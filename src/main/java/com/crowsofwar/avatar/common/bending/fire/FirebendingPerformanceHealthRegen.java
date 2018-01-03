@@ -38,7 +38,6 @@ public class FirebendingPerformanceHealthRegen {
 					performance.modifyScore(-20);
 				}
 
-
 			}
 
 		}

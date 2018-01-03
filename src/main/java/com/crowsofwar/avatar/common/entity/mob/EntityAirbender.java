@@ -25,28 +25,26 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityAirbender extends EntityHumanBender {
-	
+
 	public static final ResourceLocation LOOT_TABLE = LootTableList
 			.register(new ResourceLocation("avatarmod", "airbender"));
-	
+
 	/**
 	 * @param world
 	 */
 	public EntityAirbender(World world) {
 		super(world);
 	}
-	
+
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35);
 	}
-	
+
 	@Override
 	protected void addBendingTasks() {
 		this.tasks.addTask(1, Abilities.getAi("air_bubble", this, getBender()));
@@ -54,20 +52,20 @@ public class EntityAirbender extends EntityHumanBender {
 		this.tasks.addTask(3, Abilities.getAi("airblade", this, getBender()));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 	}
-	
+
 	@Override
 	protected ResourceLocation getLootTable() {
 		return LOOT_TABLE;
 	}
-	
+
 	@Override
 	protected ScrollType getScrollType() {
 		return ScrollType.AIR;
 	}
-	
+
 	@Override
 	protected int getNumSkins() {
 		return 7;
 	}
-	
+
 }

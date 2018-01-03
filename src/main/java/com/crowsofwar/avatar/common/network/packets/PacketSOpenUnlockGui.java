@@ -17,31 +17,30 @@
 package com.crowsofwar.avatar.common.network.packets;
 
 import com.crowsofwar.avatar.common.network.PacketRedirector;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class PacketSOpenUnlockGui extends AvatarPacket<PacketSOpenUnlockGui> {
-	
+
 	@Override
-	public void avatarFromBytes(ByteBuf buf) {}
-	
+	public void avatarFromBytes(ByteBuf buf) {
+	}
+
 	@Override
-	public void avatarToBytes(ByteBuf buf) {}
-	
+	public void avatarToBytes(ByteBuf buf) {
+	}
+
 	@Override
 	protected Side getReceivedSide() {
 		return Side.SERVER;
 	}
-	
+
 	@Override
 	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketSOpenUnlockGui> getPacketHandler() {
 		return PacketRedirector::redirectMessage;
 	}
-	
+
 }

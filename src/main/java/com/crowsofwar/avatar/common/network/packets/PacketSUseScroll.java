@@ -24,43 +24,42 @@ import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class PacketSUseScroll extends AvatarPacket<PacketSUseScroll> {
-	
+
 	private Ability ability;
-	
-	public PacketSUseScroll() {}
-	
+
+	public PacketSUseScroll() {
+	}
+
 	public PacketSUseScroll(Ability ability) {
 		this.ability = ability;
 	}
-	
+
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		ability = Abilities.get(GoreCoreByteBufUtil.readString(buf));
 	}
-	
+
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
 		GoreCoreByteBufUtil.writeString(buf, ability.getName
 				());
 	}
-	
+
 	@Override
 	protected Side getReceivedSide() {
 		return Side.SERVER;
 	}
-	
+
 	@Override
 	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketSUseScroll> getPacketHandler() {
 		return PacketRedirector::redirectMessage;
 	}
-	
+
 	public Ability getAbility() {
 		return ability;
 	}
-	
+
 }

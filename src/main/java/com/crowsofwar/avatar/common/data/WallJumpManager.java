@@ -21,7 +21,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  * Contains all wall jump related logic for a Bender. These methods would normally be in the
  * Bender class itself, but there is a lot of logic so they have been moved here. Wall jump
  * decisions can be accessed like <code>bender.getWallJumpManager.canWallJump()</code>.
- *
+ * <p>
  * TODO: Nuke this sad excuse for actual working code
  */
 public class WallJumpManager {
@@ -108,7 +108,6 @@ public class WallJumpManager {
 	/**
 	 * @return If the bender knows how to wall jump, gives the type of particles spawned when they
 	 * wall jump. If the bender does not know how to wall jump, returns null.
-	 *
 	 * @see #knowsWallJump()
 	 */
 	@Nullable

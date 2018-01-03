@@ -28,29 +28,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
-	
+
 	public static final String WORLD_DATA_KEY = "Avatar";
 	private int nextEntityId;
-	
+
 	private List<ScheduledDestroyBlock> scheduledDestroyBlocks;
 	private List<TemporaryWaterLocation> temporaryWater;
-	
+
 	public AvatarWorldData() {
 		super(WORLD_DATA_KEY);
 		nextEntityId = 1;
 		scheduledDestroyBlocks = new ArrayList<>();
 		temporaryWater = new ArrayList<>();
 	}
-	
+
 	public AvatarWorldData(String key) {
 		this();
 	}
-	
-	@Override
-	public Class<? extends PlayerData> playerDataClass() {
-		return AvatarPlayerData.class;
-	}
-	
+
 	public static AvatarWorldData getDataFromWorld(World world) {
 		if (world.isRemote) {
 			throw new IllegalStateException("AvatarWorldData is designed to be used only on " +
@@ -59,30 +54,35 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 
 		return getDataForWorld(AvatarWorldData.class, WORLD_DATA_KEY, world, false);
 	}
-	
+
+	@Override
+	public Class<? extends PlayerData> playerDataClass() {
+		return AvatarPlayerData.class;
+	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		nextEntityId = nbt.getInteger("NextEntityId");
-		
+
 		AvatarUtils.readList(scheduledDestroyBlocks, compound -> {
-			
+
 			BlockPos pos = new BlockPos(compound.getInteger("x"), compound.getInteger("y"),
 					compound.getInteger("z"));
 			return new ScheduledDestroyBlock(this, pos, compound.getInteger("Ticks"),
 					compound.getBoolean("Drop"), compound.getInteger("Fortune"));
-			
+
 		}, nbt, "DestroyBlocks");
-		
+
 		AvatarUtils.readList(temporaryWater, c -> {
-			
+
 			BlockPos pos = new BlockPos(c.getInteger("x"), c.getInteger("y"), c.getInteger("z"));
 			return new TemporaryWaterLocation(this, pos, c.getInteger("Dimension"), c.getInteger("Ticks"));
-			
+
 		}, nbt, "TemporaryWater");
-		
+
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
@@ -104,21 +104,21 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 		}, nbt, "TemporaryWater");
 		return nbt;
 	}
-	
+
 	public int nextEntityId() {
 		return ++nextEntityId;
 	}
-	
+
 	public List<ScheduledDestroyBlock> getScheduledDestroyBlocks() {
 		return scheduledDestroyBlocks;
 	}
-	
+
 	public List<TemporaryWaterLocation> geTemporaryWaterLocations() {
 		return temporaryWater;
 	}
-	
+
 	public void addTemporaryWaterLocation(BlockPos pos) {
 		temporaryWater.add(new TemporaryWaterLocation(this, pos, getWorld().provider.getDimension(), 15));
 	}
-	
+
 }

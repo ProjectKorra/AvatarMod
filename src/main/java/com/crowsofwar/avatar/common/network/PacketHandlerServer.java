@@ -54,27 +54,24 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_CAN_UPGRADE_ABILITY;
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_CAN_UPGRADE_ABILITY_2;
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_CAN_UPGRADE_ABILITY_3;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 import static com.crowsofwar.avatar.common.analytics.AnalyticEvents.getAbilityExecutionEvent;
 
 /**
  * Implements IPacketHandler. Acts as a packet handler for integrated and
  * dedicated servers. Is a singleton and is accessible via {@link #instance}.
- *
  */
 public class PacketHandlerServer implements IPacketHandler {
-	
+
 	public static final IPacketHandler instance;
 
 	static {
 		instance = new PacketHandlerServer();
 	}
-	
+
 	private PacketHandlerServer() {
 	}
-	
+
 	public static void register() {
 		MinecraftForge.EVENT_BUS.register(instance);
 	}
@@ -82,44 +79,48 @@ public class PacketHandlerServer implements IPacketHandler {
 	@Override
 	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
 		AvatarLog.debug("Server: Received a packet");
-		
-		if (packet instanceof PacketSUseAbility) return handleKeypress((PacketSUseAbility) packet, ctx);
-		
-		if (packet instanceof PacketSRequestData) return handleRequestData((PacketSRequestData) packet, ctx);
-		
+
+		if (packet instanceof PacketSUseAbility)
+			return handleKeypress((PacketSUseAbility) packet, ctx);
+
+		if (packet instanceof PacketSRequestData)
+			return handleRequestData((PacketSRequestData) packet, ctx);
+
 		if (packet instanceof PacketSUseStatusControl)
 			return handleUseStatusControl((PacketSUseStatusControl) packet, ctx);
-		
+
 		if (packet instanceof PacketSWallJump) return handleWallJump((PacketSWallJump) packet, ctx);
-		
-		if (packet instanceof PacketSSkillsMenu) return handleSkillsMenu((PacketSSkillsMenu) packet, ctx);
-		
-		if (packet instanceof PacketSUseScroll) return handleUseScroll((PacketSUseScroll) packet, ctx);
-		
+
+		if (packet instanceof PacketSSkillsMenu)
+			return handleSkillsMenu((PacketSSkillsMenu) packet, ctx);
+
+		if (packet instanceof PacketSUseScroll)
+			return handleUseScroll((PacketSUseScroll) packet, ctx);
+
 		if (packet instanceof PacketSBisonInventory)
 			return handleInventory((PacketSBisonInventory) packet, ctx);
-		
+
 		if (packet instanceof PacketSOpenUnlockGui)
 			return handleGetBending((PacketSOpenUnlockGui) packet, ctx);
-		
+
 		if (packet instanceof PacketSUnlockBending)
 			return handleUnlockBending((PacketSUnlockBending) packet, ctx);
-		
+
 		if (packet instanceof PacketSConfirmTransfer)
 			return handleConfirmTransfer((PacketSConfirmTransfer) packet, ctx);
-		
+
 		if (packet instanceof PacketSCycleBending)
 			return handleCycleBending((PacketSCycleBending) packet, ctx);
-		
+
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
 	}
-	
+
 	@Override
 	public Side getSide() {
 		return Side.SERVER;
 	}
-	
+
 	private IMessage handleKeypress(PacketSUseAbility packet, MessageContext ctx) {
 
 		EntityPlayerMP player = ctx.getServerHandler().player;
@@ -153,29 +154,29 @@ public class PacketHandlerServer implements IPacketHandler {
 
 		return null;
 	}
-	
+
 	private IMessage handleRequestData(PacketSRequestData packet, MessageContext ctx) {
-		
+
 		UUID id = packet.getAskedPlayer();
 		EntityPlayer player = AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().player.world,
 				id);
-		
+
 		if (player == null) {
-			
+
 			AvatarLog.warnHacking(ctx.getServerHandler().player.getName(),
 					"Sent request data for a player with account '" + id
 							+ "', but that player is not in the world.");
 			return null;
-			
+
 		}
-		
+
 		BendingData data = BendingData.get(player);
-		
+
 		if (data != null) data.saveAll();
 		return null;
-		
+
 	}
-	
+
 	/**
 	 * @param packet
 	 * @param ctx
@@ -183,9 +184,9 @@ public class PacketHandlerServer implements IPacketHandler {
 	 */
 	private IMessage handleUseStatusControl(PacketSUseStatusControl packet, MessageContext ctx) {
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		
+
 		BendingData data = BendingData.get(player);
-		
+
 		if (data != null) {
 			StatusControl sc = packet.getStatusControl();
 			if (data.hasStatusControl(sc)) {
@@ -193,14 +194,14 @@ public class PacketHandlerServer implements IPacketHandler {
 					data.removeStatusControl(packet.getStatusControl());
 				}
 			}
-			
+
 		}
-		
+
 		return null;
 	}
-	
+
 	private IMessage handleWallJump(PacketSWallJump packet, MessageContext ctx) {
-		
+
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		Bender bender = Bender.get(player);
 		WallJumpManager jumpManager = bender.getWallJumpManager();
@@ -213,12 +214,12 @@ public class PacketHandlerServer implements IPacketHandler {
 			}
 
 		}
-		
+
 		return null;
 	}
-	
+
 	private IMessage handleSkillsMenu(PacketSSkillsMenu packet, MessageContext ctx) {
-		
+
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		BendingData data = BendingData.get(player);
 		UUID element = packet.getElement();
@@ -234,25 +235,25 @@ public class PacketHandlerServer implements IPacketHandler {
 
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	private IMessage handleUseScroll(PacketSUseScroll packet, MessageContext ctx) {
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		
+
 		BendingData data = BendingData.get(player);
 		AbilityData abilityData = data.getAbilityData(packet.getAbility());
-		
+
 		if (!abilityData.isMaxLevel() && (abilityData.getXp() == 100 || abilityData.isLocked())) {
-			
+
 			Container container = player.openContainer;
 			if (container instanceof ContainerSkillsGui) {
 				ContainerSkillsGui skills = (ContainerSkillsGui) container;
-				
+
 				Slot slot1 = skills.getSlot(0);
 				Slot slot2 = skills.getSlot(1);
-				
+
 				Slot activeSlot = null;
 				if (slot1.getHasStack()) {
 					activeSlot = slot1;
@@ -261,15 +262,15 @@ public class PacketHandlerServer implements IPacketHandler {
 					activeSlot = slot2;
 					abilityData.setPath(AbilityTreePath.SECOND);
 				}
-				
+
 				if (activeSlot != null) {
 					ItemStack stack = activeSlot.getStack();
 					if (stack.getItem() == AvatarItems.itemScroll) {
-						
+
 						// Try to use this scroll
 						ScrollType type = ScrollType.get(stack.getMetadata());
 						if (type.accepts(packet.getAbility().getBendingId())) {
-							
+
 							activeSlot.putStack(ItemStack.EMPTY);
 							abilityData.addLevel();
 							abilityData.setXp(0);
@@ -281,21 +282,21 @@ public class PacketHandlerServer implements IPacketHandler {
 							AvatarAnalytics.INSTANCE.pushEvent(e);
 
 						}
-						
+
 					}
 				}
-				
+
 			}
-			
+
 		}
-		
+
 		return null;
-		
+
 	}
-	
+
 	private IMessage handleInventory(PacketSBisonInventory packet, MessageContext ctx) {
 		EntityPlayer player = ctx.getServerHandler().player;
-		
+
 		if (player.getRidingEntity() instanceof EntitySkyBison) {
 			EntitySkyBison bison = (EntitySkyBison) player.getRidingEntity();
 			if (bison.canPlayerViewInventory(player)) {
@@ -303,83 +304,83 @@ public class PacketHandlerServer implements IPacketHandler {
 						bison.getId(), 0, 0);
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	private IMessage handleGetBending(PacketSOpenUnlockGui packet, MessageContext ctx) {
-		
+
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		BendingData data = BendingData.get(player);
-		
+
 		if (data.getAllBending().isEmpty()) {
 			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, player.world, 0, 0, 0);
 		}
-		
+
 		return null;
-		
+
 	}
-	
+
 	private IMessage handleUnlockBending(PacketSUnlockBending packet, MessageContext ctx) {
-		
+
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		BendingData data = BendingData.get(player);
 		Container container = player.openContainer;
-		
+
 		if (container instanceof ContainerGetBending) {
 			List<UUID> eligible = ((ContainerGetBending) container).getEligibleBending();
-			
+
 			UUID bending = packet.getUnlockType();
 			if (eligible.contains(bending)) {
-				
+
 				if (data.getAllBending().isEmpty()) {
 					data.addBendingId(bending);
-					
+
 					for (int i = 0; i < ((ContainerGetBending) container).getSize(); i++) {
 						container.getSlot(i).putStack(ItemStack.EMPTY);
 					}
-					
+
 					int guiId = AvatarGuiHandler.getGuiId(bending);
 					player.openGui(AvatarMod.instance, guiId, player.world, 0, 0, 0);
 
 				}
-				
+
 			}
-			
+
 		}
-		
+
 		return null;
 	}
-	
+
 	private IMessage handleConfirmTransfer(PacketSConfirmTransfer packet, MessageContext ctx) {
-		
+
 		EntityPlayer player = ctx.getServerHandler().player;
 		TransferConfirmHandler.confirmTransfer(player);
-		
+
 		return null;
 	}
-	
+
 	private IMessage handleCycleBending(PacketSCycleBending packet, MessageContext ctx) {
-		
+
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		BendingData data = BendingData.get(player);
-		
+
 		List<BendingStyle> controllers = data.getAllBending();
 		controllers.sort(Comparator.comparing(BendingStyle::getName));
 		if (controllers.size() > 1) {
-			
+
 			int index = controllers.indexOf(data.getActiveBending());
 			index += packet.cycleRight() ? 1 : -1;
-			
+
 			if (index == -1) index = controllers.size() - 1;
 			if (index == controllers.size()) index = 0;
-			
+
 			data.setActiveBending(controllers.get(index));
-			
+
 		}
-		
+
 		return null;
-		
+
 	}
-	
+
 }

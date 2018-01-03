@@ -32,14 +32,14 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class SleepChiRegenHandler {
-	
+
 	@SubscribeEvent
 	public static void onSlept(PlayerWakeUpEvent e) {
 		EntityPlayer player = e.getEntityPlayer();
 		BendingData data = BendingData.get(player);
 		Chi chi = data.chi();
 		World world = player.world;
-		
+
 		if (world.getWorldTime() % 24000 <= 2) {
 			chi.setAvailableChi(CHI_CONFIG.maxAvailableChi);
 			chi.changeTotalChi(STATS_CONFIG.sleepChiRegen);
@@ -47,5 +47,5 @@ public class SleepChiRegenHandler {
 		}
 
 	}
-	
+
 }

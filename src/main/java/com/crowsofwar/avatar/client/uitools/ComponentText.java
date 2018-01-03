@@ -19,41 +19,39 @@ package com.crowsofwar.avatar.client.uitools;
 import net.minecraft.client.gui.FontRenderer;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ComponentText extends UiComponent {
-	
+
 	private final FontRenderer fontRender;
 	private String text;
-	
+
 	public ComponentText(String text) {
 		this.fontRender = mc.fontRenderer;
 		this.text = text;
 	}
-	
+
 	public String getText() {
 		return text;
 	}
-	
+
 	public void setText(String text) {
 		this.text = text;
 	}
-	
+
 	@Override
 	protected float componentWidth() {
 		return fontRender.getStringWidth(text);
 	}
-	
+
 	@Override
 	protected float componentHeight() {
 		return fontRender.FONT_HEIGHT;
 	}
-	
+
 	@Override
 	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		drawString(fontRender, text, 0, 0, 0xffffff);
 	}
-	
+
 }

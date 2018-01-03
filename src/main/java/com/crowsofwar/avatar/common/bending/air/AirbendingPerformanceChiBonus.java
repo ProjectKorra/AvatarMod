@@ -49,7 +49,6 @@ public class AirbendingPerformanceChiBonus {
 						chi.changeTotalChi(totalChi);
 					}
 
-
 				}
 
 			}

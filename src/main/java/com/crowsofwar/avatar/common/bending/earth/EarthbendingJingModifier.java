@@ -105,5 +105,4 @@ public class EarthbendingJingModifier extends PowerRatingModifier {
 
 	}
 
-
 }

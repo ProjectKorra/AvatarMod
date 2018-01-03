@@ -23,12 +23,10 @@ import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AbilityWaterSkate extends Ability {
-	
+
 	public AbilityWaterSkate() {
 		super(Waterbending.ID, "water_skate");
 	}
@@ -44,5 +42,5 @@ public class AbilityWaterSkate extends Ability {
 		data.addStatusControl(StatusControl.SKATING_START);
 		ctx.getData().addTickHandler(TickHandler.WATER_SKATE);
 	}
-	
+
 }

@@ -25,27 +25,25 @@ import net.minecraft.entity.player.EntityPlayer;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityAiBisonFollowOwner extends EntityAIBase {
-	
+
 	private final EntitySkyBison bison;
-	
+
 	public EntityAiBisonFollowOwner(EntitySkyBison bison) {
 		this.bison = bison;
 		this.setMutexBits(1);
 	}
-	
+
 	/**
 	 * Returns whether the EntityAIBase should begin execution.
 	 */
 	@Override
 	public boolean shouldExecute() {
-		
+
 		if (bison.isSitting()) return false;
-		
+
 		EntityPlayer owner = bison.getOwner();
 		if (owner != null) {
 
@@ -60,34 +58,34 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 				double distSq = bison.getDistanceSqToEntity(owner);
 				return distSq >= maxDistSq && !bison.isSitting();
 			}
-			
+
 		}
-		
+
 		return false;
-		
+
 	}
-	
+
 	@Override
 	public boolean shouldContinueExecuting() {
 		return false;
 	}
-	
+
 	/**
 	 * Execute a one shot task or start executing a continuous task
 	 */
 	@Override
 	public void startExecuting() {
-		
+
 		EntityPlayer owner = bison.getOwner();
 		if (owner == null) return;
-		
+
 		double dist = bison.getDistanceToEntity(owner);
-		
+
 		Vector direction = getEyePos(owner).minus(getEyePos(bison)).normalize();
 		Vector targetPos = getEyePos(bison).plus(direction.times(dist * 0.8));
-		
+
 		bison.getMoveHelper().setMoveTo(targetPos.x(), targetPos.y(), targetPos.z(), 1.0D);
-		
+
 	}
-	
+
 }

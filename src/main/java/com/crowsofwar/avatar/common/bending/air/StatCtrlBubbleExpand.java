@@ -16,37 +16,34 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
-import java.util.List;
-
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
-
 import net.minecraft.entity.EntityLivingBase;
 
+import java.util.List;
+
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class StatCtrlBubbleExpand extends StatusControl {
-	
+
 	public StatCtrlBubbleExpand() {
 		super(11, AvatarControl.CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
-	
+
 	@Override
 	public boolean execute(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
-		
+
 		List<EntityAirBubble> entities = entity.world.getEntitiesWithinAABB(EntityAirBubble.class,
 				entity.getEntityBoundingBox(), bubble -> bubble.getOwner() == entity);
 		for (EntityAirBubble bubble : entities) {
 			bubble.dissipateLarge();
 		}
-		
+
 		return true;
 	}
-	
+
 }

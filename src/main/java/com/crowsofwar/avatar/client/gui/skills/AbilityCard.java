@@ -27,17 +27,15 @@ import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AbilityCard {
-	
+
 	private final Ability ability;
 	private final int index;
 	private Frame frame;
 	private UiComponent icon, iconBg;
-	
+
 	public AbilityCard(Ability ability, int index) {
 
 		this.ability = ability;
@@ -62,9 +60,9 @@ public class AbilityCard {
 		updateFramePos(0);
 
 	}
-	
+
 	public void draw(float partialTicks, float scroll, float mouseX, float mouseY) {
-		
+
 		updateFramePos(scroll);
 
 		GlStateManager.enableBlend();
@@ -73,18 +71,18 @@ public class AbilityCard {
 		icon.draw(partialTicks, mouseX, mouseY);
 
 	}
-	
+
 	/**
 	 * Width in px
 	 */
 	public float width() {
 		return frame.getDimensions().xInPixels();
 	}
-	
+
 	public Ability getAbility() {
 		return ability;
 	}
-	
+
 	public boolean isMouseHover(float mouseX, float mouseY, float scroll) {
 
 		// Returns whether mouse within iconBg
@@ -94,15 +92,15 @@ public class AbilityCard {
 		Measurement max = min.plus(Measurement.fromPixels(iconBg.width(), iconBg.height()));
 		return mouseX > min.xInPixels() && mouseY > min.yInPixels() && mouseX < max.xInPixels()
 				&& mouseY < max.yInPixels();
-		
+
 	}
-	
+
 	private void updateFramePos(float scroll) {
-		
+
 		Measurement base = fromPixels(50, (screenHeight() - icon.height()) / 2);
 		Measurement offset = fromPixels(scroll + index * iconBg.width() * 1.4f, 0);
 		frame.setPosition(base.plus(offset));
-		
+
 	}
-	
+
 }

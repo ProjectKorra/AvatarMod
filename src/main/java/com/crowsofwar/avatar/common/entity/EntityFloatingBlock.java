@@ -53,9 +53,9 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
 public class EntityFloatingBlock extends AvatarEntity {
-	
+
 	public static final Block DEFAULT_BLOCK = Blocks.STONE;
-	
+
 	private static final DataParameter<Integer> SYNC_ENTITY_ID = createKey(EntityFloatingBlock.class,
 			DataSerializers.VARINT);
 	private static final DataParameter<Vector> SYNC_VELOCITY = createKey(EntityFloatingBlock.class,
@@ -64,32 +64,32 @@ public class EntityFloatingBlock extends AvatarEntity {
 			DataSerializers.FLOAT);
 	private static final DataParameter<Optional<IBlockState>> SYNC_BLOCK = createKey(
 			EntityFloatingBlock.class, DataSerializers.OPTIONAL_BLOCK_STATE);
-	
+
 	private static final DataParameter<FloatingBlockBehavior> SYNC_BEHAVIOR = createKey(
 			EntityFloatingBlock.class, FloatingBlockBehavior.DATA_SERIALIZER);
-	
+
 	private static int nextBlockID = 0;
-	
+
 	/**
 	 * Cached owner of this floating block. May not be accurate- use
 	 * {@link #getOwner()} to use updated version.
 	 */
 	private EntityPlayer ownerCached;
-	
+
 	/**
 	 * Whether or not to drop an ItemBlock when the floating block has been
 	 * destroyed. Does not matter on client.
 	 */
 	private boolean enableItemDrops;
-	
+
 	/**
 	 * The hitbox for this floating block, but slightly expanded to give more
 	 * room for killing things with.
 	 */
 	private AxisAlignedBB expandedHitbox;
-	
+
 	private float damageMult;
-	
+
 	public EntityFloatingBlock(World world) {
 		super(world);
 		float size = .9f;
@@ -99,32 +99,41 @@ public class EntityFloatingBlock extends AvatarEntity {
 		}
 		this.enableItemDrops = true;
 		this.damageMult = 1;
-		
+
 	}
-	
+
 	public EntityFloatingBlock(World world, IBlockState blockState) {
 		this(world);
 		setBlockState(blockState);
 	}
-	
+
 	public EntityFloatingBlock(World world, IBlockState blockState, EntityPlayer owner) {
 		this(world, blockState);
 		setOwner(owner);
 	}
 
+	public static EntityFloatingBlock getFromID(World world, int id) {
+		for (int i = 0; i < world.loadedEntityList.size(); i++) {
+			Entity e = world.loadedEntityList.get(i);
+			if (e instanceof EntityFloatingBlock && ((EntityFloatingBlock) e).getID() == id)
+				return (EntityFloatingBlock) e;
+		}
+		return null;
+	}
+
 	// Called from constructor of Entity class
 	@Override
 	protected void entityInit() {
-		
+
 		super.entityInit();
 		dataManager.register(SYNC_ENTITY_ID, 0);
 		dataManager.register(SYNC_VELOCITY, Vector.ZERO);
 		dataManager.register(SYNC_FRICTION, 1f);
 		dataManager.register(SYNC_BLOCK, Optional.of(DEFAULT_BLOCK.getDefaultState()));
 		dataManager.register(SYNC_BEHAVIOR, new FloatingBlockBehavior.DoNothing());
-		
+
 	}
-	
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
@@ -138,7 +147,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		getBehavior().load(nbt.getCompoundTag("BehaviorData"));
 		damageMult = nbt.getFloat("DamageMultiplier");
 	}
-	
+
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
@@ -153,29 +162,29 @@ public class EntityFloatingBlock extends AvatarEntity {
 		getBehavior().save(nestedCompound(nbt, "BehaviorData"));
 		nbt.setFloat("DamageMultiplier", damageMult);
 	}
-	
+
 	@Override
 	public boolean canRenderOnFire() {
 		return false;
 	}
-	
+
 	public Block getBlock() {
 		return getBlockState().getBlock();
 	}
-	
+
 	public void setBlock(Block block) {
 		setBlockState(block.getDefaultState());
 	}
-	
+
 	public IBlockState getBlockState() {
 		Optional<IBlockState> obs = dataManager.get(SYNC_BLOCK);
 		return obs.get();
 	}
-	
+
 	public void setBlockState(IBlockState state) {
 		dataManager.set(SYNC_BLOCK, Optional.of(state));
 	}
-	
+
 	/**
 	 * Get the ID of this floating block. Each instance has its own unique ID.
 	 * Synced between client and server.
@@ -183,20 +192,11 @@ public class EntityFloatingBlock extends AvatarEntity {
 	public int getID() {
 		return dataManager.get(SYNC_ENTITY_ID);
 	}
-	
+
 	public void setID(int id) {
 		if (!world.isRemote) dataManager.set(SYNC_ENTITY_ID, id);
 	}
-	
-	public static EntityFloatingBlock getFromID(World world, int id) {
-		for (int i = 0; i < world.loadedEntityList.size(); i++) {
-			Entity e = world.loadedEntityList.get(i);
-			if (e instanceof EntityFloatingBlock && ((EntityFloatingBlock) e).getID() == id)
-				return (EntityFloatingBlock) e;
-		}
-		return null;
-	}
-	
+
 	/**
 	 * Returns whether the floating block drops the block as an item when it is
 	 * destroyed. Only used on server-side. By default, is true.
@@ -204,45 +204,45 @@ public class EntityFloatingBlock extends AvatarEntity {
 	public boolean areItemDropsEnabled() {
 		return enableItemDrops;
 	}
-	
+
 	/**
 	 * Set whether the block should be dropped when it is destroyed.
 	 */
 	public void setItemDropsEnabled(boolean enable) {
 		this.enableItemDrops = enable;
 	}
-	
+
 	public float getDamageMult() {
 		return damageMult;
 	}
-	
+
 	public void setDamageMult(float mult) {
 		this.damageMult = mult;
 	}
-	
+
 	private void spawnCrackParticle(double x, double y, double z, double mx, double my, double mz) {
 		world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, x, y, z, mx, my, mz,
 				Block.getStateId(getBlockState()));
 	}
-	
+
 	@Override
 	public void onUpdate() {
-		
+
 		super.onUpdate();
-		
+
 		extinguish();
-		
+
 		if (ticksExisted == 1) {
-			
+
 			for (int i = 0; i < 10; i++) {
 				double spawnX = posX + (rand.nextDouble() - 0.5);
 				double spawnY = posY - 0;
 				double spawnZ = posZ + (rand.nextDouble() - 0.5);
 				spawnCrackParticle(spawnX, spawnY, spawnZ, 0, -0.1, 0);
 			}
-			
+
 		}
-		
+
 		setVelocity(velocity().times(getFriction()));
 
 		prevPosX = posX;
@@ -251,9 +251,9 @@ public class EntityFloatingBlock extends AvatarEntity {
 
 		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate(this);
 		if (nextBehavior != getBehavior()) setBehavior(nextBehavior);
-		
+
 	}
-	
+
 	@Override
 	public boolean onCollideWithSolid() {
 
@@ -271,7 +271,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 			spawnCrackParticle(posX, posY + 0.3, posZ, random.nextGaussian() * 0.1,
 					random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
 		}
-		
+
 		if (!world.isRemote && areItemDropsEnabled()) {
 			List<ItemStack> drops = getBlock().getDrops(world, new BlockPos(this), getBlockState(), 0);
 			for (ItemStack is : drops) {
@@ -288,22 +288,22 @@ public class EntityFloatingBlock extends AvatarEntity {
 				explosion.doExplosionA();
 				explosion.doExplosionB(true);
 			}
-			
+
 		}
-		
+
 		setDead();
 		return true;
 
 	}
-	
+
 	public float getFriction() {
 		return dataManager.get(SYNC_FRICTION);
 	}
-	
+
 	public void setFriction(float friction) {
 		if (!world.isRemote) dataManager.set(SYNC_FRICTION, friction);
 	}
-	
+
 	public void drop() {
 		setBehavior(new FloatingBlockBehavior.Fall());
 	}
@@ -311,39 +311,39 @@ public class EntityFloatingBlock extends AvatarEntity {
 	public FloatingBlockBehavior getBehavior() {
 		return dataManager.get(SYNC_BEHAVIOR);
 	}
-	
+
 	public void setBehavior(FloatingBlockBehavior behavior) {
 		// FIXME research: why doesn't sync_Behavior cause an update to client?
 		if (behavior == null) throw new IllegalArgumentException("Cannot have null behavior");
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
-	
+
 	@Override
 	public EntityLivingBase getController() {
 		return getBehavior() instanceof FloatingBlockBehavior.PlayerControlled ? getOwner() : null;
 	}
-	
+
 	public AxisAlignedBB getExpandedHitbox() {
 		return this.expandedHitbox;
 	}
-	
+
 	@Override
 	public void setEntityBoundingBox(AxisAlignedBB bb) {
 		super.setEntityBoundingBox(bb);
 		expandedHitbox = bb.grow(0.35, 0.35, 0.35);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean isInRangeToRenderDist(double d) {
 		return true;
 	}
-	
+
 	@Override
 	public boolean canBeCollidedWith() {
 		return true;
 	}
-	
+
 	@Override
 	protected boolean canCollideWith(Entity entity) {
 		return false;
@@ -353,6 +353,5 @@ public class EntityFloatingBlock extends AvatarEntity {
 	public boolean isProjectile() {
 		return true;
 	}
-
 
 }

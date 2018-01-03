@@ -22,159 +22,155 @@ import net.minecraft.world.World;
 
 import java.util.UUID;
 
-
 public class EntityCloudBall extends AvatarEntity {
-    /**
-     * @param world
-     */
-    public static final DataParameter<CloudburstBehavior> SYNC_BEHAVIOR = EntityDataManager
-            .createKey(EntityCloudBall.class, CloudburstBehavior.DATA_SERIALIZER);
+	/**
+	 * @param world
+	 */
+	public static final DataParameter<CloudburstBehavior> SYNC_BEHAVIOR = EntityDataManager
+			.createKey(EntityCloudBall.class, CloudburstBehavior.DATA_SERIALIZER);
 
-    public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityCloudBall.class,
-            DataSerializers.VARINT);
+	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityCloudBall.class,
+			DataSerializers.VARINT);
 
-    private AxisAlignedBB expandedHitbox;
+	private AxisAlignedBB expandedHitbox;
 
-    private float damage;
-    private boolean absorbtion;
-    private boolean chismash;
+	private float damage;
+	private boolean absorbtion;
+	private boolean chismash;
 
-    /**
-     * @param world
-     */
-   public EntityCloudBall(World world) {
-        super(world);
-        setSize(0.8f, 0.8f);
+	/**
+	 * @param world
+	 */
+	public EntityCloudBall(World world) {
+		super(world);
+		setSize(0.8f, 0.8f);
 
-    }
-    public void canAbsorb (boolean canAbsorb) {
-        this.absorbtion = canAbsorb;
-    }
-    public void canchiSmash (boolean canchiSmash) {
-       this.chismash = canchiSmash;
-   }
+	}
 
-    @Override
-    public void entityInit() {
-        super.entityInit();
-        dataManager.register(SYNC_BEHAVIOR, new CloudburstBehavior.Idle());
-        dataManager.register(SYNC_SIZE, 30);
-    }
+	public void canAbsorb(boolean canAbsorb) {
+		this.absorbtion = canAbsorb;
+	}
 
-    @Override
-    public void onUpdate() {
-        super.onUpdate();
+	public void canchiSmash(boolean canchiSmash) {
+		this.chismash = canchiSmash;
+	}
 
-        setBehavior((CloudburstBehavior) getBehavior().onUpdate(this));
-        if (ticksExisted >= 250 && this.getBehavior() instanceof CloudburstBehavior.Thrown) {
-            this.setDead();
-        }
+	@Override
+	public void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_BEHAVIOR, new CloudburstBehavior.Idle());
+		dataManager.register(SYNC_SIZE, 30);
+	}
+
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+
+		setBehavior((CloudburstBehavior) getBehavior().onUpdate(this));
+		if (ticksExisted >= 250 && this.getBehavior() instanceof CloudburstBehavior.Thrown) {
+			this.setDead();
+		}
 
       /*  if (!world.isRemote){
-            Thread.dumpStack();
+			Thread.dumpStack();
         }**/
 
-        // TODO Temporary fix to avoid extra fireballs
-        // Add hook or something
-        if (getOwner() == null) {
-            setDead();
-            removeStatCtrl();
-        }
+		// TODO Temporary fix to avoid extra fireballs
+		// Add hook or something
+		if (getOwner() == null) {
+			setDead();
+			removeStatCtrl();
+		}
 
-    }
+	}
 
+	public CloudburstBehavior getBehavior() {
+		return dataManager.get(SYNC_BEHAVIOR);
+	}
 
+	public void setBehavior(CloudburstBehavior behavior) {
+		dataManager.set(SYNC_BEHAVIOR, behavior);
+	}
 
-    public CloudburstBehavior getBehavior() {
-        return dataManager.get(SYNC_BEHAVIOR);
-    }
+	@Override
+	public EntityLivingBase getController() {
+		return getBehavior() instanceof CloudburstBehavior.PlayerControlled ? getOwner() : null;
+	}
 
-    public void setBehavior(CloudburstBehavior behavior) {
-        dataManager.set(SYNC_BEHAVIOR, behavior);
-    }
+	public float getDamage() {
+		return damage;
+	}
 
-    @Override
-    public EntityLivingBase getController() {
-        return getBehavior() instanceof CloudburstBehavior.PlayerControlled ? getOwner() : null;
-    }
+	public void setDamage(float damage) {
+		this.damage = damage;
+	}
 
-    public float getDamage() {
-        return damage;
-    }
+	public int getSize() {
+		return dataManager.get(SYNC_SIZE);
+	}
 
-    public void setDamage(float damage) {
-        this.damage = damage;
-    }
+	public void setSize(int size) {
+		dataManager.set(SYNC_SIZE, size);
+	}
 
-    public int getSize() {
-        return dataManager.get(SYNC_SIZE);
-    }
+	@Override
+	public boolean onCollideWithSolid() {
 
-    public void setSize(int size) {
-        dataManager.set(SYNC_SIZE, size);
-    }
+		if (getOwner() != null) {
+			AbilityData abilityData = BendingData.get(getOwner()).getAbilityData("cloudburst");
+			abilityData.addXp(3);
 
-    @Override
-    public boolean onCollideWithSolid() {
+		}
 
-        if (getOwner() != null) {
-            AbilityData abilityData = BendingData.get(getOwner()).getAbilityData("cloudburst");
-            abilityData.addXp(3);
+		setDead();
+		return true;
 
-        }
+	}
 
-        setDead();
-        return true;
+	@Override
+	protected boolean canCollideWith(Entity entity) {
+		if (getOwner() != null) {
 
-    }
+			if (absorbtion) {
+				if (entity instanceof AvatarEntity) {
+					((AvatarEntity) entity).isProjectile();
+					entity.setDead();
+					damage += 3F;
+					return false;
+				}
 
-    @Override
-    protected boolean canCollideWith(Entity entity) {
-        if (getOwner() != null) {
+				if (entity instanceof EntityArrow) {
+					entity.setDead();
+					damage += 2F;
+					return false;
+				}
+				if (entity instanceof EntityThrowable) {
+					entity.setDead();
+					damage += 1F;
+					return false;
+				}
+			}
+			if (chismash) {
+				if (entity instanceof EntityLivingBase) {
+					if (Bender.isBenderSupported((EntityLivingBase) entity)) {
+						BendingData data = BendingData.get((EntityLivingBase) entity);
+						for (UUID uuid : data.getAllBendingIds()) {
+							CloudburstPowerModifier cloudModifier = new CloudburstPowerModifier();
+							cloudModifier.setTicks(100);
+							data.getPowerRatingManager(uuid).addModifier(cloudModifier, new
+									BendingContext(data, (EntityLivingBase) entity, new
+									Raytrace.Result()));
+						}
 
+					}
+				}
+			}
 
-            if (absorbtion) {
-                if (entity instanceof AvatarEntity) {
-                    ((AvatarEntity) entity).isProjectile();
-                    entity.setDead();
-                    damage += 3F;
-                    return false;
-                }
+		}
 
+		return super.canCollideWith(entity) || entity instanceof EntityLivingBase;
 
-                if (entity instanceof EntityArrow) {
-                    entity.setDead();
-                    damage += 2F;
-                    return false;
-                }
-                if (entity instanceof EntityThrowable) {
-                    entity.setDead();
-                    damage += 1F;
-                    return false;
-                }
-            }
-            if (chismash){
-                if (entity instanceof EntityLivingBase) {
-                    if (Bender.isBenderSupported((EntityLivingBase) entity)) {
-                        BendingData data = BendingData.get((EntityLivingBase) entity);
-                        for (UUID uuid : data.getAllBendingIds()) {
-                            CloudburstPowerModifier cloudModifier = new CloudburstPowerModifier();
-                            cloudModifier.setTicks(100);
-                            data.getPowerRatingManager(uuid).addModifier(cloudModifier, new
-                                    BendingContext(data, (EntityLivingBase) entity, new
-                                    Raytrace.Result()));
-                        }
-
-                    }
-                }
-            }
-
-        }
-
-
-        return super.canCollideWith(entity) || entity instanceof EntityLivingBase;
-
-    }
+	}
 
 	/**
 	 * Prevents the cloudburst from colliding with arrows and other projectiles and deflecting them,
@@ -186,46 +182,45 @@ public class EntityCloudBall extends AvatarEntity {
 	}
 
 	@Override
-    public void readEntityFromNBT(NBTTagCompound nbt) {
-        super.readEntityFromNBT(nbt);
-        setDamage(nbt.getFloat("Damage"));
-        setBehavior((CloudburstBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
-    }
+	public void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		setDamage(nbt.getFloat("Damage"));
+		setBehavior((CloudburstBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
+	}
 
-    @Override
-    public void writeEntityToNBT(NBTTagCompound nbt) {
-        super.writeEntityToNBT(nbt);
-        nbt.setFloat("Damage", getDamage());
-        nbt.setInteger("Behavior", getBehavior().getId());
-    }
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		nbt.setFloat("Damage", getDamage());
+		nbt.setInteger("Behavior", getBehavior().getId());
+	}
 
+	public AxisAlignedBB getExpandedHitbox() {
+		return this.expandedHitbox;
+	}
 
-    public AxisAlignedBB getExpandedHitbox() {
-        return this.expandedHitbox;
-    }
+	@Override
+	public void setEntityBoundingBox(AxisAlignedBB bb) {
+		super.setEntityBoundingBox(bb);
+		expandedHitbox = bb.grow(0.35, 0.35, 0.35);
+	}
 
-    @Override
-    public void setEntityBoundingBox(AxisAlignedBB bb) {
-        super.setEntityBoundingBox(bb);
-        expandedHitbox = bb.grow(0.35, 0.35, 0.35);
-    }
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 0 || pass == 1;
+	}
 
-    @Override
-    public boolean shouldRenderInPass(int pass) {
-        return pass == 0 || pass == 1;
-    }
+	private void removeStatCtrl() {
+		if (getOwner() != null) {
+			BendingData data = Bender.get(getOwner()).getData();
+			data.removeStatusControl(StatusControl.THROW_CLOUDBURST);
+		}
+	}
 
-    private void removeStatCtrl() {
-        if (getOwner() != null) {
-            BendingData data = Bender.get(getOwner()).getData();
-            data.removeStatusControl(StatusControl.THROW_CLOUDBURST);
-        }
-    }
-
-    @Override
-    public boolean isProjectile() {
-        return true;
-    }
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
 
 }
 

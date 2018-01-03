@@ -27,49 +27,49 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class NodeBendingList extends NodeFunctional {
-	
+
 	private final IArgument<String> argPlayerName;
-	
+
 	public NodeBendingList() {
 		super("list", true);
 		this.argPlayerName = new ArgumentPlayerName("player");
 		addArgument(argPlayerName);
 	}
-	
+
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
-		
+
 		ICommandSender sender = call.getFrom();
 		World world = sender.getEntityWorld();
-		
+
 		ArgumentList args = call.popArguments(this);
 		String playerName = args.get(argPlayerName);
-		
+
 		BendingData data = BendingData.get(world, playerName);
 		if (data == null) {
-			
+
 			AvatarChatMessages.MSG_PLAYER_DATA_NO_DATA.send(sender, playerName);
-			
+
 		} else {
-			
+
 			if (!data.getAllBending().isEmpty()) {
-				
+
 				List<BendingStyle> allControllers = data.getAllBending();
 				AvatarChatMessages.MSG_BENDING_LIST_TOP.send(sender, playerName, allControllers.size());
-				
+
 				for (BendingStyle controller : allControllers) {
 					AvatarChatMessages.MSG_BENDING_LIST_ITEM.send(sender, controller.getName());
 				}
-				
+
 			} else {
-				
+
 				AvatarChatMessages.MSG_BENDING_LIST_NONBENDER.send(sender, playerName);
-				
+
 			}
-			
+
 		}
-		
+
 		return null;
 	}
-	
+
 }

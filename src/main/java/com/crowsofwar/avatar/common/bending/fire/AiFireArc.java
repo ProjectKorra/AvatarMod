@@ -35,16 +35,14 @@ import static java.lang.Math.abs;
 import static java.lang.Math.toDegrees;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AiFireArc extends BendingAi {
-	
+
 	private int timeExecuting;
-	
+
 	private float velocityYaw, velocityPitch;
-	
+
 	/**
 	 * @param ability
 	 * @param entity
@@ -55,25 +53,25 @@ public class AiFireArc extends BendingAi {
 		timeExecuting = 0;
 		setMutexBits(2);
 	}
-	
+
 	@Override
 	protected void startExec() {
 		velocityYaw = 0;
 		velocityPitch = 0;
 	}
-	
+
 	@Override
 	public boolean shouldContinueExecuting() {
-		
+
 		if (entity.getAttackTarget() == null) return false;
-		
+
 		Vector target = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
 		float targetYaw = (float) toDegrees(target.y());
 		float targetPitch = (float) toDegrees(target.x());
-		
+
 		float currentYaw = normalizeAngle(entity.rotationYaw);
 		float currentPitch = normalizeAngle(entity.rotationPitch);
-		
+
 		float yawLeft = abs(normalizeAngle(currentYaw - targetYaw));
 		float yawRight = abs(normalizeAngle(targetYaw - currentYaw));
 		if (yawRight < yawLeft) {
@@ -81,15 +79,15 @@ public class AiFireArc extends BendingAi {
 		} else {
 			velocityYaw -= yawLeft / 10;
 		}
-		
+
 		entity.rotationYaw += velocityYaw;
 		entity.rotationPitch += velocityPitch;
-		
+
 		if (timeExecuting < 20) {
 			entity.rotationYaw = targetYaw;
 			entity.rotationPitch = targetPitch;
 		}
-		
+
 		if (timeExecuting == 20) {
 			BendingData data = bender.getData();
 			data.chi().setMaxChi(10);
@@ -98,7 +96,7 @@ public class AiFireArc extends BendingAi {
 			execAbility();
 			data.getMiscData().setAbilityCooldown(80);
 		}
-		
+
 		if (timeExecuting >= 80) {
 			BendingData data = bender.getData();
 			execStatusControl(StatusControl.THROW_FIRE);
@@ -107,33 +105,33 @@ public class AiFireArc extends BendingAi {
 		} else {
 			return true;
 		}
-		
+
 	}
-	
+
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSqToEntity(target) > 4 * 4
 				&& bender.getData().getMiscData().getAbilityCooldown() == 0;
 	}
-	
+
 	@Override
 	public void updateTask() {
 		timeExecuting++;
 	}
-	
+
 	@Override
 	public void resetTask() {
-		
+
 		EntityFireArc fire = AvatarEntity.lookupEntity(entity.world, EntityFireArc.class, //
 				arc -> arc.getBehavior() instanceof FireArcBehavior.PlayerControlled
 						&& arc.getOwner() == entity);
-		
+
 		if (fire != null) {
 			fire.setDead();
 			bender.getData().removeStatusControl(StatusControl.THROW_FIRE);
 		}
-		
+
 	}
-	
+
 }

@@ -21,7 +21,7 @@ public class RenderIcePrison extends Render<EntityIcePrison> {
 
 	public RenderIcePrison(RenderManager renderManager) {
 		super(renderManager);
-		prisonModels = new ModelBase[] {
+		prisonModels = new ModelBase[]{
 				new ModelIcePrison1(),
 				new ModelIcePrison2(),
 				new ModelIcePrison3(),

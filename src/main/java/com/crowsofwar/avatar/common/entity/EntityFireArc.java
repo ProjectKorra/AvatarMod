@@ -34,24 +34,24 @@ import net.minecraft.world.World;
 public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 
 	private static final Vector GRAVITY = new Vector(0, -9.81 / 60, 0);
-	
+
 	private static final DataParameter<FireArcBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityFireArc.class, FireArcBehavior.DATA_SERIALIZER);
-	
+
 	private float damageMult;
 	private boolean createBigFire;
-	
+
 	public EntityFireArc(World world) {
 		super(world);
 		this.damageMult = 1;
 	}
-	
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new FireArcBehavior.Idle());
 	}
-	
+
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
@@ -109,7 +109,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 			int z = (int) Math.floor(posZ);
 			BlockPos pos = new BlockPos(x, y, z);
 			world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-			
+
 			if (createBigFire) {
 				for (EnumFacing dir : EnumFacing.HORIZONTALS) {
 					BlockPos offsetPos = pos.offset(dir);
@@ -124,29 +124,29 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public FireControlPoint createControlPoint(float size, int index) {
 		return new FireControlPoint(this, size, 0, 0, 0);
 	}
-	
+
 	public FireArcBehavior getBehavior() {
 		return dataManager.get(SYNC_BEHAVIOR);
 	}
-	
+
 	public void setBehavior(FireArcBehavior behavior) {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
-	
+
 	@Override
 	public EntityLivingBase getController() {
 		return getBehavior() instanceof FireArcBehavior.PlayerControlled ? getOwner() : null;
 	}
-	
+
 	public float getDamageMult() {
 		return damageMult;
 	}
-	
+
 	public void setDamageMult(float damageMult) {
 		this.damageMult = damageMult;
 	}
@@ -160,11 +160,11 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	}
 
 	public static class FireControlPoint extends ControlPoint {
-		
+
 		public FireControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);
 		}
-		
+
 	}
-	
+
 }

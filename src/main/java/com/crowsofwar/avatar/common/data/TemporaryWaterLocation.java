@@ -19,43 +19,41 @@ package com.crowsofwar.avatar.common.data;
 import net.minecraft.util.math.BlockPos;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class TemporaryWaterLocation {
-	
+
 	private final AvatarWorldData data;
 	private final BlockPos pos;
 	private final int dimension;
 	private int ticks;
-	
+
 	public TemporaryWaterLocation(AvatarWorldData data, BlockPos pos, int dimension, int ticks) {
 		this.data = data;
 		this.pos = pos;
 		this.dimension = dimension;
 		this.ticks = ticks;
 	}
-	
+
 	public AvatarWorldData getData() {
 		return data;
 	}
-	
+
 	public BlockPos getPos() {
 		return pos;
 	}
-	
+
 	public int getDimension() {
 		return dimension;
 	}
-	
+
 	public int getTicks() {
 		return ticks;
 	}
-	
+
 	public void decrementTicks() {
 		this.ticks--;
 		data.setDirty(true);
 	}
-	
+
 }

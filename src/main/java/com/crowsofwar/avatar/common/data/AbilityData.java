@@ -31,13 +31,13 @@ import java.util.UUID;
 /**
  * Represents saveable data about an ability. These are not singletons; there is
  * as many instances as required for each player data.
- * 
+ *
  * @author CrowsOfWar
  */
 public class AbilityData {
-	
+
 	public static final int MAX_LEVEL = 3;
-	
+
 	private final BendingData data;
 	private final String abilityName;
 	private float lastXp;
@@ -49,7 +49,7 @@ public class AbilityData {
 	 */
 	private int level;
 	private AbilityTreePath path;
-	
+
 	public AbilityData(BendingData data, Ability ability) {
 		this(data, ability.getName());
 	}
@@ -60,6 +60,28 @@ public class AbilityData {
 		this.xp = 0;
 		this.level = -1;
 		this.path = AbilityTreePath.MAIN;
+	}
+
+	/**
+	 * Reads ability data from the network.
+	 */
+	public static AbilityData createFromBytes(ByteBuf buf, BendingData data) {
+		String abilityName = GoreCoreByteBufUtil.readString(buf);
+		AbilityData abilityData = new AbilityData(data, abilityName);
+		abilityData.fromBytes(buf);
+		return abilityData;
+	}
+
+	public static AbilityData get(EntityLivingBase entity, String abilityName) {
+		return BendingData.get(entity).getAbilityData(abilityName);
+	}
+
+	public static AbilityData get(World world, UUID playerId, String abilityName) {
+		return BendingData.get(world, playerId).getAbilityData(abilityName);
+	}
+
+	public static AbilityData get(World world, String playerName, String abilityName) {
+		return BendingData.get(world, playerName).getAbilityData(abilityName);
 	}
 
 	@Nullable
@@ -92,7 +114,7 @@ public class AbilityData {
 		checkPath();
 		save();
 	}
-	
+
 	/**
 	 * Increments the level by 1 and syncs the level. If the ability is locked,
 	 * unlocks the ability. Does not allow going past the maximum level.
@@ -112,7 +134,7 @@ public class AbilityData {
 		}
 		return str;
 	}
-	
+
 	/**
 	 * Get the current path we are on. Note that while path other than MAIN only
 	 * matters in level IV, it can be other than MAIN on levels I,II, or III,
@@ -122,7 +144,7 @@ public class AbilityData {
 	public AbilityTreePath getPath() {
 		return path;
 	}
-	
+
 	/**
 	 * Set the current path. For details about valid values, see
 	 * {@link #getPath()}.
@@ -132,14 +154,14 @@ public class AbilityData {
 		checkPath();
 		save();
 	}
-	
+
 	/**
 	 * Checks whether is at level IV and has chosen the given path.
 	 */
 	public boolean isMasterPath(AbilityTreePath path) {
 		return isMaxLevel() && this.path == path;
 	}
-	
+
 	/**
 	 * Ensures ability path is correct - on level 4, if still on MAIN path, will
 	 * switch to FIRST automatically
@@ -149,7 +171,7 @@ public class AbilityData {
 			setPath(AbilityTreePath.FIRST);
 		}
 	}
-	
+
 	/**
 	 * Gets the total experience value from 0-100, taking into account the level
 	 * AND current xp.
@@ -157,11 +179,11 @@ public class AbilityData {
 	public float getTotalXp() {
 		return level * 33 + xp * 33f / 100;
 	}
-	
+
 	public float getXp() {
 		return xp;
 	}
-	
+
 	/**
 	 * Sets the XP level to the given amount, clamping from 0-100. If more than
 	 * 100, won't to next level. Will also save the AvatarPlayerData.
@@ -174,23 +196,23 @@ public class AbilityData {
 		if (xp > 100) {
 			xp = 100;
 		}
-		
+
 		this.xp = xp;
 		save();
-		
+
 	}
-	
+
 	/**
 	 * Add XP to this ability data. Will be {@link #getXpMultiplier()
 	 * multiplied} for exponential decay.
 	 */
 	public void addXp(float xp) {
-		
+
 		xp *= getXpMultiplier();
 		if (xp == 0) return;
-		
+
 		setXp(this.xp + xp);
-		
+
 	}
 
 	/**
@@ -211,7 +233,7 @@ public class AbilityData {
 	public boolean isMaxLevel() {
 		return level >= MAX_LEVEL;
 	}
-	
+
 	/**
 	 * Gets the multiplier applied to any XP gains. Tends to lower faster near
 	 * ends of levels, and also is lower as the level increases. The minimum
@@ -230,14 +252,14 @@ public class AbilityData {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * Returns whether this ability is locked and the player cannot use it.
 	 */
 	public boolean isLocked() {
 		return level == -1;
 	}
-	
+
 	/**
 	 * If this ability is {@link #isLocked() locked}, unlocks the ability.
 	 */
@@ -246,61 +268,39 @@ public class AbilityData {
 			level = 0;
 		}
 	}
-	
+
 	public void readFromNbt(NBTTagCompound nbt) {
 		xp = nbt.getFloat("Xp");
 		lastXp = nbt.getFloat("lastXp");
 		level = nbt.getInteger("Level");
 		path = AbilityTreePath.get(nbt.getInteger("Path"));
 	}
-	
+
 	public void writeToNbt(NBTTagCompound nbt) {
 		nbt.setFloat("Xp", xp);
 		nbt.setFloat("LastXp", lastXp);
 		nbt.setInteger("Level", level);
 		nbt.setInteger("Path", path.id());
 	}
-	
+
 	public void toBytes(ByteBuf buf) {
 		GoreCoreByteBufUtil.writeString(buf, abilityName);
 		buf.writeFloat(xp);
 		buf.writeInt(level);
 		buf.writeInt(path.id());
 	}
-	
+
 	private void fromBytes(ByteBuf buf) {
 		xp = buf.readFloat();
 		level = buf.readInt();
 		path = AbilityTreePath.get(buf.readInt());
 	}
-	
+
 	/**
 	 * Saves but does not sync
 	 */
 	private void save() {
 		data.save(DataCategory.ABILITY_DATA);
-	}
-	
-	/**
-	 * Reads ability data from the network.
-	 */
-	public static AbilityData createFromBytes(ByteBuf buf, BendingData data) {
-		String abilityName = GoreCoreByteBufUtil.readString(buf);
-		AbilityData abilityData = new AbilityData(data, abilityName);
-		abilityData.fromBytes(buf);
-		return abilityData;
-	}
-
-	public static AbilityData get(EntityLivingBase entity, String abilityName) {
-		return BendingData.get(entity).getAbilityData(abilityName);
-	}
-
-	public static AbilityData get(World world, UUID playerId, String abilityName) {
-		return BendingData.get(world, playerId).getAbilityData(abilityName);
-	}
-
-	public static AbilityData get(World world, String playerName, String abilityName) {
-		return BendingData.get(world, playerName).getAbilityData(abilityName);
 	}
 
 	/**
@@ -309,14 +309,10 @@ public class AbilityData {
 	 * chosen.
 	 */
 	public enum AbilityTreePath {
-		
+
 		MAIN,
 		FIRST,
 		SECOND;
-		
-		public int id() {
-			return ordinal();
-		}
 
 		@Nullable
 		public static AbilityTreePath get(int id) {
@@ -325,7 +321,11 @@ public class AbilityData {
 			}
 			return values()[id];
 		}
-		
+
+		public int id() {
+			return ordinal();
+		}
+
 	}
-	
+
 }

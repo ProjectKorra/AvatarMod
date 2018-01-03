@@ -20,25 +20,25 @@ package com.crowsofwar.avatar;
 import org.apache.logging.log4j.Logger;
 
 public class AvatarLog {
-	
+
 	static Logger log;
-	
+
 	public static void debug(String s) {
 		if (AvatarInfo.IS_DEVELOPMENT) log.debug("[Debug] " + s);
 	}
-	
+
 	public static void info(String s) {
 		log.info("[Info] " + s);
 	}
-	
+
 	public static void error(String s) {
 		log.error("[Error] " + s);
 	}
-	
+
 	public static void error(String s, Throwable t) {
 		log.error("[Error] " + s, t);
 	}
-	
+
 	/**
 	 * @deprecated Use {@link #warn(WarningType, String)}.
 	 */
@@ -46,14 +46,12 @@ public class AvatarLog {
 	public static void warn(String s) {
 		warn(WarningType.UNKNOWN, s);
 	}
-	
+
 	/**
 	 * Output a warning with the given category.
-	 * 
-	 * @param type
-	 *            Type of warning
-	 * @param s
-	 *            String to print
+	 *
+	 * @param type Type of warning
+	 * @param s    String to print
 	 */
 	public static void warn(WarningType type, String s) {
 		log.warn("[Warn/" + type + "] " + s);
@@ -61,14 +59,14 @@ public class AvatarLog {
 			Thread.dumpStack();
 		}
 	}
-	
+
 	public static void warn(WarningType type, String s, Throwable t) {
 		log.warn("[Warn/" + type + "]" + s, t);
 		if (type == WarningType.INVALID_CODE) {
 			Thread.dumpStack();
 		}
 	}
-	
+
 	/**
 	 * Output a warning to the log that the player might have been hacking
 	 */
@@ -76,7 +74,7 @@ public class AvatarLog {
 	public static void warnHacking(String username, String s) {
 		warn(WarningType.BAD_CLIENT_PACKET, "Player " + username + ": Unexpected data, " + s);
 	}
-	
+
 	public enum WarningType {
 		/**
 		 * No warning type was specified
@@ -103,5 +101,5 @@ public class AvatarLog {
 		 */
 		CONFIGURATION;
 	}
-	
+
 }

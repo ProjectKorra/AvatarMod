@@ -46,10 +46,10 @@ public class RenderLightningArc extends RenderArc {
 		renderArc(arc, partialTicks, 0.3f, 2 * arc.getSizeMultiplier());
 
 	}
-	
+
 	@Override
 	protected ResourceLocation getTexture() {
 		return TEXTURE;
 	}
-	
+
 }

@@ -30,25 +30,23 @@ import net.minecraft.network.datasync.DataSerializers;
 import java.io.IOException;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AvatarDataSerializers {
-	
+
 	public static final DataSerializer<Block> SERIALIZER_BLOCK = new AvatarSerializer<Block>() {
-		
+
 		@Override
 		public void write(PacketBuffer buf, Block value) {
 			// TODO Find out if DataSerializer<Block> actually works...
 			buf.writeInt(Block.getIdFromBlock(value));
 		}
-		
+
 		@Override
 		public Block read(PacketBuffer buf) throws IOException {
 			return Block.getBlockById(buf.readInt());
 		}
-		
+
 		@Override
 		public DataParameter<Block> createKey(int id) {
 			return new DataParameter<>(id, this);
@@ -60,19 +58,19 @@ public class AvatarDataSerializers {
 		}
 	};
 	public static final DataSerializer<Vector> SERIALIZER_VECTOR = new AvatarSerializer<Vector>() {
-		
+
 		@Override
 		public void write(PacketBuffer buf, Vector value) {
 			buf.writeDouble(value.x());
 			buf.writeDouble(value.y());
 			buf.writeDouble(value.z());
 		}
-		
+
 		@Override
 		public Vector read(PacketBuffer buf) throws IOException {
 			return new Vector(buf.readDouble(), buf.readDouble(), buf.readDouble());
 		}
-		
+
 		@Override
 		public DataParameter<Vector> createKey(int id) {
 			return new DataParameter<>(id, this);
@@ -84,17 +82,17 @@ public class AvatarDataSerializers {
 		}
 	};
 	public static final DataSerializer<BenderInfo> SERIALIZER_BENDER = new AvatarSerializer<BenderInfo>() {
-		
+
 		@Override
 		public void write(PacketBuffer buf, BenderInfo info) {
 			info.writeToBytes(buf);
 		}
-		
+
 		@Override
 		public BenderInfo read(PacketBuffer buf) throws IOException {
 			return BenderInfo.readFromBytes(buf);
 		}
-		
+
 		@Override
 		public DataParameter<BenderInfo> createKey(int id) {
 			return new DataParameter<>(id, this);
@@ -107,18 +105,18 @@ public class AvatarDataSerializers {
 
 	};
 	public static final DataSerializer<SaddleTier> SERIALIZER_SADDLE = new AvatarSerializer<SaddleTier>() {
-		
+
 		@Override
 		public void write(PacketBuffer buf, SaddleTier value) {
 			buf.writeInt(value == null ? -1 : value.id());
 		}
-		
+
 		@Override
 		public SaddleTier read(PacketBuffer buf) throws IOException {
 			int id = buf.readInt();
 			return id == -1 ? null : SaddleTier.get(id);
 		}
-		
+
 		@Override
 		public DataParameter<SaddleTier> createKey(int id) {
 			return new DataParameter<>(id, this);
@@ -130,18 +128,18 @@ public class AvatarDataSerializers {
 		}
 	};
 	public static final DataSerializer<ArmorTier> SERIALIZER_ARMOR = new AvatarSerializer<ArmorTier>() {
-		
+
 		@Override
 		public void write(PacketBuffer buf, ArmorTier value) {
 			buf.writeInt(value == null ? -1 : value.id());
 		}
-		
+
 		@Override
 		public ArmorTier read(PacketBuffer buf) throws IOException {
 			int id = buf.readInt();
 			return id == -1 ? null : ArmorTier.get(id);
 		}
-		
+
 		@Override
 		public DataParameter<ArmorTier> createKey(int id) {
 			return new DataParameter<>(id, this);
@@ -152,7 +150,7 @@ public class AvatarDataSerializers {
 			return tier;
 		}
 	};
-	
+
 	public static void register() {
 		DataSerializers.registerSerializer(SERIALIZER_BLOCK);
 		DataSerializers.registerSerializer(SERIALIZER_VECTOR);
@@ -160,11 +158,12 @@ public class AvatarDataSerializers {
 		DataSerializers.registerSerializer(SERIALIZER_SADDLE);
 		DataSerializers.registerSerializer(SERIALIZER_ARMOR);
 	}
-	
+
 	private static abstract class AvatarSerializer<T> implements DataSerializer<T> {
-		
-		protected AvatarSerializer() {}
-		
+
+		protected AvatarSerializer() {
+		}
+
 	}
-	
+
 }

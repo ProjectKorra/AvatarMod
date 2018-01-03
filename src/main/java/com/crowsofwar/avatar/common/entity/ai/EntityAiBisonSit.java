@@ -26,29 +26,27 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityAiBisonSit extends EntityAIBase {
-	
+
 	private final EntitySkyBison bison;
-	
+
 	public EntityAiBisonSit(EntitySkyBison bison) {
 		this.bison = bison;
 		setMutexBits(1);
 	}
-	
+
 	@Override
 	public boolean shouldExecute() {
 		return bison.isSitting();
 	}
-	
+
 	@Override
 	public void startExecuting() {
 		World world = bison.world;
 		Vector bisonPos = Vector.getEntityPos(bison);
-		
+
 		int y;
 		for (y = (int) bisonPos.y(); y > 0; y--) {
 			BlockPos pos = new BlockPos(bisonPos.x(), y, bisonPos.z());
@@ -56,14 +54,14 @@ public class EntityAiBisonSit extends EntityAIBase {
 				break;
 			}
 		}
-		
+
 		Random random = bison.getRNG();
 		Vector randomized = new Vector((random.nextDouble() * 2 - 1) * 2, 0,
 				(random.nextDouble() * 2 - 1) * 2);
-		
+
 		Vector targetPos = bisonPos.withY(y - 1).plus(randomized);
 		bison.getMoveHelper().setMoveTo(targetPos.x(), targetPos.y(), targetPos.z(), 1);
-		
+
 	}
-	
+
 }

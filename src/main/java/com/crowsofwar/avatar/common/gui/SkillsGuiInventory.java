@@ -19,14 +19,12 @@ package com.crowsofwar.avatar.common.gui;
 import net.minecraft.inventory.InventoryBasic;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class SkillsGuiInventory extends InventoryBasic {
-	
+
 	public SkillsGuiInventory() {
 		super("container.avatar.skills", false, 2);
 	}
-	
+
 }

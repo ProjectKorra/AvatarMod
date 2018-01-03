@@ -20,30 +20,25 @@ import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ConfigChi {
-	
+
 	public static final ConfigChi CHI_CONFIG = new ConfigChi();
-	
-	private ConfigChi() {}
-	
 	@Load
 	public float regenPerSecond = 0.5f, availablePerSecond = 2f, maxAvailableChi = 6f, regenInBed = 1f;
-	
 	@Load
 	public float bonusLearnedBending = 16, bonusAbility = 6, bonusAbilityLevel = 3;
-	
 	@Load
 	public float maxChiCap = 76;
-	
 	@Load
 	public boolean infiniteInCreative = true;
-	
+
+	private ConfigChi() {
+	}
+
 	public static void load() {
 		ConfigLoader.load(CHI_CONFIG, "avatar/chi.yml");
 	}
-	
+
 }

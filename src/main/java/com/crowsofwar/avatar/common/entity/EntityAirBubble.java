@@ -46,25 +46,23 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityAirBubble extends EntityShield {
-	
+
 	public static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
 			.createKey(EntityAirBubble.class, DataSerializers.VARINT);
 	public static final DataParameter<Boolean> SYNC_HOVERING = EntityDataManager
 			.createKey(EntityAirBubble.class, DataSerializers.BOOLEAN);
 	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirBubble.class,
 			DataSerializers.FLOAT);
-	
+
 	public static final UUID SLOW_ATTR_ID = UUID.fromString("40354c68-6e88-4415-8a6b-e3ddc56d6f50");
 	public static final AttributeModifier SLOW_ATTR = new AttributeModifier(SLOW_ATTR_ID,
 			"airbubble_slowness", -.3, 2);
-	
+
 	private int airLeft;
-	
+
 	public EntityAirBubble(World world) {
 		super(world);
 		// setSize(2.5f, 2.5f);
@@ -72,7 +70,7 @@ public class EntityAirBubble extends EntityShield {
 
 		this.airLeft = 600;
 	}
-	
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -85,27 +83,27 @@ public class EntityAirBubble extends EntityShield {
 	public EntityLivingBase getController() {
 		return !isDissipating() ? getOwner() : null;
 	}
-	
+
 	public boolean doesAllowHovering() {
 		return dataManager.get(SYNC_HOVERING);
 	}
-	
+
 	public void setAllowHovering(boolean floating) {
 		dataManager.set(SYNC_HOVERING, floating);
 	}
-	
+
 	public float getSize() {
 		return dataManager.get(SYNC_SIZE);
 	}
-	
+
 	public void setSize(float size) {
 		dataManager.set(SYNC_SIZE, size);
 	}
-	
+
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		
+
 		EntityLivingBase owner = getOwner();
 		if (owner == null) {
 			return;
@@ -116,7 +114,6 @@ public class EntityAirBubble extends EntityShield {
 			return;
 		}
 		setPosition(owner.posX, owner.posY, owner.posZ);
-
 
 		if (!world.isRemote && owner.isInsideOfMaterial(Material.WATER)) {
 			owner.setAir(Math.min(airLeft, 300));
@@ -130,39 +127,39 @@ public class EntityAirBubble extends EntityShield {
 			dissipateSmall();
 
 		}
-		
+
 		ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
 		if (!elytraOk) {
 			ownerBender.sendMessage("avatar.airBubbleElytra");
 			dissipateSmall();
 		}
-		
+
 		if (!isDissipating()) {
 			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 			if (attribute.getModifier(SLOW_ATTR_ID) == null) {
 				attribute.applyModifier(SLOW_ATTR);
 			}
-			
+
 			if (!owner.isInWater() && !ownerBender.isFlying() && chest.getItem() != Items.ELYTRA) {
-				
+
 				owner.motionY += 0.03;
-				
+
 				if (doesAllowHovering()) {
-					
+
 					if (doesAllowHovering() && !owner.isSneaking()) {
 						handleHovering();
 					} else {
 						owner.motionY += 0.03;
 					}
 				}
-				
+
 			}
-			
+
 		}
-		
+
 		float size = getSize();
-		
+
 		if (isDissipatingLarge()) {
 			setDissipateTime(getDissipateTime() + 1);
 			float mult = 1 + getDissipateTime() / 10f;
@@ -180,7 +177,7 @@ public class EntityAirBubble extends EntityShield {
 		} else {
 			setSize(size, size);
 		}
-		
+
 	}
 
 	/**
@@ -208,50 +205,47 @@ public class EntityAirBubble extends EntityShield {
 		double x = owner.posX;
 		double y = owner.posY;
 		double z = owner.posZ;
-			AxisAlignedBB hitbox = new AxisAlignedBB(x, y, z, x, y, z);
-			hitbox = hitbox.grow(0.2, 0, 0.2);
-			hitbox = hitbox.expand(0, -maxFloatHeight, 0);
+		AxisAlignedBB hitbox = new AxisAlignedBB(x, y, z, x, y, z);
+		hitbox = hitbox.grow(0.2, 0, 0.2);
+		hitbox = hitbox.expand(0, -maxFloatHeight, 0);
 
+		List<AxisAlignedBB> blockCollisions = world.getCollisionBoxes(null, hitbox);
 
-			List<AxisAlignedBB> blockCollisions = world.getCollisionBoxes(null, hitbox);
+		if (!blockCollisions.isEmpty()) {
 
-
-			if (!blockCollisions.isEmpty()) {
-
-				// Calculate the top-of-ground ground y position
-				// Performed by finding the maximum ypos of each collided block
-				double groundPosition = Double.MIN_VALUE;
-				for (AxisAlignedBB blockHitbox : blockCollisions) {
-					if (blockHitbox.maxY > groundPosition) {
-						groundPosition = blockHitbox.maxY;
-					}
+			// Calculate the top-of-ground ground y position
+			// Performed by finding the maximum ypos of each collided block
+			double groundPosition = Double.MIN_VALUE;
+			for (AxisAlignedBB blockHitbox : blockCollisions) {
+				if (blockHitbox.maxY > groundPosition) {
+					groundPosition = blockHitbox.maxY;
 				}
-				// Now calculate the distance from ground
-				// and use that to determine whether owner should float
-				double distanceFromGround = owner.posY - groundPosition;
-
-				// Tweak motion based on distance to ground, and target distance
-				// Minecraft gravity is 0.08 blocks/tick
-
-				if (distanceFromGround < minFloatHeight) {
-					owner.motionY += 0.11;
-				}
-				if (distanceFromGround >= minFloatHeight && distanceFromGround < maxFloatHeight) {
-					owner.motionY *= 0.7;
-				}
-				if (distanceFromGround >= maxFloatHeight) {
-					owner.motionY += 0.07;
-
-					// Avoid falling at over 3 m/s
-					if (owner.motionY < -3.0 / 20) {
-						owner.motionY = 0;
-					}
-				}
-
 			}
-		}
+			// Now calculate the distance from ground
+			// and use that to determine whether owner should float
+			double distanceFromGround = owner.posY - groundPosition;
 
-	
+			// Tweak motion based on distance to ground, and target distance
+			// Minecraft gravity is 0.08 blocks/tick
+
+			if (distanceFromGround < minFloatHeight) {
+				owner.motionY += 0.11;
+			}
+			if (distanceFromGround >= minFloatHeight && distanceFromGround < maxFloatHeight) {
+				owner.motionY *= 0.7;
+			}
+			if (distanceFromGround >= maxFloatHeight) {
+				owner.motionY += 0.07;
+
+				// Avoid falling at over 3 m/s
+				if (owner.motionY < -3.0 / 20) {
+					owner.motionY = 0;
+				}
+			}
+
+		}
+	}
+
 	@Override
 	public void setDead() {
 		super.setDead();
@@ -271,7 +265,7 @@ public class EntityAirBubble extends EntityShield {
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		
+
 		double mult = -2;
 		if (isDissipatingLarge()) mult = -4;
 		Vector vel = position().minus(getEntityPos(entity));
@@ -288,12 +282,12 @@ public class EntityAirBubble extends EntityShield {
 		entity.isAirBorne = true;
 		AvatarUtils.afterVelocityAdded(entity);
 	}
-	
+
 	@Override
 	protected boolean canCollideWith(Entity entity) {
 		return entity != getOwner() && !(entity instanceof AvatarEntity) && !(entity instanceof EntityArrow);
 	}
-	
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
@@ -301,7 +295,7 @@ public class EntityAirBubble extends EntityShield {
 		setAllowHovering(nbt.getBoolean("AllowHovering"));
 		airLeft = nbt.getInteger("AirLeft");
 	}
-	
+
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
@@ -347,30 +341,30 @@ public class EntityAirBubble extends EntityShield {
 		if (!isDissipating()) setDissipateTime(1);
 		removeStatCtrl();
 	}
-	
+
 	public void dissipateSmall() {
 		if (!isDissipating()) setDissipateTime(-1);
 		removeStatCtrl();
 	}
-	
+
 	public boolean isDissipating() {
 		return getDissipateTime() != 0;
 	}
-	
+
 	public boolean isDissipatingLarge() {
 		return getDissipateTime() > 0;
 	}
-	
+
 	public boolean isDissipatingSmall() {
 		return getDissipateTime() < 0;
 	}
-	
+
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
 			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
-			
+
 			IAttributeInstance attribute = getOwner()
 					.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 			if (attribute.getModifier(SLOW_ATTR_ID) != null) {
@@ -378,5 +372,5 @@ public class EntityAirBubble extends EntityShield {
 			}
 		}
 	}
-	
+
 }

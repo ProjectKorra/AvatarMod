@@ -43,23 +43,21 @@ import java.util.Random;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- *
- *
  * @author CrowsOfWar
  */
 public class AbilityPickUpBlock extends Ability {
 
 	private final Random random;
 
-	@Override
-	public boolean isUtility() {
-		return true;
-	}
-
 	public AbilityPickUpBlock() {
 		super(Earthbending.ID, "pickup_block");
 		this.random = new Random();
 		requireRaytrace(-1, true);
+	}
+
+	@Override
+	public boolean isUtility() {
+		return true;
 	}
 
 	@Override
@@ -69,7 +67,6 @@ public class AbilityPickUpBlock extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
-
 
 		EntityFloatingBlock currentBlock = AvatarEntity.lookupEntity(ctx.getWorld(),
 				EntityFloatingBlock.class,
@@ -102,10 +99,8 @@ public class AbilityPickUpBlock extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 
-
 		IBlockState ibs = world.getBlockState(pos);
 		Block block = ibs.getBlock();
-
 
 		if (!world.isAirBlock(pos) && STATS_CONFIG.bendableBlocks.contains(block)) {
 

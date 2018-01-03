@@ -25,7 +25,7 @@ public class RestorePowerModifier extends BuffPowerModifier {
 
 	@Override
 	protected Vision[] getVisions() {
-		return new Vision[] { Vision.RESTORE_WEAK, Vision.RESTORE_MEDIUM, Vision.RESTORE_POWERFUL };
+		return new Vision[]{Vision.RESTORE_WEAK, Vision.RESTORE_MEDIUM, Vision.RESTORE_POWERFUL};
 	}
 
 	@Override

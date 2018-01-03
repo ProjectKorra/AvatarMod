@@ -30,19 +30,17 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AbilityIceBurst extends Ability {
-	
+
 	public AbilityIceBurst() {
 		super(Icebending.ID, "ice_burst");
 	}
-	
+
 	@Override
 	public void execute(AbilityContext ctx) {
-		
+
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
@@ -64,13 +62,13 @@ public class AbilityIceBurst extends Ability {
 		AbilityData abilityData = ctx.getAbilityData();
 		double damageMult = abilityData.getLevel() >= 1 ? 1.25 : 1;
 		damageMult *= ctx.getPowerRatingDamageMod();
-		float[] shardPitchAngles = { -10, 10 };
+		float[] shardPitchAngles = {-10, 10};
 		boolean targetMobs = abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST);
 		float health = abilityData.getLevel() >= 2 ? 12 : 8;
 		health += (float) ctx.getPowerRating() / 15;
 
 		if (abilityData.getLevel() >= 2) {
-			shardPitchAngles = new float[] { -20, 0, 30 };
+			shardPitchAngles = new float[]{-20, 0, 30};
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			health = 18;

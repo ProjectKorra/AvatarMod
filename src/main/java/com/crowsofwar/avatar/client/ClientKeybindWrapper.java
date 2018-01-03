@@ -17,27 +17,24 @@
 package com.crowsofwar.avatar.client;
 
 import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
-
 import net.minecraft.client.settings.KeyBinding;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ClientKeybindWrapper extends KeybindingWrapper {
-	
+
 	private final KeyBinding kb;
-	
+
 	public ClientKeybindWrapper(KeyBinding kb) {
 		this.kb = kb;
 	}
-	
+
 	@Override
 	public String getKeyDescription() {
 		return kb.getKeyDescription();
 	}
-	
+
 	@Override
 	public boolean isPressed() {
 		return kb.isPressed();

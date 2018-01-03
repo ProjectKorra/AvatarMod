@@ -42,12 +42,10 @@ import java.util.UUID;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityIcePrison extends AvatarEntity {
-	
+
 	public static final DataParameter<Optional<UUID>> SYNC_IMPRISONED = EntityDataManager
 			.createKey(EntityIcePrison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
@@ -73,7 +71,41 @@ public class EntityIcePrison extends AvatarEntity {
 		imprisonedAttr = new SyncedEntity<>(this, SYNC_IMPRISONED);
 		setSize(3, 4);
 	}
-	
+
+	public static boolean isImprisoned(EntityLivingBase entity) {
+
+		return getPrison(entity) != null;
+
+	}
+
+	/**
+	 * Get the prison holding that entity, or null if the entity is not
+	 * imprisoned
+	 */
+	public static EntityIcePrison getPrison(EntityLivingBase entity) {
+
+		World world = entity.world;
+		List<EntityIcePrison> prisons = world.getEntities(EntityIcePrison.class,
+				prison -> prison.getImprisoned() == entity);
+
+		return prisons.isEmpty() ? null : prisons.get(0);
+
+	}
+
+	public static void imprison(EntityLivingBase entity, EntityLivingBase owner) {
+		World world = entity.world;
+		EntityIcePrison prison = new EntityIcePrison(world);
+
+		prison.setImprisoned(entity);
+		prison.setOwner(owner);
+		prison.copyLocationAndAnglesFrom(entity);
+
+		Bender bender = Bender.get(owner);
+		prison.setStats(bender.getData().getAbilityData("ice_prison"), bender.calcPowerRating(Icebending.ID));
+
+		world.spawnEntity(prison);
+	}
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -81,15 +113,15 @@ public class EntityIcePrison extends AvatarEntity {
 		dataManager.register(SYNC_IMPRISONED_TIME, 100);
 		dataManager.register(SYNC_MAX_IMPRISONED_TIME, 100);
 	}
-	
+
 	public EntityLivingBase getImprisoned() {
 		return imprisonedAttr.getEntity();
 	}
-	
+
 	public void setImprisoned(EntityLivingBase entity) {
 		imprisonedAttr.setEntity(entity);
 	}
-	
+
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
@@ -130,7 +162,7 @@ public class EntityIcePrison extends AvatarEntity {
 
 		if (getImprisonedTime() <= 0) {
 			setDead();
-			
+
 			if (!world.isRemote && imprisoned != null) {
 				world.playSound(null, imprisoned.posX, imprisoned.posY, imprisoned.posZ,
 						SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1, 1);
@@ -142,7 +174,7 @@ public class EntityIcePrison extends AvatarEntity {
 				}
 
 			}
-			
+
 		}
 	}
 
@@ -176,7 +208,7 @@ public class EntityIcePrison extends AvatarEntity {
 		imprisonedAttr.readFromNbt(nbt);
 		normalBaseValue = nbt.getDouble("NormalSpeed");
 	}
-	
+
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
@@ -228,38 +260,4 @@ public class EntityIcePrison extends AvatarEntity {
 
 	}
 
-	public static boolean isImprisoned(EntityLivingBase entity) {
-		
-		return getPrison(entity) != null;
-		
-	}
-	
-	/**
-	 * Get the prison holding that entity, or null if the entity is not
-	 * imprisoned
-	 */
-	public static EntityIcePrison getPrison(EntityLivingBase entity) {
-		
-		World world = entity.world;
-		List<EntityIcePrison> prisons = world.getEntities(EntityIcePrison.class,
-				prison -> prison.getImprisoned() == entity);
-		
-		return prisons.isEmpty() ? null : prisons.get(0);
-		
-	}
-	
-	public static void imprison(EntityLivingBase entity, EntityLivingBase owner) {
-		World world = entity.world;
-		EntityIcePrison prison = new EntityIcePrison(world);
-
-		prison.setImprisoned(entity);
-		prison.setOwner(owner);
-		prison.copyLocationAndAnglesFrom(entity);
-
-		Bender bender = Bender.get(owner);
-		prison.setStats(bender.getData().getAbilityData("ice_prison"), bender.calcPowerRating(Icebending.ID));
-
-		world.spawnEntity(prison);
-	}
-	
 }

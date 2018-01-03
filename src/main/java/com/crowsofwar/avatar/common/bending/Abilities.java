@@ -20,18 +20,19 @@ import com.crowsofwar.avatar.common.data.Bender;
 import net.minecraft.entity.EntityLiving;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class Abilities {
-	
+
 	private static final List<Ability> abilities = new ArrayList<>();
 	private static final Map<String, Ability> abilitiesByName = new HashMap<>();
-	
+
 	@Nullable
 	public static Ability get(String name) {
 		return abilitiesByName.get(name);
@@ -50,10 +51,10 @@ public class Abilities {
 	public static List<Ability> all() {
 		return abilities;
 	}
-	
+
 	public static void register(Ability ability) {
 		abilities.add(ability);
 		abilitiesByName.put(ability.getName(), ability);
 	}
-	
+
 }

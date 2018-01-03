@@ -25,31 +25,29 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityFirebender extends EntityHumanBender {
-	
+
 	public static final ResourceLocation LOOT_TABLE = LootTableList
 			.register(new ResourceLocation("avatarmod", "firebender"));
-	
+
 	/**
 	 * @param world
 	 */
 	public EntityFirebender(World world) {
 		super(world);
-		
+
 		getData().getAbilityData("flamethrower").setLevel(2);
-		
+
 	}
-	
+
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(50);
 	}
-	
+
 	@Override
 	protected void addBendingTasks() {
 		this.tasks.addTask(1, Abilities.getAi("flamethrower", this, getBender()));
@@ -57,20 +55,20 @@ public class EntityFirebender extends EntityHumanBender {
 		this.tasks.addTask(2, Abilities.getAi("fire_arc", this, getBender()));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 	}
-	
+
 	@Override
 	protected ResourceLocation getLootTable() {
 		return LOOT_TABLE;
 	}
-	
+
 	@Override
 	protected ScrollType getScrollType() {
 		return ScrollType.FIRE;
 	}
-	
+
 	@Override
 	protected int getNumSkins() {
 		return 1;
 	}
-	
+
 }

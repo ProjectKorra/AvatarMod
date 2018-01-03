@@ -57,7 +57,6 @@ public class PreAlpha5SaveConverter {
 
 		return converted;
 
-
 	}
 
 	private static void fixAbilityData(NBTTagCompound nbt) {
@@ -87,7 +86,6 @@ public class PreAlpha5SaveConverter {
 			valueTag.setString("Name", abilityName);
 
 		}
-
 
 	}
 

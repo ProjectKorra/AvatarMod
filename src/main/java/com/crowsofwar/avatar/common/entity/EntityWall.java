@@ -36,12 +36,10 @@ import static java.lang.Math.abs;
 import static net.minecraft.util.EnumFacing.NORTH;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityWall extends AvatarEntity {
-	
+
 	private static final DataParameter<Integer> SYNC_DIRECTION = EntityDataManager.createKey(EntityWall.class,
 			DataSerializers.VARINT);
 	private static final DataParameter<Optional<UUID>>[] SYNC_SEGMENTS;
@@ -52,15 +50,15 @@ public class EntityWall extends AvatarEntity {
 			SYNC_SEGMENTS[i] = EntityDataManager.createKey(EntityWall.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 		}
 	}
-	
+
 	/**
 	 * All the segments in this wall. MUST be fixed-length, as the data
 	 * parameters must be same for both sides.
 	 */
 	private final SyncedEntity<EntityWallSegment>[] segments;
-	
+
 	private int nextSegment = 0;
-	
+
 	/**
 	 * @param world
 	 */
@@ -74,7 +72,7 @@ public class EntityWall extends AvatarEntity {
 		}
 		setSize(0, 0);
 	}
-	
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -83,11 +81,11 @@ public class EntityWall extends AvatarEntity {
 			dataManager.register(SYNC_SEGMENTS[i], Optional.absent());
 		}
 	}
-	
+
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		
+
 		// Sync y-velocity with slowest moving wall segment
 		// Also calculate lowest top pos of each segment
 		double slowest = Integer.MAX_VALUE;
@@ -107,7 +105,7 @@ public class EntityWall extends AvatarEntity {
 
 			}
 		}
-		
+
 		// Now sync all wall segment speeds
 		// Also sync all segment pos to the lowest height
 		for (SyncedEntity<EntityWallSegment> ref : segments) {
@@ -127,7 +125,7 @@ public class EntityWall extends AvatarEntity {
 		this.noClip = true;
 		move(MoverType.SELF, 0, slowest / 20, 0);
 	}
-	
+
 	/**
 	 * To be used ONLY by {@link EntityWallSegment}
 	 */
@@ -135,18 +133,13 @@ public class EntityWall extends AvatarEntity {
 		segments[nextSegment].setEntity(segment);
 		nextSegment++;
 	}
-	
+
 	public EntityWallSegment getSegment(int i) {
 		return segments[i].getEntity();
 	}
-	
+
 	public EnumFacing getDirection() {
 		return EnumFacing.values()[dataManager.get(SYNC_DIRECTION)];
-	}
-
-	@Override
-	public boolean isShield() {
-		return true;
 	}
 
 	public void setDirection(EnumFacing direction) {
@@ -154,7 +147,12 @@ public class EntityWall extends AvatarEntity {
 			throw new IllegalArgumentException("Cannot face up/down: " + direction);
 		this.dataManager.set(SYNC_DIRECTION, direction.ordinal());
 	}
-	
+
+	@Override
+	public boolean isShield() {
+		return true;
+	}
+
 	@Override
 	public void setDead() {
 		for (SyncedEntity<EntityWallSegment> ref : segments) {
@@ -168,25 +166,25 @@ public class EntityWall extends AvatarEntity {
 		}
 		super.setDead();
 	}
-	
+
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		for (int i = 0; i < segments.length; i++)
 			segments[i].readFromNbt(nestedCompound(nbt, "Wall" + i));
 	}
-	
+
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		for (int i = 0; i < segments.length; i++)
 			segments[i].writeToNbt(nestedCompound(nbt, "Wall" + i));
 	}
-	
+
 	@Override
 	protected boolean canCollideWith(Entity entity) {
 		return super.canCollideWith(entity) && !(entity instanceof EntityWall)
 				&& !(entity instanceof EntityWallSegment);
 	}
-	
+
 }

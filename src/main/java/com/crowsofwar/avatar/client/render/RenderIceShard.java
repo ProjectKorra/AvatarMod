@@ -22,15 +22,13 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class RenderIceShard extends RenderModel<EntityIceShard> {
-	
+
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/entity/ice-shard.png");
-	
+
 	public RenderIceShard(RenderManager renderManager) {
 		super(renderManager, new ModelIceShard());
 	}

@@ -17,18 +17,17 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.crowsofwar.avatar.AvatarLog;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Describes a synced behavior. They follow the state design pattern, in that
@@ -45,18 +44,19 @@ import net.minecraft.network.datasync.DataSerializers;
  * Make sure that subclasses receive the instance of entity. For server-side
  * changing of behavior, call {@link #Behavior(Entity) the constructor with
  * Entity argument}. Client-side
- * 
- * @param E
- *            Type of entity this behavior is for
- * 
+ *
+ * @param E Type of entity this behavior is for
  * @author CrowsOfWar
  */
 public abstract class Behavior<E extends Entity> {
-	
+
 	private static int nextId = 1;
 	private static Map<Integer, Class<? extends Behavior>> behaviorIdToClass;
 	private static Map<Class<? extends Behavior>, Integer> classToBehaviorId;
-	
+
+	public Behavior() {
+	}
+
 	protected static int registerBehavior(Class<? extends Behavior> behaviorClass) {
 		if (behaviorIdToClass == null) {
 			behaviorIdToClass = new HashMap<>();
@@ -68,77 +68,75 @@ public abstract class Behavior<E extends Entity> {
 		classToBehaviorId.put(behaviorClass, id);
 		return id;
 	}
-	
+
 	/**
 	 * Looks up the behavior class by the given Id, then instantiates an
 	 * instance with reflection.
 	 */
 	public static Behavior lookup(int id, Entity entity) {
 		try {
-			
+
 			Behavior behavior = behaviorIdToClass.get(id).newInstance();
 			return behavior;
-			
+
 		} catch (Exception e) {
-			
+
 			AvatarLog.error("Error constructing behavior...");
 			e.printStackTrace();
 			return null;
-			
+
 		}
 	}
-	
-	public Behavior() {}
-	
+
 	public int getId() {
 		return classToBehaviorId.get(getClass());
 	}
-	
+
 	/**
 	 * Called every update tick.
-	 * 
+	 *
 	 * @return Next Behavior. Return <code>this</code> to continue the Behavior.
-	 *         Never return null.
+	 * Never return null.
 	 */
 	public abstract Behavior onUpdate(E entity);
-	
+
 	public abstract void fromBytes(PacketBuffer buf);
-	
+
 	public abstract void toBytes(PacketBuffer buf);
-	
+
 	public abstract void load(NBTTagCompound nbt);
-	
+
 	public abstract void save(NBTTagCompound nbt);
-	
+
 	public static class BehaviorSerializer<B extends Behavior<? extends Entity>>
 			implements DataSerializer<B> {
-		
+
 		// FIXME research- why doesn't read/write get called every time that
 		// behavior changes???
-		
+
 		@Override
 		public void write(PacketBuffer buf, B value) {
 			buf.writeInt(value.getId());
 			value.toBytes(buf);
 		}
-		
+
 		@Override
 		public B read(PacketBuffer buf) throws IOException {
 			try {
-				
+
 				Behavior behavior = behaviorIdToClass.get(buf.readInt()).newInstance();
 				behavior.fromBytes(buf);
 				return (B) behavior;
-				
+
 			} catch (Exception e) {
-				
+
 				AvatarLog.error("Error reading Behavior from bytes");
 				e.printStackTrace();
 				return null;
-				
+
 			}
 		}
-		
+
 		@Override
 		public DataParameter<B> createKey(int id) {
 			return new DataParameter<>(id, this);
@@ -150,5 +148,5 @@ public abstract class Behavior<E extends Entity> {
 		}
 
 	}
-	
+
 }

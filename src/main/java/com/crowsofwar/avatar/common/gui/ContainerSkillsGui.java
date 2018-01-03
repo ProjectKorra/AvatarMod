@@ -29,22 +29,20 @@ import java.util.UUID;
 import static net.minecraft.item.ItemStack.EMPTY;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ContainerSkillsGui extends Container {
-	
+
 	private final EntityPlayer player;
 	private final SkillsGuiInventory inventory;
-	
+
 	private int invIndex, hotbarIndex;
-	
+
 	public ContainerSkillsGui(EntityPlayer player, UUID bendingId) {
 		this.player = player;
-		
+
 		inventory = new SkillsGuiInventory();
-		
+
 		addSlotToContainer(new Slot(inventory, 0, 100, 100) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
@@ -64,7 +62,7 @@ public class ContainerSkillsGui extends Container {
 				return item == AvatarItems.itemScroll && scrollType.accepts(bendingId) && !other.getHasStack();
 			}
 		});
-		
+
 		// Main inventory
 		for (int r = 0; r < 3; r++) {
 			for (int c = 0; c < 9; c++) {
@@ -76,7 +74,7 @@ public class ContainerSkillsGui extends Container {
 				}
 			}
 		}
-		
+
 		// Hotbar
 		for (int i = 0; i < 9; i++) {
 			Slot slot = new Slot(player.inventory, i, 100, 100);
@@ -85,23 +83,23 @@ public class ContainerSkillsGui extends Container {
 				hotbarIndex = slot.slotNumber;
 			}
 		}
-		
+
 	}
-	
+
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
 		return true;
 	}
-	
+
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-		
+
 		Slot slot = inventorySlots.get(index);
-		
+
 		if (slot != null && slot.getHasStack()) {
 			ItemStack stack = slot.getStack();
 			ItemStack copy = stack.copy();
-			
+
 			if (index == 0) {
 				if (!mergeItemStack(stack, 1, 37, true)) {
 					return EMPTY;
@@ -111,14 +109,14 @@ public class ContainerSkillsGui extends Container {
 					return EMPTY;
 				}
 			}
-			
+
 			return stack;
-			
+
 		}
-		
+
 		return EMPTY;
 	}
-	
+
 	@Override
 	public void onContainerClosed(EntityPlayer player) {
 		super.onContainerClosed(player);
@@ -127,21 +125,21 @@ public class ContainerSkillsGui extends Container {
 			player.dropItem(scroll, false);
 			inventory.setInventorySlotContents(0, EMPTY);
 		}
-		
+
 		ItemStack scroll2 = inventory.getStackInSlot(1);
 		if (scroll2 != EMPTY) {
 			player.dropItem(scroll2, false);
 			inventory.setInventorySlotContents(1, EMPTY);
 		}
-		
+
 	}
-	
+
 	public int getInvIndex() {
 		return invIndex;
 	}
-	
+
 	public int getHotbarIndex() {
 		return hotbarIndex;
 	}
-	
+
 }

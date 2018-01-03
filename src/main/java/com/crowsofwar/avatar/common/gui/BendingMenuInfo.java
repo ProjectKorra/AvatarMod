@@ -26,18 +26,16 @@ import java.util.stream.Collectors;
 /**
  * Encapsulates information about an BendingController's radial menu- the
  * control and AvatarAbilities which will be included in the Gui.
- *
  */
 public class BendingMenuInfo {
-	
-	private MenuTheme theme;
+
 	private final Ability[] buttons;
-	
+	private MenuTheme theme;
+
 	/**
 	 * Create information for an BendingController's radial menu.
-	 * 
-	 * @param theme
-	 *            The theme of this menu, defines colors, etc.
+	 *
+	 * @param theme The theme of this menu, defines colors, etc.
 	 */
 	public BendingMenuInfo(MenuTheme theme, BendingStyle bending) {
 
@@ -54,11 +52,11 @@ public class BendingMenuInfo {
 		for (int i = 0; i < 8; i++)
 			this.buttons[i] = i < buttons.size() ? buttons.get(i) : null;
 	}
-	
+
 	public MenuTheme getTheme() {
 		return theme;
 	}
-	
+
 	/**
 	 * Get all the buttons. Size is guaranteed to be 8; if there is no button in
 	 * that slot, it is null.
@@ -66,5 +64,5 @@ public class BendingMenuInfo {
 	public Ability[] getButtons() {
 		return buttons;
 	}
-	
+
 }

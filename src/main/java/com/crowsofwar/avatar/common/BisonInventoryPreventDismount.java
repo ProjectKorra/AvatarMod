@@ -19,22 +19,18 @@ package com.crowsofwar.avatar.common;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.ContainerBisonChest;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class BisonInventoryPreventDismount {
-	
+
 	@SubscribeEvent
 	public static void onDismount(EntityMountEvent e) {
 		Entity mounting = e.getEntityMounting();
@@ -49,5 +45,5 @@ public class BisonInventoryPreventDismount {
 			}
 		}
 	}
-	
+
 }

@@ -17,23 +17,23 @@
 
 package com.crowsofwar.avatar.client.render;
 
-import java.util.Arrays;
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * BisonSaddle - Captn_Dubz Created using Tabula 5.1.0
  */
 public class ModelBisonSaddle extends ModelBase {
-	
+
 	private static final ResourceLocation texture = new ResourceLocation("avatarmod",
 			"textures/mob/flyingbison_saddle.png");
-	
+
 	public ModelRenderer saddleBase;
 	public ModelRenderer wall1;
 	public ModelRenderer wall2;
@@ -43,7 +43,7 @@ public class ModelBisonSaddle extends ModelBase {
 	public ModelRenderer wallTop;
 	public ModelRenderer wallSide1;
 	public ModelRenderer wallSide2;
-	
+
 	public ModelBisonSaddle() {
 		this.textureWidth = 192;
 		this.textureHeight = 128;
@@ -85,7 +85,7 @@ public class ModelBisonSaddle extends ModelBase {
 		this.saddleBase.addChild(this.cargo);
 		this.saddleBase.addChild(this.wallTop);
 		this.saddleBase.addChild(this.wall4);
-		
+
 		// CrowsOfWar: Slightly adjust position of saddle to make it more
 		// on-center on the bison
 		List<ModelRenderer> allBoxes = Arrays.asList(saddleBase, wall1, wall2, wall3, wall4, cargo, wallTop,
@@ -96,16 +96,16 @@ public class ModelBisonSaddle extends ModelBase {
 				box.rotationPointX -= 2;
 			}
 		}
-		
+
 	}
-	
+
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		this.saddleBase.render(f5);
-		
+
 	}
-	
+
 	/**
 	 * This is a helper function from Tabula to set the rotation of model parts
 	 */

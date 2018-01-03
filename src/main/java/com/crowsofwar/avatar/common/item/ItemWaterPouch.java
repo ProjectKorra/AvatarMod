@@ -38,12 +38,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ItemWaterPouch extends Item implements AvatarItem {
-	
+
 	public ItemWaterPouch() {
 		setCreativeTab(AvatarItems.tabItems);
 		setUnlocalizedName("water_pouch");
@@ -51,27 +49,27 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 		setMaxDamage(0);
 		setHasSubtypes(false);
 	}
-	
+
 	@Override
 	public Item item() {
 		return this;
 	}
-	
+
 	@Override
 	public String getModelName(int meta) {
 		return "water_pouch";
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> tooltips,
 							   ITooltipFlag advanced) {
-		
+
 		int meta = stack.getMetadata();
 		tooltips.add(I18n.format("avatar.tooltip.water_pouch" + (meta == 0 ? ".empty" : ""), meta));
-		
+
 	}
-	
+
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
 
@@ -80,20 +78,20 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				subItems.add(new ItemStack(this, 1, meta));
 			}
 		}
-		
+
 	}
-	
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-		
+
 		ItemStack stack = player.getHeldItem(hand);
-		
+
 		Vector eye = Vector.getEntityPos(player);
 		Vector look = Vector.getLookRectangular(player);
-		
+
 		Raytrace.Result raytrace = Raytrace.predicateRaytrace(world, eye, look, 4,
 				(pos, state) -> state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.FLOWING_WATER);
-		
+
 		if (raytrace.hitSomething()) {
 			BlockPos pos = raytrace.getPos().toBlockPos();
 			IBlockState state = world.getBlockState(pos);
@@ -101,8 +99,8 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				stack.setItemDamage(5);
 			}
 		}
-		
+
 		return new ActionResult(EnumActionResult.SUCCESS, stack);
 	}
-	
+
 }

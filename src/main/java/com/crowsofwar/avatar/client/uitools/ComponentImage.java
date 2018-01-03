@@ -22,15 +22,13 @@ import static net.minecraft.client.renderer.GlStateManager.disableBlend;
 import static net.minecraft.client.renderer.GlStateManager.enableBlend;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ComponentImage extends UiComponent {
-	
+
 	private final ResourceLocation texture;
 	private final int u, v, texWidth, texHeight;
-	
+
 	public ComponentImage(ResourceLocation texture, int u, int v, int textureWidth, int textureHeight) {
 		this.texture = texture;
 		this.u = u;
@@ -38,17 +36,17 @@ public class ComponentImage extends UiComponent {
 		this.texWidth = textureWidth;
 		this.texHeight = textureHeight;
 	}
-	
+
 	@Override
 	protected float componentWidth() {
 		return texWidth;
 	}
-	
+
 	@Override
 	protected float componentHeight() {
 		return texHeight;
 	}
-	
+
 	@Override
 	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		enableBlend();
@@ -56,5 +54,5 @@ public class ComponentImage extends UiComponent {
 		drawTexturedModalRect(0, 0, u, v, texWidth, texHeight);
 		disableBlend();
 	}
-	
+
 }

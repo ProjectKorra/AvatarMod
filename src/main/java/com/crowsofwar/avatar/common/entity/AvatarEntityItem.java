@@ -25,37 +25,35 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AvatarEntityItem extends EntityItem {
-	
+
 	private static final DataParameter<Boolean> SYNC_RESIST_FIRE = EntityDataManager
 			.createKey(AvatarEntityItem.class, DataSerializers.BOOLEAN);
-	
+
 	public AvatarEntityItem(World world) {
 		super(world);
 	}
-	
+
 	public AvatarEntityItem(World worldIn, double x, double y, double z, ItemStack stack) {
 		super(worldIn, x, y, z, stack);
 	}
-	
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_RESIST_FIRE, false);
 	}
-	
+
 	public boolean resistsFire() {
 		return dataManager.get(SYNC_RESIST_FIRE);
 	}
-	
+
 	public void setResistFire(boolean resistFire) {
 		dataManager.set(SYNC_RESIST_FIRE, resistFire);
 	}
-	
+
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
 		if (resistsFire() && source.isFireDamage()) {
@@ -63,5 +61,5 @@ public class AvatarEntityItem extends EntityItem {
 		}
 		return super.attackEntityFrom(source, amount);
 	}
-	
+
 }

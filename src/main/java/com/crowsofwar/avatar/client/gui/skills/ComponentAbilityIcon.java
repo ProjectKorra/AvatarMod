@@ -23,19 +23,17 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.client.Minecraft;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ComponentAbilityIcon extends ComponentImage {
-	
+
 	public ComponentAbilityIcon(Ability ability) {
 		super(AvatarUiTextures.skillsGui, getCurrentLevel(ability) * 16, 240, 16, 16);
 	}
-	
+
 	private static int getCurrentLevel(Ability ability) {
 		BendingData data = BendingData.get(Minecraft.getMinecraft().player);
 		return data.getAbilityData(ability).getLevel();
 	}
-	
+
 }

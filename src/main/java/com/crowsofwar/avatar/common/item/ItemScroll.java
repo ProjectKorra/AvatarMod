@@ -55,12 +55,10 @@ import java.util.UUID;
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SPECIALTY_SCROLL_TOOLTIP;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ItemScroll extends Item implements AvatarItem {
-	
+
 	public ItemScroll() {
 		setUnlocalizedName("scroll");
 		setMaxStackSize(1);
@@ -68,7 +66,17 @@ public class ItemScroll extends Item implements AvatarItem {
 		setMaxDamage(0);
 		setHasSubtypes(true);
 	}
-	
+
+	public static ScrollType getScrollType(ItemStack stack) {
+		int meta = stack.getMetadata();
+		if (meta < 0 || meta >= ScrollType.values().length) return ScrollType.ALL;
+		return ScrollType.get(meta);
+	}
+
+	public static void setScrollType(ItemStack stack, ScrollType type) {
+		stack.setItemDamage(type.id());
+	}
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 
@@ -78,7 +86,7 @@ public class ItemScroll extends Item implements AvatarItem {
 		} else {
 			handleMainScrollUse(world, player);
 		}
-		
+
 		return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 
 	}
@@ -149,17 +157,17 @@ public class ItemScroll extends Item implements AvatarItem {
 		int metadata = stack.getMetadata() >= ScrollType.values().length ? 0 : stack.getMetadata();
 		return super.getUnlocalizedName(stack) + "." + ScrollType.get(metadata).displayName();
 	}
-	
+
 	@Override
 	public EnumRarity getRarity(ItemStack stack) {
 		return EnumRarity.RARE;
 	}
-	
+
 	@Override
 	public boolean hasCustomEntity(ItemStack stack) {
 		return getScrollType(stack) == ScrollType.FIRE;
 	}
-	
+
 	@Override
 	public Entity createEntity(World world, Entity old, ItemStack stack) {
 		AvatarEntityItem custom = new AvatarEntityItem(world, old.posX, old.posY, old.posZ, stack);
@@ -170,12 +178,12 @@ public class ItemScroll extends Item implements AvatarItem {
 		custom.setDefaultPickupDelay();
 		return custom;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> tooltips,
 							   ITooltipFlag advanced) {
-		
+
 		String tooltip = I18n.format("avatar." + getScrollType(stack).getBendingName());
 		tooltips.add(tooltip);
 
@@ -190,17 +198,17 @@ public class ItemScroll extends Item implements AvatarItem {
 		}
 
 	}
-	
+
 	@Override
 	public Item item() {
 		return this;
 	}
-	
+
 	@Override
 	public String getModelName(int meta) {
 		return "scroll_" + ScrollType.get(meta).displayName();
 	}
-	
+
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
 
@@ -209,25 +217,15 @@ public class ItemScroll extends Item implements AvatarItem {
 				subItems.add(new ItemStack(this, 1, meta));
 			}
 		}
-		
+
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack stack) {
 		return true;
 	}
-	
-	public static ScrollType getScrollType(ItemStack stack) {
-		int meta = stack.getMetadata();
-		if (meta < 0 || meta >= ScrollType.values().length) return ScrollType.ALL;
-		return ScrollType.get(meta);
-	}
-	
-	public static void setScrollType(ItemStack stack, ScrollType type) {
-		stack.setItemDamage(type.id());
-	}
-	
+
 	public enum ScrollType {
 
 		ALL(null),
@@ -246,18 +244,28 @@ public class ItemScroll extends Item implements AvatarItem {
 			this.bendingId = bendingId;
 		}
 
+		@Nullable
+		public static ScrollType get(int id) {
+			if (id < 0 || id >= values().length) return null;
+			return values()[id];
+		}
+
+		public static int amount() {
+			return values().length;
+		}
+
 		public boolean isCompatibleWith(ScrollType other) {
 			return other == this || this == ALL || other == ALL;
 		}
-		
+
 		public String displayName() {
 			return name().toLowerCase();
 		}
-		
+
 		public int id() {
 			return ordinal();
 		}
-		
+
 		public boolean accepts(UUID bendingId) {
 
 			// Universal scroll
@@ -308,16 +316,6 @@ public class ItemScroll extends Item implements AvatarItem {
 
 		}
 
-		@Nullable
-		public static ScrollType get(int id) {
-			if (id < 0 || id >= values().length) return null;
-			return values()[id];
-		}
-		
-		public static int amount() {
-			return values().length;
-		}
-		
 	}
-	
+
 }

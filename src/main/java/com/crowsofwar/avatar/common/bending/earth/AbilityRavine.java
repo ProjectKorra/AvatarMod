@@ -30,36 +30,34 @@ import net.minecraft.world.World;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AbilityRavine extends Ability {
-	
+
 	public AbilityRavine() {
 		super(Earthbending.ID, "ravine");
 	}
-	
+
 	@Override
 	public void execute(AbilityContext ctx) {
 
 		Bender bender = ctx.getBender();
-		
+
 		float chi = STATS_CONFIG.chiRavine;
 		if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 			chi *= 1.5f;
 		}
-		
+
 		if (bender.consumeChi(chi)) {
-			
+
 			AbilityData abilityData = ctx.getData().getAbilityData(this);
 			float xp = abilityData.getTotalXp();
-			
+
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
-			
+
 			Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-			
+
 			double speed = ctx.getLevel() >= 1 ? 14 : 8;
 			speed += ctx.getPowerRating() / 25;
 
@@ -75,9 +73,9 @@ public class AbilityRavine extends Ability {
 			ravine.setBreakBlocks(ctx.isMasterLevel(AbilityTreePath.FIRST));
 			ravine.setDropEquipment(ctx.isMasterLevel(AbilityTreePath.SECOND));
 			world.spawnEntity(ravine);
-			
+
 		}
-		
+
 	}
 
 }

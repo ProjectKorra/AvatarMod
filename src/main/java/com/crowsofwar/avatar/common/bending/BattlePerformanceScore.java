@@ -37,21 +37,6 @@ public class BattlePerformanceScore {
 		this.score = score;
 	}
 
-	/**
-	 * Updates the battle performance number, to be called every tick
-	 */
-	public void update() {
-		double changePerSecond = getScoreChangePerSecond(score);
-		modifyScore(changePerSecond / 20);
-	}
-
-	/**
-	 * Add or subtract a certain amount of score from the bender.
-	 */
-	public void modifyScore(double amount) {
-		setScore(MathHelper.clamp(score + amount, -100, 100));
-	}
-
 	public static void addSmallScore(EntityLivingBase entity) {
 		BendingData bendingData = BendingData.get(entity);
 		if (bendingData != null) {
@@ -74,21 +59,6 @@ public class BattlePerformanceScore {
 	}
 
 	/**
-	 * Returns the numeric rating of how well the bender is doing in combat right now, ranging from
-	 * -100 to 100 (0 is neutral).
-	 */
-	public double getScore() {
-		return score;
-	}
-
-	public void setScore(double score) {
-		if (this.score != score) {
-			data.save(DataCategory.PERFORMANCE);
-		}
-		this.score = score;
-	}
-
-	/**
 	 * Attaining a high battle performance score is temporary; it passively moves towards zero every
 	 * second. Gets the amount of score to change per second, given the current score. Values of
 	 * higher magnitude (i.e. closer to 100 or -100) move towards zero faster, while scores already
@@ -108,6 +78,36 @@ public class BattlePerformanceScore {
 		double k = 10000 / (max - min);
 		return -Math.signum(currentScore) * (currentScore * currentScore + k * min) / k;
 
+	}
+
+	/**
+	 * Updates the battle performance number, to be called every tick
+	 */
+	public void update() {
+		double changePerSecond = getScoreChangePerSecond(score);
+		modifyScore(changePerSecond / 20);
+	}
+
+	/**
+	 * Add or subtract a certain amount of score from the bender.
+	 */
+	public void modifyScore(double amount) {
+		setScore(MathHelper.clamp(score + amount, -100, 100));
+	}
+
+	/**
+	 * Returns the numeric rating of how well the bender is doing in combat right now, ranging from
+	 * -100 to 100 (0 is neutral).
+	 */
+	public double getScore() {
+		return score;
+	}
+
+	public void setScore(double score) {
+		if (this.score != score) {
+			data.save(DataCategory.PERFORMANCE);
+		}
+		this.score = score;
 	}
 
 }

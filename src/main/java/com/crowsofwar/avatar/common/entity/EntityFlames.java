@@ -37,17 +37,15 @@ import java.util.List;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityFlames extends AvatarEntity {
-	
+
 	/**
 	 * The owner, null client side
 	 */
 	private EntityLivingBase owner;
-	
+
 	private boolean lightsFires;
 	private double damageMult;
 
@@ -58,19 +56,19 @@ public class EntityFlames extends AvatarEntity {
 		super(worldIn);
 		setSize(0.1f, 0.1f);
 	}
-	
+
 	public EntityFlames(World world, EntityLivingBase owner) {
 		this(world);
 		this.owner = owner;
 	}
-	
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		// TODO Support saving/loading of EntityFlames
 		super.readEntityFromNBT(nbt);
 		setDead();
 	}
-	
+
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
@@ -86,51 +84,51 @@ public class EntityFlames extends AvatarEntity {
 
 	@Override
 	public void onUpdate() {
-		
+
 		super.onUpdate();
 
 		setVelocity(velocity().times(0.94));
 
 		if (velocity().sqrMagnitude() <= 0.5 * 0.5 || isCollided) setDead();
-		
+
 		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.3,
 				true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
 			setVelocity(velocity().reflect(new Vector(sideHit)).times(0.5));
-			
+
 			// Try to light firest
 			if (lightsFires && sideHit != EnumFacing.DOWN && !world.isRemote) {
-				
+
 				BlockPos bouncingOff = getPosition().add(-sideHit.getFrontOffsetX(),
 						-sideHit.getFrontOffsetY(), -sideHit.getFrontOffsetZ());
-				
+
 				if (sideHit == EnumFacing.UP || world.getBlockState(bouncingOff).getBlock()
 						.isFlammable(world, bouncingOff, sideHit)) {
-					
+
 					world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
-					
+
 				}
-				
+
 			}
-			
+
 		}
-		
+
 		if (!world.isRemote) {
 			BendingData data = Bender.get(owner).getData();
 			AbilityData abilityData = data.getAbilityData("flamethrower");
-			
+
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
 					entity -> entity != owner && !(entity instanceof EntityFlames));
-			
+
 			for (Entity entity : collided) {
-				
+
 				entity.setFire((int) (3 * 1 + abilityData.getTotalXp() / 100f));
-				
+
 				// Add extra damage
 				// Adding 0 since even though this doesn't affect health, will
 				// cause mobs to aggro
-				
+
 				float additionalDamage = 0;
 				if (abilityData.getTotalXp() >= 50) {
 					additionalDamage = 2 + (abilityData.getTotalXp() - 50) / 25;
@@ -140,9 +138,9 @@ public class EntityFlames extends AvatarEntity {
 						additionalDamage)) {
 					BattlePerformanceScore.addSmallScore(owner);
 				}
-				
+
 			}
-			
+
 			abilityData.addXp(SKILLS_CONFIG.flamethrowerHit * collided.size());
 			if (!collided.isEmpty()) setDead();
 		}
@@ -170,7 +168,7 @@ public class EntityFlames extends AvatarEntity {
 	public boolean doesLightFires() {
 		return lightsFires;
 	}
-	
+
 	public void setLightsFires(boolean lightsFires) {
 		this.lightsFires = lightsFires;
 	}

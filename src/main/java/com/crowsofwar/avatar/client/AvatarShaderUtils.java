@@ -11,7 +11,6 @@ import javax.annotation.Nullable;
 @SideOnly(Side.CLIENT)
 public class AvatarShaderUtils {
 
-
 	private static EntityRenderer getEntityRenderer() {
 		return Minecraft.getMinecraft().entityRenderer;
 	}

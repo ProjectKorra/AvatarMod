@@ -30,33 +30,31 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPositi
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class StatCtrlThrowFireball extends StatusControl {
-	
+
 	public StatCtrlThrowFireball() {
 		super(10, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
 	}
-	
+
 	@Override
 	public boolean execute(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
-		
+
 		double size = 6;
-		
+
 		EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
-		
+
 		if (fireball != null) {
 			AbilityData abilityData = ctx.getData().getAbilityData("fireball");
 			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
 			fireball.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
 			fireball.setBehavior(new FireballBehavior.Thrown());
 		}
-		
+
 		return true;
 	}
-	
+
 }

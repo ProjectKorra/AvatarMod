@@ -26,38 +26,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ArgumentBendingController implements IArgument<BendingStyle> {
-	
+
 	private final String name;
-	
+
 	public ArgumentBendingController(String name) {
 		this.name = name;
 	}
-	
+
 	@Override
 	public boolean isOptional() {
 		return false;
 	}
-	
+
 	@Override
 	public BendingStyle getDefaultValue() {
 		return null;
 	}
-	
+
 	@Override
 	public BendingStyle convert(String input) {
 		return BendingStyles.get(input.toLowerCase());
 	}
-	
+
 	@Override
 	public String getArgumentName() {
 		return name;
 	}
-	
+
 	@Override
 	public String getHelpString() {
 		String out = "<";
@@ -66,12 +64,12 @@ public class ArgumentBendingController implements IArgument<BendingStyle> {
 		}
 		return out.substring(0, out.length() - 1) + ">";
 	}
-	
+
 	@Override
 	public String getSpecificationString() {
 		return "<" + name + ">";
 	}
-	
+
 	@Override
 	public List<String> getCompletionSuggestions(ICommandSender sender, String currentInput) {
 		List<String> out = new ArrayList<>();
@@ -79,5 +77,5 @@ public class ArgumentBendingController implements IArgument<BendingStyle> {
 			out.add(bc.getName());
 		return out;
 	}
-	
+
 }

@@ -33,24 +33,22 @@ import net.minecraft.world.World;
 import java.util.List;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class StatCtrlThrowWater extends StatusControl {
-	
+
 	public StatCtrlThrowWater() {
 		super(3, AvatarControl.CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
-	
+
 	@Override
 	public boolean execute(BendingContext ctx) {
-		
+
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
 		AbilityData abilityData = data.getAbilityData("water_arc");
-		
+
 		int lvl = abilityData.getLevel();
 		double velocity = 6;
 		if (lvl >= 2) {
@@ -59,26 +57,26 @@ public class StatCtrlThrowWater extends StatusControl {
 		if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
 			velocity = 8;
 		}
-		
+
 		AxisAlignedBB boundingBox = new AxisAlignedBB(entity.posX - 5, entity.posY - 5, entity.posZ - 5,
 				entity.posX + 5, entity.posY + 5, entity.posZ + 5);
 		List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class, boundingBox,
 				arc -> arc.getOwner() == entity
 						&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
-		
+
 		for (EntityWaterArc arc : existing) {
 			arc.setBehavior(new WaterArcBehavior.Thrown());
-			
+
 			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
 					Math.toRadians(entity.rotationPitch));
 			force = force.times(velocity);
 			arc.addVelocity(force);
 			arc.setBehavior(new WaterArcBehavior.Thrown());
-			
+
 		}
-		
+
 		return true;
-		
+
 	}
-	
+
 }

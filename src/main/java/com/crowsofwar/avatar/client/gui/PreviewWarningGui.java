@@ -16,26 +16,26 @@
 */
 package com.crowsofwar.avatar.client.gui;
 
-import java.io.IOException;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.IOException;
+
 @SideOnly(Side.CLIENT)
 public class PreviewWarningGui extends GuiScreen {
-	
+
 	@Override
 	public void initGui() {
 		this.buttonList.clear();
-		
+
 		this.buttonList
 				.add(new GuiButton(0, (width - 200) / 2, height - height / 5, 200, 20, "To Main Menu"));
-		
+
 	}
-	
+
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
@@ -44,11 +44,11 @@ public class PreviewWarningGui extends GuiScreen {
 			this.mc.shutdown();
 		}
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
-		
+
 		// @formatter:off
 		String[] lines = {
 			"Warning: Avatar Mod Preview Version",
@@ -66,13 +66,13 @@ public class PreviewWarningGui extends GuiScreen {
 			"ofwarcrows@gmail.com"
 		};
 		// @formatter:on
-		
+
 		int y = height / 6;
 		for (String ln : lines) {
 			drawString(fontRenderer, ln, (width - fontRenderer.getStringWidth(ln)) / 2, y, 0xffffff);
 			y += fontRenderer.FONT_HEIGHT + 2;
 		}
-		
+
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 }

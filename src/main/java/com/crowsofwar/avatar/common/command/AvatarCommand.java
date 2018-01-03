@@ -34,8 +34,28 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AvatarCommand extends TreeCommand {
-	
+
 	public static final List<BendingStyle>[] CONTROLLER_BENDING_OPTIONS;
+	public static final ITypeConverter<List<BendingStyle>> CONVERTER_BENDING = new ITypeConverter<List<BendingStyle>>() {
+
+		@Override
+		public List<BendingStyle> convert(String str) {
+			return str.equals("all") ? BendingStyles.all()
+					: Arrays.asList(BendingStyles.get(str.toLowerCase()));
+		}
+
+		@Override
+		public String toString(List<BendingStyle> obj) {
+			return obj.equals(BendingStyles.all()) ? "all" : obj.get(0).getName();
+		}
+
+		@Override
+		public String getTypeName() {
+			return "Bending";
+		}
+
+	};
+
 	static {
 		CONTROLLER_BENDING_OPTIONS = new List[BendingStyles.all().size() + 1];
 		CONTROLLER_BENDING_OPTIONS[0] = BendingStyles.all();
@@ -43,50 +63,30 @@ public class AvatarCommand extends TreeCommand {
 			CONTROLLER_BENDING_OPTIONS[i] = Arrays.asList(BendingStyles.all().get(i - 1));
 		}
 	}
-	
-	public static final ITypeConverter<List<BendingStyle>> CONVERTER_BENDING = new ITypeConverter<List<BendingStyle>>() {
-		
-		@Override
-		public List<BendingStyle> convert(String str) {
-			return str.equals("all") ? BendingStyles.all()
-					: Arrays.asList(BendingStyles.get(str.toLowerCase()));
-		}
-		
-		@Override
-		public String toString(List<BendingStyle> obj) {
-			return obj.equals(BendingStyles.all()) ? "all" : obj.get(0).getName();
-		}
-		
-		@Override
-		public String getTypeName() {
-			return "Bending";
-		}
-		
-	};
-	
+
 	public AvatarCommand() {
 		super(AvatarChatMessages.CFG);
 	}
-	
+
 	@Override
 	public String getName() {
 		return "avatar";
 	}
-	
+
 	@Override
 	protected ICommandNode[] addCommands() {
-		
+
 		NodeBendingList bendingList = new NodeBendingList();
 		NodeBendingAdd bendingAdd = new NodeBendingAdd();
 		NodeBendingRemove bendingRemove = new NodeBendingRemove();
 		NodeBranch branchBending = new NodeBranch(AvatarChatMessages.MSG_BENDING_BRANCH_INFO, "bending",
 				bendingList, bendingAdd, bendingRemove);
-		
+
 		NodeBranch branchAbility = new NodeBranch(branchHelpDefault, "ability", new NodeAbilityGet(),
 				new NodeAbilitySet());
-		
-		return new ICommandNode[] { branchBending, new NodeConfig(), branchAbility, new NodeXpSet() };
-		
+
+		return new ICommandNode[]{branchBending, new NodeConfig(), branchAbility, new NodeXpSet()};
+
 	}
 
 	@Override

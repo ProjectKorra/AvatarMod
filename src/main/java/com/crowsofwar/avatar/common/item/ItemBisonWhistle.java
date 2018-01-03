@@ -43,23 +43,80 @@ import static net.minecraft.util.EnumActionResult.SUCCESS;
 
 /**
  * ItemBow
- * 
+ *
  * @author CrowsOfWar
  */
 public class ItemBisonWhistle extends Item implements AvatarItem {
-	
+
 	public ItemBisonWhistle() {
 		setCreativeTab(AvatarItems.tabItems);
 		setMaxStackSize(1);
 		setUnlocalizedName("bison_whistle");
 	}
-	
+
 	// Logic for assigning bison whistle is in the bison class
 	// itemInteractionForEntity didn't work while sneaking
-	
+
+	@Nullable
+	public static UUID getBoundTo(ItemStack stack) {
+		NBTTagCompound nbt = stackCompound(stack);
+		return nbt.hasKey("SkyBisonMost") ? nbt.getUniqueId("SkyBison") : null;
+	}
+
+	public static void setBoundTo(ItemStack stack, @Nullable UUID id) {
+		NBTTagCompound nbt = stackCompound(stack);
+		if (id != null) {
+			nbt.setUniqueId("SkyBison", id);
+		} else {
+			nbt.removeTag("SkyBison");
+		}
+	}
+
+	@Nullable
+	public static String getBisonName(ItemStack stack) {
+		String name = stackCompound(stack).getString("BisonName");
+		return name.isEmpty() ? null : name;
+	}
+
+	public static void setBisonName(ItemStack stack, @Nullable String name) {
+		if (name == null) {
+			stackCompound(stack).removeTag("BisonName");
+		} else {
+			stackCompound(stack).setString("BisonName", name);
+		}
+	}
+
+	public static boolean isBound(ItemStack stack) {
+		return getBisonName(stack) != null && getBoundTo(stack) != null;
+	}
+
+	/**
+	 * Returns whether the player owns the bison which the stack is bound to.
+	 * <p>
+	 * Special conditions:
+	 * <ul>
+	 * <li>If the stack is not bound to a bison, returns false.
+	 * <li>If the bison is not in the world, returns false.
+	 */
+	public static boolean doesPlayerOwn(ItemStack stack, EntityPlayer player) {
+
+		if (isBound(stack)) {
+
+			World world = player.world;
+			EntitySkyBison bison = EntitySkyBison.findBison(world, getBoundTo(stack));
+			if (bison != null) {
+				return bison.getOwner() == player;
+			}
+
+		}
+
+		return false;
+
+	}
+
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft) {
-		
+
 		if (!world.isRemote) {
 
 			if (timeLeft >= 55) {
@@ -99,25 +156,25 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 			}
 
 		}
-		
+
 	}
-	
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-		
+
 		ItemStack stack = player.getHeldItem(hand);
 		if (isBound(stack)) {
-			
+
 			if (doesPlayerOwn(stack, player)) {
 				player.setActiveHand(hand);
 				return new ActionResult<>(SUCCESS, stack);
 			} else {
-				
+
 				EntitySkyBison bison = EntitySkyBison.findBison(world, getBoundTo(stack));
 				if (bison != null && !bison.world.isRemote) {
-					
+
 					EntityPlayer oldOwner = bison.getOwner();
-					
+
 					if (oldOwner != null) {
 						TransferConfirmHandler.startTransfer(oldOwner, player, bison);
 						return new ActionResult<>(SUCCESS, stack);
@@ -126,105 +183,48 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 						String username = AccountUUIDs.getUsername(id);
 						MSG_BISON_TRANSFER_OFFLINE.send(player, username == null ? "{error}" : username);
 					}
-					
+
 				}
-				
+
 				return new ActionResult<>(PASS, stack);
-				
+
 			}
-			
+
 		} else {
-			
+
 			if (!world.isRemote) {
 				MSG_BISON_WHISTLE_NOSUMMON.send(player);
 			}
 			return new ActionResult<>(PASS, stack);
-			
+
 		}
-		
+
 	}
-	
+
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack) {
 		return 60;
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
-		
+
 		if (isBound(stack)) {
 			tooltip.add(I18n.format("avatar.bisonWhistle.tooltipBound", getBisonName(stack)));
 		} else {
 			tooltip.add(I18n.format("avatar.bisonWhistle.tooltipUnbound"));
 		}
-		
+
 	}
-	
+
 	@Override
 	public Item item() {
 		return this;
 	}
-	
+
 	@Override
 	public String getModelName(int meta) {
 		return "bison_whistle";
 	}
-	
-	@Nullable
-	public static UUID getBoundTo(ItemStack stack) {
-		NBTTagCompound nbt = stackCompound(stack);
-		return nbt.hasKey("SkyBisonMost") ? nbt.getUniqueId("SkyBison") : null;
-	}
-	
-	public static void setBoundTo(ItemStack stack, @Nullable UUID id) {
-		NBTTagCompound nbt = stackCompound(stack);
-		if (id != null) {
-			nbt.setUniqueId("SkyBison", id);
-		} else {
-			nbt.removeTag("SkyBison");
-		}
-	}
-	
-	@Nullable
-	public static String getBisonName(ItemStack stack) {
-		String name = stackCompound(stack).getString("BisonName");
-		return name.isEmpty() ? null : name;
-	}
-	
-	public static void setBisonName(ItemStack stack, @Nullable String name) {
-		if (name == null) {
-			stackCompound(stack).removeTag("BisonName");
-		} else {
-			stackCompound(stack).setString("BisonName", name);
-		}
-	}
-	
-	public static boolean isBound(ItemStack stack) {
-		return getBisonName(stack) != null && getBoundTo(stack) != null;
-	}
-	
-	/**
-	 * Returns whether the player owns the bison which the stack is bound to.
-	 * <p>
-	 * Special conditions:
-	 * <ul>
-	 * <li>If the stack is not bound to a bison, returns false.
-	 * <li>If the bison is not in the world, returns false.
-	 */
-	public static boolean doesPlayerOwn(ItemStack stack, EntityPlayer player) {
-		
-		if (isBound(stack)) {
-			
-			World world = player.world;
-			EntitySkyBison bison = EntitySkyBison.findBison(world, getBoundTo(stack));
-			if (bison != null) {
-				return bison.getOwner() == player;
-			}
-			
-		}
-		
-		return false;
-		
-	}
-	
+
 }

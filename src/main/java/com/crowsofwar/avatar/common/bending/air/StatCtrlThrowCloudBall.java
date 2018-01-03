@@ -14,28 +14,28 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPositi
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 
 public class StatCtrlThrowCloudBall extends StatusControl {
-    public StatCtrlThrowCloudBall() {
-        super(16, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
-    }
+	public StatCtrlThrowCloudBall() {
+		super(16, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
+	}
 
-    @Override
-    public boolean execute(BendingContext ctx) {
-        EntityLivingBase entity = ctx.getBenderEntity();
-        World world = ctx.getWorld();
+	@Override
+	public boolean execute(BendingContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+		World world = ctx.getWorld();
 
-        double size = 6;
+		double size = 6;
 
-        EntityCloudBall cloudBall = AvatarEntity.lookupControlledEntity(world, EntityCloudBall.class, entity);
+		EntityCloudBall cloudBall = AvatarEntity.lookupControlledEntity(world, EntityCloudBall.class, entity);
 
-        if (cloudBall != null) {
-            AbilityData abilityData = ctx.getData().getAbilityData("cloudburst");
-            double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
-            cloudBall.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
-            cloudBall.setBehavior(new CloudburstBehavior.Thrown());
-        }
+		if (cloudBall != null) {
+			AbilityData abilityData = ctx.getData().getAbilityData("cloudburst");
+			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
+			cloudBall.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
+			cloudBall.setBehavior(new CloudburstBehavior.Thrown());
+		}
 
-        return true;
-    }
+		return true;
+	}
 
 }
 //REGISTER THIS TO SEE IF IT FIXES ITSELF

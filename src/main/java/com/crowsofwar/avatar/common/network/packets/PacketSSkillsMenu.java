@@ -27,16 +27,15 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class PacketSSkillsMenu extends AvatarPacket<PacketSSkillsMenu> {
-	
+
 	private byte element;
 	private int abilityId;
 
-	public PacketSSkillsMenu() {}
+	public PacketSSkillsMenu() {
+	}
 
 	public PacketSSkillsMenu(UUID element) {
 		this(element, null);
@@ -50,29 +49,29 @@ public class PacketSSkillsMenu extends AvatarPacket<PacketSSkillsMenu> {
 			abilityId = Abilities.all().indexOf(ability);
 		}
 	}
-	
+
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		element = buf.readByte();
 		abilityId = buf.readInt();
 	}
-	
+
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
 		buf.writeByte(element);
 		buf.writeInt(abilityId);
 	}
-	
+
 	@Override
 	protected Side getReceivedSide() {
 		return Side.SERVER;
 	}
-	
+
 	@Override
 	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketSSkillsMenu> getPacketHandler() {
 		return PacketRedirector::redirectMessage;
 	}
-	
+
 	public UUID getElement() {
 		return BendingStyles.get(element).getId();
 	}

@@ -66,7 +66,7 @@ public class ModelOstrichHorseWild extends ModelOstrichHorse {
 	public ModelRenderer Rrcrawl2;
 	public ModelRenderer Rlcrawl1;
 	public ModelRenderer Rlcrawl2;
-	
+
 	public ModelOstrichHorseWild() {
 		this.textureWidth = 256;
 		this.textureHeight = 128;
@@ -321,7 +321,7 @@ public class ModelOstrichHorseWild extends ModelOstrichHorse {
 		this.Lleg.addChild(this.Lleg2);
 		this.Lleg.addChild(this.Lfoot);
 	}
-	
+
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		this.RWing2.render(f5);
@@ -344,7 +344,7 @@ public class ModelOstrichHorseWild extends ModelOstrichHorse {
 		this.Rleg.render(f5);
 		this.LWing2.render(f5);
 	}
-	
+
 	/**
 	 * This is a helper function from Tabula to set the rotation of model parts
 	 */

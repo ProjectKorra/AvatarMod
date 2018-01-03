@@ -35,12 +35,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityWaterBubble extends AvatarEntity {
-	
+
 	private static final DataParameter<WaterBubbleBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterBubble.class, WaterBubbleBehavior.DATA_SERIALIZER);
 
@@ -49,7 +47,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	 * set on server-side.
 	 */
 	private boolean sourceBlock;
-	
+
 	/**
 	 * @param world
 	 */
@@ -58,13 +56,13 @@ public class EntityWaterBubble extends AvatarEntity {
 		setSize(.8f, .8f);
 		this.putsOutFires = true;
 	}
-	
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new WaterBubbleBehavior.Drop());
 	}
-	
+
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
@@ -74,7 +72,7 @@ public class EntityWaterBubble extends AvatarEntity {
 		WaterBubbleBehavior currentBehavior = getBehavior();
 		WaterBubbleBehavior nextBehavior = (WaterBubbleBehavior) currentBehavior.onUpdate(this);
 		if (currentBehavior != nextBehavior) setBehavior(nextBehavior);
-		
+
 		if (ticksExisted % 5 == 0) {
 			BlockPos down = getPosition().down();
 			IBlockState downState = world.getBlockState(down);
@@ -84,7 +82,7 @@ public class EntityWaterBubble extends AvatarEntity {
 						Blocks.FARMLAND.getDefaultState().withProperty(BlockFarmland.MOISTURE, moisture + 1));
 			}
 		}
-		
+
 		boolean inWaterSource = false;
 		if (!world.isRemote && ticksExisted % 2 == 1 && ticksExisted > 10) {
 			for (int x = 0; x <= 1; x++) {
@@ -98,7 +96,7 @@ public class EntityWaterBubble extends AvatarEntity {
 				}
 			}
 		}
-		
+
 		if (!world.isRemote && inWaterSource) {
 			setDead();
 			if (getOwner() != null) {
@@ -108,7 +106,7 @@ public class EntityWaterBubble extends AvatarEntity {
 				}
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -125,7 +123,7 @@ public class EntityWaterBubble extends AvatarEntity {
 		getBehavior().load(compound);
 		setSourceBlock(compound.getBoolean("SourceBlock"));
 	}
-	
+
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound compound) {
 		super.writeEntityToNBT(compound);
@@ -133,11 +131,11 @@ public class EntityWaterBubble extends AvatarEntity {
 		getBehavior().save(compound);
 		compound.setBoolean("SourceBlock", sourceBlock);
 	}
-	
+
 	public WaterBubbleBehavior getBehavior() {
 		return dataManager.get(SYNC_BEHAVIOR);
 	}
-	
+
 	public void setBehavior(WaterBubbleBehavior behavior) {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
@@ -145,16 +143,16 @@ public class EntityWaterBubble extends AvatarEntity {
 	public boolean isSourceBlock() {
 		return sourceBlock;
 	}
-	
+
 	public void setSourceBlock(boolean sourceBlock) {
 		this.sourceBlock = sourceBlock;
 	}
-	
+
 	@Override
 	public EntityLivingBase getController() {
 		return getBehavior() instanceof WaterBubbleBehavior.PlayerControlled ? getOwner() : null;
 	}
-	
+
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;

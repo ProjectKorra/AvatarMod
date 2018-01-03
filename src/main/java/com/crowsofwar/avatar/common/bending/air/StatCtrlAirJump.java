@@ -41,28 +41,26 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class StatCtrlAirJump extends StatusControl {
-	
+
 	public StatCtrlAirJump() {
 		super(0, AvatarControl.CONTROL_JUMP, CrosshairPosition.BELOW_CROSSHAIR);
 	}
-	
+
 	@Override
 	public boolean execute(BendingContext ctx) {
-		
+
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
-		
+
 		AbilityData abilityData = data.getAbilityData("air_jump");
 		boolean allowDoubleJump = abilityData.getLevel() == 3
 				&& abilityData.getPath() == AbilityTreePath.FIRST;
-		
+
 		// Figure out whether entity is on ground by finding collisions with
 		// ground - if found a collision box, then is not on ground
 		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity,
@@ -70,7 +68,7 @@ public class StatCtrlAirJump extends StatusControl {
 		boolean onGround = !collideWithGround.isEmpty();
 
 		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiAirJump))) {
-			
+
 			int lvl = abilityData.getLevel();
 			double multiplier = 0.65;
 			double powerModifier = 10;
@@ -90,10 +88,10 @@ public class StatCtrlAirJump extends StatusControl {
 				powerModifier = 25;
 				powerDuration = 6;
 			}
-			
+
 			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1),
 					Math.toRadians(entity.rotationYaw), 0);
-			
+
 			Vector velocity = rotations.toRectangular();
 			velocity = velocity.withY(Math.pow(velocity.y(), .1));
 			velocity = velocity.times(multiplier);
@@ -107,11 +105,11 @@ public class StatCtrlAirJump extends StatusControl {
 			if (entity instanceof EntityPlayerMP) {
 				((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 			}
-			
+
 			ParticleSpawner spawner = new NetworkParticleSpawner();
 			spawner.spawnParticles(entity.world, AvatarParticles.getParticleAir(), 2, 6,
 					new Vector(entity), new Vector(1, 0, 1));
-			
+
 			float fallAbsorption = 0;
 			if (lvl == 0) {
 				fallAbsorption = 8;
@@ -122,18 +120,17 @@ public class StatCtrlAirJump extends StatusControl {
 			} else if (lvl == 3) {
 				fallAbsorption = 19;
 			}
-			
+
 			data.getMiscData().setFallAbsorption(fallAbsorption);
-			
+
 			data.addTickHandler(TickHandler.AIR_PARTICLE_SPAWNER);
 			if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.SECOND) {
 				data.addTickHandler(TickHandler.SMASH_GROUND);
 			}
 			abilityData.addXp(SKILLS_CONFIG.airJump);
-			
+
 			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BAT_TAKEOFF,
 					SoundCategory.PLAYERS, 1, .7f);
-
 
 			PowerRatingModifier powerRatingModifier = new AirJumpPowerModifier(powerModifier);
 			powerRatingModifier.setTicks((int) (powerDuration * 20));
@@ -141,11 +138,11 @@ public class StatCtrlAirJump extends StatusControl {
 			data.getPowerRatingManager(Airbending.ID).addModifier(powerRatingModifier, ctx);
 
 			return true;
-			
+
 		}
-		
+
 		return false;
-		
+
 	}
-	
+
 }

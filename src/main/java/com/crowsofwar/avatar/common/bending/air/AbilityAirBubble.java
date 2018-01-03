@@ -35,34 +35,32 @@ import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRS
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AbilityAirBubble extends Ability {
-	
+
 	public AbilityAirBubble() {
 		super(Airbending.ID, "air_bubble");
 	}
-	
+
 	@Override
 	public void execute(AbilityContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
-		
+
 		ItemStack chest = entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
-		
+
 		if (!elytraOk) {
 			ctx.getBender().sendMessage("avatar.airBubbleElytra");
 		}
 
 		if (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT) && elytraOk) {
-			
+
 			if (!bender.consumeChi(STATS_CONFIG.chiAirBubble)) return;
-			
+
 			float size = 1.5f;
 			float health = 12;
 			if (ctx.getLevel() > 0) {
@@ -74,7 +72,7 @@ public class AbilityAirBubble extends Ability {
 				health = 24;
 			}
 			if (ctx.isMasterLevel(SECOND)) health = 10f;
-			
+
 			EntityAirBubble bubble = new EntityAirBubble(world);
 			bubble.setOwner(entity);
 			bubble.setPosition(entity.posX, entity.posY, entity.posZ);
@@ -83,16 +81,16 @@ public class AbilityAirBubble extends Ability {
 			bubble.setSize(size);
 			bubble.setAllowHovering(ctx.isMasterLevel(SECOND));
 			world.spawnEntity(bubble);
-			
+
 			data.addStatusControl(StatusControl.BUBBLE_EXPAND);
 			data.addStatusControl(StatusControl.BUBBLE_CONTRACT);
 		}
-		
+
 	}
-	
+
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiAirBubble(this, entity, bender);
 	}
-	
+
 }

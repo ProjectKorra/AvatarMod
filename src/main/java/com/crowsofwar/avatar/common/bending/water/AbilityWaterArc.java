@@ -40,31 +40,29 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static java.lang.Math.toRadians;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AbilityWaterArc extends Ability {
-	
+
 	public AbilityWaterArc() {
 		super(Waterbending.ID, "water_arc");
 		requireRaytrace(-1, true);
 	}
-	
+
 	@Override
 	public void execute(AbilityContext ctx) {
 		World world = ctx.getWorld();
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
-		
+
 		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel());
-		
+
 		if (targetPos != null || ctx.consumeWater(1)) {
-			
+
 			if (targetPos == null) {
 				targetPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(4));
 			}
-			
+
 			if (bender.consumeChi(STATS_CONFIG.chiWaterArc)) {
 
 				removeExisting(ctx);
@@ -78,45 +76,45 @@ public class AbilityWaterArc extends Ability {
 				water.setDamageMult(damageMult);
 				water.setBehavior(new WaterArcBehavior.PlayerControlled());
 				world.spawnEntity(water);
-				
+
 				ctx.getData().addStatusControl(StatusControl.THROW_WATER);
-				
+
 			}
 		}
 	}
-	
+
 	private Vector getClosestWaterBlock(EntityLivingBase entity, int level) {
 		World world = entity.world;
-		
+
 		Vector eye = Vector.getEyePos(entity);
-		
+
 		double rangeMult = 0.6;
 		if (level >= 1) {
 			rangeMult = 1;
 		}
-		
+
 		double range = STATS_CONFIG.waterArcSearchRadius * rangeMult;
 		for (int i = 0; i < STATS_CONFIG.waterArcAngles; i++) {
 			for (int j = 0; j < STATS_CONFIG.waterArcAngles; j++) {
-				
+
 				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterArcAngles;
 				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterArcAngles;
-				
+
 				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> state.getBlock() == Blocks.WATER
 						|| state.getBlock() == Blocks.FLOWING_WATER;
-				
+
 				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
 				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
 				if (result.hitSomething()) {
 					return result.getPosPrecise();
 				}
-				
+
 			}
-			
+
 		}
-		
+
 		return null;
-		
+
 	}
 
 	/**

@@ -31,7 +31,7 @@ public class Waterbending extends BendingStyle {
 	public static UUID ID = UUID.fromString("33486f81-29cc-4f7e-84ee-972a73b03b95");
 
 	private BendingMenuInfo menu;
-	
+
 	public Waterbending() {
 		addAbility("water_arc");
 		addAbility("wave");
@@ -39,7 +39,7 @@ public class Waterbending extends BendingStyle {
 		addAbility("water_skate");
 		addAbility("water_cannon");
 		addAbility("cleanse");
-		
+
 		Color base = new Color(228, 255, 225);
 		Color edge = new Color(60, 188, 145);
 		Color icon = new Color(129, 149, 148);
@@ -47,30 +47,30 @@ public class Waterbending extends BendingStyle {
 		menu = new BendingMenuInfo(new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),
 				new ThemeColor(icon, base), 0x57E8F2), this);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		
+
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
-		
+
 	}
-	
+
 	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}
-	
+
 	@Override
 	public String getName() {
 		return "waterbending";
 	}
-	
+
 	@Override
 	public UUID getId() {
 		return ID;
 	}
-	
+
 }

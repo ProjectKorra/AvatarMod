@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.client;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.network.packets.PacketSBisonInventory;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,39 +29,40 @@ import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 /**
  * Causes the player to open the sky bison inventory instead of their own while
  * riding a bison.
- * 
+ *
  * @author CrowsOfWar
  */
 public class AvatarInventoryOverride {
-	
-	private AvatarInventoryOverride() {}
-	
-	@SubscribeEvent
-	public void onInventoryOpen(KeyInputEvent e) {
-		
-		Minecraft mc = Minecraft.getMinecraft();
-		EntityPlayer player = mc.player;
-		KeyBinding keybind = mc.gameSettings.keyBindInventory;
-		
-		// don't use isPressed() as that marks it as "not pressed" if it was
-		if (keybind.isKeyDown()) {
-			
-			if (player.getRidingEntity() instanceof EntitySkyBison) {
-				EntitySkyBison bison = (EntitySkyBison) player.getRidingEntity();
-				if (bison.canPlayerViewInventory(player)) {
-					
-					AvatarMod.network.sendToServer(new PacketSBisonInventory());
-					// mark key as not pressed to avoid vanilla behavior
-					keybind.isPressed();
-					
-				}
-			}
-			
-		}
+
+	private AvatarInventoryOverride() {
 	}
-	
+
 	public static void register() {
 		MinecraftForge.EVENT_BUS.register(new AvatarInventoryOverride());
 	}
-	
+
+	@SubscribeEvent
+	public void onInventoryOpen(KeyInputEvent e) {
+
+		Minecraft mc = Minecraft.getMinecraft();
+		EntityPlayer player = mc.player;
+		KeyBinding keybind = mc.gameSettings.keyBindInventory;
+
+		// don't use isPressed() as that marks it as "not pressed" if it was
+		if (keybind.isKeyDown()) {
+
+			if (player.getRidingEntity() instanceof EntitySkyBison) {
+				EntitySkyBison bison = (EntitySkyBison) player.getRidingEntity();
+				if (bison.canPlayerViewInventory(player)) {
+
+					AvatarMod.network.sendToServer(new PacketSBisonInventory());
+					// mark key as not pressed to avoid vanilla behavior
+					keybind.isPressed();
+
+				}
+			}
+
+		}
+	}
+
 }

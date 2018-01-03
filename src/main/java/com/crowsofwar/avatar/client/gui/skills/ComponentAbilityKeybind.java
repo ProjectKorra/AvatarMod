@@ -18,7 +18,6 @@ package com.crowsofwar.avatar.client.gui.skills;
 
 import com.crowsofwar.avatar.client.uitools.UiComponent;
 import com.crowsofwar.avatar.common.bending.Ability;
-
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
@@ -28,16 +27,14 @@ import org.lwjgl.input.Keyboard;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ComponentAbilityKeybind extends UiComponent {
-	
+
 	private final Ability ability;
 	private String text1, text2;
 	private int color;
-	
+
 	private boolean editing;
 	private Conflictable conflict;
 
@@ -45,46 +42,54 @@ public class ComponentAbilityKeybind extends UiComponent {
 		this.ability = ability;
 		this.text1 = this.text2 = "";
 		this.color = 0xffffff;
-		
+
 		this.editing = false;
 		this.conflict = null;
-		
+
 		updateText();
-		
+
 	}
-	
+
+	private static Conflictable conflictableKeybinding(KeyBinding keybind) {
+		return () -> GameSettings.getKeyDisplayString(keybind.getKeyCode());
+	}
+
+	private static Conflictable conflictableAbility(Ability ability) {
+		return () -> GameSettings.getKeyDisplayString(CLIENT_CONFIG.keymappings.get(ability));
+	}
+
 	@Override
 	protected float componentWidth() {
 		int w1 = mc.fontRenderer.getStringWidth(text1);
 		int w2 = mc.fontRenderer.getStringWidth(text2);
 		return Math.max(w1, w2);
 	}
-	
+
 	@Override
 	protected float componentHeight() {
 		return mc.fontRenderer.FONT_HEIGHT * 2;
 	}
-	
+
 	@Override
 	protected void componentDraw(float partialTicks, boolean mouseHover) {
-		
+
 		FontRenderer fr = mc.fontRenderer;
 		fr.drawString(text1, 0, 0, color);
 		fr.drawString(text2, 0, fr.FONT_HEIGHT, color);
-		
+
 	}
-	
+
 	/**
 	 * Update the current text and color based on current keybind, whether
 	 * editing, etc.
 	 */
 	private void updateText() {
-		
+
 		// Keycode mapped to this ability - may be null!
 		Integer keymapping = currentKey();
-		
+
 		String key;
-		
+
 		if (hasConflict()) {
 			color = 0xff0000;
 			key = "conflict";
@@ -95,24 +100,24 @@ public class ComponentAbilityKeybind extends UiComponent {
 			color = 0xffffff;
 			key = keymapping != null ? "set" : "none";
 		}
-		
+
 		String keymappingStr = keymapping == null ? "" : GameSettings.getKeyDisplayString(keymapping);
 		String conflictStr = conflict == null ? "no conflict" : conflict.getName();
-		
+
 		text1 = I18n.format("avatar.key." + key + "1", keymappingStr);
 		text2 = I18n.format("avatar.key." + key + "2", conflictStr);
-		
+
 	}
-	
+
 	private boolean hasConflict() {
 		return conflict != null;
 	}
-	
+
 	@Override
 	protected void click(int button) {
 
 		if (editing) {
-			
+
 			if (button == 0 || button == 1) {
 				// Stop & discard edit
 				editing = false;
@@ -122,16 +127,16 @@ public class ComponentAbilityKeybind extends UiComponent {
 				editing = false;
 				storeKey(button - 100);
 			}
-			
+
 		} else {
 			// Start editing
 			editing = true;
 		}
-		
+
 		updateText();
-		
+
 	}
-	
+
 	@Override
 	public void keyPressed(int keyCode) {
 
@@ -150,34 +155,26 @@ public class ComponentAbilityKeybind extends UiComponent {
 		}
 
 	}
-	
+
 	private Integer currentKey() {
 		return CLIENT_CONFIG.keymappings.get(ability);
 	}
-	
+
 	private boolean hasKeybinding() {
 		return currentKey() != null;
 	}
-	
+
 	private void storeKey(Integer key) {
 		CLIENT_CONFIG.keymappings.put(ability, key);
 		CLIENT_CONFIG.save();
 	}
-	
+
 	public boolean isEditing() {
 		return editing;
 	}
-	
+
 	interface Conflictable {
 		String getName();
 	}
-	
-	private static Conflictable conflictableKeybinding(KeyBinding keybind) {
-		return () -> GameSettings.getKeyDisplayString(keybind.getKeyCode());
-	}
-	
-	private static Conflictable conflictableAbility(Ability ability) {
-		return () -> GameSettings.getKeyDisplayString(CLIENT_CONFIG.keymappings.get(ability));
-	}
-	
+
 }

@@ -29,22 +29,22 @@ import net.minecraftforge.fml.relauncher.Side;
 /**
  * Packet which tells the server that the client pressed a control. The control
  * is given to the player's active bending controller.
- * 
- * @see AvatarControl
  *
+ * @see AvatarControl
  */
 public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
-	
+
 	private Ability ability;
 	private Raytrace.Result raytrace;
-	
-	public PacketSUseAbility() {}
-	
+
+	public PacketSUseAbility() {
+	}
+
 	public PacketSUseAbility(Ability ability, Raytrace.Result raytrace) {
 		this.ability = ability;
 		this.raytrace = raytrace;
 	}
-	
+
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		ability = Abilities.get(GoreCoreByteBufUtil.readString(buf));
@@ -53,29 +53,29 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 		}
 		raytrace = Raytrace.Result.fromBytes(buf);
 	}
-	
+
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
 		GoreCoreByteBufUtil.writeString(buf, ability.getName());
 		raytrace.toBytes(buf);
 	}
-	
+
 	@Override
 	public Side getReceivedSide() {
 		return Side.SERVER;
 	}
-	
+
 	public Ability getAbility() {
 		return ability;
 	}
-	
+
 	public Raytrace.Result getRaytrace() {
 		return raytrace;
 	}
-	
+
 	@Override
 	protected AvatarPacket.Handler<PacketSUseAbility> getPacketHandler() {
 		return PacketRedirector::redirectMessage;
 	}
-	
+
 }

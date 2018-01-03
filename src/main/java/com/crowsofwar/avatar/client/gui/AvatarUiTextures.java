@@ -29,33 +29,27 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AvatarUiTextures {
-	
-	static final ResourceLocation radialMenu = new ResourceLocation("avatarmod",
-			"textures/radial/circle_segment.png");
-	static final ResourceLocation icons = new ResourceLocation("avatarmod", "textures/gui/ability_icons.png");
-	static final ResourceLocation blurredIcons = new ResourceLocation("avatarmod",
-			"textures/gui/blurred_icons.png");
+
 	public static final ResourceLocation skillsGui = new ResourceLocation("avatarmod",
 			"textures/gui/skillmenu.png");
 	public static final ResourceLocation getBending = new ResourceLocation("avatarmod",
 			"textures/gui/getbending.png");
 	public static final ResourceLocation shieldHealth = new ResourceLocation("avatarmod",
 			"textures/gui/shield_health.png");
-	
 	public static final ResourceLocation STATUS_CONTROL_ICONS = new ResourceLocation("avatarmod",
 			"textures/gui/status_controls.png");
 	public static final ResourceLocation CHI_BAR = new ResourceLocation("avatarmod", "textures/gui/chi.png");
-	
 	public static final ResourceLocation ICE = new ResourceLocation("minecraft", "textures/blocks/ice.png");
 	public static final ResourceLocation[] BLOCK_BREAK = getBlockBreakTextures();
-
 	public static final ResourceLocation WHITE = new ResourceLocation("avatarmod", "textures/gui/white.png");
-
+	static final ResourceLocation radialMenu = new ResourceLocation("avatarmod",
+			"textures/radial/circle_segment.png");
+	static final ResourceLocation icons = new ResourceLocation("avatarmod", "textures/gui/ability_icons.png");
+	static final ResourceLocation blurredIcons = new ResourceLocation("avatarmod",
+			"textures/gui/blurred_icons.png");
 	private static final Map<Ability, ResourceLocation> abilityTextures = new HashMap<>();
 	private static final Map<Ability, ResourceLocation> abilityCards = new HashMap<>();
 	private static final Map<Ability, ResourceLocation> abilityCardsPlain = new HashMap<>();
@@ -71,15 +65,15 @@ public class AvatarUiTextures {
 		}
 		return map.get(obj);
 	}
-	
+
 	public static ResourceLocation getAbilityTexture(Ability ability) {
 		return getCachedImage(abilityTextures, ability, "textures/radial/icon_" + ability.getName() + ".png");
 	}
-	
+
 	public static ResourceLocation getCardTexture(Ability ability) {
 		return getCachedImage(abilityCards, ability, "textures/gui/skillmenu/" + ability.getName() + ".png");
 	}
-	
+
 	public static ResourceLocation getPlainCardTexture(Ability ability) {
 		return getCachedImage(abilityCardsPlain, ability,
 				"textures/gui/skillmenu/" + ability.getName() + "_plain.png");

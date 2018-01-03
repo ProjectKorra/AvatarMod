@@ -22,77 +22,32 @@ import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
 /**
  * A measurement that can either be in screen pixels or percentage of total
  * screen. Measurements keep track of x and y values, and are immutable.
- * 
+ *
  * @author CrowsOfWar
  */
 public class Measurement {
-	
+
 	private final Frame frame;
 	private final float x, y;
-	
+
 	private Measurement(Frame frame, float x, float y) {
 		this.frame = frame;
 		this.x = x;
 		this.y = y;
 	}
-	
-	/**
-	 * Returns the x-value of the measurement in pixels.
-	 */
-	public float xInPixels() {
-		return x;
-	}
-	
-	/**
-	 * Returns the y-value of the measurement in pixels.
-	 */
-	public float yInPixels() {
-		return y;
-	}
-	
-	/**
-	 * Returns the x-value of the measurement in percentage of screen width from
-	 * 0-100.
-	 */
-	public float xInPercent() {
-		return x / screenWidth() * 100;
-	}
-	
-	/**
-	 * Returns the y-value of the measurement in percentage of screen height
-	 * from 0-100.
-	 */
-	public float yInPercent() {
-		return y / screenHeight() * 100;
-	}
-	
-	/**
-	 * Returns a new measurement scaled by the given factor.
-	 */
-	public Measurement times(float scl) {
-		return new Measurement(frame, x * scl, y * scl);
-	}
-	
-	/**
-	 * Returns a new measurement based off of this coordinates plus the other
-	 * coordinates.
-	 */
-	public Measurement plus(Measurement m) {
-		return new Measurement(frame, this.x + m.x, this.y + m.y);
-	}
-	
+
 	public static Measurement fromPixels(float x, float y) {
 		return fromPixels(Frame.SCREEN, x, y);
 	}
-	
+
 	public static Measurement fromPixels(Frame frame, float x, float y) {
 		return new Measurement(frame, x, y);
 	}
-	
+
 	public static Measurement fromPercent(float pctX, float pctY) {
 		return fromPercent(Frame.SCREEN, pctX, pctY);
 	}
-	
+
 	/**
 	 * Percent is from 0-100.
 	 */
@@ -100,5 +55,50 @@ public class Measurement {
 		Measurement dim = frame.getDimensions();
 		return new Measurement(frame, dim.x * pctX / 100, dim.y * pctY / 100);
 	}
-	
+
+	/**
+	 * Returns the x-value of the measurement in pixels.
+	 */
+	public float xInPixels() {
+		return x;
+	}
+
+	/**
+	 * Returns the y-value of the measurement in pixels.
+	 */
+	public float yInPixels() {
+		return y;
+	}
+
+	/**
+	 * Returns the x-value of the measurement in percentage of screen width from
+	 * 0-100.
+	 */
+	public float xInPercent() {
+		return x / screenWidth() * 100;
+	}
+
+	/**
+	 * Returns the y-value of the measurement in percentage of screen height
+	 * from 0-100.
+	 */
+	public float yInPercent() {
+		return y / screenHeight() * 100;
+	}
+
+	/**
+	 * Returns a new measurement scaled by the given factor.
+	 */
+	public Measurement times(float scl) {
+		return new Measurement(frame, x * scl, y * scl);
+	}
+
+	/**
+	 * Returns a new measurement based off of this coordinates plus the other
+	 * coordinates.
+	 */
+	public Measurement plus(Measurement m) {
+		return new Measurement(frame, this.x + m.x, this.y + m.y);
+	}
+
 }

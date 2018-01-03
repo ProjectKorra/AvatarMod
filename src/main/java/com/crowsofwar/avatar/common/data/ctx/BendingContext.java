@@ -23,7 +23,6 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.state.IBlockState;
@@ -36,11 +35,11 @@ import javax.annotation.Nullable;
 
 /**
  * Information when something is executed. Only is used server-side.
- * 
+ *
  * @author CrowsOfWar
  */
 public class BendingContext {
-	
+
 	private final BendingData data;
 	private final Bender bender;
 
@@ -49,14 +48,12 @@ public class BendingContext {
 	 */
 	@Nullable
 	private Raytrace.Result raytrace;
-	
+
 	/**
 	 * Create context for execution.
-	 * 
-	 * @param data
-	 *            Player data instance.
-	 * @param raytrace
-	 *            Result of the raytrace, from client
+	 *
+	 * @param data     Player data instance.
+	 * @param raytrace Result of the raytrace, from client
 	 */
 	public BendingContext(BendingData data, EntityLivingBase entity, Raytrace.Result raytrace) {
 		this.data = data;
@@ -64,29 +61,29 @@ public class BendingContext {
 		this.raytrace = raytrace;
 		verifyClientRaytrace();
 	}
-	
+
 	public BendingContext(BendingData data, EntityLivingBase entity, Bender bender,
-			Raytrace.Result raytrace) {
-		
+						  Raytrace.Result raytrace) {
+
 		this.data = data;
 		this.bender = bender;
 		this.raytrace = raytrace;
 		verifyClientRaytrace();
 
 	}
-	
+
 	public BendingData getData() {
 		return data;
 	}
-	
+
 	public Bender getBender() {
 		return bender;
 	}
-	
+
 	public EntityLivingBase getBenderEntity() {
 		return bender.getEntity();
 	}
-	
+
 	public World getWorld() {
 		return bender == null ? null : bender.getWorld();
 	}
@@ -106,7 +103,7 @@ public class BendingContext {
 		}
 		return raytrace.getSide();
 	}
-	
+
 	/**
 	 * Returns whether the player is looking at a block right now
 	 */
@@ -129,7 +126,6 @@ public class BendingContext {
 	 * thinks, resulting in glitchy raytracing.
 	 * <p>
 	 * Performed once to ensure that the client's targeted block is reasonable, to avoid hacking.
-	 *
 	 */
 	private void verifyClientRaytrace() {
 
@@ -150,7 +146,6 @@ public class BendingContext {
 
 			}
 
-
 		}
 
 	}
@@ -168,25 +163,25 @@ public class BendingContext {
 	 * to detect if the player is looking at water.
 	 */
 	public boolean consumeWater(int amount) {
-		
+
 		World world = bender.getWorld();
-		
+
 		if (world.isRainingAt(bender.getEntity().getPosition())) {
 			return true;
 		}
-		
+
 		VectorI targetPos = getLookPosI();
 		if (targetPos != null) {
 			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
 			if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
-				
+
 				if (amount >= 3) {
 					world.setBlockToAir(targetPos.toBlockPos());
 				}
 				return true;
-				
+
 			}
-			
+
 			if (lookAt == Blocks.CAULDRON) {
 				IBlockState ibs = world.getBlockState(targetPos.toBlockPos());
 				int waterLevel = ibs.getValue(BlockCauldron.LEVEL);
@@ -196,11 +191,11 @@ public class BendingContext {
 					return true;
 				}
 			}
-			
+
 		}
-		
+
 		return bender.consumeWaterLevel(amount);
-		
+
 	}
-	
+
 }

@@ -27,28 +27,28 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderFireArc extends RenderArc {
-	
+
 	private static final ResourceLocation fire = new ResourceLocation("avatarmod",
 			"textures/entity/fire-ribbon.png");
 
 	private final ParticleSpawner particleSpawner;
-	
+
 	public RenderFireArc(RenderManager renderManager) {
 		super(renderManager);
 		enableFullBrightness();
 		particleSpawner = new ClientParticleSpawner();
 	}
-	
+
 	@Override
 	protected ResourceLocation getTexture() {
 		return fire;
 	}
-	
+
 	@Override
 	protected void onDrawSegment(EntityArc arc, ControlPoint first, ControlPoint second) {
 		// Parametric equation
 		// For parameters, they will be same as linear equation: y = mx+b
-		
+
 		Vector m = second.position().minus(first.position());
 		Vector b = first.position();
 		double x = Math.random(); // 0-1
@@ -59,5 +59,5 @@ public class RenderFireArc extends RenderArc {
 				velocity);
 
 	}
-	
+
 }

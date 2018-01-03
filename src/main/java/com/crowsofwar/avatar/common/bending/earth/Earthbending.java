@@ -30,9 +30,9 @@ public class Earthbending extends BendingStyle {
 	public static UUID ID = UUID.fromString("82ad13b5-4bbe-4eaf-8aa0-00b36b33aed0");
 
 	private final BendingMenuInfo menu;
-	
+
 	public Earthbending() {
-		
+
 		addAbility("pickup_block");
 		addAbility("ravine");
 		addAbility("wall");
@@ -48,22 +48,22 @@ public class Earthbending extends BendingStyle {
 		ThemeColor edge = new ThemeColor(brown, brown);
 		ThemeColor icon = new ThemeColor(gray, light);
 		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xB09B7F), this);
-		
+
 	}
-	
+
 	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}
-	
+
 	@Override
 	public String getName() {
 		return "earthbending";
 	}
-	
+
 	@Override
 	public UUID getId() {
 		return ID;
 	}
-	
+
 }

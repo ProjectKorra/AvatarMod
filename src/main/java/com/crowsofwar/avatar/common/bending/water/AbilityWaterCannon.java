@@ -8,7 +8,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-public class AbilityWaterCannon extends Ability{
+public class AbilityWaterCannon extends Ability {
 	public AbilityWaterCannon() {
 		super(Waterbending.ID, "water_cannon");
 		requireRaytrace(-1, false);

@@ -26,7 +26,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenVillage;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.terraingen.InitMapGenEvent.EventType;
 import net.minecraftforge.fml.common.Mod;
@@ -37,43 +36,41 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class HumanBenderSpawner {
-	
+
 	@SubscribeEvent
 	public static void modifyVillageSpawner(InitMapGenEvent e) {
-		
+
 		if (e.getType() == EventType.VILLAGE) {
 			// TODO See if this messes up superflat world options
 			e.setNewGen(new MapGenVillageWithHumanbenders());
 		}
-		
+
 	}
-	
+
 	private static class MapGenVillageWithHumanbenders extends MapGenVillage {
-		
+
 		public MapGenVillageWithHumanbenders() {
 			super();
 		}
-		
+
 		public MapGenVillageWithHumanbenders(Map<String, String> map) {
 			super(map);
 		}
-		
+
 		@Override
 		public synchronized boolean generateStructure(World worldIn, Random randomIn, ChunkPos chunkCoord) {
 			boolean result = super.generateStructure(worldIn, randomIn, chunkCoord);
 			if (result) {
-				
+
 				// This list contains villagers in that structure
 				List<EntityVillager> villagers = worldIn.getEntities(EntityVillager.class, villager -> {
 					return new ChunkPos(villager.getPosition()).equals(chunkCoord);
 				});
-				
+
 				// To attempt to have all humanbenders be same type, check if
 				// there are nearby humanbenders
 				// If there are just copy their type
@@ -81,33 +78,33 @@ public class HumanBenderSpawner {
 						chunkCoord.getBlock(30, 150, 30));
 				List<EntityHumanBender> nearbyBenders = worldIn.getEntitiesWithinAABB(EntityHumanBender.class,
 						aabb);
-				
+
 				double chance = 100;
 				Random rand = new Random();
 				if (!villagers.isEmpty() && rand.nextDouble() * 100 < chance) {
-					
+
 					Village village = worldIn.getVillageCollection()
 							.getNearestVillage(chunkCoord.getBlock(0, 0, 0), 200);
-					
+
 					boolean firebender;
-					
+
 					if (nearbyBenders.isEmpty()) {
 						firebender = new Random().nextBoolean();
 					} else {
 						firebender = nearbyBenders.get(0) instanceof EntityFirebender;
 					}
-					
+
 					EntityHumanBender bender = firebender ? new EntityFirebender(worldIn)
 							: new EntityAirbender(worldIn);
 					bender.copyLocationAndAnglesFrom(villagers.get(0));
 					worldIn.spawnEntity(bender);
-					
+
 				}
-				
+
 			}
 			return result;
 		}
-		
+
 	}
-	
+
 }

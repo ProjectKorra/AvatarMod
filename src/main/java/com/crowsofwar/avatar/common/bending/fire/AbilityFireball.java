@@ -35,8 +35,6 @@ import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AbilityFireball extends Ability {
@@ -45,19 +43,19 @@ public class AbilityFireball extends Ability {
 		super(Firebending.ID, "fireball");
 		requireRaytrace(2.5, false);
 	}
-	
+
 	@Override
 	public void execute(AbilityContext ctx) {
-		
+
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
-		
+
 		if (data.hasStatusControl(StatusControl.THROW_FIREBALL)) return;
-		
+
 		if (bender.consumeChi(STATS_CONFIG.chiFireball)) {
-			
+
 			Vector target;
 			if (ctx.isLookingAtBlock()) {
 				target = ctx.getLookPos();
@@ -65,11 +63,11 @@ public class AbilityFireball extends Ability {
 				Vector playerPos = getEyePos(entity);
 				target = playerPos.plus(getLookRectangular(entity).times(2.5));
 			}
-			
+
 			float damage = STATS_CONFIG.fireballSettings.damage;
 			damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
 			damage *= ctx.getPowerRatingDamageMod();
-			
+
 			EntityFireball fireball = new EntityFireball(world);
 			fireball.setPosition(target);
 			fireball.setOwner(entity);
@@ -78,13 +76,13 @@ public class AbilityFireball extends Ability {
 			fireball.setPowerRating(bender.calcPowerRating(Firebending.ID));
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(20);
 			world.spawnEntity(fireball);
-			
+
 			data.addStatusControl(StatusControl.THROW_FIREBALL);
-			
+
 		}
-		
+
 	}
-	
+
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiFireball(this, entity, bender);

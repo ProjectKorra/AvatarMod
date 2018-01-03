@@ -32,7 +32,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class WallJumpEvents {
-	
+
 	private static void tick(EntityPlayer player, World world, BendingData data) {
 		MiscData miscData = data.getMiscData();
 		Bender bender = Bender.get(player);
@@ -49,7 +49,7 @@ public class WallJumpEvents {
 			miscData.setTimeInAir(miscData.getTimeInAir() + 1);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onPlayerTick(PlayerTickEvent e) {
 		EntityPlayer player = e.player;

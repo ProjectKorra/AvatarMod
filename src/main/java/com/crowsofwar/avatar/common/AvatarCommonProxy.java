@@ -24,7 +24,6 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
@@ -38,18 +37,17 @@ import net.minecraft.world.World;
  * Is using Client proxy if running from a minecraft client. Uses server proxy
  * is running from server. <br />
  * <br />
- *
  */
 public interface AvatarCommonProxy {
-	
+
 	/**
 	 * Called from the main class, subclasses should initialize themselves here
 	 * (fields, etc).
 	 */
 	public void preInit();
-	
+
 	public IControlsHandler getKeyHandler();
-	
+
 	/**
 	 * Get a client-side packet handler safely. When the machine is running a
 	 * minecraft client (even if in the integrated server thread), returns the
@@ -57,33 +55,33 @@ public interface AvatarCommonProxy {
 	 * servers), returns null.
 	 */
 	public IPacketHandler getClientPacketHandler();
-	
+
 	/**
 	 * Get client player's reach. Returns 0 on server.
 	 */
 	double getPlayerReach();
-	
+
 	/**
 	 * Called during the FMLInitialization event
 	 */
 	void init();
-	
+
 	AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
-	
+
 	PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher();
-	
+
 	/**
 	 * Get client-side IThreadListener, null on server
-	 * 
+	 *
 	 * @return
 	 */
 	IThreadListener getClientThreadListener();
-	
+
 	/**
 	 * Get amount of particles. 0 = All, 1 = decreased, 2 = minimal
 	 */
 	int getParticleAmount();
-	
+
 	/**
 	 * Creates a wrapper so that the keybinding can be used on both sides
 	 * (KeyBinding is client SideOnly)

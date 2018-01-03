@@ -47,8 +47,6 @@ import net.minecraftforge.event.ForgeEventFactory;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- *
- *
  * @author CrowsOfWar
  */
 public class EntityLightningSpear extends AvatarEntity {
@@ -69,10 +67,10 @@ public class EntityLightningSpear extends AvatarEntity {
 	 */
 	private boolean piercing;
 
-    /**
-     * Upon hitting an enemy, whether to damage any additional enemies next to the hit target.
-     */
-    private boolean groupAttack;
+	/**
+	 * Upon hitting an enemy, whether to damage any additional enemies next to the hit target.
+	 */
+	private boolean groupAttack;
 
 	/**
 	 * Handles electrocution of nearby entities when the lightning spear touches water
@@ -99,15 +97,15 @@ public class EntityLightningSpear extends AvatarEntity {
 		super.onUpdate();
 		LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
 		setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
-		if (this.isDead){
+		if (this.isDead) {
 			removeStatCtrl();
 		}
 		// TODO Temporary fix to avoid extra fireballs
 		// Add hook or something
 		if (getOwner() == null) {
 			if (this.getBehavior() == controlled) {
-			this.rotationYaw = this.getOwner().rotationYaw;
-			this.rotationPitch = this.getOwner().rotationPitch;
+				this.rotationYaw = this.getOwner().rotationYaw;
+				this.rotationPitch = this.getOwner().rotationPitch;
 			}
 			setDead();
 			removeStatCtrl();
@@ -182,23 +180,23 @@ public class EntityLightningSpear extends AvatarEntity {
 		dataManager.set(SYNC_SIZE, size);
 	}
 
-    public boolean isPiercing() {
-        return piercing;
-    }
+	public boolean isPiercing() {
+		return piercing;
+	}
 
-    public void setPiercing(boolean piercing) {
-        this.piercing = piercing;
-    }
+	public void setPiercing(boolean piercing) {
+		this.piercing = piercing;
+	}
 
-    public boolean isGroupAttack() {
-        return groupAttack;
-    }
+	public boolean isGroupAttack() {
+		return groupAttack;
+	}
 
-    public void setGroupAttack(boolean groupAttack) {
-        this.groupAttack = groupAttack;
-    }
+	public void setGroupAttack(boolean groupAttack) {
+		this.groupAttack = groupAttack;
+	}
 
-    @Override
+	@Override
 	public boolean onCollideWithSolid() {
 
 		if (!(getBehavior() instanceof LightningSpearBehavior.Thrown)) {

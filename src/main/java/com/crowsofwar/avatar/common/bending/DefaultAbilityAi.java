@@ -17,26 +17,26 @@
 package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.common.data.Bender;
-
 import net.minecraft.entity.EntityLiving;
 
 /**
  * Ability AI that does nothing
- * 
+ *
  * @author CrowsOfWar
  */
 public class DefaultAbilityAi extends BendingAi {
-	
+
 	protected DefaultAbilityAi(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 	}
-	
+
 	@Override
-	protected void startExec() {}
-	
+	protected void startExec() {
+	}
+
 	@Override
 	protected boolean shouldExec() {
 		return false;
 	}
-	
+
 }

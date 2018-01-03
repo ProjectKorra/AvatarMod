@@ -13,35 +13,35 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.FIRE_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AbilityFireJump extends Ability {
-    public AbilityFireJump() {
-        super(Firebending.ID, "fire_jump");
-    }
+	public AbilityFireJump() {
+		super(Firebending.ID, "fire_jump");
+	}
 
-    @Override
-    public boolean isUtility() {
-        return true;
-    }
+	@Override
+	public boolean isUtility() {
+		return true;
+	}
 
-    @Override
-    public void execute(AbilityContext ctx) {
+	@Override
+	public void execute(AbilityContext ctx) {
 
-        BendingData data = ctx.getData();
-        Bender bender = ctx.getBender();
+		BendingData data = ctx.getData();
+		Bender bender = ctx.getBender();
 
-        if (!data.hasStatusControl(FIRE_JUMP) && bender.consumeChi(STATS_CONFIG.chiAirJump)) {
+		if (!data.hasStatusControl(FIRE_JUMP) && bender.consumeChi(STATS_CONFIG.chiAirJump)) {
 
-            data.addStatusControl(FIRE_JUMP);
-            if (data.hasTickHandler(TickHandler.FIRE_PARTICLE_SPAWNER)) {
-                StatusControl sc = FIRE_JUMP;
-                Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
-                if (FIRE_JUMP.execute(
-                        new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
-                    data.removeStatusControl(FIRE_JUMP);
-                }
-            }
+			data.addStatusControl(FIRE_JUMP);
+			if (data.hasTickHandler(TickHandler.FIRE_PARTICLE_SPAWNER)) {
+				StatusControl sc = FIRE_JUMP;
+				Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
+				if (FIRE_JUMP.execute(
+						new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
+					data.removeStatusControl(FIRE_JUMP);
+				}
+			}
 
-        }
-    }
+		}
+	}
 
 }
 

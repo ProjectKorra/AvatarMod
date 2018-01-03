@@ -19,21 +19,19 @@ package com.crowsofwar.avatar.common.item;
 import net.minecraft.item.Item;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public interface AvatarItem {
-	
+
 	/**
 	 * Return this object, in item form
 	 */
 	Item item();
-	
+
 	/**
 	 * Get the name for the model JSON file for the given metadata. (without the
 	 * file extension appended)
 	 */
 	String getModelName(int meta);
-	
+
 }

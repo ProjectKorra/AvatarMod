@@ -22,12 +22,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ItemBisonSaddle extends Item implements AvatarItem {
-	
+
 	public ItemBisonSaddle() {
 		setUnlocalizedName("bison_saddle");
 		setMaxStackSize(1);
@@ -35,26 +33,26 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 		setMaxDamage(0);
 		setHasSubtypes(true);
 	}
-	
+
 	@Override
 	public Item item() {
 		return this;
 	}
-	
+
 	@Override
 	public String getModelName(int meta) {
 		SaddleTier tier = SaddleTier.get(meta);
 		String tierName = tier == null ? "null" : tier.name().toLowerCase();
 		return "bison_saddle_" + tierName;
 	}
-	
+
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		SaddleTier tier = SaddleTier.get(stack.getMetadata());
 		String tierName = tier == null ? "null" : tier.name().toLowerCase();
 		return super.getUnlocalizedName(stack) + "." + tierName;
 	}
-	
+
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
 
@@ -63,47 +61,47 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 				subItems.add(new ItemStack(this, 1, i));
 			}
 		}
-		
+
 	}
-	
+
 	public enum SaddleTier {
-		
+
 		BASIC(2, 1),
 		STURDY(4, 2),
 		STUDDED(6, 4),
 		MAJESTIC(10, 6);
-		
+
 		private final float armorPoints;
 		private final int maxPassengers;
-		
+
 		private SaddleTier(float armorPoints, int maxPassengers) {
 			this.armorPoints = armorPoints;
 			this.maxPassengers = maxPassengers;
 		}
-		
-		public float getArmorPoints() {
-			return armorPoints;
-		}
-		
-		public int getMaxPassengers() {
-			return maxPassengers;
-		}
-		
-		public int id() {
-			return ordinal();
-		}
-		
+
 		public static SaddleTier get(int id) {
 			if (!isValidId(id)) {
 				return null;
 			}
 			return values()[id];
 		}
-		
+
 		public static boolean isValidId(int id) {
 			return id >= 0 && id < values().length;
 		}
-		
+
+		public float getArmorPoints() {
+			return armorPoints;
+		}
+
+		public int getMaxPassengers() {
+			return maxPassengers;
+		}
+
+		public int id() {
+			return ordinal();
+		}
+
 	}
-	
+
 }

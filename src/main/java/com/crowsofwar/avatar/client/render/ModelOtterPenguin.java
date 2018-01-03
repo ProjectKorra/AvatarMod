@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.mob.EntityOtterPenguin;
-
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -28,11 +27,11 @@ import net.minecraft.util.math.MathHelper;
 /**
  * TheOtterpenguin - talhanation<br />
  * Created using Tabula 5.1.0
- * 
+ *
  * @author talhanation
  */
 public class ModelOtterPenguin extends ModelBase {
-	
+
 	public ModelRenderer leftarm2;
 	public ModelRenderer leftarm1;
 	public ModelRenderer rightarm2;
@@ -50,7 +49,7 @@ public class ModelOtterPenguin extends ModelBase {
 	public ModelRenderer beard2;
 	public ModelRenderer rightshin;
 	public ModelRenderer rightfoot;
-	
+
 	public ModelOtterPenguin() {
 		this.textureWidth = 128;
 		this.textureHeight = 64;
@@ -119,20 +118,20 @@ public class ModelOtterPenguin extends ModelBase {
 		this.rightleg.addChild(this.rightfoot);
 		this.leftleg.addChild(this.leftfoot);
 		this.head.addChild(this.nose);
-		
+
 	}
-	
+
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		// this part authored by CrowsOfWar
-		
+
 		EntityOtterPenguin penguin = (EntityOtterPenguin) entity;
 		if (penguin.isChild()) {
 			GlStateManager.pushMatrix();
 			GlStateManager.scale(0.7f, 0.7f, 0.7f);
 			GlStateManager.translate(0, 0.62f, 0);
 		}
-		
+
 		// end CrowsOfWar
 		this.leftarm2.render(f5);
 		this.tail1.render(f5);
@@ -149,26 +148,26 @@ public class ModelOtterPenguin extends ModelBase {
 			GlStateManager.popMatrix();
 		}
 		// end CrowsOfWar
-		
+
 	}
-	
+
 	/**
 	 * This method made by CrowsOfWar
 	 */
 	@Override
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
-			float headPitch, float scaleFactor, Entity entity) {
-		
+								  float headPitch, float scaleFactor, Entity entity) {
+
 		float pi = (float) Math.PI;
-		
+
 		head.rotateAngleY = (float) Math.toRadians(netHeadYaw);
 		head.rotateAngleX = (float) Math.toRadians(headPitch);
-		
+
 		rightleg.rotateAngleX = MathHelper.cos(limbSwing * 2) * limbSwingAmount;
 		leftleg.rotateAngleX = MathHelper.cos(limbSwing * 2 + pi) * limbSwingAmount;
-		
+
 	}
-	
+
 	/**
 	 * This is a helper function from Tabula to set the rotation of model parts
 	 */

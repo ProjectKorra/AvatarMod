@@ -37,44 +37,42 @@ import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_LIGHTNING_REDI
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class PlayerBender extends Bender {
-	
+
 	private final EntityPlayer player;
-	
+
 	public PlayerBender(EntityPlayer player) {
 		this.player = player;
 	}
-	
+
 	@Override
 	public EntityLivingBase getEntity() {
 		return player;
 	}
-	
+
 	@Override
 	public BendingData getData() {
 		return BendingData.get(player);
 	}
-	
+
 	@Override
 	public boolean isCreativeMode() {
 		return player.capabilities.isCreativeMode;
 	}
-	
+
 	@Override
 	public boolean isFlying() {
 		return player.capabilities.isFlying;
 	}
-	
+
 	@Override
 	public boolean consumeWaterLevel(int amount) {
-		
+
 		int total = 0;
 		InventoryPlayer inv = player.inventory;
-		
+
 		int inventorySlots = 36;
 		for (int i = 0; i < inventorySlots; i++) {
 			ItemStack stack = inv.getStackInSlot(i);
@@ -82,9 +80,9 @@ public class PlayerBender extends Bender {
 				total += stack.getMetadata();
 			}
 		}
-		
+
 		if (total >= amount) {
-			
+
 			// Reduce water pouch level
 			if (!isCreativeMode()) {
 				int i = 0;
@@ -100,13 +98,13 @@ public class PlayerBender extends Bender {
 					i++;
 				}
 			}
-			
+
 			return true;
-			
+
 		} else {
 			return false;
 		}
-		
+
 	}
 
 	@Override

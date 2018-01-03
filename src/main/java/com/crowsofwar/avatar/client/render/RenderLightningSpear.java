@@ -22,22 +22,20 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
- *
- *
  * @author CrowsOfWar
  */
 public class RenderLightningSpear extends RenderModel<EntityLightningSpear> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-            "textures/entity/lightning_spear.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
+			"textures/entity/lightning_spear.png");
 
-    /**
-     * @param renderManager
-     */
-    public RenderLightningSpear(RenderManager renderManager) {
-        super(renderManager, new ModelLightningSpear());
-        setGlowing();
-    }
+	/**
+	 * @param renderManager
+	 */
+	public RenderLightningSpear(RenderManager renderManager) {
+		super(renderManager, new ModelLightningSpear());
+		setGlowing();
+	}
 
 	@Override
 	protected void performGlTransforms(EntityLightningSpear entity, double x, double y, double z, float entityYaw, float partialTicks) {
@@ -48,10 +46,8 @@ public class RenderLightningSpear extends RenderModel<EntityLightningSpear> {
 	}
 
 	@Override
-    protected ResourceLocation getEntityTexture(EntityLightningSpear entity) {
-        return TEXTURE;
-    }
-
-    
+	protected ResourceLocation getEntityTexture(EntityLightningSpear entity) {
+		return TEXTURE;
+	}
 
 }

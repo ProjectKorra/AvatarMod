@@ -35,24 +35,22 @@ import static com.crowsofwar.gorecore.util.Vector.getVelocity;
 import static java.lang.Math.toRadians;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class FlamethrowerUpdateTick extends TickHandler {
-	
+
 	@Override
 	public boolean tick(BendingContext ctx) {
-		
+
 		BendingData data = ctx.getData();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
-		
+
 		AbilityData abilityData = data.getAbilityData("flamethrower");
 		AbilityTreePath path = abilityData.getPath();
 		float totalXp = abilityData.getTotalXp();
 		int level = abilityData.getLevel();
-		
+
 		int flamesPerSecond = level == 0 ? 6 : 10;
 		if (level == 3 && path == AbilityTreePath.FIRST) {
 			flamesPerSecond = 15;
@@ -60,7 +58,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		if (level == 3 && path == AbilityTreePath.SECOND) {
 			flamesPerSecond = 8;
 		}
-		
+
 		if (!entity.world.isRemote && Math.random() < flamesPerSecond / 20.0) {
 
 			double powerRating = bender.calcPowerRating(Firebending.ID);
@@ -81,13 +79,13 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			double maxPowerFactor = 0.4;
 			double powerFactor = (powerRating + 100) / 100 * maxPowerFactor + 1 - maxPowerFactor;
 			requiredChi *= powerFactor;
-			
+
 			if (bender.consumeChi(requiredChi)) {
-				
+
 				Vector eye = getEyePos(entity);
-				
+
 				World world = ctx.getWorld();
-				
+
 				double speedMult = 6 + 5 * totalXp / 100;
 				double randomness = 20 - 10 * totalXp / 100;
 				boolean lightsFires = false;
@@ -108,25 +106,25 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
 				double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
 				Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
-				
+
 				EntityFlames flames = new EntityFlames(world, entity);
 				flames.setVelocity(look.times(speedMult).plus(getVelocity(entity)));
 				flames.setPosition(eye.x(), eye.y(), eye.z());
 				flames.setLightsFires(lightsFires);
 				flames.setDamageMult(bender.getDamageMult(Firebending.ID));
 				world.spawnEntity(flames);
-				
+
 				world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
 						SoundCategory.PLAYERS, 0.2f, 0.8f);
-				
+
 			} else {
 				// not enough chi
 				return true;
 			}
 		}
-		
+
 		return false;
-		
+
 	}
-	
+
 }

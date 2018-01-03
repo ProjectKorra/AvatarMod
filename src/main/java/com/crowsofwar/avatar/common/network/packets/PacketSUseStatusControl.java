@@ -22,27 +22,25 @@ import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.avatar.common.util.Raytrace;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class PacketSUseStatusControl extends AvatarPacket<PacketSUseStatusControl> {
-	
+
 	private StatusControl statusControl;
 	private Raytrace.Result raytrace;
-	
-	public PacketSUseStatusControl() {}
-	
+
+	public PacketSUseStatusControl() {
+	}
+
 	public PacketSUseStatusControl(StatusControl control, Raytrace.Result raytrace) {
 		this.statusControl = control;
 		this.raytrace = raytrace;
 	}
-	
+
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		int id = buf.readInt();
@@ -53,30 +51,30 @@ public class PacketSUseStatusControl extends AvatarPacket<PacketSUseStatusContro
 							+ id);
 			return; // TODO Cancel packet processing
 		}
-		
+
 		raytrace = Raytrace.Result.fromBytes(buf);
 	}
-	
+
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
 		buf.writeInt(statusControl.id());
 		raytrace.toBytes(buf);
 	}
-	
+
 	@Override
 	protected Side getReceivedSide() {
 		return Side.SERVER;
 	}
-	
+
 	@Override
 	protected AvatarPacket.Handler<PacketSUseStatusControl> getPacketHandler() {
 		return PacketRedirector::redirectMessage;
 	}
-	
+
 	public StatusControl getStatusControl() {
 		return statusControl;
 	}
-	
+
 	public Raytrace.Result getRaytrace() {
 		return raytrace;
 	}

@@ -16,25 +16,25 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
+import net.minecraft.client.gui.FontRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.gui.FontRenderer;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 
 /**
  * Text that spans multiple lines
- * 
+ *
  * @author CrowsOfWar
  */
 public class ComponentLongText extends UiComponent {
-	
+
 	private String text;
 	private Measurement width;
-	
+
 	private List<String> lines;
-	
+
 	/**
 	 * Creates a multiline text component. Note that only the x value of the
 	 * width will be used; y is ignored.
@@ -44,42 +44,42 @@ public class ComponentLongText extends UiComponent {
 		this.width = width;
 		calculateLines();
 	}
-	
+
 	@Override
 	protected float componentWidth() {
 		return width.xInPixels() / scaleFactor();
 	}
-	
+
 	@Override
 	protected float componentHeight() {
 		return mc.fontRenderer.FONT_HEIGHT * lines.size();
 	}
-	
+
 	@Override
 	protected void componentDraw(float partialTicks, boolean mouseHover) {
 		for (int i = 0; i < lines.size(); i++) {
 			drawString(mc.fontRenderer, lines.get(i), 0, i * mc.fontRenderer.FONT_HEIGHT, 0xffffff);
 		}
 	}
-	
+
 	private void calculateLines() {
-		
+
 		FontRenderer fr = mc.fontRenderer;
 		lines = new ArrayList<>();
-		
+
 		String currentLine = "";
-		
+
 		String[] words = text.split(" ");
-		
+
 		for (int i = 0; i < words.length; i++) {
-			
+
 			String word = words[i];
 			String wouldBe = currentLine + word + " ";
 			if (fr.getStringWidth(wouldBe) > width.xInPixels() / scaleFactor()) {
 				// The line is too long, push it onto lines and reset
 				lines.add(currentLine);
 				currentLine = "";
-				
+
 				// If a word is too long by itself, ignore it
 				// (don't keep trying to put it on a new line, when it wouldn't
 				// fit by itself anyways)
@@ -88,16 +88,16 @@ public class ComponentLongText extends UiComponent {
 				} else {
 					lines.set(lines.size() - 1, wouldBe);
 				}
-				
+
 			} else {
 				// The line isn't long yet, so keep adding more words
 				currentLine = wouldBe;
 			}
-			
+
 		}
-		
+
 		lines.add(currentLine);
-		
+
 	}
-	
+
 }

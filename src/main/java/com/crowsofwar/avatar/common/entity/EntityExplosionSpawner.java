@@ -16,111 +16,118 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityExplosionSpawner extends AvatarEntity {
 
-        private double maxTicksAlive;
-        private float explosionStrength;
-        private float frequency;
+	private double maxTicksAlive;
+	private float explosionStrength;
+	private float frequency;
 
-        /**
-         * @param world
-         */
-        public EntityExplosionSpawner(World world) {
-            super(world);
-            setSize(1, 1);
-            isImmuneToExplosions();
-            isInvisible();
+	/**
+	 * @param world
+	 */
+	public EntityExplosionSpawner(World world) {
+		super(world);
+		setSize(1, 1);
+		isImmuneToExplosions();
+		isInvisible();
 
-        }
+	}
 
-        public void maxTicks (float ticks) {this.maxTicksAlive = ticks;}
-        public void setExplosionStrength (float explosionStrength) {this.explosionStrength = explosionStrength;}
-        public void setExplosionFrequency (float explosionFrequency) {this.frequency = explosionFrequency;}
+	public void maxTicks(float ticks) {
+		this.maxTicksAlive = ticks;
+	}
 
-        @Override
-        protected void readEntityFromNBT(NBTTagCompound nbt) {
-            super.readEntityFromNBT(nbt);
-        }
+	public void setExplosionStrength(float explosionStrength) {
+		this.explosionStrength = explosionStrength;
+	}
 
-        @Override
-        protected void writeEntityToNBT(NBTTagCompound nbt) {
-            super.writeEntityToNBT(nbt);
-            setDead();
-        }
+	public void setExplosionFrequency(float explosionFrequency) {
+		this.frequency = explosionFrequency;
+	}
 
-        @Override
-        public void onUpdate() {
-            super.onUpdate();
+	@Override
+	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+	}
 
-            if (!world.isRemote && ticksExisted >= maxTicksAlive) {
-                setDead();
-            }
+	@Override
+	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		setDead();
+	}
 
-            BlockPos below = getPosition().offset(EnumFacing.DOWN);
-            Block belowBlock = world.getBlockState(below).getBlock();
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
 
-            if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
-                    world.getBlockState(below).getBlock().getSoundType().getBreakSound(), SoundCategory.PLAYERS, 1, 1, false);
+		if (!world.isRemote && ticksExisted >= maxTicksAlive) {
+			setDead();
+		}
 
-            float explosionSize = STATS_CONFIG.explosionSettings.explosionSize * explosionStrength;
-            explosionSize += getPowerRating() * 2.0 / 100;
-                    if (ticksExisted >=5 && ticksExisted % frequency == 0) {
-                      world.createExplosion(this, this.posX, this.posY, this.posZ, explosionSize, false);
-                    }
+		BlockPos below = getPosition().offset(EnumFacing.DOWN);
+		Block belowBlock = world.getBlockState(below).getBlock();
 
-            if (!world.getBlockState(below).isNormalCube()) {
-                setDead();
-            }
+		if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
+				world.getBlockState(below).getBlock().getSoundType().getBreakSound(), SoundCategory.PLAYERS, 1, 1, false);
 
-            // Destroy if in a block
-            IBlockState inBlock = world.getBlockState(getPosition());
-            if (inBlock.isFullBlock()) {
-                setDead();
-            }
+		float explosionSize = STATS_CONFIG.explosionSettings.explosionSize * explosionStrength;
+		explosionSize += getPowerRating() * 2.0 / 100;
+		if (ticksExisted >= 5 && ticksExisted % frequency == 0) {
+			world.createExplosion(this, this.posX, this.posY, this.posZ, explosionSize, false);
+		}
 
-            // Destroy non-solid blocks in the spawner
-            if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
+		if (!world.getBlockState(below).isNormalCube()) {
+			setDead();
+		}
 
-                if (inBlock.getBlockHardness(world, getPosition()) == 0) {
+		// Destroy if in a block
+		IBlockState inBlock = world.getBlockState(getPosition());
+		if (inBlock.isFullBlock()) {
+			setDead();
+		}
 
-                    breakBlock(getPosition());
+		// Destroy non-solid blocks in the spawner
+		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 
-                } else {
+			if (inBlock.getBlockHardness(world, getPosition()) == 0) {
 
-                    setDead();
-                }
-            }
+				breakBlock(getPosition());
 
-            for (int i = 0; i < 2; i++) {
-                double x = posX + rand.nextGaussian() * 0.15;
-                double z = posZ + rand.nextGaussian() * 0.15;
-                world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x, posY, z, 0, 0, 0);
-            }
-            if (rand.nextDouble() < 0.08) {
-                double smokeX = posX + rand.nextGaussian() * 0.15;
-                double smokeZ = posZ + rand.nextGaussian() * 0.15;
-                world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, smokeX, posY, smokeZ, 0, 0, 0);
-                for (int i = 0; i < 3; i++) {
-                    double fireX = posX + rand.nextGaussian() * 0.4;
-                    double fireY = posY + rand.nextDouble() * 0.4;
-                    double fireZ = posZ + rand.nextGaussian() * 0.4;
-                    world.spawnParticle(EnumParticleTypes.FLAME, fireX, fireY, fireZ, 0, 0, 0);
-                }
-            }
+			} else {
 
-        }
+				setDead();
+			}
+		}
 
-        @Override
-        protected boolean canCollideWith(Entity entity) {
-            return !(entity instanceof EntityExplosionSpawner) && (entity instanceof EntityLivingBase || super.canCollideWith(entity));
+		for (int i = 0; i < 2; i++) {
+			double x = posX + rand.nextGaussian() * 0.15;
+			double z = posZ + rand.nextGaussian() * 0.15;
+			world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x, posY, z, 0, 0, 0);
+		}
+		if (rand.nextDouble() < 0.08) {
+			double smokeX = posX + rand.nextGaussian() * 0.15;
+			double smokeZ = posZ + rand.nextGaussian() * 0.15;
+			world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, smokeX, posY, smokeZ, 0, 0, 0);
+			for (int i = 0; i < 3; i++) {
+				double fireX = posX + rand.nextGaussian() * 0.4;
+				double fireY = posY + rand.nextDouble() * 0.4;
+				double fireZ = posZ + rand.nextGaussian() * 0.4;
+				world.spawnParticle(EnumParticleTypes.FLAME, fireX, fireY, fireZ, 0, 0, 0);
+			}
+		}
 
-        }
+	}
 
-         @Override
-        public boolean onCollideWithSolid() {
-              setDead();
-            return false;
-        }
+	@Override
+	protected boolean canCollideWith(Entity entity) {
+		return !(entity instanceof EntityExplosionSpawner) && (entity instanceof EntityLivingBase || super.canCollideWith(entity));
 
+	}
 
-    }
+	@Override
+	public boolean onCollideWithSolid() {
+		setDead();
+		return false;
+	}
+
+}
 
 

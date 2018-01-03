@@ -46,18 +46,16 @@ import javax.annotation.Nullable;
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_HUMANBENDER_NO_SCROLLS;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public abstract class EntityHumanBender extends EntityBender {
-	
+
 	private static final DataParameter<Integer> SYNC_SKIN = EntityDataManager
 			.createKey(EntityHumanBender.class, DataSerializers.VARINT);
-	
+
 	private EntityAiGiveScroll aiGiveScroll;
 	private int scrollsLeft;
-	
+
 	/**
 	 * @param world
 	 */
@@ -65,13 +63,13 @@ public abstract class EntityHumanBender extends EntityBender {
 		super(world);
 		scrollsLeft = rand.nextInt(3) + 1;
 	}
-	
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_SKIN, (int) (rand.nextDouble() * getNumSkins()));
 	}
-	
+
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
@@ -80,88 +78,88 @@ public abstract class EntityHumanBender extends EntityBender {
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35);
 		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3);
 	}
-	
+
 	@Override
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
-		
+
 		// this.targetTasks.addTask(2,
 		// new EntityAINearestAttackableTarget(this, EntityPlayer.class, true,
 		// false));
 		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, EntityHumanBender.class));
-		
+
 		addBendingTasks();
-		
+
 		this.tasks.addTask(4, aiGiveScroll = new EntityAiGiveScroll(this, getScrollType()));
 		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
-		
+
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[0]));
-		
+
 	}
-	
+
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		setSkin(nbt.getInteger("Skin"));
 		scrollsLeft = nbt.getInteger("Scrolls");
 	}
-	
+
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("Skin", getSkin());
 		nbt.setInteger("Scrolls", scrollsLeft);
 	}
-	
+
 	protected abstract void addBendingTasks();
-	
+
 	protected abstract ScrollType getScrollType();
-	
+
 	protected abstract int getNumSkins();
-	
+
 	public int getSkin() {
 		return dataManager.get(SYNC_SKIN);
 	}
-	
+
 	public void setSkin(int skin) {
 		dataManager.set(SYNC_SKIN, skin);
 	}
-	
+
 	@Override
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
 		super.setEquipmentBasedOnDifficulty(difficulty);
 	}
-	
+
 	@Override
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty,
-			@Nullable IEntityLivingData livingdata) {
+											@Nullable IEntityLivingData livingdata) {
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
 		setEquipmentBasedOnDifficulty(difficulty);
 		setHomePosAndDistance(getPosition(), 20);
-		
+
 		return livingdata;
 	}
-	
+
 	@Override
 	protected boolean canDespawn() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean attackEntityAsMob(Entity entityIn) {
 		float f = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
 		int i = 0;
-		
+
 		if (entityIn instanceof EntityLivingBase) {
 			f += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(),
 					((EntityLivingBase) entityIn).getCreatureAttribute());
 			i += EnchantmentHelper.getKnockbackModifier(this);
 		}
-		
+
 		boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), f);
-		
+
 		if (flag) {
 			if (i > 0 && entityIn instanceof EntityLivingBase) {
 				((EntityLivingBase) entityIn).knockBack(this, i * 0.5F,
@@ -170,45 +168,45 @@ public abstract class EntityHumanBender extends EntityBender {
 				this.motionX *= 0.6D;
 				this.motionZ *= 0.6D;
 			}
-			
+
 			int j = EnchantmentHelper.getFireAspectModifier(this);
-			
+
 			if (j > 0) {
 				entityIn.setFire(j * 4);
 			}
-			
+
 			if (entityIn instanceof EntityPlayer) {
 				EntityPlayer entityplayer = (EntityPlayer) entityIn;
 				ItemStack itemstack = this.getHeldItemMainhand();
 				ItemStack itemstack1 = entityplayer.isHandActive() ? entityplayer.getActiveItemStack()
 						: ItemStack.EMPTY;
-				
+
 				if (!itemstack.isEmpty() && !itemstack1.isEmpty()
 						&& itemstack.getItem() instanceof ItemAxe && itemstack1.getItem() == Items.SHIELD) {
 					float f1 = 0.25F + EnchantmentHelper.getEfficiencyModifier(this) * 0.05F;
-					
+
 					if (this.rand.nextFloat() < f1) {
 						entityplayer.getCooldownTracker().setCooldown(Items.SHIELD, 100);
 						this.world.setEntityState(entityplayer, (byte) 30);
 					}
 				}
 			}
-			
+
 			this.applyEnchantments(this, entityIn);
 		}
-		
+
 		return flag;
 	}
-	
+
 	@Override
 	protected abstract ResourceLocation getLootTable();
-	
+
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		
+
 		ItemStack stack = player.getHeldItem(hand);
 		if (stack.getItem() == Items.DIAMOND && !world.isRemote) {
-			
+
 			if (scrollsLeft > 0) {
 				if (aiGiveScroll.giveScrollTo(player)) {
 					// Take diamond
@@ -221,13 +219,13 @@ public abstract class EntityHumanBender extends EntityBender {
 				MSG_HUMANBENDER_NO_SCROLLS.send(player);
 				AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onNpcNoScrolls());
 			}
-			
+
 			return true;
-			
+
 		}
-		
+
 		return false;
-		
+
 	}
-	
+
 }

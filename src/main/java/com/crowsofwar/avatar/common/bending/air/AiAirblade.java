@@ -16,10 +16,6 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
-import static java.lang.Math.toDegrees;
-
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -27,13 +23,15 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
+import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import static java.lang.Math.toDegrees;
+
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AiAirblade extends BendingAi {
-	
+
 	/**
 	 * @param ability
 	 * @param entity
@@ -42,7 +40,7 @@ public class AiAirblade extends BendingAi {
 	protected AiAirblade(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 	}
-	
+
 	@Override
 	protected void startExec() {
 		EntityLivingBase target = entity.getAttackTarget();
@@ -50,7 +48,7 @@ public class AiAirblade extends BendingAi {
 		entity.rotationYaw = (float) toDegrees(rotations.y());
 		entity.rotationPitch = (float) toDegrees(rotations.x());
 	}
-	
+
 	@Override
 	public boolean shouldContinueExecuting() {
 		entity.rotationYaw = entity.rotationYawHead;
@@ -63,19 +61,19 @@ public class AiAirblade extends BendingAi {
 		}
 		return true;
 	}
-	
+
 	@Override
 	protected boolean shouldExec() {
-		
+
 		EntityLivingBase target = entity.getAttackTarget();
-		
+
 		if (target != null) {
 			double dist = entity.getDistanceSqToEntity(target);
 			return dist >= 4 * 4;
 		}
-		
+
 		return false;
-		
+
 	}
-	
+
 }

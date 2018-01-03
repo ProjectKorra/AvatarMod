@@ -29,17 +29,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ConfigMobs {
-	
-	public static ConfigMobs MOBS_CONFIG = new ConfigMobs();
-	
+
 	private static final Map<String, Integer> DEFAULT_FOODS = new HashMap<>();
 	private static final Map<String, Double> DEFAULT_SCROLL_DROP = new HashMap<>();
 	private static final Map<String, String> DEFAULT_SCROLL_TYPE = new HashMap<>();
+	public static ConfigMobs MOBS_CONFIG = new ConfigMobs();
+
 	static {
 		// Wheat
 		DEFAULT_FOODS.put("minecraft:bread", 5);
@@ -58,7 +56,7 @@ public class ConfigMobs {
 		DEFAULT_FOODS.put("minecraft:beetroot", 8);
 		DEFAULT_FOODS.put("minecraft:cake", 45);
 		DEFAULT_FOODS.put("minecraft:sugar", 2);
-		
+
 		DEFAULT_SCROLL_DROP.put("polar_bear", 15.0);
 		DEFAULT_SCROLL_TYPE.put("polar_bear", "water");
 		DEFAULT_SCROLL_DROP.put("squid", 2.0);
@@ -67,7 +65,7 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_TYPE.put("guardian", "water");
 		DEFAULT_SCROLL_DROP.put("elder_guardian", 20.0);
 		DEFAULT_SCROLL_TYPE.put("elder_guardian", "water");
-		
+
 		DEFAULT_SCROLL_DROP.put("zombie_pigman", 5.0);
 		DEFAULT_SCROLL_TYPE.put("zombie_pigman", "fire");
 		DEFAULT_SCROLL_DROP.put("magma_cube", 4.0);
@@ -78,7 +76,7 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_TYPE.put("ghast", "fire");
 		DEFAULT_SCROLL_DROP.put("blaze", 8.0);
 		DEFAULT_SCROLL_TYPE.put("blaze", "fire");
-		
+
 		DEFAULT_SCROLL_DROP.put("bat", 25.0);
 		DEFAULT_SCROLL_TYPE.put("bat", "earth");
 		DEFAULT_SCROLL_DROP.put("mooshroom", 10.0);
@@ -87,7 +85,7 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_TYPE.put("cave_spider", "earth");
 		DEFAULT_SCROLL_DROP.put("silverfish", 10.0);
 		DEFAULT_SCROLL_TYPE.put("silverfish", "earth");
-		
+
 		DEFAULT_SCROLL_DROP.put("creeper", 3.0);
 		DEFAULT_SCROLL_DROP.put("skeleton", 4.0);
 		DEFAULT_SCROLL_DROP.put("zombie", 3.0);
@@ -95,31 +93,31 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_DROP.put("witch", 10.0);
 		DEFAULT_SCROLL_DROP.put("husk", 6.0);
 		DEFAULT_SCROLL_DROP.put("stray", 6.0);
-		
+
 	}
-	
+
 	@Load
 	public int bisonMinDomestication = 500, bisonMaxDomestication = 800;
-	
+
 	@Load
 	public int bisonRiderTameness = 800, bisonOwnableTameness = 900, bisonLeashTameness = 1000,
 			bisonChestTameness = 1000;
-	
+
 	@Load
 	public int bisonGrassFoodBonus = 5, bisonRideOneSecondTameness = 3;
-	
+
 	@Load
 	public float bisonBreedMinMinutes = 60, bisonBreedMaxMinutes = 120;
-	
+
 	@Load
 	private Map<String, Integer> bisonFoods;
 	private Map<Item, Integer> bisonFoodList;
-	
+
 	@Load
 	private Map<String, Double> scrollDropChance;
 	@Load
 	private Map<String, String> scrollType;
-	
+
 	public static void load() {
 		MOBS_CONFIG.bisonFoods = DEFAULT_FOODS;
 		MOBS_CONFIG.scrollDropChance = DEFAULT_SCROLL_DROP;
@@ -127,7 +125,7 @@ public class ConfigMobs {
 		ConfigLoader.load(MOBS_CONFIG, "avatar/mobs.yml");
 		MOBS_CONFIG.loadLists();
 	}
-	
+
 	private void loadLists() {
 		bisonFoodList = new HashMap<>();
 		for (Map.Entry<String, Integer> entry : bisonFoods.entrySet()) {
@@ -140,15 +138,15 @@ public class ConfigMobs {
 			}
 		}
 	}
-	
+
 	public int getDomesticationValue(Item item) {
 		return bisonFoodList.containsKey(item) ? bisonFoodList.get(item) : 0;
 	}
-	
+
 	public boolean isBisonFood(Item item) {
 		return bisonFoodList.containsKey(item);
 	}
-	
+
 	/**
 	 * Get the default scroll drop chance for that entity in percentage (0-100)
 	 */
@@ -160,7 +158,7 @@ public class ConfigMobs {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * Gets the scroll type for that entity to drop. By default, is
 	 * ScrollType.ALL.
@@ -188,7 +186,7 @@ public class ConfigMobs {
 		}
 
 		return ScrollType.ALL;
-		
+
 	}
-	
+
 }

@@ -32,29 +32,27 @@ import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRS
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AbilityAirGust extends Ability {
-	
+
 	public AbilityAirGust() {
 		super(Airbending.ID, "air_gust");
 	}
-	
+
 	@Override
 	public void execute(AbilityContext ctx) {
-		
+
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
-		
+
 		if (!bender.consumeChi(STATS_CONFIG.chiAirGust)) return;
-		
+
 		Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
 				Math.toRadians(entity.rotationPitch));
 		Vector pos = Vector.getEyePos(entity);
-		
+
 		EntityAirGust gust = new EntityAirGust(world);
 		gust.setVelocity(look.times(25));
 		gust.setPosition(pos.x(), pos.y(), pos.z());
@@ -66,15 +64,15 @@ public class AbilityAirGust extends Ability {
 
 		world.spawnEntity(gust);
 	}
-	
+
 	@Override
 	public int getCooldown(AbilityContext ctx) {
 		return ctx.getLevel() >= 1 ? 30 : 60;
 	}
-	
+
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiAirGust(this, entity, bender);
 	}
-	
+
 }

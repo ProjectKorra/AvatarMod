@@ -17,47 +17,45 @@
 package com.crowsofwar.avatar.common.network.packets;
 
 import com.crowsofwar.avatar.common.network.PacketRedirector;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class PacketSCycleBending extends AvatarPacket<PacketSCycleBending> {
-	
+
 	private boolean right;
-	
-	public PacketSCycleBending() {}
-	
+
+	public PacketSCycleBending() {
+	}
+
 	public PacketSCycleBending(boolean right) {
 		this.right = right;
 	}
-	
+
 	@Override
 	protected void avatarFromBytes(ByteBuf buf) {
 		right = buf.readBoolean();
 	}
-	
+
 	@Override
 	protected void avatarToBytes(ByteBuf buf) {
 		buf.writeBoolean(right);
 	}
-	
+
 	@Override
 	protected Side getReceivedSide() {
 		return Side.SERVER;
 	}
-	
+
 	@Override
 	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketSCycleBending> getPacketHandler() {
 		return PacketRedirector::redirectMessage;
 	}
-	
+
 	public boolean cycleRight() {
 		return right;
 	}
-	
+
 }

@@ -17,58 +17,57 @@
 
 package com.crowsofwar.avatar.common.network.packets;
 
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.AccountUUIDs.AccountId;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.UUID;
+
 /**
  * Sent from client to server to request data about a player.
- *
  */
 public class PacketSRequestData extends AvatarPacket<PacketSRequestData> {
-	
+
 	private UUID asking;
-	
-	public PacketSRequestData() {}
-	
+
+	public PacketSRequestData() {
+	}
+
 	public PacketSRequestData(UUID asking) {
 		this.asking = asking;
 	}
-	
+
 	public PacketSRequestData(EntityPlayer player) {
 		AccountId result = AccountUUIDs.getId(player.getName());
 		this.asking = result.getUUID();
 	}
-	
+
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		asking = GoreCoreByteBufUtil.readUUID(buf);
 	}
-	
+
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
 		GoreCoreByteBufUtil.writeUUID(buf, asking);
 	}
-	
+
 	@Override
 	public Side getReceivedSide() {
 		return Side.SERVER;
 	}
-	
+
 	public UUID getAskedPlayer() {
 		return asking;
 	}
-	
+
 	@Override
 	protected AvatarPacket.Handler<PacketSRequestData> getPacketHandler() {
 		return PacketRedirector::redirectMessage;
 	}
-	
+
 }

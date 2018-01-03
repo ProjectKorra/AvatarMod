@@ -45,8 +45,6 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityRavine extends AvatarEntity {
@@ -57,7 +55,7 @@ public class EntityRavine extends AvatarEntity {
 	private double maxTravelDistanceSq;
 	private boolean breakBlocks;
 	private boolean dropEquipment;
-	
+
 	/**
 	 * @param world
 	 */
@@ -66,19 +64,19 @@ public class EntityRavine extends AvatarEntity {
 		setSize(1, 1);
 		this.damageMult = 1;
 	}
-	
+
 	public void setDamageMult(float mult) {
 		this.damageMult = mult;
 	}
-	
+
 	public void setDistance(double dist) {
 		maxTravelDistanceSq = dist * dist;
 	}
-	
+
 	public void setBreakBlocks(boolean breakBlocks) {
 		this.breakBlocks = breakBlocks;
 	}
-	
+
 	public void setDropEquipment(boolean dropEquipment) {
 		this.dropEquipment = dropEquipment;
 	}
@@ -86,12 +84,12 @@ public class EntityRavine extends AvatarEntity {
 	public double getSqrDistanceTravelled() {
 		return position().sqrDist(initialPosition);
 	}
-	
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 	}
-	
+
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
@@ -105,7 +103,7 @@ public class EntityRavine extends AvatarEntity {
 
 	@Override
 	public void onEntityUpdate() {
-		
+
 		super.onEntityUpdate();
 
 		if (initialPosition == null) {
@@ -114,7 +112,7 @@ public class EntityRavine extends AvatarEntity {
 
 		Vector position = position();
 		Vector velocity = velocity();
-		
+
 		setPosition(position.plus(velocity.times(0.05)));
 
 		if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
@@ -123,44 +121,44 @@ public class EntityRavine extends AvatarEntity {
 
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		Block belowBlock = world.getBlockState(below).getBlock();
-		
+
 		if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
 				world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
 				SoundCategory.PLAYERS, 1, 1, false);
-		
+
 		if (!world.getBlockState(below).isNormalCube()) {
 			setDead();
 		}
-		
+
 		if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock)) {
 			setDead();
 		}
-		
+
 		// Destroy if in a block
 		IBlockState inBlock = world.getBlockState(getPosition());
 		if (inBlock.isFullBlock()) {
 			setDead();
 		}
-		
+
 		// Destroy non-solid blocks in the ravine
 		BlockPos inPos = getPosition();
 		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
-			
+
 			if (inBlock.getBlockHardness(world, getPosition()) == 0) {
-				
+
 				breakBlock(getPosition());
-				
+
 			} else {
-				
+
 				setDead();
-				
+
 			}
-			
+
 		}
-		
+
 		// amount of entities which were successfully attacked
 		int attacked = 0;
-		
+
 		// Push collided entities back
 		if (!world.isRemote) {
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
@@ -174,28 +172,28 @@ public class EntityRavine extends AvatarEntity {
 				}
 			}
 		}
-		
+
 		if (!world.isRemote && getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 			if (data != null) {
 				data.getAbilityData("ravine").addXp(SKILLS_CONFIG.ravineHit * attacked);
 			}
 		}
-		
+
 		if (!world.isRemote && breakBlocks) {
 			BlockPos last = new BlockPos(prevPosX, prevPosY, prevPosZ);
 			if (!last.equals(getPosition()) && !last.equals(initialPosition.toBlockPos())) {
-				
+
 				world.destroyBlock(last.down(), true);
-				
+
 				double travel = Math.sqrt(getSqrDistanceTravelled() / maxTravelDistanceSq);
 				double chance = -(travel - 0.5) * (travel - 0.5) + 0.25;
 				chance *= 2;
-				
+
 				if (rand.nextDouble() <= chance) {
 					world.destroyBlock(last.down(2), true);
 				}
-				
+
 			}
 		}
 
@@ -208,19 +206,19 @@ public class EntityRavine extends AvatarEntity {
 	}
 
 	private boolean attackEntity(Entity entity) {
-		
+
 		if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
-			
+
 			Vector push = velocity().withY(1).times(STATS_CONFIG.ravineSettings.push);
 			entity.addVelocity(push.x(), push.y(), push.z());
 			AvatarUtils.afterVelocityAdded(entity);
-			
+
 			if (dropEquipment && entity instanceof EntityLivingBase) {
-				
+
 				EntityLivingBase elb = (EntityLivingBase) entity;
-				
+
 				for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
-					
+
 					ItemStack stack = elb.getItemStackFromSlot(slot);
 					if (!stack.isEmpty()) {
 						double chance = slot.getSlotType() == Type.HAND ? 40 : 20;
@@ -229,19 +227,19 @@ public class EntityRavine extends AvatarEntity {
 							elb.setItemStackToSlot(slot, ItemStack.EMPTY);
 						}
 					}
-					
+
 				}
-				
+
 			}
-			
+
 			DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
 			float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
 			return entity.attackEntityFrom(ds, damage);
-			
+
 		}
-		
+
 		return false;
-		
+
 	}
-	
+
 }

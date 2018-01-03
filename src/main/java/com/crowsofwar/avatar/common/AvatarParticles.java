@@ -17,44 +17,44 @@
 
 package com.crowsofwar.avatar.common;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraftforge.common.util.EnumHelper;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraftforge.common.util.EnumHelper;
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
 /**
  * Manages registration of custom particles
- * 
+ *
  * @author CrowsOfWar
  */
 public class AvatarParticles {
-	
+
 	private static EnumParticleTypes particleFlames, particleAir;
 	private static Map<Integer, EnumParticleTypes> lookup;
-	
+
 	public static void register() {
 		lookup = new HashMap<>();
 		particleFlames = addParticle("flames");
 		particleAir = addParticle("air");
 	}
-	
+
 	private static EnumParticleTypes addParticle(String particleName) {
-		
+
 		EnumParticleTypes particle = EnumHelper.addEnum(EnumParticleTypes.class,
 				"AVATAR_" + particleName.toUpperCase(),
-				new Class<?>[] { String.class, int.class, boolean.class },
+				new Class<?>[]{String.class, int.class, boolean.class},
 				"avatar" + particleName.substring(0, 1).toUpperCase()
 						+ particleName.substring(1).toLowerCase(),
 				nextParticleId(), true);
-		
+
 		lookup.put(particle.getParticleID(), particle);
 		return particle;
-		
+
 	}
-	
+
 	private static int nextParticleId() {
 		EnumParticleTypes[] allParticles = EnumParticleTypes.values();
 		int maxId = -1;
@@ -65,20 +65,20 @@ public class AvatarParticles {
 		}
 		return maxId + 1;
 	}
-	
+
 	public static EnumParticleTypes getParticleFlames() {
 		return CLIENT_CONFIG.useCustomParticles ? particleFlames : EnumParticleTypes.FLAME;
 	}
-	
+
 	public static EnumParticleTypes getParticleAir() {
 		return CLIENT_CONFIG.useCustomParticles ? particleAir : EnumParticleTypes.CLOUD;
 	}
-	
+
 	/**
 	 * Looks up that particle. Returns null if none found.
 	 */
 	public static EnumParticleTypes lookup(int id) {
 		return lookup.get(id);
 	}
-	
+
 }

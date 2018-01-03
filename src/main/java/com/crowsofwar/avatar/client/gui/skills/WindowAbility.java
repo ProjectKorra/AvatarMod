@@ -40,12 +40,10 @@ import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class WindowAbility {
-	
+
 	private static final FormattedMessage MSG_UNLOCK_TEXT = FormattedMessage
 			.newChatMessage("avatar.ui.unlockDesc", "bending");
 	private static final FormattedMessage MSG_UNLOCK_SPECIAL_TEXT = FormattedMessage
@@ -56,86 +54,86 @@ public class WindowAbility {
 	private final Ability ability;
 	private final SkillsGui gui;
 	private final UiComponentHandler handler;
-	
+
 	private Frame frame;
 	private UiComponent icon, title, overlay, level, invBg, treeView, description, backButton;
 	private ComponentInventorySlots slot1, slot2;
 	private ComponentAbilityKeybind keybind;
 	private ComponentCustomButton button;
-	
+
 	private UiComponent unlockTitle, unlockText;
 	private ComponentCustomButton unlockButton;
-	
+
 	public WindowAbility(Ability ability, SkillsGui gui) {
 		this.mc = Minecraft.getMinecraft();
 		this.ability = ability;
 		this.gui = gui;
 		this.handler = new UiComponentHandler();
-		
+
 		frame = new Frame();
 		frame.setDimensions(fromPercent(80, 80));
 		frame.setPosition(fromPercent((100 - 80) / 2, (100 - 80) / 2));
-		
+
 		Frame frameLeft = new Frame(frame);
 		frameLeft.setDimensions(fromPercent(frame, 30, 100));
-		
+
 		Frame frameRight = new Frame(frame);
 		frameRight.setDimensions(fromPercent(frame, 60, 100));
 		frameRight.setPosition(fromPercent(frame, 40, 0));
-		
+
 		overlay = new ComponentOverlay();
 		handler.add(overlay);
-		
+
 		title = new ComponentText(TextFormatting.BOLD + I18n.format("avatar.ability." + ability.getName()));
 		title.setFrame(frameLeft);
 		title.setPosition(StartingPosition.MIDDLE_TOP);
 		title.setScale(1.4f);
 		title.setZLevel(4);
 		handler.add(title);
-		
+
 		icon = new ComponentImage(getPlainCardTexture(ability), 0, 0, 256, 256);
 		icon.setFrame(frameLeft);
 		icon.setPosition(StartingPosition.MIDDLE_TOP);
 		icon.setOffset(fromPixels(0, title.height()).plus(fromPercent(0, -35)));
 		icon.setZLevel(3);
 		handler.add(icon);
-		
+
 		description = new ComponentLongText(I18n.format("avatar.ability." + ability.getName() + ".desc"),
 				fromPercent(frameLeft, 100, 0));
 		description.setFrame(frameLeft);
 		description.setPosition(StartingPosition.custom(0, 0.2f, 0, 0));
 		description.setZLevel(4);
 		handler.add(description);
-		
+
 		// level = new ComponentAbilityIcon(ability);
 		// level.setFrame(frameRight);
 		// level.setPosition(StartingPosition.TOP_RIGHT);
 		// handler.add(level);
-		
+
 		invBg = new ComponentImage(AvatarUiTextures.skillsGui, 0, 54, 169, 83);
 		invBg.setPosition(StartingPosition.BOTTOM_RIGHT);
 		// Not setting frame since should be absolutely positioned
 		// Don't add invBg since it shouldn't be rendered
 		// invBg is used to figure out where inventory is
-		
+
 		slot1 = new ComponentInventorySlots(gui.inventorySlots, 0);
 		slot1.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
 		slot1.setZLevel(5);
 		handler.add(slot1);
-		
+
 		slot2 = new ComponentInventorySlots(gui.inventorySlots, 1);
 		slot2.useTexture(AvatarUiTextures.skillsGui, 40, 0, 18, 18);
 		slot2.setOffset(Measurement.fromPixels(frameRight, slot1.width() + 10, 0));
 		slot2.setZLevel(5);
 		handler.add(slot2);
-		
+
 		treeView = new ComponentAbilityTree(ability, slot1, slot2);
 		treeView.setFrame(frameRight);
 		treeView.setPosition(StartingPosition.TOP_LEFT);
 		treeView.setOffset(Measurement.fromPercent(frameRight, 0, 20));
 		treeView.setZLevel(4);
 		handler.add(treeView);
-		
+
 		button = new ComponentCustomButton(AvatarUiTextures.skillsGui, 112, 0, 18, 18,
 				() -> gui.useScroll(ability));
 		button.setFrame(frameRight);
@@ -144,20 +142,20 @@ public class WindowAbility {
 		button.setOffset(treeView.offset().plus(fromPixels(frameRight, treeView.width() + 100, 0)));
 		button.setZLevel(4);
 		handler.add(button);
-		
+
 		keybind = new ComponentAbilityKeybind(ability);
 		keybind.setFrame(frameRight);
 		keybind.setPosition(StartingPosition.custom(0.5f, 0.5f, 1, 0.5f));
 		keybind.setOffset(Measurement.fromPercent(frameRight, -4, 0));
 		keybind.setZLevel(4);
 		handler.add(keybind);
-		
+
 		unlockTitle = new ComponentText(TextFormatting.BOLD + I18n.format("avatar.ui.unlock"));
 		unlockTitle.setFrame(frameRight);
 		unlockTitle.setScale(1.5f);
 		unlockTitle.setZLevel(4);
 		handler.add(unlockTitle);
-		
+
 		String bendingName = BendingStyles.get(ability.getBendingId()).getName().toLowerCase();
 
 		// Apply special text if specialty bending
@@ -168,7 +166,7 @@ public class WindowAbility {
 			text = FormattedMessageProcessor.formatText(MSG_UNLOCK_SPECIAL_TEXT,
 					I18n.format("avatar.ui.unlockDescSpecialty"), bendingName, specialtyName);
 		} else {
-			 text = FormattedMessageProcessor.formatText(MSG_UNLOCK_TEXT,
+			text = FormattedMessageProcessor.formatText(MSG_UNLOCK_TEXT,
 					I18n.format("avatar.ui.unlockDesc"), bendingName);
 		}
 
@@ -177,7 +175,7 @@ public class WindowAbility {
 		unlockText.setZLevel(4);
 		unlockText.setOffset(fromPixels(frameRight, 0, unlockTitle.height() + 10));
 		handler.add(unlockText);
-		
+
 		unlockButton = new ComponentCustomButton(AvatarUiTextures.skillsGui, 196, 100, 20, 20,
 				() -> AvatarMod.network.sendToServer(new PacketSUseScroll(ability)));
 		unlockButton.setFrame(frameRight);
@@ -185,33 +183,33 @@ public class WindowAbility {
 				unlockTitle.height() + unlockText.height() + 20));
 		unlockButton.setZLevel(4);
 		handler.add(unlockButton);
-		
+
 		backButton = new ComponentCustomButton(AvatarUiTextures.skillsGui, 0, 240, 16, 16,
 				() -> gui.closeWindow());
 		backButton.setZLevel(999);
 		handler.add(backButton);
-		
+
 	}
-	
+
 	public void draw(float partialTicks) {
-		
+
 		button.setEnabled(
 				gui.inventorySlots.getSlot(0).getHasStack() || gui.inventorySlots.getSlot(1).getHasStack());
-		
+
 		int width = screenWidth() / scaleFactor();
 		int height = screenHeight() / scaleFactor();
 		int mouseX = Mouse.getX() * width / mc.displayWidth;
 		int mouseY = height - Mouse.getY() * height / mc.displayHeight - 1;
-		
+
 		AbilityData data = AbilityData.get(mc.player, ability.getName());
-		
+
 		unlockTitle.setVisible(data.isLocked());
 		unlockText.setVisible(data.isLocked());
 		unlockButton.setVisible(data.isLocked());
-		
+
 		treeView.setVisible(!data.isLocked());
 		button.setVisible(!data.isLocked());
-		
+
 		if (data.isLocked()) {
 			unlockButton.setEnabled(gui.inventorySlots.getSlot(0).getHasStack());
 			slot1.setVisible(true);
@@ -222,41 +220,41 @@ public class WindowAbility {
 		} else {
 			slot1.setFrame(Frame.SCREEN);
 		}
-		
+
 		handler.draw(partialTicks, mouseX, mouseY);
-		
+
 	}
-	
+
 	public boolean isMouseHover(float mouseX, float mouseY) {
 		Measurement min = frame.getCoordsMin();
 		Measurement max = frame.getCoordsMax();
 		return mouseX > min.xInPixels() && mouseY > min.yInPixels() && mouseX < max.xInPixels()
 				&& mouseY < max.yInPixels();
 	}
-	
+
 	public boolean isInventoryMouseHover(float mouseX, float mouseY) {
 		Measurement min = invBg.coordinates();
 		Measurement max = min.plus(fromPixels(invBg.width(), invBg.height()));
 		return mouseX > min.xInPixels() && mouseY > min.yInPixels() && mouseX < max.xInPixels()
 				&& mouseY < max.yInPixels();
 	}
-	
+
 	public void mouseClicked(float x, float y, int button) {
 		handler.click(x, y, button);
 	}
-	
+
 	public void keyTyped(int key) {
 		handler.type(key);
 	}
-	
+
 	public Frame getFrame() {
 		return frame;
 	}
-	
+
 	public boolean isEditing() {
 		return keybind.isEditing();
 	}
-	
+
 	public void onClose() {
 		slot1.setVisible(false);
 		slot2.setVisible(false);
@@ -264,24 +262,24 @@ public class WindowAbility {
 		slot1.draw(0, 0, 0);
 		slot2.draw(0, 0, 0);
 	}
-	
+
 	/**
 	 * Check whether the ItemStack is in a slot that doesn't have a tooltip.
 	 * This is to prevent an issue where there is an ItemStack tooltip and a
 	 * slot tooltip rendering at the same time.
 	 */
 	public boolean canRenderTooltip(ItemStack stack) {
-		
+
 		AbilityData data = AbilityData.get(mc.player, ability.getName());
 		if (data.isLocked()) {
 			return true;
 		}
-		
+
 		Slot invSlot1 = gui.inventorySlots.getSlot(0);
 		Slot invSlot2 = gui.inventorySlots.getSlot(1);
-		
+
 		return invSlot1.getStack() != stack && invSlot2.getStack() != stack;
-		
+
 	}
-	
+
 }

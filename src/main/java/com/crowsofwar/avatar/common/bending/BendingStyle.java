@@ -44,10 +44,9 @@ import java.util.UUID;
  * <p>
  * *Optionally = the subclass must declare the method, but does not need to put
  * any code inside of it.
- *
  */
 public abstract class BendingStyle implements ReadableWritable {
-	
+
 	public static final CreateFromNBT<BendingStyle> creator = new CreateFromNBT<BendingStyle>() {
 		@Override
 		public BendingStyle create(NBTTagCompound nbt, Object[] methodsExtraData, Object[] extraData) {
@@ -63,20 +62,20 @@ public abstract class BendingStyle implements ReadableWritable {
 			}
 		}
 	};
-	
+
 	public static final WriteToNBT<BendingStyle> writer = new WriteToNBT<BendingStyle>() {
 		@Override
 		public void write(NBTTagCompound nbt, BendingStyle object, Object[] methodsExtraData,
-				Object[] extraData) {
+						  Object[] extraData) {
 			nbt.setUniqueId("ControllerID", object.getId());
 		}
 	};
-	
+
 	/**
 	 * RNG available for convenient use.
 	 */
 	public static final Random random = new Random();
-	
+
 	private final List<Ability> abilities;
 
 	/**
@@ -102,21 +101,21 @@ public abstract class BendingStyle implements ReadableWritable {
 		this.abilities = new ArrayList<>();
 		this.parentBendingId = parentBendingId;
 	}
-	
+
 	protected void addAbility(String abilityName) {
 		this.abilities.add(Abilities.get(abilityName));
 	}
-	
+
 	/**
 	 * Get information about this bending controller's radial menu.
 	 */
 	public abstract BendingMenuInfo getRadialMenu();
-	
+
 	/**
 	 * Get the name of this bending controller in lowercase. e.g. "earthbending"
 	 */
 	public abstract String getName();
-	
+
 	public abstract UUID getId();
 
 	public byte getNetworkId() {
@@ -144,9 +143,11 @@ public abstract class BendingStyle implements ReadableWritable {
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {}
-	
+	public void readFromNBT(NBTTagCompound nbt) {
+	}
+
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {}
+	public void writeToNBT(NBTTagCompound nbt) {
+	}
 
 }

@@ -39,30 +39,29 @@ import java.util.List;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
-	
+
 	public static final DataSerializer<FireArcBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
-	
+
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
-		
+
 		registerBehavior(PlayerControlled.class);
 		registerBehavior(Thrown.class);
 		registerBehavior(Idle.class);
-		
+
 	}
-	
+
 	public static class PlayerControlled extends FireArcBehavior {
-		
-		public PlayerControlled() {}
-		
+
+		public PlayerControlled() {
+		}
+
 		@Override
 		public FireArcBehavior onUpdate(EntityFireArc entity) {
-			
+
 			EntityLivingBase owner = entity.getOwner();
 			if (owner == null) {
 				return this;
@@ -73,27 +72,31 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			Vector lookPos = Vector.getEyePos(owner).plus(look.times(3));
 			Vector motion = lookPos.minus(new Vector(entity)).times(0.3);
 			entity.move(MoverType.SELF, motion.x(), motion.y(), motion.z());
-			
+
 			return this;
-			
+
 		}
-		
+
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
+		public void fromBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
+		public void toBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void load(NBTTagCompound nbt) {}
-		
+		public void load(NBTTagCompound nbt) {
+		}
+
 		@Override
-		public void save(NBTTagCompound nbt) {}
-		
+		public void save(NBTTagCompound nbt) {
+		}
+
 	}
-	
+
 	public static class Thrown extends FireArcBehavior {
-		
+
 		@Override
 		public FireArcBehavior onUpdate(EntityFireArc entity) {
 			entity.addVelocity(Vector.DOWN.times(9.81 / 60));
@@ -101,9 +104,9 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
 					EntityLivingBase.class, entity.getEntityBoundingBox().grow(0.9, 0.9, 0.9),
 					collided -> collided != entity.getOwner());
-			
+
 			for (EntityLivingBase collided : collidedList) {
-				
+
 				double push = STATS_CONFIG.fireballSettings.push;
 				collided.addVelocity(entity.motionX * push, 0.4 * push, entity.motionZ * push);
 				collided.setFire(3);
@@ -112,7 +115,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 						STATS_CONFIG.fireballSettings.damage * entity.getDamageMult())) {
 					BattlePerformanceScore.addMediumScore(entity.getOwner());
 				}
-				
+
 				if (!entity.world.isRemote) {
 					BendingData data = Bender.get(entity.getOwner()).getData();
 					if (data != null) {
@@ -120,9 +123,9 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 								.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);
 					}
 				}
-				
+
 			}
-			
+
 			if (!collidedList.isEmpty() && entity.getOwner() != null) {
 				BendingData data = BendingData.get(entity.getOwner());
 				AbilityData abilityData = data.getAbilityData("fire_arc");
@@ -134,40 +137,48 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 
 			return this;
 		}
-		
+
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
+		public void fromBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
+		public void toBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void load(NBTTagCompound nbt) {}
-		
+		public void load(NBTTagCompound nbt) {
+		}
+
 		@Override
-		public void save(NBTTagCompound nbt) {}
-		
+		public void save(NBTTagCompound nbt) {
+		}
+
 	}
-	
+
 	public static class Idle extends FireArcBehavior {
-		
+
 		@Override
 		public FireArcBehavior onUpdate(EntityFireArc entity) {
 			return this;
 		}
-		
+
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
+		public void fromBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
+		public void toBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void load(NBTTagCompound nbt) {}
-		
+		public void load(NBTTagCompound nbt) {
+		}
+
 		@Override
-		public void save(NBTTagCompound nbt) {}
-		
+		public void save(NBTTagCompound nbt) {
+		}
+
 	}
-	
+
 }

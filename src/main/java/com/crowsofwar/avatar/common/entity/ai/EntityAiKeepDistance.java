@@ -24,31 +24,29 @@ import net.minecraft.pathfinding.Path;
 import net.minecraft.util.math.Vec3d;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityAiKeepDistance extends EntityAIBase {
-	
+
 	private final EntityCreature entity;
 	private final double maxSafeDistance;
 	private final double speed;
 	private Path path;
-	
+
 	public EntityAiKeepDistance(EntityCreature entity, double maxSafeDistance, double speed) {
 		this.entity = entity;
 		this.maxSafeDistance = maxSafeDistance;
 		this.speed = speed;
 	}
-	
+
 	@Override
 	public boolean shouldExecute() {
 		EntityLivingBase target = entity.getAttackTarget();
 		if (target != null && entity.getDistanceSqToEntity(target) <= maxSafeDistance * maxSafeDistance) {
-			
+
 			Vec3d vec3d = RandomPositionGenerator.findRandomTargetBlockAwayFrom(entity, 16, 7,
 					new Vec3d(target.posX, target.posY, target.posZ));
-			
+
 			if (vec3d == null) {
 				return false;
 			} else if (entity.getDistanceSq(vec3d.x, vec3d.y, vec3d.z) < entity
@@ -58,15 +56,15 @@ public class EntityAiKeepDistance extends EntityAIBase {
 				path = entity.getNavigator().getPathToXYZ(vec3d.x, vec3d.y, vec3d.z);
 				return path != null;
 			}
-			
+
 		} else {
 			return false;
 		}
 	}
-	
+
 	@Override
 	public void startExecuting() {
 		entity.getNavigator().setPath(path, speed);
 	}
-	
+
 }

@@ -1,35 +1,19 @@
 package com.crowsofwar.avatar.client.util;
 
-import java.nio.ByteBuffer;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import java.nio.ByteBuffer;
+
 /**
  * Utility to output all current openGL settings.
- * 
+ *
  * @author The Grey Ghost 9/02/14
  */
 public class UtilityGl11Debug {
-	public class GLproperty {
-		public GLproperty(int init_gLconstant, String init_name, String init_description,
-				String init_category, String init_fetchCommand) {
-			gLconstant = init_gLconstant;
-			name = init_name;
-			description = init_description;
-			category = init_category;
-			fetchCommand = init_fetchCommand;
-		}
-		
-		public int gLconstant;
-		public String name;
-		public String description;
-		public String category;
-		public String fetchCommand;
-	};
-	
 	public static UtilityGl11Debug instance = new UtilityGl11Debug();
-	
+
+	;
 	public GLproperty[] propertyList = {
 			new GLproperty(GL11.GL_CURRENT_COLOR, "GL_CURRENT_COLOR", "Current color", "current",
 					"glGetFloatv()"),
@@ -508,10 +492,11 @@ public class UtilityGl11Debug {
 			new GLproperty(GL11.GL_FEEDBACK_BUFFER_SIZE, "GL_FEEDBACK_BUFFER_SIZE", "Size of feedback buffer",
 					"feedback", "glGetIntegerv()"),
 			new GLproperty(GL11.GL_FEEDBACK_BUFFER_TYPE, "GL_FEEDBACK_BUFFER_TYPE", "Type of feedback buffer",
-					"feedback", "glGetIntegerv()"), };
-	
-	public static void dumpOpenGLstate() {}
-	
+					"feedback", "glGetIntegerv()"),};
+
+	public static void dumpOpenGLstate() {
+	}
+
 	public static void dumpAllIsEnabled() {
 		for (int i = 0; i < instance.propertyList.length; ++i) {
 			if (instance.propertyList[i].fetchCommand == "glIsEnabled()") {
@@ -521,7 +506,7 @@ public class UtilityGl11Debug {
 			}
 		}
 	}
-	
+
 	public static void dumpAllType(String type) {
 		for (int i = 0; i < instance.propertyList.length; ++i) {
 			if (instance.propertyList[i].category.equals(type)) {
@@ -531,16 +516,16 @@ public class UtilityGl11Debug {
 			}
 		}
 	}
-	
+
 	private static String getPropertyAsString(int propertyListIndex) {
 		int gLconstant = instance.propertyList[propertyListIndex].gLconstant;
 		if (instance.propertyList[propertyListIndex].fetchCommand.equals("glIsEnabled()")) {
 			return "" + GL11.glIsEnabled(gLconstant);
 		}
-		
+
 		if (instance.propertyList[propertyListIndex].fetchCommand == "glGetBooleanv()") {
 			ByteBuffer params = BufferUtils.createByteBuffer(16);
-			
+
 			GL11.glGetBoolean(gLconstant, params);
 			String out = "";
 			for (int i = 0; i < params.capacity(); ++i) {
@@ -548,7 +533,23 @@ public class UtilityGl11Debug {
 			}
 			return out;
 		}
-		
+
 		return "";
+	}
+
+	public class GLproperty {
+		public int gLconstant;
+		public String name;
+		public String description;
+		public String category;
+		public String fetchCommand;
+		public GLproperty(int init_gLconstant, String init_name, String init_description,
+						  String init_category, String init_fetchCommand) {
+			gLconstant = init_gLconstant;
+			name = init_name;
+			description = init_description;
+			category = init_category;
+			fetchCommand = init_fetchCommand;
+		}
 	}
 }

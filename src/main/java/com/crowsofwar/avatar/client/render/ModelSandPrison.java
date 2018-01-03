@@ -31,7 +31,7 @@ public class ModelSandPrison extends ModelBase {
 	private ModelRenderer shape16;
 
 	public ModelSandPrison() {
-		
+
 		this.textureWidth = 256;
 		this.textureHeight = 128;
 

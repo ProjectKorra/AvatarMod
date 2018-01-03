@@ -51,12 +51,10 @@ import static net.minecraft.client.Minecraft.getMinecraft;
 import static org.lwjgl.input.Keyboard.KEY_ESCAPE;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class SkillsGui extends GuiContainer implements AvatarGui {
-	
+
 	private static final FormattedMessage MSG_TITLE = FormattedMessage.newChatMessage("avatar.ui.skillsMenu",
 			"bending");
 
@@ -65,38 +63,38 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	private AbilityCard[] cards;
 	private ComponentBendingTab[] tabs;
 	private int scroll;
-	
+
 	private WindowAbility window;
 	private Frame frame;
-	
+
 	private ComponentInventorySlots inventory, hotbar;
 	private ComponentText title;
 	private ComponentImageNonSquare background;
 	private UiComponentHandler handler;
-	
+
 	public SkillsGui(UUID guiBending) {
 		super(new ContainerSkillsGui(getMinecraft().player, guiBending));
 		this.bendingId = guiBending;
 
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
 		BendingData data = BendingData.get(getMinecraft().player);
-		
+
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
-		
+
 		xSize = res.getScaledWidth();
 		ySize = res.getScaledHeight();
-		
+
 		ScreenInfo.refreshDimensions();
-		
+
 		BendingStyle controller = BendingStyles.get(guiBending);
 		List<Ability> abilities = controller.getAllAbilities();
 		cards = new AbilityCard[abilities.size()];
 		for (int i = 0; i < abilities.size(); i++) {
 			cards[i] = new AbilityCard(abilities.get(i), i);
 		}
-		
+
 		handler = new UiComponentHandler();
-		
+
 		UUID[] types = data.getAllBending().stream()//
 				.map(BendingStyle::getId)//
 				.sorted((id1, id2) -> {
@@ -105,7 +103,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 					return c1.getName().compareTo(c2.getName());
 				})//
 				.toArray(UUID[]::new);
-		
+
 		tabs = new ComponentBendingTab[types.length];
 		for (int i = 0; i < types.length; i++) {
 			float scale = 1.4f;
@@ -116,19 +114,19 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 			tabs[i].setScale(scale);
 			handler.add(tabs[i]);
 		}
-		
+
 		inventory = new ComponentInventorySlots(inventorySlots, 9, 3, skillsContainer.getInvIndex(),
 				skillsContainer.getInvIndex() + 26);
 		inventory.useTexture(AvatarUiTextures.skillsGui, 0, 54, 169, 83);
 		inventory.setPosition(StartingPosition.BOTTOM_RIGHT);
 		inventory.setPadding(fromPixels(7, 7));
 		inventory.setVisible(false);
-		
+
 		hotbar = new ComponentInventorySlots(inventorySlots, 9, 1, skillsContainer.getHotbarIndex(),
 				skillsContainer.getHotbarIndex() + 8);
 		hotbar.setPosition(StartingPosition.BOTTOM_RIGHT);
 		hotbar.setVisible(false);
-		
+
 		title = new ComponentText(TextFormatting.BOLD + FormattedMessageProcessor.formatText(MSG_TITLE,
 				I18n.format("avatar.ui.skillsMenu"), BendingStyles.get(guiBending).getName().toLowerCase()));
 		title.setPosition(StartingPosition.TOP_CENTER);
@@ -141,50 +139,51 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		background = new ComponentImageNonSquare(bgTexture, bgWidth, bgHeight);
 		background.setZLevel(-1);
 		handler.add(background);
-		
+
 	}
-	
+
 	@Override
 	public void initGui() {
 		super.initGui();
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
-		
+
 		ScreenInfo.refreshDimensions();
-		
+
 	}
-	
+
 	@Override
 	public void updateScreen() {
 		super.updateScreen();
-		
+
 		ContainerSkillsGui container = (ContainerSkillsGui) inventorySlots;
 		ItemStack scroll = container.getSlot(0).getStack();
-		
+
 	}
-	
+
 	@Override
 	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
 		scroll += Mouse.getDWheel() / 3;
-		
+
 		if (Mouse.isButtonDown(0) && !isWindowOpen()) {
-			
+
 			int mouseX = Mouse.getX(), mouseY = screenHeight() - Mouse.getY();
-			
+
 			for (int i = 0; i < cards.length; i++) {
 				if (cards[i].isMouseHover(mouseX, mouseY, scroll)) {
 					openWindow(cards[i]);
 					break;
 				}
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	@Override
-	protected void actionPerformed(GuiButton button) {}
-	
+	protected void actionPerformed(GuiButton button) {
+	}
+
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 
@@ -203,33 +202,33 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		background.setOffset(Measurement.fromPixels(offsetX, offsetY));
 
 		handler.draw(partialTicks, mouseX, mouseY);
-		
+
 		if (isWindowOpen()) {
 			window.draw(partialTicks);
 		} else {
-			
+
 			for (int i = 0; i < cards.length; i++) {
 				cards[i].draw(partialTicks, scroll, mouseX, mouseY);
 			}
-			
+
 		}
-		
+
 		inventory.setVisible(isWindowOpen());
 		inventory.draw(partialTicks, mouseX, mouseY);
 		hotbar.draw(partialTicks, mouseX, mouseY);
-		
+
 	}
-	
+
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		
+
 		if (!isWindowOpen()) {
 			handler.type(keyCode);
 		}
-		
+
 		if (isWindowOpen()) {
 			KeyBinding invKb = mc.gameSettings.keyBindInventory;
-			
+
 			if (window.isEditing() && keyCode == KEY_ESCAPE) {
 				window.keyTyped(keyCode);
 			} else if (keyCode == 1 || invKb.isActiveAndMatches(keyCode)) {
@@ -237,9 +236,9 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 			} else {
 				window.keyTyped(keyCode);
 			}
-			
+
 		} else {
-			
+
 			if (keyCode == Keyboard.KEY_A || keyCode == Keyboard.KEY_LEFT) {
 				scroll += 25;
 			} else if (keyCode == Keyboard.KEY_D || keyCode == Keyboard.KEY_RIGHT) {
@@ -247,10 +246,10 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 			} else {
 				super.keyTyped(typedChar, keyCode);
 			}
-			
+
 		}
 	}
-	
+
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -260,7 +259,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 			handler.click(mouseX, mouseY, mouseButton);
 		}
 	}
-	
+
 	@Override
 	protected void renderToolTip(ItemStack stack, int x, int y) {
 		// Prevent rendering tooltip of ItemStacks if they are in a slot that
@@ -269,11 +268,11 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 			super.renderToolTip(stack, x, y);
 		}
 	}
-	
+
 	private boolean isWindowOpen() {
 		return window != null;
 	}
-	
+
 	private void openWindow(AbilityCard card) {
 		window = new WindowAbility(card.getAbility(), this);
 		inventory.setVisible(true);
@@ -288,25 +287,25 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 			}
 		}
 	}
-	
+
 	public void closeWindow() {
 		window.onClose();
 		window = null;
 		inventory.setVisible(false);
 		hotbar.setVisible(false);
-		
+
 	}
-	
+
 	/**
 	 * Called when the 'use scroll' button is clicked
 	 */
 	public void useScroll(Ability ability) {
 		ContainerSkillsGui container = (ContainerSkillsGui) inventorySlots;
-		
+
 		if (container.getSlot(0).getHasStack() || container.getSlot(1).getHasStack()) {
 			AvatarMod.network.sendToServer(new PacketSUseScroll(ability));
 		}
-		
+
 	}
-	
+
 }

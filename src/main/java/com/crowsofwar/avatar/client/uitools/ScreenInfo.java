@@ -20,34 +20,32 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ScreenInfo {
-	
+
 	private static int width, height, scale;
-	
+
 	public static int screenWidth() {
 		if (width == 0) refreshDimensions();
 		return width;
 	}
-	
+
 	public static int screenHeight() {
 		if (height == 0) refreshDimensions();
 		return height;
 	}
-	
+
 	public static int scaleFactor() {
 		if (scale == 0) refreshDimensions();
 		return scale == 0 ? 1 : scale;
 	}
-	
+
 	public static void refreshDimensions() {
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		width = res.getScaledWidth() * res.getScaleFactor();
 		height = res.getScaledHeight() * res.getScaleFactor();
 		scale = res.getScaleFactor();
 	}
-	
+
 }

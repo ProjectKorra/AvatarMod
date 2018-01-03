@@ -32,7 +32,7 @@ import java.util.function.Function;
  * info about the Chi and would add the {@link #CHI} DataCategory to the changed
  * list. But they wouldn't send info about bending controllers since that is
  * unnecessary.
- * 
+ *
  * @author CrowsOfWar
  */
 
@@ -49,18 +49,18 @@ public enum DataCategory {
 	VISION(			BendingData::getVision,				BendingData::setVision, 			DataTransmitters.VISION),
 	PERFORMANCE(	BendingData::getPerformance,		BendingData::setPerformance,		DataTransmitters.PERFORMANCE);
 	//@formatter:on
-	
+
 	private final Function<BendingData, ?> getter;
 	private final BiConsumer<BendingData, ?> setter;
 	private final DataTransmitter<?> transmitter;
-	
+
 	private <T> DataCategory(Function<BendingData, T> getter, BiConsumer<BendingData, T> setter,
-			DataTransmitter<?> transmitter) {
+							 DataTransmitter<?> transmitter) {
 		this.getter = getter;
 		this.setter = setter;
 		this.transmitter = transmitter;
 	}
-	
+
 	/**
 	 * Finds the necessary data from the PlayerData and then writes it to the
 	 * ByteBuf
@@ -68,7 +68,7 @@ public enum DataCategory {
 	public void write(ByteBuf buf, BendingData data) {
 		((DataTransmitter<Object>) transmitter).write(buf, getter.apply(data));
 	}
-	
+
 	/**
 	 * Reads from the ByteBuf and saves the result into player data
 	 */
@@ -76,5 +76,5 @@ public enum DataCategory {
 		Object obj = transmitter.read(buf, data);
 		((BiConsumer<BendingData, Object>) setter).accept(data, obj);
 	}
-	
+
 }

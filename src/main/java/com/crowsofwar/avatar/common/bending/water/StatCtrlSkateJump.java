@@ -30,16 +30,14 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPositi
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_JUMP;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class StatCtrlSkateJump extends StatusControl {
-	
+
 	public StatCtrlSkateJump() {
 		super(9, CONTROL_JUMP, BELOW_CROSSHAIR);
 	}
-	
+
 	@Override
 	public boolean execute(BendingContext ctx) {
 		BendingData data = ctx.getData();
@@ -47,7 +45,7 @@ public class StatCtrlSkateJump extends StatusControl {
 		if (data.hasTickHandler(TickHandler.WATER_SKATE)) {
 			data.removeTickHandler(TickHandler.WATER_SKATE);
 			data.getMiscData().setCanUseAbilities(true);
-			
+
 			Vector velocity = Vector.getLookRectangular(entity).times(1.5);
 			entity.motionX = velocity.x() * 2;
 			entity.motionY = velocity.y();
@@ -60,10 +58,10 @@ public class StatCtrlSkateJump extends StatusControl {
 			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
 				data.addTickHandler(TickHandler.SMASH_GROUND);
 			}
-			
+
 		}
-		
+
 		return true;
 	}
-	
+
 }

@@ -54,55 +54,51 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
 /**
  * Large class that manages input on the client-side. After input is received,
  * it is sent to the server using packets.
- *
  */
 @SideOnly(Side.CLIENT)
 public class ClientInput implements IControlsHandler {
-	
+
 	private final Minecraft mc;
-	private GameSettings gameSettings;
-	private Map<String, KeyBinding> keybindings;
-	private boolean mouseLeft, mouseRight, mouseMiddle, space;
-	private boolean wasLeft, wasRight, wasMiddle, wasSpace;
-	
 	/**
 	 * A list of all bending controllers which can be activated by keyboard
 	 */
 	private final List<BendingStyle> keyboardBending;
-	
 	private final boolean[] wasAbilityDown;
-	
+	private GameSettings gameSettings;
+	private Map<String, KeyBinding> keybindings;
+	private boolean mouseLeft, mouseRight, mouseMiddle, space;
+	private boolean wasLeft, wasRight, wasMiddle, wasSpace;
 	private boolean press;
-	
+
 	public ClientInput() {
 		gameSettings = Minecraft.getMinecraft().gameSettings;
 		mouseLeft = mouseRight = mouseMiddle = wasLeft = wasRight = wasMiddle = false;
 		mc = Minecraft.getMinecraft();
-		
+
 		keybindings = new HashMap();
-		
+
 		keyboardBending = new ArrayList<>();
 		addKeybinding("Bend", Keyboard.KEY_LMENU, "main");
 		addKeybinding("BendingCycleLeft", Keyboard.KEY_Z, "main");
 		addKeybinding("BendingCycleRight", Keyboard.KEY_V, "main");
 		addKeybinding("Skills", Keyboard.KEY_K, "main");
 		addKeybinding("TransferBison", Keyboard.KEY_O, "main");
-		
+
 		this.wasAbilityDown = new boolean[Abilities.all().size()];
-		
+
 	}
-	
+
 	private KeyBinding addKeybinding(String name, int key, String cat) {
 		KeyBinding kb = new KeyBinding("avatar." + name, key, "avatar.category." + cat);
 		keybindings.put(name, kb);
 		ClientRegistry.registerKeyBinding(kb);
 		return kb;
-		
+
 	}
-	
+
 	@Override
 	public boolean isControlPressed(AvatarControl control) {
-		
+
 		if (control == CONTROL_LEFT_CLICK) return mouseLeft;
 		if (control == CONTROL_RIGHT_CLICK) return mouseRight;
 		if (control == CONTROL_MIDDLE_CLICK) return mouseMiddle;
@@ -117,7 +113,7 @@ public class ClientInput implements IControlsHandler {
 		if (control == CONTROL_SHIFT) return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 		AvatarLog.warn(AvatarLog.WarningType.INVALID_CODE, "ClientInput- Unknown control: " + control);
 		return false;
-		
+
 	}
 
 	@Override
@@ -147,7 +143,7 @@ public class ClientInput implements IControlsHandler {
 		if (kb == null) AvatarLog.warn("Key control '" + keyName + "' is undefined");
 		return kb == null ? -1 : kb.getKeyCode();
 	}
-	
+
 	@Override
 	public String getDisplayName(AvatarControl control) {
 		if (control.isKeybinding()) {
@@ -157,13 +153,13 @@ public class ClientInput implements IControlsHandler {
 			return null;
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onKeyPressed(InputEvent.KeyInputEvent e) {
-		
+
 		tryOpenBendingMenu();
 		tryCycleBending();
-		
+
 		if (AvatarControl.KEY_SKILLS.isPressed()) {
 			BendingData data = BendingData.get(mc.player);
 			BendingStyle active = data.getActiveBending();
@@ -176,9 +172,9 @@ public class ClientInput implements IControlsHandler {
 		if (AvatarControl.KEY_TRANSFER_BISON.isPressed()) {
 			AvatarMod.network.sendToServer(new PacketSConfirmTransfer());
 		}
-		
+
 	}
-	
+
 	private boolean isAbilityPressed(Ability ability) {
 		Integer key = CLIENT_CONFIG.keymappings.get(ability);
 		if (key != null) {
@@ -187,29 +183,29 @@ public class ClientInput implements IControlsHandler {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Tries to open the specified bending controller if its key is pressed.
 	 */
 	private void tryOpenBendingMenu() {
 		BendingData data = BendingData.get(mc.player);
 		if (AvatarControl.KEY_USE_BENDING.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
-			
+
 			if (data.getActiveBending() != null) {
 				AvatarUiRenderer.openBendingGui(data.getActiveBendingId());
 			} else {
-				
+
 				String message = I18n.format(MSG_DONT_HAVE_BENDING.getTranslateKey());
 				message = FormattedMessageProcessor.formatText(MSG_DONT_HAVE_BENDING, message,
 						mc.player.getName());
 				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(message));
-				
+
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	private void tryCycleBending() {
 		BendingData data = BendingData.get(mc.player);
 		if (AvatarControl.KEY_BENDING_CYCLE_LEFT.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
@@ -219,14 +215,14 @@ public class ClientInput implements IControlsHandler {
 			AvatarMod.network.sendToServer(new PacketSCycleBending(true));
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onTick(TickEvent.ClientTickEvent e) {
 		wasLeft = mouseLeft;
 		wasRight = mouseRight;
 		wasMiddle = mouseMiddle;
 		wasSpace = space;
-		
+
 		if (mc.inGameHasFocus) {
 			mouseLeft = Mouse.isButtonDown(0);
 			mouseRight = Mouse.isButtonDown(1);
@@ -234,43 +230,43 @@ public class ClientInput implements IControlsHandler {
 		} else {
 			mouseLeft = mouseRight = mouseMiddle = false;
 		}
-		
+
 		space = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-		
+
 		EntityPlayer player = mc.player;
-		
+
 		if (player != null && player.world != null) {
 			// Send any input to the server
 			BendingData data = BendingData.get(player);
-			
+
 			if (data != null) {
-				
+
 				if (mc.inGameHasFocus) {
 					Collection<AvatarControl> pressed = getAllPressed();
 					Collection<StatusControl> statusControls = data.getAllStatusControls();
-					
+
 					Iterator<StatusControl> sci = statusControls.iterator();
 					while (sci.hasNext()) {
 						StatusControl sc = sci.next();
 						if (pressed.contains(sc.getSubscribedControl())) {
 							Raytrace.Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
-							
+
 							AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
 						}
 					}
 				}
-				
+
 			}
-			
+
 			List<Ability> allAbilities = Abilities.all();
 			for (int i = 0; i < allAbilities.size(); i++) {
 				Ability ability = allAbilities.get(i);
 				boolean down = isAbilityPressed(ability);
-				
+
 				if (!CLIENT_CONFIG.conflicts.containsKey(ability))
 					CLIENT_CONFIG.conflicts.put(ability, false);
 				boolean conflict = CLIENT_CONFIG.conflicts.get(ability);
-				
+
 				if (!conflict && mc.inGameHasFocus && mc.currentScreen == null && down
 						&& !wasAbilityDown[i]) {
 					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player, ability.getRaytrace());
@@ -278,22 +274,22 @@ public class ClientInput implements IControlsHandler {
 				}
 				wasAbilityDown[i] = down;
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	@Override
 	public List<AvatarControl> getAllPressed() {
 		List<AvatarControl> list = new ArrayList<>();
-		
+
 		for (AvatarControl control : AvatarControl.ALL_CONTROLS) {
 			if (control.isPressed()) {
 				list.add(control);
 			}
 		}
-		
+
 		return list;
 	}
-	
+
 }

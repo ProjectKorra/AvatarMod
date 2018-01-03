@@ -31,18 +31,16 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPositi
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class StatCtrlThrowBubble extends StatusControl {
-	
+
 	/**
 	 */
 	public StatCtrlThrowBubble() {
 		super(7, CONTROL_RIGHT_CLICK_DOWN, RIGHT_OF_CROSSHAIR);
 	}
-	
+
 	@Override
 	public boolean execute(BendingContext ctx) {
 		BendingData data = ctx.getData();
@@ -51,21 +49,21 @@ public class StatCtrlThrowBubble extends StatusControl {
 		EntityWaterBubble bubble = AvatarEntity.lookupEntity(ctx.getWorld(), EntityWaterBubble.class, //
 				bub -> bub.getBehavior() instanceof WaterBubbleBehavior.PlayerControlled
 						&& bub.getOwner() == ctx.getBenderEntity());
-		
+
 		if (bubble != null) {
-			
+
 			AbilityData adata = data.getAbilityData("water_bubble");
 			double speed = adata.getLevel() >= 1 ? 14 : 8;
 			if (adata.isMasterPath(AbilityTreePath.FIRST)) {
 				speed = 20;
 			}
 			speed += powerRating / 30f;
-			
+
 			bubble.setBehavior(new WaterBubbleBehavior.Thrown());
 			bubble.setVelocity(Vector.getLookRectangular(ctx.getBenderEntity()).times(speed));
 		}
-		
+
 		return true;
 	}
-	
+
 }

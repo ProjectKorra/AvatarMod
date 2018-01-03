@@ -29,22 +29,20 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import static net.minecraftforge.client.model.ModelLoader.setCustomModelResourceLocation;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AvatarItemRenderRegister {
-	
+
 	private static ModelResourceLocation[] locationsRegular, locationsGlow;
-	
+
 	public static void register() {
-		
+
 		MinecraftForge.EVENT_BUS.register(new AvatarItemRenderRegister());
-		
+
 		// Setup scrolls
 		locationsRegular = new ModelResourceLocation[ScrollType.amount()];
 		locationsGlow = new ModelResourceLocation[ScrollType.amount()];
-		
+
 		for (int i = 0; i < ScrollType.amount(); i++) {
 
 			ScrollType type = ScrollType.get(i);
@@ -58,7 +56,7 @@ public class AvatarItemRenderRegister {
 			setCustomModelResourceLocation(AvatarItems.itemScroll, i, locationsRegular[i]);
 
 		}
-		
+
 		for (int i = 0; i <= 5; i++) {
 			register(AvatarItems.itemWaterPouch, i);
 		}
@@ -68,7 +66,7 @@ public class AvatarItemRenderRegister {
 			register(AvatarItems.itemBisonSaddle, i);
 			register(AvatarItems.itemOstrichEquipment, i);
 		}
-		
+
 	}
 
 	/**
@@ -81,22 +79,22 @@ public class AvatarItemRenderRegister {
 		if (metadata.length == 0) {
 			metadata = new int[1];
 		}
-		
+
 		for (int meta : metadata) {
 			ModelResourceLocation mrl = new ModelResourceLocation("avatarmod:" + item.getModelName(meta),
 					"inventory");
-			
+
 			ModelLoader.setCustomModelResourceLocation(item.item(), meta, mrl);
 
 		}
-		
+
 	}
-	
+
 	@SubscribeEvent
 	public void modelBake(ModelBakeEvent e) {
-		
+
 		for (int i = 0; i < ScrollType.amount(); i++) {
-			
+
 			ModelResourceLocation mrlRegular = locationsRegular[i];
 			ModelResourceLocation mrlGlow = locationsGlow[i];
 
@@ -106,7 +104,7 @@ public class AvatarItemRenderRegister {
 			e.getModelRegistry().putObject(mrlRegular, customModel);
 
 		}
-		
+
 	}
-	
+
 }

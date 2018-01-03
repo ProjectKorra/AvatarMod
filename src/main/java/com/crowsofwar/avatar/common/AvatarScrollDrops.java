@@ -37,31 +37,31 @@ import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarScrollDrops {
-	
+
 	@SubscribeEvent
 	public static void onMobDeath(LivingDropsEvent e) {
-		
+
 		EntityLivingBase entity = e.getEntityLiving();
 		DamageSource source = e.getSource();
-		
+
 		if (e.isRecentlyHit()) {
-			
+
 			double chance = MOBS_CONFIG.getScrollDropChance(entity);
 			ScrollType type = MOBS_CONFIG.getScrollType(entity);
-			
+
 			double random = Math.random() * 100;
 			if (random < chance) {
-				
+
 				ItemStack stack = new ItemStack(AvatarItems.itemScroll);
 				ItemScroll.setScrollType(stack, type);
-				
+
 				EntityItem entityItem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
 						stack);
 				entityItem.setDefaultPickupDelay();
 				e.getDrops().add(entityItem);
 
 			}
-			
+
 		}
 
 		// Send analytics for any entities that dropped scrolls
@@ -81,5 +81,5 @@ public class AvatarScrollDrops {
 		}
 
 	}
-	
+
 }

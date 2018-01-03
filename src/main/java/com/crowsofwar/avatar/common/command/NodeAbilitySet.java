@@ -25,35 +25,33 @@ import com.crowsofwar.gorecore.tree.*;
 import java.util.List;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class NodeAbilitySet extends NodeFunctional {
-	
+
 	private final IArgument<String> argPlayer;
 	private final IArgument<Ability> argAbility;
 	private final IArgument<Integer> argSetTo;
-	
+
 	public NodeAbilitySet() {
 		super("set", true);
 		argPlayer = addArgument(new ArgumentPlayerName("player"));
 		argAbility = addArgument(new ArgumentAbility("ability"));
 		argSetTo = addArgument(new ArgumentRangeInteger("value", 0, 100));
 	}
-	
+
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
-		
+
 		ArgumentList args = call.popArguments(this);
 		String player = args.get(argPlayer);
 		Ability ability = args.get(argAbility);
 		int setXp = args.get(argSetTo);
-		
+
 		if (setXp >= 0 && setXp <= 100) {
 			BendingData data = BendingData.get(call.getFrom().getEntityWorld(), player);
 			if (data != null) {
-				
+
 				data.getAbilityData(ability).setXp(setXp);
 				AvatarChatMessages.MSG_ABILITY_SET_SUCCESS.send(call.getFrom(), player, ability.getName(),
 						setXp);
@@ -61,8 +59,8 @@ public class NodeAbilitySet extends NodeFunctional {
 		} else {
 			AvatarChatMessages.MSG_ABILITY_SET_RANGE.send(call.getFrom());
 		}
-		
+
 		return null;
 	}
-	
+
 }

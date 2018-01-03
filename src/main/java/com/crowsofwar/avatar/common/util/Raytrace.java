@@ -39,81 +39,77 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 public class Raytrace {
-	
-	private Raytrace() {}
-	
+
+	private Raytrace() {
+	}
+
 	/**
 	 * Returns the position of the block the entity is looking at. Null if the
 	 * entity is not targeting anything in range. This does not raycast liquids.
-	 * 
-	 * @param entity
-	 *            Bending entity (for players, works both client-side and
-	 *            server-side)
-	 * @param range
-	 *            How far to raytrace. If -1, then it is how far the entity can
-	 *            reach.
+	 *
+	 * @param entity Bending entity (for players, works both client-side and
+	 *               server-side)
+	 * @param range  How far to raytrace. If -1, then it is how far the entity can
+	 *               reach.
 	 * @return The position of the block that the entity is looking at. May
-	 *         differ between server and client.
+	 * differ between server and client.
 	 */
 	public static Result getTargetBlock(EntityLivingBase entity, double range) {
-		
+
 		return getTargetBlock(entity, range, false);
-		
+
 	}
-	
+
 	/**
 	 * Returns the position of the block the entity is looking at.
 	 * {@link Raytrace.Result#hitSomething() No hit} if the entity is not
 	 * targeting anything in range, or the information doesn't require raytrace.
-	 * 
-	 * @param info
-	 *            Information of this raytrace
+	 *
+	 * @param info Information of this raytrace
 	 */
 	public static Result getTargetBlock(EntityLivingBase entity, Raytrace.Info info) {
-		
+
 		if (!info.needsRaytrace()) return new Raytrace.Result();
-		
-		if (info.predicateRaytrace()) return predicateRaytrace(entity.world, Vector.getEyePos(entity),
-				Vector.getLookRectangular(entity), info.range, info.predicate);
-		
+
+		if (info.predicateRaytrace())
+			return predicateRaytrace(entity.world, Vector.getEyePos(entity),
+					Vector.getLookRectangular(entity), info.range, info.predicate);
+
 		return getTargetBlock(entity, info.getRange(), info.raycastLiquids());
-		
+
 	}
-	
+
 	/**
 	 * Returns the position of the block the entity is looking at.
-	 * 
-	 * @param entity
-	 *            Bending entity (for players, works both client-side and
-	 *            server-side)
-	 * @param range
-	 *            How far to raytrace. If -1, then it is how far the entity can
-	 *            reach.
-	 * @param raycastLiquids
-	 *            Whether liquids are detected in the raycast.
+	 *
+	 * @param entity         Bending entity (for players, works both client-side and
+	 *                       server-side)
+	 * @param range          How far to raytrace. If -1, then it is how far the entity can
+	 *                       reach.
+	 * @param raycastLiquids Whether liquids are detected in the raycast.
 	 * @return The position of the block that the entity is looking at. May
-	 *         differ between server and client.
+	 * differ between server and client.
 	 */
 	public static Result getTargetBlock(EntityLivingBase entity, double range, boolean raycastLiquids) {
-		
+
 		if (range == -1) range = getReachDistance(entity);
-		
+
 		Vector eyePos = Vector.getEyePos(entity);
 		Vector look = new Vector(entity.getLookVec());
 		Vector end = eyePos.plus(look.times(range));
 		RayTraceResult res = entity.world.rayTraceBlocks(eyePos.toMinecraft(), end.toMinecraft(),
 				!raycastLiquids, raycastLiquids, true);
-		
+
 		if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
 			return new Result(new VectorI(res.getBlockPos()), res.sideHit, new Vector(res.hitVec));
 		} else {
 			return new Result();
 		}
 	}
-	
+
 	/**
 	 * Returns how far the entity can reach.
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -126,80 +122,70 @@ public class Raytrace {
 			return 4;
 		}
 	}
-	
+
 	/**
 	 * Returns a raytrace over blocks.
-	 * 
-	 * @param world
-	 *            World
-	 * @param start
-	 *            Starting position of raytrace
-	 * @param direction
-	 *            Normalized direction vector of where to go
-	 * @param range
-	 *            How far to raytrace at most
-	 * @param raycastLiquids
-	 *            Whether to keep going when liquids are hit
+	 *
+	 * @param world          World
+	 * @param start          Starting position of raytrace
+	 * @param direction      Normalized direction vector of where to go
+	 * @param range          How far to raytrace at most
+	 * @param raycastLiquids Whether to keep going when liquids are hit
 	 */
 	public static Result raytrace(World world, Vector start, Vector direction, double range,
-			boolean raycastLiquids) {
-		
+								  boolean raycastLiquids) {
+
 		RayTraceResult res = world.rayTraceBlocks(start.toMinecraft(),
 				start.plus(direction.times(range)).toMinecraft(), !raycastLiquids, raycastLiquids, true);
-		
+
 		if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
 			return new Result(new VectorI(res.getBlockPos()), res.sideHit, new Vector(res.hitVec));
 		} else {
 			return new Result();
 		}
 	}
-	
+
 	/**
 	 * Custom raytrace which allows you to specify a (Bi)Predicate to determine
 	 * if the block has been hit. Unfortunately, this implementation does not
 	 * correctly report the side hit (always is {@link EnumFacing#DOWN}).
-	 * 
-	 * @param world
-	 *            The world
-	 * @param start
-	 *            Starting position to raytrace
-	 * @param direction
-	 *            Normalized vector to specify direction
-	 * @param range
-	 *            How many meters (blocks) to raytrace
-	 * @param verify
-	 *            A BiPredicate used to verify if that block is correct
+	 *
+	 * @param world     The world
+	 * @param start     Starting position to raytrace
+	 * @param direction Normalized vector to specify direction
+	 * @param range     How many meters (blocks) to raytrace
+	 * @param verify    A BiPredicate used to verify if that block is correct
 	 */
 	public static Result predicateRaytrace(World world, Vector start, Vector direction, double range,
-			BiPredicate<BlockPos, IBlockState> verify) {
-		
+										   BiPredicate<BlockPos, IBlockState> verify) {
+
 		if (range == -1) range = 3;
-		
+
 		Vector currentPosition = start;
 		Vector increment = direction.times(0.2);
 		while (currentPosition.sqrDist(start) <= range * range) {
-			
+
 			BlockPos pos = currentPosition.toBlockPos();
 			IBlockState blockState = world.getBlockState(pos);
 			if (verify.test(pos, blockState)) {
 				return new Result(new VectorI(pos), EnumFacing.DOWN, currentPosition);
 			}
-			
+
 			currentPosition = currentPosition.plus(increment);
-			
+
 		}
 		return new Result();
-		
+
 	}
-	
+
 	public static List<Entity> entityRaytrace(World world, Vector start, Vector direction,
-			double maxDistance) {
+											  double maxDistance) {
 		return entityRaytrace(world, start, direction, maxDistance, entity -> true);
 	}
-	
+
 	public static List<Entity> entityRaytrace(World world, Vector start, Vector direction, double maxRange,
-			Predicate<Entity> filter) {
-		
+											  Predicate<Entity> filter) {
+
 		// Detect correct range- avoid obstructions from walls
 		double range = maxRange;
 		Result raytrace = raytrace(world, start, direction, maxRange, true);
@@ -207,13 +193,13 @@ public class Raytrace {
 			Vector stopAt = raytrace.posPrecise;
 			range = start.minus(stopAt).magnitude();
 		}
-		
+
 		List<Entity> hit = new ArrayList<>();
-		
+
 		Vector end = start.plus(direction.times(range));
 		AxisAlignedBB aabb = new AxisAlignedBB(start.x(), start.y(), start.z(), end.x(), end.y(), end.z());
 		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, aabb);
-		
+
 		for (Entity entity : entities) {
 			if (filter.test(entity)) {
 				AxisAlignedBB collisionBox = entity.getEntityBoundingBox();
@@ -224,60 +210,32 @@ public class Raytrace {
 				}
 			}
 		}
-		
+
 		return hit;
-		
+
 	}
-	
+
 	public static class Result {
-		
+
 		private final boolean hit;
 		private final VectorI pos;
 		private final EnumFacing side;
 		private final Vector posPrecise;
-		
+
 		/**
 		 * Creates a raytrace result with no block hit
 		 */
 		public Result() {
 			this(null, null, null);
 		}
-		
+
 		public Result(VectorI pos, EnumFacing side, Vector posPrecise) {
 			this.pos = pos;
 			this.side = side;
 			this.hit = pos != null;
 			this.posPrecise = posPrecise;
 		}
-		
-		/**
-		 * Get the position of the block hit. Null if hit nothing
-		 */
-		@Nullable
-		public VectorI getPos() {
-			return pos;
-		}
-		
-		/**
-		 * Get the side of the block hit. Null if hit nothing
-		 */
-		@Nullable
-		public EnumFacing getSide() {
-			return side;
-		}
-		
-		/**
-		 * Returns whether the raytrace actually hit something
-		 */
-		public boolean hitSomething() {
-			return hit;
-		}
 
-		@Nullable
-		public Vector getPosPrecise() {
-			return posPrecise;
-		}
-		
 		public static Raytrace.Result fromBytes(ByteBuf buf) {
 			boolean hit = buf.readBoolean();
 			EnumFacing side = null;
@@ -290,7 +248,35 @@ public class Raytrace {
 			}
 			return new Result(pos, side, posPrecise);
 		}
-		
+
+		/**
+		 * Get the position of the block hit. Null if hit nothing
+		 */
+		@Nullable
+		public VectorI getPos() {
+			return pos;
+		}
+
+		/**
+		 * Get the side of the block hit. Null if hit nothing
+		 */
+		@Nullable
+		public EnumFacing getSide() {
+			return side;
+		}
+
+		/**
+		 * Returns whether the raytrace actually hit something
+		 */
+		public boolean hitSomething() {
+			return hit;
+		}
+
+		@Nullable
+		public Vector getPosPrecise() {
+			return posPrecise;
+		}
+
 		public void toBytes(ByteBuf buf) {
 			buf.writeBoolean(hit);
 			if (hit) {
@@ -299,21 +285,21 @@ public class Raytrace {
 				posPrecise.toBytes(buf);
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * Encapsulates information about whether a raytrace is needed.
-	 * 
+	 *
 	 * @author CrowsOfWar
 	 */
 	public static class Info {
-		
+
 		private final double range;
 		private final boolean needsRaytrace;
 		private final boolean raycastLiquids;
 		private BiPredicate<BlockPos, IBlockState> predicate;
-		
+
 		/**
 		 * Constructs a raytrace information requesting a no raytrace.
 		 */
@@ -323,15 +309,13 @@ public class Raytrace {
 			this.raycastLiquids = false;
 			this.predicate = null;
 		}
-		
+
 		/**
 		 * Constructs a raytrace information requesting a raytrace with the
 		 * designated parameters.
-		 * 
-		 * @param range
-		 *            Range of raytrace. If -1, is how far entity can reach.
-		 * @param raycastLiquids
-		 *            Whether to keep going when liquids are hit
+		 *
+		 * @param range          Range of raytrace. If -1, is how far entity can reach.
+		 * @param raycastLiquids Whether to keep going when liquids are hit
 		 */
 		public Info(double range, boolean raycastLiquids) {
 			super();
@@ -340,31 +324,31 @@ public class Raytrace {
 			this.raycastLiquids = raycastLiquids;
 			this.predicate = null;
 		}
-		
+
 		public double getRange() {
 			return range;
 		}
-		
+
 		public boolean needsRaytrace() {
 			return needsRaytrace;
 		}
-		
+
 		public boolean raycastLiquids() {
 			return raycastLiquids;
 		}
-		
+
 		public boolean predicateRaytrace() {
 			return predicate != null;
 		}
-		
+
 		public BiPredicate<BlockPos, IBlockState> getPredicate() {
 			return predicate;
 		}
-		
+
 		public void setPredicate(BiPredicate<BlockPos, IBlockState> predicate) {
 			this.predicate = predicate;
 		}
-		
+
 	}
-	
+
 }

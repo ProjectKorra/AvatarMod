@@ -22,8 +22,6 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
- *
- *
  * @author CrowsOfWar
  */
 public class RenderSandPrison extends RenderModel<EntitySandPrison> {

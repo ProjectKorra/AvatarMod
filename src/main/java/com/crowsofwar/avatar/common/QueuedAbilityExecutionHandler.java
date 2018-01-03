@@ -27,7 +27,8 @@ public class QueuedAbilityExecutionHandler {
 
 	private static final List<QueuedAbilityExecution> abilityExecutions = new ArrayList<>();
 
-	private QueuedAbilityExecutionHandler() {}
+	private QueuedAbilityExecutionHandler() {
+	}
 
 	@SubscribeEvent
 	public static void tick(TickEvent.WorldTickEvent e) {
@@ -57,12 +58,12 @@ public class QueuedAbilityExecutionHandler {
 
 	private static class QueuedAbilityExecution {
 
-		private int ticks;
 		private final EntityLivingBase entity;
 		private final BendingData data;
 		private final Ability ability;
 		private final Raytrace.Result raytrace;
 		private final double powerRating;
+		private int ticks;
 
 		public QueuedAbilityExecution(int ticks, EntityLivingBase entity, BendingData data,
 									  Ability ability, Raytrace.Result raytrace, double powerRating) {

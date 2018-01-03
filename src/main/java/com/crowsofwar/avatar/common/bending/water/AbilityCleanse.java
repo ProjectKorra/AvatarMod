@@ -37,7 +37,7 @@ public class AbilityCleanse extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		AbilityData abilityData = data.getAbilityData(this);
-		
+
 		float chi = STATS_CONFIG.chiBuff;
 		if (abilityData.getLevel() == 1) {
 			chi *= 1.5f;
@@ -59,7 +59,7 @@ public class AbilityCleanse extends Ability {
 
 			// Apply basic potion effects
 
-            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, duration, regenLevel));
+			entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, duration, regenLevel));
 
 			if (abilityData.getLevel() >= 2) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, duration));
@@ -67,8 +67,8 @@ public class AbilityCleanse extends Ability {
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, duration, 1));
-                entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, duration, 1));
-                entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 0, 0));
+				entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, duration, 1));
+				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 0, 0));
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
@@ -104,37 +104,37 @@ public class AbilityCleanse extends Ability {
 
 	}
 
-    /**
-     * Applies the given effect to all nearby players in the given range, excluding the
-     * caster. Range is in blocks.
-     */
+	/**
+	 * Applies the given effect to all nearby players in the given range, excluding the
+	 * caster. Range is in blocks.
+	 */
 	private void applyGroupEffect(AbilityContext ctx, int radius, Consumer<EntityPlayer> effect) {
 
-        World world = ctx.getWorld();
-        EntityLivingBase entity = ctx.getBenderEntity();
-        AxisAlignedBB aabb = new AxisAlignedBB(
-                entity.posX - radius, entity.posY - radius, entity.posZ - radius,
-                entity.posX + radius, entity.posY + radius, entity.posZ + radius);
+		World world = ctx.getWorld();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		AxisAlignedBB aabb = new AxisAlignedBB(
+				entity.posX - radius, entity.posY - radius, entity.posZ - radius,
+				entity.posX + radius, entity.posY + radius, entity.posZ + radius);
 
-        List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, aabb);
+		List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, aabb);
 
-        for (EntityPlayer player : players) {
+		for (EntityPlayer player : players) {
 
-        	// Initial aabb check was rectangular, need to check distance for truly circular radius
-            if (player.getDistanceSqToEntity(entity) > radius * radius) {
+			// Initial aabb check was rectangular, need to check distance for truly circular radius
+			if (player.getDistanceSqToEntity(entity) > radius * radius) {
 				continue;
-            }
+			}
 
-            // Ignore the caster
+			// Ignore the caster
 			if (player == entity) {
-            	continue;
+				continue;
 			}
 
 			effect.accept(player);
 
-        }
+		}
 
-    }
+	}
 
 	/**
 	 * Grants the player a chi bonus
@@ -146,7 +146,6 @@ public class AbilityCleanse extends Ability {
 		data.chi().changeAvailableChi(STATS_CONFIG.cleanseChiGroupBonus);
 
 	}
-
 
 }
 

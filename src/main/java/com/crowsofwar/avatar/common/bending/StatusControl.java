@@ -53,11 +53,11 @@ import java.util.List;
  * <p>
  * Status controls are stored in player-data, but are also sent to the client
  * via packets, which render over the crosshair.
- * 
+ *
  * @author CrowsOfWar
  */
 public abstract class StatusControl {
-	
+
 	// @formatter:off
 	public static final StatusControl
 			AIR_JUMP = new StatCtrlAirJump(),
@@ -80,95 +80,92 @@ public abstract class StatusControl {
 			DROP_WALL = new StatCtrlDropWall(),
 			SANDSTORM_REDIRECT = new StatCtrlSandstormRedirect();
 	// @formatter:on
-	
+
 	private static int nextId = 0;
 	private static List<StatusControl> allControls;
-	
+
 	private final int texture;
 	private final AvatarControl control;
-	private Raytrace.Info raytrace;
 	private final CrosshairPosition position;
 	private final int id;
-	
+	private Raytrace.Info raytrace;
+
 	public StatusControl(int texture, AvatarControl subscribeTo, CrosshairPosition position) {
-		
+
 		if (allControls == null) allControls = new ArrayList<>();
-		
+
 		this.texture = texture;
 		this.control = subscribeTo;
 		this.raytrace = new Raytrace.Info();
 		this.position = position;
 		this.id = ++nextId;
 		allControls.add(this);
-		
+
 	}
-	
-	/**
-	 * Require that a raytrace be cast client-side, which is sent to the server.
-	 * It is then accessible in {@link #execute(BendingContext)}.
-	 * 
-	 * @param range
-	 *            Range to raytrace. -1 for player reach
-	 * @param raycastLiquids
-	 *            Whether to keep going when hit liquids
-	 */
-	protected void requireRaytrace(int range, boolean raycastLiquids) {
-		this.raytrace = new Raytrace.Info(range, raycastLiquids);
-	}
-	
-	/**
-	 * Execute this status control in the given context. Only called
-	 * server-side.
-	 * 
-	 * @param ctx
-	 *            Information for status control
-	 * @return Whether to remove it
-	 */
-	public abstract boolean  execute(BendingContext ctx);
-	
-	public int id() {
-		return id;
-	}
-	
-	public AvatarControl getSubscribedControl() {
-		return control;
-	}
-	
-	public Raytrace.Info getRaytrace() {
-		return raytrace;
-	}
-	
-	public int getTextureU() {
-		return (texture * 16) % 256;
-	}
-	
-	public int getTextureV() {
-		return (texture / 16) * 16;
-	}
-	
-	public CrosshairPosition getPosition() {
-		return position;
-	}
-	
+
 	public static StatusControl lookup(int id) {
 		id--;
 		return id >= 0 && id < allControls.size() ? allControls.get(id) : null;
 	}
-	
+
+	/**
+	 * Require that a raytrace be cast client-side, which is sent to the server.
+	 * It is then accessible in {@link #execute(BendingContext)}.
+	 *
+	 * @param range          Range to raytrace. -1 for player reach
+	 * @param raycastLiquids Whether to keep going when hit liquids
+	 */
+	protected void requireRaytrace(int range, boolean raycastLiquids) {
+		this.raytrace = new Raytrace.Info(range, raycastLiquids);
+	}
+
+	/**
+	 * Execute this status control in the given context. Only called
+	 * server-side.
+	 *
+	 * @param ctx Information for status control
+	 * @return Whether to remove it
+	 */
+	public abstract boolean execute(BendingContext ctx);
+
+	public int id() {
+		return id;
+	}
+
+	public AvatarControl getSubscribedControl() {
+		return control;
+	}
+
+	public Raytrace.Info getRaytrace() {
+		return raytrace;
+	}
+
+	public int getTextureU() {
+		return (texture * 16) % 256;
+	}
+
+	public int getTextureV() {
+		return (texture / 16) * 16;
+	}
+
+	public CrosshairPosition getPosition() {
+		return position;
+	}
+
 	public enum CrosshairPosition {
-		
+
 		ABOVE_CROSSHAIR(4, 14),
 		LEFT_OF_CROSSHAIR(14, 3),
 		RIGHT_OF_CROSSHAIR(-6, 3),
 		BELOW_CROSSHAIR(4, -8);
-		
+
 		private final int x, y;
-		
+
 		/**
 		 * Some notes on coordinates:<br />
 		 * +y = up<br />
 		 * +x = left
-		 * 
+		 *
 		 * @param x
 		 * @param y
 		 */
@@ -176,15 +173,15 @@ public abstract class StatusControl {
 			this.x = x;
 			this.y = y;
 		}
-		
+
 		public int xOffset() {
 			return x;
 		}
-		
+
 		public int yOffset() {
 			return y;
 		}
-		
+
 	}
-	
+
 }

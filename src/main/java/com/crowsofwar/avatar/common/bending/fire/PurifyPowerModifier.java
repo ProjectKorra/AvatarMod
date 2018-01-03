@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
-
 import com.crowsofwar.avatar.common.bending.BuffPowerModifier;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -9,11 +8,11 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
 public class PurifyPowerModifier extends BuffPowerModifier {
 
-    @Override
-    public double get(BendingContext ctx) {
+	@Override
+	public double get(BendingContext ctx) {
 
-    	BendingData data = ctx.getData();
-        AbilityData abilityData = data.getAbilityData("purify");
+		BendingData data = ctx.getData();
+		AbilityData abilityData = data.getAbilityData("purify");
 
 		double modifier = 20;
 		if (abilityData.getLevel() >= 1) {
@@ -27,7 +26,7 @@ public class PurifyPowerModifier extends BuffPowerModifier {
 		}
 		return modifier;
 
-    }
+	}
 
 	@Override
 	public boolean onUpdate(BendingContext ctx) {
@@ -53,7 +52,7 @@ public class PurifyPowerModifier extends BuffPowerModifier {
 
 	@Override
 	protected Vision[] getVisions() {
-		return new Vision[] { Vision.PURIFY_WEAK, Vision.PURIFY_MEDIUM, Vision.PURIFY_POWERFUL };
+		return new Vision[]{Vision.PURIFY_WEAK, Vision.PURIFY_MEDIUM, Vision.PURIFY_POWERFUL};
 	}
 
 	@Override

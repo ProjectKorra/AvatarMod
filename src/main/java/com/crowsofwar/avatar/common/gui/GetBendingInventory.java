@@ -19,14 +19,12 @@ package com.crowsofwar.avatar.common.gui;
 import net.minecraft.inventory.InventoryBasic;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class GetBendingInventory extends InventoryBasic {
-	
+
 	public GetBendingInventory() {
 		super("container.avatar.getBending", false, 3);
 	}
-	
+
 }

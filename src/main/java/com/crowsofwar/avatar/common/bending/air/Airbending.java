@@ -17,23 +17,21 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
-import java.awt.Color;
-import java.util.UUID;
-
-
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
-
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.awt.*;
+import java.util.UUID;
 
 public class Airbending extends BendingStyle {
 
 	public static final UUID ID = UUID.fromString("231edc16-639e-4dc4-92f5-924e9102df0f");
 
 	private BendingMenuInfo menu;
-	
+
 	public Airbending() {
 		addAbility("air_gust");
 		addAbility("air_jump");
@@ -41,7 +39,7 @@ public class Airbending extends BendingStyle {
 		addAbility("air_bubble");
 		addAbility("cloudburst");
 		addAbility("slipstream");
-		
+
 		Color light = new Color(220, 220, 220);
 		Color dark = new Color(172, 172, 172);
 		Color iconClr = new Color(196, 109, 0);
@@ -51,30 +49,30 @@ public class Airbending extends BendingStyle {
 		MenuTheme theme = new MenuTheme(background, edge, icon, 0xE8E5DF);
 		this.menu = new BendingMenuInfo(theme, this);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		
+
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
-		
+
 	}
-	
+
 	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}
-	
+
 	@Override
 	public String getName() {
 		return "airbending";
 	}
-	
+
 	@Override
 	public UUID getId() {
 		return ID;
 	}
-	
+
 }

@@ -21,10 +21,9 @@ import java.util.List;
 
 /**
  * Manages what controls are pressed. This is designed for the client.
- *
  */
 public interface IControlsHandler {
-	
+
 	/**
 	 * <strong>For internal use only. To check if a control is pressed, you
 	 * should use {@link AvatarControl#isPressed()}.</strong>
@@ -47,16 +46,16 @@ public interface IControlsHandler {
 	 * Get the key code for that control. It must be a keybinding.
 	 */
 	int getKeyCode(AvatarControl control);
-	
+
 	/**
 	 * Get the display of that control based on its current binding (adjusts if
 	 * the keybinding changes). Null if there is no description available.
 	 */
 	String getDisplayName(AvatarControl control);
-	
+
 	/**
 	 * Get all controls pressed.
 	 */
 	List<AvatarControl> getAllPressed();
-	
+
 }

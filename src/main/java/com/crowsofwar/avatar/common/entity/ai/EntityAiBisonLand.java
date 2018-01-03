@@ -32,11 +32,11 @@ import static net.minecraft.util.math.MathHelper.floor;
 /**
  * Bison lands when he is hungry. This allows the bison to eat grass and to
  * consume less food points. Considered a MOVEMENT task, so has mutex bits 1.
- * 
+ *
  * @author CrowsOfWar
  */
 public class EntityAiBisonLand extends EntityAIBase {
-	
+
 	private final EntitySkyBison bison;
 
 	/**
@@ -50,42 +50,42 @@ public class EntityAiBisonLand extends EntityAIBase {
 		this.bison = bison;
 		setMutexBits(1);
 	}
-	
+
 	@Override
 	public boolean shouldExecute() {
 		return bison.wantsGrass() && bison.ticksExisted - lastLandAttempt > 100;
 	}
-	
+
 	@Override
 	public void startExecuting() {
 
 		lastLandAttempt = bison.ticksExisted;
 
 		World world = bison.world;
-		
+
 		int tries = 0;
 		Vector landing;
 		boolean isValidPosition;
 		do {
-			
+
 			landing = findLandingPoint().plusY(1);
 			tries++;
-			
+
 			Block block = world.getBlockState(landing.toBlockPos().down()).getBlock();
 			isValidPosition = (block == Blocks.GRASS || block == Blocks.TALLGRASS) && canFit(landing)
 					&& canGetTo(landing);
-			
+
 		} while (!isValidPosition && tries < 5);
-		
+
 		if (isValidPosition) {
-			
+
 			landing = landing.plusY(1);
 			bison.getMoveHelper().setMoveTo(landing.x(), landing.y() - 1, landing.z(), 1);
-			
+
 		}
-		
+
 	}
-	
+
 	@Override
 	public boolean shouldContinueExecuting() {
 		// Once got close to grass, close enough
@@ -93,35 +93,35 @@ public class EntityAiBisonLand extends EntityAIBase {
 		if (bison.getDistanceSq(mh.getX(), mh.getY(), mh.getZ()) <= 5) {
 			bison.getMoveHelper().action = Action.WAIT;
 		}
-		
+
 		// Don't wander off until we have food!
 		return !bison.isFull() && bison.isEatingGrass();
 	}
-	
+
 	private Vector findLandingPoint() {
-		
+
 		double maxDist = 2;
-		
+
 		double x = bison.posX + (bison.getRNG().nextDouble() * 2 - 1) * maxDist;
 		double z = bison.posZ + (bison.getRNG().nextDouble() * 2 - 1) * maxDist;
-		
+
 		int y = (int) bison.posY;
 		while (!isSolidBlock(new BlockPos(x, y, z)) && y >= 0) {
 			y--;
 		}
 		return new Vector(x, y, z);
-		
+
 	}
-	
+
 	private boolean canFit(Vector pos) {
-		
+
 		double minX = pos.x() - bison.width / 2;
 		double maxX = pos.x() + bison.width / 2;
 		double minY = pos.y();
 		double maxY = pos.y() + bison.height;
 		double minZ = pos.z() - bison.width / 2;
 		double maxZ = pos.z() + bison.width / 2;
-		
+
 		for (int x = floor(minX); x <= maxX; x++) {
 			for (int y = floor(minY); y <= maxY; y++) {
 				for (int z = floor(minZ); z <= maxZ; z++) {
@@ -131,11 +131,11 @@ public class EntityAiBisonLand extends EntityAIBase {
 				}
 			}
 		}
-		
+
 		return true;
-		
+
 	}
-	
+
 	/**
 	 * Figure out whether the bison can get to that position by raytracing
 	 */
@@ -147,10 +147,10 @@ public class EntityAiBisonLand extends EntityAIBase {
 		Vector hitPos = raytrace.getPosPrecise() == null ? null : raytrace.getPosPrecise().plusY(1);
 		return hitPos == null || hitPos.sqrDist(target) <= 2;
 	}
-	
+
 	private boolean isSolidBlock(BlockPos pos) {
 		World world = bison.world;
 		return world.isBlockNormalCube(pos, false);
 	}
-	
+
 }

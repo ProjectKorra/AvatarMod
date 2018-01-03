@@ -31,27 +31,25 @@ import java.util.UUID;
 /**
  * Like {@link CachedEntity}, but allows access to an Entity on both sides (synchronized). It can
  * only be used by another Entity since it uses the DataManager.
- * 
+ *
  * @author CrowsOfWar
  */
 @SuppressWarnings("Guava")
 public class SyncedEntity<T extends Entity> {
-	
+
 	private final Entity using;
 	private final DataParameter<Optional<UUID>> sync;
 	private final CachedEntity<T> cache;
 	private boolean allowNullSaving;
-	
+
 	/**
 	 * Create an entity reference.
-	 * 
-	 * @param entity
-	 *            The entity that is USING the reference, usually
-	 *            <code>this</code>. Not the entity being referenced
-	 * @param sync
-	 *            DataParameter used to sync. Should NOT be created specifically
-	 *            for this SyncedEntity - use a constant. Will not
-	 *            register to entity DataManager.
+	 *
+	 * @param entity The entity that is USING the reference, usually
+	 *               <code>this</code>. Not the entity being referenced
+	 * @param sync   DataParameter used to sync. Should NOT be created specifically
+	 *               for this SyncedEntity - use a constant. Will not
+	 *               register to entity DataManager.
 	 */
 	public SyncedEntity(Entity entity, DataParameter<Optional<UUID>> sync) {
 		this.using = entity;
@@ -59,7 +57,7 @@ public class SyncedEntity<T extends Entity> {
 		this.cache = new CachedEntity<>(null);
 		this.allowNullSaving = true;
 	}
-	
+
 	/**
 	 * Intended for references which need to be set. If the referenced entity is not found on
 	 * loading, destroys the using entity to avoid crashes.
@@ -67,7 +65,7 @@ public class SyncedEntity<T extends Entity> {
 	public void preventNullSaving() {
 		allowNullSaving = false;
 	}
-	
+
 	@Nullable
 	public T getEntity() {
 		// Cache may have an incorrect id; other side could have changed
@@ -76,7 +74,7 @@ public class SyncedEntity<T extends Entity> {
 		cache.setEntityId(optional.orNull());
 		return cache.getEntity(using.world);
 	}
-	
+
 	public void setEntity(@Nullable T entity) {
 		cache.setEntity(entity);
 		using.getDataManager().set(sync, Optional.fromNullable(cache.getEntityId()));
@@ -94,7 +92,7 @@ public class SyncedEntity<T extends Entity> {
 		cache.setEntityId(entityId);
 		using.getDataManager().set(sync, Optional.fromNullable(entityId));
 	}
-	
+
 	/**
 	 * Reads this reference from NBT. Please note, reads values directly from
 	 * this compound (no sub-compound).
@@ -108,7 +106,7 @@ public class SyncedEntity<T extends Entity> {
 					"Entity reference was null on load and removed entity for safety: " + using);
 		}
 	}
-	
+
 	/**
 	 * Writes this reference from NBT. Please note, writes values directly from
 	 * this compound (no sub-compound).
@@ -116,5 +114,5 @@ public class SyncedEntity<T extends Entity> {
 	public void writeToNbt(NBTTagCompound nbt) {
 		cache.writeToNbt(nbt);
 	}
-	
+
 }

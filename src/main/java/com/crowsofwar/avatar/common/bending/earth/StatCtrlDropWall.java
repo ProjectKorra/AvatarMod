@@ -33,7 +33,7 @@ public class StatCtrlDropWall extends StatusControl {
 
 		List<EntityWallSegment> segments = world.getEntities(EntityWallSegment.class, seg -> seg
 				.getOwner() == entity);
-		
+
 		for (EntityWallSegment seg : segments) {
 			seg.setBehavior(new WallBehavior.Drop());
 		}

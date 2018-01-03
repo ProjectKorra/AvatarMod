@@ -29,13 +29,25 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import java.util.UUID;
 
 public class AvatarGuiHandler implements IGuiHandler {
-	
+
 	public static final int GUI_ID_BISON_CHEST = 5;
 	public static final int GUI_ID_GET_BENDING = 6;
-	
+
+	public static int getGuiId(UUID bendingId) {
+		return 100 + BendingStyles.getNetworkId(bendingId);
+	}
+
+	public static UUID getBendingId(int guiId) {
+		return BendingStyles.get((byte) (guiId - 100)).getId();
+	}
+
+	public static boolean isBendingGui(int guiId) {
+		return guiId > 100 && BendingStyles.has(getBendingId(guiId));
+	}
+
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-		
+
 		if (isBendingGui(id)) {
 			return new ContainerSkillsGui(player, getBendingId(id));
 		}
@@ -44,9 +56,9 @@ public class AvatarGuiHandler implements IGuiHandler {
 			int bisonId = x;
 			EntitySkyBison bison = EntitySkyBison.findBison(world, bisonId);
 			if (bison != null) {
-				
+
 				return new ContainerBisonChest(player.inventory, bison.getInventory(), bison, player);
-				
+
 			} else {
 				AvatarLog.warn(WarningType.WEIRD_PACKET, player.getName()
 						+ " tried to open skybison inventory, was not found. BisonId: " + bisonId);
@@ -55,25 +67,13 @@ public class AvatarGuiHandler implements IGuiHandler {
 		if (id == GUI_ID_GET_BENDING) {
 			return new ContainerGetBending(player);
 		}
-		
+
 		return null;
 	}
-	
+
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		return AvatarMod.proxy.createClientGui(id, player, world, x, y, z);
 	}
-	
-	public static int getGuiId(UUID bendingId) {
-		return 100 + BendingStyles.getNetworkId(bendingId);
-	}
-	
-	public static UUID getBendingId(int guiId) {
-		return BendingStyles.get((byte) (guiId - 100)).getId();
-	}
-	
-	public static boolean isBendingGui(int guiId) {
-		return guiId > 100 && BendingStyles.has(getBendingId(guiId));
-	}
-	
+
 }

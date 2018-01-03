@@ -14,7 +14,8 @@ public class PacketCPowerRating extends AvatarPacket<PacketCPowerRating> {
 
 	private Map<UUID, Double> powerRatings;
 
-	public PacketCPowerRating() {}
+	public PacketCPowerRating() {
+	}
 
 	public PacketCPowerRating(Map<UUID, Double> powerRatings) {
 		this.powerRatings = powerRatings;

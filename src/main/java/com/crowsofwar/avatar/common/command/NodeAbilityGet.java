@@ -25,15 +25,13 @@ import com.crowsofwar.gorecore.tree.*;
 import java.util.List;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class NodeAbilityGet extends NodeFunctional {
-	
+
 	private final IArgument<String> argPlayer;
 	private final IArgument<Ability> argAbility;
-	
+
 	/**
 	 * @param name
 	 * @param op
@@ -43,23 +41,23 @@ public class NodeAbilityGet extends NodeFunctional {
 		argPlayer = addArgument(new ArgumentPlayerName("player"));
 		argAbility = addArgument(new ArgumentAbility("ability"));
 	}
-	
+
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
-		
+
 		ArgumentList args = call.popArguments(this);
 		String player = args.get(argPlayer);
 		Ability ability = args.get(argAbility);
-		
+
 		BendingData data = BendingData.get(call.getFrom().getEntityWorld(), player);
 		if (data != null) {
-			
+
 			float xp = data.getAbilityData(ability).getTotalXp();
 			AvatarChatMessages.MSG_ABILITY_GET.send(call.getFrom(), player, ability.getName(), xp);
-			
+
 		}
-		
+
 		return null;
 	}
-	
+
 }

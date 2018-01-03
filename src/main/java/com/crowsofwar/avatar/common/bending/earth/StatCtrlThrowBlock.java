@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -32,33 +31,31 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class StatCtrlThrowBlock extends StatusControl {
-	
+
 	public StatCtrlThrowBlock() {
 		super(2, AvatarControl.CONTROL_LEFT_CLICK_DOWN, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
-	
+
 	@Override
 	public boolean execute(BendingContext ctx) {
-		
+
 		BendingStyle controller = BendingStyles.get(Earthbending.ID);
-		
+
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = entity.world;
 		BendingData data = ctx.getData();
-		
+
 		EntityFloatingBlock floating = AvatarEntity.lookupControlledEntity(world, EntityFloatingBlock.class,
 				entity);
-		
+
 		if (floating != null) {
 
 			float yaw = (float) Math.toRadians(entity.rotationYaw);
 			float pitch = (float) Math.toRadians(entity.rotationPitch);
-			
+
 			// Calculate force and everything
 			double forceMult = data.getAbilityData("pickup_block").getLevel() >= 1 //
 					? 35 : 25;
@@ -73,7 +70,7 @@ public class StatCtrlThrowBlock extends StatusControl {
 		}
 
 		return false;
-		
+
 	}
-	
+
 }

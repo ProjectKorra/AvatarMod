@@ -40,22 +40,20 @@ import net.minecraftforge.event.ForgeEventFactory;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityFireball extends AvatarEntity {
-	
+
 	public static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
 
 	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityFireball.class,
 			DataSerializers.VARINT);
-	
+
 	private AxisAlignedBB expandedHitbox;
-	
+
 	private float damage;
-	
+
 	/**
 	 * @param world
 	 */
@@ -63,14 +61,14 @@ public class EntityFireball extends AvatarEntity {
 		super(world);
 		setSize(.8f, .8f);
 	}
-	
+
 	@Override
 	public void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new FireballBehavior.Idle());
 		dataManager.register(SYNC_SIZE, 30);
 	}
-	
+
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
@@ -82,7 +80,7 @@ public class EntityFireball extends AvatarEntity {
 			setDead();
 			removeStatCtrl();
 		}
-		
+
 	}
 
 	@Override
@@ -98,32 +96,32 @@ public class EntityFireball extends AvatarEntity {
 		spawnExtinguishIndicators();
 		return false;
 	}
-	
+
 	public FireballBehavior getBehavior() {
 		return dataManager.get(SYNC_BEHAVIOR);
 	}
-	
+
 	public void setBehavior(FireballBehavior behavior) {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
-	
+
 	@Override
 	public EntityLivingBase getController() {
 		return getBehavior() instanceof FireballBehavior.PlayerControlled ? getOwner() : null;
 	}
-	
+
 	public float getDamage() {
 		return damage;
 	}
-	
+
 	public void setDamage(float damage) {
 		this.damage = damage;
 	}
-	
+
 	public int getSize() {
 		return dataManager.get(SYNC_SIZE);
 	}
-	
+
 	public void setSize(int size) {
 		dataManager.set(SYNC_SIZE, size);
 	}
@@ -137,12 +135,12 @@ public class EntityFireball extends AvatarEntity {
 
 	@Override
 	public boolean onCollideWithSolid() {
-		
+
 		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
 		explosionSize *= getSize() / 30f;
 		explosionSize += getPowerRating() * 2.0 / 100;
 		boolean destroyObsidian = false;
-		
+
 		if (getOwner() != null) {
 			AbilityData abilityData = BendingData.get(getOwner())
 					.getAbilityData("fireball");
@@ -150,16 +148,16 @@ public class EntityFireball extends AvatarEntity {
 				destroyObsidian = true;
 			}
 		}
-		
+
 		Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
 				!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
 		if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
-			
+
 			explosion.doExplosionA();
 			explosion.doExplosionB(true);
-			
+
 		}
-		
+
 		if (destroyObsidian) {
 			for (EnumFacing dir : EnumFacing.values()) {
 				BlockPos pos = getPosition().offset(dir);
@@ -173,36 +171,36 @@ public class EntityFireball extends AvatarEntity {
 		return true;
 
 	}
-	
+
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		setDamage(nbt.getFloat("Damage"));
 		setBehavior((FireballBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 	}
-	
+
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setFloat("Damage", getDamage());
 		nbt.setInteger("Behavior", getBehavior().getId());
 	}
-	
+
 	public AxisAlignedBB getExpandedHitbox() {
 		return this.expandedHitbox;
 	}
-	
+
 	@Override
 	public void setEntityBoundingBox(AxisAlignedBB bb) {
 		super.setEntityBoundingBox(bb);
 		expandedHitbox = bb.grow(0.35, 0.35, 0.35);
 	}
-	
+
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 0 || pass == 1;
 	}
-	
+
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
@@ -214,6 +212,5 @@ public class EntityFireball extends AvatarEntity {
 	public boolean isProjectile() {
 		return true;
 	}
-
 
 }

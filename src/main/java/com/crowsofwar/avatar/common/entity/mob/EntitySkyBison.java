@@ -129,8 +129,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_ARMOR);
 
 	private final SyncedEntity<EntityLivingBase> ownerAttr;
-	private Vector originalPos;
 	private final AnimalCondition condition;
+	private Vector originalPos;
 	/**
 	 * Note: Is null clientside.
 	 */
@@ -155,6 +155,25 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		initChest();
 
+	}
+
+	/**
+	 * Returns the sky bison in that world with the specified id, or null if no
+	 * sky bison with that id.
+	 */
+	public static EntitySkyBison findBison(World world, int id) {
+		List<EntitySkyBison> list = world.getEntities(EntitySkyBison.class, bison -> bison.getId() == id);
+		return list.isEmpty() ? null : list.get(0);
+	}
+
+	/**
+	 * Returns the sky bison in that world with the specified uuid, or null if
+	 * no sky bison with that uuid.
+	 */
+	public static EntitySkyBison findBison(World world, UUID id) {
+		List<EntitySkyBison> list = world.getEntities(EntitySkyBison.class,
+				bison -> bison.getUniqueID().equals(id));
+		return list.isEmpty() ? null : list.get(0);
 	}
 
 	@Override
@@ -239,6 +258,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 	}
 
+	// ================================================================================
+	// DATA ACCESS / DATAMANAGER
+	// ================================================================================
+
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
@@ -282,10 +305,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		writeInventory(chest, nbt, "Inventory");
 
 	}
-
-	// ================================================================================
-	// DATA ACCESS / DATAMANAGER
-	// ================================================================================
 
 	public Vector getOriginalPos() {
 
@@ -413,25 +432,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 	public void setId(int id) {
 		dataManager.set(SYNC_ID, id);
-	}
-
-	/**
-	 * Returns the sky bison in that world with the specified id, or null if no
-	 * sky bison with that id.
-	 */
-	public static EntitySkyBison findBison(World world, int id) {
-		List<EntitySkyBison> list = world.getEntities(EntitySkyBison.class, bison -> bison.getId() == id);
-		return list.isEmpty() ? null : list.get(0);
-	}
-
-	/**
-	 * Returns the sky bison in that world with the specified uuid, or null if
-	 * no sky bison with that uuid.
-	 */
-	public static EntitySkyBison findBison(World world, UUID id) {
-		List<EntitySkyBison> list = world.getEntities(EntitySkyBison.class,
-				bison -> bison.getUniqueID().equals(id));
-		return list.isEmpty() ? null : list.get(0);
 	}
 
 	// ================================================================================
@@ -703,7 +703,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	 * will attack as normal.
 	 */
 	public boolean onLeftClick(EntityPlayer player) {
-		
+
 		if (this.hasOwner()) {
 			if (player.isSneaking()) {
 				// Open GUI

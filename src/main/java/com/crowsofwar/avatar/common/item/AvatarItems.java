@@ -28,19 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class
 AvatarItems {
-	
-	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
-		@Override
-		public ItemStack getTabIconItem() {
-			return stackScroll;
-		}
-	};
 
 	public static List<Item> allItems;
 	public static ItemScroll itemScroll;
@@ -49,11 +40,17 @@ AvatarItems {
 	public static ItemBisonSaddle itemBisonSaddle;
 	public static ItemBisonArmor itemBisonArmor;
 	public static ItemOstrichEquipment itemOstrichEquipment;
-	
 	private static ItemStack stackScroll;
+	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
+		@Override
+		public ItemStack getTabIconItem() {
+			return stackScroll;
+		}
+	};
 
-	private AvatarItems() {}
-	
+	private AvatarItems() {
+	}
+
 	public static void init() {
 		allItems = new ArrayList<>();
 		addItem(itemScroll = new ItemScroll());
@@ -62,7 +59,7 @@ AvatarItems {
 		addItem(itemBisonArmor = new ItemBisonArmor());
 		addItem(itemBisonSaddle = new ItemBisonSaddle());
 		addItem(itemOstrichEquipment = new ItemOstrichEquipment());
-		
+
 		stackScroll = new ItemStack(itemScroll);
 		MinecraftForge.EVENT_BUS.register(new AvatarItems());
 

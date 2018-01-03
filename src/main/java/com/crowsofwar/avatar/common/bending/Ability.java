@@ -17,8 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLiving;
 
@@ -27,11 +27,11 @@ import java.util.UUID;
 /**
  * Encapsulates all logic required for a bending ability. There is 1 instance of
  * a bending ability for each ability present - similar to BendingController.
- * 
+ *
  * @author CrowsOfWar
  */
 public abstract class Ability {
-	
+
 	private final UUID type;
 	private final String name;
 	private Raytrace.Info raytrace;
@@ -56,8 +56,7 @@ public abstract class Ability {
 	/**
 	 * Execute this ability. Only called on server.
 	 *
-	 * @param ctx
-	 *            Information for the ability
+	 * @param ctx Information for the ability
 	 */
 	public abstract void execute(AbilityContext ctx);
 
@@ -75,7 +74,6 @@ public abstract class Ability {
 		return false;
 	}
 
-
 	/**
 	 * Generally used for abilities that help with evreryday tasks, such as mining,
 	 * moving water sources, or just moving around.
@@ -92,10 +90,8 @@ public abstract class Ability {
 	 * Information for the raytrace will then be available through the
 	 * {@link AbilityContext}.
 	 *
-	 * @param range
-	 *            Range to raycast. -1 for player's reach.
-	 * @param raycastLiquids
-	 *            Whether to keep going on hit liquids
+	 * @param range          Range to raycast. -1 for player's reach.
+	 * @param raycastLiquids Whether to keep going on hit liquids
 	 */
 	protected void requireRaytrace(double range, boolean raycastLiquids) {
 		this.raytrace = new Raytrace.Info(range, raycastLiquids);

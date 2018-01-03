@@ -24,42 +24,41 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.util.UUID;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class PacketSUnlockBending extends AvatarPacket<PacketSUnlockBending> {
-	
+
 	private byte type;
-	
-	public PacketSUnlockBending() {}
-	
+
+	public PacketSUnlockBending() {
+	}
+
 	public PacketSUnlockBending(UUID type) {
 		this.type = BendingStyles.getNetworkId(type);
 	}
-	
+
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		type = buf.readByte();
 	}
-	
+
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
 		buf.writeByte(type);
 	}
-	
+
 	@Override
 	protected Side getReceivedSide() {
 		return Side.SERVER;
 	}
-	
+
 	@Override
 	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketSUnlockBending> getPacketHandler() {
 		return PacketRedirector::redirectMessage;
 	}
-	
+
 	public UUID getUnlockType() {
 		return BendingStyles.get(type).getId();
 	}
-	
+
 }

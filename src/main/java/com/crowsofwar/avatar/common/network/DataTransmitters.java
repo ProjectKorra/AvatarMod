@@ -33,63 +33,63 @@ import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.writeUUID;
  * DataTransmitters are responsible for reading and writing certain parts of
  * player data to the network. For example, there is a transmitter for the
  * bending list, the ability data, and chi.
- * 
+ *
  * @author CrowsOfWar
  */
 public class DataTransmitters {
-	
+
 	public static final DataTransmitter<List<UUID>> BENDING_LIST = new
 			DataTransmitter<List<UUID>>() {
-		
-		@Override
-		public void write(ByteBuf buf, List<UUID> t) {
-			buf.writeInt(t.size());
-			for (UUID bendingId : t) {
-				writeUUID(buf, bendingId);
-			}
-		}
-		
-		@Override
-		public List<UUID> read(ByteBuf buf, BendingData data) {
-			int size = buf.readInt();
-			List<UUID> out = new ArrayList<>(size);
-			for (int i = 0; i < size; i++) {
-				out.add(readUUID(buf));
-			}
-			return out;
-		}
-	};
-	
+
+				@Override
+				public void write(ByteBuf buf, List<UUID> t) {
+					buf.writeInt(t.size());
+					for (UUID bendingId : t) {
+						writeUUID(buf, bendingId);
+					}
+				}
+
+				@Override
+				public List<UUID> read(ByteBuf buf, BendingData data) {
+					int size = buf.readInt();
+					List<UUID> out = new ArrayList<>(size);
+					for (int i = 0; i < size; i++) {
+						out.add(readUUID(buf));
+					}
+					return out;
+				}
+			};
+
 	public static final DataTransmitter<Map<String, AbilityData>> ABILITY_DATA = new
 			DataTransmitter<Map<String, AbilityData>>() {
-		
-		@Override
-		public void write(ByteBuf buf, Map<String, AbilityData> t) {
-			Set<Map.Entry<String, AbilityData>> entries = t.entrySet();
-			buf.writeInt(entries.size());
-			for (Map.Entry<String, AbilityData> entry : entries) {
-				entry.getValue().toBytes(buf);
-			}
-		}
-		
-		@Override
-		public Map<String, AbilityData> read(ByteBuf buf, BendingData data) {
-			Map<String, AbilityData> out = new HashMap<>();
-			int size = buf.readInt();
-			for (int i = 0; i < size; i++) {
-				AbilityData abilityData = AbilityData.createFromBytes(buf, data);
-				if (abilityData == null) {
-					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid ability ID sent for ability data");
-				} else {
-					out.put(abilityData.getAbilityName(), abilityData);
+
+				@Override
+				public void write(ByteBuf buf, Map<String, AbilityData> t) {
+					Set<Map.Entry<String, AbilityData>> entries = t.entrySet();
+					buf.writeInt(entries.size());
+					for (Map.Entry<String, AbilityData> entry : entries) {
+						entry.getValue().toBytes(buf);
+					}
 				}
-			}
-			return out;
-		}
-	};
-	
+
+				@Override
+				public Map<String, AbilityData> read(ByteBuf buf, BendingData data) {
+					Map<String, AbilityData> out = new HashMap<>();
+					int size = buf.readInt();
+					for (int i = 0; i < size; i++) {
+						AbilityData abilityData = AbilityData.createFromBytes(buf, data);
+						if (abilityData == null) {
+							AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid ability ID sent for ability data");
+						} else {
+							out.put(abilityData.getAbilityName(), abilityData);
+						}
+					}
+					return out;
+				}
+			};
+
 	public static final DataTransmitter<List<StatusControl>> STATUS_CONTROLS = new DataTransmitter<List<StatusControl>>() {
-		
+
 		@Override
 		public void write(ByteBuf buf, List<StatusControl> t) {
 			buf.writeInt(t.size());
@@ -97,7 +97,7 @@ public class DataTransmitters {
 				buf.writeInt(sc.id());
 			}
 		}
-		
+
 		@Override
 		public List<StatusControl> read(ByteBuf buf, BendingData data) {
 			int size = buf.readInt();
@@ -112,27 +112,27 @@ public class DataTransmitters {
 			return out;
 		}
 	};
-	
+
 	public static final DataTransmitter<Boolean> BOOLEAN = new DataTransmitter<Boolean>() {
-		
+
 		@Override
 		public void write(ByteBuf buf, Boolean t) {
 			buf.writeBoolean(t);
 		}
-		
+
 		@Override
 		public Boolean read(ByteBuf buf, BendingData data) {
 			return buf.readBoolean();
 		}
 	};
-	
+
 	public static final DataTransmitter<Chi> CHI = new DataTransmitter<Chi>() {
-		
+
 		@Override
 		public void write(ByteBuf buf, Chi t) {
 			t.toBytes(buf);
 		}
-		
+
 		@Override
 		public Chi read(ByteBuf buf, BendingData data) {
 			Chi chi = new Chi(data);
@@ -140,9 +140,9 @@ public class DataTransmitters {
 			return chi;
 		}
 	};
-	
+
 	public static final DataTransmitter<List<TickHandler>> TICK_HANDLERS = new DataTransmitter<List<TickHandler>>() {
-		
+
 		@Override
 		public void write(ByteBuf buf, List<TickHandler> list) {
 			buf.writeInt(list.size());
@@ -150,7 +150,7 @@ public class DataTransmitters {
 				buf.writeInt(handler.id());
 			}
 		}
-		
+
 		@Override
 		public List<TickHandler> read(ByteBuf buf, BendingData data) {
 			List<TickHandler> list = new ArrayList<>();
@@ -160,16 +160,16 @@ public class DataTransmitters {
 			}
 			return list;
 		}
-		
+
 	};
-	
+
 	public static final DataTransmitter<MiscData> MISC_DATA = new DataTransmitter<MiscData>() {
-		
+
 		@Override
 		public void write(ByteBuf buf, MiscData t) {
 			t.toBytes(buf);
 		}
-		
+
 		@Override
 		public MiscData read(ByteBuf buf, BendingData data) {
 			MiscData misc = new MiscData(() -> data.save(DataCategory.MISC_DATA));
@@ -177,14 +177,14 @@ public class DataTransmitters {
 			return misc;
 		}
 	};
-	
+
 	public static final DataTransmitter<UUID> ACTIVE_BENDING = new DataTransmitter<UUID>() {
-		
+
 		@Override
 		public void write(ByteBuf buf, UUID t) {
 			writeUUID(buf, t == null ? new UUID(0, 0) : t);
 		}
-		
+
 		@Override
 		public UUID read(ByteBuf buf, BendingData data) {
 			UUID id = readUUID(buf);
@@ -223,5 +223,5 @@ public class DataTransmitters {
 		}
 
 	};
-	
+
 }

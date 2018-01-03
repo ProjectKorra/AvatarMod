@@ -137,7 +137,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 				BendingData.get(getOwner()).removeStatusControl(StatusControl.DROP_WALL);
 			}
 		}
-		
+
 	}
 
 	public void setDirection(EnumFacing dir) {

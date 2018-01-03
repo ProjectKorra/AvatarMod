@@ -30,31 +30,31 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
 
 public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> {
-	
+
 	public static final Vector ZERO = new Vector(0, 0, 0);
-	
+
 	private boolean airGrab, destroyProjectiles;
-	
+
 	public EntityAirGust(World world) {
 		super(world);
 		setSize(1.5f, 1.5f);
 		putsOutFires = true;
 	}
-	
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		airGrab = nbt.getBoolean("AirGrab");
 		destroyProjectiles = nbt.getBoolean("DestroyProjectiles");
 	}
-	
+
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setBoolean("AirGrab", airGrab);
 		nbt.setBoolean("DestroyProjectiles", destroyProjectiles);
 	}
-	
+
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
@@ -65,7 +65,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 			setDead();
 		}
 	}
-	
+
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
 		EntityLivingBase owner = getOwner();
@@ -84,27 +84,27 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 				xp = abilityData.getTotalXp();
 				abilityData.addXp(SKILLS_CONFIG.airGustHit);
 			}
-			
+
 			Vector velocity = velocity().times(0.15).times(1 + xp / 200.0);
 			velocity = velocity.withY(airGrab ? -1 : 1).times(airGrab ? -0.8 : 1);
 
 			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 			afterVelocityAdded(entity);
-			
+
 			setDead();
-			
+
 			if (entity instanceof AvatarEntity) {
 				((AvatarEntity) entity).onAirContact();
 			}
-			
+
 		}
 	}
-	
+
 	@Override
 	protected boolean canCollideWith(Entity entity) {
 		return true;
 	}
-	
+
 	@Override
 	public boolean onCollideWithSolid() {
 		setDead();
@@ -115,42 +115,42 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	protected AirGustControlPoint createControlPoint(float size, int index) {
 		return new AirGustControlPoint(this, 0.5f, 0, 0, 0);
 	}
-	
+
 	@Override
 	public int getAmountOfControlPoints() {
 		return 2;
 	}
-	
+
 	@Override
 	protected double getControlPointMaxDistanceSq() {
 		return 400; // 20
 	}
-	
+
 	@Override
 	protected double getControlPointTeleportDistanceSq() {
 		// Note: Is not actually called.
 		// Set dead as soon as reached sq-distance
 		return 200;
 	}
-	
+
 	public boolean doesAirGrab() {
 		return airGrab;
 	}
-	
+
 	public void setAirGrab(boolean airGrab) {
 		this.airGrab = airGrab;
 	}
-	
+
 	public boolean doesDestroyProjectiles() {
 		return destroyProjectiles;
 	}
-	
+
 	public void setDestroyProjectiles(boolean destroyProjectiles) {
 		this.destroyProjectiles = destroyProjectiles;
 	}
-	
+
 	public static class AirGustControlPoint extends ControlPoint {
-		
+
 		public AirGustControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);
 		}
@@ -163,7 +163,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 				size += expansionRate;
 			}
 		}
-		
+
 	}
-	
+
 }

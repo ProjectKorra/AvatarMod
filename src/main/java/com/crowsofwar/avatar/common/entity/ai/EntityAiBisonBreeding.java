@@ -32,43 +32,42 @@ import java.util.Random;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityAiBisonBreeding extends EntityAIBase {
-	
+
 	private final EntitySkyBison bison;
-	
+
 	public EntityAiBisonBreeding(EntitySkyBison bison) {
 		this.bison = bison;
 		setMutexBits(1);
 	}
-	
+
 	@Override
 	public boolean shouldExecute() {
 		AnimalCondition cond = bison.getCondition();
 		return cond.isReadyToBreed() && getNearbyBison() > 0;
 	}
-	
+
 	@Override
-	public void startExecuting() {}
-	
+	public void startExecuting() {
+	}
+
 	@Override
 	public boolean shouldContinueExecuting() {
-		
+
 		if (!shouldExecute()) {
 			return false;
 		}
-		
+
 		double range = 100;
-		
+
 		Vector pos = Vector.getEntityPos(bison);
 		Vector min = pos.minus(range / 2, range / 2, range / 2);
 		Vector max = pos.plus(range / 2, range / 2, range / 2);
-		
+
 		AxisAlignedBB aabb = new AxisAlignedBB(min.x(), min.y(), min.z(), max.x(), max.y(), max.z());
-		
+
 		List<EntitySkyBison> mates = bison.world.getEntitiesWithinAABB(EntitySkyBison.class, aabb,
 				b -> b != bison && b.getCondition().isReadyToBreed());
 
@@ -78,63 +77,63 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 				bison.getMoveHelper().setMoveTo(mate.posX, mate.posY, mate.posZ, 1);
 				// 7 obtained through real-world testing
 				if (bison.getDistanceSqToEntity(mate) <= 7) {
-					
+
 					spawnBaby(mate);
-					
+
 					bison.getCondition().setBreedTimer(generateBreedTimer());
 					mate.getCondition().setBreedTimer(generateBreedTimer());
-					
+
 					return true;
-					
+
 				}
 			}
 		}
-		
+
 		return true;
-		
+
 	}
-	
+
 	private void spawnBaby(EntitySkyBison mate) {
-		
+
 		World world = bison.world;
 		AnimalCondition cond = bison.getCondition();
 		EntitySkyBison child = new EntitySkyBison(world);
-		
+
 		if (child != null) {
-			
+
 			// Spawn the baby
 			child.getCondition().setAge(0);
 			child.setLocationAndAngles(bison.posX, bison.posY, bison.posZ, 0, 0);
 			child.onInitialSpawn(world.getDifficultyForLocation(bison.getPosition()),
 					new BisonSpawnData(true));
 			world.spawnEntity(child);
-			
+
 			// Spawn heart particles
 			Random random = bison.getRNG();
 			for (int i = 0; i < 7; ++i) {
-				
+
 				double mx = random.nextGaussian() * 0.02D;
 				double my = random.nextGaussian() * 0.02D;
 				double mz = random.nextGaussian() * 0.02D;
-				
+
 				double dx = random.nextDouble() * bison.width * 2 - bison.width;
 				double dy = 0.5 + random.nextDouble() * bison.height;
 				double dz = random.nextDouble() * bison.width * 2 - bison.width;
-				
+
 				world.spawnParticle(EnumParticleTypes.HEART, bison.posX + dx, bison.posY + dy,
 						bison.posZ + dz, mx, my, mz);
-				
+
 			}
-			
+
 			// Spawn XP orbs
 			if (world.getGameRules().getBoolean("doMobLoot")) {
 				world.spawnEntity(
 						new EntityXPOrb(world, bison.posX, bison.posY, bison.posZ, random.nextInt(7) + 1));
 			}
-			
+
 		}
 	}
-	
+
 	private int generateBreedTimer() {
 		Random random = bison.getRNG();
 		float min = MOBS_CONFIG.bisonBreedMinMinutes;
@@ -142,19 +141,19 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 		float minutes = min + random.nextFloat() * (max - min);
 		return (int) (minutes * 1200);
 	}
-	
+
 	/**
 	 * Get the number of nearby other bison, excluding this bison.
 	 */
 	private int getNearbyBison() {
-		
+
 		World world = bison.world;
-		
+
 		AxisAlignedBB aabb = new AxisAlignedBB(bison.posX - 32, 0, bison.posZ - 32, bison.posX + 32, 255,
 				bison.posZ + 32);
-		
+
 		return world.getEntitiesWithinAABB(EntitySkyBison.class, aabb, b -> b != bison).size();
-		
+
 	}
-	
+
 }

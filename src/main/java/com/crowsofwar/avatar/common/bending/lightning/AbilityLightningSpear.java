@@ -37,8 +37,6 @@ import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 /**
- *
- *
  * @author CrowsOfWar
  */
 public class AbilityLightningSpear extends Ability {

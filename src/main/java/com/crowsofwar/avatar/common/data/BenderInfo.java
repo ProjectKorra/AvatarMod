@@ -42,37 +42,6 @@ import java.util.UUID;
  */
 public abstract class BenderInfo {
 
-	public abstract boolean isPlayer();
-	
-	@Nullable
-	public abstract UUID getId();
-
-	@Nullable
-	public abstract Bender find(World world);
-
-	/**
-	 * Gets the type of this BenderInfo (according to class hierarchy) to be used in NBT compounds
-	 */
-	private String getType() {
-		// this isn't an instance method since it would be a bit overcomplicated for something like this
-		// Only using getType() wouldn't work for static method readFromNbt, which means a registry would be needed
-		// ... which isn't necessary if BenderInfo only has 2-3 subclasses and will not add more in the future
-		if (this instanceof BenderInfoPlayer) {
-			return "Player";
-		}
-		if (this instanceof BenderInfoEntity) {
-			return "Entity";
-		}
-		return "None";
-	}
-
-	public void writeToNbt(NBTTagCompound nbt) {
-		nbt.setString("Type", getType());
-		if (getId() != null) {
-			nbt.setUniqueId("Id", getId());
-		}
-	}
-
 	public static BenderInfo readFromNbt(NBTTagCompound nbt) {
 		String type = nbt.getString("Type");
 		UUID id = nbt.getUniqueId("Id");
@@ -82,13 +51,6 @@ public abstract class BenderInfo {
 			return new BenderInfoEntity(id);
 		} else {
 			return new NoBenderInfo();
-		}
-	}
-
-	public void writeToBytes(ByteBuf buf) {
-		ByteBufUtils.writeUTF8String(buf, getType());
-		if (getId() != null) {
-			GoreCoreByteBufUtil.writeUUID(buf, getId());
 		}
 	}
 
@@ -123,6 +85,44 @@ public abstract class BenderInfo {
 			return new BenderInfoPlayer(entity.getName());
 		} else {
 			return new BenderInfoEntity(entity.getUniqueID());
+		}
+	}
+
+	public abstract boolean isPlayer();
+
+	@Nullable
+	public abstract UUID getId();
+
+	@Nullable
+	public abstract Bender find(World world);
+
+	/**
+	 * Gets the type of this BenderInfo (according to class hierarchy) to be used in NBT compounds
+	 */
+	private String getType() {
+		// this isn't an instance method since it would be a bit overcomplicated for something like this
+		// Only using getType() wouldn't work for static method readFromNbt, which means a registry would be needed
+		// ... which isn't necessary if BenderInfo only has 2-3 subclasses and will not add more in the future
+		if (this instanceof BenderInfoPlayer) {
+			return "Player";
+		}
+		if (this instanceof BenderInfoEntity) {
+			return "Entity";
+		}
+		return "None";
+	}
+
+	public void writeToNbt(NBTTagCompound nbt) {
+		nbt.setString("Type", getType());
+		if (getId() != null) {
+			nbt.setUniqueId("Id", getId());
+		}
+	}
+
+	public void writeToBytes(ByteBuf buf) {
+		ByteBufUtils.writeUTF8String(buf, getType());
+		if (getId() != null) {
+			GoreCoreByteBufUtil.writeUUID(buf, getId());
 		}
 	}
 

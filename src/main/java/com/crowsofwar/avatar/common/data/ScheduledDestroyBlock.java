@@ -19,13 +19,13 @@ package com.crowsofwar.avatar.common.data;
 import net.minecraft.util.math.BlockPos;
 
 public class ScheduledDestroyBlock {
-	
-	private final AvatarWorldData data;
+
 	final BlockPos pos;
 	final boolean drop;
 	final int fortune;
+	private final AvatarWorldData data;
 	int ticks;
-	
+
 	public ScheduledDestroyBlock(AvatarWorldData avatarWorldData, BlockPos pos, int ticks, boolean drop, int fortune) {
 		data = avatarWorldData;
 		this.pos = pos;
@@ -33,26 +33,26 @@ public class ScheduledDestroyBlock {
 		this.fortune = fortune;
 		this.drop = drop;
 	}
-	
+
 	public int getTicks() {
 		return ticks;
 	}
-	
+
 	public void decrementTicks() {
 		this.ticks--;
 		data.setDirty(true);
 	}
-	
+
 	public BlockPos getPos() {
 		return pos;
 	}
-	
+
 	public boolean isDrop() {
 		return drop;
 	}
-	
+
 	public int getFortune() {
 		return fortune;
 	}
-	
+
 }

@@ -31,38 +31,36 @@ import static net.minecraft.util.math.MathHelper.cos;
 import static net.minecraft.util.math.MathHelper.sin;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class RenderWaterBubble extends Render<EntityWaterBubble> {
-	
+
 	private static final ResourceLocation water = new ResourceLocation("minecraft",
 			"textures/blocks/water_still.png");
-	
+
 	public RenderWaterBubble(RenderManager renderManager) {
 		super(renderManager);
 	}
-	
+
 	@Override
 	public void doRender(EntityWaterBubble bubble, double x, double y, double z, float entityYaw,
-			float partialTicks) {
-		
+						 float partialTicks) {
+
 		float ticks = bubble.ticksExisted + partialTicks;
 		float colorEnhancement = 1.2f;
-		
+
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.renderEngine.bindTexture(water);
 		GlStateManager.enableBlend();
 		GlStateManager.color(colorEnhancement, colorEnhancement, colorEnhancement, 0.6f);
-		
+
 		Matrix4f mat = new Matrix4f();
 		mat.translate((float) x - 0.5f, (float) y, (float) z - 0.5f);
-		
+
 		// (0 Left)/(1 Right), (0 Bottom)/(1 Top), (0 Front)/(1 Back)
-		
+
 		Vector4f mid = new Vector4f((float) x, (float) y + .5f, (float) z, 1);
-		
+
 		// @formatter:off
 		Vector4f
 		lbf = new Vector4f(0, 0, 0, 1).mul(mat),
@@ -89,26 +87,26 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		rtb.add(cos(t1)*amt, cos(t2)*amt, sin(t1)*amt, 0);
 		
 		// @formatter:on
-		
+
 		float existed = ticks / 4f;
 		int anim = (int) ((int) existed % 16);
 		float v1 = anim / 16f, v2 = v1 + 1f / 16;
-		
+
 		drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2); // -x
 		drawQuad(2, rtb, rbb, rbf, rtf, 0, v1, 1, v2); // +x
 		drawQuad(2, rbb, rbf, lbf, lbb, 0, v1, 1, v2); // -y
 		drawQuad(2, rtb, rtf, ltf, ltb, 0, v1, 1, v2); // +y
 		drawQuad(2, rtf, rbf, lbf, ltf, 0, v1, 1, v2); // -z
 		drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2); // +z
-		
+
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.disableBlend();
-		
+
 	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityWaterBubble entity) {
 		return null;
 	}
-	
+
 }

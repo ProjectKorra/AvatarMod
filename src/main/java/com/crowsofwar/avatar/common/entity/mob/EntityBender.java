@@ -24,14 +24,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public abstract class EntityBender extends EntityCreature {
-	
+
 	private Bender bender;
-	
+
 	/**
 	 * @param world
 	 */
@@ -56,13 +54,13 @@ public abstract class EntityBender extends EntityCreature {
 		super.readEntityFromNBT(nbt);
 		bender.getData().readFromNbt(nbt);
 	}
-	
+
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		bender.getData().writeToNbt(nbt);
 	}
-	
+
 	@Override
 	public void onUpdate() {
 		super.onUpdate();

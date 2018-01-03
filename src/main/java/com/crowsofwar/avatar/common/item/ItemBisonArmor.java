@@ -24,12 +24,10 @@ import net.minecraft.util.NonNullList;
 import javax.annotation.Nullable;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ItemBisonArmor extends Item implements AvatarItem {
-	
+
 	public ItemBisonArmor() {
 		setUnlocalizedName("bison_armor");
 		setMaxStackSize(1);
@@ -37,26 +35,26 @@ public class ItemBisonArmor extends Item implements AvatarItem {
 		setMaxDamage(0);
 		setHasSubtypes(true);
 	}
-	
+
 	@Override
 	public Item item() {
 		return this;
 	}
-	
+
 	@Override
 	public String getModelName(int meta) {
 		ArmorTier tier = ArmorTier.get(meta);
 		String tierName = tier == null ? "null" : tier.name().toLowerCase();
 		return "bison_armor_" + tierName;
 	}
-	
+
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		ArmorTier tier = ArmorTier.get(stack.getMetadata());
 		String tierName = tier == null ? "null" : tier.name().toLowerCase();
 		return super.getUnlocalizedName(stack) + "." + tierName;
 	}
-	
+
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
 
@@ -65,36 +63,24 @@ public class ItemBisonArmor extends Item implements AvatarItem {
 				subItems.add(new ItemStack(this, 1, i));
 			}
 		}
-		
+
 	}
-	
+
 	public enum ArmorTier {
-		
+
 		WOVEN(8, 0.8f),
 		CHAIN(16, 0.7f),
 		WROUGHT(20, 0.6f),
 		LEGENDARY(26, 0.75f);
-		
+
 		private final float armorPoints;
 		private final float speedMultiplier;
-		
+
 		private ArmorTier(float armorPoints, float speedMultiplier) {
 			this.armorPoints = armorPoints;
 			this.speedMultiplier = speedMultiplier;
 		}
-		
-		public float getArmorPoints() {
-			return armorPoints;
-		}
-		
-		public float getSpeedMultiplier() {
-			return speedMultiplier;
-		}
-		
-		public int id() {
-			return ordinal();
-		}
-		
+
 		@Nullable
 		public static ArmorTier get(int id) {
 			if (!isValidId(id)) {
@@ -102,11 +88,23 @@ public class ItemBisonArmor extends Item implements AvatarItem {
 			}
 			return values()[id];
 		}
-		
+
 		public static boolean isValidId(int id) {
 			return id >= 0 && id < values().length;
 		}
-		
+
+		public float getArmorPoints() {
+			return armorPoints;
+		}
+
+		public float getSpeedMultiplier() {
+			return speedMultiplier;
+		}
+
+		public int id() {
+			return ordinal();
+		}
+
 	}
-	
+
 }

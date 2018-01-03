@@ -42,12 +42,10 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityOstrichHorse extends EntityAnimal implements IInventoryChangedListener {
-	
+
 	private static final DataParameter<Float> SYNC_RIDE_SPEED = EntityDataManager
 			.createKey(EntityOstrichHorse.class, DataSerializers.FLOAT);
 
@@ -64,19 +62,19 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 		setSize(1, 2);
 		setupChest();
 	}
-	
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_RIDE_SPEED, 0f);
 		dataManager.register(SYNC_EQUIPMENT, -1);
 	}
-	
+
 	@Override
 	public EntityAgeable createChild(EntityAgeable ageable) {
 		return new EntityOstrichHorse(world);
 	}
-	
+
 	@Override
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
@@ -88,7 +86,7 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 10));
 		this.tasks.addTask(7, new EntityAILookIdle(this));
 	}
-	
+
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
@@ -166,12 +164,12 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 	public Entity getControllingPassenger() {
 		return !getPassengers().isEmpty() ? getPassengers().get(0) : null;
 	}
-	
+
 	@Override
 	public boolean canBeSteered() {
-		return getControllingPassenger() instanceof  EntityLivingBase;
+		return getControllingPassenger() instanceof EntityLivingBase;
 	}
-	
+
 	@Override
 	public void travel(float strafe, float jump, float forward) {
 		EntityLivingBase driver = (EntityLivingBase) getControllingPassenger();
@@ -187,7 +185,7 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 			this.rotationYawHead = this.rotationYaw;
 			this.stepHeight = 1.0F;
 			this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
-			
+
 			if (this.canPassengerSteer()) {
 
 				updateRideSpeed(driver.moveForward);
@@ -201,16 +199,16 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 				this.motionY = 0.0D;
 				this.motionZ = 0.0D;
 			}
-			
+
 			this.prevLimbSwingAmount = this.limbSwingAmount;
 			double d1 = this.posX - this.prevPosX;
 			double d0 = this.posZ - this.prevPosZ;
 			float f1 = MathHelper.sqrt(d1 * d1 + d0 * d0) * 4.0F;
-			
+
 			if (f1 > 1.0F) {
 				f1 = 1.0F;
 			}
-			
+
 			this.limbSwingAmount += (f1 - this.limbSwingAmount) * 0.4F;
 			this.limbSwing += this.limbSwingAmount;
 		} else {
@@ -272,7 +270,7 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 	private float getRideSpeed() {
 		return dataManager.get(SYNC_RIDE_SPEED);
 	}
-	
+
 	private void setRideSpeed(float rideSpeed) {
 		dataManager.set(SYNC_RIDE_SPEED, rideSpeed);
 	}
@@ -292,7 +290,7 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 	 * Drops the current equipment onto the ground, emptying the current equipment
 	 *
 	 * @param dropItem Whether to drop an item on the ground, useful for preventing creative
-	 *                    players from getting extra items
+	 *                 players from getting extra items
 	 */
 	private void dropEquipment(boolean dropItem) {
 		if (getEquipment() != null) {
@@ -308,22 +306,21 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 	/**
 	 * Assuming that the ostrich is currently ridden, update ride speed to the
 	 * driver's specifications
-	 * 
+	 *
+	 * @param instructions Positive if the ostrich should move faster, negative if the
+	 *                     ostrich should move slower, zero to stay the same
 	 * @see #getRideSpeed()
-	 * @param instructions
-	 *            Positive if the ostrich should move faster, negative if the
-	 *            ostrich should move slower, zero to stay the same
 	 */
 	private void updateRideSpeed(float instructions) {
-		
+
 		float moveSpeedAttr = (float) getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED)
 				.getAttributeValue();
 		float current = getRideSpeed();
 		float target = moveSpeedAttr * 1.5f;
 		float next = current;
-		
+
 		if (instructions > 0) {
-			
+
 			// Move faster!
 			if (current < target) {
 				next += moveSpeedAttr * 0.02f;
@@ -331,23 +328,23 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 			if (next < 0.1) {
 				next = 0.1f;
 			}
-			
+
 		}
 		if (instructions < 0) {
-			
+
 			// Move slower!
 			if (current > 0) {
 				next -= moveSpeedAttr * 0.03f;
 			}
-			
+
 		}
 		if (instructions == 0) {
-			
+
 			// Don't move very fast
 			target = moveSpeedAttr * 0.5f;
-			
+
 		}
-		
+
 		// Update to dataManager
 		if (next < 0.1) {
 			next = 0;

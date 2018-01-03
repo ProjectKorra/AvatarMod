@@ -25,31 +25,29 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.util.Random;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityAiBisonWander extends EntityAIBase {
-	
+
 	private final EntitySkyBison entity;
-	
+
 	public EntityAiBisonWander(EntitySkyBison entity) {
 		this.entity = entity;
 		this.setMutexBits(1);
 	}
-	
+
 	/**
 	 * Returns whether the EntityAIBase should begin execution.
 	 */
 	@Override
 	public boolean shouldExecute() {
-		
+
 		if (entity.isSitting()) return false;
 		if (entity.getControllingPassenger() != null) return false;
 		if (entity.wantsGrass()) return false;
-		
+
 		EntityMoveHelper moveHelper = entity.getMoveHelper();
-		
+
 		if (!moveHelper.isUpdating()) {
 			return true;
 		} else {
@@ -59,9 +57,9 @@ public class EntityAiBisonWander extends EntityAIBase {
 			double distToTargetSq = dx * dx + dy * dy + dz * dz;
 			return distToTargetSq < 1.0D || distToTargetSq > 3600.0D;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Returns whether an in-progress EntityAIBase should continue executing
 	 */
@@ -69,7 +67,7 @@ public class EntityAiBisonWander extends EntityAIBase {
 	public boolean shouldContinueExecuting() {
 		return false;
 	}
-	
+
 	/**
 	 * Execute a one shot task or start executing a continuous task
 	 */
@@ -87,8 +85,8 @@ public class EntityAiBisonWander extends EntityAIBase {
 		double x = centerPoint.x() + (random.nextFloat() * 2 - 1) * 32;
 		double y = centerPoint.y() + (random.nextFloat() * 2 - 1) * 32;
 		double z = centerPoint.z() + (random.nextFloat() * 2 - 1) * 32;
-		
+
 		this.entity.getMoveHelper().setMoveTo(x, y, z, 1.0D);
 	}
-	
+
 }

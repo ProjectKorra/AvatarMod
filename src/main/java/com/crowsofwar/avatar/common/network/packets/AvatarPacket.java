@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.common.network.packets;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.IThreadListener;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -29,23 +28,22 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IMessageHandler<MSG, IMessage> {
-	
-	public AvatarPacket() {}
-	
+
+	public AvatarPacket() {
+	}
+
 	@Override
 	public final IMessage onMessage(MSG message, MessageContext ctx) {
-		
+
 		Handler<MSG> handler = getPacketHandler();
-		
+
 		IThreadListener mainThread = getReceivedSide().isServer()
 				? ctx.getServerHandler().player.getServerWorld()
 				: AvatarMod.proxy.getClientThreadListener();
-		
+
 		mainThread.addScheduledTask(() -> {
 			IMessage followup = handler.onMessageRecieved(message, ctx);
 			if (followup != null) {
@@ -56,11 +54,11 @@ public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IM
 				}
 			}
 		});
-		
+
 		return null;
-		
+
 	}
-	
+
 	@Override
 	public final void fromBytes(ByteBuf buf) {
 		try {
@@ -70,7 +68,7 @@ public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IM
 					"Error processing packet " + getClass().getSimpleName(), ex);
 		}
 	}
-	
+
 	@Override
 	public final void toBytes(ByteBuf buf) {
 		try {
@@ -80,51 +78,46 @@ public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IM
 					"Error processing packet " + getClass().getSimpleName(), ex);
 		}
 	}
-	
+
 	protected abstract void avatarFromBytes(ByteBuf buf);
-	
+
 	protected abstract void avatarToBytes(ByteBuf buf);
-	
+
 	/**
 	 * Returns the side that this packet is meant to be received on.
 	 */
 	protected abstract Side getReceivedSide();
-	
+
 	/**
 	 * Get a packet handler which contains the logic for when this packet is
 	 * received.
 	 */
 	protected abstract Handler<MSG> getPacketHandler();
-	
+
 	/**
 	 * An interface to handle the packet being received.
 	 * <p>
 	 * Method must be implemented:
 	 * {@link #onMessageRecieved(MSG, MessageContext)}.
-	 * 
-	 * @param <MSG>
-	 *            The type of the message to receive
-	 * 
+	 *
+	 * @param <MSG> The type of the message to receive
 	 * @author CrowsOfWar
 	 */
 	@FunctionalInterface
 	public interface Handler<MSG extends IMessage> {
-		
+
 		/**
 		 * Called to handle the packet being received.
-		 * 
-		 * @param message
-		 *            The actual instance of the received packet. You use this
-		 *            instance to retrieve the necessary data.
-		 * @param ctx
-		 *            The context of the message. Can be used to obtain
-		 *            necessary objects such as a player entity.
-		 * 
+		 *
+		 * @param message The actual instance of the received packet. You use this
+		 *                instance to retrieve the necessary data.
+		 * @param ctx     The context of the message. Can be used to obtain
+		 *                necessary objects such as a player entity.
 		 * @return The follow-up packet, null for none. Note: doesn't actually
-		 *         use default SimpleImpl follow ups.
+		 * use default SimpleImpl follow ups.
 		 */
 		IMessage onMessageRecieved(MSG message, MessageContext ctx);
-		
+
 	}
-	
+
 }

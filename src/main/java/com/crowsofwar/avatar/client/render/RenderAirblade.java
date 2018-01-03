@@ -31,30 +31,28 @@ import org.joml.Vector4f;
 import java.util.Random;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class RenderAirblade extends Render<EntityAirblade> {
-	
+
 	public static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/entity/airblade.png");
 	private static final Random random = new Random();
-	
+
 	public RenderAirblade(RenderManager renderManager) {
 		super(renderManager);
 	}
-	
+
 	@Override
 	public void doRender(EntityAirblade entity, double x, double y, double z, float entityYaw,
-			float partialTicks) {
-		
+						 float partialTicks) {
+
 		float ticks = (entity.ticksExisted + partialTicks) / 3;
-		
+
 		Matrix4f mat = new Matrix4f();
 		mat.translate((float) x, (float) y + .1f, (float) z);
 		mat.rotate(ticks, 0, 1, 0);
-		
+
 		//@formatter:off
 		float n = -.75f, p = .75f;
 		Vector4f nw = new Vector4f(n, 0, n, 1).mul(mat);
@@ -62,14 +60,14 @@ public class RenderAirblade extends Render<EntityAirblade> {
 		Vector4f sw = new Vector4f(n, 0, p, 1).mul(mat);
 		Vector4f se = new Vector4f(p, 0, p, 1).mul(mat);
 		//@formatter:on
-		
+
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
-		
+
 		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
 		RenderUtils.drawQuad(2, nw, ne, se, sw, 0, 0, 1, 1);
 		GlStateManager.enableLighting();
-		
+
 		if (entity.ticksExisted % 3 == 0) {
 			World world = entity.world;
 			AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
@@ -78,12 +76,12 @@ public class RenderAirblade extends Render<EntityAirblade> {
 			double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 			world.spawnParticle(EnumParticleTypes.CLOUD, spawnX, spawnY, spawnZ, 0, 0, 0);
 		}
-		
+
 	}
-	
+
 	@Override
 	protected ResourceLocation getEntityTexture(EntityAirblade entity) {
 		return null;
 	}
-	
+
 }

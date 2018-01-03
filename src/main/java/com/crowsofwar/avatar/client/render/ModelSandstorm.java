@@ -44,7 +44,7 @@ public class ModelSandstorm extends ModelBase {
 			netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
 
 		EntitySandstorm sandstorm = (EntitySandstorm) entityIn;
-		double velocityMultiplier =  sandstorm.getVelocityMultiplier();
+		double velocityMultiplier = sandstorm.getVelocityMultiplier();
 		float strength = sandstorm.getStrength();
 
 		// Time passed since this sandstorm was last rendered
@@ -71,12 +71,12 @@ public class ModelSandstorm extends ModelBase {
 	}
 
 	/**
-     * This is a helper function from Tabula to set the rotation of model parts
-     */
-    public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
-    }
+	 * This is a helper function from Tabula to set the rotation of model parts
+	 */
+	public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+		modelRenderer.rotateAngleX = x;
+		modelRenderer.rotateAngleY = y;
+		modelRenderer.rotateAngleZ = z;
+	}
 
 }

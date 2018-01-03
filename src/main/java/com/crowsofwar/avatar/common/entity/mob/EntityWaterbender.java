@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
@@ -27,15 +26,13 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityWaterbender extends EntityHumanBender {
-	
+
 	public static final ResourceLocation LOOT_TABLE = LootTableList
 			.register(new ResourceLocation("avatarmod", "waterbender"));
-	
+
 	public EntityWaterbender(World world) {
 		super(world);
 	}
@@ -51,17 +48,17 @@ public class EntityWaterbender extends EntityHumanBender {
 		// this.tasks.addTask(2, ABILITY_WATER_ARC.getAi(this, this));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 	}
-	
+
 	@Override
 	protected ScrollType getScrollType() {
 		return ScrollType.WATER;
 	}
-	
+
 	@Override
 	protected int getNumSkins() {
 		return 1;
 	}
-	
+
 	@Override
 	protected ResourceLocation getLootTable() {
 		return LOOT_TABLE;

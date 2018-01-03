@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.gui;
 
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.item.AvatarItems;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -27,18 +26,18 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ContainerBisonChest extends Container {
-	
+
 	private final IInventory bisonInventory;
 	private final EntitySkyBison bison;
-	
+
 	public ContainerBisonChest(IInventory playerInventory, IInventory bisonInventory, EntitySkyBison bison,
-			EntityPlayer player) {
-		
+							   EntityPlayer player) {
+
 		this.bisonInventory = bisonInventory;
 		this.bison = bison;
-		
+
 		bisonInventory.openInventory(player);
-		
+
 		// Saddle stack
 		this.addSlotToContainer(new Slot(bisonInventory, 0, 8, 18) {
 			@Override
@@ -53,25 +52,26 @@ public class ContainerBisonChest extends Container {
 				return stack.getItem() == AvatarItems.itemBisonArmor;
 			}
 		});
-		
+
 		// Bison inventory
 		int slotsAdded = 0;
-		outer: for (int r = 0; r < 3; r++) {
+		outer:
+		for (int r = 0; r < 3; r++) {
 			for (int c = 0; c < 9; c++) {
-				
+
 				if (slotsAdded >= bison.getChestSlots()) {
 					break outer;
 				}
 				slotsAdded++;
-				
+
 				int index = 2 + r * 9 + c;
 				int x = 80 + (c % 9) * 18;
 				int y = 18 + r * 18;
 				addSlotToContainer(new Slot(bisonInventory, index, x, y));
-				
+
 			}
 		}
-		
+
 		// Player inventory slots
 		for (int r = 0; r < 3; r++) {
 			for (int c = 0; c < 9; c++) {
@@ -81,28 +81,28 @@ public class ContainerBisonChest extends Container {
 				this.addSlotToContainer(new Slot(playerInventory, index, x, y));
 			}
 		}
-		
+
 		for (int i = 0; i < 9; i++) {
 			this.addSlotToContainer(new Slot(playerInventory, i, 44 + i * 18, 142));
 		}
-		
+
 	}
-	
+
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
 		return bisonInventory.isUsableByPlayer(playerIn) && bison.isEntityAlive()
 				&& bison.getDistanceToEntity(playerIn) < 8.0F;
 	}
-	
+
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(index);
-		
+
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
-			
+
 			if (index < this.bisonInventory.getSizeInventory()) {
 				if (!this.mergeItemStack(itemstack1, this.bisonInventory.getSizeInventory(),
 						this.inventorySlots.size(), true)) {
@@ -120,17 +120,17 @@ public class ContainerBisonChest extends Container {
 					|| !this.mergeItemStack(itemstack1, 2, this.bisonInventory.getSizeInventory(), false)) {
 				return ItemStack.EMPTY;
 			}
-			
+
 			if (itemstack1.isEmpty()) {
 				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();
 			}
 		}
-		
+
 		return itemstack;
 	}
-	
+
 	/**
 	 * Called when the container is closed.
 	 */

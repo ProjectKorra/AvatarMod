@@ -39,20 +39,18 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 import static net.minecraft.util.math.MathHelper.cos;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class RenderFireball extends Render<EntityFireball> {
-	
+
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/entity/fireball.png");
-	
+	private static final Random random = new Random();
+
 	public RenderFireball(RenderManager renderManager) {
 		super(renderManager);
 	}
-	private static final Random random = new Random();
-	
+
 	// @formatter:off
 	@Override
 	public void doRender(EntityFireball entity, double xx, double yy, double zz, float entityYaw,
@@ -107,16 +105,16 @@ public class RenderFireball extends Render<EntityFireball> {
 		
 	}
 	// @formatter:on
-	
+
 	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,
-			float rotateX, float rotateY, float rotateZ) {
+							float rotateX, float rotateY, float rotateZ) {
 		Matrix4f mat = new Matrix4f();
 		mat.translate(x, y + .4f, z);
-		
+
 		mat.rotate(rotateX, 1, 0, 0);
 		mat.rotate(rotateY, 0, 1, 0);
 		mat.rotate(rotateZ, 0, 0, 1);
-		
+
 		// @formatter:off
 		// Can't use .mul(size) here because it would mul the w component
 		Vector4f
@@ -130,7 +128,7 @@ public class RenderFireball extends Render<EntityFireball> {
 		rtb = new Vector4f(0.5f*size, 0.5f*size, 0.5f*size, 1).mul(mat);
 		
 		// @formatter:on
-		
+
 		drawQuad(2, ltb, lbb, lbf, ltf, u1, v1, u2, v2); // -x
 		drawQuad(2, rtb, rbb, rbf, rtf, u1, v1, u2, v2); // +x
 		drawQuad(2, rbb, rbf, lbf, lbb, u1, v1, u2, v2); // -y
@@ -138,13 +136,13 @@ public class RenderFireball extends Render<EntityFireball> {
 		drawQuad(2, rtf, rbf, lbf, ltf, u1, v1, u2, v2); // -z
 		drawQuad(2, rtb, rbb, lbb, ltb, u1, v1, u2, v2); // +z
 	}
-	
+
 	private void drawQuad(int normal, Vector4f pos1, Vector4f pos2, Vector4f pos3, Vector4f pos4, double u1,
-			double v1, double u2, double v2) {
-		
+						  double v1, double u2, double v2) {
+
 		Tessellator t = Tessellator.getInstance();
 		BufferBuilder vb = t.getBuffer();
-		
+
 		if (normal == 0 || normal == 2) {
 			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			vb.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).endVertex();
@@ -162,10 +160,10 @@ public class RenderFireball extends Render<EntityFireball> {
 			t.draw();
 		}
 	}
-	
+
 	@Override
 	protected ResourceLocation getEntityTexture(EntityFireball entity) {
 		return null;
 	}
-	
+
 }

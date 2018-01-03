@@ -22,8 +22,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 
 /**
- *
- *
  * @author CrowsOfWar
  */
 public class FireSmashGroundHandler extends SmashGroundHandler {

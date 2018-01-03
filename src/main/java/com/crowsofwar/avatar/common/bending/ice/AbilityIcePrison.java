@@ -35,8 +35,6 @@ import java.util.function.Predicate;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AbilityIcePrison extends Ability {
@@ -56,31 +54,31 @@ public class AbilityIcePrison extends Ability {
 		Bender bender = ctx.getBender();
 
 		if (bender.consumeChi(ConfigStats.STATS_CONFIG.chiPrison)) {
-			
+
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
 			Vector start = Vector.getEyePos(entity);
 			Vector direction = Vector.getLookRectangular(entity);
-			
+
 			Predicate<Entity> filter = candidate -> candidate != entity && candidate instanceof EntityLivingBase;
 			List<Entity> hit = Raytrace.entityRaytrace(world, start, direction, 10, filter);
-			
+
 			if (!hit.isEmpty()) {
 				EntityLivingBase prisoner = (EntityLivingBase) hit.get(0);
 				EntityIcePrison.imprison(prisoner, entity);
-				
+
 				world.playSound(null, prisoner.posX, prisoner.posY, prisoner.posZ,
 						SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.PLAYERS, 2, 2);
-				
+
 				world.playSound(null, prisoner.posX, prisoner.posY, prisoner.posZ,
 						SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1, 1);
 
 				ctx.getAbilityData().addXp(SKILLS_CONFIG.icePrisoned);
 
 			}
-			
+
 		}
-		
+
 	}
-	
+
 }

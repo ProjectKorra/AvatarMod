@@ -39,14 +39,12 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityAirblade extends AvatarEntity {
 
 	private float damage;
-	
+
 	/**
 	 * Hardness threshold to chop blocks. For example, setting to 1.5 will allow
 	 * the airblade to chop stone.
@@ -57,16 +55,16 @@ public class EntityAirblade extends AvatarEntity {
 	private float chopBlocksThreshold;
 	private boolean chainAttack;
 	private boolean pierceArmor;
-	
+
 	public EntityAirblade(World world) {
 		super(world);
 		setSize(1.5f, .2f);
 		this.chopBlocksThreshold = -1;
 	}
-	
+
 	@Override
 	public void onUpdate() {
-		
+
 		super.onUpdate();
 
 		setVelocity(velocity().times(0.96));
@@ -76,15 +74,15 @@ public class EntityAirblade extends AvatarEntity {
 		if (!world.isRemote && inWater) {
 			setDead();
 		}
-		
+
 		if (!world.isRemote && chopBlocksThreshold >= 0) {
 			breakCollidingBlocks();
 		}
-		
+
 		if (!isDead && !world.isRemote) {
 			List<Entity> collidedList = world.getEntitiesWithinAABB(Entity.class,
 					getEntityBoundingBox());
-			
+
 			if (!collidedList.isEmpty()) {
 
 				Entity collided = collidedList.get(0);
@@ -97,7 +95,7 @@ public class EntityAirblade extends AvatarEntity {
 
 			}
 		}
-		
+
 	}
 
 	private void handleCollision(EntityLivingBase collided) {
@@ -157,21 +155,21 @@ public class EntityAirblade extends AvatarEntity {
 		// airblade collides with them
 		double expansion = 0.1;
 		AxisAlignedBB hitbox = getEntityBoundingBox().grow(expansion, expansion, expansion);
-		
+
 		for (int ix = 0; ix <= 1; ix++) {
 			for (int iz = 0; iz <= 1; iz++) {
-				
+
 				double x = ix == 0 ? hitbox.minX : hitbox.maxX;
 				double y = hitbox.minY;
 				double z = iz == 0 ? hitbox.minZ : hitbox.maxZ;
 				BlockPos pos = new BlockPos(x, y, z);
-				
+
 				tryBreakBlock(world.getBlockState(pos), pos);
-				
+
 			}
 		}
 	}
-	
+
 	/**
 	 * Assuming the airblade can break blocks, tries to break the block.
 	 */
@@ -179,14 +177,14 @@ public class EntityAirblade extends AvatarEntity {
 		if (state.getBlock() == Blocks.AIR) {
 			return;
 		}
-		
+
 		float hardness = state.getBlockHardness(world, pos);
 		if (hardness <= chopBlocksThreshold) {
 			breakBlock(pos);
 			setVelocity(velocity().times(0.5));
 		}
 	}
-	
+
 	@Override
 	public void setDead() {
 		super.setDead();
@@ -195,35 +193,35 @@ public class EntityAirblade extends AvatarEntity {
 	public Bender getOwnerBender() {
 		return Bender.get(getOwner());
 	}
-	
+
 	public void setDamage(float damage) {
 		this.damage = damage;
 	}
-	
+
 	public float getChopBlocksThreshold() {
 		return chopBlocksThreshold;
 	}
-	
+
 	public void setChopBlocksThreshold(float chopBlocksThreshold) {
 		this.chopBlocksThreshold = chopBlocksThreshold;
 	}
-	
+
 	public boolean getPierceArmor() {
 		return pierceArmor;
 	}
-	
+
 	public void setPierceArmor(boolean piercing) {
 		this.pierceArmor = piercing;
 	}
-	
+
 	public boolean isChainAttack() {
 		return chainAttack;
 	}
-	
+
 	public void setChainAttack(boolean chainAttack) {
 		this.chainAttack = chainAttack;
 	}
-	
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
@@ -232,7 +230,7 @@ public class EntityAirblade extends AvatarEntity {
 		pierceArmor = nbt.getBoolean("Piercing");
 		chainAttack = nbt.getBoolean("ChainAttack");
 	}
-	
+
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);

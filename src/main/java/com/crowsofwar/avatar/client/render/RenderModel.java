@@ -67,7 +67,7 @@ public class RenderModel<T extends Entity> extends Render<T> {
 	 * Place to perform all openGL transformations prior to the entity being rendered.
 	 */
 	protected void performGlTransforms(T entity, double x, double y, double z, float entityYaw,
-									 float partialTicks) {
+									   float partialTicks) {
 
 	}
 

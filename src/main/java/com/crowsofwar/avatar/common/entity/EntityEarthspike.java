@@ -34,8 +34,6 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- *
- *
  * @author CrowsOfWar
  */
 public class EntityEarthspike extends AvatarEntity {

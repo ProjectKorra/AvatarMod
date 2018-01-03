@@ -36,57 +36,55 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class StatCtrlPlaceBlock extends StatusControl {
-	
+
 	public StatCtrlPlaceBlock() {
 		super(1, CONTROL_RIGHT_CLICK_DOWN, RIGHT_OF_CROSSHAIR);
-		
+
 		requireRaytrace(-1, true);
-		
+
 	}
-	
+
 	@Override
 	public boolean execute(BendingContext ctx) {
-		
+
 		BendingStyle controller = BendingStyles.get(Earthbending.ID);
-		
+
 		BendingData data = ctx.getData();
-		
+
 		EntityFloatingBlock floating = AvatarEntity.lookupEntity(ctx.getWorld(), EntityFloatingBlock.class,
 				fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
 						&& fb.getOwner() == ctx.getBenderEntity());
-		
+
 		if (floating != null) {
 			VectorI looking = ctx.getLookPosI();
 			EnumFacing lookingSide = ctx.getLookSide();
 			if (looking != null && lookingSide != null) {
 				looking.offset(lookingSide);
-				
+
 				floating.setBehavior(new FloatingBlockBehavior.Place(looking.toBlockPos()));
 				Vector force = looking.precision().minus(new Vector(floating)).normalize();
 				floating.addVelocity(force);
-				
+
 				SoundType sound = floating.getBlock().getSoundType();
 				if (sound != null) {
 					floating.world.playSound(null, floating.getPosition(), sound.getPlaceSound(),
 							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 				}
-				
+
 				data.removeStatusControl(THROW_BLOCK);
-				
+
 				data.getAbilityData("pickup_block").addXp(SKILLS_CONFIG.blockPlaced);
-				
+
 				return true;
 			}
 			return false;
 		}
-		
+
 		return false;
-		
+
 	}
-	
+
 }

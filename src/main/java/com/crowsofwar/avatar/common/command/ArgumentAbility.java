@@ -28,45 +28,45 @@ import java.util.List;
 /**
  * Argument for an ability specified by its {@link Ability#getName()
  * internal name}. Will give null if incorrect input
- * 
+ *
  * @author CrowsOfWar
  */
 public class ArgumentAbility implements IArgument<Ability> {
-	
+
 	private final String name;
-	
+
 	public ArgumentAbility(String name) {
 		this.name = name;
 	}
-	
+
 	@Override
 	public boolean isOptional() {
 		return false;
 	}
-	
+
 	@Override
 	public Ability getDefaultValue() {
 		return null;
 	}
-	
+
 	@Override
 	public Ability convert(String input) {
-		
+
 		for (Ability ability : Abilities.all()) {
 			if (ability.getName().equals(input)) {
 				return ability;
 			}
 		}
-		
+
 		throw new TreeCommandException("avatar.cmd.noAbility", input);
-		
+
 	}
-	
+
 	@Override
 	public String getArgumentName() {
 		return name;
 	}
-	
+
 	@Override
 	public String getHelpString() {
 		String out = "<";
@@ -75,12 +75,12 @@ public class ArgumentAbility implements IArgument<Ability> {
 		}
 		return out.substring(0, out.length() - 1) + ">";
 	}
-	
+
 	@Override
 	public String getSpecificationString() {
 		return "<" + name + ">";
 	}
-	
+
 	@Override
 	public List<String> getCompletionSuggestions(ICommandSender sender, String currentInput) {
 		List<String> out = new ArrayList<>();
@@ -89,5 +89,5 @@ public class ArgumentAbility implements IArgument<Ability> {
 		}
 		return out;
 	}
-	
+
 }

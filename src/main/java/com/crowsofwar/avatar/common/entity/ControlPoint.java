@@ -28,40 +28,36 @@ import net.minecraft.world.World;
  * An arc is made up of multiple control points. This allows the arc to twist
  * and turn. Segments are drawn in-between control points, which creates a
  * blocky arc.
- * 
+ *
  * @author CrowsOfWar
  */
 public class ControlPoint {
-	
+
+	private final World world;
 	protected EntityArc arc;
 	protected EntityLivingBase owner;
-	
+	protected float size;
 	private Vector internalVelocity;
 	private Vector internalPosition;
-	
 	private Vector lastPos;
-	
-	private final World world;
 	private AxisAlignedBB hitbox;
-	
-	protected float size;
-	
+
 	public ControlPoint(EntityArc arc, float size, double x, double y, double z) {
 		internalPosition = new Vector();
 		internalVelocity = new Vector();
 		this.arc = arc;
 		this.world = arc.world;
 		this.size = size;
-		
+
 		double sizeHalfed = size / 2;
 		hitbox = new AxisAlignedBB(position().x() - sizeHalfed, position().y() - sizeHalfed,
 				position().z() - sizeHalfed, position().x() + sizeHalfed, position().y() + sizeHalfed,
 				position().z() + sizeHalfed);
-		
+
 		lastPos = new Vector();
-		
+
 	}
-	
+
 	/**
 	 * Get the velocity of this entity in m/s. Changes to this vector will be
 	 * reflected in the entity's actual velocity.
@@ -81,56 +77,55 @@ public class ControlPoint {
 	public Vector position() {
 		return internalPosition;
 	}
-	
+
 	public Vector lastPosition() {
 		return lastPos;
 	}
-	
+
 	public double x() {
 		return position().x();
 	}
-	
+
 	public double y() {
 		return position().y();
 	}
-	
+
 	public double z() {
 		return position().z();
 	}
-	
+
 	/**
 	 * Remove the control point's arc.
 	 */
 	public void setDead() {
 		arc.setDead();
 	}
-	
+
 	public AxisAlignedBB getBoundingBox() {
 		return hitbox;
 	}
-	
+
 	public float size() {
 		return size;
 	}
-	
+
 	public void onUpdate() {
-		
+
 		double sizeHalfed = size / 2;
 		hitbox = new AxisAlignedBB(position().x() - sizeHalfed, position().y() - sizeHalfed,
 				position().z() - sizeHalfed, position().x() + sizeHalfed, position().y() + sizeHalfed,
 				position().z() + sizeHalfed);
-		
+
 		lastPos = position();
 		move(velocity().times(0.05));
 		setVelocity(velocity().times(0.4));
 
-
 	}
-	
+
 	public void setPosition(Vector pos) {
 		internalPosition = pos;
 	}
-	
+
 	/**
 	 * Move this control point by the designated offset, not checking for
 	 * collisions.
@@ -139,7 +134,7 @@ public class ControlPoint {
 	public void move(double x, double y, double z) {
 		setPosition(position().plus(x, y, z));
 	}
-	
+
 	/**
 	 * Move this control point by the designated offset, not checking for
 	 * collisions.
@@ -152,24 +147,16 @@ public class ControlPoint {
 	public double getDistance(ControlPoint point) {
 		return position().dist(point.position());
 	}
-	
+
 	/**
 	 * Get the arc that this control point belongs to.
-	 * 
+	 *
 	 * @return
 	 */
 	public EntityArc getArc() {
 		return arc;
 	}
-	
-	public EntityLivingBase getOwner() {
-		return owner;
-	}
-	
-	public void setOwner(EntityLivingBase owner) {
-		this.owner = owner;
-	}
-	
+
 	/**
 	 * "Attach" the arc to this control point, meaning that the control point
 	 * now has a reference to the given arc.
@@ -178,13 +165,21 @@ public class ControlPoint {
 		this.arc = arc;
 	}
 
+	public EntityLivingBase getOwner() {
+		return owner;
+	}
+
+	public void setOwner(EntityLivingBase owner) {
+		this.owner = owner;
+	}
+
 	/**
 	 * Get the interpolated position between two ticks.
 	 * @param partialTicks The percentage through this tick, from 0..1
 	 */
 	public Vector getInterpolatedPosition(float partialTicks) {
 		//@formatter:on
-		return lastPosition().plus (  (position() .minus(lastPosition()) ) .times(partialTicks)  );
+		return lastPosition().plus((position().minus(lastPosition())).times(partialTicks));
 		//@formatter:off
 	}
 

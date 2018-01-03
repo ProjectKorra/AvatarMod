@@ -36,15 +36,13 @@ import net.minecraft.world.storage.loot.LootTableList;
 import java.util.Set;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityOtterPenguin extends EntityAnimal {
-	
+
 	public static final ResourceLocation LOOT_TABLE = LootTableList
 			.register(new ResourceLocation("avatarmod", "otterpenguin"));
-	
+
 	/**
 	 * @param world
 	 */
@@ -52,11 +50,11 @@ public class EntityOtterPenguin extends EntityAnimal {
 		super(world);
 		setSize(0.7f, 1.6f);
 	}
-	
+
 	@Override
 	protected void initEntityAI() {
 		Set<Item> temptItems = Sets.newHashSet(Items.FISH);
-		
+
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAIPanic(this, 3D));
 		this.tasks.addTask(3, new EntityAIMate(this, 1.0D));
@@ -66,57 +64,57 @@ public class EntityOtterPenguin extends EntityAnimal {
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 	}
-	
+
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(10);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
 	}
-	
+
 	@Override
 	public EntityAgeable createChild(EntityAgeable ageable) {
 		return new EntityOtterPenguin(world);
 	}
-	
+
 	@Override
 	protected ResourceLocation getLootTable() {
 		return LOOT_TABLE;
 	}
-	
+
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		
+
 		if (!super.processInteract(player, hand) && !world.isRemote) {
-			
+
 			if (!isBreedingItem(player.getHeldItemMainhand())
 					&& !isBreedingItem(player.getHeldItemOffhand())) {
-				
+
 				player.startRiding(this);
 				return true;
-				
+
 			}
-			
+
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public boolean isBreedingItem(ItemStack stack) {
 		return stack.getItem() == Items.FISH;
 	}
-	
+
 	@Override
 	public Entity getControllingPassenger() {
 		return getPassengers().isEmpty() ? null : getPassengers().get(0);
 	}
-	
+
 	@Override
 	public boolean canBeSteered() {
 		return getControllingPassenger() instanceof EntityLivingBase;
 	}
-	
+
 	@Override
 	public boolean canPassengerSteer() {
 		return super.canPassengerSteer();
@@ -126,7 +124,7 @@ public class EntityOtterPenguin extends EntityAnimal {
 	@Override
 	public void travel(float strafe, float jump, float forward) {
 		EntityLivingBase driver = (EntityLivingBase) getControllingPassenger();
-		
+
 		if (this.isBeingRidden() && this.canBeSteered()) {
 			this.rotationYaw = driver.rotationYaw;
 			this.prevRotationYaw = this.rotationYaw;
@@ -136,31 +134,31 @@ public class EntityOtterPenguin extends EntityAnimal {
 			this.rotationYawHead = this.rotationYaw;
 			this.stepHeight = 1.0F;
 			this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
-			
+
 			if (this.canPassengerSteer()) {
-				
+
 				forward = driver.moveForward;
 				strafe = driver.moveStrafing;
-				
+
 				setAIMoveSpeed((float) getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED)
 						.getAttributeValue());
 				super.travel(strafe, jump, forward);
-				
+
 			} else {
 				this.motionX = 0.0D;
 				this.motionY = 0.0D;
 				this.motionZ = 0.0D;
 			}
-			
+
 			this.prevLimbSwingAmount = this.limbSwingAmount;
 			double d1 = this.posX - this.prevPosX;
 			double d0 = this.posZ - this.prevPosZ;
 			float f1 = MathHelper.sqrt(d1 * d1 + d0 * d0) * 4.0F;
-			
+
 			if (f1 > 1.0F) {
 				f1 = 1.0F;
 			}
-			
+
 			this.limbSwingAmount += (f1 - this.limbSwingAmount) * 0.4F;
 			this.limbSwing += this.limbSwingAmount;
 		} else {
@@ -169,5 +167,5 @@ public class EntityOtterPenguin extends EntityAnimal {
 			super.travel(strafe, jump, forward);
 		}
 	}
-	
+
 }

@@ -19,21 +19,18 @@ package com.crowsofwar.avatar.common.gui;
 import net.minecraft.inventory.InventoryBasic;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class InventoryBisonChest extends InventoryBasic {
-	
+
 	/**
 	 * Creates a flying bison inventory.
-	 * 
-	 * @param chestSlots
-	 *            The amount of slots to be used in the chest (not including
-	 *            armor/saddle slots)
+	 *
+	 * @param chestSlots The amount of slots to be used in the chest (not including
+	 *                   armor/saddle slots)
 	 */
 	public InventoryBisonChest(int chestSlots) {
 		super("Flying Bison", false, chestSlots + 2);
 	}
-	
+
 }

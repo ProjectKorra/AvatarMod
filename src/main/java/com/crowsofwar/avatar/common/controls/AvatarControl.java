@@ -30,12 +30,11 @@ import java.util.List;
  * <li>Vanilla keybindings
  * <li>Special controls from AvatarMod like mouse button up/down
  * </ul>
- * 
  */
 public class AvatarControl {
-	
+
 	public static List<AvatarControl> ALL_CONTROLS;
-	
+
 	// @formatter:off
 	public static AvatarControl
 		KEY_USE_BENDING,
@@ -57,6 +56,17 @@ public class AvatarControl {
 		CONTROL_MIDDLE_CLICK_UP,
 		CONTROL_SHIFT;
 	// @formatter:off
+	private final String name;
+	private KeybindingWrapper kb;
+	private boolean needsKeybinding;
+	/**
+	 * Creates a new AvatarControl. If the parameter <code>keybinding</code> is true, then initializes to the keybinding with the given name.
+	 */
+	private AvatarControl(String name, boolean keybinding) {
+		this.name = name;
+		this.needsKeybinding = keybinding;
+		ALL_CONTROLS.add(this);
+	}
 	
 	public static void initControls() {
 		ALL_CONTROLS = new ArrayList<>();
@@ -78,19 +88,6 @@ public class AvatarControl {
 		CONTROL_RIGHT_CLICK_UP = new AvatarControl("RightClickUp", false);
 		CONTROL_MIDDLE_CLICK_UP = new AvatarControl("MiddleClickUp", false);
 		CONTROL_SHIFT = new AvatarControl("Shift", false);
-	}
-	
-	private final String name;
-	private KeybindingWrapper kb;
-	private boolean needsKeybinding;
-	
-	/**
-	 * Creates a new AvatarControl. If the parameter <code>keybinding</code> is true, then initializes to the keybinding with the given name.
-	 */
-	private AvatarControl(String name, boolean keybinding) {
-		this.name = name;
-		this.needsKeybinding = keybinding;
-		ALL_CONTROLS.add(this);
 	}
 	
 	/**

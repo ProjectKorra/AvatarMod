@@ -16,39 +16,38 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
+import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
+import net.minecraft.client.renderer.GlStateManager;
+
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenWidth;
 
-import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
-
-import net.minecraft.client.renderer.GlStateManager;
-
 /**
  * UI component which covers the whole screen in a background shade
- * 
+ *
  * @author CrowsOfWar
  */
 public class ComponentOverlay extends UiComponent {
-	
+
 	@Override
 	protected float componentWidth() {
 		return screenWidth();
 	}
-	
+
 	@Override
 	protected float componentHeight() {
 		return screenHeight();
 	}
-	
+
 	@Override
 	protected void componentDraw(float partialTicks, boolean mouseHover) {
-		
+
 		mc.renderEngine.bindTexture(AvatarUiTextures.WHITE);
 		GlStateManager.enableBlend();
 		GlStateManager.color(0, 0, 0, .5f);
 		drawTexturedModalRect(0, 0, 0, 0, screenWidth(), screenHeight());
-		
+
 		GlStateManager.disableBlend();
 	}
-	
+
 }

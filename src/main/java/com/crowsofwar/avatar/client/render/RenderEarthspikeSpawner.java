@@ -13,31 +13,31 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 public class RenderEarthspikeSpawner extends Render<EntityEarthspikeSpawner> {
-    private final Random random;
+	private final Random random;
 
-    /**
-     * @param renderManager
-     */
-    public RenderEarthspikeSpawner(RenderManager renderManager) {
-        super(renderManager);
-        this.random = new Random();
-    }
+	/**
+	 * @param renderManager
+	 */
+	public RenderEarthspikeSpawner(RenderManager renderManager) {
+		super(renderManager);
+		this.random = new Random();
+	}
 
-    @Override
-    public void doRender(EntityEarthspikeSpawner entity, double x, double y, double z, float entityYaw,
-                         float partialTicks) {
-        World world = entity.getEntityWorld();
-        IBlockState blockState = world.getBlockState(entity.getPosition().offset(EnumFacing.DOWN));
-        Block block = blockState.getBlock();
-        world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, entity.posX, entity.posY + 0.3, entity.posZ,
-                random.nextGaussian() - 0.5, random.nextGaussian() * 0.4, random.nextGaussian() - 0.5,
-                Block.getStateId(blockState));
-    }
+	@Override
+	public void doRender(EntityEarthspikeSpawner entity, double x, double y, double z, float entityYaw,
+						 float partialTicks) {
+		World world = entity.getEntityWorld();
+		IBlockState blockState = world.getBlockState(entity.getPosition().offset(EnumFacing.DOWN));
+		Block block = blockState.getBlock();
+		world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, entity.posX, entity.posY + 0.3, entity.posZ,
+				random.nextGaussian() - 0.5, random.nextGaussian() * 0.4, random.nextGaussian() - 0.5,
+				Block.getStateId(blockState));
+	}
 
-    @Override
-    protected ResourceLocation getEntityTexture(EntityEarthspikeSpawner entity) {
-        return null;
-    }
+	@Override
+	protected ResourceLocation getEntityTexture(EntityEarthspikeSpawner entity) {
+		return null;
+	}
 
 }
 

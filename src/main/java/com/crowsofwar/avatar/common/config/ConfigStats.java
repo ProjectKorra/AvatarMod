@@ -29,33 +29,31 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ConfigStats {
-	
+
 	public static final ConfigStats STATS_CONFIG = new ConfigStats();
-	
+
 	@Load
 	public AttackSettings floatingBlockSettings = new AttackSettings(0.45f, 1),
 			ravineSettings = new AttackSettings(7, 0.25), //
 			waveSettings = new AttackSettings(6, 6), //
 			airbladeSettings = new AttackSettings(4, .03), //
 			fireArcSettings = new AttackSettings(4, 1);
-	
+
 	@Load
 	public double wallWaitTime = 10, wallWaitTime2 = 60, wallMomentum = 10;
-	
+
 	@Load
 	public int wallJumpDelay = 10;
-	
+
 	@Load
 	public FireballSettings fireballSettings = new FireballSettings();
 
 	@Load
 	public ExplosionSettings explosionSettings = new ExplosionSettings();
-	
+
 	// @formatter:off
 	@Load
 	public float chiAirblade = 1f,
@@ -95,19 +93,19 @@ public class ConfigStats {
 
 	@Load
 	public float icePrisonDamage = 2;
-	
+
 	@Load
 	public float sleepChiRegen = 99999;
-	
+
 	@Load
 	public boolean allowAirBubbleElytra = false;
-	
+
 	@Load
 	public double waterArcSearchRadius = 4, waterArcAngles = 8;
-	
+
 	@Load
 	public boolean addDungeonLoot = true;
-	
+
 	@Load
 	public boolean preventPickupBlockGriefing = false;
 
@@ -148,7 +146,8 @@ public class ConfigStats {
 	public List<Block> bendableBlocks;
 	public List<Block> sandBlocks;
 
-	private ConfigStats() {}
+	private ConfigStats() {
+	}
 
 	public static void load() {
 		ConfigLoader.load(STATS_CONFIG, "avatar/stats.yml");
@@ -164,7 +163,7 @@ public class ConfigStats {
 	 */
 	private List<Block> loadBlocksList(List<String> blocksNames) {
 		List<Block> blocks = new ArrayList<>();
-		
+
 		for (String blockName : blocksNames) {
 			Block b = Block.REGISTRY.getObject(new ResourceLocation(blockName));
 			if (b == null) {
@@ -176,45 +175,47 @@ public class ConfigStats {
 		}
 
 		return blocks;
-		
+
 	}
-	
+
 	public static class AttackSettings {
-		
+
 		@Load
 		public float damage;
-		
+
 		@Load
 		public double push;
-		
-		public AttackSettings() {}
-		
+
+		public AttackSettings() {
+		}
+
 		private AttackSettings(float damage, double push) {
 			this.damage = damage;
 			this.push = push;
 		}
-		
+
 	}
-	
+
 	public static class FireballSettings {
-		
+
 		@Load
 		public float damage = 6;
-		
+
 		@Load
 		public int fireTime = 6;
-		
+
 		@Load
 		public float explosionSize = 1.5f;
-		
+
 		@Load
 		public boolean damageBlocks = false;
-		
+
 		@Load
 		public double push = .75;
-		
+
 	}
-	public static class ExplosionSettings{
+
+	public static class ExplosionSettings {
 		@Load
 		public float damage = 6;
 
@@ -230,8 +231,6 @@ public class ConfigStats {
 		@Load
 		public double push = 1;
 
-
-
 	}
-	
+
 }

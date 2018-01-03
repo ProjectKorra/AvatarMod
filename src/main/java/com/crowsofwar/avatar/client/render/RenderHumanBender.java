@@ -17,40 +17,36 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
-
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class RenderHumanBender extends RenderLiving<EntityHumanBender> {
-	
+
 	private final ResourceLocation[] locations;
-	
+
 	/**
 	 * @param renderManager
-	 * @param texture
-	 *            Name of the texture file to be used, without the ending
-	 *            "_#.png". E.g. "airbender"
+	 * @param texture       Name of the texture file to be used, without the ending
+	 *                      "_#.png". E.g. "airbender"
 	 */
 	public RenderHumanBender(RenderManager renderManager, String texture, int textures) {
 		super(renderManager, new ModelBiped(0, 0, 64, 64), 0.5f);
-		
+
 		locations = new ResourceLocation[textures];
 		for (int i = 0; i < textures; i++) {
 			locations[i] = new ResourceLocation("avatarmod", "textures/mob/" + texture + "_" + i + ".png");
 		}
-		
+
 	}
-	
+
 	@Override
 	protected ResourceLocation getEntityTexture(EntityHumanBender entity) {
 		return locations[entity.getSkin()];
 	}
-	
+
 }

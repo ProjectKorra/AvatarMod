@@ -16,74 +16,72 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
-import static net.minecraft.client.renderer.GlStateManager.*;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
 
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
+import static net.minecraft.client.renderer.GlStateManager.*;
+
 /**
  * A positioned rectangular frame within the screen which allows positioning of
  * {@link UiComponent components} within a certain bounds.
- * 
+ *
  * @author CrowsOfWar
  */
 public class Frame extends Gui {
-	
-	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/gui/box.png");
-	
+
 	public static final Frame SCREEN = new Frame(null) {
-		
+
 		@Override
 		public Measurement getOffset() {
 			return Measurement.fromPixels(0, 0);
 		}
-		
+
 		@Override
 		public Measurement getDimensions() {
 			return Measurement.fromPixels(screenWidth(), screenHeight());
 		}
-		
+
 		@Override
 		public Measurement getCoordsMin() {
 			return Measurement.fromPixels(0, 0);
 		}
-		
+
 	};
-	
+	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/gui/box.png");
 	private final Frame parent;
 	private Measurement offset, dimensions;
-	
+
 	public Frame() {
 		this(SCREEN);
 	}
-	
+
 	public Frame(Frame parent) {
 		this.parent = parent;
 		this.offset = Measurement.fromPixels(0, 0);
 		this.dimensions = Measurement.fromPixels(screenWidth(), screenHeight());
 	}
-	
+
 	/**
 	 * Get offset from the parent frame
 	 */
 	public Measurement getOffset() {
 		return offset;
 	}
-	
+
 	public void setPosition(Measurement offset) {
 		this.offset = offset;
 	}
-	
+
 	public Measurement getDimensions() {
 		return dimensions;
 	}
-	
+
 	public void setDimensions(Measurement dimensions) {
 		this.dimensions = dimensions;
 	}
-	
+
 	/**
 	 * Get the calculated coordinates of this frame, based off of parent pos +
 	 * offset. Top-left.
@@ -91,7 +89,7 @@ public class Frame extends Gui {
 	public Measurement getCoordsMin() {
 		return getOffset().plus(parent.getCoordsMin());
 	}
-	
+
 	/**
 	 * Get the calculated coordinates of this frame, based off of parent pos +
 	 * offset. Bottom-right.
@@ -99,9 +97,9 @@ public class Frame extends Gui {
 	public Measurement getCoordsMax() {
 		return getCoordsMin().plus(getDimensions());
 	}
-	
+
 	public void draw(float partialTicks) {
-		
+
 		//@formatter:off
 		color(1, 1, 1, 1);
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
@@ -121,5 +119,5 @@ public class Frame extends Gui {
 		popMatrix();
 		//@formatter:on
 	}
-	
+
 }

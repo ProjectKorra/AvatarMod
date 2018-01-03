@@ -32,9 +32,9 @@ public class AbilityPurify extends Ability {
 		AbilityData abilityData = data.getAbilityData(this);
 
 		float chi = STATS_CONFIG.chiBuff;
-		if (abilityData.getLevel() == 1){
+		if (abilityData.getLevel() == 1) {
 			chi *= 1.5f;
-		} else if (abilityData.getLevel() ==2 ){
+		} else if (abilityData.getLevel() == 2) {
 			chi *= 2f;
 		} else if (abilityData.getLevel() == 3) {
 			chi *= 2.5f;

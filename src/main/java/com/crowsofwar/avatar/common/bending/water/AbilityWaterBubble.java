@@ -37,8 +37,6 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AbilityWaterBubble extends Ability {
@@ -59,40 +57,40 @@ public class AbilityWaterBubble extends Ability {
 		Bender bender = ctx.getBender();
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
-		
+
 		if (ctx.isLookingAtBlock()) {
 			BlockPos lookPos = ctx.getLookPosI().toBlockPos();
 			IBlockState lookingAtBlock = world.getBlockState(lookPos);
 			if (lookingAtBlock.getBlock() == Blocks.WATER) {
-				
+
 				if (bender.consumeChi(STATS_CONFIG.chiWaterBubble)) {
-					
+
 					EntityWaterBubble existing = AvatarEntity.lookupEntity(world, EntityWaterBubble.class, //
 							bub -> bub.getBehavior() instanceof WaterBubbleBehavior.PlayerControlled
 									&& bub.getOwner() == entity);
-					
+
 					if (existing != null) {
 						existing.setBehavior(new WaterBubbleBehavior.Drop());
 						// prevent bubble from removing status control
 						existing.setOwner(null);
 					}
-					
+
 					Vector pos = ctx.getLookPos();
-					
+
 					EntityWaterBubble bubble = new EntityWaterBubble(world);
 					bubble.setPosition(pos.x(), pos.y(), pos.z());
 					bubble.setBehavior(new WaterBubbleBehavior.PlayerControlled());
 					bubble.setOwner(entity);
 					bubble.setSourceBlock(ctx.getLevel() >= 2);
 					world.spawnEntity(bubble);
-					
+
 					data.addStatusControl(StatusControl.THROW_BUBBLE);
 					data.getAbilityData(this).addXp(SKILLS_CONFIG.createBubble);
-					
+
 					if (!ctx.isMasterLevel(AbilityTreePath.SECOND)) {
 						world.setBlockToAir(lookPos);
 					}
-					
+
 				}
 			}
 		}

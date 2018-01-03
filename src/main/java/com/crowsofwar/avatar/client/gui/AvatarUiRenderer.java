@@ -57,11 +57,8 @@ import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraft.client.renderer.GlStateManager.*;
-import static net.minecraft.client.renderer.GlStateManager.scale;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 @SideOnly(Side.CLIENT)
@@ -71,28 +68,51 @@ public class AvatarUiRenderer extends Gui {
 			("avatarmod", "shaders/post/purify_weak.json");
 
 	public static AvatarUiRenderer instance;
-	
+	private final Minecraft mc;
 	private RadialMenu currentBendingMenu;
 	private RadialSegment fadingSegment;
 	private long timeFadeStart;
-	private final Minecraft mc;
 	private long errorMsgFade;
 	private String errorMsg;
-	
+
 	public AvatarUiRenderer() {
 		mc = Minecraft.getMinecraft();
 		instance = this;
 		errorMsgFade = -1;
 		errorMsg = "";
 	}
-	
+
+	public static void openBendingGui(UUID bending) {
+
+		BendingStyle controller = BendingStyles.get(bending);
+		BendingMenuInfo menu = controller.getRadialMenu();
+
+		instance.currentBendingMenu = new RadialMenu(controller, menu.getTheme(), menu.getButtons());
+		instance.mc.setIngameNotInFocus();
+
+	}
+
+	public static boolean hasBendingGui() {
+		return instance.currentBendingMenu != null;
+	}
+
+	public static void fade(RadialSegment segment) {
+		instance.fadingSegment = segment;
+		instance.timeFadeStart = System.currentTimeMillis();
+	}
+
+	public static void displayErrorMessage(String message) {
+		instance.errorMsgFade = System.currentTimeMillis();
+		instance.errorMsg = message;
+	}
+
 	@SubscribeEvent
 	public void onGuiRender(RenderGameOverlayEvent.Post e) {
-		
+
 		if (e.getType() != ElementType.EXPERIENCE) return;
-		
+
 		ScaledResolution resolution = e.getResolution();
-		
+
 		renderRadialMenu(resolution);
 		renderStatusControls(resolution);
 		renderChiBar(resolution);
@@ -106,16 +126,16 @@ public class AvatarUiRenderer extends Gui {
 		applyVisionShader();
 
 	}
-	
+
 	private void renderRadialMenu(ScaledResolution resolution) {
 		int mouseX = Mouse.getX() * resolution.getScaledWidth() / mc.displayWidth;
 		int mouseY = resolution.getScaledHeight()
 				- (Mouse.getY() * resolution.getScaledHeight() / mc.displayHeight);
-		
+
 		// For some reason, not including this will cause weirdness in 3rd
 		// person
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		
+
 		if (currentBendingMenu != null) {
 			if (currentBendingMenu.updateScreen(mouseX, mouseY, resolution)) {
 				currentBendingMenu = null;
@@ -143,7 +163,7 @@ public class AvatarUiRenderer extends Gui {
 			}
 		}
 	}
-	
+
 	private void renderStatusControls(ScaledResolution resolution) {
 		List<StatusControl> statusControls = BendingData.get(mc.player).getAllStatusControls();
 		for (StatusControl statusControl : statusControls) {
@@ -152,11 +172,11 @@ public class AvatarUiRenderer extends Gui {
 			int centerY = resolution.getScaledHeight() / 2;
 			int xOffset = statusControl.getPosition().xOffset();
 			int yOffset = statusControl.getPosition().yOffset();
-			
+
 			double scale = .5;
-			
+
 			GlStateManager.color(1, 1, 1);
-			
+
 			GlStateManager.enableBlend();
 			GlStateManager.pushMatrix();
 			GlStateManager.scale(scale, scale, scale);
@@ -165,88 +185,88 @@ public class AvatarUiRenderer extends Gui {
 			GlStateManager.popMatrix();
 		}
 	}
-	
+
 	private void renderChiBar(ScaledResolution resolution) {
-		
+
 		GlStateManager.color(1, 1, 1, CLIENT_CONFIG.chiBarAlpha);
-		
+
 		BendingData data = BendingData.get(mc.player);
-		
+
 		if (data.getAllBending().isEmpty()) return;
-		
+
 		Chi chi = data.chi();
 		float total = chi.getTotalChi();
 		float max = chi.getMaxChi();
 		float available = chi.getAvailableChi();
 		float unavailable = total - available;
-		
+
 		// Dimensions of end result in pixels
 		float scale = 1.1f;
 		float width = 100 * scale;
 		float height = 9 * scale;
-		
+
 		mc.getTextureManager().bindTexture(AvatarUiTextures.CHI_BAR);
-		
+
 		pushMatrix();
-		
+
 		translate(3, resolution.getScaledHeight() - height - 3, 0);
 		scale(scale, scale, 1);
-		
+
 		// Background of chi bar
 		drawTexturedModalRect(0, 0, 0, 36, 100, 9);
-		
+
 		// Available chi
-		
+
 		float unadjustedU = 100 * unavailable / max;
 		int adjustedU = (int) Math.floor(unadjustedU / 8f) * 8;
 		float uDiff = unadjustedU - adjustedU;
-		
+
 		drawTexturedModalRect(adjustedU, 0, 1, 27, (int) (100 * available / max + uDiff), 9);
-		
+
 		// Unavailable chi
 		drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
-		
+
 		drawString(mc.fontRenderer, ((int) total) + "/" + ((int) max) + "," + ((int) available), 0, -20,
 				0xffffff | ((int) (CLIENT_CONFIG.chiBarAlpha * 255) << 24));
-		
+
 		popMatrix();
-		
+
 	}
-	
+
 	private void renderChiMsg(ScaledResolution res) {
-		
+
 		if (errorMsgFade != -1) {
-			
+
 			float seconds = (System.currentTimeMillis() - errorMsgFade) / 1000f;
 			float alpha = seconds < 1 ? 1 : 1 - (seconds - 1);
 			int alphaI = (int) (alpha * 255);
 			// For some reason, any alpha below 4 is displayed at alpha 255
 			if (alphaI < 4) alphaI = 4;
-			
+
 			String text = TextFormatting.BOLD + I18n.format(errorMsg);
-			
+
 			//@formatter:off
 			drawString(mc.fontRenderer, text,
 					(res.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2,
 					res.getScaledHeight() - mc.fontRenderer.FONT_HEIGHT - 40,
 					0xffffff | (alphaI << 24));
 			//@formatter:on
-			
+
 			if (seconds >= 2) errorMsgFade = -1;
-			
+
 		}
-		
+
 	}
-	
+
 	private void renderActiveBending(ScaledResolution res) {
-		
+
 		BendingData data = BendingData.get(mc.player);
-		
+
 		if (data.getActiveBending() != null) {
-			
+
 			GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha);
 			drawBendingIcon(0, 0, data.getActiveBending());
-			
+
 			GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha * 0.5f);
 
 			List<BendingStyle> allBending = data.getAllBending();
@@ -255,36 +275,36 @@ public class AvatarUiRenderer extends Gui {
 			// Draw next
 			int indexNext = allBending.indexOf(data.getActiveBending()) + 1;
 			if (indexNext == allBending.size()) indexNext = 0;
-			
+
 			if (allBending.size() > 1) {
 				GlStateManager.pushMatrix();
 				GlStateManager.translate(0, 0, -1);
 				drawBendingIcon(25, 25, allBending.get(indexNext));
 				GlStateManager.popMatrix();
 			}
-			
+
 			// Draw previous
 			int indexPrevious = allBending.indexOf(data.getActiveBending()) - 1;
 			if (indexPrevious <= -1) indexPrevious = allBending.size() - 1;
-			
+
 			if (allBending.size() > 2) {
 				GlStateManager.pushMatrix();
 				GlStateManager.translate(0, 0, -1);
 				drawBendingIcon(-25, 25, allBending.get(indexPrevious));
 				GlStateManager.popMatrix();
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	private void drawBendingIcon(int xOff, int yOff, BendingStyle controller) {
 		int x = screenWidth() / scaleFactor() - 85 + xOff;
 		int y = screenHeight() / scaleFactor() - 60 + yOff;
 		mc.renderEngine.bindTexture(AvatarUiTextures.getBendingIconTexture(controller.getId()));
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 0);
-		GlStateManager.scale(50.0 / 256, 50.0/ 256, 1);
+		GlStateManager.scale(50.0 / 256, 50.0 / 256, 1);
 		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 		GlStateManager.popMatrix();
 	}
@@ -319,10 +339,10 @@ public class AvatarUiRenderer extends Gui {
 
 	private void renderShieldHealth(ScaledResolution res, float health, float maxHealth, int
 			textureV) {
-		
+
 		mc.renderEngine.bindTexture(AvatarUiTextures.shieldHealth);
 		GlStateManager.color(1, 1, 1, 1);
-		
+
 		int x = res.getScaledWidth() / 2 - 91;
 		int y = res.getScaledHeight() - GuiIngameForge.left_height;
 		if (mc.player.getTotalArmorValue() == 0) {
@@ -346,30 +366,30 @@ public class AvatarUiRenderer extends Gui {
 		}
 
 	}
-	
+
 	private void renderPrisonCracks(ScaledResolution res) {
-		
+
 		EntityPlayer player = mc.player;
 		EntityIcePrison prison = EntityIcePrison.getPrison(player);
 		if (prison != null) {
-			
+
 			GlStateManager.pushMatrix();
-			
+
 			float scaledWidth = res.getScaledWidth();
 			float scaledHeight = res.getScaledHeight();
 			float scaleX = scaledWidth / 256;
 			float scaleY = scaledHeight / 256;
 			float scale = Math.max(scaleX, scaleY);
-			
+
 			// Width of screen: scaledWidth
 			// Width of ice: scale * 256
-			
+
 			GlStateManager.translate((scaledWidth - scale * 256) / 2, (scaledHeight - scale * 256) / 2, 0);
 			GlStateManager.scale(scale, scale, 1);
-			
+
 			mc.renderEngine.bindTexture(AvatarUiTextures.ICE);
 			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-			
+
 			color(1, 1, 1, 0.5f);
 			float percent = 1 - (float) prison.getImprisonedTime() / prison.getMaxImprisonedTime();
 			int crackIndex = (int) (percent * percent * percent * (BLOCK_BREAK.length + 1)) - 1;
@@ -377,11 +397,11 @@ public class AvatarUiRenderer extends Gui {
 				mc.renderEngine.bindTexture(BLOCK_BREAK[crackIndex]);
 				drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 			}
-			
+
 			GlStateManager.popMatrix();
-			
+
 		}
-		
+
 	}
 
 	/**
@@ -427,31 +447,6 @@ public class AvatarUiRenderer extends Gui {
 			drawString(fr, text, res.getScaledWidth() - fr.getStringWidth(text) - 10, 20, 0xffffff);
 		}
 
-
 	}
 
-	public static void openBendingGui(UUID bending) {
-		
-		BendingStyle controller = BendingStyles.get(bending);
-		BendingMenuInfo menu = controller.getRadialMenu();
-		
-		instance.currentBendingMenu = new RadialMenu(controller, menu.getTheme(), menu.getButtons());
-		instance.mc.setIngameNotInFocus();
-		
-	}
-	
-	public static boolean hasBendingGui() {
-		return instance.currentBendingMenu != null;
-	}
-	
-	public static void fade(RadialSegment segment) {
-		instance.fadingSegment = segment;
-		instance.timeFadeStart = System.currentTimeMillis();
-	}
-	
-	public static void displayErrorMessage(String message) {
-		instance.errorMsgFade = System.currentTimeMillis();
-		instance.errorMsg = message;
-	}
-	
 }

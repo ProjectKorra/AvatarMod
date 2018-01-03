@@ -21,34 +21,31 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityIceShield;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class StatCtrlShieldShatter extends StatusControl {
-	
+
 	public StatCtrlShieldShatter() {
 		super(13, AvatarControl.CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
-	
+
 	@Override
 	public boolean execute(BendingContext ctx) {
-		
+
 		World world = ctx.getWorld();
 		EntityLivingBase owner = ctx.getBenderEntity();
 		EntityIceShield shield = AvatarEntity.lookupControlledEntity(world, EntityIceShield.class, owner);
-		
+
 		if (shield != null) {
 			shield.shatter();
 		}
-		
+
 		return true;
-		
+
 	}
-	
+
 }

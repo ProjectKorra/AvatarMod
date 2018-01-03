@@ -29,12 +29,10 @@ import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AiAirGust extends BendingAi {
-	
+
 	/**
 	 * @param ability
 	 * @param entity
@@ -43,33 +41,33 @@ public class AiAirGust extends BendingAi {
 	protected AiAirGust(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 	}
-	
+
 	@Override
 	protected void startExec() {
 		// EntityLivingBase entity = ctx.getBenderEntity();
 		EntityLivingBase target = entity.getAttackTarget();
 		BendingData data = bender.getData();
-		
+
 		if (target != null && target.getHealth() >= 10) {
-			
+
 			Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(target));
 			entity.rotationYaw = (float) toDegrees(rotations.y());
 			entity.rotationPitch = (float) toDegrees(rotations.x());
-			
+
 			data.chi().setMaxChi(10);
 			data.chi().setTotalChi(10);
 			data.chi().setAvailableChi(10);
-			
+
 			execAbility();
 			data.getMiscData().setAbilityCooldown(20);
-			
+
 		}
 	}
-	
+
 	@Override
 	protected boolean shouldExec() {
 		return entity.getAttackTarget() != null
 				&& entity.getDistanceSqToEntity(entity.getAttackTarget()) < 4 * 4;
 	}
-	
+
 }

@@ -18,12 +18,11 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -33,25 +32,24 @@ import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
-	
+
 	public static final DataSerializer<WaterBubbleBehavior> DATA_SERIALIZER = new BehaviorSerializer<>();
-	
+
+	protected WaterBubbleBehavior() {
+	}
+
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
 		registerBehavior(Drop.class);
 		registerBehavior(PlayerControlled.class);
 		registerBehavior(Thrown.class);
 	}
-	
-	protected WaterBubbleBehavior() {}
-	
+
 	public static class Drop extends WaterBubbleBehavior {
-		
+
 		@Override
 		public Behavior onUpdate(EntityWaterBubble entity) {
 			entity.addVelocity(Vector.DOWN.times(0.981));
@@ -60,31 +58,35 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 			}
 			return this;
 		}
-		
+
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
+		public void fromBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
+		public void toBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void load(NBTTagCompound nbt) {}
-		
+		public void load(NBTTagCompound nbt) {
+		}
+
 		@Override
-		public void save(NBTTagCompound nbt) {}
-		
+		public void save(NBTTagCompound nbt) {
+		}
+
 	}
-	
+
 	public static class PlayerControlled extends WaterBubbleBehavior {
-		
+
 		@Override
 		public Behavior onUpdate(EntityWaterBubble entity) {
 			EntityLivingBase owner = entity.getOwner();
-			
+
 			if (owner == null) return this;
-			
+
 			BendingData data = Bender.get(owner).getData();
-			
+
 			Vector target;
 			Raytrace.Result raytrace = Raytrace.getTargetBlock(owner, 3, false);
 			if (raytrace.hitSomething()) {
@@ -96,64 +98,72 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 				Vector eye = Vector.getEyePos(owner);
 				target = forward.times(3).plus(eye);
 			}
-			
+
 			Vector motion = target.minus(Vector.getEntityPos(entity)).times(3);
 			entity.setVelocity(motion);
 
 			return this;
 		}
-		
+
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
+		public void fromBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
+		public void toBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void load(NBTTagCompound nbt) {}
-		
+		public void load(NBTTagCompound nbt) {
+		}
+
 		@Override
-		public void save(NBTTagCompound nbt) {}
-		
+		public void save(NBTTagCompound nbt) {
+		}
+
 	}
-	
+
 	public static class Thrown extends WaterBubbleBehavior {
-		
+
 		@Override
 		public Behavior onUpdate(EntityWaterBubble entity) {
 			entity.addVelocity(Vector.DOWN.times(0.981));
 			if (entity.isCollided) {
-				
+
 				IBlockState state = Blocks.FLOWING_WATER.getDefaultState();
-				
+
 				if (!entity.world.isRemote) {
-					
+
 					entity.world.setBlockState(entity.getPosition(), state, 3);
 					entity.setDead();
-					
+
 					if (!entity.isSourceBlock()) {
 						AvatarWorldData wd = AvatarWorldData.getDataFromWorld(entity.world);
 						wd.addTemporaryWaterLocation(entity.getPosition());
 					}
-					
+
 				}
-				
+
 			}
 			return this;
 		}
-		
+
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
+		public void fromBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
+		public void toBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void load(NBTTagCompound nbt) {}
-		
+		public void load(NBTTagCompound nbt) {
+		}
+
 		@Override
-		public void save(NBTTagCompound nbt) {}
-		
+		public void save(NBTTagCompound nbt) {
+		}
+
 	}
-	
+
 }

@@ -45,9 +45,9 @@ public class AvatarPlayerTick {
 			if (e.phase == Phase.START) {
 				bender.onUpdate();
 			}
-			
+
 		}
-		
+
 	}
-	
+
 }

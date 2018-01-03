@@ -35,7 +35,7 @@ import net.minecraft.entity.ai.EntityAIBase;
  * applied per-entity in its tasks list. A new instance of a BendingAi is
  * acquired via the ability's {@link Ability#getAi(EntityLiving, Bender)
  * getAi method} for the specific mob.
- * 
+ *
  * @author CrowsOfWar
  */
 public abstract class BendingAi extends EntityAIBase {

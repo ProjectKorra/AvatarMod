@@ -25,51 +25,48 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
- *
- *
  * @author CrowsOfWar
  */
 public class RenderEarthspikes extends Render<EntityEarthspike> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-            "textures/entity/earthspike.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
+			"textures/entity/earthspike.png");
 
-    private ModelBase model;
+	private ModelBase model;
 
-    /**
-     * @param renderManager
-     */
-    public RenderEarthspikes(RenderManager renderManager) {
-        super(renderManager);
-        this.model = new ModelEarthspikes();
-    }
+	/**
+	 * @param renderManager
+	 */
+	public RenderEarthspikes(RenderManager renderManager) {
+		super(renderManager);
+		this.model = new ModelEarthspikes();
+	}
 
-    @Override
-    public void doRender(EntityEarthspike entity, double x, double y, double z, float entityYaw,
-                         float partialTicks) {
+	@Override
+	public void doRender(EntityEarthspike entity, double x, double y, double z, float entityYaw,
+						 float partialTicks) {
 
-        Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
-        GlStateManager.enableBlend();
+		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+		GlStateManager.enableBlend();
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, z);
 
-
-        GlStateManager.rotate(180, 1, 0, 0);
-        GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
+		GlStateManager.rotate(180, 1, 0, 0);
+		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
 		GlStateManager.translate(0, -1.5, 0);
 
-        model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
-        GlStateManager.popMatrix();
+		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
+		GlStateManager.popMatrix();
 
-        GlStateManager.disableBlend();
+		GlStateManager.disableBlend();
 
-    }
+	}
 
-    @Override
-    protected ResourceLocation getEntityTexture(EntityEarthspike entity) {
-        return TEXTURE;
-    }
+	@Override
+	protected ResourceLocation getEntityTexture(EntityEarthspike entity) {
+		return TEXTURE;
+	}
 }
 
 

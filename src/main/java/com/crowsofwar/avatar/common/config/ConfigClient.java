@@ -26,37 +26,33 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ConfigClient {
-	
+
 	public static ConfigClient CLIENT_CONFIG = new ConfigClient();
-	
+
 	@Load
 	public float radialMenuAlpha = 0.75f;
-	
+
 	@Load
 	public float chiBarAlpha = 0.5f;
-	
+
 	@Load
 	public float bendingCycleAlpha = 0.5f;
-	
+
 	@Load
 	public boolean useCustomParticles = true;
-	
+	public Map<Ability, Integer> keymappings = new HashMap<>();
+	public Map<Ability, Boolean> conflicts = new HashMap<>();
 	@Load
 	private Map<String, Integer> nameKeymappings = new HashMap<>();
-	public Map<Ability, Integer> keymappings = new HashMap<>();
-	
 	@Load
 	private Map<String, Boolean> nameConflicts = new HashMap<>();
-	public Map<Ability, Boolean> conflicts = new HashMap<>();
 
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
-		
+
 		CLIENT_CONFIG.keymappings.clear();
 		Set<Map.Entry<String, Integer>> entries = CLIENT_CONFIG.nameKeymappings.entrySet();
 		for (Map.Entry<String, Integer> entry : entries) {
@@ -85,11 +81,11 @@ public class ConfigClient {
 				CLIENT_CONFIG.conflicts.put(ability, entry.getValue());
 			}
 		}
-		
+
 	}
-	
+
 	public static void save() {
-		
+
 		CLIENT_CONFIG.nameKeymappings.clear();
 		Set<Map.Entry<Ability, Integer>> entries = CLIENT_CONFIG.keymappings.entrySet();
 		for (Map.Entry<Ability, Integer> entry : entries) {
@@ -100,7 +96,7 @@ public class ConfigClient {
 		for (Map.Entry<Ability, Boolean> entry : entries2) {
 			CLIENT_CONFIG.nameConflicts.put(entry.getKey().getName(), entry.getValue());
 		}
-		
+
 		ConfigLoader.save(CLIENT_CONFIG, "avatar/cosmetic.yml");
 	}
 

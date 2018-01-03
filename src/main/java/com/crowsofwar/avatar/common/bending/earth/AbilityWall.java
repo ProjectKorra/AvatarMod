@@ -39,28 +39,28 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AbilityWall extends Ability {
-	
+
 	public AbilityWall() {
 		super(Earthbending.ID, "wall");
 		requireRaytrace(6, false);
 	}
-	
+
 	@Override
 	public void execute(AbilityContext ctx) {
 
 		Bender bender = ctx.getBender();
 
 		if (bender.consumeChi(STATS_CONFIG.chiWall)) {
-			
+
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
 			EnumFacing cardinal = entity.getHorizontalFacing();
 			BendingData data = ctx.getData();
-			
+
 			AbilityData abilityData = data.getAbilityData(this);
 			// This "power" variable is the player's experience, but power rating can boost power by up to 25 points
 			float power = abilityData.getTotalXp() + (float) ctx.getPowerRating() / 100 * 25;
-			
+
 			int whMin, whMax;
 			Random random = new Random();
 			if (power == 100) {
@@ -80,36 +80,36 @@ public class AbilityWall extends Ability {
 			}
 
 			abilityData.addXp(SKILLS_CONFIG.wallRaised);
-			
+
 			if (!ctx.isLookingAtBlock()) return;
 			BlockPos lookPos = ctx.getLookPosI().toBlockPos();
 			EntityWall wall = new EntityWall(world);
-			
+
 			Block lookBlock = world.getBlockState(lookPos).getBlock();
 			if (lookBlock == Blocks.TALLGRASS) {
 				lookPos = lookPos.down();
 			} else if (lookBlock == Blocks.DOUBLE_PLANT) {
 				lookPos = lookPos.down(2);
 			}
-			
+
 			wall.setPosition(lookPos.getX() + .5, lookPos.getY(), lookPos.getZ() + .5);
 			for (int i = 0; i < 5; i++) {
-				
+
 				int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
-				
+
 				int horizMod = -2 + i;
 				int x = lookPos.getX()
 						+ (cardinal == EnumFacing.NORTH || cardinal == EnumFacing.SOUTH ? horizMod : 0);
 				int y = lookPos.getY() - 4;
 				int z = lookPos.getZ()
 						+ (cardinal == EnumFacing.EAST || cardinal == EnumFacing.WEST ? horizMod : 0);
-				
+
 				EntityWallSegment seg = new EntityWallSegment(world);
 				seg.attachToWall(wall);
 				seg.setPosition(x + .5, y, z + .5);
 				seg.setDirection(cardinal);
 				seg.setOwner(entity);
-				
+
 				boolean foundAir = false, dontBreakMore = false;
 				for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {
 					BlockPos pos = new BlockPos(x, y + j, z);
@@ -119,7 +119,7 @@ public class AbilityWall extends Ability {
 						state = Blocks.AIR.getDefaultState();
 						dontBreakMore = true;
 					}
-					
+
 					if (!foundAir && state.getBlock() == Blocks.AIR) {
 						seg.setSize(seg.width, 5 - j - 1);
 						seg.setBlocksOffset(-(j + 1));
@@ -132,16 +132,16 @@ public class AbilityWall extends Ability {
 						seg.setBlocksOffset(-j);
 						seg.setPosition(seg.position().withY(y + j));
 					}
-					
+
 					seg.setBlock(j, state);
 					if (bendable && !dontBreakMore) world.setBlockToAir(pos);
-					
+
 					if (j == 5 - wallHeight) {
 						dontBreakMore = true;
 					}
-					
+
 				}
-				
+
 				world.spawnEntity(seg);
 			}
 			world.spawnEntity(wall);
@@ -149,7 +149,7 @@ public class AbilityWall extends Ability {
 			ctx.getData().addStatusControl(StatusControl.DROP_WALL);
 
 		}
-		
+
 	}
 
 }

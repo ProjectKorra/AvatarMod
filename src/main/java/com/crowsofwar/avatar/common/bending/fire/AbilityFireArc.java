@@ -35,8 +35,6 @@ import net.minecraft.world.World;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AbilityFireArc extends Ability {
@@ -45,18 +43,18 @@ public class AbilityFireArc extends Ability {
 		super(Firebending.ID, "fire_arc");
 		requireRaytrace(-1, false);
 	}
-	
+
 	@Override
 	public void execute(AbilityContext ctx) {
 
 		Bender bender = ctx.getBender();
 
 		if (bender.consumeChi(STATS_CONFIG.chiFireArc)) {
-			
+
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
 			BendingData data = ctx.getData();
-			
+
 			Vector lookPos;
 			if (ctx.isLookingAtBlock()) {
 				lookPos = ctx.getLookPos();
@@ -81,7 +79,7 @@ public class AbilityFireArc extends Ability {
 			data.addStatusControl(StatusControl.THROW_FIRE);
 
 		}
-		
+
 	}
 
 	/**

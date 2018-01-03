@@ -92,7 +92,6 @@ public class AnalyticsWarningGui extends GuiScreen {
 				currentLineLength += fontRenderer.getStringWidth(word);
 			}
 
-
 		}
 
 		int y = height / 6;

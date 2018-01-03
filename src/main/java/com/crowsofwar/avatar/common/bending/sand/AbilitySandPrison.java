@@ -29,7 +29,6 @@ public class AbilitySandPrison extends Ability {
 		super(Sandbending.ID, "sand_prison");
 	}
 
-
 	@Override
 	public boolean isUtility() {
 		return true;
@@ -75,7 +74,7 @@ public class AbilitySandPrison extends Ability {
 
 	/**
 	 * @param allowEarthbendable Whether to allow all earthbendable blocks (grass, dirt, etc) to
-	 *                              be used. If false, only sand can be used.
+	 *                           be used. If false, only sand can be used.
 	 */
 	private boolean canImprison(EntityLivingBase target, boolean allowEarthbendable) {
 		BlockPos pos = target.getPosition().down();

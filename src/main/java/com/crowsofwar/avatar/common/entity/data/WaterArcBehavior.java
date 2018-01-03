@@ -37,35 +37,34 @@ import net.minecraft.network.datasync.DataSerializers;
 import java.util.List;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
-	
+
 	public static final DataSerializer<WaterArcBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
-	
+
+	public WaterArcBehavior() {
+	}
+
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
-		
+
 		registerBehavior(PlayerControlled.class);
 		registerBehavior(Thrown.class);
 		registerBehavior(Idle.class);
-		
+
 	}
-	
-	public WaterArcBehavior() {}
-	
+
 	public static class PlayerControlled extends WaterArcBehavior {
-		
+
 		@Override
 		public WaterArcBehavior onUpdate(EntityWaterArc water) {
-			
+
 			EntityLivingBase owner = water.getOwner();
 			if (owner == null) return this;
 
 			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
-			
+
 			Vector target;
 			if (res.hitSomething()) {
 				target = res.getPosPrecise();
@@ -74,35 +73,39 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 						Math.toRadians(owner.rotationPitch));
 				target = Vector.getEyePos(owner).plus(look.times(3));
 			}
-			
+
 			Vector motion = target.minus(water.position());
 			motion = motion.times(0.3 * 20);
 			water.setVelocity(motion);
-			
+
 			if (water.world.isRemote && water.canPlaySplash()) {
 				if (motion.sqrMagnitude() >= 0.004) water.playSplash();
 			}
-			
+
 			return this;
-			
+
 		}
-		
+
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
+		public void fromBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
+		public void toBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void load(NBTTagCompound nbt) {}
-		
+		public void load(NBTTagCompound nbt) {
+		}
+
 		@Override
-		public void save(NBTTagCompound nbt) {}
-		
+		public void save(NBTTagCompound nbt) {
+		}
+
 	}
-	
+
 	public static class Thrown extends WaterArcBehavior {
-		
+
 		@Override
 		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
 
@@ -120,11 +123,11 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			if (waterSpear || entity.ticksExisted >= 40) {
 				entity.addVelocity(Vector.DOWN.times(9.81 / 60));
 			}
-			
+
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
 					EntityLivingBase.class, entity.getEntityBoundingBox().grow(0.9, 0.9, 0.9),
 					collided -> collided != entity.getOwner());
-			
+
 			for (EntityLivingBase collided : collidedList) {
 				if (collided == entity.getOwner()) return this;
 				collided.addVelocity(entity.motionX, 0.4, entity.motionZ);
@@ -132,56 +135,64 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 						6 * entity.getDamageMult())) {
 					BattlePerformanceScore.addMediumScore(entity.getOwner());
 				}
-				
+
 				if (!entity.world.isRemote && data != null) {
-					
+
 					abilityData.addXp(ConfigSkills.SKILLS_CONFIG.waterHit);
-					
+
 					if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 						entity.setBehavior(new PlayerControlled());
 						data.addStatusControl(StatusControl.THROW_WATER);
 					}
-					
+
 				}
-				
+
 			}
-			
+
 			return this;
 		}
-		
+
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
+		public void fromBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
+		public void toBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void load(NBTTagCompound nbt) {}
-		
+		public void load(NBTTagCompound nbt) {
+		}
+
 		@Override
-		public void save(NBTTagCompound nbt) {}
-		
+		public void save(NBTTagCompound nbt) {
+		}
+
 	}
-	
+
 	public static class Idle extends WaterArcBehavior {
-		
+
 		@Override
 		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
 			return this;
 		}
-		
+
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
+		public void fromBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
+		public void toBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void load(NBTTagCompound nbt) {}
-		
+		public void load(NBTTagCompound nbt) {
+		}
+
 		@Override
-		public void save(NBTTagCompound nbt) {}
-		
+		public void save(NBTTagCompound nbt) {
+		}
+
 	}
-	
+
 }

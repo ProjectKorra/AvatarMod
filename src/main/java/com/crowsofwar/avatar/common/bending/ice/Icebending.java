@@ -25,8 +25,6 @@ import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 import java.util.UUID;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class Icebending extends BendingStyle {
@@ -34,36 +32,36 @@ public class Icebending extends BendingStyle {
 	public static UUID ID = UUID.fromString("a0e4e7d8-b7c0-4ff7-ba6e-5a279bc52848");
 
 	private final BendingMenuInfo menu;
-	
+
 	public Icebending() {
 
 		super(Waterbending.ID);
 
 		addAbility("ice_burst");
 		addAbility("ice_prison");
-		
+
 		ThemeColor bkgd = new ThemeColor(0xEBF4F5, 0xDBE1E2);
 		ThemeColor edge = new ThemeColor(0xC5DDDF, 0xACBFC0);
 		ThemeColor icon = new ThemeColor(0xFFEBC2, 0xFBE9C3);
-		
+
 		MenuTheme theme = new MenuTheme(bkgd, edge, icon, 0xFFEBC2);
 		menu = new BendingMenuInfo(theme, this);
-		
+
 	}
-	
+
 	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}
-	
+
 	@Override
 	public String getName() {
 		return "icebending";
 	}
-	
+
 	@Override
 	public UUID getId() {
 		return ID;
 	}
-	
+
 }

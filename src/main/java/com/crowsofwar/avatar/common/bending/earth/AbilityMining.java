@@ -42,12 +42,10 @@ import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECO
 import static net.minecraft.init.Blocks.AIR;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AbilityMining extends Ability {
-	
+
 	public AbilityMining() {
 		super(Earthbending.ID, "mine_blocks");
 	}
@@ -62,12 +60,12 @@ public class AbilityMining extends Ability {
 
 		Bender bender = ctx.getBender();
 		float chi = ctx.isMasterLevel(FIRST) ? STATS_CONFIG.chiMiningMaster : STATS_CONFIG.chiMining;
-		
+
 		if (bender.consumeChi(chi)) {
-			
+
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
-			
+
 			AbilityData abilityData = ctx.getAbilityData();
 			abilityData.addXp(SKILLS_CONFIG.miningUse);
 
@@ -79,7 +77,7 @@ public class AbilityMining extends Ability {
 			int fortune = getFortune(abilityData.getLevel(), abilityData.getPath());
 			fortune += (int) Math.ceil(ctx.getPowerRating() / 50);
 			int breakBlockTime = ctx.isMasterLevel(FIRST) ? 1 : 3;
-			
+
 			// For keeping track of already inspected/to-be-inspected positions
 			// of ore blocks
 			// orePos: Position that needs to be inspected
@@ -87,9 +85,9 @@ public class AbilityMining extends Ability {
 			// queue items will be deleted)
 			Queue<BlockPos> oresToBeMined = new LinkedList<>();
 			Set<BlockPos> alreadyMinedOres = new HashSet<>();
-			
+
 			for (Vector ray : rays) {
-				
+
 				for (int i = 1; i <= dist; i++) {
 
 					BlockPos pos = ray.plus(direction.times(i)).toBlockPos();
@@ -107,57 +105,57 @@ public class AbilityMining extends Ability {
 					if (!success && block != Blocks.AIR) {
 						break;
 					}
-					
+
 				}
-				
+
 			}
 
 			// Here is where ore floodfill mining is actually performed
 			if (abilityData.getPath() == SECOND) {
 				mineNextOre(ctx, oresToBeMined, alreadyMinedOres, 0);
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	/**
 	 * Calculates a random distance to mine blocks based on the current level.
 	 */
 	private int getDistance(int level, AbilityTreePath path) {
-		
+
 		int min, max;
 		if (level == 3 && path == FIRST) {
-			
+
 			min = 5;
 			max = 7;
-			
+
 		} else if (level == 3) {
-			
+
 			min = 4;
 			max = 6;
-			
+
 		} else if (level == 2) {
-			
+
 			min = 3;
 			max = 5;
-			
+
 		} else if (level == 1) {
-			
+
 			min = 2;
 			max = 4;
-			
+
 		} else {
-			
+
 			min = 2;
 			max = 3;
-			
+
 		}
-		
+
 		return (int) (min + Math.random() * (max - min));
-		
+
 	}
-	
+
 	private int getFortune(int level, AbilityTreePath path) {
 		if (level == 3) {
 			return path == SECOND ? 3 : 2;
@@ -217,74 +215,74 @@ public class AbilityMining extends Ability {
 	 * isn't bendable).
 	 */
 	private boolean breakBlock(BlockPos pos, AbilityContext ctx, int delay, int fortune) {
-		
+
 		World world = ctx.getWorld();
 		Block block = world.getBlockState(pos).getBlock();
 		AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
-		
+
 		boolean bendable = STATS_CONFIG.bendableBlocks.contains(block) && block != AIR;
 		if (bendable) {
-			
+
 			boolean drop = !ctx.getBender().isCreativeMode();
 			wd.getScheduledDestroyBlocks().add(new ScheduledDestroyBlock(wd, pos, delay, drop, fortune));
-			
+
 			return true;
-			
+
 		} else {
 			return false;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Represents a step in the flood-fill algorithm to destroy ore veins. Looks
 	 * on the next flagged ore block and mines it, then inspects nearby blocks
 	 * and flags any ores for mining. Finally, recursively calls mineNextOre again so the
 	 * floodfill process continues.
-	 * 
+	 *
 	 * @param queue
 	 * @param alreadyInspected
 	 * @param ctx
-	 * @param oresMined How many ores have been mined so far. When calling this method from
-	 *                     outside, should be 0. When the method recursively calls itself, this
-	 *                     parameter increases. This allows the method to know when it has mined
-	 *                     enough ores and should stop
+	 * @param oresMined        How many ores have been mined so far. When calling this method from
+	 *                         outside, should be 0. When the method recursively calls itself, this
+	 *                         parameter increases. This allows the method to know when it has mined
+	 *                         enough ores and should stop
 	 */
 	private void mineNextOre(AbilityContext ctx, Queue<BlockPos> queue, Set<BlockPos>
 			alreadyInspected, int oresMined) {
 
 		World world = ctx.getWorld();
 		BlockPos pos = queue.poll();
-		
+
 		if (breakBlock(pos, ctx, oresMined * 3 + 20, 3)) {
 			oresMined++;
 			ctx.getAbilityData().addXp(SKILLS_CONFIG.miningBreakOre);
 		}
-		
+
 		// Search nearby blocks, and flag ores for mining
-		
+
 		for (int j = 0; j < 6; j++) {
-			
+
 			EnumFacing facing = EnumFacing.values()[j];
 			BlockPos inspectingPos = pos.offset(facing);
 			Block inspectingBlock = world.getBlockState(inspectingPos).getBlock();
-			
+
 			if (isBreakableOre(world, inspectingPos) && !alreadyInspected.contains(inspectingPos)) {
-				
+
 				queue.add(inspectingPos);
 				alreadyInspected.add(inspectingPos);
-				
+
 			}
-			
+
 		}
-		
+
 		// Inspect the next ore
 		if (!queue.isEmpty() && oresMined < 15) {
 			mineNextOre(ctx, queue, alreadyInspected, oresMined);
 		}
-		
+
 	}
-	
+
 	private boolean isBreakableOre(World world, BlockPos pos) {
 		Block block = world.getBlockState(pos).getBlock();
 		return block instanceof BlockOre || block instanceof BlockRedstoneOre;

@@ -35,34 +35,33 @@ import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.readUUID;
 import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.writeUUID;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
-	
+
 	/**
 	 * Used server-side to find what to write<br />
 	 * Used client-side to write to
 	 */
 	private BendingData data;
 	private UUID playerId;
-	
+
 	// We need a SortedSet since the order of writing/reading the data is
 	// determined by the order of the DataCategories
 	// If there was a regular set(no ordering guarantees), the order could have
 	// changed, which would make the data get read/written in the wrong order
 	// which would probably cause bugs/crashing
 	private SortedSet<DataCategory> changed;
-	
-	public PacketCPlayerData() {}
-	
+
+	public PacketCPlayerData() {
+	}
+
 	public PacketCPlayerData(BendingData data, UUID player, SortedSet<DataCategory> changed) {
 		this.data = data;
 		this.playerId = player;
 		this.changed = changed;
 	}
-	
+
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		playerId = readUUID(buf);
@@ -71,14 +70,14 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 				.fetch(GoreCore.proxy.getClientSidePlayer().world, playerId).getData();
 
 		if (data != null) {
-			
+
 			// Find what changed
 			changed = new TreeSet<>();
 			int size = buf.readInt();
 			for (int i = 0; i < size; i++) {
 				changed.add(DataCategory.values()[buf.readInt()]);
 			}
-			
+
 			// Read what changed
 
 			// For the scheduled task, can't continue to use this old bytebuf - it will be
@@ -99,7 +98,9 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 			// They aren't used, but this is necessary since read/write need to use same number
 			// of bytes (or there will be big problems)
 
-			BendingData trashData = new BendingData(dataCategory -> {}, () -> {});
+			BendingData trashData = new BendingData(dataCategory -> {
+			}, () -> {
+			});
 
 			changed = new TreeSet<>();
 			int size = buf.readInt();
@@ -111,43 +112,43 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 			}
 
 		}
-		
+
 	}
-	
+
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
 		writeUUID(buf, playerId);
-		
+
 		// Tell client what has changed
 		buf.writeInt(changed.size());
 		for (DataCategory category : changed) {
 			buf.writeInt(category.ordinal());
 		}
-		
+
 		// The "real" payload - player data
 		for (DataCategory category : changed) {
 			category.write(buf, data);
 		}
-		
+
 	}
-	
+
 	@Override
 	protected Side getReceivedSide() {
 		return Side.CLIENT;
 	}
-	
+
 	@Override
 	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketCPlayerData> getPacketHandler() {
-		
+
 		// Do nothing!
 		// In the avatarFromBytes method, already saved the data into the
 		// player-data (when DataCategory.read is called)
-		
+
 		return (msg, ctx) -> null;
 	}
-	
+
 	public UUID getPlayerId() {
 		return playerId;
 	}
-	
+
 }

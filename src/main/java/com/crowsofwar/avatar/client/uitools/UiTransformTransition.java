@@ -17,36 +17,34 @@
 package com.crowsofwar.avatar.client.uitools;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class UiTransformTransition implements UiTransform {
-	
+
 	private final UiTransform initial, ending;
 	private final float maxTicks;
 	private float ticks, lastPartialTicks;
-	
+
 	public UiTransformTransition(UiTransform initial, UiTransform ending, float seconds) {
 		this.initial = initial;
 		this.ending = ending;
 		this.maxTicks = seconds * 20;
 	}
-	
+
 	private float percentDone() {
 		float value = ticks / maxTicks;
 		return value > 1 ? 1 : value;
 	}
-	
+
 	private float invPercentDone() {
 		return 1 - percentDone();
 	}
-	
+
 	@Override
 	public Measurement coordinates() {
 		return ending.coordinates().times(percentDone()).plus(initial.coordinates().times(invPercentDone()));
 	}
-	
+
 	@Override
 	public StartingPosition position() {
 		Measurement dim1 = initial.getFrame().getDimensions(), dim2 = ending.getFrame().getDimensions();
@@ -56,34 +54,38 @@ public class UiTransformTransition implements UiTransform {
 				+ initial.position().getY() * dim1.yInPixels() * invPercentDone();
 		return StartingPosition.custom(x, y);
 	}
-	
+
 	@Override
-	public void setPosition(StartingPosition position) {}
-	
+	public void setPosition(StartingPosition position) {
+	}
+
 	@Override
 	public Measurement offset() {
 		return ending.offset().times(percentDone()).plus(initial.offset().times(invPercentDone()));
 	}
-	
+
 	@Override
-	public void setOffset(Measurement offset) {}
-	
+	public void setOffset(Measurement offset) {
+	}
+
 	@Override
 	public float scale() {
 		return ending.scale() * percentDone() + initial.scale() * invPercentDone();
 	}
-	
+
 	@Override
-	public void setScale(float scale) {}
-	
+	public void setScale(float scale) {
+	}
+
 	@Override
 	public float offsetScale() {
 		return ending.offsetScale() * percentDone() + initial.offsetScale() * invPercentDone();
 	}
-	
+
 	@Override
-	public void setOffsetScale(float scale) {}
-	
+	public void setOffsetScale(float scale) {
+	}
+
 	@Override
 	public void update(float partialTicks) {
 		float diff = partialTicks - lastPartialTicks;
@@ -91,21 +93,23 @@ public class UiTransformTransition implements UiTransform {
 		ticks += diff;
 		lastPartialTicks = partialTicks;
 	}
-	
+
 	@Override
 	public Frame getFrame() {
 		return Frame.SCREEN;
 	}
-	
+
 	@Override
-	public void setFrame(Frame frame) {}
-	
+	public void setFrame(Frame frame) {
+	}
+
 	@Override
 	public float zLevel() {
 		return ending.zLevel() * percentDone() + initial.zLevel() * invPercentDone();
 	}
-	
+
 	@Override
-	public void setZLevel(float zLevel) {}
-	
+	public void setZLevel(float zLevel) {
+	}
+
 }

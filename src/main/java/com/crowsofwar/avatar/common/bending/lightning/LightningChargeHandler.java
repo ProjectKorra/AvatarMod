@@ -66,12 +66,12 @@ public abstract class LightningChargeHandler extends TickHandler {
 			double speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			float damage = abilityData.getLevel() >= 2 ? 8 : 6;
 			float size = 1;
-			float[] turbulenceValues = { 0.6f, 1.2f };
+			float[] turbulenceValues = {0.6f, 1.2f};
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage = 12;
 				size = 0.75f;
-				turbulenceValues = new float[] { 0.6f, 1.2f, 0.8f };
+				turbulenceValues = new float[]{0.6f, 1.2f, 0.8f};
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				size = 1.5f;
@@ -86,7 +86,6 @@ public abstract class LightningChargeHandler extends TickHandler {
 
 			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE,
 					SoundCategory.PLAYERS, 1, 2);
-
 
 			return true;
 
@@ -132,7 +131,5 @@ public abstract class LightningChargeHandler extends TickHandler {
 				"Lightning charge modifier", multiplier - 1, 1));
 
 	}
-
-
 
 }

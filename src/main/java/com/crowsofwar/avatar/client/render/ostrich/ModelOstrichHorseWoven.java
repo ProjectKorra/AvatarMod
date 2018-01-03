@@ -12,7 +12,7 @@ import net.minecraft.entity.Entity;
  */
 @SuppressWarnings("FieldCanBeLocal")
 public class ModelOstrichHorseWoven extends ModelOstrichHorse {
-	
+
 	private ModelRenderer BodyMain;
 	private ModelRenderer Body3;
 	private ModelRenderer Body4;

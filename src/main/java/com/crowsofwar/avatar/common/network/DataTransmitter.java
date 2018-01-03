@@ -18,24 +18,21 @@
 package com.crowsofwar.avatar.common.network;
 
 import com.crowsofwar.avatar.common.data.BendingData;
-
 import io.netty.buffer.ByteBuf;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public interface DataTransmitter<T> {
-	
+
 	/**
 	 * Writes the <code>T</code> to network
 	 */
 	void write(ByteBuf buf, T t);
-	
+
 	/**
 	 * Creates a new <code>T</code> and reads data from the network
 	 */
 	T read(ByteBuf buf, BendingData data);
-	
+
 }

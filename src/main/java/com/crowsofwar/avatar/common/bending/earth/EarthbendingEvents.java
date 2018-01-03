@@ -35,35 +35,38 @@ import java.util.Iterator;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EarthbendingEvents {
-	
-	private EarthbendingEvents() {}
-	
+
+	private EarthbendingEvents() {
+	}
+
+	public static void register() {
+		MinecraftForge.EVENT_BUS.register(new EarthbendingEvents());
+	}
+
 	@SubscribeEvent
 	public void digSpeed(PlayerEvent.BreakSpeed e) {
 		EntityPlayer player = e.getEntityPlayer();
 		World world = player.world;
-		
+
 		IBlockState state = e.getState();
 		if (STATS_CONFIG.bendableBlocks.contains(state.getBlock())) {
 			e.setNewSpeed(e.getOriginalSpeed() * 2);
 		}
-		
+
 	}
-	
+
 	@SubscribeEvent
 	public void worldUpdate(WorldTickEvent e) {
 		World world = e.world;
 		if (!world.isRemote && e.phase == TickEvent.Phase.START && world.provider.getDimension() == 0) {
-			
+
 			AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
 			Iterator<ScheduledDestroyBlock> iterator = wd.getScheduledDestroyBlocks().iterator();
 			while (iterator.hasNext()) {
-				
+
 				ScheduledDestroyBlock sdb = iterator.next();
 				sdb.decrementTicks();
 				if (sdb.getTicks() <= 0) {
@@ -74,33 +77,29 @@ public class EarthbendingEvents {
 					destroyBlock(world, pos, sdb.isDrop(), sdb.getFortune());
 
 					iterator.remove();
-					
+
 				}
-				
+
 			}
-			
+
 		}
 	}
-	
+
 	private void destroyBlock(World world, BlockPos pos, boolean dropBlock, int fortune) {
-		
+
 		IBlockState iblockstate = world.getBlockState(pos);
 		Block block = iblockstate.getBlock();
-		
+
 		if (!block.isAir(iblockstate, world, pos)) {
 			world.playEvent(2001, pos, Block.getStateId(iblockstate));
-			
+
 			if (dropBlock) {
 				block.dropBlockAsItem(world, pos, iblockstate, fortune);
 			}
-			
+
 			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 		}
-		
+
 	}
-	
-	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new EarthbendingEvents());
-	}
-	
+
 }

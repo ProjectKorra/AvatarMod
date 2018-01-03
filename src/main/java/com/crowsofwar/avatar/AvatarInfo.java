@@ -28,13 +28,13 @@ package com.crowsofwar.avatar;
  * If development version, DEV_BUILD is "_dev"
  * <p>
  * E.g. AV_B3.2-dev -> Beta, Update 3, patch 2, development build
- * 
+ *
  * @author CrowsOfWar
  */
 public class AvatarInfo {
-	
+
 	// Things that are adjustable
-	
+
 	/**
 	 * Incremented for every major update.
 	 */
@@ -51,6 +51,11 @@ public class AvatarInfo {
 	 * "" for full release.
 	 */
 	public static final String DEV_STAGE = "a";
+	public static final String MOD_ID = "avatarmod";
+
+	// Not adjustable / automatically calculated
+	public static final String MOD_NAME = "Avatar Mod: Out of the Iceberg";
+	public static final String MC_VERSION = "1.12.2";
 	/**
 	 * Type of version; 0 for production; 1 for development; 2 for preview 1; 3
 	 * for preview 2, etc
@@ -59,26 +64,18 @@ public class AvatarInfo {
 	 * {@link #IS_DEVELOPMENT}
 	 */
 	private static final int VERSION_TYPE = 2;
-	
-	// Not adjustable / automatically calculated
-	
-	public static final String MOD_ID = "avatarmod";
-	public static final String MOD_NAME = "Avatar Mod: Out of the Iceberg";
-	
 	public static final boolean IS_PRODUCTION = VERSION_TYPE == 0;
 	public static final boolean IS_DEVELOPMENT = VERSION_TYPE == 1;
 	public static final boolean IS_PREVIEW = VERSION_TYPE >= 2;
-	
-	public static final String MC_VERSION = "1.12.2";
 	public static final String VERSION = DEV_STAGE + VERSION_UPDATE + "." + VERSION_PATCH
 			+ (IS_PRODUCTION ? "" : (IS_PREVIEW ? "_preview" + (VERSION_TYPE - 1) : "_dev"));
-	
+
 	public enum VersionType {
-		
+
 		PRODUCTION,
 		PREVIEW,
 		DEVELOPMENT
-	
+
 	}
-	
+
 }

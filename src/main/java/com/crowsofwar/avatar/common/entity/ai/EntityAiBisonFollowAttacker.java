@@ -17,49 +17,46 @@
 package com.crowsofwar.avatar.common.entity.ai;
 
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityAiBisonFollowAttacker extends EntityAIBase {
-	
+
 	private final EntitySkyBison bison;
 	private final double followRange;
-	
+
 	public EntityAiBisonFollowAttacker(EntitySkyBison bison) {
 		this.bison = bison;
 		this.followRange = 60;
 		setMutexBits(1);
 	}
-	
+
 	@Override
 	public boolean shouldExecute() {
 		return bison.getAttackTarget() != null;
 	}
-	
+
 	@Override
 	public boolean shouldContinueExecuting() {
-		
+
 		EntityLivingBase target = bison.getAttackTarget();
 		if (target == null || target.isDead) {
 			return false;
 		}
-		
+
 		if (bison.getDistanceSqToEntity(target) > followRange * followRange) {
 			bison.setAttackTarget(null);
 			return false;
 		}
-		
+
 		bison.getMoveHelper().setMoveTo(target.posX, target.posY + target.getEyeHeight(), target.posZ, 1);
 		bison.getLookHelper().setLookPositionWithEntity(target, 20, 20);
-		
+
 		return true;
-		
+
 	}
-	
+
 }

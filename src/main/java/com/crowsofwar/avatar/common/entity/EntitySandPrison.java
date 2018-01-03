@@ -41,8 +41,6 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- *
- *
  * @author CrowsOfWar
  */
 public class EntitySandPrison extends AvatarEntity {
@@ -71,6 +69,41 @@ public class EntitySandPrison extends AvatarEntity {
 		imprisonedAttr = new SyncedEntity<>(this, SYNC_IMPRISONED);
 		setSize(1, 0.25f);
 		vulnerableToAirbending = true;
+	}
+
+	public static boolean isImprisoned(EntityLivingBase entity) {
+
+		return getPrison(entity) != null;
+
+	}
+
+	/**
+	 * Get the prison holding that entity, or null if the entity is not
+	 * imprisoned
+	 */
+	public static EntitySandPrison getPrison(EntityLivingBase entity) {
+
+		World world = entity.world;
+		List<EntitySandPrison> prisons = world.getEntities(EntitySandPrison.class,
+				prison -> prison.getImprisoned() == entity);
+
+		return prisons.isEmpty() ? null : prisons.get(0);
+
+	}
+
+	public static void imprison(EntityLivingBase entity, EntityLivingBase owner) {
+		World world = entity.world;
+		EntitySandPrison prison = new EntitySandPrison(world);
+		prison.setImprisoned(entity);
+		prison.copyLocationAndAnglesFrom(entity);
+
+		double powerRating = Bender.get(owner).calcPowerRating(Sandbending.ID);
+		prison.setStats(AbilityData.get(owner, "sand_prison"), powerRating);
+
+		world.spawnEntity(prison);
+
+		BattlePerformanceScore.addLargeScore(owner);
+
 	}
 
 	@Override
@@ -246,41 +279,6 @@ public class EntitySandPrison extends AvatarEntity {
 	@Override
 	public boolean canPush() {
 		return false;
-	}
-
-	public static boolean isImprisoned(EntityLivingBase entity) {
-
-		return getPrison(entity) != null;
-
-	}
-
-	/**
-	 * Get the prison holding that entity, or null if the entity is not
-	 * imprisoned
-	 */
-	public static EntitySandPrison getPrison(EntityLivingBase entity) {
-
-		World world = entity.world;
-		List<EntitySandPrison> prisons = world.getEntities(EntitySandPrison.class,
-				prison -> prison.getImprisoned() == entity);
-
-		return prisons.isEmpty() ? null : prisons.get(0);
-
-	}
-
-	public static void imprison(EntityLivingBase entity, EntityLivingBase owner) {
-		World world = entity.world;
-		EntitySandPrison prison = new EntitySandPrison(world);
-		prison.setImprisoned(entity);
-		prison.copyLocationAndAnglesFrom(entity);
-
-		double powerRating = Bender.get(owner).calcPowerRating(Sandbending.ID);
-		prison.setStats(AbilityData.get(owner, "sand_prison"), powerRating);
-
-		world.spawnEntity(prison);
-
-		BattlePerformanceScore.addLargeScore(owner);
-
 	}
 
 }

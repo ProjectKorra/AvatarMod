@@ -16,12 +16,11 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorseWoven;
 import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorseChain;
 import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorsePlate;
 import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorseWild;
+import com.crowsofwar.avatar.client.render.ostrich.ModelOstrichHorseWoven;
 import com.crowsofwar.avatar.common.entity.mob.EntityOstrichHorse;
-
 import com.crowsofwar.avatar.common.item.ItemOstrichEquipment;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
@@ -43,7 +42,7 @@ public class RenderOstrichHorse extends RenderLiving<EntityOstrichHorse> {
 		super(rendermanagerIn, new ModelOstrichHorseWild(), 0.5f); // pass in a dummy model ot
 		// avoid NPEs
 
-		models = new ModelBase[] {
+		models = new ModelBase[]{
 				new ModelOstrichHorseWild(),
 				new ModelOstrichHorseWoven(),
 				new ModelOstrichHorseChain(),

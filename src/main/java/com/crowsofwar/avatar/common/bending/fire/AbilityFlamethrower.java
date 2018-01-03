@@ -26,25 +26,23 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLiving;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AbilityFlamethrower extends Ability {
-	
+
 	public AbilityFlamethrower() {
 		super(Firebending.ID, "flamethrower");
 	}
-	
+
 	@Override
 	public void execute(AbilityContext ctx) {
 		BendingData data = ctx.getData();
 		data.addStatusControl(StatusControl.START_FLAMETHROW);
 	}
-	
+
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiFlamethrower(this, entity, bender);
 	}
-	
+
 }

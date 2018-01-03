@@ -44,12 +44,32 @@ import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 /**
  * A wrapper for any mob/player that can bend to provide greater abstraction
  * over useful methods.
- * 
+ *
  * @author CrowsOfWar
  */
 public abstract class Bender {
 
 	protected WallJumpManager wallJumpManager = new WallJumpManager(this);
+
+	/**
+	 * Creates an appropriate Bender instance for that entity
+	 */
+	@Nullable
+	public static Bender get(@Nullable EntityLivingBase entity) {
+		if (entity == null) {
+			return null;
+		} else if (entity instanceof EntityBender) {
+			return ((EntityBender) entity).getBender();
+		} else if (entity instanceof EntityPlayer) {
+			return new PlayerBender((EntityPlayer) entity);
+		} else {
+			throw new IllegalArgumentException("Unsure how to get bender for entity " + entity);
+		}
+	}
+
+	public static boolean isBenderSupported(EntityLivingBase entity) {
+		return entity == null || entity instanceof EntityPlayer || entity instanceof EntityBender;
+	}
 
 	/**
 	 * For players, returns the username. For mobs, returns the mob's name (e.g.
@@ -58,12 +78,12 @@ public abstract class Bender {
 	public String getName() {
 		return getEntity().getName();
 	}
-	
+
 	/**
 	 * Gets this bender in entity form
 	 */
 	public abstract EntityLivingBase getEntity();
-	
+
 	/**
 	 * Get the world this entity is currently in
 	 */
@@ -76,7 +96,7 @@ public abstract class Bender {
 	 * found again later.
 	 */
 	public abstract BenderInfo getInfo();
-	
+
 	public abstract BendingData getData();
 
 	/**
@@ -87,9 +107,11 @@ public abstract class Bender {
 	 * and have PlayerBender override that method.
 	 */
 	public abstract boolean isCreativeMode();
-	
+
 	public abstract boolean isFlying();
-	
+
+	;
+
 	/**
 	 * If any water pouches are in the inventory, checks if there is enough
 	 * water. If there is, consumes the total amount of water in those pouches
@@ -104,7 +126,7 @@ public abstract class Bender {
 	public boolean consumeChi(float amount) {
 		// TODO Account for entity Chi?
 		return true;
-	};
+	}
 
 	/**
 	 * Calculates the current power rating based off the current environment.
@@ -123,9 +145,9 @@ public abstract class Bender {
 	/**
 	 * Gets the power rating, but in the range 0.25 to 2.0 for convenience in damage calculations.
 	 * <ul>
-	 *     <li>-100 power rating gives 0.25; damage would be 1/4 of normal</li>
-	 *     <li>0 power rating gives 1; damage would be the same as normal</li>
-	 *     <li>100 power rating gives 2; damage would be twice as much as usual</li>
+	 * <li>-100 power rating gives 0.25; damage would be 1/4 of normal</li>
+	 * <li>0 power rating gives 1; damage would be the same as normal</li>
+	 * <li>100 power rating gives 2; damage would be twice as much as usual</li>
 	 */
 	public double getDamageMult(UUID bendingId) {
 		double powerRating = calcPowerRating(bendingId);
@@ -212,7 +234,8 @@ public abstract class Bender {
 	 *
 	 * @see com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage
 	 */
-	public void sendMessage(String message) {}
+	public void sendMessage(String message) {
+	}
 
 	/*
 	 * Called when the bender is hit by lightning, and attempts to redirect it. Returns whether the
@@ -324,24 +347,4 @@ public abstract class Bender {
 		return wallJumpManager;
 	}
 
-	/**
-	 * Creates an appropriate Bender instance for that entity
-	 */
-	@Nullable
-	public static Bender get(@Nullable EntityLivingBase entity) {
-		if (entity == null) {
-			return null;
-		} else if (entity instanceof EntityBender) {
-			return ((EntityBender) entity).getBender();
-		} else if (entity instanceof EntityPlayer) {
-			return new PlayerBender((EntityPlayer) entity);
-		} else {
-			throw new IllegalArgumentException("Unsure how to get bender for entity " + entity);
-		}
-	}
-
-	public static boolean isBenderSupported(EntityLivingBase entity) {
-		return entity == null || entity instanceof EntityPlayer || entity instanceof EntityBender;
-	}
-	
 }

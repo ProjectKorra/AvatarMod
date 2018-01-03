@@ -18,15 +18,15 @@ package com.crowsofwar.avatar.common.controls;
 
 /**
  * Wrapper class so vanilla KeyBinding class can be used on both sides
- * 
+ *
  * @author CrowsOfWar
  */
 public class KeybindingWrapper {
-	
+
 	public String getKeyDescription() {
 		return null;
 	}
-	
+
 	public boolean isPressed() {
 		return false;
 	}

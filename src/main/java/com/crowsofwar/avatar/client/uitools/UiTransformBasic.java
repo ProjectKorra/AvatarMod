@@ -17,22 +17,20 @@
 package com.crowsofwar.avatar.client.uitools;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class UiTransformBasic implements UiTransform {
-	
+
 	private final UiComponent component;
 	private StartingPosition pos;
 	private Measurement offset;
 	private float offsetScale, componentScale;
 	private Frame frame;
 	private float zLevel;
-	
+
 	public UiTransformBasic(UiComponent component) {
 		if (component == null) throw new IllegalArgumentException("Cannot have null component");
-		
+
 		this.component = component;
 		pos = StartingPosition.TOP_LEFT;
 		offset = Measurement.fromPixels(0, 0);
@@ -40,84 +38,85 @@ public class UiTransformBasic implements UiTransform {
 		componentScale = 1;
 		frame = Frame.SCREEN;
 		zLevel = 0;
-		
+
 	}
-	
+
 	@Override
 	public Measurement coordinates() {
 		float w = frame.getDimensions().xInPixels();
 		float h = frame.getDimensions().yInPixels();
-		
+
 		float x = frame.getCoordsMin().xInPixels() + pos.getX() * w;
 		x += offset().xInPixels() * offsetScale - pos.getMinusX() * component.width();
-		
+
 		float y = frame.getCoordsMin().yInPixels() + pos.getY() * h;
 		y += offset().yInPixels() * offsetScale - pos.getMinusY() * component.height();
-		
+
 		return Measurement.fromPixels(x, y);
 	}
-	
+
 	@Override
 	public StartingPosition position() {
 		return pos;
 	}
-	
+
 	@Override
 	public void setPosition(StartingPosition position) {
 		this.pos = position;
 	}
-	
+
 	@Override
 	public Measurement offset() {
 		return offset;
 	}
-	
+
 	@Override
 	public void setOffset(Measurement offset) {
 		this.offset = offset;
 	}
-	
+
 	@Override
 	public float offsetScale() {
 		return offsetScale;
 	}
-	
+
 	@Override
 	public void setOffsetScale(float scale) {
 		this.offsetScale = scale;
 	}
-	
+
 	@Override
 	public float scale() {
 		return componentScale;
 	}
-	
+
 	@Override
 	public void setScale(float scale) {
 		this.componentScale = scale;
 	}
-	
+
 	@Override
-	public void update(float partialTicks) {}
-	
+	public void update(float partialTicks) {
+	}
+
 	@Override
 	public Frame getFrame() {
 		return frame;
 	}
-	
+
 	@Override
 	public void setFrame(Frame frame) {
 		this.frame = frame;
 	}
-	
+
 	@Override
 	public float zLevel() {
 		return zLevel;
 	}
-	
+
 	@Override
 	public void setZLevel(float zLevel) {
 		this.zLevel = zLevel;
 	}
-	
+
 }

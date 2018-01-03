@@ -25,59 +25,57 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class BisonSummonHandler extends TickHandler {
-	
+
 	@Override
 	public boolean tick(BendingContext ctx) {
-		
+
 		if (ctx.getWorld().isRemote) return false;
-		
+
 		BendingData data = ctx.getData();
-		
+
 		int cooldown = data.getMiscData().getPetSummonCooldown();
 		if (cooldown <= 0) {
-			
+
 			trySummonBison(ctx.getBenderEntity());
 			return true;
-			
+
 		} else {
-			
+
 			data.getMiscData().setPetSummonCooldown(cooldown - 1);
 			return false;
-			
+
 		}
-		
+
 	}
-	
+
 	private boolean trySummonBison(EntityLivingBase player) {
-		
+
 		List<EntitySkyBison> entities = player.world.getEntities(EntitySkyBison.class,
 				bison -> bison.getOwner() == player);
-		
+
 		if (!entities.isEmpty()) {
 			EntitySkyBison bison = entities.get(0);
 			Random random = new Random();
-			
+
 			// Find suitable location near player
 			for (int i = 0; i < 5; i++) {
-				
+
 				double x = player.posX + (random.nextDouble() * 2 - 1) * 15;
 				double y = player.posY + (random.nextDouble() * 2 - 1) * 5;
 				double z = player.posZ + (random.nextDouble() * 2 - 1) * 15;
-				
+
 				if (bison.attemptTeleport(x, y, z)) {
 					return true;
 				}
-				
+
 			}
 		}
-		
+
 		return false;
-		
+
 	}
-	
+
 }

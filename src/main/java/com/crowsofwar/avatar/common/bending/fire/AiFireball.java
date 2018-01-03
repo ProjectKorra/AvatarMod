@@ -33,14 +33,12 @@ import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AiFireball extends BendingAi {
-	
+
 	private int timeExecuting;
-	
+
 	/**
 	 * @param ability
 	 * @param entity
@@ -51,7 +49,7 @@ public class AiFireball extends BendingAi {
 		timeExecuting = 0;
 		setMutexBits(2);
 	}
-	
+
 	@Override
 	protected void startExec() {
 		BendingData data = bender.getData();
@@ -61,16 +59,16 @@ public class AiFireball extends BendingAi {
 		execAbility();
 		data.getMiscData().setAbilityCooldown(100);
 	}
-	
+
 	@Override
 	public boolean shouldContinueExecuting() {
-		
+
 		if (entity.getAttackTarget() == null) return false;
-		
+
 		Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
 		entity.rotationYaw = (float) toDegrees(rotations.y());
 		entity.rotationPitch = (float) toDegrees(rotations.x());
-		
+
 		if (timeExecuting >= 40) {
 			BendingData data = bender.getData();
 			execStatusControl(StatusControl.THROW_FIREBALL);
@@ -79,33 +77,33 @@ public class AiFireball extends BendingAi {
 		} else {
 			return true;
 		}
-		
+
 	}
-	
+
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSqToEntity(target) > 4 * 4
 				&& bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
 	}
-	
+
 	@Override
 	public void updateTask() {
 		timeExecuting++;
 	}
-	
+
 	@Override
 	public void resetTask() {
-		
+
 		EntityFireball fireball = AvatarEntity.lookupEntity(entity.world, EntityFireball.class, //
 				fire -> fire.getBehavior() instanceof FireballBehavior.PlayerControlled
 						&& fire.getOwner() == entity);
-		
+
 		if (fireball != null) {
 			fireball.setDead();
 			bender.getData().removeStatusControl(StatusControl.THROW_FIREBALL);
 		}
-		
+
 	}
-	
+
 }

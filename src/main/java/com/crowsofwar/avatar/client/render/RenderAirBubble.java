@@ -16,57 +16,53 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import static net.minecraft.client.renderer.GlStateManager.disableBlend;
-import static net.minecraft.client.renderer.GlStateManager.enableBlend;
-
-import org.joml.Matrix4f;
-import org.joml.Vector4f;
-import org.lwjgl.opengl.GL11;
-
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
-
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
+import org.lwjgl.opengl.GL11;
+
+import static net.minecraft.client.renderer.GlStateManager.disableBlend;
+import static net.minecraft.client.renderer.GlStateManager.enableBlend;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class RenderAirBubble extends Render<EntityAirBubble> {
-	
+
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/entity/air_bubble.png");
-	
+
 	/**
 	 * @param renderManager
 	 */
 	public RenderAirBubble(RenderManager renderManager) {
 		super(renderManager);
 	}
-	
+
 	@Override
 	public void doRender(EntityAirBubble entity, double xx, double yy, double zz, float entityYaw,
-			float partialTicks) {
-		
+						 float partialTicks) {
+
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
-		
+
 		float x = (float) xx;
 		float y = (float) yy + .8f;
 		float z = (float) zz;
-		
+
 		enableBlend();
 		GlStateManager.disableLighting();
-		
+
 		float ticks = entity.ticksExisted + partialTicks;
-		
+
 		float sizeMult = 1, alpha = 1;
 		if (entity.isDissipatingLarge()) {
 			sizeMult = 1 + entity.getDissipateTime() / 10f;
@@ -80,7 +76,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 			alpha = ticks / 10f;
 		}
 		sizeMult *= entity.getSize() / 2.5f;
-		
+
 		GlStateManager.color(1, 1, 1, .5f * alpha);
 		{
 			float rotY = ticks / 7f;
@@ -93,21 +89,21 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 			float rotZ = MathHelper.cos(ticks / 10f + 1.3f) * .3f;
 			renderCube(x, y, z, 0, 1, 0, 1, 3f * sizeMult, 0, rotY, rotZ);
 		}
-		
+
 		disableBlend();
 		GlStateManager.enableLighting();
-		
+
 	}
-	
+
 	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,
-			float rotateX, float rotateY, float rotateZ) {
+							float rotateX, float rotateY, float rotateZ) {
 		Matrix4f mat = new Matrix4f();
 		mat.translate(x, y + .4f, z);
-		
+
 		mat.rotate(rotateX, 1, 0, 0);
 		mat.rotate(rotateY, 0, 1, 0);
 		mat.rotate(rotateZ, 0, 0, 1);
-		
+
 		// @formatter:off
 		// Can't use .mul(size) here because it would mul the w component
 		Vector4f
@@ -121,7 +117,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		rtb = new Vector4f(0.5f*size, 0.5f*size, 0.5f*size, 1).mul(mat);
 		
 		// @formatter:on
-		
+
 		drawQuad(2, ltb, lbb, lbf, ltf, u1, v1, u2, v2); // -x
 		drawQuad(2, rtb, rbb, rbf, rtf, u1, v1, u2, v2); // +x
 		drawQuad(2, rbb, rbf, lbf, lbb, u1, v1, u2, v2); // -y
@@ -129,13 +125,13 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		drawQuad(2, rtf, rbf, lbf, ltf, u1, v1, u2, v2); // -z
 		drawQuad(2, rtb, rbb, lbb, ltb, u1, v1, u2, v2); // +z
 	}
-	
+
 	private void drawQuad(int normal, Vector4f pos1, Vector4f pos2, Vector4f pos3, Vector4f pos4, double u1,
-			double v1, double u2, double v2) {
-		
+						  double v1, double u2, double v2) {
+
 		Tessellator t = Tessellator.getInstance();
 		BufferBuilder vb = t.getBuffer();
-		
+
 		if (normal == 0 || normal == 2) {
 			vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			vb.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).endVertex();
@@ -153,10 +149,10 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 			t.draw();
 		}
 	}
-	
+
 	@Override
 	protected ResourceLocation getEntityTexture(EntityAirBubble entity) {
 		return null;
 	}
-	
+
 }

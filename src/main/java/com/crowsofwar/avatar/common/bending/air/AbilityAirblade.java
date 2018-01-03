@@ -33,31 +33,29 @@ import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECO
 import static java.lang.Math.abs;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AbilityAirblade extends Ability {
-	
+
 	public AbilityAirblade() {
 		super(Airbending.ID, "airblade");
 	}
-	
+
 	@Override
 	public void execute(AbilityContext ctx) {
-		
+
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
-		
+
 		if (!bender.consumeChi(STATS_CONFIG.chiAirblade)) return;
-		
+
 		double pitchDeg = entity.rotationPitch;
 		if (abs(pitchDeg) > 30) {
 			pitchDeg = pitchDeg / abs(pitchDeg) * 30;
 		}
 		float pitch = (float) Math.toRadians(pitchDeg);
-		
+
 		Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), pitch);
 		Vector spawnAt = Vector.getEntityPos(entity).plus(look.times(2)).plus(0, 1, 0);
 
@@ -67,7 +65,7 @@ public class AbilityAirblade extends Ability {
 		float damage = STATS_CONFIG.airbladeSettings.damage;
 		damage *= 1 + xp * .015f;
 		damage *= ctx.getPowerRatingDamageMod();
-		
+
 		EntityAirblade airblade = new EntityAirblade(world);
 		airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
 		airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 30 : 20));
@@ -75,7 +73,7 @@ public class AbilityAirblade extends Ability {
 		airblade.setOwner(entity);
 		airblade.setPierceArmor(abilityData.isMasterPath(SECOND));
 		airblade.setChainAttack(abilityData.isMasterPath(FIRST));
-		
+
 		float chopBlocks = -1;
 		if (abilityData.getLevel() >= 1) {
 			chopBlocks = 0;
@@ -84,11 +82,11 @@ public class AbilityAirblade extends Ability {
 			chopBlocks = 2;
 		}
 		airblade.setChopBlocksThreshold(chopBlocks);
-		
+
 		world.spawnEntity(airblade);
-		
+
 	}
-	
+
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiAirblade(this, entity, bender);

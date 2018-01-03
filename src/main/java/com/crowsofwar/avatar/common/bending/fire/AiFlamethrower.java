@@ -16,53 +16,50 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
-
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AiFlamethrower extends BendingAi {
-	
+
 	protected AiFlamethrower(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		setMutexBits(2);
 	}
-	
+
 	@Override
 	public boolean shouldContinueExecuting() {
-		
+
 		if (entity.getAttackTarget() == null) return false;
-		
+
 		Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
 		entity.rotationYaw = (float) toDegrees(rotations.y());
 		entity.rotationPitch = (float) toDegrees(rotations.x());
-		
+
 		if (timeExecuting == 20) {
-			
+
 			BendingContext ctx = new BendingContext(bender.getData(), entity, bender, new Raytrace.Result());
-			
+
 			execAbility();
 			execStatusControl(StatusControl.START_FLAMETHROW);
-			
+
 		}
-		
+
 		if (timeExecuting > 20) {
 			BendingContext ctx = new BendingContext(bender.getData(), entity, bender, new Raytrace.Result());
 			TickHandler.FLAMETHROWER.tick(ctx);
@@ -72,18 +69,19 @@ public class AiFlamethrower extends BendingAi {
 			execStatusControl(StatusControl.STOP_FLAMETHROW);
 			return false;
 		}
-		
+
 		return true;
-		
+
 	}
-	
+
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSqToEntity(target) < 4 * 4;
 	}
-	
+
 	@Override
-	protected void startExec() {}
-	
+	protected void startExec() {
+	}
+
 }

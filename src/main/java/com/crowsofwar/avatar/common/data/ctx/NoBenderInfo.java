@@ -16,36 +16,35 @@
 */
 package com.crowsofwar.avatar.common.data.ctx;
 
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderInfo;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import java.util.UUID;
+
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class NoBenderInfo extends BenderInfo {
-	
+
 	@Override
 	public boolean isPlayer() {
 		return false;
 	}
-	
+
 	@Override
 	public UUID getId() {
 		return null;
 	}
-	
+
 	@Override
 	public Bender find(World world) {
 		return null;
 	}
-	
+
 	@Override
-	public void writeToNbt(NBTTagCompound nbt) {}
-	
+	public void writeToNbt(NBTTagCompound nbt) {
+	}
+
 }

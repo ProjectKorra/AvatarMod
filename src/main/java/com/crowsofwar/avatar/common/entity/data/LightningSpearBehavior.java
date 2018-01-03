@@ -38,8 +38,6 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- *
- *
  * @author CrowsOfWar
  */
 public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpear> {
@@ -63,16 +61,20 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		}
 
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
+		public void fromBytes(PacketBuffer buf) {
+		}
 
 		@Override
-		public void toBytes(PacketBuffer buf) {}
+		public void toBytes(PacketBuffer buf) {
+		}
 
 		@Override
-		public void load(NBTTagCompound nbt) {}
+		public void load(NBTTagCompound nbt) {
+		}
 
 		@Override
-		public void save(NBTTagCompound nbt) {}
+		public void save(NBTTagCompound nbt) {
+		}
 
 	}
 
@@ -90,7 +92,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				entity.onCollideWithSolid();
 			}
 
-			entity.addVelocity(Vector.DOWN.times(1/12000));
+			entity.addVelocity(Vector.DOWN.times(1 / 12000));
 
 			Vector direction = entity.velocity().toSpherical();
 			entity.rotationYaw = (float) Math.toDegrees(direction.y());
@@ -161,22 +163,27 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		}
 
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
+		public void fromBytes(PacketBuffer buf) {
+		}
 
 		@Override
-		public void toBytes(PacketBuffer buf) {}
+		public void toBytes(PacketBuffer buf) {
+		}
 
 		@Override
-		public void load(NBTTagCompound nbt) {}
+		public void load(NBTTagCompound nbt) {
+		}
 
 		@Override
-		public void save(NBTTagCompound nbt) {}
+		public void save(NBTTagCompound nbt) {
+		}
 
 	}
 
 	public static class PlayerControlled extends LightningSpearBehavior {
 
-		public PlayerControlled() {}
+		public PlayerControlled() {
+		}
 
 		@Override
 		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
@@ -203,21 +210,24 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				entity.setSize(size + 1);
 			}
 
-
 			return this;
 		}
 
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
+		public void fromBytes(PacketBuffer buf) {
+		}
 
 		@Override
-		public void toBytes(PacketBuffer buf) {}
+		public void toBytes(PacketBuffer buf) {
+		}
 
 		@Override
-		public void load(NBTTagCompound nbt) {}
+		public void load(NBTTagCompound nbt) {
+		}
 
 		@Override
-		public void save(NBTTagCompound nbt) {}
+		public void save(NBTTagCompound nbt) {
+		}
 
 	}
 

@@ -21,22 +21,23 @@ import com.crowsofwar.avatar.common.data.DataCategory;
 import net.minecraft.entity.EntityLivingBase;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityBenderData extends BendingData {
-	
+
 	private final EntityLivingBase entity;
-	
+
 	public EntityBenderData(EntityLivingBase entity) {
-		super(dataCategory -> {}, () -> {});
+		super(dataCategory -> {
+		}, () -> {
+		});
 		// Entities are saved automatically; no dirty flag etc.
 
 		this.entity = entity;
 	}
 
 	@Override
-	public void save(DataCategory category) {}
+	public void save(DataCategory category) {
+	}
 
 }

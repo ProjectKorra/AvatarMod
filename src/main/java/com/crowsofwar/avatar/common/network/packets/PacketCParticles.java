@@ -18,25 +18,23 @@
 package com.crowsofwar.avatar.common.network.packets;
 
 import com.crowsofwar.avatar.common.network.PacketRedirector;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class PacketCParticles extends AvatarPacket<PacketCParticles> {
-	
+
 	private EnumParticleTypes particle;
 	private int minimum, maximum;
 	private double x, y, z;
 	private double maxVelocityX, maxVelocityY, maxVelocityZ;
-	
-	public PacketCParticles() {}
-	
+
+	public PacketCParticles() {
+	}
+
 	/**
 	 * @param particle
 	 * @param minimum
@@ -49,7 +47,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	 * @param maxVelocityZ
 	 */
 	public PacketCParticles(EnumParticleTypes particle, int minimum, int maximum, double x, double y,
-			double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ) {
+							double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ) {
 		this.particle = particle;
 		this.minimum = minimum;
 		this.maximum = maximum;
@@ -60,7 +58,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 		this.maxVelocityY = maxVelocityY;
 		this.maxVelocityZ = maxVelocityZ;
 	}
-	
+
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		particle = EnumParticleTypes.values()[buf.readInt()];
@@ -73,7 +71,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 		maxVelocityY = buf.readDouble();
 		maxVelocityZ = buf.readDouble();
 	}
-	
+
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
 		buf.writeInt(particle.ordinal());
@@ -86,51 +84,51 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 		buf.writeDouble(maxVelocityY);
 		buf.writeDouble(maxVelocityZ);
 	}
-	
+
 	@Override
 	protected Side getReceivedSide() {
 		return Side.CLIENT;
 	}
-	
+
 	@Override
 	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketCParticles> getPacketHandler() {
 		return PacketRedirector::redirectMessage;
 	}
-	
+
 	public EnumParticleTypes getParticle() {
 		return particle;
 	}
-	
+
 	public int getMinimum() {
 		return minimum;
 	}
-	
+
 	public int getMaximum() {
 		return maximum;
 	}
-	
+
 	public double getX() {
 		return x;
 	}
-	
+
 	public double getY() {
 		return y;
 	}
-	
+
 	public double getZ() {
 		return z;
 	}
-	
+
 	public double getMaxVelocityX() {
 		return maxVelocityX;
 	}
-	
+
 	public double getMaxVelocityY() {
 		return maxVelocityY;
 	}
-	
+
 	public double getMaxVelocityZ() {
 		return maxVelocityZ;
 	}
-	
+
 }

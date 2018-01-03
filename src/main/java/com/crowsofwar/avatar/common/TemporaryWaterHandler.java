@@ -16,50 +16,48 @@
 */
 package com.crowsofwar.avatar.common;
 
-import java.util.Iterator;
-import java.util.List;
-
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.TemporaryWaterLocation;
-
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * A hacky workaround to manage a temporary water block at a position. The water
  * block will flow outwards. Creating a flowing water block (which would
  * naturally disappear) still wouldn't work since it wouldn't flow outwards.
- * 
+ *
  * @author CrowsOfWar
  */
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class TemporaryWaterHandler {
-	
+
 	@SubscribeEvent
 	public static void onTick(WorldTickEvent e) {
 		if (e.phase == Phase.START && e.side == Side.SERVER) {
-			
+
 			World world = e.world;
 			AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
-			
+
 			List<TemporaryWaterLocation> twls = wd.geTemporaryWaterLocations();
 			Iterator<TemporaryWaterLocation> iterator = twls.iterator();
-			
+
 			while (iterator.hasNext()) {
-				
+
 				TemporaryWaterLocation twl = iterator.next();
-				
+
 				if (twl.getDimension() == world.provider.getDimension()) {
-					
+
 					twl.decrementTicks();
 					if (twl.getTicks() <= 0) {
 						BlockPos pos = twl.getPos();
@@ -68,15 +66,15 @@ public class TemporaryWaterHandler {
 							// world.setBlockToAir(pos);
 							world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 						}
-						
+
 						iterator.remove();
 					}
-					
+
 				}
-				
+
 			}
-			
+
 		}
 	}
-	
+
 }

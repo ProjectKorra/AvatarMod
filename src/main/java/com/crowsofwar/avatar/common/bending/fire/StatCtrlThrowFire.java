@@ -27,33 +27,30 @@ import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.EntityLivingBase;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class StatCtrlThrowFire extends StatusControl {
-	
+
 	public StatCtrlThrowFire() {
 		super(6, AvatarControl.CONTROL_LEFT_CLICK_DOWN, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
-	
+
 	@Override
 	public boolean execute(BendingContext ctx) {
-		
+
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		Bender bender = ctx.getBender();
-		
+
 		EntityFireArc fire = AvatarEntity.lookupEntity(ctx.getWorld(), EntityFireArc.class, //
 				arc -> arc.getBehavior() instanceof FireArcBehavior.PlayerControlled
 						&& arc.getOwner() == ctx.getBenderEntity());
-		
+
 		if (fire != null) {
-			
+
 			AbilityData abilityData = data.getAbilityData("fire_arc");
 
 			double powerRating = bender.calcPowerRating(Firebending.ID);
@@ -65,12 +62,12 @@ public class StatCtrlThrowFire extends StatusControl {
 			force = force.times(velocity);
 			fire.addVelocity(force);
 			fire.setBehavior(new FireArcBehavior.Thrown());
-			
+
 			return true;
-			
+
 		}
-		
+
 		return false;
 	}
-	
+
 }

@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 /**
  * Manages lightning hurting nearby entities when in water, by using a flood-fill algorithm,
  * where some computation is done each tick.
- *
+ * <p>
  * This should be used on the server side
  *
  * @author CrowsOfWar

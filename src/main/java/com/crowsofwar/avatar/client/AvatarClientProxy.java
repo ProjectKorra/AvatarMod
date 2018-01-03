@@ -72,35 +72,35 @@ import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerE
 
 @SideOnly(Side.CLIENT)
 public class AvatarClientProxy implements AvatarCommonProxy {
-	
+
 	private Minecraft mc;
 	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;
 	private PlayerDataFetcher<AvatarPlayerData> clientFetcher;
 	private boolean displayedMainMenu;
 	private List<KeyBinding> allKeybindings;
-	
+
 	@Override
 	public void preInit() {
 		mc = Minecraft.getMinecraft();
-		
+
 		displayedMainMenu = false;
-		
+
 		packetHandler = new PacketHandlerClient();
 		AvatarUiRenderer.instance = new AvatarUiRenderer();
-		
+
 		inputHandler = new ClientInput();
 		MinecraftForge.EVENT_BUS.register(inputHandler);
 		MinecraftForge.EVENT_BUS.register(AvatarUiRenderer.instance);
 		MinecraftForge.EVENT_BUS.register(this);
 		AvatarInventoryOverride.register();
 		AvatarFovChanger.register();
-		
+
 		clientFetcher = new PlayerDataFetcherClient<>(AvatarPlayerData.class, (data) -> {
 			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
 			AvatarLog.debug("Client: Requesting data for " + data.getPlayerEntity() + "");
 		});
-		
+
 		registerEntityRenderingHandler(EntityFloatingBlock.class, RenderFloatingBlock::new);
 		registerEntityRenderingHandler(EntityFireArc.class, RenderFireArc::new);
 		registerEntityRenderingHandler(EntityWaterArc.class, RenderWaterArc::new);
@@ -136,19 +136,19 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 				rm -> new RenderHumanBender(rm, "firebender", 1));
 		registerEntityRenderingHandler(EntityWaterbender.class,
 				rm -> new RenderHumanBender(rm, "airbender", 1));
-		
+
 	}
 
 	@Override
 	public IControlsHandler getKeyHandler() {
 		return inputHandler;
 	}
-	
+
 	@Override
 	public IPacketHandler getClientPacketHandler() {
 		return packetHandler;
 	}
-	
+
 	@Override
 	public double getPlayerReach() {
 		PlayerControllerMP pc = mc.playerController;
@@ -156,23 +156,23 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		if (pc.extendedReach()) reach = 6;
 		return reach;
 	}
-	
+
 	@Override
 	public void init() {
-		
+
 		ParticleManager pm = mc.effectRenderer;
-		
+
 		if (CLIENT_CONFIG.useCustomParticles) {
 			pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(),
 					AvatarParticleFlames::new);
 			pm.registerParticle(AvatarParticles.getParticleAir().getParticleID(), AvatarParticleAir::new);
 		}
-		
+
 	}
-	
+
 	@Override
 	public AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z) {
-		
+
 		if (AvatarGuiHandler.isBendingGui(id)) {
 			return new SkillsGui(AvatarGuiHandler.getBendingId(id));
 		}
@@ -181,9 +181,9 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			int bisonId = x;
 			EntitySkyBison bison = EntitySkyBison.findBison(world, bisonId);
 			if (bison != null) {
-				
+
 				return new GuiBisonChest(player.inventory, bison);
-				
+
 			} else {
 				AvatarLog.warn(WarningType.WEIRD_PACKET, player.getName()
 						+ " tried to open skybison inventory, was not found. BisonId: " + bisonId);
@@ -192,25 +192,25 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		if (id == AvatarGuiHandler.GUI_ID_GET_BENDING) {
 			return new GetBendingGui(player);
 		}
-		
+
 		return null;
 	}
-	
+
 	@Override
 	public PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher() {
 		return clientFetcher;
 	}
-	
+
 	@Override
 	public IThreadListener getClientThreadListener() {
 		return mc;
 	}
-	
+
 	@Override
 	public int getParticleAmount() {
 		return mc.gameSettings.particleSetting;
 	}
-	
+
 	@SubscribeEvent
 	public void onMainMenu(GuiOpenEvent e) {
 
@@ -228,14 +228,14 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			displayedMainMenu = true;
 		}
 	}
-	
+
 	@Override
 	public KeybindingWrapper createKeybindWrapper(String keybindName) {
-		
+
 		if (allKeybindings == null) {
 			initAllKeybindings();
 		}
-		
+
 		KeyBinding kb = null;
 		for (KeyBinding candidate : allKeybindings) {
 			if (candidate.getKeyDescription().equals(keybindName)) {
@@ -243,9 +243,9 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 				break;
 			}
 		}
-		
+
 		return kb == null ? new KeybindingWrapper() : new ClientKeybindWrapper(kb);
-		
+
 	}
 
 	@Override
@@ -264,17 +264,17 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	 */
 	private void initAllKeybindings() {
 		try {
-			
+
 			Field field = KeyBinding.class.getDeclaredFields()[0];
 			field.setAccessible(true);
 			Map<String, KeyBinding> kbMap = (Map<String, KeyBinding>) field.get(null);
 			this.allKeybindings = kbMap.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
-			
+
 		} catch (Exception ex) {
 			AvatarLog.error(
 					"Could not load all keybindings list by using reflection. Will probably have serious problems",
 					ex);
 		}
 	}
-	
+
 }

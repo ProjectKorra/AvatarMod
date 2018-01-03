@@ -30,17 +30,16 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 /**
  * Holds information for the RadialMenu about a segment. Contains information on
  * its rotation (position), and whether it's clicked.
- *
  */
 public class RadialSegment extends Gui {
-	
+
 	private final RadialMenu gui;
 	private final MenuTheme theme;
 	private final Minecraft mc;
 	private final float angle;
 	private final int index;
 	private final Ability ability;
-	
+
 	public RadialSegment(RadialMenu gui, MenuTheme theme, int index, Ability ability) {
 		this.gui = gui;
 		this.angle = 22.5f + index * 45;
@@ -49,16 +48,16 @@ public class RadialSegment extends Gui {
 		this.theme = theme;
 		this.mc = Minecraft.getMinecraft();
 	}
-	
+
 	/**
 	 * Returns whether the mouse is currently hovering
-	 * 
+	 *
 	 * @param mouseX
 	 * @param mouseY
 	 * @return
 	 */
 	public boolean isMouseHover(int mouseX, int mouseY, ScaledResolution resolution) {
-		
+
 		int mouseCenteredX = mouseX - resolution.getScaledWidth() / 2;
 		int mouseCenteredY = mouseY - resolution.getScaledHeight() / 2;
 		double r = Math.sqrt(mouseCenteredX * mouseCenteredX + mouseCenteredY * mouseCenteredY)
@@ -73,17 +72,17 @@ public class RadialSegment extends Gui {
 			addCurrentAngle = true;
 		}
 		if (addCurrentAngle) currentAngle += 360;
-		
+
 		return r >= 100 && r <= 300 && currentAngle >= minAngle && currentAngle <= maxAngle;
 	}
-	
+
 	public float getAngle() {
 		return angle;
 	}
-	
+
 	/**
 	 * Draw this radial segment.
-	 * 
+	 *
 	 * @param hover
 	 *            Whether mouse is over it
 	 * @param resolution

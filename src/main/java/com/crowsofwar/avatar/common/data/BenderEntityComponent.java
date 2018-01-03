@@ -17,7 +17,9 @@ public class BenderEntityComponent extends Bender {
 
 	public BenderEntityComponent(EntityBender entity) {
 		this.entity = entity;
-		this.data = new BendingData(category -> {}, () -> {}); // mc automatically saves entity
+		this.data = new BendingData(category -> {
+		}, () -> {
+		}); // mc automatically saves entity
 	}
 
 	@Override

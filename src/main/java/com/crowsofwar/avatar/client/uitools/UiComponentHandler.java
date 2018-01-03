@@ -16,52 +16,51 @@
 */
 package com.crowsofwar.avatar.client.uitools;
 
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
-import static net.minecraft.client.Minecraft.getMinecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.client.config.GuiUtils;
+import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.lwjgl.input.Mouse;
-
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.fml.client.config.GuiUtils;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
+import static net.minecraft.client.Minecraft.getMinecraft;
 
 /**
  * Handles calls to all UI components, so they don't need to be worried about
  * outside their instantiation.
- * 
+ *
  * @author CrowsOfWar
  */
 public class UiComponentHandler {
-	
+
 	private final List<UiComponent> components;
-	
+
 	public UiComponentHandler() {
 		components = new ArrayList<>();
 	}
-	
+
 	public UiComponentHandler(UiComponent... components) {
 		this();
 		this.components.addAll(Arrays.asList(components));
 	}
-	
+
 	public void add(UiComponent component) {
 		components.add(component);
 	}
-	
+
 	public void draw(float partialTicks, float mouseX, float mouseY) {
-		
+
 		List<String> tooltip = null;
-		
+
 		for (UiComponent component : components) {
 			component.draw(partialTicks, mouseX, mouseY);
-			
+
 			if (component.isVisible()) {
 				float mx2 = Mouse.getX();
 				float my2 = screenHeight() - Mouse.getY();
-				
+
 				Measurement coords = component.coordinates();
 				if (mx2 >= coords.xInPixels() && mx2 <= coords.xInPixels() + component.width()) {
 					if (my2 >= coords.yInPixels() && my2 <= coords.yInPixels() + component.height()) {
@@ -72,30 +71,30 @@ public class UiComponentHandler {
 					}
 				}
 			}
-			
+
 		}
-		
+
 		if (tooltip != null) {
-			
+
 			int width = screenWidth() / scaleFactor();
 			int height = screenHeight() / scaleFactor();
-			
+
 			GuiUtils.drawHoveringText(tooltip, (int) mouseX, (int) mouseY, width, height, -1,
 					getMinecraft().fontRenderer);
 			GlStateManager.disableLighting();
-			
+
 		}
-		
+
 	}
-	
+
 	public void click(float x, float y, int button) {
 		for (UiComponent component : components)
 			component.mouseClicked(x, y, button);
 	}
-	
+
 	public void type(int key) {
 		for (UiComponent component : components)
 			component.keyPressed(key);
 	}
-	
+
 }

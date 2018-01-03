@@ -33,65 +33,63 @@ import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AiWave extends BendingAi {
-	
+
 	protected AiWave(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 	}
-	
+
 	@Override
 	protected boolean shouldExec() {
-		
+
 		EntityLivingBase target = entity.getAttackTarget();
 		if (target != null && target.isInWater()) {
-			
+
 			if (isAtEdgeOfWater()) {
 				return true;
 			}
-			
+
 		}
-		
+
 		return false;
-		
+
 	}
-	
+
 	@Override
 	protected void startExec() {
 		shouldContinueExecuting();
 	}
-	
+
 	@Override
 	public boolean shouldContinueExecuting() {
-		
+
 		EntityLivingBase target = entity.getAttackTarget();
 		if (target != null && target.isInWater()) {
 			entity.getLookHelper().setLookPosition(target.posX, target.posY, target.posZ, 10, 10);
-			
+
 			if (timeExecuting >= 40) {
-				
+
 				Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(target));
 				entity.rotationYaw = (float) toDegrees(rotations.y());
 				entity.rotationPitch = (float) toDegrees(rotations.x());
-				
+
 				execAbility();
 				return false;
-				
+
 			}
-			
+
 			return true;
-			
+
 		}
-		
+
 		return false;
-		
+
 	}
-	
+
 	private boolean isAtEdgeOfWater() {
-		
+
 		World world = entity.world;
 		Vector look = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()))
 				.withY(0);
@@ -100,20 +98,20 @@ public class AiWave extends BendingAi {
 						.minusY(1),
 				look, 4, (pos, blockState) -> blockState.getBlock() == Blocks.WATER);
 		if (result.hitSomething()) {
-			
+
 			VectorI pos = result.getPos();
 			IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
 			IBlockState up = world.getBlockState(pos.toBlockPos().up());
-			
+
 			for (int i = 0; i < 3; i++) {
 				if (world.getBlockState(pos.toBlockPos().up()).getBlock() == Blocks.AIR) {
 					return true;
 				}
 			}
-			
+
 		}
 		return false;
-		
+
 	}
-	
+
 }

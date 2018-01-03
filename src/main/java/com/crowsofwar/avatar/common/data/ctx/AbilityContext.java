@@ -25,12 +25,10 @@ import com.crowsofwar.avatar.common.util.Raytrace.Result;
 import net.minecraft.entity.EntityLivingBase;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AbilityContext extends BendingContext {
-	
+
 	private final Ability ability;
 	private final double powerRating;
 
@@ -40,26 +38,26 @@ public class AbilityContext extends BendingContext {
 		this.ability = ability;
 		this.powerRating = powerRating;
 	}
-	
+
 	public AbilityContext(BendingData data, EntityLivingBase entity, Bender bender, Result raytrace,
 						  Ability ability, double powerRating) {
 		super(data, entity, bender, raytrace);
 		this.ability = ability;
 		this.powerRating = powerRating;
 	}
-	
+
 	public AbilityData getAbilityData() {
 		return getData().getAbilityData(ability);
 	}
-	
+
 	public int getLevel() {
 		return getAbilityData().getLevel();
 	}
-	
+
 	public AbilityTreePath getPath() {
 		return getAbilityData().getPath();
 	}
-	
+
 	/**
 	 * Returns true if ability is on level 4 and has selected that path.
 	 */
@@ -77,9 +75,9 @@ public class AbilityContext extends BendingContext {
 	/**
 	 * Gets the power rating, but in the range 0.25 to 2.0 for convenience in damage calculations.
 	 * <ul>
-	 *     <li>-100 power rating gives 0.25; damage would be 1/4 of normal</li>
-	 *     <li>0 power rating gives 1; damage would be the same as normal</li>
-	 *     <li>100 power rating gives 2; damage would be twice as much as usual</li>
+	 * <li>-100 power rating gives 0.25; damage would be 1/4 of normal</li>
+	 * <li>0 power rating gives 1; damage would be the same as normal</li>
+	 * <li>100 power rating gives 2; damage would be twice as much as usual</li>
 	 */
 	public double getPowerRatingDamageMod() {
 		return getBender().getDamageMult(ability.getBendingId());

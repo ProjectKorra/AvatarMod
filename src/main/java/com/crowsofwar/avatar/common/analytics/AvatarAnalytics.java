@@ -114,7 +114,7 @@ public class AvatarAnalytics {
 		synchronized (queuedEvents) {
 			queuedEvents.clear();
 		}
-		
+
 	}
 
 	/**
@@ -195,7 +195,6 @@ public class AvatarAnalytics {
 			}
 
 		}
-
 
 	}
 

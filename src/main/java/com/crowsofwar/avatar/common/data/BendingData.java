@@ -40,6 +40,40 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 public class BendingData {
 
 	private static final int CURRENT_SAVE_VERSION = 1;
+	private final Consumer<DataCategory> saveCategory;
+	private final Runnable saveAll;
+	private final Set<UUID> bendings;
+	private final Set<StatusControl> statusControls;
+	private final Map<String, AbilityData> abilityData;
+	private final Set<TickHandler> tickHandlers;
+	private final Map<TickHandler, Integer> tickHandlerDuration;
+	private BattlePerformanceScore performance;
+	private UUID activeBending;
+	private Chi chi;
+	private MiscData miscData;
+	private Map<UUID, PowerRatingManager> powerRatingManagers;
+	private Vision vision;
+	/**
+	 * Create a new BendingData
+	 *
+	 * @param saveCategory Function to save data in one category
+	 * @param saveAll      Function to save all data
+	 */
+	public BendingData(Consumer<DataCategory> saveCategory, Runnable saveAll) {
+		this.saveCategory = saveCategory;
+		this.saveAll = saveAll;
+
+		bendings = new HashSet<>();
+		statusControls = new HashSet<>();
+		abilityData = new HashMap<>();
+		tickHandlers = new HashSet<>();
+		tickHandlerDuration = new HashMap<>();
+		activeBending = null;
+		chi = new Chi(this);
+		miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
+		powerRatingManagers = new HashMap<>();
+		performance = new BattlePerformanceScore(this);
+	}
 
 	// static methods
 	@Nonnull
@@ -73,43 +107,6 @@ public class BendingData {
 				return null;
 			}
 		}
-	}
-
-	private final Consumer<DataCategory> saveCategory;
-	private final Runnable saveAll;
-
-	private final Set<UUID> bendings;
-	private final Set<StatusControl> statusControls;
-	private final Map<String, AbilityData> abilityData;
-	private final Set<TickHandler> tickHandlers;
-	private final Map<TickHandler, Integer> tickHandlerDuration;
-	private BattlePerformanceScore performance;
-	private UUID activeBending;
-	private Chi chi;
-	private MiscData miscData;
-	private Map<UUID, PowerRatingManager> powerRatingManagers;
-	private Vision vision;
-
-	/**
-	 * Create a new BendingData
-	 *
-	 * @param saveCategory Function to save data in one category
-	 * @param saveAll      Function to save all data
-	 */
-	public BendingData(Consumer<DataCategory> saveCategory, Runnable saveAll) {
-		this.saveCategory = saveCategory;
-		this.saveAll = saveAll;
-
-		bendings = new HashSet<>();
-		statusControls = new HashSet<>();
-		abilityData = new HashMap<>();
-		tickHandlers = new HashSet<>();
-		tickHandlerDuration = new HashMap<>();
-		activeBending = null;
-		chi = new Chi(this);
-		miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
-		powerRatingManagers = new HashMap<>();
-		performance = new BattlePerformanceScore(this);
 	}
 
 	// ================================================================================
@@ -167,13 +164,13 @@ public class BendingData {
 		return bendings.stream().map(BendingStyles::get).collect(Collectors.toList());
 	}
 
-	public List<UUID> getAllBendingIds() {
-		return new ArrayList<>(bendings);
-	}
-
 	public void setAllBending(List<BendingStyle> bending) {
 		List<UUID> bendingIds = bending.stream().map(BendingStyle::getId).collect(Collectors.toList());
 		setAllBendingIds(bendingIds);
+	}
+
+	public List<UUID> getAllBendingIds() {
+		return new ArrayList<>(bendings);
 	}
 
 	public void setAllBendingIds(List<UUID> bendingIds) {
@@ -203,16 +200,16 @@ public class BendingData {
 		return activeBending;
 	}
 
-	@Nullable
-	public BendingStyle getActiveBending() {
-		return BendingStyles.get(getActiveBendingId());
-	}
-
 	public void setActiveBendingId(UUID id) {
 		if (bendings.contains(id)) {
 			activeBending = id;
 			save(DataCategory.ACTIVE_BENDING);
 		}
+	}
+
+	@Nullable
+	public BendingStyle getActiveBending() {
+		return BendingStyles.get(getActiveBendingId());
 	}
 
 	public void setActiveBending(BendingStyle bending) {
@@ -474,7 +471,7 @@ public class BendingData {
 		return vision;
 	}
 
-	public void setVision(@Nullable  Vision vision) {
+	public void setVision(@Nullable Vision vision) {
 		if (this.vision != vision) {
 			this.vision = vision;
 			save(DataCategory.VISION);

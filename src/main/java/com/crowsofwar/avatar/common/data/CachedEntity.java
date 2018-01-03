@@ -31,33 +31,38 @@ import java.util.UUID;
 /**
  * Represents an entity which is stored by its UUID but also cached for
  * performance. Can also store no entity.
- * 
+ *
  * @author CrowsOfWar
  */
 public class CachedEntity<T extends Entity> {
-	
+
 	private T cachedEntity;
 	private UUID entityId;
-	
+
 	public CachedEntity(@Nullable UUID id) {
 		this.entityId = id;
+	}
+
+	private static UUID getId(Entity entity) {
+		return entity instanceof EntityPlayer ? AccountUUIDs.getId(entity.getName()).getUUID()
+				: entity.getUniqueID();
 	}
 
 	public void readFromNbt(NBTTagCompound nbt) {
 		entityId = nbt.getBoolean("NoEntity") ? null : nbt.getUniqueId("EntityUuid");
 	}
-	
+
 	public void writeToNbt(NBTTagCompound nbt) {
 		nbt.setBoolean("NoEntity", entityId == null);
 		if (entityId != null) {
 			nbt.setUniqueId("EntityUuid", entityId);
 		}
 	}
-	
+
 	public void fromBytes(ByteBuf buf) {
 		entityId = buf.readBoolean() ? null : new UUID(buf.readLong(), buf.readLong());
 	}
-	
+
 	public void toBytes(ByteBuf buf) {
 		buf.writeBoolean(entityId == null);
 		if (entityId != null) {
@@ -70,11 +75,11 @@ public class CachedEntity<T extends Entity> {
 	public UUID getEntityId() {
 		return entityId;
 	}
-	
+
 	public void setEntityId(@Nullable UUID entityId) {
 		this.entityId = entityId;
 	}
-	
+
 	/**
 	 * Finds the entity through the cache or searching for it.
 	 */
@@ -87,26 +92,21 @@ public class CachedEntity<T extends Entity> {
 		}
 		return cachedEntity;
 	}
-	
+
 	public void setEntity(@Nullable T entity) {
 		cachedEntity = entity;
 		entityId = entity == null ? null : getId(entity);
 	}
-	
+
 	/**
 	 * Checks whether the cached entity is invalid (null or dead). If so, sets
 	 * to null and returns true. Else returns false.
-	 * 
+	 *
 	 * @return whether cache is invalid; if true the cached entity is null
 	 */
 	private boolean isCacheInvalid() {
 		return cachedEntity == null || cachedEntity.isDead || cachedEntity.getUniqueID() !=
 				entityId;
 	}
-	
-	private static UUID getId(Entity entity) {
-		return entity instanceof EntityPlayer ? AccountUUIDs.getId(entity.getName()).getUUID()
-				: entity.getUniqueID();
-	}
-	
+
 }

@@ -38,58 +38,60 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public abstract class FireballBehavior extends Behavior<EntityFireball> {
-	
+
 	public static final DataSerializer<FireballBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
-	
+
 	public static int ID_NOTHING, ID_FALL, ID_PICKUP, ID_PLAYER_CONTROL, ID_THROWN;
-	
+
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
 		ID_NOTHING = registerBehavior(Idle.class);
 		ID_PLAYER_CONTROL = registerBehavior(PlayerControlled.class);
 		ID_THROWN = registerBehavior(Thrown.class);
 	}
-	
+
 	public static class Idle extends FireballBehavior {
-		
+
 		@Override
 		public FireballBehavior onUpdate(EntityFireball entity) {
 			return this;
 		}
-		
+
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
+		public void fromBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
+		public void toBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void load(NBTTagCompound nbt) {}
-		
+		public void load(NBTTagCompound nbt) {
+		}
+
 		@Override
-		public void save(NBTTagCompound nbt) {}
-		
+		public void save(NBTTagCompound nbt) {
+		}
+
 	}
-	
+
 	public static class Thrown extends FireballBehavior {
-		
+
 		int time = 0;
-		
+
 		@Override
 		public FireballBehavior onUpdate(EntityFireball entity) {
-			
+
 			time++;
-			
+
 			if (entity.isCollided || (!entity.world.isRemote && time > 100)) {
 				entity.setDead();
 				entity.onCollideWithSolid();
 			}
-			
+
 			entity.addVelocity(Vector.DOWN.times(9.81 / 40));
 
 			World world = entity.world;
@@ -105,14 +107,14 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 						motion = motion.times(0.3).withY(0.08);
 						collided.addVelocity(motion.x(), motion.y(), motion.z());
 					}
-					
+
 				}
 			}
-			
+
 			return this;
-			
+
 		}
-		
+
 		private void collision(EntityLivingBase collided, EntityFireball entity) {
 			double speed = entity.velocity().magnitude();
 
@@ -126,44 +128,49 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			Vector motion = entity.velocity().dividedBy(20);
 			motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.08);
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
-			
+
 			BendingData data = Bender.get(entity.getOwner()).getData();
 			if (!collided.world.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.fireballHit;
 				data.getAbilityData("fireball").addXp(xp);
 			}
-			
+
 			// Remove the fireball & spawn particles
 			if (!entity.world.isRemote) entity.setDead();
 			entity.onCollideWithSolid();
 		}
-		
+
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
+		public void fromBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
+		public void toBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void load(NBTTagCompound nbt) {}
-		
+		public void load(NBTTagCompound nbt) {
+		}
+
 		@Override
-		public void save(NBTTagCompound nbt) {}
-		
+		public void save(NBTTagCompound nbt) {
+		}
+
 	}
-	
+
 	public static class PlayerControlled extends FireballBehavior {
-		
-		public PlayerControlled() {}
-		
+
+		public PlayerControlled() {
+		}
+
 		@Override
 		public FireballBehavior onUpdate(EntityFireball entity) {
 			EntityLivingBase owner = entity.getOwner();
-			
+
 			if (owner == null) return this;
-			
+
 			BendingData data = Bender.get(owner).getData();
-			
+
 			double yaw = Math.toRadians(owner.rotationYaw);
 			double pitch = Math.toRadians(owner.rotationPitch);
 			Vector forward = Vector.toRectangular(yaw, pitch);
@@ -171,29 +178,33 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			Vector target = forward.times(2).plus(eye);
 			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
 			entity.setVelocity(motion);
-			
+
 			if (data.getAbilityData("fireball").isMasterPath(AbilityTreePath.SECOND)) {
 				int size = entity.getSize();
 				if (size < 60 && entity.ticksExisted % 4 == 0) {
 					entity.setSize(size + 1);
 				}
 			}
-			
+
 			return this;
 		}
-		
+
 		@Override
-		public void fromBytes(PacketBuffer buf) {}
-		
+		public void fromBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void toBytes(PacketBuffer buf) {}
-		
+		public void toBytes(PacketBuffer buf) {
+		}
+
 		@Override
-		public void load(NBTTagCompound nbt) {}
-		
+		public void load(NBTTagCompound nbt) {
+		}
+
 		@Override
-		public void save(NBTTagCompound nbt) {}
-		
+		public void save(NBTTagCompound nbt) {
+		}
+
 	}
-	
+
 }

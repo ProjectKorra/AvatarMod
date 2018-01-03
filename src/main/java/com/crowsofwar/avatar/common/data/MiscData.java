@@ -23,8 +23,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import javax.annotation.Nonnull;
 
 /**
- *
- *
  * @author CrowsOfWar
  */
 public class MiscData {
@@ -100,7 +98,8 @@ public class MiscData {
 	}
 
 	public void setFallAbsorption(float fallAbsorption) {
-		if (fallAbsorption == 0 || fallAbsorption > this.fallAbsorption) this.fallAbsorption = fallAbsorption;
+		if (fallAbsorption == 0 || fallAbsorption > this.fallAbsorption)
+			this.fallAbsorption = fallAbsorption;
 	}
 
 	public void addFallAbsorption(float fallAbsorption) {

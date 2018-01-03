@@ -24,14 +24,12 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class GuiButtonScrolls extends GuiButton {
-	
+
 	private final Slot scrollSlot;
-	
+
 	public GuiButtonScrolls(Container container, int buttonId, int x, int y) {
 		super(buttonId, x, y, 18, 18, "");
 		this.scrollSlot = container.inventorySlots.get(0);
@@ -40,26 +38,26 @@ public class GuiButtonScrolls extends GuiButton {
 	// drawButton
 	@Override
 	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
-		
+
 		this.enabled = scrollSlot.getHasStack();
-		
+
 		if (this.visible) {
-			
+
 			FontRenderer fontrenderer = mc.fontRenderer;
 			mc.getTextureManager().bindTexture(AvatarUiTextures.skillsGui);
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			this.hovered = mouseX >= x && mouseY >= y
 					&& mouseX < x + this.width && mouseY < y + this.height;
-			
+
 			int offset = this.getHoverState(this.hovered);
-			
+
 			GlStateManager.enableBlend();
 			GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
 					GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
 					GlStateManager.DestFactor.ZERO);
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
 					GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			
+
 			//@formatter:off
 			
 			drawTexturedModalRect(x, y,
@@ -67,11 +65,11 @@ public class GuiButtonScrolls extends GuiButton {
 					width, height);
 			
 			//@formatter:on
-			
+
 			mouseDragged(mc, mouseX, mouseY);
-			
+
 			int j = 14737632;
-			
+
 			if (packedFGColour != 0) {
 				j = packedFGColour;
 			} else if (!this.enabled) {
@@ -79,9 +77,9 @@ public class GuiButtonScrolls extends GuiButton {
 			} else if (this.hovered) {
 				j = 16777120;
 			}
-			
+
 		}
-		
+
 	}
-	
+
 }

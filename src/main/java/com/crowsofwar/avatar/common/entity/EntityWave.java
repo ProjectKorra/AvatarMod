@@ -35,50 +35,50 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityWave extends AvatarEntity {
-	
+
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWave.class,
 			DataSerializers.FLOAT);
-	
+
 	private float damageMult;
 	private boolean createExplosion;
-	
+
 	public EntityWave(World world) {
 		super(world);
 		setSize(2, 2);
 		damageMult = 1;
 	}
-	
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_SIZE, 2f);
 	}
-	
+
 	public void setDamageMultiplier(float damageMult) {
 		this.damageMult = damageMult;
 	}
-	
+
 	public float getWaveSize() {
 		return dataManager.get(SYNC_SIZE);
 	}
-	
+
 	public void setWaveSize(float size) {
 		dataManager.set(SYNC_SIZE, size);
 	}
-	
+
 	@Override
 	public void onUpdate() {
 
 		super.onUpdate();
 
 		setSize(getWaveSize() * 0.75f, 2);
-		
+
 		EntityLivingBase owner = getOwner();
-		
+
 		Vector move = velocity().dividedBy(20);
 		Vector newPos = position().plus(move);
 		setPosition(newPos.x(), newPos.y(), newPos.z());
-		
+
 		if (!world.isRemote) {
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
 			for (Entity entity : collided) {
@@ -126,12 +126,12 @@ public class EntityWave extends AvatarEntity {
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		setDead();
 	}
-	
+
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		setDead();
 	}
-	
+
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;

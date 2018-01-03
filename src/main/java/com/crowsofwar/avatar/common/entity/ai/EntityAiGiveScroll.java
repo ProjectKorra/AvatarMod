@@ -31,23 +31,21 @@ import net.minecraft.world.World;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityAiGiveScroll extends EntityAIBase {
-	
+
 	private final EntityLiving entity;
 	private final ScrollType scrollType;
 	private EntityLivingBase target;
 	private int ticksExecuting;
-	
+
 	public EntityAiGiveScroll(EntityLiving entity, ScrollType scrollType) {
 		this.entity = entity;
 		this.scrollType = scrollType;
 		setMutexBits(1);
 	}
-	
+
 	/**
 	 * Starts giving scroll to the target and returns true. However, if this is
 	 * already executing, rejects and returns false.
@@ -59,32 +57,32 @@ public class EntityAiGiveScroll extends EntityAIBase {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean shouldExecute() {
 		return target != null && target.isEntityAlive() && entity.getAttackTarget() == null;
 	}
-	
+
 	@Override
 	public void startExecuting() {
 		ticksExecuting = 0;
 		entity.getLookHelper().setLookPositionWithEntity(target, 10, 10);
 	}
-	
+
 	@Override
 	public boolean shouldContinueExecuting() {
-		
+
 		entity.getLookHelper().setLookPosition(target.posX, target.posY + target.getEyeHeight(), target.posZ,
 				entity.getHorizontalFaceSpeed(), entity.getVerticalFaceSpeed());
-		
+
 		ticksExecuting++;
 		if (ticksExecuting >= 50) {
-			
+
 			World world = entity.world;
-			
+
 			Vector velocity = getEntityPos(target).minus(getEntityPos(entity)).normalize().times(0.3);
 			ItemStack scrollStack = new ItemStack(AvatarItems.itemScroll, 1, scrollType.id());
-			
+
 			EntityItem entityItem = new EntityItem(world, entity.posX, entity.posY + entity.getEyeHeight(),
 					entity.posZ, scrollStack);
 			entityItem.setDefaultPickupDelay();
@@ -92,15 +90,15 @@ public class EntityAiGiveScroll extends EntityAIBase {
 			entityItem.motionY = velocity.y();
 			entityItem.motionZ = velocity.z();
 			world.spawnEntity(entityItem);
-			
+
 			target = null;
 
 			AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onNpcTrade());
-			
+
 		}
-		
+
 		return shouldExecute();
-		
+
 	}
-	
+
 }

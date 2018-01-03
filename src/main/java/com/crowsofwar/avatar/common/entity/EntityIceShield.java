@@ -36,8 +36,6 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class EntityIceShield extends EntityShield {
@@ -47,17 +45,17 @@ public class EntityIceShield extends EntityShield {
 	private double damageMult;
 	private boolean targetMobs;
 	private float[] pitchAngles;
-	
+
 	public EntityIceShield(World world) {
 		super(world);
 	}
-	
+
 	public void shatter() {
-		
+
 		world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1,
 				1);
 		setDead();
-		
+
 		EntityLivingBase owner = getOwner();
 
 		// Shoot shards at mobs
@@ -80,7 +78,7 @@ public class EntityIceShield extends EntityShield {
 		}
 
 		shootShardsAround(owner, 4, pitchAngles, shardsLeft);
-		
+
 	}
 
 	@Override
@@ -109,7 +107,7 @@ public class EntityIceShield extends EntityShield {
 			owner.motionZ = this.motionZ;
 		}
 	}
-	
+
 	@Override
 	public void setDead() {
 		super.setDead();
@@ -147,7 +145,7 @@ public class EntityIceShield extends EntityShield {
 		}
 
 	}
-	
+
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
@@ -216,15 +214,12 @@ public class EntityIceShield extends EntityShield {
 	/**
 	 * Shoot ice shards around the entity.
 	 *
-	 * @param yawAngles
-	 *            Spacing for yaw angles
-	 * @param pitchAngles
-	 *            All of the pitch angles
-	 * @param shardsLimit
-	 *            Limit the number of ice shards to shoot. Note that the actual shards shot is
-	 *            also limited by the number of possible angles to shoot at (<code>yawAngles
-	 *            * pitchAngles.length</code>), so this acts as a limiter rather than the actual
-	 *            amount of shards to shoot.
+	 * @param yawAngles   Spacing for yaw angles
+	 * @param pitchAngles All of the pitch angles
+	 * @param shardsLimit Limit the number of ice shards to shoot. Note that the actual shards shot is
+	 *                    also limited by the number of possible angles to shoot at (<code>yawAngles
+	 *                    * pitchAngles.length</code>), so this acts as a limiter rather than the actual
+	 *                    amount of shards to shoot.
 	 */
 	private void shootShardsAround(EntityLivingBase shooter, int yawAngles, float[] pitchAngles,
 								   int shardsLimit) {

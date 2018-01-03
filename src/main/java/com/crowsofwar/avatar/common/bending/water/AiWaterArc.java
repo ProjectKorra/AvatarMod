@@ -33,14 +33,12 @@ import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class AiWaterArc extends BendingAi {
-	
+
 	private int timeExecuting;
-	
+
 	/**
 	 * @param ability
 	 * @param entity
@@ -51,23 +49,24 @@ public class AiWaterArc extends BendingAi {
 		timeExecuting = 0;
 		setMutexBits(3);
 	}
-	
+
 	@Override
-	protected void startExec() {}
-	
+	protected void startExec() {
+	}
+
 	@Override
 	public boolean shouldContinueExecuting() {
-		
+
 		EntityLivingBase target = entity.getAttackTarget();
 		if (target == null) return false;
-		
+
 		Vector targetRotations = getRotationTo(getEntityPos(entity), getEntityPos(target));
 		entity.rotationYaw = (float) toDegrees(targetRotations.y());
 		entity.rotationPitch = (float) toDegrees(targetRotations.x());
-		
+
 		entity.getLookHelper().setLookPosition(target.posX, target.posY + target.getEyeHeight(), target.posZ,
 				10, 10);
-		
+
 		if (timeExecuting == 20) {
 			BendingData data = bender.getData();
 			data.chi().setMaxChi(10);
@@ -76,7 +75,7 @@ public class AiWaterArc extends BendingAi {
 			execAbility();
 			data.getMiscData().setAbilityCooldown(80);
 		}
-		
+
 		if (timeExecuting >= 80) {
 			BendingData data = bender.getData();
 			execStatusControl(StatusControl.THROW_WATER);
@@ -85,33 +84,33 @@ public class AiWaterArc extends BendingAi {
 		} else {
 			return true;
 		}
-		
+
 	}
-	
+
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSqToEntity(target) > 4 * 4
 				&& bender.getData().getMiscData().getAbilityCooldown() == 0;
 	}
-	
+
 	@Override
 	public void updateTask() {
 		timeExecuting++;
 	}
-	
+
 	@Override
 	public void resetTask() {
-		
+
 		EntityWaterArc water = AvatarEntity.lookupEntity(entity.world, EntityWaterArc.class, //
 				arc -> arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled
 						&& arc.getOwner() == entity);
-		
+
 		if (water != null) {
 			water.setDead();
 			bender.getData().removeStatusControl(StatusControl.THROW_WATER);
 		}
-		
+
 	}
-	
+
 }

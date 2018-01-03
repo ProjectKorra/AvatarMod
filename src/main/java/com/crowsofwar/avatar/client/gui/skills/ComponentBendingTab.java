@@ -25,62 +25,60 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ComponentBendingTab extends UiComponent {
 
 	private final BendingStyle type;
 	private final boolean fullTab;
-	
+
 	private final ResourceLocation bendingIconLocation;
-	
+
 	public ComponentBendingTab(BendingStyle type, boolean fullTab) {
-		
+
 		bendingIconLocation = new ResourceLocation(
 				"avatarmod:textures/gui/tab/" + type.getName().toLowerCase() + ".png");
-		
+
 		this.type = type;
 		this.fullTab = fullTab;
-		
+
 	}
-	
+
 	@Override
 	protected void click(int button) {
 		AvatarMod.network.sendToServer(new PacketSSkillsMenu(type.getId()));
 	}
-	
+
 	@Override
 	protected float componentWidth() {
 		return 20;
 	}
-	
+
 	@Override
 	protected float componentHeight() {
 		return fullTab ? 23 : 20;
 	}
-	
+
 	@Override
 	protected void componentDraw(float partialTicks, boolean mouseHover) {
-		
+
 		// Draw tab image
 		mc.renderEngine.bindTexture(AvatarUiTextures.skillsGui);
 		int tabU = fullTab ? 236 : 216;
 		int tabV = mouseHover ? 23 : 0;
 		drawTexturedModalRect(0, 0, tabU, tabV, 20, fullTab ? 23 : 20);
-		
+
 		// Draw component image
 		mc.renderEngine.bindTexture(bendingIconLocation);
 		GlStateManager.pushMatrix();
-		
+
 		double iconScale = 0.75;
 		GlStateManager.translate((20 - 20 * iconScale) / 2, (20 - 20 * iconScale) / 2, 0);
 		GlStateManager.scale(20.0 / 256, 20.0 / 256, 1);
 		GlStateManager.scale(iconScale, iconScale, 1);
 		drawTexturedModalRect(0, fullTab ? -3 : 0, 0, 0, 256, 256);
 		GlStateManager.popMatrix();
-		
+
 	}
-	
+
 }

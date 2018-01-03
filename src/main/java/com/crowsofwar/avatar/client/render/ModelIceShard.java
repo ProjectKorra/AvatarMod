@@ -8,18 +8,18 @@ import net.minecraft.entity.Entity;
 /**
  * IceShard - CrowsOfWar<br />
  * Created using Tabula 5.1.0
- * 
+ *
  * @author model & code created by CrowsOfWar
  */
 public class ModelIceShard extends ModelBase {
-	
+
 	private static final int TEXTURE_SCALE = 3;
-	
+
 	public ModelRenderer spike;
 	public ModelRenderer bulb;
-	
+
 	public ModelIceShard() {
-		
+
 		this.textureWidth = 64;
 		this.textureHeight = 32;
 		this.bulb = new ModelRenderer(this, 0, 0);
@@ -29,13 +29,13 @@ public class ModelIceShard extends ModelBase {
 		this.spike.setRotationPoint(0.0F, 0.0F, 0.0F);
 		this.spike.addBox(0.0F, 0.0F, 0.0F, 1 * TEXTURE_SCALE, 1 * TEXTURE_SCALE, 6 * TEXTURE_SCALE, 0.0F);
 	}
-	
+
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-		
+
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(1f / TEXTURE_SCALE, 1f / TEXTURE_SCALE, 1f / TEXTURE_SCALE);
-		
+
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(this.bulb.offsetX, this.bulb.offsetY, this.bulb.offsetZ);
 		GlStateManager.translate(this.bulb.rotationPointX * f5, this.bulb.rotationPointY * f5,
@@ -47,11 +47,11 @@ public class ModelIceShard extends ModelBase {
 		this.bulb.render(f5);
 		GlStateManager.popMatrix();
 		this.spike.render(f5);
-		
+
 		GlStateManager.popMatrix();
-		
+
 	}
-	
+
 	/**
 	 * This is a helper function from Tabula to set the rotation of model parts
 	 */

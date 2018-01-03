@@ -30,7 +30,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Cancels any actions done when a player is in an ice prison or ice shield
- * 
+ *
  * @author CrowsOfWar
  */
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
@@ -56,7 +56,7 @@ public class IceActionCanceller {
 			entity.motionY = 0;
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onInteract(PlayerInteractEvent e) {
 		EntityPlayer player = e.getEntityPlayer();
@@ -66,5 +66,5 @@ public class IceActionCanceller {
 			}
 		}
 	}
-	
+
 }

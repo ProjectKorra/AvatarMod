@@ -16,11 +16,11 @@ public class CleansePowerModifier extends BuffPowerModifier {
 
 		double modifier = 15;
 		if (abilityData.getLevel() >= 2) {
-            modifier = 25;
-        }
-        if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-		    modifier = 40;
-        }
+			modifier = 25;
+		}
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			modifier = 40;
+		}
 
 		return modifier;
 
@@ -28,7 +28,7 @@ public class CleansePowerModifier extends BuffPowerModifier {
 
 	@Override
 	protected Vision[] getVisions() {
-		return new Vision[] { Vision.CLEANSE_WEAK, Vision.CLEANSE_MEDIUM, Vision.CLEANSE_POWERFUL };
+		return new Vision[]{Vision.CLEANSE_WEAK, Vision.CLEANSE_MEDIUM, Vision.CLEANSE_POWERFUL};
 	}
 
 	@Override

@@ -19,20 +19,18 @@ package com.crowsofwar.avatar.common.entity.data;
 import net.minecraft.entity.IEntityLivingData;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class BisonSpawnData implements IEntityLivingData {
-	
+
 	private final boolean sterile;
-	
+
 	public BisonSpawnData(boolean sterile) {
 		this.sterile = sterile;
 	}
-	
+
 	public boolean isSterile() {
 		return sterile;
 	}
-	
+
 }

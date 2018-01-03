@@ -29,19 +29,17 @@ import java.util.List;
 import static net.minecraft.client.Minecraft.getMinecraft;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class ScrollsPerspectiveModel implements IBakedModel {
-	
+
 	private final ModelResourceLocation mrlRegular, mrlGlow;
 	private final ItemCameraTransforms cameraTransforms;
 	private final ItemOverrideList overrideList;
 	private final IBakedModel baseModel, baseModelGlow;
-	
+
 	public ScrollsPerspectiveModel(ModelResourceLocation mrlRegular, ModelResourceLocation mrlGlow,
-			IBakedModel baseModel, IBakedModel baseModelGlow) {
+								   IBakedModel baseModel, IBakedModel baseModelGlow) {
 		this.mrlRegular = mrlRegular;
 		this.mrlGlow = mrlGlow;
 		this.cameraTransforms = ItemCameraTransforms.DEFAULT;
@@ -49,51 +47,51 @@ public class ScrollsPerspectiveModel implements IBakedModel {
 		this.baseModel = baseModel;
 		this.baseModelGlow = baseModelGlow;
 	}
-	
+
 	@Override
 	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType transform) {
-		
+
 		ModelManager mm = getMinecraft().getRenderItem().getItemModelMesher().getModelManager();
 		ModelResourceLocation mrl = transform == TransformType.GUI ? mrlGlow : mrlRegular;
-		
+
 		Matrix4f mat = baseModel.handlePerspective(transform).getRight();
-		
+
 		return Pair.of(mm.getModel(mrl), mat);
 	}
-	
+
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
 		return baseModel.getQuads(state, side, rand);
 	}
-	
+
 	@Override
 	public boolean isAmbientOcclusion() {
 		return baseModel.isAmbientOcclusion();
 	}
-	
+
 	@Override
 	public boolean isGui3d() {
 		return baseModel.isGui3d();
 	}
-	
+
 	@Override
 	public boolean isBuiltInRenderer() {
 		return false;
 	}
-	
+
 	@Override
 	public TextureAtlasSprite getParticleTexture() {
 		return baseModel.getParticleTexture();
 	}
-	
+
 	@Override
 	public ItemCameraTransforms getItemCameraTransforms() {
 		return baseModel.getItemCameraTransforms();
 	}
-	
+
 	@Override
 	public ItemOverrideList getOverrides() {
 		return overrideList;
 	}
-	
+
 }

@@ -31,16 +31,16 @@ public class Firebending extends BendingStyle {
 	public static UUID ID = UUID.fromString("8485da8f-20d9-4e98-9a10-721104e962fe");
 
 	private final BendingMenuInfo menu;
-	
+
 	public Firebending() {
-		
+
 		addAbility("light_fire");
 		addAbility("fire_arc");
 		addAbility("flamethrower");
 		addAbility("fireball");
 		addAbility("fire_jump");
 		addAbility("purify");
-		
+
 		Color light = new Color(244, 240, 187);
 		Color red = new Color(173, 64, 31);
 		Color gray = new Color(40, 40, 40);
@@ -48,32 +48,32 @@ public class Firebending extends BendingStyle {
 		ThemeColor edge = new ThemeColor(red, red);
 		ThemeColor icon = new ThemeColor(gray, light);
 		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xFAAA5A), this);
-		
+
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		
+
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
-		
+
 	}
-	
+
 	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}
-	
+
 	@Override
 	public String getName() {
 		return "firebending";
 	}
-	
+
 	@Override
 	public UUID getId() {
 		return ID;
 	}
-	
+
 }

@@ -54,37 +54,46 @@ public class AvatarPlayerData extends PlayerData {
 		lastChiPacketTime = -1;
 
 		boolean isClient = !(player instanceof EntityPlayerMP);
-		
+
 		bendingData = new BendingData(this::save, this::saveAll);
-		
+
 		changed = new TreeSet<>();
-		
+
 	}
-	
+
+	public static void initFetcher(PlayerDataFetcher<AvatarPlayerData> clientFetcher) {
+		fetcher = new PlayerDataFetcherSided<>(clientFetcher,
+				new PlayerDataFetcherServer<>(AvatarWorldData::getDataFromWorld));
+	}
+
+	public static PlayerDataFetcher<AvatarPlayerData> fetcher() {
+		return fetcher;
+	}
+
 	@Override
 	protected void readPlayerDataFromNBT(NBTTagCompound nbt) {
 		bendingData.readFromNbt(nbt);
 	}
-	
+
 	@Override
 	protected void writePlayerDataToNBT(NBTTagCompound nbt) {
 		bendingData.writeToNbt(nbt);
 	}
-	
+
 	public void save(DataCategory category) {
 		changed.add(category);
 		sendPacket();
 		saveChanges();
 	}
-	
+
 	public void saveAll() {
 		changed.addAll(Arrays.asList(DataCategory.values()));
 		sendPacket();
 		saveChanges();
 	}
-	
+
 	private void sendPacket() {
-		
+
 		PacketCPlayerData packet = new PacketCPlayerData(bendingData, playerID, changed);
 		EntityPlayer player = this.getPlayerEntity();
 		if (player != null && !player.world.isRemote) {
@@ -97,11 +106,11 @@ public class AvatarPlayerData extends PlayerData {
 			// Look at who is tracking this player, to avoid unnecessarily
 			// sending packets to extra players
 			EntityTracker tracker = ((WorldServer) player.world).getEntityTracker();
-			
+
 			List<EntityPlayer> nearbyPlayers = new ArrayList<>();
 			nearbyPlayers.add(player);
 			nearbyPlayers.addAll(tracker.getTrackingPlayers(player));
-			
+
 			// Find the correct range to send the packet to
 			double rangeSq = 0;
 			for (EntityPlayer p : nearbyPlayers) {
@@ -110,14 +119,14 @@ public class AvatarPlayerData extends PlayerData {
 				}
 			}
 			double range = Math.sqrt(rangeSq) + 0.01;// +0.01 "just in case"
-			
+
 			AvatarMod.network.sendToAllAround(packet,
 					new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, range));
 
 			changed.clear();
 
 		}
-		
+
 	}
 
 	public BendingData getData() {
@@ -152,15 +161,6 @@ public class AvatarPlayerData extends PlayerData {
 	protected void saveChanges() {
 		super.saveChanges();
 		bendingData.updateMaxChi();
-	}
-
-	public static void initFetcher(PlayerDataFetcher<AvatarPlayerData> clientFetcher) {
-		fetcher = new PlayerDataFetcherSided<>(clientFetcher,
-				new PlayerDataFetcherServer<>(AvatarWorldData::getDataFromWorld));
-	}
-	
-	public static PlayerDataFetcher<AvatarPlayerData> fetcher() {
-		return fetcher;
 	}
 
 }

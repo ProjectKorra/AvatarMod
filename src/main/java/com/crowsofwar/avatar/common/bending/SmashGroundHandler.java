@@ -28,22 +28,20 @@ import net.minecraft.world.World;
 import java.util.List;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class SmashGroundHandler extends TickHandler {
-	
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
-		
+
 		if (entity.isInWater() || entity.onGround || bender.isFlying()) {
-			
+
 			if (entity.onGround) {
-				
+
 				double range = getRange();
 
 				World world = entity.world;
@@ -56,12 +54,12 @@ public class SmashGroundHandler extends TickHandler {
 						smashEntity(target, entity);
 					}
 				}
-				
+
 			}
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
 
