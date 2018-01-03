@@ -39,6 +39,8 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
  */
 public class BendingData {
 
+	private static final int CURRENT_SAVE_VERSION = 1;
+
 	// static methods
 	@Nonnull
 	public static BendingData get(@Nonnull EntityLivingBase entity) {
@@ -539,7 +541,7 @@ public class BendingData {
 
 		writeTo.setDouble("BattlePerformance", getPerformance().getScore());
 
-		writeTo.setInteger("SaveVersion", 1);
+		writeTo.setInteger("SaveVersion", CURRENT_SAVE_VERSION);
 
 		// @formatter:on
 
@@ -559,7 +561,7 @@ public class BendingData {
 		if (!readFrom.hasKey("SaveVersion") && !readFrom.hasKey("HurtByTimestamp")) {
 			AvatarLog.info("Detected pre-a5.0 save data, converting...");
 			AvatarLog.info(readFrom.toString());
-			readFrom = PreAlpha5SaveConverter.convertSave(readFrom);
+			readFrom = PreAlpha5SaveConverter.convertSave(readFrom, CURRENT_SAVE_VERSION);
 			AvatarLog.info(readFrom.toString());
 		}
 

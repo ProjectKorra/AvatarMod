@@ -47,12 +47,13 @@ public class PreAlpha5SaveConverter {
 		bendingIdConversion.put(4, Airbending.ID);
 	}
 
-	public static NBTTagCompound convertSave(NBTTagCompound preA5) {
+	public static NBTTagCompound convertSave(NBTTagCompound preA5, int currentSaveVersion) {
 
 		NBTTagCompound converted = preA5.copy();
 
 		fixAbilityData(converted);
 		fixBendingControllers(converted);
+		converted.setInteger("SaveVersion", currentSaveVersion);
 
 		return converted;
 
@@ -69,6 +70,12 @@ public class PreAlpha5SaveConverter {
 			// Simple fix, need to move String value with key "_AbilityName" to new key "Name"
 			NBTTagCompound keyTag = item.getCompoundTag("Key");
 			String abilityName = keyTag.getString("_AbilityName");
+
+			// Just make sure that it's actually legacy
+			if (abilityName.equals("")) {
+				return;
+			}
+
 			keyTag.setString("Name", abilityName);
 			keyTag.removeTag("_AbilityName");
 			keyTag.removeTag("Id");
