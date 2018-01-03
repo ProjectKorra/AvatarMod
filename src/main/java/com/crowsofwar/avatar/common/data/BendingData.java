@@ -538,6 +538,8 @@ public class BendingData {
 
 		writeTo.setDouble("BattlePerformance", getPerformance().getScore());
 
+		writeTo.setInteger("SaveVersion", 1);
+
 		// @formatter:on
 
 	}
