@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.data;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.EntityLivingBase;
@@ -547,6 +548,20 @@ public class BendingData {
 	public void readFromNbt(NBTTagCompound readFrom) {
 
 		// @formatter:off
+
+		// Support for reading pre-a5.0 data: We can tell that data is pre-a5.0 if there is no
+		// "SaveVersion" key, which was introduced in a5.0
+		//
+		// There were many changes in a5.0 save structure, so trying to read pre-a5.0 save data will
+		// NOT work.
+		// Need to convert this pre-a5.0 data to modern structure
+
+		if (readFrom.hasKey("SaveVersion")) {
+			AvatarLog.info("Detected pre-a5.0 save data, converting...");
+			AvatarLog.info("Data is: " + readFrom);
+			readFrom = PreAlpha5SaveConverter.convertSave(readFrom);
+			AvatarLog.info("Fixed, now it is: " + readFrom);
+		}
 
 		AvatarUtils.readList(bendings,
 				nbt -> nbt.getUniqueId("ControllerID"),
