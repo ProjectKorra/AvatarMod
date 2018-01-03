@@ -81,7 +81,8 @@ avatar.sandPrisonDisabled.bendable=El objetivo debe estar sobre un bloque de tie
 avatar.lightningRedirected=Redirigiste el rayo de ${lightningbender}!
 avatar.canUpgradeAbility=[bold]\[AvatarMod2] Sabias que [aqua]puedes mejorar tu habilidad [translate=avatar.ability.${ability}] al[translate=avatar.spec.lvl${newLevel}]?[/aqua][/bold]
 avatar.canUpgradeAbility2=\[AvatarMod2] Para hacerlo, solo abre el Menu Radial y haz clic en la habilidad!
-avatar.canUpgradeAbility3=\[AvatarMod2] Necesitras un [yellow]Pergamino Universal o Pergamino de [translate=avatar.${bendingType}][/yellow] para hacerlo!
+avatar.canUpgradeAbility3=\[AvatarMod2] Necesitaras un [yellow]Pergamino Universal o Pergamino de [translate=avatar.${bendingType}][/yellow] para hacerlo!
+avatar.waterCannonFail=Necesitas estar viendo una fuente de agua directamente
 
 avatar.bisonWhistle.summon=Tu bisonte fue llamado y estara aqui en aproximadamente ${time} segundos!
 avatar.bisonWhistle.assign=Se ha ligado este Silbato de Bisonte a ${bison}.
@@ -103,11 +104,16 @@ avatar.bisonWhistle.followOn=Tu bisonte empezara a seguirte.
 avatar.bisonWhistle.followOff=Tu bisonte ha dejado de seguirte.
 avatar.bisonWhistle.nearby=[error]Tu bisonte ya se encuentra cerca de ti![/error]
 
+avatar.specialtyScroll.success=Has desbloqueado [translate=avatar.${specialtyBending}]!
+avatar.specialtyScroll.fail=[error]Disculpa pero, debes aprender [translate=avatar.${mainBending}] antes de poder aprender [translate=avatar.${specialtyBending}].[/error]
+avatar.specialtyScroll.alreadyHave=[error]Ya has desbloqueado [translate=avatar.${specialtyBending}].[/error]
+avatar.specialtyScroll.tooltip=[aqua]Puede ser usado para desbloquear o mejorar [translate=avatar.${bending}].[/aqua]
+
 avatar.ability.pickup_block=Levantar bloque
 avatar.ability.pickup_block.desc=Usa la Tierra control para mover bloques de tierra. Colocalos en un lugar deseado, o lanzalos a tu enemigos.
 avatar.ability.pickup_block.lvl1=Mueve bloques de origen terrestre.
 avatar.ability.pickup_block.lvl2=Los bloques llegan mas rapido y mas lejos
-avatar.ability.pickup_block.lvl3=El dano se duplica
+avatar.ability.pickup_block.lvl3=El daño se duplica
 avatar.ability.pickup_block.lvl4_1=Bloque Boomerang ;; El bloque regresa si golpeas a un enemigo
 avatar.ability.pickup_block.lvl4_2=Gran impacto ;; 1/2 probabilidad que el bloque explote
 
@@ -136,7 +142,7 @@ avatar.ability.mine_blocks.lvl4_2=Minero de venas ;; Rompe venas de menas, con n
 
 avatar.ability.earthspike=Picos de Tierra
 avatar.ability.earthspike.desc=Crea un linea de picos de tierra que lastiman cualquier entidad a su paso.
-avatar.ability.earthspike.lvl1=Los picos son picos y hacen daño promedio
+avatar.ability.earthspike.lvl1=Los picos hacen daño promedio
 avatar.ability.earthspike.lvl2=Se generan mas picos y duelen mas
 avatar.ability.earthspike.lvl3=Los picos son mas rapidos al viajar
 avatar.ability.earthspike.lvl4_1=Picos de pulpo ;; Forma 8 picos en todas las direcciones
@@ -164,7 +170,7 @@ avatar.ability.fire_arc=Arco de fuego
 avatar.ability.fire_arc.desc=Forma un latigo de fuego y lanzalo a tus enemigos.
 avatar.ability.fire_arc.lvl1=Simple latigo de fuego
 avatar.ability.fire_arc.lvl2=Se mueve mas rapido
-avatar.ability.fire_arc.lvl3=Mucho mas dano
+avatar.ability.fire_arc.lvl3=Mucho mas daño
 avatar.ability.fire_arc.lvl4_1=Gran flama ;; Quema mas bloques al impactar
 avatar.ability.fire_arc.lvl4_2=Boomerang de fuego ;; Regresa a ti si golpeas a un enemigo
 
@@ -180,7 +186,7 @@ avatar.ability.fireball=Bola de fuego
 avatar.ability.fireball.desc=Crea un orbe de fuego. Crea una explosion y quema cuando impacta.
 avatar.ability.fireball.lvl1=Genera una bola de fuego basica
 avatar.ability.fireball.lvl2=Viaja mas rapido cuando se lanza
-avatar.ability.fireball.lvl3=Mucho mas dano cuando impacta
+avatar.ability.fireball.lvl3=Mucho mas daño cuando impacta
 avatar.ability.fireball.lvl4_1=Explosion enfocada ;; La bola puede llegar a destruir obsidiana
 avatar.ability.fireball.lvl4_2=Explosion cargada ;; Toma un par de segundos para cargar pero, la explosion es mas grande
 
@@ -206,16 +212,16 @@ avatar.ability.water_arc.desc=Uno de los ataques más comunes del Agua Control. 
 avatar.ability.water_arc.lvl1=Arco de agua basico
 avatar.ability.water_arc.lvl2=Rango de obtencion mas amplio
 avatar.ability.water_arc.lvl3=Mas rapido
-avatar.ability.water_arc.lvl4_1=Boomerang Acuoso;; Regresa a ti si golpeas un enemigo
-avatar.ability.water_arc.lvl4_2=Lanza de Agua ;; Gravedad desactivada al ser lanzado, pero es mas lento
+avatar.ability.water_arc.lvl4_1=Boomerang acuoso;; Regresa a ti si golpeas un enemigo
+avatar.ability.water_arc.lvl4_2=Lanza de agua ;; Gravedad desactivada al ser lanzado, pero es mas lento
 
 avatar.ability.wave=Ola
 avatar.ability.wave.desc=Invoca una ola para destruir a tus enemigos. Solo funciona si estan dentro del agua.
 avatar.ability.wave.lvl1=Haz que tus enemigos se alejen
-avatar.ability.wave.lvl2=La ola hace mucho mas dano
+avatar.ability.wave.lvl2=La ola hace mucho mas daño
 avatar.ability.wave.lvl3=La ola se vuelve mas grande
-avatar.ability.wave.lvl4_1=Ola de Choque ;; Crea un leve explosion cuando choca con un enemigo
-avatar.ability.wave.lvl4_2=Ola Potente ;; Ola sumamente rapida y fuerte
+avatar.ability.wave.lvl4_1=Ola de choque ;; Crea un leve explosion cuando choca con un enemigo
+avatar.ability.wave.lvl4_2=Ola potente ;; Ola sumamente rapida y fuerte
 
 avatar.ability.water_bubble=Burbuja de agua
 avatar.ability.water_bubble.desc=Suspende y transporta una burbuja de agua. Puede ser usado como un cubo de largo alcance.
@@ -223,15 +229,15 @@ avatar.ability.water_bubble.lvl1=Burbuja de corto alcance. El agua se seca despu
 avatar.ability.water_bubble.lvl2=La burbuja se puede tirar mas lejos
 avatar.ability.water_bubble.lvl3=La burbuja crea una fuente de agua al impactar
 avatar.ability.water_bubble.lvl4_1=Burbuja de largo alcance ;; Lanza la burbuja muy lejos
-avatar.ability.water_bubble.lvl4_2=Maestro de Burbujas ;; No usa agua para crear la burbuja
+avatar.ability.water_bubble.lvl4_2=Maestro de burbujas ;; No usa agua para crear la burbuja
 
 avatar.ability.water_skate=Patinaje acuatico
 avatar.ability.water_skate.desc=Corre por encima del agua. Muy util para moverte y explorar.
 avatar.ability.water_skate.lvl1=Camina sobre el agua, no puedes usar habilidades
 avatar.ability.water_skate.lvl2=Puedes usar habilidades mientras patinas
 avatar.ability.water_skate.lvl3=Patinas mas rapido
-avatar.ability.water_skate.lvl4_1=Patinaje Equilibrado ;; Puede patinar en agua en movimiento (corriente)
-avatar.ability.water_skate.lvl4_2=Impacto Acuoso ;; Golpea el suelo despues de saltar
+avatar.ability.water_skate.lvl4_1=Patinaje equilibrado ;; Puede patinar en agua en movimiento (corriente)
+avatar.ability.water_skate.lvl4_2=Impacto acuoso ;; Golpea el suelo despues de saltar
 
 avatar.ability.water_cannon=Cañon de agua
 avatar.ability.water_cannon.desc=Genera un chorro continuo de agua que rastrea a su objetivo. Cuesta 3 cargas de la bolsa de agua.
@@ -248,6 +254,7 @@ avatar.ability.cleanse.lvl2=Comparte la mejora con tus aliados cercanos
 avatar.ability.cleanse.lvl3=Obten una mejora extra de saturacion
 avatar.ability.cleanse.lvl4_1=Revitalizacion ;; Tambien recibe una mejora de salud instantanea
 avatar.ability.cleanse.lvl4_2=Enfoque ;; Confiere una mejora que mejora el combate y la velocidad de movimiento tambien
+
 
 avatar.ability.air_gust=Rafaga de viento
 avatar.ability.air_gust.desc=Crea una rafaga de viento que empuja a los enemigos, permitiendote enfocarte en otro problema.
@@ -268,18 +275,18 @@ avatar.ability.air_jump.lvl4_2=Onda expansiva ;; Ataca a los enemigos cercanos c
 avatar.ability.airblade=Cuchilla de aire
 avatar.ability.airblade.desc=Un disco giratorio de viento, suficientemente poderoso para cortar piel, puede ser letal en sucesiones seguidas.
 avatar.ability.airblade.lvl1=Corta y rebana a tus enemigos
-avatar.ability.airblade.lvl2=Velocidad y dano aumentado
+avatar.ability.airblade.lvl2=Velocidad y daño aumentado
 avatar.ability.airblade.lvl3=Puede cortar bloques
-avatar.ability.airblade.lvl4_1=Hoja en Cadena ;; Rebota entre enemigos
-avatar.ability.airblade.lvl4_2=Perforador de Armadura ;; Corta armadura y piedra
+avatar.ability.airblade.lvl4_1=Hoja en cadena ;; Rebota entre enemigos
+avatar.ability.airblade.lvl4_2=Perforador de armadura ;; Corta armadura y piedra
 
 avatar.ability.air_bubble=Burbuja de aire
 avatar.ability.air_bubble.desc=Crea una burbuja de aire a tu alrededor para protegerte de ataques. Sin embargo, usas demasiado chi para mantenerla.
 avatar.ability.air_bubble.lvl1=Rango pequeno y empuje
 avatar.ability.air_bubble.lvl2=Tamano mediano
 avatar.ability.air_bubble.lvl3=Mas empuje
-avatar.ability.air_bubble.lvl4_1=Burbuja Presurizada ;; Tamano muy grande
-avatar.ability.air_bubble.lvl4_2=Corriente Inferior ;; Puedes flotar al saltar, pulsa agacharse (shift) para desactivar
+avatar.ability.air_bubble.lvl4_1=Burbuja presurizada ;; Tamano muy grande
+avatar.ability.air_bubble.lvl4_2=Corriente inferior ;; Puedes flotar al saltar, pulsa agacharse (shift) para desactivar
 
 avatar.ability.cloudburst=Explosion de nube
 avatar.ability.cloudburst.desc=Crea una bola de aire giratoria que puede ser lanzada a los enemigos.
@@ -315,8 +322,8 @@ avatar.ability.lightning_redirect.lvl4_1=90% de probabilidad de redireccionar un
 avatar.ability.lightning_redirect.lvl4_2=90% de probabilidad de redireccionar un rayo
 
 avatar.ability.lightning_spear=Lanza de relampago
-avatar.ability.lightning_spear.desc=Crea una lanza pequeña de relampago que puede ser lanzada.
-avatar.ability.lightning_spear.lvl1=Lanza basica, electrocta al objetivo si esta en agua
+avatar.ability.lightning_spear.desc=Crea una bala pequeña de rayo que puede ser lanzada.
+avatar.ability.lightning_spear.lvl1=Lanza basica, electrocuta al objetivo si esta en agua
 avatar.ability.lightning_spear.lvl2=Se puede lanzar mas rapido
 avatar.ability.lightning_spear.lvl3=La lanza hace mas daño
 avatar.ability.lightning_spear.lvl4_1=Lanza penetrante ;; Atraviesa a los enemigos, puede hacer daño a varios a la vez
@@ -328,13 +335,13 @@ avatar.ability.ice_prison.desc=Atrapa a tu enemigo en un bloque de hielo, impidi
 avatar.ability.ice_prison.lvl1=Deten a tus enemigos
 avatar.ability.ice_prison.lvl2=La carcel dura mas tiempo
 avatar.ability.ice_prison.lvl3=El prisionero es lastimado cuando el hielo se rompe
-avatar.ability.ice_prison.lvl4_1=Castigo continuo ;; El enemigo capturado recibe dano continuamente durante la duracion
+avatar.ability.ice_prison.lvl4_1=Castigo continuo ;; El enemigo capturado recibe daño continuamente durante la duracion
 avatar.ability.ice_prison.lvl4_2=Hielo de glaciar ;; El hielo no se derrite ni con el Sol ni con Fuego Control
 
 avatar.ability.ice_burst=Explosion de hielo
-avatar.ability.ice_burst.desc=Envuelvete en una esfera de hielo que te protege del dano. Cuando se rompe detona en muchos fragmentos.
-avatar.ability.ice_burst.lvl1=Protegete del dano
-avatar.ability.ice_burst.lvl2=Los fragmentos hacen un poco mas de dano
+avatar.ability.ice_burst.desc=Envuelvete en una esfera de hielo que te protege del daño. Cuando se rompe detona en muchos fragmentos.
+avatar.ability.ice_burst.lvl1=Protegete del daño y luego lastima a tus atacantes
+avatar.ability.ice_burst.lvl2=Los fragmentos hacen un poco mas de daño
 avatar.ability.ice_burst.lvl3=El escudo tiene mas salud
 avatar.ability.ice_burst.lvl4_1=Fragmentos dirigidos ;; Algunos fragmentos de hielo apuntan hacia los enemigos directamente
 avatar.ability.ice_burst.lvl4_2=Hielo endurecido ;; El escudo de hielo tiene mucha mas salud
@@ -345,7 +352,7 @@ avatar.ability.sand_prison.desc=Crea una trampa de arena que atrapa a tus enemig
 avatar.ability.sand_prison.lvl1=Deten a tus enemigos
 avatar.ability.sand_prison.lvl2=Puedes atrapar enemigos en cualquier bloque de tierra al hacer uso de los sedimentos internos (no solo en arena)
 avatar.ability.sand_prison.lvl3=El prisionero recibe un efecto de lentitud una vez libre
-avatar.ability.sand_prison.lvl4_1=Trampa Dañina ;; El prisionero recibe dano una vez se libere
+avatar.ability.sand_prison.lvl4_1=Trampa Dañina ;; El prisionero recibe daño una vez se libere
 avatar.ability.sand_prison.lvl4_2=Trampa Pesada ;; La trampa no puede ser eliminada con Aire Control
 
 avatar.ability.sandstorm=Tormenta de Arena
@@ -356,6 +363,7 @@ avatar.ability.sandstorm.lvl3=El latigazo intenso hace que las entidades reciban
 avatar.ability.sandstorm.lvl4_1=Polvos fuertes ;; La tormenta de arena se mueve mucho mas rapido y es inmune a los efectos del Aire Control
 avatar.ability.sandstorm.lvl4_2=Granos violentos ;; Los granos de arena giratorios causan daño continuo sobre las entidades
 
+
 avatar.ability.explosion=Explosion
 avatar.ability.explosion.desc=Haz volar a tus enemigos con grandes explosiones. Ten cuidado, las explosiones pueden herirte.
 avatar.ability.explosion.lvl1=Crea una explosion en el bloque al que mires; rango de creacion es de 20 bloques
@@ -365,7 +373,7 @@ avatar.ability.explosion.lvl4_1=Explosion de francotirador ;; El rango aumenta n
 avatar.ability.explosion.lvl4_2=Bomba masiva;; El radio de explosion es aun mas grande y se vuelve letal si es un golpe directo a un enemigo 
 
 avatar.ability.explosive_pillar=Pilar de explosiones
-avatar.ability.explosive_pillar.desc=Crea una linea de explosiones que aparecen una detras de la otra en la direccion que apuntes.
+avatar.ability.explosive_pillar.desc=Crea una serie de explosiones que aparecen una detras de la otra en la direccion que apuntes.
 avatar.ability.explosive_pillar.lvl1=Explosiones continuas (hay un delay entre cada explosion)
 avatar.ability.explosive_pillar.lvl2=Las explosiones son mas grandes, ocurren con mas frecuencia y llegan mas lejos
 avatar.ability.explosive_pillar.lvl3=El radio de explosiones aumenta aun mas
@@ -416,13 +424,19 @@ death.attack.avatar_flamethrower=%1$s fue calcinado por %2$s!!
 death.attack.avatar_groundSmash=%2$s volvio pulpa a %1$s
 death.attack.avatar_lightningBending=%2$s electrocuto a %1$s
 death.attack.avatar_lightningBendingRedirected=%2$s redirigio un rayo y electrocuto a %1$s
-death.attack.avatar_watercannon=%1$s murio por el Cañon de Agua de %2$s
+death.attack.avatar_watercannon=%1$s murio por el cañon de Agua de %2$s
+death.attack.avatar_cloudburst=%1$s fue eliminado por la explosion de nube de %2$s
+death.attack.avatar_icePrison=El frio intenso de la prision de hielo de %2$s congelo a %1$s
+death.attack.avatar_iceShard=%2$s fue perforado por un trozo de hielo de %1$s
+death.attack.avatar_sandPrison=%1$s murio enterrado por la prision de arena de %1$s
+death.attack.avatar_sandstorm=%2$s fue lanzado por los aires por la tormenta de arena de %1$s
 
 entity.Airbender.name=Maestro de Aire
 entity.Firebender.name=Maestro de Fuego
 entity.Waterbender.name=Maestro de Agua
 entity.SkyBison.name=Bisonte volador
 entity.OtterPenguin.name=Pinguino nutria
+entity.OstrichHorse.name=Caballo avestruz
 
 itemGroup.avatar.items=Objetos de Avatar
 
@@ -431,6 +445,11 @@ item.avatarmod:scroll.air.name=Pergamino de Aire Control
 item.avatarmod:scroll.fire.name=Pergamino de Fuego Control
 item.avatarmod:scroll.earth.name=Pergamino de Tierra Control
 item.avatarmod:scroll.water.name=Pergamino de Agua Control
+item.avatarmod:scroll.lightning.name=Pergamino de Rayo Control
+item.avatarmod:scroll.ice.name=Pergamino de Hielo Control
+item.avatarmod:scroll.sand.name=Pergamino de Arena Control
+item.avatarmod:scroll.combustion.name=Pergamino de Combustion Control
+
 item.avatarmod:water_pouch.name=Bolsa de agua
 item.avatarmod:bison_whistle.name=Silbato de bisonte
 
@@ -443,6 +462,10 @@ item.avatarmod:bison_armor.woven.name=Armadura de bisonte tejida
 item.avatarmod:bison_armor.chain.name=Armadura de bisonte metalica
 item.avatarmod:bison_armor.wrought.name=Armadura de bisonte forjada
 item.avatarmod:bison_armor.legendary.name=Armadura de bisonte legendaria
+
+item.avatarmod:ostrich_equip.woven.name=Armadura de caballo avestruz tejida
+item.avatarmod:ostrich_equip.chain.name=Armadura de caballo avestruz metalica
+item.avatarmod:ostrich_equip.plate.name=Armadura de caballo avestruz de oro
 
 avatar.tooltip.water_pouch=%d/5 de agua
 avatar.tooltip.water_pouch.empty=vacia
