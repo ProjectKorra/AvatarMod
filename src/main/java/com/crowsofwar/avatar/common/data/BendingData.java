@@ -556,11 +556,11 @@ public class BendingData {
 		// NOT work.
 		// Need to convert this pre-a5.0 data to modern structure
 
-		if (readFrom.hasKey("SaveVersion")) {
+		if (!readFrom.hasKey("SaveVersion") && !readFrom.hasKey("HurtByTimestamp")) {
 			AvatarLog.info("Detected pre-a5.0 save data, converting...");
-			AvatarLog.info("Data is: " + readFrom);
+			AvatarLog.info(readFrom.toString());
 			readFrom = PreAlpha5SaveConverter.convertSave(readFrom);
-			AvatarLog.info("Fixed, now it is: " + readFrom);
+			AvatarLog.info(readFrom.toString());
 		}
 
 		AvatarUtils.readList(bendings,
