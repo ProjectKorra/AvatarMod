@@ -4,11 +4,12 @@
     "a2.0": "Bug fixes and skills menu, full changelog not available :(",
     "a3.0": "Seven new abilities, Chi, Wall-jumping. Full changelog at: av2.io/a3.0-changelog",
     "a3.1": "Various bugfixes and tweaks. Full changelog available at: av2.io/a3.1-changelog",
-    "a4.0": "HUGE UPDATE!!\n\n- Better progression: ability levels, level 4 choices, new GUIs\n- Get bending in survival, scrolls\n- Flying bison, otter penguins, human benders\n- And much more!!\n\nFull changelog available at: av2.io/a4.0-changelog"
+    "a4.0": "HUGE UPDATE!!\n\n- Better progression: ability levels, level 4 choices, new GUIs\n- Get bending in survival, scrolls\n- Flying bison, otter penguins, human benders\n- And much more!!\n\nFull changelog available at: av2.io/a4.0-changelog",
     "a4.1": "Bugfixes and improvements - please see av2.io/a4.1-changelog",
     "a4.2": "Bugfixes and improvements - please see av2.io/a4.2-changelog",
-    "a4.3": "Hotfix for servers, fixes flying bison crash"
-    "a4.4": "Bugfixes and improvements - please see av2.io/a4.4-changelog"
+    "a4.3": "Hotfix for servers, fixes flying bison crash",
+    "a4.4": "Bugfixes and improvements - please see av2.io/a4.4-changelog",
+    "a5.0": "Massive SPECIALTY BENDING update\n\n- Added Icebending, Combustionbending, Lightningbending, and Sandbending\n- Added ostrich horses, ostrich armor, and more\n- Added Power Rating and Performance system for heated battles\n- Tons of bugfixes & improvements, full changelog available at: bit.ly/2CsUEJH"
   },
   "promos": {
     "1.11-latest": "a4.4",
@@ -16,9 +17,11 @@
     "1.11.2-latest": "a4.4",
     "1.11.2-recommended": "a4.4",
 
-    "1.12-latest": "a4.6",
-    "1.12-recommended": "a4.6",
-    "1.12.1-latest": "a4.6",
-    "1.12.1-recommended": "a4.6"
+    "1.12-latest": "a5.0",
+    "1.12-recommended": "a5.0",
+    "1.12.1-latest": "a5.0",
+    "1.12.1-recommended": "a5.0",
+    "1.12.2-latest": "a5.0",
+    "1.12.2-recommended": "a5.0"
   }
 }

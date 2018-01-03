@@ -63,7 +63,7 @@ public class AvatarInfo {
 	 * Accessed via {@link #IS_PRODUCTION}, {@link #IS_PREVIEW},
 	 * {@link #IS_DEVELOPMENT}
 	 */
-	private static final int VERSION_TYPE = 2;
+	private static final int VERSION_TYPE = 0;
 	public static final boolean IS_PRODUCTION = VERSION_TYPE == 0;
 	public static final boolean IS_DEVELOPMENT = VERSION_TYPE == 1;
 	public static final boolean IS_PREVIEW = VERSION_TYPE >= 2;
