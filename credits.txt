@@ -7,6 +7,10 @@ Some Code written by FavouriteDragon
 All models animated by CrowsOfWar
 Sky bison armor/saddle item texture by CrowsOfWar
 Ostrich armor textures by CrowsOfWar
+Ability icons by CrowsOfWar: explosive_pillar, sand_prison, lightning_redirect
+Bending backgrounds by CrowsOfWar
+
+Skillmenu tabs from Adingo - extracted from image here: bit.ly/2CvwHS8
 
 Ostrich horse models & textures by talhanation
  model code cleanup by CrowsOfWar
@@ -25,8 +29,7 @@ Lightning status control icon by FavouriteDragon
 
 Sky bison model/texture by Captn_Dubz
 
-Skill menu tabs by FavouriteDragon
- adjusted for practical use by CrowsOfWar
-
-Translations by Ferrujado, Madwrist, SporYou, ExterMiner
+Translations by Ferrujado, SporYou, ExterMiner
 Polish translation by Gremter
+Spanish translations by Madwrist (Argentinian Spanish, Spanish, Mexican Spanish, Uruguayan Spanish,
+  Venezuelan Spanish)
