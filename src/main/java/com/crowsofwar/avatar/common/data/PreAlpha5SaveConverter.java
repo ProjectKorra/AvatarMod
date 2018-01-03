@@ -1,7 +1,15 @@
 package com.crowsofwar.avatar.common.data;
 
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.earth.Earthbending;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Provides support for reading pre-a5.0 BendingData from NBT.
@@ -25,11 +33,26 @@ public class PreAlpha5SaveConverter {
 
 	 */
 
+	/**
+	 * Previously, bending IDs were stored as integers. Now, they use UUIDs. This map converts old
+	 * integer IDs to new UUID IDs.
+	 */
+	private static final Map<Integer, UUID> bendingIdConversion;
+
+	static {
+		bendingIdConversion = new HashMap<>();
+		bendingIdConversion.put(1, Earthbending.ID);
+		bendingIdConversion.put(2, Firebending.ID);
+		bendingIdConversion.put(3, Waterbending.ID);
+		bendingIdConversion.put(4, Airbending.ID);
+	}
+
 	public static NBTTagCompound convertSave(NBTTagCompound preA5) {
 
 		NBTTagCompound converted = preA5.copy();
 
 		fixAbilityData(converted);
+		fixBendingControllers(converted);
 
 		return converted;
 
@@ -58,6 +81,30 @@ public class PreAlpha5SaveConverter {
 
 		}
 
+
+	}
+
+	private static void fixBendingControllers(NBTTagCompound nbt) {
+
+		NBTTagList listTag = nbt.getTagList("BendingControllers", 10);
+		for (int i = 0; i < listTag.tagCount(); i++) {
+			NBTTagCompound item = listTag.getCompoundTagAt(i);
+
+			// Just make sure that the ControllerID is the legacy type
+			if (item.hasKey("ControllerID", 3)) {
+
+				// Fix ControllerID value
+				// Previously this was stored as an int
+				// Now this is stored as a UUID
+				int oldId = item.getInteger("ControllerID");
+				item.removeTag("ControllerID");
+
+				UUID newId = bendingIdConversion.get(oldId);
+				item.setUniqueId("ControllerID", newId);
+
+			}
+
+		}
 
 	}
 
