@@ -1,20 +1,45 @@
-+ Notify player when ability can be upgraded to next level
-+ Added recipe for Water Pouch
+AV2 Changelog :: version a5.0
 
+this update was 6 months in the making, we hope you'll like it :)
+
++ Added Icebending
++ Added Ice Prison ability, which freezes a target, leaving them vulnerable to attack
++ Added Ice Shield ability, which protects the user from any attacks, and creates dangerous shards when broken
++ Added Lightningbending
++ Added classic Lightning Arc ability
++ Added Lightning Redirection technique
++ Added Lightning Spear, which is a projectile of lightning
++ Added Combustionbending
++ Added Explosion ability, which lets combustionbender create an explosion
++ Added Explosive Pillar ability, which lets combustionbender make a series of explosions
++ Added Sandbending
++ Added Sand Prison ability, which immobilizes a target
++ Added Sandstorm ability, which creates a whirling dust devil capable of carrying many targets away
++ Added new scrolls for specialty bending, found in generated structures
+
++ Added power rating mechanic, which increases depending on bending style, and increases damage dealt
++ Added performance, which represents bender's performance in combat, and can give the user many buffs
+
++ Added Immolate, a dangerous firebending ability to temporarily boost power rating and other stats
++ Added Cleanse, a waterbending ability which can group heal
++ Added Restore, an earthbending ability that grants several buffs at cost of movement speed
++ Added Slipstream, an airbending ability which increases bending power and grants intermittent invisibility
++ Added Earthspike, an earthbending ability that spawns several ravine-like spikes
++ Added Cloudburst, an airbending ability similar to existing fireball
++ Added Fire Jump, a firebending ability which allows the firebender to jump short distances
++ Added Water Cannon, a waterbending ability which lets the waterbender create a beam of water as an attack
+
++ Added the Ostrich Horse, a quick transportation animal
++ Added equipment for the ostrich horse, can be crafted or found
+
++ Added recipe for Water Pouch
++ New model for Wave
+
++ Added optional statistics service - http://bit.ly/2Bda6EY
+
+* Tons of internal code changes (moving from integer IDs -> string IDs)
+* Notify the player when ability can be upgraded to next level
 * Added particle effects for fireball
-* Added Icebending
-* Added Lightningbending
-* Added Combustionbending
-* Added Sandbending
-* Added a model for wave
-* Added Purify
-* Added Cleanse
-* Added Restore
-* Added Slipstream
-* Added Earthspike
-* Added Cloudburst
-* Added Fire Jump
-* Added Water Cannon
 * Fixed some bugs
 * Server sends MUCH less packets to clients, reducing lag (hopefully)
 * Fix potential exploits with floating block pickup location, light fire location, etc
