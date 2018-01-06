@@ -9,6 +9,7 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.util.BlockRenderLayer;
 
 public class CloudBlock extends Block {
 	public CloudBlock(Material blockMaterialIn, MapColor blockMapColorIn) {
@@ -24,7 +25,7 @@ public class CloudBlock extends Block {
 	}
 
 	@Override
-	public boolean isTranslucent(IBlockState state) {
-		return true;
+	public BlockRenderLayer getBlockLayer() {
+		return getBlockLayer().TRANSLUCENT;
 	}
 }
