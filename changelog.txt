@@ -3,3 +3,4 @@
 > Fix issues when killing entity already in ice prison
 > Fix water cannon always working
 > Fix radial menu controls unaffected by rebinding attack/use item controls
+> Fix water arc statctrl removed when creating another water arc
