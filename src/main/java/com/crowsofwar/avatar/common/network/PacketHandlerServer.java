@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.analytics.AnalyticEvent;
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -335,6 +336,12 @@ public class PacketHandlerServer implements IPacketHandler {
 
 				if (data.getAllBending().isEmpty()) {
 					data.addBendingId(bending);
+
+					// Unlock first ability
+					//noinspection ConstantConditions - can safely assume bending is present if
+					// the ID is in use to unlock it
+					Ability ability = BendingStyles.get(bending).getAllAbilities().get(0);
+					data.getAbilityData(ability).unlockAbility();
 
 					for (int i = 0; i < ((ContainerGetBending) container).getSize(); i++) {
 						container.getSlot(i).putStack(ItemStack.EMPTY);
