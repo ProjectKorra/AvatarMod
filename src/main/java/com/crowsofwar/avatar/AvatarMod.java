@@ -42,6 +42,7 @@ import com.crowsofwar.avatar.common.bending.sand.AbilitySandPrison;
 import com.crowsofwar.avatar.common.bending.sand.AbilitySandstorm;
 import com.crowsofwar.avatar.common.bending.sand.Sandbending;
 import com.crowsofwar.avatar.common.bending.water.*;
+import com.crowsofwar.avatar.common.block.AvatarBlocks;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.*;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -156,6 +157,7 @@ public class AvatarMod {
 		registerAbilities();
 		registerBendingStyles();
 		AvatarItems.init();
+		AvatarBlocks.init();
 		AvatarParticles.register();
 
 		proxy.preInit();

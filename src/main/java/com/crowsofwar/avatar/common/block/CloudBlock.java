@@ -1,19 +1,14 @@
-package com.crowsofwar.avatar.common.blocks;
+package com.crowsofwar.avatar.common.block;
 
-
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.BlockRenderLayer;
 
 public class CloudBlock extends Block {
-	public CloudBlock(Material blockMaterialIn, MapColor blockMapColorIn) {
-		super(blockMaterial.AIR);
+	public CloudBlock() {
+		super(Material.AIR);
 		this.setCreativeTab(AvatarItems.tabItems);
 		this.setUnlocalizedName("cloud_block");
 		this.setHardness(1f);
@@ -26,6 +21,6 @@ public class CloudBlock extends Block {
 
 	@Override
 	public BlockRenderLayer getBlockLayer() {
-		return getBlockLayer().TRANSLUCENT;
+		return BlockRenderLayer.TRANSLUCENT;
 	}
 }
