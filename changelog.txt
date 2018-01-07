@@ -1,0 +1,4 @@
+* As suggested by Toroic, when unlocking bending, the first ability will be automatically unlocked
+
+> Fix issues when killing entity already in ice prison
+> Fix water cannon always working
