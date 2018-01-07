@@ -14,11 +14,7 @@ public class Avatarbending extends BendingStyle {
 
 	public Avatarbending() {
 
-		super(Firebending.ID);
-
-		addAbility("lightning_arc");
-		addAbility("lightning_redirect");
-		addAbility("lightning_spear");
+		super(Avatarbending.ID);
 
 		MenuTheme.ThemeColor bkgd = new MenuTheme.ThemeColor(0xEBF4F5, 0xDBE1E2);
 		MenuTheme.ThemeColor edge = new MenuTheme.ThemeColor(0xC5DDDF, 0xACBFC0);
