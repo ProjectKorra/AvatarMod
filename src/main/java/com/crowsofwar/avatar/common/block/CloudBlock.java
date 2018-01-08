@@ -8,7 +8,7 @@ import net.minecraft.util.BlockRenderLayer;
 
 public class CloudBlock extends Block {
 	public CloudBlock() {
-		super(Material.AIR);
+		super(Material.GLASS);
 		this.setCreativeTab(AvatarItems.tabItems);
 		this.setUnlocalizedName("cloud_block");
 		this.setHardness(1f);
