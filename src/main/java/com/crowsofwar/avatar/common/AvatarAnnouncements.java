@@ -30,10 +30,6 @@ public class AvatarAnnouncements {
 	@SubscribeEvent
 	public static void onLogin(PlayerEvent.PlayerLoggedInEvent e) {
 
-		if (announcements == null) {
-			fetchAnnouncements();
-		}
-
 		e.player.sendMessage(new TextComponentString(announcements.get(0)));
 
 	}
