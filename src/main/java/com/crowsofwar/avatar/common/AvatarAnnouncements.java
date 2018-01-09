@@ -29,17 +29,16 @@ public class AvatarAnnouncements {
 		Announcement announcement = new Announcement("2018-01-08 Here is the first announcement");
 		System.out.println(announcement);
 
-		Date start = announcement.timestamp;
-		Date end = new Date();
-		long diffInSeconds = (end.getTime() - start.getTime()) / 1000;
-		long diffInHours = diffInSeconds / 60 / 60;
+
 
 	}
 
 	@SubscribeEvent
 	public static void onLogin(PlayerEvent.PlayerLoggedInEvent e) {
 
-		AvatarChatMessages.MSG_ANNOUNCEMENT.send(e.player, announcements.get(0));
+		for (Announcement announcement : announcements) {
+			AvatarChatMessages.MSG_ANNOUNCEMENT.send(e.player, announcement, announcement.getHoursAgo());
+		}
 
 	}
 
@@ -124,6 +123,13 @@ public class AvatarAnnouncements {
 		public String toString() {
 			return "[" + timestamp + "] " + contents;
 		}
+
+		public long getHoursAgo() {
+			Date end = new Date();
+			long msDiff = (timestamp.getTime() - new Date().getTime());
+			return msDiff / 1000 / 60 / 60;
+		}
+
 	}
 
 	/**
