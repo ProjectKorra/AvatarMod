@@ -67,7 +67,7 @@ public class EntityElementshard extends AvatarEntity {
 		if (!world.isRemote) {
 			float volume = 0.3f + rand.nextFloat() * 0.3f;
 			float pitch = 1.1f + rand.nextFloat() * 0.2f;
-			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS,
+			world.playSound(null, posX, posY, posZ, SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS,
 					volume, pitch);
 		}
 
