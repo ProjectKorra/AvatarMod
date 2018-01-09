@@ -37,7 +37,7 @@ public class AvatarAnnouncements {
 	public static void onLogin(PlayerEvent.PlayerLoggedInEvent e) {
 
 		for (Announcement announcement : announcements) {
-			AvatarChatMessages.MSG_ANNOUNCEMENT.send(e.player, announcement, announcement.getHoursAgo());
+			AvatarChatMessages.MSG_ANNOUNCEMENT.send(e.player, announcement.contents, announcement.getHoursAgo());
 		}
 
 	}
