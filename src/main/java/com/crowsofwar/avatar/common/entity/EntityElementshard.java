@@ -1,121 +1,205 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.List;
 
-public class EntityElementshard extends AvatarEntity {
-	private double damageMult;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-	public EntityElementshard(World worldIn) {
-		super(worldIn);
-		setSize(0.5f, 0.5f);
+public class EntityElementshard extends AvatarEntity {
+	public static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
+			.createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
+
+	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityFireball.class,
+			DataSerializers.VARINT);
+
+	private AxisAlignedBB expandedHitbox;
+
+	private float damage;
+
+	/**
+	 * @param world
+	 */
+	public EntityElementshard(World world) {
+		super(world);
+		setSize(.2f, .2f);
+	}
+
+	@Override
+	public void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_BEHAVIOR, new FireballBehavior.Idle());
+		dataManager.register(SYNC_SIZE, 30);
 	}
 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		motionY -= 1.0 / 20;
-		if (isCollided) {
-			shatter();
-		}
+		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
 
-		move(MoverType.SELF, motionX, motionY, motionZ);
-
-		// Update rotation to match the velocity adjusted from gravity
-		Vector newRotation = Vector.getRotationTo(Vector.ZERO, new Vector(motionX, motionY, motionZ));
-		rotationYaw = (float) Math.toDegrees(newRotation.y());
-		rotationPitch = (float) Math.toDegrees(newRotation.x());
-
-		// Perform raycast to find targets
-		Vector direction = Vector.toRectangular(Math.toRadians(rotationYaw), Math.toRadians(rotationPitch));
-		List<Entity> collidedEntities = Raytrace.entityRaytrace(world, new Vector(this), direction, 4,
-				entity -> !(entity instanceof EntityPlayer) && !(entity instanceof EntityIceShard));
-
-		if (!collidedEntities.isEmpty()) {
-
-			Entity collided = collidedEntities.get(0);
-
-			DamageSource source = AvatarDamageSource.causeIceShardDamage(collided, null);
-			collided.attackEntityFrom(source, 5 * (float) damageMult);
-
-			shatter();
-
+		// TODO Temporary fix to avoid extra fireballs
+		// Add hook or something
+		if (getOwner() == null) {
+			setDead();
+			removeStatCtrl();
 		}
 
 	}
 
-	// Prevent bouncing off of other entities
 	@Override
-	public void applyEntityCollision(Entity entity) {
+	public boolean onMajorWaterContact() {
+		spawnExtinguishIndicators();
+		removeStatCtrl();
+		setDead();
+		return true;
 	}
 
-	/**
-	 * Breaks the ice shard and plays particle/sound effects
-	 */
-	private void shatter() {
-		if (!world.isRemote) {
-			float volume = 0.3f + rand.nextFloat() * 0.3f;
-			float pitch = 1.1f + rand.nextFloat() * 0.2f;
-			world.playSound(null, posX, posY, posZ, SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS,
-					volume, pitch);
+	@Override
+	public boolean onMinorWaterContact() {
+		spawnExtinguishIndicators();
+		return false;
+	}
+
+	public FireballBehavior getBehavior() {
+		return dataManager.get(SYNC_BEHAVIOR);
+	}
+
+	public void setBehavior(FireballBehavior behavior) {
+		dataManager.set(SYNC_BEHAVIOR, behavior);
+	}
+
+	@Override
+	public EntityLivingBase getController() {
+		return getBehavior() instanceof FireballBehavior.PlayerControlled ? getOwner() : null;
+	}
+
+	public float getDamage() {
+		return damage;
+	}
+
+	public void setDamage(float damage) {
+		this.damage = damage;
+	}
+
+	public int getSize() {
+		return dataManager.get(SYNC_SIZE);
+	}
+
+	public void setSize(int size) {
+		dataManager.set(SYNC_SIZE, size);
+	}
+
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
+		if (entity instanceof AvatarEntity) {
+			((AvatarEntity) entity).onFireContact();
+		}
+	}
+
+	@Override
+	public boolean onCollideWithSolid() {
+
+		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
+		explosionSize *= getSize() / 30f;
+		explosionSize += getPowerRating() * 2.0 / 100;
+		boolean destroyObsidian = false;
+
+		if (getOwner() != null) {
+			AbilityData abilityData = BendingData.get(getOwner())
+					.getAbilityData("fireball");
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				destroyObsidian = true;
+			}
+		}
+
+		Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
+				!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
+		if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
+
+			explosion.doExplosionA();
+			explosion.doExplosionB(true);
+
+		}
+
+		if (destroyObsidian) {
+			for (EnumFacing dir : EnumFacing.values()) {
+				BlockPos pos = getPosition().offset(dir);
+				if (world.getBlockState(pos).getBlock() == Blocks.OBSIDIAN) {
+					world.destroyBlock(pos, true);
+				}
+			}
 		}
 
 		setDead();
-	}
-
-	/**
-	 * Sets the shard's rotations and motion to the given rotations/speed.
-	 * Parameters should be in degrees.
-	 *
-	 * @param speed Speed in m/s
-	 */
-	public void aim(float yaw, float pitch, double speed) {
-		rotationYaw = yaw;
-		rotationPitch = pitch;
-
-		double yawRad = Math.toRadians(yaw);
-		double pitchRad = Math.toRadians(pitch);
-		Vector velocity = Vector.toRectangular(yawRad, pitchRad).times(speed).dividedBy(20);
-		motionX = velocity.x();
-		motionY = velocity.y();
-		motionZ = velocity.z();
-
-	}
-
-	public double getDamageMult() {
-		return damageMult;
-	}
-
-	public void setDamageMult(double damageMult) {
-		this.damageMult = damageMult;
-	}
-
-	@Override
-	protected void entityInit() {
+		return true;
 
 	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt) {
-
+	public void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		setDamage(nbt.getFloat("Damage"));
+		setBehavior((FireballBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 	}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {
+	public void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		nbt.setFloat("Damage", getDamage());
+		nbt.setInteger("Behavior", getBehavior().getId());
+	}
 
+	public AxisAlignedBB getExpandedHitbox() {
+		return this.expandedHitbox;
+	}
+
+	@Override
+	public void setEntityBoundingBox(AxisAlignedBB bb) {
+		super.setEntityBoundingBox(bb);
+		expandedHitbox = bb.grow(0.35, 0.35, 0.35);
+	}
+
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 0 || pass == 1;
+	}
+
+	private void removeStatCtrl() {
+		if (getOwner() != null) {
+			BendingData data = Bender.get(getOwner()).getData();
+			data.removeStatusControl(StatusControl.THROW_FIREBALL);
+		}
+	}
+
+	@Override
+	public boolean isProjectile() {
+		return true;
 	}
 
 }
-
-
