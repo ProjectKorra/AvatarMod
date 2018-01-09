@@ -28,9 +28,9 @@ public abstract class ElementshardBehavior extends Behavior<EntityElementshard> 
 
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
-		ID_NOTHING = registerBehavior(FireballBehavior.Idle.class);
-		ID_PLAYER_CONTROL = registerBehavior(FireballBehavior.PlayerControlled.class);
-		ID_THROWN = registerBehavior(FireballBehavior.Thrown.class);
+		ID_NOTHING = registerBehavior(ElementshardBehavior.Idle.class);
+		ID_PLAYER_CONTROL = registerBehavior(ElementshardBehavior.PlayerControlled.class);
+		ID_THROWN = registerBehavior(ElementshardBehavior.Thrown.class);
 	}
 
 	public static class Idle extends ElementshardBehavior {
@@ -95,10 +95,8 @@ public abstract class ElementshardBehavior extends Behavior<EntityElementshard> 
 
 		}
 
-		private void collision(EntityLivingBase collided, EntityFireball entity) {
+		private void collision(EntityLivingBase collided, EntityElementshard entity) {
 			double speed = entity.velocity().magnitude();
-
-			collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
 
 			if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
 					entity.getDamage())) {
@@ -112,7 +110,7 @@ public abstract class ElementshardBehavior extends Behavior<EntityElementshard> 
 			BendingData data = Bender.get(entity.getOwner()).getData();
 			if (!collided.world.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.fireballHit;
-				data.getAbilityData("fireball").addXp(xp);
+				data.getAbilityData("element_shard").addXp(xp);
 			}
 
 			// Remove the fireball & spawn particles
@@ -138,13 +136,13 @@ public abstract class ElementshardBehavior extends Behavior<EntityElementshard> 
 
 	}
 
-	public static class PlayerControlled extends FireballBehavior {
+	public static class PlayerControlled extends ElementshardBehavior {
 
 		public PlayerControlled() {
 		}
 
 		@Override
-		public FireballBehavior onUpdate(EntityFireball entity) {
+		public ElementshardBehavior onUpdate(EntityElementshard entity) {
 			EntityLivingBase owner = entity.getOwner();
 
 			if (owner == null) return this;
@@ -159,7 +157,7 @@ public abstract class ElementshardBehavior extends Behavior<EntityElementshard> 
 			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
 			entity.setVelocity(motion);
 
-			if (data.getAbilityData("fireball").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			if (data.getAbilityData("element_shard").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				int size = entity.getSize();
 				if (size < 60 && entity.ticksExisted % 4 == 0) {
 					entity.setSize(size + 1);
@@ -189,4 +187,4 @@ public abstract class ElementshardBehavior extends Behavior<EntityElementshard> 
 
 }
 
-}
+
