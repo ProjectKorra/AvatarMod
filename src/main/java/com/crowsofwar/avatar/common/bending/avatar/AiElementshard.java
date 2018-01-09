@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityElementshard;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
+import com.crowsofwar.avatar.common.entity.data.ElementshardBehavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
@@ -77,12 +78,12 @@ public class AiElementshard extends BendingAi {
 	public void resetTask() {
 
 		EntityElementshard elementshard = AvatarEntity.lookupEntity(entity.world, EntityElementshard.class, //
-				fire -> fire.getBehavior() instanceof FireballBehavior.PlayerControlled
-						&& fire.getOwner() == entity);
+				shard -> shard.getBehavior() instanceof ElementshardBehavior.PlayerControlled
+						&& shard.getOwner() == entity);
 
 		if (elementshard != null) {
 			elementshard.setDead();
-			bender.getData().removeStatusControl(StatusControl.THROW_FIREBALL);
+			bender.getData().removeStatusControl(StatusControl.THROW_ELEMENTSHARD);
 		}
 
 	}

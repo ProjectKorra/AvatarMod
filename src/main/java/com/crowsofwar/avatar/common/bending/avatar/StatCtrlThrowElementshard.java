@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityElementshard;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
+import com.crowsofwar.avatar.common.entity.data.ElementshardBehavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,7 +34,7 @@ public class StatCtrlThrowElementshard extends StatusControl {
 			AbilityData abilityData = ctx.getData().getAbilityData("element_shard");
 			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
 			elementshard.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
-			elementshard.setBehavior(new FireballBehavior.Thrown());
+			elementshard.setBehavior(new ElementshardBehavior.Thrown());
 		}
 
 		return true;
