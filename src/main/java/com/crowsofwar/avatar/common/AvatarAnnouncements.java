@@ -21,9 +21,9 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarAnnouncements {
 
-	public static final String ANNOUNCEMENT_URL = "https://pastebin.com/raw/Mm8grAfe";
+	public static final String ANNOUNCEMENT_URL = "https://pastebin.com/raw/x1Z3sXp6";
 
-	private static List<String> announcements;
+	private static List<Announcement> announcements;
 
 	public static void main(String[] args) {
 		Announcement announcement = new Announcement("2018-01-08 Here is the first announcement");
@@ -59,7 +59,17 @@ public class AvatarAnnouncements {
 
 			String inputLine;
 			while ((inputLine = in.readLine()) != null) {
-				announcements.add(inputLine);
+
+				// Interpret and add announcement
+				try {
+
+					announcements.add(new Announcement(inputLine));
+
+				} catch (IllegalArgumentException ex) {
+					// Incorrect format string from announcement
+					AvatarLog.error("Developers sent an incorrectly formatted announcement", ex);
+				}
+
 			}
 
 			in.close();
