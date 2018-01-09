@@ -43,6 +43,7 @@ public class AvatarAnnouncements {
 
 			URL u = new URL(ANNOUNCEMENT_URL);
 			URLConnection conn = u.openConnection();
+			conn.setConnectTimeout(3000);
 			BufferedReader in = new BufferedReader(
 					new InputStreamReader(
 							conn.getInputStream()));
