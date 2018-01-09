@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.common;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -30,7 +29,7 @@ public class AvatarAnnouncements {
 	@SubscribeEvent
 	public static void onLogin(PlayerEvent.PlayerLoggedInEvent e) {
 
-		e.player.sendMessage(new TextComponentString(announcements.get(0)));
+		AvatarChatMessages.MSG_ANNOUNCEMENT.send(e.player, announcements.get(0));
 
 	}
 
