@@ -22,5 +22,19 @@ public class AbilityElementshard extends Ability {
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 
+		float chi = 4F;
+		int shardsleft;
+
+		if (ctx.getLevel() <= 0){
+			shardsleft = 5;
+		}
+		if (ctx.getLevel() == 1 ){
+			shardsleft = 8;
+		}
+		if (ctx.getLevel() == 2){
+			shardsleft = 10;
+		}
+
+
 	}
 }
