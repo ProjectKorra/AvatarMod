@@ -29,7 +29,7 @@ public class AnalyticsUtils {
 	 * Makes a request to the GA API
 	 */
 	public static void makeSingleApiRequest(String params) {
-		if (ConfigAnalytics.ANALYTICS_CONFIG.analyticsEnabled) {
+		if (ConfigAnalytics.ANALYTICS_CONFIG.isAnalyticsEnabled()) {
 			post("https://www.google-analytics.com/collect", params);
 		}
 	}
@@ -38,7 +38,7 @@ public class AnalyticsUtils {
 	 * Makes a request to the GA API
 	 */
 	public static void makeBatchApiRequest(String params) {
-		if (ConfigAnalytics.ANALYTICS_CONFIG.analyticsEnabled) {
+		if (ConfigAnalytics.ANALYTICS_CONFIG.isAnalyticsEnabled()) {
 			post("https://www.google-analytics.com/batch", params);
 		}
 	}

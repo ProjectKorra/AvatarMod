@@ -11,11 +11,13 @@ public class ConfigAnalytics {
 	public static final ConfigAnalytics ANALYTICS_CONFIG = new ConfigAnalytics();
 	public UUID analyticsId;
 	@Load
-	public boolean analyticsEnabled = true;
+	private boolean analyticsEnabled = true;
 	@Load
 	public boolean displayAnalyticsWarning = true;
 	@Load
 	private String analyticsIdStr = UUID.randomUUID().toString();
+
+	private boolean inAnalyticsGroup = false;
 
 	private ConfigAnalytics() {
 	}
@@ -30,6 +32,8 @@ public class ConfigAnalytics {
 		try {
 
 			analyticsId = UUID.fromString(analyticsIdStr);
+			// Choose 1/256th of players to send analytics
+			inAnalyticsGroup = analyticsId.toString().startsWith("00");
 
 		} catch (IllegalArgumentException e) {
 
@@ -51,6 +55,14 @@ public class ConfigAnalytics {
 	public void dontShowAnalyticsWarning() {
 		displayAnalyticsWarning = false;
 		ConfigLoader.save(this, "avatar/analytics.yml", true);
+	}
+
+	/**
+	 * Returns whether to send analytics. This is a combination of whether the user opted in, and
+	 * also whether they are part of the small group that sends analytics (1%).
+	 */
+	public boolean isAnalyticsEnabled() {
+		return analyticsEnabled && inAnalyticsGroup;
 	}
 
 }
