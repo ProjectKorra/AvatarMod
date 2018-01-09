@@ -6,9 +6,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
-import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
+import com.crowsofwar.avatar.common.entity.data.ElementshardBehavior;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -33,10 +31,10 @@ import java.util.List;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityElementshard extends AvatarEntity {
-	public static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
-			.createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
+	public static final DataParameter<ElementshardBehavior> SYNC_BEHAVIOR = EntityDataManager
+			.createKey(EntityElementshard.class, ElementshardBehavior.DATA_SERIALIZER);
 
-	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityFireball.class,
+	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityElementshard.class,
 			DataSerializers.VARINT);
 
 	private AxisAlignedBB expandedHitbox;
@@ -54,16 +52,15 @@ public class EntityElementshard extends AvatarEntity {
 	@Override
 	public void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_BEHAVIOR, new FireballBehavior.Idle());
+		dataManager.register(SYNC_BEHAVIOR, new ElementshardBehavior.Idle());
 		dataManager.register(SYNC_SIZE, 30);
 	}
 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
+		setBehavior((ElementshardBehavior) getBehavior().onUpdate(this));
 
-		// TODO Temporary fix to avoid extra fireballs
 		// Add hook or something
 		if (getOwner() == null) {
 			setDead();
@@ -86,17 +83,17 @@ public class EntityElementshard extends AvatarEntity {
 		return false;
 	}
 
-	public FireballBehavior getBehavior() {
+	public ElementshardBehavior getBehavior() {
 		return dataManager.get(SYNC_BEHAVIOR);
 	}
 
-	public void setBehavior(FireballBehavior behavior) {
+	public void setBehavior(ElementshardBehavior behavior) {
 		dataManager.set(SYNC_BEHAVIOR, behavior);
 	}
 
 	@Override
 	public EntityLivingBase getController() {
-		return getBehavior() instanceof FireballBehavior.PlayerControlled ? getOwner() : null;
+		return getBehavior() instanceof ElementshardBehavior.PlayerControlled ? getOwner() : null;
 	}
 
 	public float getDamage() {
@@ -118,7 +115,7 @@ public class EntityElementshard extends AvatarEntity {
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
 		if (entity instanceof AvatarEntity) {
-			((AvatarEntity) entity).onFireContact();
+			((AvatarEntity) entity).onCollideWithSolid();
 		}
 	}
 
@@ -132,29 +129,21 @@ public class EntityElementshard extends AvatarEntity {
 
 		if (getOwner() != null) {
 			AbilityData abilityData = BendingData.get(getOwner())
-					.getAbilityData("fireball");
+					.getAbilityData("element_shard");
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				destroyObsidian = true;
 			}
 		}
 
-		Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
+		/*Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
 				!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
 		if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
 
 			explosion.doExplosionA();
 			explosion.doExplosionB(true);
 
-		}
+		}**/
 
-		if (destroyObsidian) {
-			for (EnumFacing dir : EnumFacing.values()) {
-				BlockPos pos = getPosition().offset(dir);
-				if (world.getBlockState(pos).getBlock() == Blocks.OBSIDIAN) {
-					world.destroyBlock(pos, true);
-				}
-			}
-		}
 
 		setDead();
 		return true;
@@ -165,7 +154,7 @@ public class EntityElementshard extends AvatarEntity {
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		setDamage(nbt.getFloat("Damage"));
-		setBehavior((FireballBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
+		setBehavior((ElementshardBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 	}
 
 	@Override
@@ -193,7 +182,7 @@ public class EntityElementshard extends AvatarEntity {
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
-			data.removeStatusControl(StatusControl.THROW_FIREBALL);
+			data.removeStatusControl(StatusControl.THROW_ELEMENTSHARD);
 		}
 	}
 
