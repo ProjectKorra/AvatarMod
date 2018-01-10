@@ -40,10 +40,9 @@ public class AvatarAnnouncements {
 			long hoursTotal = announcement.getHoursAgo();
 			if (hoursTotal > 24) {
 				long days = hoursTotal / 24;
-				long hours = hoursTotal - days * 24;
-				AvatarChatMessages.MSG_ANNOUNCEMENT_DAYS.send(e.player, announcement.contents, hours, days);
+				AvatarChatMessages.MSG_ANNOUNCEMENT_DAYS.send(e.player, announcement.contents, days);
 			} else {
-				AvatarChatMessages.MSG_ANNOUNCEMENT.send(e.player, announcement.contents, announcement.getHoursAgo());
+				AvatarChatMessages.MSG_ANNOUNCEMENT_TODAY.send(e.player, announcement.contents);
 			}
 
 		}
