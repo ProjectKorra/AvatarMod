@@ -73,6 +73,8 @@ public class AvatarAnnouncements {
 
 			in.close();
 
+			announcements.sort(Comparator.comparingLong(Announcement::getHoursAgo));
+
 		} catch (Exception ex) {
 
 			AvatarLog.error("Your game will be fine, but there was a problem getting Av2 announcements", ex);
