@@ -37,7 +37,15 @@ public class AvatarAnnouncements {
 	public static void onLogin(PlayerEvent.PlayerLoggedInEvent e) {
 
 		for (Announcement announcement : announcements) {
-			AvatarChatMessages.MSG_ANNOUNCEMENT.send(e.player, announcement.contents, announcement.getHoursAgo());
+			long hoursTotal = announcement.getHoursAgo();
+			if (hoursTotal > 24) {
+				long days = hoursTotal / 24;
+				long hours = hoursTotal - days * 24;
+				AvatarChatMessages.MSG_ANNOUNCEMENT_DAYS.send(e.player, announcement.contents, hours, days);
+			} else {
+				AvatarChatMessages.MSG_ANNOUNCEMENT.send(e.player, announcement.contents, announcement.getHoursAgo());
+			}
+
 		}
 
 	}

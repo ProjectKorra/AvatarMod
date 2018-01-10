@@ -88,6 +88,7 @@ avatar.canUpgradeAbility3=\[AvatarMod2] You'll need a [yellow]Universal or [tran
 avatar.waterCannonFail=Need to look directly at water source
 
 avatar.announcement=[bold][red]\[AV2 ${hours} hours ago]: [/red][/bold] ${announcement}
+avatar.announcement.days=[bold][red]\[AV2 ${days} days ${hours} hours ago]: [/red][/bold] ${announcement}
 
 avatar.bisonWhistle.summon=Your bison was called and will be here in approximately ${time} seconds!
 avatar.bisonWhistle.assign=Bound this Bison Whistle to ${bison}.
