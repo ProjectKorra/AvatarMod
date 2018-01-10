@@ -127,8 +127,7 @@ public class AvatarAnnouncements {
 		}
 
 		public long getHoursAgo() {
-			Date end = new Date();
-			long msDiff = (timestamp.getTime() - new Date().getTime());
+			long msDiff = (System.currentTimeMillis() - timestamp.getTime());
 			return msDiff / 1000 / 60 / 60;
 		}
 
