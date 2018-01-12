@@ -44,6 +44,10 @@ public class EntityIceShield extends EntityShield {
 
 	private double damageMult;
 	private boolean targetMobs;
+	/**
+	 * When shattering the ice shield, this represents the pitch angles which shards are thrown
+	 * from. Only set on the server thread.
+	 */
 	private float[] pitchAngles;
 
 	public EntityIceShield(World world) {
@@ -77,7 +81,7 @@ public class EntityIceShield extends EntityShield {
 
 		}
 
-		shootShardsAround(owner, 4, pitchAngles, shardsLeft);
+		shootShardsAround(owner, 4, shardsLeft);
 
 	}
 
@@ -215,14 +219,19 @@ public class EntityIceShield extends EntityShield {
 	 * Shoot ice shards around the entity.
 	 *
 	 * @param yawAngles   Spacing for yaw angles
-	 * @param pitchAngles All of the pitch angles
 	 * @param shardsLimit Limit the number of ice shards to shoot. Note that the actual shards shot is
 	 *                    also limited by the number of possible angles to shoot at (<code>yawAngles
 	 *                    * pitchAngles.length</code>), so this acts as a limiter rather than the actual
 	 *                    amount of shards to shoot.
 	 */
-	private void shootShardsAround(EntityLivingBase shooter, int yawAngles, float[] pitchAngles,
-								   int shardsLimit) {
+	private void shootShardsAround(EntityLivingBase shooter, int yawAngles, int shardsLimit) {
+
+		// pitchAngles is not set on the client-side, so if this code is executed on the client, it
+		// would cause an NPE
+		if (world.isRemote) {
+			return;
+		}
+
 		for (int i = 0; i < yawAngles; i++) {
 			float yaw = 360f / yawAngles * i;
 			for (int j = 0; j < pitchAngles.length; j++) {
