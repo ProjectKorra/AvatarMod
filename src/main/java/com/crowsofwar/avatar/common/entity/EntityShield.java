@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -29,6 +28,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -44,6 +44,12 @@ public abstract class EntityShield extends AvatarEntity {
 			DataSerializers.FLOAT);
 	public static final DataParameter<Float> SYNC_MAX_HEALTH = EntityDataManager
 			.createKey(EntityShield.class, DataSerializers.FLOAT);
+
+	/**
+	 * Shields do not protect against some types of damage, such as falling.
+	 */
+	public static final List<String> UNPROTECTED_DAMAGE = Arrays.asList("fall", "magic", "poison",
+			"wither", "indirectMagic");
 
 	public EntityShield(World world) {
 		super(world);
@@ -163,8 +169,8 @@ public abstract class EntityShield extends AvatarEntity {
 		if (owner != null) {
 
 			if (!world.isRemote) {
-				Entity sourceEntity = source.getTrueSource();
-				if (sourceEntity != null) {
+
+				if (!UNPROTECTED_DAMAGE.contains(source.getDamageType())) {
 					if (!owner.isEntityInvulnerable(source)) {
 
 						Bender bender = Bender.get(owner);
