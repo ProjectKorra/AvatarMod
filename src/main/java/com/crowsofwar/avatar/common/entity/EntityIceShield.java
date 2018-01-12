@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -188,6 +190,11 @@ public class EntityIceShield extends EntityShield {
 	@Override
 	protected void onDeath() {
 		shatter();
+
+		if (getOwner() != null) {
+			BendingData.get(getOwner()).removeStatusControl(StatusControl.SHIELD_SHATTER);
+		}
+
 	}
 
 	/**

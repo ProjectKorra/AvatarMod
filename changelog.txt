@@ -7,3 +7,4 @@
 > Fix radial menu controls unaffected by rebinding attack/use item controls
 > Fix water arc statctrl removed when creating another water arc
 > Fix crash when killing player inside ice shield
+> Fix ice burst shatter icon not removed when ice shield destroyed
