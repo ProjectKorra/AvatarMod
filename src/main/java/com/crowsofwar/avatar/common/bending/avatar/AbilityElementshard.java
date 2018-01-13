@@ -74,9 +74,8 @@ public class AbilityElementshard extends Ability {
 				if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) elementshard.setSize(20);
 				world.spawnEntity(elementshard);
 
-				data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
-
 			}
+			data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
 		}
 
 	}
