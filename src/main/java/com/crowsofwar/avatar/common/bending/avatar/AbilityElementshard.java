@@ -26,7 +26,7 @@ import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 public class AbilityElementshard extends Ability {
 
-	public AbilityElementshard(UUID bendingType, String name) {
+	public AbilityElementshard() {
 		super(Avatarbending.ID, "element_shard");
 		requireRaytrace(2.5, false);
 	}
@@ -63,18 +63,20 @@ public class AbilityElementshard extends Ability {
 			}
 
 			damage *= ctx.getPowerRatingDamageMod();
+			for (int i = 0; i<shardsLeft; i++ ) {
 
-			EntityElementshard elementshard = new EntityElementshard(world);
-			elementshard.setPosition(target);
-			elementshard.setOwner(entity);
-			elementshard.setBehavior(new ElementshardBehavior.PlayerControlled());
-			elementshard.setDamage(damage);
-			elementshard.setPowerRating(bender.calcPowerRating(Firebending.ID));
-			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) elementshard.setSize(20);
-			world.spawnEntity(elementshard);
+				EntityElementshard elementshard = new EntityElementshard(world);
+				elementshard.setPosition(target);
+				elementshard.setOwner(entity);
+				elementshard.setBehavior(new ElementshardBehavior.PlayerControlled());
+				elementshard.setDamage(damage);
+				elementshard.setPowerRating(bender.calcPowerRating(Firebending.ID));
+				if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) elementshard.setSize(20);
+				world.spawnEntity(elementshard);
 
-			data.addStatusControl(StatusControl.THROW_FIREBALL);
+				data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
 
+			}
 		}
 
 	}
