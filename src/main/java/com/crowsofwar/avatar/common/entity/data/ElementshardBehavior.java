@@ -63,6 +63,8 @@ public abstract class ElementshardBehavior extends Behavior<EntityElementshard> 
 
 		@Override
 		public ElementshardBehavior onUpdate(EntityElementshard entity) {
+			EntityLivingBase owner = entity.getOwner();
+
 
 			time++;
 
@@ -144,16 +146,18 @@ public abstract class ElementshardBehavior extends Behavior<EntityElementshard> 
 		public ElementshardBehavior onUpdate(EntityElementshard entity) {
 			EntityLivingBase owner = entity.getOwner();
 
+
 			if (owner == null) return this;
 
 			BendingData data = Bender.get(owner).getData();
 
-			double yaw = Math.toRadians(owner.rotationYaw);
-			double pitch = Math.toRadians(owner.rotationPitch);
-			Vector forward = Vector.toRectangular(yaw, pitch);
+			Vector forward = Vector.getLookRectangular(owner);
 			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
-			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
+			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5 /* <-- !! you can adjust that number to make the shards move faster */);
+			entity.rotationPitch = entity.rotationPitch +3;
+			entity.rotationYaw = entity.rotationYaw +3;
+
 			entity.setVelocity(motion);
 
 			if (data.getAbilityData("element_shard").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
