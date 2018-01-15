@@ -27,16 +27,8 @@ public class AbilityExplosion extends Ability {
 		World world = ctx.getWorld();
 
 		float xp = 3F;
-		float chi = STATS_CONFIG.chiExplosion;
-		if (ctx.getLevel() == 2) {
-			chi *= 1.25;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			chi *= 1.5;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			chi *= 2;
-		}
+		float chi = ctx.getLevel() > 0 ? STATS_CONFIG.chiExplosionUpgraded : STATS_CONFIG.chiExplosion;
+
 		if (bender.consumeChi(chi)) {
 			Raytrace.Result hit = Raytrace.getTargetBlock(entity, 20);
 			float explosionSize = STATS_CONFIG.explosionSettings.explosionSize;

@@ -65,10 +65,10 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 			float requiredChi = STATS_CONFIG.chiFlamethrowerSecond / flamesPerSecond;
 			if (level == 3 && path == AbilityTreePath.FIRST) {
-				requiredChi *= 1.5f;
+				requiredChi = STATS_CONFIG.chiFlamethrowerSecondLvl4_1 / flamesPerSecond;
 			}
 			if (level == 3 && path == AbilityTreePath.SECOND) {
-				requiredChi *= 2;
+				requiredChi = STATS_CONFIG.chiFlamethrowerSecondLvl4_2 / flamesPerSecond;
 			}
 
 			// Adjust chi to power rating

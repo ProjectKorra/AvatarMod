@@ -62,7 +62,7 @@ public class AbilityRestore extends Ability {
 			entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, duration, slownessLevel));
 
 			if (abilityData.getLevel() >= 1) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 1, regenLevel));
+				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, regenLevel));
 			}
 			if (abilityData.getLevel() >= 2) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration, effectLevel));

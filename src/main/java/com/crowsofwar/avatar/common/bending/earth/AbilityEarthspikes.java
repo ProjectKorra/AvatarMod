@@ -32,7 +32,6 @@ public class AbilityEarthspikes extends Ability {
 		float chi = STATS_CONFIG.chiEarthspike;
 
 		if (ctx.getLevel() >= 1) {
-			chi *= 1.5f;
 			damage = 1f;
 			ticks = 40;
 		}
@@ -40,13 +39,11 @@ public class AbilityEarthspikes extends Ability {
 			speed = 14;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			chi *= 2.5f;
 			damage = 0.75f;
 			ticks = 30;
 			speed = 12;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			chi *= 2f;
 			damage = 2f;
 			ticks = 60;
 			speed = 20;

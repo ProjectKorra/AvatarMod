@@ -45,7 +45,7 @@ public class AbilityRavine extends Ability {
 
 		float chi = STATS_CONFIG.chiRavine;
 		if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-			chi *= 1.5f;
+			chi = STATS_CONFIG.chiRavineLvl4_1;
 		}
 
 		if (bender.consumeChi(chi)) {
