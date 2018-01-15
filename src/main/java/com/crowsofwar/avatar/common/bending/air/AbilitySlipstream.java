@@ -30,20 +30,16 @@ public class AbilitySlipstream extends Ability {
 		AbilityData abilityData = data.getAbilityData(this);
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
-		float chi = STATS_CONFIG.chiBuff;
 
+		float chi = STATS_CONFIG.chiBuff;
 		if (abilityData.getLevel() == 1) {
-			chi *= 1.5f;
+			chi = STATS_CONFIG.chiBuffLvl2;
+		} else if (abilityData.getLevel() == 2) {
+			chi = STATS_CONFIG.chiBuffLvl3;
+		} else if (abilityData.getLevel() == 3) {
+			chi = STATS_CONFIG.chiBuffLvl4;
 		}
-		if (abilityData.getLevel() == 2) {
-			chi *= 2f;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			chi *= 2.5F;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			chi *= 2.5F;
-		}
+
 		if (bender.consumeChi(chi)) {
 			float xp = SKILLS_CONFIG.buffUsed;
 

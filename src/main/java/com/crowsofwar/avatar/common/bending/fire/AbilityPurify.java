@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.google.common.math.Stats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
 
@@ -33,11 +34,11 @@ public class AbilityPurify extends Ability {
 
 		float chi = STATS_CONFIG.chiBuff;
 		if (abilityData.getLevel() == 1) {
-			chi *= 1.5f;
+			chi = STATS_CONFIG.chiBuffLvl2;
 		} else if (abilityData.getLevel() == 2) {
-			chi *= 2f;
+			chi = STATS_CONFIG.chiBuffLvl3;
 		} else if (abilityData.getLevel() == 3) {
-			chi *= 2.5f;
+			chi = STATS_CONFIG.chiBuffLvl4;
 		}
 
 		if (bender.consumeChi(chi)) {
