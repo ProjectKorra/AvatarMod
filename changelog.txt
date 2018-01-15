@@ -11,3 +11,4 @@
 > Fix crash when killing player inside ice shield
 > Fix ice burst shatter icon not removed when ice shield destroyed
 > Fix (most?) issues with water bubble being destroyed quickly after creation
+> Fix upgraded Restore ability not adding more health
