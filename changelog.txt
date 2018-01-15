@@ -9,3 +9,4 @@
 > Fix water arc statctrl removed when creating another water arc
 > Fix crash when killing player inside ice shield
 > Fix ice burst shatter icon not removed when ice shield destroyed
+> Fix (most?) issues with water bubble being destroyed quickly after creation
