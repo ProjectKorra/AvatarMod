@@ -21,7 +21,7 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarAnnouncements {
 
-	public static final String ANNOUNCEMENT_URL = "https://pastebin.com/raw/x1Z3sXp6";
+	public static final String ANNOUNCEMENT_URL = "https://pastebin.com/raw/iXq8pwr8";
 
 	private static List<Announcement> announcements;
 
@@ -40,7 +40,11 @@ public class AvatarAnnouncements {
 			long hoursTotal = announcement.getHoursAgo();
 			if (hoursTotal > 24) {
 				long days = hoursTotal / 24;
-				AvatarChatMessages.MSG_ANNOUNCEMENT_DAYS.send(e.player, announcement.contents, days);
+				if (days == 1) {
+					AvatarChatMessages.MSG_ANNOUNCEMENT_YESTERDAY.send(e.player, announcement.contents, days);
+				} else {
+					AvatarChatMessages.MSG_ANNOUNCEMENT_DAYS.send(e.player, announcement.contents, days);
+				}
 			} else {
 				AvatarChatMessages.MSG_ANNOUNCEMENT_TODAY.send(e.player, announcement.contents);
 			}
