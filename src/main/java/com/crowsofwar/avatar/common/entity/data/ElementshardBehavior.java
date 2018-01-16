@@ -73,7 +73,7 @@ public abstract class ElementshardBehavior extends Behavior<EntityElementshard> 
 				entity.onCollideWithSolid();
 			}
 
-			entity.addVelocity(Vector.DOWN.times(9.81 / 40));
+			entity.addVelocity(Vector.DOWN.times(0.000001/ 40));
 
 			World world = entity.world;
 			if (!entity.isDead) {
@@ -155,10 +155,11 @@ public abstract class ElementshardBehavior extends Behavior<EntityElementshard> 
 			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
 			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5 /* <-- !! you can adjust that number to make the shards move faster */);
-			entity.rotationPitch = entity.rotationPitch +3;
-			entity.rotationYaw = entity.rotationYaw +3;
+			entity.rotationPitch = owner.rotationPitch +3;
+			entity.rotationYaw = owner.rotationYaw +3;
 
 			entity.setVelocity(motion);
+
 
 			if (data.getAbilityData("element_shard").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				int size = entity.getSize();

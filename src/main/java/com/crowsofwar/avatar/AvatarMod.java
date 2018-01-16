@@ -197,6 +197,7 @@ public class AvatarMod {
 		CloudburstBehavior.register();
 		AvatarChatMessages.loadAll();
 		LightningSpearBehavior.register();
+		ElementshardBehavior.register();
 
 		EarthbendingEvents.register();
 

@@ -52,7 +52,7 @@ public class AbilityElementshard extends Ability {
 		}
 		if (data.hasStatusControl(StatusControl.THROW_ELEMENTSHARD)) return;
 
-		if (bender.consumeChi(STATS_CONFIG.chiFireball)) {
+		if (bender.consumeChi(chi)) {
 
 			Vector target;
 			if (ctx.isLookingAtBlock()) {
@@ -74,8 +74,9 @@ public class AbilityElementshard extends Ability {
 				if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) elementshard.setSize(20);
 				world.spawnEntity(elementshard);
 
+
+				data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
 			}
-			data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
 		}
 
 	}
