@@ -37,6 +37,7 @@ public class AbilityElementshard extends Ability {
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
+		boolean controlled = true;
 
 		float chi = 4F;
 		float damage = 0.5F;
@@ -52,6 +53,7 @@ public class AbilityElementshard extends Ability {
 		}
 		if (data.hasStatusControl(StatusControl.THROW_ELEMENTSHARD)) return;
 
+
 		if (bender.consumeChi(chi)) {
 
 			Vector target;
@@ -62,10 +64,19 @@ public class AbilityElementshard extends Ability {
 				target = playerPos.plus(getLookRectangular(entity).times(2.5));
 			}
 
-			damage *= ctx.getPowerRatingDamageMod();
-			for (int i = 0; i<shardsLeft; i++ ) {
 
-				EntityElementshard elementshard = new EntityElementshard(world);
+			damage *= ctx.getPowerRatingDamageMod();
+			EntityElementshard elementshard = new EntityElementshard(world);
+			if (elementshard.getBehavior() instanceof ElementshardBehavior.Thrown) {
+				controlled = false;
+			}
+			if (elementshard.getBehavior() instanceof ElementshardBehavior.PlayerControlled) {
+				controlled = true;
+			}
+			if (controlled) {
+			for (int i = 0; i<shardsLeft; i++) {
+
+
 				elementshard.setPosition(target);
 				elementshard.setOwner(entity);
 				elementshard.setBehavior(new ElementshardBehavior.PlayerControlled());
@@ -73,10 +84,12 @@ public class AbilityElementshard extends Ability {
 				elementshard.setPowerRating(bender.calcPowerRating(Firebending.ID));
 				if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) elementshard.setSize(20);
 				world.spawnEntity(elementshard);
-
-
-				data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
 			}
+				data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
+		}
+
+
+
 		}
 
 	}
