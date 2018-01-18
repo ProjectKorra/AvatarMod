@@ -40,20 +40,27 @@ public class AbilityElementshard extends Ability {
 
 		float chi = 4F;
 		float damage = 0.5F;
-		int shardsLeft = 5;
+		int shardsAvailable = 5;
+
 
 		if (ctx.getLevel() == 1){
 			damage = 1F;
-			shardsLeft = 8;
+			shardsAvailable = 8;
 		}
 		if (ctx.getLevel() == 2){
-			shardsLeft = 10;
+			shardsAvailable = 10;
 			//create an explosion; code is in fireball but 2 lazy to do it right now
 		}
+		EntityElementshard shard = new EntityElementshard(world);
+		shard.setShardsLeft(shardsAvailable);
+		int shardsLeft = shardsAvailable;
+
 		if (data.hasStatusControl(StatusControl.THROW_ELEMENTSHARD)) return;
 
 
+
 		if (bender.consumeChi(chi)) {
+
 
 			Vector target;
 			if (ctx.isLookingAtBlock()) {
@@ -65,7 +72,7 @@ public class AbilityElementshard extends Ability {
 
 
 			damage *= ctx.getPowerRatingDamageMod();
-				for (int i = 0; i<shardsLeft; i++) {
+				for (int i = 0; i<shardsAvailable; i++) {
 						EntityElementshard elementshard = new EntityElementshard(world);
 						elementshard.setPosition(target);
 						elementshard.setOwner(entity);
@@ -78,6 +85,12 @@ public class AbilityElementshard extends Ability {
 
 				}
 			data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
+			shardsLeft =- 1;
+
+
+		}
+		for (int j = 0; j<1;){
+			shard.setShardsLeft(shardsLeft);
 		}
 
 

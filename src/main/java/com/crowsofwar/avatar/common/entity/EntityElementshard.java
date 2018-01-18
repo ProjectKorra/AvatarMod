@@ -193,7 +193,7 @@ public class EntityElementshard extends AvatarEntity {
 	}
 
 	private void removeStatCtrl() {
-		if (getOwner() != null) {
+		if (getOwner() != null && this.shardsLeft == 0) {
 			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(StatusControl.THROW_ELEMENTSHARD);
 		}
