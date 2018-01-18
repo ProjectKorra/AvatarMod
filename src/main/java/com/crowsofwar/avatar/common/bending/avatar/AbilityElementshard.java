@@ -66,8 +66,7 @@ public class AbilityElementshard extends Ability {
 
 			damage *= ctx.getPowerRatingDamageMod();
 				for (int i = 0; i<shardsLeft; i++) {
-					EntityElementshard elementshard = new EntityElementshard(world);
-					if (!(elementshard.getBehavior() instanceof ElementshardBehavior.PlayerControlled) && i >= 1) {
+						EntityElementshard elementshard = new EntityElementshard(world);
 						elementshard.setPosition(target);
 						elementshard.setOwner(entity);
 						elementshard.setDamage(damage);
@@ -77,7 +76,7 @@ public class AbilityElementshard extends Ability {
 						world.spawnEntity(elementshard);
 
 
-					}
+					
 
 
 				}

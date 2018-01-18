@@ -66,10 +66,16 @@ public class EntityElementshard extends AvatarEntity {
 			setDead();
 			removeStatCtrl();
 		}
-		if (this.isDead){
-			//dump
-		}
 
+
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
+		if (!world.isRemote && this.isDead) {
+			Thread.dumpStack();
+		}
 	}
 
 	@Override
@@ -118,7 +124,7 @@ public class EntityElementshard extends AvatarEntity {
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (entity instanceof AvatarEntity) {
+		if (entity instanceof AvatarEntity && !(entity instanceof EntityElementshard)) {
 			((AvatarEntity) entity).onCollideWithSolid();
 		}
 	}
