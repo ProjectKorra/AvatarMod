@@ -37,7 +37,6 @@ public class AbilityElementshard extends Ability {
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
-		boolean controlled = true;
 
 		float chi = 4F;
 		float damage = 0.5F;
@@ -66,33 +65,30 @@ public class AbilityElementshard extends Ability {
 
 
 			damage *= ctx.getPowerRatingDamageMod();
-			EntityElementshard elementshard = new EntityElementshard(world);
-			if (elementshard.getBehavior() instanceof ElementshardBehavior.Thrown) {
-				controlled = false;
-			}
-			if (elementshard.getBehavior() instanceof ElementshardBehavior.PlayerControlled) {
-				controlled = true;
-			}
-			if (controlled) {
-			for (int i = 0; i<shardsLeft; i++) {
+				for (int i = 0; i<shardsLeft; i++) {
+					EntityElementshard elementshard = new EntityElementshard(world);
+					if (!(elementshard.getBehavior() instanceof ElementshardBehavior.PlayerControlled) && i >= 1) {
+						elementshard.setPosition(target);
+						elementshard.setOwner(entity);
+						elementshard.setDamage(damage);
+						elementshard.setPowerRating(bender.calcPowerRating(Avatarbending.ID));
+						if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) elementshard.setSize(20);
+						elementshard.setBehavior(new ElementshardBehavior.PlayerControlled());
+						world.spawnEntity(elementshard);
 
 
-				elementshard.setPosition(target);
-				elementshard.setOwner(entity);
-				elementshard.setBehavior(new ElementshardBehavior.PlayerControlled());
-				elementshard.setDamage(damage);
-				elementshard.setPowerRating(bender.calcPowerRating(Firebending.ID));
-				if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) elementshard.setSize(20);
-				world.spawnEntity(elementshard);
-			}
-				data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
+					}
+
+
+				}
+			data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
 		}
 
 
 
 		}
 
-	}
+
 
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {

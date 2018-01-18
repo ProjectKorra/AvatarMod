@@ -66,6 +66,9 @@ public class EntityElementshard extends AvatarEntity {
 			setDead();
 			removeStatCtrl();
 		}
+		if (this.isDead){
+			//dump
+		}
 
 	}
 
@@ -82,6 +85,7 @@ public class EntityElementshard extends AvatarEntity {
 		spawnExtinguishIndicators();
 		return false;
 	}
+
 
 	public ElementshardBehavior getBehavior() {
 		return dataManager.get(SYNC_BEHAVIOR);
