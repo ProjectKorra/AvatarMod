@@ -38,7 +38,10 @@ public class EntityElementshard extends AvatarEntity {
 			DataSerializers.VARINT);
 
 	private AxisAlignedBB expandedHitbox;
-
+	private float shardsLeft;
+	public void setShardsLeft(float shards) {
+		this.shardsLeft = shards;
+	}
 	private float damage;
 
 	/**

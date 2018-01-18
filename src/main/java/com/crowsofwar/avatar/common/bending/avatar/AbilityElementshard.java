@@ -76,9 +76,6 @@ public class AbilityElementshard extends Ability {
 						world.spawnEntity(elementshard);
 
 
-					
-
-
 				}
 			data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
 		}

@@ -53,7 +53,7 @@ public class AiElementshard extends BendingAi {
 
 		if (timeExecuting >= 40) {
 			BendingData data = bender.getData();
-			execStatusControl(StatusControl.THROW_FIREBALL);
+			execStatusControl(StatusControl.THROW_ELEMENTSHARD);
 			timeExecuting = 0;
 			return false;
 		} else {
