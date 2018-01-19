@@ -43,6 +43,7 @@ public class AbilityElementshard extends Ability {
 		int shardsAvailable = 5;
 
 
+
 		if (ctx.getLevel() == 1){
 			damage = 1F;
 			shardsAvailable = 8;
@@ -53,7 +54,6 @@ public class AbilityElementshard extends Ability {
 		}
 		EntityElementshard shard = new EntityElementshard(world);
 		shard.setShardsLeft(shardsAvailable);
-		int shardsLeft = shardsAvailable;
 
 		if (data.hasStatusControl(StatusControl.THROW_ELEMENTSHARD)) return;
 
@@ -85,13 +85,9 @@ public class AbilityElementshard extends Ability {
 
 				}
 			data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
-			shardsLeft =- 1;
 
+			}
 
-		}
-		for (int j = 0; j<1;){
-			shard.setShardsLeft(shardsLeft);
-		}
 
 
 
