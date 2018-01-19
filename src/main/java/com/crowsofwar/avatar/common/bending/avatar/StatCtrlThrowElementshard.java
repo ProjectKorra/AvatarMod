@@ -20,7 +20,6 @@ public class StatCtrlThrowElementshard extends StatusControl {
 	public StatCtrlThrowElementshard() {
 		super(10, CONTROL_RIGHT_CLICK, LEFT_OF_CROSSHAIR);
 	}
-	int shardsLeft = 4;
 	//^Place holder value; will change it so that it adapts based on ability level
 
 
@@ -36,8 +35,6 @@ public class StatCtrlThrowElementshard extends StatusControl {
 			AbilityData abilityData = ctx.getData().getAbilityData("element_shard");
 			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
 			elementshard.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
-			shardsLeft --;
-			elementshard.setShardsLeft(shardsLeft);
 			elementshard.setBehavior(new ElementshardBehavior.Thrown());
 		}
 

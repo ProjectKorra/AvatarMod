@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.avatar.AbilityElementshard;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -43,6 +44,7 @@ public class EntityElementshard extends AvatarEntity {
 		this.shardsLeft = shards;
 	}
 	private float damage;
+	int shardsLeft1 = 4;
 
 	/**
 	 * @param world
@@ -61,6 +63,7 @@ public class EntityElementshard extends AvatarEntity {
 
 	@Override
 	public void onUpdate() {
+		shardsLeft = shardsLeft1;
 		super.onUpdate();
 		setBehavior((ElementshardBehavior) getBehavior().onUpdate(this));
 
@@ -135,6 +138,7 @@ public class EntityElementshard extends AvatarEntity {
 	@Override
 	public boolean onCollideWithSolid() {
 
+
 		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
 		explosionSize *= getSize() / 30f;
 		explosionSize += getPowerRating() * 2.0 / 100;
@@ -147,6 +151,7 @@ public class EntityElementshard extends AvatarEntity {
 				destroyObsidian = true;
 			}
 		}
+		this.shardsLeft --;
 
 		/*Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
 				!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);

@@ -61,14 +61,16 @@ public abstract class ElementshardBehavior extends Behavior<EntityElementshard> 
 
 		int time = 0;
 
+
 		@Override
 		public ElementshardBehavior onUpdate(EntityElementshard entity) {
 			EntityLivingBase owner = entity.getOwner();
 
 
+
 			time++;
 
-			if (entity.isCollided || (!entity.world.isRemote && time > 100)) {
+			if (entity.isCollided || (!entity.world.isRemote && time > 200)) {
 				entity.setDead();
 				entity.onCollideWithSolid();
 			}

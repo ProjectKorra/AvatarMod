@@ -40,7 +40,7 @@ public class AbilityElementshard extends Ability {
 
 		float chi = 4F;
 		float damage = 0.5F;
-		int shardsAvailable = 5;
+		int shardsAvailable = 4;
 
 
 
@@ -49,7 +49,7 @@ public class AbilityElementshard extends Ability {
 			shardsAvailable = 8;
 		}
 		if (ctx.getLevel() == 2){
-			shardsAvailable = 10;
+			shardsAvailable = 16;
 			//create an explosion; code is in fireball but 2 lazy to do it right now
 		}
 		EntityElementshard shard = new EntityElementshard(world);
