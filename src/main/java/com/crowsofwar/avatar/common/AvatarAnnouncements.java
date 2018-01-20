@@ -53,6 +53,17 @@ public class AvatarAnnouncements {
 
 	}
 
+	/**
+	 * Cleans up the announcements so that they are ready for use. Sorts them so most recent announcements come first,
+	 * and removes any announcements later than 72 hours ago.
+	 */
+	private static void cleanupAnnouncements() {
+
+		announcements.sort(Comparator.comparingLong(Announcement::getHoursAgo));
+		announcements.removeIf(announcement -> announcement.getHoursAgo() > 72);
+
+	}
+
 	public static void fetchAnnouncements() {
 
 		AvatarLog.info("Fetching latest AvatarMod2 announcements...");
@@ -84,7 +95,7 @@ public class AvatarAnnouncements {
 
 			in.close();
 
-			announcements.sort(Comparator.comparingLong(Announcement::getHoursAgo));
+			cleanupAnnouncements();
 
 		} catch (Exception ex) {
 
