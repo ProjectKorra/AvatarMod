@@ -21,18 +21,10 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarAnnouncements {
 
-	public static final String ANNOUNCEMENT_URL = "https://pastebin.com/raw/iXq8pwr8";
+	public static final String ANNOUNCEMENT_URL = "https://raw.githubusercontent.com/CrowsOfWar/AvatarMod-Announcements/master/announcements.txt";
 
 	private static List<Announcement> announcements;
-
-	public static void main(String[] args) {
-		Announcement announcement = new Announcement("2018-01-08 Here is the first announcement");
-		System.out.println(announcement);
-
-
-
-	}
-
+	
 	@SubscribeEvent
 	public static void onLogin(PlayerEvent.PlayerLoggedInEvent e) {
 
