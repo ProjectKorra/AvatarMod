@@ -17,10 +17,7 @@
 
 package com.crowsofwar.avatar;
 
-import com.crowsofwar.avatar.common.AvatarChatMessages;
-import com.crowsofwar.avatar.common.AvatarCommonProxy;
-import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.AvatarPlayerTick;
+import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
@@ -198,6 +195,8 @@ public class AvatarMod {
 
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {
 		});
+
+		AvatarAnnouncements.fetchAnnouncements();
 
 	}
 
