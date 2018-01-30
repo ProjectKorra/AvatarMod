@@ -53,7 +53,7 @@ public class AbilityElementshard extends Ability {
 			//create an explosion; code is in fireball but 2 lazy to do it right now
 		}
 		EntityElementshard shard = new EntityElementshard(world);
-		shard.setShardsLeft(shardsAvailable);
+		shard.setShardsLeft(4);
 
 		if (data.hasStatusControl(StatusControl.THROW_ELEMENTSHARD)) return;
 

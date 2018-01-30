@@ -44,7 +44,6 @@ public class EntityElementshard extends AvatarEntity {
 		this.shardsLeft = shards;
 	}
 	private float damage;
-	int shardsLeft1 = 4;
 
 	/**
 	 * @param world
@@ -63,26 +62,29 @@ public class EntityElementshard extends AvatarEntity {
 
 	@Override
 	public void onUpdate() {
-		shardsLeft = shardsLeft1;
+
 		super.onUpdate();
 		setBehavior((ElementshardBehavior) getBehavior().onUpdate(this));
+		System.out.println(shardsLeft);
 
 		// Add hook or something
 		if (getOwner() == null) {
 			setDead();
-			removeStatCtrl();
+			if (shardsLeft == 0) {
+				removeStatCtrl();
+			}
 		}
 
 
 	}
 
-	@Override
+	/*@Override
 	public void setDead() {
 		super.setDead();
 		if (!world.isRemote && this.isDead) {
 			Thread.dumpStack();
 		}
-	}
+	}**/
 
 	@Override
 	public boolean onMajorWaterContact() {
@@ -132,11 +134,13 @@ public class EntityElementshard extends AvatarEntity {
 	protected void onCollideWithEntity(Entity entity) {
 		if (entity instanceof AvatarEntity && !(entity instanceof EntityElementshard)) {
 			((AvatarEntity) entity).onCollideWithSolid();
+			//shardsLeft --;
 		}
 	}
 
 	@Override
 	public boolean onCollideWithSolid() {
+		shardsLeft --;
 
 
 		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
@@ -151,7 +155,6 @@ public class EntityElementshard extends AvatarEntity {
 				destroyObsidian = true;
 			}
 		}
-		this.shardsLeft --;
 
 		/*Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
 				!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
