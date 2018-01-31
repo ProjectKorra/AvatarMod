@@ -52,8 +52,6 @@ public class AbilityElementshard extends Ability {
 			shardsAvailable = 16;
 			//create an explosion; code is in fireball but 2 lazy to do it right now
 		}
-		EntityElementshard shard = new EntityElementshard(world);
-		shard.setShardsLeft(4);
 
 		if (data.hasStatusControl(StatusControl.THROW_ELEMENTSHARD)) return;
 
@@ -74,6 +72,7 @@ public class AbilityElementshard extends Ability {
 			damage *= ctx.getPowerRatingDamageMod();
 				for (int i = 0; i<shardsAvailable; i++) {
 						EntityElementshard elementshard = new EntityElementshard(world);
+							elementshard.setShardsLeft(shardsAvailable);
 						elementshard.setPosition(target);
 						elementshard.setOwner(entity);
 						elementshard.setDamage(damage);
