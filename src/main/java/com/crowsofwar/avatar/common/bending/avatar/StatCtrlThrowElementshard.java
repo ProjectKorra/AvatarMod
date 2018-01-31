@@ -11,14 +11,16 @@ import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+import scala.util.Right;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
+import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK;
 
 public class StatCtrlThrowElementshard extends StatusControl {
 	public StatCtrlThrowElementshard() {
-		super(10, CONTROL_RIGHT_CLICK, LEFT_OF_CROSSHAIR);
+		super(10, CONTROL_RIGHT_CLICK, RIGHT_OF_CROSSHAIR);
 	}
 	int shardsLeft = 4;
 
