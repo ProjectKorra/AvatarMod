@@ -30,15 +30,20 @@ public class StatCtrlThrowElementshard extends StatusControl {
 	public boolean execute(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
+
+		AbilityElementshard abilityElementshard = new AbilityElementshard();
+
 		EntityElementshard elementshard = AvatarEntity.lookupControlledEntity(world, EntityElementshard.class, entity);
 
-		if (elementshard != null && shardsLeft > 0) {
+		abilityElementshard.setShardsLeft(shardsLeft);
+
+		if (elementshard != null) {
 			AbilityData abilityData = ctx.getData().getAbilityData("element_shard");
 			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
 			elementshard.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
 			elementshard.setBehavior(new ElementshardBehavior.Thrown());
 			shardsLeft --;
-			elementshard.setShardsLeft(shardsLeft);
+			abilityElementshard.setShardsLeft(shardsLeft);
 
 		}
 

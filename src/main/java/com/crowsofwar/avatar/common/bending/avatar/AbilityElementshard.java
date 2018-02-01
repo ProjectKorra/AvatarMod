@@ -26,6 +26,11 @@ import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 public class AbilityElementshard extends Ability {
 
+	private int shardsLeft;
+	public void setShardsLeft (int shards) {
+		this.shardsLeft = shards;
+	}
+
 	public AbilityElementshard() {
 		super(Avatarbending.ID, "element_shard");
 		requireRaytrace(2.5, false);
@@ -72,7 +77,6 @@ public class AbilityElementshard extends Ability {
 			damage *= ctx.getPowerRatingDamageMod();
 				for (int i = 0; i<shardsAvailable; i++) {
 						EntityElementshard elementshard = new EntityElementshard(world);
-							elementshard.setShardsLeft(shardsAvailable);
 						elementshard.setPosition(target);
 						elementshard.setOwner(entity);
 						elementshard.setDamage(damage);

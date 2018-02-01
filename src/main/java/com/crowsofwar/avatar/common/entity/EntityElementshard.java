@@ -39,9 +39,9 @@ public class EntityElementshard extends AvatarEntity {
 			DataSerializers.VARINT);
 
 	private AxisAlignedBB expandedHitbox;
-	private float shardsLeft;
-	public void setShardsLeft(float shards) {
-		this.shardsLeft = shards;
+	private boolean noShards = false;
+	public void havenoShards(boolean shards) {
+		this.noShards = shards;
 	}
 	private float damage;
 
@@ -65,15 +65,11 @@ public class EntityElementshard extends AvatarEntity {
 
 		super.onUpdate();
 		setBehavior((ElementshardBehavior) getBehavior().onUpdate(this));
-		System.out.println(shardsLeft);
 
 		// Add hook or something
 		if (getOwner() == null) {
 			setDead();
-		//	if (shardsLeft == 0) {
-			//	removeStatCtrl();
-		//	}
-		}
+	}
 
 
 	}
@@ -140,7 +136,7 @@ public class EntityElementshard extends AvatarEntity {
 
 	@Override
 	public boolean onCollideWithSolid() {
-		shardsLeft --;
+
 
 
 		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
@@ -201,9 +197,10 @@ public class EntityElementshard extends AvatarEntity {
 	}
 
 	private void removeStatCtrl() {
-		if (getOwner() != null && this.shardsLeft == 0) {
+		if (getOwner() != null && this.noShards) {
 			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(StatusControl.THROW_ELEMENTSHARD);
+			noShards = false;
 		}
 	}
 
