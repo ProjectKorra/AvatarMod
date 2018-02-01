@@ -10,8 +10,7 @@ import com.crowsofwar.avatar.common.entity.data.ElementshardBehavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.World;
-import scala.util.Right;
+import net.minecraft.world.World;;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
@@ -22,11 +21,12 @@ public class StatCtrlThrowElementshard extends StatusControl {
 	public StatCtrlThrowElementshard() {
 		super(10, CONTROL_RIGHT_CLICK, RIGHT_OF_CROSSHAIR);
 	}
+
 	private int shardsLeft;
-	public void setShardsLeft (int shards) {
+
+	public void setShardsLeft(int shards) {
 		this.shardsLeft = shards;
 	}
-
 
 
 	@Override
@@ -35,19 +35,18 @@ public class StatCtrlThrowElementshard extends StatusControl {
 		World world = ctx.getWorld();
 
 
-
 		EntityElementshard elementshard = AvatarEntity.lookupControlledEntity(world, EntityElementshard.class, entity);
 
 		if (elementshard != null) {
+			this.setShardsLeft(4);
 			AbilityData abilityData = ctx.getData().getAbilityData("element_shard");
 			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
 			elementshard.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
 			elementshard.setBehavior(new ElementshardBehavior.Thrown());
-			shardsLeft --;
-			if (shardsLeft == 0){
+			shardsLeft--;
+			if (shardsLeft == 0) {
 				elementshard.havenoShards(true);
-			}
-			else {
+			} else {
 				elementshard.havenoShards(false);
 			}
 
@@ -55,6 +54,7 @@ public class StatCtrlThrowElementshard extends StatusControl {
 
 		return true;
 	}
+
 
 }
 
