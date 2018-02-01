@@ -22,7 +22,10 @@ public class StatCtrlThrowElementshard extends StatusControl {
 	public StatCtrlThrowElementshard() {
 		super(10, CONTROL_RIGHT_CLICK, RIGHT_OF_CROSSHAIR);
 	}
-	int shardsLeft = 4;
+	private int shardsLeft;
+	public void setShardsLeft (int shards) {
+		this.shardsLeft = shards;
+	}
 
 
 
@@ -31,11 +34,9 @@ public class StatCtrlThrowElementshard extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 
-		AbilityElementshard abilityElementshard = new AbilityElementshard();
+
 
 		EntityElementshard elementshard = AvatarEntity.lookupControlledEntity(world, EntityElementshard.class, entity);
-
-		abilityElementshard.setShardsLeft(shardsLeft);
 
 		if (elementshard != null) {
 			AbilityData abilityData = ctx.getData().getAbilityData("element_shard");
@@ -43,7 +44,12 @@ public class StatCtrlThrowElementshard extends StatusControl {
 			elementshard.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
 			elementshard.setBehavior(new ElementshardBehavior.Thrown());
 			shardsLeft --;
-			abilityElementshard.setShardsLeft(shardsLeft);
+			if (shardsLeft == 0){
+				elementshard.havenoShards(true);
+			}
+			else {
+				elementshard.havenoShards(false);
+			}
 
 		}
 
