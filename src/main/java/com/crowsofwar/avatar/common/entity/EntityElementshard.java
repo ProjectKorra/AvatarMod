@@ -122,7 +122,9 @@ public class EntityElementshard extends AvatarEntity {
 	protected void onCollideWithEntity(Entity entity) {
 		if (entity instanceof AvatarEntity && !(entity instanceof EntityElementshard)) {
 			((AvatarEntity) entity).onCollideWithSolid();
-			//shardsLeft --;
+
+			StatCtrlThrowElementshard elementshard = new StatCtrlThrowElementshard();
+			elementshard.shardsLeft --;
 		}
 	}
 

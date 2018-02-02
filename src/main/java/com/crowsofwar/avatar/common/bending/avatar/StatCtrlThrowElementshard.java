@@ -22,7 +22,7 @@ public class StatCtrlThrowElementshard extends StatusControl {
 		super(10, CONTROL_RIGHT_CLICK, RIGHT_OF_CROSSHAIR);
 	}
 
-	private static int shardsLeft;
+	public static int shardsLeft;
 
 	public void setShardsLeft(int shards) {
 		this.shardsLeft = shards;
