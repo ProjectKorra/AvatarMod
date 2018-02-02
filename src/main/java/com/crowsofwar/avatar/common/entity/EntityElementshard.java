@@ -71,7 +71,7 @@ public class EntityElementshard extends AvatarEntity {
 		// Add hook or something
 		if (getOwner() == null) {
 			setDead();
-			if (noShards){
+			if (noShards) {
 				removeStatCtrl();
 			}
 
