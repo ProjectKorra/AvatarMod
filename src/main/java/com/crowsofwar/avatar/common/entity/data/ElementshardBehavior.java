@@ -103,7 +103,7 @@ public abstract class ElementshardBehavior extends Behavior<EntityElementshard> 
 
 			if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
 					entity.getDamage())) {
-				BattlePerformanceScore.addMediumScore(entity.getOwner());
+				BattlePerformanceScore.addSmallScore(entity.getOwner());
 			}
 
 			Vector motion = entity.velocity().dividedBy(20);
