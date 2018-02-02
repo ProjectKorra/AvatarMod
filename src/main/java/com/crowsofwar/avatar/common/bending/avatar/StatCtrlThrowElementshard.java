@@ -22,7 +22,7 @@ public class StatCtrlThrowElementshard extends StatusControl {
 		super(10, CONTROL_RIGHT_CLICK, RIGHT_OF_CROSSHAIR);
 	}
 
-	private int shardsLeft;
+	private static int shardsLeft;
 
 	public void setShardsLeft(int shards) {
 		this.shardsLeft = shards;
@@ -38,12 +38,13 @@ public class StatCtrlThrowElementshard extends StatusControl {
 		EntityElementshard elementshard = AvatarEntity.lookupControlledEntity(world, EntityElementshard.class, entity);
 
 		if (elementshard != null) {
-			this.setShardsLeft(4);
+			//this.setShardsLeft(4);
 			AbilityData abilityData = ctx.getData().getAbilityData("element_shard");
 			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
 			elementshard.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
 			elementshard.setBehavior(new ElementshardBehavior.Thrown());
 			shardsLeft--;
+			System.out.println(shardsLeft);
 			if (shardsLeft == 0) {
 				elementshard.havenoShards(true);
 			} else {

@@ -27,6 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+import org.lwjgl.Sys;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class EntityElementshard extends AvatarEntity {
 			DataSerializers.VARINT);
 
 	private AxisAlignedBB expandedHitbox;
-	private boolean noShards = false;
+	private static boolean noShards;
 	public void havenoShards(boolean shards) {
 		this.noShards = shards;
 	}
@@ -70,8 +71,11 @@ public class EntityElementshard extends AvatarEntity {
 		// Add hook or something
 		if (getOwner() == null) {
 			setDead();
-	}
+			if (noShards){
+				removeStatCtrl();
+			}
 
+		}
 
 	}
 
@@ -83,19 +87,6 @@ public class EntityElementshard extends AvatarEntity {
 		}
 	}**/
 
-	@Override
-	public boolean onMajorWaterContact() {
-		spawnExtinguishIndicators();
-		removeStatCtrl();
-		setDead();
-		return true;
-	}
-
-	@Override
-	public boolean onMinorWaterContact() {
-		spawnExtinguishIndicators();
-		return false;
-	}
 
 
 	public ElementshardBehavior getBehavior() {
@@ -140,7 +131,7 @@ public class EntityElementshard extends AvatarEntity {
 
 
 
-		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
+		/*float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
 		explosionSize *= getSize() / 30f;
 		explosionSize += getPowerRating() * 2.0 / 100;
 		boolean destroyObsidian = false;
@@ -152,7 +143,7 @@ public class EntityElementshard extends AvatarEntity {
 				destroyObsidian = true;
 			}
 		}
-
+**/
 		/*Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
 				!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
 		if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
@@ -198,7 +189,8 @@ public class EntityElementshard extends AvatarEntity {
 	}
 
 	private void removeStatCtrl() {
-		if (getOwner() != null && this.noShards) {
+		if (getOwner() != null && noShards) {
+			System.out.println(noShards);
 			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(StatusControl.THROW_ELEMENTSHARD);
 			noShards = false;
