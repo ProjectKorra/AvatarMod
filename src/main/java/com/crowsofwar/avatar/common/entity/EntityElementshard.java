@@ -71,11 +71,9 @@ public class EntityElementshard extends AvatarEntity {
 		// Add hook or something
 		if (getOwner() == null) {
 			setDead();
-			if (noShards) {
+			if (noShards && this.isDead) {
 				removeStatCtrl();
 			}
-
-
 		}
 
 	}
@@ -124,8 +122,6 @@ public class EntityElementshard extends AvatarEntity {
 		if (entity instanceof AvatarEntity && !(entity instanceof EntityElementshard)) {
 			((AvatarEntity) entity).onCollideWithSolid();
 
-			StatCtrlThrowElementshard elementshard = new StatCtrlThrowElementshard();
-			elementshard.shardsLeft --;
 		}
 	}
 
