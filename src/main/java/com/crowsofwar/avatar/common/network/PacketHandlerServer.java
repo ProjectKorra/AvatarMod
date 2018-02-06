@@ -26,12 +26,14 @@ import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.avatar.StatCtrlThrowElementshard;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.WallJumpManager;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityElementshard;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.ContainerGetBending;
@@ -189,8 +191,8 @@ public class PacketHandlerServer implements IPacketHandler {
 
 		if (data != null) {
 			StatusControl sc = packet.getStatusControl();
-			if (data.hasStatusControl(sc)) {
-				if (sc.execute(new BendingContext(data, player, packet.getRaytrace()))) {
+			if (data.hasStatusControl(sc))  {
+				if (sc.execute(new BendingContext(data, player, packet.getRaytrace())) && ((sc instanceof StatCtrlThrowElementshard && EntityElementshard.noShards == true) || !(sc instanceof StatCtrlThrowElementshard))) {
 					data.removeStatusControl(packet.getStatusControl());
 				}
 			}
