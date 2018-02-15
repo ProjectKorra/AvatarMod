@@ -23,6 +23,7 @@ public class AbilityAvatarState extends Ability {
 		return true;
 	}
 
+
 	@Override
 	public void execute(AbilityContext ctx) {
 		BendingData data = ctx.getData();
@@ -37,10 +38,22 @@ public class AbilityAvatarState extends Ability {
 			// 5s base + 1s per level
 			int duration = 100 + 20 * abilityData.getLevel();
 
-			int effectLevel = abilityData.getLevel() >= 2 ? 1 : 0;
+			int effectLevel = abilityData.getLevel() >= 0 ? abilityData.getLevel() : 0;
+
+			entity.clearActivePotions();
 
 			entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, effectLevel));
 			entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration, effectLevel));
+
+
+			if (abilityData.getLevel() >= 1){
+				entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, effectLevel));
+			}
+
+			if (abilityData.getLevel() >= 2){
+				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, effectLevel));
+			}
+
 
 		}
 	}
