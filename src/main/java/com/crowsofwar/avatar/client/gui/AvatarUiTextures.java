@@ -23,6 +23,7 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -107,9 +108,8 @@ public class AvatarUiTextures {
 
 			String path = "assets/avatarmod/textures/gui/background/";
 			String file = path + bendingName + ".png";
-			instr = ClassLoader.getSystemClassLoader().getResourceAsStream(file);
 
-			BufferedImage image = ImageIO.read(instr);
+			BufferedImage image = ImageIO.read(AvatarUiTextures.class.getClassLoader().getResourceAsStream(file));
 			int width = image.getWidth();
 			bendingBackgroundWidth.put(bendingId, width);
 			return width;

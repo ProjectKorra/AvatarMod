@@ -225,13 +225,13 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 					if (bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
 						data.addStatusControl(StatusControl.THROW_BLOCK);
 						data.addStatusControl(StatusControl.PLACE_BLOCK);
+
+						// the entity was already setDead from onCollideWithSolid, we need to mark it alive again
+						entity.isDead = false;
+
 						return new FloatingBlockBehavior.PlayerControlled();
-					} else {
-						entity.setDead();
 					}
 
-				} else {
-					entity.setDead();
 				}
 			}
 

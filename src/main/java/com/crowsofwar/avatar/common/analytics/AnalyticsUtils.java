@@ -1,11 +1,11 @@
 package com.crowsofwar.avatar.common.analytics;
 
 import com.crowsofwar.avatar.common.config.ConfigAnalytics;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
+
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author CrowsOfWar
@@ -29,7 +29,7 @@ public class AnalyticsUtils {
 	 * Makes a request to the GA API
 	 */
 	public static void makeSingleApiRequest(String params) {
-		if (ConfigAnalytics.ANALYTICS_CONFIG.analyticsEnabled) {
+		if (ConfigAnalytics.ANALYTICS_CONFIG.isAnalyticsEnabled()) {
 			post("https://www.google-analytics.com/collect", params);
 		}
 	}
@@ -38,26 +38,43 @@ public class AnalyticsUtils {
 	 * Makes a request to the GA API
 	 */
 	public static void makeBatchApiRequest(String params) {
-		if (ConfigAnalytics.ANALYTICS_CONFIG.analyticsEnabled) {
+		if (ConfigAnalytics.ANALYTICS_CONFIG.isAnalyticsEnabled()) {
 			post("https://www.google-analytics.com/batch", params);
 		}
 	}
 
 	public static void post(String url, String payload) {
 
+		// We can't use Apache HTTP libraries here because for some reason they aren't loaded on the
+		// server
 		// https://stackoverflow.com/questions/3324717/sending-http-post-request-in-java
 
+		HttpURLConnection connection = null;
 		try {
 
-			HttpClient client = HttpClients.createDefault();
-			HttpPost post = new HttpPost(url);
+			URL urlObject = new URL(url);
+			connection = (HttpURLConnection) urlObject.openConnection();
+			connection.setRequestMethod("POST");
+			connection.setDoOutput(true);
 
-			post.setEntity(new StringEntity(payload, ContentType.create("text/plain", "UTF-8")));
+			byte[] payloadBytes = payload.getBytes(StandardCharsets.UTF_8);
 
-			client.execute(post);
+			connection.setFixedLengthStreamingMode(payloadBytes.length);
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			connection.connect();
+
+			OutputStream outputStream = connection.getOutputStream();
+			outputStream.write(payloadBytes);
+			outputStream.flush();
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+
+			if (connection != null) {
+				connection.disconnect();
+			}
+
 		}
 
 	}

@@ -87,6 +87,10 @@ avatar.canUpgradeAbility2=\[AvatarMod2] To do so, in the radial menu, just hover
 avatar.canUpgradeAbility3=\[AvatarMod2] You'll need a [yellow]Universal or [translate=avatar.${bendingType}] scroll[/yellow] to do so!
 avatar.waterCannonFail=Need to look directly at water source
 
+avatar.announcement.today=[bold][red]\[AvatarMod Announcement][/red] \[today]:[/bold] ${announcement}
+avatar.announcement.yesterday=[bold][red]\[AvatarMod Announcement][/red] \[yesterday]:[/bold] ${announcement}
+avatar.announcement.days=[bold][red]\[AvatarMod Announcement][/red] \[${days} days ago]:[/bold] ${announcement}
+
 avatar.bisonWhistle.summon=Your bison was called and will be here in approximately ${time} seconds!
 avatar.bisonWhistle.assign=Bound this Bison Whistle to ${bison}.
 avatar.bisonWhistle.notAssigned=[error]This bison whistle has not been bound to a bison; sneak-click a bison with this to bind it.[/error]
