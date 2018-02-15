@@ -17,6 +17,7 @@ public class Avatarbending extends BendingStyle {
 		super(Avatarbending.ID);
 
 		addAbility("element_shard");
+		addAbility("avatar_state");
 
 		MenuTheme.ThemeColor bkgd = new MenuTheme.ThemeColor(0xEBF4F5, 0xDBE1E2);
 		MenuTheme.ThemeColor edge = new MenuTheme.ThemeColor(0xC5DDDF, 0xACBFC0);
