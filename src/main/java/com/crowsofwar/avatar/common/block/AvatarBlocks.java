@@ -25,7 +25,7 @@ public class AvatarBlocks {
 	private AvatarBlocks() {
 	}
 
-	public static void init() {
+	private static void init() {
 		allBlocks = new ArrayList<>();
 		addBlock(blockCloud = new CloudBlock());
 	}
@@ -37,6 +37,7 @@ public class AvatarBlocks {
 
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> e) {
+		init();
 		Block[] blocksArr = allBlocks.toArray(new Block[allBlocks.size()]);
 		e.getRegistry().registerAll(blocksArr);
 	}

@@ -161,7 +161,6 @@ public class AvatarMod {
 		registerAbilities();
 		registerBendingStyles();
 		AvatarItems.init();
-		AvatarBlocks.init();
 		AvatarParticles.register();
 
 		proxy.preInit();

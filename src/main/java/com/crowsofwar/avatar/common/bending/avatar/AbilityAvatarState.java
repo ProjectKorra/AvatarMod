@@ -15,7 +15,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class AbilityAvatarState extends Ability {
 
 	public AbilityAvatarState() {
-		super(Avatarbending.ID, "avatr_state");
+		super(Avatarbending.ID, "avatar_state");
 	}
 
 	@Override
