@@ -30,6 +30,7 @@ public class AbilityElementshard extends Ability {
 		super(Avatarbending.ID, "element_shard");
 		requireRaytrace(2.5, false);
 	}
+
 	@Override
 	public void execute(AbilityContext ctx) {
 
@@ -43,12 +44,11 @@ public class AbilityElementshard extends Ability {
 		int shardsAvailable = 4;
 
 
-
-		if (ctx.getLevel() == 1){
+		if (ctx.getLevel() == 1) {
 			damage = 1F;
 			shardsAvailable = 8;
 		}
-		if (ctx.getLevel() == 2){
+		if (ctx.getLevel() == 2) {
 			shardsAvailable = 16;
 			//create an explosion; code is in fireball but 2 lazy to do it right now
 		}
@@ -56,9 +56,7 @@ public class AbilityElementshard extends Ability {
 		if (data.hasStatusControl(StatusControl.THROW_ELEMENTSHARD)) return;
 
 
-
 		if (bender.consumeChi(chi)) {
-
 
 			Vector target;
 			if (ctx.isLookingAtBlock()) {
@@ -72,27 +70,24 @@ public class AbilityElementshard extends Ability {
 			throwElementshard.setShardsLeft(shardsAvailable);
 
 			damage *= ctx.getPowerRatingDamageMod();
-				for (int i = 0; i<shardsAvailable; i++) {
-						EntityElementshard elementshard = new EntityElementshard(world);
-						elementshard.setPosition(target);
-						elementshard.setOwner(entity);
-						elementshard.setDamage(damage);
-						elementshard.setPowerRating(bender.calcPowerRating(Avatarbending.ID));
-						if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) elementshard.setSize(20);
-						elementshard.setBehavior(new ElementshardBehavior.PlayerControlled());
-						world.spawnEntity(elementshard);
+			for (int i = 0; i < shardsAvailable; i++) {
+				EntityElementshard elementshard = new EntityElementshard(world);
+				elementshard.setPosition(target);
+				elementshard.setOwner(entity);
+				elementshard.setDamage(damage);
+				elementshard.setPowerRating(bender.calcPowerRating(Avatarbending.ID));
+				if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) elementshard.setSize(20);
+				elementshard.setBehavior(new ElementshardBehavior.PlayerControlled());
+				world.spawnEntity(elementshard);
 
-
-				}
-			data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
 
 			}
-
-
-
+			data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
 
 		}
 
+
+	}
 
 
 	@Override
