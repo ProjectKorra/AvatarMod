@@ -87,7 +87,7 @@ public abstract class EntityShield extends AvatarEntity {
 	 * Handles hovering logic to make the owner hover. Preconditions (not in water, owner
 	 * present, etc) are handled by the caller
 	 */
-	private void handleHovering() {
+	protected void handleHovering() {
 
 		if (getOwner() != null) {
 			getOwner().fallDistance = 0;
