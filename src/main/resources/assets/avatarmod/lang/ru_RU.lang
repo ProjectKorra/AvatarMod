@@ -1,0 +1,472 @@
+avatar.category.main=Аватар
+
+avatar.BendingList=Отобразить Меню Стихий
+avatar.CheatEarthbending=Cheat Earthbending
+avatar.ThrowBlock=Кинуть блок
+avatar.ToggleBending=Поднять блок
+
+avatar.RadialMenu=Меню способностей
+avatar.Bend=Использовать магию
+avatar.BendingCycleLeft=Сменить магию влево
+avatar.BendingCycleRight=Сменить магию вправо
+avatar.Skills=Меню способностей
+avatar.TransferBison=Подтвердить передачу бизона
+
+avatar.combustionbending=Воспламенения
+avatar.combustionbending.demonym=Маг воспламенения
+avatar.earthbending=Магии земли
+avatar.earthbending.demonym=Маг земли
+avatar.firebending=Магии огня
+avatar.firebending.demonym=Маг огня
+avatar.waterbending=Магии воды
+avatar.waterbending.demonym=Маг воды
+avatar.airbending=Магии воздуха
+avatar.airbending.demonym=Маг воздуха
+avatar.lightningbending=Магии молнии
+avatar.lightningbending.demonym=Маг молнии
+avatar.icebending=Ледяной магии
+avatar.icebending.demonym=Маг льда
+avatar.sandbending=Магии песка
+avatar.sandbending.demonym=Песчаный маг
+
+avatar.all=Универсальный
+
+avatar.cmd.bending=Настроить клавиши управления способностями.
+avatar.cmd.bending.list.noData=[error][error_value]${player}[/error_value] нет данных об игроке.[/error]
+avatar.cmd.bending.list.nonbender=[italic][value]${player}[/value] н.[/italic]
+avatar.cmd.bending.list.item=- [translate=avatar.${bending}]
+avatar.cmd.bending.list.top= Игроку [value]${player}[/value][/bold] доступно [bold][value]${amount}[/value] следующих стихии:
+
+avatar.cmd.bending.add.alreadyHas=[error][error_value]${player}[/error_value] уже [error_value][translate=avatar.${bending}.demonym][/error_value][/error].
+avatar.cmd.bending.add.success=[bold][value]${player}[/value] теперь [value][translate=avatar.${bending}.demonym][/value]![/bold]
+
+avatar.cmd.bending.remove.doesntHave=[error][error_value]${player}[/error_value] не [error_value][translate=avatar.${bending}.demonym][/error_value][/error].
+avatar.cmd.bending.remove.success=[bold]Отобрана [value][translate=avatar.${bending}][/value] у [value]${player}[/value]![/bold]
+
+avatar.cmd.ability.set.range=[error]Значение опыта должно варьироваться от [error_value]0[/error_value] до [error_value]100[/error_value].
+avatar.cmd.ability.set.success=[bold]Опыт игрока [value]${player}[/value] для способности [value]${ability}[/value] успешно установлен на [value]${amount}[/value][/bold]
+
+avatar.cmd.ability.get=[bold]Опыт игрока[value]${player}[/value] для способности [value]${ability}[/value] составляет [value]${amount}[/value][/bold]
+
+avatar.cmd.cfg.exception1=[error]При попытке перезагрузки файлов конфигурации произошла ошибка[/error]
+avatar.cmd.cfg.exception2=[error]Подробнее: [error_value]${details}[/error_value] загляните в log для деталей[/error]
+
+avatar.cmd.cfg.successful=[bold]Файлы конфигурации успешно перезагружены[/bold]
+
+avatar.cmd.pp.add=Очки прогресса игрока [value]${player}[/value] по способности [value][translate=avatar.${bending}][/value] увеличены до [value]${pps}[/value].
+avatar.cmd.pp.get=[value]${player}[/value] на данный момент имеет [value]${pps}[/value] очков прогресса по способности [value][translate=avatar.${bending}][/value].
+avatar.cmd.pp.set=Установлено значение прогресса игрока [value]${player}[/value] [value]${pps}[/value] по способности [value][translate=avatar.${bending}][/value].
+avatar.cmd.pp.set.range=[error]Значение опыта должно быть больше, чем 0.[/error]
+
+avatar.spec.locked=недоступно
+avatar.spec.lvl1=Уровень I
+avatar.spec.lvl2=Уровень II
+avatar.spec.lvl3=Уровень III
+avatar.spec.lvl4=Уровень IV
+avatar.spec.lvl4_1=Уровень IV, первое ответвление
+avatar.spec.lvl4_2=Уровень IV, второе ответвление
+avatar.cmd.xpset=Установлен прогресс игрока [value]${player}[/value] по способности [value]${ability}[/value] на [value][translate=avatar.spec.${spec}][/value]
+avatar.cmd.noAbility=Нет способности с названием %s
+
+avatar.donthavebending=[error]Вы ещё пока не изучили ${bending}. Для того, чтобы сделать это, введите: [error_value]/avatar bending add ${username} ${bending}[/error_value][/error]
+avatar.nochi=Недостаточно chi!
+avatar.airBubbleElytra=Невозможно использовать воздушный щит при полёте на элитрах.
+avatar.bisonStats=Показатели бизона таковы: ${food}%% сытости, ${health}%% здоровья, и ${domestication} прирученности.
+avatar.outOfScrolls=Мне нечего Вам больше предложить.
+avatar.abilityLocked=Вам необходимо открыть эту способность прежде чем её использовать!
+avatar.bisonChestSlots1=У Вашего бизона пока нет инвентаря,
+avatar.bisonChestSlots2=но он появится и будет увеличиваться
+avatar.bisonChestSlots3=по мере взросления питомца.
+avatar.skatingBendingDisabled=[error]Вы не можете использовать магию во время бега по воде, пока не улучшите способность до уровня II.[/error]
+avatar.sandPrisonDisabled.sand=Цель должна находиться на сыпучем блоке, иначе вы не можете использовать способность.
+avatar.sandPrisonDisabled.bendable=Цель должна находиться на блоке, подвластном магии земли, чтобы вы могли использовать способность.
+avatar.lightningRedirected=Вы отразили молнию игрока ${lightningbender}!
+avatar.canUpgradeAbility=[bold]\[AvatarMod2] [aqua]Вы можете улучшить способность [translate=avatar.ability.${ability}] до показателя [translate=avatar.spec.lvl${newLevel}]![/aqua][/bold]
+avatar.canUpgradeAbility2=\[AvatarMod2] Для этого наведите на неё мышь в меню способностей и нажмите ПКМ.
+avatar.canUpgradeAbility3=\[AvatarMod2] Вам понадобится [yellow]универсатльный свиток или свиток [translate=avatar.${bendingType}].[/yellow]
+avatar.waterCannonFail=Для использования способности смотрите прямо на источник воды
+
+avatar.announcement.today=[bold][red]\[AvatarMod Announcement][/red] \[today]:[/bold] ${announcement}
+avatar.announcement.yesterday=[bold][red]\[AvatarMod Announcement][/red] \[yesterday]:[/bold] ${announcement}
+avatar.announcement.days=[bold][red]\[AvatarMod Announcement][/red] \[${days} days ago]:[/bold] ${announcement}
+
+avatar.bisonWhistle.summon=Ваш бизон призван и прибудет через ${time} секунд!
+avatar.bisonWhistle.assign=Этот Свисток теперь будет призывать бизона ${bison}.
+avatar.bisonWhistle.notAssigned=[error]Этот свисток не привязан ни к какому бизону; присядьте и кликните свистком на бизона чтобы связать их.[/error]
+avatar.bisonWhistle.notFound=[error]${bison} больше не проживает в физическом мире.[/error]
+avatar.bisonWhistle.notOwned=[error]Этот летающий бизон Вам не принадлежит.[/error]
+avatar.bisonWhistle.untamed=[error]Этот летающий бизон дикий и Вам требуется приручить его сперва.[/error]
+avatar.bisonWhistle.tooltipBound=Призывает %s
+avatar.bisonWhistle.tooltipUnbound=Не привязан
+avatar.bisonWhistle.transferAway=Ваш летающий бизон ${bison} перешёл во вледение ${newOwner}.
+avatar.bisonWhistle.transferTo=Теперь ${bison} - Ваш бизон!
+avatar.bisonWhistle.noTransfer=[error]Пока никто не давал запрос на передачу бизона.[/error]
+avatar.bisonWhistle.transferAway.start=${newOwner} хотел(а) бы забрать вашего бизона ${bison}. Нажмите [keybinding=avatar.TransferBison] чтобы подтвердить, игнорируйте для отказа.
+avatar.bisonWhistle.transferTo.start=Игроку ${oldOwner} - владельцу данного бизона был отправлен запрос на передачу бизона ${bison} Вам.
+avatar.bisonWhistle.transferAway.ignore=Запрос на передачу бизона игроку ${newOwner} отклонён.
+avatar.bisonWhistle.transferTo.ignore=${oldOwner} решил(а) не отвечать на ваш запрос.
+avatar.bisonWhistle.transferOffline=[error]Этот бизон не Ваш. Вы не можете передавать бизона, пока его владелец ${owner} не в сети.[/error]
+avatar.bisonWhistle.followOn=Теперь ваш бизон будет следовать за Вами.
+avatar.bisonWhistle.followOff=Бизон больше не следует за Вами.
+avatar.bisonWhistle.nearby=[error]Ваш бизон и так поблизости![/error]
+
+avatar.specialtyScroll.success=Вы разблокировали [translate=avatar.${specialtyBending}]!
+avatar.specialtyScroll.fail=[error]Извините, но вы не маг [translate=avatar.${mainBending}]. Перед тем, как вы сможете обучиться [translate=avatar.${specialtyBending}], Вам нужно изучить основную магию.[/error]
+avatar.specialtyScroll.alreadyHave=[error]Вы уже маг [translate=avatar.${specialtyBending}].[/error]
+avatar.specialtyScroll.tooltip=[aqua]Может быть использован для разблокировки или улучшения [translate=avatar.${bending}].[/aqua]
+
+avatar.ability.pickup_block=Манипуляция землёй
+avatar.ability.pickup_block.desc=Используйте магию земли, чтобы двигать блоки, подвластные ей. Перемещайте их на навые места или бросте в своих врагов!.
+avatar.ability.pickup_block.lvl1=Перемещайте и бросайте породу.
+avatar.ability.pickup_block.lvl2=Брошенные блоки летят дальше и быстрее
+avatar.ability.pickup_block.lvl3=Удвоен урон
+avatar.ability.pickup_block.lvl4_1=Блок-бумеранг ;; Блок возвращается к Вам после успешного попадания по мобу
+avatar.ability.pickup_block.lvl4_2=Ударное воздействие ;; 50% шанс создать взрыв при столкновении с целью
+
+avatar.ability.ravine=Разлом
+avatar.ability.ravine.desc=Создаёт небольшие, но мощные трещины в земле (не разрушающие и не сдвигающие блоки), отталкивая враов и нанося урон. Работает на уровне высоты блоков, на, и в которых вы стоите.
+avatar.ability.ravine.lvl1=Медленный, обычный импульс
+avatar.ability.ravine.lvl2=Более высокая скорость
+avatar.ability.ravine.lvl3=Разлом проходит дальше, если на его пути нет препятствий
+avatar.ability.ravine.lvl4_1=Раскол ;; Разрушает блоки и задевает множество врагов, но стоит 1.5x chi
+avatar.ability.ravine.lvl4_2=Неустойчивая земля ;; Высокий шанс сбить броню или оружие с противника
+
+avatar.ability.wall=Стена
+avatar.ability.wall.desc=Поднимите защитный барьер перед собой, который защитит вас от снарядов и мобов.
+avatar.ability.wall.lvl1=Создаётся маленькая стена
+avatar.ability.wall.lvl2=Стена становится больше
+avatar.ability.wall.lvl3=Создавайте бóльшую стену
+avatar.ability.wall.lvl4_1=Вы можете стрелять сквозь стену
+avatar.ability.wall.lvl4_2=Стена остаётся поднятой дольше, но использует chi
+
+avatar.ability.mine_blocks=Добыча блоков
+avatar.ability.mine_blocks.desc=Быстро разрушайте блоки, создавая туннели
+avatar.ability.mine_blocks.lvl1=Добыча нескольких блоков
+avatar.ability.mine_blocks.lvl2=Количество добываемых блоков увеличено
+avatar.ability.mine_blocks.lvl3=Вы добываете с зачарованием Удача I
+avatar.ability.mine_blocks.lvl4_1=Копайте очень быстро с удачей III
+avatar.ability.mine_blocks.lvl4_2=Добывайте жилы руд с удачей IV
+
+avatar.ability.earthspike=Земляные шипы
+avatar.ability.earthspike.desc=Сорвите землю и создайте линию шипов которая ноносит урон всему, что встретится на её пути.
+avatar.ability.earthspike.lvl1=Вы создаёте гладкие, не очень опасные шипы
+avatar.ability.earthspike.lvl2=Больше шипов, больше урона!
+avatar.ability.earthspike.lvl3=Более быстрые шипы
+avatar.ability.earthspike.lvl4_1=Шипы осьминога ;; Создаёт 8 линий шипов во всех направлениях
+avatar.ability.earthspike.lvl4_2=Молниеносная атака ;; Шипы очень быстрые и наносят двойной урон
+
+avatar.ability.restore=Восстановление
+avatar.ability.restore.desc= Используйте энергию земли, чтобы помочь себе в бою, повышая свою стойкость.
+avatar.ability.restore.lvl1= Получайте сопротивление за счёт своей скорости.
+avatar.ability.restore.lvl2= Вы можете извлечь энергию из окружающей среды, чтобы медленно лечить себя.
+avatar.ability.restore.lvl3= Количество скорости, которую вы теряете уменьшено, а скорость регенерации увеличена. Вы также набираетесь сил.
+avatar.ability.restore.lvl4_1= Телохранитель ;; Ваша сила и сопротивление увеличены.
+avatar.ability.restore.lvl4_2= Жизнеобеспечение ;; Вы мгновенно излечиваетесь и Ваш голод пропадает.
+
+avatar.ability.light_fire=Поджигание
+avatar.ability.light_fire.desc=Небольшая способность, позволяющая разжигать огонь. Пожалуй, менее практична в бою, чем некоторые другие способности.
+avatar.ability.light_fire.fail=У Вас не получилось ражечь огонь. Возможно, стоит попробовать снова...
+avatar.ability.light_fire.lvl1=Вы пробуете разжечь меленький костёр
+avatar.ability.light_fire.lvl2=Повышены шансы разжигания огня
+avatar.ability.light_fire.lvl3=Ещё больше шанс разжечь огонь
+avatar.ability.light_fire.lvl4_1=Огненная снена ;; Создаёт линию огня в направлении вашего взгляда
+avatar.ability.light_fire.lvl4_2=Широкий диапазон ;; Вы также поджигаете близлежащие блоки
+
+avatar.ability.fire_arc=Огненный хлыст
+avatar.ability.fire_arc.desc=Создайте огненный кнут и обрушьте его на своего врага
+avatar.ability.fire_arc.lvl1=Вы можете создать огненный хлыст
+avatar.ability.fire_arc.lvl2=Скорость увеличена
+avatar.ability.fire_arc.lvl3=Значительно увеличен урон
+avatar.ability.fire_arc.lvl4_1=Больше огня ;; Создаёт больше огня при столкновении
+avatar.ability.fire_arc.lvl4_2=Бумеранг ;; Орудие возвращается назад после успешного попадания по цели
+
+avatar.ability.flamethrower=Огнемёт
+avatar.ability.flamethrower.desc=Создайте мощный поток огня малой дальности. Визитная карточка огненной магии.
+avatar.ability.flamethrower.lvl1=Атака малой дальности
+avatar.ability.flamethrower.lvl2=Почти вдвое больше пламени; но стоит больше chi
+avatar.ability.flamethrower.lvl3=Больше дальность, атаки становятся точнее
+avatar.ability.flamethrower.lvl4_1=Поток пламени ;; Концентрированное пламя чрезвычайно дальнего действия 
+avatar.ability.flamethrower.lvl4_2=Гори оно огнём! ;; Рассосредоточенная атака, которая поджигает всё вокруг
+
+avatar.ability.fireball=Огненный шар
+avatar.ability.fireball.desc=Создайте светящуюся сферу огня, которая взрывается при контакте с чем- или кем-либо.
+avatar.ability.fireball.lvl1=Создайте базовый огненный шар
+avatar.ability.fireball.lvl2=Шар летит быстрее
+avatar.ability.fireball.lvl3=Наносит огромный урон при прямом попадании
+avatar.ability.fireball.lvl4_1=Концентрированный взрыв ;; Иногда может сломать обсидиан
+avatar.ability.fireball.lvl4_2=Заряженный взрыв ;; Требует время, чтобы зарядиться. Когда заряжен, образует большой взрыв.
+
+avatar.ability.fire_jump=Огненный прыжок
+avatar.ability.fire_jump.desc=Используйте тягу огня чтобы совершать прыжки на небольшие расстояния
+avatar.ability.fire_jump.lvl1=Вы можете совершать маленькие прыжки, нанося урон мобам при контакте
+avatar.ability.fire_jump.lvl2=Немного увеличена дальность прыжка
+avatar.ability.fire_jump.lvl3=Вы наносите урон большему количеству целей при приземлении и поджигаете их
+avatar.ability.fire_jump.lvl4_1=Взрывной прыжок ;; Наносите урон врагам и при подпрыгивании
+avatar.ability.fire_jump.lvl4_2=Прыжки по стенам ;; Получите возможность оттолкнуться от стены после совершения огненного прыжка
+
+avatar.ability.purify=Ярость огня
+avatar.ability.purify.desc=Временно усиливает Ваши огненные способности на короткий период времени. Осторожно! Не сожгите себя в этом процессе!
+avatar.ability.purify.lvl1=У вас есть второстепенные баффы, но вы склонны причинять себе боль.
+avatar.ability.purify.lvl2=Значительное усиление магии огня + эффект скорости
+avatar.ability.purify.lvl3=Усилены эффекты зелий. Вы теперь не воспламеняетесь каждый раз.
+avatar.ability.purify.lvl4_1=Укрощение огня ;; Значительно увеличено время действия способности, эффект прилива здоровья
+avatar.ability.purify.lvl4_2=Inferno ;; Гораздо более мощные эффекты
+
+avatar.ability.water_arc=Водяной хлыст
+avatar.ability.water_arc.desc=Одна из самых популярных атак водных магов. Стреляйте дугой воды по врагу. Нужен источник воды поблизости.
+avatar.ability.water_arc.lvl1=Базовый водяной хлыст
+avatar.ability.water_arc.lvl2=Увеличен радиус захвата воды
+avatar.ability.water_arc.lvl3=Намного быстрее
+avatar.ability.water_arc.lvl4_1=Бумеранг ;; Хлыст возвращается если вы попадаете по цели
+avatar.ability.water_arc.lvl4_2=Водяное копьё ;; Гравитация отключена на 2с после броска, медленнее
+
+avatar.ability.wave=Волна
+avatar.ability.wave.desc=Призовите волну воды и повергните своих врагов. Работает только если враг в воде.
+avatar.ability.wave.lvl1=Попрощайтесь с врагами
+avatar.ability.wave.lvl2=Значительно увеличен урон
+avatar.ability.wave.lvl3=Волна стала намного больше
+avatar.ability.wave.lvl4_1=Морская пена ;; Создаёт небольшой взрыв при контакте с целью
+avatar.ability.wave.lvl4_2=Сильная волна ;; Очень быстрые волны
+
+avatar.ability.water_bubble=Водяной пузырь
+avatar.ability.water_bubble.desc=Создайте и перенесите пузырь воды. Можно использовать как ведро высокой дальности.
+avatar.ability.water_bubble.lvl1=Быстро исчезающий пузырь с водой, вода высыхает после столкновения с чем-либо
+avatar.ability.water_bubble.lvl2=Бросайте пузырь воды намного дальше
+avatar.ability.water_bubble.lvl3=Пузырь создаёт постоянный источник воды после приземления
+avatar.ability.water_bubble.lvl4_1=Бросайте пузырь воды очень далеко
+avatar.ability.water_bubble.lvl4_2=Вода не используется, чтобы создать пузырь - бесконечные источники!
+
+avatar.ability.water_skate=Скольжение по воде
+avatar.ability.water_skate.desc=Бегите по поверхности воды. Полезно как для уклонения, так и для прогулки.
+avatar.ability.water_skate.lvl1=Скользя по воде, вы не можете использовать способности
+avatar.ability.water_skate.lvl2=Теперь во время водной ходьбы доступны способности
+avatar.ability.water_skate.lvl3=Скорость передвижения значительно увеличена
+avatar.ability.water_skate.lvl4_1=Хороший баланс ;; Вы можете передвигаться по текущей воде
+avatar.ability.water_skate.lvl4_2=Водообильное воздействие ;; Разбейте землю после прыжка
+
+avatar.ability.water_cannon=Водная пушка
+avatar.ability.water_cannon.desc=Создайте непрерывный поток воды, который отслеживает цель. Потребуется время, чтобы сконцентрироваться и 3 части воды из бурдюка.
+avatar.ability.water_cannon.lvl1=Базовая водяная пушка
+avatar.ability.water_cannon.lvl2=Наносит больше урона, немного больше в размерах
+avatar.ability.water_cannon.lvl3=Наносит ещё больше урона
+avatar.ability.water_cannon.lvl4_1=Мощная пушка ;; Количество воды и урон, ею наносимый значительно увеличен
+avatar.ability.water_cannon.lvl4_2=Водомёт ;; Бысто создавайте множество маленьких струй воды
+
+avatar.ability.cleanse=Врачевание
+avatar.ability.cleanse.desc=Исцеляйте себя, а также окружающих Вас игрокой, и усильте свою магию. 
+avatar.ability.cleanse.lvl1=Даёт временный эффект регенерации
+avatar.ability.cleanse.lvl2=Регенерация распространяется и на игроков вокруг Вас
+avatar.ability.cleanse.lvl3=Вы насыщаетесь
+avatar.ability.cleanse.lvl4_1=Оздоровление ;; Вы также получаете эффект поглощения
+avatar.ability.cleanse.lvl4_2=Концентрация ;; Наносите гораздо больше урона в бою и двигайтесь гораздо быстрее
+
+
+avatar.ability.air_gust=Порыв ветра
+avatar.ability.air_gust.desc=Создайте сильный порыв ветра, чтобы отталкивать врагов назад, что позволит Вам сосредоточиться на другой проблеме.
+avatar.ability.air_gust.lvl1=Сдувайте врагов
+avatar.ability.air_gust.lvl2=Перезарядка ускорена вдвое
+avatar.ability.air_gust.lvl3=Более сильная отдача
+avatar.ability.air_gust.lvl4_1=Ликвидатор ;; Обезвредьте слабые снаряды
+avatar.ability.air_gust.lvl4_2=Вакуум ;; Притяните врагов К себе
+
+avatar.ability.air_jump=Прыжок мага воздуха
+avatar.ability.air_jump.desc=Используйте воздух вокруг вас, чтобы отскочить от земли. Прекрасно подходит, если вы хотите быстро подобратьсяя к врагу и застать его врасплох. Или наоборот ускользнуть от неожиданно появившегося "гостя". Позволяет высоко, а со временем и очень высоко прыгать, игнорируя урон от падения.
+avatar.ability.air_jump.lvl1=Перемещайтесь по воздуху!
+avatar.ability.air_jump.lvl2=Немного улучшена сила прыжка
+avatar.ability.air_jump.lvl3=Ещё сильнее увеличена высота прыжка. Не разбейте голову... 
+avatar.ability.air_jump.lvl4_1=Двойной прыжок ;; Стоит 2x chi
+avatar.ability.air_jump.lvl4_2=Удар о землю ;; Наносите урон сущностям при приземлении
+
+avatar.ability.airblade=Лезвие
+avatar.ability.airblade.desc=Вращающийся воздушный диск, достаточно можный, чтобы рассекать плоть. Может оказаться смертельным при быстрой атаке.
+avatar.ability.airblade.lvl1=Мясорубка!
+avatar.ability.airblade.lvl2=Повышена скорость и урон
+avatar.ability.airblade.lvl3=Теперь может резать блоки
+avatar.ability.airblade.lvl4_1=Цепное лезвие ;; Проскальзывает сквозь нескольких врагов
+avatar.ability.airblade.lvl4_2=Разрушитель брони ;; Проходит сквозь броню и камень
+
+avatar.ability.air_bubble=Воздушный щит
+avatar.ability.air_bubble.desc=Создает пузырь воздуха защищающий Вас от внешних атак. Однако, требует много chi для поддержания.
+avatar.ability.air_bubble.lvl1=Маленький радиус и слабая отдача
+avatar.ability.air_bubble.lvl2=Размер сферы увеличен
+avatar.ability.air_bubble.lvl3=Повышена отдача
+avatar.ability.air_bubble.lvl4_1=Высокое давление ;; Очень большой радиус щита
+avatar.ability.air_bubble.lvl4_2=Затаённая сила ;; Ограниченное парение. Отключите, присев.
+
+avatar.ability.cloudburst=Грозовое облако
+avatar.ability.cloudburst.desc=Создайте вращающийся шар воздуха и бросьте его в своего врага
+avatar.ability.cloudburst.lvl1=Обычное шарообразное облако
+avatar.ability.cloudburst.lvl2=Скорость полёта увеличена
+avatar.ability.cloudburst.lvl3=Значительно повышен урон
+avatar.ability.cloudburst.lvl4_1=Блокировка chi ;; На время сильно ослабляет магические сбособности цели
+avatar.ability.cloudburst.lvl4_2=Поглощение ;; Облако может поглощать приближающиеся снаряды, увеличивая свой урон
+
+avatar.ability.slipstream=Воздушный поток
+avatar.ability.slipstream.desc=Окружите себя потоком воздуха, ускоряющим ваше движение.
+avatar.ability.slipstream.lvl1=Обычное ускорение
+avatar.ability.slipstream.lvl2=Повышена высота прыжка
+avatar.ability.slipstream.lvl3=Вы периодически становитесь невидимыми. Мощность баффов увеличена.
+avatar.ability.slipstream.lvl4_1=Ветер с небес ;; Станьте силнее в ближнем бою и усильте свою магию!
+avatar.ability.slipstream.lvl4_2=Беги как ветер! ;; Вы становитесь невидимым чаще, а сила эффектов возрастает.
+
+avatar.ability.lightning_arc=Молния
+avatar.ability.lightning_arc.desc=Создайте солидную дуговую молнию, чтобы поразить врагов.
+avatar.ability.lightning_arc.lvl1=Спугните потенциальных приятелей
+avatar.ability.lightning_arc.lvl2=Молния становится быстрее
+avatar.ability.lightning_arc.lvl3=Урон способности увеличен
+avatar.ability.lightning_arc.lvl4_1=Яростная молния ;; Наносит больше урона, размер немного уменьшен
+avatar.ability.lightning_arc.lvl4_2=Большие молнии ;; Имеет больший угол поражения, что упрощает попадание в цель
+
+avatar.ability.lightning_redirect=Перенаправление молнии
+avatar.ability.lightning_redirect.desc=Даёт способность перенаправлять молнию. Не появляется в меню способностей, поскольку работает постоянно.
+avatar.ability.lightning_redirect.lvl1=Шанс отразить молнию = 60% Будьте осторожны!
+avatar.ability.lightning_redirect.lvl2=Вероятность отразить молнию = 70%
+avatar.ability.lightning_redirect.lvl3=Молнии для вас не опасны в 80% случаев.
+avatar.ability.lightning_redirect.lvl4_1=Рефлектор ;; Вы отражаете молнии с вероятностью 90%
+avatar.ability.lightning_redirect.lvl4_2=Отражатель ;; Здесь тоже шанс равен 90%, честно... Никакого подвоха!
+
+avatar.ability.lightning_spear=Электрическое копьё
+avatar.ability.lightning_spear.desc=Создайте перекидной заряд молнии.
+avatar.ability.lightning_spear.lvl1=Обычная шаровая молния, поражает цели в воде
+avatar.ability.lightning_spear.lvl2=Молния летит быстрее
+avatar.ability.lightning_spear.lvl3=Урон увеличен
+avatar.ability.lightning_spear.lvl4_1=Пронзающий заряд ;; Проходит сквозь врагов, вместо заземления первым встретившимся на пути.
+avatar.ability.lightning_spear.lvl4_2=Заряженное облако ;; При попадании в цель, окружающим её сущностям в пределах двух блоков также наносится урон.
+
+avatar.ability.ice_prison=Ледяная тюрьма
+avatar.ability.ice_prison.desc=Заключите нападающего в блоке льда и оторвитесь от преследования.
+avatar.ability.ice_prison.lvl1=Вы способны задержать вашего врага.
+avatar.ability.ice_prison.lvl2=Ловушка действует немного дольше.
+avatar.ability.ice_prison.lvl3=Жертва получает урон при расколе льда.
+avatar.ability.ice_prison.lvl4_1=Обморожение ;; Узник непрерывно получает урон на протяжении заключения.
+avatar.ability.ice_prison.lvl4_2=Ледник ;; Лёд не может быть растоплен солнцем или магией огня.
+
+avatar.ability.ice_burst=Ледяной щит
+avatar.ability.ice_burst.desc=Оградите себя сферой льда от врагов.  При её разбиении, во всех направлениях разлетаются осколки льда.
+avatar.ability.ice_burst.lvl1=Щит поглощает урон
+avatar.ability.ice_burst.lvl2=Осколки наносят немного больше урона.
+avatar.ability.ice_burst.lvl3=Прочность щита немного повышена.
+avatar.ability.ice_burst.lvl4_1=Система самонаведения ;; Несколько осколков сами находят цель. Не имеет ценности, если Вас атакует много монстров.
+avatar.ability.ice_burst.lvl4_2=Плотный лёд ;; Прочность щита значительно повышается
+
+avatar.ability.sand_prison=Песчаная тюрьма
+avatar.ability.sand_prison.desc=Создайте ловушку из песка или гравия, чтобы временно захватить ваших врагов.
+avatar.ability.sand_prison.lvl1=Задержите врага.
+avatar.ability.sand_prison.lvl2=Вы можете поймать цели в любом земном блоке, манипулируя небольшими частицами песка и гравия, находящимися в нём
+avatar.ability.sand_prison.lvl3=Заключенный получает эффект медлительности после освобождения
+avatar.ability.sand_prison.lvl4_1=Грубые частицы ;; Заключенный получает урон освобождаясь
+avatar.ability.sand_prison.lvl4_2=Твердые пески ;; Песок не может быть сдут магией воздуха
+
+avatar.ability.sandstorm=Смерч
+avatar.ability.sandstorm.desc=Создайте песчаный смерч, который поднимает врагов и уносит их
+avatar.ability.sandstorm.lvl1=Подберайте сущностей и бросайте их. Смерч уязвим перед магией воздуха.
+avatar.ability.sandstorm.lvl2=Смерч движется быстрее и дальше
+avatar.ability.sandstorm.lvl3=Цели получают урон от смерча, когда вылетают из него
+avatar.ability.sandstorm.lvl4_1=Ураган ;; Песчаная буря движется гораздо быстрее и не рассеивается магией воздуха
+avatar.ability.sandstorm.lvl4_2=Опасная сила ;; Кружащиеся песчинки наносят непрерывный незначительный урон целям
+avatar.ability.explosion=Взрыв
+avatar.ability.explosion.desc=Взрывайте надоедливых врагов силой мысли! Но будьте осторожны, вы можете навредить себя!
+avatar.ability.explosion.lvl1=Создайте взрыв на блоке, на который вы смотрите; максимальное расстояние - 20 блоков. Отправьте врагов за облака!
+avatar.ability.explosion.lvl2=Чуть больший взрыв. Я знаю, тебе нравиться всех взрывать!
+avatar.ability.explosion.lvl3=Дальность увеличена до 30-и блоков! Взрывы становятся больше!
+avatar.ability.explosion.lvl4_1=Снайперская винтовка ;; Невероятная дальность, но взрывы малы.
+avatar.ability.explosion.lvl4_2=BOOOOOOOOOOOOOOOOOOM ;; Огромный взрыв от вашего взгляда, наносит огромный урон при прямом попадании. Однако, дальность равна 30-и блокам.
+
+avatar.ability.explosive_pillar=Взрывная колонна
+avatar.ability.explosive_pillar.desc=Создайте серию взрывов, следующих один за другим в направлении вашего взгляда.
+avatar.ability.explosive_pillar.lvl1=Как обычный человек говорит, бум-бум-бум-бум BOOOOOOOOOM!
+avatar.ability.explosive_pillar.lvl2=Взрывы становятся крупнее, происходят чаще и идут дальше.
+avatar.ability.explosive_pillar.lvl3=Я бы написал то же самое, что и выше, но это было бы скучно. КРУТЕЦКИЕ ВЗРЫВЫ, ДЕТКА!
+avatar.ability.explosive_pillar.lvl4_1=ВзРыВнОй ПуЛеМёТ ;; Создаёт 3 линии небольших взрывов, имеющих малую дальность, но происходящих очень часто и забавно.
+avatar.ability.explosive_pillar.lvl4_2=BOOOOOM ;; Смехотворно большой взрыв, который идёт далеко, но происходит не часто. Разрушительно... хе-хе.
+
+
+
+avatar.ability.undefined=???
+
+avatar.ui.level0=Уровень I
+avatar.ui.level1=Уровень II
+avatar.ui.level2=Уровень III
+avatar.ui.level3=-MAX-
+avatar.ui.path_first=Первое ответвление
+avatar.ui.path_second=Второе ответвление
+avatar.ui.unlock=Способность недоступна
+avatar.ui.unlockDesc=Потратте свиток [translate=avatar.${bending}] или Универсальный свиток, чтобы разблокировать.
+avatar.ui.unlockDescSpecialty=Потратте свиток [translate=avatar.${bendingMain}], [translate=avatar.${bendingSpecialty}] или Универсальный свиток чтобы разблокировать
+avatar.ui.skillsMenu=Ваше мастерство [translate=avatar.${bending}] 
+
+avatar.radial.undefined=В разработке!
+avatar.radial.xp=[translate=avatar.ui.level${level}], ${xp}%%
+avatar.radial.max=Уровень IV, [translate=avatar.ui.path_${xp}]
+avatar.radial.locked1=Способность недоступна
+avatar.radial.locked2=Нажмите ${level} чтобы разблокировать
+avatar.radial.lockedCreative2=Доступно благодаря креативу
+
+avatar.getBending.title=Разблокируйте магию стихии
+avatar.getBending.incompatible=Вы можете использовать свиток желаемой стихии либо универсальный
+avatar.getBending.guide=Положите универсальные и/или свитки одной стихии, чтобы разблокировать.
+
+avatar.key.none1=Не назначено
+avatar.key.none2=Нажмите для назначения
+avatar.key.set1=%1$s
+avatar.key.set2=Кликните, чтобы изменить
+avatar.key.editing1=Нажмите желаемую кнопку
+avatar.key.editing2=нажмите ESC чтобы отвязать
+avatar.key.conflict1=%1$s
+avatar.key.conflict2=Конфликтует w/ %1$s
+
+death.attack.avatar_earthbendBlock=%2$s раздавил(а) %1$s магией земли
+death.attack.avatar_waterArc=%2$s отхлестал(а) водой %1$s
+death.attack.avatar_ravine=%2$s раздробил(а) %1$s 
+death.attack.avatar_wave=Из %1$s вышел плохой серфингист
+death.attack.avatar_fireball=%2$s подорвал(а) %1$s огненным шаром
+death.attack.avatar_airblade=%1$s нарезан(а) игроком %2$s
+death.attack.avatar_flamethrower=%1$s стал(а) тостом благодаря %2$s!!
+death.attack.avatar_groundSmash=%2$s разбил(а) %1$s 
+death.attack.avatar_lightningBending=%2$s подумал(а), что %1$s недостаточно энергичен(-на)
+death.attack.avatar_lightningBendingRedirected=%2$s подумал(а), что %1$s - громоотвод
+death.attack.avatar_watercannon=%1$s был(а) убит(а) водяной пушкой игрока %2$s
+death.attack.avatar_cloudburst=%1$s был(а) убит(а) порывом ветра игрока %2$s
+death.attack.avatar_icePrison= Сильный холод ледяной ловушки %2$s отморозил %1$s
+death.attack.avatar_iceShard=%2$s умер(ла) от осколка ледяного щита игрока %1$s
+death.attack.avatar_sandPrison=%1$s навеки остался в песчаной ловушке игрока %2$s
+death.attack.avatar_sandstorm=Игрока %1$s сдуло песчаным смерчем, в чём виновен(-на) %2$s
+
+entity.Airbender.name=Маг воздуха
+entity.Firebender.name=Маг огня
+entity.Waterbender.name=Маг воды
+entity.SkyBison.name=Летающий бизон
+entity.OtterPenguin.name=Выдропингвин
+entity.OstrichHorse.name=Страусиная лошадь
+
+itemGroup.avatar.items=Предметы вселенной Аватара
+
+item.avatarmod:scroll.all.name=Свиток
+item.avatarmod:scroll.air.name=Свиток воздушной магии
+item.avatarmod:scroll.fire.name=Свиток магии огня
+item.avatarmod:scroll.earth.name=Свиток магии земли
+item.avatarmod:scroll.water.name=Свиток водной магии
+item.avatarmod:scroll.lightning.name=Свиток покорения молнии
+item.avatarmod:scroll.ice.name=Свиток ледяной магии
+item.avatarmod:scroll.sand.name=Свиток песчаной магии
+item.avatarmod:scroll.combustion.name=Свиток магии воспламенения
+
+item.avatarmod:water_pouch.name=Бурдюк
+item.avatarmod:bison_whistle.name=Свисток для бизона
+
+item.avatarmod:bison_saddle.basic.name=Обычное седло бизона
+item.avatarmod:bison_saddle.sturdy.name=Прочное седло бизона
+item.avatarmod:bison_saddle.studded.name=Обитое седло бизона
+item.avatarmod:bison_saddle.majestic.name=Царское седло бизона
+
+item.avatarmod:bison_armor.woven.name=Тканая броня бизона
+item.avatarmod:bison_armor.chain.name=Кольчужная броня бизона
+item.avatarmod:bison_armor.wrought.name=Кованая броня бизона
+item.avatarmod:bison_armor.legendary.name=Легендарная броня бизона
+
+item.avatarmod:ostrich_equip.woven.name=Тканая страусиная броня
+item.avatarmod:ostrich_equip.chain.name=Кольчужная страусиная броня
+item.avatarmod:ostrich_equip.plate.name=Золотая страусиная броня
+
+avatar.tooltip.water_pouch=Заполнен на %d/5
+avatar.tooltip.water_pouch.empty=Пусто
