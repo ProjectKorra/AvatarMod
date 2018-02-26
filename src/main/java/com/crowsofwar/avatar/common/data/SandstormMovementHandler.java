@@ -5,6 +5,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nullable;
+
 /**
  * Handles movement for the sandstorm when the sandstorm has been redirected. When the owner
  * requests the sandstorm be at different velocity (via StatCtrlSandstormRedirect), this makes
