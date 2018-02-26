@@ -179,7 +179,7 @@ public class EntityAirBubble extends EntityShield {
 		}
 
 	}
-	
+
 	/**
 	 * Handles hovering logic to make the owner hover. Preconditions (not in water, owner
 	 * present, etc) are handled by the caller
