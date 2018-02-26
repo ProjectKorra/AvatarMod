@@ -40,8 +40,7 @@ public class SandstormMovementHandler {
 	 * <p>
 	 * Only to be used server side
 	 */
-	@SideOnly(Side.SERVER)
-	public void updateServer() {
+	public void update() {
 
 		if (targetVelocity != null) {
 
@@ -69,14 +68,6 @@ public class SandstormMovementHandler {
 			Vector newVelocity = sandstorm.velocity().normalize().times(desiredSpeed);
 			sandstorm.setVelocity(newVelocity);
 
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void updateClient() {
-		if (Minecraft.getMinecraft().gameSettings.hideGUI) {
-			sandstorm.setVelocity(Vector.ZERO);
-			sandstorm.setStrength(1);
 		}
 	}
 	
