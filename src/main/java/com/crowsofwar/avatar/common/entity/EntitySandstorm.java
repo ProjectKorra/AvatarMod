@@ -78,7 +78,9 @@ public class EntitySandstorm extends AvatarEntity {
 
 		super.onUpdate();
 		if (!world.isRemote) {
-			movementHandler.update();
+			movementHandler.updateServer();
+		} else {
+			movementHandler.updateClient();
 		}
 
 		if (isCollided) {
