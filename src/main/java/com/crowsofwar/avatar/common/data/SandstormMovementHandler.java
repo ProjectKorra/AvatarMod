@@ -6,6 +6,8 @@ import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nullable;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Handles movement for the sandstorm when the sandstorm has been redirected. When the owner
  * requests the sandstorm be at different velocity (via StatCtrlSandstormRedirect), this makes
