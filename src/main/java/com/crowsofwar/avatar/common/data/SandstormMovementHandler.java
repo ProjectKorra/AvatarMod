@@ -38,7 +38,8 @@ public class SandstormMovementHandler {
 	 * <p>
 	 * Only to be used server side
 	 */
-	public void update() {
+	@SideOnly(Side.SERVER)
+	public void updateServer() {
 
 		if (targetVelocity != null) {
 
@@ -67,14 +68,16 @@ public class SandstormMovementHandler {
 			sandstorm.setVelocity(newVelocity);
 
 		}
+	}
 
+	@SideOnly(Side.CLIENT)
+	public void updateClient() {
 		if (Minecraft.getMinecraft().gameSettings.hideGUI) {
 			sandstorm.setVelocity(Vector.ZERO);
 			sandstorm.setStrength(1);
 		}
-
 	}
-
+	
 	/**
 	 * Set the target velocity vector to the given value. Target velocity is a unit vector
 	 * pointing in the desired direction which the sandstorm will move towards.
