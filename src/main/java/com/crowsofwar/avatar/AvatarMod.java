@@ -238,6 +238,8 @@ public class AvatarMod {
 				EXTREME_HILLS, MUTATED_SAVANNA);
 		EntityRegistry.addSpawn(EntityOtterPenguin.class, 4, 5, 9, EnumCreatureType.CREATURE, //
 				COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
+		EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 3, 6, EnumCreatureType.CREATURE, //
+				DESERT, DESERT_HILLS, SAVANNA, SAVANNA_PLATEAU, PLAINS);
 
 		// Second loading required since other mods blocks might not be
 		// registered

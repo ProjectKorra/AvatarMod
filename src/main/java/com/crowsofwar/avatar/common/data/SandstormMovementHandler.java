@@ -67,12 +67,6 @@ public class SandstormMovementHandler {
 			sandstorm.setVelocity(newVelocity);
 
 		}
-
-		if (Minecraft.getMinecraft().gameSettings.hideGUI) {
-			sandstorm.setVelocity(Vector.ZERO);
-			sandstorm.setStrength(1);
-		}
-
 	}
 
 	/**
