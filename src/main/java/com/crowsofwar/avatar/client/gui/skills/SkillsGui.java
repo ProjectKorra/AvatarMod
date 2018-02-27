@@ -221,11 +221,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-
-		if (!isWindowOpen()) {
-			handler.type(keyCode);
-		}
-
+		
 		if (isWindowOpen()) {
 			KeyBinding invKb = mc.gameSettings.keyBindInventory;
 
@@ -236,9 +232,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 			} else {
 				window.keyTyped(keyCode);
 			}
-
 		} else {
-
+			handler.type(keyCode);
 			if (keyCode == Keyboard.KEY_A || keyCode == Keyboard.KEY_LEFT) {
 				scroll += 25;
 			} else if (keyCode == Keyboard.KEY_D || keyCode == Keyboard.KEY_RIGHT) {
@@ -246,8 +241,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 			} else {
 				super.keyTyped(typedChar, keyCode);
 			}
-
 		}
+		
 	}
 
 	@Override
