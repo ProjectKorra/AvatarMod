@@ -291,7 +291,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		ownerAttr.writeToNbt(nbt);
 		nbt.setBoolean("Sitting", isSitting());
 		condition.writeToNbt(nbt);
-		nbt.setInteger("EatGrass", getEatGrassTime())
+		nbt.setInteger("EatGrass", getEatGrassTime());
 		nbt.setInteger("RiderTicks", riderTicks);
 		nbt.setBoolean("InLove", isLoveParticles());
 		nbt.setInteger("BisonId", getId());
