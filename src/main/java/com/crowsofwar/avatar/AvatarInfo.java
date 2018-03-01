@@ -21,8 +21,7 @@ package com.crowsofwar.avatar;
  * Not using semantic versioning. This isn't an API, and I'm too lazy to be
  * backwards-compatible.
  * <p>
- * Versioning scheme: AV{DEV_STAGE}{UPDATE}.{PATCH}{DEV_BUILD}
- * <p>
+ * Versioning scheme: AV{DEV_STAGE}{UPDATE}.{PATCH}{DEV_BUILD} * <p>
  * DEV_STAGE is for alpha("a"), beta("b"), or full release("").
  * <p>
  * If development version, DEV_BUILD is "_dev"
@@ -67,12 +66,12 @@ public class AvatarInfo {
 	public static final boolean IS_PRODUCTION = VERSION_TYPE == 0;
 	public static final boolean IS_DEVELOPMENT = VERSION_TYPE == 1;
 	public static final boolean IS_PREVIEW = VERSION_TYPE >= 2;
-	public static final String VERSION = DEV_STAGE + VERSION_UPDATE + "." + VERSION_PATCH
-			+ (IS_PRODUCTION ? "" : (IS_PREVIEW ? "_preview" + (VERSION_TYPE - 1) : "_dev"));
+	public static final String VERSION = IS_PRODUCTION ? PRODUCTION_VERSION : DEV_STAGE + VERSION_UPDATE + "." + VERSION_PATCH
+			+ (IS_PREVIEW ? "_preview" + (VERSION_TYPE - 1) : "_dev");
 	/**
 	 * Automatically updated when the mod is build
 	 */
-	public static final String RELEASE_VERSION = "@VERSION@";
+	public static final String PRODUCTION_VERSION = "@VERSION@";
 
 	public enum VersionType {
 
