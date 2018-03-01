@@ -69,6 +69,10 @@ public class AvatarInfo {
 	public static final boolean IS_PREVIEW = VERSION_TYPE >= 2;
 	public static final String VERSION = DEV_STAGE + VERSION_UPDATE + "." + VERSION_PATCH
 			+ (IS_PRODUCTION ? "" : (IS_PREVIEW ? "_preview" + (VERSION_TYPE - 1) : "_dev"));
+	/**
+	 * Automatically updated when the mod is build
+	 */
+	public static final String RELEASE_VERSION = "@VERSION@";
 
 	public enum VersionType {
 
