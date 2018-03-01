@@ -21,7 +21,8 @@ package com.crowsofwar.avatar;
  * Not using semantic versioning. This isn't an API, and I'm too lazy to be
  * backwards-compatible.
  * <p>
- * Versioning scheme: AV{DEV_STAGE}{UPDATE}.{PATCH}{DEV_BUILD} * <p>
+ * Versioning scheme: AV{DEV_STAGE}{UPDATE}.{PATCH}{DEV_BUILD}
+ * <p>
  * DEV_STAGE is for alpha("a"), beta("b"), or full release("").
  * <p>
  * If development version, DEV_BUILD is "_dev"
