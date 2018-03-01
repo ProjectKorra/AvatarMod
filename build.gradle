@@ -33,6 +33,11 @@ archivesBaseName = "avatarmod"
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
+dependencies {
+    compile files("libs/joml/joml-1.8.1.jar")
+    compile files("libs/yaml/snakeyaml-1.16.jar");
+}
+
 minecraft {
     version = config.forge
     mappings = config.mappings
@@ -41,11 +46,6 @@ minecraft {
     
     replaceIn 'src/main/java/com/crowsofwar/avatar/AvatarInfo.java'
     replace '@VERSION@', project.version
-}
-
-dependencies {
-    compile files("libs/joml/joml-1.8.1.jar")
-    compile files("libs/yaml/snakeyaml-1.16.jar");
 }
 
 processResources {
