@@ -114,7 +114,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				player.addStat(StatList.getObjectUseStats(this));
 				// TODO: Custom sound?
 				player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
-				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, level));
+				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, willBeFilled));
 			} else if (material == Material.WATER) {
 				// Get how full the block is
 				int level = state.getValue(BlockLiquid.LEVEL).intValue();
@@ -142,7 +142,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				player.addStat(StatList.getObjectUseStats(this));
 				// TODO: Custom sound?
 				player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
-				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, level));
+				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, willBeFilled));
 			} else {
 				return new ActionResult(EnumActionResult.PASS, itemstack);
 			}
