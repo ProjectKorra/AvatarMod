@@ -103,51 +103,48 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				return new ActionResult(EnumActionResult.PASS, itemstack);
 			}
 			IBlockState state = world.getBlockState(blockpos);
-;			Material material = state.getMaterial();
-			boolean isCauldron = state.getBlock() instanceof BlockCauldron;
-			// Is the block a cauldron? If yes, set this to the block. If no, set it to null
-			BlockCauldron cauldron = isCauldron ? (BlockCauldron) state.getBlock() : null;
-			if (isCauldron || material == Material.WATER) {
+			Material material = state.getMaterial();
+			if (state.getBlock() instanceof BlockCauldron) {
 				// Get how full the block is
-				int level = state.getValue(BlockLiquid.LEVEL).intValue();
-				int canBeFilled;
-				if (isCauldron) {
-					// Level will be 3 when completely filled, and 0 when empty
-					canBeFilled = level;
-				} else {
-					// Level will be 0 when completely filled, and 7 when nearly empty, so we have to invert it
-					canBeFilled = 8 - level;
-				}
+				int canBeFilled = state.getValue(BlockLiquid.LEVEL).intValue();
 				int toBeFilled = 5 - itemstack.getItemDamage();
 				int willBeFilled = Math.min(canBeFilled, toBeFilled);
-				if (isCauldron) {
-					cauldron.setWaterLevel(world, blockpos, state, level - willBeFilled);
-					player.addStat(StatList.CAULDRON_USED);
+				((BlockCauldron) state.getBlock()).setWaterLevel(world, blockpos, state, level - willBeFilled);
+				player.addStat(StatList.CAULDRON_USED);
+				player.addStat(StatList.getObjectUseStats(this));
+				// TODO: Custom sound?
+				player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
+				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, level));
+			} else if (material == Material.WATER) {
+				// Get how full the block is
+				int level = state.getValue(BlockLiquid.LEVEL).intValue();
+				// Level will be 0 when completely filled, and 7 when nearly empty, so we have to invert it
+				int canBeFilled 8 - level;
+				int toBeFilled = 5 - itemstack.getItemDamage();
+				int willBeFilled = Math.min(canBeFilled, toBeFilled);
+				IBlockState newState;
+				if (willBeFilled > 0) {
+					newState = state.getBlock().getStateFromMeta(level + willBeFilled);
 				} else {
-					IBlockState newState;
-					if (willBeFilled > 0) {
-						newState = state.getBlock().getStateFromMeta(level + willBeFilled);
-					} else {
-						newState = Blocks.AIR.getDefaultState();
-					}
-					/* 11 are the flags. Flags are binary. 11 in binary:
-					 *  0 1 0 1 1
-					 * 16 8 4 2 1
-					 * 1: cause block update
-					 * 2: send change to clients
-					 * 4: prevent re-render
-					 * 8: run re-renders on main thread
-					 * 16: prevent observers update
-					 * For more information see {@link net.minecraft.world.World#setBlockState World#setBlockState}
-					 */
-					world.setBlockState(blockpos, newState, 11);
+					newState = Blocks.AIR.getDefaultState();
 				}
+				/* 11 are the flags. Flags are binary. 11 in binary:
+				 *  0 1 0 1 1
+				 * 16 8 4 2 1
+				 * 1: cause block update
+				 * 2: send change to clients
+				 * 4: prevent re-render
+				 * 8: run re-renders on main thread
+				 * 16: prevent observers update
+				 * For more information see {@link net.minecraft.world.World#setBlockState World#setBlockState}
+				 */
+				world.setBlockState(blockpos, newState, 11);
 				player.addStat(StatList.getObjectUseStats(this));
 				// TODO: Custom sound?
 				player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
 				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, level));
 			} else {
-				new ActionResult(EnumActionResult.PASS, itemstack);
+				return new ActionResult(EnumActionResult.PASS, itemstack);
 			}
 		}
 	}
