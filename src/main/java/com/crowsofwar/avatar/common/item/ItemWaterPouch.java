@@ -119,7 +119,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				// Get how full the block is
 				int level = state.getValue(BlockLiquid.LEVEL).intValue();
 				// Level will be 0 when completely filled, and 7 when nearly empty, so we have to invert it
-				int canBeFilled 8 - level;
+				int canBeFilled = 8 - level;
 				int toBeFilled = 5 - itemstack.getItemDamage();
 				int willBeFilled = Math.min(canBeFilled, toBeFilled);
 				IBlockState newState;
