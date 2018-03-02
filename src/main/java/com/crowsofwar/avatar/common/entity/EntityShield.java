@@ -87,12 +87,14 @@ public abstract class EntityShield extends AvatarEntity {
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		setHealth(nbt.getFloat("Health"));
+		setMaxHealth(nbt.getFloat("MaxHealth"));
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setFloat("Health", getHealth());
+		nbt.setFloat("MaxHealth", getMaxHealth());
 	}
 
 	@Override
