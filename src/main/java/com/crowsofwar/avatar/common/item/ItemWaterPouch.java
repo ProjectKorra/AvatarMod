@@ -109,7 +109,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				int canBeFilled = state.getValue(BlockLiquid.LEVEL).intValue();
 				int toBeFilled = 5 - itemstack.getItemDamage();
 				int willBeFilled = Math.min(canBeFilled, toBeFilled);
-				((BlockCauldron) state.getBlock()).setWaterLevel(world, blockpos, state, level - willBeFilled);
+				((BlockCauldron) state.getBlock()).setWaterLevel(world, blockpos, state, canBeFilled - willBeFilled);
 				player.addStat(StatList.CAULDRON_USED);
 				player.addStat(StatList.getObjectUseStats(this));
 				// TODO: Custom sound?
