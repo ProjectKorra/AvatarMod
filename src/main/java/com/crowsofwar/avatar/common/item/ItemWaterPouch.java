@@ -17,8 +17,9 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.BlockCauldron;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -26,13 +27,16 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -87,7 +91,8 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 			// We're already completely filled
 			return new ActionResult(EnumActionResult.PASS, itemstack);
 		}
-		RayTraceResult raytraceresult = this.rayTrace(world, player, canBeFilled);
+		// Last boolean is useLiquids, which obviously should be true
+		RayTraceResult raytraceresult = this.rayTrace(world, player, true);
 		if (raytraceresult == null || raytraceresult.typeOfHit != RayTraceResult.Type.BLOCK) {
 			// We're not looking at a block
 			return new ActionResult(EnumActionResult.PASS, itemstack);
@@ -116,7 +121,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				int toBeFilled = 5 - itemstack.getItemDamage();
 				int willBeFilled = Math.min(canBeFilled, toBeFilled);
 				if (isCauldron) {
-;					cauldron.setWaterLevel(worldIn, pos, state, level - willBeFilled);
+					cauldron.setWaterLevel(world, blockpos, state, level - willBeFilled);
 					player.addStat(StatList.CAULDRON_USED);
 				} else {
 					IBlockState newState;
@@ -155,10 +160,10 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 			final ItemStack filledPouch = new ItemStack(emptyPouches.getItem(), 1, newLevel);
 			emptyPouches.shrink(1);
 			if (emptyPouches.isEmpty())	{
-				return new ItemStack(filledPouch);
+				return filledPouch;
 			} else {
-				if (!player.inventory.addItemStackToInventory(new ItemStack(filledPouch))) {
-					player.dropItem(new ItemStack(filledPouch), false);
+				if (!player.inventory.addItemStackToInventory(filledPouch)) {
+					player.dropItem(filledPouch, false);
 				} else if (player instanceof EntityPlayerMP) {
 					((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
 				}
