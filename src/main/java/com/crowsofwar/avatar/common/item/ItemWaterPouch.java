@@ -96,7 +96,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				return new ActionResult(EnumActionResult.PASS, itemstack);
 			}
 			IBlockState state = world.getBlockState(blockpos);
-			Material material = state.getMaterial();
+;			Material material = state.getMaterial();
 			boolean isCauldron = state.getBlock() instanceof BlockCauldron;
 			// Is the block a cauldron? If yes, set this to the block. If no, set it to null
 			BlockCauldron cauldron = isCauldron ? (BlockCauldron) state.getBlock() : null;
@@ -150,7 +150,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 			return emptyPouches;
 		} else {
 			int newLevel = Math.max(5, emptyPouches.getItemDamage() + levels);
-			final ItemStack filledPouch = new ItemStack(emptyPouches.getItem(), 1, newLevel)
+			final ItemStack filledPouch = new ItemStack(emptyPouches.getItem(), 1, newLevel);
 			emptyPouches.shrink(1);
 			if (emptyPouches.isEmpty())	{
 				return new ItemStack(filledPouch);
