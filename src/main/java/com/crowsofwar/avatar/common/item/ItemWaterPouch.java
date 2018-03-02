@@ -106,7 +106,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 			Material material = state.getMaterial();
 			if (state.getBlock() instanceof BlockCauldron) {
 				// Get how full the block is
-				int canBeFilled = state.getValue(BlockLiquid.LEVEL).intValue();
+				int canBeFilled = state.getValue(BlockCauldron.LEVEL).intValue();
 				int toBeFilled = 5 - itemstack.getItemDamage();
 				int willBeFilled = Math.min(canBeFilled, toBeFilled);
 				((BlockCauldron) state.getBlock()).setWaterLevel(world, blockpos, state, canBeFilled - willBeFilled);
