@@ -82,7 +82,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 			}
 		}
 	}
-
+	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		ItemStack itemstack = player.getHeldItem(hand);
@@ -109,7 +109,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 			BlockCauldron cauldron = isCauldron ? (BlockCauldron) state.getBlock() : null;
 			if (isCauldron || material == Material.WATER) {
 				// Get how full the block is
-				int level = state.getValue(BlockLiquid.LEVEL).intValue;
+				int level = state.getValue(BlockLiquid.LEVEL).intValue();
 				int canBeFilled;
 				if (isCauldron) {
 					// Level will be 3 when completely filled, and 0 when empty
