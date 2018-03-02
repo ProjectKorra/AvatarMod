@@ -82,21 +82,26 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 		ItemStack itemstack = player.getHeldItem(hand);
 		boolean isFull = itemstack.getMetadata() == 5;
 		if (isFull) {
+			// We're already completely filled
 			return new ActionResult(EnumActionResult.PASS, itemstack);
 		}
 		RayTraceResult raytraceresult = this.rayTrace(world, player, canBeFilled);
 		if (raytraceresult == null || raytraceresult.typeOfHit != RayTraceResult.Type.BLOCK) {
+			// We're not looking at a block
 			return new ActionResult(EnumActionResult.PASS, itemstack);
 		} else {
 			BlockPos blockpos = raytraceresult.getBlockPos();
+			// We're not allowed to edit the block
 			if (!world.isBlockModifiable(player, blockpos) || !player.canPlayerEdit(blockpos.offset(raytraceresult.sideHit), raytraceresult.sideHit, itemstack)) {
 				return new ActionResult(EnumActionResult.PASS, itemstack);
 			}
 			IBlockState state = world.getBlockState(blockpos);
 			Material material = state.getMaterial();
 			boolean isCauldron = state.getBlock() instanceof BlockCauldron;
+			// Is the block a cauldron? If yes, set this to the block. If no, set it to null
 			BlockCauldron cauldron = isCauldron ? (BlockCauldron) state.getBlock() : null;
 			if (isCauldron || material == Material.WATER) {
+				// Get how full the block is
 				int level = state.getValue(BlockLiquid.LEVEL).intValue;
 				int canBeFilled;
 				if (isCauldron) {
@@ -108,11 +113,11 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				}
 				int toBeFilled = 5 - itemstack.getItemDamage();
 				int willBeFilled = Math.min(canBeFilled, toBeFilled);
-				IBlockState newState;
 				if (isCauldron) {
-					cauldron.setWaterLevel(worldIn, pos, state, level - willBeFilled);
+;					cauldron.setWaterLevel(worldIn, pos, state, level - willBeFilled);
 					player.addStat(StatList.CAULDRON_USED);
 				} else {
+					IBlockState newState;
 					if (willBeFilled > 0) {
 						newState = state.getBlock().getStateFromMeta(level + willBeFilled);
 					} else {
@@ -133,7 +138,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				player.addStat(StatList.getObjectUseStats(this));
 				// TODO: Custom sound?
 				player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
-				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, level))
+				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, level));
 			} else {
 				new ActionResult(EnumActionResult.PASS, itemstack);
 			}
