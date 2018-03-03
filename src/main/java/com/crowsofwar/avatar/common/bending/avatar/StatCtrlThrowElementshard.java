@@ -44,17 +44,16 @@ public class StatCtrlThrowElementshard extends StatusControl {
 			elementshard.setBehavior(new ElementshardBehavior.Thrown());
 			shardsLeft--;
 			System.out.println(shardsLeft);
-			if (shardsLeft == 0) {
-				elementshard.havenoShards(true);
-			} else {
-				elementshard.havenoShards(false);
-			}
+
 
 		}
+		if (shardsLeft == 0) {
+			return true;
+		} else {
+			return false;
+		}
 
-		return true;
 	}
-
 
 }
 

@@ -41,11 +41,8 @@ public class EntityElementshard extends AvatarEntity {
 			DataSerializers.VARINT);
 
 	private AxisAlignedBB expandedHitbox;
-	public static boolean noShards;
-	public void havenoShards(boolean shards) {
-		this.noShards = shards;
-	}
 	private float damage;
+	public int shardsLeft;
 
 	/**
 	 * @param world
@@ -71,7 +68,7 @@ public class EntityElementshard extends AvatarEntity {
 		// Add hook or something
 		if (getOwner() == null) {
 			setDead();
-			if (noShards || this.isDead) {
+			if (this.isDead) {
 				removeStatCtrl();
 			}
 		}
@@ -188,11 +185,10 @@ public class EntityElementshard extends AvatarEntity {
 	}
 
 	private void removeStatCtrl() {
-		if (noShards && getOwner() != null) {
-			System.out.println(noShards);
+		if ( getOwner() != null) {
+			System.out.println();
 			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(StatusControl.THROW_ELEMENTSHARD);
-			noShards = false;
 		}
 
 	}
