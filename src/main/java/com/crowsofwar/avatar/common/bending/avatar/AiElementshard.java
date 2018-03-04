@@ -54,6 +54,7 @@ public class AiElementshard extends BendingAi {
 		if (timeExecuting >= 40) {
 			BendingData data = bender.getData();
 			execStatusControl(StatusControl.THROW_ELEMENTSHARD);
+			execStatusControl(StatusControl.THROW_ALL_ELEMENTSHARD);
 			timeExecuting = 0;
 			return false;
 		} else {
@@ -84,6 +85,7 @@ public class AiElementshard extends BendingAi {
 		if (elementshard != null && elementshard.getShardsLeft() == 0) {
 			elementshard.setDead();
 			bender.getData().removeStatusControl(StatusControl.THROW_ELEMENTSHARD);
+			bender.getData().removeStatusControl(StatusControl.THROW_ALL_ELEMENTSHARD);
 		}
 
 	}

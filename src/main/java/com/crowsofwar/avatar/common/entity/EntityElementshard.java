@@ -204,6 +204,7 @@ public class EntityElementshard extends AvatarEntity {
 			System.out.println();
 			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(StatusControl.THROW_ELEMENTSHARD);
+			data.removeStatusControl(StatusControl.THROW_ALL_ELEMENTSHARD);
 		}
 
 	}
