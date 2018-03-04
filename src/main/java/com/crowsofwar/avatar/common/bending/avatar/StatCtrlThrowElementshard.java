@@ -29,7 +29,7 @@ public class StatCtrlThrowElementshard extends StatusControl {
 
 
 		EntityElementshard elementshard = AvatarEntity.lookupControlledEntity(world, EntityElementshard.class, entity);
-		if (elementshard.getShardsLeft() > 0 && elementshard != null){
+		if (elementshard != null && elementshard.getShardsLeft() > 0){
 			return false;
 		}
 
