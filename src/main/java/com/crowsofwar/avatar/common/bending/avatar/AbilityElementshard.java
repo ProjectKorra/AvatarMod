@@ -66,8 +66,6 @@ public class AbilityElementshard extends Ability {
 				target = playerPos.plus(getLookRectangular(entity).times(2.5));
 			}
 
-			StatCtrlThrowElementshard throwElementshard = new StatCtrlThrowElementshard();
-			throwElementshard.setShardsLeft(shardsAvailable);
 
 			damage *= ctx.getPowerRatingDamageMod();
 			for (int i = 0; i < shardsAvailable; i++) {
@@ -76,6 +74,7 @@ public class AbilityElementshard extends Ability {
 				elementshard.setOwner(entity);
 				elementshard.setDamage(damage);
 				elementshard.setPowerRating(bender.calcPowerRating(Avatarbending.ID));
+				elementshard.setShardsLeft(shardsAvailable);
 				if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) elementshard.setSize(20);
 				elementshard.setBehavior(new ElementshardBehavior.PlayerControlled());
 				world.spawnEntity(elementshard);

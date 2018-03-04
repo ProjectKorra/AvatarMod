@@ -102,7 +102,7 @@ public abstract class BendingAi extends EntityAIBase {
 		BendingData data = bender.getData();
 		if (data.hasStatusControl(sc)) {
 			Raytrace.Result raytrace = Raytrace.getTargetBlock(entity, ability.getRaytrace());
-			if (sc.execute(new BendingContext(data, entity, bender, raytrace))/* && ((sc instanceof StatCtrlThrowElementshard && EntityElementshard.noShards) || !(sc instanceof StatCtrlThrowElementshard))**/) {
+			if (sc.execute(new BendingContext(data, entity, bender, raytrace))) {
 				data.removeStatusControl(sc);
 			}
 		}

@@ -18,14 +18,9 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_C
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK;
 
 public class StatCtrlThrowElementshard extends StatusControl {
+
 	public StatCtrlThrowElementshard() {
 		super(10, CONTROL_RIGHT_CLICK, RIGHT_OF_CROSSHAIR);
-	}
-
-	public int shardsLeft;
-
-	public void setShardsLeft(int shards) {
-		this.shardsLeft = shards;
 	}
 
 
@@ -37,20 +32,18 @@ public class StatCtrlThrowElementshard extends StatusControl {
 
 		EntityElementshard elementshard = AvatarEntity.lookupControlledEntity(world, EntityElementshard.class, entity);
 
-		if (elementshard != null && this.shardsLeft > 0) {
+		if (elementshard != null && elementshard.getShardsLeft() > 0) {
 			AbilityData abilityData = ctx.getData().getAbilityData("element_shard");
 			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
 			elementshard.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
 			elementshard.setBehavior(new ElementshardBehavior.Thrown());
-			shardsLeft--;
-			System.out.println(shardsLeft);
-
+			elementshard.setShardsLeft(elementshard.getShardsLeft() - 1);
+			System.out.println(elementshard.getShardsLeft());
+			return false;
 
 		}
-		if (shardsLeft == 0) {
+		else {
 			return true;
-		} else {
-			return false;
 		}
 
 	}

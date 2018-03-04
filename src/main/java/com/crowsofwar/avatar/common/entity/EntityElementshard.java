@@ -40,6 +40,9 @@ public class EntityElementshard extends AvatarEntity {
 	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityElementshard.class,
 			DataSerializers.VARINT);
 
+	public static final DataParameter<Integer> SYNC_SHARDS_LEFT = EntityDataManager.createKey(EntityElementshard.class,
+			DataSerializers.VARINT);
+
 	private AxisAlignedBB expandedHitbox;
 	private float damage;
 	public int shardsLeft;
@@ -52,11 +55,24 @@ public class EntityElementshard extends AvatarEntity {
 		setSize(.2f, .2f);
 	}
 
+	public int getShardsLeft(){
+		return dataManager.get(SYNC_SHARDS_LEFT);
+	}
+	public void setShardsLeft(int shardsLeft){
+		dataManager.set(SYNC_SHARDS_LEFT, shardsLeft);
+	}
+
+
 	@Override
 	public void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new ElementshardBehavior.Idle());
 		dataManager.register(SYNC_SIZE, 30);
+		dataManager.register(SYNC_SHARDS_LEFT, 0);
+		/*Didn't set shardsLeft to 4 as it's easier to change the amount of shards depending on the level by just calling
+		entityelementshard.getShardsLeft in the ability class
+		**/
+
 	}
 
 	@Override
@@ -68,7 +84,7 @@ public class EntityElementshard extends AvatarEntity {
 		// Add hook or something
 		if (getOwner() == null) {
 			setDead();
-			if (this.isDead) {
+			if (this.isDead && shardsLeft == 0) {
 				removeStatCtrl();
 			}
 		}

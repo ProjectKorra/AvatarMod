@@ -192,7 +192,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (data != null) {
 			StatusControl sc = packet.getStatusControl();
 			if (data.hasStatusControl(sc))  {
-				if (sc.execute(new BendingContext(data, player, packet.getRaytrace())) && ((sc instanceof StatCtrlThrowElementshard && EntityElementshard.noShards == true) || !(sc instanceof StatCtrlThrowElementshard))) {
+				if (sc.execute(new BendingContext(data, player, packet.getRaytrace()))) {
 					data.removeStatusControl(packet.getStatusControl());
 				}
 			}
