@@ -60,7 +60,7 @@ public class EntityElementshard extends AvatarEntity {
 		return dataManager.get(SYNC_SHARD_COOLDOWN);
 	}
 
-	public void setShardCooldown(int cooshardsLeft){
+	public void setShardCooldown(int shardCooldown){
 		dataManager.set(SYNC_SHARD_COOLDOWN, shardCooldown);
 	}
 
@@ -70,7 +70,7 @@ public class EntityElementshard extends AvatarEntity {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new ElementshardBehavior.Idle());
 		dataManager.register(SYNC_SIZE, 30);
-		dataManager.register(SYNC_SHARDS_LEFT, 0);
+		dataManager.register(SYNC_SHARDS_LEFT, 4);
 		dataManager.register(SYNC_SHARD_COOLDOWN, 0);
 		/*Didn't set shardsLeft to 4 as it's easier to change the amount of shards depending on the level by just calling
 		entityelementshard.getShardsLeft in the ability class
@@ -83,7 +83,7 @@ public class EntityElementshard extends AvatarEntity {
 
 		super.onUpdate();
 		setBehavior((ElementshardBehavior) getBehavior().onUpdate(this));
-		this.setShardsLeft(this.getShardsLeft() -1);
+		this.setShardCooldown(this.getShardCooldown() -1);
 
 		// Add hook or something
 		if (getOwner() == null) {
