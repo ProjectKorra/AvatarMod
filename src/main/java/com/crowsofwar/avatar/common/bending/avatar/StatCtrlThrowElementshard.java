@@ -29,8 +29,11 @@ public class StatCtrlThrowElementshard extends StatusControl {
 
 
 		EntityElementshard elementshard = AvatarEntity.lookupControlledEntity(world, EntityElementshard.class, entity);
+		if (elementshard.getShardsLeft() > 0 && elementshard != null){
+			return false;
+		}
 
-		if (elementshard != null && elementshard.getShardsLeft() > 0 && elementshard.getShardCooldown() <= 0) {
+		else if (elementshard != null && elementshard.getShardsLeft() > 0 && elementshard.getShardCooldown() <= 0) {
 			AbilityData abilityData = ctx.getData().getAbilityData("element_shard");
 			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
 			elementshard.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
@@ -39,8 +42,10 @@ public class StatCtrlThrowElementshard extends StatusControl {
 			System.out.println(elementshard.getShardsLeft());
 			System.out.println(elementshard.getShardCooldown());
 			elementshard.setShardCooldown(100);
+			return false;
 		}
-		return elementshard.getShardsLeft() == 0;
+
+		else return true;
 	}
 
 }
