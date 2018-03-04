@@ -157,8 +157,8 @@ public abstract class ElementshardBehavior extends Behavior<EntityElementshard> 
 			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
 			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5 /* <-- !! you can adjust that number to make the shards move faster */);
-			entity.rotationPitch = owner.rotationPitch +3;
-			entity.rotationYaw = owner.rotationYaw +3;
+			entity.rotationPitch = owner.rotationPitch;
+			entity.rotationYaw = owner.rotationYaw;
 
 			entity.setVelocity(motion);
 
