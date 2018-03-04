@@ -81,7 +81,7 @@ public class AiElementshard extends BendingAi {
 				shard -> shard.getBehavior() instanceof ElementshardBehavior.PlayerControlled
 						&& shard.getOwner() == entity);
 
-		if (elementshard != null && elementshard.noShards) {
+		if (elementshard != null && elementshard.getShardsLeft() == 0) {
 			elementshard.setDead();
 			bender.getData().removeStatusControl(StatusControl.THROW_ELEMENTSHARD);
 		}
