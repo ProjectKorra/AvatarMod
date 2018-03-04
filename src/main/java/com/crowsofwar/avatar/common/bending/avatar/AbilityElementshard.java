@@ -54,6 +54,7 @@ public class AbilityElementshard extends Ability {
 		}
 
 		if (data.hasStatusControl(StatusControl.THROW_ELEMENTSHARD)) return;
+		if (data.hasStatusControl(StatusControl.THROW_ALL_ELEMENTSHARD)) return;
 
 
 		if (bender.consumeChi(chi)) {

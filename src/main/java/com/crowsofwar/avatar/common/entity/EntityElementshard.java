@@ -20,15 +20,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
+
 import net.minecraft.world.World;
-import net.minecraftforge.event.ForgeEventFactory;
-import org.lwjgl.Sys;
 
-import java.util.List;
-
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityElementshard extends AvatarEntity {
 	public static final DataParameter<ElementshardBehavior> SYNC_BEHAVIOR = EntityDataManager
@@ -39,10 +33,13 @@ public class EntityElementshard extends AvatarEntity {
 
 	public static final DataParameter<Integer> SYNC_SHARDS_LEFT = EntityDataManager.createKey(EntityElementshard.class,
 			DataSerializers.VARINT);
+	public static final DataParameter<Integer> SYNC_SHARD_COOLDOWN = EntityDataManager.createKey(EntityElementshard.class,
+			DataSerializers.VARINT);
 
 	private AxisAlignedBB expandedHitbox;
 	private float damage;
 	public int shardsLeft;
+	public int shardCooldown;
 
 	/**
 	 * @param world
@@ -59,6 +56,14 @@ public class EntityElementshard extends AvatarEntity {
 		dataManager.set(SYNC_SHARDS_LEFT, shardsLeft);
 	}
 
+	public int getShardCooldown(){
+		return dataManager.get(SYNC_SHARD_COOLDOWN);
+	}
+
+	public void setShardCooldown(int cooshardsLeft){
+		dataManager.set(SYNC_SHARD_COOLDOWN, shardCooldown);
+	}
+
 
 	@Override
 	public void entityInit() {
@@ -66,6 +71,7 @@ public class EntityElementshard extends AvatarEntity {
 		dataManager.register(SYNC_BEHAVIOR, new ElementshardBehavior.Idle());
 		dataManager.register(SYNC_SIZE, 30);
 		dataManager.register(SYNC_SHARDS_LEFT, 0);
+		dataManager.register(SYNC_SHARD_COOLDOWN, 0);
 		/*Didn't set shardsLeft to 4 as it's easier to change the amount of shards depending on the level by just calling
 		entityelementshard.getShardsLeft in the ability class
 		**/
@@ -77,6 +83,7 @@ public class EntityElementshard extends AvatarEntity {
 
 		super.onUpdate();
 		setBehavior((ElementshardBehavior) getBehavior().onUpdate(this));
+		this.setShardsLeft(this.getShardsLeft() -1);
 
 		// Add hook or something
 		if (getOwner() == null) {
@@ -174,6 +181,7 @@ public class EntityElementshard extends AvatarEntity {
 		setDamage(nbt.getFloat("Damage"));
 		setBehavior((ElementshardBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 		setShardsLeft(nbt.getInteger("ShardsLeft"));
+		setShardCooldown(nbt.getInteger("Cooldown"));
 	}
 
 
@@ -183,6 +191,7 @@ public class EntityElementshard extends AvatarEntity {
 		nbt.setFloat("Damage", getDamage());
 		nbt.setInteger("Behavior", getBehavior().getId());
 		nbt.setInteger("ShardsLeft", getShardsLeft());
+		nbt.setInteger("Cooldown", getShardCooldown());
 	}
 
 	public AxisAlignedBB getExpandedHitbox() {

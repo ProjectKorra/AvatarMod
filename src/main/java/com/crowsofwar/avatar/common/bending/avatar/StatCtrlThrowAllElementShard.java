@@ -36,12 +36,8 @@ public class StatCtrlThrowAllElementShard extends StatusControl {
 			elementshard.setShardsLeft(elementshard.getShardsLeft() - 1);
 			System.out.println(elementshard.getShardsLeft());
 			return false;
-
-
 		}
-		else {
-			return true;
-		}
+		 return elementshard.getShardsLeft() <= 0;
 	}
 
 }

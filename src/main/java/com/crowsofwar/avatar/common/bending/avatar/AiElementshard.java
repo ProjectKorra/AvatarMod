@@ -84,7 +84,7 @@ public class AiElementshard extends BendingAi {
 
 		if (elementshard != null && elementshard.getShardsLeft() == 0) {
 			elementshard.setDead();
-			bender.getData().addStatusControl(StatusControl.THROW_ELEMENTSHARD);
+			bender.getData().removeStatusControl(StatusControl.THROW_ELEMENTSHARD);
 			bender.getData().removeStatusControl(StatusControl.THROW_ALL_ELEMENTSHARD);
 		}
 
