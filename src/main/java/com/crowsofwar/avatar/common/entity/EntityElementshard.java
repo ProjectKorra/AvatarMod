@@ -176,6 +176,7 @@ public class EntityElementshard extends AvatarEntity {
 		setShardsLeft(nbt.getInteger("ShardsLeft"));
 	}
 
+
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);

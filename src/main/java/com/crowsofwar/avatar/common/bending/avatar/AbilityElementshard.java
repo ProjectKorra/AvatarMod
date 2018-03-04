@@ -82,6 +82,7 @@ public class AbilityElementshard extends Ability {
 
 			}
 			data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
+			data.addStatusControl(StatusControl.THROW_ALL_ELEMENTSHARD);
 
 		}
 
