@@ -95,8 +95,8 @@ public class EntityElementshard extends AvatarEntity {
 			}
 		}
 		if (this.getBehavior() instanceof ElementshardBehavior.PlayerControlled) {
-			this.rotationYaw = this.rotationYaw + 80;
-			this.rotationPitch = this.rotationPitch + 80;
+			this.rotationYaw = this.rotationYaw * 5;
+			this.rotationPitch = this.rotationPitch * 5;
 		}
 
 	}
