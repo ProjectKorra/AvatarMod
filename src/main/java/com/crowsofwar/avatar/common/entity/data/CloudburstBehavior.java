@@ -23,7 +23,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 	public static final DataSerializer<CloudburstBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
 
-	public static int ID_NOTHING, ID_FALL, ID_PICKUP, ID_PLAYER_CONTROL, ID_THROWN;
+	public static int ID_NOTHING, ID_PLAYER_CONTROL, ID_THROWN;
 
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
