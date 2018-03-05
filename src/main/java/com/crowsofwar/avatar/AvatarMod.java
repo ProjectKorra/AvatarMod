@@ -45,6 +45,7 @@ import com.crowsofwar.avatar.common.bending.sand.AbilitySandstorm;
 import com.crowsofwar.avatar.common.bending.sand.Sandbending;
 import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.block.AvatarBlocks;
+import com.crowsofwar.avatar.common.block.CloudBlock;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.*;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -60,7 +61,9 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -77,6 +80,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;
+import static net.minecraftforge.event.RegistryEvent.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false, //
@@ -162,6 +166,8 @@ public class AvatarMod {
 		registerBendingStyles();
 		AvatarItems.init();
 		AvatarParticles.register();
+		AvatarBlocks.init();
+
 
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());

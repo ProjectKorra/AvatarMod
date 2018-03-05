@@ -25,19 +25,21 @@ public class AvatarBlocks {
 	private AvatarBlocks() {
 	}
 
-	private static void init() {
+	public static void init() {
 		allBlocks = new ArrayList<>();
 		addBlock(blockCloud = new CloudBlock());
 	}
 
 	private static void addBlock(Block block) {
-		block.setRegistryName(AvatarInfo.MOD_ID, block.getUnlocalizedName().substring(5));
+		block.setRegistryName("avatarmod", block.getUnlocalizedName().substring(5));
+		block.setUnlocalizedName("avatarmod:" + block.getUnlocalizedName().substring(5));
 		allBlocks.add(block);
 	}
 
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> e) {
 		init();
+		blockCloud.initModel();
 		Block[] blocksArr = allBlocks.toArray(new Block[allBlocks.size()]);
 		e.getRegistry().registerAll(blocksArr);
 	}
