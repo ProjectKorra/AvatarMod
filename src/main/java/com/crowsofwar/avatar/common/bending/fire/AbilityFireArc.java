@@ -63,8 +63,6 @@ public class AbilityFireArc extends Ability {
 				lookPos = Vector.getEyePos(entity).plus(look.times(3));
 			}
 
-			removeExisting(ctx);
-
 			float damageMult = ctx.getLevel() >= 2 ? 2 : 1;
 			damageMult *= ctx.getPowerRatingDamageMod();
 
@@ -74,6 +72,7 @@ public class AbilityFireArc extends Ability {
 			fire.setOwner(entity);
 			fire.setDamageMult(damageMult);
 			fire.setCreateBigFire(ctx.isMasterLevel(AbilityTreePath.FIRST));
+			removeExisting(ctx);
 			world.spawnEntity(fire);
 
 			data.addStatusControl(StatusControl.THROW_FIRE);
