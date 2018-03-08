@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * @author CrowsOfWar
+ * @author Mahtaran
  */
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarBlocks {
@@ -30,10 +31,12 @@ public class AvatarBlocks {
 	public static void init() {
 		allBlocks = new ArrayList<>();
 		addBlock(blockCloud = new CloudBlock());
+		
 		MinecraftForge.EVENT_BUS.register(new AvatarBlocks());
 	}
 
 	private static void addBlock(Block block) {
+		// Remove the "tile." prefix
 		block.setRegistryName("avatarmod", block.getUnlocalizedName().substring(5));
 		block.setUnlocalizedName("avatarmod:" + block.getUnlocalizedName().substring(5));
 		allBlocks.add(block);
@@ -42,7 +45,6 @@ public class AvatarBlocks {
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> e) {
 		init();
-		blockCloud.initModel();
 		Block[] blocksArr = allBlocks.toArray(new Block[allBlocks.size()]);
 		e.getRegistry().registerAll(blocksArr);
 		AvatarMod.proxy.registerBlockModels();
@@ -50,20 +52,13 @@ public class AvatarBlocks {
 
 	@SubscribeEvent
 	public static void registerItemBlocks(RegistryEvent.Register<Item> e) {
-
 		for (Block block : allBlocks) {
-
 			ItemBlock itemBlock = new ItemBlock(block);
-
 			ResourceLocation registryName = Preconditions.checkNotNull(block.getRegistryName(),
 					"Block %s has null registry name", block);
 			itemBlock.setRegistryName(registryName);
-
 			e.getRegistry().register(itemBlock);
 
 		}
-
-
 	}
-
 }
