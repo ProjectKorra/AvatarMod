@@ -1,11 +1,13 @@
 package com.crowsofwar.avatar.common.block;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.AvatarMod;
 import com.google.common.base.Preconditions;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -28,6 +30,7 @@ public class AvatarBlocks {
 	public static void init() {
 		allBlocks = new ArrayList<>();
 		addBlock(blockCloud = new CloudBlock());
+		MinecraftForge.EVENT_BUS.register(new AvatarBlocks());
 	}
 
 	private static void addBlock(Block block) {
@@ -42,6 +45,7 @@ public class AvatarBlocks {
 		blockCloud.initModel();
 		Block[] blocksArr = allBlocks.toArray(new Block[allBlocks.size()]);
 		e.getRegistry().registerAll(blocksArr);
+		AvatarMod.proxy.registerBlockModels();
 	}
 
 	@SubscribeEvent

@@ -33,6 +33,7 @@ import com.crowsofwar.avatar.client.render.*;
 import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.block.AvatarBlocks;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -252,6 +253,12 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public void registerItemModels() {
 		AvatarItemRenderRegister.register();
+	}
+
+	@Override
+	public void registerBlockModels() {
+	//	AvatarBlockRenderRegister.register();
+
 	}
 
 	@Override
