@@ -46,27 +46,23 @@ public class AbilityAvatarState extends Ability {
 
 			entity.clearActivePotions();
 
+			entity.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, duration, effectLevel));
+			entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, effectLevel));
+			entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration, effectLevel));
 
-			if (abilityData.getLevel() >= 1){
-				entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, effectLevel));
+			if (ctx.getLevel() >= 1){
+				entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, duration, effectLevel));
 				savehealth = 8;
 			}
 
-			if (abilityData.getLevel() >= 2){
-				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, effectLevel));
+			if (ctx.getLevel() >= 2){
+				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, duration, effectLevel));
 				savehealth = 10;
 			}
 
 			if (entity.getHealth() <= savehealth){
 				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 1, effectLevel));
 			}
-
-			entity.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, duration, effectLevel));
-			entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, effectLevel));
-			entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration, effectLevel));
-
-
-
 
 
 		}
