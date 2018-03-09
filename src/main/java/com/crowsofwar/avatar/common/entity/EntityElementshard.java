@@ -95,7 +95,7 @@ public class EntityElementshard extends AvatarEntity {
 			}
 		}
 
-			this.rotationYaw = this.rotationYaw * 5;
+
 
 
 	}
