@@ -41,6 +41,7 @@ public class EntityElementshard extends AvatarEntity {
 
 	public static final DataParameter<Integer> SYNC_ROTATION_SPEED = EntityDataManager.createKey(EntityElementshard.class,
 			DataSerializers.VARINT);
+	//Just times the speed by 20 to get the degrees rotated per second; it rotates in degrees per tick
 
 	private AxisAlignedBB expandedHitbox;
 	private float damage;
@@ -86,7 +87,7 @@ public class EntityElementshard extends AvatarEntity {
 		dataManager.register(SYNC_SIZE, 30);
 		dataManager.register(SYNC_SHARDS_LEFT, 0);
 		dataManager.register(SYNC_SHARD_COOLDOWN, 0);
-		dataManager.register(SYNC_ROTATION_SPEED, 10);
+		dataManager.register(SYNC_ROTATION_SPEED, 12);
 		/*Didn't set shardsLeft to 4 as it's easier to change the amount of shards depending on the level by just calling
 		entityelementshard.getShardsLeft in the ability class
 		**/
