@@ -33,13 +33,12 @@ public class StatCtrlThrowAllElementShard extends StatusControl {
 			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
 			elementshard.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
 			elementshard.setBehavior(new ElementshardBehavior.Thrown());
-			elementshard.setShardsLeft(elementshard.getShardsLeft() - 1);
+			elementshard.setShardsLeft(0);
 			System.out.println(elementshard.getShardsLeft());
 			System.out.println(elementshard.getShardCooldown());
 			return false;
-		} else {
-			return true;
 		}
+		else return true;
 
 	}
 

@@ -8,6 +8,9 @@ import com.crowsofwar.avatar.common.entity.EntityElementshard;
 import com.crowsofwar.avatar.common.entity.data.ElementshardBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
 
@@ -25,7 +28,6 @@ public class StatCtrlThrowElementshard extends StatusControl {
 	public boolean execute(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
-
 
 		EntityElementshard elementshard = AvatarEntity.lookupControlledEntity(world, EntityElementshard.class, entity);
 		if (elementshard != null && elementshard.getShardsLeft() > 0 && elementshard.getShardCooldown() <= 0) {

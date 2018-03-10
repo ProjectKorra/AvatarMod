@@ -16,6 +16,9 @@ import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -30,6 +33,8 @@ public class AbilityElementshard extends Ability {
 		super(Avatarbending.ID, "element_shard");
 		requireRaytrace(2.5, false);
 	}
+
+
 
 	@Override
 	public void execute(AbilityContext ctx) {
@@ -79,8 +84,6 @@ public class AbilityElementshard extends Ability {
 				if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) elementshard.setSize(20);
 				elementshard.setBehavior(new ElementshardBehavior.PlayerControlled());
 				world.spawnEntity(elementshard);
-
-
 			}
 			data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
 			data.addStatusControl(StatusControl.THROW_ALL_ELEMENTSHARD);
