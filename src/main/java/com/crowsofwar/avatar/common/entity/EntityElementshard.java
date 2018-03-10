@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.ElementshardBehavior;
+import com.crowsofwar.gorecore.util.Vector;
 import com.sun.istack.internal.NotNull;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -94,7 +95,6 @@ public class EntityElementshard extends AvatarEntity {
 				removeStatCtrl();
 			}
 		}
-
 
 
 
