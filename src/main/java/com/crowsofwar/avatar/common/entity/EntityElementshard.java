@@ -35,13 +35,18 @@ public class EntityElementshard extends AvatarEntity {
 
 	public static final DataParameter<Integer> SYNC_SHARDS_LEFT = EntityDataManager.createKey(EntityElementshard.class,
 			DataSerializers.VARINT);
+
 	public static final DataParameter<Integer> SYNC_SHARD_COOLDOWN = EntityDataManager.createKey(EntityElementshard.class,
+			DataSerializers.VARINT);
+
+	public static final DataParameter<Integer> SYNC_ROTATION_SPEED = EntityDataManager.createKey(EntityElementshard.class,
 			DataSerializers.VARINT);
 
 	private AxisAlignedBB expandedHitbox;
 	private float damage;
 	public int shardsLeft;
 	public int shardCooldown;
+	public int rotationSpeed;
 
 	/**
 	 * @param world
@@ -66,6 +71,13 @@ public class EntityElementshard extends AvatarEntity {
 		dataManager.set(SYNC_SHARD_COOLDOWN, shardCooldown);
 	}
 
+	public int getRotationSpeed(){
+		return dataManager.get(SYNC_ROTATION_SPEED);
+	}
+
+	public void setRotationSpeed(){
+		dataManager.set(SYNC_ROTATION_SPEED, rotationSpeed);
+	}
 
 	@Override
 	public void entityInit() {
@@ -74,6 +86,7 @@ public class EntityElementshard extends AvatarEntity {
 		dataManager.register(SYNC_SIZE, 30);
 		dataManager.register(SYNC_SHARDS_LEFT, 0);
 		dataManager.register(SYNC_SHARD_COOLDOWN, 0);
+		dataManager.register(SYNC_ROTATION_SPEED, 10);
 		/*Didn't set shardsLeft to 4 as it's easier to change the amount of shards depending on the level by just calling
 		entityelementshard.getShardsLeft in the ability class
 		**/
