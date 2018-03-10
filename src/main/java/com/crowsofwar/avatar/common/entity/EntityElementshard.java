@@ -154,10 +154,17 @@ public class EntityElementshard extends AvatarEntity {
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
-		if (entity instanceof AvatarEntity && !(entity instanceof EntityElementshard)) {
-			((AvatarEntity) entity).onCollideWithSolid();
+	protected boolean canCollideWith(Entity entity) {
+		if (entity instanceof EntityElementshard){
+			return false;
+		}
+		else return entity instanceof EntityLivingBase || super.canCollideWith(entity);
+	}
 
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
+		if (entity instanceof AvatarEntity) {
+			((AvatarEntity) entity).onCollideWithSolid();
 		}
 	}
 

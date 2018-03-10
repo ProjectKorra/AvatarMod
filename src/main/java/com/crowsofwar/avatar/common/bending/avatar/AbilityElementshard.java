@@ -34,6 +34,7 @@ public class AbilityElementshard extends Ability {
 		requireRaytrace(2.5, false);
 	}
 
+	public static int shardsAvailable = 4;
 
 
 	@Override
@@ -46,7 +47,7 @@ public class AbilityElementshard extends Ability {
 
 		float chi = 4F;
 		float damage = 0.5F;
-		int shardsAvailable = 4;
+
 
 
 		if (ctx.getLevel() == 1) {
