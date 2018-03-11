@@ -34,8 +34,11 @@ public class AbilityElementshard extends Ability {
 		requireRaytrace(2.5, false);
 	}
 
-	public static int shardsAvailable = 4;
+	public int shardsAvailable = 4;
 
+	public int getShardsAvailable() {
+		return shardsAvailable;
+	}
 
 	@Override
 	public void execute(AbilityContext ctx) {
