@@ -24,11 +24,11 @@ public class StatCtrlThrowAllElementShard extends StatusControl {
 	public boolean execute(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
-		
+
 		EntityElementshard elementshard = AvatarEntity.lookupControlledEntity(world, EntityElementshard.class, entity);
 		AbilityElementshard abilityElementshard = new AbilityElementshard();
 
-		if (elementshard != null && abilityElementshard.shardsAvailable > 0) {
+		if (elementshard != null) {
 			AbilityData abilityData = ctx.getData().getAbilityData("element_shard");
 			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
 			elementshard.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
@@ -36,10 +36,6 @@ public class StatCtrlThrowAllElementShard extends StatusControl {
 			abilityElementshard.shardsAvailable--;
 			System.out.println(abilityElementshard.shardsAvailable);
 			return false;
-		}
-		else if (abilityElementshard.shardsAvailable == 0){
-			abilityElementshard.shardsAvailable = 4;
-			return true;
 		}
 		else return true;
 	}

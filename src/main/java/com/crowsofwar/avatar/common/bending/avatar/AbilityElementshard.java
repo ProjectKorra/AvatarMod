@@ -35,6 +35,7 @@ public class AbilityElementshard extends Ability {
 	}
 
 	public int shardsAvailable = 4;
+	public int shardCooldown = 0;
 
 	public int getShardsAvailable() {
 		return shardsAvailable;
@@ -78,6 +79,7 @@ public class AbilityElementshard extends Ability {
 
 
 			damage *= ctx.getPowerRatingDamageMod();
+
 			for (int i = 0; i < shardsAvailable; i++) {
 				EntityElementshard elementshard = new EntityElementshard(world);
 				elementshard.setPosition(target);
