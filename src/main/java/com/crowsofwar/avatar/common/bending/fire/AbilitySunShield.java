@@ -24,9 +24,9 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
 
-public class AbilityInfernoShield extends Ability {
-	public AbilityInfernoShield() {
-		super(Firebending.ID, "inferno_shield");
+public class AbilitySunShield extends Ability {
+	public AbilitySunShield() {
+		super(Firebending.ID, "sun_shield");
 	}
 
 	@Override
