@@ -56,11 +56,14 @@ public class AbilityInfernoShield extends Ability {
 
 			if (world.isDaytime()) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, effectLevel, duration));
-			 if (abilityData.getLevel() >= 2){
-				 entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, effectLevel, duration));
-			 }
+				if (abilityData.getLevel() >= 1) {
+					entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, effectLevel, duration));
+				}
+				if (abilityData.getLevel() >= 2) {
+					entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, effectLevel, duration));
+					entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, effectLevel, duration));
+				}
 			}
-
 		}
 	}
 }
