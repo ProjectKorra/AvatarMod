@@ -11,6 +11,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,21 +27,29 @@ public class AvatarBlocks {
 	public static List<Block> allBlocks;
 	public static CloudBlock blockCloud;
 
+	public static List<ItemBlock> allItemBlocks;
+	public static ItemBlock itemBlockCloud;
+
 	private AvatarBlocks() {
 	}
 
 	public static void init() {
 		allBlocks = new ArrayList<>();
-		addBlock(blockCloud = new CloudBlock());
+		allItemBlocks = new ArrayList<>();
+		addBlock(blockCloud = new CloudBlock(), itemBlockCloud = new ItemBlock(blockCloud));
 		
 		MinecraftForge.EVENT_BUS.register(new AvatarBlocks());
 	}
 
-	private static void addBlock(Block block) {
+	private static void addBlock(Block block, ItemBlock itemBlock) {
 		// Remove the "tile." prefix
 		block.setRegistryName("avatarmod", block.getUnlocalizedName().substring(5));
 		block.setUnlocalizedName("avatarmod:" + block.getUnlocalizedName().substring(5));
 		allBlocks.add(block);
+		ResourceLocation registryName = Preconditions.checkNotNull(block.getRegistryName(),
+					"Block %s has null registry name", block);
+		itemBlock.setRegistryName(registryName);
+		allItemBlocks.add(itemBlock);
 	}
 
 	@SubscribeEvent
@@ -47,18 +57,14 @@ public class AvatarBlocks {
 		init();
 		Block[] blocksArr = allBlocks.toArray(new Block[allBlocks.size()]);
 		e.getRegistry().registerAll(blocksArr);
-		AvatarMod.proxy.registerBlockModels();
+		
 	}
 
 	@SubscribeEvent
 	public static void registerItemBlocks(RegistryEvent.Register<Item> e) {
-		for (Block block : allBlocks) {
-			ItemBlock itemBlock = new ItemBlock(block);
-			ResourceLocation registryName = Preconditions.checkNotNull(block.getRegistryName(),
-					"Block %s has null registry name", block);
-			itemBlock.setRegistryName(registryName);
+		for (ItemBlock itemBlock : allItemBlocks) {
 			e.getRegistry().register(itemBlock);
-
 		}
+		AvatarMod.proxy.registerBlockModels();
 	}
 }
