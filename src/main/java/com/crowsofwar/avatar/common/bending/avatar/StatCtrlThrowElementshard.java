@@ -26,24 +26,29 @@ public class StatCtrlThrowElementshard extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 
-
 		EntityElementshard elementshard = AvatarEntity.lookupControlledEntity(world, EntityElementshard.class, entity);
-		if (elementshard != null && elementshard.getShardsLeft() > 0 && elementshard.getShardCooldown() <= 0) {
-			AbilityData abilityData = ctx.getData().getAbilityData("element_shard");
-			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
-			elementshard.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
-			elementshard.setBehavior(new ElementshardBehavior.Thrown());
-			elementshard.setShardsLeft(elementshard.getShardsLeft() - 1);
-			System.out.println(elementshard.getShardsLeft());
-			System.out.println(elementshard.getShardCooldown());
-			elementshard.setShardCooldown(100);
-			return false;
-		}
-		if (elementshard != null && elementshard.getShardsLeft() > 0) {
-			return false;
-		} else return true;
-	}
+		AbilityElementshard abilityElementshard = new AbilityElementshard();
 
+
+		if (elementshard != null) {
+			for (int i = 0; i < abilityElementshard.shardsAvailable; i++) {
+				if (abilityElementshard.shardCooldown == 0) {
+					AbilityData abilityData = ctx.getData().getAbilityData("element_shard");
+					double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
+					elementshard.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
+					elementshard.setBehavior(new ElementshardBehavior.Thrown());
+					abilityElementshard.shardsAvailable--;
+					System.out.println(abilityElementshard.shardsAvailable);
+					System.out.println(abilityElementshard.shardCooldown);
+					abilityElementshard.shardCooldown = 100;
+				}
+			}
+		return false;
+		}
+		else return true;
+	}
 }
+
+
 
 

@@ -16,6 +16,9 @@ import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -31,6 +34,13 @@ public class AbilityElementshard extends Ability {
 		requireRaytrace(2.5, false);
 	}
 
+	public int shardsAvailable = 4;
+	public int shardCooldown = 0;
+
+	public int getShardsAvailable() {
+		return shardsAvailable;
+	}
+
 	@Override
 	public void execute(AbilityContext ctx) {
 
@@ -41,7 +51,7 @@ public class AbilityElementshard extends Ability {
 
 		float chi = 4F;
 		float damage = 0.5F;
-		int shardsAvailable = 4;
+
 
 
 		if (ctx.getLevel() == 1) {
@@ -69,6 +79,7 @@ public class AbilityElementshard extends Ability {
 
 
 			damage *= ctx.getPowerRatingDamageMod();
+
 			for (int i = 0; i < shardsAvailable; i++) {
 				EntityElementshard elementshard = new EntityElementshard(world);
 				elementshard.setPosition(target);
@@ -79,8 +90,6 @@ public class AbilityElementshard extends Ability {
 				if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) elementshard.setSize(20);
 				elementshard.setBehavior(new ElementshardBehavior.PlayerControlled());
 				world.spawnEntity(elementshard);
-
-
 			}
 			data.addStatusControl(StatusControl.THROW_ELEMENTSHARD);
 			data.addStatusControl(StatusControl.THROW_ALL_ELEMENTSHARD);

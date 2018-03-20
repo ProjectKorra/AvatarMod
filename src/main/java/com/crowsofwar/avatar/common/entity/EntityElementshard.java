@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.avatar.AbilityElementshard;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
@@ -33,13 +34,19 @@ public class EntityElementshard extends AvatarEntity {
 
 	public static final DataParameter<Integer> SYNC_SHARDS_LEFT = EntityDataManager.createKey(EntityElementshard.class,
 			DataSerializers.VARINT);
+
 	public static final DataParameter<Integer> SYNC_SHARD_COOLDOWN = EntityDataManager.createKey(EntityElementshard.class,
 			DataSerializers.VARINT);
+
+	public static final DataParameter<Integer> SYNC_ROTATION_SPEED = EntityDataManager.createKey(EntityElementshard.class,
+			DataSerializers.VARINT);
+	//Just times the speed by 20 to get the degrees rotated per second; it rotates in degrees per tick
 
 	private AxisAlignedBB expandedHitbox;
 	private float damage;
 	public int shardsLeft;
 	public int shardCooldown;
+	public int rotationSpeed;
 
 	/**
 	 * @param world
@@ -64,6 +71,13 @@ public class EntityElementshard extends AvatarEntity {
 		dataManager.set(SYNC_SHARD_COOLDOWN, shardCooldown);
 	}
 
+	public int getRotationSpeed(){
+		return dataManager.get(SYNC_ROTATION_SPEED);
+	}
+
+	public void setRotationSpeed(){
+		dataManager.set(SYNC_ROTATION_SPEED, rotationSpeed);
+	}
 
 	@Override
 	public void entityInit() {
@@ -72,6 +86,7 @@ public class EntityElementshard extends AvatarEntity {
 		dataManager.register(SYNC_SIZE, 30);
 		dataManager.register(SYNC_SHARDS_LEFT, 0);
 		dataManager.register(SYNC_SHARD_COOLDOWN, 0);
+		dataManager.register(SYNC_ROTATION_SPEED, 12);
 		/*Didn't set shardsLeft to 4 as it's easier to change the amount of shards depending on the level by just calling
 		entityelementshard.getShardsLeft in the ability class
 		**/
@@ -93,7 +108,8 @@ public class EntityElementshard extends AvatarEntity {
 				removeStatCtrl();
 			}
 		}
-
+		AbilityElementshard elementshard = new AbilityElementshard();
+		elementshard.shardCooldown--;
 
 
 
@@ -139,10 +155,17 @@ public class EntityElementshard extends AvatarEntity {
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
-		if (entity instanceof AvatarEntity && !(entity instanceof EntityElementshard)) {
-			((AvatarEntity) entity).onCollideWithSolid();
+	protected boolean canCollideWith(Entity entity) {
+		if (entity instanceof EntityElementshard){
+			return false;
+		}
+		else return entity instanceof EntityLivingBase || super.canCollideWith(entity);
+	}
 
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
+		if (entity instanceof AvatarEntity) {
+			((AvatarEntity) entity).onCollideWithSolid();
 		}
 	}
 
