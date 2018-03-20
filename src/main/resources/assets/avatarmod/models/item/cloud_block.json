@@ -1,6 +1,3 @@
 {
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "avatarmod:blocks/cloud_block"
-    }
+    "parent": "avatarmod:block/cloud_block",
 }
