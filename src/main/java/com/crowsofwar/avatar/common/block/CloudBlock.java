@@ -25,7 +25,6 @@ public class CloudBlock extends AvatarBlock {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-<<<<<<< HEAD
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT_MIPPED;
     }
