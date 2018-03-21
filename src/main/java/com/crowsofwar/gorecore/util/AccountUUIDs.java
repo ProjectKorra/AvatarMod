@@ -17,27 +17,12 @@
 
 package com.crowsofwar.gorecore.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Random;
+import java.util.regex.Pattern;
 import java.util.UUID;
 
-import com.crowsofwar.gorecore.GoreCore;
-import com.crowsofwar.gorecore.settings.GoreCoreModConfig;
-
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.common.UsernameCache;
 
 /**
