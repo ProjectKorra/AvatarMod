@@ -36,6 +36,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 dependencies {
     compile files("libs/joml/joml-1.8.1.jar")
     compile files("libs/yaml/snakeyaml-1.16.jar");
+    compile 'com.google.code.gson:gson:2.8.2'
 }
 
 minecraft {
