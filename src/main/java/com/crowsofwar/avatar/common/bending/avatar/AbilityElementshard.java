@@ -68,6 +68,8 @@ public class AbilityElementshard extends Ability {
 
 
 		if (bender.consumeChi(chi)) {
+			EntityElementshard elementshard1 = new EntityElementshard(world);
+			elementshard1.setShardsLeft(shardsAvailable);
 
 			Vector target;
 			if (ctx.isLookingAtBlock()) {
