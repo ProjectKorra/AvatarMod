@@ -22,6 +22,7 @@ import java.net.URL;
 import java.util.regex.Pattern;
 import java.util.UUID;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
 
