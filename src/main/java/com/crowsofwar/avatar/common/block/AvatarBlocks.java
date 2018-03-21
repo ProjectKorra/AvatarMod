@@ -43,8 +43,6 @@ public class AvatarBlocks {
 
 	private static void addBlock(Block block, ItemBlock itemBlock) {
 		// Remove the "tile." prefix
-		block.setRegistryName("avatarmod", block.getUnlocalizedName().substring(5));
-		block.setUnlocalizedName("avatarmod:" + block.getUnlocalizedName().substring(5));
 		allBlocks.add(block);
 		ResourceLocation registryName = Preconditions.checkNotNull(block.getRegistryName(),
 					"Block %s has null registry name", block);
