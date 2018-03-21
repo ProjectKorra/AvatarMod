@@ -42,7 +42,6 @@ public class AvatarBlocks {
 	}
 
 	private static void addBlock(Block block, ItemBlock itemBlock) {
-		// Remove the "tile." prefix
 		allBlocks.add(block);
 		ResourceLocation registryName = Preconditions.checkNotNull(block.getRegistryName(),
 					"Block %s has null registry name", block);

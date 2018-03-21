@@ -153,7 +153,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	}
 
 	private ModelResourceLocation createItemBlockResourceLocation(ItemBlock itemBlock, String suffix) {
-		return new ModelResourceLocation(AvatarInfo.MOD_ID + ":" + itemBlock.getRegistryName() + suffix, "inventory");
+		return new ModelResourceLocation(itemBlock.getRegistryName() + suffix, "inventory");
 	}
 
 	@Override
