@@ -48,6 +48,7 @@ import net.minecraftforge.common.UsernameCache;
  * </p>
  * 
  * @author CrowsOfWar
+ * @author Mahtaran
  */
 public final class AccountUUIDs {
 	/**
