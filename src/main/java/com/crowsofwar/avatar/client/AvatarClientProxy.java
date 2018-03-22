@@ -41,11 +41,13 @@ import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.mob.*;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
+import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
@@ -59,6 +61,7 @@ import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
 
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -162,6 +165,12 @@ public class AvatarClientProxy extends AvatarCommonProxy {
 	@Override
 	public void postInit(FMLPostInitializationEvent event) {
 		super.postInit(event);
+	}
+	
+	@SubscribeEvent
+	public static void registerModels(ModelRegistryEvent event) {
+		AvatarBlocks.initModels();
+		AvatarItems.initModels();
 	}
 
 	@Override
