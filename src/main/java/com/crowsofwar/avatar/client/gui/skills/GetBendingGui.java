@@ -136,7 +136,7 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 			int v = 124 + 60 * (i / 2);
 
 			UiComponent comp = new ComponentCustomButton(AvatarUiTextures.getBending, u, v, 60, 60, () -> {
-				AvatarMod.network.sendToServer(new PacketSUnlockBending(bendingId));
+				AvatarMod.proxy.network.sendToServer(new PacketSUnlockBending(bendingId));
 			});
 
 			comp.setFrame(buttonsFrame);
