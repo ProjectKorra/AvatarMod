@@ -18,37 +18,6 @@
 package com.crowsofwar.avatar;
 
 import com.crowsofwar.avatar.common.*;
-import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.bending.air.*;
-import com.crowsofwar.avatar.common.bending.avatar.*
-import com.crowsofwar.avatar.common.bending.combustion.*;
-import com.crowsofwar.avatar.common.bending.earth.*;
-import com.crowsofwar.avatar.common.bending.fire.*;
-import com.crowsofwar.avatar.common.bending.ice.*;
-import com.crowsofwar.avatar.common.bending.lightning.*;
-import com.crowsofwar.avatar.common.bending.sand.*;
-import com.crowsofwar.avatar.common.bending.water.*;
-import com.crowsofwar.avatar.common.block.AvatarBlocks;
-import com.crowsofwar.avatar.common.block.CloudBlock;
-import com.crowsofwar.avatar.common.command.AvatarCommand;
-import com.crowsofwar.avatar.common.config.*;
-import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.entity.*;
-import com.crowsofwar.avatar.common.entity.data.*;
-import com.crowsofwar.avatar.common.entity.mob.*;
-import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
-import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.network.PacketHandlerServer;
-import com.crowsofwar.avatar.common.network.packets.*;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.event.RegistryEvent;
@@ -56,21 +25,11 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.relauncher.Side;
 
 import static com.crowsofwar.avatar.AvatarInfo.*;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-import static net.minecraft.init.Biomes.*;
-
-import static net.minecraftforge.event.RegistryEvent.*;
-import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
-
-@Mod(modid = MOD_ID, name = MOD_NAME, version = VERSION, dependencies = "required-after:gorecore", useMetadata = true, 
-	 updateJSON = "http://avatar.amuzil.com/updates.json", acceptedMinecraftVersions = "[1.12,1.13)")
+@Mod(modid = MOD_ID, name = MOD_NAME, version = VERSION, dependencies = "required-after:gorecore",
+     updateJSON = UPDATE_JSON, useMetadata = true, acceptedMinecraftVersions = "[1.12,1.13)")
 public class AvatarMod {
 	@SidedProxy(serverSide = "com.crowsofwar.avatar.server.AvatarServerProxy", clientSide = "com.crowsofwar.avatar.client.AvatarClientProxy")
 	public static AvatarCommonProxy proxy;
@@ -78,194 +37,24 @@ public class AvatarMod {
 	@Mod.Instance(value = MOD_ID)
 	public static AvatarMod instance;
 
-	public static SimpleNetworkWrapper network;
-
-	private int nextMessageID = 1;
-	private int nextEntityID = 1;
-
-	private static void registerAbilities() {
-		Abilities.register(new AbilityAirGust());
-		Abilities.register(new AbilityAirJump());
-		Abilities.register(new AbilityPickUpBlock());
-		Abilities.register(new AbilityRavine());
-		Abilities.register(new AbilityLightFire());
-		Abilities.register(new AbilityFireArc());
-		Abilities.register(new AbilityFlamethrower());
-		Abilities.register(new AbilityWaterArc());
-		Abilities.register(new AbilityCreateWave());
-		Abilities.register(new AbilityWaterBubble());
-		Abilities.register(new AbilityWall());
-		Abilities.register(new AbilityWaterSkate());
-		Abilities.register(new AbilityFireball());
-		Abilities.register(new AbilityAirblade());
-		Abilities.register(new AbilityMining());
-		Abilities.register(new AbilityAirBubble());
-		Abilities.register(new AbilityIceBurst());
-		Abilities.register(new AbilityIcePrison());
-		Abilities.register(new AbilitySandPrison());
-		Abilities.register(new AbilityLightningArc());
-		Abilities.register(new AbilityLightningRedirect());
-		Abilities.register(new AbilityCloudBurst());
-		Abilities.register(new AbilityRestore());
-		Abilities.register(new AbilitySlipstream());
-		Abilities.register(new AbilityCleanse());
-		Abilities.register(new AbilityEarthspikes());
-		Abilities.register(new AbilityLightningSpear());
-		Abilities.register(new AbilityPurify());
-		Abilities.register(new AbilityWaterCannon());
-		Abilities.register(new AbilityFireJump());
-		Abilities.register(new AbilityExplosion());
-		Abilities.register(new AbilityExplosivePillar());
-		Abilities.register(new AbilitySandstorm());
-		Abilities.register(new AbilityElementshard());
-		Abilities.register(new AbilityAvatarState());
-	}
-
-	private static void registerBendingStyles() {
-		BendingStyles.register(new Earthbending());
-		BendingStyles.register(new Firebending());
-		BendingStyles.register(new Waterbending());
-		BendingStyles.register(new Airbending());
-		BendingStyles.register(new Icebending());
-		BendingStyles.register(new Lightningbending());
-		BendingStyles.register(new Sandbending());
-		BendingStyles.register(new Combustionbending());
-		BendingStyles.register(new Avatarbending());
-	}
-
 	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent e) {
-		AvatarLog.log = e.getModLog();
-
-		ConfigStats.load();
-		ConfigSkills.load();
-		ConfigClient.load();
-		ConfigChi.load();
-		ConfigMobs.load();
-		ConfigAnalytics.load();
-
-		AvatarControl.initControls();
-		registerAbilities();
-		registerBendingStyles();
-		AvatarItems.init();
-		AvatarParticles.register();
-		AvatarBlocks.init();
-
-		proxy.preInit();
-		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
-
-		network = NetworkRegistry.INSTANCE.newSimpleChannel(AvatarInfo.MOD_ID + "_Network");
-		registerPacket(PacketSUseAbility.class, Side.SERVER);
-		registerPacket(PacketSRequestData.class, Side.SERVER);
-		registerPacket(PacketSUseStatusControl.class, Side.SERVER);
-		registerPacket(PacketCParticles.class, Side.CLIENT);
-		registerPacket(PacketCPlayerData.class, Side.CLIENT);
-		registerPacket(PacketSWallJump.class, Side.SERVER);
-		registerPacket(PacketSSkillsMenu.class, Side.SERVER);
-		registerPacket(PacketSUseScroll.class, Side.SERVER);
-		registerPacket(PacketCErrorMessage.class, Side.CLIENT);
-		registerPacket(PacketSBisonInventory.class, Side.SERVER);
-		registerPacket(PacketSOpenUnlockGui.class, Side.SERVER);
-		registerPacket(PacketSUnlockBending.class, Side.SERVER);
-		registerPacket(PacketSConfirmTransfer.class, Side.SERVER);
-		registerPacket(PacketSCycleBending.class, Side.SERVER);
-		registerPacket(PacketCPowerRating.class, Side.CLIENT);
-		registerPacket(PacketCOpenSkillCard.class, Side.CLIENT);
-
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
-
-		FMLCommonHandler.instance().bus().register(new AvatarPlayerTick());
-
-		AvatarDataSerializers.register();
-		FloatingBlockBehavior.register();
-		WaterArcBehavior.register();
-		FireArcBehavior.register();
-		WaterBubbleBehavior.register();
-		WallBehavior.register();
-		FireballBehavior.register();
-		CloudburstBehavior.register();
-		AvatarChatMessages.loadAll();
-		LightningSpearBehavior.register();
-		ElementshardBehavior.register();
-
-		EarthbendingEvents.register();
-
-		PacketHandlerServer.register();
-
-		AvatarAnnouncements.fetchAnnouncements();
-		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {});
+	public void preInit(FMLPreInitializationEvent event) {
+		AvatarLog.log = event.getModLog();
+		proxy.preInit(event);
 	}
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent e) {
-		registerEntity(EntityFloatingBlock.class, "FloatingBlock");
-		registerEntity(EntityFireArc.class, "FireArc");
-		registerEntity(EntityWaterArc.class, "WaterArc");
-		registerEntity(EntityAirGust.class, "AirGust");
-		registerEntity(EntityRavine.class, "Ravine");
-		registerEntity(EntityFlames.class, "Flames");
-		registerEntity(EntityWave.class, "Wave");
-		registerEntity(EntityWaterBubble.class, "WaterBubble");
-		registerEntity(EntityWall.class, "Wall");
-		registerEntity(EntityWallSegment.class, "WallSegment");
-		registerEntity(EntityFireball.class, "Fireball");
-		registerEntity(EntityAirblade.class, "Airblade");
-		registerEntity(EntityAirBubble.class, "AirBubble");
-		registerEntity(EntityFirebender.class, "Firebender", 0xffffff, 0xffffff);
-		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xffffff);
-		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
-		registerEntity(EntityOtterPenguin.class, "OtterPenguin", 0xffffff, 0xffffff);
-		registerEntity(AvatarEntityItem.class, "Item");
-		registerEntity(EntityIceShield.class, "iceshield");
-		registerEntity(EntityIceShard.class, "iceshard");
-		registerEntity(EntityIcePrison.class, "iceprison");
-		registerEntity(EntityOstrichHorse.class, "OstrichHorse", 0x5c5b46, 0x0f1108);
-		registerEntity(EntitySandPrison.class, "sandprison");
-		registerEntity(EntityLightningArc.class, "lightningarc");
-		registerEntity(EntityCloudBall.class, "cloudburst");
-		registerEntity(EntityEarthspike.class, "earthspike");
-		registerEntity(EntityLightningSpear.class, "lightning_spear");
-		registerEntity(EntityEarthspikeSpawner.class, "earthspike_spawner");
-		registerEntity(EntityWaterCannon.class, "water_cannon");
-		registerEntity(EntitySandstorm.class, "sandstorm");
-		registerEntity(EntityExplosionSpawner.class, "explosion_spawner");
-		registerEntity(EntityElementshard.class, "element_shard");
-
-		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, 
-					EXTREME_HILLS, MUTATED_SAVANNA);
-		EntityRegistry.addSpawn(EntityOtterPenguin.class, 4, 5, 9, EnumCreatureType.CREATURE, 
-					COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
-    EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 3, 6, EnumCreatureType.CREATURE,
-				DESERT, DESERT_HILLS, SAVANNA, SAVANNA_PLATEAU, PLAINS);
-
-		// Second loading required since other mods blocks might not be registered
-		STATS_CONFIG.loadBlocks();
-
-		proxy.init();
+		proxy.init(e);
 	}
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
-		AvatarAnalytics.INSTANCE.init();
+		proxy.postInit(e);
 	}
 
 	@Mod.EventHandler
-	public void onServerStarting(FMLServerStartingEvent e) {
-		e.registerServerCommand(new AvatarCommand());
+	public void onServerStarting(FMLServerStartingEvent event) {
+		proxy.onServerStarting(event);
 	}
-
-	private <MSG extends AvatarPacket<MSG>> void registerPacket(Class<MSG> packet, Side side) {
-		network.registerMessage(packet, packet, nextMessageID++, side);
-	}
-
-	private void registerEntity(Class<? extends Entity> entity, String name) {
-		EntityRegistry.registerModEntity(new ResourceLocation("avatarmod", name), entity, name,
-				nextEntityID++, this, 128, 3, true);
-	}
-
-	private void registerEntity(Class<? extends Entity> entity, String name, int primary, int secondary) {
-		registerEntity(entity, name);
-		registerEgg(new ResourceLocation("avatarmod", name), primary, secondary);
-	}
-
 }
