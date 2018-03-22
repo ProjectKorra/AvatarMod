@@ -50,15 +50,6 @@ public class CloudBlock extends AvatarBlock {
 		return true;
 	}
 
-	@Override
-	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
-		super.harvestBlock(worldIn, player, pos, state, te, stack);
-	}
-
-	@Override
-	public Block setBlockUnbreakable() {
-		return super.setBlockUnbreakable();
-	}
 
 	@Override
 	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
@@ -66,10 +57,5 @@ public class CloudBlock extends AvatarBlock {
 		double spawnY = entityIn.posY;
 		double spawnZ = entityIn.posZ;
 		worldIn.spawnParticle(EnumParticleTypes.CLOUD, spawnX, spawnY, spawnZ, 0, 0, 0);
-	}
-
-	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-		super.breakBlock(worldIn, pos, state);
 	}
 }
