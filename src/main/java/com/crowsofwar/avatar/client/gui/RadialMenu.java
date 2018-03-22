@@ -240,7 +240,7 @@ public class RadialMenu extends Gui {
 		// Right-clicking on segment opens bending menu
 		if (mc.gameSettings.keyBindUseItem.isKeyDown() && currentMouseover != null) {
 			UUID activeBendingId = BendingData.get(mc.player).getActiveBendingId();
-			AvatarMod.network.sendToServer(new PacketSSkillsMenu(activeBendingId, currentMouseover.getAbility()));
+			AvatarMod.proxy.network.sendToServer(new PacketSSkillsMenu(activeBendingId, currentMouseover.getAbility()));
 			closeGui = true;
 		}
 
