@@ -57,11 +57,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
+
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -75,8 +78,8 @@ import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
 @SideOnly(Side.CLIENT)
+@Mod.EventBusSubscriber(Side.CLIENT)
 public class AvatarClientProxy extends AvatarCommonProxy {
-
 	private Minecraft mc;
 	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;
@@ -85,8 +88,8 @@ public class AvatarClientProxy extends AvatarCommonProxy {
 	private List<KeyBinding> allKeybindings;
 
 	@Override
-	public void preInit() {
-		super.preInit();
+	public void preInit(FMLPreInitializationEvent event) {
+		super.preInit(event);
 		mc = Minecraft.getMinecraft();
 
 		displayedMainMenu = false;
@@ -145,8 +148,8 @@ public class AvatarClientProxy extends AvatarCommonProxy {
 	}
 
 	@Override
-	public void init() {
-		super.init();
+	public void init(FMLInitializationEvent event) {
+		super.init(event);
 		ParticleManager pm = mc.effectRenderer;
 
 		if (CLIENT_CONFIG.useCustomParticles) {
@@ -157,8 +160,8 @@ public class AvatarClientProxy extends AvatarCommonProxy {
 	}
 	
 	@Override
-	public void postInit() {
-		super.postInit();
+	public void postInit(FMLPostInitializationEvent event) {
+		super.postInit(event);
 	}
 
 	@Override
