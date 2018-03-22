@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class AvatarBlock extends Block {
 	public AvatarBlock(Material material, String name) {
 		super(material);
-		this.setUnlocalizedName(AvatarInfo.MOD_ID + ":" + name);
+		this.setUnlocalizedName(AvatarInfo.MOD_ID + "." + name);
 		this.setRegistryName(name);
 	}
 	
