@@ -3,6 +3,7 @@ AvatarMod2 Credits
 
 Most (90%) Code written by CrowsOfWar
 Some Code written by FavouriteDragon
+Some Code written by Mahtaran
 
 All models animated by CrowsOfWar
 Sky bison armor/saddle item texture by CrowsOfWar
@@ -30,6 +31,7 @@ Lightning status control icon by FavouriteDragon
 Sky bison model/texture by Captn_Dubz
 
 Translations by Ferrujado, SporYou, ExterMiner
-Polish translation by Gremter
+Polish translations by Gremter
 Spanish translations by Madwrist (Argentinian Spanish, Spanish, Mexican Spanish, Uruguayan Spanish,
   Venezuelan Spanish)
+Russian translations by Mo-og

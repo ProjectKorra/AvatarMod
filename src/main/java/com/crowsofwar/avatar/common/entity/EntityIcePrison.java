@@ -36,6 +36,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -114,6 +115,7 @@ public class EntityIcePrison extends AvatarEntity {
 		dataManager.register(SYNC_MAX_IMPRISONED_TIME, 100);
 	}
 
+	@Nullable
 	public EntityLivingBase getImprisoned() {
 		return imprisonedAttr.getEntity();
 	}
@@ -176,12 +178,20 @@ public class EntityIcePrison extends AvatarEntity {
 			}
 
 		}
+
+		if (imprisoned == null || imprisoned.isDead) {
+			setDead();
+		}
+
 	}
 
 	private void attackPrisoner(float damageMultiplier) {
 		EntityLivingBase imprisoned = getImprisoned();
-		DamageSource ds = AvatarDamageSource.causeIcePrisonDamage(imprisoned, getOwner());
-		imprisoned.attackEntityFrom(ds, STATS_CONFIG.icePrisonDamage * damageMultiplier);
+
+		if (imprisoned != null) {
+			DamageSource ds = AvatarDamageSource.causeIcePrisonDamage(imprisoned, getOwner());
+			imprisoned.attackEntityFrom(ds, STATS_CONFIG.icePrisonDamage * damageMultiplier);
+		}
 	}
 
 	@Override

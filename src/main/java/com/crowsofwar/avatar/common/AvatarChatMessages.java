@@ -109,6 +109,10 @@ public class AvatarChatMessages {
 	public static final FormattedMessage MSG_SPECIALTY_SCROLL_ALREADY_HAVE = newChatMessage(CFG, "avatar.specialtyScroll.alreadyHave", "specialtyBending");
 	public static final FormattedMessage MSG_SPECIALTY_SCROLL_TOOLTIP = newChatMessage(CFG, "avatar.specialtyScroll.tooltip", "bending");
 
+	public static final FormattedMessage MSG_ANNOUNCEMENT_TODAY = newChatMessage(CFG, "avatar.announcement.today", "announcement");
+	public static final FormattedMessage MSG_ANNOUNCEMENT_YESTERDAY = newChatMessage(CFG, "avatar.announcement.yesterday", "announcement");
+	public static final FormattedMessage MSG_ANNOUNCEMENT_DAYS = newChatMessage(CFG, "avatar.announcement.days", "announcement", "days");
+
 	/**
 	 * Call the static initializers
 	 */

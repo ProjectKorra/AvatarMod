@@ -196,7 +196,7 @@ public class RadialMenu extends Gui {
 		ticksExisted++;
 
 		boolean closeGui = !AvatarControl.KEY_USE_BENDING.isDown()
-				|| AvatarControl.CONTROL_LEFT_CLICK.isPressed();
+				|| mc.gameSettings.keyBindAttack.isKeyDown();
 
 		// Find current mouse over
 		RadialSegment currentMouseover = null;
@@ -238,7 +238,7 @@ public class RadialMenu extends Gui {
 
 		}
 		// Right-clicking on segment opens bending menu
-		if (AvatarControl.CONTROL_RIGHT_CLICK.isPressed() && currentMouseover != null) {
+		if (mc.gameSettings.keyBindUseItem.isKeyDown() && currentMouseover != null) {
 			UUID activeBendingId = BendingData.get(mc.player).getActiveBendingId();
 			AvatarMod.network.sendToServer(new PacketSSkillsMenu(activeBendingId, currentMouseover.getAbility()));
 			closeGui = true;

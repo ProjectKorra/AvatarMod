@@ -24,7 +24,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AnalyticsWarningGui;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.client.gui.GuiBisonChest;
-import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
+import com.crowsofwar.avatar.client.gui.DevelopmentWarningGui;
 import com.crowsofwar.avatar.client.gui.skills.GetBendingGui;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
@@ -238,8 +238,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			return;
 		}
 
-		if (AvatarInfo.IS_PREVIEW && e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
-			GuiScreen screen = new PreviewWarningGui();
+		if (AvatarInfo.IS_DEVELOPMENT && e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
+			GuiScreen screen = new DevelopmentWarningGui();
 			mc.displayGuiScreen(screen);
 			e.setGui(screen);
 			displayedMainMenu = true;

@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -29,6 +28,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -44,6 +44,12 @@ public abstract class EntityShield extends AvatarEntity {
 			DataSerializers.FLOAT);
 	public static final DataParameter<Float> SYNC_MAX_HEALTH = EntityDataManager
 			.createKey(EntityShield.class, DataSerializers.FLOAT);
+
+	/**
+	 * Shields do not protect against some types of damage, such as falling.
+	 */
+	public static final List<String> UNPROTECTED_DAMAGE = Arrays.asList("fall", "magic", "poison",
+			"wither", "indirectMagic");
 
 	public EntityShield(World world) {
 		super(world);
@@ -77,83 +83,18 @@ public abstract class EntityShield extends AvatarEntity {
 
 	}
 
-	/**
-	 * Handles hovering logic to make the owner hover. Preconditions (not in water, owner
-	 * present, etc) are handled by the caller
-	 */
-	private void handleHovering() {
-
-		if (getOwner() != null) {
-			getOwner().fallDistance = 0;
-		}
-
-		// Min/max acceptable hovering distance
-		// Hovering is allowed between these two values
-		// Hover distance doesn't need to be EXACT
-		final double minFloatHeight = 1.8;
-		final double maxFloatHeight = 2.2;
-
-		EntityLivingBase owner = getOwner();
-
-		// Find whether there are blocks under the owner
-		// Done by making a hitbox around the owner's feet and checking if there are blocks
-		// colliding with that hitbox
-
-		double x = owner.posX;
-		double y = owner.posY;
-		double z = owner.posZ;
-		AxisAlignedBB hitbox = new AxisAlignedBB(x, y, z, x, y, z);
-		hitbox = hitbox.grow(0.2, 0, 0.2);
-		hitbox = hitbox.expand(0, -maxFloatHeight, 0);
-
-		List<AxisAlignedBB> blockCollisions = world.getCollisionBoxes(null, hitbox);
-
-		if (!blockCollisions.isEmpty()) {
-
-			// Calculate the top-of-ground ground y position
-			// Performed by finding the maximum ypos of each collided block
-			double groundPosition = Double.MIN_VALUE;
-			for (AxisAlignedBB blockHitbox : blockCollisions) {
-				if (blockHitbox.maxY > groundPosition) {
-					groundPosition = blockHitbox.maxY;
-				}
-			}
-			// Now calculate the distance from ground
-			// and use that to determine whether owner should float
-			double distanceFromGround = owner.posY - groundPosition;
-
-			// Tweak motion based on distance to ground, and target distance
-			// Minecraft gravity is 0.08 blocks/tick
-
-			if (distanceFromGround < minFloatHeight) {
-				owner.motionY += 0.11;
-			}
-			if (distanceFromGround >= minFloatHeight && distanceFromGround < maxFloatHeight) {
-				owner.motionY *= 0.7;
-			}
-			if (distanceFromGround >= maxFloatHeight) {
-				owner.motionY += 0.07;
-
-				// Avoid falling at over 3 m/s
-				if (owner.motionY < -3.0 / 20) {
-					owner.motionY = 0;
-				}
-			}
-
-		}
-
-	}
-
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		setHealth(nbt.getFloat("Health"));
+		setMaxHealth(nbt.getFloat("MaxHealth"));
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setFloat("Health", getHealth());
+		nbt.setFloat("MaxHealth", getMaxHealth());
 	}
 
 	@Override
@@ -163,8 +104,8 @@ public abstract class EntityShield extends AvatarEntity {
 		if (owner != null) {
 
 			if (!world.isRemote) {
-				Entity sourceEntity = source.getTrueSource();
-				if (sourceEntity != null) {
+
+				if (!UNPROTECTED_DAMAGE.contains(source.getDamageType())) {
 					if (!owner.isEntityInvulnerable(source)) {
 
 						Bender bender = Bender.get(owner);

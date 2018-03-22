@@ -32,16 +32,14 @@ public class AbilityRestore extends Ability {
 		AbilityData abilityData = data.getAbilityData(this);
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
-		float chi = STATS_CONFIG.chiBuff;
 
+		float chi = STATS_CONFIG.chiBuff;
 		if (abilityData.getLevel() == 1) {
-			chi *= 1.5f;
-		}
-		if (abilityData.getLevel() == 2) {
-			chi *= 2f;
-		}
-		if (abilityData.getLevel() == 3) {
-			chi *= 2.5F;
+			chi = STATS_CONFIG.chiBuffLvl2;
+		} else if (abilityData.getLevel() == 2) {
+			chi = STATS_CONFIG.chiBuffLvl3;
+		} else if (abilityData.getLevel() == 3) {
+			chi = STATS_CONFIG.chiBuffLvl4;
 		}
 
 		if (bender.consumeChi(chi)) {
@@ -64,7 +62,7 @@ public class AbilityRestore extends Ability {
 			entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, duration, slownessLevel));
 
 			if (abilityData.getLevel() >= 1) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 1, regenLevel));
+				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, regenLevel));
 			}
 			if (abilityData.getLevel() >= 2) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration, effectLevel));

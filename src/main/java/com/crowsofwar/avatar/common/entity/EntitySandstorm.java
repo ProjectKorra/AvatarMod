@@ -220,7 +220,9 @@ public class EntitySandstorm extends AvatarEntity {
 		Vector delta = nextPos.minus(Vector.getEntityPos(entity));
 
 		Vector nextVelocity = velocity().plus(delta.times(20));
-		entity.setVelocity(nextVelocity.x() / 20, nextVelocity.y() / 20, nextVelocity.z() / 20);
+		entity.motionX = nextVelocity.x() / 20;
+		entity.motionY = nextVelocity.y() / 20;
+		entity.motionZ = nextVelocity.z() / 20;
 
 		AvatarUtils.afterVelocityAdded(entity);
 		onContact(entity);

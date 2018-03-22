@@ -254,6 +254,7 @@ public class AbilityMining extends Ability {
 		World world = ctx.getWorld();
 		BlockPos pos = queue.poll();
 
+		if (pos == null) return;
 		if (breakBlock(pos, ctx, oresMined * 3 + 20, 3)) {
 			oresMined++;
 			ctx.getAbilityData().addXp(SKILLS_CONFIG.miningBreakOre);

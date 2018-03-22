@@ -82,6 +82,9 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				if (motion.sqrMagnitude() >= 0.004) water.playSplash();
 			}
 
+			// Ensure that owner always has stat ctrl active
+			BendingData.get(owner).addStatusControl(StatusControl.THROW_WATER);
+
 			return this;
 
 		}

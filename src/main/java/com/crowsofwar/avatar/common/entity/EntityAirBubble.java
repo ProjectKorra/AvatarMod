@@ -293,6 +293,7 @@ public class EntityAirBubble extends EntityShield {
 		super.readEntityFromNBT(nbt);
 		setDissipateTime(nbt.getInteger("Dissipate"));
 		setAllowHovering(nbt.getBoolean("AllowHovering"));
+		setSize(nbt.getFloat("Size"));
 		airLeft = nbt.getInteger("AirLeft");
 	}
 
@@ -301,6 +302,7 @@ public class EntityAirBubble extends EntityShield {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("Dissipate", getDissipateTime());
 		nbt.setBoolean("AllowHovering", doesAllowHovering());
+		nbt.setFloat("Size", getSize());
 		nbt.setInteger("AirLeft", airLeft);
 	}
 

@@ -269,6 +269,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		ownerAttr.readFromNbt(nbt);
 		setSitting(nbt.getBoolean("Sitting"));
 		condition.readFromNbt(nbt);
+		setEatGrassTime(nbt.getInteger("EatGrass"));
 		riderTicks = nbt.getInteger("RiderTicks");
 		setLoveParticles(nbt.getBoolean("InLove"));
 		setId(nbt.getInteger("BisonId"));
@@ -290,6 +291,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		ownerAttr.writeToNbt(nbt);
 		nbt.setBoolean("Sitting", isSitting());
 		condition.writeToNbt(nbt);
+		nbt.setInteger("EatGrass", getEatGrassTime());
 		nbt.setInteger("RiderTicks", riderTicks);
 		nbt.setBoolean("InLove", isLoveParticles());
 		nbt.setInteger("BisonId", getId());
@@ -562,7 +564,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		if (willBeOwned) {
 			playTameEffect(true);
-			setOwnerId(AccountUUIDs.getId(player.getName()).getUUID());
+			setOwnerId(AccountUUIDs.getId(player.getName()));
 			if (!player.capabilities.isCreativeMode) {
 				stack.shrink(1);
 			}
