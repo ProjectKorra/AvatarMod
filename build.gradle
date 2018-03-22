@@ -1,3 +1,11 @@
+println """
+*******************************************
+ You are building the Avatar mod! 
+
+ Output files will be in build/libs
+ Be sure to use the one without a suffix if you want to test it!
+*******************************************
+"""
 // For those who want the bleeding edge
 buildscript {
     repositories {
