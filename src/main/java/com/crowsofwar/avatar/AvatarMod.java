@@ -25,24 +25,13 @@ import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
-import com.crowsofwar.avatar.common.bending.avatar.AbilityAvatarState;
-import com.crowsofwar.avatar.common.bending.avatar.AbilityElementshard;
-import com.crowsofwar.avatar.common.bending.avatar.Avatarbending;
-import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosion;
-import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosivePillar;
-import com.crowsofwar.avatar.common.bending.combustion.Combustionbending;
+import com.crowsofwar.avatar.common.bending.avatar.*
+import com.crowsofwar.avatar.common.bending.combustion.*;
 import com.crowsofwar.avatar.common.bending.earth.*;
 import com.crowsofwar.avatar.common.bending.fire.*;
-import com.crowsofwar.avatar.common.bending.ice.AbilityIceBurst;
-import com.crowsofwar.avatar.common.bending.ice.AbilityIcePrison;
-import com.crowsofwar.avatar.common.bending.ice.Icebending;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRedirect;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
-import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
-import com.crowsofwar.avatar.common.bending.sand.AbilitySandPrison;
-import com.crowsofwar.avatar.common.bending.sand.AbilitySandstorm;
-import com.crowsofwar.avatar.common.bending.sand.Sandbending;
+import com.crowsofwar.avatar.common.bending.ice.*;
+import com.crowsofwar.avatar.common.bending.lightning.*;
+import com.crowsofwar.avatar.common.bending.sand.*;
 import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.block.AvatarBlocks;
 import com.crowsofwar.avatar.common.block.CloudBlock;
@@ -58,40 +47,38 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
+import static com.crowsofwar.avatar.AvatarInfo.*;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 import static net.minecraft.init.Biomes.*;
+
 import static net.minecraftforge.event.RegistryEvent.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
-@Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false, //
-		updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "[1.12,1.13)")
-
+@Mod(modid = MOD_ID, name = MOD_NAME, version = VERSION, dependencies = "required-after:gorecore", useMetadata = true, 
+	 updateJSON = "http://avatar.amuzil.com/updates.json", acceptedMinecraftVersions = "[1.12,1.13)")
 public class AvatarMod {
-
 	@SidedProxy(serverSide = "com.crowsofwar.avatar.server.AvatarServerProxy", clientSide = "com.crowsofwar.avatar.client.AvatarClientProxy")
 	public static AvatarCommonProxy proxy;
 
-	@Instance(value = AvatarInfo.MOD_ID)
+	@Mod.Instance(value = MOD_ID)
 	public static AvatarMod instance;
 
 	public static SimpleNetworkWrapper network;
@@ -149,9 +136,8 @@ public class AvatarMod {
 		BendingStyles.register(new Avatarbending());
 	}
 
-	@EventHandler
+	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
-
 		AvatarLog.log = e.getModLog();
 
 		ConfigStats.load();
@@ -167,7 +153,6 @@ public class AvatarMod {
 		AvatarItems.init();
 		AvatarParticles.register();
 		AvatarBlocks.init();
-
 
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
@@ -210,12 +195,10 @@ public class AvatarMod {
 
 		PacketHandlerServer.register();
 
-		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {
-		});
-
+		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {});
 	}
 
-	@EventHandler
+	@Mod.EventHandler
 	public void init(FMLInitializationEvent e) {
 		registerEntity(EntityFloatingBlock.class, "FloatingBlock");
 		registerEntity(EntityFireArc.class, "FireArc");
@@ -250,25 +233,23 @@ public class AvatarMod {
 		registerEntity(EntityExplosionSpawner.class, "explosion_spawner");
 		registerEntity(EntityElementshard.class, "element_shard");
 
-		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
-				EXTREME_HILLS, MUTATED_SAVANNA);
-		EntityRegistry.addSpawn(EntityOtterPenguin.class, 4, 5, 9, EnumCreatureType.CREATURE, //
-				COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
+		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, 
+					EXTREME_HILLS, MUTATED_SAVANNA);
+		EntityRegistry.addSpawn(EntityOtterPenguin.class, 4, 5, 9, EnumCreatureType.CREATURE, 
+					COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
 
-		// Second loading required since other mods blocks might not be
-		// registered
+		// Second loading required since other mods blocks might not be registered
 		STATS_CONFIG.loadBlocks();
 
 		proxy.init();
-
 	}
 
-	@EventHandler
+	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
 		AvatarAnalytics.INSTANCE.init();
 	}
 
-	@EventHandler
+	@Mod.EventHandler
 	public void onServerStarting(FMLServerStartingEvent e) {
 		e.registerServerCommand(new AvatarCommand());
 	}
