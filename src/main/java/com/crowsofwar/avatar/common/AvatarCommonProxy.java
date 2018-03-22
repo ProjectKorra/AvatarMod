@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
@@ -57,8 +58,10 @@ import net.minecraft.util.IThreadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -270,7 +273,7 @@ public abstract class AvatarCommonProxy {
 		registerEgg(new ResourceLocation("avatarmod", name), primary, secondary);
 	}
 
-	public IControlsHandler getKeyHandler();
+	public abstract IControlsHandler getKeyHandler();
 
 	/**
 	 * Get a client-side packet handler safely. When the machine is running a
@@ -278,28 +281,26 @@ public abstract class AvatarCommonProxy {
 	 * packet handler for the client. Otherwise (this only happens on dedicated
 	 * servers), returns null.
 	 */
-	public IPacketHandler getClientPacketHandler();
+	public abstract IPacketHandler getClientPacketHandler();
 
 	/**
 	 * Get client player's reach. Returns 0 on server.
 	 */
-	double getPlayerReach();
+	abstract double getPlayerReach();
 
-	AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
+	abstract AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
 
-	PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher();
+	abstract PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher();
 
 	/**
 	 * Get client-side IThreadListener, null on server
-	 *
-	 * @return
 	 */
-	IThreadListener getClientThreadListener();
+	abstract IThreadListener getClientThreadListener();
 
 	/**
 	 * Get amount of particles. 0 = All, 1 = decreased, 2 = minimal
 	 */
-	int getParticleAmount();
+	abstract int getParticleAmount();
 
 	/**
 	 * Creates a wrapper so that the keybinding can be used on both sides
@@ -307,7 +308,7 @@ public abstract class AvatarCommonProxy {
 	 * <p>
 	 * Looks up keybinding by name
 	 */
-	KeybindingWrapper createKeybindWrapper(String keybindName);
+	abstract KeybindingWrapper createKeybindWrapper(String keybindName);
 
-	boolean isOptifinePresent();
+	abstract boolean isOptifinePresent();
 }
