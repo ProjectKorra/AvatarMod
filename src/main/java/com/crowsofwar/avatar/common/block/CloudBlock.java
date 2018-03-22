@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 
 public class CloudBlock extends AvatarBlock {
 	public CloudBlock() {
-		super(Material.CLOTH, "cloud_block");
+		super(Material.GLASS, "cloud_block");
 		this.setCreativeTab(AvatarItems.tabItems);
 		this.setHardness(1f);
 		this.setLightLevel(0.1F);
@@ -46,8 +46,19 @@ public class CloudBlock extends AvatarBlock {
 	}
 
 	@Override
-	public boolean isCollidable() {
-		return true;
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public boolean causesSuffocation(IBlockState state) {
+		return false;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+		return false;
 	}
 
 	/*@Override
@@ -60,17 +71,11 @@ public class CloudBlock extends AvatarBlock {
 	}**/
 
 	@Override
-	public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side) {
-		return true;
-	}
-
-
-	@Override
 	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
 		double spawnX = entityIn.posX;
 		double spawnY = entityIn.posY;
 		double spawnZ = entityIn.posZ;
 		worldIn.spawnParticle(EnumParticleTypes.CLOUD, spawnX, spawnY, spawnZ, 0, 0, 0);
+		//Make it only solid to airbenders
 	}
-	//Make it only solid to airbenders
 }
