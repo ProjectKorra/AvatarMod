@@ -16,9 +16,12 @@
 */
 package com.crowsofwar.avatar.common.bending;
 
+import com.crowsofwar.avatar.common.bending.avatar.AbilityElementshard;
+import com.crowsofwar.avatar.common.bending.avatar.StatCtrlThrowElementshard;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityElementshard;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;

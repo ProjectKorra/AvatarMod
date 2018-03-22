@@ -87,6 +87,11 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	}
 
 	@Override
+	public void registerBlockModels() {
+
+	}
+
+	@Override
 	public boolean isOptifinePresent() {
 		return false;
 	}
