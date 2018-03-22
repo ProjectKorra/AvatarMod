@@ -39,7 +39,7 @@ public class WallJumpEvents {
 		if (player == GoreCore.proxy.getClientSidePlayer() && bender.getWallJumpManager()
 				.canWallJump()) {
 			if (AvatarControl.CONTROL_JUMP.isPressed()) {
-				AvatarMod.network.sendToServer(new PacketSWallJump());
+				AvatarMod.proxy.network.sendToServer(new PacketSWallJump());
 			}
 		}
 		if (player.onGround) {
