@@ -35,9 +35,7 @@ import java.util.List;
 /**
  * @author CrowsOfWar
  */
-public class
-AvatarItems {
-
+public class AvatarItems {
 	public static List<Item> allItems;
 	public static ItemScroll itemScroll;
 	public static ItemWaterPouch itemWaterPouch;
@@ -84,7 +82,7 @@ AvatarItems {
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public void initModels() {
+	public static void initModels() {
 		AvatarItemRenderRegister.register();	
 	}
 }
