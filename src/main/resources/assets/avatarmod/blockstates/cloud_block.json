@@ -1,7 +1,10 @@
 {
-    "variants": {
-        "normal": {
-        	"model": "avatarmod:cloud_block"
-        }
-    }
+	"forge_marker": 1,
+	"defaults": {
+		"model": "avatarmod:cloud_block"
+	},
+	"variants": {
+		"normal": [{}],
+		"inventory": [{}]
+	}
 }
