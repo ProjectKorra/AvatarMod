@@ -47,7 +47,7 @@ public interface PlayerDataFetcher<T extends PlayerData> {
 	 * 
 	 * @see AccountUUIDs
 	 */
-	T fetch(World world, UUID accountId);
+	T fetch(World world, UUID uuid);
 	
 	/**
 	 * Retrieves player data from that world and with the given player name.
@@ -62,7 +62,7 @@ public interface PlayerDataFetcher<T extends PlayerData> {
 		if (world == null) throw new IllegalArgumentException("Cannot get player-data with null World");
 		if (playerName == null)
 			throw new IllegalArgumentException("Cannot get player-data with null player name");
-		return fetch(world, AccountUUIDs.getId(playerName).getUUID());
+		return fetch(world, AccountUUIDs.getId(playerName));
 	}
 	
 	/**
