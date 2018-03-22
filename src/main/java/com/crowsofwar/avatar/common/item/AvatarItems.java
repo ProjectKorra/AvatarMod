@@ -17,12 +17,17 @@
 package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.AvatarItemRenderRegister;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +81,10 @@ AvatarItems {
 	public void registerItems(RegistryEvent.Register<Item> e) {
 		Item[] itemsArr = allItems.toArray(new Item[allItems.size()]);
 		e.getRegistry().registerAll(itemsArr);
-		AvatarMod.proxy.registerItemModels();
 	}
-
+	
+	@SideOnly(Side.CLIENT)
+	public void initModels() {
+		AvatarItemRenderRegister.register();	
+	}
 }
