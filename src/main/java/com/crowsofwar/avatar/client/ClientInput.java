@@ -164,13 +164,13 @@ public class ClientInput implements IControlsHandler {
 			BendingData data = BendingData.get(mc.player);
 			BendingStyle active = data.getActiveBending();
 			if (active == null) {
-				AvatarMod.network.sendToServer(new PacketSOpenUnlockGui());
+				AvatarMod.proxy.network.sendToServer(new PacketSOpenUnlockGui());
 			} else {
-				AvatarMod.network.sendToServer(new PacketSSkillsMenu(active.getId()));
+				AvatarMod.proxy.network.sendToServer(new PacketSSkillsMenu(active.getId()));
 			}
 		}
 		if (AvatarControl.KEY_TRANSFER_BISON.isPressed()) {
-			AvatarMod.network.sendToServer(new PacketSConfirmTransfer());
+			AvatarMod.proxy.network.sendToServer(new PacketSConfirmTransfer());
 		}
 
 	}
@@ -209,10 +209,10 @@ public class ClientInput implements IControlsHandler {
 	private void tryCycleBending() {
 		BendingData data = BendingData.get(mc.player);
 		if (AvatarControl.KEY_BENDING_CYCLE_LEFT.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
-			AvatarMod.network.sendToServer(new PacketSCycleBending(false));
+			AvatarMod.proxy.network.sendToServer(new PacketSCycleBending(false));
 		}
 		if (AvatarControl.KEY_BENDING_CYCLE_RIGHT.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
-			AvatarMod.network.sendToServer(new PacketSCycleBending(true));
+			AvatarMod.proxy.network.sendToServer(new PacketSCycleBending(true));
 		}
 	}
 
@@ -251,7 +251,7 @@ public class ClientInput implements IControlsHandler {
 						if (pressed.contains(sc.getSubscribedControl())) {
 							Raytrace.Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
 
-							AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
+							AvatarMod.proxy.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
 						}
 					}
 				}
@@ -270,7 +270,7 @@ public class ClientInput implements IControlsHandler {
 				if (!conflict && mc.inGameHasFocus && mc.currentScreen == null && down
 						&& !wasAbilityDown[i]) {
 					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player, ability.getRaytrace());
-					AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace));
+					AvatarMod.proxy.network.sendToServer(new PacketSUseAbility(ability, raytrace));
 				}
 				wasAbilityDown[i] = down;
 			}
