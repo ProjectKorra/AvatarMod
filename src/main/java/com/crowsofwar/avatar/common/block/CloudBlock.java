@@ -1,5 +1,9 @@
 package com.crowsofwar.avatar.common.block;
 
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BenderInfo;
+import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -19,6 +23,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -45,6 +50,15 @@ public class CloudBlock extends AvatarBlock {
 		return true;
 	}
 
+	/*@Override
+	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+		if (entityIn instanceof EntityPlayer){
+			if (entityIn instanceof Bender && BenderInfo.get(true, Airbending.ID)){
+
+			}
+		}
+	}**/
+
 	@Override
 	public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side) {
 		return true;
@@ -58,4 +72,5 @@ public class CloudBlock extends AvatarBlock {
 		double spawnZ = entityIn.posZ;
 		worldIn.spawnParticle(EnumParticleTypes.CLOUD, spawnX, spawnY, spawnZ, 0, 0, 0);
 	}
+	//Make it only solid to airbenders
 }
