@@ -120,7 +120,7 @@ public class AvatarPlayerData extends PlayerData {
 			}
 			double range = Math.sqrt(rangeSq) + 0.01;// +0.01 "just in case"
 
-			AvatarMod.network.sendToAllAround(packet,
+			AvatarMod.proxy.network.sendToAllAround(packet,
 					new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, range));
 
 			changed.clear();
