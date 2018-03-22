@@ -108,7 +108,7 @@ public class AvatarClientProxy extends AvatarCommonProxy {
 		AvatarFovChanger.register();
 
 		clientFetcher = new PlayerDataFetcherClient<>(AvatarPlayerData.class, (data) -> {
-			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
+			AvatarMod.proxy.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
 			AvatarLog.debug("Client: Requesting data for " + data.getPlayerEntity() + "");
 		});
 
