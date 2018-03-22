@@ -40,6 +40,7 @@ AvatarItems {
 	public static ItemBisonSaddle itemBisonSaddle;
 	public static ItemBisonArmor itemBisonArmor;
 	public static ItemOstrichEquipment itemOstrichEquipment;
+
 	private static ItemStack stackScroll;
 	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
 		@Override

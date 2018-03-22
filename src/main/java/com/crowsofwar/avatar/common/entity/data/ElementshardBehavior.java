@@ -5,7 +5,7 @@ import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.EntityCloudBall;
+import com.crowsofwar.avatar.common.entity.EntityElementshard;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,22 +20,22 @@ import java.util.List;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
-	public static final DataSerializer<CloudburstBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
+public abstract class ElementshardBehavior extends Behavior<EntityElementshard> {
+	public static final DataSerializer<ElementshardBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
 
-	public static int ID_NOTHING, ID_PLAYER_CONTROL, ID_THROWN;
+	public static int ID_NOTHING, ID_FALL, ID_PICKUP, ID_PLAYER_CONTROL, ID_THROWN;
 
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
-		ID_NOTHING = registerBehavior(CloudburstBehavior.Idle.class);
-		ID_PLAYER_CONTROL = registerBehavior(CloudburstBehavior.PlayerControlled.class);
-		ID_THROWN = registerBehavior(CloudburstBehavior.Thrown.class);
+		ID_NOTHING = registerBehavior(ElementshardBehavior.Idle.class);
+		ID_PLAYER_CONTROL = registerBehavior(ElementshardBehavior.PlayerControlled.class);
+		ID_THROWN = registerBehavior(ElementshardBehavior.Thrown.class);
 	}
 
-	public static class Idle extends CloudburstBehavior {
+	public static class Idle extends ElementshardBehavior {
 
 		@Override
-		public CloudburstBehavior onUpdate(EntityCloudBall entity) {
+		public ElementshardBehavior onUpdate(EntityElementshard entity) {
 			return this;
 		}
 
@@ -57,21 +57,25 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 
 	}
 
-	public static class Thrown extends CloudburstBehavior {
+	public static class Thrown extends ElementshardBehavior {
 
 		int time = 0;
 
+
 		@Override
-		public CloudburstBehavior onUpdate(EntityCloudBall entity) {
+		public ElementshardBehavior onUpdate(EntityElementshard entity) {
+			EntityLivingBase owner = entity.getOwner();
+
+
 
 			time++;
 
-			if (entity.isCollided || (!entity.world.isRemote && time > 100)) {
+			if (entity.isCollided || (!entity.world.isRemote && time > 200)) {
 				entity.setDead();
 				entity.onCollideWithSolid();
 			}
 
-			entity.addVelocity(0, -1 / 120, 0);
+			entity.addVelocity(Vector.DOWN.times(0.000001/ 40));
 
 			World world = entity.world;
 			if (!entity.isDead) {
@@ -85,7 +89,6 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 						Vector motion = new Vector(collided).minus(new Vector(entity));
 						motion = motion.times(0.3).withY(0.08);
 						collided.addVelocity(motion.x(), motion.y(), motion.z());
-
 					}
 
 				}
@@ -95,30 +98,27 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 
 		}
 
-		private void collision(EntityLivingBase collided, EntityCloudBall entity) {
+		private void collision(EntityLivingBase collided, EntityElementshard entity) {
 			double speed = entity.velocity().magnitude();
 
-			if (collided.attackEntityFrom(AvatarDamageSource.causeCloudburstDamage(collided, entity.getOwner()),
+			if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
 					entity.getDamage())) {
-				BattlePerformanceScore.addMediumScore(entity.getOwner());
+				BattlePerformanceScore.addSmallScore(entity.getOwner());
 			}
 
 			Vector motion = entity.velocity().dividedBy(20);
-			motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.09);
+			motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.08);
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
 
 			BendingData data = Bender.get(entity.getOwner()).getData();
 			if (!collided.world.isRemote && data != null) {
-				float xp = SKILLS_CONFIG.cloudburstHit;
-				data.getAbilityData("cloudburst").addXp(xp);
+				float xp = SKILLS_CONFIG.fireballHit;
+				data.getAbilityData("element_shard").addXp(xp);
 			}
 
 			// Remove the fireball & spawn particles
-			if (!entity.world.isRemote)
-
-				entity.setDead();
+			if (!entity.world.isRemote) entity.setDead();
 			entity.onCollideWithSolid();
-
 		}
 
 		@Override
@@ -139,28 +139,31 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 
 	}
 
-	public static class PlayerControlled extends CloudburstBehavior {
+	public static class PlayerControlled extends ElementshardBehavior {
 
 		public PlayerControlled() {
 		}
 
 		@Override
-		public CloudburstBehavior onUpdate(EntityCloudBall entity) {
+		public ElementshardBehavior onUpdate(EntityElementshard entity) {
 			EntityLivingBase owner = entity.getOwner();
+
 
 			if (owner == null) return this;
 
 			BendingData data = Bender.get(owner).getData();
 
-			double yaw = Math.toRadians(owner.rotationYaw);
-			double pitch = Math.toRadians(owner.rotationPitch);
-			Vector forward = Vector.toRectangular(yaw, pitch);
+			Vector forward = Vector.getLookRectangular(owner);
 			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
-			Vector motion = target.minus(Vector.getEntityPos(entity)).times(6);
+			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5 /* <-- !! you can adjust that number to make the shards move faster */);
+			entity.rotationPitch = owner.rotationPitch;
+			entity.rotationYaw = owner.rotationYaw;
+
 			entity.setVelocity(motion);
 
-			if (data.getAbilityData("cloudburst").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+
+			if (data.getAbilityData("element_shard").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				int size = entity.getSize();
 				if (size < 60 && entity.ticksExisted % 4 == 0) {
 					entity.setSize(size + 1);
@@ -189,3 +192,5 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 	}
 
 }
+
+

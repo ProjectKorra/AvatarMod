@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-    
+	
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -24,7 +24,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AnalyticsWarningGui;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.client.gui.GuiBisonChest;
-import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
+import com.crowsofwar.avatar.client.gui.DevelopmentWarningGui;
 import com.crowsofwar.avatar.client.gui.skills.GetBendingGui;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
@@ -33,6 +33,7 @@ import com.crowsofwar.avatar.client.render.*;
 import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.block.AvatarBlocks;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -50,11 +51,14 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -128,6 +132,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityEarthspikeSpawner.class, RenderEarthspikeSpawner::new);
 		registerEntityRenderingHandler(EntityWaterCannon.class, RenderWaterCannon::new);
 		registerEntityRenderingHandler(EntitySandstorm.class, RenderSandstorm::new);
+		registerEntityRenderingHandler(EntityElementshard.class, RenderElementShard::new);
 		registerEntityRenderingHandler(EntityExplosionSpawner.class, RenderNothing::new);
 
 		registerEntityRenderingHandler(EntityAirbender.class,
@@ -136,7 +141,19 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 				rm -> new RenderHumanBender(rm, "firebender", 1));
 		registerEntityRenderingHandler(EntityWaterbender.class,
 				rm -> new RenderHumanBender(rm, "airbender", 1));
+	}
 
+	@Override
+	public void registerBlockModels() {
+		setCustomModelResourceLocation(AvatarBlocks.itemBlockCloud, 0, "");
+	}
+
+	private void setCustomModelResourceLocation(ItemBlock itemBlock, int data, String suffix) {
+		ModelLoader.setCustomModelResourceLocation(itemBlock, data, createItemBlockResourceLocation(itemBlock, suffix));
+	}
+
+	private ModelResourceLocation createItemBlockResourceLocation(ItemBlock itemBlock, String suffix) {
+		return new ModelResourceLocation(itemBlock.getRegistryName() + suffix, "inventory");
 	}
 
 	@Override
@@ -221,8 +238,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			return;
 		}
 
-		if (AvatarInfo.IS_PREVIEW && e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
-			GuiScreen screen = new PreviewWarningGui();
+		if (AvatarInfo.IS_DEVELOPMENT && e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
+			GuiScreen screen = new DevelopmentWarningGui();
 			mc.displayGuiScreen(screen);
 			e.setGui(screen);
 			displayedMainMenu = true;

@@ -25,15 +25,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
-public class PreviewWarningGui extends GuiScreen {
+public class DevelopmentWarningGui extends GuiScreen {
 
 	@Override
 	public void initGui() {
 		this.buttonList.clear();
 
-		this.buttonList
-				.add(new GuiButton(0, (width - 200) / 2, height - height / 5, 200, 20, "To Main Menu"));
-
+		this.buttonList.add(new GuiButton(0, (width - 200) / 2, height - height / 5, 200, 20, "To Main Menu"));
 	}
 
 	@Override
@@ -51,19 +49,19 @@ public class PreviewWarningGui extends GuiScreen {
 
 		// @formatter:off
 		String[] lines = {
-			"Warning: Avatar Mod Preview Version",
+			"Warning: Avatar Mod Development Version",
 			"",
-			"You are running a preview version of the Avatar Mod.",
+			"You are running a development version of the Avatar Mod.",
 			"This is made so fans can get a glimpse of upcoming releases,",
 			"and so people can critique/suggest tweaks to the mod.",
 			"",
 			"While you are not required to, I would really appreciate it",
 			"if you gave some feedback on the new changes in the form of",
-			"an e-mail or a forum post. I'll use your suggestions in the",
-			"OFFICIAL release to make the mod more fun.",
+			"a discord meesage, an e-mail or a forum post. I'll use your",
+			"suggestions in the OFFICIAL release to make the mod more fun.",
 			"",
-			"Thanks, CrowsOfWar",
-			"ofwarcrows@gmail.com"
+			"Thanks, CrowsOfWar and Mahtaran",
+			"ofwarcrows@gmail.com - mahtaran@amuzil.com"
 		};
 		// @formatter:on
 

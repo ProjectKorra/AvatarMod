@@ -17,69 +17,79 @@
 
 package com.crowsofwar.avatar;
 
+import java.util.regex.Pattern;
+
 /**
- * Not using semantic versioning. This isn't an API, and I'm too lazy to be
- * backwards-compatible.
+ * Using semantic versioning. This isn't an API, but I'm not too lazy to be
+ * backwards-compatible. Everything is automatically calculated
  * <p>
- * Versioning scheme: AV{DEV_STAGE}{UPDATE}.{PATCH}{DEV_BUILD}
+ * Versioning scheme: {RELEASE}.{UPDATE}.{PATCH}{DEV_STAGE}
+ * </p>
+ *
  * <p>
- * DEV_STAGE is for alpha("a"), beta("b"), or full release("").
+ * DEV_STAGE is alpha ("-alpha"), beta ("-beta"), or full release ("").
+ * Append "-dev" if a development build
+ * </p>
+ *
  * <p>
- * If development version, DEV_BUILD is "_dev"
- * <p>
- * E.g. AV_B3.2-dev -> Beta, Update 3, patch 2, development build
+ * E.g. 1.3.2-beta-dev -> Release 1, Update 3, patch 2, Beta, development build
+ * </p>
  *
  * @author CrowsOfWar
+ * @author Mahtaran
  */
 public class AvatarInfo {
+	public enum DevelopmentStage {
+		ALPHA,
+		BETA,
+		RELEASE;
+	}
 
-	// Things that are adjustable
-
+	// Everything is not adjustable / automatically calculated
+	
+	public static final String VERSION = "@VERSION@";
+	/**
+	 * Incremented for complete rewrites
+	 */
+	public static final int VERSION_RELEASE;
 	/**
 	 * Incremented for every major update.
 	 */
-	public static final int VERSION_UPDATE = 5;
+	public static final int VERSION_UPDATE;
 	/**
 	 * Incremented for minor bug fixes.
 	 */
-	public static final int VERSION_PATCH = 3;
+	public static final int VERSION_PATCH;
+
 	/**
-	 * "a" for alpha.
-	 * <p>
-	 * "b" for beta.
-	 * <p>
-	 * "" for full release.
+	 * Current development stage
 	 */
-	public static final String DEV_STAGE = "a";
-	public static final String MOD_ID = "avatarmod";
-
-	// Not adjustable / automatically calculated
-	public static final String MOD_NAME = "Avatar Mod: Out of the Iceberg";
-	public static final String MC_VERSION = "1.12.2";
+	public static final DevelopmentStage DEV_STAGE;
+	
+	/*
+	 * Patterns used to find out if the version string contains certain suffixes
+	 */
+	private static final Pattern ALPHA = Pattern.compile(Pattern.quote("-alpha"), Pattern.CASE_INSENSITIVE);
+	private static final Pattern BETA = Pattern.compile(Pattern.quote("-beta"), Pattern.CASE_INSENSITIVE);
+	private static final Pattern DEV = Pattern.compile(Pattern.quote("-dev"), Pattern.CASE_INSENSITIVE);
+	
 	/**
-	 * Type of version; 0 for production; 1 for development; 2 for preview 1; 3
-	 * for preview 2, etc
-	 * <p>
-	 * Accessed via {@link #IS_PRODUCTION}, {@link #IS_PREVIEW},
-	 * {@link #IS_DEVELOPMENT}
+	 * true if this is a development version
 	 */
-	private static final int VERSION_TYPE = 0;
-	public static final boolean IS_PRODUCTION = VERSION_TYPE == 0;
-	public static final boolean IS_DEVELOPMENT = VERSION_TYPE == 1;
-	public static final boolean IS_PREVIEW = VERSION_TYPE >= 2;
-	/**
-	 * Automatically updated when the mod is build
-	 */
-	public static final String PRODUCTION_VERSION = "@VERSION@";
-	public static final String VERSION = IS_PRODUCTION ? PRODUCTION_VERSION : DEV_STAGE + VERSION_UPDATE + "." + VERSION_PATCH
-			+ (IS_PREVIEW ? "_preview" + (VERSION_TYPE - 1) : "_dev");
-
-	public enum VersionType {
-
-		PRODUCTION,
-		PREVIEW,
-		DEVELOPMENT
-
+	public static final boolean IS_DEVELOPMENT;
+	
+	static {
+		String[] versions = VERSION.split("-")[0].split("\\.");
+		VERSION_RELEASE = Integer.parseInt(versions[0]);
+		VERSION_UPDATE = Integer.parseInt(versions[1]);
+		VERSION_PATCH = Integer.parseInt(versions[2]);
+		if (ALPHA.matcher(VERSION).find()) DEV_STAGE = DevelopmentStage.ALPHA;
+		else if (BETA.matcher(VERSION).find()) DEV_STAGE = DevelopmentStage.BETA;
+		else DEV_STAGE = DevelopmentStage.RELEASE;
+		IS_DEVELOPMENT = DEV.matcher(VERSION).find();
 	}
 
+	public static final String MOD_ID = "avatarmod";
+	public static final String MOD_NAME = "Avatar Mod: Out of the Iceberg";
+	public static final String MC_VERSION = "1.12.2";
 }

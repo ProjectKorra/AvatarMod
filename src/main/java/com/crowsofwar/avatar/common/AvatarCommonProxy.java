@@ -97,4 +97,5 @@ public interface AvatarCommonProxy {
 
 	boolean isOptifinePresent();
 
+	public void registerBlockModels();
 }

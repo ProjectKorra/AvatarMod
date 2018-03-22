@@ -17,6 +17,7 @@
 
 package com.crowsofwar.gorecore;
 
+import java.io.File;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -56,16 +57,16 @@ public class GoreCore {
 	public void preInit(FMLPreInitializationEvent event) {
 		config = new GoreCoreModConfig(event);
 		ConverterRegistry.addDefaultConverters();
-		
-		AccountUUIDs.readCache();
+		File oldFile = GoreCore.proxy.getUUIDCacheFile();
+		if (oldFile.exists()) {
+			// We don't need a cache anymore
+			oldFile.delete();
+		}
 		GoreCoreChatMessages.register();
 		
 		proxy.sideSpecifics();
 		
 		ChatSender.load();
-		
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> AccountUUIDs.saveCache()));
-		
 	}
 	
 	@EventHandler

@@ -1,28 +1,39 @@
 // For those who want the bleeding edge
 buildscript {
-    repositories {
-        jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
+	repositories {
+		mavenCentral()
+		jcenter()
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+		maven {
+			name = "forge"
+			url = "http://files.minecraftforge.net/maven"
+		}
 
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-        classpath "com.github.jengelman.gradle.plugins:shadow:1.2.3"
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2"
-    }
+	}
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+		classpath "com.github.jengelman.gradle.plugins:shadow:1.2.3"
+		classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2"
+	}
 }
+
 plugins {
-    id "org.sonarqube" version "2.2"
+	id "org.sonarqube" version "2.2"
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.github.johnrengelman.shadow'
+
+println """
+*******************************************
+ You are building the Avatar mod! 
+
+ Output files will be in build/libs
+ Be sure to use the one without a suffix if you want to test it!
+*******************************************
+"""
 
 ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
@@ -34,37 +45,38 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
-    compile files("libs/joml/joml-1.8.1.jar")
-    compile files("libs/yaml/snakeyaml-1.16.jar");
+	compile files("libs/joml/joml-1.8.1.jar")
+	compile files("libs/yaml/snakeyaml-1.16.jar");
+	compile 'com.google.code.gson:gson:2.8.2'
 }
 
 minecraft {
-    version = config.forge
-    mappings = config.mappings
-    
-    runDir = "run"
-    
-    replaceIn 'src/main/java/com/crowsofwar/avatar/AvatarInfo.java'
-    replace '@VERSION@', project.version
+	version = config.forge
+	mappings = config.mappings
+	
+	runDir = "run"
+	
+	replaceIn 'src/main/java/com/crowsofwar/avatar/AvatarInfo.java'
+	replace '@VERSION@', project.version
 }
 
 processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+	// this will ensure that this task is redone when the versions change.
+	inputs.property "version", project.version
+	inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
+	// replace stuff in mcmod.info, nothing else
+	from(sourceSets.main.resources.srcDirs) {
+		include 'mcmod.info'
 
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
+		// replace version and mcversion
+		expand 'version':project.version, 'mcversion':project.minecraft.version
+	}
 
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
+	// copy everything else, thats not the mcmod.info
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'mcmod.info'
+	}
 }
 
 jar.classifier = "thin"
@@ -86,9 +98,9 @@ shadowJar {
 }
 
 def parseConfig(File config) {
-    config.withReader {
-        def prop = new Properties()
-        prop.load(it)
-        return (new ConfigSlurper().parse(prop))
-    }
+	config.withReader {
+		def prop = new Properties()
+		prop.load(it)
+		return (new ConfigSlurper().parse(prop))
+	}
 }
