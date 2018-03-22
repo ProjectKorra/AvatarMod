@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
-public class PreviewWarningGui extends GuiScreen {
+public class DevelopmentWarningGui extends GuiScreen {
 
 	@Override
 	public void initGui() {
