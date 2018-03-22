@@ -46,7 +46,7 @@ public class ComponentBendingTab extends UiComponent {
 
 	@Override
 	protected void click(int button) {
-		AvatarMod.network.sendToServer(new PacketSSkillsMenu(type.getId()));
+		AvatarMod.proxy.network.sendToServer(new PacketSSkillsMenu(type.getId()));
 	}
 
 	@Override
