@@ -165,6 +165,7 @@ public class AvatarClientProxy extends AvatarCommonProxy {
 	@Override
 	public void postInit(FMLPostInitializationEvent event) {
 		super.postInit(event);
+		AvatarBlocks.initItemModels();
 	}
 	
 	@SubscribeEvent
