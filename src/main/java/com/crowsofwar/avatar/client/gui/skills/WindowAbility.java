@@ -177,7 +177,7 @@ public class WindowAbility {
 		handler.add(unlockText);
 
 		unlockButton = new ComponentCustomButton(AvatarUiTextures.skillsGui, 196, 100, 20, 20,
-				() -> AvatarMod.network.sendToServer(new PacketSUseScroll(ability)));
+				() -> AvatarMod.proxy.network.sendToServer(new PacketSUseScroll(ability)));
 		unlockButton.setFrame(frameRight);
 		unlockButton.setOffset(fromPixels(unlockTitle.getFrame(), slot1.width() + 20,
 				unlockTitle.height() + unlockText.height() + 20));
