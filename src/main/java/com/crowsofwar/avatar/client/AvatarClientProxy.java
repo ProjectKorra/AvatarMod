@@ -75,7 +75,7 @@ import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
 @SideOnly(Side.CLIENT)
-public class AvatarClientProxy implements AvatarCommonProxy {
+public class AvatarClientProxy extends AvatarCommonProxy {
 
 	private Minecraft mc;
 	private PacketHandlerClient packetHandler;
@@ -86,6 +86,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 
 	@Override
 	public void preInit() {
+		super.preInit();
 		mc = Minecraft.getMinecraft();
 
 		displayedMainMenu = false;
@@ -144,16 +145,20 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	}
 
 	@Override
-	public void registerBlockModels() {
-		setCustomModelResourceLocation(AvatarBlocks.itemBlockCloud, 0, "");
-	}
+	public void init() {
+		super.init();
+		ParticleManager pm = mc.effectRenderer;
 
-	private void setCustomModelResourceLocation(ItemBlock itemBlock, int data, String suffix) {
-		ModelLoader.setCustomModelResourceLocation(itemBlock, data, createItemBlockResourceLocation(itemBlock, suffix));
+		if (CLIENT_CONFIG.useCustomParticles) {
+			pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(),
+					AvatarParticleFlames::new);
+			pm.registerParticle(AvatarParticles.getParticleAir().getParticleID(), AvatarParticleAir::new);
+		}
 	}
-
-	private ModelResourceLocation createItemBlockResourceLocation(ItemBlock itemBlock, String suffix) {
-		return new ModelResourceLocation(itemBlock.getRegistryName() + suffix, "inventory");
+	
+	@Override
+	public void postInit() {
+		super.postInit();
 	}
 
 	@Override
@@ -172,19 +177,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		double reach = pc.getBlockReachDistance();
 		if (pc.extendedReach()) reach = 6;
 		return reach;
-	}
-
-	@Override
-	public void init() {
-
-		ParticleManager pm = mc.effectRenderer;
-
-		if (CLIENT_CONFIG.useCustomParticles) {
-			pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(),
-					AvatarParticleFlames::new);
-			pm.registerParticle(AvatarParticles.getParticleAir().getParticleID(), AvatarParticleAir::new);
-		}
-
 	}
 
 	@Override
