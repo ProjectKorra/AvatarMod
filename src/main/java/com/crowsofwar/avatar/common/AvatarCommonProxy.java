@@ -286,21 +286,21 @@ public abstract class AvatarCommonProxy {
 	/**
 	 * Get client player's reach. Returns 0 on server.
 	 */
-	abstract double getPlayerReach();
+	public abstract double getPlayerReach();
 
-	abstract AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
+	public abstract AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
 
-	abstract PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher();
+	public abstract PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher();
 
 	/**
 	 * Get client-side IThreadListener, null on server
 	 */
-	abstract IThreadListener getClientThreadListener();
+	public abstract IThreadListener getClientThreadListener();
 
 	/**
 	 * Get amount of particles. 0 = All, 1 = decreased, 2 = minimal
 	 */
-	abstract int getParticleAmount();
+	public abstract int getParticleAmount();
 
 	/**
 	 * Creates a wrapper so that the keybinding can be used on both sides
@@ -308,7 +308,7 @@ public abstract class AvatarCommonProxy {
 	 * <p>
 	 * Looks up keybinding by name
 	 */
-	abstract KeybindingWrapper createKeybindWrapper(String keybindName);
+	public abstract KeybindingWrapper createKeybindWrapper(String keybindName);
 
-	abstract boolean isOptifinePresent();
+	public abstract boolean isOptifinePresent();
 }
