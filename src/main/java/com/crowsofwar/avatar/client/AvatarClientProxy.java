@@ -271,11 +271,6 @@ public class AvatarClientProxy extends AvatarCommonProxy {
 	}
 
 	@Override
-	public void registerItemModels() {
-		AvatarItemRenderRegister.register();
-	}
-
-	@Override
 	public boolean isOptifinePresent() {
 		return FMLClientHandler.instance().hasOptifine();
 	}
