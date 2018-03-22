@@ -26,11 +26,11 @@ package com.crowsofwar.avatar;
  *
  * <p>
  * DEV_STAGE is alpha ("-alpha"), beta ("-beta"), or full release ("").
- * Append "-dev" if a dev build
+ * Append "-dev" if a development build
  * </p>
  *
  * <p>
- * E.g. 1.3.2-beta-dev -> Beta, Release 1, Update 3, patch 2, development build
+ * E.g. 1.3.2-beta-dev -> Release 1, Update 3, patch 2, Beta, development build
  * </p>
  *
  * @author CrowsOfWar
@@ -44,19 +44,12 @@ public class AvatarInfo {
 	/**
 	 * Incremented for every major update.
 	 */
-	public static final int VERSION_UPDATE = 5;
+	public static final int VERSION_UPDATE;
 	/**
 	 * Incremented for minor bug fixes.
 	 */
-	public static final int VERSION_PATCH = 3;
+	public static final int VERSION_PATCH;
 	
-	static {
-		String[] appends = VERSION.split("-");
-		String[] versions = appends[0].split("\\.");
-		VERSION_RELEASE = Integer.parseInt(versions[0]);
-		VERSION_RELEASE = Integer.parseInt(versions[1]);
-		VERSION_RELEASE = Integer.parseInt(versions[2]);
-	}
 	/**
 	 * "a" for alpha.
 	 * <p>
@@ -64,10 +57,25 @@ public class AvatarInfo {
 	 * <p>
 	 * "" for full release.
 	 */
-	public static final String DEV_STAGE = "a";
-	public static final String MOD_ID = "avatarmod";
+	public static final String DEV_STAGE;
+	
+	
+	public static final boolean IS_DEVELOPMENT;
+	
+	static {
+		String[] appends = VERSION.split("-");
+		String[] versions = appends[0].split("\\.");
+		VERSION_RELEASE = Integer.parseInt(versions[0]);
+		VERSION_RELEASE = Integer.parseInt(versions[1]);
+		VERSION_RELEASE = Integer.parseInt(versions[2]);
+		if(appends.length > 1) {
+			
+		}
+		IS_DEVELOPMENT = VERSION.contains()
+	}
 
 	// Not adjustable / automatically calculated
+	public static final String MOD_ID = "avatarmod";
 	public static final String MOD_NAME = "Avatar Mod: Out of the Iceberg";
 	public static final String MC_VERSION = "1.12.2";
 	/**
