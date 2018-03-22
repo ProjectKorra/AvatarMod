@@ -28,13 +28,23 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
 
-public class AvatarServerProxy implements AvatarCommonProxy {
-
+public class AvatarServerProxy extends AvatarCommonProxy {
 	private AvatarKeybindingServer keys;
 
 	@Override
 	public void preInit() {
+		super.preInit();
 		keys = new AvatarKeybindingServer();
+	}
+	
+	@Override
+	public void init() {
+		super.init();
+	}
+	
+	@Override
+	public void postInit() {
+		super.postInit();
 	}
 
 	@Override
@@ -50,11 +60,6 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	@Override
 	public double getPlayerReach() {
 		return 0;
-	}
-
-	@Override
-	public void init() {
-
 	}
 
 	@Override
@@ -83,17 +88,7 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	}
 
 	@Override
-	public void registerItemModels() {
-	}
-
-	@Override
-	public void registerBlockModels() {
-
-	}
-
-	@Override
 	public boolean isOptifinePresent() {
 		return false;
 	}
-
 }
