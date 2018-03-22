@@ -85,7 +85,7 @@ public class AvatarInfo {
 		VERSION_RELEASE = Integer.parseInt(versions[2]);
 		if (ALPHA.matcher(VERSION).find()) DEV_STAGE = DevelopmentStage.ALPHA;
 		else if (BETA.matcher(VERSION).find()) DEV_STAGE = DevelopmentStage.BETA;
-		else DEV_STAGE = DevelopmentState.RELEASE;
+		else DEV_STAGE = DevelopmentStage.RELEASE;
 		IS_DEVELOPMENT = DEV.matcher(VERSION).find();
 	}
 
