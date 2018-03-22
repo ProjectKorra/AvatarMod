@@ -19,7 +19,7 @@ package com.crowsofwar.avatar;
 
 /**
  * Using semantic versioning. This isn't an API, but I'm not too lazy to be
- * backwards-compatible.
+ * backwards-compatible. Everything is automatically calculated
  * <p>
  * Versioning scheme: {RELEASE}.{UPDATE}.{PATCH}{DEV_STAGE}
  * </p>
@@ -34,8 +34,17 @@ package com.crowsofwar.avatar;
  * </p>
  *
  * @author CrowsOfWar
+ * @author Mahtaran
  */
 public class AvatarInfo {
+	public enum DevelopmentState {
+		ALPHA,
+		BETA,
+		RELEASE;
+	}
+
+	// Everything is not adjustable / automatically calculated
+	
 	public static final String VERSION = "@VERSION@";
 	/**
 	 * Incremented for complete rewrites
@@ -49,15 +58,11 @@ public class AvatarInfo {
 	 * Incremented for minor bug fixes.
 	 */
 	public static final int VERSION_PATCH;
-	
+
 	/**
-	 * "a" for alpha.
-	 * <p>
-	 * "b" for beta.
-	 * <p>
-	 * "" for full release.
+	 * Current development state
 	 */
-	public static final String DEV_STAGE;
+	public static final DevelopmentState DEV_STAGE;
 	
 	
 	public static final boolean IS_DEVELOPMENT;
@@ -68,40 +73,19 @@ public class AvatarInfo {
 		VERSION_RELEASE = Integer.parseInt(versions[0]);
 		VERSION_RELEASE = Integer.parseInt(versions[1]);
 		VERSION_RELEASE = Integer.parseInt(versions[2]);
-		if(appends.length > 1) {
-			
+		if (appends.length > 1) {
+			for (int i = 1; i < appends.length; i++) {
+				String appendix = appends[i];
+				if (appendix.contentEquals("alpha")) DEV_STAGE = DevelopmentState.ALPHA;
+				else if (appendix.contentEquals("beta")) DEV_STAGE = DevelopmentState.BETA;
+				if (DEV_STAGE != null) break;
+			}
 		}
-		IS_DEVELOPMENT = VERSION.contains()
+		if (DEV_STAGE == null) DEV_STAGE = DevelopmentState.RELEASE;
+		IS_DEVELOPMENT = VERSION.contains("-dev");
 	}
 
-	// Not adjustable / automatically calculated
 	public static final String MOD_ID = "avatarmod";
 	public static final String MOD_NAME = "Avatar Mod: Out of the Iceberg";
 	public static final String MC_VERSION = "1.12.2";
-	/**
-	 * Type of version; 0 for production; 1 for development; 2 for preview 1; 3
-	 * for preview 2, etc
-	 * <p>
-	 * Accessed via {@link #IS_PRODUCTION}, {@link #IS_PREVIEW},
-	 * {@link #IS_DEVELOPMENT}
-	 */
-	private static final int VERSION_TYPE = 0;
-	public static final boolean IS_PRODUCTION = VERSION_TYPE == 0;
-	public static final boolean IS_DEVELOPMENT = VERSION_TYPE == 1;
-	public static final boolean IS_PREVIEW = VERSION_TYPE >= 2;
-	/**
-	 * Automatically updated when the mod is build
-	 */
-	public static final String PRODUCTION_VERSION = "@VERSION@";
-	public static final String VERSION = IS_PRODUCTION ? PRODUCTION_VERSION : DEV_STAGE + VERSION_UPDATE + "." + VERSION_PATCH
-			+ (IS_PREVIEW ? "_preview" + (VERSION_TYPE - 1) : "_dev");
-
-	public enum VersionType {
-
-		PRODUCTION,
-		PREVIEW,
-		DEVELOPMENT
-
-	}
-
 }
