@@ -92,4 +92,5 @@ public class AvatarInfo {
 	public static final String MOD_ID = "avatarmod";
 	public static final String MOD_NAME = "Avatar Mod: Out of the Iceberg";
 	public static final String MC_VERSION = "1.12.2";
+	public static final String UPDATE_URL = "http://avatar.amuzil.com/updates.json";
 }
