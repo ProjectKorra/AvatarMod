@@ -22,7 +22,7 @@ import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
-import com.crowsofwar.avatar.common.bending.avatar.*
+import com.crowsofwar.avatar.common.bending.avatar.*;
 import com.crowsofwar.avatar.common.bending.combustion.*;
 import com.crowsofwar.avatar.common.bending.earth.*;
 import com.crowsofwar.avatar.common.bending.fire.*;
