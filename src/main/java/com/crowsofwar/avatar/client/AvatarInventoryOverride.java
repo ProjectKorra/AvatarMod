@@ -55,7 +55,7 @@ public class AvatarInventoryOverride {
 				EntitySkyBison bison = (EntitySkyBison) player.getRidingEntity();
 				if (bison.canPlayerViewInventory(player)) {
 
-					AvatarMod.network.sendToServer(new PacketSBisonInventory());
+					AvatarMod.proxy.network.sendToServer(new PacketSBisonInventory());
 					// mark key as not pressed to avoid vanilla behavior
 					keybind.isPressed();
 
