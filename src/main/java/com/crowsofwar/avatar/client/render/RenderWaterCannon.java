@@ -34,16 +34,17 @@ public class RenderWaterCannon extends RenderArc {
 		enableFullBrightness();
 		particleSpawner = new ClientParticleSpawner();
 	}
-/*
+
 	@Override
 	public void doRender(Entity entity, double xx, double yy, double zz, float p_76986_8_,
 						 float partialTicks) {
 
 		EntityWaterCannon cannon = (EntityWaterCannon) entity;
 		renderArc(cannon, partialTicks, 3f, 3f * cannon.getSizeMultiplier());
+		startRenderingLasers();
 
 	}
-**/
+
 
 	public static ResourceLocation textLaser = new ResourceLocation("avatarmod",
 			"textures/entity/water-ribbon.png");

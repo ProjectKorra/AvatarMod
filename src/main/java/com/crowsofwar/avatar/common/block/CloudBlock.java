@@ -25,21 +25,12 @@ public class CloudBlock extends AvatarBlock {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.CUTOUT_MIPPED;
-    }
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.SOLID;
+	}
 
-    @Override
-    public boolean causesSuffocation(IBlockState state) {
-        return false;
-    }
-
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-        return false;
-    }
+	@Override
+	public boolean isCollidable() {
+		return true;
+	}
 }
