@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar;
 
+import java.util.regex.Pattern;
+
 /**
  * Using semantic versioning. This isn't an API, but I'm not too lazy to be
  * backwards-compatible. Everything is automatically calculated
@@ -37,7 +39,7 @@ package com.crowsofwar.avatar;
  * @author Mahtaran
  */
 public class AvatarInfo {
-	public enum DevelopmentState {
+	public enum DevelopmentStage {
 		ALPHA,
 		BETA,
 		RELEASE;
@@ -60,29 +62,31 @@ public class AvatarInfo {
 	public static final int VERSION_PATCH;
 
 	/**
-	 * Current development state
+	 * Current development stage
 	 */
-	public static final DevelopmentState DEV_STAGE;
+	public static final DevelopmentStage DEV_STAGE;
 	
+	/*
+	 * Patterns used to find out if the version string contains certain suffixes
+	 */
+	private static final Pattern ALPHA = Pattern.compile(Pattern.quote("-alpha"), Pattern.CASE_INSENSITIVE);
+	private static final Pattern BETA = Pattern.compile(Pattern.quote("-beta"), Pattern.CASE_INSENSITIVE);
+	private static final Pattern DEV = Pattern.compile(Pattern.quote("-dev"), Pattern.CASE_INSENSITIVE);
 	
+	/**
+	 * true if this is a development version
+	 */
 	public static final boolean IS_DEVELOPMENT;
 	
 	static {
-		String[] appends = VERSION.split("-");
-		String[] versions = appends[0].split("\\.");
+		String[] versions = VERSION.split("-")[0].split("\\.");
 		VERSION_RELEASE = Integer.parseInt(versions[0]);
 		VERSION_RELEASE = Integer.parseInt(versions[1]);
 		VERSION_RELEASE = Integer.parseInt(versions[2]);
-		if (appends.length > 1) {
-			for (int i = 1; i < appends.length; i++) {
-				String appendix = appends[i];
-				if (appendix.contentEquals("alpha")) DEV_STAGE = DevelopmentState.ALPHA;
-				else if (appendix.contentEquals("beta")) DEV_STAGE = DevelopmentState.BETA;
-				if (DEV_STAGE != null) break;
-			}
-		}
-		if (DEV_STAGE == null) DEV_STAGE = DevelopmentState.RELEASE;
-		IS_DEVELOPMENT = VERSION.contains("-dev");
+		if (ALPHA.matcher(VERSION).find()) DEV_STAGE = DevelopmentStage.ALPHA;
+		else if (BETA.matcher(VERSION).find()) DEV_STAGE = DevelopmentStage.BETA;
+		else DEV_STAGE = DevelopmentState.RELEASE;
+		IS_DEVELOPMENT = DEV.matcher(VERSION).find();
 	}
 
 	public static final String MOD_ID = "avatarmod";
