@@ -17,10 +17,17 @@
 
 package com.crowsofwar.gorecore.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.UUID;
+import java.util.Map;
+
+import com.crowsofwar.gorecore.GoreCore;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -117,14 +124,14 @@ public final class AccountUUIDs {
 				return null;
 			}
 			
-			ByteArrayOutputStream response = new ByteArrayOutputStream();
+			ByteArrayOutputStream result = new ByteArrayOutputStream();
 			byte[] buffer = new byte[1024];
 			int length;
 			InputStream inputStream = connection.getInputStream();
 			while ((length = inputStream.read(buffer)) != -1) {
 				result.write(buffer, 0, length);
 			}
-			return UUID.fromString(addDashes(JsonUtils.fromString(response.toString(), "id").getAsString()));				
+			return UUID.fromString(addDashes(JsonUtils.fromString(result.toString(), "id").getAsString()));				
 		} catch (Exception e) {
 			GoreCore.LOGGER.error("Unexpected error getting UUID for " + username, e);
 			return null;
@@ -159,7 +166,7 @@ public final class AccountUUIDs {
 				return null;
 			}
 			
-			ByteArrayOutputStream response = new ByteArrayOutputStream();
+			ByteArrayOutputStream result = new ByteArrayOutputStream();
 			byte[] buffer = new byte[1024];
 			int length;
 			InputStream inputStream = connection.getInputStream();
@@ -167,7 +174,7 @@ public final class AccountUUIDs {
 				result.write(buffer, 0, length);
 			}
 			
-			return JsonUtils.fromString(response.toString(), "name").getAsString();
+			return JsonUtils.fromString(result.toString(), "name").getAsString();
 		} catch (Exception e) {
 			GoreCore.LOGGER.error("Unexpected error getting username for " + id, e);
 			return null;
