@@ -40,6 +40,7 @@ ext.config = parseConfig(configFile)
 
 group = "com.crowsofwar.avatarmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "avatarmod"
+version = config.version 
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
