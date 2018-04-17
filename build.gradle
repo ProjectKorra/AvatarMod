@@ -80,11 +80,6 @@ processResources {
 	from(sourceSets.main.resources.srcDirs) {
 		exclude 'mcmod.info'
 	}
-	
-	from(sourceSets.main.java) {
-		include 'com/crowsofwar/avatar/AvatarInfo.java'
-		
-	}
 }
 
 jar.classifier = "thin"
