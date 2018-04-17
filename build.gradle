@@ -89,11 +89,11 @@ reobf { shadowJar { mappingType = "SEARGE" } }
 tasks.reobfShadowJar.mustRunAfter shadowJar
 
 task sourceZip(type: Zip, dependsOn: 'classes') {
-  classifier "src"
-  from projectDir
-  include "src/**/*"
+	classifier "src"
+	from projectDir
+	include "src/**/*"
 
-  destinationDir(new File(buildDir, "/libs"))
+	destinationDir(new File(buildDir, "/libs"))
 }
 
 shadowJar {
@@ -109,7 +109,7 @@ afterEvaluate {
 }
  
 def allProcessResourcesTasks() {
-	sourceSets.all.processResourcesTaskName.collect {
+	sourceSets*.processResourcesTaskName.collect {
 		tasks[it]
 	}
 }
