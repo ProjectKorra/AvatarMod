@@ -23,8 +23,6 @@ plugins {
 	id "org.sonarqube" version "2.2"
 }
 
-import org.apache.tools.ant.filters.*
-
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.github.johnrengelman.shadow'
 
@@ -59,8 +57,8 @@ minecraft {
 	
 	runDir = "run"
 	
-	// replaceIn 'src/main/java/com/crowsofwar/avatar/AvatarInfo.java'
-	// replace '@VERSION@', project.version
+	replaceIn 'src/main/java/com/crowsofwar/avatar/AvatarInfo.java'
+	replace '@VERSION@', project.version
 }
 
 processResources {
@@ -98,14 +96,6 @@ task sourceZip(type: Zip, dependsOn: 'classes') {
 
 shadowJar {
   configurations = [project.configurations.compile]
-}
-
-afterEvaluate {
-	configure(allProcessResourcesTasks()) {
-		filter(ReplaceTokens,
-			tokens: [version: project.version]
-		)
-	}
 }
  
 def allProcessResourcesTasks() {
