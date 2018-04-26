@@ -46,7 +46,7 @@ public class AvatarInfo {
 	}
 
 	// Everything is not adjustable / automatically calculated
-	public static final String VERSION = "@VERSION@";
+	public static final String VERSION = "@VERSION_PLACEHOLDER@";
 	/**
 	 * Incremented for complete rewrites
 	 */
