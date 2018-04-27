@@ -46,7 +46,7 @@ public class AvatarInfo {
 	}
 
 	// Everything is not adjustable / automatically calculated
-	public static final String VERSION;
+	public static final String VERSION = "@VERSION_PLACEHOLDER@".startsWith("@") ? "0.0.0-dev" : "@VERSION_PLACEHOLDER@";
 	/**
 	 * Incremented for complete rewrites
 	 */
@@ -78,10 +78,6 @@ public class AvatarInfo {
 	public static final boolean IS_DEVELOPMENT;
 	
 	static {
-		String versionString = "@VERSION_PLACEHOLDER@";
-		// Gradle version replacement didn't work AKA we're using the IDE's run configuration
-		if (versionString.startsWith("@")) VERSION = "0.0.0-dev";
-		else VERSION = versionString;
 		String[] versions = VERSION.split("-")[0].split("\\.");
 		VERSION_RELEASE = Integer.parseInt(versions[0]);
 		VERSION_UPDATE = Integer.parseInt(versions[1]);
