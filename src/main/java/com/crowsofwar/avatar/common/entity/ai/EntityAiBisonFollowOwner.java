@@ -47,7 +47,7 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 		EntityPlayer owner = bison.getOwner();
 		if (owner != null) {
 
-			if (bison.getLeashedToEntity() == owner) {
+			if (bison.getLeashHolder() == owner) {
 				return true;
 			}
 
