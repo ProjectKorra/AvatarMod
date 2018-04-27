@@ -38,17 +38,13 @@ println """
 ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
 
+version = config.version
 group = "com.crowsofwar.avatarmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "avatarmod"
-version = config.version 
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-
-dependencies {
-	compile files("libs/joml/joml-1.8.1.jar")
-	compile files("libs/yaml/snakeyaml-1.16.jar");
-	compile 'com.google.code.gson:gson:2.8.2'
+sourceCompatibility = '1.9'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
 }
 
 minecraft {
@@ -59,6 +55,12 @@ minecraft {
 	
 	replace '@VERSION_PLACEHOLDER@', project.version
 	replaceIn 'src/main/java/com/crowsofwar/avatar/AvatarInfo.java'
+}
+
+dependencies {
+	compile files("libs/joml/joml-1.8.1.jar")
+	compile files("libs/yaml/snakeyaml-1.16.jar");
+	compile 'com.google.code.gson:gson:2.8.2'
 }
 
 processResources {
