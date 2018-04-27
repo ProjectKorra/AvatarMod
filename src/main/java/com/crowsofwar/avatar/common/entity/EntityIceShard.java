@@ -46,7 +46,7 @@ public class EntityIceShard extends Entity {
 	public void onUpdate() {
 		super.onUpdate();
 		motionY -= 1.0 / 20;
-		if (isCollided) {
+		if (collided) {
 			shatter();
 		}
 

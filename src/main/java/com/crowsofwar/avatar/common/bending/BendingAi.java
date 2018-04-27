@@ -80,7 +80,7 @@ public abstract class BendingAi extends EntityAIBase {
 	@Override
 	public final boolean shouldExecute() {
 		EntityLivingBase target = entity.getAttackTarget();
-		boolean targetInRange = target == null || entity.getDistanceSqToEntity(target) < 12 * 12;
+		boolean targetInRange = target == null || entity.getDistanceSq(target) < 12 * 12;
 		return bender.getData().getMiscData().getAbilityCooldown() == 0 && targetInRange && shouldExec();
 	}
 

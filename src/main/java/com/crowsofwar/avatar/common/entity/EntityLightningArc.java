@@ -219,7 +219,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	private void handleWaterElectrocution(EntityLivingBase entity) {
 
-		double distance = entity.getDistanceToEntity(this);
+		double distance = entity.getDistance(this);
 		float damageModifier = (float) (1 - (distance / 12) * (distance / 12));
 		damageEntity(entity, damageModifier);
 

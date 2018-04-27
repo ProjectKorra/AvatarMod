@@ -79,12 +79,12 @@ public class WallJumpManager {
 		EntityLivingBase entity = bender.getEntity();
 
 		// Detect whether the player is horizontally collided (i.e. touching a wall)
-		// Calculation different between client/server b/c client has isCollidedVertically
+		// Calculation different between client/server b/c client has collidedVertically
 		// properly setup, while server doesn't and needs trickier calculation
 
 		boolean collidedWithWall;
 		if (bender.getWorld().isRemote) {
-			collidedWithWall = entity.isCollidedHorizontally && !entity.isCollidedVertically;
+			collidedWithWall = entity.collidedHorizontally && !entity.collidedVertically;
 		} else {
 			collidedWithWall = getHorizontalCollisionBlock() != null;
 		}

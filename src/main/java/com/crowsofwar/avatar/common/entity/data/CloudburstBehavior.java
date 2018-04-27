@@ -66,7 +66,7 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 
 			time++;
 
-			if (entity.isCollided || (!entity.world.isRemote && time > 100)) {
+			if (entity.collided || (!entity.world.isRemote && time > 100)) {
 				entity.setDead();
 				entity.onCollideWithSolid();
 			}
