@@ -85,7 +85,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			double xVel = 0, yVel = 0, zVel = 0;
 			double offX = 0, offY = 0, offZ = 0;
 
-			if (collidedVertically) {
+			if (isCollidedVertically) {
 
 				xVel = 5;
 				yVel = 3.5;

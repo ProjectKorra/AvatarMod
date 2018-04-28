@@ -68,7 +68,7 @@ public class AiAirblade extends BendingAi {
 		EntityLivingBase target = entity.getAttackTarget();
 
 		if (target != null) {
-			double dist = entity.getDistanceSq(target);
+			double dist = entity.getDistanceSq(target.posX, target.posY, target.posZ);
 			return dist >= 4 * 4;
 		}
 

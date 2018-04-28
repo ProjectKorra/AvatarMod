@@ -87,7 +87,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 
 			time++;
 
-			if (entity.collided || (!entity.world.isRemote && time > 100)) {
+			if (entity.isCollided || (!entity.world.isRemote && time > 100)) {
 				entity.setDead();
 				entity.onCollideWithSolid();
 			}
