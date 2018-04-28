@@ -91,7 +91,7 @@ public class ContainerBisonChest extends Container {
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
 		return bisonInventory.isUsableByPlayer(playerIn) && bison.isEntityAlive()
-				&& bison.getDistance(playerIn) < 8.0F;
+				&& bison.getDistance(playerIn.posX, playerIn.posY, playerIn.posZ) < 8.0F;
 	}
 
 	@Override

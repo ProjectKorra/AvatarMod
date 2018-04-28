@@ -129,8 +129,9 @@ public class EntityAirblade extends AvatarEntity {
 				List<EntityLivingBase> nextTargets = world.getEntitiesWithinAABB
 						(EntityLivingBase.class, aabb, notFriendly);
 
-				nextTargets.sort(AvatarUtils.getSortByDistanceComparator
-						(this::getDistance));
+				/*nextTargets.sort(AvatarUtils.getSortByDistanceComparator
+						(this::getDistance));**/
+				//Can't use that air blade upgrade for now, due to forge version bugs
 
 				if (!nextTargets.isEmpty()) {
 					EntityLivingBase nextTarget = nextTargets.get(0);

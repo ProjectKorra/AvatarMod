@@ -42,7 +42,7 @@ public class EntityAiKeepDistance extends EntityAIBase {
 	@Override
 	public boolean shouldExecute() {
 		EntityLivingBase target = entity.getAttackTarget();
-		if (target != null && entity.getDistanceSq(target) <= maxSafeDistance * maxSafeDistance) {
+		if (target != null && entity.getDistanceSq(target.posX, target.posY, target.posZ) <= maxSafeDistance * maxSafeDistance) {
 
 			Vec3d vec3d = RandomPositionGenerator.findRandomTargetBlockAwayFrom(entity, 16, 7,
 					new Vec3d(target.posX, target.posY, target.posZ));
@@ -50,7 +50,7 @@ public class EntityAiKeepDistance extends EntityAIBase {
 			if (vec3d == null) {
 				return false;
 			} else if (entity.getDistanceSq(vec3d.x, vec3d.y, vec3d.z) < entity
-					.getDistanceSq(target)) {
+					.getDistanceSq(target.posX, target.posY, target.posZ)) {
 				return false;
 			} else {
 				path = entity.getNavigator().getPathToXYZ(vec3d.x, vec3d.y, vec3d.z);

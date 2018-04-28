@@ -81,7 +81,7 @@ public class EntitySandstorm extends AvatarEntity {
 			movementHandler.update();
 		}
 
-		if (collided) {
+		if (isCollided) {
 			setDead();
 		}
 

@@ -47,7 +47,7 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 		EntityPlayer owner = bison.getOwner();
 		if (owner != null) {
 
-			if (bison.getLeashHolder() == owner) {
+			if (bison.getLeashedToEntity() == owner) {
 				return true;
 			}
 
@@ -55,7 +55,7 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 			if (followMode) {
 				double maxDist = bison.getAttackTarget() == null ? 6 : 20;
 				double maxDistSq = maxDist * maxDist;
-				double distSq = bison.getDistanceSq(owner);
+				double distSq = bison.getDistanceSq(owner.posX, owner.posY, owner.posZ);
 				return distSq >= maxDistSq && !bison.isSitting();
 			}
 
@@ -79,7 +79,7 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 		EntityPlayer owner = bison.getOwner();
 		if (owner == null) return;
 
-		double dist = bison.getDistance(owner);
+		double dist = bison.getDistance(owner.posX, owner.posY, owner.posZ);
 
 		Vector direction = getEyePos(owner).minus(getEyePos(bison)).normalize();
 		Vector targetPos = getEyePos(bison).plus(direction.times(dist * 0.8));

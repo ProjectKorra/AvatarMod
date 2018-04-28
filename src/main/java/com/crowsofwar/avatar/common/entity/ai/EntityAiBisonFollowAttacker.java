@@ -47,7 +47,7 @@ public class EntityAiBisonFollowAttacker extends EntityAIBase {
 			return false;
 		}
 
-		if (bison.getDistanceSq(target) > followRange * followRange) {
+		if (bison.getDistanceSq(target.posX, target.posY, target.posZ) > followRange * followRange) {
 			bison.setAttackTarget(null);
 			return false;
 		}
