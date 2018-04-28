@@ -187,6 +187,7 @@ public abstract class AvatarCommonProxy {
 		registerEntity(EntitySandstorm.class, "sandstorm");
 		registerEntity(EntityExplosionSpawner.class, "explosion_spawner");
 		registerEntity(EntityElementshard.class, "element_shard");
+		registerEntity(EntityLightningSpawner.class, "lightning_spawner");
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, 
 					EXTREME_HILLS, MUTATED_SAVANNA);
@@ -245,6 +246,7 @@ public abstract class AvatarCommonProxy {
 		Abilities.register(new AbilitySandstorm());
 		Abilities.register(new AbilityElementshard());
 		Abilities.register(new AbilityAvatarState());
+		Abilities.register(new AbilityLightningRaze());
 	}
 
 	private static void registerBendingStyles() {
