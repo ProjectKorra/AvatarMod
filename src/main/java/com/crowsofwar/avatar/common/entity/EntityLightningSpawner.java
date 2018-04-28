@@ -21,7 +21,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 	private float lightningFrequency;
 	private boolean trackEnemies;
 	private float amountofBolts;
-	private float accuray;
+	private int boltAccuracy;
 
 	/**
 	 * @param world
@@ -41,6 +41,8 @@ public class EntityLightningSpawner extends AvatarEntity {
 	public void setTrackEnemies(boolean shouldTrack) {this.trackEnemies = shouldTrack;}
 
 	public void setAmountofBolts (float amount) {this.amountofBolts = amount;}
+
+	public void setAccuracy (int accuracy) {this.boltAccuracy = accuracy;}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -67,9 +69,21 @@ public class EntityLightningSpawner extends AvatarEntity {
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 
 		if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
-			BlockPos blockPos = this.getPosition();
-			EntityLightningBolt bolt = new EntityLightningBolt(world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), false);
-			world.addWeatherEffect(bolt);
+			if (amountofBolts == 1) {
+				BlockPos blockPos = this.getPosition();
+				EntityLightningBolt bolt = new EntityLightningBolt(world, blockPos.getX() + Pos, blockPos.getY() + Pos,
+						blockPos.getZ() + Pos, false);
+				world.addWeatherEffect(bolt);
+			}
+			else {
+				for (int i = 0; i<amountofBolts; i++){
+					BlockPos blockPos = this.getPosition();
+					EntityLightningBolt bolt = new EntityLightningBolt(world, blockPos.getX() + Pos, blockPos.getY() + Pos,
+							blockPos.getZ() + Pos, false);
+					world.addWeatherEffect(bolt);
+
+				}
+			}
 		}
 
 		if (!world.getBlockState(below).isNormalCube()) {

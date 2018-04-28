@@ -26,12 +26,16 @@ public class AbilityLightningRaze extends Ability {
 
 		float xp = abilityData.getTotalXp();
 		float ticks = 20;
+		//How long the spawner tays alive.
 		double speed = 4;
 		float chi = 5;
 		float frequency = 5;
+		//How many ticks pass before each lightning bolt strikes.
 		int bolts = 1;
-		//use randoms for positioning
-		//Spawn entity a little ahead of the player
+		int accuracy = 2;
+		/*0 accuracy is the most accurate; each number represents how far away from the spawn position
+		it will be.**/
+
 
 
 		if (ctx.getLevel() >= 1) {
@@ -40,19 +44,22 @@ public class AbilityLightningRaze extends Ability {
 			chi = 6;
 			speed = 6;
 			bolts = 2;
+
 		}
 		if (ctx.getLevel() >= 2) {
 			speed = 8;
 			frequency = 3;
 			chi = 7;
 			bolts = 3;
+			accuracy = 2;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			frequency = 2;
 			bolts = 1;
 			ticks = 40;
-			speed = 40;
+			speed = 20;
 			chi = 6;
+			accuracy = 0;
 			//Super-fast line of lightning that lights up the ground
 			//Zeus' Wrath
 		}
@@ -62,6 +69,7 @@ public class AbilityLightningRaze extends Ability {
 			speed = 5;
 			chi = 8;
 			bolts = 5;
+			accuracy = 3;
 			//spawn 3 (cloud of lightning), tracks enemies
 			//Thor's wrath
 		}
@@ -72,12 +80,13 @@ public class AbilityLightningRaze extends Ability {
 					EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
 					boltSpawner.setOwner(entity);
 					//boltSpawner.setPosition(entity.posX, entity.posY, entity.posZ);
-					boltSpawner.setPosition(look.minusY(entity.getEyeHeight()));
+					boltSpawner.setPosition(entity.posX, entity.posY, entity.posZ);
 					boltSpawner.setVelocity(look.times(speed));
 					boltSpawner.setDuration(ticks);
 					boltSpawner.setLightningFrequency(frequency);
 					boltSpawner.setTrackEnemies(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
 					boltSpawner.setAmountofBolts(bolts) ;
+					boltSpawner.setAccuracy(accuracy);
 					world.spawnEntity(boltSpawner);
 
 			}
