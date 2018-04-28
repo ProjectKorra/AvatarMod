@@ -12,6 +12,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 
+import java.util.Random;
+
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 public class EntityLightningSpawner extends AvatarEntity {
@@ -19,6 +21,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 	private float lightningFrequency;
 	private boolean trackEnemies;
 	private float amountofBolts;
+	private float accuray;
 
 	/**
 	 * @param world
@@ -53,6 +56,9 @@ public class EntityLightningSpawner extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+
+		Random random = new Random();
+		double Pos = random.nextInt(2);
 
 		if (!world.isRemote && ticksExisted >= maxTicksAlive) {
 			setDead();

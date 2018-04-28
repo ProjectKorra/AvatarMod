@@ -9,7 +9,6 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AbilityLightningRaze extends Ability {
 	public AbilityLightningRaze() {
@@ -30,6 +29,9 @@ public class AbilityLightningRaze extends Ability {
 		double speed = 4;
 		float chi = 5;
 		float frequency = 5;
+		int bolts = 1;
+		//use randoms for positioning
+		//Spawn entity a little ahead of the player
 
 
 		if (ctx.getLevel() >= 1) {
@@ -37,14 +39,17 @@ public class AbilityLightningRaze extends Ability {
 			frequency = 4;
 			chi = 6;
 			speed = 6;
+			bolts = 2;
 		}
 		if (ctx.getLevel() >= 2) {
 			speed = 8;
 			frequency = 3;
 			chi = 7;
+			bolts = 3;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			frequency = 2;
+			bolts = 1;
 			ticks = 40;
 			speed = 40;
 			chi = 6;
@@ -56,6 +61,7 @@ public class AbilityLightningRaze extends Ability {
 			ticks = 60;
 			speed = 5;
 			chi = 8;
+			bolts = 5;
 			//spawn 3 (cloud of lightning), tracks enemies
 			//Thor's wrath
 		}
@@ -65,12 +71,13 @@ public class AbilityLightningRaze extends Ability {
 					Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 					EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
 					boltSpawner.setOwner(entity);
-					boltSpawner.setPosition(entity.posX, entity.posY, entity.posZ);
+					//boltSpawner.setPosition(entity.posX, entity.posY, entity.posZ);
+					boltSpawner.setPosition(look.minusY(entity.getEyeHeight()));
 					boltSpawner.setVelocity(look.times(speed));
 					boltSpawner.setDuration(ticks);
 					boltSpawner.setLightningFrequency(frequency);
 					boltSpawner.setTrackEnemies(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
-					boltSpawner.setAmountofBolts(!ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND) ? 1 : 3 ) ;
+					boltSpawner.setAmountofBolts(bolts) ;
 					world.spawnEntity(boltSpawner);
 
 			}
