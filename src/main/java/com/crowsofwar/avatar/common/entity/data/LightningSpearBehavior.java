@@ -87,7 +87,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 			time++;
 
-			if (entity.isCollided || (!entity.world.isRemote && time > 100)) {
+			if (entity.collided || (!entity.world.isRemote && time > 100)) {
 				entity.setDead();
 				entity.onCollideWithSolid();
 			}
@@ -152,7 +152,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				List<EntityLivingBase> targets = entity.world.getEntitiesWithinAABB(
 						EntityLivingBase.class, aabb);
 				for (EntityLivingBase target : targets) {
-					if (target.getDistanceSq(entity.posX, entity.posY, entity.posZ) > radius * radius) {
+					if (target.getDistanceSq(entity) > radius * radius) {
 						continue;
 					}
 					collision(target, entity, false);
