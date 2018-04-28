@@ -25,7 +25,8 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityLightningSpawner extends AvatarEntity {
-	private double maxTicksAlive;
+	private float maxTicksAlive;
+	private float lightningFrequency;
 
 	/**
 	 * @param world
@@ -39,6 +40,8 @@ public class EntityLightningSpawner extends AvatarEntity {
 	public void setDuration(float ticks) {
 		this.maxTicksAlive = ticks;
 	}
+
+	public void setLightningFrequency(float ticks) {this.lightningFrequency = ticks;}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -62,17 +65,10 @@ public class EntityLightningSpawner extends AvatarEntity {
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		Block belowBlock = world.getBlockState(below).getBlock();
 
-		if (!this.isDead && !world.isRemote) {
-			int xPos = this.getPosition().getX();
-			int yPos = this.getPosition().getY();
-			int zPos = this.getPosition().getZ();
-
-			EntityLightningBolt bolt = new EntityLightningBolt(world, xPos, yPos, zPos, false);
-			bolt.posX = xPos;
-			bolt.posY = yPos;
-			bolt.posZ = zPos;
-
-			world.spawnEntity(bolt);
+		if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
+			BlockPos blockPos = this.getPosition();
+			EntityLightningBolt bolt = new EntityLightningBolt(world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), false);
+			world.addWeatherEffect(bolt);
 		}
 
 		if (!world.getBlockState(below).isNormalCube()) {
