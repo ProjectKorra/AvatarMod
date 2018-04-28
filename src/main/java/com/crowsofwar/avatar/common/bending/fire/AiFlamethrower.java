@@ -77,7 +77,7 @@ public class AiFlamethrower extends BendingAi {
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSq(target.posX, target.posY, target.posZ) < 4 * 4;
+		return target != null && entity.getDistanceSq(target) < 4 * 4;
 	}
 
 	@Override

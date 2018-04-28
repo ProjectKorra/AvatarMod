@@ -114,8 +114,8 @@ public class AvatarPlayerData extends PlayerData {
 			// Find the correct range to send the packet to
 			double rangeSq = 0;
 			for (EntityPlayer p : nearbyPlayers) {
-				if (p.getDistanceSq(player.posX, player.posY, player.posZ) > rangeSq) {
-					rangeSq = p.getDistanceSq(player.posX, player.posY, player.posZ);
+				if (p.getDistanceSq(player) > rangeSq) {
+					rangeSq = p.getDistanceSq(player);
 				}
 			}
 			double range = Math.sqrt(rangeSq) + 0.01;// +0.01 "just in case"

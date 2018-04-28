@@ -70,7 +70,7 @@ public abstract class ElementshardBehavior extends Behavior<EntityElementshard> 
 
 			time++;
 
-			if (entity.isCollided || (!entity.world.isRemote && time > 200)) {
+			if (entity.collided || (!entity.world.isRemote && time > 200)) {
 				entity.setDead();
 				entity.onCollideWithSolid();
 			}
