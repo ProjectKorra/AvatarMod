@@ -119,7 +119,7 @@ public class AbilityCleanse extends Ability {
 		for (EntityPlayer player : players) {
 
 			// Initial aabb check was rectangular, need to check distance for truly circular radius
-			if (player.getDistanceSq(entity.posX, entity.posY, entity.posZ) > radius * radius) {
+			if (player.getDistanceSq(entity) > radius * radius) {
 				continue;
 			}
 

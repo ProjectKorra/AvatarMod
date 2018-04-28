@@ -50,13 +50,13 @@ public class EntityAiBisonTempt extends EntityAIBase {
 		if (bison.getCondition().getFoodPoints() >= 25) return false;
 
 		List<EntityPlayer> players = bison.world.getEntities(EntityPlayer.class, player -> {
-			if (bison.getDistanceSq(player.posX, player.posY, player.posZ) > maxDistSq) return false;
+			if (bison.getDistanceSq(player) > maxDistSq) return false;
 			return isHoldingFood(player);
 		});
 
 		players.sort((p1, p2) -> {
-			double d1 = bison.getDistanceSq(p1.posX, p1.posY, p1.posZ);
-			double d2 = bison.getDistanceSq(p2.posX, p2.posY, p2.posZ);
+			double d1 = bison.getDistanceSq(p1);
+			double d2 = bison.getDistanceSq(p2);
 			return d1 < d2 ? -1 : (d1 > d2 ? 1 : 0);
 		});
 
@@ -78,7 +78,7 @@ public class EntityAiBisonTempt extends EntityAIBase {
 	@Override
 	public boolean shouldContinueExecuting() {
 
-		if (!following.isDead && bison.getDistanceSq(following.posX, following.posY, following.posZ) <= maxDistSq
+		if (!following.isDead && bison.getDistanceSq(following) <= maxDistSq
 				&& isHoldingFood(following)) {
 
 			bison.getMoveHelper().setMoveTo(following.posX,

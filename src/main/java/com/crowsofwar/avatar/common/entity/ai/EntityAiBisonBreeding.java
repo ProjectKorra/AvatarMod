@@ -76,7 +76,7 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 			if (getNearbyBison() < 15) {
 				bison.getMoveHelper().setMoveTo(mate.posX, mate.posY, mate.posZ, 1);
 				// 7 obtained through real-world testing
-				if (bison.getDistanceSq(mate.posX, mate.posY, mate.posZ) <= 7) {
+				if (bison.getDistanceSq(mate) <= 7) {
 
 					spawnBaby(mate);
 
