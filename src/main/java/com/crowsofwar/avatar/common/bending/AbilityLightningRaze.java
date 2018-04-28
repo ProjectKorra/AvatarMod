@@ -45,11 +45,15 @@ public class AbilityLightningRaze extends Ability {
 			frequency = 2;
 			ticks = 40;
 			speed = 40;
+			//Super-fast line of lightning that lights up the ground
+			//Zeus' Wrath
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			frequency = 4;
 			ticks = 60;
 			speed = 5;
+			//spawn 3 (cloud of lightning), tracks enemies
+			//Thor's wrath
 		}
 
 		if (bender.consumeChi(chi)) {
