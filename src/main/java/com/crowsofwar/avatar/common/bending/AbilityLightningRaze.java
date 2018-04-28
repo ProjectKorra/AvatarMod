@@ -27,22 +27,26 @@ public class AbilityLightningRaze extends Ability {
 
 		float xp = abilityData.getTotalXp();
 		float ticks = 20;
-		double speed = 8;
-		float chi = STATS_CONFIG.chiEarthspike;
+		double speed = 4;
+		float chi = 5;
 		float frequency = 5;
 
 		if (ctx.getLevel() >= 1) {
 			ticks = 40;
 			frequency = 4;
+			chi = 6;
+			speed = 6;
 		}
 		if (ctx.getLevel() >= 2) {
-			speed = 14;
+			speed = 8;
 			frequency = 3;
+			chi = 7;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			frequency = 2;
 			ticks = 40;
 			speed = 40;
+			chi = 6;
 			//Super-fast line of lightning that lights up the ground
 			//Zeus' Wrath
 		}
@@ -50,6 +54,7 @@ public class AbilityLightningRaze extends Ability {
 			frequency = 4;
 			ticks = 60;
 			speed = 5;
+			chi = 8;
 			//spawn 3 (cloud of lightning), tracks enemies
 			//Thor's wrath
 		}
