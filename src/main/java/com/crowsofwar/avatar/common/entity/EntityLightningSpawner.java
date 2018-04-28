@@ -17,6 +17,8 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 public class EntityLightningSpawner extends AvatarEntity {
 	private float maxTicksAlive;
 	private float lightningFrequency;
+	private boolean trackEnemies;
+	private float amountofBolts;
 
 	/**
 	 * @param world
@@ -32,6 +34,10 @@ public class EntityLightningSpawner extends AvatarEntity {
 	}
 
 	public void setLightningFrequency(float ticks) {this.lightningFrequency = ticks;}
+
+	public void setTrackEnemies(boolean shouldTrack) {this.trackEnemies = shouldTrack;}
+
+	public void setAmountofBolts (float amount) {this.amountofBolts = amount;}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {

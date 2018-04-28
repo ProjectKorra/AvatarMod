@@ -31,6 +31,7 @@ public class AbilityLightningRaze extends Ability {
 		float chi = 5;
 		float frequency = 5;
 
+
 		if (ctx.getLevel() >= 1) {
 			ticks = 40;
 			frequency = 4;
@@ -61,16 +62,16 @@ public class AbilityLightningRaze extends Ability {
 
 		if (bender.consumeChi(chi)) {
 
-
-				Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-
-				EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
-				boltSpawner.setOwner(entity);
-				boltSpawner.setPosition(entity.posX, entity.posY, entity.posZ);
-				boltSpawner.setVelocity(look.times(speed));
-				boltSpawner.setDuration(ticks);
-				boltSpawner.setLightningFrequency(frequency);
-				world.spawnEntity(boltSpawner);
+					Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
+					EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
+					boltSpawner.setOwner(entity);
+					boltSpawner.setPosition(entity.posX, entity.posY, entity.posZ);
+					boltSpawner.setVelocity(look.times(speed));
+					boltSpawner.setDuration(ticks);
+					boltSpawner.setLightningFrequency(frequency);
+					boltSpawner.setTrackEnemies(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
+					boltSpawner.setAmountofBolts(!ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND) ? 1 : 3 ) ;
+					world.spawnEntity(boltSpawner);
 
 			}
 
