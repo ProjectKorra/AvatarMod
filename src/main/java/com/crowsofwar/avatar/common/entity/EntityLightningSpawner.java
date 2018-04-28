@@ -1,28 +1,18 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityLightningSpawner extends AvatarEntity {
 	private float maxTicksAlive;
@@ -63,7 +53,6 @@ public class EntityLightningSpawner extends AvatarEntity {
 		}
 
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
-		Block belowBlock = world.getBlockState(below).getBlock();
 
 		if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
 			BlockPos blockPos = this.getPosition();
@@ -99,51 +88,30 @@ public class EntityLightningSpawner extends AvatarEntity {
 		int attacked = 0;
 
 		// Push collided entities back
-		if (!world.isRemote) {
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-					entity -> entity != getOwner());
-			if (!collided.isEmpty()) {
-				for (Entity entity : collided) {
-					if (attackEntity(entity)) {
-						attacked++;
-					}
-				}
-			}
-		}
+
+
 
 		if (!world.isRemote && getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 			if (data != null) {
-				data.getAbilityData("lightning_raze").addXp(SKILLS_CONFIG.lightningspearHit * attacked);
+				data.getAbilityData("lightning_raze").addXp(SKILLS_CONFIG.lightningspearHit);
 			}
 		}
 	}
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner) {
+		if (entity instanceof EntityLightningSpawner || entity instanceof EntityLivingBase) {
 			return false;
 		}
-		return entity instanceof EntityLivingBase || super.canCollideWith(entity);
+		return entity instanceof EntityShield || super.canCollideWith(entity);
 	}
 
 	@Override
 	public boolean onCollideWithSolid() {
-		setDead();
 		return false;
 	}
 
-	private boolean attackEntity(Entity entity) {
 
-		if (!(entity instanceof EntityItem && entity.ticksExisted <=
-				10) && canCollideWith(entity)) {
-
-			Vector push = velocity().withY(.8).times(STATS_CONFIG.ravineSettings.push);
-			entity.addVelocity(push.x(), push.y(), push.z());
-			AvatarUtils.afterVelocityAdded(entity);
-
-		}
-		return false;
-	}
 }
 

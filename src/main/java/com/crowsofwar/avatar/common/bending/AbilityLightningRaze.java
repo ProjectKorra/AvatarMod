@@ -1,11 +1,9 @@
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -57,6 +55,7 @@ public class AbilityLightningRaze extends Ability {
 		}
 
 		if (bender.consumeChi(chi)) {
+
 
 				Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 
