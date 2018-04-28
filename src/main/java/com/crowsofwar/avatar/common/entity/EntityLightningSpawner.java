@@ -33,7 +33,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 	 */
 	public EntityLightningSpawner(World world) {
 		super(world);
-		setSize(1, 1);
+		setSize(.01F, .01F);
 
 	}
 

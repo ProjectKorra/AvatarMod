@@ -31,20 +31,23 @@ public class AbilityLightningRaze extends Ability {
 		float ticks = 20;
 		double speed = 8;
 		float chi = STATS_CONFIG.chiEarthspike;
+		float frequency = 5;
 
 		if (ctx.getLevel() >= 1) {
 			ticks = 40;
+			frequency = 4;
 		}
 		if (ctx.getLevel() >= 2) {
 			speed = 14;
+			frequency = 3;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-
+			frequency = 2;
 			ticks = 40;
 			speed = 40;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-
+			frequency = 4;
 			ticks = 60;
 			speed = 5;
 		}
@@ -58,6 +61,7 @@ public class AbilityLightningRaze extends Ability {
 				boltSpawner.setPosition(entity.posX, entity.posY, entity.posZ);
 				boltSpawner.setVelocity(look.times(speed));
 				boltSpawner.setDuration(ticks);
+				boltSpawner.setLightningFrequency(frequency);
 				world.spawnEntity(boltSpawner);
 
 			}
