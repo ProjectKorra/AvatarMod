@@ -20,6 +20,7 @@ package com.crowsofwar.avatar;
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.AbilityLightningRaze;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
 import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosion;
@@ -122,6 +123,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityExplosion());
 		Abilities.register(new AbilityExplosivePillar());
 		Abilities.register(new AbilitySandstorm());
+		Abilities.register(new AbilityLightningRaze());
 	}
 
 	private static void registerBendingStyles() {
@@ -233,6 +235,7 @@ public class AvatarMod {
 		registerEntity(EntityWaterCannon.class, "water_cannon");
 		registerEntity(EntitySandstorm.class, "sandstorm");
 		registerEntity(EntityExplosionSpawner.class, "explosion_spawner");
+		registerEntity(EntityLightningSpawner.class, "lightning_spawner");
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);
