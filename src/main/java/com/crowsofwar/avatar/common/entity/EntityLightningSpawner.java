@@ -63,10 +63,14 @@ public class EntityLightningSpawner extends AvatarEntity {
 		Block belowBlock = world.getBlockState(below).getBlock();
 
 		if (!this.isDead && !world.isRemote) {
-			EntityLightningBolt bolt = new EntityLightningBolt(world, this.posX, this.posY, this.posZ, false);
-			bolt.posX = this.posX;
-			bolt.posY = this.posY;
-			bolt.posZ = this.posZ;
+			int xPos = this.getPosition().getX();
+			int yPos = this.getPosition().getY();
+			int zPos = this.getPosition().getZ();
+
+			EntityLightningBolt bolt = new EntityLightningBolt(world, xPos, yPos, zPos, false);
+			bolt.posX = xPos;
+			bolt.posY = yPos;
+			bolt.posZ = zPos;
 
 			world.spawnEntity(bolt);
 		}
