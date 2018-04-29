@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -11,6 +12,9 @@ import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -23,9 +27,10 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 public class EntityLightningSpawner extends AvatarEntity {
 	private float maxTicksAlive;
 	private float lightningFrequency;
-	private boolean trackEnemies;
+	private boolean playerControl;
 	private float amountofBolts;
 	private float boltAccuracy;
+	private int Speed;
 
 	/**
 	 * @param world
@@ -36,17 +41,23 @@ public class EntityLightningSpawner extends AvatarEntity {
 
 	}
 
+	public void setSpeed(int speed) {this.Speed = speed;}
+
 	public void setDuration(float ticks) {
 		this.maxTicksAlive = ticks;
 	}
 
 	public void setLightningFrequency(float ticks) {this.lightningFrequency = ticks;}
 
-	public void setTrackEnemies(boolean shouldTrack) {this.trackEnemies = shouldTrack;}
+	public void setPlayerControl(boolean shouldControl) {this.playerControl = playerControl;}
 
 	public void setAmountofBolts (float amount) {this.amountofBolts = amount;}
 
 	public void setAccuracy (float accuracy) {this.boltAccuracy = accuracy;}
+
+
+
+
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -63,15 +74,11 @@ public class EntityLightningSpawner extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (trackEnemies){
-			//EntityZombie zombie = new EntityZombie(world);
-			List<EntityCreature> radius = this.world.getEntitiesWithinAABB(EntityCreature.class, this.getEntityBoundingBox().expand(10D, 10D, 10D));
-			if (radius.contains(new EntityZombie(world))){
-				this.rotationYaw = radius.get(1).rotationYaw;
-				}
-			}
-
-
+		if (playerControl) {
+			this.rotationYaw = getOwner().rotationYaw;
+			Vector direction = Vector.toRectangular(Math.toRadians(this.rotationYaw), 0);
+			this.setVelocity(direction.times(Speed));
+		}
 		float Pos = 0 + rand.nextFloat() * (boltAccuracy - 0);
 
 		if (!world.isRemote && ticksExisted >= maxTicksAlive) {

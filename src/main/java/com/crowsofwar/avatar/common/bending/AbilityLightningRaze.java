@@ -30,7 +30,7 @@ public class AbilityLightningRaze extends Ability {
 		float xp = abilityData.getTotalXp();
 		float ticks = 20;
 		//How long the spawner tays alive.
-		double speed = 5;
+		int speed = 5;
 		float chi = 5;
 		float frequency = 5;
 		//How many ticks pass before each lightning bolt strikes.
@@ -88,9 +88,10 @@ public class AbilityLightningRaze extends Ability {
 					//boltSpawner.setPosition(entity.posX, entity.posY, entity.posZ);
 					boltSpawner.setPosition(lookPos.withY(entity.posY));
 					boltSpawner.setVelocity(look.times(speed));
+					boltSpawner.setSpeed(speed);
 					boltSpawner.setDuration(ticks);
 					boltSpawner.setLightningFrequency(frequency);
-					boltSpawner.setTrackEnemies(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
+					boltSpawner.setPlayerControl(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
 					boltSpawner.setAmountofBolts(bolts) ;
 					boltSpawner.setAccuracy(accuracy);
 					world.spawnEntity(boltSpawner);
