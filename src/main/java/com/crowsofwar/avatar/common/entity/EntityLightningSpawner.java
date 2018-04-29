@@ -67,10 +67,11 @@ public class EntityLightningSpawner extends AvatarEntity {
 			EntityZombie zombie = new EntityZombie(world);
 			List<EntityCreature> radius = this.world.getEntitiesWithinAABB(EntityCreature.class, this.getEntityBoundingBox().expand(10D, 10D, 10D));
 			if (radius.contains(zombie)){
-				
+				this.rotationYaw = zombie.rotationYaw;
+				}
 			}
 
-		}
+
 		float Pos = 0 + rand.nextFloat() * (boltAccuracy - 0);
 
 		if (!world.isRemote && ticksExisted >= maxTicksAlive) {
