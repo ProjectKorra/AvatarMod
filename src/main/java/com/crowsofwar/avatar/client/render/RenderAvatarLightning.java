@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityAvatarLightning;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -13,6 +14,9 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class RenderAvatarLightning extends Render<EntityAvatarLightning> {
+
+	public static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod, " +
+			"textures/entity/lightning-ribbon.png");
 
 	public RenderAvatarLightning(RenderManager renderManagerIn) {
 		super(renderManagerIn);
@@ -29,6 +33,7 @@ public class RenderAvatarLightning extends Render<EntityAvatarLightning> {
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		double[] adouble = new double[8];
 		double[] adouble1 = new double[8];
 		double d0 = 0.0D;
@@ -131,6 +136,6 @@ public class RenderAvatarLightning extends Render<EntityAvatarLightning> {
 	 */
 	@Nullable
 	protected ResourceLocation getEntityTexture(EntityAvatarLightning entity) {
-		return null;
+		return TEXTURE;
 	}
 }
