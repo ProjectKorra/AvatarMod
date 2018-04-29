@@ -63,7 +63,7 @@ public class EntityLightning extends AvatarEntity {
 	public void onUpdate()
 	{
 		super.onUpdate();
-		
+
 
 		if (this.lightningState == 2)
 		{

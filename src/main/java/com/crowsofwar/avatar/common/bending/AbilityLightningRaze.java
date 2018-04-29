@@ -3,14 +3,12 @@ package com.crowsofwar.avatar.common.bending;
 import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.EntityLightning;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
-
-import java.util.Random;
 
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
@@ -23,14 +21,11 @@ public class AbilityLightningRaze extends Ability {
 
 	@Override
 	public void execute(AbilityContext ctx) {
-
-		AbilityData abilityData = ctx.getAbilityData();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		Bender bender = ctx.getBender();
+		BendingData data = ctx.getData();
 
-
-		float xp = abilityData.getTotalXp();
 		int ticks = 20;
 		//How long the spawner tays alive.
 		int speed = 5;
@@ -40,7 +35,6 @@ public class AbilityLightningRaze extends Ability {
 		int bolts = 1;
 		float accuracy = 2;
 		float damage = 4;
-		Random random = new Random();
 		/*0 accuracy is the most accurate; each number represents how far away from the spawn position
 		it will be.**/
 
@@ -86,6 +80,16 @@ public class AbilityLightningRaze extends Ability {
 		}
 
 		if (bender.consumeChi(chi)) {
+
+					if (ctx.getLevel() <= 0){
+						data.getAbilityData("lightning_raze").addXp(3);
+					}
+					if (ctx.getLevel() == 1){
+						data.getAbilityData("lightning_raze").addXp(2);
+					}
+					if (ctx.getLevel() == 2){
+						data.getAbilityData("lightning_raze").addXp(1);
+					}
 
 					Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 					Vector playerPos = getEyePos(entity);
