@@ -77,7 +77,7 @@ public class EntityAvatarLightning extends AvatarEntity {
 	public void onUpdate()
 	{
 		super.onUpdate();
-		if (!isDead && !world.isRemote) {
+		/*if (!isDead && !world.isRemote) {
 			List<Entity> collidedList = world.getEntitiesWithinAABB(Entity.class,
 					getEntityBoundingBox());
 
@@ -92,7 +92,7 @@ public class EntityAvatarLightning extends AvatarEntity {
 				}
 
 			}
-		}
+		}**/
 
 		if (this.lightningState == 2)
 		{
@@ -138,9 +138,9 @@ public class EntityAvatarLightning extends AvatarEntity {
 	protected void entityInit()
 	{
 	}
-	private void handleCollision(EntityLivingBase collided) {
+	/*private void handleCollision(EntityLivingBase collided) {
 
-		DamageSource source = AvatarDamageSource.causeAirbladeDamage(collided, getOwner());
+		DamageSource source = AvatarDamageSource.causeLightningDamage(collided, getOwner());
 
 		boolean successfulHit = collided.attackEntityFrom(source, Damage);
 
@@ -153,10 +153,10 @@ public class EntityAvatarLightning extends AvatarEntity {
 			data.getAbilityData("airblade").addXp(SKILLS_CONFIG.airbladeHit);
 		}**/
 
-		if (successfulHit) {
+		/*if (successfulHit) {
 			BattlePerformanceScore.addSmallScore(getOwner());
 		}
-	}
+	}**/
 	/**
 	 * (abstract) Protected helper method to read subclass entity data from NBT.
 	 */
