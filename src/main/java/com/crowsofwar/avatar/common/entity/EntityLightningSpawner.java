@@ -49,7 +49,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 
 	public void setLightningFrequency(float ticks) {this.lightningFrequency = ticks;}
 
-	public void setPlayerControl(boolean shouldControl) {this.playerControl = playerControl;}
+	public void setPlayerControl(boolean shouldControl) {this.playerControl = shouldControl;}
 
 	public void setAmountofBolts (float amount) {this.amountofBolts = amount;}
 
