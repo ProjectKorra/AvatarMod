@@ -64,10 +64,10 @@ public class EntityLightningSpawner extends AvatarEntity {
 		super.onUpdate();
 
 		if (trackEnemies){
-			EntityZombie zombie = new EntityZombie(world);
+			//EntityZombie zombie = new EntityZombie(world);
 			List<EntityCreature> radius = this.world.getEntitiesWithinAABB(EntityCreature.class, this.getEntityBoundingBox().expand(10D, 10D, 10D));
-			if (radius.contains(zombie)){
-				this.rotationYaw = zombie.rotationYaw;
+			if (radius.contains(new EntityZombie(world))){
+				this.rotationYaw = radius.get(1).rotationYaw;
 				}
 			}
 
