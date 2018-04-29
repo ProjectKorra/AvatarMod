@@ -9,6 +9,9 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.gorecore.util.Vector.getEyePos;
+import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
+
 
 public class AbilityLightningRaze extends Ability {
 	public AbilityLightningRaze() {
@@ -77,12 +80,13 @@ public class AbilityLightningRaze extends Ability {
 		if (bender.consumeChi(chi)) {
 
 					Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-					//Vector lookPos = Vector.getLookRectangular(entity);
+					Vector playerPos = getEyePos(entity);
+					Vector lookPos = playerPos.plus(getLookRectangular(entity).times(1.5));
 
 					EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
 					boltSpawner.setOwner(entity);
-					boltSpawner.setPosition(entity.posX, entity.posY, entity.posZ);
-					//boltSpawner.setPosition(lookPos.minusY(entity.getEyeHeight()));
+					//boltSpawner.setPosition(entity.posX, entity.posY, entity.posZ);
+					boltSpawner.setPosition(lookPos.withY(entity.posY));
 					boltSpawner.setVelocity(look.times(speed));
 					boltSpawner.setDuration(ticks);
 					boltSpawner.setLightningFrequency(frequency);
