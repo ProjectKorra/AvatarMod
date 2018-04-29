@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityLightning;
+import com.crowsofwar.avatar.common.entity.EntityAvatarLightning;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -12,16 +12,17 @@ import net.minecraft.util.ResourceLocation;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class RenderLightning extends Render<EntityLightning> {
+public class RenderAvatarLightning extends Render<EntityAvatarLightning> {
 
-	public RenderLightning(RenderManager renderManagerIn) {
+	public RenderAvatarLightning(RenderManager renderManagerIn) {
 		super(renderManagerIn);
 	}
 
 	/**
 	 * Renders the desired {@code T} type Entity.
 	 */
-	public void doRender(EntityLightning entity, double x, double y, double z, float entityYaw, float partialTicks) {
+	@Override
+	public void doRender(EntityAvatarLightning entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		GlStateManager.disableTexture2D();
@@ -129,7 +130,7 @@ public class RenderLightning extends Render<EntityLightning> {
 	 * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
 	 */
 	@Nullable
-	protected ResourceLocation getEntityTexture(EntityLightning entity) {
+	protected ResourceLocation getEntityTexture(EntityAvatarLightning entity) {
 		return null;
 	}
 }

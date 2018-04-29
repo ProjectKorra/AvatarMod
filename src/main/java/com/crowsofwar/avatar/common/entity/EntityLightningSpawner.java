@@ -4,7 +4,6 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -87,7 +86,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 				if (amountofBolts == 1) {
 
 				BlockPos blockPos = this.getPosition();
-				EntityLightning bolt = new EntityLightning(world, blockPos.getX() + Pos, blockPos.getY(),
+				EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
 						blockPos.getZ() + Pos);
 				bolt.setBoltLivingTime(random.nextInt(3) + 1);
 				bolt.setDamage(Damage);
@@ -97,7 +96,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 			else {
 				for (int i = 0; i<amountofBolts; i++){
 					BlockPos blockPos = this.getPosition();
-					EntityLightning bolt = new EntityLightning(world, blockPos.getX() + Pos, blockPos.getY(),
+					EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
 							blockPos.getZ() + Pos);
 					bolt.setBoltLivingTime(random.nextInt(3) + 1);
 					bolt.setDamage(Damage);
