@@ -27,12 +27,12 @@ public class AbilityLightningRaze extends Ability {
 		float xp = abilityData.getTotalXp();
 		float ticks = 20;
 		//How long the spawner tays alive.
-		double speed = 4;
+		double speed = 5;
 		float chi = 5;
 		float frequency = 5;
 		//How many ticks pass before each lightning bolt strikes.
 		int bolts = 1;
-		int accuracy = 2;
+		float accuracy = 2;
 		/*0 accuracy is the most accurate; each number represents how far away from the spawn position
 		it will be.**/
 
@@ -42,12 +42,12 @@ public class AbilityLightningRaze extends Ability {
 			ticks = 40;
 			frequency = 4;
 			chi = 6;
-			speed = 6;
+			speed = 7;
 			bolts = 2;
 
 		}
 		if (ctx.getLevel() >= 2) {
-			speed = 8;
+			speed = 9;
 			frequency = 3;
 			chi = 7;
 			bolts = 3;
@@ -77,10 +77,12 @@ public class AbilityLightningRaze extends Ability {
 		if (bender.consumeChi(chi)) {
 
 					Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
+					//Vector lookPos = Vector.getLookRectangular(entity);
+
 					EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
 					boltSpawner.setOwner(entity);
-					//boltSpawner.setPosition(entity.posX, entity.posY, entity.posZ);
 					boltSpawner.setPosition(entity.posX, entity.posY, entity.posZ);
+					//boltSpawner.setPosition(lookPos.minusY(entity.getEyeHeight()));
 					boltSpawner.setVelocity(look.times(speed));
 					boltSpawner.setDuration(ticks);
 					boltSpawner.setLightningFrequency(frequency);
