@@ -81,7 +81,7 @@ public class AbilityLightningRaze extends Ability {
 
 					Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 					Vector playerPos = getEyePos(entity);
-					Vector lookPos = playerPos.plus(getLookRectangular(entity).times(1.5));
+					Vector lookPos = playerPos.plus(getLookRectangular(entity).times(1.3));
 
 					EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
 					boltSpawner.setOwner(entity);
