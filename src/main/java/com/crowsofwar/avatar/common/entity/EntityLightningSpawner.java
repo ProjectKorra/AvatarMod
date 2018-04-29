@@ -1,28 +1,16 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIFindEntityNearest;
 import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-
-import java.util.List;
-
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 public class EntityLightningSpawner extends AvatarEntity {
 	private float maxTicksAlive;
@@ -74,7 +62,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (playerControl) {
+		if (playerControl && !this.isDead) {
 			this.rotationYaw = getOwner().rotationYaw;
 			Vector direction = Vector.toRectangular(Math.toRadians(this.rotationYaw), 0);
 			this.setVelocity(direction.times(Speed));
@@ -126,20 +114,6 @@ public class EntityLightningSpawner extends AvatarEntity {
 			} else {
 
 				setDead();
-			}
-		}
-
-		// amount of entities which were successfully attacked
-		int attacked = 0;
-
-		// Push collided entities back
-
-
-
-		if (!world.isRemote && getOwner() != null) {
-			BendingData data = BendingData.get(getOwner());
-			if (data != null) {
-				data.getAbilityData("lightning_raze").addXp(SKILLS_CONFIG.lightningspearHit);
 			}
 		}
 	}

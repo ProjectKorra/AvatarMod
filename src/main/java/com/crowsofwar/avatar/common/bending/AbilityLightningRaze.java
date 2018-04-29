@@ -4,10 +4,13 @@ import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.EntityLightning;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
@@ -28,7 +31,7 @@ public class AbilityLightningRaze extends Ability {
 
 
 		float xp = abilityData.getTotalXp();
-		float ticks = 20;
+		int ticks = 20;
 		//How long the spawner tays alive.
 		int speed = 5;
 		float chi = 5;
@@ -36,6 +39,7 @@ public class AbilityLightningRaze extends Ability {
 		//How many ticks pass before each lightning bolt strikes.
 		int bolts = 1;
 		float accuracy = 2;
+		Random random = new Random();
 		/*0 accuracy is the most accurate; each number represents how far away from the spawn position
 		it will be.**/
 
@@ -95,6 +99,8 @@ public class AbilityLightningRaze extends Ability {
 					boltSpawner.setAmountofBolts(bolts) ;
 					boltSpawner.setAccuracy(accuracy);
 					world.spawnEntity(boltSpawner);
+
+
 
 			}
 
