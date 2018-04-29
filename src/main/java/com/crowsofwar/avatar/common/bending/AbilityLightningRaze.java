@@ -39,6 +39,7 @@ public class AbilityLightningRaze extends Ability {
 		//How many ticks pass before each lightning bolt strikes.
 		int bolts = 1;
 		float accuracy = 2;
+		float damage = 4;
 		Random random = new Random();
 		/*0 accuracy is the most accurate; each number represents how far away from the spawn position
 		it will be.**/
@@ -52,6 +53,7 @@ public class AbilityLightningRaze extends Ability {
 			speed = 7;
 			bolts = 2;
 
+
 		}
 		if (ctx.getLevel() >= 2) {
 			speed = 9;
@@ -59,6 +61,7 @@ public class AbilityLightningRaze extends Ability {
 			chi = 7;
 			bolts = 3;
 			accuracy = 2;
+			damage = 5;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			frequency = 2;
@@ -67,6 +70,7 @@ public class AbilityLightningRaze extends Ability {
 			speed = 20;
 			chi = 6;
 			accuracy = 0;
+			damage = 10;
 			//Super-fast line of lightning that lights up the ground
 			//Zeus' Wrath
 		}
@@ -77,7 +81,7 @@ public class AbilityLightningRaze extends Ability {
 			chi = 8;
 			bolts = 5;
 			accuracy = 3;
-			//spawn 3 (cloud of lightning), tracks enemies
+			damage = 2;
 			//Thor's wrath
 		}
 
@@ -98,9 +102,9 @@ public class AbilityLightningRaze extends Ability {
 					boltSpawner.setPlayerControl(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
 					boltSpawner.setAmountofBolts(bolts) ;
 					boltSpawner.setAccuracy(accuracy);
+					boltSpawner.setDamage(damage);
+					//Doesn't actually damage the target; this is so EntityLightning can access this class' damage values.
 					world.spawnEntity(boltSpawner);
-
-
 
 			}
 

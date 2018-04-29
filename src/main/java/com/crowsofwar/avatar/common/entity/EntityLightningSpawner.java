@@ -21,6 +21,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 	private float amountofBolts;
 	private float boltAccuracy;
 	private int Speed;
+	private float Damage;
 	Random random = new Random();
 	/**
 	 * @param world
@@ -30,6 +31,8 @@ public class EntityLightningSpawner extends AvatarEntity {
 		setSize(.01F, .01F);
 
 	}
+
+	public void setDamage (float damage) {this.Damage = damage;}
 
 	public void setSpeed(int speed) {this.Speed = speed;}
 
@@ -64,6 +67,8 @@ public class EntityLightningSpawner extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
+
+
 		if (playerControl && !this.isDead) {
 			this.rotationYaw = getOwner().rotationYaw;
 			Vector direction = Vector.toRectangular(Math.toRadians(this.rotationYaw), 0);
@@ -85,6 +90,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 				EntityLightning bolt = new EntityLightning(world, blockPos.getX() + Pos, blockPos.getY(),
 						blockPos.getZ() + Pos);
 				bolt.setBoltLivingTime(random.nextInt(3) + 1);
+				bolt.setDamage(Damage);
 				world.addWeatherEffect(bolt);
 
 			}
@@ -94,6 +100,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 					EntityLightning bolt = new EntityLightning(world, blockPos.getX() + Pos, blockPos.getY(),
 							blockPos.getZ() + Pos);
 					bolt.setBoltLivingTime(random.nextInt(3) + 1);
+					bolt.setDamage(Damage);
 					world.addWeatherEffect(bolt);
 
 				}

@@ -19,8 +19,11 @@ public class EntityLightning extends AvatarEntity {
 	/** Determines the time before the EntityLightningBolt is destroyed. It is a random integer decremented over time. */
 	private int boltLivingTime;
 	//Can be manipulated for laser-like lightning attacks from the heavens
+	private float Damage;
 
 	public void setBoltLivingTime (int livingTime) {this.boltLivingTime = livingTime;}
+
+	public void setDamage (float damage) {this.Damage = damage;}
 
     public EntityLightning(World worldIn, double x, double y, double z)
 	{
@@ -60,6 +63,7 @@ public class EntityLightning extends AvatarEntity {
 	public void onUpdate()
 	{
 		super.onUpdate();
+		
 
 		if (this.lightningState == 2)
 		{
