@@ -3,8 +3,12 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAIFindEntityNearest;
 import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -12,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 
-import java.util.Random;
+import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
@@ -59,6 +63,14 @@ public class EntityLightningSpawner extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
+		if (trackEnemies){
+			EntityZombie zombie = new EntityZombie(world);
+			List<EntityCreature> radius = this.world.getEntitiesWithinAABB(EntityCreature.class, this.getEntityBoundingBox().expand(10D, 10D, 10D));
+			if (radius.contains(zombie)){
+				
+			}
+
+		}
 		float Pos = 0 + rand.nextFloat() * (boltAccuracy - 0);
 
 		if (!world.isRemote && ticksExisted >= maxTicksAlive) {
