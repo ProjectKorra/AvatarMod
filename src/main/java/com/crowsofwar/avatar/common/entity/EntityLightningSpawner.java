@@ -11,15 +11,17 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.Random;
+
 
 public class EntityLightningSpawner extends AvatarEntity {
-	private float maxTicksAlive;
+	private int maxTicksAlive;
 	private float lightningFrequency;
 	private boolean playerControl;
 	private float amountofBolts;
 	private float boltAccuracy;
 	private int Speed;
-
+	Random random = new Random();
 	/**
 	 * @param world
 	 */
@@ -31,7 +33,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 
 	public void setSpeed(int speed) {this.Speed = speed;}
 
-	public void setDuration(float ticks) {
+	public void setDuration(int ticks) {
 		this.maxTicksAlive = ticks;
 	}
 
@@ -75,18 +77,23 @@ public class EntityLightningSpawner extends AvatarEntity {
 
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 
-		if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
-			if (amountofBolts == 1) {
+
+			if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
+				if (amountofBolts == 1) {
+
 				BlockPos blockPos = this.getPosition();
-				EntityLightningBolt bolt = new EntityLightningBolt(world, blockPos.getX() + Pos, blockPos.getY(),
-						blockPos.getZ() + Pos, false);
+				EntityLightning bolt = new EntityLightning(world, blockPos.getX() + Pos, blockPos.getY(),
+						blockPos.getZ() + Pos);
+				bolt.setBoltLivingTime(random.nextInt(3) + 1);
 				world.addWeatherEffect(bolt);
+
 			}
 			else {
 				for (int i = 0; i<amountofBolts; i++){
 					BlockPos blockPos = this.getPosition();
-					EntityLightningBolt bolt = new EntityLightningBolt(world, blockPos.getX() + Pos, blockPos.getY(),
-							blockPos.getZ() + Pos, false);
+					EntityLightning bolt = new EntityLightning(world, blockPos.getX() + Pos, blockPos.getY(),
+							blockPos.getZ() + Pos);
+					bolt.setBoltLivingTime(random.nextInt(3) + 1);
 					world.addWeatherEffect(bolt);
 
 				}

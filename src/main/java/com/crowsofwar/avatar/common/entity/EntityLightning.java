@@ -17,7 +17,8 @@ public class EntityLightning extends AvatarEntity {
 	/** A random long that is used to change the vertex of the lightning rendered in RenderLightningBolt */
 	public long boltVertex;
 	/** Determines the time before the EntityLightningBolt is destroyed. It is a random integer decremented over time. */
-	private int boltLivingTime = this.rand.nextInt(3) + 1;
+	private int boltLivingTime;
+	//Can be manipulated for laser-like lightning attacks from the heavens
 
 	public void setBoltLivingTime (int livingTime) {this.boltLivingTime = livingTime;}
 
