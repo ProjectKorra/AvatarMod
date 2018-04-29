@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
@@ -98,6 +99,9 @@ public class AbilityLightningRaze extends Ability {
 					EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
 					boltSpawner.setOwner(entity);
 					boltSpawner.setPosition(lookPos.withY(entity.posY));
+					if (entity.isAirBorne){
+
+					}
 					boltSpawner.setVelocity(look.times(speed));
 					boltSpawner.setSpeed(speed);
 					//This is so that the player can control the entity; otherwise unnecessary.
