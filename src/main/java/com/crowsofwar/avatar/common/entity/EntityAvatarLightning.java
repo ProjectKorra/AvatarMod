@@ -1,64 +1,54 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityWeatherEffect;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 
 import java.util.List;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-public class EntityAvatarLightning extends EntityWeatherEffect {
+
+public class EntityAvatarLightning extends EntityWeatherEffect
+{
 	/** Declares which state the lightning bolt is in. Whether it's in the air, hit the ground, etc. */
 	private int lightningState;
 	/** A random long that is used to change the vertex of the lightning rendered in RenderLightningBolt */
 	public long boltVertex;
 	/** Determines the time before the EntityLightningBolt is destroyed. It is a random integer decremented over time. */
 	private int boltLivingTime;
-	//Can be manipulated for laser-like lightning attacks from the heavens
-	private float Damage;
 
-	public void setBoltLivingTime (int livingTime) {this.boltLivingTime = livingTime;}
-
-	public void setDamage (float damage) {this.Damage = damage;}
-
-    public EntityAvatarLightning(World world, double x, double y, double z)
+	public EntityAvatarLightning(World worldIn, double x, double y, double z)
 	{
-		super(world);
+		super(worldIn);
 		this.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 		this.lightningState = 2;
-		this.boltLivingTime = this.rand.nextInt(3) - 1;
 		this.boltVertex = this.rand.nextLong();
+		this.boltLivingTime = this.rand.nextInt(3) + 1;
 		BlockPos blockpos = new BlockPos(this);
 
-		if (!world.isRemote && world.getGameRules().getBoolean("doFireTick") && world.isAreaLoaded(blockpos, 10))
+		if (!worldIn.isRemote && worldIn.getGameRules().getBoolean("doFireTick")&& worldIn.isAreaLoaded(blockpos, 10))
 		{
-			if (world.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(world, blockpos))
+			if (worldIn.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(worldIn, blockpos))
 			{
-				world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
+				worldIn.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 			}
 
 			for (int i = 0; i < 4; ++i)
 			{
 				BlockPos blockpos1 = blockpos.add(this.rand.nextInt(3) - 1, this.rand.nextInt(3) - 1, this.rand.nextInt(3) - 1);
 
-				if (world.getBlockState(blockpos1).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(world, blockpos1))
+				if (worldIn.getBlockState(blockpos1).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(worldIn, blockpos1))
 				{
-					world.setBlockState(blockpos1, Blocks.FIRE.getDefaultState());
+					worldIn.setBlockState(blockpos1, Blocks.FIRE.getDefaultState());
 				}
 			}
 		}
@@ -69,31 +59,12 @@ public class EntityAvatarLightning extends EntityWeatherEffect {
 		return SoundCategory.WEATHER;
 	}
 
-
-
 	/**
 	 * Called to update the entity's position/logic.
 	 */
-	@Override
 	public void onUpdate()
 	{
 		super.onUpdate();
-		/*if (!isDead && !world.isRemote) {
-			List<Entity> collidedList = world.getEntitiesWithinAABB(Entity.class,
-					getEntityBoundingBox());
-
-			if (!collidedList.isEmpty()) {
-
-				Entity collided = collidedList.get(0);
-
-				if (collided instanceof AvatarEntity) {
-					((AvatarEntity) collided).onFireContact();
-				} else if (collided instanceof EntityLivingBase) {
-					handleCollision((EntityLivingBase) collided);
-				}
-
-			}
-		}**/
 
 		if (this.lightningState == 2)
 		{
@@ -133,31 +104,26 @@ public class EntityAvatarLightning extends EntityWeatherEffect {
 			{
 				this.world.setLastLightningBolt(2);
 			}
+			else if (!this.world.isRemote)
+			{
+			/*	double d0 = 3.0D;
+				List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB
+						(this.posX - 3.0D, this.posY - 3.0D, this.posZ - 3.0D, this.posX + 3.0D, this.posY + 6.0D + 3.0D, this.posZ + 3.0D));
+
+				for (int i = 0; i < list.size(); ++i)
+				{
+					Entity entity = list.get(i);
+					if (!MinecraftForge.EVENT_BUS.post(new EntityStruckByLightningEvent(entity, this)))
+						entity.onStruckByLightning(this);
+				}**/
+			}
 		}
 	}
 
 	protected void entityInit()
 	{
 	}
-	/*private void handleCollision(EntityLivingBase collided) {
 
-		DamageSource source = AvatarDamageSource.causeLightningDamage(collided, getOwner());
-
-		boolean successfulHit = collided.attackEntityFrom(source, Damage);
-
-		Vector motion = velocity();
-		motion = motion.times(STATS_CONFIG.airbladeSettings.push).withY(0.08);
-		collided.addVelocity(motion.x(), motion.y(), motion.z());
-
-	/*	if (getOwner() != null) {
-			BendingData data = getOwner().getDataManager();
-			data.getAbilityData("airblade").addXp(SKILLS_CONFIG.airbladeHit);
-		}**/
-
-		/*if (successfulHit) {
-			BattlePerformanceScore.addSmallScore(getOwner());
-		}
-	}**/
 	/**
 	 * (abstract) Protected helper method to read subclass entity data from NBT.
 	 */
