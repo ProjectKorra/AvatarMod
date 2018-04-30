@@ -79,18 +79,24 @@ public class EntityLightningSpawner extends AvatarEntity {
 			setDead();
 		}
 
-		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 
 
-			if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
+		if (!world.isRemote){
+			BlockPos blockPos = this.getPosition();
+			world.addWeatherEffect(new EntityAvatarLightning(world, blockPos.getX()+ Pos, blockPos.getY(),
+					blockPos.getZ() + Pos ));
+		}
+
+			/*if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
 				if (amountofBolts == 1) {
 
 				BlockPos blockPos = this.getPosition();
 				EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
 						blockPos.getZ() + Pos);
-				bolt.setBoltLivingTime(random.nextInt(3) + 1);
-				bolt.setDamage(Damage);
-				world.addWeatherEffect(bolt);
+				//bolt.setBoltLivingTime(random.nextInt(3) + 1);
+				//bolt.setDamage(Damage);
+				world.addWeatherEffect(new EntityAvatarLightning(world, blockPos.getX()+ Pos, blockPos.getY(),
+						blockPos.getZ() + Pos ));
 
 			}
 			else {
@@ -98,13 +104,16 @@ public class EntityLightningSpawner extends AvatarEntity {
 					BlockPos blockPos = this.getPosition();
 					EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
 							blockPos.getZ() + Pos);
-					bolt.setBoltLivingTime(random.nextInt(3) + 1);
-					bolt.setDamage(Damage);
-					world.addWeatherEffect(bolt);
+					//bolt.setBoltLivingTime(random.nextInt(3) + 1);
+					//bolt.setDamage(Damage);
+
+					world.addWeatherEffect(new EntityAvatarLightning(world, blockPos.getX()+ Pos, blockPos.getY(),
+							blockPos.getZ() + Pos ));
 
 				}
 			}
-		}
+		}**/
+		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 
 		if (!world.getBlockState(below).isNormalCube()) {
 			setDead();

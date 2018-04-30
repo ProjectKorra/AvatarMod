@@ -9,6 +9,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.effect.EntityWeatherEffect;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,7 +22,7 @@ import net.minecraft.world.World;
 import java.util.List;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-public class EntityAvatarLightning extends AvatarEntity {
+public class EntityAvatarLightning extends EntityWeatherEffect {
 	/** Declares which state the lightning bolt is in. Whether it's in the air, hit the ground, etc. */
 	private int lightningState;
 	/** A random long that is used to change the vertex of the lightning rendered in RenderLightningBolt */
@@ -44,7 +45,7 @@ public class EntityAvatarLightning extends AvatarEntity {
 		this.boltVertex = this.rand.nextLong();
 		BlockPos blockpos = new BlockPos(this);
 
-		if (!world.isRemote && world.getGameRules().getBoolean("doFireTick") && (world.getDifficulty() == EnumDifficulty.NORMAL || world.getDifficulty() == EnumDifficulty.HARD) && world.isAreaLoaded(blockpos, 10))
+		if (!world.isRemote && world.getGameRules().getBoolean("doFireTick") && world.isAreaLoaded(blockpos, 10))
 		{
 			if (world.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(world, blockpos))
 			{
