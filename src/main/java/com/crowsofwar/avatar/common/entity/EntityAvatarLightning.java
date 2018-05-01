@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.effect.EntityWeatherEffect;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -17,7 +18,7 @@ import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 import java.util.List;
 
 
-public class EntityAvatarLightning extends EntityWeatherEffect
+public class EntityAvatarLightning extends EntityLightningBolt
 {
 	/** Declares which state the lightning bolt is in. Whether it's in the air, hit the ground, etc. */
 	private int lightningState;
@@ -26,29 +27,29 @@ public class EntityAvatarLightning extends EntityWeatherEffect
 	/** Determines the time before the EntityLightningBolt is destroyed. It is a random integer decremented over time. */
 	private int boltLivingTime;
 
-	public EntityAvatarLightning(World worldIn, double x, double y, double z)
+	public EntityAvatarLightning(World world, double x, double y, double z)
 	{
-		super(worldIn);
+		super(world, x, y, z, false);
 		this.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 		this.lightningState = 2;
 		this.boltVertex = this.rand.nextLong();
 		this.boltLivingTime = this.rand.nextInt(3) + 1;
 		BlockPos blockpos = new BlockPos(this);
 
-		if (!worldIn.isRemote && worldIn.getGameRules().getBoolean("doFireTick")&& worldIn.isAreaLoaded(blockpos, 10))
+		if (!world.isRemote && world.getGameRules().getBoolean("doFireTick")&& world.isAreaLoaded(blockpos, 10))
 		{
-			if (worldIn.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(worldIn, blockpos))
+			if (world.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(world, blockpos))
 			{
-				worldIn.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
+				world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 			}
 
 			for (int i = 0; i < 4; ++i)
 			{
 				BlockPos blockpos1 = blockpos.add(this.rand.nextInt(3) - 1, this.rand.nextInt(3) - 1, this.rand.nextInt(3) - 1);
 
-				if (worldIn.getBlockState(blockpos1).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(worldIn, blockpos1))
+				if (world.getBlockState(blockpos1).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(world, blockpos1))
 				{
-					worldIn.setBlockState(blockpos1, Blocks.FIRE.getDefaultState());
+					world.setBlockState(blockpos1, Blocks.FIRE.getDefaultState());
 				}
 			}
 		}
@@ -106,7 +107,7 @@ public class EntityAvatarLightning extends EntityWeatherEffect
 			}
 			else if (!this.world.isRemote)
 			{
-			/*	double d0 = 3.0D;
+				double d0 = 3.0D;
 				List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB
 						(this.posX - 3.0D, this.posY - 3.0D, this.posZ - 3.0D, this.posX + 3.0D, this.posY + 6.0D + 3.0D, this.posZ + 3.0D));
 
@@ -115,7 +116,7 @@ public class EntityAvatarLightning extends EntityWeatherEffect
 					Entity entity = list.get(i);
 					if (!MinecraftForge.EVENT_BUS.post(new EntityStruckByLightningEvent(entity, this)))
 						entity.onStruckByLightning(this);
-				}**/
+				}
 			}
 		}
 	}
