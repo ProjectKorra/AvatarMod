@@ -27,6 +27,12 @@ public class EntityAvatarLightning extends EntityLightningBolt
 	/** Determines the time before the EntityLightningBolt is destroyed. It is a random integer decremented over time. */
 	private int boltLivingTime;
 
+	private float Damage;
+
+	public void setDamage (float damage) {this.Damage = damage;}
+
+	public void setBoltLivingTime (int livingTime) {this.boltLivingTime = livingTime;}
+
 	public EntityAvatarLightning(World world, double x, double y, double z)
 	{
 		super(world, x, y, z, false);
