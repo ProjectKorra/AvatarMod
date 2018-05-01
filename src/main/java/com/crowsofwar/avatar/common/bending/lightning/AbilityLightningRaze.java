@@ -1,5 +1,6 @@
-package com.crowsofwar.avatar.common.bending;
+package com.crowsofwar.avatar.common.bending.lightning;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -111,7 +112,7 @@ public class AbilityLightningRaze extends Ability {
 					boltSpawner.setAmountofBolts(bolts) ;
 					boltSpawner.setAccuracy(accuracy);
 					boltSpawner.setDamage(damage);
-					//Doesn't actually damage the target; this is so EntityLightning can access this class' damage values.
+					//Doesn't actually damage the target; this is so EntityAvatarLightning can access this class' damage values.
 					world.spawnEntity(boltSpawner);
 
 			}

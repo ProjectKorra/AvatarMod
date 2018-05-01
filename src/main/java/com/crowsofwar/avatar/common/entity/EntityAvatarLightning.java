@@ -1,12 +1,22 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.effect.EntityWeatherEffect;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -16,6 +26,10 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 
 import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 
 public class EntityAvatarLightning extends EntityLightningBolt
@@ -120,6 +134,12 @@ public class EntityAvatarLightning extends EntityLightningBolt
 				for (int i = 0; i < list.size(); ++i)
 				{
 					Entity entity = list.get(i);
+					if (entity instanceof AvatarEntity){
+						entity.onStruckByLightning(this);
+					}
+					else if (entity instanceof EntityLivingBase){
+						handleCollision((EntityLivingBase) entity);
+					}
 					if (!MinecraftForge.EVENT_BUS.post(new EntityStruckByLightningEvent(entity, this)))
 						entity.onStruckByLightning(this);
 				}
@@ -127,10 +147,37 @@ public class EntityAvatarLightning extends EntityLightningBolt
 		}
 	}
 
+
+
 	protected void entityInit()
 	{
 	}
+	private void handleCollision(EntityLivingBase collided) {
+		damageEntity(collided, Damage);
 
+	}
+
+	private void damageEntity(EntityLivingBase entity, float damage) {
+
+		if (world.isRemote) {
+			return;
+		}
+		damage = Damage;
+
+
+
+		EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
+		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, boltSpawner.getOwner());
+		if (entity.attackEntityFrom(damageSource, damage)) {
+
+			if (boltSpawner.getOwner() != null) {
+				BendingData data = BendingData.get(boltSpawner.getOwner());
+				AbilityData abilityData = data.getAbilityData("lightning_raze");
+				abilityData.addXp(SKILLS_CONFIG.struckWithLightning);
+			}
+		}
+
+	}
 	/**
 	 * (abstract) Protected helper method to read subclass entity data from NBT.
 	 */
