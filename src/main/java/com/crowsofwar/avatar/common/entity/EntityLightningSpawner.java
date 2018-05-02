@@ -1,11 +1,15 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRaze;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -25,13 +29,20 @@ public class EntityLightningSpawner extends AvatarEntity {
 	/**
 	 * @param world
 	 */
+
 	public EntityLightningSpawner(World world) {
 		super(world);
 		setSize(.01F, .01F);
 
 	}
 
-	public void setDamage (float damage) {this.Damage = damage;}
+	public float getDamage(){
+		return Damage;
+	}
+
+	public void setDamage (float damage) {
+		this.Damage = damage;
+	}
 
 	public void setSpeed(int speed) {this.Speed = speed;}
 
@@ -48,8 +59,10 @@ public class EntityLightningSpawner extends AvatarEntity {
 	public void setAccuracy (float accuracy) {this.boltAccuracy = accuracy;}
 
 
-
-
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+	}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {

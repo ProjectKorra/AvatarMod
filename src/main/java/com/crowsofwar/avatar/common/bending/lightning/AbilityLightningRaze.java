@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpawner;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.BlockPos;
@@ -18,8 +19,15 @@ import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 public class AbilityLightningRaze extends Ability {
 	public AbilityLightningRaze() {
-	super(Lightningbending.ID, "lightning_raze");
-}
+		super(Lightningbending.ID, "lightning_raze");
+	}
+
+	public float damage = 4;
+
+	public float getDamage() {
+		return damage;
+	}
+
 
 	@Override
 	public void execute(AbilityContext ctx) {
@@ -36,10 +44,9 @@ public class AbilityLightningRaze extends Ability {
 		//How many ticks pass before each lightning bolt strikes.
 		int bolts = 1;
 		float accuracy = 2;
-		float damage = 4;
+
 		/*0 accuracy is the most accurate; each number represents how far away from the spawn position
 		it will be.**/
-
 
 
 		if (ctx.getLevel() >= 1) {
@@ -82,41 +89,46 @@ public class AbilityLightningRaze extends Ability {
 		}
 
 		if (bender.consumeChi(chi)) {
+			Raytrace.Result hit = Raytrace.getTargetBlock(entity, 6);
 
-					if (ctx.getLevel() <= 0){
-						data.getAbilityData("lightning_raze").addXp(3);
-					}
-					if (ctx.getLevel() == 1){
-						data.getAbilityData("lightning_raze").addXp(2);
-					}
-					if (ctx.getLevel() == 2){
-						data.getAbilityData("lightning_raze").addXp(1);
-					}
-
-					Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-					Vector playerPos = getEyePos(entity);
-					Vector lookPos = playerPos.plus(getLookRectangular(entity).times(1.3));
-
-					EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
-					boltSpawner.setOwner(entity);
-					boltSpawner.setPosition(lookPos.withY(entity.posY));
-					if (entity.isAirBorne){
-
-					}
-					boltSpawner.setVelocity(look.times(speed));
-					boltSpawner.setSpeed(speed);
-					//This is so that the player can control the entity; otherwise unnecessary.
-					boltSpawner.setDuration(ticks);
-					boltSpawner.setLightningFrequency(frequency);
-					boltSpawner.setPlayerControl(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
-					boltSpawner.setAmountofBolts(bolts) ;
-					boltSpawner.setAccuracy(accuracy);
-					boltSpawner.setDamage(damage);
-					//Doesn't actually damage the target; this is so EntityAvatarLightning can access this class' damage values.
-					world.spawnEntity(boltSpawner);
-
+			if (ctx.getLevel() <= 0) {
+				data.getAbilityData("lightning_raze").addXp(3);
+			}
+			if (ctx.getLevel() == 1) {
+				data.getAbilityData("lightning_raze").addXp(3);
+				hit = Raytrace.getTargetBlock(entity, 10);
+			}
+			if (ctx.getLevel() == 2) {
+				data.getAbilityData("lightning_raze").addXp(3);
+			}
+			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+				hit = Raytrace.getTargetBlock(entity, 8);
+			}
+			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+				hit = Raytrace.getTargetBlock(entity, 20);
 			}
 
+			Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
+			Vector playerPos = getEyePos(entity);
+			Vector lookPos = playerPos.plus(getLookRectangular(entity).times(1.3));
+			Vector hitAt = hit.getPosPrecise();
+
+			EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
+			boltSpawner.setOwner(entity);
+		//	boltSpawner.setPosition(lookPos.withY(entity.posY));
+			boltSpawner.setPosition(hitAt.x(), hitAt.y(), hitAt.z());
+			boltSpawner.setVelocity(look.times(speed));
+			boltSpawner.setSpeed(speed);
+			//This is so that the player can control the entity; otherwise unnecessary.
+			boltSpawner.setDuration(ticks);
+			boltSpawner.setLightningFrequency(frequency);
+			boltSpawner.setPlayerControl(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
+			boltSpawner.setAmountofBolts(bolts);
+			boltSpawner.setAccuracy(accuracy);
+			world.spawnEntity(boltSpawner);
+
 		}
+
 	}
+}
 
