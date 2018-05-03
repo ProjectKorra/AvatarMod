@@ -22,7 +22,7 @@ public class AbilityLightningRaze extends Ability {
 		super(Lightningbending.ID, "lightning_raze");
 	}
 
-	public float damage = 4;
+	public float damageMult = 1;
 
 	@Override
 	public void execute(AbilityContext ctx) {
@@ -59,7 +59,7 @@ public class AbilityLightningRaze extends Ability {
 			chi = 7;
 			bolts = 3;
 			accuracy = 2;
-			damage = 10;
+			damageMult = 2;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			frequency = 2;
@@ -68,7 +68,7 @@ public class AbilityLightningRaze extends Ability {
 			speed = 20;
 			chi = 6;
 			accuracy = 0;
-			damage = 20;
+			damageMult = 4;
 			//Super-fast line of lightning that lights up the ground
 			//Zeus' Wrath
 		}
@@ -79,7 +79,7 @@ public class AbilityLightningRaze extends Ability {
 			chi = 8;
 			bolts = 5;
 			accuracy = 3;
-			damage = 2;
+			damageMult = 0.5F;
 			//Thor's wrath
 		}
 
@@ -108,7 +108,7 @@ public class AbilityLightningRaze extends Ability {
 			boltSpawner.setVelocity(look.times(speed));
 			boltSpawner.setSpeed(speed);
 			//This is so that the player can control the entity; otherwise unnecessary.
-			boltSpawner.setDamage(damage);
+			boltSpawner.setDamageMult(damageMult);
 			boltSpawner.setDuration(ticks);
 			boltSpawner.setLightningFrequency(frequency);
 			boltSpawner.setPlayerControl(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));

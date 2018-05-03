@@ -24,13 +24,13 @@ public class EntityLightningSpawner extends AvatarEntity {
 	private float amountofBolts;
 	private float boltAccuracy;
 	private int Speed;
-	private float Damage;
+	private float damageMult;
 	Random random = new Random();
 	/**
 	 * @param world
 	 */
 
-	public static final DataParameter<Float> SYNC_DAMAGE = EntityDataManager.createKey(EntityLightningSpawner.class,
+	private static final DataParameter<Float> SYNC_DAMAGE_MULT = EntityDataManager.createKey(EntityLightningSpawner.class,
 			DataSerializers.FLOAT);
 
 	public EntityLightningSpawner(World world) {
@@ -39,44 +39,56 @@ public class EntityLightningSpawner extends AvatarEntity {
 
 	}
 
-	public float getDamage(){
-		return dataManager.get(SYNC_DAMAGE);
+	public float getDamageMult() {
+		return dataManager.get(SYNC_DAMAGE_MULT);
 	}
 
-	public void setDamage (float Damage) {
-		dataManager.set(SYNC_DAMAGE, Damage);
+	public void setDamageMult(float damageMult) {
+		dataManager.set(SYNC_DAMAGE_MULT, damageMult);
 	}
 
-	public void setSpeed(int speed) {this.Speed = speed;}
+	public void setSpeed(int speed) {
+		this.Speed = speed;
+	}
 
 	public void setDuration(int ticks) {
 		this.maxTicksAlive = ticks;
 	}
 
-	public void setLightningFrequency(float ticks) {this.lightningFrequency = ticks;}
+	public void setLightningFrequency(float ticks) {
+		this.lightningFrequency = ticks;
+	}
 
-	public void setPlayerControl(boolean shouldControl) {this.playerControl = shouldControl;}
+	public void setPlayerControl(boolean shouldControl) {
+		this.playerControl = shouldControl;
+	}
 
-	public void setAmountofBolts (float amount) {this.amountofBolts = amount;}
+	public void setAmountofBolts(float amount) {
+		this.amountofBolts = amount;
+	}
 
-	public void setAccuracy (float accuracy) {this.boltAccuracy = accuracy;}
+	public void setAccuracy(float accuracy) {
+		this.boltAccuracy = accuracy;
+	}
 
 
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_DAMAGE, 4F);
+		dataManager.register(SYNC_DAMAGE_MULT, 1F);
 	}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
+		setDamageMult(nbt.getFloat("damageMult"));
 		setDead();
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
+		nbt.setFloat("damageMult", damageMult);
 	}
 
 	@Override
@@ -84,42 +96,38 @@ public class EntityLightningSpawner extends AvatarEntity {
 		super.onUpdate();
 
 
-
 		if (playerControl && !this.isDead) {
 			this.rotationYaw = getOwner().rotationYaw;
 			Vector direction = Vector.toRectangular(Math.toRadians(this.rotationYaw), 0);
 			this.setVelocity(direction.times(Speed));
 		}
-		float Pos = 0 + rand.nextFloat() * (boltAccuracy - 0);
-
 		if (!world.isRemote && ticksExisted >= maxTicksAlive) {
 			setDead();
 		}
 
+		float Pos = 0 + rand.nextFloat() * (boltAccuracy - 0);
 
-
-			if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
-				if (amountofBolts == 1) {
+		if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
+			if (amountofBolts == 1) {
 
 				BlockPos blockPos = this.getPosition();
 				EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
 						blockPos.getZ() + Pos);
 				bolt.setBoltLivingTime(random.nextInt(3) + 1);
-				bolt.setDamage(Damage);
-				world.addWeatherEffect(new EntityAvatarLightning(world, blockPos.getX()+ Pos, blockPos.getY(),
-						blockPos.getZ() + Pos ));
+				bolt.setDamageMult(damageMult);
+				world.addWeatherEffect(new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
+						blockPos.getZ() + Pos));
 
-			}
-			else {
-				for (int i = 0; i<amountofBolts; i++){
+			} else {
+				for (int i = 0; i < amountofBolts; i++) {
 					BlockPos blockPos = this.getPosition();
 					EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
 							blockPos.getZ() + Pos);
 					bolt.setBoltLivingTime(random.nextInt(3) + 1);
-					bolt.setDamage(Damage);
+					bolt.setDamageMult(damageMult);
 
-					world.addWeatherEffect(new EntityAvatarLightning(world, blockPos.getX()+ Pos, blockPos.getY(),
-							blockPos.getZ() + Pos ));
+					world.addWeatherEffect(new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
+							blockPos.getZ() + Pos));
 
 				}
 			}

@@ -26,7 +26,7 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 
 public class EntityAvatarLightning extends EntityLightningBolt {
-	public static final DataParameter<Float> SYNC_DAMAGE = EntityDataManager.createKey(EntityAvatarLightning.class,
+	private static final DataParameter<Float> SYNC_DAMAGE_MULT = EntityDataManager.createKey(EntityAvatarLightning.class,
 			DataSerializers.FLOAT);
 
 	/**
@@ -42,14 +42,14 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	 */
 	private int boltLivingTime;
 
-	private float Damage;
+	private float damageMult;
 
-	public float getDamage() {
-		return dataManager.get(SYNC_DAMAGE);
+	public float getDamageMult() {
+		return dataManager.get(SYNC_DAMAGE_MULT);
 	}
 
-	public void setDamage(float Damage) {
-		dataManager.set(SYNC_DAMAGE, Damage);
+	public void setDamageMult(float damageMult) {
+		dataManager.set(SYNC_DAMAGE_MULT, damageMult);
 	}
 
 	public void setBoltLivingTime(int livingTime) {
@@ -59,7 +59,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	@Override
 	public void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_DAMAGE, 4F);
+		dataManager.register(SYNC_DAMAGE_MULT, 1F);
 	}
 
 	public EntityAvatarLightning(World world, double x, double y, double z) {
@@ -143,7 +143,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 
 	private void handleCollision(EntityLivingBase collided) {
-		damageEntity(collided, Damage);
+		damageEntity(collided, 5 * damageMult);
 
 	}
 
@@ -152,13 +152,13 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 		if (world.isRemote) {
 			return;
 		}
-		damage = Damage;
+		damage = damageMult * 5;
 
 
 		EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
 		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, boltSpawner.getOwner());
 		if (entity.attackEntityFrom(damageSource, damage)) {
-			System.out.println(Damage);
+			System.out.println(damageMult);
 
 			if (boltSpawner.getOwner() != null) {
 				BendingData data = BendingData.get(boltSpawner.getOwner());
@@ -175,7 +175,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		//setDamage(nbt.getFloat("Damage"));
+		setDamageMult(nbt.getFloat("damageMult"));
 	}
 
 	/**
@@ -184,6 +184,6 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		//nbt.setFloat("Damage", Damage);
+		nbt.setFloat("damageMult", damageMult);
 	}
 }
