@@ -116,8 +116,5 @@ public class AbilityLightningRaze extends Ability {
 		}
 
 	}
-	public float getDamageMult(){
-		return this.damageMult;
-	}
 }
 

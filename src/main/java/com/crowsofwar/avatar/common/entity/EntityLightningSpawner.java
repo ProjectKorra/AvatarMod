@@ -24,7 +24,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 	private float amountofBolts;
 	private float boltAccuracy;
 	private int Speed;
-	private float damageMult;
+	private float damageMult = 1;
 	Random random = new Random();
 	/**
 	 * @param world
@@ -43,8 +43,12 @@ public class EntityLightningSpawner extends AvatarEntity {
 		return dataManager.get(SYNC_DAMAGE_MULT);
 	}
 
-	public void setDamageMult(float damageMult) {
+	/*public void setDamageMult(float damageMult) {
 		dataManager.set(SYNC_DAMAGE_MULT, damageMult);
+	}**/
+
+	public void setDamageMult(float mult) {
+		this.damageMult = mult;
 	}
 
 	public void setSpeed(int speed) {
