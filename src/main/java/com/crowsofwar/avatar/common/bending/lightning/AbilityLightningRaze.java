@@ -80,7 +80,7 @@ public class AbilityLightningRaze extends Ability {
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			frequency = 4;
 			ticks = 60;
-			speed = 5;
+			speed = 3;
 			chi = 8;
 			bolts = 5;
 			accuracy = 3;
@@ -115,8 +115,12 @@ public class AbilityLightningRaze extends Ability {
 
 			EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
 			boltSpawner.setOwner(entity);
-		//	boltSpawner.setPosition(lookPos.withY(entity.posY));
-			boltSpawner.setPosition(hitAt.x(), hitAt.y(), hitAt.z());
+			if (hit.hitSomething()) {
+				boltSpawner.setPosition(hitAt.x(), hitAt.y(), hitAt.z());
+			}
+			else {
+				boltSpawner.setPosition(lookPos.withY(entity.posY));
+			}
 			boltSpawner.setVelocity(look.times(speed));
 			boltSpawner.setSpeed(speed);
 			//This is so that the player can control the entity; otherwise unnecessary.
