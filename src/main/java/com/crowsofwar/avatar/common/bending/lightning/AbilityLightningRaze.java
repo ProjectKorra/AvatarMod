@@ -90,17 +90,7 @@ public class AbilityLightningRaze extends Ability {
 
 		if (bender.consumeChi(chi)) {
 			Raytrace.Result hit = Raytrace.getTargetBlock(entity, 6);
-
-			if (ctx.getLevel() <= 0) {
-				data.getAbilityData("lightning_raze").addXp(3);
-			}
-			if (ctx.getLevel() == 1) {
-				data.getAbilityData("lightning_raze").addXp(3);
-				hit = Raytrace.getTargetBlock(entity, 10);
-			}
-			if (ctx.getLevel() == 2) {
-				data.getAbilityData("lightning_raze").addXp(3);
-			}
+			
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 				hit = Raytrace.getTargetBlock(entity, 8);
 			}

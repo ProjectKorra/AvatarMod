@@ -159,7 +159,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 		EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
 		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, boltSpawner.getOwner());
-		if (entity.attackEntityFrom(damageSource, damage)) {
+		if (entity.attackEntityFrom(damageSource, 20)) {
 			System.out.println(Damage);
 
 			if (boltSpawner.getOwner() != null) {
