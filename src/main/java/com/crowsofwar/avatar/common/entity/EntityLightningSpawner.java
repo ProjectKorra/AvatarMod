@@ -30,6 +30,9 @@ public class EntityLightningSpawner extends AvatarEntity {
 	 * @param world
 	 */
 
+	public static final DataParameter<Float> SYNC_DAMAGE = EntityDataManager.createKey(EntityLightningSpawner.class,
+			DataSerializers.FLOAT);
+
 	public EntityLightningSpawner(World world) {
 		super(world);
 		setSize(.01F, .01F);
@@ -37,11 +40,11 @@ public class EntityLightningSpawner extends AvatarEntity {
 	}
 
 	public float getDamage(){
-		return Damage;
+		return dataManager.get(SYNC_DAMAGE);
 	}
 
-	public void setDamage (float damage) {
-		this.Damage = damage;
+	public void setDamage (float Damage) {
+		dataManager.set(SYNC_DAMAGE, Damage);
 	}
 
 	public void setSpeed(int speed) {this.Speed = speed;}
@@ -62,6 +65,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 	@Override
 	protected void entityInit() {
 		super.entityInit();
+		dataManager.register(SYNC_DAMAGE, 4F);
 	}
 
 	@Override

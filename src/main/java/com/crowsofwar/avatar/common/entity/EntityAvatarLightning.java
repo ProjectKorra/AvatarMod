@@ -58,7 +58,6 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 	@Override
 	public void entityInit() {
-		AbilityLightningRaze lightningRaze = new AbilityLightningRaze();
 		super.entityInit();
 		dataManager.register(SYNC_DAMAGE, 4F);
 	}
@@ -158,7 +157,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 		EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
 		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, boltSpawner.getOwner());
-		if (entity.attackEntityFrom(damageSource, Damage)) {
+		if (entity.attackEntityFrom(damageSource, damage)) {
 			System.out.println(Damage);
 
 			if (boltSpawner.getOwner() != null) {
@@ -176,7 +175,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		setDamage(nbt.getFloat("Damage"));
+		//setDamage(nbt.getFloat("Damage"));
 	}
 
 	/**
@@ -184,8 +183,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	 */
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		AbilityLightningRaze lightningRaze = new AbilityLightningRaze();
 		super.writeEntityToNBT(nbt);
-		nbt.setFloat("Damage", lightningRaze.getDamage());
+		//nbt.setFloat("Damage", Damage);
 	}
 }

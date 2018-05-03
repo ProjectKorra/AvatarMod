@@ -59,7 +59,7 @@ public class AbilityLightningRaze extends Ability {
 			chi = 7;
 			bolts = 3;
 			accuracy = 2;
-			damage = 5;
+			damage = 10;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			frequency = 2;
@@ -68,7 +68,7 @@ public class AbilityLightningRaze extends Ability {
 			speed = 20;
 			chi = 6;
 			accuracy = 0;
-			damage = 10;
+			damage = 20;
 			//Super-fast line of lightning that lights up the ground
 			//Zeus' Wrath
 		}
