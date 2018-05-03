@@ -19,10 +19,10 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-
 
 
 public class EntityAvatarLightning extends EntityLightningBolt {
@@ -44,12 +44,12 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 	private float Damage;
 
-	public float getDamage(){
-		return Damage;
+	public float getDamage() {
+		return dataManager.get(SYNC_DAMAGE);
 	}
 
-	public void setDamage(float damage) {
-		this.Damage = damage;
+	public void setDamage(float Damage) {
+		dataManager.set(SYNC_DAMAGE, Damage);
 	}
 
 	public void setBoltLivingTime(int livingTime) {
@@ -60,9 +60,10 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	public void entityInit() {
 		AbilityLightningRaze lightningRaze = new AbilityLightningRaze();
 		super.entityInit();
-		dataManager.register(SYNC_DAMAGE, lightningRaze.getDamage());
+		dataManager.register(SYNC_DAMAGE, 4F);
 	}
-		public EntityAvatarLightning(World world, double x, double y, double z) {
+
+	public EntityAvatarLightning(World world, double x, double y, double z) {
 		super(world, x, y, z, false);
 		this.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 		this.lightningState = 2;
@@ -142,8 +143,6 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	}
 
 
-
-
 	private void handleCollision(EntityLivingBase collided) {
 		damageEntity(collided, Damage);
 
@@ -159,7 +158,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 		EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
 		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, boltSpawner.getOwner());
-		if (entity.attackEntityFrom(damageSource, 20)) {
+		if (entity.attackEntityFrom(damageSource, Damage)) {
 			System.out.println(Damage);
 
 			if (boltSpawner.getOwner() != null) {

@@ -24,11 +24,6 @@ public class AbilityLightningRaze extends Ability {
 
 	public float damage = 4;
 
-	public float getDamage() {
-		return damage;
-	}
-
-
 	@Override
 	public void execute(AbilityContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
@@ -107,19 +102,20 @@ public class AbilityLightningRaze extends Ability {
 			boltSpawner.setOwner(entity);
 			if (hit.hitSomething()) {
 				boltSpawner.setPosition(hitAt.x(), hitAt.y(), hitAt.z());
-			}
-			else {
+			} else {
 				boltSpawner.setPosition(lookPos.withY(entity.posY));
 			}
 			boltSpawner.setVelocity(look.times(speed));
 			boltSpawner.setSpeed(speed);
 			//This is so that the player can control the entity; otherwise unnecessary.
+			boltSpawner.setDamage(damage);
 			boltSpawner.setDuration(ticks);
 			boltSpawner.setLightningFrequency(frequency);
 			boltSpawner.setPlayerControl(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
 			boltSpawner.setAmountofBolts(bolts);
 			boltSpawner.setAccuracy(accuracy);
 			world.spawnEntity(boltSpawner);
+
 
 		}
 
