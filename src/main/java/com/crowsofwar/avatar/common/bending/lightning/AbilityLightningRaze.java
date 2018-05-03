@@ -1,16 +1,13 @@
 package com.crowsofwar.avatar.common.bending.lightning;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpawner;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
@@ -22,14 +19,13 @@ public class AbilityLightningRaze extends Ability {
 		super(Lightningbending.ID, "lightning_raze");
 	}
 
-	public float damageMult = 1;
+	public float damageMult = 1F;
 
 	@Override
 	public void execute(AbilityContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		Bender bender = ctx.getBender();
-		BendingData data = ctx.getData();
 
 		int ticks = 20;
 		//How long the spawner tays alive.
@@ -59,16 +55,16 @@ public class AbilityLightningRaze extends Ability {
 			chi = 7;
 			bolts = 3;
 			accuracy = 2;
-			damageMult = 2;
+			damageMult = 1.5F;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			frequency = 2;
 			bolts = 1;
 			ticks = 40;
 			speed = 20;
-			chi = 6;
+			chi = 7;
 			accuracy = 0;
-			damageMult = 4;
+			damageMult = 3;
 			//Super-fast line of lightning that lights up the ground
 			//Zeus' Wrath
 		}
@@ -79,7 +75,7 @@ public class AbilityLightningRaze extends Ability {
 			chi = 8;
 			bolts = 5;
 			accuracy = 3;
-			damageMult = 0.5F;
+			damageMult = 0.2F;
 			//Thor's wrath
 		}
 
@@ -119,6 +115,9 @@ public class AbilityLightningRaze extends Ability {
 
 		}
 
+	}
+	public float getDamageMult(){
+		return this.damageMult;
 	}
 }
 
