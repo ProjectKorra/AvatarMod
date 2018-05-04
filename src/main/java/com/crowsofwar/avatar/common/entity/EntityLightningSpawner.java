@@ -26,23 +26,16 @@ public class EntityLightningSpawner extends AvatarEntity {
 	private float amountofBolts;
 	private float boltAccuracy;
 	private int Speed;
-	private float damageMult = 1;
+	private float damageMult;
 	Random random = new Random();
 	/**
 	 * @param world
 	 */
 
-	private static final DataParameter<Float> SYNC_DAMAGE_MULT = EntityDataManager.createKey(EntityLightningSpawner.class,
-			DataSerializers.FLOAT);
-
 	public EntityLightningSpawner(World world) {
 		super(world);
 		setSize(.01F, .01F);
 
-	}
-
-	public float getDamageMult() {
-		return dataManager.get(SYNC_DAMAGE_MULT);
 	}
 
 	/*public void setDamageMult(float damageMult) {
@@ -81,109 +74,96 @@ public class EntityLightningSpawner extends AvatarEntity {
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_DAMAGE_MULT, 1F);
 	}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		setDamageMult(nbt.getFloat("damageMult"));
 		setDead();
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		nbt.setFloat("damageMult", damageMult);
 	}
 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		if (this.getOwner() != null) {
+			float Mult = damageMult;
 			BendingData data = BendingData.get(this.getOwner());
 			AbilityData abilityData = data.getAbilityData("lightning_raze");
-			if (abilityData.getLevel() <= 0){
-				damageMult = 0.5F;
+			if (abilityData.getLevel() <= 0) {
+				Mult = 0.5F;
 			}
-			if (abilityData.getLevel() == 1){
-				damageMult = .75F;
+			if (abilityData.getLevel() == 1) {
+				Mult = .75F;
 			}
-			if (abilityData.getLevel() == 2){
-				damageMult = 1;
+			if (abilityData.getLevel() == 2) {
+				Mult = 1;
 			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)){
-				damageMult = 3;
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				Mult = 3;
 			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
-				damageMult = 0.25F;
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				Mult = 0.25F;
 			}
-		}
 
 
-		if (playerControl && !this.isDead && this.getOwner() != null) {
-			this.rotationYaw = getOwner().rotationYaw;
-			Vector direction = Vector.toRectangular(Math.toRadians(this.rotationYaw), 0);
-			this.setVelocity(direction.times(Speed));
-		}
-		if (!world.isRemote && ticksExisted >= maxTicksAlive) {
-			setDead();
-		}
+			if (playerControl && !this.isDead && this.getOwner() != null) {
+				this.rotationYaw = getOwner().rotationYaw;
+				Vector direction = Vector.toRectangular(Math.toRadians(this.rotationYaw), 0);
+				this.setVelocity(direction.times(Speed));
+			}
+			if (!world.isRemote && ticksExisted >= maxTicksAlive) {
+				setDead();
+			}
 
-		float Pos = 0 + rand.nextFloat() * (boltAccuracy - 0);
+			float Pos = 0 + rand.nextFloat() * (boltAccuracy - 0);
 
-		if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
-			if (amountofBolts == 1) {
-
-				BlockPos blockPos = this.getPosition();
-				EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
-						blockPos.getZ() + Pos);
-				bolt.setBoltLivingTime(random.nextInt(3) + 1);
-				bolt.setDamageMult(damageMult);
-				//bolt.setOwner(this.getOwner());
-				world.addWeatherEffect(new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
-						blockPos.getZ() + Pos));
-
-			} else {
+			if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
 				for (int i = 0; i < amountofBolts; i++) {
-					BlockPos blockPos = this.getPosition();
-					EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
-							blockPos.getZ() + Pos);
-					bolt.setBoltLivingTime(random.nextInt(3) + 1);
-					bolt.setDamageMult(damageMult);
-					//bolt.setOwner(this.getOwner());
-					world.addWeatherEffect(new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
-							blockPos.getZ() + Pos));
+					System.out.println(damageMult);
+						BlockPos blockPos = this.getPosition();
+						EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
+								blockPos.getZ() + Pos);
+						bolt.setBoltLivingTime(random.nextInt(3) + 1);
+						bolt.setDamageMult(Mult);
+						bolt.setOwner(this.getOwner());
+						world.spawnEntity(new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
+								blockPos.getZ() + Pos));
 
+					}
+				}
+			}
+			BlockPos below = getPosition().offset(EnumFacing.DOWN);
+
+			if (!world.getBlockState(below).isNormalCube()) {
+				setDead();
+			}
+
+
+			// Destroy if in a block
+			IBlockState inBlock = world.getBlockState(getPosition());
+			if (inBlock.isFullBlock()) {
+				setDead();
+			}
+
+			// Destroy non-solid blocks in the earthspike
+			if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
+
+				if (inBlock.getBlockHardness(world, getPosition()) == 0) {
+
+					breakBlock(getPosition());
+
+				} else {
+
+					setDead();
 				}
 			}
 		}
-		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 
-		if (!world.getBlockState(below).isNormalCube()) {
-			setDead();
-		}
-
-
-		// Destroy if in a block
-		IBlockState inBlock = world.getBlockState(getPosition());
-		if (inBlock.isFullBlock()) {
-			setDead();
-		}
-
-		// Destroy non-solid blocks in the earthspike
-		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
-
-			if (inBlock.getBlockHardness(world, getPosition()) == 0) {
-
-				breakBlock(getPosition());
-
-			} else {
-
-				setDead();
-			}
-		}
-	}
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {

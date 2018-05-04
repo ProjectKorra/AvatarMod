@@ -19,7 +19,7 @@ public class AbilityLightningRaze extends Ability {
 		super(Lightningbending.ID, "lightning_raze");
 	}
 
-	public float damageMult = 1F;
+
 
 	@Override
 	public void execute(AbilityContext ctx) {
@@ -35,6 +35,7 @@ public class AbilityLightningRaze extends Ability {
 		//How many ticks pass before each lightning bolt strikes.
 		int bolts = 1;
 		float accuracy = 2;
+		float damageMult = 0.5F;
 
 		/*0 accuracy is the most accurate; each number represents how far away from the spawn position
 		it will be.**/
@@ -46,6 +47,7 @@ public class AbilityLightningRaze extends Ability {
 			chi = 6;
 			speed = 7;
 			bolts = 2;
+			damageMult = 0.75F;
 
 
 		}
@@ -55,7 +57,7 @@ public class AbilityLightningRaze extends Ability {
 			chi = 7;
 			bolts = 3;
 			accuracy = 2;
-			damageMult = 1.5F;
+			damageMult = 1F;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			frequency = 2;
@@ -75,7 +77,7 @@ public class AbilityLightningRaze extends Ability {
 			chi = 8;
 			bolts = 5;
 			accuracy = 3;
-			damageMult = 0.2F;
+			damageMult = 0.25F;
 			//Thor's wrath
 		}
 
