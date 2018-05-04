@@ -4,6 +4,8 @@ import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRaze;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
+import com.google.common.base.Optional;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,8 +22,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Objects;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
@@ -30,6 +33,9 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	private static final DataParameter<Float> SYNC_DAMAGE_MULT = EntityDataManager.createKey(EntityAvatarLightning.class,
 			DataSerializers.FLOAT);
 
+
+	private SyncedEntity<EntityLivingBase> ownerRef;
+
 	/**
 	 * Declares which state the lightning bolt is in. Whether it's in the air, hit the ground, etc.
 	 */
@@ -37,7 +43,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	/**
 	 * A random long that is used to change the vertex of the lightning rendered in RenderLightningBolt
 
-	public long boltVertex;
+	**/public long boltVertex;
 	/**
 	 * Determines the time before the EntityLightningBolt is destroyed. It is a random integer decremented over time.
 	 */
@@ -51,6 +57,11 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	public void setDamageMult(float mult) {
 		this.damageMult = mult;
 	}
+
+	/*public EntityLivingBase getOwner() {
+		return ownerRef.getEntity();
+	}**/
+
 
 	/*public void setDamageMult(float damageMult) {
 		dataManager.set(SYNC_DAMAGE_MULT, damageMult);
@@ -70,6 +81,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 		super(world, x, y, z, false);
 		this.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 		this.lightningState = 2;
+	//	this.ownerRef = new SyncedEntity<>(this, SYNC_OWNER);
 		this.boltVertex = this.rand.nextLong();
 		this.boltLivingTime = this.rand.nextInt(3) + 1;
 		this.damageMult = 1;
@@ -137,7 +149,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 				for (int i = 0; i < list.size(); ++i) {
 					Entity entity = list.get(i);
 					if (entity instanceof AvatarEntity) {
-						entity.onStruckByLightning(this);
+						//entity.onStruckByLightning(this);
 					} else if (entity instanceof EntityLivingBase) {
 						handleCollision((EntityLivingBase) entity);
 					}
@@ -160,39 +172,20 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 		EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
 		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, boltSpawner.getOwner());
 
-		BendingData data = BendingData.get(Objects.requireNonNull(boltSpawner.getOwner()));
-		int level = data.getAbilityData("lightning_raze").getLevel();
-		boolean firstPath = data.getAbilityData("lightning_raze").isMasterPath(AbilityData.AbilityTreePath.FIRST);
-		boolean secondPath = data.getAbilityData("lightning_raze").isMasterPath(AbilityData.AbilityTreePath.SECOND);
+			float damage = 5 * damageMult;
+			entity.attackEntityFrom(damageSource, damage);
+			System.out.println(damageMult);
 
-		if (level <= 0){
-			damageMult = 0.5F;
-		}
-		if (level == 1){
-			damageMult = 0.75F;
-		}
-		if (level == 2){
-			damageMult = 1;
-		}
-		if( firstPath){
-			damageMult = 3;
-		}
-		if (secondPath){
-			damageMult = 0.25F;
-		}
-		float damage = 5 * damageMult;
-		entity.attackEntityFrom(damageSource, damage);
-		System.out.println(damageMult);
-
-		if (entity.attackEntityFrom(damageSource, damage)) {
-			if (boltSpawner.getOwner() != null) {
-				BendingData data1 = BendingData.get(boltSpawner.getOwner());
-				AbilityData abilityData = data1.getAbilityData("lightning_raze");
-				abilityData.addXp(SKILLS_CONFIG.struckWithLightning);
+			if (entity.attackEntityFrom(damageSource, damage)) {
+				if (boltSpawner.getOwner() != null) {
+					BendingData data1 = BendingData.get(boltSpawner.getOwner());
+					AbilityData abilityData = data1.getAbilityData("lightning_raze");
+					abilityData.addXp(SKILLS_CONFIG.struckWithLightning);
+				}
 			}
+
 		}
 
-	}
 
 	/**
 	 * (abstract) Protected helper method to read subclass entity data from NBT.

@@ -1,6 +1,8 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRaze;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -98,9 +100,28 @@ public class EntityLightningSpawner extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		if (this.getOwner() != null) {
+			BendingData data = BendingData.get(this.getOwner());
+			AbilityData abilityData = data.getAbilityData("lightning_raze");
+			if (abilityData.getLevel() <= 0){
+				damageMult = 0.5F;
+			}
+			if (abilityData.getLevel() == 1){
+				damageMult = .75F;
+			}
+			if (abilityData.getLevel() == 2){
+				damageMult = 1;
+			}
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)){
+				damageMult = 3;
+			}
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
+				damageMult = 0.25F;
+			}
+		}
 
 
-		if (playerControl && !this.isDead) {
+		if (playerControl && !this.isDead && this.getOwner() != null) {
 			this.rotationYaw = getOwner().rotationYaw;
 			Vector direction = Vector.toRectangular(Math.toRadians(this.rotationYaw), 0);
 			this.setVelocity(direction.times(Speed));
@@ -119,6 +140,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 						blockPos.getZ() + Pos);
 				bolt.setBoltLivingTime(random.nextInt(3) + 1);
 				bolt.setDamageMult(damageMult);
+				//bolt.setOwner(this.getOwner());
 				world.addWeatherEffect(new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
 						blockPos.getZ() + Pos));
 
@@ -129,7 +151,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 							blockPos.getZ() + Pos);
 					bolt.setBoltLivingTime(random.nextInt(3) + 1);
 					bolt.setDamageMult(damageMult);
-
+					//bolt.setOwner(this.getOwner());
 					world.addWeatherEffect(new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
 							blockPos.getZ() + Pos));
 
@@ -175,6 +197,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 	public boolean onCollideWithSolid() {
 		return false;
 	}
+
 
 
 }
