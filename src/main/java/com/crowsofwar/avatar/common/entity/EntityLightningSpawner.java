@@ -91,24 +91,6 @@ public class EntityLightningSpawner extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		if (this.getOwner() != null) {
-			float Mult = damageMult;
-			BendingData data = BendingData.get(this.getOwner());
-			AbilityData abilityData = data.getAbilityData("lightning_raze");
-			if (abilityData.getLevel() <= 0) {
-				Mult = 0.5F;
-			}
-			if (abilityData.getLevel() == 1) {
-				Mult = .75F;
-			}
-			if (abilityData.getLevel() == 2) {
-				Mult = 1;
-			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				Mult = 3;
-			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				Mult = 0.25F;
-			}
 
 
 			if (playerControl && !this.isDead && this.getOwner() != null) {
@@ -129,10 +111,8 @@ public class EntityLightningSpawner extends AvatarEntity {
 						EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
 								blockPos.getZ() + Pos);
 						bolt.setBoltLivingTime(random.nextInt(3) + 1);
-						bolt.setMult(Mult);
-						bolt.setOwner(this.getOwner());
-						world.spawnEntity(new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
-								blockPos.getZ() + Pos));
+						bolt.setMult(damageMult);
+						world.addWeatherEffect(bolt);
 
 					}
 				}

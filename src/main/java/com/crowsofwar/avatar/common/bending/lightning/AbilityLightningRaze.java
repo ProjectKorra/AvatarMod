@@ -114,8 +114,6 @@ public class AbilityLightningRaze extends Ability {
 			boltSpawner.setAmountofBolts(bolts);
 			boltSpawner.setAccuracy(accuracy);
 			world.spawnEntity(boltSpawner);
-			EntityAvatarLightning lightning = new EntityAvatarLightning(world, hitAt.x(), hitAt.y(), hitAt.z());
-			lightning.setMult(damageMult);
 
 
 		}

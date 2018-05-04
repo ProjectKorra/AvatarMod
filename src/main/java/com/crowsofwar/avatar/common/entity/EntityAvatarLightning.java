@@ -1,11 +1,9 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRaze;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
-import com.google.common.base.Optional;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,10 +24,9 @@ import net.minecraft.world.World;
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 
-public class EntityAvatarLightning extends AvatarEntity {
+public class EntityAvatarLightning extends EntityLightningBolt {
 	private static final DataParameter<Float> SYNC_DAMAGE_MULT = EntityDataManager.createKey(EntityAvatarLightning.class,
 			DataSerializers.FLOAT);
 
@@ -75,7 +72,7 @@ public class EntityAvatarLightning extends AvatarEntity {
 	}
 
 	public EntityAvatarLightning(World world, double x, double y, double z) {
-		super(world);
+		super(world, x, y, z, false);
 		this.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 		this.lightningState = 2;
 		//	this.ownerRef = new SyncedEntity<>(this, SYNC_OWNER);
@@ -110,107 +107,88 @@ public class EntityAvatarLightning extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (this.lightningState == 2) {
-			this.world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.WEATHER, 10000.0F, 0.8F + this.rand.nextFloat() * 0.2F);
-			this.world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.WEATHER, 2.0F, 0.5F + this.rand.nextFloat() * 0.2F);
-		}
 
-		--this.lightningState;
-
-		if (this.lightningState < 0) {
-			if (this.boltLivingTime == 0) {
-				this.setDead();
-			} else if (this.lightningState < -this.rand.nextInt(10)) {
-				--this.boltLivingTime;
-				this.lightningState = 1;
-
-				if (!this.world.isRemote) {
-					this.boltVertex = this.rand.nextLong();
-					BlockPos blockpos = new BlockPos(this);
-
-					if (this.world.getGameRules().getBoolean("doFireTick") && this.world.isAreaLoaded(blockpos, 10) && this.world.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(this.world, blockpos)) {
-						this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
-					}
-				}
+			if (this.lightningState == 2) {
+				this.world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.WEATHER, 10000.0F, 0.8F + this.rand.nextFloat() * 0.2F);
+				this.world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.WEATHER, 2.0F, 0.5F + this.rand.nextFloat() * 0.2F);
 			}
-		}
 
-		if (this.lightningState >= 0) {
-			if (this.world.isRemote) {
-				this.world.setLastLightningBolt(2);
-			} else if (!this.world.isRemote) {
-				double d0 = 3.0D;
-				List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB
-						(this.posX - 3.0D, this.posY - 3.0D, this.posZ - 3.0D, this.posX + 3.0D, this.posY + 6.0D + 3.0D, this.posZ + 3.0D));
+			--this.lightningState;
 
-				for (int i = 0; i < list.size(); ++i) {
-					Entity entity = list.get(i);
-					if (entity instanceof AvatarEntity && !(entity instanceof EntityAvatarLightning)) {
-						//entity.onStruckByLightning(this);
-					} else if (entity instanceof EntityLivingBase) {
-						handleCollision((EntityLivingBase) entity);
-					}
-				}
-			}
-			// amount of entities which were successfully attacked
-			int attacked = 0;
+			if (this.lightningState < 0) {
+				if (this.boltLivingTime == 0) {
+					this.setDead();
+				} else if (this.lightningState < -this.rand.nextInt(10)) {
+					--this.boltLivingTime;
+					this.lightningState = 1;
 
-			// Push collided entities back
-			if (!world.isRemote) {
-				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-						entity -> entity != getOwner());
-				if (!collided.isEmpty()) {
-					for (Entity entity : collided) {
-						if (attackEntity(entity)) {
-							attacked++;
+					if (!this.world.isRemote) {
+						this.boltVertex = this.rand.nextLong();
+						BlockPos blockpos = new BlockPos(this);
+
+						if (this.world.getGameRules().getBoolean("doFireTick") && this.world.isAreaLoaded(blockpos, 10) && this.world.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(this.world, blockpos)) {
+							this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 						}
 					}
 				}
 			}
-			if (!world.isRemote && getOwner() != null) {
-				BendingData data = BendingData.get(getOwner());
-				if (data != null) {
-					data.getAbilityData("lightning_raze").addXp(SKILLS_CONFIG.struckWithLightning * attacked);
+
+			if (this.lightningState >= 0) {
+				if (this.world.isRemote) {
+					this.world.setLastLightningBolt(2);
+				} else if (!this.world.isRemote) {
+					double d0 = 3.0D;
+					List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB
+							(this.posX - 3.0D, this.posY - 3.0D, this.posZ - 3.0D, this.posX + 3.0D, this.posY + 6.0D + 3.0D, this.posZ + 3.0D));
+
+					for (int i = 0; i < list.size(); ++i) {
+						Entity entity = list.get(i);
+						if (entity instanceof AvatarEntity && !(entity instanceof EntityAvatarLightning)) {
+							entity.onStruckByLightning(this);
+						} else if (entity instanceof EntityLivingBase) {
+							handleCollision((EntityLivingBase) entity);
+						}
+					}
 				}
 			}
-		}
 	}
 
 
 	private void handleCollision(EntityLivingBase collided) {
-		attackEntity(collided);
+		damageEntity(collided);
 	}
 
-	/*private void damageEntity(EntityLivingBase entity) {
+	private void damageEntity(EntityLivingBase entity) {
 
 			if (world.isRemote) {
 				return;
 			}
 
-			//EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
-			DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());
+			EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
+			DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, boltSpawner.getOwner());
 			float damage = 5 * Mult;
 			entity.attackEntityFrom(damageSource, damage);
 			System.out.println(damage);
 
 			if (entity.attackEntityFrom(damageSource, damage)) {
-				if (this.getOwner() != null) {
-					BendingData data1 = BendingData.get(this.getOwner());
+				if (boltSpawner.getOwner() != null) {
+					BendingData data1 = BendingData.get(boltSpawner.getOwner());
 					AbilityData abilityData1 = data1.getAbilityData("lightning_raze");
 					abilityData1.addXp(SKILLS_CONFIG.struckWithLightning);
 				}
 			}
 
-		}**/
-	private boolean attackEntity(Entity entity) {
+		}
+	/*private boolean attackEntity(Entity entity) {
 		if (!(entity instanceof EntityItem)) {
-			DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
+			EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
+			DamageSource ds = AvatarDamageSource.causeLightningDamage(entity, boltSpawner.getOwner());
 			float damage = 5 * Mult;
 			return entity.attackEntityFrom(ds, damage);
 		}
 
 		return false;
-	}
+	}**/
 
 
 
