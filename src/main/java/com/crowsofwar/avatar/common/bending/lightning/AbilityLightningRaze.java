@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.EntityAvatarLightning;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpawner;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -113,6 +114,8 @@ public class AbilityLightningRaze extends Ability {
 			boltSpawner.setAmountofBolts(bolts);
 			boltSpawner.setAccuracy(accuracy);
 			world.spawnEntity(boltSpawner);
+			EntityAvatarLightning lightning = new EntityAvatarLightning(world, hitAt.x(), hitAt.y(), hitAt.z());
+			lightning.setMult(damageMult);
 
 
 		}

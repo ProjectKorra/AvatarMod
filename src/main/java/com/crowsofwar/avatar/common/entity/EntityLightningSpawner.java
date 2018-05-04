@@ -129,7 +129,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 						EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
 								blockPos.getZ() + Pos);
 						bolt.setBoltLivingTime(random.nextInt(3) + 1);
-						bolt.setDamageMult(Mult);
+						bolt.setMult(Mult);
 						bolt.setOwner(this.getOwner());
 						world.spawnEntity(new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
 								blockPos.getZ() + Pos));

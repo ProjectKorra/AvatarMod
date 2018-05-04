@@ -10,6 +10,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,6 +26,7 @@ import net.minecraft.world.World;
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 
 public class EntityAvatarLightning extends AvatarEntity {
@@ -50,7 +52,7 @@ public class EntityAvatarLightning extends AvatarEntity {
 	private float Mult;
 
 
-	public void setDamageMult(float mult) {
+	public void setMult(float mult) {
 		this.Mult = mult;
 	}
 
@@ -150,23 +152,43 @@ public class EntityAvatarLightning extends AvatarEntity {
 					}
 				}
 			}
+			// amount of entities which were successfully attacked
+			int attacked = 0;
+
+			// Push collided entities back
+			if (!world.isRemote) {
+				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
+						entity -> entity != getOwner());
+				if (!collided.isEmpty()) {
+					for (Entity entity : collided) {
+						if (attackEntity(entity)) {
+							attacked++;
+						}
+					}
+				}
+			}
+			if (!world.isRemote && getOwner() != null) {
+				BendingData data = BendingData.get(getOwner());
+				if (data != null) {
+					data.getAbilityData("lightning_raze").addXp(SKILLS_CONFIG.struckWithLightning * attacked);
+				}
+			}
 		}
 	}
 
 
 	private void handleCollision(EntityLivingBase collided) {
-		damageEntity(collided);
+		attackEntity(collided);
 	}
 
-	private void damageEntity(EntityLivingBase entity) {
+	/*private void damageEntity(EntityLivingBase entity) {
 
 			if (world.isRemote) {
 				return;
 			}
 
 			//EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
-			DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, this.getOwner());
-
+			DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());
 			float damage = 5 * Mult;
 			entity.attackEntityFrom(damageSource, damage);
 			System.out.println(damage);
@@ -179,7 +201,16 @@ public class EntityAvatarLightning extends AvatarEntity {
 				}
 			}
 
+		}**/
+	private boolean attackEntity(Entity entity) {
+		if (!(entity instanceof EntityItem)) {
+			DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
+			float damage = 5 * Mult;
+			return entity.attackEntityFrom(ds, damage);
 		}
+
+		return false;
+	}
 
 
 
