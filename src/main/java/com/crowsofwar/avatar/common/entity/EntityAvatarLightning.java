@@ -144,15 +144,28 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 					for (int i = 0; i < list.size(); ++i) {
 						Entity entity = list.get(i);
 						if (entity instanceof AvatarEntity && !(entity instanceof EntityAvatarLightning)) {
-							entity.onStruckByLightning(this);
+							((AvatarEntity) entity).onFireContact();
 						} else if (entity instanceof EntityLivingBase) {
 							handleCollision((EntityLivingBase) entity);
 						}
 					}
 				}
 			}
-	}
+		}
 
+	@Override
+	public void onStruckByLightning(EntityLightningBolt lightningBolt) {
+		List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB
+				(this.posX - 3.0D, this.posY - 3.0D, this.posZ - 3.0D, this.posX + 3.0D, this.posY + 6.0D + 3.0D, this.posZ + 3.0D));
+		for (int i = 0; i < list.size(); ++i) {
+			Entity entity = list.get(i);
+			if (entity instanceof AvatarEntity && !(entity instanceof EntityAvatarLightning)) {
+				((AvatarEntity) entity).onFireContact();
+			} else if (entity instanceof EntityLivingBase && !(entity instanceof EntityItem)) {
+				handleCollision((EntityLivingBase) entity);
+			}
+		}
+	}
 
 	private void handleCollision(EntityLivingBase collided) {
 		damageEntity(collided);
@@ -166,7 +179,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 			EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
 			DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, boltSpawner.getOwner());
-			float damage = 5 * Mult;
+			float damage = 2 * Mult;
 			entity.attackEntityFrom(damageSource, damage);
 			System.out.println(damage);
 

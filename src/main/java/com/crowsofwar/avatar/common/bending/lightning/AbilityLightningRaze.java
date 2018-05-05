@@ -36,7 +36,7 @@ public class AbilityLightningRaze extends Ability {
 		//How many ticks pass before each lightning bolt strikes.
 		int bolts = 1;
 		float accuracy = 2;
-		float damageMult = 0.5F;
+		float damageMult = 1;
 
 		/*0 accuracy is the most accurate; each number represents how far away from the spawn position
 		it will be.**/
@@ -48,8 +48,6 @@ public class AbilityLightningRaze extends Ability {
 			chi = 6;
 			speed = 7;
 			bolts = 2;
-			damageMult = 0.75F;
-
 
 		}
 		if (ctx.getLevel() >= 2) {
@@ -58,7 +56,7 @@ public class AbilityLightningRaze extends Ability {
 			chi = 7;
 			bolts = 3;
 			accuracy = 2;
-			damageMult = 1F;
+			damageMult = 1.25F;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			frequency = 2;
@@ -67,7 +65,7 @@ public class AbilityLightningRaze extends Ability {
 			speed = 20;
 			chi = 7;
 			accuracy = 0;
-			damageMult = 1.75F;
+			damageMult = 4.5F;
 			//Super-fast line of lightning that lights up the ground
 			//Zeus' Wrath
 		}
