@@ -106,7 +106,6 @@ public class EntityLightningSpawner extends AvatarEntity {
 
 			if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
 				for (int i = 0; i < amountofBolts; i++) {
-					System.out.println(damageMult);
 						BlockPos blockPos = this.getPosition();
 						EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
 								blockPos.getZ() + Pos);
