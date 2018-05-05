@@ -151,6 +151,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 					}
 				}
 			}
+
 		}
 
 	@Override
@@ -159,13 +160,17 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 				(this.posX - 3.0D, this.posY - 3.0D, this.posZ - 3.0D, this.posX + 3.0D, this.posY + 6.0D + 3.0D, this.posZ + 3.0D));
 		for (int i = 0; i < list.size(); ++i) {
 			Entity entity = list.get(i);
+			DamageSource ds = DamageSource.LIGHTNING_BOLT;
 			if (entity instanceof AvatarEntity && !(entity instanceof EntityAvatarLightning)) {
 				((AvatarEntity) entity).onFireContact();
 			} else if (entity instanceof EntityLivingBase && !(entity instanceof EntityItem)) {
-				handleCollision((EntityLivingBase) entity);
+				if (entity.attackEntityFrom(ds, 5F)) {
+					handleCollision((EntityLivingBase) entity);
+				}
 			}
 		}
 	}
+
 
 	private void handleCollision(EntityLivingBase collided) {
 		damageEntity(collided);
