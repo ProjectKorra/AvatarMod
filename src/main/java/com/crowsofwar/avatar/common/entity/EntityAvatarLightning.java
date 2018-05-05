@@ -144,7 +144,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 					for (int i = 0; i < list.size(); ++i) {
 						Entity entity = list.get(i);
 						if (entity instanceof AvatarEntity && !(entity instanceof EntityAvatarLightning)) {
-							((AvatarEntity) entity).onFireContact();
+							entity.onStruckByLightning(this);
 						} else if (entity instanceof EntityLivingBase) {
 							handleCollision((EntityLivingBase) entity);
 						}
