@@ -8,10 +8,14 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.passive.EntityPig;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -155,8 +159,12 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 				for (int i = 0; i < list.size(); ++i) {
 					Entity entity = list.get(i);
-					if (!net.minecraftforge.event.ForgeEventFactory.onEntityStruckByLightning(entity, this))
-						entity.onStruckByLightning(this);
+					EntityStruckByLightningEvent event = new EntityStruckByLightningEvent(entity, this);
+						if (entity instanceof AvatarEntity) {
+							((AvatarEntity) entity).onFireContact();
+						} else if (entity instanceof EntityLivingBase) {
+							handleCollision((EntityLivingBase) entity);
+					}
 					//	onLightningAttack(eve);
 				}
 			}
@@ -171,13 +179,17 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 		}
 	}**/
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public static void onLightningAttack(LivingAttackEvent event) {
-		System.out.println(event.getSource().getTrueSource());
-		if (event.getSource().getTrueSource() instanceof EntityAvatarLightning) {
-			EntityAvatarLightning castedEntityObject = (EntityAvatarLightning) event.getEntity();
-			System.out.println("Attack successful!");
-			if (event.getSource().getTrueSource() == castedEntityObject) {
+		System.out.println(event.getAmount());
+		}
+
+
+
+	@SubscribeEvent
+	public static void onLightningStrike (EntityStruckByLightningEvent event){
+		if (event.getLightning() instanceof EntityAvatarLightning){
+			EntityAvatarLightning castedEntityObject = (EntityAvatarLightning) event.getLightning();
 				List<Entity> list = castedEntityObject.world.getEntitiesWithinAABBExcludingEntity(castedEntityObject, new AxisAlignedBB
 						(castedEntityObject.posX - 3.0D, castedEntityObject.posY - 3.0D, castedEntityObject.posZ - 3.0D, castedEntityObject.posX + 3.0D, castedEntityObject.posY + 6.0D + 3.0D, castedEntityObject.posZ + 3.0D));
 
@@ -190,8 +202,9 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 					}
 				}
 			}
+
 		}
-	}
+**/
 
 	public void handleCollision(EntityLivingBase collided) {
 		damageEntity(collided);

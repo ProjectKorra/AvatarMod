@@ -121,6 +121,7 @@ public class RenderAvatarLightning extends Render<EntityAvatarLightning> {
 
 						bufferbuilder.pos(d10 + d2, y + (double) (i1 * 16), d11 + d3).color(0F, 1F, 1F, 1F).endVertex();
 						bufferbuilder.pos(d8 + d4, y + (double) ((i1 + 1) * 16), d9 + d5).color(0F, 1F, 1F, 1F).endVertex();
+						bufferbuilder.color(0F, 1F, 1F, 1F);
 					}
 
 					tessellator.draw();
