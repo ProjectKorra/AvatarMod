@@ -208,6 +208,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 	public void handleCollision(EntityLivingBase collided) {
 		damageEntity(collided);
+		collided.setFire(collided.isImmuneToFire() ? 0 : 8);
 	}
 
 
