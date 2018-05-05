@@ -20,7 +20,12 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.awt.*;
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -105,7 +110,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	 */
 	@Override
 	public void onUpdate() {
-		super.onUpdate();
+		//super.onUpdate();
 
 
 			if (this.lightningState == 2) {
@@ -144,9 +149,13 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 					for (int i = 0; i < list.size(); ++i) {
 						Entity entity = list.get(i);
 						if (entity instanceof AvatarEntity && !(entity instanceof EntityAvatarLightning)) {
-							entity.onStruckByLightning(this);
+							((AvatarEntity) entity).onFireContact();
 						} else if (entity instanceof EntityLivingBase) {
 							handleCollision((EntityLivingBase) entity);
+						}
+						EntityStruckByLightningEvent event = new EntityStruckByLightningEvent(entity, this);
+						if (!event.isCanceled()) {
+							LightningEvent(event);
 						}
 					}
 				}
@@ -154,22 +163,13 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 		}
 
-	@Override
-	public void onStruckByLightning(EntityLightningBolt lightningBolt) {
-		List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB
-				(this.posX - 3.0D, this.posY - 3.0D, this.posZ - 3.0D, this.posX + 3.0D, this.posY + 6.0D + 3.0D, this.posZ + 3.0D));
-		for (int i = 0; i < list.size(); ++i) {
-			Entity entity = list.get(i);
-			DamageSource ds = DamageSource.LIGHTNING_BOLT;
-			if (entity instanceof AvatarEntity && !(entity instanceof EntityAvatarLightning)) {
-				((AvatarEntity) entity).onFireContact();
-			} else if (entity instanceof EntityLivingBase && !(entity instanceof EntityItem)) {
-				if (entity.attackEntityFrom(ds, 5F)) {
-					handleCollision((EntityLivingBase) entity);
-				}
-			}
+	@SubscribeEvent
+	public void LightningEvent(EntityStruckByLightningEvent event) {
+	if (event.getLightning() instanceof EntityAvatarLightning){
+		event.setCanceled(true);
 		}
 	}
+
 
 
 	private void handleCollision(EntityLivingBase collided) {
