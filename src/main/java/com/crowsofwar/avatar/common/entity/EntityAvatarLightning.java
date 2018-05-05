@@ -179,16 +179,6 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 			}
 
 		}
-	/*private boolean attackEntity(Entity entity) {
-		if (!(entity instanceof EntityItem)) {
-			EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
-			DamageSource ds = AvatarDamageSource.causeLightningDamage(entity, boltSpawner.getOwner());
-			float damage = 5 * Mult;
-			return entity.attackEntityFrom(ds, damage);
-		}
-
-		return false;
-	}**/
 
 
 

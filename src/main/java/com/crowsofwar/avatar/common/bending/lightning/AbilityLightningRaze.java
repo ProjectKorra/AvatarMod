@@ -67,7 +67,7 @@ public class AbilityLightningRaze extends Ability {
 			speed = 20;
 			chi = 7;
 			accuracy = 0;
-			damageMult = 3;
+			damageMult = 1.75F;
 			//Super-fast line of lightning that lights up the ground
 			//Zeus' Wrath
 		}
