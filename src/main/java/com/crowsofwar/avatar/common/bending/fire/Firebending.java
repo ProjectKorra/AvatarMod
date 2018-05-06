@@ -40,6 +40,7 @@ public class Firebending extends BendingStyle {
 		addAbility("fireball");
 		addAbility("fire_jump");
 		addAbility("purify");
+		//addAbility("inferno_punch");
 
 		Color light = new Color(244, 240, 187);
 		Color red = new Color(173, 64, 31);

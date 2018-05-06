@@ -24,10 +24,7 @@ import com.crowsofwar.avatar.common.bending.air.StatCtrlThrowCloudBall;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlDropWall;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlPlaceBlock;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlThrowBlock;
-import com.crowsofwar.avatar.common.bending.fire.StatCtrlFireJump;
-import com.crowsofwar.avatar.common.bending.fire.StatCtrlSetFlamethrowing;
-import com.crowsofwar.avatar.common.bending.fire.StatCtrlThrowFire;
-import com.crowsofwar.avatar.common.bending.fire.StatCtrlThrowFireball;
+import com.crowsofwar.avatar.common.bending.fire.*;
 import com.crowsofwar.avatar.common.bending.ice.StatCtrlShieldShatter;
 import com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear;
 import com.crowsofwar.avatar.common.bending.sand.StatCtrlSandstormRedirect;
@@ -78,7 +75,8 @@ public abstract class StatusControl {
 			BUBBLE_CONTRACT = new StatCtrlBubbleContract(),
 			SHIELD_SHATTER = new StatCtrlShieldShatter(),
 			DROP_WALL = new StatCtrlDropWall(),
-			SANDSTORM_REDIRECT = new StatCtrlSandstormRedirect();
+			SANDSTORM_REDIRECT = new StatCtrlSandstormRedirect(),
+			INFERNO_PUNCH = new StatCtrlInfernoPunch();
 	// @formatter:on
 
 	private static int nextId = 0;
