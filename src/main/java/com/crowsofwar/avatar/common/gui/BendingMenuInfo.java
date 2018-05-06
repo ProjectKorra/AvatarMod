@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.gui;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

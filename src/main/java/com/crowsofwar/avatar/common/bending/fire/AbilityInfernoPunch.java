@@ -13,10 +13,13 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -24,7 +27,8 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.FIRE_JUMP;
 import static com.crowsofwar.avatar.common.bending.StatusControl.INFERNO_PUNCH;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+@Mod.EventBusSubscriber (modid = AvatarInfo.MOD_ID)
+
 public class AbilityInfernoPunch extends Ability {
 	public AbilityInfernoPunch() {
 		super(Firebending.ID, "inferno_punch");
@@ -40,10 +44,6 @@ public class AbilityInfernoPunch extends Ability {
 
 	public boolean haveStatusControl = false;
 
-	@Override
-	public boolean isUtility() {
-		return true;
-	}
 
 	@Override
 	public void execute(AbilityContext ctx) {
@@ -81,19 +81,30 @@ public class AbilityInfernoPunch extends Ability {
 		}
 	}
 
-	/*@SubscribeEvent
-	public static void onInfernoPunch(LivingAttackEvent event) {
-		AbilityInfernoPunch punch = new AbilityInfernoPunch();
+	@SubscribeEvent
+	public static void onInfernoPunch(LivingHurtEvent event) {
 		EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
+		EntityLivingBase target = (EntityLivingBase) event.getEntity();
+		AbilityInfernoPunch punch = new AbilityInfernoPunch();
+		//System.out.println(event.getSource().getTrueSource());
 
-		if (event.getSource().getTrueSource() == entity && event.getSource().getTrueSource().getHeldEquipment().equals(ItemStack.EMPTY)) {
-			DamageSource ds = AvatarDamageSource.causeFireDamage(event.getEntity(), entity);
-			if (punch.haveStatusControl && punch.punchesLeft() && entity instanceof EntityBender) {
-				event.getEntity().attackEntityFrom(ds, punch.damage);
-				punch.punchesLeft--;
+		if (event.getSource().getTrueSource() == entity) {
+			if ( entity instanceof EntityPlayer && entity.getHeldItemMainhand() == ItemStack.EMPTY) {
+				DamageSource ds = DamageSource.ON_FIRE;
+				System.out.println("Step One Accomplished!");
+				target.attackEntityFrom(ds, 10);
+
+				if (punch.haveStatusControl && punch.punchesLeft()) {
+					System.out.println("Attack Successful!");
+					//	event.getEntity().attackEntityFrom(ds, punch.damage);
+					punch.punchesLeft--;
+				}
+				if (punch.punchesLeft <= 0) {
+					punch.haveStatusControl = false;
+				}
 			}
 		}
-	}**/
+	}
 
 
 
