@@ -27,7 +27,7 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.FIRE_JUMP;
 import static com.crowsofwar.avatar.common.bending.StatusControl.INFERNO_PUNCH;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-@Mod.EventBusSubscriber (modid = AvatarInfo.MOD_ID)
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 
 public class AbilityInfernoPunch extends Ability {
 	public AbilityInfernoPunch() {
@@ -42,7 +42,7 @@ public class AbilityInfernoPunch extends Ability {
 
 	public int fireTime = 5;
 
-	public boolean haveStatusControl = false;
+
 
 
 	@Override
@@ -54,7 +54,7 @@ public class AbilityInfernoPunch extends Ability {
 
 		if (!data.hasStatusControl(INFERNO_PUNCH) && bender.consumeChi(STATS_CONFIG.chiFireball)) {
 			data.addStatusControl(INFERNO_PUNCH);
-			haveStatusControl = true;
+
 			if (abilityData.getLevel() >= 1) {
 				damage = 6;
 				knockBack = 1.25F;
@@ -79,38 +79,17 @@ public class AbilityInfernoPunch extends Ability {
 				fireTime = 4;
 			}
 		}
+
 	}
 
-	@SubscribeEvent
-	public static void onInfernoPunch(LivingHurtEvent event) {
-		EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
-		EntityLivingBase target = (EntityLivingBase) event.getEntity();
-		AbilityInfernoPunch punch = new AbilityInfernoPunch();
-		//System.out.println(event.getSource().getTrueSource());
 
-		if (event.getSource().getTrueSource() == entity) {
-			if ( entity instanceof EntityPlayer && entity.getHeldItemMainhand() == ItemStack.EMPTY) {
-				DamageSource ds = DamageSource.ON_FIRE;
-				System.out.println("Step One Accomplished!");
-				target.attackEntityFrom(ds, 10);
-
-				if (punch.haveStatusControl && punch.punchesLeft()) {
-					System.out.println("Attack Successful!");
-					//	event.getEntity().attackEntityFrom(ds, punch.damage);
-					punch.punchesLeft--;
-				}
-				if (punch.punchesLeft <= 0) {
-					punch.haveStatusControl = false;
-				}
-			}
-		}
-	}
 
 
 
 	public boolean punchesLeft() {
 		return punchesLeft > 0;
 	}
+
 
 }
 
