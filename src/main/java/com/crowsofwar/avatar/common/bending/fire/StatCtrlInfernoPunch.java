@@ -54,14 +54,16 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			float punchesLeft = infernoPunch.punchesLeft;
 			if (ctx.getData() != null && ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
 				if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
-					DamageSource ds = DamageSource.ON_FIRE;
+					//DamageSource ds = DamageSource.LAVA;
+					DamageSource ds  = DamageSource.MAGIC;
 					target.attackEntityFrom(ds, infernoPunch.damage);
 					target.setFire(infernoPunch.fireTime);
 					ctx.getData().removeStatusControl(INFERNO_PUNCH);
 					punchesLeft--;
 					target.motionX += direction.x() * infernoPunch.knockBack;
-					target.motionY += direction.y() * infernoPunch.knockBack;
+					target.motionY += infernoPunch.knockBack/3;
 					target.motionZ += direction.z() * infernoPunch.knockBack;
+					target.isAirBorne = true;
 					// this line is needed to prevent a bug where players will not be pushed in multiplayer
 					AvatarUtils.afterVelocityAdded(target);
 					if (punchesLeft > 0) {
