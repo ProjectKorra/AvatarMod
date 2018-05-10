@@ -22,12 +22,12 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.Sys;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.FIRE_JUMP;
 import static com.crowsofwar.avatar.common.bending.StatusControl.INFERNO_PUNCH;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 
 public class AbilityInfernoPunch extends Ability {
 	public AbilityInfernoPunch() {
@@ -42,7 +42,7 @@ public class AbilityInfernoPunch extends Ability {
 
 	public int fireTime = 5;
 
-
+	private boolean haveStatusControl;
 
 
 	@Override
@@ -53,6 +53,7 @@ public class AbilityInfernoPunch extends Ability {
 		AbilityData abilityData = data.getAbilityData(this);
 
 		if (!data.hasStatusControl(INFERNO_PUNCH) && bender.consumeChi(STATS_CONFIG.chiFireball)) {
+			haveStatusControl = true;
 			data.addStatusControl(INFERNO_PUNCH);
 
 			if (abilityData.getLevel() >= 1) {
@@ -83,13 +84,17 @@ public class AbilityInfernoPunch extends Ability {
 	}
 
 
-
-
-
 	public boolean punchesLeft() {
 		return punchesLeft > 0;
 	}
 
+	public boolean hasStatusControl(){
+		return haveStatusControl = true;
+	}
+	void setStatusControl(){
+		haveStatusControl = false;
+
+	}
 
 }
 

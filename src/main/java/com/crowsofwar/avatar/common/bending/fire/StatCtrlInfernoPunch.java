@@ -18,49 +18,54 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+
 public class StatCtrlInfernoPunch extends StatusControl {
 	public StatCtrlInfernoPunch() {
 		super(15, CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
-	public boolean haveStatusControl = true;
+
 	@Override
 	public boolean execute(BendingContext ctx) {
-		//this.haveStatusControl = false;
-		return true;
+		AbilityInfernoPunch infernoPunch = new AbilityInfernoPunch();
+		return infernoPunch.punchesLeft <= 0;
+
 
 	}
+
+
 	@SubscribeEvent
-	public static void onInfernoPunch(LivingHurtEvent event) {
+	public static void onInfernoPunch(LivingAttackEvent event) {
 		EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
 		EntityLivingBase target = (EntityLivingBase) event.getEntity();
-		StatCtrlInfernoPunch punch = new StatCtrlInfernoPunch();
-		AbilityInfernoPunch infernoPunch = new AbilityInfernoPunch();
-		//System.out.println(event.getSource().getTrueSource());
+		Bender ctx = Bender.get(entity);
 
-		if (event.getSource().getTrueSource() == entity) {
-			if (entity instanceof EntityPlayer && entity.getHeldItemMainhand() == ItemStack.EMPTY) {
-				DamageSource ds = DamageSource.ON_FIRE;
-				System.out.println("Step One Accomplished!");
-				//System.out.println(punch.haveStatusControl);
-				if (punch.haveStatusControl && infernoPunch.punchesLeft()) {
+		if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
+			AbilityInfernoPunch infernoPunch = new AbilityInfernoPunch();
+			if (ctx.getData() != null && ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
+				if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
+					DamageSource ds = DamageSource.ON_FIRE;
+					System.out.println("Step One Accomplished!");
 					target.attackEntityFrom(ds, infernoPunch.damage);
 					target.setFire(infernoPunch.fireTime);
 					System.out.println("Attack Successful!");
-					punch.haveStatusControl = false;
-					//	event.getEntity().attackEntityFrom(ds, punch.damage);
-					infernoPunch.punchesLeft--;
+					if (infernoPunch.punchesLeft > 0){
+						infernoPunch.punchesLeft--;
+						if(infernoPunch.punchesLeft <= 0){
+							ctx.getData().removeStatusControl(INFERNO_PUNCH);
+						}
+					}
 
-				}
-				if (infernoPunch.punchesLeft <= 0) {
-					punch.haveStatusControl = false;
 				}
 			}
 		}
 	}
-
 }
+
+
