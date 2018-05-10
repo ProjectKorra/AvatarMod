@@ -31,6 +31,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		super(15, CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
 
+
 	@Override
 	public boolean execute(BendingContext ctx) {
 		AbilityInfernoPunch infernoPunch = new AbilityInfernoPunch();
@@ -45,9 +46,9 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
 		EntityLivingBase target = (EntityLivingBase) event.getEntity();
 		Bender ctx = Bender.get(entity);
-
 		if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
 			AbilityInfernoPunch infernoPunch = new AbilityInfernoPunch();
+			float punchesLeft = infernoPunch.punchesLeft;
 			if (ctx.getData() != null && ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
 				if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
 					DamageSource ds = DamageSource.ON_FIRE;
@@ -55,11 +56,11 @@ public class StatCtrlInfernoPunch extends StatusControl {
 					target.attackEntityFrom(ds, infernoPunch.damage);
 					target.setFire(infernoPunch.fireTime);
 					System.out.println("Attack Successful!");
-					if (infernoPunch.punchesLeft > 0){
-						infernoPunch.punchesLeft--;
-						if(infernoPunch.punchesLeft <= 0){
-							ctx.getData().removeStatusControl(INFERNO_PUNCH);
-						}
+					if (punchesLeft > 0) {
+						punchesLeft--;
+					} else {
+						punchesLeft--;
+						ctx.getData().removeStatusControl(INFERNO_PUNCH);
 					}
 
 				}

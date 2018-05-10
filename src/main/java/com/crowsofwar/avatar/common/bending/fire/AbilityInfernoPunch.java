@@ -34,7 +34,7 @@ public class AbilityInfernoPunch extends Ability {
 		super(Firebending.ID, "inferno_punch");
 	}
 
-	public int punchesLeft = 1;
+	public static int punchesLeft = 1;
 
 	public float damage = 5;
 
@@ -42,7 +42,7 @@ public class AbilityInfernoPunch extends Ability {
 
 	public int fireTime = 5;
 
-	private boolean haveStatusControl;
+	public boolean removeStatusControl = false;
 
 
 	@Override
@@ -53,25 +53,29 @@ public class AbilityInfernoPunch extends Ability {
 		AbilityData abilityData = data.getAbilityData(this);
 
 		if (!data.hasStatusControl(INFERNO_PUNCH) && bender.consumeChi(STATS_CONFIG.chiFireball)) {
-			haveStatusControl = true;
 			data.addStatusControl(INFERNO_PUNCH);
+			punchesLeft = 1;
 
 			if (abilityData.getLevel() >= 1) {
 				damage = 6;
 				knockBack = 1.25F;
 				fireTime = 6;
 
+
 			}
 			if (abilityData.getLevel() >= 2) {
 				damage = 8;
 				knockBack = 1.5F;
 				fireTime = 8;
+				punchesLeft = 2;
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage = 10;
 				knockBack = 3;
 				fireTime = 15;
+				punchesLeft = 1;
+				//Creates a bunch of fire blocks around the target
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				damage = 4;
@@ -88,13 +92,6 @@ public class AbilityInfernoPunch extends Ability {
 		return punchesLeft > 0;
 	}
 
-	public boolean hasStatusControl(){
-		return haveStatusControl = true;
-	}
-	void setStatusControl(){
-		haveStatusControl = false;
-
-	}
 
 }
 
