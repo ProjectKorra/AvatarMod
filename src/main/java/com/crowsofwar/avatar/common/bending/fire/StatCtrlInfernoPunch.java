@@ -60,8 +60,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 					ctx.getData().removeStatusControl(INFERNO_PUNCH);
 					punchesLeft--;
 					target.motionX += direction.x() * infernoPunch.knockBack;
-					target.motionX += direction.y() * infernoPunch.knockBack;
-					target.motionX += direction.z() * infernoPunch.knockBack;
+					target.motionY += direction.y() * infernoPunch.knockBack;
+					target.motionZ += direction.z() * infernoPunch.knockBack;
 					// this line is needed to prevent a bug where players will not be pushed in multiplayer
 					AvatarUtils.afterVelocityAdded(target);
 					if (punchesLeft > 0) {
