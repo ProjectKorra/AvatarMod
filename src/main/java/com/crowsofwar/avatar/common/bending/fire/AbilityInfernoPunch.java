@@ -34,7 +34,7 @@ public class AbilityInfernoPunch extends Ability {
 		super(Firebending.ID, "inferno_punch");
 	}
 
-	public static int punchesLeft = 1;
+	public int punchesLeft = 1;
 
 	public float damage = 5;
 

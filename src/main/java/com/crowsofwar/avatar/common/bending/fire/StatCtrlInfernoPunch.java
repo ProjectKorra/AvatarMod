@@ -11,6 +11,8 @@ import com.crowsofwar.avatar.common.data.DataCategory;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -47,22 +49,24 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		EntityLivingBase target = (EntityLivingBase) event.getEntity();
 		Bender ctx = Bender.get(entity);
 		if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
+			Vector direction= Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 			AbilityInfernoPunch infernoPunch = new AbilityInfernoPunch();
 			float punchesLeft = infernoPunch.punchesLeft;
 			if (ctx.getData() != null && ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
 				if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
 					DamageSource ds = DamageSource.ON_FIRE;
-					System.out.println("Step One Accomplished!");
 					target.attackEntityFrom(ds, infernoPunch.damage);
 					target.setFire(infernoPunch.fireTime);
-					System.out.println("Attack Successful!");
+					ctx.getData().removeStatusControl(INFERNO_PUNCH);
+					punchesLeft--;
+					target.motionX += direction.x() * infernoPunch.knockBack;
+					target.motionX += direction.y() * infernoPunch.knockBack;
+					target.motionX += direction.z() * infernoPunch.knockBack;
+					// this line is needed to prevent a bug where players will not be pushed in multiplayer
+					AvatarUtils.afterVelocityAdded(target);
 					if (punchesLeft > 0) {
-						punchesLeft--;
-					} else {
-						punchesLeft--;
-						ctx.getData().removeStatusControl(INFERNO_PUNCH);
+						ctx.getData().addStatusControl(INFERNO_PUNCH);
 					}
-
 				}
 			}
 		}
