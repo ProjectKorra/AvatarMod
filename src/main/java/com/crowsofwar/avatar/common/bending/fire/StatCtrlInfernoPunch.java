@@ -50,31 +50,31 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
 		EntityLivingBase target = (EntityLivingBase) event.getEntity();
 		Bender ctx = Bender.get(entity);
-		if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer) && ctx.getData() != null ) {
-			Vector direction= Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
+		if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer) && ctx.getData() != null) {
+			Vector direction = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 			int punchesLeft = 1;
-			float knockBack = 0.5F;
+			float knockBack = 1F;
 			int fireTime = 5;
 			float damage = 3;
 			AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
 
 			if (abilityData.getLevel() >= 1) {
 				damage = 4;
-				knockBack = 0.75F;
+				knockBack = 1.25F;
 				fireTime = 6;
 
 
 			}
 			if (abilityData.getLevel() >= 2) {
 				damage = 5;
-				knockBack = 1F;
+				knockBack = 1.5F;
 				fireTime = 8;
 				punchesLeft = 2;
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage = 10;
-				knockBack = 1.5F;
+				knockBack = 1.75F;
 				fireTime = 15;
 				punchesLeft = 1;
 				//Creates a bunch of fire blocks around the target
@@ -89,13 +89,13 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
 				if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
 					//DamageSource ds = DamageSource.LAVA;
-					DamageSource ds  = DamageSource.MAGIC;
+					DamageSource ds = DamageSource.MAGIC;
 					target.attackEntityFrom(ds, damage);
 					target.setFire(fireTime);
 					ctx.getData().removeStatusControl(INFERNO_PUNCH);
 					punchesLeft--;
 					target.motionX += direction.x() * knockBack;
-					target.motionY += knockBack ;//+ (direction.y() * infernoPunch.knockBack);
+					target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
 					target.motionZ += direction.z() * knockBack;
 					target.isAirBorne = true;
 					// this line is needed to prevent a bug where players will not be pushed in multiplayer

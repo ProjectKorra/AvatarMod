@@ -50,8 +50,21 @@ public class AbilityInfernoPunch extends Ability {
 
 		BendingData data = ctx.getData();
 		Bender bender = ctx.getBender();
+		float chi = 3;
 
-		if (!data.hasStatusControl(INFERNO_PUNCH) && bender.consumeChi(STATS_CONFIG.chiFireball)) {
+		if (ctx.getLevel() >= 1){
+			chi = 4;
+		}
+		if (ctx.getLevel() >= 2){
+			chi = 5;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)){
+			chi = 8;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)){
+			chi = 3;
+		}
+		if (!data.hasStatusControl(INFERNO_PUNCH) && bender.consumeChi(chi)) {
 			data.addStatusControl(INFERNO_PUNCH);
 		}
 
