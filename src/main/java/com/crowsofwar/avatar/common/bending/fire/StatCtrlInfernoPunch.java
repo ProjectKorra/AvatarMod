@@ -50,7 +50,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
 		EntityLivingBase target = (EntityLivingBase) event.getEntity();
 		Bender ctx = Bender.get(entity);
-		if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
+		if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer) && ctx.getData() != null ) {
 			Vector direction= Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 			int punchesLeft = 1;
 			float knockBack = 0.5F;
@@ -86,7 +86,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 				fireTime = 4;
 			}
 
-			if (ctx.getData() != null && ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
+			if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
 				if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
 					//DamageSource ds = DamageSource.LAVA;
 					DamageSource ds  = DamageSource.MAGIC;
