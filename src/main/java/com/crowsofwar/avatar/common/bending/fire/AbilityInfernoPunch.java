@@ -38,7 +38,7 @@ public class AbilityInfernoPunch extends Ability {
 
 	public float damage = 5;
 
-	public float knockBack = 1;
+	public float knockBack = 0.5F;
 
 	public int fireTime = 5;
 
@@ -50,46 +50,11 @@ public class AbilityInfernoPunch extends Ability {
 
 		BendingData data = ctx.getData();
 		Bender bender = ctx.getBender();
-		AbilityData abilityData = data.getAbilityData(this);
 
 		if (!data.hasStatusControl(INFERNO_PUNCH) && bender.consumeChi(STATS_CONFIG.chiFireball)) {
 			data.addStatusControl(INFERNO_PUNCH);
-			punchesLeft = 1;
-
-			if (abilityData.getLevel() >= 1) {
-				damage = 6;
-				knockBack = 1.25F;
-				fireTime = 6;
-
-
-			}
-			if (abilityData.getLevel() >= 2) {
-				damage = 8;
-				knockBack = 1.5F;
-				fireTime = 8;
-				punchesLeft = 2;
-			}
-
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				damage = 10;
-				knockBack = 3;
-				fireTime = 15;
-				punchesLeft = 1;
-				//Creates a bunch of fire blocks around the target
-			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				damage = 4;
-				punchesLeft = 3;
-				knockBack = 1.25F;
-				fireTime = 4;
-			}
 		}
 
-	}
-
-
-	public boolean punchesLeft() {
-		return punchesLeft > 0;
 	}
 
 

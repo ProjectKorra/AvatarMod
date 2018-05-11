@@ -36,8 +36,10 @@ public class StatCtrlInfernoPunch extends StatusControl {
 
 	@Override
 	public boolean execute(BendingContext ctx) {
-		AbilityInfernoPunch infernoPunch = new AbilityInfernoPunch();
-		return infernoPunch.punchesLeft <= 0;
+		EntityLivingBase entity = ctx.getBenderEntity();
+		AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
+
+		return false;
 
 
 	}
@@ -50,19 +52,51 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		Bender ctx = Bender.get(entity);
 		if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
 			Vector direction= Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-			AbilityInfernoPunch infernoPunch = new AbilityInfernoPunch();
-			float punchesLeft = infernoPunch.punchesLeft;
+			int punchesLeft = 1;
+			float knockBack = 0.5F;
+			int fireTime = 5;
+			float damage = 3;
+			AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
+
+			if (abilityData.getLevel() >= 1) {
+				damage = 4;
+				knockBack = 0.75F;
+				fireTime = 6;
+
+
+			}
+			if (abilityData.getLevel() >= 2) {
+				damage = 5;
+				knockBack = 1F;
+				fireTime = 8;
+				punchesLeft = 2;
+			}
+
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				damage = 10;
+				knockBack = 1.5F;
+				fireTime = 15;
+				punchesLeft = 1;
+				//Creates a bunch of fire blocks around the target
+			}
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				damage = 2;
+				punchesLeft = 3;
+				knockBack = 0.75F;
+				fireTime = 4;
+			}
+
 			if (ctx.getData() != null && ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
 				if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
 					//DamageSource ds = DamageSource.LAVA;
 					DamageSource ds  = DamageSource.MAGIC;
-					target.attackEntityFrom(ds, infernoPunch.damage);
-					target.setFire(infernoPunch.fireTime);
+					target.attackEntityFrom(ds, damage);
+					target.setFire(fireTime);
 					ctx.getData().removeStatusControl(INFERNO_PUNCH);
 					punchesLeft--;
-					target.motionX += direction.x() * infernoPunch.knockBack;
-					target.motionY += infernoPunch.knockBack/3;
-					target.motionZ += direction.z() * infernoPunch.knockBack;
+					target.motionX += direction.x() * knockBack;
+					target.motionY += knockBack ;//+ (direction.y() * infernoPunch.knockBack);
+					target.motionZ += direction.z() * knockBack;
 					target.isAirBorne = true;
 					// this line is needed to prevent a bug where players will not be pushed in multiplayer
 					AvatarUtils.afterVelocityAdded(target);
