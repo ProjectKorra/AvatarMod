@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -13,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.Sys;
@@ -39,6 +41,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
 		EntityLivingBase target = (EntityLivingBase) event.getEntity();
 
+
 		if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
 			Bender ctx = Bender.get(entity);
 			if (ctx.getData() != null) {
@@ -52,25 +55,25 @@ public class StatCtrlInfernoPunch extends StatusControl {
 
 				if (abilityData.getLevel() >= 1) {
 					damage = 4;
-					knockBack = 1.25F;
+					knockBack = 1.125F;
 					fireTime = 6;
 				}
 				if (abilityData.getLevel() >= 2) {
 					damage = 5;
-					knockBack = 1.5F;
+					knockBack = 1.25F;
 					fireTime = 8;
 					punchesLeft = 2;
 				}
 
 				if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 					damage = 10;
-					knockBack = 1.75F;
+					knockBack = 1.5F;
 					fireTime = 15;
 					//Creates a bunch of fire blocks around the target
 				}
 				if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 					damage = 2;
-					knockBack = 0.25F;
+					knockBack = 0.75F;
 					fireTime = 4;
 					punchesLeft = 3;
 				}
@@ -88,6 +91,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 							target.isAirBorne = true;
 							// this line is needed to prevent a bug where players will not be pushed in multiplayer
 							AvatarUtils.afterVelocityAdded(target);
+
 
 						}
 					}
