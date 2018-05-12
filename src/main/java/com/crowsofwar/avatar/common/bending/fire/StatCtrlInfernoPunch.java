@@ -11,8 +11,13 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -80,6 +85,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 				if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
 					for (int i = 0; i < punchesLeft; i++) {
 						if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
+							target.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BLAZE_HURT,
+									SoundCategory.PLAYERS, 1, .7f);
 							//DamageSource ds = DamageSource.LAVA;
 							DamageSource ds = DamageSource.MAGIC;
 							target.attackEntityFrom(ds, damage);
