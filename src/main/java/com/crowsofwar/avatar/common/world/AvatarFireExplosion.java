@@ -9,7 +9,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentProtection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -22,10 +21,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -52,8 +47,8 @@ public class AvatarFireExplosion extends Explosion {
 	public AvatarFireExplosion(World worldIn, Entity entityIn, double x, double y, double z, float size, boolean flaming, boolean damagesTerrain) {
 		super(worldIn, entityIn, x, y, z, size, true, false);
 		this.random = new Random();
-		this.affectedBlockPositions = Lists.<BlockPos>newArrayList();
-		this.playerKnockbackMap = Maps.<EntityPlayer, Vec3d>newHashMap();
+		this.affectedBlockPositions = Lists.newArrayList();
+		this.playerKnockbackMap = Maps.newHashMap();
 		this.world = worldIn;
 		this.exploder = entityIn;
 		this.size = size;
@@ -70,13 +65,12 @@ public class AvatarFireExplosion extends Explosion {
 	{
 		this.world.playSound(null, this.x, this.y, this.z, SoundEvents.ENTITY_BLAZE_DEATH, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 
-		if (this.size >= 2.0F && this.damagesTerrain)
-		{
-			this.world.spawnParticle(EnumParticleTypes.LAVA, this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
+		if (this.size >= 2.0F && this.damagesTerrain)  {
+			this.world.spawnParticle(EnumParticleTypes.FLAME, this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
 		}
 		else
 		{
-			this.world.spawnParticle(EnumParticleTypes.LAVA, this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
+			this.world.spawnParticle(EnumParticleTypes.FLAME, this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
 		}
 
 		if (this.damagesTerrain)
@@ -133,7 +127,7 @@ public class AvatarFireExplosion extends Explosion {
 
 	@Override
 	public void doExplosionA() {
-		Set<BlockPos> set = Sets.<BlockPos>newHashSet();
+		Set<BlockPos> set = Sets.newHashSet();
 		int i = 16;
 
 		for (int j = 0; j < 16; ++j) {
@@ -157,7 +151,7 @@ public class AvatarFireExplosion extends Explosion {
 							IBlockState iblockstate = this.world.getBlockState(blockpos);
 
 							if (iblockstate.getMaterial() != Material.AIR) {
-								float f2 = this.exploder != null ? this.exploder.getExplosionResistance(this, this.world, blockpos, iblockstate) : iblockstate.getBlock().getExplosionResistance(world, blockpos, (Entity) null, this);
+								float f2 = this.exploder != null ? this.exploder.getExplosionResistance(this, this.world, blockpos, iblockstate) : iblockstate.getBlock().getExplosionResistance(world, blockpos, null, this);
 								f -= (f2 + 0.3F) * 0.3F;
 							}
 
@@ -186,9 +180,7 @@ public class AvatarFireExplosion extends Explosion {
 		net.minecraftforge.event.ForgeEventFactory.onExplosionDetonate(this.world, this, list, f3);
 		Vec3d vec3d = new Vec3d(this.x, this.y, this.z);
 
-		for (int k2 = 0; k2 < list.size(); ++k2) {
-			Entity entity = list.get(k2);
-
+		for (Entity entity : list) {
 			if (!entity.isImmuneToExplosions()) {
 				double d12 = entity.getDistance(this.x, this.y, this.z) / (double) f3;
 
@@ -227,5 +219,20 @@ public class AvatarFireExplosion extends Explosion {
 			}
 		}
 	}
+
+	@Override
+	public void clearAffectedBlockPositions()
+	{
+		this.affectedBlockPositions.clear();
+	}
+
+	@Override
+	public List<BlockPos> getAffectedBlockPositions()
+	{
+		return this.affectedBlockPositions;
+	}
+
+	@Override
+	public Vec3d getPosition(){ return this.position; }
 }
 
