@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.common.world.AvatarFireExplosion;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.Sys;
@@ -45,10 +47,10 @@ public class StatCtrlInfernoPunch extends StatusControl {
 
 	@Override
 	public boolean execute(BendingContext ctx) {
-		AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
-		if (firstPunch){
-			System.out.println(firstPunch);
-			punchesLeft = 1;
+		/*AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
+		/*if (firstPunch){
+			System.out.println(firstPunch);**/
+			/*punchesLeft = 1;
 
 			if (abilityData.getLevel() >= 2) {
 				punchesLeft = 2;
@@ -60,14 +62,15 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				punchesLeft = 3;
-			}
-			firstPunch = false;
-		}
-		System.out.println(firstPunch);
-		if (punchesLeft > 0) {
+			}**/
+			//firstPunch = false;
+		//}
+		//System.out.println(firstPunch);
+		/*if (punchesLeft > 0) {
 			punchesLeft--;
-		}
-		return punchesLeft <= 0;
+		}**/
+		//return punchesLeft <= 0;
+		return false;
 
 	}
 
@@ -85,7 +88,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 				float knockBack = 1F;
 				int fireTime = 5;
 				float damageModifier = (float) (ctx.calcPowerRating(Firebending.ID)/100);
-				System.out.println(ctx.calcPowerRating(Firebending.ID));
 				float damage = 3 + (3 * damageModifier);
 				//int punchesLeft = 1;
 
@@ -117,6 +119,13 @@ public class StatCtrlInfernoPunch extends StatusControl {
 				if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
 					if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
 
+						if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)){
+							BlockPos blockPos = target.getPosition();
+							AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, target, blockPos.getX(), blockPos.getY(),
+									blockPos.getZ(), 3F, true, false);
+							fireExplosion.doExplosionA();
+							fireExplosion.doExplosionB(true);
+						}
 						target.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BLAZE_HURT,
 								SoundCategory.PLAYERS, 1, .7f);
 						//DamageSource ds = DamageSource.LAVA;
@@ -129,6 +138,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						target.isAirBorne = true;
 						// this line is needed to prevent a bug where players will not be pushed in multiplayer
 						AvatarUtils.afterVelocityAdded(target);
+						ctx.getData().removeStatusControl(INFERNO_PUNCH);
 
 
 					}

@@ -36,6 +36,8 @@ public class AbilityInfernoPunch extends Ability {
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			chi = 2F;
 		}
+		if (data.hasStatusControl(INFERNO_PUNCH)) return;
+
 		if (!data.hasStatusControl(INFERNO_PUNCH) && bender.consumeChi(chi)) {
 			data.addStatusControl(INFERNO_PUNCH);
 
