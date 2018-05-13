@@ -43,9 +43,6 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class EntityAvatarLightning extends EntityLightningBolt {
-	private static final DataParameter<Float> SYNC_DAMAGE_MULT = EntityDataManager.createKey(EntityAvatarLightning.class,
-			DataSerializers.FLOAT);
-
 
 	private SyncedEntity<EntityLivingBase> ownerRef;
 

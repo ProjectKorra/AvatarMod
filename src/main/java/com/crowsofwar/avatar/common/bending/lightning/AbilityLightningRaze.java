@@ -35,11 +35,15 @@ public class AbilityLightningRaze extends Ability {
 		float frequency = 5;
 		//How many ticks pass before each lightning bolt strikes.
 		int bolts = 1;
+		//The number of  bolts the lightning spawner spawns per ticks
+		//Ticks determined by frequency
 		float accuracy = 2;
-		float damageMult = 1;
-
 		/*0 accuracy is the most accurate; each number represents how far away from the spawn position
 		it will be.**/
+
+		float damageMult = 1;
+		//Times the damage mult by 2 to get damage
+
 
 
 		if (ctx.getLevel() >= 1) {
