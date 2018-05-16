@@ -5,15 +5,12 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
-import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.world.AvatarFireExplosion;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -24,19 +21,9 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.client.event.sound.PlaySoundEvent;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.Sys;
-
-import java.util.Random;
-import java.util.Timer;
-
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
@@ -48,18 +35,17 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		super(15, CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
 
-	private int punchesLeft;
+	/*private int punchesLeft;
 	private boolean firstPunch;
 
 	public void setFirstPunch(boolean punch) {
 		this.firstPunch = punch;
 	}
-
+**/
 
 	@Override
 	public boolean execute(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
-		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
 		EntityFireball fireball = new EntityFireball(world);
@@ -165,8 +151,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 								AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, target, blockPos.getX(), blockPos.getY(),
 										blockPos.getZ(), 3F, true, false);
 								fireExplosion.doExplosionA();
-								World.spawnParticle(EnumParticleTypes.LAVA, target.posX, target.posY, target.posZ,
-										200, 0, 0, 0D, 2);
+								World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY, target.posZ,
+										200, 0.05, 0.05, 0.05, 0.75);
 								fireExplosion.doExplosionB(true);
 
 							}
