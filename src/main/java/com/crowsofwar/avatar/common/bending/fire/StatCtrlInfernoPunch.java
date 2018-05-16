@@ -5,19 +5,25 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.EntityFireball;
+import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.world.AvatarFireExplosion;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -32,6 +38,8 @@ import java.util.Timer;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
+import static com.crowsofwar.gorecore.util.Vector.getEyePos;
+import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 
@@ -50,7 +58,11 @@ public class StatCtrlInfernoPunch extends StatusControl {
 
 	@Override
 	public boolean execute(BendingContext ctx) {
-		/*AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
+		EntityLivingBase entity = ctx.getBenderEntity();
+		Bender bender = ctx.getBender();
+		World world = ctx.getWorld();
+		AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
+		EntityFireball fireball = new EntityFireball(world);
 		/*if (firstPunch){
 			System.out.println(firstPunch);**/
 			/*punchesLeft = 1;
@@ -73,6 +85,28 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			punchesLeft--;
 		}**/
 		//return punchesLeft <= 0;
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+
+			Vector playerPos = getEyePos(entity);
+			Vector target = playerPos.plus(getLookRectangular(entity).times(2.5));
+
+
+			fireball.setPosition(target);
+			fireball.setOwner(entity);
+			fireball.setDamage(4);
+			fireball.setSize((int) 0.3);
+			fireball.setBehavior(new FireballBehavior.PlayerControlled());
+			world.spawnEntity(fireball);
+
+			//EntityFireball fireball1 = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
+
+			//if (fireball1 != null) {
+			fireball.addVelocity(Vector.getLookRectangular(entity).times(40));
+			fireball.setBehavior(new FireballBehavior.Thrown());
+			//}
+
+
+		}
 		return false;
 
 	}
@@ -82,6 +116,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 	public static void onInfernoPunch(LivingAttackEvent event) {
 		EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
 		EntityLivingBase target = (EntityLivingBase) event.getEntity();
+		
+
 
 
 		if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
@@ -127,15 +163,12 @@ public class StatCtrlInfernoPunch extends StatusControl {
 							BlockPos blockPos = target.getPosition();
 							AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, target, blockPos.getX(), blockPos.getY(),
 									blockPos.getZ(), 3F, true, false);
-
-							if (!ForgeEventFactory.onExplosionStart(target.world, fireExplosion)) {
-
-								fireExplosion.doExplosionA();
-								fireExplosion.doExplosionB(true);
-
-
-							}
+							fireExplosion.doExplosionA();
+							fireExplosion.doExplosionB(true);
+							target.isServerWorld().spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY, target.posZ,
+									50, 0, 0,  0D,  1);
 						}
+
 						target.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BLAZE_HURT,
 								SoundCategory.PLAYERS, 1, .7f);
 						DamageSource ds = DamageSource.MAGIC;
@@ -149,13 +182,13 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						AvatarUtils.afterVelocityAdded(target);
 						ctx.getData().removeStatusControl(INFERNO_PUNCH);
 
-						}
 					}
-
 				}
+
 			}
 		}
 	}
+}
 
 
 

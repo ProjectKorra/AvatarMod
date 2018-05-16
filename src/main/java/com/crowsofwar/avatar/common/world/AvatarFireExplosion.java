@@ -45,7 +45,7 @@ public class AvatarFireExplosion extends Explosion {
 	private final Vec3d position;
 
 	public AvatarFireExplosion(World worldIn, Entity entityIn, double x, double y, double z, float size, boolean flaming, boolean damagesTerrain) {
-		super(worldIn, entityIn, x, y, z, size, true, false);
+		super(worldIn, entityIn, x, y, z, size, true, damagesTerrain);
 		this.random = new Random();
 		this.affectedBlockPositions = Lists.newArrayList();
 		this.playerKnockbackMap = Maps.newHashMap();
@@ -61,69 +61,61 @@ public class AvatarFireExplosion extends Explosion {
 	}
 
 	@Override
-	public void doExplosionB(boolean spawnParticles)
-	{
-		this.world.playSound(null, this.x, this.y, this.z, SoundEvents.ENTITY_BLAZE_DEATH, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+	public void doExplosionB(boolean spawnParticles){
 
-		if (this.size >= 2.0F && this.damagesTerrain)  {
-			this.world.spawnParticle(EnumParticleTypes.FLAME, this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
-		}
-		else
-		{
-			this.world.spawnParticle(EnumParticleTypes.FLAME, this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
-		}
+				//this.world.spawnParticle(EnumParticleTypes.FLAME, this.x, this.y, this.z, 1D, 1D, 1D);
 
-		if (this.damagesTerrain)
-		{
-			for (BlockPos blockpos : this.affectedBlockPositions)
-			{
-				IBlockState iblockstate = this.world.getBlockState(blockpos);
-				Block block = iblockstate.getBlock();
+				this.world.playSound(null, this.x, this.y, this.z, SoundEvents.ENTITY_BLAZE_DEATH, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 
-				if (spawnParticles)
-				{
-					double d0 = (double)((float)blockpos.getX() + this.world.rand.nextFloat());
-					double d1 = (double)((float)blockpos.getY() + this.world.rand.nextFloat());
-					double d2 = (double)((float)blockpos.getZ() + this.world.rand.nextFloat());
-					double d3 = d0 - this.x;
-					double d4 = d1 - this.y;
-					double d5 = d2 - this.z;
-					double d6 = (double)MathHelper.sqrt(d3 * d3 + d4 * d4 + d5 * d5);
-					d3 = d3 / d6;
-					d4 = d4 / d6;
-					d5 = d5 / d6;
-					double d7 = 0.5D / (d6 / (double)this.size + 0.1D);
-					d7 = d7 * (double)(this.world.rand.nextFloat() * this.world.rand.nextFloat() + 0.3F);
-					d3 = d3 * d7;
-					d4 = d4 * d7;
-					d5 = d5 * d7;
-					this.world.spawnParticle(EnumParticleTypes.LAVA, (d0 + this.x) / 2.0D, (d1 + this.y) / 2.0D, (d2 + this.z) / 2.0D, d3, d4, d5);
-					this.world.spawnParticle(EnumParticleTypes.FLAME, d0, d1, d2, d3, d4, d5);
+				if (this.size >= 2.0F) {
+					this.world.spawnParticle(EnumParticleTypes.LAVA, this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
+				} else {
+					this.world.spawnParticle(EnumParticleTypes.FLAME, this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
 				}
 
-				if (iblockstate.getMaterial() != Material.AIR)
-				{
-					if (block.canDropFromExplosion(this))
-					{
-						block.dropBlockAsItemWithChance(this.world, blockpos, this.world.getBlockState(blockpos), 1.0F / this.size, 0);
+
+				for (BlockPos blockpos : this.affectedBlockPositions) {
+					IBlockState iblockstate = this.world.getBlockState(blockpos);
+					Block block = iblockstate.getBlock();
+
+					if (spawnParticles) {
+						double d0 = (double) ((float) blockpos.getX() + this.world.rand.nextFloat());
+						double d1 = (double) ((float) blockpos.getY() + this.world.rand.nextFloat());
+						double d2 = (double) ((float) blockpos.getZ() + this.world.rand.nextFloat());
+						double d3 = d0 - this.x;
+						double d4 = d1 - this.y;
+						double d5 = d2 - this.z;
+						double d6 = (double) MathHelper.sqrt(d3 * d3 + d4 * d4 + d5 * d5);
+						d3 = d3 / d6;
+						d4 = d4 / d6;
+						d5 = d5 / d6;
+						double d7 = 0.5D / (d6 / (double) this.size + 0.1D);
+						d7 = d7 * (double) (this.world.rand.nextFloat() * this.world.rand.nextFloat() + 0.3F);
+						d3 = d3 * d7;
+						d4 = d4 * d7;
+						d5 = d5 * d7;
+						this.world.spawnParticle(EnumParticleTypes.LAVA, (d0 + this.x) / 2.0D, (d1 + this.y) / 2.0D, (d2 + this.z) / 2.0D, d3, d4, d5);
+						this.world.spawnParticle(EnumParticleTypes.FLAME, d0, d1, d2, d3, d4, d5);
 					}
+					if (this.damagesTerrain) {
+						if (iblockstate.getMaterial() != Material.AIR) {
+							if (block.canDropFromExplosion(this)) {
+								block.dropBlockAsItemWithChance(this.world, blockpos, this.world.getBlockState(blockpos), 1.0F / this.size, 0);
+							}
 
-					block.onBlockExploded(this.world, blockpos, this);
+							block.onBlockExploded(this.world, blockpos, this);
+						}
+					}
+				}
+
+				if (this.causesFire) {
+					for (BlockPos blockpos1 : this.affectedBlockPositions) {
+						if (this.world.getBlockState(blockpos1).getMaterial() == Material.AIR && this.world.getBlockState(blockpos1.down()).isFullBlock() && this.random.nextInt(3) == 0) {
+							this.world.setBlockState(blockpos1, Blocks.FIRE.getDefaultState());
+						}
+					}
 				}
 			}
-		}
-
-		if (this.causesFire)
-		{
-			for (BlockPos blockpos1 : this.affectedBlockPositions)
-			{
-				if (this.world.getBlockState(blockpos1).getMaterial() == Material.AIR && this.world.getBlockState(blockpos1.down()).isFullBlock() && this.random.nextInt(3) == 0)
-				{
-					this.world.setBlockState(blockpos1, Blocks.FIRE.getDefaultState());
-				}
-			}
-		}
-	}
 
 	@Override
 	public void doExplosionA() {

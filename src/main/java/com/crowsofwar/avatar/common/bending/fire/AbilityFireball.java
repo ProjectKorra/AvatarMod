@@ -29,6 +29,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+import org.lwjgl.Sys;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
@@ -67,6 +68,7 @@ public class AbilityFireball extends Ability {
 			float damage = STATS_CONFIG.fireballSettings.damage;
 			damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
 			damage *= ctx.getPowerRatingDamageMod();
+			System.out.println(ctx.getPowerRatingDamageMod());
 
 			EntityFireball fireball = new EntityFireball(world);
 			fireball.setPosition(target);
