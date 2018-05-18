@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
@@ -22,8 +23,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
+
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
@@ -79,19 +83,17 @@ public class StatCtrlInfernoPunch extends StatusControl {
 
 			fireball.setPosition(target);
 			fireball.setOwner(entity);
-			fireball.setDamage(4);
-			fireball.setSize((int) 0.3);
+			fireball.setDamage(0.5F);
 			fireball.setBehavior(new FireballBehavior.PlayerControlled());
 			world.spawnEntity(fireball);
 
-			//EntityFireball fireball1 = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
 
-			//if (fireball1 != null) {
-			fireball.addVelocity(Vector.getLookRectangular(entity).times(40));
-			fireball.setBehavior(new FireballBehavior.Thrown());
-			//}
+		}
+		EntityFireball fireball1 = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
 
-
+		if (fireball1 != null) {
+		fireball1.addVelocity(Vector.getLookRectangular(entity).times(40));
+		fireball1.setBehavior(new FireballBehavior.Thrown());
 		}
 		return false;
 
@@ -103,8 +105,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
 		EntityLivingBase target = (EntityLivingBase) event.getEntity();
 		World world = target.getEntityWorld();
-		if (world instanceof WorldServer) {
-			WorldServer World = (WorldServer) target.getEntityWorld();
+
 
 
 			if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
@@ -151,9 +152,12 @@ public class StatCtrlInfernoPunch extends StatusControl {
 								AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, target, blockPos.getX(), blockPos.getY(),
 										blockPos.getZ(), 3F, true, false);
 								fireExplosion.doExplosionA();
-								World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY, target.posZ,
-										200, 0.05, 0.05, 0.05, 0.75);
-								fireExplosion.doExplosionB(true);
+								if (world instanceof WorldServer) {
+									WorldServer World = (WorldServer) target.getEntityWorld();
+									World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY, target.posZ,
+											200, 0.05, 0.05, 0.05, 0.75);
+									fireExplosion.doExplosionB(true);
+								}
 
 							}
 
