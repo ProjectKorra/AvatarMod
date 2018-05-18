@@ -181,7 +181,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			}
 		}
 	}
-}
 
 
 
