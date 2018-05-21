@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -52,6 +53,7 @@ public class EntityEarthShield extends AvatarEntity {
 		this.posX = Math.cos(Math.toRadians(Angle)) * Radius;
 		this.posZ = Math.sin(Math.toRadians(Angle)) * Radius;
 		i++;
+
 		if (Health <= 0) {
 			this.setDead();
 		}
@@ -84,13 +86,19 @@ public class EntityEarthShield extends AvatarEntity {
 		if (!world.isRemote) {
 			pushEntity(entity);
 			if (attackEntity(entity)) {
-
 				if (getOwner() != null) {
 					BendingData data = BendingData.get(getOwner());
 					data.getAbilityData("earth_shield").addXp(3 - data.getAbilityData("earth_shield").getLevel()/3);
-					BattlePerformanceScore.addMediumScore(getOwner());
+					BattlePerformanceScore.addSmallScore(getOwner());
 				}
 
+			}
+			if (entity instanceof EntityArrow){
+				this.Health -= 1;
+			}
+			if (entity instanceof AvatarEntity && ((AvatarEntity) entity).isProjectile()){
+				entity.setDead();
+				this.Health -= 1;
 			}
 		}
 	}
@@ -99,6 +107,7 @@ public class EntityEarthShield extends AvatarEntity {
 		if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
 			DamageSource ds = AvatarDamageSource.causeFloatingBlockDamage(entity, getOwner());
 			float damage = Damage;
+			this.Health -= 0.1;
 			return entity.attackEntityFrom(ds, damage);
 		}
 
