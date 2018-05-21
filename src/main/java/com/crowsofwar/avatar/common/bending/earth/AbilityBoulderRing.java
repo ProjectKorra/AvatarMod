@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.EntityBoulder;
 import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,10 +12,10 @@ import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-public class AbilityEarthShield extends Ability {
+public class AbilityBoulderRing extends Ability {
 
-	public AbilityEarthShield(){
-		super (Earthbending.ID, "earth_shield");
+	public AbilityBoulderRing(){
+		super (Earthbending.ID, "boulder_ring");
 	}
 
 	@Override
@@ -30,59 +31,54 @@ public class AbilityEarthShield extends Ability {
 		float ticks = 50;
 		double speed = 1;
 		float chi = 4;
+		int boulders = 3;
+		float radius = 2;
 
 		if (ctx.getLevel() >= 1) {
 			damage = 0.2f;
 			ticks = 80;
+			boulders = 4;
+			radius = 3;
 		}
 		if (ctx.getLevel() >= 2) {
 			ticks = 100;
+			boulders = 5;
+			radius = 4;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			damage = 0.75f;
+			damage = 1f;
 			ticks = 30;
-			speed = 12;
+			//speed = 12;
+			boulders = 4;
+
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			damage = 2f;
+			damage = 0.5f;
 			ticks = 60;
-			speed = 20;
+			//speed = 20;
+			boulders = 10;
 		}
 
 		if (bender.consumeChi(chi)) {
 
-			if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-
-				Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-
-				EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
-				earthspike.setOwner(entity);
-				earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
-				earthspike.setVelocity(look.times(speed));
-				earthspike.setDamageMult((float) (damage * ctx.getPowerRatingDamageMod()));
-				earthspike.setDuration(ticks);
-				earthspike.setUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
-				world.spawnEntity(earthspike);
-
-			} else {
-
-				for (int i = 0; i < 8; i++) {
+				for (int i = 0; i < 3; i++) {
 
 					Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-							i * 45), 0);
-					Vector velocity = direction1.times(speed);
+							360/boulders), entity.rotationPitch);
+					//Vector velocity = direction1.times(speed);
 
-					EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
-					earthspike.setVelocity(velocity);
-					earthspike.setDuration(ticks);
-					earthspike.setOwner(entity);
-					earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
-					earthspike.setDamageMult(damage + xp / 100);
-					world.spawnEntity(earthspike);
+					EntityBoulder boulder = new EntityBoulder(world);
+					boulder.setSpeed((float) speed);
+					boulder.setTicksAlive(ticks);
+					boulder.setOwner(entity);
+					boulder.setPosition(direction1);
+					boulder.setBouldersLeft(boulders);
+					boulder.setDamage(damage);
+					boulder.setRadius(radius);
+					world.spawnEntity(boulder);
 				}
 			}
 
 		}
 	}
-}
 

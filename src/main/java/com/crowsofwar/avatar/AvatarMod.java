@@ -123,6 +123,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityExplosivePillar());
 		Abilities.register(new AbilitySandstorm());
 		Abilities.register(new AbilityInfernoPunch());
+		Abilities.register(new AbilityBoulderRing());
 	}
 
 	private static void registerBendingStyles() {
@@ -234,7 +235,7 @@ public class AvatarMod {
 		registerEntity(EntityWaterCannon.class, "water_cannon");
 		registerEntity(EntitySandstorm.class, "sandstorm");
 		registerEntity(EntityExplosionSpawner.class, "explosion_spawner");
-
+		registerEntity(EntityBoulder.class, "entity_boulder");
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);

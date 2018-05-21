@@ -13,6 +13,9 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
@@ -21,15 +24,19 @@ import java.util.List;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-public class EntityEarthShield extends AvatarEntity {
+public class EntityBoulder extends AvatarEntity {
+	public static final DataParameter<Integer> SYNC_BOULDERS_LEFT= EntityDataManager.createKey(
+			EntityBoulder.class, DataSerializers.VARINT);
+
 	private float Damage;
-	private Vector startingPosition;
-	//Just a test to see if I need to add this to the circle code
 	private float speed;
+	//Just a test to see if I need to add this to the circle code
 	private float Radius;
 	private float ticksAlive;
 	private float Health;
 	private float knockBack;
+	public float size;
+	private int bouldersLeft;
 	//How far away the entity is from the player.
 
 	public void setHealth (float health) {
@@ -38,10 +45,6 @@ public class EntityEarthShield extends AvatarEntity {
 
 	public void setTicksAlive (float ticks) {
 		this.ticksAlive = ticks;
-	}
-
-	public void setStartingPosition (Vector position) {
-		this.startingPosition = position;
 	}
 
 	public void setRadius (float radius) {
@@ -59,10 +62,33 @@ public class EntityEarthShield extends AvatarEntity {
 	public void setKnockBack (float knockBack){
 		this.knockBack = knockBack;
 	}
-	public EntityEarthShield(World world) {
+
+	public void setSize (float size) {
+		this.size = size;
+	}
+
+	public void setBouldersLeft (int boulders) {
+		dataManager.set(SYNC_BOULDERS_LEFT, boulders);
+	}
+
+	public float getSize () {
+		return this.size;
+	}
+
+	public int getBouldersLeft(){
+		return dataManager.get(SYNC_BOULDERS_LEFT);
+	}
+
+	public EntityBoulder(World world) {
 		super(world);
 		this.Damage = 0.5F;
 		this.Radius = 2;
+	}
+
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_BOULDERS_LEFT, bouldersLeft);
 	}
 
 	@Override
@@ -82,8 +108,8 @@ public class EntityEarthShield extends AvatarEntity {
 		float Angle = speed % 360;
 		this.posX = Math.cos(Math.toRadians(Angle)) * Radius;
 		this.posZ = Math.sin(Math.toRadians(Angle)) * Radius;
-		speed++;
-
+		speed ++;
+     	//Need to make speed increase by whatever I set it too originally
 		if (Health <= 0) {
 			this.setDead();
 		}
@@ -110,8 +136,8 @@ public class EntityEarthShield extends AvatarEntity {
 		if (!world.isRemote && getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 			if (data != null) {
-				data.getAbilityData("earthspike").addXp(
-						(data.getAbilityData("earth_shield").getLevel()/3) * attacked);
+				data.getAbilityData("boulder_ring").addXp(
+						(data.getAbilityData("boulder_ring").getLevel()/3) * attacked);
 				}
 			}
 
@@ -124,7 +150,7 @@ public class EntityEarthShield extends AvatarEntity {
 			if (attackEntity(entity)) {
 				if (getOwner() != null) {
 					BendingData data = BendingData.get(getOwner());
-					data.getAbilityData("earth_shield").addXp(3 - data.getAbilityData("earth_shield").getLevel()/3);
+					data.getAbilityData("boulder_ring").addXp(3 - data.getAbilityData("boulder_ring").getLevel()/3);
 					BattlePerformanceScore.addSmallScore(getOwner());
 				}
 

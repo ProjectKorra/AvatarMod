@@ -8,10 +8,10 @@ import net.minecraft.entity.Entity;
  * ModelEnderCrystal - Either Mojang or a mod author
  * Created using Tabula 6.0.0
  */
-public class ModelEarthShield extends ModelBase {
+public class ModelBoulder extends ModelBase {
     public ModelRenderer cube;
 
-    public ModelEarthShield() {
+    public ModelBoulder() {
         this.textureWidth = 64;
         this.textureHeight = 32;
         this.cube = new ModelRenderer(this, 32, 0);
