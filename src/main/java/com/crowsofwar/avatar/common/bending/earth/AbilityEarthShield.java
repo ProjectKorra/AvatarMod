@@ -1,0 +1,88 @@
+package com.crowsofwar.avatar.common.bending.earth;
+
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
+public class AbilityEarthShield extends Ability {
+
+	public AbilityEarthShield(){
+		super (Earthbending.ID, "earth_shield");
+	}
+
+	@Override
+	public void execute(AbilityContext ctx) {
+
+		AbilityData abilityData = ctx.getAbilityData();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		World world = ctx.getWorld();
+		Bender bender = ctx.getBender();
+
+		float damage = 0.1f;
+		float xp = abilityData.getTotalXp();
+		float ticks = 50;
+		double speed = 1;
+		float chi = 4;
+
+		if (ctx.getLevel() >= 1) {
+			damage = 0.2f;
+			ticks = 80;
+		}
+		if (ctx.getLevel() >= 2) {
+			ticks = 100;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			damage = 0.75f;
+			ticks = 30;
+			speed = 12;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			damage = 2f;
+			ticks = 60;
+			speed = 20;
+		}
+
+		if (bender.consumeChi(chi)) {
+
+			if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+
+				Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
+
+				EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
+				earthspike.setOwner(entity);
+				earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
+				earthspike.setVelocity(look.times(speed));
+				earthspike.setDamageMult((float) (damage * ctx.getPowerRatingDamageMod()));
+				earthspike.setDuration(ticks);
+				earthspike.setUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
+				world.spawnEntity(earthspike);
+
+			} else {
+
+				for (int i = 0; i < 8; i++) {
+
+					Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+							i * 45), 0);
+					Vector velocity = direction1.times(speed);
+
+					EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
+					earthspike.setVelocity(velocity);
+					earthspike.setDuration(ticks);
+					earthspike.setOwner(entity);
+					earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
+					earthspike.setDamageMult(damage + xp / 100);
+					world.spawnEntity(earthspike);
+				}
+			}
+
+		}
+	}
+}
+
