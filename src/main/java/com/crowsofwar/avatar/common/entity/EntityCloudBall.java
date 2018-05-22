@@ -65,10 +65,14 @@ public class EntityCloudBall extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		int ticks = 0;
 
 		setBehavior((CloudburstBehavior) getBehavior().onUpdate(this));
-		if (ticksExisted >= 250 && this.getBehavior() instanceof CloudburstBehavior.Thrown) {
-			this.setDead();
+		if (this.getBehavior() instanceof CloudburstBehavior.Thrown) {
+			ticks++;
+			if (ticks >= 250){
+				this.setDead();
+			}
 		}
 
       /*  if (!world.isRemote){

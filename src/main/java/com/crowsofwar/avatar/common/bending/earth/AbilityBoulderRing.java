@@ -6,6 +6,9 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityBoulder;
 import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
+import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
+import com.crowsofwar.avatar.common.entity.data.BoulderBehavior;
+import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
@@ -72,8 +75,8 @@ public class AbilityBoulderRing extends Ability {
 					Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
 							360/boulders), entity.rotationPitch);
 					//Vector velocity = direction1.times(speed);
-					//Vector playerPos = getEyePos(entity);
-					//Vector target = playerPos.plus(getLookRectangular(entity).times(2.5));
+					Vector playerPos = getEyePos(entity);
+					Vector target = playerPos.plus(getLookRectangular(entity).times(2.5));
 
 					EntityBoulder boulder = new EntityBoulder(world);
 					boulder.setSpeed((float) speed);
@@ -86,7 +89,9 @@ public class AbilityBoulderRing extends Ability {
 					boulder.setRadius(radius);
 					boulder.setSize(0.2F);
 					boulder.setKnockBack(0.1F);
+					boulder.setBehavior(new BoulderBehavior.PlayerControlled());
 					world.spawnEntity(boulder);
+
 				//}
 			}
 
