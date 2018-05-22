@@ -15,14 +15,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.world.World;
-
-import java.util.List;
-
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
 
 public abstract class BoulderBehavior extends Behavior<EntityBoulder> {
 

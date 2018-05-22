@@ -65,7 +65,6 @@ public class EntityBoulder extends AvatarEntity {
 
 	private AxisAlignedBB expandedHitbox;
 
-	private float damage;
 	private float Damage;
 	private float speed;
 	//Just a test to see if I need to add this to the circle code
@@ -122,7 +121,7 @@ public class EntityBoulder extends AvatarEntity {
 	}
 
 	public float getDamage() {
-		return damage;
+		return Damage;
 	}
 
 	public int getSize() {
@@ -327,7 +326,10 @@ public class EntityBoulder extends AvatarEntity {
 		if ((entity instanceof EntityBender || entity instanceof EntityPlayer) && this.getOwner() == entity) {
 			return false;
 		}
-		return entity instanceof EntityLivingBase || super.canCollideWith(entity);
+		else if (entity instanceof EntityBoulder && ((EntityBoulder) entity).getOwner() == this.getOwner()){
+			return false;
+		}
+		else return entity instanceof EntityLivingBase || super.canCollideWith(entity);
 	}
 
 	public boolean attackEntity(Entity entity) {
