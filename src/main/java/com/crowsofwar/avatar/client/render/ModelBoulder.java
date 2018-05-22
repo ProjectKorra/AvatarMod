@@ -16,7 +16,7 @@ public class ModelBoulder extends ModelBase {
         this.textureHeight = 32;
         this.cube = new ModelRenderer(this, 32, 0);
         this.cube.setRotationPoint(0.0F, 0.0F, 0.0F);
-        this.cube.addBox(-4.0F, -4.0F, -4.0F, 8, 8, 8, 0.0F);
+        this.cube.addBox(-4.0F, -4.0F, -4.0F, 8, 8, 8, 1F);
     }
 
     @Override
