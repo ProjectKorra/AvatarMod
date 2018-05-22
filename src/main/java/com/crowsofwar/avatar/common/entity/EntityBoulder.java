@@ -39,8 +39,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.Random;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
@@ -59,7 +57,7 @@ public class EntityBoulder extends AvatarEntity {
 	private static final DataParameter<Float> SYNC_FRICTION = createKey(EntityBoulder.class,
 			DataSerializers.FLOAT);
 	private static final DataParameter<Optional<IBlockState>> SYNC_BLOCK = createKey(
-			EntityFloatingBlock.class, DataSerializers.OPTIONAL_BLOCK_STATE);
+			EntityBoulder.class, DataSerializers.OPTIONAL_BLOCK_STATE);
 
 	private static final DataParameter<BoulderBehavior> SYNC_BEHAVIOR = createKey(
 			EntityBoulder.class, BoulderBehavior.DATA_SERIALIZER);
@@ -72,11 +70,6 @@ public class EntityBoulder extends AvatarEntity {
 	 */
 	private EntityPlayer ownerCached;
 
-	/**
-	 * Whether or not to drop an ItemBlock when the floating block has been
-	 * destroyed. Does not matter on client.
-	 */
-	private boolean enableItemDrops;
 
 	/**
 	 * The hitbox for this floating block, but slightly expanded to give more
@@ -182,8 +175,8 @@ public class EntityBoulder extends AvatarEntity {
 		dataManager.register(SYNC_VELOCITY, Vector.ZERO);
 		dataManager.register(SYNC_FRICTION, 1f);
 		dataManager.register(SYNC_BLOCK, Optional.of(DEFAULT_BLOCK.getDefaultState()));
-		dataManager.register(SYNC_BEHAVIOR, new BoulderBehavior.DoNothing());
 		dataManager.register(SYNC_BOULDERS_LEFT, bouldersLeft);
+		dataManager.register(SYNC_BEHAVIOR, new BoulderBehavior.Idle());
 
 	}
 
@@ -195,9 +188,7 @@ public class EntityBoulder extends AvatarEntity {
 		setVelocity(new Vector(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble
 				("VelocityZ")));
 		setFriction(nbt.getFloat("Friction"));
-		setItemDropsEnabled(nbt.getBoolean("DropItems"));
 		setBehavior((BoulderBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
-		getBehavior().load(nbt.getCompoundTag("BehaviorData"));
 		Damage = nbt.getFloat("Damage");
 	}
 
@@ -210,9 +201,7 @@ public class EntityBoulder extends AvatarEntity {
 		nbt.setDouble("VelocityY", velocity().y());
 		nbt.setDouble("VelocityZ", velocity().z());
 		nbt.setFloat("Friction", getFriction());
-		nbt.setBoolean("DropItems", areItemDropsEnabled());
 		nbt.setInteger("Behavior", getBehavior().getId());
-		getBehavior().save(nestedCompound(nbt, "BehaviorData"));
 		nbt.setFloat("Damage", Damage);
 	}
 
@@ -248,21 +237,6 @@ public class EntityBoulder extends AvatarEntity {
 
 	public void setID(int id) {
 		if (!world.isRemote) dataManager.set(SYNC_ENTITY_ID, id);
-	}
-
-	/**
-	 * Returns whether the floating block drops the block as an item when it is
-	 * destroyed. Only used on server-side. By default, is true.
-	 */
-	public boolean areItemDropsEnabled() {
-		return enableItemDrops;
-	}
-
-	/**
-	 * Set whether the block should be dropped when it is destroyed.
-	 */
-	public void setItemDropsEnabled(boolean enable) {
-		this.enableItemDrops = enable;
 	}
 
 
@@ -302,7 +276,7 @@ public class EntityBoulder extends AvatarEntity {
 		if (Health <= 0) {
 			this.setDead();
 		}
-		if (this.ticksAlive % this.ticksExisted == 0){
+		if (this.ticksAlive <= this.ticksExisted){
 			this.setDead();
 		}
 
@@ -348,14 +322,7 @@ public class EntityBoulder extends AvatarEntity {
 		for (int i = 0; i < 7; i++) {
 			spawnCrackParticle(posX, posY + 0.3, posZ, random.nextGaussian() * 0.1,
 					random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
-		}
 
-		if (!world.isRemote && areItemDropsEnabled()) {
-			List<ItemStack> drops = getBlock().getDrops(world, new BlockPos(this), getBlockState(), 0);
-			for (ItemStack is : drops) {
-				EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
-				world.spawnEntity(ei);
-			}
 		}
 
 		AbilityData data = BendingData.get(getOwner()).getAbilityData("boulder_ring");

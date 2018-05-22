@@ -1,47 +1,34 @@
 package com.crowsofwar.avatar.common.entity.data;
-
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityBoulder;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
-import java.util.List;
-
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public abstract class BoulderBehavior extends Behavior<EntityBoulder> {
 
 	public static final DataSerializer<BoulderBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
 
-	public static int ID_NOTHING, ID_FALL, ID_PICKUP, ID_PLAYER_CONTROL, ID_THROWN;
+	public static int  ID_NOTHING, ID_FALL, ID_PICKUP, ID_PLAYER_CONTROL, ID_THROWN;
 
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
-		ID_NOTHING = registerBehavior(DoNothing.class);
+		ID_NOTHING = registerBehavior(Idle.class);
 		ID_FALL = registerBehavior(Fall.class);
 		ID_PICKUP = registerBehavior(PickUp.class);
 		ID_PLAYER_CONTROL = registerBehavior(PlayerControlled.class);
 		ID_THROWN = registerBehavior(Thrown.class);
 	}
 
-	public static class DoNothing extends BoulderBehavior {
+
+	public static class Idle extends BoulderBehavior {
 
 		@Override
 		public BoulderBehavior onUpdate(EntityBoulder entity) {
@@ -65,7 +52,6 @@ public abstract class BoulderBehavior extends Behavior<EntityBoulder> {
 		}
 
 	}
-
 
 	public static class Thrown extends BoulderBehavior {
 
