@@ -105,11 +105,15 @@ public abstract class BoulderBehavior extends Behavior<EntityBoulder> {
 			if (owner == null) return this;
 
 			float Angle = entity.getSpeed() % 360;
-			entity.posX = Math.cos(Math.toRadians(Angle)) * entity.getRadius();
-			entity.posZ = Math.sin(Math.toRadians(Angle)) * entity.getRadius();
+			double x = Math.cos(Math.toRadians(Angle)) * entity.getRadius();
+			double z = Math.sin(Math.toRadians(Angle)) * entity.getRadius();
 			entity.setSpeed(entity.getSpeed() + 1);
 			//Need to make speed increase by whatever I set it too originally
-
+			Vector forward = Vector.toRectangular(x, z);
+			Vector eye = Vector.getEyePos(owner);
+			Vector target = forward.times(2).plus(eye);
+			Vector motion = target.minus(Vector.getEntityPos(entity)).times(6);
+			entity.setVelocity(motion);
 			return this;
 		}
 

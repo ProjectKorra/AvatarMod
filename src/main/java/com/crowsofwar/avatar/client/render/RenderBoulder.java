@@ -17,12 +17,8 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
@@ -35,8 +31,9 @@ import static net.minecraft.client.renderer.GlStateManager.disableBlend;
 import static net.minecraft.client.renderer.GlStateManager.enableLighting;
 import static net.minecraft.util.math.MathHelper.cos;
 
-@SideOnly(Side.CLIENT)
-public class RenderBoulder extends Render<EntityBoulder> {private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
+public class RenderBoulder extends Render<EntityBoulder> {
+
+	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 		"textures/entity/cloudburst.png");
 	private static final Random random = new Random();
 
@@ -52,7 +49,7 @@ public class RenderBoulder extends Render<EntityBoulder> {private static final R
 
 		float x = (float) xx, y = (float) yy, z = (float) zz;
 
-		float particlePosition = rand.nextInt(2);
+		float particlePosition = rand.nextInt(1);
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 
@@ -69,7 +66,7 @@ public class RenderBoulder extends Render<EntityBoulder> {private static final R
 			double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
 			double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 			double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-			world.spawnParticle(EnumParticleTypes.CLOUD, spawnX + particlePosition, spawnY + particlePosition, spawnZ + particlePosition, 0, 0, 0);
+			//world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, spawnX + particlePosition, spawnY + particlePosition, spawnZ + particlePosition, 0, 0, 0);
 		}
 
 		if (MinecraftForgeClient.getRenderPass() == 0) {

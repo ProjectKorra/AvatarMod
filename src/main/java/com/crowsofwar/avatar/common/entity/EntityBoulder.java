@@ -157,6 +157,7 @@ public class EntityBoulder extends AvatarEntity {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new BoulderBehavior.Idle());
 		dataManager.register(SYNC_SIZE, (int) size);
+		dataManager.register(SYNC_BOULDERS_LEFT, bouldersLeft);
 	}
 
 
@@ -178,9 +179,6 @@ public class EntityBoulder extends AvatarEntity {
 		setBehavior((BoulderBehavior) getBehavior().onUpdate(this));
 
 		if (Health <= 0) {
-			this.setDead();
-		}
-		if (this.ticksAlive <= this.ticksExisted){
 			this.setDead();
 		}
 

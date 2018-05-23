@@ -82,7 +82,7 @@ public class AbilityBoulderRing extends Ability {
 					boulder.setSpeed((float) speed);
 					boulder.setTicksAlive(ticks);
 					boulder.setOwner(entity);
-					boulder.setPosition(direction1);
+					boulder.setPosition(target);
 					boulder.setHealth(health);
 					boulder.setBouldersLeft(boulders);
 					boulder.setDamage(damage);
