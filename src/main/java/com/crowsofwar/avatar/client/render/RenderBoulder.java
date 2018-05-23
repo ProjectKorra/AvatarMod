@@ -6,7 +6,6 @@ import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -34,7 +33,7 @@ import static net.minecraft.util.math.MathHelper.cos;
 public class RenderBoulder extends Render<EntityBoulder> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-		"textures/entity/cloudburst.png");
+		"textures/entity/entity_boulder.png");
 	private static final Random random = new Random();
 
 	public RenderBoulder(RenderManager renderManager) {
@@ -66,7 +65,7 @@ public class RenderBoulder extends Render<EntityBoulder> {
 			double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
 			double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 			double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-			//world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, spawnX + particlePosition, spawnY + particlePosition, spawnZ + particlePosition, 0, 0, 0);
+		//	world.spawnParticle(EnumParticleTypes., spawnX + particlePosition, spawnY + particlePosition, spawnZ + particlePosition, 0, 0, 0);
 		}
 
 		if (MinecraftForgeClient.getRenderPass() == 0) {

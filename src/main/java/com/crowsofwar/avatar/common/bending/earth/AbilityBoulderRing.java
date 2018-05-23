@@ -21,6 +21,7 @@ public class AbilityBoulderRing extends Ability {
 
 	public AbilityBoulderRing(){
 		super (Earthbending.ID, "boulder_ring");
+		requireRaytrace(2.5, false);
 	}
 
 	@Override
@@ -87,7 +88,7 @@ public class AbilityBoulderRing extends Ability {
 					boulder.setBouldersLeft(boulders);
 					boulder.setDamage(damage);
 					boulder.setRadius(radius);
-					boulder.setSize(0.2F);
+					//boulder.setSize(4);
 					boulder.setKnockBack(0.1F);
 					boulder.setBehavior(new BoulderBehavior.PlayerControlled());
 					world.spawnEntity(boulder);

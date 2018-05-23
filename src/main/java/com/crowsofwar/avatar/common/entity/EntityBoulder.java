@@ -1,10 +1,8 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.air.CloudburstPowerModifier;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -13,20 +11,13 @@ import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.BoulderBehavior;
 import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import com.google.common.base.Optional;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -34,24 +25,13 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
+
 import net.minecraft.world.World;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
-
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
-import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
 public class EntityBoulder extends AvatarEntity {
-
-
 
 
 	public static final DataParameter<Integer> SYNC_BOULDERS_LEFT= EntityDataManager.createKey(
@@ -101,7 +81,7 @@ public class EntityBoulder extends AvatarEntity {
 	}
 
 	public void setSize (float size) {
-		this.size = size;
+		dataManager.set(SYNC_SIZE, (int) size);
 	}
 
 	public void setBouldersLeft (int boulders) {
@@ -128,9 +108,6 @@ public class EntityBoulder extends AvatarEntity {
 		return dataManager.get(SYNC_SIZE);
 	}
 
-	public void setSize(int size) {
-		dataManager.set(SYNC_SIZE, size);
-	}
 
 
 	public BoulderBehavior getBehavior() {
@@ -156,7 +133,7 @@ public class EntityBoulder extends AvatarEntity {
 	public void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new BoulderBehavior.Idle());
-		dataManager.register(SYNC_SIZE, (int) size);
+		dataManager.register(SYNC_SIZE, 30);
 		dataManager.register(SYNC_BOULDERS_LEFT, bouldersLeft);
 	}
 
@@ -207,14 +184,7 @@ public class EntityBoulder extends AvatarEntity {
 		}
 
 	}
-	/**
-	 * Prevents the cloudburst from colliding with arrows and other projectiles and deflecting them,
-	 * which messes up the absorption mechanic.
-	 */
-	@Override
-	public boolean canBeCollidedWith() {
-		return false;
-	}
+
 
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
@@ -228,10 +198,6 @@ public class EntityBoulder extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		nbt.setFloat("Damage", getDamage());
 		nbt.setInteger("Behavior", getBehavior().getId());
-	}
-
-	public AxisAlignedBB getExpandedHitbox() {
-		return this.expandedHitbox;
 	}
 
 	@Override
@@ -263,31 +229,10 @@ public class EntityBoulder extends AvatarEntity {
 		Random random = new Random();
 
 		AbilityData data = BendingData.get(getOwner()).getAbilityData("boulder_ring");
-		if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND) && rand.nextBoolean()) {
-
-			Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);
-			if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
-				explosion.doExplosionA();
-				explosion.doExplosionB(true);
-			}
-
-		}
-
-		setDead();
+		this.Health --;
 		return true;
 
 	}
-
-
-
-
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean isInRangeToRenderDist(double d) {
-		return true;
-	}
-
 
 	@Override
 	public void setDead() {

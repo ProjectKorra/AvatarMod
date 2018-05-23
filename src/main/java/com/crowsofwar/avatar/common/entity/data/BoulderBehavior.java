@@ -63,7 +63,7 @@ public abstract class BoulderBehavior extends Behavior<EntityBoulder> {
 
 			time++;
 
-			if (entity.isCollided || (!entity.world.isRemote && time > 100)) {
+			if (entity.isCollided || (!entity.world.isRemote && time > 200)) {
 				entity.setDead();
 				entity.onCollideWithSolid();
 			}
@@ -104,12 +104,15 @@ public abstract class BoulderBehavior extends Behavior<EntityBoulder> {
 
 			if (owner == null) return this;
 
-			float Angle = entity.getSpeed() % 360;
+			/*float Angle = entity.getSpeed() % 360;
 			double x = Math.cos(Math.toRadians(Angle)) * entity.getRadius();
 			double z = Math.sin(Math.toRadians(Angle)) * entity.getRadius();
-			entity.setSpeed(entity.getSpeed() + 1);
+			entity.setSpeed(entity.getSpeed() + 1);**/
 			//Need to make speed increase by whatever I set it too originally
-			Vector forward = Vector.toRectangular(x, z);
+			double yaw = Math.toRadians(owner.rotationYaw);
+			double pitch = Math.toRadians(owner.rotationPitch);
+
+			Vector forward = Vector.toRectangular(yaw, pitch);
 			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
 			Vector motion = target.minus(Vector.getEntityPos(entity)).times(6);
