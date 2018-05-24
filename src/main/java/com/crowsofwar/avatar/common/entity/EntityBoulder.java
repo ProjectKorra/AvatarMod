@@ -6,10 +6,8 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.BoulderBehavior;
-import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -23,13 +21,10 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 
 import net.minecraft.world.World;
 
-import java.util.List;
-import java.util.Random;
 
 public class EntityBoulder extends AvatarEntity {
 
@@ -42,6 +37,10 @@ public class EntityBoulder extends AvatarEntity {
 
 	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityBoulder.class,
 			DataSerializers.VARINT);
+
+	public static final DataParameter<Float> SYNC_KNOCKBACK = EntityDataManager.createKey(EntityBoulder.class, DataSerializers.FLOAT);
+
+	public static final DataParameter<Float> SYNC_DAMAGE = EntityDataManager.createKey(EntityBoulder.class, DataSerializers.FLOAT);
 
 	private AxisAlignedBB expandedHitbox;
 
@@ -64,12 +63,12 @@ public class EntityBoulder extends AvatarEntity {
 		this.ticksAlive = ticks;
 	}
 
-	public void setRadius (float radius) {
+	/*public void setRadius (float radius) {
 		this.Radius = radius;
-	}
+	}**/
 
 	public void setDamage (float damage) {
-		this.Damage = damage;
+		dataManager.set(SYNC_DAMAGE, damage);
 	}
 
 	public void setSpeed (float speed) {
@@ -77,7 +76,7 @@ public class EntityBoulder extends AvatarEntity {
 	}
 
 	public void setKnockBack (float knockBack){
-		this.knockBack = knockBack;
+		dataManager.set(SYNC_KNOCKBACK, knockBack);
 	}
 
 	public void setSize (float size) {
@@ -96,16 +95,20 @@ public class EntityBoulder extends AvatarEntity {
 		return this.speed;
 	}
 
-	public float getRadius(){
-		return this.Radius;
-	}
+	//public float getRadius(){
+	//	return this.Radius;
+	//}
 
 	public float getDamage() {
-		return Damage;
+		return dataManager.get(SYNC_DAMAGE);
 	}
 
 	public int getSize() {
 		return dataManager.get(SYNC_SIZE);
+	}
+
+	public float getKnockBack(){
+		return dataManager.get(SYNC_KNOCKBACK);
 	}
 
 
@@ -135,6 +138,8 @@ public class EntityBoulder extends AvatarEntity {
 		dataManager.register(SYNC_BEHAVIOR, new BoulderBehavior.Idle());
 		dataManager.register(SYNC_SIZE, 30);
 		dataManager.register(SYNC_BOULDERS_LEFT, bouldersLeft);
+		dataManager.register(SYNC_KNOCKBACK, 0.1F);
+		dataManager.register(SYNC_DAMAGE, 0.1F);
 	}
 
 
@@ -143,7 +148,6 @@ public class EntityBoulder extends AvatarEntity {
 	public EntityLivingBase getController() {
 		return getBehavior() instanceof BoulderBehavior.PlayerControlled ? getOwner() : null;
 	}
-
 
 
 
@@ -157,30 +161,6 @@ public class EntityBoulder extends AvatarEntity {
 
 		if (Health <= 0) {
 			this.setDead();
-		}
-
-		// amount of entities which were successfully attacked
-		int attacked = 0;
-
-		// Push collided entities back
-		if (!world.isRemote) {
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-					entity -> entity != getOwner());
-			if (!collided.isEmpty()) {
-				for (Entity entity : collided) {
-					if (attackEntity(entity)) {
-						attacked++;
-					}
-				}
-			}
-		}
-
-		if (!world.isRemote && getOwner() != null) {
-			BendingData data = BendingData.get(getOwner());
-			if (data != null) {
-				data.getAbilityData("boulder_ring").addXp(
-						(data.getAbilityData("boulder_ring").getLevel()/3) * attacked);
-			}
 		}
 
 	}
@@ -198,6 +178,10 @@ public class EntityBoulder extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		nbt.setFloat("Damage", getDamage());
 		nbt.setInteger("Behavior", getBehavior().getId());
+	}
+
+	public AxisAlignedBB getExpandedHitbox() {
+		return this.expandedHitbox;
 	}
 
 	@Override
@@ -223,12 +207,6 @@ public class EntityBoulder extends AvatarEntity {
 
 	@Override
 	public boolean onCollideWithSolid() {
-
-		BoulderBehavior behavior = getBehavior();
-		// Spawn particles
-		Random random = new Random();
-
-		AbilityData data = BendingData.get(getOwner()).getAbilityData("boulder_ring");
 		this.Health --;
 		return true;
 

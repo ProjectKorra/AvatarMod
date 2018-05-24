@@ -15,6 +15,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.world.World;
+
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public abstract class BoulderBehavior extends Behavior<EntityBoulder> {
 
@@ -69,10 +75,53 @@ public abstract class BoulderBehavior extends Behavior<EntityBoulder> {
 			}
 
 			entity.addVelocity(0, -1 / 120, 0);
+			World world = entity.world;
+			if (!entity.isDead) {
+				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
+						entity.getExpandedHitbox());
+				if (!collidedList.isEmpty()) {
+					Entity collided = collidedList.get(0);
+					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
+						collision((EntityLivingBase) collided, entity);
+					} else if (collided != entity.getOwner()) {
+						Vector motion = new Vector(collided).minus(new Vector(entity));
+						motion = motion.times(0.3).withY(0.08);
+						collided.addVelocity(motion.x(), motion.y(), motion.z());
+
+					}
+
+				}
+			}
 
 			return this;
 
 		}
+		private void collision(EntityLivingBase collided, EntityBoulder entity) {
+			double speed = entity.velocity().magnitude();
+
+			if (collided.attackEntityFrom(AvatarDamageSource.causeCloudburstDamage(collided, entity.getOwner()),
+					entity.getDamage())) {
+				BattlePerformanceScore.addMediumScore(entity.getOwner());
+			}
+
+			Vector motion = entity.velocity().dividedBy(20);
+			motion = motion.times(entity.getKnockBack());
+			collided.addVelocity(motion.x(), motion.y(), motion.z());
+
+			BendingData data = Bender.get(entity.getOwner()).getData();
+			if (!collided.world.isRemote && data != null) {
+				float xp = SKILLS_CONFIG.blockPlaced;
+				data.getAbilityData("boulder_ring").addXp(xp);
+			}
+
+			// Remove the fireball & spawn particles
+			if (!entity.world.isRemote)
+
+				entity.setDead();
+			entity.onCollideWithSolid();
+
+		}
+
 
 		@Override
 		public void fromBytes(PacketBuffer buf) {

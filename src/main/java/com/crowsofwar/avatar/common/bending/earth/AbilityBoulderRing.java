@@ -87,7 +87,7 @@ public class AbilityBoulderRing extends Ability {
 					boulder.setHealth(health);
 					boulder.setBouldersLeft(boulders);
 					boulder.setDamage(damage);
-					boulder.setRadius(radius);
+					//boulder.setRadius(radius);
 					//boulder.setSize(4);
 					boulder.setKnockBack(0.1F);
 					boulder.setBehavior(new BoulderBehavior.PlayerControlled());
