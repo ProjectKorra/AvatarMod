@@ -129,6 +129,7 @@ public class EntityBoulder extends AvatarEntity {
 	public EntityBoulder (World world) {
 		super(world);
 		setSize(0.8f, 0.8f);
+		Damage = 0.1F;
 
 	}
 
