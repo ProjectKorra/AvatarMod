@@ -66,6 +66,7 @@ public class ConfigStats {
 			chiBuffLvl2 = 3f,
 			chiBuffLvl3 = 3.5f,
 			chiBuffLvl4 = 4f,
+			chiBoulderRing = 3F,
 			chiCloudburst = 2.5F,
 			chiEarthspike = 5F,
 			chiExplosion = 3F,
@@ -159,6 +160,27 @@ public class ConfigStats {
 			"minecraft:grass",
 			"minecraft:grass_path");
 
+	@Load
+	public List<String> waterBendableBlockNames = Arrays.asList(
+			"minecraft:snow",
+			"minecraft:snow_layer",
+			"minecraft:ice",
+			"minecraft:packed_ice",
+			"minecraft:frosted_ice",
+			"minecraft:water",
+			"minecraft:flowing_water"
+	);
+
+	@Load List<String> plantBendableBlockNames = Arrays.asList(
+			"minecraft:tallgrass",
+			"minecraft:wheat",
+			"minecraft:double_grass",
+			"minecraft:waterlily",
+			
+
+	);
+
+	public List<Block> waterBendableBlocks;
 	public List<Block> bendableBlocks;
 	public List<Block> sandBlocks;
 
@@ -172,6 +194,7 @@ public class ConfigStats {
 	public void loadBlocks() {
 		bendableBlocks = STATS_CONFIG.loadBlocksList(bendableBlocksNames);
 		sandBlocks = STATS_CONFIG.loadBlocksList(sandBlocksNames);
+		waterBendableBlocks= STATS_CONFIG.loadBlocksList(waterBendableBlockNames);
 	}
 
 	/**
