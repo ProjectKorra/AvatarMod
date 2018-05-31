@@ -158,7 +158,8 @@ public class ConfigStats {
 			"minecraft:redstone_ore",
 			"minecraft:red_sandstone",
 			"minecraft:grass",
-			"minecraft:grass_path");
+			"minecraft:grass_path"
+	);
 
 	@Load
 	public List<String> waterBendableBlockNames = Arrays.asList(
@@ -171,15 +172,23 @@ public class ConfigStats {
 			"minecraft:flowing_water"
 	);
 
-	@Load List<String> plantBendableBlockNames = Arrays.asList(
+	@Load
+	List<String> plantBendableBlockNames = Arrays.asList(
 			"minecraft:tallgrass",
 			"minecraft:wheat",
 			"minecraft:double_grass",
 			"minecraft:waterlily",
-			
+			"minecraft:red_flower",
+			//For some reason, most of the plants in minecraft are tallgrass, double_grass, or red_flowers. Weird.
+			"minecraft:leaves",
+			"minecraft:yellow_flower",
+			"minecraft:red_mushroom",
+			"minecraft:brown_mushroom",
+			"minecraft:vine"
 
 	);
 
+	public List<Block> plantBendableBlocks;
 	public List<Block> waterBendableBlocks;
 	public List<Block> bendableBlocks;
 	public List<Block> sandBlocks;
@@ -194,7 +203,8 @@ public class ConfigStats {
 	public void loadBlocks() {
 		bendableBlocks = STATS_CONFIG.loadBlocksList(bendableBlocksNames);
 		sandBlocks = STATS_CONFIG.loadBlocksList(sandBlocksNames);
-		waterBendableBlocks= STATS_CONFIG.loadBlocksList(waterBendableBlockNames);
+		waterBendableBlocks = STATS_CONFIG.loadBlocksList(waterBendableBlockNames);
+		plantBendableBlocks = STATS_CONFIG.loadBlocksList(plantBendableBlockNames);
 	}
 
 	/**
