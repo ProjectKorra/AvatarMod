@@ -67,10 +67,8 @@ public class AbilityWaterCannon extends Ability {
 				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterCannonAngles;
 				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterCannonAngles;
 
-				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> state.getBlock() == Blocks.WATER
-						|| state.getBlock() == Blocks.FLOWING_WATER || state.getBlock() == Blocks.SNOW ||
-						state.getBlock() == Blocks.SNOW_LAYER || state.getBlock() == Blocks.ICE || state.getBlock() == Blocks.FROSTED_ICE
-						|| state.getBlock() == Blocks.PACKED_ICE;
+				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> STATS_CONFIG.waterBendableBlocks.contains(state.getBlock())
+						|| STATS_CONFIG.plantBendableBlocks.contains(state.getBlock());
 
 				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
 				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
