@@ -93,6 +93,9 @@ public class ConfigStats {
 			chiLightning = 6,
 			chiIceShieldCreate = 4,
 			chiIceShieldProtect = 0.15f,
+			chiInfernoPunch = 3F,
+			chiSmallInfernoPunch = 1F,
+			chiLargeInfernoPunch = 6F,
 			chiSandstorm = 3f,
 			chiWaterCannon = 5f,
 			chiFireJump = 2f;
@@ -105,10 +108,16 @@ public class ConfigStats {
 	public float sleepChiRegen = 99999;
 
 	@Load
+	public float InfernoPunchDamage = 2F;
+
+	@Load
 	public boolean allowAirBubbleElytra = false;
 
 	@Load
 	public double waterArcSearchRadius = 4, waterArcAngles = 8;
+
+	@Load
+	public double waterCannonSearchRadius = 3, waterCannonAngles = 8;
 
 	@Load
 	public boolean addDungeonLoot = true;

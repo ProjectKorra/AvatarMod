@@ -60,12 +60,12 @@ public class AbilityWaterCannon extends Ability {
 			rangeMult = 1;
 		}
 
-		double range = STATS_CONFIG.waterArcSearchRadius * rangeMult;
-		for (int i = 0; i < STATS_CONFIG.waterArcAngles; i++) {
-			for (int j = 0; j < STATS_CONFIG.waterArcAngles; j++) {
+		double range = STATS_CONFIG.waterCannonSearchRadius * rangeMult;
+		for (int i = 0; i < STATS_CONFIG.waterCannonAngles; i++) {
+			for (int j = 0; j < STATS_CONFIG.waterCannonAngles; j++) {
 
-				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterArcAngles;
-				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterArcAngles;
+				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterCannonAngles;
+				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterCannonAngles;
 
 				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> state.getBlock() == Blocks.WATER
 						|| state.getBlock() == Blocks.FLOWING_WATER || state.getBlock() == Blocks.SNOW ||
