@@ -1,14 +1,11 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.INFERNO_PUNCH;
-
 
 public class AbilityInfernoPunch extends Ability {
 	public AbilityInfernoPunch() {
@@ -17,13 +14,12 @@ public class AbilityInfernoPunch extends Ability {
 
 	@Override
 	public void execute(AbilityContext ctx) {
-
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		Bender bender = ctx.getBender();
+		if (data.hasStatusControl(INFERNO_PUNCH)) return;
 
 		float chi = 3;
-
 		if (ctx.getLevel() >= 1) {
 			chi = 4;
 		}
@@ -34,22 +30,11 @@ public class AbilityInfernoPunch extends Ability {
 			chi = 8;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			chi = 2F;
+			chi = 2;
 		}
-		if (data.hasStatusControl(INFERNO_PUNCH)) return;
 
-		if (!data.hasStatusControl(INFERNO_PUNCH) && bender.consumeChi(chi)) {
+		if (bender.consumeChi(chi)) {
 			data.addStatusControl(INFERNO_PUNCH);
-
-
-
-
 		}
-
 	}
-
-
 }
-
-
-
