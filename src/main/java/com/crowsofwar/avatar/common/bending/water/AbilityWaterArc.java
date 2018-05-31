@@ -55,7 +55,7 @@ public class AbilityWaterArc extends Ability {
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
 
-		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel());
+		Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel());
 
 		if (targetPos != null || ctx.consumeWater(1)) {
 
@@ -116,6 +116,45 @@ public class AbilityWaterArc extends Ability {
 		return null;
 
 	}
+
+
+	//For bending snow and ice; is a separate method so that when passives are active it's easy to differentiate
+	private Vector getClosestWaterbendableBlock (EntityLivingBase entity, int level) {
+		World world = entity.world;
+
+		Vector eye = Vector.getEyePos(entity);
+
+		double rangeMult = 0.6;
+		if (level >= 1) {
+			rangeMult = 1;
+		}
+
+		double range = STATS_CONFIG.waterArcSearchRadius * rangeMult;
+		for (int i = 0; i < STATS_CONFIG.waterArcAngles; i++) {
+			for (int j = 0; j < STATS_CONFIG.waterArcAngles; j++) {
+
+				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterArcAngles;
+				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterArcAngles;
+
+				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> state.getBlock() == Blocks.WATER
+						|| state.getBlock() == Blocks.FLOWING_WATER || state.getBlock() == Blocks.SNOW ||
+						state.getBlock() == Blocks.SNOW_LAYER || state.getBlock() == Blocks.ICE || state.getBlock() == Blocks.FROSTED_ICE
+						|| state.getBlock() == Blocks.PACKED_ICE;
+
+				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
+				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
+				if (result.hitSomething()) {
+					return result.getPosPrecise();
+				}
+
+			}
+
+		}
+
+		return null;
+
+	}
+
 
 	/**
 	 * Kills already existing water arc if there is one

@@ -5,8 +5,19 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+import java.util.function.BiPredicate;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static java.lang.Math.toRadians;
 
 public class AbilityWaterCannon extends Ability {
 	public AbilityWaterCannon() {
@@ -18,18 +29,60 @@ public class AbilityWaterCannon extends Ability {
 	public void execute(AbilityContext ctx) {
 
 		Bender bender = ctx.getBender();
+		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 
+		Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel());
 		boolean hasChi = bender.consumeChi(STATS_CONFIG.chiWaterCannon);
 		boolean hasWaterCharge = data.hasTickHandler(TickHandler.WATER_CHARGE);
 
-		if (ctx.consumeWater(3)) {
+		if (ctx.consumeWater(3) || targetPos != null) {
 			if (hasChi && !hasWaterCharge) {
 				ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
 			}
-		} else {
-			bender.sendMessage("avatar.waterCannonFail");
+		} else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()){
+			if (hasChi && !hasWaterCharge) {
+				ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
+			}
+			else {
+				bender.sendMessage("avatar.waterCannonFail");
+			}
 		}
+
+	}
+	private Vector getClosestWaterbendableBlock (EntityLivingBase entity, int level) {
+		World world = entity.world;
+
+		Vector eye = Vector.getEyePos(entity);
+
+		double rangeMult = 0.6;
+		if (level >= 1) {
+			rangeMult = 1;
+		}
+
+		double range = STATS_CONFIG.waterArcSearchRadius * rangeMult;
+		for (int i = 0; i < STATS_CONFIG.waterArcAngles; i++) {
+			for (int j = 0; j < STATS_CONFIG.waterArcAngles; j++) {
+
+				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterArcAngles;
+				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterArcAngles;
+
+				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> state.getBlock() == Blocks.WATER
+						|| state.getBlock() == Blocks.FLOWING_WATER || state.getBlock() == Blocks.SNOW ||
+						state.getBlock() == Blocks.SNOW_LAYER || state.getBlock() == Blocks.ICE || state.getBlock() == Blocks.FROSTED_ICE
+						|| state.getBlock() == Blocks.PACKED_ICE;
+
+				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
+				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
+				if (result.hitSomething()) {
+					return result.getPosPrecise();
+				}
+
+			}
+
+		}
+
+		return null;
 
 	}
 
