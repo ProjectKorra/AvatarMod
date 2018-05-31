@@ -45,7 +45,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 	public void setFirstPunch(boolean punch) {
 		this.firstPunch = punch;
 	}
-**/
+	**/
 
 	@Override
 	public boolean execute(BendingContext ctx) {
@@ -54,8 +54,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
 		EntityFireball fireball = new EntityFireball(world);
 		/*if (firstPunch){
-			System.out.println(firstPunch);**/
-			/*punchesLeft = 1;
+			System.out.println(firstPunch);
+			punchesLeft = 1;
 
 			if (abilityData.getLevel() >= 2) {
 				punchesLeft = 2;
@@ -63,37 +63,34 @@ public class StatCtrlInfernoPunch extends StatusControl {
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				punchesLeft = 1;
-				//Creates a bunch of fire blocks around the target
+				// Creates a bunch of fire blocks around the target
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				punchesLeft = 3;
-			}**/
-		//firstPunch = false;
-		//}
-		//System.out.println(firstPunch);
-		/*if (punchesLeft > 0) {
+			}
+			firstPunch = false;
+		}
+		System.out.println(firstPunch);
+		if (punchesLeft > 0) {
 			punchesLeft--;
-		}**/
-		//return punchesLeft <= 0;
+		}
+		return punchesLeft <= 0;*/
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-
 			Vector playerPos = getEyePos(entity);
 			Vector target = playerPos.plus(getLookRectangular(entity).times(2.5));
-
 
 			fireball.setPosition(target);
 			fireball.setOwner(entity);
 			fireball.setDamage(0.5F);
 			fireball.setBehavior(new FireballBehavior.PlayerControlled());
 			world.spawnEntity(fireball);
-
-
 		}
+		
 		EntityFireball fireball1 = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
-
+		
 		if (fireball1 != null) {
-		fireball1.addVelocity(Vector.getLookRectangular(entity).times(40));
-		fireball1.setBehavior(new FireballBehavior.Thrown());
+			fireball1.addVelocity(Vector.getLookRectangular(entity).times(40));
+			fireball1.setBehavior(new FireballBehavior.Thrown());
 		}
 		return false;
 
@@ -105,82 +102,64 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
 		EntityLivingBase target = (EntityLivingBase) event.getEntity();
 		World world = target.getEntityWorld();
+		if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
+			Bender ctx = Bender.get(entity);
+			if (ctx.getData() != null) {
+				Vector direction = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
+				AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
+				float knockBack = 1F;
+				int fireTime = 5;
+				float damageModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
+				float damage = 3 + (3 * damageModifier);
+				//int punchesLeft = 1;
 
-
-
-			if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
-				Bender ctx = Bender.get(entity);
-				if (ctx.getData() != null) {
-					Vector direction = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-					AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
-					float knockBack = 1F;
-					int fireTime = 5;
-					float damageModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
-					float damage = 3 + (3 * damageModifier);
-					//int punchesLeft = 1;
-
-
-					if (abilityData.getLevel() >= 1) {
-						damage = 4 + (4 * damageModifier);
-						knockBack = 1.125F;
-						fireTime = 6;
-					}
-					if (abilityData.getLevel() >= 2) {
-						damage = 5 + (5 * damageModifier);
-						knockBack = 1.25F;
-						fireTime = 8;
-						//punchesLeft = 2;
-					}
-
-					if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-						damage = 10 + (10 * damageModifier);
-						knockBack = 1.5F;
-						fireTime = 15;
-						//Creates a bunch of fire blocks around the target
-					}
-					if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-						damage = 2 + (2 * damageModifier);
-						knockBack = 0.75F;
-						fireTime = 4;
-						//punchesLeft = 3;
-					}
-					if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
-						if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
-
-							if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-								BlockPos blockPos = target.getPosition();
-								AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, target, blockPos.getX(), blockPos.getY(),
-										blockPos.getZ(), 3F, true, false);
-								fireExplosion.doExplosionA();
-								if (world instanceof WorldServer) {
-									WorldServer World = (WorldServer) target.getEntityWorld();
-									World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY, target.posZ,
-											200, 0.05, 0.05, 0.05, 0.75);
-									fireExplosion.doExplosionB(true);
-								}
-
+				if (abilityData.getLevel() >= 1) {
+					damage = 4 + (4 * damageModifier);
+					knockBack = 1.125F;
+					fireTime = 6;
+				} else if (abilityData.getLevel() >= 2) {
+					damage = 5 + (5 * damageModifier);
+					knockBack = 1.25F;
+					fireTime = 8;
+					//punchesLeft = 2;
+				}
+				if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+					damage = 10 + (10 * damageModifier);
+					knockBack = 1.5F;
+					fireTime = 15;
+					//Creates a bunch of fire blocks around the target
+				} else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+					damage = 2 + (2 * damageModifier);
+					knockBack = 0.75F;
+					fireTime = 4;
+					//punchesLeft = 3;
+				}
+				if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
+					if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
+						if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+							BlockPos blockPos = target.getPosition();
+							AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, target, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 3F, true, false);
+							fireExplosion.doExplosionA();
+							if (world instanceof WorldServer) {
+								WorldServer World = (WorldServer) target.getEntityWorld();
+								World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY, target.posZ, 200, 0.05, 0.05, 0.05, 0.75);
+								fireExplosion.doExplosionB(true);
 							}
-
-							target.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BLAZE_HURT,
-									SoundCategory.PLAYERS, 1, .7f);
-							DamageSource ds = DamageSource.MAGIC;
-							target.attackEntityFrom(ds, damage);
-							target.setFire(fireTime);
-							target.motionX += direction.x() * knockBack;
-							target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
-							target.motionZ += direction.z() * knockBack;
-							target.isAirBorne = true;
-							// this line is needed to prevent a bug where players will not be pushed in multiplayer
-							AvatarUtils.afterVelocityAdded(target);
-							ctx.getData().removeStatusControl(INFERNO_PUNCH);
-
 						}
+						target.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BLAZE_HURT, SoundCategory.PLAYERS, 1, .7f);
+						DamageSource ds = DamageSource.MAGIC;
+						target.attackEntityFrom(ds, damage);
+						target.setFire(fireTime);
+						target.motionX += direction.x() * knockBack;
+						target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
+						target.motionZ += direction.z() * knockBack;
+						target.isAirBorne = true;
+						// this line is needed to prevent a bug where players will not be pushed in multiplayer
+						AvatarUtils.afterVelocityAdded(target);
+						ctx.getData().removeStatusControl(INFERNO_PUNCH);
 					}
-
 				}
 			}
 		}
 	}
-
-
-
+}
