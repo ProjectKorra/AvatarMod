@@ -61,9 +61,8 @@ public class AbilityWaterBubble extends Ability {
 		if (ctx.isLookingAtBlock()) {
 			BlockPos lookPos = ctx.getLookPosI().toBlockPos();
 			IBlockState lookingAtBlock = world.getBlockState(lookPos);
-			if (lookingAtBlock.getBlock() == Blocks.WATER || lookingAtBlock.getBlock() == Blocks.SNOW_LAYER ||
-					lookingAtBlock.getBlock() == Blocks.SNOW || lookingAtBlock.getBlock() == Blocks.ICE || lookingAtBlock.getBlock() == Blocks.PACKED_ICE
-						|| lookingAtBlock.getBlock() == Blocks.FROSTED_ICE) {
+			if (STATS_CONFIG.waterBendableBlocks.contains(lookingAtBlock.getBlock())
+					|| STATS_CONFIG.plantBendableBlocks.contains(lookingAtBlock.getBlock())) {
 
 				if (bender.consumeChi(STATS_CONFIG.chiWaterBubble)) {
 

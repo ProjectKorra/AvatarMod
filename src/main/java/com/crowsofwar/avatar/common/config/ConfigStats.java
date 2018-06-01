@@ -40,7 +40,8 @@ public class ConfigStats {
 			ravineSettings = new AttackSettings(7, 0.25), //
 			waveSettings = new AttackSettings(6, 6), //
 			airbladeSettings = new AttackSettings(4, .03), //
-			fireArcSettings = new AttackSettings(4, 1);
+			fireArcSettings = new AttackSettings(4, 1),   //
+			boulderSettings = new AttackSettings(0.1F, 0.1);
 
 	@Load
 	public double wallWaitTime = 10, wallWaitTime2 = 60, wallMomentum = 10;

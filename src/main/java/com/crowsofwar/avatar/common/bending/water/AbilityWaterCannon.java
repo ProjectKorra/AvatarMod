@@ -5,14 +5,17 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.EntityEarthspike;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.lwjgl.Sys;
 
 import java.util.function.BiPredicate;
 
@@ -31,25 +34,37 @@ public class AbilityWaterCannon extends Ability {
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
+		World world = ctx.getWorld();
 
 		Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel());
 		boolean hasChi = bender.consumeChi(STATS_CONFIG.chiWaterCannon);
 		boolean hasWaterCharge = data.hasTickHandler(TickHandler.WATER_CHARGE);
 
-		if (ctx.consumeWater(3) || targetPos != null) {
+		if (ctx.consumeWater(3)) {
 			if (hasChi && !hasWaterCharge) {
 				ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
 			}
-		} else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()){
+		} else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
 			if (hasChi && !hasWaterCharge) {
 				ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
+			}
+		}
+			else if (targetPos != null) {
+				if (hasChi && !hasWaterCharge) {
+					world.setBlockToAir(targetPos.toBlockPos());
+					EntityEarthspike spike = new EntityEarthspike(world);
+					spike.setPosition(targetPos);
+					spike.setOwner(entity);
+					world.spawnEntity(spike);
+					ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
+				}
 			}
 			else {
 				bender.sendMessage("avatar.waterCannonFail");
 			}
 		}
 
-	}
+
 	private Vector getClosestWaterbendableBlock (EntityLivingBase entity, int level) {
 		World world = entity.world;
 
@@ -69,6 +84,7 @@ public class AbilityWaterCannon extends Ability {
 
 				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> STATS_CONFIG.waterBendableBlocks.contains(state.getBlock())
 						|| STATS_CONFIG.plantBendableBlocks.contains(state.getBlock());
+
 
 				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
 				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);

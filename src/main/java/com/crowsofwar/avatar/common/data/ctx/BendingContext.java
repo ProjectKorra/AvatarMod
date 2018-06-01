@@ -33,6 +33,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 /**
  * Information when something is executed. Only is used server-side.
  *
@@ -173,7 +175,8 @@ public class BendingContext {
 		VectorI targetPos = getLookPosI();
 		if (targetPos != null) {
 			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
-			if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
+			//Will need to adjust for passives
+			if (STATS_CONFIG.plantBendableBlocks.contains(lookAt) || STATS_CONFIG.waterBendableBlocks.contains(lookAt)) {
 
 				if (amount >= 3) {
 					world.setBlockToAir(targetPos.toBlockPos());
