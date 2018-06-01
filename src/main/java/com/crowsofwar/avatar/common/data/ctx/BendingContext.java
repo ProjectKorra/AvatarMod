@@ -176,7 +176,7 @@ public class BendingContext {
 		if (targetPos != null) {
 			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
 			//Will need to adjust for passives
-			if (STATS_CONFIG.plantBendableBlocks.contains(lookAt) || STATS_CONFIG.waterBendableBlocks.contains(lookAt)) {
+			if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
 
 				if (amount >= 3) {
 					world.setBlockToAir(targetPos.toBlockPos());
@@ -201,4 +201,63 @@ public class BendingContext {
 
 	}
 
+
+
+	public boolean consumeSnow(int amount) {
+
+		World world = bender.getWorld();
+
+		if (world.isRainingAt(bender.getEntity().getPosition())) {
+			return true;
+		}
+
+		VectorI targetPos = getLookPosI();
+		if (targetPos != null) {
+			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
+			//Will need to adjust for passives
+			if (STATS_CONFIG.waterBendableBlocks.contains(lookAt)) {
+
+				if (amount >= 3) {
+					world.setBlockToAir(targetPos.toBlockPos());
+				}
+				return true;
+
+			}
+
+
+		}
+
+		return bender.consumeWaterLevel(amount);
+
+	}
+
+
+
+	public boolean consumePlants(int amount) {
+
+		World world = bender.getWorld();
+
+		if (world.isRainingAt(bender.getEntity().getPosition())) {
+			return true;
+		}
+
+		VectorI targetPos = getLookPosI();
+		if (targetPos != null) {
+			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
+			//Will need to adjust for passives
+			if (STATS_CONFIG.plantBendableBlocks.contains(lookAt)) {
+
+				if (amount >= 3) {
+					world.setBlockToAir(targetPos.toBlockPos());
+				}
+				return true;
+
+			}
+
+
+		}
+
+		return bender.consumeWaterLevel(amount);
+
+	}
 }
