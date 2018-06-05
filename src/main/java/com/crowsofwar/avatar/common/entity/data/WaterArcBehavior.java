@@ -75,7 +75,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 
 			Vector motion = target.minus(water.position());
-			motion = motion.times(0.3 * 20);
+			motion = motion.times(0.5 * 20);
 			water.setVelocity(motion);
 
 			if (water.world.isRemote && water.canPlaySplash()) {
@@ -133,9 +133,9 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 			for (EntityLivingBase collided : collidedList) {
 				if (collided == entity.getOwner()) return this;
-				collided.addVelocity(entity.motionX, 0.4, entity.motionZ);
+				collided.addVelocity(entity.motionX, 0.1, entity.motionZ);
 				if (collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
-						6 * entity.getDamageMult())) {
+						4 * entity.getDamageMult())) {
 					BattlePerformanceScore.addMediumScore(entity.getOwner());
 				}
 

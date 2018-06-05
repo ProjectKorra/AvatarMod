@@ -48,6 +48,8 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	private float damageMult;
 
+	public boolean isSpear;
+
 	public EntityWaterArc(World world) {
 		super(world);
 		setSize(.5f, .5f);
@@ -129,7 +131,14 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	protected void onCollideWithEntity(Entity entity) {
 		if (entity instanceof AvatarEntity) {
 			((AvatarEntity) entity).onMinorWaterContact();
+			if (!isSpear){
+				this.setDead();
+			}
 		}
+		if (!isSpear){
+			this.setDead();
+		}
+
 	}
 
 	@Override

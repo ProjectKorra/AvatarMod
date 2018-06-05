@@ -216,7 +216,6 @@ public class BendingContext {
 			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
 			//Will need to adjust for passives
 			if (STATS_CONFIG.waterBendableBlocks.contains(lookAt)) {
-
 				if (amount >= 3) {
 					world.setBlockToAir(targetPos.toBlockPos());
 				}
