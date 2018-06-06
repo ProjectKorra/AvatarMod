@@ -121,8 +121,7 @@ public class EntityAirBubble extends EntityShield {
 		}
 
 		Bender ownerBender = Bender.get(getOwner());
-		if (!world.isRemote
-				&& !ownerBender.consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
+		if (!world.isRemote && !ownerBender.consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
 
 			dissipateSmall();
 

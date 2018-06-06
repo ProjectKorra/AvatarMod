@@ -46,9 +46,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	 */
 	private int lastPlayedSplash;
 
+	private boolean isSpear;
+
 	private float damageMult;
 
-	public boolean isSpear;
+	private float ticksAlive;
 
 	public EntityWaterArc(World world) {
 		super(world);
@@ -66,6 +68,13 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.damageMult = mult;
 	}
 
+	public void setTicksAlive (float ticks) {
+		this.ticksAlive = ticks;
+	}
+
+	public void setSpear (boolean isSpear) {
+		this.isSpear = isSpear;
+	}
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -79,6 +88,12 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			setDead();
 			cleanup();
 			return true;
+		}
+		if (ticksAlive <= 0) {
+			this.setDead();
+		}
+		if (this.getBehavior() instanceof WaterArcBehavior.Thrown){
+			ticksAlive--;
 		}
 
 		if (world.isRemote) {

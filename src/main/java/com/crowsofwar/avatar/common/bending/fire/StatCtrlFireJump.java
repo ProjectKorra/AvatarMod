@@ -123,7 +123,7 @@ public class StatCtrlFireJump extends StatusControl {
 
 			abilityData.addXp(ConfigSkills.SKILLS_CONFIG.fireJump);
 
-			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BLAZE_HURT,
+			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_SHOOT,
 					SoundCategory.PLAYERS, 1, .7f);
 
 			return true;
