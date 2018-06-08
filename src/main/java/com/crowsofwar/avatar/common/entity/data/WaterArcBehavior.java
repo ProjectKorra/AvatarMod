@@ -109,10 +109,12 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 	public static class Thrown extends WaterArcBehavior {
 
-		int ticks = 0;
+		float ticks = 0;
+		float startGravity;
 		@Override
 		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
 			ticks++;
+
 
 			boolean waterSpear = false;
 			BendingData data = null;
@@ -128,37 +130,47 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			if (lvl <= 0) {
 				//Level I or in Creative Mode
+				startGravity = 40;
 				if (ticks >= 40) {
+					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (lvl == 1) {
 				//Level II.
+				startGravity = 60;
 				if (ticks >= 60) {
+					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (lvl == 2) {
 				//Level III
+				startGravity = 80;
 				if (ticks >= 80) {
+					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (waterSpear) {
 				//Level 4 Path Two
+				startGravity = 120;
 				if (ticks >= 120) {
+					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 				//Level 4 Path One
-				if (ticks >= 25) {
+				startGravity = 25;
+				if (ticks >= 80) {
+					entity.Splash();
 					entity.setDead();
 				}
 			}
 
-			if (ticks/entity.ticksExisted == 2) {
-				entity.addVelocity(Vector.DOWN.times(9.81 / 60));
+			if (startGravity/ticks == 2) {
+				entity.addVelocity(Vector.DOWN.times(9.81 / 30));
 			}
 
 
@@ -169,11 +181,8 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 			for (EntityLivingBase collided : collidedList) {
 				if (collided == entity.getOwner()) return this;
-				collided.addVelocity(entity.motionX, 0.1, entity.motionZ);
-				if (collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
-						4 * entity.getDamageMult())) {
-					BattlePerformanceScore.addMediumScore(entity.getOwner());
-				}
+				collided.addVelocity(entity.motionX/5, 0.1, entity.motionZ/5);
+				entity.damageEntity(collided);
 
 				if (!entity.world.isRemote && data != null) {
 
@@ -183,13 +192,14 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 						entity.setBehavior(new PlayerControlled());
 						data.addStatusControl(StatusControl.THROW_WATER);
 					}
+					if (!waterSpear) {
+						entity.Splash();
+					}
 
 				}
 
 			}
-			if (!waterSpear) {
-				entity.Splash();
-			}
+
 
 			return this;
 		}

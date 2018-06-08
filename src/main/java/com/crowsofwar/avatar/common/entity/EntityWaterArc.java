@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -31,6 +33,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -43,6 +46,7 @@ import java.util.List;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> {
@@ -89,10 +93,25 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		dataManager.register(SYNC_BEHAVIOR, new WaterArcBehavior.Idle());
 	}
 
+	public void damageEntity(Entity entity) {
+		DamageSource ds = AvatarDamageSource.causeWaterDamage(entity, getOwner());
+		float damage = 3 * damageMult;
+		entity.attackEntityFrom(ds, damage);
+		if (entity.attackEntityFrom(ds, damage)) {
+			if (getOwner() != null) {
+				BendingData data1 = BendingData.get(getOwner());
+				AbilityData abilityData1 = data1.getAbilityData("water_arc");
+				abilityData1.addXp(SKILLS_CONFIG.waterHit);
+				BattlePerformanceScore.addMediumScore(getOwner());
+
+			}
+		}
+	}
 	public void Splash() {
+		this.damageMult = 0.1F;
 		if (world instanceof WorldServer) {
 			WorldServer World = (WorldServer) this.world;
-			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY, posZ,20, 1, 1,  1, 1D);
+			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY, posZ,300, 0.2, 0.05, 0.2, 3);
 			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().expand(1, 1, 1),
 					entity -> entity != getOwner());
@@ -107,6 +126,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 					entity.motionX = vel.x();
 					entity.motionY = vel.y();
 					entity.motionZ = vel.z();
+					damageEntity(entity);
 
 					if (entity instanceof AvatarEntity) {
 						AvatarEntity avent = (AvatarEntity) entity;
@@ -194,21 +214,12 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	@Override
-	public void setDead() {
-		super.setDead();
-		if (!world.isRemote && this.isDead) {
-			Thread.dumpStack();
-		}
-	}
-
-	@Override
 	public void onUpdate() {
 
-
-		/*if (!world.isRemote && ticksAlive == 0) {
-			Thread.dumpStack();
-		}*/
 		super.onUpdate();
+		if (this.isDead) {
+			cleanup();
+		}
 		if (lastPlayedSplash > -1) {
 			lastPlayedSplash++;
 			if (lastPlayedSplash > 20) lastPlayedSplash = -1;
