@@ -109,23 +109,59 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 	public static class Thrown extends WaterArcBehavior {
 
+		int ticks = 0;
 		@Override
 		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
+			ticks++;
 
 			boolean waterSpear = false;
 			BendingData data = null;
 			AbilityData abilityData = null;
+			int lvl = 0;
 
 			Bender bender = Bender.get(entity.getOwner());
 			if (bender != null) {
 				data = bender.getData();
 				abilityData = data.getAbilityData("water_arc");
 				waterSpear = abilityData.isMasterPath(AbilityTreePath.SECOND);
+				lvl = abilityData.getLevel();
+			}
+			if (lvl <= 0) {
+				//Level I or in Creative Mode
+				if (ticks >= 40) {
+					entity.setDead();
+				}
+			}
+			if (lvl == 1) {
+				//Level II.
+				if (ticks >= 60) {
+					entity.setDead();
+				}
+			}
+			if (lvl == 2) {
+				//Level III
+				if (ticks >= 80) {
+					entity.setDead();
+				}
+			}
+			if (waterSpear) {
+				//Level 4 Path Two
+				if (ticks >= 120) {
+					entity.setDead();
+				}
+			}
+			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
+				//Level 4 Path One
+				if (ticks >= 25) {
+					entity.setDead();
+				}
 			}
 
 			if (waterSpear || entity.ticksExisted >= 40) {
 				entity.addVelocity(Vector.DOWN.times(9.81 / 60));
 			}
+
+
 
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
 					EntityLivingBase.class, entity.getEntityBoundingBox().grow(0.9, 0.9, 0.9),

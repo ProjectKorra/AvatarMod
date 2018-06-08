@@ -17,29 +17,38 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.lwjgl.Sys;
 
+import java.util.List;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> {
 
 	private static final DataParameter<WaterArcBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterArc.class, WaterArcBehavior.DATA_SERIALIZER);
+
 
 	/**
 	 * The amount of ticks since last played splash sound. -1 for splashable.
@@ -50,7 +59,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	private float damageMult;
 
-	private float ticksAlive;
+
 
 	public EntityWaterArc(World world) {
 		super(world);
@@ -58,6 +67,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.lastPlayedSplash = -1;
 		this.damageMult = 1;
 		this.putsOutFires = true;
+
 	}
 
 	public float getDamageMult() {
@@ -68,13 +78,10 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.damageMult = mult;
 	}
 
-	public void setTicksAlive (float ticks) {
-		this.ticksAlive = ticks;
-	}
-
-	public void setSpear (boolean isSpear) {
+	public void setSpear(boolean isSpear) {
 		this.isSpear = isSpear;
 	}
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -87,13 +94,32 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {
 			setDead();
 			cleanup();
+			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY, posZ, 0.1, 0.1, 0.1);
+			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().expand(1, 1, 1),
+					entity -> entity != getOwner());
+			if (!collided.isEmpty()) {
+				for (Entity entity : collided) {
+
+					double mult = -0.1;
+
+					Vector vel = position().minus(getEntityPos(entity));
+					vel = vel.normalize().times(mult).plusY(0.1f);
+
+					entity.motionX = vel.x();
+					entity.motionY = vel.y();
+					entity.motionZ = vel.z();
+
+					if (entity instanceof AvatarEntity) {
+						AvatarEntity avent = (AvatarEntity) entity;
+						avent.setVelocity(vel);
+					}
+					entity.isAirBorne = true;
+					AvatarUtils.afterVelocityAdded(entity);
+				}
+			}
 			return true;
-		}
-		if (ticksAlive <= 0) {
-			this.setDead();
-		}
-		if (this.getBehavior() instanceof WaterArcBehavior.Thrown){
-			ticksAlive--;
+
 		}
 
 		if (world.isRemote) {
@@ -146,19 +172,31 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	protected void onCollideWithEntity(Entity entity) {
 		if (entity instanceof AvatarEntity) {
 			((AvatarEntity) entity).onMinorWaterContact();
-			if (!isSpear){
+			if (!isSpear) {
 				this.setDead();
 			}
 		}
-		if (!isSpear){
+		if (!isSpear) {
 			this.setDead();
 		}
 
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+		if (!world.isRemote && this.isDead) {
+			Thread.dumpStack();
+		}
+	}
+
+	@Override
 	public void onUpdate() {
 
+
+		/*if (!world.isRemote && ticksAlive == 0) {
+			Thread.dumpStack();
+		}*/
 		super.onUpdate();
 		if (lastPlayedSplash > -1) {
 			lastPlayedSplash++;
@@ -170,6 +208,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		if (next != behavior) {
 			setBehavior(next);
 		}
+
 
 		if (inWater && behavior instanceof WaterArcBehavior.PlayerControlled) {
 			// try to go upwards
@@ -215,7 +254,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	@Override
 	protected double getControlPointTeleportDistanceSq() {
-		return 9;
+		return 20;
 	}
 
 	private void cleanup() {

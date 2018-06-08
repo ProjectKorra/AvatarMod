@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.bending.water;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
@@ -61,6 +62,20 @@ public class AbilityWaterArc extends Ability {
 
 			if (targetPos == null) {
 				targetPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(4));
+			}
+
+			float ticks = 10;
+			if (ctx.getLevel() == 1){
+				ticks = 20;
+			}
+			if (ctx.getLevel() == 2) {
+				ticks = 30;
+			}
+			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+				ticks = 15;
+			}
+			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+				ticks = 60;
 			}
 
 			if (bender.consumeChi(STATS_CONFIG.chiWaterArc)) {
