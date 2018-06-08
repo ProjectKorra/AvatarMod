@@ -181,7 +181,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 			for (EntityLivingBase collided : collidedList) {
 				if (collided == entity.getOwner()) return this;
-				collided.addVelocity(entity.motionX/5, 0.1, entity.motionZ/5);
+				collided.addVelocity(entity.motionX/2, 0.1, entity.motionZ/2);
 				entity.damageEntity(collided);
 
 				if (!entity.world.isRemote && data != null) {

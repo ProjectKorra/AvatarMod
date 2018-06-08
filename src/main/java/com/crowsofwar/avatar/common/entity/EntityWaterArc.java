@@ -108,7 +108,8 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		}
 	}
 	public void Splash() {
-		this.damageMult = 0.1F;
+		AbilityData abilityData = BendingData.get(getOwner()).getAbilityData("water_arc");
+		int lvl = abilityData.getLevel();
 		if (world instanceof WorldServer) {
 			WorldServer World = (WorldServer) this.world;
 			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ,500, 0.2, 0.1, 0.2, 0.03);
@@ -117,6 +118,10 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
+
+					this.damageMult = lvl >= 2 ? 2 : 0.5F;
+					//If the player's water arc level is level III or greater the aoe will do 2+ damage.
+					damageEntity(entity);
 
 					double mult = -0.1;
 
