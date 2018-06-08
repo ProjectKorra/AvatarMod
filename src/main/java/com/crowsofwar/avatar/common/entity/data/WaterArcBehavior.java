@@ -130,40 +130,40 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			if (lvl <= 0) {
 				//Level I or in Creative Mode
-				startGravity = 40;
-				if (ticks >= 40) {
+				startGravity = 30;
+				if (ticks >= 30) {
 					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (lvl == 1) {
 				//Level II.
-				startGravity = 60;
-				if (ticks >= 60) {
+				startGravity = 40;
+				if (ticks >= 40) {
 					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (lvl == 2) {
 				//Level III
-				startGravity = 80;
-				if (ticks >= 80) {
+				startGravity = 50;
+				if (ticks >= 50) {
 					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (waterSpear) {
 				//Level 4 Path Two
-				startGravity = 120;
-				if (ticks >= 120) {
+				startGravity = 80;
+				if (ticks >= 80) {
 					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 				//Level 4 Path One
-				startGravity = 25;
-				if (ticks >= 80) {
+				startGravity = 60;
+				if (ticks >= 60) {
 					entity.Splash();
 					entity.setDead();
 				}
@@ -194,6 +194,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 					}
 					if (!waterSpear) {
 						entity.Splash();
+						entity.setDead();
 					}
 
 				}

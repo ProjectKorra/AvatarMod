@@ -111,7 +111,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.damageMult = 0.1F;
 		if (world instanceof WorldServer) {
 			WorldServer World = (WorldServer) this.world;
-			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY, posZ,300, 0.2, 0.05, 0.2, 3);
+			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ,500, 0.2, 0.1, 0.2, 0.03);
 			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().expand(1, 1, 1),
 					entity -> entity != getOwner());
