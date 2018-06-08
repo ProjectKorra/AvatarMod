@@ -36,6 +36,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import org.lwjgl.Sys;
 
 import java.util.List;
@@ -63,7 +64,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	public EntityWaterArc(World world) {
 		super(world);
-		setSize(.5f, .5f);
+		setSize(.4f, .4f);
 		this.lastPlayedSplash = -1;
 		this.damageMult = 1;
 		this.putsOutFires = true;
@@ -88,13 +89,10 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		dataManager.register(SYNC_BEHAVIOR, new WaterArcBehavior.Idle());
 	}
 
-	@Override
-	public boolean onCollideWithSolid() {
-
-		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {
-			setDead();
-			cleanup();
-			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY, posZ, 0.1, 0.1, 0.1);
+	public void Splash() {
+		if (world instanceof WorldServer) {
+			WorldServer World = (WorldServer) this.world;
+			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY, posZ,20, 1, 1,  1, 1D);
 			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().expand(1, 1, 1),
 					entity -> entity != getOwner());
@@ -118,50 +116,61 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 					AvatarUtils.afterVelocityAdded(entity);
 				}
 			}
-			return true;
 
 		}
 
-		if (world.isRemote) {
-			Random random = new Random();
+	}
+	@Override
+	public boolean onCollideWithSolid() {
 
-			double xVel = 0, yVel = 0, zVel = 0;
-			double offX = 0, offY = 0, offZ = 0;
+		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {
+			Splash();
+			setDead();
+			cleanup();
 
-			if (isCollidedVertically) {
 
-				xVel = 5;
-				yVel = 3.5;
-				zVel = 5;
-				offX = 0;
-				offY = 0.6;
-				offZ = 0;
 
-			} else {
+			if (world.isRemote) {
+				Random random = new Random();
 
-				xVel = 7;
-				yVel = 2;
-				zVel = 7;
-				offX = 0.6;
-				offY = 0.2;
-				offZ = 0.6;
+				double xVel = 0, yVel = 0, zVel = 0;
+				double offX = 0, offY = 0, offZ = 0;
+
+				if (isCollidedVertically) {
+
+					xVel = 5;
+					yVel = 3.5;
+					zVel = 5;
+					offX = 0;
+					offY = 0.6;
+					offZ = 0;
+
+				} else {
+
+					xVel = 7;
+					yVel = 2;
+					zVel = 7;
+					offX = 0.6;
+					offY = 0.2;
+					offZ = 0.6;
+
+				}
+
+				xVel *= 0.0;
+				yVel *= 0.0;
+				zVel *= 0.0;
+
+				int particles = random.nextInt(3) + 4;
+				for (int i = 0; i < particles; i++) {
+
+					world.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX + random.nextGaussian() * offX,
+							posY + random.nextGaussian() * offY + 0.2, posZ + random.nextGaussian() * offZ,
+							random.nextGaussian() * xVel, random.nextGaussian() * yVel,
+							random.nextGaussian() * zVel);
+
+				}
 
 			}
-
-			xVel *= 0.0;
-			yVel *= 0.0;
-			zVel *= 0.0;
-
-			int particles = random.nextInt(3) + 4;
-			for (int i = 0; i < particles; i++) {
-
-				world.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX + random.nextGaussian() * offX,
-						posY + random.nextGaussian() * offY + 0.2, posZ + random.nextGaussian() * offZ,
-						random.nextGaussian() * xVel, random.nextGaussian() * yVel,
-						random.nextGaussian() * zVel);
-
-			}
-
 		}
 
 		return false;
@@ -173,10 +182,12 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		if (entity instanceof AvatarEntity) {
 			((AvatarEntity) entity).onMinorWaterContact();
 			if (!isSpear) {
+				Splash();
 				this.setDead();
 			}
 		}
 		if (!isSpear) {
+			Splash();
 			this.setDead();
 		}
 
@@ -254,7 +265,8 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	@Override
 	protected double getControlPointTeleportDistanceSq() {
-		return 20;
+		return 10;
+		//Lower makes it faster, higher makes it slower.
 	}
 
 	private void cleanup() {

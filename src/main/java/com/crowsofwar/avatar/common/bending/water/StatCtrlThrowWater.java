@@ -50,20 +50,20 @@ public class StatCtrlThrowWater extends StatusControl {
 		AbilityData abilityData = data.getAbilityData("water_arc");
 
 		int lvl = abilityData.getLevel();
-		double velocity = 15;
+		double velocity = 12;
 
 		if (lvl == 1){
-			velocity = 17.5;
+			velocity = 16;
 		}
 		if (lvl == 2) {
-			velocity = 20;
+			velocity = 18;
 		}
 		if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
-			velocity = 30;
+			velocity = 25;
 		}
 
 		if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
-			velocity = 25;
+			velocity = 20;
 		}
 
 		AxisAlignedBB boundingBox = new AxisAlignedBB(entity.posX - 5, entity.posY - 5, entity.posZ - 5,

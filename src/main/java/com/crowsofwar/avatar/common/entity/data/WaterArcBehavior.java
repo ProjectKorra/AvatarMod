@@ -157,7 +157,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				}
 			}
 
-			if (waterSpear || entity.ticksExisted >= 40) {
+			if (ticks/entity.ticksExisted == 2) {
 				entity.addVelocity(Vector.DOWN.times(9.81 / 60));
 			}
 
@@ -186,6 +186,9 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 				}
 
+			}
+			if (!waterSpear) {
+				entity.Splash();
 			}
 
 			return this;
