@@ -195,6 +195,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 					if (!waterSpear) {
 						entity.Splash();
 						entity.setDead();
+						entity.cleanup();
 					}
 
 				}

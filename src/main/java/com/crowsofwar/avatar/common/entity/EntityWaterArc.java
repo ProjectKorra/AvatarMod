@@ -284,7 +284,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		//Lower makes it faster, higher makes it slower.
 	}
 
-	private void cleanup() {
+	public void cleanup() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(THROW_WATER);
