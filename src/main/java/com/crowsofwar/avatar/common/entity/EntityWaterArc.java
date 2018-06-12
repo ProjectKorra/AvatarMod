@@ -41,6 +41,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import org.lwjgl.Sys;
+import scala.Int;
 
 import java.util.List;
 import java.util.Random;
@@ -53,6 +54,8 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	private static final DataParameter<WaterArcBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterArc.class, WaterArcBehavior.DATA_SERIALIZER);
+	private static final DataParameter<Integer> SYNC_COMBO_TIMER = EntityDataManager.createKey(EntityWaterArc.class,
+			DataSerializers.VARINT);
 
 
 	/**
@@ -64,6 +67,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	private float damageMult;
 
+	private int comboTimer;
 
 
 	public EntityWaterArc(World world) {
@@ -72,6 +76,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.lastPlayedSplash = -1;
 		this.damageMult = 1;
 		this.putsOutFires = true;
+		this.comboTimer = 0;
 
 	}
 
@@ -87,10 +92,19 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.isSpear = isSpear;
 	}
 
+	public int getComboTimer() {
+		return dataManager.get(SYNC_COMBO_TIMER);
+	}
+
+	public void setComboTimer(int timer) {
+		dataManager.set(SYNC_COMBO_TIMER, timer);
+	}
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new WaterArcBehavior.Idle());
+		dataManager.register(SYNC_COMBO_TIMER, comboTimer);
 	}
 
 	public void damageEntity(Entity entity) {
@@ -107,12 +121,13 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			}
 		}
 	}
+
 	public void Splash() {
 		AbilityData abilityData = BendingData.get(getOwner()).getAbilityData("water_arc");
 		int lvl = abilityData.getLevel();
 		if (world instanceof WorldServer) {
 			WorldServer World = (WorldServer) this.world;
-			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ,500, 0.2, 0.1, 0.2, 0.03);
+			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0.2, 0.1, 0.2, 0.03);
 			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().expand(1, 1, 1),
 					entity -> entity != getOwner());
@@ -145,6 +160,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		}
 
 	}
+
 	@Override
 	public boolean onCollideWithSolid() {
 
@@ -152,7 +168,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			Splash();
 			setDead();
 			cleanup();
-
 
 
 			if (world.isRemote) {

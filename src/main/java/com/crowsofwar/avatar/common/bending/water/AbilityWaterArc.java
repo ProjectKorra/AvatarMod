@@ -95,15 +95,30 @@ public class AbilityWaterArc extends Ability {
 					world.spawnEntity(water);
 					ctx.getData().addStatusControl(StatusControl.THROW_WATER);
 				} else {
+					EntityWaterArc water = new EntityWaterArc(world);
+
+					if (comboNumber == 1) {
+						water.setComboTimer(0);
+					}
+					if (water.getComboTimer() > 15) {
+						comboNumber = 1;
+						water.setComboTimer(0);
+					}
+					if (water.getComboTimer() < 15) {
+						water.setComboTimer(0);
+						comboNumber++;
+					}
+
 					Vector look = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(4));
 					Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch));
 					force = force.times(15 + comboNumber);
-					EntityWaterArc water = new EntityWaterArc(world);
+
 					water.setOwner(entity);
 					water.setPosition(look.x(), entity.getEyeHeight(), look.z());
 					water.setDamageMult(damageMult);
 					water.addVelocity(force);
 					water.setBehavior(new WaterArcBehavior.Thrown());
+
 				}
 
 			}
