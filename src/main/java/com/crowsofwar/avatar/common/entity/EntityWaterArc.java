@@ -209,11 +209,13 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			if (!isSpear) {
 				Splash();
 				this.setDead();
+				cleanup();
 			}
 		}
 		if (!isSpear) {
 			Splash();
 			this.setDead();
+			cleanup();
 		}
 
 	}
@@ -222,9 +224,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	public void onUpdate() {
 
 		super.onUpdate();
-		if (this.isDead) {
-			cleanup();
-		}
 		if (lastPlayedSplash > -1) {
 			lastPlayedSplash++;
 			if (lastPlayedSplash > 20) lastPlayedSplash = -1;

@@ -169,7 +169,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				}
 			}
 
-			if (startGravity/ticks == 2) {
+			if (startGravity/ticks <= 2) {
 				entity.addVelocity(Vector.DOWN.times(9.81 / 30));
 			}
 
