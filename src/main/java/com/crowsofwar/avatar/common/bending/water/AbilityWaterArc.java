@@ -63,36 +63,48 @@ public class AbilityWaterArc extends Ability {
 			if (targetPos == null) {
 				targetPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(4));
 			}
+			float damageMult = 1F;
+			int comboNumber = 1;
+			//The water arc number in the combo.
 
-			float ticks = 10;
-			if (ctx.getLevel() == 1){
-				ticks = 20;
+			if (ctx.getLevel() == 1) {
+				damageMult = 1.25F;
 			}
 			if (ctx.getLevel() == 2) {
-				ticks = 30;
+				damageMult = 1.5F;
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-				ticks = 15;
+				damageMult = 3F;
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-				ticks = 60;
+				damageMult = 1 + comboNumber / 2;
 			}
 
 			if (bender.consumeChi(STATS_CONFIG.chiWaterArc)) {
 
 				removeExisting(ctx);
-
-				float damageMult = 1 + ctx.getData().getAbilityData(this).getXp() / 200;
 				damageMult *= ctx.getPowerRatingDamageMod();
 
-				EntityWaterArc water = new EntityWaterArc(world);
-				water.setOwner(entity);
-				water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
-				water.setDamageMult(damageMult);
-				water.setBehavior(new WaterArcBehavior.PlayerControlled());
-				world.spawnEntity(water);
-
-				ctx.getData().addStatusControl(StatusControl.THROW_WATER);
+				if (!ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+					EntityWaterArc water = new EntityWaterArc(world);
+					water.setOwner(entity);
+					water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
+					water.setDamageMult(damageMult);
+					water.setBehavior(new WaterArcBehavior.PlayerControlled());
+					water.isSpear(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
+					world.spawnEntity(water);
+					ctx.getData().addStatusControl(StatusControl.THROW_WATER);
+				} else {
+					Vector look = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(4));
+					Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch));
+					force = force.times(15 + comboNumber);
+					EntityWaterArc water = new EntityWaterArc(world);
+					water.setOwner(entity);
+					water.setPosition(look.x(), entity.getEyeHeight(), look.z());
+					water.setDamageMult(damageMult);
+					water.addVelocity(force);
+					water.setBehavior(new WaterArcBehavior.Thrown());
+				}
 
 			}
 		}
@@ -134,7 +146,7 @@ public class AbilityWaterArc extends Ability {
 
 
 	//For bending snow and ice; is a separate method so that when passives are active it's easy to differentiate
-	private Vector getClosestWaterbendableBlock (EntityLivingBase entity, int level) {
+	private Vector getClosestWaterbendableBlock(EntityLivingBase entity, int level) {
 		World world = entity.world;
 
 		Vector eye = Vector.getEyePos(entity);

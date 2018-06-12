@@ -83,7 +83,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.damageMult = mult;
 	}
 
-	public void setSpear(boolean isSpear) {
+	public void isSpear(boolean isSpear) {
 		this.isSpear = isSpear;
 	}
 

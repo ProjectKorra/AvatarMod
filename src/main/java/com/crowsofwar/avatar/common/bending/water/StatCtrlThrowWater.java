@@ -62,10 +62,6 @@ public class StatCtrlThrowWater extends StatusControl {
 			velocity = 25;
 		}
 
-		if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
-			velocity = 20;
-		}
-
 		AxisAlignedBB boundingBox = new AxisAlignedBB(entity.posX - 5, entity.posY - 5, entity.posZ - 5,
 				entity.posX + 5, entity.posY + 5, entity.posZ + 5);
 		List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class, boundingBox,
