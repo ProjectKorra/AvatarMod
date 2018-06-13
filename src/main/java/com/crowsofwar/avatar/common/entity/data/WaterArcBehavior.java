@@ -37,6 +37,8 @@ import net.minecraft.network.datasync.DataSerializers;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 /**
  * @author CrowsOfWar
  */
@@ -132,32 +134,35 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			if (lvl <= 0) {
 				//Level I or in Creative Mode
-				startGravity = 30;
-				if (ticks >= 30) {
+				startGravity = STATS_CONFIG.waterArcTicks;
+				if (ticks >= STATS_CONFIG.waterArcTicks) {
+					//Default is 30
 					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (lvl == 1) {
 				//Level II.
-				startGravity = 40;
-				if (ticks >= 40) {
+				startGravity = STATS_CONFIG.waterArcTicks * (4/3);
+				if (ticks >= STATS_CONFIG.waterArcTicks * (4/3)) {
+					//40
 					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (lvl == 2) {
 				//Level III
-				startGravity = 50;
-				if (ticks >= 50) {
+				startGravity = STATS_CONFIG.waterArcTicks * (5/3);
+				if (ticks >= STATS_CONFIG.waterArcTicks * (5/3)) {
+					//50
 					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (waterSpear) {
 				//Level 4 Path Two
-				startGravity = 80;
-				if (ticks >= 80) {
+				startGravity = STATS_CONFIG.waterArcTicks * (8/3);
+				if (ticks >= STATS_CONFIG.waterArcTicks * (8/3)) {
 					entity.Splash();
 					entity.setDead();
 				}
@@ -165,9 +170,11 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 				entity.setComboTimer(entity.getComboTimer() + 1);
+				System.out.println(entity.getComboTimer());
 				//Level 4 Path One
-				startGravity = 25;
-				if (ticks >= 25) {
+				startGravity = STATS_CONFIG.waterArcTicks * (5/3);
+				if (ticks >= STATS_CONFIG.waterArcTicks * (5/3)) {
+					//40
 					entity.Splash();
 					entity.setDead();
 				}
@@ -187,7 +194,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 			for (EntityLivingBase collided : collidedList) {
 				if (collided == entity.getOwner()) return this;
-				collided.addVelocity(entity.motionX/2, 0.1, entity.motionZ/2);
+				collided.addVelocity(entity.motionX/2, STATS_CONFIG.waterArcSettings.push/10, entity.motionZ/2);
 				entity.damageEntity(collided);
 
 				if (!entity.world.isRemote && data != null) {

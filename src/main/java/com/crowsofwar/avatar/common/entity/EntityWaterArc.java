@@ -50,6 +50,7 @@ import java.util.Random;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> {
@@ -133,7 +134,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	public void damageEntity(Entity entity) {
 		DamageSource ds = AvatarDamageSource.causeWaterDamage(entity, getOwner());
-		float damage = 3 * damageMult;
+		float damage = STATS_CONFIG.waterArcSettings.damage * damageMult;
 		entity.attackEntityFrom(ds, damage);
 		if (entity.attackEntityFrom(ds, damage)) {
 			if (getOwner() != null) {

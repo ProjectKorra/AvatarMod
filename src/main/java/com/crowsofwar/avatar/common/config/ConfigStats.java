@@ -41,6 +41,7 @@ public class ConfigStats {
 			waveSettings = new AttackSettings(6, 6), //
 			airbladeSettings = new AttackSettings(4, .03), //
 			fireArcSettings = new AttackSettings(4, 1),   //
+			waterArcSettings = new AttackSettings(3, 1),
 			boulderSettings = new AttackSettings(0.1F, 0.1);
 
 	@Load
@@ -48,6 +49,10 @@ public class ConfigStats {
 
 	@Load
 	public int wallJumpDelay = 10;
+
+	@Load
+	public float waterArcTicks = 30;
+	//Has to be ticks so I can times it by a fraction; there aren't any partial ticks, though.
 
 	@Load
 	public FireballSettings fireballSettings = new FireballSettings();

@@ -98,11 +98,11 @@ public class AbilityWaterArc extends Ability {
 					if (comboNumber == 1) {
 						water.setComboTimer(0);
 					}
-					if (water.getComboTimer() > 15) {
+					if (water.getComboTimer() > 25) {
 						comboNumber = 1;
 						water.setComboTimer(0);
 					}
-					if (water.getComboTimer() < 15) {
+					if (water.getComboTimer() < 25) {
 						water.setComboTimer(0);
 						comboNumber++;
 					}
@@ -110,8 +110,11 @@ public class AbilityWaterArc extends Ability {
 						//Massive Singular water arc; kinda like airgust
 						water.setSize(0.9F);
 						gravity = 2;
-						comboNumber = 1;
 
+					}
+					if (comboNumber > 3) {
+						comboNumber = 1;
+						water.setComboTimer(0);
 					}
 
 					if (comboNumber == 2) {
@@ -126,6 +129,7 @@ public class AbilityWaterArc extends Ability {
 					water.setOwner(entity);
 					water.setPosition(look);
 					water.setDamageMult(damageMult);
+					water.setStartingPosition(entity.getPosition());
 					water.addVelocity(force);
 					water.setGravity(gravity);
 					water.setBehavior(new WaterArcBehavior.Thrown());
