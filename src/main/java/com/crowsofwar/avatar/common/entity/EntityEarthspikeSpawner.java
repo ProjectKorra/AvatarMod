@@ -3,6 +3,8 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
@@ -34,7 +36,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	public EntityEarthspikeSpawner(World world) {
 		super(world);
 		setSize(1, 1);
-		this.damageMult = 1.6F;
 
 	}
 
@@ -77,12 +78,14 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
 				world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
 				SoundCategory.PLAYERS, 1, 1, false);
-		if (ticksExisted % 3 == 0 && !world.isRemote) {
+
+		if (ticksExisted % 3 == 0) {
 			EntityEarthspike earthspike = new EntityEarthspike(world);
 			earthspike.posX = this.posX;
 			earthspike.posY = this.posY;
 			earthspike.posZ = this.posZ;
 			earthspike.setOwner(getOwner());
+			earthspike.setWorld(world);
 			earthspike.setDamageMult(damageMult);
 			world.spawnEntity(earthspike);
 		}

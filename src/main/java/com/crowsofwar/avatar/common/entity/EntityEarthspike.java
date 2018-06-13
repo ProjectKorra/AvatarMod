@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,6 +31,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
@@ -91,9 +93,16 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	@Override
-	public void onEntityUpdate() {
+	public void onUpdate() {
 
-		super.onEntityUpdate();
+		super.onUpdate();
+		if (world.isRemote) {
+			setWorld(getOwner().world);
+		}
+
+
+		//For some reason earthspike thinks it's clientside. I don't why/
+		//HHAAAAALLPPP MEEEEE
 
 		setVelocity(Vector.ZERO);
 		if (ticksExisted >= 15) {
@@ -136,7 +145,9 @@ public class EntityEarthspike extends AvatarEntity {
 				}
 
 			}
+			System.out.println("Success??");
 		}
+		System.out.println("confusion");
 	}
 
 	private boolean attackEntity(Entity entity) {
