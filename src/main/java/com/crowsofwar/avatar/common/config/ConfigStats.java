@@ -174,7 +174,7 @@ public class ConfigStats {
 	);
 
 	@Load
-	List<String> plantBendableBlockNames = Arrays.asList(
+	public List<String> plantBendableBlockNames = Arrays.asList(
 			"minecraft:tallgrass",
 			"minecraft:wheat",
 			"minecraft:double_grass",
@@ -249,7 +249,7 @@ public class ConfigStats {
 	public static class FireballSettings {
 
 		@Load
-		public float damage = 6;
+		public float damage = 4F;
 
 		@Load
 		public int fireTime = 6;
@@ -261,7 +261,7 @@ public class ConfigStats {
 		public boolean damageBlocks = false;
 
 		@Load
-		public double push = .75;
+		public double push = 0.75;
 
 	}
 

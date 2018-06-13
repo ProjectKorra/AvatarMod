@@ -65,7 +65,7 @@ public class AbilityFireball extends Ability {
 			}
 
 			float damage = STATS_CONFIG.fireballSettings.damage;
-			damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
+			damage *= ctx.getLevel() >= 2 ? 1.75f : 1f;
 			damage *= ctx.getPowerRatingDamageMod();
 			System.out.println(ctx.getPowerRatingDamageMod());
 

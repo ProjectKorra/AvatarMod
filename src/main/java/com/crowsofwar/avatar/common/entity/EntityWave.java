@@ -27,6 +27,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -80,6 +81,8 @@ public class EntityWave extends AvatarEntity {
 		setPosition(newPos.x(), newPos.y(), newPos.z());
 
 		if (!world.isRemote) {
+			world.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 0.03, 0.03, 0.03);
+			world.spawnParticle(EnumParticleTypes.CLOUD, posX, getEyeHeight(), posZ, 0.02, 0.005, 0.02);
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
 			for (Entity entity : collided) {
 				Vector motion = velocity().dividedBy(20).times(STATS_CONFIG.waveSettings.push);
