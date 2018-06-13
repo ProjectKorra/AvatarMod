@@ -53,8 +53,6 @@ public class AbilityFireball extends Ability {
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
 
-		//if (data.hasStatusControl(StatusControl.THROW_FIREBALL)) return;
-		//That doesn't work if you spam the button; that's really weird
 
 		if (bender.consumeChi(STATS_CONFIG.chiFireball) && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
 
@@ -80,7 +78,6 @@ public class AbilityFireball extends Ability {
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(20);
 			data.addStatusControl(StatusControl.THROW_FIREBALL);
 			world.spawnEntity(fireball);
-
 
 
 		}

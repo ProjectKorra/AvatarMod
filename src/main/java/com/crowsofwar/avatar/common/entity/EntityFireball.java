@@ -85,16 +85,7 @@ public class EntityFireball extends AvatarEntity {
 		if (getBehavior() instanceof FireballBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
 			setDead();
 		}
-
 	}
-
-	/*@Override
-	public void setDead() {
-		super.setDead();
-		if (this.isDead && !world.isRemote) {
-			Thread.dumpStack();
-		}
-	}**/
 
 	@Override
 	public boolean onMajorWaterContact() {
