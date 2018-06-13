@@ -273,7 +273,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		}
 		AbilityData data = BendingData.get(getOwner()).getAbilityData("pickup_block");
 
-		if (!world.isRemote && areItemDropsEnabled() && !data.isMasterPath(AbilityTreePath.FIRST)) {
+		if (!world.isRemote && areItemDropsEnabled()) {
 			List<ItemStack> drops = getBlock().getDrops(world, new BlockPos(this), getBlockState(), 0);
 			for (ItemStack is : drops) {
 				EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
@@ -292,9 +292,16 @@ public class EntityFloatingBlock extends AvatarEntity {
 
 		}
 
-		setDead();
 		return true;
 
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
+		if (this.isDead && !world.isRemote) {
+			Thread.dumpStack();
+		}
 	}
 
 	public float getFriction() {

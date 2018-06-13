@@ -156,7 +156,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			AbilityData data = BendingData.get(entity.getOwner()).getAbilityData("pickup_block");
 
 			if (entity.isCollided) {
-				if (!entity.world.isRemote && data.isMasterPath(AbilityTreePath.FIRST)) entity.setDead();
+				if (!entity.world.isRemote) entity.setDead();
 				entity.onCollideWithSolid();
 
 				World world = entity.world;
@@ -167,7 +167,6 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 				}
 
-				entity.setBehavior(new FloatingBlockBehavior.PlayerControlled());
 			}
 
 			entity.addVelocity(Vector.DOWN.times(9.81 / 20));
@@ -187,6 +186,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 					}
 
 				}
+				entity.setBehavior(new FloatingBlockBehavior.PlayerControlled());
 			}
 
 			return this;
