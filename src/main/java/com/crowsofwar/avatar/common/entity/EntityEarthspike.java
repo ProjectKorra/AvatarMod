@@ -25,6 +25,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
@@ -38,26 +41,35 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class EntityEarthspike extends AvatarEntity {
 
+	//private static final DataParameter<Float> SYNC_SIZE = EntityDataManager
+	//		.createKey(EntityEarthspike.class, DataSerializers.FLOAT);
+
 	private float damageMult;
-	private float Size;
+	//private float Size = 1;
 
 	public EntityEarthspike(World world) {
 		super(world);
-		setSize(Size, Size);
-		this.damageMult = 1.6F;
+		setSize(1, 1);
 	}
 
 	public void setDamageMult(float mult) {
 		this.damageMult = mult;
 	}
 
-	public void setSize (float size) {
-		this.Size = size;
+//	public void setSize (float size) {
+	//	dataManager.set(SYNC_SIZE, size);
+	//}
+
+	//public float getSize() {
+	//	return dataManager.get(SYNC_SIZE);
+	//}
+
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		//dataManager.register(SYNC_SIZE, Size);
 	}
 
-	public float getSize() {
-		return Size;
-	}
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
@@ -82,8 +94,8 @@ public class EntityEarthspike extends AvatarEntity {
 	public void onEntityUpdate() {
 
 		super.onEntityUpdate();
-		setVelocity(Vector.ZERO);
 
+		setVelocity(Vector.ZERO);
 		if (ticksExisted >= 15) {
 			this.setDead();
 		}
@@ -142,7 +154,7 @@ public class EntityEarthspike extends AvatarEntity {
 		Vector entityPos = Vector.getEntityPos(entity);
 		Vector direction = entityPos.minus(this.position());
 		Vector velocity = direction.times(STATS_CONFIG.earthspikeSettings.push);
-		entity.addVelocity(velocity.x()/2, velocity.y(), velocity.z()/2);
+		entity.addVelocity(velocity.x()/20, velocity.y(), velocity.z()/20);
 	}
 
 	@Override

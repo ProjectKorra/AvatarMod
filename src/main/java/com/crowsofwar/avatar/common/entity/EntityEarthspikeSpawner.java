@@ -28,7 +28,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	private boolean unstoppable;
 	private float damageMult;
 	private double maxTicksAlive;
-	private float Size;
 	/**
 	 * @param world
 	 */
@@ -36,7 +35,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		super(world);
 		setSize(1, 1);
 		this.damageMult = 1.6F;
-		this.Size = 1;
 
 	}
 
@@ -70,15 +68,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		super.onUpdate();
 
 		if (!world.isRemote && ticksExisted >= maxTicksAlive) {
-			Size = (float) maxTicksAlive/10;
-			EntityEarthspike earthspike = new EntityEarthspike(world);
-			earthspike.posX = this.posX;
-			earthspike.posY = this.posY;
-			earthspike.posZ = this.posZ;
-			earthspike.setOwner(getOwner());
-			earthspike.setSize(Size);
-			world.spawnEntity(earthspike);
-
 			setDead();
 		}
 
@@ -89,13 +78,11 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 				world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
 				SoundCategory.PLAYERS, 1, 1, false);
 		if (ticksExisted % 3 == 0 && !world.isRemote) {
-			Size += 0.1;
 			EntityEarthspike earthspike = new EntityEarthspike(world);
 			earthspike.posX = this.posX;
 			earthspike.posY = this.posY;
 			earthspike.posZ = this.posZ;
 			earthspike.setOwner(getOwner());
-			earthspike.setSize(Size);
 			world.spawnEntity(earthspike);
 		}
 
