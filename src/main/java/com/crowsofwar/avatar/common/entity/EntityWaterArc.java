@@ -146,7 +146,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			WorldServer World = (WorldServer) this.world;
 			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0.2, 0.1, 0.2, 0.03);
 			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().expand(1, 1, 1),
+			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(1, 1, 1),
 					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
@@ -155,13 +155,13 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 					//If the player's water arc level is level III or greater the aoe will do 2+ damage.
 					damageEntity(entity);
 
-					double mult = -0.1;
+					double mult = -0.5;
 
 					Vector vel = position().minus(getEntityPos(entity));
 					vel = vel.normalize().times(mult).plusY(0.1f);
 
 					entity.motionX = vel.x();
-					entity.motionY = vel.y();
+					entity.motionY = vel.y() > 0 ? vel.y() : 0.1F;
 					entity.motionZ = vel.z();
 					damageEntity(entity);
 

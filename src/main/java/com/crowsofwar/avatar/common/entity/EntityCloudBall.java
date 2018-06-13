@@ -79,6 +79,9 @@ public class EntityCloudBall extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		int ticks = 0;
+		if (!this.isCollided) {
+			this.setInvisible(false);
+		}
 
 		setBehavior((CloudburstBehavior) getBehavior().onUpdate(this));
 		if (this.getBehavior() instanceof CloudburstBehavior.Thrown) {
@@ -231,38 +234,40 @@ public class EntityCloudBall extends AvatarEntity {
 					speed = 0.2F;
 					hitBox = 4;
 				}
-			}
 
-			WorldServer World = (WorldServer) this.world;
-			World.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, 50, 0, 0, 0, speed);
-			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_FIREWORK_LAUNCH, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().expand(hitBox, hitBox, hitBox),
-					entity -> entity != getOwner());
 
-			if (!collided.isEmpty()) {
-				for (Entity entity : collided) {
+				this.setInvisible(true);
+				WorldServer World = (WorldServer) this.world;
+				World.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, 50, 0, 0, 0, speed);
+				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_FIREWORK_LAUNCH, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(hitBox, hitBox, hitBox),
+						entity -> entity != getOwner());
 
-					damageEntity(entity);
+				if (!collided.isEmpty()) {
+					for (Entity entity : collided) {
 
-					double mult = -0.3;
+						damageEntity(entity);
 
-					Vector vel = position().minus(getEntityPos(entity));
-					vel = vel.normalize().times(mult).plusY(0.15f);
+						double mult = abilityData.getLevel() >= 2 ? -3 : -1.5;
 
-					entity.motionX = vel.x();
-					entity.motionY = vel.y();
-					entity.motionZ = vel.z();
-					damageEntity(entity);
+						Vector vel = position().minus(getEntityPos(entity));
+						vel = vel.normalize().times(mult).plusY(0.15f);
 
-					if (entity instanceof AvatarEntity) {
-						AvatarEntity avent = (AvatarEntity) entity;
-						avent.setVelocity(vel);
+						entity.motionX = vel.x();
+						entity.motionY = vel.y() > 0 ? vel.y() : 0.15F;
+						entity.motionZ = vel.z();
+						damageEntity(entity);
+
+						if (entity instanceof AvatarEntity) {
+							AvatarEntity avent = (AvatarEntity) entity;
+							avent.setVelocity(vel);
+						}
+						entity.isAirBorne = true;
+						AvatarUtils.afterVelocityAdded(entity);
 					}
-					entity.isAirBorne = true;
-					AvatarUtils.afterVelocityAdded(entity);
 				}
-			}
 
+			}
 		}
 	}
 
