@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -114,6 +115,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		@Override
 		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
 			ticks++;
+
 
 
 			boolean waterSpear = false;

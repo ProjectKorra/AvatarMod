@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -274,6 +275,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			setBehavior(next);
 		}
 
+		EntityWaterArc arc = AvatarEntity.lookupControlledEntity(world, EntityWaterArc.class, getOwner());
+		BendingData bD = BendingData.get(getOwner());
+		if (arc == null && bD.hasStatusControl(StatusControl.THROW_WATER)) {
+			bD.removeStatusControl(StatusControl.THROW_WATER);
+		}
 
 		if (inWater && behavior instanceof WaterArcBehavior.PlayerControlled) {
 			// try to go upwards
