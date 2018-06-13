@@ -74,6 +74,8 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	private float Gravity;
 
+	private BlockPos position;
+
 	public EntityWaterArc(World world) {
 		super(world);
 		setSize(Size, Size);
@@ -118,6 +120,9 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.Gravity = gravity;
 	}
 
+	public void setStartingPosition (BlockPos position) {
+		this.position = position;
+	}
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -157,13 +162,14 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 					damageEntity(entity);
 
 					double mult = -0.5;
+					double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
 
 					Vector vel = position().minus(getEntityPos(entity));
 					vel = vel.normalize().times(mult).plusY(0.15f);
 
-					entity.motionX = vel.x();
-					entity.motionY = vel.y() > 0 ? vel.y() : 0.15F;
-					entity.motionZ = vel.z();
+					entity.motionX = vel.x() + 0.1/distanceTravelled;
+					entity.motionY = vel.y() > 0 ? vel.y() + 0.1/distanceTravelled : 0.15F + 0.1/distanceTravelled;
+					entity.motionZ = vel.z() + 0.1/distanceTravelled;;
 					damageEntity(entity);
 
 					if (entity instanceof AvatarEntity) {
