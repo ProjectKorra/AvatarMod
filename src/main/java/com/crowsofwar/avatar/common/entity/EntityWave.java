@@ -81,11 +81,12 @@ public class EntityWave extends AvatarEntity {
 		Vector move = velocity().dividedBy(20);
 		Vector newPos = position().plus(move);
 		setPosition(newPos.x(), newPos.y(), newPos.z());
+		this.posY = this.prevPosY - 0.005;
 
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
 			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 300, 0.8, 0.4, 0.8, 0);
-			World.spawnParticle(EnumParticleTypes.CLOUD, posX, posY + (Size * 0.75F), posZ, 10, 0.4, 0, 0.4, 0);
+			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY + (Size * 0.75F), posZ, 30, 0.4, 0, 0.4, 0);
 
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
 			for (Entity entity : collided) {
