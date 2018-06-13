@@ -39,10 +39,11 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class EntityEarthspike extends AvatarEntity {
 
 	private float damageMult;
+	private float Size;
 
 	public EntityEarthspike(World world) {
 		super(world);
-		setSize(1, 1);
+		setSize(Size, Size);
 		this.damageMult = 1.6F;
 	}
 
@@ -50,6 +51,13 @@ public class EntityEarthspike extends AvatarEntity {
 		this.damageMult = mult;
 	}
 
+	public void setSize (float size) {
+		this.Size = size;
+	}
+
+	public float getSize() {
+		return Size;
+	}
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
@@ -112,7 +120,7 @@ public class EntityEarthspike extends AvatarEntity {
 
 				if (getOwner() != null) {
 					BendingData data = BendingData.get(getOwner());
-					data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.ravineHit);
+					data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.earthspikeHit);
 					BattlePerformanceScore.addMediumScore(getOwner());
 				}
 
@@ -122,8 +130,8 @@ public class EntityEarthspike extends AvatarEntity {
 
 	private boolean attackEntity(Entity entity) {
 		if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
-			DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
-			float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
+			DamageSource ds = AvatarDamageSource.causeEarthspikeDamage(entity, getOwner());
+			float damage = STATS_CONFIG.earthspikeSettings.damage * damageMult;
 			return entity.attackEntityFrom(ds, damage);
 		}
 
@@ -133,8 +141,8 @@ public class EntityEarthspike extends AvatarEntity {
 	private void pushEntity(Entity entity) {
 		Vector entityPos = Vector.getEntityPos(entity);
 		Vector direction = entityPos.minus(this.position());
-		Vector velocity = direction.times(STATS_CONFIG.ravineSettings.push);
-		entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
+		Vector velocity = direction.times(STATS_CONFIG.earthspikeSettings.push);
+		entity.addVelocity(velocity.x()/2, velocity.y(), velocity.z()/2);
 	}
 
 	@Override

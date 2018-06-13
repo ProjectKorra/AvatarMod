@@ -41,6 +41,9 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import org.lwjgl.Sys;
 import scala.Int;
 
@@ -131,6 +134,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		dataManager.register(SYNC_BEHAVIOR, new WaterArcBehavior.Idle());
 		dataManager.register(SYNC_COMBO_TIMER, comboTimer);
 	}
+
 
 	public void damageEntity(Entity entity) {
 		DamageSource ds = AvatarDamageSource.causeWaterDamage(entity, getOwner());

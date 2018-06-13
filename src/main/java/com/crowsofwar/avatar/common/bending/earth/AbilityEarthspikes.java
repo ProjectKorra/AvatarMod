@@ -25,26 +25,27 @@ public class AbilityEarthspikes extends Ability {
 		World world = ctx.getWorld();
 		Bender bender = ctx.getBender();
 
-		float damage = 0.90f;
+		float damage = 1;
 		float xp = abilityData.getTotalXp();
 		float ticks = 20;
 		double speed = 8;
 		float chi = STATS_CONFIG.chiEarthspike;
 
 		if (ctx.getLevel() >= 1) {
-			damage = 1f;
+			damage = 1.5f;
 			ticks = 40;
 		}
 		if (ctx.getLevel() >= 2) {
 			speed = 14;
+			damage = 2;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			damage = 0.75f;
+			damage = 1.25f;
 			ticks = 30;
 			speed = 12;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			damage = 2f;
+			damage = 3;
 			ticks = 60;
 			speed = 20;
 		}
@@ -60,6 +61,7 @@ public class AbilityEarthspikes extends Ability {
 				earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
 				earthspike.setVelocity(look.times(speed));
 				earthspike.setDamageMult((float) (damage * ctx.getPowerRatingDamageMod()));
+				//For Earthspike's damagemult.
 				earthspike.setDuration(ticks);
 				earthspike.setUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
 				world.spawnEntity(earthspike);

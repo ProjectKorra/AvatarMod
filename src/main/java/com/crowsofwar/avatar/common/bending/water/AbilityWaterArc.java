@@ -34,6 +34,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.function.BiPredicate;
 
@@ -51,7 +52,7 @@ public class AbilityWaterArc extends Ability {
 		requireRaytrace(-1, true);
 	}
 
-	public int comboNumber = 1;
+	public int comboNumber;
 
 	@Override
 	public void execute(AbilityContext ctx) {
@@ -95,14 +96,17 @@ public class AbilityWaterArc extends Ability {
 				if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 					EntityWaterArc water = new EntityWaterArc(world);
 
+					if (comboNumber == 0) {
+						comboNumber = 1;
+					}
 					if (comboNumber == 1) {
 						water.setComboTimer(0);
 					}
-					if (water.getComboTimer() > 25) {
+					if (water.getComboTimer() > 15) {
 						comboNumber = 1;
 						water.setComboTimer(0);
 					}
-					if (water.getComboTimer() < 25) {
+					if (water.getComboTimer() < 15) {
 						water.setComboTimer(0);
 						comboNumber++;
 					}

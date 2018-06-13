@@ -89,7 +89,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the wave
 	 */
 	public static DamageSource causeWaveDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_wave", hit, owner);
+		return new EntityDamageSourceIndirect("avatar_wave", hit, owner).setProjectile();
 	}
 
 	/**
@@ -101,6 +101,16 @@ public class AvatarDamageSource {
 	public static DamageSource causeFireballDamage(Entity hit, @Nullable Entity owner) {
 		return new EntityDamageSourceIndirect("avatar_fireball", hit, owner).setProjectile()
 				.setFireDamage().setExplosion();
+	}
+
+	/**
+	 * Create a DamageSource for damage caused by an earthspike.
+	 *
+	 * @param hit   Who was hit by the earthspike
+	 * @param owner Who created the earthspike
+	 */
+	public static DamageSource causeEarthspikeDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_earthspike", hit, owner);
 	}
 
 	/**
