@@ -57,6 +57,7 @@ public class AbilityCreateWave extends Ability {
 			IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
 			IBlockState up = world.getBlockState(pos.toBlockPos().up());
 
+			float size = 2;
 			for (int i = 0; i < 3; i++) {
 				if (world.getBlockState(pos.toBlockPos().up()).getBlock() == Blocks.AIR) {
 
@@ -64,10 +65,20 @@ public class AbilityCreateWave extends Ability {
 
 						double speed = 10;
 						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-							speed = 8;
+							speed = 15;
+							size = 3.5F;
 						}
 						if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-							speed = 18;
+							speed = 20;
+							size = 2.75F;
+						}
+						if (ctx.getLevel() == 1) {
+							size = 2.5F;
+							speed = 11;
+						}
+						if (ctx.getLevel() == 2) {
+							size = 3;
+							speed = 13;
 						}
 						speed += ctx.getPowerRating() / 100 * 8;
 
@@ -80,7 +91,7 @@ public class AbilityCreateWave extends Ability {
 						float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
 						damageMult *= ctx.getPowerRatingDamageMod();
 						wave.setDamageMultiplier(damageMult);
-						wave.setWaveSize(ctx.getLevel() >= 2 ? 3 : 2);
+						wave.setWaveSize(size);
 						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 							wave.setWaveSize(5);
 						}

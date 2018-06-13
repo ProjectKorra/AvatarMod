@@ -29,6 +29,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
@@ -42,17 +43,18 @@ public class EntityWave extends AvatarEntity {
 
 	private float damageMult;
 	private boolean createExplosion;
+	private float Size = 2;
 
 	public EntityWave(World world) {
 		super(world);
-		setSize(2, 2);
+		setSize(Size, Size);
 		damageMult = 1;
 	}
 
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_SIZE, 2f);
+		dataManager.register(SYNC_SIZE, Size);
 	}
 
 	public void setDamageMultiplier(float damageMult) {
@@ -72,7 +74,7 @@ public class EntityWave extends AvatarEntity {
 
 		super.onUpdate();
 
-		setSize(getWaveSize() * 0.75f, 2);
+		setSize(Size, Size * 0.75F);
 
 		EntityLivingBase owner = getOwner();
 
@@ -81,8 +83,10 @@ public class EntityWave extends AvatarEntity {
 		setPosition(newPos.x(), newPos.y(), newPos.z());
 
 		if (!world.isRemote) {
-			world.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 0.03, 0.03, 0.03);
-			world.spawnParticle(EnumParticleTypes.CLOUD, posX, getEyeHeight(), posZ, 0.02, 0.005, 0.02);
+			WorldServer World = (WorldServer) world;
+			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 300, 0.8, 0.4, 0.8, 0);
+			World.spawnParticle(EnumParticleTypes.CLOUD, posX, posY + (Size * 0.75F), posZ, 10, 0.4, 0, 0.4, 0);
+
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
 			for (Entity entity : collided) {
 				Vector motion = velocity().dividedBy(20).times(STATS_CONFIG.waveSettings.push);

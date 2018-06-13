@@ -218,7 +218,7 @@ avatar.ability.water_arc.desc=One of waterbending's most common attacks. Shoot a
 avatar.ability.water_arc.lvl1=Basic water arc
 avatar.ability.water_arc.lvl2=Farther pick-up range
 avatar.ability.water_arc.lvl3=Much faster
-avatar.ability.water_arc.lvl4_1=Boomerang ;; Comes back to you if you hit a target
+avatar.ability.water_arc.lvl4_1=Water Flurry ;; You can now instantly fire off water arcs; multiple arcs in quick succession make a combo.
 avatar.ability.water_arc.lvl4_2=Water spear ;; Gravity disabled for 2s after thrown, slower
 
 avatar.ability.wave=Wave

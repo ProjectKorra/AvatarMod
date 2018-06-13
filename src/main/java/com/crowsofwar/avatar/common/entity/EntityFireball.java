@@ -89,7 +89,9 @@ public class EntityFireball extends AvatarEntity {
 	@Override
 	public boolean onMajorWaterContact() {
 		spawnExtinguishIndicators();
-		removeStatCtrl();
+		if (getBehavior() instanceof FireballBehavior.PlayerControlled) {
+			removeStatCtrl();
+		}
 		setDead();
 		return true;
 	}
