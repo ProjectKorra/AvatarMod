@@ -154,7 +154,7 @@ public class EntityEarthspike extends AvatarEntity {
 		Vector entityPos = Vector.getEntityPos(entity);
 		Vector direction = entityPos.minus(this.position());
 		Vector velocity = direction.times(STATS_CONFIG.earthspikeSettings.push);
-		entity.addVelocity(velocity.x()/20, velocity.y(), velocity.z()/20);
+		entity.addVelocity(0.1, velocity.y(), 0.1);
 	}
 
 	@Override
