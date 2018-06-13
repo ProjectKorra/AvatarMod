@@ -244,7 +244,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (entity instanceof AvatarEntity) {
+		if (entity instanceof AvatarEntity && getBehavior() instanceof WaterArcBehavior.Thrown) {
 			((AvatarEntity) entity).onMinorWaterContact();
 			if (!isSpear) {
 				Splash();
@@ -252,7 +252,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 				cleanup();
 			}
 		}
-		if (!isSpear) {
+		if (!isSpear && getBehavior() instanceof WaterArcBehavior.Thrown) {
 			Splash();
 			this.setDead();
 			cleanup();
