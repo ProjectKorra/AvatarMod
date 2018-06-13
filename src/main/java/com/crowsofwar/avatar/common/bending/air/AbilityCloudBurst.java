@@ -52,6 +52,7 @@ public class AbilityCloudBurst extends Ability {
 			EntityCloudBall cloudball = new EntityCloudBall(world);
 			cloudball.setPosition(target);
 			cloudball.setOwner(entity);
+			cloudball.setStartingPosition(entity.getPosition());
 			cloudball.setBehavior(new CloudburstBehavior.PlayerControlled());
 
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
