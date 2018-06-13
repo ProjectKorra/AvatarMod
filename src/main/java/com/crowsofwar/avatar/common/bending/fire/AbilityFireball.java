@@ -53,9 +53,10 @@ public class AbilityFireball extends Ability {
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
 
-		if (data.hasStatusControl(StatusControl.THROW_FIREBALL)) return;
+		//if (data.hasStatusControl(StatusControl.THROW_FIREBALL)) return;
+		//That doesn't work if you spam the button; that's really weird
 
-		if (bender.consumeChi(STATS_CONFIG.chiFireball)) {
+		if (bender.consumeChi(STATS_CONFIG.chiFireball) && data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
 
 			Vector target;
 			if (ctx.isLookingAtBlock()) {
