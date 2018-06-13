@@ -271,8 +271,9 @@ public class EntityFloatingBlock extends AvatarEntity {
 			spawnCrackParticle(posX, posY + 0.3, posZ, random.nextGaussian() * 0.1,
 					random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
 		}
+		AbilityData data = BendingData.get(getOwner()).getAbilityData("pickup_block");
 
-		if (!world.isRemote && areItemDropsEnabled()) {
+		if (!world.isRemote && areItemDropsEnabled() && !data.isMasterPath(AbilityTreePath.FIRST)) {
 			List<ItemStack> drops = getBlock().getDrops(world, new BlockPos(this), getBlockState(), 0);
 			for (ItemStack is : drops) {
 				EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
@@ -280,7 +281,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 			}
 		}
 
-		AbilityData data = BendingData.get(getOwner()).getAbilityData("pickup_block");
+
 		if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
 
 			Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);

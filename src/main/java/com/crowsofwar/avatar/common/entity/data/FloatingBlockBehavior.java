@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.entity.data;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -152,8 +153,10 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
 
+			AbilityData data = BendingData.get(entity.getOwner()).getAbilityData("pickup_block");
+
 			if (entity.isCollided) {
-				if (!entity.world.isRemote) entity.setDead();
+				if (!entity.world.isRemote && data.isMasterPath(AbilityTreePath.FIRST)) entity.setDead();
 				entity.onCollideWithSolid();
 
 				World world = entity.world;
@@ -164,6 +167,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 				}
 
+				entity.setBehavior(new FloatingBlockBehavior.PlayerControlled());
 			}
 
 			entity.addVelocity(Vector.DOWN.times(9.81 / 20));

@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.client.particle.ParticleExplosion;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -86,6 +87,7 @@ public class EntityWave extends AvatarEntity {
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
 			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 300, 0.8, 0.4, 0.8, 0);
+			World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL,  posX, posY + (Size * 0.75F), posZ, 1, 0.4, 0.1, 0.4, 0);
 			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY + (Size * 0.75F), posZ, 30, 0.4, 0, 0.4, 0);
 
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
