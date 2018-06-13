@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.CloudburstPowerModifier;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -8,19 +10,30 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
+import java.util.List;
 import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 public class EntityCloudBall extends AvatarEntity {
 	/**
@@ -70,7 +83,8 @@ public class EntityCloudBall extends AvatarEntity {
 		setBehavior((CloudburstBehavior) getBehavior().onUpdate(this));
 		if (this.getBehavior() instanceof CloudburstBehavior.Thrown) {
 			ticks++;
-			if (ticks >= 200){
+			if (ticks >= 200) {
+				cloudBurst();
 				this.setDead();
 			}
 		}
@@ -122,9 +136,9 @@ public class EntityCloudBall extends AvatarEntity {
 		if (getOwner() != null) {
 			AbilityData abilityData = BendingData.get(getOwner()).getAbilityData("cloudburst");
 			abilityData.addXp(3);
-
 		}
 
+		cloudBurst();
 		setDead();
 		return true;
 
@@ -170,7 +184,7 @@ public class EntityCloudBall extends AvatarEntity {
 			}
 
 		}
-
+		cloudBurst();
 		return super.canCollideWith(entity) || entity instanceof EntityLivingBase;
 
 	}
@@ -200,6 +214,69 @@ public class EntityCloudBall extends AvatarEntity {
 
 	public AxisAlignedBB getExpandedHitbox() {
 		return this.expandedHitbox;
+	}
+
+	public void cloudBurst() {
+		if (world instanceof WorldServer) {
+			WorldServer World = (WorldServer) this.world;
+			World.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, 100, 0.2, 0.1, 0.2, 0.1);
+			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_FIREWORK_LAUNCH, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().expand(1, 1, 1),
+					entity -> entity != getOwner());
+
+			if (!collided.isEmpty()) {
+				for (Entity entity : collided) {
+
+					damageEntity(entity);
+
+					double mult = -0.3;
+
+					Vector vel = position().minus(getEntityPos(entity));
+					vel = vel.normalize().times(mult).plusY(0.15f);
+
+					entity.motionX = vel.x();
+					entity.motionY = vel.y();
+					entity.motionZ = vel.z();
+					damageEntity(entity);
+
+					if (entity instanceof AvatarEntity) {
+						AvatarEntity avent = (AvatarEntity) entity;
+						avent.setVelocity(vel);
+					}
+					entity.isAirBorne = true;
+					AvatarUtils.afterVelocityAdded(entity);
+				}
+			}
+
+		}
+	}
+
+	public void damageEntity(Entity entity) {
+		if (getOwner() != null) {
+			BendingData data = BendingData.get(getOwner());
+			AbilityData abilityData = data.getAbilityData("cloudburst");
+			DamageSource ds = AvatarDamageSource.causeWaterDamage(entity, getOwner());
+			int lvl = abilityData.getLevel();
+			float damage = 0.5F;
+			if (lvl == 1) {
+				damage = 1;
+			}
+			if (lvl == 2) {
+				damage = 1.5F;
+			}
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				damage = 2;
+			}
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				damage = 2.5F;
+			}
+			entity.attackEntityFrom(ds, damage);
+			if (entity.attackEntityFrom(ds, damage)) {
+				abilityData.addXp(SKILLS_CONFIG.cloudburstHit);
+				BattlePerformanceScore.addMediumScore(getOwner());
+
+			}
+		}
 	}
 
 	@Override

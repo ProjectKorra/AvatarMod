@@ -179,14 +179,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	@Override
-	public void setDead() {
-		super.setDead();
-		if (this.isDead && !world.isRemote) {
-			Thread.dumpStack();
-		}
-	}
-
-	@Override
 	public boolean onCollideWithSolid() {
 
 		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {

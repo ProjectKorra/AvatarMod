@@ -93,14 +93,19 @@ public class EntityLightningSpear extends AvatarEntity {
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+		if (this.isDead && !world.isRemote) {
+			Thread.dumpStack();
+		}
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
 		setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
-		if (this.isDead) {
-			removeStatCtrl();
-		}
-		// TODO Temporary fix to avoid extra fireballs
+
 		// Add hook or something
 		if (getOwner() == null) {
 			if (this.getBehavior() == controlled) {

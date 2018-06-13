@@ -81,7 +81,7 @@ public class EntityWave extends AvatarEntity {
 		Vector move = velocity().dividedBy(20);
 		Vector newPos = position().plus(move);
 		setPosition(newPos.x(), newPos.y(), newPos.z());
-		this.posY = this.prevPosY - 0.005;
+		this.Size = Size - 0.001F;
 
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;

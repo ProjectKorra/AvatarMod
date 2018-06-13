@@ -87,14 +87,6 @@ public class EntityFireball extends AvatarEntity {
 	}
 
 	@Override
-	public void setDead() {
-		super.setDead();
-		if (this.isDead && !world.isRemote) {
-			Thread.dumpStack();
-		}
-	}
-
-	@Override
 	public boolean onMajorWaterContact() {
 		spawnExtinguishIndicators();
 		if (getBehavior() instanceof FireballBehavior.PlayerControlled) {
