@@ -44,6 +44,7 @@ import org.lwjgl.Sys;
 import scala.Int;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
@@ -140,7 +141,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	public void Splash() {
-		AbilityData abilityData = BendingData.get(getOwner()).getAbilityData("water_arc");
+		AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("water_arc");
 		int lvl = abilityData.getLevel();
 		if (world instanceof WorldServer) {
 			WorldServer World = (WorldServer) this.world;
@@ -158,10 +159,10 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 					double mult = -0.5;
 
 					Vector vel = position().minus(getEntityPos(entity));
-					vel = vel.normalize().times(mult).plusY(0.1f);
+					vel = vel.normalize().times(mult).plusY(0.15f);
 
 					entity.motionX = vel.x();
-					entity.motionY = vel.y() > 0 ? vel.y() : 0.1F;
+					entity.motionY = vel.y() > 0 ? vel.y() : 0.15F;
 					entity.motionZ = vel.z();
 					damageEntity(entity);
 
