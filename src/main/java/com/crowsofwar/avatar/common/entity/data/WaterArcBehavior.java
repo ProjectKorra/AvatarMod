@@ -160,11 +160,12 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 					entity.setDead();
 				}
 			}
+
 			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 				entity.setComboTimer(entity.getComboTimer() + 1);
 				//Level 4 Path One
-				startGravity = 60;
-				if (ticks >= 60) {
+				startGravity = 25;
+				if (ticks >= 25) {
 					entity.Splash();
 					entity.setDead();
 				}
@@ -172,7 +173,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 
 			if (startGravity/ticks <= 2) {
-				entity.addVelocity(Vector.DOWN.times(9.81 / 30));
+				entity.addVelocity(Vector.DOWN.times(entity.getGravity() / 30));
 			}
 
 

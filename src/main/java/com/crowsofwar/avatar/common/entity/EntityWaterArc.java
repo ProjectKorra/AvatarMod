@@ -69,14 +69,19 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	private int comboTimer;
 
+	private float Size;
+
+	private float Gravity;
 
 	public EntityWaterArc(World world) {
 		super(world);
-		setSize(.4f, .4f);
+		setSize(Size, Size);
 		this.lastPlayedSplash = -1;
 		this.damageMult = 1;
 		this.putsOutFires = true;
 		this.comboTimer = 0;
+		this.Size = 0.4F;
+		this.Gravity = 9.81F;
 
 	}
 
@@ -92,12 +97,24 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.isSpear = isSpear;
 	}
 
+	public void setSize(float size) {
+		this.Size = size;
+	}
+
 	public int getComboTimer() {
 		return dataManager.get(SYNC_COMBO_TIMER);
 	}
 
 	public void setComboTimer(int timer) {
 		dataManager.set(SYNC_COMBO_TIMER, timer);
+	}
+
+	public float getGravity() {
+		return this.Gravity;
+	}
+
+	public void setGravity(float gravity) {
+		this.Gravity = gravity;
 	}
 
 	@Override
@@ -159,6 +176,14 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 		}
 
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
+		if (this.isDead && !world.isRemote) {
+			Thread.dumpStack();
+		}
 	}
 
 	@Override

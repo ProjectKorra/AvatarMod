@@ -38,6 +38,7 @@ import net.minecraft.world.World;
 import java.util.function.BiPredicate;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 import static java.lang.Math.toRadians;
 
 /**
@@ -50,6 +51,8 @@ public class AbilityWaterArc extends Ability {
 		requireRaytrace(-1, true);
 	}
 
+	public int comboNumber = 1;
+
 	@Override
 	public void execute(AbilityContext ctx) {
 		World world = ctx.getWorld();
@@ -61,23 +64,27 @@ public class AbilityWaterArc extends Ability {
 		if (targetPos != null || ctx.consumeWater(1)) {
 
 			if (targetPos == null) {
-				targetPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(4));
+				targetPos = Vector.getEyePos(entity).plus(getLookRectangular(entity).times(4));
 			}
 			float damageMult = 1F;
-			int comboNumber = 1;
+			float gravity = 8;
 			//The water arc number in the combo.
 
 			if (ctx.getLevel() == 1) {
 				damageMult = 1.25F;
+				gravity = 7.5F;
 			}
 			if (ctx.getLevel() == 2) {
 				damageMult = 1.5F;
-			}
-			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-				damageMult = 3F;
+				gravity = 7;
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+				damageMult = 3F;
+				gravity = 3;
+			}
+			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 				damageMult = 1 + comboNumber / 2;
+				gravity = 9.81F;
 			}
 
 			if (bender.consumeChi(STATS_CONFIG.chiWaterArc)) {
@@ -85,16 +92,7 @@ public class AbilityWaterArc extends Ability {
 				removeExisting(ctx);
 				damageMult *= ctx.getPowerRatingDamageMod();
 
-				if (!ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-					EntityWaterArc water = new EntityWaterArc(world);
-					water.setOwner(entity);
-					water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
-					water.setDamageMult(damageMult);
-					water.setBehavior(new WaterArcBehavior.PlayerControlled());
-					water.isSpear(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
-					world.spawnEntity(water);
-					ctx.getData().addStatusControl(StatusControl.THROW_WATER);
-				} else {
+				if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 					EntityWaterArc water = new EntityWaterArc(world);
 
 					if (comboNumber == 1) {
@@ -108,17 +106,41 @@ public class AbilityWaterArc extends Ability {
 						water.setComboTimer(0);
 						comboNumber++;
 					}
+					if (comboNumber == 3) {
+						//Massive Singular water arc; kinda like airgust
+						water.setSize(0.9F);
+						gravity = 2;
+						comboNumber = 1;
 
-					Vector look = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(4));
+					}
+
+					if (comboNumber == 2) {
+						gravity = -9.81F;
+					}
+
+					Vector playerEye = Vector.getEyePos(entity);
+					Vector look = playerEye.plus(getLookRectangular(entity).times(2.5));
 					Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch));
 					force = force.times(15 + comboNumber);
 
 					water.setOwner(entity);
-					water.setPosition(look.x(), entity.getEyeHeight(), look.z());
+					water.setPosition(look);
 					water.setDamageMult(damageMult);
 					water.addVelocity(force);
+					water.setGravity(gravity);
 					water.setBehavior(new WaterArcBehavior.Thrown());
+					world.spawnEntity(water);
 
+				} else {
+					EntityWaterArc water = new EntityWaterArc(world);
+					water.setOwner(entity);
+					water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
+					water.setDamageMult(damageMult);
+					water.setBehavior(new WaterArcBehavior.PlayerControlled());
+					water.isSpear(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
+					water.setGravity(gravity);
+					world.spawnEntity(water);
+					ctx.getData().addStatusControl(StatusControl.THROW_WATER);
 				}
 
 			}
