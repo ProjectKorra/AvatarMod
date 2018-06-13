@@ -296,14 +296,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 
 	}
 
-	@Override
-	public void setDead() {
-		super.setDead();
-		if (this.isDead && !world.isRemote) {
-			Thread.dumpStack();
-		}
-	}
-
 	public float getFriction() {
 		return dataManager.get(SYNC_FRICTION);
 	}
