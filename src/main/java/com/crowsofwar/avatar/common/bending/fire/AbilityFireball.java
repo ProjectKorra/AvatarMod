@@ -56,7 +56,7 @@ public class AbilityFireball extends Ability {
 		//if (data.hasStatusControl(StatusControl.THROW_FIREBALL)) return;
 		//That doesn't work if you spam the button; that's really weird
 
-		if (bender.consumeChi(STATS_CONFIG.chiFireball) && data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
+		if (bender.consumeChi(STATS_CONFIG.chiFireball) && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
 
 			Vector target;
 			if (ctx.isLookingAtBlock()) {
