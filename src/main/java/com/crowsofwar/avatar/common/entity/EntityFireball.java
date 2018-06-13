@@ -74,7 +74,6 @@ public class EntityFireball extends AvatarEntity {
 		super.onUpdate();
 		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
 
-		// TODO Temporary fix to avoid extra fireballs
 		// Add hook or something
 		if (getOwner() == null) {
 			setDead();

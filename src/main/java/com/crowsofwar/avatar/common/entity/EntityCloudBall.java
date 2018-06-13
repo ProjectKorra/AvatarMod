@@ -70,20 +70,19 @@ public class EntityCloudBall extends AvatarEntity {
 		setBehavior((CloudburstBehavior) getBehavior().onUpdate(this));
 		if (this.getBehavior() instanceof CloudburstBehavior.Thrown) {
 			ticks++;
-			if (ticks >= 250){
+			if (ticks >= 200){
 				this.setDead();
 			}
 		}
 
-      /*  if (!world.isRemote){
-			Thread.dumpStack();
-        }**/
-
-		// TODO Temporary fix to avoid extra fireballs
 		// Add hook or something
 		if (getOwner() == null) {
 			setDead();
 			removeStatCtrl();
+		}
+		BendingData data = BendingData.get(getOwner());
+		if (getBehavior() instanceof CloudburstBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_CLOUDBURST)) {
+			setDead();
 		}
 
 	}
