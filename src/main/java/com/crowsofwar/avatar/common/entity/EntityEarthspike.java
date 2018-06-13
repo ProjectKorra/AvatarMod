@@ -129,7 +129,6 @@ public class EntityEarthspike extends AvatarEntity {
 		if (!world.isRemote) {
 			pushEntity(entity);
 			if (attackEntity(entity)) {
-
 				if (getOwner() != null) {
 					BendingData data = BendingData.get(getOwner());
 					data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.earthspikeHit);
@@ -154,7 +153,7 @@ public class EntityEarthspike extends AvatarEntity {
 		Vector entityPos = Vector.getEntityPos(entity);
 		Vector direction = entityPos.minus(this.position());
 		Vector velocity = direction.times(STATS_CONFIG.earthspikeSettings.push);
-		entity.addVelocity(0.1, velocity.y(), 0.1);
+		entity.addVelocity(velocity.x()/4, velocity.y(), velocity.z()/5);
 	}
 
 	@Override

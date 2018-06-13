@@ -83,6 +83,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 			earthspike.posY = this.posY;
 			earthspike.posZ = this.posZ;
 			earthspike.setOwner(getOwner());
+			earthspike.setDamageMult(damageMult);
 			world.spawnEntity(earthspike);
 		}
 
@@ -112,37 +113,15 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 				setDead();
 			}
 		}
-
-		// amount of entities which were successfully attacked
-		int attacked = 0;
-
-		// Push collided entities back
-		if (!world.isRemote) {
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-					entity -> entity != getOwner());
-			if (!collided.isEmpty()) {
-				for (Entity entity : collided) {
-					if (attackEntity(entity)) {
-						attacked++;
-					}
-				}
-			}
-		}
-
-		if (!world.isRemote && getOwner() != null) {
-			BendingData data = BendingData.get(getOwner());
-			if (data != null) {
-				data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.earthspikeHit * attacked);
-			}
-		}
 	}
+
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
 		if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner) {
 			return false;
 		}
-		return entity instanceof EntityLivingBase || super.canCollideWith(entity);
+		return super.canCollideWith(entity);
 	}
 
 	@Override
@@ -151,19 +130,4 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		return false;
 	}
 
-	private boolean attackEntity(Entity entity) {
-
-		if (!(entity instanceof EntityItem && entity.ticksExisted <=
-				10) && canCollideWith(entity)) {
-
-			Vector push = velocity().withY(.8).times(STATS_CONFIG.ravineSettings.push);
-			entity.addVelocity(push.x(), push.y(), push.z());
-			AvatarUtils.afterVelocityAdded(entity);
-
-			DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
-			float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
-			return entity.attackEntityFrom(ds, damage);
-		}
-		return false;
-	}
 }
