@@ -141,8 +141,10 @@ public class EntityCloudBall extends AvatarEntity {
 			abilityData.addXp(3);
 		}
 
-		cloudBurst();
-		setDead();
+		if (getBehavior() instanceof CloudburstBehavior.Thrown) {
+			cloudBurst();
+			setDead();
+		}
 		return true;
 
 	}
@@ -187,7 +189,9 @@ public class EntityCloudBall extends AvatarEntity {
 			}
 
 		}
-		cloudBurst();
+		if (getBehavior() instanceof CloudburstBehavior.Thrown) {
+			cloudBurst();
+		}
 		return super.canCollideWith(entity) || entity instanceof EntityLivingBase;
 
 	}
@@ -254,7 +258,7 @@ public class EntityCloudBall extends AvatarEntity {
 						vel = vel.normalize().times(mult).plusY(0.15f);
 
 						entity.motionX = vel.x();
-						entity.motionY = vel.y() > 0 ? vel.y() : 0.15F;
+						entity.motionY = vel.y() > 0 ? vel.y() : 0.2F;
 						entity.motionZ = vel.z();
 						damageEntity(entity);
 
