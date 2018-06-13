@@ -252,13 +252,13 @@ public class EntityCloudBall extends AvatarEntity {
 
 						damageEntity(entity);
 
-						double mult = abilityData.getLevel() >= 2 ? -3 : -1.5;
+						double mult = abilityData.getLevel() >= 2 ? -2 : -1;
 
 						Vector vel = position().minus(getEntityPos(entity));
 						vel = vel.normalize().times(mult).plusY(0.15f);
 
 						entity.motionX = vel.x();
-						entity.motionY = vel.y() > 0 ? vel.y() : 0.2F;
+						entity.motionY = vel.y() > 0 ? vel.y() : 0.3F;
 						entity.motionZ = vel.z();
 						damageEntity(entity);
 
