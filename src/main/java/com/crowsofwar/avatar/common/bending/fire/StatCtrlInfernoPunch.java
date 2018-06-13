@@ -146,7 +146,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 								fireExplosion.doExplosionB(true);
 							}
 						}
-						target.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BLAZE_HURT, SoundCategory.PLAYERS, 1, .7f);
 						DamageSource ds = DamageSource.MAGIC;
 						target.attackEntityFrom(ds, damage);
 						target.setFire(fireTime);
