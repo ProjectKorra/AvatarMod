@@ -26,6 +26,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
@@ -50,6 +51,7 @@ public class EntityCloudBall extends AvatarEntity {
 	private float damage;
 	private boolean absorbtion;
 	private boolean chismash;
+	private BlockPos position;
 
 	/**
 	 * @param world
@@ -66,6 +68,10 @@ public class EntityCloudBall extends AvatarEntity {
 
 	public void canchiSmash(boolean canchiSmash) {
 		this.chismash = canchiSmash;
+	}
+
+	public void setStartingPosition(BlockPos position) {
+		this.position = position;
 	}
 
 	@Override
@@ -239,7 +245,6 @@ public class EntityCloudBall extends AvatarEntity {
 					hitBox = 4;
 				}
 
-
 				this.setInvisible(true);
 				WorldServer World = (WorldServer) this.world;
 				World.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, 50, 0, 0, 0, speed);
@@ -253,13 +258,14 @@ public class EntityCloudBall extends AvatarEntity {
 						damageEntity(entity);
 
 						double mult = abilityData.getLevel() >= 2 ? -2 : -1;
+						double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
 
 						Vector vel = position().minus(getEntityPos(entity));
 						vel = vel.normalize().times(mult).plusY(0.15f);
 
-						entity.motionX = vel.x();
-						entity.motionY = vel.y() > 0 ? vel.y() : 0.3F;
-						entity.motionZ = vel.z();
+						entity.motionX = vel.x() + 0.1/distanceTravelled;;
+						entity.motionY = vel.y() > 0 ? vel.y() + 0.1/distanceTravelled : 0.3F + 0.1/distanceTravelled;
+						entity.motionZ = vel.z() + 0.1/distanceTravelled;;
 						damageEntity(entity);
 
 						if (entity instanceof AvatarEntity) {
