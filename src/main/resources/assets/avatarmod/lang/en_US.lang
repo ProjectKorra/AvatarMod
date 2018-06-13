@@ -116,7 +116,7 @@ avatar.specialtyScroll.fail=[error]Sorry, you need to learn [translate=avatar.${
 avatar.specialtyScroll.alreadyHave=[error]You have already unlocked [translate=avatar.${specialtyBending}].[/error]
 avatar.specialtyScroll.tooltip=[aqua]Can be used to unlock or upgrade [translate=avatar.${bending}].[/aqua]
 
-avatar.ability.pickup_block=Pick Up Block
+avatar.ability.pickup_block=Earth Control
 avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
 avatar.ability.pickup_block.lvl1=Move and throw bendable blocks
 avatar.ability.pickup_block.lvl2=Faster and farther when thrown
