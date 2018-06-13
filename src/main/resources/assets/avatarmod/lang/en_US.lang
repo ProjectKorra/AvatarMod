@@ -295,7 +295,7 @@ avatar.ability.air_bubble.lvl4_1=Pressured bubble ;; Very large size
 avatar.ability.air_bubble.lvl4_2=Undercurrent ;; Limited hovering, disabled by sneak
 
 avatar.ability.cloudburst=Cloudburst
-avatar.ability.cloudburst.desc=Create a whirling ball of air which can be thrown at enemies
+avatar.ability.cloudburst.desc=Create a whirling ball of air which can be thrown at enemies; creates a mini burst of air where it lands.
 avatar.ability.cloudburst.lvl1=Basic cloud ball
 avatar.ability.cloudburst.lvl2=Faster speed when thrown
 avatar.ability.cloudburst.lvl3=Much more damage
