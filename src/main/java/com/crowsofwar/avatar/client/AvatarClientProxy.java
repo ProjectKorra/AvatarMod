@@ -1,6 +1,6 @@
 /* 
   This file is part of AvatarMod.
-    
+	
   AvatarMod is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -24,7 +24,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AnalyticsWarningGui;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.client.gui.GuiBisonChest;
-import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
+import com.crowsofwar.avatar.client.gui.DevelopmentWarningGui;
 import com.crowsofwar.avatar.client.gui.skills.GetBendingGui;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
@@ -33,6 +33,7 @@ import com.crowsofwar.avatar.client.render.*;
 import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.block.AvatarBlocks;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -40,24 +41,33 @@ import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.mob.*;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
+import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
+
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -71,8 +81,8 @@ import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
 @SideOnly(Side.CLIENT)
-public class AvatarClientProxy implements AvatarCommonProxy {
-
+@Mod.EventBusSubscriber(Side.CLIENT)
+public class AvatarClientProxy extends AvatarCommonProxy {
 	private Minecraft mc;
 	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;
@@ -81,7 +91,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	private List<KeyBinding> allKeybindings;
 
 	@Override
-	public void preInit() {
+	public void preInit(FMLPreInitializationEvent event) {
+		super.preInit(event);
 		mc = Minecraft.getMinecraft();
 
 		displayedMainMenu = false;
@@ -97,7 +108,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		AvatarFovChanger.register();
 
 		clientFetcher = new PlayerDataFetcherClient<>(AvatarPlayerData.class, (data) -> {
-			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
+			AvatarMod.proxy.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
 			AvatarLog.debug("Client: Requesting data for " + data.getPlayerEntity() + "");
 		});
 
@@ -128,6 +139,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityEarthspikeSpawner.class, RenderEarthspikeSpawner::new);
 		registerEntityRenderingHandler(EntityWaterCannon.class, RenderWaterCannon::new);
 		registerEntityRenderingHandler(EntitySandstorm.class, RenderSandstorm::new);
+		registerEntityRenderingHandler(EntityElementshard.class, RenderElementShard::new);
 		registerEntityRenderingHandler(EntityExplosionSpawner.class, RenderNothing::new);
 
 		registerEntityRenderingHandler(EntityAirbender.class,
@@ -136,7 +148,30 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 				rm -> new RenderHumanBender(rm, "firebender", 1));
 		registerEntityRenderingHandler(EntityWaterbender.class,
 				rm -> new RenderHumanBender(rm, "airbender", 1));
+	}
 
+	@Override
+	public void init(FMLInitializationEvent event) {
+		super.init(event);
+		ParticleManager pm = mc.effectRenderer;
+
+		if (CLIENT_CONFIG.useCustomParticles) {
+			pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(),
+					AvatarParticleFlames::new);
+			pm.registerParticle(AvatarParticles.getParticleAir().getParticleID(), AvatarParticleAir::new);
+		}
+	}
+	
+	@Override
+	public void postInit(FMLPostInitializationEvent event) {
+		super.postInit(event);
+		AvatarBlocks.initItemModels();
+	}
+	
+	@SubscribeEvent
+	public static void registerModels(ModelRegistryEvent event) {
+		AvatarBlocks.initModels();
+		AvatarItems.initModels();
 	}
 
 	@Override
@@ -155,19 +190,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		double reach = pc.getBlockReachDistance();
 		if (pc.extendedReach()) reach = 6;
 		return reach;
-	}
-
-	@Override
-	public void init() {
-
-		ParticleManager pm = mc.effectRenderer;
-
-		if (CLIENT_CONFIG.useCustomParticles) {
-			pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(),
-					AvatarParticleFlames::new);
-			pm.registerParticle(AvatarParticles.getParticleAir().getParticleID(), AvatarParticleAir::new);
-		}
-
 	}
 
 	@Override
@@ -221,8 +243,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			return;
 		}
 
-		if (AvatarInfo.IS_PREVIEW && e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
-			GuiScreen screen = new PreviewWarningGui();
+		if (AvatarInfo.IS_DEVELOPMENT && e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
+			GuiScreen screen = new DevelopmentWarningGui();
 			mc.displayGuiScreen(screen);
 			e.setGui(screen);
 			displayedMainMenu = true;
@@ -246,11 +268,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 
 		return kb == null ? new KeybindingWrapper() : new ClientKeybindWrapper(kb);
 
-	}
-
-	@Override
-	public void registerItemModels() {
-		AvatarItemRenderRegister.register();
 	}
 
 	@Override

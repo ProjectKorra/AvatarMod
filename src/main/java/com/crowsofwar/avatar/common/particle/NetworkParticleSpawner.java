@@ -51,7 +51,7 @@ public class NetworkParticleSpawner implements ParticleSpawner {
 		if (!world.isRemote) {
 			TargetPoint point = new TargetPoint(world.provider.getDimension(), x, y, z, 64);
 
-			AvatarMod.network.sendToAllAround(new PacketCParticles(particle, minimum, maximum, x, y, z,
+			AvatarMod.proxy.network.sendToAllAround(new PacketCParticles(particle, minimum, maximum, x, y, z,
 					maxVelocityX / 20, maxVelocityY / 20, maxVelocityZ / 20), point);
 		}
 

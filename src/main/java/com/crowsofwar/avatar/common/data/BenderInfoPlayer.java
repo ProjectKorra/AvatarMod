@@ -15,7 +15,7 @@ public class BenderInfoPlayer extends BenderInfo {
 	private UUID playerId;
 
 	public BenderInfoPlayer(@Nonnull String playerName) {
-		this(AccountUUIDs.getId(playerName).getUUID());
+		this(AccountUUIDs.getId(playerName));
 	}
 
 	public BenderInfoPlayer(@Nonnull UUID playerId) {

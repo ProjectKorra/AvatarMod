@@ -51,12 +51,7 @@ public class GoreCoreCommand extends TreeCommand {
 						return;
 					}
 					
-					FormattedMessage msg;
-					if (AccountUUIDs.getId(username).isTemporary()) {
-						msg = AccountUUIDs.tryFixId(username) ? MSG_FIXID_SUCCESS : MSG_FIXID_FAILURE;
-					} else {
-						msg = MSG_FIXID_ONLINE;
-					}
+					FormattedMessage msg = MSG_FIXID_ONLINE;
 					msg.send(popper.from(), username);
 					
 				});

@@ -339,7 +339,7 @@ public abstract class Bender {
 			powerRatings.put(manager.getBendingType(), manager.getRating(ctx));
 		}
 
-		AvatarMod.network.sendTo(new PacketCPowerRating(powerRatings), (EntityPlayerMP) getEntity());
+		AvatarMod.proxy.network.sendTo(new PacketCPowerRating(powerRatings), (EntityPlayerMP) getEntity());
 
 	}
 

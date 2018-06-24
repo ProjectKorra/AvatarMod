@@ -298,7 +298,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		ContainerSkillsGui container = (ContainerSkillsGui) inventorySlots;
 
 		if (container.getSlot(0).getHasStack() || container.getSlot(1).getHasStack()) {
-			AvatarMod.network.sendToServer(new PacketSUseScroll(ability));
+			AvatarMod.proxy.network.sendToServer(new PacketSUseScroll(ability));
 		}
 
 	}

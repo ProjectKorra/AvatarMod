@@ -138,7 +138,7 @@ public class PlayerBender extends Bender {
 	@Override
 	public void sendMessage(String message) {
 		if (!getWorld().isRemote) {
-			AvatarMod.network.sendTo(new PacketCErrorMessage(message), (EntityPlayerMP) player);
+			AvatarMod.proxy.network.sendTo(new PacketCErrorMessage(message), (EntityPlayerMP) player);
 		} else {
 			AvatarUiRenderer.displayErrorMessage(message);
 		}
@@ -148,7 +148,7 @@ public class PlayerBender extends Bender {
 	public void executeAbility(Ability ability, Raytrace.Result raytrace) {
 		if (getWorld().isRemote) {
 
-			AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace));
+			AvatarMod.proxy.network.sendToServer(new PacketSUseAbility(ability, raytrace));
 
 		} else {
 			super.executeAbility(ability, raytrace);

@@ -130,7 +130,7 @@ public class EntityAirblade extends AvatarEntity {
 						(EntityLivingBase.class, aabb, notFriendly);
 
 				nextTargets.sort(AvatarUtils.getSortByDistanceComparator
-						(this::getDistanceToEntity));
+						(this::getDistance));
 
 				if (!nextTargets.isEmpty()) {
 					EntityLivingBase nextTarget = nextTargets.get(0);

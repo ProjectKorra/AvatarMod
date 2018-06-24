@@ -48,9 +48,9 @@ public abstract class AvatarPacket<MSG extends IMessage> implements IMessage, IM
 			IMessage followup = handler.onMessageRecieved(message, ctx);
 			if (followup != null) {
 				if (ctx.side.isClient()) {
-					AvatarMod.network.sendToServer(followup);
+					AvatarMod.proxy.network.sendToServer(followup);
 				} else {
-					AvatarMod.network.sendTo(followup, ctx.getServerHandler().player);
+					AvatarMod.proxy.network.sendTo(followup, ctx.getServerHandler().player);
 				}
 			}
 		});

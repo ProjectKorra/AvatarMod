@@ -24,17 +24,34 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
 
-public class AvatarServerProxy implements AvatarCommonProxy {
+import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.relauncher.Side;
 
+@Mod.EventBusSubscriber(Side.SERVER)
+public class AvatarServerProxy extends AvatarCommonProxy {
 	private AvatarKeybindingServer keys;
 
 	@Override
-	public void preInit() {
+	public void preInit(FMLPreInitializationEvent event) {
+		super.preInit(event);
 		keys = new AvatarKeybindingServer();
+	}
+	
+	@Override
+	public void init(FMLInitializationEvent event) {
+		super.init(event);
+	}
+	
+	@Override
+	public void postInit(FMLPostInitializationEvent event) {
+		super.postInit(event);
 	}
 
 	@Override
@@ -50,11 +67,6 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	@Override
 	public double getPlayerReach() {
 		return 0;
-	}
-
-	@Override
-	public void init() {
-
 	}
 
 	@Override
@@ -83,12 +95,7 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	}
 
 	@Override
-	public void registerItemModels() {
-	}
-
-	@Override
 	public boolean isOptifinePresent() {
 		return false;
 	}
-
 }

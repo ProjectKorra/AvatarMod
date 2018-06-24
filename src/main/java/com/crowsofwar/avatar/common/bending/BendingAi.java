@@ -16,9 +16,12 @@
 */
 package com.crowsofwar.avatar.common.bending;
 
+import com.crowsofwar.avatar.common.bending.avatar.AbilityElementshard;
+import com.crowsofwar.avatar.common.bending.avatar.StatCtrlThrowElementshard;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityElementshard;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -77,7 +80,7 @@ public abstract class BendingAi extends EntityAIBase {
 	@Override
 	public final boolean shouldExecute() {
 		EntityLivingBase target = entity.getAttackTarget();
-		boolean targetInRange = target == null || entity.getDistanceSqToEntity(target) < 12 * 12;
+		boolean targetInRange = target == null || entity.getDistanceSq(target) < 12 * 12;
 		return bender.getData().getMiscData().getAbilityCooldown() == 0 && targetInRange && shouldExec();
 	}
 

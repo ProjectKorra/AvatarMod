@@ -136,7 +136,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 
 				if (bison != null) {
 
-					double dist = entity.getDistanceToEntity(bison);
+					double dist = entity.getDistance(bison);
 
 					if (dist >= 20) {
 						double seconds = dist / 20;

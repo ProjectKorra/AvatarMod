@@ -67,7 +67,7 @@ public class AiAirGust extends BendingAi {
 	@Override
 	protected boolean shouldExec() {
 		return entity.getAttackTarget() != null
-				&& entity.getDistanceSqToEntity(entity.getAttackTarget()) < 4 * 4;
+				&& entity.getDistanceSq(entity.getAttackTarget()) < 4 * 4;
 	}
 
 }

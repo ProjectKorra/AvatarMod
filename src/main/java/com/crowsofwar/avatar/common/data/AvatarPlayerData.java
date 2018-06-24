@@ -114,13 +114,13 @@ public class AvatarPlayerData extends PlayerData {
 			// Find the correct range to send the packet to
 			double rangeSq = 0;
 			for (EntityPlayer p : nearbyPlayers) {
-				if (p.getDistanceSqToEntity(player) > rangeSq) {
-					rangeSq = p.getDistanceSqToEntity(player);
+				if (p.getDistanceSq(player) > rangeSq) {
+					rangeSq = p.getDistanceSq(player);
 				}
 			}
 			double range = Math.sqrt(rangeSq) + 0.01;// +0.01 "just in case"
 
-			AvatarMod.network.sendToAllAround(packet,
+			AvatarMod.proxy.network.sendToAllAround(packet,
 					new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, range));
 
 			changed.clear();
