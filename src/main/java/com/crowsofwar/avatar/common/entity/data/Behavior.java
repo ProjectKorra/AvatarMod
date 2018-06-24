@@ -17,17 +17,14 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.AvatarLog;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializer;
-import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.*;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import com.crowsofwar.avatar.AvatarLog;
+
+import java.util.*;
 
 /**
  * Describes a synced behavior. They follow the state design pattern, in that
@@ -42,10 +39,9 @@ import java.util.Map;
  * {@link DataSerializers#registerSerializer(DataSerializer)}.
  * <p>
  * Make sure that subclasses receive the instance of entity. For server-side
- * changing of behavior, call {@link #Behavior(Entity) the constructor with
- * Entity argument}. Client-side
+ * changing of behavior, call the constructor with the Entity argument
  *
- * @param E Type of entity this behavior is for
+ * @param <E> Type of entity this behavior is for
  * @author CrowsOfWar
  */
 public abstract class Behavior<E extends Entity> {
@@ -108,8 +104,7 @@ public abstract class Behavior<E extends Entity> {
 
 	public abstract void save(NBTTagCompound nbt);
 
-	public static class BehaviorSerializer<B extends Behavior<? extends Entity>>
-			implements DataSerializer<B> {
+	public static class BehaviorSerializer<B extends Behavior<? extends Entity>> implements DataSerializer<B> {
 
 		// FIXME research- why doesn't read/write get called every time that
 		// behavior changes???
@@ -121,7 +116,7 @@ public abstract class Behavior<E extends Entity> {
 		}
 
 		@Override
-		public B read(PacketBuffer buf) throws IOException {
+		public B read(PacketBuffer buf) {
 			try {
 
 				Behavior behavior = behaviorIdToClass.get(buf.readInt()).newInstance();

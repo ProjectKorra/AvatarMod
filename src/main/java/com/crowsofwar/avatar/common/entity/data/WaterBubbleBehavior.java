@@ -17,19 +17,17 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.data.AvatarWorldData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataSerializer;
-import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.*;
+
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
+import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
 
 /**
  * @author CrowsOfWar
@@ -53,7 +51,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 		@Override
 		public Behavior onUpdate(EntityWaterBubble entity) {
 			entity.addVelocity(Vector.DOWN.times(0.981));
-			if (entity.isCollided) {
+			if (entity.collided) {
 				entity.setDead();
 			}
 			return this;
@@ -128,7 +126,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 		@Override
 		public Behavior onUpdate(EntityWaterBubble entity) {
 			entity.addVelocity(Vector.DOWN.times(0.981));
-			if (entity.isCollided) {
+			if (entity.collided) {
 
 				IBlockState state = Blocks.FLOWING_WATER.getDefaultState();
 

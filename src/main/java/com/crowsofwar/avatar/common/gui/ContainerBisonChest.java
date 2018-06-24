@@ -17,21 +17,19 @@
 
 package com.crowsofwar.avatar.common.gui;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.*;
+import net.minecraft.item.ItemStack;
+
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.item.AvatarItems;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 
 public class ContainerBisonChest extends Container {
 
 	private final IInventory bisonInventory;
 	private final EntitySkyBison bison;
 
-	public ContainerBisonChest(IInventory playerInventory, IInventory bisonInventory, EntitySkyBison bison,
-							   EntityPlayer player) {
+	public ContainerBisonChest(IInventory playerInventory, IInventory bisonInventory, EntitySkyBison bison, EntityPlayer player) {
 
 		this.bisonInventory = bisonInventory;
 		this.bison = bison;
@@ -39,14 +37,14 @@ public class ContainerBisonChest extends Container {
 		bisonInventory.openInventory(player);
 
 		// Saddle stack
-		this.addSlotToContainer(new Slot(bisonInventory, 0, 8, 18) {
+		addSlotToContainer(new Slot(bisonInventory, 0, 8, 18) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return stack.getItem() == AvatarItems.itemBisonSaddle;
 			}
 		});
 		// Armor slot
-		this.addSlotToContainer(new Slot(bisonInventory, 1, 8, 36) {
+		addSlotToContainer(new Slot(bisonInventory, 1, 8, 36) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return stack.getItem() == AvatarItems.itemBisonArmor;
@@ -78,46 +76,43 @@ public class ContainerBisonChest extends Container {
 				int index = c + r * 9 + 9;
 				int x = 44 + c * 18;
 				int y = 84 + r * 18;
-				this.addSlotToContainer(new Slot(playerInventory, index, x, y));
+				addSlotToContainer(new Slot(playerInventory, index, x, y));
 			}
 		}
 
 		for (int i = 0; i < 9; i++) {
-			this.addSlotToContainer(new Slot(playerInventory, i, 44 + i * 18, 142));
+			addSlotToContainer(new Slot(playerInventory, i, 44 + i * 18, 142));
 		}
 
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
-		return bisonInventory.isUsableByPlayer(playerIn) && bison.isEntityAlive()
-				&& bison.getDistanceToEntity(playerIn) < 8.0F;
+		return bisonInventory.isUsableByPlayer(playerIn) && bison.isEntityAlive() && bison.getDistance(playerIn) < 8.0F;
 	}
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
 		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.inventorySlots.get(index);
+		Slot slot = inventorySlots.get(index);
 
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
-			if (index < this.bisonInventory.getSizeInventory()) {
-				if (!this.mergeItemStack(itemstack1, this.bisonInventory.getSizeInventory(),
-						this.inventorySlots.size(), true)) {
+			if (index < bisonInventory.getSizeInventory()) {
+				if (!mergeItemStack(itemstack1, bisonInventory.getSizeInventory(), inventorySlots.size(), true)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (this.getSlot(1).isItemValid(itemstack1) && !this.getSlot(1).getHasStack()) {
-				if (!this.mergeItemStack(itemstack1, 1, 2, false)) {
+			} else if (getSlot(1).isItemValid(itemstack1) && !getSlot(1).getHasStack()) {
+				if (!mergeItemStack(itemstack1, 1, 2, false)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (this.getSlot(0).isItemValid(itemstack1)) {
-				if (!this.mergeItemStack(itemstack1, 0, 1, false)) {
+			} else if (getSlot(0).isItemValid(itemstack1)) {
+				if (!mergeItemStack(itemstack1, 0, 1, false)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (this.bisonInventory.getSizeInventory() <= 2
-					|| !this.mergeItemStack(itemstack1, 2, this.bisonInventory.getSizeInventory(), false)) {
+			} else if (bisonInventory.getSizeInventory() <= 2 || !mergeItemStack(itemstack1, 2, bisonInventory.getSizeInventory(), false)) {
 				return ItemStack.EMPTY;
 			}
 
@@ -137,6 +132,6 @@ public class ContainerBisonChest extends Container {
 	@Override
 	public void onContainerClosed(EntityPlayer playerIn) {
 		super.onContainerClosed(playerIn);
-		this.bisonInventory.closeInventory(playerIn);
+		bisonInventory.closeInventory(playerIn);
 	}
 }

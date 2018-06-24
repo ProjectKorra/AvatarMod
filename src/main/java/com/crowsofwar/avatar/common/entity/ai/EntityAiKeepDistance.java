@@ -16,10 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity.ai;
 
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.*;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.util.math.Vec3d;
 
@@ -42,15 +40,13 @@ public class EntityAiKeepDistance extends EntityAIBase {
 	@Override
 	public boolean shouldExecute() {
 		EntityLivingBase target = entity.getAttackTarget();
-		if (target != null && entity.getDistanceSqToEntity(target) <= maxSafeDistance * maxSafeDistance) {
+		if (target != null && entity.getDistanceSq(target) <= maxSafeDistance * maxSafeDistance) {
 
-			Vec3d vec3d = RandomPositionGenerator.findRandomTargetBlockAwayFrom(entity, 16, 7,
-					new Vec3d(target.posX, target.posY, target.posZ));
+			Vec3d vec3d = RandomPositionGenerator.findRandomTargetBlockAwayFrom(entity, 16, 7, new Vec3d(target.posX, target.posY, target.posZ));
 
 			if (vec3d == null) {
 				return false;
-			} else if (entity.getDistanceSq(vec3d.x, vec3d.y, vec3d.z) < entity
-					.getDistanceSqToEntity(target)) {
+			} else if (entity.getDistanceSq(vec3d.x, vec3d.y, vec3d.z) < entity.getDistanceSq(target)) {
 				return false;
 			} else {
 				path = entity.getNavigator().getPathToXYZ(vec3d.x, vec3d.y, vec3d.z);

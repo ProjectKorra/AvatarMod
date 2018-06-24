@@ -16,9 +16,10 @@
 */
 package com.crowsofwar.avatar.common.entity.ai;
 
-import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 /**
  * @author CrowsOfWar
@@ -30,7 +31,7 @@ public class EntityAiBisonFollowAttacker extends EntityAIBase {
 
 	public EntityAiBisonFollowAttacker(EntitySkyBison bison) {
 		this.bison = bison;
-		this.followRange = 60;
+		followRange = 60;
 		setMutexBits(1);
 	}
 
@@ -47,7 +48,7 @@ public class EntityAiBisonFollowAttacker extends EntityAIBase {
 			return false;
 		}
 
-		if (bison.getDistanceSqToEntity(target) > followRange * followRange) {
+		if (bison.getDistanceSq(target) > followRange * followRange) {
 			bison.setAttackTarget(null);
 			return false;
 		}

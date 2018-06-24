@@ -13,7 +13,6 @@ import java.nio.ByteBuffer;
 public class UtilityGl11Debug {
 	public static UtilityGl11Debug instance = new UtilityGl11Debug();
 
-	;
 	public GLproperty[] propertyList = {
 			new GLproperty(GL11.GL_CURRENT_COLOR, "GL_CURRENT_COLOR", "Current color", "current",
 					"glGetFloatv()"),

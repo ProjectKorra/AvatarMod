@@ -1,5 +1,4 @@
-
-/* 
+/*
   This file is part of AvatarMod.
     
   AvatarMod is free software: you can redistribute it and/or modify
@@ -17,29 +16,21 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import net.minecraft.block.BlockCauldron;
-import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.*;
+import net.minecraft.init.*;
+import net.minecraft.item.*;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.List;
 
@@ -82,7 +73,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 			}
 		}
 	}
-	
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		ItemStack itemstack = player.getHeldItem(hand);
@@ -92,14 +83,15 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 			return new ActionResult(EnumActionResult.PASS, itemstack);
 		}
 		// Last boolean is useLiquids, which obviously should be true
-		RayTraceResult raytraceresult = this.rayTrace(world, player, true);
+		RayTraceResult raytraceresult = rayTrace(world, player, true);
 		if (raytraceresult == null || raytraceresult.typeOfHit != RayTraceResult.Type.BLOCK) {
 			// We're not looking at a block
 			return new ActionResult(EnumActionResult.PASS, itemstack);
 		} else {
 			BlockPos blockpos = raytraceresult.getBlockPos();
 			// We're not allowed to edit the block
-			if (!world.isBlockModifiable(player, blockpos) || !player.canPlayerEdit(blockpos.offset(raytraceresult.sideHit), raytraceresult.sideHit, itemstack)) {
+			if (!world.isBlockModifiable(player, blockpos) || !player
+							.canPlayerEdit(blockpos.offset(raytraceresult.sideHit), raytraceresult.sideHit, itemstack)) {
 				return new ActionResult(EnumActionResult.PASS, itemstack);
 			}
 			IBlockState state = world.getBlockState(blockpos);
@@ -114,7 +106,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				player.addStat(StatList.getObjectUseStats(this));
 				// TODO: Custom sound?
 				player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
-				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, willBeFilled));
+				return new ActionResult<>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, willBeFilled));
 			} else if (material == Material.WATER) {
 				// Get how full the block is
 				int level = state.getValue(BlockLiquid.LEVEL).intValue();
@@ -142,7 +134,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				player.addStat(StatList.getObjectUseStats(this));
 				// TODO: Custom sound?
 				player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
-				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, willBeFilled));
+				return new ActionResult<>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, willBeFilled));
 			} else {
 				return new ActionResult(EnumActionResult.PASS, itemstack);
 			}
@@ -150,13 +142,13 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 	}
 
 	private ItemStack fillPouch(ItemStack emptyPouches, EntityPlayer player, int levels) {
-		if (player.capabilities.isCreativeMode)	{
+		if (player.capabilities.isCreativeMode) {
 			return emptyPouches;
 		} else {
 			int newLevel = Math.max(5, emptyPouches.getItemDamage() + levels);
-			final ItemStack filledPouch = new ItemStack(emptyPouches.getItem(), 1, newLevel);
+			ItemStack filledPouch = new ItemStack(emptyPouches.getItem(), 1, newLevel);
 			emptyPouches.shrink(1);
-			if (emptyPouches.isEmpty())	{
+			if (emptyPouches.isEmpty()) {
 				return filledPouch;
 			} else {
 				if (!player.inventory.addItemStackToInventory(filledPouch)) {

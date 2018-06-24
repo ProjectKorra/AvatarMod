@@ -16,28 +16,22 @@
 */
 package com.crowsofwar.avatar.common.data;
 
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.*;
+import net.minecraft.world.World;
+
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.AvatarChatMessages;
-import com.crowsofwar.avatar.common.QueuedAbilityExecutionHandler;
+import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
+import com.crowsofwar.avatar.common.data.ctx.*;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.network.packets.PacketCPowerRating;
 import com.crowsofwar.avatar.common.powerrating.PrModifierHandler;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 
@@ -110,8 +104,6 @@ public abstract class Bender {
 
 	public abstract boolean isFlying();
 
-	;
-
 	/**
 	 * If any water pouches are in the inventory, checks if there is enough
 	 * water. If there is, consumes the total amount of water in those pouches
@@ -163,8 +155,7 @@ public abstract class Bender {
 	 */
 	protected boolean canUseAbility(Ability ability) {
 		BendingData data = getData();
-		return data.hasBendingId(ability.getBendingId()) && !data.getAbilityData(ability)
-				.isLocked();
+		return data.hasBendingId(ability.getBendingId()) && !data.getAbilityData(ability).isLocked();
 	}
 
 	/**
@@ -176,8 +167,7 @@ public abstract class Bender {
 	 */
 	public void executeAbility(Ability ability) {
 
-		Raytrace.Result raytrace = Raytrace.getTargetBlock(getEntity(),
-				ability.getRaytrace());
+		Raytrace.Result raytrace = Raytrace.getTargetBlock(getEntity(), ability.getRaytrace());
 		executeAbility(ability, raytrace);
 
 	}
@@ -202,8 +192,7 @@ public abstract class Bender {
 
 					if (data.getMiscData().getCanUseAbilities()) {
 
-						AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
-								entity, powerRating);
+						AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability, entity, powerRating);
 
 						ability.execute(abilityCtx);
 						data.getMiscData().setAbilityCooldown(ability.getCooldown(abilityCtx));
@@ -214,8 +203,7 @@ public abstract class Bender {
 					}
 
 				} else {
-					QueuedAbilityExecutionHandler.queueAbilityExecution(entity, data, ability,
-							raytrace, powerRating);
+					QueuedAbilityExecutionHandler.queueAbilityExecution(entity, data, ability, raytrace, powerRating);
 				}
 			} else {
 				sendMessage("avatar.abilityLocked");
@@ -319,7 +307,6 @@ public abstract class Bender {
 
 		for (UUID bendingId : data.getAllBendingIds()) {
 			PowerRatingManager manager = data.getPowerRatingManager(bendingId);
-			//noinspection ConstantConditions
 			manager.clearModifiers(ctx);
 		}
 

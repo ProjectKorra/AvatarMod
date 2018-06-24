@@ -16,12 +16,10 @@
 */
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.avatar.common.network.DataTransmitter;
-import com.crowsofwar.avatar.common.network.DataTransmitters;
+import com.crowsofwar.avatar.common.network.*;
 import io.netty.buffer.ByteBuf;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import java.util.function.*;
 
 /**
  * Separates all of the methods of BendingData into different categories. This
@@ -54,8 +52,7 @@ public enum DataCategory {
 	private final BiConsumer<BendingData, ?> setter;
 	private final DataTransmitter<?> transmitter;
 
-	private <T> DataCategory(Function<BendingData, T> getter, BiConsumer<BendingData, T> setter,
-							 DataTransmitter<?> transmitter) {
+	<T> DataCategory(Function<BendingData, T> getter, BiConsumer<BendingData, T> setter, DataTransmitter<?> transmitter) {
 		this.getter = getter;
 		this.setter = setter;
 		this.transmitter = transmitter;

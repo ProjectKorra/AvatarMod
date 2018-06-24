@@ -59,7 +59,7 @@ public enum Vision {
 
 	private final ResourceLocation shaderLocation;
 
-	private Vision(String shaderLocation) {
+	Vision(String shaderLocation) {
 		this.shaderLocation = new ResourceLocation("avatarmod", shaderLocation);
 	}
 

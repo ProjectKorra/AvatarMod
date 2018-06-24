@@ -17,53 +17,51 @@
 
 package com.crowsofwar.gorecore.data;
 
-import java.util.UUID;
-
-import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces;
-import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.MapUser;
-import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLLog;
+
+import com.crowsofwar.gorecore.GoreCore;
+import com.crowsofwar.gorecore.util.*;
+import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.MapUser;
+
+import java.util.UUID;
 
 public abstract class PlayerData implements GoreCoreNBTInterfaces.ReadableWritable {
-	
+
 	public static final MapUser<UUID, PlayerData> MAP_USER = new MapUser<UUID, PlayerData>() {
 		@Override
 		public UUID createK(NBTTagCompound nbt, Object[] constructArgsK) {
 			return GoreCoreNBTUtil.readUUIDFromNBT(nbt, "KeyUUID");
 		}
-		
+
 		@Override
 		public PlayerData createV(NBTTagCompound nbt, UUID key, Object[] constructArgsV) {
 			try {
-				PlayerData data = ((Class<? extends PlayerData>) constructArgsV[0])
-						.getConstructor(DataSaver.class, UUID.class, EntityPlayer.class)
-						.newInstance(constructArgsV[1], key, null);
+				PlayerData data = ((Class<? extends PlayerData>) constructArgsV[0]).getConstructor(DataSaver.class, UUID.class, EntityPlayer.class)
+								.newInstance((DataSaver) constructArgsV[1], key, null);
 				data.readFromNBT(nbt);
 				return data;
 			} catch (Exception e) {
-				FMLLog.severe("GoreCore> An error occured while creating new player data!");
+				GoreCore.LOGGER.error("An error occurred while creating new player data!");
 				e.printStackTrace();
 				return null;
 			}
 		}
-		
+
 		@Override
 		public void writeK(NBTTagCompound nbt, UUID obj) {
 			GoreCoreNBTUtil.writeUUIDToNBT(nbt, "KeyUUID", obj);
 		}
-		
+
 		@Override
 		public void writeV(NBTTagCompound nbt, PlayerData obj) {
 			obj.writeToNBT(nbt);
 		}
 	};
-	
+
 	protected UUID playerID;
-	protected DataSaver dataSaver;
+	private DataSaver dataSaver;
 	/**
 	 * The player entity this player-data is attached to.
 	 * <p>
@@ -72,65 +70,60 @@ public abstract class PlayerData implements GoreCoreNBTInterfaces.ReadableWritab
 	 * Is not null {@link #shouldBeDecached() by default} on client.
 	 */
 	private EntityPlayer playerEntity;
-	
+
 	/**
 	 * Creates new GC player data.
 	 * <p>
 	 * Please note, the subclass must get a constructor identical to this
 	 * one, passing the arguments to <code>super</code>. This is because
 	 * GoreCore player data is created with reflection.
-	 * 
-	 * @param dataSaver
-	 *            Where data is saved to
-	 * @param playerID
-	 *            The account UUID of the player this player-data is for
-	 * @param playerEntity
-	 *            The player entity. May be null.
+	 *
+	 * @param dataSaver    Where data is saved to
+	 * @param playerID     The account UUID of the player this player-data is for
+	 * @param playerEntity The player entity. May be null.
 	 */
 	public PlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer playerEntity) {
 		construct(dataSaver, playerID, playerEntity);
 	}
-	
+
 	/**
 	 * Called from constructor to initialize data. Override to change
 	 * constructor.
 	 */
 	protected void construct(DataSaver dataSaver, UUID playerID, EntityPlayer playerEntity) {
-		if (dataSaver == null)
-			FMLLog.severe("GoreCore> Player data was created with a null dataSaver - this is a bug! Debug:");
-		if (playerID == null)
-			FMLLog.severe("GoreCore> Player data was created with a null playerID - this is a bug! Debug:");
+		if (dataSaver == null) GoreCore.LOGGER.error("Player data was created with a null dataSaver - this is a bug! Debug:");
+		if (playerID == null) GoreCore.LOGGER.error("Player data was created with a null playerID - this is a bug! Debug:");
 		if (dataSaver == null || playerID == null) Thread.dumpStack();
-		
+
 		this.dataSaver = dataSaver;
 		this.playerID = playerID;
 		this.playerEntity = playerEntity;
 	}
-	
+
 	protected void saveChanges() {
 		dataSaver.saveChanges();
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		this.playerID = GoreCoreNBTUtil.readUUIDFromNBT(nbt, "PlayerID");
+		playerID = GoreCoreNBTUtil.readUUIDFromNBT(nbt, "PlayerID");
 		readPlayerDataFromNBT(nbt);
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		GoreCoreNBTUtil.writeUUIDToNBT(nbt, "PlayerID", playerID);
 		writePlayerDataToNBT(nbt);
 	}
-	
+
 	protected abstract void readPlayerDataFromNBT(NBTTagCompound nbt);
-	
+
 	protected abstract void writePlayerDataToNBT(NBTTagCompound nbt);
-	
+
 	public UUID getPlayerID() {
 		return playerID;
 	}
-	
+
 	/**
 	 * Returns whether this player data should be de-cached on a client-side
 	 * Player Data Cache.
@@ -142,7 +135,7 @@ public abstract class PlayerData implements GoreCoreNBTInterfaces.ReadableWritab
 	public boolean shouldBeDecached() {
 		return playerEntity.isDead;
 	}
-	
+
 	/**
 	 * The player entity this player-data is attached to.
 	 * <p>
@@ -153,11 +146,11 @@ public abstract class PlayerData implements GoreCoreNBTInterfaces.ReadableWritab
 	public EntityPlayer getPlayerEntity() {
 		return playerEntity;
 	}
-	
+
 	public void setPlayerEntity(EntityPlayer player) {
-		this.playerEntity = player;
+		playerEntity = player;
 	}
-	
+
 	/**
 	 * Get the world this player data is in.
 	 * <p>
@@ -166,5 +159,5 @@ public abstract class PlayerData implements GoreCoreNBTInterfaces.ReadableWritab
 	public World getWorld() {
 		return getPlayerEntity() == null ? null : getPlayerEntity().getEntityWorld();
 	}
-	
+
 }

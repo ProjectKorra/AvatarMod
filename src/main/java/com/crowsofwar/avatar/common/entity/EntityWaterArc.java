@@ -17,20 +17,16 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.entity.*;
+import net.minecraft.init.*;
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.Random;
 
@@ -39,7 +35,7 @@ import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
 public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> {
 
 	private static final DataParameter<WaterArcBehavior> SYNC_BEHAVIOR = EntityDataManager
-			.createKey(EntityWaterArc.class, WaterArcBehavior.DATA_SERIALIZER);
+					.createKey(EntityWaterArc.class, WaterArcBehavior.DATA_SERIALIZER);
 
 	/**
 	 * The amount of ticks since last played splash sound. -1 for splashable.
@@ -51,9 +47,9 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	public EntityWaterArc(World world) {
 		super(world);
 		setSize(.5f, .5f);
-		this.lastPlayedSplash = -1;
-		this.damageMult = 1;
-		this.putsOutFires = true;
+		lastPlayedSplash = -1;
+		damageMult = 1;
+		putsOutFires = true;
 	}
 
 	public float getDamageMult() {
@@ -61,7 +57,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	public void setDamageMult(float mult) {
-		this.damageMult = mult;
+		damageMult = mult;
 	}
 
 	@Override
@@ -85,7 +81,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			double xVel = 0, yVel = 0, zVel = 0;
 			double offX = 0, offY = 0, offZ = 0;
 
-			if (isCollidedVertically) {
+			if (collidedVertically) {
 
 				xVel = 5;
 				yVel = 3.5;
@@ -112,10 +108,9 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			int particles = random.nextInt(3) + 4;
 			for (int i = 0; i < particles; i++) {
 
-				world.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX + random.nextGaussian() * offX,
-						posY + random.nextGaussian() * offY + 0.2, posZ + random.nextGaussian() * offZ,
-						random.nextGaussian() * xVel, random.nextGaussian() * yVel,
-						random.nextGaussian() * zVel);
+				world.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX + random.nextGaussian() * offX, posY + random.nextGaussian() * offY + 0.2,
+									posZ + random.nextGaussian() * offZ, random.nextGaussian() * xVel, random.nextGaussian() * yVel,
+									random.nextGaussian() * zVel);
 
 			}
 
@@ -171,8 +166,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	public void playSplash() {
-		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_SWIM, SoundCategory.PLAYERS, 0.3f,
-				1.5f, false);
+		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_SWIM, SoundCategory.PLAYERS, 0.3f, 1.5f, false);
 		lastPlayedSplash = 0;
 	}
 

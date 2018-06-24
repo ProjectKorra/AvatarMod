@@ -16,16 +16,13 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.gorecore.util.Vector;
+
+import static com.crowsofwar.gorecore.util.Vector.*;
 import static java.lang.Math.toDegrees;
 
 /**
@@ -66,8 +63,7 @@ public class AiAirGust extends BendingAi {
 
 	@Override
 	protected boolean shouldExec() {
-		return entity.getAttackTarget() != null
-				&& entity.getDistanceSqToEntity(entity.getAttackTarget()) < 4 * 4;
+		return entity.getAttackTarget() != null && entity.getDistanceSq(entity.getAttackTarget()) < 4 * 4;
 	}
 
 }

@@ -17,26 +17,28 @@
 
 package com.crowsofwar.avatar;
 
+import net.minecraft.entity.*;
+import net.minecraft.util.ResourceLocation;
+
+import net.minecraftforge.common.*;
+import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.Mod.*;
+import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.bending.air.*;
-import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosion;
-import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosivePillar;
-import com.crowsofwar.avatar.common.bending.combustion.Combustionbending;
+import com.crowsofwar.avatar.common.bending.combustion.*;
 import com.crowsofwar.avatar.common.bending.earth.*;
 import com.crowsofwar.avatar.common.bending.fire.*;
-import com.crowsofwar.avatar.common.bending.ice.AbilityIceBurst;
-import com.crowsofwar.avatar.common.bending.ice.AbilityIcePrison;
-import com.crowsofwar.avatar.common.bending.ice.Icebending;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRedirect;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
-import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
-import com.crowsofwar.avatar.common.bending.sand.AbilitySandPrison;
-import com.crowsofwar.avatar.common.bending.sand.AbilitySandstorm;
-import com.crowsofwar.avatar.common.bending.sand.Sandbending;
+import com.crowsofwar.avatar.common.bending.ice.*;
+import com.crowsofwar.avatar.common.bending.lightning.*;
+import com.crowsofwar.avatar.common.bending.sand.*;
 import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.*;
@@ -50,30 +52,13 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.relauncher.Side;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false, //
-		updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "[1.12,1.13)")
+				updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "[1.12,1.13)")
 
 public class AvatarMod {
 
@@ -176,7 +161,7 @@ public class AvatarMod {
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 
-		FMLCommonHandler.instance().bus().register(new AvatarPlayerTick());
+		MinecraftForge.EVENT_BUS.register(new AvatarPlayerTick());
 
 		AvatarDataSerializers.register();
 		FloatingBlockBehavior.register();
@@ -235,11 +220,11 @@ public class AvatarMod {
 		registerEntity(EntityExplosionSpawner.class, "explosion_spawner");
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
-				EXTREME_HILLS, MUTATED_SAVANNA);
+								EXTREME_HILLS, MUTATED_SAVANNA);
 		EntityRegistry.addSpawn(EntityOtterPenguin.class, 4, 5, 9, EnumCreatureType.CREATURE, //
-				COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
+								COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
 		EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 3, 6, EnumCreatureType.CREATURE, //
-				DESERT, DESERT_HILLS, SAVANNA, SAVANNA_PLATEAU, PLAINS);
+								DESERT, DESERT_HILLS, SAVANNA, SAVANNA_PLATEAU, PLAINS);
 
 		// Second loading required since other mods blocks might not be
 		// registered
@@ -264,8 +249,7 @@ public class AvatarMod {
 	}
 
 	private void registerEntity(Class<? extends Entity> entity, String name) {
-		EntityRegistry.registerModEntity(new ResourceLocation("avatarmod", name), entity, name,
-				nextEntityID++, this, 128, 3, true);
+		EntityRegistry.registerModEntity(new ResourceLocation("avatarmod", name), entity, name, nextEntityID++, this, 128, 3, true);
 	}
 
 	private void registerEntity(Class<? extends Entity> entity, String name, int primary, int secondary) {

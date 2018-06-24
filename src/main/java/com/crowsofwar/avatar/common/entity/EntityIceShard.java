@@ -16,17 +16,16 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MoverType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.List;
 
@@ -46,7 +45,7 @@ public class EntityIceShard extends Entity {
 	public void onUpdate() {
 		super.onUpdate();
 		motionY -= 1.0 / 20;
-		if (isCollided) {
+		if (collided) {
 			shatter();
 		}
 
@@ -60,7 +59,7 @@ public class EntityIceShard extends Entity {
 		// Perform raycast to find targets
 		Vector direction = Vector.toRectangular(Math.toRadians(rotationYaw), Math.toRadians(rotationPitch));
 		List<Entity> collidedEntities = Raytrace.entityRaytrace(world, new Vector(this), direction, 4,
-				entity -> !(entity instanceof EntityPlayer) && !(entity instanceof EntityIceShard));
+																entity -> !(entity instanceof EntityPlayer) && !(entity instanceof EntityIceShard));
 
 		if (!collidedEntities.isEmpty()) {
 
@@ -87,8 +86,7 @@ public class EntityIceShard extends Entity {
 		if (!world.isRemote) {
 			float volume = 0.3f + rand.nextFloat() * 0.3f;
 			float pitch = 1.1f + rand.nextFloat() * 0.2f;
-			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS,
-					volume, pitch);
+			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, volume, pitch);
 		}
 
 		setDead();

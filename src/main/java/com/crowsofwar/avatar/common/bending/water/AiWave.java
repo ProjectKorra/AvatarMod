@@ -16,20 +16,17 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
-import com.crowsofwar.gorecore.util.VectorI;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.*;
+
+import static com.crowsofwar.gorecore.util.Vector.*;
 import static java.lang.Math.toDegrees;
 
 /**
@@ -47,9 +44,7 @@ public class AiWave extends BendingAi {
 		EntityLivingBase target = entity.getAttackTarget();
 		if (target != null && target.isInWater()) {
 
-			if (isAtEdgeOfWater()) {
-				return true;
-			}
+			return isAtEdgeOfWater();
 
 		}
 
@@ -91,12 +86,10 @@ public class AiWave extends BendingAi {
 	private boolean isAtEdgeOfWater() {
 
 		World world = entity.world;
-		Vector look = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()))
-				.withY(0);
+		Vector look = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget())).withY(0);
 
-		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity)
-						.minusY(1),
-				look, 4, (pos, blockState) -> blockState.getBlock() == Blocks.WATER);
+		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1), look, 4,
+															(pos, blockState) -> blockState.getBlock() == Blocks.WATER);
 		if (result.hitSomething()) {
 
 			VectorI pos = result.getPos();

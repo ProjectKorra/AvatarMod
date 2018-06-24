@@ -17,27 +17,25 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.config.ConfigStats;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.EntityEquipmentSlot.Type;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.config.ConfigStats;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.List;
 
@@ -62,11 +60,11 @@ public class EntityRavine extends AvatarEntity {
 	public EntityRavine(World world) {
 		super(world);
 		setSize(1, 1);
-		this.damageMult = 1;
+		damageMult = 1;
 	}
 
 	public void setDamageMult(float mult) {
-		this.damageMult = mult;
+		damageMult = mult;
 	}
 
 	public void setDistance(double dist) {
@@ -123,8 +121,8 @@ public class EntityRavine extends AvatarEntity {
 		Block belowBlock = world.getBlockState(below).getBlock();
 
 		if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
-				world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
-				SoundCategory.PLAYERS, 1, 1, false);
+												   world.getBlockState(below).getBlock().getSoundType(world.getBlockState(below), world, below, this)
+																   .getBreakSound(), SoundCategory.PLAYERS, 1, 1, false);
 
 		if (!world.getBlockState(below).isNormalCube()) {
 			setDead();
@@ -161,8 +159,7 @@ public class EntityRavine extends AvatarEntity {
 
 		// Push collided entities back
 		if (!world.isRemote) {
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-					entity -> entity != getOwner());
+			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
 					if (attackEntity(entity)) {

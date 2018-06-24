@@ -99,7 +99,7 @@ public class AvatarLog {
 		/**
 		 * Miswritten configuration files
 		 */
-		CONFIGURATION;
+		CONFIGURATION
 	}
 
 }

@@ -1,17 +1,15 @@
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -78,13 +76,11 @@ public class AbilityCleanse extends Ability {
 
 			if (abilityData.getLevel() >= 1) {
 
-				int groupLevel = abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)
-						? 1 : 0;
+				int groupLevel = abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST) ? 1 : 0;
 				int groupDuration = abilityData.getLevel() == 3 ? 100 : 60;
 				int groupRadius = abilityData.getLevel() >= 2 ? 6 : 4;
 
-				PotionEffect groupEffect = new PotionEffect(MobEffects.REGENERATION, groupDuration,
-						groupLevel);
+				PotionEffect groupEffect = new PotionEffect(MobEffects.REGENERATION, groupDuration, groupLevel);
 				applyGroupEffect(ctx, groupRadius, player -> player.addPotionEffect(groupEffect));
 				applyGroupEffect(ctx, groupRadius, this::addChiBonus);
 
@@ -95,7 +91,6 @@ public class AbilityCleanse extends Ability {
 			CleansePowerModifier modifier = new CleansePowerModifier();
 			modifier.setTicks(duration);
 			// Ignore warning; we know they have the bending, so manager for that bending != null
-			//noinspection ConstantConditions
 			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
 
 		}
@@ -110,16 +105,15 @@ public class AbilityCleanse extends Ability {
 
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
-		AxisAlignedBB aabb = new AxisAlignedBB(
-				entity.posX - radius, entity.posY - radius, entity.posZ - radius,
-				entity.posX + radius, entity.posY + radius, entity.posZ + radius);
+		AxisAlignedBB aabb = new AxisAlignedBB(entity.posX - radius, entity.posY - radius, entity.posZ - radius, entity.posX + radius,
+											   entity.posY + radius, entity.posZ + radius);
 
 		List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, aabb);
 
 		for (EntityPlayer player : players) {
 
 			// Initial aabb check was rectangular, need to check distance for truly circular radius
-			if (player.getDistanceSqToEntity(entity) > radius * radius) {
+			if (player.getDistanceSq(entity) > radius * radius) {
 				continue;
 			}
 

@@ -16,20 +16,15 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
+import net.minecraft.entity.*;
+
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import static com.crowsofwar.gorecore.util.Vector.*;
 import static java.lang.Math.toDegrees;
 
 /**
@@ -77,7 +72,7 @@ public class AiFlamethrower extends BendingAi {
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSqToEntity(target) < 4 * 4;
+		return target != null && entity.getDistanceSq(target) < 4 * 4;
 	}
 
 	@Override

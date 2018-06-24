@@ -17,20 +17,18 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataSerializer;
-import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.List;
 
@@ -87,7 +85,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 			time++;
 
-			if (entity.isCollided || (!entity.world.isRemote && time > 100)) {
+			if (entity.collided || (!entity.world.isRemote && time > 100)) {
 				entity.setDead();
 				entity.onCollideWithSolid();
 			}
@@ -100,8 +98,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 			World world = entity.world;
 			if (!entity.isDead) {
-				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
-						entity.getExpandedHitbox());
+				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity, entity.getExpandedHitbox());
 				if (!collidedList.isEmpty()) {
 					Entity collided = collidedList.get(0);
 					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
@@ -122,8 +119,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		private void collision(EntityLivingBase collided, EntityLightningSpear entity, boolean triggerGroupAttack) {
 			double speed = entity.velocity().magnitude();
 
-			if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
-					entity.getDamage())) {
+			if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()), entity.getDamage())) {
 				BattlePerformanceScore.addMediumScore(entity.getOwner());
 			}
 
@@ -145,14 +141,12 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				// Damage nearby entities in group
 
 				double radius = 2;
-				AxisAlignedBB aabb = new AxisAlignedBB(
-						entity.posX - radius, entity.posY - radius, entity.posZ - radius,
-						entity.posX + radius, entity.posY + radius, entity.posZ + radius);
+				AxisAlignedBB aabb = new AxisAlignedBB(entity.posX - radius, entity.posY - radius, entity.posZ - radius, entity.posX + radius,
+													   entity.posY + radius, entity.posZ + radius);
 
-				List<EntityLivingBase> targets = entity.world.getEntitiesWithinAABB(
-						EntityLivingBase.class, aabb);
+				List<EntityLivingBase> targets = entity.world.getEntitiesWithinAABB(EntityLivingBase.class, aabb);
 				for (EntityLivingBase target : targets) {
-					if (target.getDistanceSqToEntity(entity) > radius * radius) {
+					if (target.getDistanceSq(entity) > radius * radius) {
 						continue;
 					}
 					collision(target, entity, false);

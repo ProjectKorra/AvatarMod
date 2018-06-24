@@ -17,8 +17,7 @@
 
 package com.crowsofwar.avatar.common.network;
 
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -28,8 +27,8 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public interface IPacketHandler {
 
-	public IMessage onPacketReceived(IMessage packet, MessageContext ctx);
+	IMessage onPacketReceived(IMessage packet, MessageContext ctx);
 
-	public Side getSide();
+	Side getSide();
 
 }

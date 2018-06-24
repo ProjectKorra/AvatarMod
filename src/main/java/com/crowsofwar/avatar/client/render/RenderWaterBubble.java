@@ -17,34 +17,30 @@
 
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.*;
 import net.minecraft.util.ResourceLocation;
-import org.joml.Matrix4f;
-import org.joml.Vector4f;
+
+import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
+import org.joml.*;
 
 import static com.crowsofwar.avatar.client.render.RenderUtils.drawQuad;
-import static net.minecraft.util.math.MathHelper.cos;
-import static net.minecraft.util.math.MathHelper.sin;
+import static net.minecraft.util.math.MathHelper.*;
 
 /**
  * @author CrowsOfWar
  */
 public class RenderWaterBubble extends Render<EntityWaterBubble> {
 
-	private static final ResourceLocation water = new ResourceLocation("minecraft",
-			"textures/blocks/water_still.png");
+	private static final ResourceLocation water = new ResourceLocation("minecraft", "textures/blocks/water_still.png");
 
 	public RenderWaterBubble(RenderManager renderManager) {
 		super(renderManager);
 	}
 
 	@Override
-	public void doRender(EntityWaterBubble bubble, double x, double y, double z, float entityYaw,
-						 float partialTicks) {
+	public void doRender(EntityWaterBubble bubble, double x, double y, double z, float entityYaw, float partialTicks) {
 
 		float ticks = bubble.ticksExisted + partialTicks;
 		float colorEnhancement = 1.2f;
@@ -89,7 +85,7 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		// @formatter:on
 
 		float existed = ticks / 4f;
-		int anim = (int) ((int) existed % 16);
+		int anim = (int) existed % 16;
 		float v1 = anim / 16f, v2 = v1 + 1f / 16;
 
 		drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2); // -x

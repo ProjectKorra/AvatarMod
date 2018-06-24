@@ -17,16 +17,16 @@
 
 package com.crowsofwar.avatar.common;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IThreadListener;
+import net.minecraft.world.World;
+
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.controls.IControlsHandler;
-import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
+import com.crowsofwar.avatar.common.controls.*;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.IThreadListener;
-import net.minecraft.world.World;
 
 /**
  * Allows calling of side-specific code by using a common base class and
@@ -44,9 +44,9 @@ public interface AvatarCommonProxy {
 	 * Called from the main class, subclasses should initialize themselves here
 	 * (fields, etc).
 	 */
-	public void preInit();
+	void preInit();
 
-	public IControlsHandler getKeyHandler();
+	IControlsHandler getKeyHandler();
 
 	/**
 	 * Get a client-side packet handler safely. When the machine is running a
@@ -54,7 +54,7 @@ public interface AvatarCommonProxy {
 	 * packet handler for the client. Otherwise (this only happens on dedicated
 	 * servers), returns null.
 	 */
-	public IPacketHandler getClientPacketHandler();
+	IPacketHandler getClientPacketHandler();
 
 	/**
 	 * Get client player's reach. Returns 0 on server.
@@ -93,7 +93,7 @@ public interface AvatarCommonProxy {
 	/**
 	 * Register the item models so they can be configured to use the correct textures
 	 */
-	public void registerItemModels();
+	void registerItemModels();
 
 	boolean isOptifinePresent();
 

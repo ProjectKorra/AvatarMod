@@ -17,25 +17,21 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.block.*;
+import net.minecraft.entity.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataSerializer;
-import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.*;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.List;
 
@@ -107,16 +103,11 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			entity.setVelocity(force);
 
 			if (!entity.world.isRemote && placeAtVec.sqrDist(thisPos) < 0.01) {
-
 				entity.setDead();
 				entity.world.setBlockState(new BlockPos(entity), entity.getBlockState());
 
-				SoundType sound = entity.getBlock().getSoundType();
-				if (sound != null) {
-					entity.world.playSound(null, entity.getPosition(), sound.getPlaceSound(),
-							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
-				}
-
+				SoundType sound = entity.getBlock().getSoundType(entity.getBlockState(), entity.world, entity.getPosition(), entity);
+				entity.world.playSound(null, entity.getPosition(), sound.getPlaceSound(), SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 			}
 
 			return this;
@@ -134,8 +125,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 
 		@Override
 		public void load(NBTTagCompound nbt) {
-			placeAt = new BlockPos(nbt.getInteger("PlaceX"), nbt.getInteger("PlaceY"),
-					nbt.getInteger("PlaceZ"));
+			placeAt = new BlockPos(nbt.getInteger("PlaceX"), nbt.getInteger("PlaceY"), nbt.getInteger("PlaceZ"));
 		}
 
 		@Override
@@ -152,26 +142,20 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
 
-			if (entity.isCollided) {
+			if (entity.collided) {
 				if (!entity.world.isRemote) entity.setDead();
 				entity.onCollideWithSolid();
 
-				World world = entity.world;
 				Block block = entity.getBlockState().getBlock();
-				SoundType sound = block.getSoundType();
-				if (sound != null) {
-					entity.world.playSound(null, entity.getPosition(), sound.getBreakSound(),
-							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
-				}
-
+				SoundType sound = block.getSoundType(entity.getBlockState(), entity.world, entity.getPosition(), entity);
+				entity.world.playSound(null, entity.getPosition(), sound.getBreakSound(), SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 			}
 
 			entity.addVelocity(Vector.DOWN.times(9.81 / 20));
 
 			World world = entity.world;
 			if (!entity.isDead) {
-				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
-						entity.getExpandedHitbox());
+				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity, entity.getExpandedHitbox());
 				if (!collidedList.isEmpty()) {
 					Entity collided = collidedList.get(0);
 					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
@@ -193,9 +177,8 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			// Add damage
 			double speed = entity.velocity().magnitude();
 
-			if (collided.attackEntityFrom(
-					AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
-					(float) (speed * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()))) {
+			if (collided.attackEntityFrom(AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
+										  (float) (speed * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()))) {
 				BattlePerformanceScore.addMediumScore(entity.getOwner());
 			}
 
@@ -218,8 +201,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			entity.onCollideWithSolid();
 			// boomerang upgrade handling
 			if (!entity.world.isRemote) {
-				if (data.getAbilityData("pickup_block")
-						.isMasterPath(AbilityTreePath.FIRST)) {
+				if (data.getAbilityData("pickup_block").isMasterPath(AbilityTreePath.FIRST)) {
 
 					Bender bender = Bender.get(entity.getOwner());
 					if (bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
@@ -338,7 +320,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
 			entity.addVelocity(Vector.DOWN.times(9.81 / 20));
-			if (entity.isCollided) {
+			if (entity.collided) {
 				if (!entity.world.isRemote) entity.setDead();
 				entity.onCollideWithSolid();
 			}

@@ -1,28 +1,18 @@
 package com.crowsofwar.avatar.common.entity;
 
+import net.minecraft.entity.*;
+import net.minecraft.init.*;
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.*;
+import net.minecraft.world.World;
+
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.avatar.common.util.*;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.world.World;
-import org.joml.Matrix4d;
-import org.joml.SimplexNoise;
-import org.joml.Vector4d;
+import org.joml.*;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -35,17 +25,14 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
  */
 public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningControlPoint> {
 
-	private static final DataParameter<Vector> SYNC_ENDPOS = EntityDataManager.createKey
-			(EntityLightningArc.class, AvatarDataSerializers.SERIALIZER_VECTOR);
+	private static final DataParameter<Vector> SYNC_ENDPOS = EntityDataManager
+					.createKey(EntityLightningArc.class, AvatarDataSerializers.SERIALIZER_VECTOR);
 
-	private static final DataParameter<Float> SYNC_TURBULENCE = EntityDataManager.createKey
-			(EntityLightningArc.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_TURBULENCE = EntityDataManager.createKey(EntityLightningArc.class, DataSerializers.FLOAT);
 
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey
-			(EntityLightningArc.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityLightningArc.class, DataSerializers.FLOAT);
 
-	private static final DataParameter<Boolean> SYNC_MAIN_ARC = EntityDataManager.createKey
-			(EntityLightningArc.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> SYNC_MAIN_ARC = EntityDataManager.createKey(EntityLightningArc.class, DataSerializers.BOOLEAN);
 
 	/**
 	 * If the lightning hits an entity, the lightning "sticks to" that entity and continues to
@@ -144,8 +131,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		if (velocity().equals(Vector.ZERO)) {
 			stuckTime++;
 			if (stuckTime == 1) {
-				world.playSound(null, getPosition(), SoundEvents.ENTITY_LIGHTNING_THUNDER,
-						SoundCategory.PLAYERS, 1, 1);
+				world.playSound(null, getPosition(), SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.PLAYERS, 1, 1);
 			}
 		}
 		boolean existTooLong = stuckTime >= 40 || ticksExisted >= 200;
@@ -174,8 +160,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		// Electrocute enemies in water
 		if (inWater && !world.isRemote) {
 			if (floodFill == null) {
-				floodFill = new LightningFloodFill(world, getPosition(), 12,
-						this::handleWaterElectrocution);
+				floodFill = new LightningFloodFill(world, getPosition(), 12, this::handleWaterElectrocution);
 			}
 			floodFill.tick();
 		}
@@ -186,8 +171,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	protected void updateCpBehavior() {
 		for (LightningControlPoint controlPoint : getControlPoints()) {
 
-			controlPoint.setPosition(controlPoint.getPosition
-					(ticksExisted));
+			controlPoint.setPosition(controlPoint.getPosition(ticksExisted));
 
 		}
 	}
@@ -208,8 +192,8 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	@Override
 	protected void collideWithNearbyEntities() {
 
-		List<Entity> collisions = Raytrace.entityRaytrace(world, position(), velocity(), velocity
-				().magnitude() / 20, entity -> entity != getOwner() && entity != this);
+		List<Entity> collisions = Raytrace
+						.entityRaytrace(world, position(), velocity(), velocity().magnitude() / 20, entity -> entity != getOwner() && entity != this);
 
 		for (Entity collided : collisions) {
 			onCollideWithEntity(collided);
@@ -219,7 +203,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	private void handleWaterElectrocution(EntityLivingBase entity) {
 
-		double distance = entity.getDistanceToEntity(this);
+		double distance = entity.getDistance(this);
 		float damageModifier = (float) (1 - (distance / 12) * (distance / 12));
 		damageEntity(entity, damageModifier);
 
@@ -235,21 +219,19 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		}
 
 		// Handle lightning redirection
-		if (!wasRedirected && isMainArc() && entity == stuckTo && Bender.isBenderSupported
-				(entity)) {
+		if (!wasRedirected && isMainArc() && entity == stuckTo && Bender.isBenderSupported(entity)) {
 			wasSuccessfullyRedirected = Bender.get(entity).redirectLightning(this);
 			wasRedirected = true;
 		}
 
 		DamageSource damageSource = createDamageSource(entity);
-		if (!wasSuccessfullyRedirected && entity.attackEntityFrom(damageSource, damage *
-				damageModifier)) {
+		if (!wasSuccessfullyRedirected && entity.attackEntityFrom(damageSource, damage * damageModifier)) {
 
 			BattlePerformanceScore.addLargeScore(getOwner());
 
 			entity.setFire(4);
 
-			Vector velocity = getEntityPos(entity).minus(this.position()).normalize();
+			Vector velocity = getEntityPos(entity).minus(position()).normalize();
 			velocity = velocity.times(2);
 			entity.addVelocity(velocity.x(), 0.4, velocity.z());
 			AvatarUtils.afterVelocityAdded(entity);
@@ -282,7 +264,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	@Override
 	public boolean onCollideWithSolid() {
-//		setDead();
+		//		setDead();
 		setVelocity(Vector.ZERO);
 		if (!world.isRemote) {
 			if (world.isAirBlock(getPosition())) {
@@ -290,7 +272,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			}
 		}
 		return false;
-//		return true;
+		//		return true;
 	}
 
 	@Override
@@ -375,13 +357,8 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			Vector randomize = Vector.ZERO;
 
 			if (index != arc.getControlPoints().size() - 1 && index != 0) {
-				double actualOffX = SimplexNoise.noise(ticks / 25f * getTurbulence() + index / 1f,
-						getEntityId
-								() *
-								1000) * getTurbulence();
-				double actualOffY = SimplexNoise.noise(ticks / 25f * getTurbulence() + index / 1f,
-						getEntityId() *
-								2000) * getTurbulence();
+				double actualOffX = SimplexNoise.noise(ticks / 25f * getTurbulence() + index / 1f, getEntityId() * 1000) * getTurbulence();
+				double actualOffY = SimplexNoise.noise(ticks / 25f * getTurbulence() + index / 1f, getEntityId() * 2000) * getTurbulence();
 
 				Matrix4d matrix = new Matrix4d();
 				matrix.rotate(Math.toRadians(rotationYaw), 0, 1, 0);

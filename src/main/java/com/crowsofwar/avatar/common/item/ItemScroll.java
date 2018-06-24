@@ -16,10 +16,20 @@
 */
 package com.crowsofwar.avatar.common.item;
 
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.*;
+import net.minecraft.util.*;
+import net.minecraft.world.World;
+
+import net.minecraftforge.fml.relauncher.*;
+
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarChatMessages;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.combustion.Combustionbending;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
@@ -32,25 +42,9 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SPECIALTY_SCROLL_TOOLTIP;
 
@@ -129,7 +123,6 @@ public class ItemScroll extends Item implements AvatarItem {
 
 		}
 
-		//noinspection ConstantConditions - we already know this is a specialty bending style
 		UUID requiredMainBending = specialtyStyle.getParentBendingId();
 
 		if (data.hasBendingId(requiredMainBending)) {
@@ -181,8 +174,7 @@ public class ItemScroll extends Item implements AvatarItem {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World world, List<String> tooltips,
-							   ITooltipFlag advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> tooltips, ITooltipFlag advanced) {
 
 		String tooltip = I18n.format("avatar." + getScrollType(stack).getBendingName());
 		tooltips.add(tooltip);
@@ -191,8 +183,7 @@ public class ItemScroll extends Item implements AvatarItem {
 
 			String translated = I18n.format("avatar.specialtyScroll.tooltip");
 			String bendingName = getScrollType(stack).getBendingName();
-			String formatted = FormattedMessageProcessor.formatText(MSG_SPECIALTY_SCROLL_TOOLTIP,
-					translated, bendingName);
+			String formatted = FormattedMessageProcessor.formatText(MSG_SPECIALTY_SCROLL_TOOLTIP, translated, bendingName);
 			tooltips.add(formatted);
 
 		}
@@ -240,7 +231,7 @@ public class ItemScroll extends Item implements AvatarItem {
 
 		private final UUID bendingId;
 
-		private ScrollType(UUID bendingId) {
+		ScrollType(UUID bendingId) {
 			this.bendingId = bendingId;
 		}
 
@@ -279,11 +270,7 @@ public class ItemScroll extends Item implements AvatarItem {
 			}
 
 			// Trying to use parent-type bending scroll on specialty bending style
-			if (BendingStyles.get(bendingId).getParentBendingId() == this.bendingId) {
-				return true;
-			}
-
-			return false;
+			return BendingStyles.get(bendingId).getParentBendingId() == this.bendingId;
 
 		}
 

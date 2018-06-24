@@ -15,7 +15,7 @@ addListeners = function() {
 setClassPresent = function($el, cls, present) {
     if (present && !$el.hasClass(cls)) $el.addClass(cls);
     if (!present && $el.hasClass(cls)) $el.removeClass(cls);
-}
+};
 checkNav = function() {
     $nav = $("nav");
     if ($(window).scrollTop() < $("#vision").offset().top - 100) {
@@ -28,7 +28,7 @@ checkNav = function() {
         var elPos = $(el).offset().top + parseInt($(el).attr("data-scroll-transition"));
         setClassPresent($(el), "in-view", scrollBottom > elPos);
     });
-}
+};
 
 $(document).ready(function () {
     $("nav").load("navbar.html", addListeners);
