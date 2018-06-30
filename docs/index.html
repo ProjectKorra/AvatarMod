@@ -1,160 +1,128 @@
-<!DOCTYPE html>
-<html>
-
+<!doctype html>
+<html lang="en">
 <head>
-    <title>AV2 :: Avatar In Minecraft</title>
-    <script src="jquery-3.1.1.min.js"></script>
-    <script src="navbar.js"></script>
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-    <link rel="stylesheet" type="text/css" href="styles.css" />
+	<meta charset="utf-8" />
+	
+	<title>AV2 :: Avatar In Minecraft</title>
+	<meta name="author" content="Mahtaran">
+	<meta name="description" content="The homepage of the Avatar Mod!">
+	
+	<!--[if lt IE 9]>
+		<script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<script src="jquery-3.1.1.min.js"></script>
+	<script src="navbar.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="styles.css" />
 </head>
-
 <body data-spy="scroll" data-target=".navbar" data-offset="30">
-    <nav></nav>
-
-    <div id="top"></div>
-
-    <div id="content" class="container-fluid">
-        <div id="homepage" class="row">
-            <div class="fg-text lg">
-                <h1>AvatarMod 2</h1>
-                <div id="homepage-desc">
-                    <span>A multiplayer, combat-oriented mod for Minecraft by CrowsOfWar</span>
-                </div>
-                <a class="avbtn" href="#vision">Read More</a>
-                <a class="avbtn avbtn-bold" href="#download">Download</a>
-            </div>
-
-        </div>
-
-        <section class="homepage-text" id="vision">
-            <h1>An exciting new mod</h1>
-            <p>
-                AvatarMod2 is a free, open-sourced mod for Minecraft created by CrowsOfWar which will add elemental bending from the TV show <i>Avatar: The Last Airbender</i>&nbsp; (not the movie). Players will be able to "bend" the elements of Minecraft and manipulate their environment to defeat enemies.
-            </p>
-            <p>
-                The mod will support four main types of bending styles, known as Airbending, Waterbending, Firebending, and Earthbending. Each bending technique has its own strengths and strategies, requiring benders to take their own functions. Each bending will have eight useful abilities which each serve different roles in a bender's toolbox. In addition, there are non-combat aspects to bending which will improve players' proficiency as they take on peaceful tasks in Minecraft.
-            </p>
-            <p>
-                <dfn title="Player vs Player">PvP</dfn> is a large part of the vision of this mod. Multiplayer will allow players to participate in combat and other interactions not normally present in singleplayer. This mod will introduce new strategy and challenge to existing PvP scenarios.
-            </p>
-            <p>
-                This mod is currently in Alpha but development is chugging along quite nicely and features are frequently added. Weekly updates are posted on <a href="http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2726598" target="_blank">Minecraft Forums</a>.
-            </p>
-        </section>
-
-        <section class="container-fluid" id="features">
-
-            <div class="row" data-scroll-transition="70">
-                <div class="col-md-4">
-                    <img src="imgs/radial_menu.png" />
-                </div>
-                <div class="col-md-8">
-                    <h1>Quick Radial-Menu Ability System</h1>
-                    <p>
-                        AV2 brings a new system of ability activation to the table. Forget silly items or obscure keybindings for every ability: Manage up to 32 abilities with lightning-fast access via AV2's innovative Radial Menu system. <a href="https://github.com/CrowsOfWar/AvatarMod/wiki/Getting-started" target="_blank">Getting started...</a>
-                    </p>
-                </div>
-            </div>
-            <div class="row" data-scroll-transition="70">
-
-                <div class="col-md-8">
-                    <h1>Fast-paced combat</h1>
-                    <p>
-                        With a diverse set of Abilities, combat in AV2 goes beyond the vanilla spam-clicking panic mechanic. Deal damage from afar with Thrown Blocks, evade your enemies with Airbending, or fight close-combat melees with Firebending. <a href="https://github.com/CrowsOfWar/AvatarMod/wiki/Abilities" target="_blank">View all...</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <img src="imgs/bending.png" />
-                </div>
-
-            </div>
-            <div class="row" data-scroll-transition="70">
-                <div class="col-md-4">
-                    <img src="imgs/progression.png" />
-                </div>
-                <div class="col-md-8">
-                    <h1>Complex Levelling System</h1>
-                    <p>
-                        AV2 will possess an interesting "character build" system designed to weave strategy and choice into the mod's design. Players will earn "Progression Points" through appropriately-chosen challenges and spend them to improve their proficiency. <a href="https://github.com/CrowsOfWar/AvatarMod/wiki/Progression-Update" target="_blank">Full plans...</a>
-                    </p>
-                </div>
-            </div>
-
-            <div class="row" data-scroll-transition="70">
-                <div class="col-md-8">
-                    <h1>Highly Configurable</h1>
-                    <p>
-                        Customize AV2 to your needs. Need to prevent players from modifying strongholds? Just remove stone blocks from the earthbending list. Want to tweak XP curves to allow fast progression? Simply adjust the formulas. With the easy-to-use YAML format, AV2 is quick and simple to configure. <a href="https://github.com/CrowsOfWar/AvatarMod/wiki/Configuration-files" target="_blank">Full documentation...</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <img src="imgs/config.png" />
-                </div>
-            </div>
-        </section>
-
-        <section id="download">
-
-            <div class="fg-text">
-                <h1>Available now for Minecraft 1.12.1</h1>
-                <p>
-                    Alpha release 4.6 is available for download now. Only MC 1.12.x on PC is
-                    supported. Forge is required.
-                </p>
-                <div class="download-widget">
-                    <iframe src="https://widget.mcf.li/mc-mods/minecraft/254565-avatar-mod-2-out-of-the-iceberg" width="100%" style="border: none;"></iframe>
-                </div>
-                <p class="note">
-                    Installation instructions: <a href="http://minecraft.gamepedia.com/Mods/Installing_forge_mods">install Forge</a> and place the downloaded avatar mod JAR into your mods folder.
-                </p>
-            </div>
-
-        </section>
-
-        <footer>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="link">
-                        <a href="http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2726598">Minecraft Forum Thread</a>
-                    </div>
-                    <div class="link">
-                        <a href="https://github.com/CrowsOfWar/AvatarMod/wiki">Official Wiki</a>
-                    </div>
-                    <div class="link">
-                        <a href="https://github.com/CrowsOfWar/AvatarMod">Sources on Github</a>
-                    </div>
-                    <div class="link">
-                        <a href="http://trello.av2.io">Suggestions on Trello</a>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="link">Contact:</div>
-                    <div class="link">
-                        <a href="mailto:ofwarcrows@gmail.com">ofwarcrows@gmail.com</a>
-                    </div>
-                    <div class="link">
-                        <a href="http://www.minecraftforum.net/members/CrowsOfWar">CrowsOfWar on MCF</a>
-                    </div>
-                    <div class="link">
-                        <a href="https://github.com/CrowsOfWar/AvatarMod/wiki/Reporting-Bugs">Reporting Bugs Guide</a>
-                    </div>
-                </div>
-            </div>
-            <div class="copyright link">
-                Copyright (c) 2016-2017 CrowsOfWar.
-            </div>
-        </footer>
-    </div>
-
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-
+	<nav></nav>
+	<div id="top"></div>
+	<div id="content" class="container-fluid">
+		<div id="homepage" class="row">
+			<div class="fg-text lg">
+				<h1>AvatarMod 2</h1>
+				<div id="homepage-desc">
+					<span>A multiplayer, combat-oriented mod for Minecraft by CrowsOfWar</span>
+				</div>
+				<a class="avbtn" href="#vision">Read More</a>
+				<a class="avbtn avbtn-bold" href="#download">Download</a>
+			</div>
+		</div>
+		<section class="homepage-text" id="vision">
+			<h1>An exciting new mod</h1>
+			<p>AvatarMod2 is a free, open-sourced mod for Minecraft created by CrowsOfWar which will add elemental bending from the TV show <i>Avatar: The Last Airbender</i>&nbsp; (not the movie). Players will be able to "bend" the elements of Minecraft and manipulate their environment to defeat enemies.</p>
+			<p>The mod will support four main types of bending styles, known as Airbending, Waterbending, Firebending, and Earthbending. Each bending technique has its own strengths and strategies, requiring benders to take their own functions. Each bending will have eight useful abilities which each serve different roles in a bender's toolbox. In addition, there are non-combat aspects to bending which will improve players' proficiency as they take on peaceful tasks in Minecraft.</p>
+			<p><dfn title="Player vs Player">PvP</dfn> is a large part of the vision of this mod. Multiplayer will allow players to participate in combat and other interactions not normally present in singleplayer. This mod will introduce new strategy and challenge to existing PvP scenarios.</p>
+			<p>This mod is currently in Alpha but development is chugging along quite nicely and features are frequently added. Weekly updates are posted on <a href="https://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2726598" target="_blank">Minecraft Forums</a>.</p>
+		</section>
+		<section class="container-fluid" id="features">
+			<div class="row" data-scroll-transition="70">
+				<div class="col-md-4">
+					<img src="imgs/radial_menu.png" />
+				</div>
+				<div class="col-md-8">
+					<h1>Quick Radial-Menu Ability System</h1>
+					<p>
+						AV2 brings a new system of ability activation to the table. Forget silly items or obscure keybindings for every ability: Manage up to 32 abilities with lightning-fast access via AV2's innovative Radial Menu system. <a href="https://github.com/CrowsOfWar/AvatarMod/wiki/Getting-started" target="_blank">Getting started...</a>
+					</p>
+				</div>
+			</div>
+			<div class="row" data-scroll-transition="70">
+				<div class="col-md-8">
+					<h1>Fast-paced combat</h1>
+					<p>With a diverse set of Abilities, combat in AV2 goes beyond the vanilla spam-clicking panic mechanic. Deal damage from afar with Thrown Blocks, evade your enemies with Airbending, or fight close-combat melees with Firebending. <a href="https://github.com/CrowsOfWar/AvatarMod/wiki/Abilities" target="_blank">View all...</a></p>
+				</div>
+				<div class="col-md-4">
+					<img src="imgs/bending.png" />
+				</div>
+			</div>
+			<div class="row" data-scroll-transition="70">
+				<div class="col-md-4">
+					<img src="imgs/progression.png" />
+				</div>
+				<div class="col-md-8">
+					<h1>Complex Levelling System</h1>
+					<p>AV2 will possess an interesting "character build" system designed to weave strategy and choice into the mod's design. Players will earn "Progression Points" through appropriately-chosen challenges and spend them to improve their proficiency. <a href="https://github.com/CrowsOfWar/AvatarMod/wiki/Progression-Update" target="_blank">Full plans...</a></p>
+				</div>
+			</div>
+			<div class="row" data-scroll-transition="70">
+				<div class="col-md-8">
+					<h1>Highly Configurable</h1>
+					<p>Customize AV2 to your needs. Need to prevent players from modifying strongholds? Just remove stone blocks from the earthbending list. Want to tweak XP curves to allow fast progression? Simply adjust the formulas. With the easy-to-use YAML format, AV2 is quick and simple to configure. <a href="https://github.com/CrowsOfWar/AvatarMod/wiki/Configuration-files" target="_blank">Full documentation...</a></p>
+				</div>
+				<div class="col-md-4">
+					<img src="imgs/config.png" />
+				</div>
+			</div>
+		</section>
+		<section id="download">
+			<div class="fg-text">
+				<h1>Available now for Minecraft 1.12.1</h1>
+				<p>Alpha release 4.6 is available for download now. Only MC 1.12.x on PC is supported. Forge is required.</p>
+				<div class="download-widget">
+					<iframe src="https://widget.mcf.li/mc-mods/minecraft/254565-avatar-mod-2-out-of-the-iceberg" width="100%" style="border: none;"></iframe>
+				</div>
+				<p class="note">Installation instructions: <a href="https://minecraft.gamepedia.com/Mods/Installing_forge_mods">install Forge</a> and place the downloaded avatar mod JAR into your mods folder.</p>
+			</div>
+		</section>
+		<footer>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="link">
+						<a href="https://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2726598">Minecraft Forum Thread</a>
+					</div>
+					<div class="link">
+						<a href="https://github.com/CrowsOfWar/AvatarMod/wiki">Official Wiki</a>
+					</div>
+					<div class="link">
+						<a href="https://github.com/CrowsOfWar/AvatarMod">Sources on Github</a>
+					</div>
+					<div class="link">
+						<a href="https://trello.com/b/btY5D31y/projectkorra-av2-development">Suggestions on Trello</a>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="link">Contact:</div>
+					<div class="link">
+						<a href="mailto:ofwarcrows@gmail.com">ofwarcrows@gmail.com</a>
+					</div>
+					<div class="link">
+						<a href="https://www.minecraftforum.net/members/CrowsOfWar">CrowsOfWar on MCF</a>
+					</div>
+					<div class="link">
+						<a href="https://github.com/CrowsOfWar/AvatarMod/wiki/Reporting-Bugs">Reporting Bugs Guide</a>
+					</div>
+				</div>
+			</div>
+			<div class="copyright link">
+				Copyright (c) 2016-2017 CrowsOfWar.
+			</div>
+		</footer>
+	</div>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </body>
-
-
 </html>
