@@ -169,8 +169,6 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 
 			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
-				entity.setComboTimer(entity.getComboTimer() + 1);
-				System.out.println(entity.getComboTimer());
 				//Level 4 Path One
 				startGravity = STATS_CONFIG.waterArcTicks * (5/3);
 				if (ticks >= STATS_CONFIG.waterArcTicks * (5/3)) {

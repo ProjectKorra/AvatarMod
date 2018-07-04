@@ -60,9 +60,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	private static final DataParameter<WaterArcBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterArc.class, WaterArcBehavior.DATA_SERIALIZER);
-	private static final DataParameter<Integer> SYNC_COMBO_TIMER = EntityDataManager.createKey(EntityWaterArc.class,
-			DataSerializers.VARINT);
-
 
 	/**
 	 * The amount of ticks since last played splash sound. -1 for splashable.
@@ -72,8 +69,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	private boolean isSpear;
 
 	private float damageMult;
-
-	private int comboTimer;
 
 	private float Size;
 
@@ -87,7 +82,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.lastPlayedSplash = -1;
 		this.damageMult = 1;
 		this.putsOutFires = true;
-		this.comboTimer = 0;
 		this.Size = 0.4F;
 		this.Gravity = 9.81F;
 
@@ -109,14 +103,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.Size = size;
 	}
 
-	public int getComboTimer() {
-		return dataManager.get(SYNC_COMBO_TIMER);
-	}
-
-	public void setComboTimer(int timer) {
-		dataManager.set(SYNC_COMBO_TIMER, timer);
-	}
-
 	public float getGravity() {
 		return this.Gravity;
 	}
@@ -132,7 +118,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new WaterArcBehavior.Idle());
-		dataManager.register(SYNC_COMBO_TIMER, comboTimer);
 	}
 
 

@@ -93,21 +93,12 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	@Override
-	public void setWorld(World worldIn) {
-		super.setWorld(worldIn);
-		if (world.isRemote) {
-			Thread.dumpStack();
-		}
-	}
-
-	@Override
 	public void onUpdate() {
 
 		super.onUpdate();
 
-		//For some reason earthspike thinks it's clientside. I don't why/
+		//For some reason earthspike thinks it's clientside. I don't why
 		//HHAAAAALLPPP MEEEEE
-
 
 		setVelocity(Vector.ZERO);
 		if (ticksExisted >= 15) {
