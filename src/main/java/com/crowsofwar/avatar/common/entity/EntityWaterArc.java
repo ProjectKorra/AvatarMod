@@ -139,6 +139,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	public void Splash() {
 		AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("water_arc");
 		int lvl = abilityData.getLevel();
+		onMinorWaterContact();
 		if (world instanceof WorldServer) {
 			WorldServer World = (WorldServer) this.world;
 			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0.2, 0.1, 0.2, 0.03);
@@ -180,9 +181,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	public boolean onCollideWithSolid() {
 
 		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {
+			onMinorWaterContact();
 			Splash();
 			setDead();
 			cleanup();
+
 
 
 			if (world.isRemote) {

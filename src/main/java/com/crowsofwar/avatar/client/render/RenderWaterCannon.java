@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.client.render;
 import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -25,6 +26,7 @@ public class RenderWaterCannon extends RenderArc {
 
 		EntityWaterCannon cannon = (EntityWaterCannon) entity;
 		renderArc(cannon, partialTicks, 3f, 3f * cannon.getSizeMultiplier());
+		GlStateManager.rotate(entity.ticksExisted * 10, 0, 0, 1);
 
 	}
 

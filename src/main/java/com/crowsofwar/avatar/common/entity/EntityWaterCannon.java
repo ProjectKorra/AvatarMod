@@ -28,25 +28,14 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey
 			(EntityWaterCannon.class, DataSerializers.FLOAT);
 
-	/**
-	 * If the water cannon hits an entity, the water cannon "sticks to" that entity and continues to
-	 * damage it.
-	 */
-	@Nullable
-	private EntityLivingBase stuckTo;
 
-	/**
-	 * If the water cannon hits an entity or the ground, the water cannon "sticks to" that position and
-	 * will die after some time after getting stuck.
-	 */
-	private int stuckTime;
 
 	private float damage;
 
 	public EntityWaterCannon(World world) {
 		super(world);
-		setSize(1.5f, 1.5f);
-		damage = 10;
+		setSize(1.5f * getSizeMultiplier(), 1.5f * getSizeMultiplier());
+		damage = 1;
 	}
 
 	@Override
@@ -60,27 +49,20 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		return 2;
 	}
 
+
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (stuckTo != null) {
-			setPosition(Vector.getEyePos(stuckTo));
-			setVelocity(Vector.ZERO);
-			damageEntity(stuckTo, 0.5f);
+		if (getOwner() != null) {
+			Vector direction = Vector.getLookRectangular(getOwner());
+			this.setVelocity(direction.times(20));
 		}
 
-		if (velocity().equals(Vector.ZERO)) {
-			stuckTime++;
-			if (stuckTime == 1) {
-				world.playSound(null, getPosition(), SoundEvents.BLOCK_WATER_AMBIENT,
-						SoundCategory.PLAYERS, 1, 1);
-			}
-		}
 
-		boolean existTooLong = stuckTime >= 40 || ticksExisted >= 200;
-		boolean stuckIsDead = stuckTo != null && stuckTo.isDead;
-		if (existTooLong || stuckIsDead) {
+		boolean existTooLong = ticksExisted >= 150;
+
+		if (existTooLong) {
 			setDead();
 		}
 
@@ -94,6 +76,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		// First control point (at front) should just follow water cannon
 		getControlPoint(0).setPosition(Vector.getEntityPos(this));
 
+
 		// Second control point (at back) should stay near the player
 		if (getOwner() != null) {
 			Vector eyePos = Vector.getEyePos(getOwner());
@@ -105,8 +88,10 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (stuckTo == null && entity instanceof EntityLivingBase) {
-			stuckTo = (EntityLivingBase) entity;
+		if (entity instanceof EntityLivingBase && !(entity instanceof AvatarEntity)) {
+			damageEntity((EntityLivingBase) entity, 1);
+			world.playSound(null, getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH,
+					SoundCategory.PLAYERS, 1, 1);
 		}
 	}
 
@@ -138,9 +123,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 			BattlePerformanceScore.addLargeScore(getOwner());
 
-			Vector velocity = getEntityPos(entity).minus(this.position()).normalize();
-			velocity = velocity.times(2);
-			entity.addVelocity(velocity.x(), 0.4, velocity.z());
+			entity.motionY = this.motionY;
+			entity.motionZ = this.motionZ;
+			entity.motionX = this.motionX;
 			AvatarUtils.afterVelocityAdded(entity);
 
 			// Add Experience
@@ -191,8 +176,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	public class CannonControlPoint extends ControlPoint {
 
 		public CannonControlPoint(EntityArc arc, int index) {
-			// Make control point closest to the player very small, so it has a cone appearance
-			super(arc, index == 1 ? 0.1f : 1.0f, 0, 0, 0);
+			// Make all control points the same size
+			super(arc, index == 1 ? 0.75f : 0.75f, 0, 0, 0);
 		}
 
 	}

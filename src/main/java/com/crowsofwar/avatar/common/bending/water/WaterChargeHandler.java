@@ -38,9 +38,10 @@ public class WaterChargeHandler extends TickHandler {
 		float damage = 4;
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		float size = 0.1f;
-		int durationToFire = 100;
+		//Multiply by 1.5 to get water cannon size
+		int durationToFire = 40;
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			durationToFire = 50;
+			durationToFire = 60;
 		}
 
 		if (world.isRemote) {
@@ -51,12 +52,11 @@ public class WaterChargeHandler extends TickHandler {
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 
-			damage = (float) (4 * bender.getDamageMult(Waterbending.ID));
-			size = 0.1f;
+			damage = (float) (0.5 * bender.getDamageMult(Waterbending.ID));
 
 			// Fire once every 10 ticks, until we get to 100 ticks
 			// So at fire at 60, 70, 80, 90, 100
-			if (duration >= 60 && duration % 10 == 0) {
+			if (duration >= 40 && duration % 10 == 0) {
 
 				fireCannon(world, entity, damage, speed, size);
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
@@ -72,14 +72,15 @@ public class WaterChargeHandler extends TickHandler {
 			speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			speed += powerRating / 15;
 			damage = 8;
-			size = 1;
+			size = 0.25F;
 
 			if (abilityData.getLevel() >= 1) {
 				damage = 11;
-				size = 1.1f;
+				size = 0.5f;
 			}
 			if (abilityData.getLevel() >= 2) {
 				damage = 12;
+				size = 1f;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage = 17;
@@ -91,7 +92,7 @@ public class WaterChargeHandler extends TickHandler {
 
 			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
-			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
+			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_SPLASH,
 					SoundCategory.PLAYERS, 1, 2);
 
 			return true;
@@ -115,7 +116,6 @@ public class WaterChargeHandler extends TickHandler {
 		Vector velocity = Vector.getLookRectangular(entity);
 		velocity = velocity.normalize().times(speed);
 		cannon.setVelocity(velocity);
-
 		world.spawnEntity(cannon);
 
 	}
