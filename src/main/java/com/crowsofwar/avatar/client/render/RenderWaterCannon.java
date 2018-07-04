@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderWaterCannon extends RenderArc {
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/entity/water-ribbon.png");
+			"textures/entity/water-ribbon2.png");
 
 	private final ParticleSpawner particleSpawner;
 
@@ -26,9 +26,9 @@ public class RenderWaterCannon extends RenderArc {
 
 		EntityWaterCannon cannon = (EntityWaterCannon) entity;
 		renderArc(cannon, partialTicks, 3f, 3f * cannon.getSizeMultiplier());
-		GlStateManager.rotate(entity.ticksExisted * 10, 0, 0, 1);
 
 	}
+
 
 	@Override
 	protected ResourceLocation getTexture() {
