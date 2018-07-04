@@ -14,8 +14,10 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -54,6 +56,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	public void onUpdate() {
 		super.onUpdate();
 
+		if (world instanceof WorldServer) {
+			WorldServer World = (WorldServer) world;
+			World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, posX, posY, posZ, 4, 0.1, 0.1, 0.1, 0);
+			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY, posZ, 20, 0.1, 0.1, 0.1, 0);
+		}
 		if (getOwner() != null) {
 			Vector direction = Vector.getLookRectangular(getOwner());
 			this.setVelocity(direction.times(20));
