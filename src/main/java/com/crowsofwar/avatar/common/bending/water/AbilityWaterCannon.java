@@ -52,10 +52,11 @@ public class AbilityWaterCannon extends Ability {
 			else if (targetPos != null) {
 				if (hasChi && !hasWaterCharge) {
 					world.setBlockToAir(targetPos.toBlockPos());
-					EntityEarthspike spike = new EntityEarthspike(world);
+					/*EntityEarthspike spike = new EntityEarthspike(world);
 					spike.setPosition(targetPos);
 					spike.setOwner(entity);
-					world.spawnEntity(spike);
+					world.spawnEntity(spike);**/
+					//For debugging
 					ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
 				}
 			}

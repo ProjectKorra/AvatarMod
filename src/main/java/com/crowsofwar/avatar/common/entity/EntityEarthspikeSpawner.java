@@ -19,6 +19,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
@@ -68,55 +69,59 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (!world.isRemote && ticksExisted >= maxTicksAlive) {
-			setDead();
-		}
+		if (!world.isRemote) {
 
-		BlockPos below = getPosition().offset(EnumFacing.DOWN);
-		Block belowBlock = world.getBlockState(below).getBlock();
-
-		if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
-				world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
-				SoundCategory.PLAYERS, 1, 1, false);
-
-		if (ticksExisted % 3 == 0) {
-			EntityEarthspike earthspike = new EntityEarthspike(world);
-			earthspike.posX = this.posX;
-			earthspike.posY = this.posY;
-			earthspike.posZ = this.posZ;
-			earthspike.setOwner(getOwner());
-			earthspike.setWorld(world);
-			earthspike.setDamageMult(damageMult);
-			world.spawnEntity(earthspike);
-		}
-
-		if (!world.getBlockState(below).isNormalCube()) {
-			setDead();
-		}
-
-		if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && !unstoppable) {
-			setDead();
-		}
-
-		// Destroy if in a block
-		IBlockState inBlock = world.getBlockState(getPosition());
-		if (inBlock.isFullBlock()) {
-			setDead();
-		}
-
-		// Destroy non-solid blocks in the earthspike
-		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
-
-			if (inBlock.getBlockHardness(world, getPosition()) == 0) {
-
-				breakBlock(getPosition());
-
-			} else {
-
+			if (ticksExisted >= maxTicksAlive) {
 				setDead();
+			}
+
+			BlockPos below = getPosition().offset(EnumFacing.DOWN);
+			Block belowBlock = world.getBlockState(below).getBlock();
+
+			if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
+					world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
+					SoundCategory.PLAYERS, 1, 1, false);
+
+			if (ticksExisted % 3 == 0) {
+				World World = this.getEntityWorld();
+				EntityEarthspike earthspike = new EntityEarthspike(world);
+				earthspike.posX = this.posX;
+				earthspike.posY = this.posY;
+				earthspike.posZ = this.posZ;
+				earthspike.setOwner(getOwner());
+				earthspike.setDamageMult(damageMult);
+				World.spawnEntity(earthspike);
+			}
+
+			if (!world.getBlockState(below).isNormalCube()) {
+				setDead();
+			}
+
+			if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && !unstoppable) {
+				setDead();
+			}
+
+			// Destroy if in a block
+			IBlockState inBlock = world.getBlockState(getPosition());
+			if (inBlock.isFullBlock()) {
+				setDead();
+			}
+
+			// Destroy non-solid blocks in the earthspike
+			if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
+
+				if (inBlock.getBlockHardness(world, getPosition()) == 0) {
+
+					breakBlock(getPosition());
+
+				} else {
+
+					setDead();
+				}
 			}
 		}
 	}
+
 
 
 	@Override
