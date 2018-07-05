@@ -239,7 +239,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
 
-		// Note... only called server-side
+		/*// Note... only called server-side
 		double amt = 0.4;
 
 		boolean ns = direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH;
@@ -278,8 +278,9 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			} else {
 				velocity = velocity.withX(amt);
 			}
-		}
-
+		}**/
+		//Uhhh why not just do entity.onCollideWithSolid or something like that?
+		entity.isCollided = true;
 		if (entity instanceof AvatarEntity) {
 
 			AvatarEntity avEnt = (AvatarEntity) entity;
