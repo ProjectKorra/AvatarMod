@@ -44,7 +44,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_SIZE, 1.5f);
+		dataManager.register(SYNC_SIZE, 1f);
 	}
 
 	@Override
@@ -68,7 +68,14 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 
 
-		if (ticksExisted >= 125 && !world.isRemote) {
+		if (this.ticksExisted >= 125 && !world.isRemote) {
+			setDead();
+			//getControlPoint(0).setDead();
+			//getControlPoint(1).setDead();
+
+		}
+
+		if (getOwner() == null) {
 			setDead();
 		}
 
@@ -81,6 +88,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 		// First control point (at front) should just follow water cannon
 		getControlPoint(0).setPosition(Vector.getEntityPos(this));
+
 
 
 		// Second control point (at back) should stay near the player
@@ -101,6 +109,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	}
 
+
 	/**
 	 * Custom water cannon collision detection which uses raytrace. Required since water cannon moves
 	 * quickly and can sometimes "glitch" through an entity without detecting the collision.
@@ -112,9 +121,19 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				().magnitude() / 20, entity -> entity != getOwner() && entity != this);
 
 		for (Entity collided : collisions) {
-			onCollideWithEntity(collided);
+			if (canCollideWith(collided)) {
+				onCollideWithEntity(collided);
+			}
 		}
 
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
+		if (this.isDead && !world.isRemote) {
+			Thread.dumpStack();
+		}
 	}
 
 	private void damageEntity(EntityLivingBase entity, float damageModifier) {
@@ -141,7 +160,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			if (getOwner() != null) {
 				BendingData data = BendingData.get(getOwner());
 				AbilityData abilityData = data.getAbilityData("water_cannon");
-				abilityData.addXp(SKILLS_CONFIG.struckWithLightning);
+				abilityData.addXp(SKILLS_CONFIG.waterHit/2);
 			}
 		}
 
@@ -149,6 +168,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
+		if (entity instanceof AvatarEntity) {
+			if (((AvatarEntity) entity).getOwner() == getOwner()) {
+				return false;
+			}
+		}
 		return entity != getOwner() || entity instanceof EntityLivingBase;
 	}
 

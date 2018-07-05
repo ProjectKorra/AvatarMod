@@ -39,13 +39,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		super(15, CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
 
-	/*private int punchesLeft;
-	private boolean firstPunch;
-
-	public void setFirstPunch(boolean punch) {
-		this.firstPunch = punch;
-	}
-	**/
 
 	@Override
 	public boolean execute(BendingContext ctx) {
@@ -53,28 +46,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		World world = ctx.getWorld();
 		AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
 		EntityFireball fireball = new EntityFireball(world);
-		/*if (firstPunch){
-			System.out.println(firstPunch);
-			punchesLeft = 1;
 
-			if (abilityData.getLevel() >= 2) {
-				punchesLeft = 2;
-			}
-
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				punchesLeft = 1;
-				// Creates a bunch of fire blocks around the target
-			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				punchesLeft = 3;
-			}
-			firstPunch = false;
-		}
-		System.out.println(firstPunch);
-		if (punchesLeft > 0) {
-			punchesLeft--;
-		}
-		return punchesLeft <= 0;*/
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			Vector playerPos = getEyePos(entity);
 			Vector target = playerPos.plus(getLookRectangular(entity).times(2.5));
@@ -111,7 +83,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 				int fireTime = 5;
 				float damageModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
 				float damage = 3 + (3 * damageModifier);
-				//int punchesLeft = 1;
 
 				if (abilityData.getLevel() >= 1) {
 					damage = 4 + (4 * damageModifier);
@@ -121,18 +92,15 @@ public class StatCtrlInfernoPunch extends StatusControl {
 					damage = 5 + (5 * damageModifier);
 					knockBack = 1.25F;
 					fireTime = 8;
-					//punchesLeft = 2;
 				}
 				if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 					damage = 10 + (10 * damageModifier);
 					knockBack = 1.5F;
 					fireTime = 15;
-					//Creates a bunch of fire blocks around the target
 				} else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 					damage = 2 + (2 * damageModifier);
 					knockBack = 0.75F;
 					fireTime = 4;
-					//punchesLeft = 3;
 				}
 				if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
 					if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
@@ -144,8 +112,11 @@ public class StatCtrlInfernoPunch extends StatusControl {
 								WorldServer World = (WorldServer) target.getEntityWorld();
 								World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY, target.posZ, 200, 0.05, 0.05, 0.05, 0.75);
 								fireExplosion.doExplosionB(true);
+								World.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
+										SoundCategory.PLAYERS, 1, 2);
 							}
 						}
+
 						DamageSource ds = DamageSource.MAGIC;
 						target.attackEntityFrom(ds, damage);
 						target.setFire(fireTime);
