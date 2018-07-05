@@ -38,7 +38,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	public EntityWaterCannon(World world) {
 		super(world);
 		setSize(1.5f * getSizeMultiplier(), 1.5f * getSizeMultiplier());
-		damage = 1;
+		damage = 0.5F;
 	}
 
 	@Override
@@ -59,8 +59,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 		if (world instanceof WorldServer) {
 			WorldServer World = (WorldServer) world;
-			World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, posX, posY, posZ, 4, 0.1, 0.1, 0.1, 0);
-			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY, posZ, 20, 0.1, 0.1, 0.1, 0);
+			World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, posX, posY, posZ, 4, 0.1, 0.1, 0.1, 0.005);
+			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY, posZ, 200, 0.1, 0.1, 0.1, 0.03);
 		}
 		if (getOwner() != null) {
 			Vector direction = Vector.getLookRectangular(getOwner());
@@ -68,9 +68,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 
 
-		boolean existTooLong = ticksExisted >= 150;
-
-		if (existTooLong) {
+		if (ticksExisted >= 125 && !world.isRemote) {
 			setDead();
 		}
 
@@ -96,11 +94,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (entity instanceof EntityLivingBase && !(entity instanceof AvatarEntity)) {
+
 			damageEntity((EntityLivingBase) entity, 1);
 			world.playSound(null, getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH,
 					SoundCategory.PLAYERS, 1, 1);
-		}
+
 	}
 
 	/**
@@ -151,7 +149,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		return entity != getOwner();
+		return entity != getOwner() || entity instanceof EntityLivingBase;
 	}
 
 	@Override
