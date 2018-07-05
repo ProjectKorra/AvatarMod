@@ -93,9 +93,9 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	@Override
-	public void onUpdate() {
+	public void onEntityUpdate() {
 
-		super.onUpdate();
+		super.onEntityUpdate();
 
 		//For some reason earthspike thinks it's clientside. I don't why
 		//HHAAAAALLPPP MEEEEE
@@ -119,12 +119,11 @@ public class EntityEarthspike extends AvatarEntity {
 					}
 				}
 			}
-		}
-
-		if (!world.isRemote && getOwner() != null) {
-			BendingData data = BendingData.get(getOwner());
-			if (data != null) {
-				data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.earthspikeHit * attacked);
+			if (getOwner() != null) {
+				BendingData data = BendingData.get(getOwner());
+				if (data != null) {
+					data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.earthspikeHit * attacked);
+				}
 			}
 		}
 	}
