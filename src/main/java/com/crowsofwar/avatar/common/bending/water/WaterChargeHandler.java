@@ -67,7 +67,7 @@ public class WaterChargeHandler extends TickHandler {
 
 			}
 
-		} else if (duration >= durationToFire) {
+		} else if (duration == durationToFire) {
 
 			speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			speed += powerRating / 15;
