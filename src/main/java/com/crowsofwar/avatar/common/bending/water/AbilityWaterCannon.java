@@ -52,14 +52,7 @@ public class AbilityWaterCannon extends Ability {
 			if (hasChi && !hasWaterCharge) {
 				world.setBlockToAir(targetPos.toBlockPos());
 				Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-				EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
-				earthspike.setOwner(entity);
-				earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
-				earthspike.setVelocity(look.times(8));
-				earthspike.setDamageMult((float) (1 * ctx.getPowerRatingDamageMod()));
-				//For Earthspike's damagemult.
-				earthspike.setDuration(15);
-				world.spawnEntity(earthspike);
+
 				
 				/*EntityEarthspike spike = new EntityEarthspike(world);
 				spike.setPosition(targetPos);
