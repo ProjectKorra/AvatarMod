@@ -242,7 +242,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	protected void onCollideWithEntity(Entity entity) {
 
 		// Note... only called server-side
-		double amt = 0.2;
+		double amt = 0.05;
 
 		boolean ns = direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH;
 		if (ns) {
@@ -267,7 +267,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			entity.motionX = amt;
 		}
 
-		entity.motionY = .1;
+		entity.motionY = 0.01;
 
 		entity.isAirBorne = true;
 		if (entity instanceof EntityPlayerMP) {
@@ -281,7 +281,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 				velocity = velocity.withX(amt);
 			}
 		}
-		
+
 		if (entity instanceof AvatarEntity) {
 
 			AvatarEntity avEnt = (AvatarEntity) entity;
