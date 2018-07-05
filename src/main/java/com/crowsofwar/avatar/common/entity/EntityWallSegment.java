@@ -30,6 +30,7 @@ import com.google.common.base.Optional;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -236,11 +237,12 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		return false;
 	}
 
+
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
 
-		/*// Note... only called server-side
-		double amt = 0.4;
+		// Note... only called server-side
+		double amt = 0.2;
 
 		boolean ns = direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH;
 		if (ns) {
@@ -265,7 +267,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			entity.motionX = amt;
 		}
 
-		entity.motionY = .25;
+		entity.motionY = .1;
 
 		entity.isAirBorne = true;
 		if (entity instanceof EntityPlayerMP) {
@@ -278,9 +280,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			} else {
 				velocity = velocity.withX(amt);
 			}
-		}**/
-		//Uhhh why not just do entity.onCollideWithSolid or something like that?
-		entity.isCollided = true;
+		}
+		
 		if (entity instanceof AvatarEntity) {
 
 			AvatarEntity avEnt = (AvatarEntity) entity;
@@ -297,6 +298,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			}
 
 		}
+		//this.setVelocity(Vector.ZERO);
+		//For some reason the wall is affected by explosions and whatnot
 
 	}
 
@@ -319,5 +322,6 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		return notWall && !friendlyProjectile;
 
 	}
+
 
 }
