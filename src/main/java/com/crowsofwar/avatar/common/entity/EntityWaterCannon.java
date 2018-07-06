@@ -18,6 +18,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -76,12 +77,22 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			//getControlPoint(1).setDead();
 
 		}
+		Raytrace.Result hit = Raytrace.raytrace(world, getControlPoint(1).position(), velocity(), 80, false);
+		if (hit.hitSomething()) {
+			Vector hitAt = hit.getPosPrecise();
+			this.setPosition(hitAt);
+			getControlPoint(0).setPosition(hitAt);
+		}
+		//Sets the entity's position to where you're looking, if you're looking at a block.
+
+
 
 		if (getOwner() == null) {
 			setDead();
 		}
 
-		setSize(1.5f * getSizeMultiplier(), 1.5f * getSizeMultiplier());
+
+		//setSize(1.5f * getSizeMultiplier(), 1.5f * getSizeMultiplier());
 
 	}
 
@@ -108,10 +119,14 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			damageEntity((EntityLivingBase) entity, 1);
 			world.playSound(null, getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH,
 					SoundCategory.PLAYERS, 1, 1);
-			this.setVelocity(Vector.ZERO);
 
 	}
 
+
+	@Override
+	public AxisAlignedBB getEntityBoundingBox() {
+		return super.getEntityBoundingBox();
+	}
 
 	/**
 	 * Custom water cannon collision detection which uses raytrace. Required since water cannon moves
@@ -120,17 +135,18 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	protected void collideWithNearbyEntities() {
 
-		List<Entity> collisions = Raytrace.entityRaytrace(world, Vector.getEyePos(getOwner()), velocity(), velocity
+		List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), velocity(), velocity
 				().magnitude() / 20, entity -> entity != getOwner() && entity != this);
 
-
 		for (Entity collided : collisions) {
-			if (canCollideWith(collided)) {
+			if (canCollideWith(collided) && this.getPosition() == collided.getPosition()) {
 				onCollideWithEntity(collided);
+				this.setPosition(collided.posX, collided.posY, collided.posZ);
 			}
 		}
 
 	}
+
 
 	@Override
 	public void setDead() {

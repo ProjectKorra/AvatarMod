@@ -101,6 +101,16 @@ public class EntityAirBubble extends EntityShield {
 	}
 
 	@Override
+	public void setPositionAndRotation(double x, double y, double z, float yaw, float pitch) {
+
+	}
+
+	@Override
+	public void setPositionAndUpdate(double x, double y, double z) {
+		 setPositionAndUpdate(getOwner().posX, getOwner().posY, getOwner().posZ);
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 
