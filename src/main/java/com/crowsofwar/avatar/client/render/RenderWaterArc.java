@@ -63,7 +63,7 @@ public class RenderWaterArc extends RenderArc {
 						 float partialTicks) {
 
 		EntityWaterArc arc = (EntityWaterArc) entity;
-		renderArc(arc, partialTicks, 3f, 3.5F * arc.getSize());
+		renderArc(arc, partialTicks, 3f, 3 * arc.getSize());
 
 	}
 
