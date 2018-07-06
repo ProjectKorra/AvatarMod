@@ -92,7 +92,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 
 
-		//setSize(1.5f * getSizeMultiplier(), 1.5f * getSizeMultiplier());
+		setSize(4,4);
 
 	}
 
@@ -122,11 +122,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	}
 
-
-	@Override
-	public AxisAlignedBB getEntityBoundingBox() {
-		return super.getEntityBoundingBox();
-	}
 
 	/**
 	 * Custom water cannon collision detection which uses raytrace. Required since water cannon moves
