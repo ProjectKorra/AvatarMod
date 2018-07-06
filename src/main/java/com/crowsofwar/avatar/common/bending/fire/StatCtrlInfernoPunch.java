@@ -54,16 +54,11 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			fireball.setPosition(target);
 			fireball.setOwner(entity);
 			fireball.setDamage(0.5F);
-			fireball.setBehavior(new FireballBehavior.PlayerControlled());
+			fireball.addVelocity(Vector.getLookRectangular(entity).times(40));
+			fireball.setBehavior(new FireballBehavior.Thrown());
+			fireball.setSize(20);
 			world.spawnEntity(fireball);
-
-
-			EntityFireball fireball1 = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
-
-			if (fireball1 != null) {
-				fireball1.addVelocity(Vector.getLookRectangular(entity).times(40));
-				fireball1.setBehavior(new FireballBehavior.Thrown());
-			}
+			return true;
 		}
 		return false;
 
