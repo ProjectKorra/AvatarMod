@@ -10,6 +10,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -106,6 +107,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			damageEntity((EntityLivingBase) entity, 1);
 			world.playSound(null, getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH,
 					SoundCategory.PLAYERS, 1, 1);
+			this.setVelocity(Vector.ZERO);
 
 	}
 
@@ -156,7 +158,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			// Add Experience
 			// Although 2 water cannon entities are fired in each water cannon ability, this won't
 			// cause 2x XP rewards as this only happens when the entity is successfully attacked
-			// (hurtResistantTime prevents the 2 water cannon entities from both damaging at once)
 			if (getOwner() != null) {
 				BendingData data = BendingData.get(getOwner());
 				AbilityData abilityData = data.getAbilityData("water_cannon");
@@ -173,7 +174,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				return false;
 			}
 		}
-		return entity != getOwner() || entity instanceof EntityLivingBase;
+		return entity != getOwner() && !(entity instanceof EntityItem);
 	}
 
 	@Override
