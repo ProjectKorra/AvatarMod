@@ -69,19 +69,23 @@ public class AbilityWaterArc extends Ability {
 			}
 			float damageMult = 1F;
 			float gravity = 8;
+			float size = 0.5F;
 			//The water arc number in the combo.
 
 			if (ctx.getLevel() == 1) {
 				damageMult = 1.25F;
 				gravity = 7.5F;
+				size = 0.75F;
 			}
 			if (ctx.getLevel() == 2) {
 				damageMult = 1.5F;
 				gravity = 7;
+				size = 1F;
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				damageMult = 3F;
 				gravity = 3;
+				size = 1.25F;
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 				damageMult = 1 + comboNumber / 2;
@@ -102,7 +106,7 @@ public class AbilityWaterArc extends Ability {
 
 					if (comboNumber == 3) {
 						//Massive Singular water arc; kinda like airgust
-						water.setSize(0.9F);
+						size = 1.5F;
 						gravity = 2;
 						comboNumber = 1;
 					}
@@ -112,6 +116,7 @@ public class AbilityWaterArc extends Ability {
 
 					if (comboNumber == 2) {
 						gravity = -9.81F;
+						size = 1F;
 					}
 
 					System.out.println(comboNumber);
@@ -123,6 +128,7 @@ public class AbilityWaterArc extends Ability {
 
 					water.setOwner(entity);
 					water.setPosition(look);
+					water.setSize(size);
 					water.setDamageMult(damageMult);
 					water.setStartingPosition(entity.getPosition());
 					water.setVelocity(force);
