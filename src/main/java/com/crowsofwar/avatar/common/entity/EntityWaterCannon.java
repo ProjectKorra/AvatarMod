@@ -18,6 +18,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
@@ -58,11 +59,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (world instanceof WorldServer) {
+		/*if (world instanceof WorldServer) {
 			WorldServer World = (WorldServer) world;
 			World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, posX, posY, posZ, 4, 0.1, 0.1, 0.1, 0.005);
 			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY, posZ, 200, 0.1, 0.1, 0.1, 0.03);
-		}
+		}**/
 		if (getOwner() != null) {
 			Vector direction = Vector.getLookRectangular(getOwner());
 			this.setVelocity(direction.times(20));
@@ -119,8 +120,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	protected void collideWithNearbyEntities() {
 
-		List<Entity> collisions = Raytrace.entityRaytrace(world, position(), velocity(), velocity
+		List<Entity> collisions = Raytrace.entityRaytrace(world, Vector.getEyePos(getOwner()), velocity(), velocity
 				().magnitude() / 20, entity -> entity != getOwner() && entity != this);
+
 
 		for (Entity collided : collisions) {
 			if (canCollideWith(collided)) {
@@ -174,7 +176,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				return false;
 			}
 		}
-		return entity != getOwner() && !(entity instanceof EntityItem);
+		return entity != getOwner() && !(entity instanceof EntityItem) && !(entity instanceof EntityWaterCannon);
 	}
 
 	@Override
