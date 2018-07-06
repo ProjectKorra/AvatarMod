@@ -94,7 +94,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 				entity.onCollideWithSolid();
 			}
 
-			entity.addVelocity(Vector.DOWN.times(9.81 / 40));
+			entity.addVelocity(Vector.DOWN.times(1 / 40));
 
 			World world = entity.world;
 			if (!entity.isDead) {

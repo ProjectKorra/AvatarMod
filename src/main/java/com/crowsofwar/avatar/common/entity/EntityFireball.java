@@ -191,6 +191,11 @@ public class EntityFireball extends AvatarEntity {
 		nbt.setInteger("Behavior", getBehavior().getId());
 	}
 
+	@Override
+	public boolean isGlowing() {
+		return true;
+	}
+
 	public AxisAlignedBB getExpandedHitbox() {
 		return this.expandedHitbox;
 	}
