@@ -82,7 +82,7 @@ public class EntityFireball extends AvatarEntity {
 			setDead();
 			removeStatCtrl();
 		}
-		
+
 		BendingData data = BendingData.get(getOwner());
 		if (getBehavior() instanceof FireballBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
 			setDead();
