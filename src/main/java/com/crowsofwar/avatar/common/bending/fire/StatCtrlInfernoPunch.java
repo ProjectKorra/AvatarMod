@@ -48,18 +48,17 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		EntityFireball fireball = new EntityFireball(world);
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			Vector playerPos = getEyePos(entity);
-			Vector target = playerPos.plus(getLookRectangular(entity).times(2.5));
+				Vector playerPos = getEyePos(entity);
+				Vector target = playerPos.plus(getLookRectangular(entity).times(2.5));
 
-			fireball.setPosition(target);
-			fireball.setOwner(entity);
-			fireball.setDamage(0.5F);
-			fireball.addVelocity(Vector.getLookRectangular(entity).times(40));
-			fireball.setBehavior(new FireballBehavior.Thrown());
-			fireball.setSize(20);
-			world.spawnEntity(fireball);
-			return true;
-		}
+				fireball.setPosition(target);
+				fireball.setOwner(entity);
+				fireball.setDamage(0.5F);
+				fireball.addVelocity(Vector.getLookRectangular(entity).times(20));
+				fireball.setBehavior(new FireballBehavior.Thrown());
+				world.spawnEntity(fireball);
+				return true;
+			}
 		return false;
 
 	}

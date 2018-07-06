@@ -67,11 +67,7 @@ public class RenderFireball extends Render<EntityFireball> {
 		float rotation = ticks / 5f;
 		float size = .8f + cos(ticks / 5f) * .05f;
 		size *= Math.sqrt(entity.getSize() / 30f);
-		Bender ctx = Bender.get(entity.getOwner());
-		AbilityData data = ctx.getData().getAbilityData("inferno_punch");
-		if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)){
-			entity.setSize(1);
-		}
+
 		
 		enableBlend();
 		if (entity.ticksExisted % 3 == 0) {
