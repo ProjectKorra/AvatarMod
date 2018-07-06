@@ -42,7 +42,7 @@ public class ConfigStats {
 			waveSettings = new AttackSettings(6, 6), //
 			airbladeSettings = new AttackSettings(4, .03), //
 			fireArcSettings = new AttackSettings(4, 1),   //
-			waterArcSettings = new AttackSettings(3, 1),
+			waterArcSettings = new AttackSettings(1.5F, 1),
 			boulderSettings = new AttackSettings(0.1F, 0.1);
 
 	@Load
@@ -75,7 +75,7 @@ public class ConfigStats {
 			chiBuffLvl4 = 4f,
 			chiBoulderRing = 3F,
 			chiCloudburst = 2.5F,
-			chiEarthspike = 5F,
+			chiEarthspike = 4.5F,
 			chiExplosion = 3F,
 			chiExplosionUpgraded = 4.5f,
 			chiExplosivePillar = 4F,
@@ -105,6 +105,7 @@ public class ConfigStats {
 			chiSmallInfernoPunch = 1F,
 			chiLargeInfernoPunch = 6F,
 			chiSandstorm = 3f,
+			chiShockwave = 6F,
 			chiWaterCannon = 5f,
 			chiFireJump = 2f;
 	// @formatter:on

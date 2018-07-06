@@ -88,8 +88,9 @@ public class AbilityWaterArc extends Ability {
 				size = 1.25F;
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-				damageMult = 1 + comboNumber / 2;
+				damageMult = comboNumber >= 3 ? 1 : 2;
 				gravity = 9.81F;
+				size = 0.5F;
 			}
 
 			if (bender.consumeChi(STATS_CONFIG.chiWaterArc)) {
@@ -141,6 +142,7 @@ public class AbilityWaterArc extends Ability {
 					water.setOwner(entity);
 					water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
 					water.setDamageMult(damageMult);
+					water.setSize(size);
 					water.setStartingPosition(entity.getPosition());
 					water.setBehavior(new WaterArcBehavior.PlayerControlled());
 					water.isSpear(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
