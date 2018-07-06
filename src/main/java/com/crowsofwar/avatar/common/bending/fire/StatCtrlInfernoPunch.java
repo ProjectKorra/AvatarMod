@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -112,8 +113,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 
 						world.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
 								SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
-						DamageSource ds = DamageSource.MAGIC;
-						target.attackEntityFrom(ds, damage);
+
+						target.attackEntityFrom(DamageSource.IN_FIRE, damage);
 						target.setFire(fireTime);
 						target.motionX += direction.x() * knockBack;
 						target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
