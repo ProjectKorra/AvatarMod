@@ -56,13 +56,14 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			fireball.setDamage(0.5F);
 			fireball.setBehavior(new FireballBehavior.PlayerControlled());
 			world.spawnEntity(fireball);
-		}
-		
-		EntityFireball fireball1 = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
-		
-		if (fireball1 != null) {
-			fireball1.addVelocity(Vector.getLookRectangular(entity).times(40));
-			fireball1.setBehavior(new FireballBehavior.Thrown());
+
+
+			EntityFireball fireball1 = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
+
+			if (fireball1 != null) {
+				fireball1.addVelocity(Vector.getLookRectangular(entity).times(40));
+				fireball1.setBehavior(new FireballBehavior.Thrown());
+			}
 		}
 		return false;
 
@@ -112,11 +113,11 @@ public class StatCtrlInfernoPunch extends StatusControl {
 								WorldServer World = (WorldServer) target.getEntityWorld();
 								World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY, target.posZ, 200, 0.05, 0.05, 0.05, 0.75);
 								fireExplosion.doExplosionB(true);
-								World.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
-										SoundCategory.PLAYERS, 1, 2);
 							}
 						}
 
+						world.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
+								SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 						DamageSource ds = DamageSource.MAGIC;
 						target.attackEntityFrom(ds, damage);
 						target.setFire(fireTime);
