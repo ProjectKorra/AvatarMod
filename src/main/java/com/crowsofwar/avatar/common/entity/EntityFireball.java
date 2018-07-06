@@ -33,9 +33,12 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+
+import javax.annotation.Nullable;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -79,7 +82,7 @@ public class EntityFireball extends AvatarEntity {
 			setDead();
 			removeStatCtrl();
 		}
-
+		
 		BendingData data = BendingData.get(getOwner());
 		if (getBehavior() instanceof FireballBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
 			setDead();
@@ -192,9 +195,10 @@ public class EntityFireball extends AvatarEntity {
 	}
 
 	@Override
-	public boolean isGlowing() {
-		return true;
+	public int getBrightnessForRender() {
+		return 150;
 	}
+
 
 	public AxisAlignedBB getExpandedHitbox() {
 		return this.expandedHitbox;

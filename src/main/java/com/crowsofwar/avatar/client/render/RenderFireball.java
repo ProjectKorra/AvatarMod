@@ -19,8 +19,10 @@ package com.crowsofwar.avatar.client.render;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
+import javafx.scene.effect.Glow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
@@ -57,7 +59,7 @@ public class RenderFireball extends Render<EntityFireball> {
 	@Override
 	public void doRender(EntityFireball entity, double xx, double yy, double zz, float entityYaw,
 			float partialTicks) {
-		
+
 		float x = (float) xx, y = (float) yy, z = (float) zz;
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
@@ -70,6 +72,8 @@ public class RenderFireball extends Render<EntityFireball> {
 
 		
 		enableBlend();
+
+		entity.getBrightnessForRender();
 		if (entity.ticksExisted % 3 == 0) {
 			World world = entity.world;
 			AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
@@ -78,7 +82,7 @@ public class RenderFireball extends Render<EntityFireball> {
 			double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 			world.spawnParticle(EnumParticleTypes.FLAME, spawnX, spawnY, spawnZ, 0, 0, 0);
 		}
-		
+
 		if (MinecraftForgeClient.getRenderPass() == 0) {
 			
 			renderCube(x, y, z, //
