@@ -19,8 +19,10 @@ package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.ControlPoint;
 import com.crowsofwar.avatar.common.entity.EntityArc;
+import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 
@@ -55,5 +57,15 @@ public class RenderWaterArc extends RenderArc {
 		arc.world.spawnParticle(EnumParticleTypes.WATER_SPLASH, spawnAt.x(), spawnAt.y(), spawnAt.z(),
 				velocity.x(), velocity.y(), velocity.z());
 	}
+
+	@Override
+	public void doRender(Entity entity, double xx, double yy, double zz, float p_76986_8_,
+						 float partialTicks) {
+
+		EntityWaterArc arc = (EntityWaterArc) entity;
+		renderArc(arc, partialTicks, 3f, arc.getSize());
+
+	}
+
 
 }

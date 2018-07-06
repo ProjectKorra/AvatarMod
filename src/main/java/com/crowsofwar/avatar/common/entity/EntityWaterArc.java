@@ -61,6 +61,9 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	private static final DataParameter<WaterArcBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterArc.class, WaterArcBehavior.DATA_SERIALIZER);
 
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager
+			.createKey(EntityWaterArc.class, DataSerializers.FLOAT);
+
 	/**
 	 * The amount of ticks since last played splash sound. -1 for splashable.
 	 */
@@ -100,7 +103,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	public void setSize(float size) {
-		this.Size = size;
+		dataManager.set(SYNC_SIZE, Size);
+	}
+
+	public float getSize() {
+		return dataManager.get(SYNC_SIZE);
 	}
 
 	public float getGravity() {
@@ -118,6 +125,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new WaterArcBehavior.Idle());
+		dataManager.register(SYNC_SIZE, Size);
 	}
 
 

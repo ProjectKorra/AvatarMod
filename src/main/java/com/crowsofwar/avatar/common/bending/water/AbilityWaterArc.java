@@ -100,7 +100,7 @@ public class AbilityWaterArc extends Ability {
 						comboNumber = 1;
 					}
 
-					if (comboNumber >= 3) {
+					if (comboNumber == 3) {
 						//Massive Singular water arc; kinda like airgust
 						water.setSize(0.9F);
 						gravity = 2;
@@ -114,8 +114,10 @@ public class AbilityWaterArc extends Ability {
 						gravity = -9.81F;
 					}
 
+					System.out.println(comboNumber);
+
 					Vector playerEye = Vector.getEyePos(entity);
-					Vector look = playerEye.plus(getLookRectangular(entity).times(2.5));
+					Vector look = playerEye.plus(getLookRectangular(entity).times(1.5));
 					Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch));
 					force = force.times(15 + comboNumber);
 
