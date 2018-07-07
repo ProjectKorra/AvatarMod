@@ -19,6 +19,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -92,7 +93,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 
 
-		setSize(4,4);
+		setSize(2,2);
 
 	}
 
@@ -122,6 +123,13 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	}
 
+	@Override
+	public AxisAlignedBB getEntityBoundingBox() {
+		BlockPos Pos = this.getPosition().add(0, -1, 0);
+		AxisAlignedBB hitBox = new AxisAlignedBB(Pos) ;
+		hitBox.grow(2,2,2);
+		return hitBox;
+	}
 
 	/**
 	 * Custom water cannon collision detection which uses raytrace. Required since water cannon moves
