@@ -93,6 +93,7 @@ public class AbilityWall extends Ability {
 			}
 
 			wall.setPosition(lookPos.getX() + .5, lookPos.getY(), lookPos.getZ() + .5);
+			wall.setOwner(entity);
 			for (int i = 0; i < 5; i++) {
 
 				int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
