@@ -115,7 +115,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	protected void updateCpBehavior() {
 
 		// First control point (at front) should just follow water cannon
-		getControlPoint(0).setPosition(Vector.getEntityPos(this).plusY(1.5*getSizeMultiplier()));
+		getControlPoint(0).setPosition(Vector.getEntityPos(this).plusY(getSizeMultiplier()));
 		//The control point's top gets set to the water cannon; you want the center to be set
 		//to the water cannon.
 
