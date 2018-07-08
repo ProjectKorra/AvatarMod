@@ -142,7 +142,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				().magnitude() / 20, entity -> entity != getOwner() && entity != this);
 
 
+		//collisions.add(Raytrace.Result);
 		System.out.println("Hit!");
+		System.out.println(collisions);
 		if (!collisions.isEmpty()) {
 			System.out.println("Partial success!");
 			for (Entity collided : collisions) {
@@ -155,15 +157,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			}
 		}
 
-	}
-
-
-	@Override
-	public void setDead() {
-		super.setDead();
-		if (this.isDead && !world.isRemote) {
-			Thread.dumpStack();
-		}
 	}
 
 	private void damageEntity(EntityLivingBase entity, float damageModifier) {
