@@ -38,6 +38,7 @@ public class WaterChargeHandler extends TickHandler {
 		float damage;
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		float size = 0.1f;
+		float ticks = 50;
 		//Multiply by 1.5 to get water cannon size
 		int durationToFire = 40;
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
@@ -52,13 +53,14 @@ public class WaterChargeHandler extends TickHandler {
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 
+			ticks = 50;
 			damage = (float) (0.25 * bender.getDamageMult(Waterbending.ID));
 
 			// Fire once every 10 ticks, until we get to 100 ticks
 			// So at fire at 60, 70, 80, 90, 100
 			if (duration >= 40 && duration % 10 == 0) {
 
-				fireCannon(world, entity, damage, speed, size);
+				fireCannon(world, entity, damage, speed, size, ticks);
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 						SoundCategory.PLAYERS, 1, 2);
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
@@ -77,18 +79,21 @@ public class WaterChargeHandler extends TickHandler {
 			if (abilityData.getLevel() >= 1) {
 				damage = (float) (1 * bender.getDamageMult(Waterbending.ID));;
 				size = 0.5f;
+				ticks = 75;
 			}
 			if (abilityData.getLevel() >= 2) {
 				damage =(float) (1.5 * bender.getDamageMult(Waterbending.ID));
 				size = 1f;
+				ticks = 100;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage = (float) (3 * bender.getDamageMult(Waterbending.ID));;
 				size = 2f;
+				ticks = 200;
 			}
 
 			damage *= bender.getDamageMult(Waterbending.ID);
-			fireCannon(world, entity, damage, speed, size);
+			fireCannon(world, entity, damage, speed, size, ticks);
 
 			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
@@ -103,15 +108,15 @@ public class WaterChargeHandler extends TickHandler {
 	}
 
 	private void fireCannon(World world, EntityLivingBase entity, float damage, double speed,
-							float size) {
+							float size, float ticks) {
 
 		EntityWaterCannon cannon = new EntityWaterCannon(world);
 
 		cannon.setOwner(entity);
 		cannon.setDamage(damage);
 		cannon.setSizeMultiplier(size);
-
 		cannon.setPosition(Vector.getEyePos(entity));
+		cannon.setLifeTime(ticks);
 
 		Vector velocity = Vector.getLookRectangular(entity);
 		velocity = velocity.normalize().times(speed);

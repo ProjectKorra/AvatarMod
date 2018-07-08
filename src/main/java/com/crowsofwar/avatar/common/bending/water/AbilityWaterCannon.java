@@ -45,7 +45,7 @@ public class AbilityWaterCannon extends Ability {
 				ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
 			}
 		} else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-			if (hasChi && !hasWaterCharge) {
+			if (!hasWaterCharge) {
 				ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
 			}
 		} else if (targetPos != null) {

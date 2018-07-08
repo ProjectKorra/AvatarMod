@@ -36,8 +36,28 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			(EntityWaterCannon.class, DataSerializers.FLOAT);
 
 
-
 	private float damage;
+	private float lifeTime;
+
+	public float getDamage() {
+		return damage;
+	}
+
+	public void setDamage(float damage) {
+		this.damage = damage;
+	}
+
+	public float getSizeMultiplier() {
+		return dataManager.get(SYNC_SIZE);
+	}
+
+	public void setSizeMultiplier(float sizeMultiplier) {
+		dataManager.set(SYNC_SIZE, sizeMultiplier);
+	}
+
+	public void setLifeTime(float ticks) {
+		this.lifeTime = ticks;
+	}
 
 	public EntityWaterCannon(World world) {
 		super(world);
@@ -61,11 +81,13 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	public void onUpdate() {
 		super.onUpdate();
 
-		/*if (world instanceof WorldServer) {
+		world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
+				SoundCategory.PLAYERS, 1, 2);
+		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
-			World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, posX, posY, posZ, 4, 0.1, 0.1, 0.1, 0.005);
-			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY, posZ, 200, 0.1, 0.1, 0.1, 0.03);
-		}**/
+			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY, posZ, 500, 0, 0, 0, 0.1);
+		}
+
 		if (getOwner() != null) {
 			Vector direction = Vector.getLookRectangular(getOwner());
 			this.setVelocity(direction.times(20));
@@ -73,11 +95,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 
 
-		if (this.ticksExisted >= 125 && !world.isRemote) {
+		if (this.ticksExisted >= lifeTime && !world.isRemote) {
 			setDead();
 
 		}
-		Raytrace.Result hit = Raytrace.raytrace(world, position(), velocity(), velocity().magnitude()/20, false);
+		Raytrace.Result hit = Raytrace.raytrace(world, position(), velocity(), velocity().magnitude() / 20, false);
 		if (hit.hitSomething()) {
 			Vector hitAt = hit.getPosPrecise();
 			this.setPosition(hitAt);
@@ -90,8 +112,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 
 
-
-		setSize(2,2);
+		setSize(2, 2);
 
 	}
 
@@ -100,7 +121,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 		// First control point (at front) should just follow water cannon
 		getControlPoint(0).setPosition(Vector.getEntityPos(this));
-
 
 
 		// Second control point (at back) should stay near the player
@@ -115,9 +135,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
 
-			damageEntity((EntityLivingBase) entity, 1);
-			world.playSound(null, getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH,
-					SoundCategory.PLAYERS, 1, 1);
+		damageEntity((EntityLivingBase) entity);
+		world.playSound(null, getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH,
+				SoundCategory.PLAYERS, 1, 1);
 
 	}
 
@@ -146,15 +166,14 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	}
 
-	private void damageEntity(EntityLivingBase entity, float damageModifier) {
+	private void damageEntity(EntityLivingBase entity) {
 
 		if (world.isRemote) {
 			return;
 		}
 
 		DamageSource damageSource = AvatarDamageSource.causeWaterCannonDamage(entity, getOwner());
-		if (entity.attackEntityFrom(damageSource, damage *
-				damageModifier)) {
+		if (entity.attackEntityFrom(damageSource, damage)) {
 
 			BattlePerformanceScore.addLargeScore(getOwner());
 
@@ -169,7 +188,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			if (getOwner() != null) {
 				BendingData data = BendingData.get(getOwner());
 				AbilityData abilityData = data.getAbilityData("water_cannon");
-				abilityData.addXp(SKILLS_CONFIG.waterHit/2);
+				abilityData.addXp(SKILLS_CONFIG.waterHit / 2);
 			}
 		}
 
@@ -196,21 +215,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		return new EntityWaterCannon.CannonControlPoint(this, index);
 	}
 
-	public float getDamage() {
-		return damage;
-	}
-
-	public void setDamage(float damage) {
-		this.damage = damage;
-	}
-
-	public float getSizeMultiplier() {
-		return dataManager.get(SYNC_SIZE);
-	}
-
-	public void setSizeMultiplier(float sizeMultiplier) {
-		dataManager.set(SYNC_SIZE, sizeMultiplier);
-	}
 
 	public class CannonControlPoint extends ControlPoint {
 
