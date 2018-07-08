@@ -75,8 +75,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 		if (this.ticksExisted >= 125 && !world.isRemote) {
 			setDead();
-			//getControlPoint(0).setDead();
-			//getControlPoint(1).setDead();
 
 		}
 		Raytrace.Result hit = Raytrace.raytrace(world, position(), velocity(), velocity().magnitude()/20, false);
@@ -123,17 +121,13 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	}
 
-	/*@Override
-	public AxisAlignedBB getEntityBoundingBox() {
-		BlockPos Pos = this.getPosition().add(0, -1, 0);
-		AxisAlignedBB hitBox = new AxisAlignedBB(Pos);
-		hitBox.grow(2,2,2);
-		return hitBox;
-	}
-**/
+
 	/**
 	 * Custom water cannon collision detection which uses raytrace. Required since water cannon moves
 	 * quickly and can sometimes "glitch" through an entity without detecting the collision.
+	 * That's because the hitbox is wonky, and also because the hitbox is well, a box, at the end of the water cannon. If
+	 * it were to extend across the entire entity.... Well let's just say that minecraft
+	 * wouldn't be happy.
 	 */
 	@Override
 	protected void collideWithNearbyEntities() {
@@ -141,16 +135,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), velocity(), velocity
 				().magnitude() / 20, entity -> entity != getOwner() && entity != this);
 
-		
-		System.out.println(collisions);
 		if (!collisions.isEmpty()) {
-			System.out.println("Partial success!");
 			for (Entity collided : collisions) {
-				System.out.println("Kind of works");
 				if (canCollideWith(collided)) {
-					System.out.println("SUCCESS BABY");
 					onCollideWithEntity(collided);
-					//this.setPosition(collided.posX, collided.posY, collided.posZ);
+					this.setPosition(collided.posX, collided.posY, collided.posZ);
 				}
 			}
 		}
