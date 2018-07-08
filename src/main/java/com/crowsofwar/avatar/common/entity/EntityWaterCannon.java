@@ -87,7 +87,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 		if (!world.isRemote && this.isCollided) {
 			WorldServer World = (WorldServer) world;
-			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ,  numberOfParticles, 0, 0, 0,  0.05 + getSizeMultiplier()/10);
+			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, numberOfParticles, 0, 0, 0, 0.05 + getSizeMultiplier() / 10);
 		}
 
 		if (getOwner() != null) {
@@ -101,14 +101,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			setDead();
 
 		}
-		/*Raytrace.Result hit = Raytrace.raytrace(world, getControlPoint(1).position(), velocity(), velocity().magnitude() / 20, false);
-		if (hit.hitSomething()) {
-			Vector hitAt = hit.getPosPrecise();
-			this.setPosition(hitAt);
-			getControlPoint(0).setPosition(hitAt);
-		}**/
-		//Sets the entity's position to where you're looking, if you're looking at a block.
-
+		
 		if (getOwner() == null) {
 			setDead();
 		}
@@ -141,7 +134,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		if (!world.isRemote) {
 			int numberOfParticles = (int) (500 * getSizeMultiplier());
 			WorldServer World = (WorldServer) world;
-			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, numberOfParticles, 0, 0, 0,  0.05 + getSizeMultiplier()/10);
+			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, numberOfParticles, 0, 0, 0, 0.05 + getSizeMultiplier() / 10);
 			//Change based on size
 		}
 
@@ -212,7 +205,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				return false;
 			}
 		}
-		return entity != getOwner() && !(entity instanceof EntityItem) && !(entity instanceof EntityWaterCannon);
+		return entity != getOwner() && !(entity instanceof EntityItem) && !(entity instanceof EntityWaterCannon) && entity instanceof EntityLivingBase;
 	}
 
 	@Override
