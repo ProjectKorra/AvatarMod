@@ -86,6 +86,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		if (!world.isRemote && this.isCollided) {
 			WorldServer World = (WorldServer) world;
 			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0, 0, 0,  0.1);
+			//Change based on size
 		}
 
 		if (getOwner() != null) {
@@ -139,6 +140,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
 			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0, 0, 0,  0.1);
+			//Change based on size
 		}
 
 		damageEntity((EntityLivingBase) entity);
