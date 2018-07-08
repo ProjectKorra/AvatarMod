@@ -138,12 +138,10 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	protected void collideWithNearbyEntities() {
 
-		List<Entity> collisions = Raytrace.entityRaytrace(world, position(), Vector.getLookRectangular(this), velocity
+		List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), velocity(), velocity
 				().magnitude() / 20, entity -> entity != getOwner() && entity != this);
 
-
-		//collisions.add(Raytrace.Result);
-		System.out.println("Hit!");
+		
 		System.out.println(collisions);
 		if (!collisions.isEmpty()) {
 			System.out.println("Partial success!");
@@ -152,7 +150,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				if (canCollideWith(collided)) {
 					System.out.println("SUCCESS BABY");
 					onCollideWithEntity(collided);
-					this.setPosition(collided.posX, collided.posY, collided.posZ);
+					//this.setPosition(collided.posX, collided.posY, collided.posZ);
 				}
 			}
 		}
