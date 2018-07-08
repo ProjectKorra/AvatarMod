@@ -83,9 +83,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 		world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 				SoundCategory.PLAYERS, 1, 2);
-		if (!world.isRemote) {
+		if (!world.isRemote && this.isCollided) {
 			WorldServer World = (WorldServer) world;
-			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0, 0, 0,  0.2);
+			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0, 0, 0,  0.1);
 		}
 
 		if (getOwner() != null) {
@@ -133,15 +133,14 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBox(Entity entityIn) {
-		AxisAlignedBB hitBox = new AxisAlignedBB(this.getPosition().add(0, -(1.5 * getSizeMultiplier()), 0));
-		hitBox.grow(1.5 * getSizeMultiplier(), 1.5 * getSizeMultiplier(), 1.5* getSizeMultiplier());
-		return hitBox;
-	}
-
-	@Override
 	protected void onCollideWithEntity(Entity entity) {
 
+
+		if (!world.isRemote && this.isCollided) {
+			WorldServer World = (WorldServer) world;
+			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0, 0, 0,  0.1);
+		}
+		
 		damageEntity((EntityLivingBase) entity);
 		world.playSound(null, getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH,
 				SoundCategory.PLAYERS, 1, 1);
@@ -166,7 +165,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			for (Entity collided : collisions) {
 				if (canCollideWith(collided)) {
 					onCollideWithEntity(collided);
-					this.setPosition(collided.posX, collided.posY+0.5, collided.posZ);
+					//Needed because the water cannon will still glitch through the entity
+					this.setPosition(collided.posX, collided.posY + 2, collided.posZ);
 				}
 			}
 		}
@@ -184,9 +184,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 			BattlePerformanceScore.addSmallScore(getOwner());
 
-			entity.motionY = this.velocity().y();
-			entity.motionZ = this.velocity().z();
-			entity.motionX = this.velocity().x();
+			entity.motionX = this.motionX;
+			entity.motionY = this.motionY;
+			entity.motionZ = this.motionZ;
 			AvatarUtils.afterVelocityAdded(entity);
 
 			// Add Experience
