@@ -38,7 +38,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	private float damage;
 	private float lifeTime;
-	
+
 	public float getDamage() {
 		return damage;
 	}
@@ -107,7 +107,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 
 
-		//setSize((float) 1.5 * getSizeMultiplier(), (float) 1.5 * getSizeMultiplier());
+		setSize((float) 1.5 * getSizeMultiplier(), (float) 1.5 * getSizeMultiplier());
 
 	}
 
@@ -115,7 +115,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	protected void updateCpBehavior() {
 
 		// First control point (at front) should just follow water cannon
-		getControlPoint(0).setPosition(Vector.getEntityPos(this));
+		getControlPoint(0).setPosition(Vector.getEntityPos(this).plusY(1.5*getSizeMultiplier()));
+		//The control point's top gets set to the water cannon; you want the center to be set
+		//to the water cannon.
 
 
 		// Second control point (at back) should stay near the player
@@ -162,7 +164,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				if (canCollideWith(collided)) {
 					onCollideWithEntity(collided);
 					//Needed because the water cannon will still glitch through the entity
-					this.setPosition(collided.posX, collided.posY + 1.5, collided.posZ);
+					this.setPosition(collided.posX, collided.posY + (collided.getEyeHeight()/2), collided.posZ);
 				}
 			}
 		}
