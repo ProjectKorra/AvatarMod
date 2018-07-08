@@ -85,7 +85,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				SoundCategory.PLAYERS, 1, 2);
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
-			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY, posZ, 500, 0, 0, 0, 0.3);
+			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0, 0, 0,  0.2);
 		}
 
 		if (getOwner() != null) {
@@ -99,12 +99,12 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			setDead();
 
 		}
-		Raytrace.Result hit = Raytrace.raytrace(world, getControlPoint(1).position(), velocity(), velocity().magnitude() / 20, false);
+		/*Raytrace.Result hit = Raytrace.raytrace(world, getControlPoint(1).position(), velocity(), velocity().magnitude() / 20, false);
 		if (hit.hitSomething()) {
 			Vector hitAt = hit.getPosPrecise();
 			this.setPosition(hitAt);
 			getControlPoint(0).setPosition(hitAt);
-		}
+		}**/
 		//Sets the entity's position to where you're looking, if you're looking at a block.
 
 		if (getOwner() == null) {
@@ -134,7 +134,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entityIn) {
-		AxisAlignedBB hitBox = new AxisAlignedBB(this.getPosition().add(0, -(1.5* getSizeMultiplier()), 0));
+		AxisAlignedBB hitBox = new AxisAlignedBB(this.getPosition().add(0, -(1.5 * getSizeMultiplier()), 0));
 		hitBox.grow(1.5 * getSizeMultiplier(), 1.5 * getSizeMultiplier(), 1.5* getSizeMultiplier());
 		return hitBox;
 	}
@@ -166,7 +166,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			for (Entity collided : collisions) {
 				if (canCollideWith(collided)) {
 					onCollideWithEntity(collided);
-					this.setPosition(collided.posX, collided.posY, collided.posZ);
+					this.setPosition(collided.posX, collided.posY+0.5, collided.posZ);
 				}
 			}
 		}
@@ -182,11 +182,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		DamageSource damageSource = AvatarDamageSource.causeWaterCannonDamage(entity, getOwner());
 		if (entity.attackEntityFrom(damageSource, damage)) {
 
-			BattlePerformanceScore.addLargeScore(getOwner());
+			BattlePerformanceScore.addSmallScore(getOwner());
 
-			entity.motionY = this.motionY;
-			entity.motionZ = this.motionZ;
-			entity.motionX = this.motionX;
+			entity.motionY = this.velocity().y();
+			entity.motionZ = this.velocity().z();
+			entity.motionX = this.velocity().x();
 			AvatarUtils.afterVelocityAdded(entity);
 
 			// Add Experience
