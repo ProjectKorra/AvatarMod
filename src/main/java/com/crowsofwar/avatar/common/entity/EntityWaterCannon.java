@@ -136,11 +136,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	protected void onCollideWithEntity(Entity entity) {
 
 
-		if (!world.isRemote && this.isCollided) {
+		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
 			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0, 0, 0,  0.1);
 		}
-		
+
 		damageEntity((EntityLivingBase) entity);
 		world.playSound(null, getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH,
 				SoundCategory.PLAYERS, 1, 1);
@@ -166,7 +166,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				if (canCollideWith(collided)) {
 					onCollideWithEntity(collided);
 					//Needed because the water cannon will still glitch through the entity
-					this.setPosition(collided.posX, collided.posY + 2, collided.posZ);
+					this.setPosition(collided.posX, collided.posY + 1.5, collided.posZ);
 				}
 			}
 		}
