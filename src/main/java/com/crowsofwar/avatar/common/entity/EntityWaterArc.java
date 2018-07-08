@@ -330,12 +330,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		return getBehavior() instanceof WaterArcBehavior.PlayerControlled ? getOwner() : null;
 	}
 
-/*	@Override
-	protected double getControlPointTeleportDistanceSq() {
-		return 10;
-		//Lower makes it faster, higher makes it slower.
-	}**/
-
 	public void cleanup() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
