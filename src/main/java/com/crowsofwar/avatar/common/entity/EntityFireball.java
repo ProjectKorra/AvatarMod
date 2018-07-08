@@ -27,11 +27,13 @@ import com.crowsofwar.avatar.common.world.AvatarFireExplosion;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
@@ -87,6 +89,9 @@ public class EntityFireball extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
+		if (ticksExisted % 40 == 0) {
+			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 6, 0.8F);
+		}
 
 		// Add hook or something
 		if (getOwner() == null) {
@@ -156,6 +161,7 @@ public class EntityFireball extends AvatarEntity {
 	public boolean onCollideWithSolid() {
 
 		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
+
 		explosionSize *= getSize() / 30f;
 		explosionSize += getPowerRating() * 2.0 / 100;
 		boolean destroyObsidian = false;
@@ -166,9 +172,10 @@ public class EntityFireball extends AvatarEntity {
 			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 				destroyObsidian = true;
 			}
+
 		}
 
-		AvatarFireExplosion fireExplosion = new AvatarFireExplosion(world, this, posX, posY, posZ, STATS_CONFIG.fireballSettings.explosionSize * this.explosionStrength,
+		AvatarFireExplosion fireExplosion = new AvatarFireExplosion(world, this, posX, posY, posZ, explosionSize * this.explosionStrength,
 				!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
 
 		if (!ForgeEventFactory.onExplosionStart(world, fireExplosion)) {
@@ -186,7 +193,10 @@ public class EntityFireball extends AvatarEntity {
 			}
 		}
 
-		setDead();
+		if (getBehavior() instanceof FireballBehavior.Thrown) {
+			setDead();
+			removeStatCtrl();
+		}
 		return true;
 
 	}

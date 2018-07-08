@@ -47,13 +47,17 @@ public class AbilityFireArc extends Ability {
 	@Override
 	public void execute(AbilityContext ctx) {
 
+		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
+		World world = ctx.getWorld();
+		BendingData data = ctx.getData();
+
+		if (data.hasStatusControl(StatusControl.THROW_FIRE)) {
+			return;
+		}
 
 		if (bender.consumeChi(STATS_CONFIG.chiFireArc)) {
 
-			EntityLivingBase entity = ctx.getBenderEntity();
-			World world = ctx.getWorld();
-			BendingData data = ctx.getData();
 
 			Vector lookPos;
 			if (ctx.isLookingAtBlock()) {
@@ -69,14 +73,16 @@ public class AbilityFireArc extends Ability {
 			damageMult *= ctx.getPowerRatingDamageMod();
 
 			EntityFireArc fire = new EntityFireArc(world);
-			fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
-			fire.setBehavior(new FireArcBehavior.PlayerControlled());
-			fire.setOwner(entity);
-			fire.setDamageMult(damageMult);
-			fire.setCreateBigFire(ctx.isMasterLevel(AbilityTreePath.FIRST));
-			world.spawnEntity(fire);
+			if (lookPos != null) {
+				fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
+				fire.setBehavior(new FireArcBehavior.PlayerControlled());
+				fire.setOwner(entity);
+				fire.setDamageMult(damageMult);
+				fire.setCreateBigFire(ctx.isMasterLevel(AbilityTreePath.FIRST));
+				world.spawnEntity(fire);
 
-			data.addStatusControl(StatusControl.THROW_FIRE);
+				data.addStatusControl(StatusControl.THROW_FIRE);
+			}
 
 		}
 

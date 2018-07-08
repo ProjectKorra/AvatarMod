@@ -276,24 +276,30 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			setBehavior(next);
 		}
 
-		EntityWaterArc arc = AvatarEntity.lookupControlledEntity(world, EntityWaterArc.class, getOwner());
-		BendingData bD = BendingData.get(getOwner());
-		if (arc == null && bD.hasStatusControl(StatusControl.THROW_WATER)) {
-			bD.removeStatusControl(StatusControl.THROW_WATER);
+		if (getOwner() == null) {
+			this.setDead();
 		}
 
-		if (inWater && behavior instanceof WaterArcBehavior.PlayerControlled) {
-			// try to go upwards
-			for (double i = 0.1; i <= 3; i += 0.05) {
-				BlockPos pos = new Vector(this).plus(0, i, 0).toBlockPos();
-				if (world.getBlockState(pos).getBlock() == Blocks.AIR) {
-					setPosition(posX, posY + i, posZ);
-					inWater = false;
-					break;
+		if (getOwner() != null) {
+			EntityWaterArc arc = AvatarEntity.lookupControlledEntity(world, EntityWaterArc.class, getOwner());
+			BendingData bD = BendingData.get(getOwner());
+			if (arc == null && bD.hasStatusControl(StatusControl.THROW_WATER)) {
+				bD.removeStatusControl(StatusControl.THROW_WATER);
+			}
+
+			if (inWater && behavior instanceof WaterArcBehavior.PlayerControlled) {
+				// try to go upwards
+				for (double i = 0.1; i <= 3; i += 0.05) {
+					BlockPos pos = new Vector(this).plus(0, i, 0).toBlockPos();
+					if (world.getBlockState(pos).getBlock() == Blocks.AIR) {
+						setPosition(posX, posY + i, posZ);
+						inWater = false;
+						break;
+					}
 				}
 			}
-		}
 
+		}
 	}
 
 	@Override
@@ -324,11 +330,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		return getBehavior() instanceof WaterArcBehavior.PlayerControlled ? getOwner() : null;
 	}
 
-	@Override
+/*	@Override
 	protected double getControlPointTeleportDistanceSq() {
 		return 10;
 		//Lower makes it faster, higher makes it slower.
-	}
+	}**/
 
 	public void cleanup() {
 		if (getOwner() != null) {
