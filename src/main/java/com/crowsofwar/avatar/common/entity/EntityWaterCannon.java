@@ -83,10 +83,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 		world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 				SoundCategory.PLAYERS, 1, 2);
+		int numberOfParticles = (int) (500 * getSizeMultiplier());
+
 		if (!world.isRemote && this.isCollided) {
 			WorldServer World = (WorldServer) world;
-			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0, 0, 0,  0.1);
-			//Change based on size
+			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ,  numberOfParticles, 0, 0, 0,  0.05 + getSizeMultiplier()/10);
 		}
 
 		if (getOwner() != null) {
@@ -138,8 +139,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 
 		if (!world.isRemote) {
+			int numberOfParticles = (int) (500 * getSizeMultiplier());
 			WorldServer World = (WorldServer) world;
-			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0, 0, 0,  0.1);
+			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, numberOfParticles, 0, 0, 0,  0.05 + getSizeMultiplier()/10);
 			//Change based on size
 		}
 
