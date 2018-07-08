@@ -129,7 +129,6 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		setDead();
 	}
 
 	@Override

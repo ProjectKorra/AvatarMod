@@ -35,6 +35,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
@@ -98,16 +99,6 @@ public class EntityAirBubble extends EntityShield {
 
 	public void setSize(float size) {
 		dataManager.set(SYNC_SIZE, size);
-	}
-
-	@Override
-	public void setPositionAndRotation(double x, double y, double z, float yaw, float pitch) {
-
-	}
-
-	@Override
-	public void setPositionAndUpdate(double x, double y, double z) {
-		 setPositionAndUpdate(getOwner().posX, getOwner().posY, getOwner().posZ);
 	}
 
 	@Override

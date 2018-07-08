@@ -69,6 +69,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		if (getOwner() != null) {
 			Vector direction = Vector.getLookRectangular(getOwner());
 			this.setVelocity(direction.times(20));
+			this.setRotation(getOwner().rotationYaw * -1, getOwner().rotationPitch * -1);
 		}
 
 
@@ -78,7 +79,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			//getControlPoint(1).setDead();
 
 		}
-		Raytrace.Result hit = Raytrace.raytrace(world, getControlPoint(1).position(), velocity(), 80, false);
+		Raytrace.Result hit = Raytrace.raytrace(world, position(), velocity(), velocity().magnitude()/20, false);
 		if (hit.hitSomething()) {
 			Vector hitAt = hit.getPosPrecise();
 			this.setPosition(hitAt);
@@ -86,11 +87,10 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 		//Sets the entity's position to where you're looking, if you're looking at a block.
 
-
-
 		if (getOwner() == null) {
 			setDead();
 		}
+
 
 
 		setSize(2,2);
@@ -123,14 +123,14 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	}
 
-	@Override
+	/*@Override
 	public AxisAlignedBB getEntityBoundingBox() {
 		BlockPos Pos = this.getPosition().add(0, -1, 0);
-		AxisAlignedBB hitBox = new AxisAlignedBB(Pos) ;
+		AxisAlignedBB hitBox = new AxisAlignedBB(Pos);
 		hitBox.grow(2,2,2);
 		return hitBox;
 	}
-
+**/
 	/**
 	 * Custom water cannon collision detection which uses raytrace. Required since water cannon moves
 	 * quickly and can sometimes "glitch" through an entity without detecting the collision.
@@ -138,13 +138,20 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	protected void collideWithNearbyEntities() {
 
-		List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), velocity(), velocity
+		List<Entity> collisions = Raytrace.entityRaytrace(world, position(), Vector.getLookRectangular(this), velocity
 				().magnitude() / 20, entity -> entity != getOwner() && entity != this);
 
-		for (Entity collided : collisions) {
-			if (canCollideWith(collided) && this.getPosition() == collided.getPosition()) {
-				onCollideWithEntity(collided);
-				this.setPosition(collided.posX, collided.posY, collided.posZ);
+
+		System.out.println("Hit!");
+		if (!collisions.isEmpty()) {
+			System.out.println("Partial success!");
+			for (Entity collided : collisions) {
+				System.out.println("Kind of works");
+				if (canCollideWith(collided)) {
+					System.out.println("SUCCESS BABY");
+					onCollideWithEntity(collided);
+					this.setPosition(collided.posX, collided.posY, collided.posZ);
+				}
 			}
 		}
 
