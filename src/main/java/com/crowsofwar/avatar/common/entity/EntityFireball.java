@@ -65,9 +65,6 @@ public class EntityFireball extends AvatarEntity {
 		this.explosionStrength = strength;
 	}
 
-	public float getExplosionStregth() {
-		return explosionStrength;
-	}
 
 	/**
 	 * @param world
@@ -89,7 +86,7 @@ public class EntityFireball extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
-		if (ticksExisted % 40 == 0) {
+		if (ticksExisted % 30 == 0) {
 			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 6, 0.8F);
 		}
 
@@ -160,42 +157,43 @@ public class EntityFireball extends AvatarEntity {
 	@Override
 	public boolean onCollideWithSolid() {
 
-		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
+		if (getBehavior() instanceof FireballBehavior.Thrown) {
+			float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
 
-		explosionSize *= getSize() / 30f;
-		explosionSize += getPowerRating() * 2.0 / 100;
-		boolean destroyObsidian = false;
+			explosionSize *= getSize() / 30f;
+			explosionSize += getPowerRating() * 2.0 / 100;
+			boolean destroyObsidian = false;
 
-		if (getOwner() != null) {
-			AbilityData abilityData = BendingData.get(getOwner())
-					.getAbilityData("fireball");
-			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
-				destroyObsidian = true;
+			if (getOwner() != null) {
+				AbilityData abilityData = BendingData.get(getOwner())
+						.getAbilityData("fireball");
+				if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
+					destroyObsidian = true;
+				}
+
 			}
 
-		}
+			AvatarFireExplosion fireExplosion = new AvatarFireExplosion(world, this, posX, posY, posZ, explosionSize * this.explosionStrength,
+					!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
 
-		AvatarFireExplosion fireExplosion = new AvatarFireExplosion(world, this, posX, posY, posZ, explosionSize * this.explosionStrength,
-				!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
+			if (!ForgeEventFactory.onExplosionStart(world, fireExplosion)) {
+				fireExplosion.doExplosionA();
+				fireExplosion.doExplosionB(true);
 
-		if (!ForgeEventFactory.onExplosionStart(world, fireExplosion)) {
-			fireExplosion.doExplosionA();
-			fireExplosion.doExplosionB(true);
+			}
 
-		}
-
-		if (destroyObsidian) {
-			for (EnumFacing dir : EnumFacing.values()) {
-				BlockPos pos = getPosition().offset(dir);
-				if (world.getBlockState(pos).getBlock() == Blocks.OBSIDIAN) {
-					world.destroyBlock(pos, true);
+			if (destroyObsidian) {
+				for (EnumFacing dir : EnumFacing.values()) {
+					BlockPos pos = getPosition().offset(dir);
+					if (world.getBlockState(pos).getBlock() == Blocks.OBSIDIAN) {
+						world.destroyBlock(pos, true);
+					}
 				}
 			}
-		}
 
-		if (getBehavior() instanceof FireballBehavior.Thrown) {
 			setDead();
 			removeStatCtrl();
+
 		}
 		return true;
 

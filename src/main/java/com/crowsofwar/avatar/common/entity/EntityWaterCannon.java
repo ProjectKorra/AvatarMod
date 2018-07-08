@@ -38,7 +38,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	private float damage;
 	private float lifeTime;
-
+	
 	public float getDamage() {
 		return damage;
 	}
@@ -101,13 +101,13 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			setDead();
 
 		}
-		
+
 		if (getOwner() == null) {
 			setDead();
 		}
 
 
-		setSize((float) 1.5 * getSizeMultiplier(), (float) 1.5 * getSizeMultiplier());
+		//setSize((float) 1.5 * getSizeMultiplier(), (float) 1.5 * getSizeMultiplier());
 
 	}
 
@@ -143,7 +143,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				SoundCategory.PLAYERS, 1, 1);
 
 	}
-
 
 	/**
 	 * Custom water cannon collision detection which uses raytrace. Required since water cannon moves
