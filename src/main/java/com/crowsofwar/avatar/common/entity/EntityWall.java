@@ -86,6 +86,10 @@ public class EntityWall extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
+		if (this.getOwner() == null) {
+			this.setDead();
+		}
+
 		// Sync y-velocity with slowest moving wall segment
 		// Also calculate lowest top pos of each segment
 		double slowest = Integer.MAX_VALUE;

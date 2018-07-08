@@ -181,6 +181,9 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		super.onUpdate();
 		ignoreFrustumCheck = true;
 
+		if (getOwner() == null) {
+			this.setDead();
+		}
 		// restrict to only vertical movement
 		setVelocity(velocity().withX(0).withZ(0));
 

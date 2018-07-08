@@ -28,6 +28,8 @@ import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import org.lwjgl.Sys;
 
@@ -65,9 +67,23 @@ public class AbilityFireball extends Ability {
 			}
 
 			float damage = STATS_CONFIG.fireballSettings.damage;
+			float explosionStrength = 0.75f;
 			damage *= ctx.getLevel() >= 2 ? 1.75f : 1f;
 			damage *= ctx.getPowerRatingDamageMod();
 			System.out.println(ctx.getPowerRatingDamageMod());
+
+			if (ctx.getLevel() == 1) {
+				explosionStrength = 1;
+			}
+
+			if (ctx.getLevel() == 2) {
+				explosionStrength = 1.25F;
+			}
+
+			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+				explosionStrength = 2;
+			}
+
 
 			EntityFireball fireball = new EntityFireball(world);
 			fireball.setPosition(target);
@@ -76,6 +92,12 @@ public class AbilityFireball extends Ability {
 			fireball.setDamage(damage);
 			fireball.setPowerRating(bender.calcPowerRating(Firebending.ID));
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(20);
+
+			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+				explosionStrength = fireball.getSize()/20 + 0.75F;
+			}
+
+			fireball.setExplosionStrength(explosionStrength);
 			data.addStatusControl(StatusControl.THROW_FIREBALL);
 			world.spawnEntity(fireball);
 

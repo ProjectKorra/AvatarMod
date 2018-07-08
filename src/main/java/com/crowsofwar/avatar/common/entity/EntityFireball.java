@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
+import com.crowsofwar.avatar.common.world.AvatarFireExplosion;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -56,6 +57,15 @@ public class EntityFireball extends AvatarEntity {
 	private AxisAlignedBB expandedHitbox;
 
 	private float damage;
+	private float explosionStrength;
+
+	public void setExplosionStrength(float strength) {
+		this.explosionStrength = strength;
+	}
+
+	public float getExplosionStregth() {
+		return explosionStrength;
+	}
 
 	/**
 	 * @param world
@@ -63,6 +73,7 @@ public class EntityFireball extends AvatarEntity {
 	public EntityFireball(World world) {
 		super(world);
 		setSize(.8f, .8f);
+		this.explosionStrength = 0.75f;
 	}
 
 	@Override
@@ -157,12 +168,12 @@ public class EntityFireball extends AvatarEntity {
 			}
 		}
 
-		Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
+		AvatarFireExplosion fireExplosion = new AvatarFireExplosion(world, this, posX, posY, posZ, STATS_CONFIG.fireballSettings.explosionSize * this.explosionStrength,
 				!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
-		if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
 
-			explosion.doExplosionA();
-			explosion.doExplosionB(true);
+		if (!ForgeEventFactory.onExplosionStart(world, fireExplosion)) {
+			fireExplosion.doExplosionA();
+			fireExplosion.doExplosionB(true);
 
 		}
 

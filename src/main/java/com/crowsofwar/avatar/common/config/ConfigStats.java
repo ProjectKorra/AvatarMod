@@ -262,7 +262,7 @@ public class ConfigStats {
 		public int fireTime = 6;
 
 		@Load
-		public float explosionSize = 1.5f;
+		public float explosionSize = 1f;
 
 		@Load
 		public boolean damageBlocks = false;
