@@ -85,7 +85,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				SoundCategory.PLAYERS, 1, 2);
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
-			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY, posZ, 500, 0, 0, 0, 0.1);
+			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY, posZ, 500, 0, 0, 0, 0.3);
 		}
 
 		if (getOwner() != null) {
@@ -99,7 +99,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			setDead();
 
 		}
-		Raytrace.Result hit = Raytrace.raytrace(world, position(), velocity(), velocity().magnitude() / 20, false);
+		Raytrace.Result hit = Raytrace.raytrace(world, getControlPoint(1).position(), velocity(), velocity().magnitude() / 20, false);
 		if (hit.hitSomething()) {
 			Vector hitAt = hit.getPosPrecise();
 			this.setPosition(hitAt);
@@ -112,7 +112,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 
 
-		setSize(2, 2);
+		setSize((float) 1.5 * getSizeMultiplier(), (float) 1.5 * getSizeMultiplier());
 
 	}
 
@@ -130,6 +130,13 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			getControlPoint(1).setPosition(eyePos.plus(directionToEnd.times(0.5)));
 		}
 
+	}
+
+	@Override
+	public AxisAlignedBB getCollisionBox(Entity entityIn) {
+		AxisAlignedBB hitBox = new AxisAlignedBB(this.getPosition().add(0, -(1.5* getSizeMultiplier()), 0));
+		hitBox.grow(1.5 * getSizeMultiplier(), 1.5 * getSizeMultiplier(), 1.5* getSizeMultiplier());
+		return hitBox;
 	}
 
 	@Override

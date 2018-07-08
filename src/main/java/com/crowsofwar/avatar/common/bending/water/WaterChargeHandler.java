@@ -37,7 +37,7 @@ public class WaterChargeHandler extends TickHandler {
 		double speed = abilityData.getLevel() >= 1 ? 20 : 30;
 		float damage;
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
-		float size = 0.1f;
+		float size;
 		float ticks = 50;
 		//Multiply by 1.5 to get water cannon size
 		int durationToFire = 40;
@@ -53,6 +53,7 @@ public class WaterChargeHandler extends TickHandler {
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 
+			size = 0.1F;
 			ticks = 50;
 			damage = (float) (0.25 * bender.getDamageMult(Waterbending.ID));
 
@@ -83,12 +84,12 @@ public class WaterChargeHandler extends TickHandler {
 			}
 			if (abilityData.getLevel() >= 2) {
 				damage =(float) (1.5 * bender.getDamageMult(Waterbending.ID));
-				size = 1f;
+				size = 0.75f;
 				ticks = 100;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage = (float) (3 * bender.getDamageMult(Waterbending.ID));;
-				size = 2f;
+				size = 1f;
 				ticks = 200;
 			}
 
