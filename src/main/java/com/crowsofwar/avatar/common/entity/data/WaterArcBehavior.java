@@ -136,33 +136,34 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				//Level I or in Creative Mode
 				startGravity = STATS_CONFIG.waterArcTicks;
 				if (ticks >= STATS_CONFIG.waterArcTicks) {
-					//Default is 30
+					//Default is 40
 					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (lvl == 1) {
 				//Level II.
-				startGravity = STATS_CONFIG.waterArcTicks * (4/3);
-				if (ticks >= STATS_CONFIG.waterArcTicks * (4/3)) {
-					//40
+				startGravity = STATS_CONFIG.waterArcTicks * (5/4);
+				if (ticks >= STATS_CONFIG.waterArcTicks * (5/4)) {
+					//50
 					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (lvl == 2) {
 				//Level III
-				startGravity = STATS_CONFIG.waterArcTicks * (5/3);
-				if (ticks >= STATS_CONFIG.waterArcTicks * (5/3)) {
-					//50
+				startGravity = STATS_CONFIG.waterArcTicks * (6/4);
+				if (ticks >= STATS_CONFIG.waterArcTicks * (6/4)) {
+					//60
 					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (waterSpear) {
 				//Level 4 Path Two
-				startGravity = STATS_CONFIG.waterArcTicks * (8/3);
-				if (ticks >= STATS_CONFIG.waterArcTicks * (8/3)) {
+				startGravity = STATS_CONFIG.waterArcTicks * (3);
+				if (ticks >= STATS_CONFIG.waterArcTicks * (3)) {
+					//120 ticks
 					entity.Splash();
 					entity.setDead();
 				}
@@ -170,9 +171,9 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 				//Level 4 Path One
-				startGravity = STATS_CONFIG.waterArcTicks * (5/3);
-				if (ticks >= STATS_CONFIG.waterArcTicks * (5/3)) {
-					//40
+				startGravity = STATS_CONFIG.waterArcTicks * (5/4);
+				if (ticks >= STATS_CONFIG.waterArcTicks * (5/4)) {
+					//50
 					entity.Splash();
 					entity.setDead();
 				}

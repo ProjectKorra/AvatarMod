@@ -52,8 +52,8 @@ public class ConfigStats {
 	public int wallJumpDelay = 10;
 
 	@Load
-	public float waterArcTicks = 30;
-	//Has to be ticks so I can times it by a fraction; there aren't any partial ticks, though.
+	public float waterArcTicks = 40;
+	//Has to be a float so I can times it by a fraction; there aren't any partial ticks, though.
 
 	@Load
 	public FireballSettings fireballSettings = new FireballSettings();
