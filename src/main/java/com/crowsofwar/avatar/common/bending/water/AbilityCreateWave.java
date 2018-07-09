@@ -46,7 +46,7 @@ public class AbilityCreateWave extends Ability {
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 
-		Vector look = Vector.getLookRectangular(entity).withY(0);
+		Vector look = Vector.getLookRectangular(entity).times(1.5*ctx.getLevel()).withY(0);
 		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity)
 				.minusY(1), look, 4, (pos, blockState) -> blockState.getBlock() == Blocks
 				.WATER);

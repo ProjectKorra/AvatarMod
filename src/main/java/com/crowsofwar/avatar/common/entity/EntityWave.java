@@ -18,8 +18,10 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.client.particle.ParticleExplosion;
 import net.minecraft.entity.Entity;
@@ -77,8 +79,15 @@ public class EntityWave extends AvatarEntity {
 	public void onUpdate() {
 
 		super.onUpdate();
+		BendingData data = BendingData.get(getOwner());
+		AbilityData lvl = data.getAbilityData("wave");
 
-		setSize(Size, Size * 0.75F);
+		if (lvl.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+			setSize(Size * 2, Size * 0.75F * 2);
+		}
+		else {
+			setSize(Size, Size);
+		}
 
 		EntityLivingBase owner = getOwner();
 
