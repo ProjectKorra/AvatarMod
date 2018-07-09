@@ -98,7 +98,7 @@ public class EntityWave extends AvatarEntity {
 		Vector move = velocity().dividedBy(20);
 		Vector newPos = position().plus(move);
 		setPosition(newPos.x(), newPos.y(), newPos.z());
-		//this.Size -= 0.005F;
+		this.Size -= 0.005F;
 
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
@@ -150,13 +150,22 @@ public class EntityWave extends AvatarEntity {
 	@Override
 	public boolean onCollideWithSolid() {
 
-		if (!this.onGround) {
-			this.setVelocity(velocity().dividedBy(20));
-			collided++;
-			return true;
+		if (this.isCollidedHorizontally) {
+			return false;
 		}
 		//TODO: Add check for if the block is the block below the wave
-		else return false;
+		else  if (this.onGround && this.isCollidedVertically){
+			collided++;
+			this.setVelocity(velocity().dividedBy(20));
+			return true;
+		}
+		else  {
+			collided++;
+			this.setVelocity(velocity().dividedBy(20));
+			return true;
+		}
+		//TODO: Make wave go onto land
+
 	}
 
 	@Override
