@@ -112,6 +112,12 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	}
 
 	@Override
+	protected void updateCpBehavior() {
+		super.updateCpBehavior();
+		getControlPoint(0).setPosition(Vector.getEntityPos(this).plusY(0.75));
+	}
+
+	@Override
 	protected AirGustControlPoint createControlPoint(float size, int index) {
 		return new AirGustControlPoint(this, 0.5f, 0, 0, 0);
 	}

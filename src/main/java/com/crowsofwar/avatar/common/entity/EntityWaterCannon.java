@@ -155,7 +155,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	 */
 	@Override
 	protected void collideWithNearbyEntities() {
-		
+
 		List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), velocity(), velocity
 				().magnitude() / 20, entity -> entity != getOwner() && entity != this);
 
