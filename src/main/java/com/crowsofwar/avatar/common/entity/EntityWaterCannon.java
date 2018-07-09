@@ -107,7 +107,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 
 
-		setSize((float) 1.5 * getSizeMultiplier(), (float) 1.5 * getSizeMultiplier());
+		setSize(1.5F * getSizeMultiplier(), 1.5F * getSizeMultiplier());
 
 	}
 
@@ -155,7 +155,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	 */
 	@Override
 	protected void collideWithNearbyEntities() {
-
+		
 		List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), velocity(), velocity
 				().magnitude() / 20, entity -> entity != getOwner() && entity != this);
 
@@ -164,7 +164,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				if (canCollideWith(collided)) {
 					onCollideWithEntity(collided);
 					//Needed because the water cannon will still glitch through the entity
-					this.setPosition(collided.posX, collided.posY + (collided.getEyeHeight()/2), collided.posZ);
+					this.setPosition(collided.posX, collided.posY + (collided.getEyeHeight() / 2), collided.posZ);
 				}
 			}
 		}
