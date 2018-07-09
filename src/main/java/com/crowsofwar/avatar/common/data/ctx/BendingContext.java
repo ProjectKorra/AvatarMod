@@ -180,6 +180,7 @@ public class BendingContext {
 		EntityLivingBase entity = bender.getEntity();
 
 		if (entity.getHeldItemMainhand().getItem() == Items.WATER_BUCKET || entity.getHeldItemOffhand().getItem() == Items.WATER_BUCKET) {
+		//	entity.getHeldItemOffhand().getItem() = Items.BUCKET;
 			return true;
 		}
 

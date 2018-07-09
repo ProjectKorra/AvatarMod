@@ -86,7 +86,7 @@ public class EntityWave extends AvatarEntity {
 			setSize(Size * 2, Size * 0.75F * 2);
 		}
 		else {
-			setSize(Size, Size);
+			setSize(Size, Size * 0.75F);
 		}
 
 		EntityLivingBase owner = getOwner();
@@ -145,9 +145,12 @@ public class EntityWave extends AvatarEntity {
 
 	@Override
 	public boolean onCollideWithSolid() {
-		this.setVelocity(velocity().dividedBy(40));
-		collided++;
-		return true;
+		if (this.isCollidedVertically) {
+			this.setVelocity(velocity().dividedBy(20));
+			collided++;
+			return true;
+		}
+		else return false;
 	}
 
 	@Override
