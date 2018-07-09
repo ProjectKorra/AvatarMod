@@ -57,6 +57,10 @@ public class AbilityCleanse extends Ability {
 
 		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel());
 
+		if (targetPos == null) {
+			bender.sendMessage("avatar.cleanseFail");
+		}
+		
 		if ((bender.consumeChi(chi) && targetPos != null) || (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative())) {
 
 			// Duration: 5-10s
