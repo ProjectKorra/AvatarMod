@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
 import net.minecraft.client.particle.ParticleExplosion;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,7 +31,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
@@ -79,6 +82,7 @@ public class EntityWave extends AvatarEntity {
 	public void onUpdate() {
 
 		super.onUpdate();
+		//this.noClip = true;
 		BendingData data = BendingData.get(getOwner());
 		AbilityData lvl = data.getAbilityData("wave");
 
@@ -145,11 +149,13 @@ public class EntityWave extends AvatarEntity {
 
 	@Override
 	public boolean onCollideWithSolid() {
-		if (this.isCollidedVertically) {
+
+		if (!this.onGround) {
 			this.setVelocity(velocity().dividedBy(20));
 			collided++;
 			return true;
 		}
+		//TODO: Add check for if the block is the block below the wave
 		else return false;
 	}
 
