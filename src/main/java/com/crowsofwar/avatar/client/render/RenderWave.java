@@ -41,6 +41,7 @@ public class RenderWave extends RenderModel<EntityWave> {
 	protected void performGlTransforms(EntityWave entity, double x, double y, double z, float
 			entityYaw, float partialTicks) {
 		GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
+		GlStateManager.scale(entity.getWaveSize()/2, entity.getWaveSize()/2 * 0.75, entity.getWaveSize()/2);
 	}
 
 	@Override

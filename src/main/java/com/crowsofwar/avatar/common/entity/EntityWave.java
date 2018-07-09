@@ -44,12 +44,15 @@ public class EntityWave extends AvatarEntity {
 
 	private float damageMult;
 	private boolean createExplosion;
-	private float Size = 2;
+	private float Size;
+	private int collided;
 
 	public EntityWave(World world) {
 		super(world);
+		this.Size = 2;
 		setSize(Size, Size);
 		damageMult = 1;
+		collided = 0;
 	}
 
 	@Override
@@ -82,13 +85,13 @@ public class EntityWave extends AvatarEntity {
 		Vector move = velocity().dividedBy(20);
 		Vector newPos = position().plus(move);
 		setPosition(newPos.x(), newPos.y(), newPos.z());
-		this.Size = Size - 0.001F;
+		//this.Size -= 0.005F;
 
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
-			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 300, 0.8, 0.4, 0.8, 0);
-			World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL,  posX, posY + (Size * 0.75F), posZ, 1, 0.4, 0.1, 0.4, 0);
-			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY + (Size * 0.75F), posZ, 30, 0.4, 0, 0.4, 0);
+			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 300, getWaveSize() / 2.5, getWaveSize() / 5, getWaveSize() / 2.5, 0);
+			World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, posX, posY + (Size * 0.75F), posZ, 1, getWaveSize() / 5, getWaveSize() / 20, getWaveSize() / 5, 0);
+			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY + (Size * 0.75F), posZ, 30, getWaveSize() / 5, 0, getWaveSize() / 5, 0);
 
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
 			for (Entity entity : collided) {
@@ -113,11 +116,16 @@ public class EntityWave extends AvatarEntity {
 			}
 		}
 
-		if (ticksExisted > 7000) {
+		if (ticksExisted > 400) {
 			setDead();
 		}
 
+		if (collided >= 4) {
+			this.setDead();
+		}
+
 	}
+
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
@@ -128,7 +136,8 @@ public class EntityWave extends AvatarEntity {
 
 	@Override
 	public boolean onCollideWithSolid() {
-		setDead();
+		this.setVelocity(velocity().dividedBy(40));
+		collided++;
 		return true;
 	}
 
