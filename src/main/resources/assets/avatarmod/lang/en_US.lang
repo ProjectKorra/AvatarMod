@@ -85,7 +85,8 @@ avatar.lightningRedirected=You redirected ${lightningbender}'s lightning!
 avatar.canUpgradeAbility=[bold]\[AvatarMod2] Did you know [aqua]you can upgrade your ability [translate=avatar.ability.${ability}] to [translate=avatar.spec.lvl${newLevel}]?[/aqua][/bold]
 avatar.canUpgradeAbility2=\[AvatarMod2] To do so, in the radial menu, just hover over the ability and right click!
 avatar.canUpgradeAbility3=\[AvatarMod2] You'll need a [yellow]Universal or [translate=avatar.${bendingType}] scroll[/yellow] to do so!
-avatar.waterCannonFail=Need to look directly at water source
+avatar.waterCannonFail = Need to look directly at water source!
+avatar.cleanseFail = Need to look at or get near a water source block!
 
 avatar.announcement.today=[bold][red]\[AvatarMod Announcement][/red] \[today]:[/bold] ${announcement}
 avatar.announcement.yesterday=[bold][red]\[AvatarMod Announcement][/red] \[yesterday]:[/bold] ${announcement}
