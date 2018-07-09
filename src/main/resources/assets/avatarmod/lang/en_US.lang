@@ -208,7 +208,7 @@ avatar.ability.fire_jump.lvl4_2=Wall jumping ;; Gain the ability to wall jump on
 
 avatar.ability.purify=Immolate
 avatar.ability.purify.desc=Temporarily boost your firebending powers for a short period of time, but you may burn yourself in the process
-avatar.ability.purify.lvl1=You have minor buffs, but are apt to hurt yourself
+avatar.ability.purify.lvl1=FEEL THE BURRRRNNNNN
 avatar.ability.purify.lvl2=Stronger buff to firebending and speed buff
 avatar.ability.purify.lvl3=Stronger potion effects and don't burn every time
 avatar.ability.purify.lvl4_1=Fire tolerance ;; Much longer duration, health boost effect
@@ -250,13 +250,13 @@ avatar.ability.water_cannon=Water Cannon
 avatar.ability.water_cannon.desc=Make a continuous stream of water that tracks a target. It takes a while to charge up, and takes 3 water charges out of water pouches.
 avatar.ability.water_cannon.lvl1=Basic water cannon
 avatar.ability.water_cannon.lvl2=Deals more damage, slightly larger
-avatar.ability.water_cannon.lvl3=Deals even more damage
-avatar.ability.water_cannon.lvl4_1=Powerful cannon ;; Water is much larger and deals much more damage
-avatar.ability.water_cannon.lvl4_2=Rapidfire ;; Rapidly create many smaller streams of water
+avatar.ability.water_cannon.lvl3=Deals even more damage; you can now just be near a source block to use water cannon, you don't have to look at one!
+avatar.ability.water_cannon.lvl4_1=Titanium Tearer ;; Water is much larger and deals much more damage. Did you that water can punch holes through anything? Including humans!!!!
+avatar.ability.water_cannon.lvl4_2=Rapidfire ;; Rapidly create many smaller streams of water that pierces through enemies!
 
 avatar.ability.cleanse=Cleanse
 avatar.ability.cleanse.desc=Grant yourself and nearby players restorative health effects, plus bending buffs
-avatar.ability.cleanse.lvl1=Give a temporary regeneration effect
+avatar.ability.cleanse.lvl1=*It's like a free shower!*
 avatar.ability.cleanse.lvl2=Share regeneration with nearby players
 avatar.ability.cleanse.lvl3=Give yourself saturation
 avatar.ability.cleanse.lvl4_1=Invigoration ;; Also receive instant health boost
@@ -289,7 +289,7 @@ avatar.ability.airblade.lvl4_2=Armor piercer ;; Cuts through armor and stone
 
 avatar.ability.air_bubble=Air Bubble
 avatar.ability.air_bubble.desc=Create a bubble of air around you to protect yourself from incoming attacks. However, it takes lots of chi to maintain.
-avatar.ability.air_bubble.lvl1=Small range and knockback
+avatar.ability.air_bubble.lvl1=*Can't touch this*
 avatar.ability.air_bubble.lvl2=Medium-sized air bubble
 avatar.ability.air_bubble.lvl3=More knockback
 avatar.ability.air_bubble.lvl4_1=Pressured bubble ;; Very large size
@@ -297,7 +297,7 @@ avatar.ability.air_bubble.lvl4_2=Undercurrent ;; Limited hovering, disabled by s
 
 avatar.ability.cloudburst=Cloudburst
 avatar.ability.cloudburst.desc=Create a whirling ball of air which can be thrown at enemies; creates a mini burst of air where it lands.
-avatar.ability.cloudburst.lvl1=Basic cloud ball
+avatar.ability.cloudburst.lvl1= That was a big-ass burp
 avatar.ability.cloudburst.lvl2=Faster speed when thrown
 avatar.ability.cloudburst.lvl3=Much more damage
 avatar.ability.cloudburst.lvl4_1=Chi Smash ;; Temporarily applies severe debuffs to targets' bending power

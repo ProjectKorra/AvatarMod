@@ -36,7 +36,7 @@ public class AbilityWaterCannon extends Ability {
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
 
-		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel());
+		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel() * 2);
 		boolean hasChi = bender.consumeChi(STATS_CONFIG.chiWaterCannon);
 		boolean hasWaterCharge = data.hasTickHandler(TickHandler.WATER_CHARGE);
 

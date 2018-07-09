@@ -57,7 +57,7 @@ public class AbilityCleanse extends Ability {
 			chi = STATS_CONFIG.chiBuffLvl4;
 		}
 
-		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel());
+		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel() * 3);
 
 		if (targetPos == null) {
 			bender.sendMessage("avatar.cleanseFail");
