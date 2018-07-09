@@ -36,7 +36,7 @@ public class AbilityWaterCannon extends Ability {
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
 
-		Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel());
+		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel());
 		boolean hasChi = bender.consumeChi(STATS_CONFIG.chiWaterCannon);
 		boolean hasWaterCharge = data.hasTickHandler(TickHandler.WATER_CHARGE);
 
@@ -67,7 +67,7 @@ public class AbilityWaterCannon extends Ability {
 			}
 		}
 
-
+	//Is broken; will investigate later.
 	private Vector getClosestWaterbendableBlock (EntityLivingBase entity, int level) {
 		World world = entity.world;
 
@@ -102,6 +102,42 @@ public class AbilityWaterCannon extends Ability {
 		return null;
 
 	}
+
+	private Vector getClosestWaterBlock(EntityLivingBase entity, int level) {
+		World world = entity.world;
+
+		Vector eye = Vector.getEyePos(entity);
+
+		double rangeMult = 0.6;
+		if (level >= 1) {
+			rangeMult = 1;
+		}
+
+		double range = STATS_CONFIG.waterCannonSearchRadius * rangeMult;
+		for (int i = 0; i < STATS_CONFIG.waterCannonAngles; i++) {
+			for (int j = 0; j < STATS_CONFIG.waterCannonAngles; j++) {
+
+				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterCannonAngles;
+				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterCannonAngles;
+
+				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> state.getBlock() == Blocks.WATER
+						|| state.getBlock() == Blocks.FLOWING_WATER || state.getBlock() == Blocks.ICE || state.getBlock() == Blocks.SNOW_LAYER
+						|| state.getBlock() == Blocks.SNOW;
+
+				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
+				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
+				if (result.hitSomething()) {
+					return result.getPosPrecise();
+				}
+
+			}
+
+		}
+
+		return null;
+
+	}
+
 
 }
 

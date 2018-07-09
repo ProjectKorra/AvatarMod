@@ -115,6 +115,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	protected void updateCpBehavior() {
 		super.updateCpBehavior();
 		getControlPoint(0).setPosition(Vector.getEntityPos(this).plusY(0.75));
+		//So the middle of the airgust has the hitbox
 	}
 
 	@Override

@@ -60,13 +60,14 @@ public class AbilityWaterArc extends Ability {
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
 
-		Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel());
+		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel());
 
 		if (targetPos != null || ctx.consumeWater(1)) {
 
 			if (targetPos == null) {
 				targetPos = Vector.getEyePos(entity).plus(getLookRectangular(entity).times(4));
 			}
+
 			float damageMult = 1F;
 			float gravity = 8;
 			float size = 0.5F;
@@ -173,7 +174,8 @@ public class AbilityWaterArc extends Ability {
 				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterArcAngles;
 
 				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> state.getBlock() == Blocks.WATER
-						|| state.getBlock() == Blocks.FLOWING_WATER;
+						|| state.getBlock() == Blocks.FLOWING_WATER || state.getBlock() == Blocks.ICE || state.getBlock() == Blocks.SNOW_LAYER
+						|| state.getBlock() == Blocks.SNOW;
 
 				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
 				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
@@ -191,6 +193,7 @@ public class AbilityWaterArc extends Ability {
 
 
 	//For bending snow and ice; is a separate method so that when passives are active it's easy to differentiate
+	//For some reason this doesn't work; will use alternate method for now
 	private Vector getClosestWaterbendableBlock(EntityLivingBase entity, int level) {
 		World world = entity.world;
 
