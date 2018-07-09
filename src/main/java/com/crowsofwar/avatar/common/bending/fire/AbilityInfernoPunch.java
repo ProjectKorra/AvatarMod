@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.INFERNO_PUNCH;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AbilityInfernoPunch extends Ability {
 	public AbilityInfernoPunch() {
@@ -19,18 +20,22 @@ public class AbilityInfernoPunch extends Ability {
 		Bender bender = ctx.getBender();
 		if (data.hasStatusControl(INFERNO_PUNCH)) return;
 
-		float chi = 3;
+		float chi = STATS_CONFIG.chiInfernoPunch;
 		if (ctx.getLevel() >= 1) {
-			chi = 4;
+			chi = STATS_CONFIG.chiInfernoPunch * 4/3;
+			//4
 		}
 		if (ctx.getLevel() >= 2) {
-			chi = 5;
+			chi = STATS_CONFIG.chiInfernoPunch * 5/3;
+			//5
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			chi = 8;
+			chi = STATS_CONFIG.chiLargeInfernoPunch;
+			//6
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			chi = 2;
+			chi = STATS_CONFIG.chiSmallInfernoPunch * 2F;
+			//4
 		}
 
 		if (bender.consumeChi(chi)) {

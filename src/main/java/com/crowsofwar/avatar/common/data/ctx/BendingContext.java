@@ -27,6 +27,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -180,7 +181,6 @@ public class BendingContext {
 		EntityLivingBase entity = bender.getEntity();
 
 		if (entity.getHeldItemMainhand().getItem() == Items.WATER_BUCKET || entity.getHeldItemOffhand().getItem() == Items.WATER_BUCKET) {
-		//	entity.getHeldItemOffhand().getItem() = Items.BUCKET;
 			return true;
 		}
 

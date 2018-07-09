@@ -102,7 +102,7 @@ public class ConfigStats {
 			chiIceShieldCreate = 4,
 			chiIceShieldProtect = 0.15f,
 			chiInfernoPunch = 3F,
-			chiSmallInfernoPunch = 1F,
+			chiSmallInfernoPunch = 2F,
 			chiLargeInfernoPunch = 6F,
 			chiSandstorm = 3f,
 			chiShockwave = 6F,
