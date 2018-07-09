@@ -12,7 +12,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -60,8 +62,9 @@ public class AbilityCleanse extends Ability {
 		if (targetPos == null) {
 			bender.sendMessage("avatar.cleanseFail");
 		}
-		
-		if ((bender.consumeChi(chi) && targetPos != null) || (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative())) {
+
+		if ((bender.consumeChi(chi) && targetPos != null) || (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative())
+				|| ctx.consumeWater(4)) {
 
 			// Duration: 5-10s
 			int duration = abilityData.getLevel() < 2 ? 100 : 200;

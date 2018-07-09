@@ -40,7 +40,7 @@ public class AbilityWaterCannon extends Ability {
 		boolean hasChi = bender.consumeChi(STATS_CONFIG.chiWaterCannon);
 		boolean hasWaterCharge = data.hasTickHandler(TickHandler.WATER_CHARGE);
 
-		if (ctx.consumeWater(3) || ctx.consumePlants(3) || ctx.consumeSnow(3)) {
+		if (ctx.consumeWater(3)) {
 			if (hasChi && !hasWaterCharge) {
 				ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
 			}
@@ -48,18 +48,11 @@ public class AbilityWaterCannon extends Ability {
 			if (!hasWaterCharge) {
 				ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
 			}
-		} else if (targetPos != null) {
+		} else if (targetPos != null && ctx.getLevel() >= 2) {
 			if (hasChi && !hasWaterCharge) {
 				world.setBlockToAir(targetPos.toBlockPos());
 				Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 
-				
-				/*EntityEarthspike spike = new EntityEarthspike(world);
-				spike.setPosition(targetPos);
-				spike.setOwner(entity);
-				world.spawnEntity(spike);**/
-				//For debugging
-				
 				ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
 			}
 		} else {
@@ -86,7 +79,7 @@ public class AbilityWaterCannon extends Ability {
 				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterCannonAngles;
 
 				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> STATS_CONFIG.waterBendableBlocks.contains(state.getBlock())
-						|| STATS_CONFIG.plantBendableBlocks.contains(state.getBlock());
+						|| STATS_CONFIG.plantBendableBlocks.contains(state.getBlock()) || state.getBlock() != Blocks.AIR;
 
 
 				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));

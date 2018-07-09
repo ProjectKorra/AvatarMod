@@ -28,7 +28,12 @@ import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGlassBottle;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -171,6 +176,13 @@ public class BendingContext {
 		if (world.isRainingAt(bender.getEntity().getPosition())) {
 			return true;
 		}
+
+		EntityLivingBase entity = bender.getEntity();
+
+		if (entity.getHeldItemMainhand().getItem() == Items.WATER_BUCKET || entity.getHeldItemOffhand().getItem() == Items.WATER_BUCKET) {
+			return true;
+		}
+
 
 		VectorI targetPos = getLookPosI();
 		if (targetPos != null) {
