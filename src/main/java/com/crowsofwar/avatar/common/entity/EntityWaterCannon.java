@@ -138,6 +138,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			WorldServer World = (WorldServer) world;
 			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, numberOfParticles, 0, 0, 0, 0.05 + getSizeMultiplier() / 10);
 			//Change based on size
+			onMajorWaterContact();
 		}
 
 		damageEntity((EntityLivingBase) entity);
@@ -215,6 +216,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	public boolean onCollideWithSolid() {
 		setVelocity(Vector.ZERO);
+		onMajorWaterContact();
 		return false;
 	}
 

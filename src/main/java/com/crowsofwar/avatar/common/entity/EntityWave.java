@@ -27,6 +27,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.particle.ParticleExplosion;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -50,14 +51,14 @@ public class EntityWave extends AvatarEntity {
 	private float damageMult;
 	private boolean createExplosion;
 	private float Size;
-	private int collided;
+	private float Shrink;
 
 	public EntityWave(World world) {
 		super(world);
 		this.Size = 2;
 		setSize(Size, Size);
 		damageMult = 1;
-		collided = 0;
+		Shrink = 0.001F;
 	}
 
 	@Override
@@ -93,12 +94,20 @@ public class EntityWave extends AvatarEntity {
 			setSize(Size, Size * 0.75F);
 		}
 
+		BlockPos below = getPosition().offset(EnumFacing.DOWN);
+		Block belowBlock = world.getBlockState(below).getBlock();
+
+		if (belowBlock != Blocks.FLOWING_WATER && belowBlock != Blocks.WATER) {
+			this.setVelocity(velocity().dividedBy(40));
+			this.posY -= Shrink;
+		}
+
 		EntityLivingBase owner = getOwner();
 
 		Vector move = velocity().dividedBy(20);
 		Vector newPos = position().plus(move);
 		setPosition(newPos.x(), newPos.y(), newPos.z());
-		this.Size -= 0.005F;
+
 
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
@@ -133,10 +142,6 @@ public class EntityWave extends AvatarEntity {
 			setDead();
 		}
 
-		if (collided >= 4) {
-			this.setDead();
-		}
-
 	}
 
 
@@ -149,21 +154,18 @@ public class EntityWave extends AvatarEntity {
 
 	@Override
 	public boolean onCollideWithSolid() {
+		onMajorWaterContact();
 
-		if (this.isCollidedHorizontally) {
+		BlockPos below = getPosition().offset(EnumFacing.DOWN);
+		Block belowBlock = world.getBlockState(below).getBlock();
+
+		if (!this.isCollidedVertically && (belowBlock != Blocks.FLOWING_WATER && belowBlock != Blocks.WATER)) {
+			Shrink = 0.005F;
 			return false;
 		}
-		//TODO: Add check for if the block is the block below the wave
-		else  if (this.onGround && this.isCollidedVertically){
-			collided++;
-			this.setVelocity(velocity().dividedBy(20));
-			return true;
-		}
-		else  {
-			collided++;
-			this.setVelocity(velocity().dividedBy(20));
-			return true;
-		}
+		else return true;
+
+		//help
 		//TODO: Make wave go onto land
 
 	}
