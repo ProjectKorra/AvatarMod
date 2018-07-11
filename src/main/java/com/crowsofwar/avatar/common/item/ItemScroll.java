@@ -197,6 +197,7 @@ public class ItemScroll extends Item implements AvatarItem {
 
 		}
 
+
 	}
 
 	@Override

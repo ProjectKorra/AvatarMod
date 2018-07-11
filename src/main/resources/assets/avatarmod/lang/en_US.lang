@@ -19,18 +19,18 @@ avatar.earthbending=Earthbending
 avatar.earthbending.demonym=Earthbender
 avatar.firebending=Firebending
 avatar.firebending.demonym=Firebender
-avatar.waterbending=Waterbending
-avatar.waterbending.demonym=Waterbender
-avatar.airbending=Airbending
-avatar.airbending.demonym=Airbender
-avatar.lightningbending=§l§bLightningbending
-avatar.lightningbending.demonym=§l§bLightningbender
+avatar.waterbending=§9§lWaterbending
+avatar.waterbending.demonym=§9§lWaterbender
+avatar.airbending=§f§lAirbending
+avatar.airbending.demonym=§f§lAirbender
+avatar.lightningbending=§b§lLightningbending
+avatar.lightningbending.demonym=§b§lLightningbender
 avatar.icebending=Icebending
 avatar.icebending.demonym=Icebender
-avatar.sandbending=Sandbending
-avatar.sandbending.demonym=Sandbending
+avatar.sandbending=§6§lSandbending
+avatar.sandbending.demonym=§6§lSandbender
 
-avatar.all=Universal
+avatar.all=§aUniversal
 
 avatar.cmd.bending=Manage a player's bending controllers.
 avatar.cmd.bending.list.noData=[error][error_value]${player}[/error_value] is not a registered account.[/error]
@@ -115,7 +115,8 @@ avatar.bisonWhistle.nearby=[error]Your bison is already nearby![/error]
 avatar.specialtyScroll.success=You have now unlocked [translate=avatar.${specialtyBending}]!
 avatar.specialtyScroll.fail=[error]Sorry, you need to learn [translate=avatar.${mainBending}] before you learn [translate=avatar.${specialtyBending}].[/error]
 avatar.specialtyScroll.alreadyHave=[error]You have already unlocked [translate=avatar.${specialtyBending}].[/error]
-avatar.specialtyScroll.tooltip=[aqua]Can be used to unlock or upgrade [translate=avatar.${bending}].[/aqua]
+avatar.specialtyScroll.tooltip=[purple]Can be used to unlock or upgrade [translate=avatar.${bending}].[/purple]
+avatar.Scroll.tooltip=[purple]Can be used to unlock or upgrade [translate=avatar.${bending}].[/purple]
 
 avatar.ability.pickup_block=Earth Control
 avatar.ability.pickup_block.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
@@ -222,112 +223,112 @@ avatar.ability.inferno_punchlvl3=Even more damage!
 avatar.ability.inferno_punchlvl4_1=§lINCINERATE ;; Use a super-powerful inferno when you punch to create a massive fire explosion! Be warned, the explosion damages you too!
 avatar.ability.inferno_punchlvl4_2=§lFIRRRRRREBALLL ;; Fling a fireball when you punch! Your punch is really weak, though.
 
-avatar.ability.water_arc=§l§9Water §l§9Arc
+avatar.ability.water_arc=§9§lWater §9§lArc
 avatar.ability.water_arc.desc=One of waterbending's most common attacks. Shoot a trailing arc of water at your enemy, but only when water is nearby.
 avatar.ability.water_arc.lvl1=Basic water arc
 avatar.ability.water_arc.lvl2=Farther pick-up range
 avatar.ability.water_arc.lvl3=Much faster
-avatar.ability.water_arc.lvl4_1=§l§9Water Flurry ;; You can now instantly fire off water arcs; multiple arcs in quick succession make a combo.
-avatar.ability.water_arc.lvl4_2=§l§9Water spear ;; Gravity disabled for 2s after thrown, slower
+avatar.ability.water_arc.lvl4_1=§9§l§oWater Flurry ;; You can now instantly fire off water arcs; multiple arcs in quick succession make a combo.
+avatar.ability.water_arc.lvl4_2=§9§l§oWater spear ;; Gravity disabled for 2s after thrown, slower
 
-avatar.ability.wave=§l§9Wave
+avatar.ability.wave=§9§lWave
 avatar.ability.wave.desc=Summon a wave of water to destroy your enemies. Only works when they are in water.
 avatar.ability.wave.lvl1=Make your enemies wave goodbye
 avatar.ability.wave.lvl2=A lot more damage
 avatar.ability.wave.lvl3=Much larger
-avatar.ability.wave.lvl4_1=§l§9Water spray ;; Creates minor explosion upon contact with enemy
-avatar.ability.wave.lvl4_2=§l§9Force wave ;; Very fast waves
+avatar.ability.wave.lvl4_1=§9§l§oWater §9§l§ospray ;; Creates minor explosion upon contact with enemy
+avatar.ability.wave.lvl4_2=§9§l§oForce §9§l§owave ;; Very fast waves
 
-avatar.ability.water_bubble=§l§9Water §l§9Bubble
+avatar.ability.water_bubble=§9§lWater §9§lBubble
 avatar.ability.water_bubble.desc=Suspend and transport a bubble of water. Can be used like a long-range bucket.
 avatar.ability.water_bubble.lvl1=Short-ranged water bubble, water dries up after impact
 avatar.ability.water_bubble.lvl2=Throw the bubble much farther
 avatar.ability.water_bubble.lvl3=Bubble creates permanent water source on landing
-avatar.ability.water_bubble.lvl4_1=§l§9Throw water bubble very far
-avatar.ability.water_bubble.lvl4_2=§l§9Doesn't use up water to create bubble - infinite water
+avatar.ability.water_bubble.lvl4_1=Throw water bubble very far
+avatar.ability.water_bubble.lvl4_2=Doesn't use up water to create bubble - infinite water
 
-avatar.ability.water_skate=§l§9Water §l§9Skate
+avatar.ability.water_skate=§9§lWater §9§lSkate
 avatar.ability.water_skate.desc=Run on the surface of water. Useful as an evasive ability, or just to get around.
 avatar.ability.water_skate.lvl1=Slip across the water, can't use abilities
 avatar.ability.water_skate.lvl2=Can use abilities while skating
 avatar.ability.water_skate.lvl3=Much faster
-avatar.ability.water_skate.lvl4_1=§l§9Balanced skating ;; Can skate even on flowing water
-avatar.ability.water_skate.lvl4_2=§l§9Watery impact ;; Smash the ground after jumping
+avatar.ability.water_skate.lvl4_1=§9§l§oBalanced §9§l§oskating ;; Can skate even on flowing water
+avatar.ability.water_skate.lvl4_2=§9§l§oWatery §9§l§oimpact ;; Smash the ground after jumping
 
-avatar.ability.water_cannon=§l§9Water §l§9Cannon
-avatar.ability.water_cannon.desc=Make a continuous stream of water that tracks a target. It takes a while to charge up, and takes 3 water charges out of water pouches.
+avatar.ability.water_cannon=§9§lWater §9§lCannon
+avatar.ability.water_cannon.desc=Make a continuous stream of water acts as crowd control. It takes a while to charge up, and takes 3 water charges out of water pouches.
 avatar.ability.water_cannon.lvl1=Basic water cannon
 avatar.ability.water_cannon.lvl2=Deals more damage, slightly larger
 avatar.ability.water_cannon.lvl3=Deals even more damage; you can now just be near a source block to use water cannon, you don't have to look at one!
-avatar.ability.water_cannon.lvl4_1=§l§9Titanium Tearer ;; Water is much larger and deals much more damage. Did you that water can punch holes through anything? Including humans!!!!
-avatar.ability.water_cannon.lvl4_2=§l§9Rapidfire ;; Rapidly create many smaller streams of water that pierces through enemies!
+avatar.ability.water_cannon.lvl4_1=§9§l§oTitanium §9§l§oTearer ;; Water is much larger and deals much more damage. Did you that water can punch holes through anything? Including humans!!!!
+avatar.ability.water_cannon.lvl4_2=§9§l§oRapidfire ;; Rapidly create many smaller streams of water that pierces through enemies!
 
-avatar.ability.cleanse=§l§9Cleanse
+avatar.ability.cleanse=§9§lCleanse
 avatar.ability.cleanse.desc=Grant yourself and nearby players restorative health effects, plus bending buffs
-avatar.ability.cleanse.lvl1=*It's like a free shower!*
+avatar.ability.cleanse.lvl1=§oIt's §olike §oa §ofree §oshower!
 avatar.ability.cleanse.lvl2=Share regeneration with nearby players
 avatar.ability.cleanse.lvl3=Give yourself saturation
-avatar.ability.cleanse.lvl4_1=§l§9Invigoration ;; Also receive instant health boost
-avatar.ability.cleanse.lvl4_2=§l§9Focus ;; Deal much more damage in combat and move much more quickly
+avatar.ability.cleanse.lvl4_1=§9§l§oInvigoration ;; Also receive instant health boost
+avatar.ability.cleanse.lvl4_2=§9§l§oFocus ;; Deal much more damage in combat and move much more quickly
 
 
-avatar.ability.air_gust=Air Gust
+avatar.ability.air_gust=§f§lAir Gust
 avatar.ability.air_gust.desc=Generate a strong gust of air to push enemies back, allowing you to focus on another problem.
 avatar.ability.air_gust.lvl1=I've got 99 problems and you ain't one!
 avatar.ability.air_gust.lvl2=Half the cooldown
 avatar.ability.air_gust.lvl3=Stronger push
-avatar.ability.air_gust.lvl4_1=Extinguish ;; Destroys weaker projectiles
-avatar.ability.air_gust.lvl4_2=Vacuum ;; Sucks enemies TOWARDS you
+avatar.ability.air_gust.lvl4_1=§f§l§oExtinguish ;; Destroys weaker projectiles
+avatar.ability.air_gust.lvl4_2=§f§l§oVacuum ;; Sucks enemies TOWARDS you
 
-avatar.ability.air_jump=Air Jump
+avatar.ability.air_jump=§f§lAir Jump
 avatar.ability.air_jump.desc=Manipulate the air around you to boost off the ground. Perfect for catching up to an unsuspecting enemy.
 avatar.ability.air_jump.lvl1=Jump through the air
 avatar.ability.air_jump.lvl2=Slightly improved jumping power
 avatar.ability.air_jump.lvl3=Even better jumping
-avatar.ability.air_jump.lvl4_1=Double-jump ;; Costs double chi
-avatar.ability.air_jump.lvl4_2=Ground pound ;; Attack nearby enemies on land
+avatar.ability.air_jump.lvl4_1=§f§l§oDouble-jump ;; Costs double chi
+avatar.ability.air_jump.lvl4_2=§f§l§oGround §f§l§opound ;; Attack nearby enemies on land
 
-avatar.ability.airblade=Airblade
+avatar.ability.airblade=§f§lAirblade
 avatar.ability.airblade.desc=A spinning disc of air powerful enough to cut flesh. Can be deadly in quick succession.
 avatar.ability.airblade.lvl1=Slice n' Dice!
 avatar.ability.airblade.lvl2=Higher speeds and damage
 avatar.ability.airblade.lvl3=Can now cut blocks
-avatar.ability.airblade.lvl4_1=Chainblade ;; Bounces through multiple enemies
-avatar.ability.airblade.lvl4_2=Armor piercer ;; Cuts through armor and stone
+avatar.ability.airblade.lvl4_1=§f§l§oChainblade ;; Bounces through multiple enemies
+avatar.ability.airblade.lvl4_2=§f§l§oArmor §f§l§opiercer ;; Cuts through armor and stone
 
-avatar.ability.air_bubble=Air Bubble
+avatar.ability.air_bubble=§f§lAir Bubble
 avatar.ability.air_bubble.desc=Create a bubble of air around you to protect yourself from incoming attacks. However, it takes lots of chi to maintain.
 avatar.ability.air_bubble.lvl1=*Can't touch this*
 avatar.ability.air_bubble.lvl2=Medium-sized air bubble
 avatar.ability.air_bubble.lvl3=More knockback
-avatar.ability.air_bubble.lvl4_1=Pressured bubble ;; Very large size
-avatar.ability.air_bubble.lvl4_2=Undercurrent ;; Limited hovering, disabled by sneak
+avatar.ability.air_bubble.lvl4_1=§f§l§oPressured §f§l§obubble ;; Very large size
+avatar.ability.air_bubble.lvl4_2=§f§l§oUndercurrent ;; Limited hovering, disabled by sneak
 
-avatar.ability.cloudburst=Cloudburst
+avatar.ability.cloudburst=§f§lCloudburst
 avatar.ability.cloudburst.desc=Create a whirling ball of air which can be thrown at enemies; creates a mini burst of air where it lands.
 avatar.ability.cloudburst.lvl1= That was a big-ass burp
 avatar.ability.cloudburst.lvl2=Faster speed when thrown
 avatar.ability.cloudburst.lvl3=Much more damage
-avatar.ability.cloudburst.lvl4_1=Chi Smash ;; Temporarily applies severe debuffs to targets' bending power
-avatar.ability.cloudburst.lvl4_2=Absorption ;; Cloudburst can absorb incoming projectiles, which increases its damage
+avatar.ability.cloudburst.lvl4_1=§f§l§oChi §f§l§oSmash ;; Temporarily applies severe debuffs to targets' bending power
+avatar.ability.cloudburst.lvl4_2=§f§l§oAbsorption ;; Cloudburst can absorb incoming projectiles, which increases its damage
 
-avatar.ability.slipstream=Slipstream
+avatar.ability.slipstream=§f§lSlipstream
 avatar.ability.slipstream.desc=Surround yourself in a veil of air, increasing your movement speed.
 avatar.ability.slipstream.lvl1=Basic speed boost
 avatar.ability.slipstream.lvl2=Increase your jumping height
 avatar.ability.slipstream.lvl3=Intermittently become invisible and increase the power of the buffs.
-avatar.ability.slipstream.lvl4_1=Divine Breeze ;; Become stronger in melee and airbending combat
-avatar.ability.slipstream.lvl4_2=Run like the wind ;; Become invisible more often and potion effects are stronger
+avatar.ability.slipstream.lvl4_1=§f§l§oDivine §f§l§oBreeze ;; Become stronger in melee and airbending combat
+avatar.ability.slipstream.lvl4_2=§f§l§oRun §f§l§olike §f§l§othe §f§l§owind ;; Become invisible more often and potion effects are stronger
 
-avatar.ability.lightning_arc=§l§bLightning Arc
+avatar.ability.lightning_arc=§b§lLightning Arc
 avatar.ability.lightning_arc.desc=Create imposing arcs of electricity to electrocute your enemies!
 avatar.ability.lightning_arc.lvl1=Intimidate potential boyfriends
 avatar.ability.lightning_arc.lvl2=Lightning travels faster
 avatar.ability.lightning_arc.lvl3=Lightning does more damage
-avatar.ability.lightning_arc.lvl4_1=§l§bFurious lightning ;; Does more damage, slightly smaller, another bolt
-avatar.ability.lightning_arc.lvl4_2=§l§bLarge thunderbolts ;; Has a larger hitbox, making it easier to capture enemies
+avatar.ability.lightning_arc.lvl4_1=§b§lFurious lightning ;; Does more damage, slightly smaller, another bolt
+avatar.ability.lightning_arc.lvl4_2=§b§lLarge thunderbolts ;; Has a larger hitbox, making it easier to capture enemies
 
-avatar.ability.lightning_redirect=§l§bLightning Redirection
+avatar.ability.lightning_redirect=§b§lLightning Redirection
 avatar.ability.lightning_redirect.desc=Represents your ability to redirect lightning, doesn't appear in the radial menu
 avatar.ability.lightning_redirect.lvl1=60% chance to redirect lightning, be careful!
 avatar.ability.lightning_redirect.lvl2=70% chance to redirect
@@ -335,13 +336,13 @@ avatar.ability.lightning_redirect.lvl3=80% chance to redirect
 avatar.ability.lightning_redirect.lvl4_1=90% chance to redirect lightning
 avatar.ability.lightning_redirect.lvl4_2=90% chance to redirect lightning
 
-avatar.ability.lightning_spear=§l§bLightning Spear
+avatar.ability.lightning_spear=§b§lLightning Spear
 avatar.ability.lightning_spear.desc=Create a throwable bolt of lightning
 avatar.ability.lightning_spear.lvl1=Basic lightning spear, electrocutes targets in water
 avatar.ability.lightning_spear.lvl2=Faster when thrown
 avatar.ability.lightning_spear.lvl3=Deals much more damage
-avatar.ability.lightning_spear.lvl4_1=§l§bPiercing bolt ;; Goes through enemies instead of stopping on the first one, so it can hurt many targets
-avatar.ability.lightning_spear.lvl4_2=§l§bElectric cloud ;; When hitting a target, nearby targets within 2 blocks are also hurt
+avatar.ability.lightning_spear.lvl4_1=§b§lPiercing bolt ;; Goes through enemies instead of stopping on the first one, so it can hurt many targets
+avatar.ability.lightning_spear.lvl4_2=§b§lElectric cloud ;; When hitting a target, nearby targets within 2 blocks are also hurt
 
 avatar.ability.ice_prison=Ice Prison
 avatar.ability.ice_prison.desc=Encase an attacker in a block of ice to prevent them from following you for a short time.
@@ -359,21 +360,21 @@ avatar.ability.ice_burst.lvl3=The shield has a little more health.
 avatar.ability.ice_burst.lvl4_1=Aiming system ;; A few ice shards automatically target monsters, invaluable when there are many mobs attacking
 avatar.ability.ice_burst.lvl4_2=Hardened ice ;; The ice shield has much more health
 
-avatar.ability.sand_prison=Sand Prison
+avatar.ability.sand_prison=§6§lSand Prison
 avatar.ability.sand_prison.desc=Create a snare out of sand to temporarily capture your enemies
 avatar.ability.sand_prison.lvl1=Delay your attackers.
 avatar.ability.sand_prison.lvl2=You can catch targets in any earth block by manipulating the small sediments
 avatar.ability.sand_prison.lvl3=The prisoner receives a slowness effect after being freed
-avatar.ability.sand_prison.lvl4_1=Coarse grains ;; The prisoner takes damage after being freed
-avatar.ability.sand_prison.lvl4_2=Solid sands ;; The sand can't be blown away by airbending
+avatar.ability.sand_prison.lvl4_1=§6§lCoarse §6§lgrains ;; The prisoner takes damage after being freed
+avatar.ability.sand_prison.lvl4_2=§6§lSolid §6§lsands ;; The sand can't be blown away by airbending
 
-avatar.ability.sandstorm=Sandstorm
+avatar.ability.sandstorm=§6§l§6§lSandstorm
 avatar.ability.sandstorm.desc=Create a whirling dust devil that picks up enemies and carries them away
 avatar.ability.sandstorm.lvl1=Pick up entities and throw them off, vulnerable to airbending moves
 avatar.ability.sandstorm.lvl2=Moves slightly faster and travels slightly farther
 avatar.ability.sandstorm.lvl3=Intense whiplash deals damage to targets when they are flung away
-avatar.ability.sandstorm.lvl4_1=Strong gusts ;; Sandstorm moves much faster and isn't disrupted by airbending
-avatar.ability.sandstorm.lvl4_2=Harsh grains ;; Whirling sand grains cause continuous minor damage to targets
+avatar.ability.sandstorm.lvl4_1=§6§lStrong §6§lgusts ;; Sandstorm moves much faster and isn't disrupted by airbending
+avatar.ability.sandstorm.lvl4_2=§6§lHarsh §6§lgrains ;; Whirling sand grains cause continuous minor damage to targets
 
 avatar.ability.explosion=Explosion
 avatar.ability.explosion.desc=Sparky-Sparky-Boom-Boom-Man!!! ;; Blow up pesky enemies with explosions! Be careful, though, as you can damage yourself!
@@ -427,23 +428,23 @@ avatar.key.conflict1=%1$s
 avatar.key.conflict2=Conflict w/ %1$s
 
 death.attack.avatar_earthbendBlock=%2$s smashed %1$s with earthbending!
-death.attack.avatar_waterArc=%2$s used §l§9waterbending to bring down %1$s !
+death.attack.avatar_waterArc=%2$s used §9§lwaterbending to bring down %1$s !
 death.attack.avatar_ravine=%2$s crushed %1$s in a ravine!
-death.attack.avatar_wave=%1$s §l§9can't §l§9surf!
+death.attack.avatar_wave=%1$s §9§lcan't §9§lsurf!
 death.attack.avatar_fireball=%2$s incinerated %1$s with a fireball!
-death.attack.avatar_airblade=%1$s was sliced by %2$s !
+death.attack.avatar_airblade=%1$s was §f§lsliced by %2$s !
 death.attack.avatar_flamethrower=%1$s just got ROASTED by %2$s !
 death.attack.avatar_groundSmash=%2$s smashed %1$s to a pulp!
-death.attack.avatar_lightningBending=%2$s §l§belectrocuted %1$s !
-death.attack.avatar_lightningBendingRedirected=%2$s §l§bredirected lightning to §l§belectrocute %1$s !
-death.attack.avatar_watercannon=%1$s couldn't handle the pressure of %2$s's §l§9Water §l§9Cannon!
-death.attack.avatar_cloudburst=%1$s was blown apart by %2$s's cloudburst!
+death.attack.avatar_lightningBending=%2$s §b§lelectrocuted %1$s !
+death.attack.avatar_lightningBendingRedirected=%2$s §b§lredirected lightning to §b§lelectrocute %1$s !
+death.attack.avatar_watercannon=%1$s couldn't handle the pressure of %2$s's §9§lWater §9§lCannon!
+death.attack.avatar_cloudburst=%1$s was §f§lblown §f§lapart by %2$s's §f§lcloudburst!
 death.attack.avatar_icePrison=The intense frost of %2$s's ice prison froze %1$s !
 death.attack.avatar_iceShard=%2$s was stabbed by %1$s's ice shard!
-death.attack.avatar_sandPrison=%1$s was entombed by %1$s's sand prison!
-death.attack.avatar_sandstorm=%2$s was flung by %1$s's sandstorm!
+death.attack.avatar_sandPrison=%1$s was §6§lentombed by %1$s's §6§lsand §6§lprison!
+death.attack.avatar_sandstorm=%2$s was flung by %1$s's §6§lsandstorm!
 
-entity.Airbender.name=Airbender
+entity.Airbender.name=§f§lAirbender
 entity.Firebender.name=Firebender
 entity.Waterbender.name=Waterbender
 entity.SkyBison.name=Flying Bison
@@ -452,15 +453,15 @@ entity.OstrichHorse.name=Ostrich Horse
 
 itemGroup.avatar.items=Avatar Items
 
-item.avatarmod:scroll.all.name=Scroll
-item.avatarmod:scroll.air.name=Airbending §l§dScroll
-item.avatarmod:scroll.fire.name=Firebending §l§dScroll
-item.avatarmod:scroll.earth.name=Earthbending §l§dScroll
-item.avatarmod:scroll.water.name=Waterbending §l§dScroll
-item.avatarmod:scroll.lightning.name=§l§bLightningbending §l§dScroll
-item.avatarmod:scroll.ice.name=Icebending §l§dScroll
-item.avatarmod:scroll.sand.name=Sandbending §l§dScroll
-item.avatarmod:scroll.combustion.name=Combustionbending §l§dScroll
+item.avatarmod:scroll.all.name=§d§lScroll
+item.avatarmod:scroll.air.name=§f§lAirbending §d§lScroll
+item.avatarmod:scroll.fire.name=Firebending §d§lScroll
+item.avatarmod:scroll.earth.name=Earthbending §d§lScroll
+item.avatarmod:scroll.water.name=§9§lWaterbending §d§lScroll
+item.avatarmod:scroll.lightning.name=§b§lLightningbending §d§lScroll
+item.avatarmod:scroll.ice.name=Icebending §d§lScroll
+item.avatarmod:scroll.sand.name=§6§lSandbending §d§lScroll
+item.avatarmod:scroll.combustion.name=Combustionbending §d§lScroll
 
 item.avatarmod:water_pouch.name=Water Skin
 item.avatarmod:bison_whistle.name=Bison Whistle
