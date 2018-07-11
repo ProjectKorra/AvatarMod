@@ -58,7 +58,7 @@ public class EntityWave extends AvatarEntity {
 		this.Size = 2;
 		setSize(Size, Size);
 		damageMult = 1;
-		Shrink = 0.001F;
+		Shrink = 0.005F;
 	}
 
 	@Override
@@ -101,6 +101,9 @@ public class EntityWave extends AvatarEntity {
 			this.setVelocity(velocity().dividedBy(40));
 			this.posY -= Shrink;
 		}
+		else{
+			this.posY += Shrink;
+		}
 
 		EntityLivingBase owner = getOwner();
 
@@ -138,8 +141,11 @@ public class EntityWave extends AvatarEntity {
 			}
 		}
 
-		if (ticksExisted > 400) {
+		BlockPos below1 = getPosition();
+		Block belowBlock1 = world.getBlockState(below1).getBlock();
+		if (ticksExisted > 200 && belowBlock1 != Blocks.WATER) {
 			setDead();
+
 		}
 
 	}
@@ -163,7 +169,7 @@ public class EntityWave extends AvatarEntity {
 			Shrink = 0.005F;
 			return false;
 		}
-		else return true;
+		return false;
 
 		//help
 		//TODO: Make wave go onto land

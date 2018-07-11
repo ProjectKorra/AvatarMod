@@ -63,29 +63,29 @@ public class AbilityCreateWave extends Ability {
 
 					if (bender.consumeChi(STATS_CONFIG.chiWave)) {
 
-						double speed = 10;
+						double speed = 6.5;
 						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-							speed = 15;
+							speed = 12.5;
 							size = 3.5F;
 						}
 						if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-							speed = 20;
+							speed = 17;
 							size = 2.75F;
 						}
 						if (ctx.getLevel() == 1) {
 							size = 2.5F;
-							speed = 11;
+							speed = 8;
 						}
 						if (ctx.getLevel() == 2) {
 							size = 3;
-							speed = 13;
+							speed = 10;
 						}
 						speed += ctx.getPowerRating() / 100 * 8;
 
 						EntityWave wave = new EntityWave(world);
 						wave.setOwner(entity);
 						wave.setVelocity(look.times(speed));
-						wave.setPosition(pos.x() + 0.5, pos.y()+1.1, pos.z() + 0.5);
+						wave.setPosition(pos.x() + 0.5, pos.y()+0.5, pos.z() + 0.5);
 						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 
 						float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
