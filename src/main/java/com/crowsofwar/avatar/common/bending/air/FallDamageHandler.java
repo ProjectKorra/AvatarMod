@@ -22,12 +22,9 @@ public class FallDamageHandler {
 		EntityLivingBase entity = (EntityLivingBase) event.getEntity();
 		if (entity instanceof EntityBender || entity instanceof EntityPlayerMP) {
 			Bender bender = Bender.get(entity);
-			System.out.println("step 1");
 			if (bender.getData() != null) {
-				System.out.println("kind of works");
 				BendingData ctx = BendingData.get(entity);
 				if (ctx.hasBendingId(Airbending.ID)) {
-					System.out.println("Success!");
 					if (event.getSource() == DamageSource.FALL) {
 						event.setAmount(0);
 						event.setCanceled(true);
