@@ -37,8 +37,7 @@ public class WaterRegenChi {
 					if (currentBlock == Blocks.WATER || currentBlock == Blocks.FLOWING_WATER) {
 						Chi chi = ctx.chi();
 						if (world.getWorldTime() % 24000 <= 2) {
-							chi.setAvailableChi(CHI_CONFIG.maxAvailableChi);
-							chi.changeTotalChi(STATS_CONFIG.sleepChiRegen);
+							chi.changeTotalChi(CHI_CONFIG.regenInWater);
 						}
 					}
 				}
