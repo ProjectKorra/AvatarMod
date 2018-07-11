@@ -66,7 +66,7 @@ public class AbilityWaterArc extends Ability {
 		if (targetPos != null || ctx.consumeWater(1) || (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative())) {
 
 			if (targetPos == null) {
-				targetPos = Vector.getEyePos(entity).plus(getLookRectangular(entity).times(4));
+				targetPos = Vector.getEyePos(entity).plus(getLookRectangular(entity).times(2.5));
 			}
 
 			float damageMult = 1F;

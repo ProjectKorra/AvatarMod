@@ -22,8 +22,10 @@ import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
@@ -48,6 +50,13 @@ public class SmashGroundHandler extends TickHandler {
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.posY - range,
 						entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range);
 
+				if (world instanceof WorldServer) {
+					WorldServer World = (WorldServer) world;
+					World.spawnParticle(EnumParticleTypes.CLOUD, box.maxX, box.maxY, box.maxZ,10, 0.2, 0, 0.2, 0.01);
+				}
+				if (!world.isRemote) {
+					world.spawnParticle(EnumParticleTypes.CLOUD, true, box.maxX, box.maxY, box.maxZ, 0.01, 0.01, 0.01);
+				}
 				List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 				for (EntityLivingBase target : nearby) {
 					if (target != entity) {

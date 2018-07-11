@@ -38,6 +38,9 @@ public class WaterRegenChi {
 						Chi chi = ctx.chi();
 						if (world.getWorldTime() % 24000 <= 2) {
 							chi.changeTotalChi(CHI_CONFIG.regenInWater);
+							if (chi.getTotalChi() > chi.getMaxChi()) {
+								chi.setTotalChi(chi.getMaxChi());
+							}
 						}
 					}
 				}
