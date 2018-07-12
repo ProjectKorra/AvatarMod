@@ -14,15 +14,20 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.bending;
+package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -39,32 +44,58 @@ public class SmashGroundHandler extends TickHandler {
 
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
+		int ticks = 0;
 
 		if (entity.isInWater() || entity.onGround || bender.isFlying()) {
 
 			if (entity.onGround) {
 
+				ticks++;
 				double range = getRange();
 
 				World world = entity.world;
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.posY - range,
 						entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range);
 
-				if (world instanceof WorldServer) {
-					WorldServer World = (WorldServer) world;
-					World.spawnParticle(EnumParticleTypes.CLOUD, box.maxX, box.maxY, box.maxZ,10, 0.2, 0, 0.2, 0.01);
-				}
-				if (!world.isRemote) {
-					world.spawnParticle(EnumParticleTypes.CLOUD, true, box.maxX, box.maxY, box.maxZ, 0.01, 0.01, 0.01);
-				}
-				List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
+				float speed = 0.4F;
+
+				//For radial particle spawning; all credit for this part goes to Electroblob, as his earthquake code
+				//was invaluable for this process.
+				for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (ticks * 1.5)) {
+					float x = (float) (entity.posX < 0 ? (entity.posX + ((ticks * speed)) * Math.sin(angle) - 1)
+							: (float) (entity.posX + ((ticks * speed)) * Math.sin(angle)));
+					float y = (float) (entity.posY);
+					float z = entity.posZ < 0 ? (float) (entity.posZ + ((ticks * speed)) * Math.cos(angle) - 1)
+							: (float) (entity.posZ + ((ticks * speed)) * Math.cos(angle));
+
+					double distance = entity.getDistance(x, y, z);
+
+					if (distance > 3) {
+						x = (float) (entity.posX + getRange());
+						y = (float) (entity.posY);
+						z = (float) (entity.posZ + getRange());
+					}
+					if (!world.isRemote) {
+						world.spawnParticle(getParticle(), false, x, y, z, 0.01, 0.01, 0.01);
+						world.spawnParticle(getParticle(), false, -x, y, -z, 0.01, 0.01, 0.01);
+						WorldServer World = (WorldServer) world;
+						World.spawnParticle(getParticle(), x, y, z, 100, 0, 0, 0, 0.1);
+						World.spawnParticle(getParticle(), -x, y, -z, 100, 0, 0, 0, 0.1);
+						entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), SoundCategory.BLOCKS, 4F, 0.5F);
+
+					}
+
+
+					List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 				for (EntityLivingBase target : nearby) {
 					if (target != entity) {
 						smashEntity(target, entity);
 					}
 				}
 
+				}
 			}
+
 
 			return true;
 		}
@@ -80,7 +111,6 @@ public class SmashGroundHandler extends TickHandler {
 		Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
 		velocity = velocity.withY(1).times(getSpeed() / 20);
 		target.addVelocity(velocity.x(), velocity.y(), velocity.z());
-
 	}
 
 	protected double getRange() {
@@ -93,5 +123,18 @@ public class SmashGroundHandler extends TickHandler {
 	protected double getSpeed() {
 		return 3;
 	}
+
+	protected EnumParticleTypes getParticle() {
+		return EnumParticleTypes.CLOUD;
+	}
+
+	protected SoundEvent getSound() {
+		return SoundEvents.ENTITY_FIREWORK_LAUNCH;
+	}
+
+	protected SoundCategory getSoundCategory() {
+		return SoundCategory.BLOCKS;
+	}
+
 
 }

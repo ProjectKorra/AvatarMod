@@ -16,9 +16,10 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.bending.SmashGroundHandler;
+import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 
 /**
@@ -42,5 +43,10 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 	@Override
 	protected double getSpeed() {
 		return 8;
+	}
+
+	@Override
+	protected EnumParticleTypes getParticle() {
+		return EnumParticleTypes.FLAME;
 	}
 }

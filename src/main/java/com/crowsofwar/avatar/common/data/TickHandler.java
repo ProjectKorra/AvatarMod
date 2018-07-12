@@ -16,8 +16,8 @@
 */
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.avatar.common.bending.SmashGroundHandler;
 import com.crowsofwar.avatar.common.bending.air.AirParticleSpawner;
+import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
 import com.crowsofwar.avatar.common.bending.fire.FireParticleSpawner;
 import com.crowsofwar.avatar.common.bending.fire.FireSmashGroundHandler;
 import com.crowsofwar.avatar.common.bending.fire.FireSmashGroundHandlerBig;
