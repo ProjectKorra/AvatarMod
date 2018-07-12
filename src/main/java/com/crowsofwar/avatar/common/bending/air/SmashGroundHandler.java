@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
@@ -57,43 +56,24 @@ public class SmashGroundHandler extends TickHandler {
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.posY - range,
 						entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range);
 
-				float speed = 0.4F;
 
-				//For radial particle spawning; all credit for this part goes to Electroblob, as his earthquake code
-				//was invaluable for this process.
-				for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (ticks * 1.5)) {
-					float x = (float) (entity.posX < 0 ? (entity.posX + ((ticks * speed)) * Math.sin(angle) - 1)
-							: (float) (entity.posX + ((ticks * speed)) * Math.sin(angle)));
-					float y = (float) (entity.posY);
-					float z = entity.posZ < 0 ? (float) (entity.posZ + ((ticks * speed)) * Math.cos(angle) - 1)
-							: (float) (entity.posZ + ((ticks * speed)) * Math.cos(angle));
+				if (!world.isRemote) {
+					WorldServer World = (WorldServer) world;
+					World.spawnParticle(getParticle(), entity.posX, entity.posY, entity.posZ, 100, 0, 0, 0, getParticleSpeed());
+					//World.spawnParticle(getParticle(), entity.posX - 3, y, entity.posZ - 3, 100, 0, 0, 0, 0.1);
+					entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), getSoundCategory(), 4F, 0.5F);
 
-					double distance = entity.getDistance(x, y, z);
-
-					if (distance > 3) {
-						x = (float) (entity.posX + getRange());
-						y = (float) (entity.posY);
-						z = (float) (entity.posZ + getRange());
-					}
-					if (!world.isRemote) {
-						world.spawnParticle(getParticle(), false, x, y, z, 0.01, 0.01, 0.01);
-						world.spawnParticle(getParticle(), false, -x, y, -z, 0.01, 0.01, 0.01);
-						WorldServer World = (WorldServer) world;
-						World.spawnParticle(getParticle(), x, y, z, 100, 0, 0, 0, 0.1);
-						World.spawnParticle(getParticle(), -x, y, -z, 100, 0, 0, 0, 0.1);
-						entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), SoundCategory.BLOCKS, 4F, 0.5F);
-
-					}
+				}
 
 
-					List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
+				List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 				for (EntityLivingBase target : nearby) {
 					if (target != entity) {
 						smashEntity(target, entity);
 					}
 				}
 
-				}
+
 			}
 
 
@@ -136,5 +116,9 @@ public class SmashGroundHandler extends TickHandler {
 		return SoundCategory.BLOCKS;
 	}
 
+	protected float getParticleSpeed() {
+		return 0.3F;
 
+	}
 }
+

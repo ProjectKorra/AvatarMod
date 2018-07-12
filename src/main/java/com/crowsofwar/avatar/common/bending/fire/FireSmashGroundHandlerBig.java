@@ -21,6 +21,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 
 /**
  * @author CrowsOfWar
@@ -48,5 +49,20 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 	@Override
 	protected EnumParticleTypes getParticle() {
 		return EnumParticleTypes.FLAME;
+	}
+
+	@Override
+	protected SoundEvent getSound() {
+		return SoundEvents.ITEM_FIRECHARGE_USE;
+	}
+
+	@Override
+	protected SoundCategory getSoundCategory() {
+		return SoundCategory.PLAYERS;
+	}
+
+	@Override
+	protected float getParticleSpeed() {
+		return 0.2F;
 	}
 }

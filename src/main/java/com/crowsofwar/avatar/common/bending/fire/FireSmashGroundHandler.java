@@ -50,4 +50,9 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 	protected EnumParticleTypes getParticle() {
 		return EnumParticleTypes.FLAME;
 	}
+
+	@Override
+	protected float getParticleSpeed() {
+		return 0.1F;
+	}
 }
