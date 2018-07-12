@@ -59,7 +59,7 @@ public class EntityWave extends AvatarEntity {
 		this.Size = 2;
 		setSize(Size, Size);
 		damageMult = 1;
-		Shrink = 0.005F;
+		Shrink = 0.05F;
 		this.collided = 0;
 	}
 
