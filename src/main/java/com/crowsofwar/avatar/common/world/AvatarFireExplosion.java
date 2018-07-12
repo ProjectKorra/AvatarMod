@@ -68,9 +68,10 @@ public class AvatarFireExplosion extends Explosion {
 				this.world.playSound(null, this.x, this.y, this.z, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 
 				if (this.size >= 2.0F) {
-					this.world.spawnParticle(EnumParticleTypes.LAVA, this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
+					this.world.spawnParticle(EnumParticleTypes.LAVA, this.x, this.y, this.z, 1.0D, 0.0D, 1.0D);
 				} else {
-					this.world.spawnParticle(EnumParticleTypes.FLAME, this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
+					this.world.spawnParticle(EnumParticleTypes.FLAME, this.x, this.y, this.z, 1.0D, 0.0D, 1.0D);
+					this.world.spawnParticle(EnumParticleTypes.FLAME, x, y, z, 0.5D, 0, 0.5D);
 				}
 
 

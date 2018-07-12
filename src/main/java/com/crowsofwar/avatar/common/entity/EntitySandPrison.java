@@ -22,7 +22,9 @@ import com.crowsofwar.avatar.common.bending.sand.Sandbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
+import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -123,6 +125,11 @@ public class EntitySandPrison extends AvatarEntity {
 	}
 
 	@Override
+	protected boolean canCollideWith(Entity entity) {
+		return false;
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		EntityLivingBase imprisoned = getImprisoned();
@@ -136,6 +143,8 @@ public class EntitySandPrison extends AvatarEntity {
 			imprisoned.posY = this.posY;
 			imprisoned.posZ = this.posZ;
 			imprisoned.motionX = imprisoned.motionY = imprisoned.motionZ = 0;
+			setVelocity(Vector.ZERO);
+			imprisoned.setVelocity(0, 0, 0);
 		}
 
 		if (!world.isRemote) {

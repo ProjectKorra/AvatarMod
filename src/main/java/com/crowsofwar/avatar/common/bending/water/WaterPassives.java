@@ -9,6 +9,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -20,10 +22,10 @@ import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
-public class WaterRegenChi {
+public class WaterPassives {
 
 	@SubscribeEvent
-	public static void waterRegenChi(LivingEvent.LivingUpdateEvent event) {
+	public static void waterPassives(LivingEvent.LivingUpdateEvent event) {
 		//TODO: Use configurable lists; they aren't working rn, I need to figure out why
 		EntityLivingBase entity = (EntityLivingBase) event.getEntity();
 		World world = entity.getEntityWorld();
@@ -35,6 +37,8 @@ public class WaterRegenChi {
 					BlockPos block = entity.getPosition();
 					Block currentBlock = world.getBlockState(block).getBlock();
 					if (currentBlock == Blocks.WATER || currentBlock == Blocks.FLOWING_WATER) {
+						entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 10));
+						entity.addPotionEffect(new PotionEffect(MobEffects.HASTE, 10, 1));
 						Chi chi = ctx.chi();
 						if (world.getWorldTime() % 24000 <= 2) {
 							chi.changeTotalChi(CHI_CONFIG.regenInWater);

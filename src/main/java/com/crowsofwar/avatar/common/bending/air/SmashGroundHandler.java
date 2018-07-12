@@ -129,7 +129,7 @@ public class SmashGroundHandler extends TickHandler {
 	}
 
 	protected int getNumberOfParticles() {
-		return 100;
+		return 200;
 	}
 }
 
