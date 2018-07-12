@@ -56,7 +56,7 @@ public class StatCtrlSkateJump extends StatusControl {
 
 			AbilityData abilityData = data.getAbilityData("water_skate");
 			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
-				data.addTickHandler(TickHandler.SMASH_GROUND);
+				data.addTickHandler(TickHandler.SMASH_GROUND_WATER);
 			}
 
 		}

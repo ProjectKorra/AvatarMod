@@ -55,4 +55,14 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 	protected float getParticleSpeed() {
 		return 0.1F;
 	}
+
+	@Override
+	protected float getKnockbackHeight() {
+		return 0.25F;
+	}
+
+	@Override
+	protected double getSpeed() {
+		return 2;
+	}
 }

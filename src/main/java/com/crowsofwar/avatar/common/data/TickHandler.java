@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.bending.lightning.LightningCreateHandler;
 import com.crowsofwar.avatar.common.bending.lightning.LightningRedirectHandler;
 import com.crowsofwar.avatar.common.bending.water.WaterChargeHandler;
 import com.crowsofwar.avatar.common.bending.water.WaterSkateHandler;
+import com.crowsofwar.avatar.common.bending.water.WaterSmashHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.BisonSummonHandler;
 import io.netty.buffer.ByteBuf;
@@ -49,6 +50,7 @@ public abstract class TickHandler {
 	public static TickHandler LIGHTNING_REDIRECT = new LightningRedirectHandler();
 	public static TickHandler SMASH_GROUND_FIRE = new FireSmashGroundHandler();
 	public static TickHandler SMASH_GROUND_FIRE_BIG = new FireSmashGroundHandlerBig();
+	public static TickHandler SMASH_GROUND_WATER = new WaterSmashHandler();
 
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;

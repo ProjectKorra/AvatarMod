@@ -65,4 +65,16 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 	protected float getParticleSpeed() {
 		return 0.2F;
 	}
+
+	@Override
+	protected float getDamage() {
+		return 5;
+	}
+
+	@Override
+	protected float getKnockbackHeight() {
+		return 0.75F;
+	}
+
+
 }

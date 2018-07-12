@@ -84,12 +84,12 @@ public class SmashGroundHandler extends TickHandler {
 	}
 
 	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {
-		if (target.attackEntityFrom(AvatarDamageSource.causeSmashDamage(target, entity), 5)) {
+		if (target.attackEntityFrom(AvatarDamageSource.causeSmashDamage(target, entity), getDamage())) {
 			BattlePerformanceScore.addLargeScore(entity);
 		}
 
 		Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
-		velocity = velocity.withY(1).times(getSpeed() / 20);
+		velocity = velocity.withY(getKnockbackHeight()).times(getSpeed() / 20);
 		target.addVelocity(velocity.x(), velocity.y(), velocity.z());
 	}
 
@@ -102,6 +102,10 @@ public class SmashGroundHandler extends TickHandler {
 	 */
 	protected double getSpeed() {
 		return 3;
+	}
+
+	protected float getKnockbackHeight() {
+		return 0.75F;
 	}
 
 	protected EnumParticleTypes getParticle() {
@@ -118,7 +122,10 @@ public class SmashGroundHandler extends TickHandler {
 
 	protected float getParticleSpeed() {
 		return 0.3F;
+	}
 
+	protected float getDamage() {
+		return  3;
 	}
 }
 
