@@ -65,4 +65,9 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 	protected double getSpeed() {
 		return 2;
 	}
+
+	@Override
+	protected int getNumberOfParticles() {
+		return 200;
+	}
 }

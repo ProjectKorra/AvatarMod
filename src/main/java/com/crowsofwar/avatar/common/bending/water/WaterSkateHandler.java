@@ -59,7 +59,6 @@ public class WaterSkateHandler extends TickHandler {
 	@Override
 	public boolean tick(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
-		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
 
 		// The tick handler may be active while the player hasn't started

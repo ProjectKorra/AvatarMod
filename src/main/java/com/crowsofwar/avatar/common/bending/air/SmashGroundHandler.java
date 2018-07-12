@@ -59,7 +59,7 @@ public class SmashGroundHandler extends TickHandler {
 
 				if (!world.isRemote) {
 					WorldServer World = (WorldServer) world;
-					World.spawnParticle(getParticle(), entity.posX, entity.posY, entity.posZ, 100, 0, 0, 0, getParticleSpeed());
+					World.spawnParticle(getParticle(), entity.posX, entity.posY, entity.posZ, getNumberOfParticles(), 0, 0, 0, getParticleSpeed());
 					//World.spawnParticle(getParticle(), entity.posX - 3, y, entity.posZ - 3, 100, 0, 0, 0, 0.1);
 					entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), getSoundCategory(), 4F, 0.5F);
 
@@ -101,7 +101,7 @@ public class SmashGroundHandler extends TickHandler {
 	 * The speed applied to hit entities, in m/s
 	 */
 	protected double getSpeed() {
-		return 3;
+		return 5;
 	}
 
 	protected float getKnockbackHeight() {
@@ -121,11 +121,15 @@ public class SmashGroundHandler extends TickHandler {
 	}
 
 	protected float getParticleSpeed() {
-		return 0.3F;
+		return 0.2F;
 	}
 
 	protected float getDamage() {
-		return  3;
+		return 3;
+	}
+
+	protected int getNumberOfParticles() {
+		return 100;
 	}
 }
 
