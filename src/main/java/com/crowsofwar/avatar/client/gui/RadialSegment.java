@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.client.gui;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -39,14 +40,17 @@ public class RadialSegment extends Gui {
 	private final float angle;
 	private final int index;
 	private final Ability ability;
+	private final BendingStyle element;
 
-	public RadialSegment(RadialMenu gui, MenuTheme theme, int index, Ability ability) {
+	public RadialSegment(RadialMenu gui, MenuTheme theme, int index, Ability ability, BendingStyle element) {
 		this.gui = gui;
 		this.angle = 22.5f + index * 45;
 		this.index = index;
 		this.ability = ability;
 		this.theme = theme;
 		this.mc = Minecraft.getMinecraft();
+		this.element = element;
+
 	}
 
 	/**
@@ -113,7 +117,7 @@ public class RadialSegment extends Gui {
 			// Draw background
 			GlStateManager.color(theme.getBackground().getRed(hover) / 255f,
 					theme.getBackground().getGreen(hover) / 255f, theme.getBackground().getBlue(hover) / 255f, alpha);
-			mc.getTextureManager().bindTexture(AvatarUiTextures.radialMenu);
+			mc.getTextureManager().bindTexture(AvatarUiTextures.getBendingRadialTexture(element));
 			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 			
 		GlStateManager.popMatrix();

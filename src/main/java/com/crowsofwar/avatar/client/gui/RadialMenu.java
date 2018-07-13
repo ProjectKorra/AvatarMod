@@ -98,7 +98,7 @@ public class RadialMenu extends Gui {
 		this.controls = ctrl;
 
 		for (int i = 0; i < segments.length; i++) {
-			segments[i] = new RadialSegment(this, theme, i, controls[i]);
+			segments[i] = new RadialSegment(this, theme, i, controls[i], controller);
 		}
 
 		this.bender = Bender.get(mc.player);

@@ -18,7 +18,9 @@
 package com.crowsofwar.avatar.client.gui;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import net.minecraft.util.ResourceLocation;
 
 import javax.imageio.ImageIO;
@@ -47,11 +49,12 @@ public class AvatarUiTextures {
 	public static final ResourceLocation[] BLOCK_BREAK = getBlockBreakTextures();
 	public static final ResourceLocation WHITE = new ResourceLocation("avatarmod", "textures/gui/white.png");
 	static final ResourceLocation radialMenu = new ResourceLocation("avatarmod",
-			"textures/radial/circle_segment.png");
+			"textures/radial/earthbending_segment.png");
 	static final ResourceLocation icons = new ResourceLocation("avatarmod", "textures/gui/ability_icons.png");
 	static final ResourceLocation blurredIcons = new ResourceLocation("avatarmod",
 			"textures/gui/blurred_icons.png");
 	private static final Map<Ability, ResourceLocation> abilityTextures = new HashMap<>();
+	private static final Map<BendingStyle, ResourceLocation> radialTextures = new HashMap<>();
 	private static final Map<Ability, ResourceLocation> abilityCards = new HashMap<>();
 	private static final Map<Ability, ResourceLocation> abilityCardsPlain = new HashMap<>();
 	private static final Map<UUID, ResourceLocation> bendingBackgrounds = new HashMap<>();
@@ -69,6 +72,10 @@ public class AvatarUiTextures {
 
 	public static ResourceLocation getAbilityTexture(Ability ability) {
 		return getCachedImage(abilityTextures, ability, "textures/radial/icon_" + ability.getName() + ".png");
+	}
+
+	public static ResourceLocation getBendingRadialTexture (BendingStyle element) {
+		return getCachedImage(radialTextures, element, "textures/radial/" + element.getName() + "_segment.png");
 	}
 
 	public static ResourceLocation getCardTexture(Ability ability) {
