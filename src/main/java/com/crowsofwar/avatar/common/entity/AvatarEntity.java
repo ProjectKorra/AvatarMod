@@ -64,6 +64,7 @@ public abstract class AvatarEntity extends Entity {
 	protected boolean putsOutFires;
 	protected boolean flammable;
 	private double powerRating;
+	private String ability;
 
 	private SyncedEntity<EntityLivingBase> ownerRef;
 
@@ -207,6 +208,14 @@ public abstract class AvatarEntity extends Entity {
 
 	public void setPowerRating(double powerRating) {
 		this.powerRating = powerRating;
+	}
+
+	public void setAbility (String ability) {
+		this.ability = ability;
+	}
+
+	public String getAbility() {
+		return ability;
 	}
 
 	@Override
