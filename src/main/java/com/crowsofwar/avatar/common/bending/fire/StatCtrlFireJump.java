@@ -42,7 +42,7 @@ public class StatCtrlFireJump extends StatusControl {
 
 		AbilityData abilityData = data.getAbilityData("fire_jump");
 		boolean allowDoubleJump = abilityData.getLevel() == 3
-				&& abilityData.getPath() == AbilityData.AbilityTreePath.FIRST;
+				&& abilityData.getPath() == AbilityData.AbilityTreePath.SECOND;
 
 		// Figure out whether entity is on ground by finding collisions with
 		// ground - if found a collision box, then is not on ground
@@ -66,6 +66,14 @@ public class StatCtrlFireJump extends StatusControl {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				jumpMultiplier = 0.6;
 				fallAbsorption = 8;
+			}
+			if (abilityData.getLevel() < 2) {
+				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE);
+				entity.onGround = true;
+			}
+			else {
+				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE_BIG);
+				entity.onGround = true;
 			}
 
 			// Calculate direction to jump -- in the direction the player is currently already going
@@ -96,6 +104,7 @@ public class StatCtrlFireJump extends StatusControl {
 			velocity = velocity.withZ(velocity.z() * 2);
 
 			velocity = velocity.times(jumpMultiplier);
+			entity.onGround = false;
 			if (!onGround) {
 				velocity = velocity.times(1);
 				entity.motionX = 0;
@@ -114,11 +123,10 @@ public class StatCtrlFireJump extends StatusControl {
 			data.getMiscData().setFallAbsorption(fallAbsorption);
 
 			data.addTickHandler(TickHandler.FIRE_PARTICLE_SPAWNER);
-			data.addTickHandler(abilityData.getLevel() >= 2 ?
-					TickHandler.SMASH_GROUND_FIRE_BIG : TickHandler.SMASH_GROUND_FIRE);
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				damageNearbyEntities(ctx, 5, 3);
+			//	damageNearbyEntities(ctx, 5, 3);
+				//data.addTickHandler(TickHandler.SMASH_GROUND_FIRE_BIG);
 			}
 
 			abilityData.addXp(ConfigSkills.SKILLS_CONFIG.fireJump);
@@ -134,7 +142,7 @@ public class StatCtrlFireJump extends StatusControl {
 
 	}
 
-	private void damageNearbyEntities(BendingContext ctx, double range, double speed) {
+/*	private void damageNearbyEntities(BendingContext ctx, double range, double speed) {
 
 		EntityLivingBase entity = ctx.getBenderEntity();
 
@@ -157,7 +165,7 @@ public class StatCtrlFireJump extends StatusControl {
 			}
 		}
 
-	}
+	}**/
 
 }
 
