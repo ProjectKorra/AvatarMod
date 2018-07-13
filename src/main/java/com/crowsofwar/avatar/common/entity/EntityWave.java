@@ -156,6 +156,10 @@ public class EntityWave extends AvatarEntity {
 
 		}
 
+		if (ticksExisted >= 250) {
+			this.setDead();
+		}
+
 	}
 
 

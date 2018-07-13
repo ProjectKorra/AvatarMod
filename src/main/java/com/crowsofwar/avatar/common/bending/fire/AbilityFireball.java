@@ -68,20 +68,24 @@ public class AbilityFireball extends Ability {
 
 			float damage = STATS_CONFIG.fireballSettings.damage;
 			float explosionStrength = 0.75f;
+			int size = 14;
 			damage *= ctx.getLevel() >= 2 ? 1.75f : 1f;
 			damage *= ctx.getPowerRatingDamageMod();
 			System.out.println(ctx.getPowerRatingDamageMod());
 
 			if (ctx.getLevel() == 1) {
 				explosionStrength = 1;
+				size = 16;
 			}
 
 			if (ctx.getLevel() == 2) {
 				explosionStrength = 1.25F;
+				size = 18;
 			}
 
 			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 				explosionStrength = 2;
+				size = 30;
 			}
 
 
@@ -91,6 +95,7 @@ public class AbilityFireball extends Ability {
 			fireball.setBehavior(new FireballBehavior.PlayerControlled());
 			fireball.setDamage(damage);
 			fireball.setPowerRating(bender.calcPowerRating(Firebending.ID));
+			fireball.setSize(size);
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(20);
 
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {

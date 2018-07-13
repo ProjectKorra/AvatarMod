@@ -168,7 +168,7 @@ public class EntityFireball extends AvatarEntity {
 		if (getBehavior() instanceof FireballBehavior.Thrown) {
 			float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
 
-			explosionSize *= getSize() / 30f;
+			explosionSize *= getSize() / 15f;
 			explosionSize += getPowerRating() * 2.0 / 100;
 			boolean destroyObsidian = false;
 
