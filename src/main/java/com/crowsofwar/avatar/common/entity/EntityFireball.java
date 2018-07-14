@@ -24,6 +24,8 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.world.AvatarFireExplosion;
+import com.crowsofwar.gorecore.util.Vector;
+import jdk.nashorn.internal.ir.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -40,6 +42,7 @@ import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+import org.lwjgl.Sys;
 
 import javax.annotation.Nullable;
 
@@ -84,31 +87,43 @@ public class EntityFireball extends AvatarEntity {
 
 	@Override
 	public void onUpdate() {
-		super.onUpdate();
-		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
-		if (ticksExisted % 30 == 0) {
-			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 6, 0.8F);
-		}
+			super.onUpdate();
 
-		// Add hook or something
-		if (getOwner() == null) {
-			setDead();
-			removeStatCtrl();
-		}
+			setBehavior((FireballBehavior) getBehavior().onUpdate(this));
 
-		BendingData data = BendingData.get(getOwner());
-		if (getBehavior() instanceof FireballBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
-			setDead();
-		}
+			//if (!world.isRemote) {
+				if (!world.isRemote) {
+					if (getServer().getPosition() != getPosition()) {
+						this.setPosition(this.position());
+					}
+				}
+			//}
 
-		if (getOwner() != null) {
-			EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
-			BendingData bD = BendingData.get(getOwner());
-			if (fireball == null && bD.hasStatusControl(StatusControl.THROW_FIREBALL)) {
-				bD.removeStatusControl(StatusControl.THROW_FIREBALL);
+			if (ticksExisted % 30 == 0) {
+				world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 6, 0.8F);
+			}
+
+			// Add hook or something
+			if (getOwner() == null) {
+				setDead();
+				removeStatCtrl();
+			}
+
+			BendingData data = BendingData.get(getOwner());
+			if (getBehavior() instanceof FireballBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
+				setDead();
+			}
+
+			if (getOwner() != null && !world.isRemote) {
+				EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
+				BendingData bD = BendingData.get(getOwner());
+				if (fireball == null && bD.hasStatusControl(StatusControl.THROW_FIREBALL)) {
+					bD.removeStatusControl(StatusControl.THROW_FIREBALL);
+				}
 			}
 		}
-	}
+
+
 
 	@Override
 	public boolean onMajorWaterContact() {
@@ -165,6 +180,7 @@ public class EntityFireball extends AvatarEntity {
 	@Override
 	public boolean onCollideWithSolid() {
 
+
 		if (getBehavior() instanceof FireballBehavior.Thrown) {
 			float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
 
@@ -172,14 +188,15 @@ public class EntityFireball extends AvatarEntity {
 			explosionSize += getPowerRating() * 2.0 / 100;
 			boolean destroyObsidian = false;
 
-			if (getOwner() != null) {
-				if (getAbility().equals("fireball")) {
+			if (getOwner() != null && !world.isRemote) {
+
+				/*if (getAbility().equals("fireball")) {
 					AbilityData abilityData = BendingData.get(getOwner())
 							.getAbilityData("fireball");
 					if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 						destroyObsidian = true;
-					}
-				}
+					}**/
+				//}
 
 			}
 
@@ -200,6 +217,7 @@ public class EntityFireball extends AvatarEntity {
 					}
 				}
 			}
+
 
 			setDead();
 			removeStatCtrl();

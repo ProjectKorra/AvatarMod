@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.client.particle.ParticleCloud;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
@@ -59,8 +60,13 @@ public class SmashGroundHandler extends TickHandler {
 
 				if (!world.isRemote) {
 					WorldServer World = (WorldServer) world;
-					World.spawnParticle(getParticle(), entity.posX, entity.posY, entity.posZ, getNumberOfParticles(), 0, 0, 0, getParticleSpeed());
-					//World.spawnParticle(getParticle(), entity.posX - 3, y, entity.posZ - 3, 100, 0, 0, 0, 0.1);
+					for (int degree = 0; degree < 360; degree++) {
+						double radians = Math.toRadians(degree);
+						double x = Math.cos(radians) * getRange();
+						double z = Math.sin(radians) * getRange();
+						World.spawnParticle(getParticle(), x + entity.posX, entity.posY,
+								z + entity.posZ, getNumberOfParticles()/4, 0, 0 , 0, getParticleSpeed()/4);
+					}
 					entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), getSoundCategory(), 4F, 0.5F);
 
 				}
@@ -121,7 +127,7 @@ public class SmashGroundHandler extends TickHandler {
 	}
 
 	protected float getParticleSpeed() {
-		return 0.2F;
+		return 0.1F;
 	}
 
 	protected float getDamage() {
@@ -129,7 +135,7 @@ public class SmashGroundHandler extends TickHandler {
 	}
 
 	protected int getNumberOfParticles() {
-		return 200;
+		return 100;
 	}
 }
 
