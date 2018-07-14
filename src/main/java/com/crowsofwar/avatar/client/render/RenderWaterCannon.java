@@ -30,19 +30,19 @@ public class RenderWaterCannon extends RenderArc {
 		renderArc(cannon, partialTicks, 3f, 3f * cannon.getSizeMultiplier());
 		Vector vector = cannon.velocity().normalize();
 		//double yaw = Math.atan(vector.x()/(-vector.y()));
-		//double pitch = Math.atan(Math.sqrt(vector.x()^2 + vector.y()^2)/vector.z());
+		//double pitch = Math.atan(Math.sqrt(vector.x() * vector.x() + vector.y() * vector.y())/vector.z());
 		for (int degree = 0; degree < 360; degree++) {
 			double radians = Math.toRadians(degree);
 			double x = Math.cos(radians);
 			double z = Math.sin(radians);
-			double y = cannon.posY - cannon.getSizeMultiplier()/2;
-			if (y >= cannon.posY + cannon.getSizeMultiplier()/2) {
+			//double y = cannon.posY - cannon.getSizeMultiplier();
+			/*if (y >= cannon.posY + cannon.getSizeMultiplier()) {
 				y -= 1;
 			}
-			else if (y<= cannon.posY - cannon.getSizeMultiplier()/2) {
+			else if (y<= cannon.posY - cannon.getSizeMultiplier()) {
 				y -= 1;
-			}
-			cannon.world.spawnParticle(EnumParticleTypes.WATER_SPLASH, x + cannon.getOwner().posX, y,
+			}**/
+			cannon.world.spawnParticle(EnumParticleTypes.WATER_SPLASH, x + cannon.getOwner().posX, cannon.getOwner().posY,
 					z + cannon.getOwner().posZ, 0, 0, 0);
 
 

@@ -110,20 +110,25 @@ public class EntityAirBubble extends EntityShield {
 			return;
 		}
 
-		if (!world.isRemote) {
-			if (getServer().getPositionVector() != getPositionVector()) {
+
+			if (getServer().getPosition() != getPosition()) {
 				serverPosX = (long) position().x();
 				serverPosY = (long) position().y();
 				serverPosZ = (long) position().z();
 
 			}
-		}
+
+
 
 		if (owner.isDead) {
 			dissipateSmall();
 			return;
 		}
 		setPosition(owner.posX, owner.posY, owner.posZ);
+		if (!world.isRemote) {
+			setPositionAndUpdate(owner.posX, owner.posY, owner.posZ);
+		}
+
 		this.setVelocity(Vector.ZERO);
 
 		if (!world.isRemote && owner.isInsideOfMaterial(Material.WATER)) {
