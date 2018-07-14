@@ -34,9 +34,7 @@ public class WaterPassives {
 			if (bender.getData() != null) {
 				BendingData ctx = BendingData.get(entity);
 				if (ctx.hasBendingId(Waterbending.ID)) {
-					BlockPos block = entity.getPosition();
-					Block currentBlock = world.getBlockState(block).getBlock();
-					if (currentBlock == Blocks.WATER || currentBlock == Blocks.FLOWING_WATER) {
+					if (entity.isInWater()) {
 						entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 10));
 						entity.addPotionEffect(new PotionEffect(MobEffects.HASTE, 10, 1));
 						Chi chi = ctx.chi();

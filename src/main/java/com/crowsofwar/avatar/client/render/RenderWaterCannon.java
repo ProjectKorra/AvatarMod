@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.client.render;
 import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
@@ -27,20 +28,25 @@ public class RenderWaterCannon extends RenderArc {
 
 		EntityWaterCannon cannon = (EntityWaterCannon) entity;
 		renderArc(cannon, partialTicks, 3f, 3f * cannon.getSizeMultiplier());
+		Vector vector = cannon.velocity().normalize();
+		//double yaw = Math.atan(vector.x()/(-vector.y()));
+		//double pitch = Math.atan(Math.sqrt(vector.x()^2 + vector.y()^2)/vector.z());
 		for (int degree = 0; degree < 360; degree++) {
 			double radians = Math.toRadians(degree);
 			double x = Math.cos(radians);
 			double z = Math.sin(radians);
-			cannon.world.spawnParticle(EnumParticleTypes.CLOUD, x + cannon.getOwner().posX, cannon.getOwner().posY,
+			double y = cannon.posY - cannon.getSizeMultiplier()/2;
+			if (y >= cannon.posY + cannon.getSizeMultiplier()/2) {
+				y -= 1;
+			}
+			else if (y<= cannon.posY - cannon.getSizeMultiplier()/2) {
+				y -= 1;
+			}
+			cannon.world.spawnParticle(EnumParticleTypes.WATER_SPLASH, x + cannon.getOwner().posX, y,
 					z + cannon.getOwner().posZ, 0, 0, 0);
+
+
 		}
-		/*float Angle = 2 % 360;
-		double cos = Math.cos(Math.toRadians(Angle));
-		double sin = Math.sin(Math.toRadians(Angle));
-		double x = 2 * cos - 2 * sin;
-		double y = 2 * cos + 2 * sin;
-		entity.world.spawnParticle(EnumParticleTypes.WATER_SPLASH, x, y, z,
-				((EntityWaterCannon) entity).velocity().x(), ((EntityWaterCannon) entity).velocity().y(), ((EntityWaterCannon) entity).velocity().z());**/
 
 	}
 
