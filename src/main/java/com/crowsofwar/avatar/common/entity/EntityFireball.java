@@ -189,7 +189,6 @@ public class EntityFireball extends AvatarEntity {
 			boolean destroyObsidian = false;
 
 			if (getOwner() != null && !world.isRemote) {
-
 				if (getAbility() instanceof AbilityFireball) {
 					AbilityData abilityData = BendingData.get(getOwner())
 							.getAbilityData("fireball");

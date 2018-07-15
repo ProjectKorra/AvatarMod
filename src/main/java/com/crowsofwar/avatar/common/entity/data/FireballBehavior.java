@@ -135,9 +135,10 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			BendingData data = Bender.get(entity.getOwner()).getData();
 			if (!collided.world.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.fireballHit;
-				if (entity.getAbility() instanceof AbilityFireball) {
-					data.getAbilityData("fireball").addXp(xp);
+				if (entity.getAbility() != null) {
+					data.getAbilityData(entity.getAbility().getName()).addXp(xp);
 				}
+
 			}
 
 			// Remove the fireball & spawn particles

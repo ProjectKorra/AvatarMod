@@ -33,7 +33,7 @@ public class WaterParticleSpawner extends TickHandler {
 				double z = radius > 0 ? Math.sin(radians) * radius : Math.sin(radians);
 				//Prevents a possible null pointer exception with the value of radius being zero
 				double y = entity.posY + entity.getEyeHeight()/2;
-				World.spawnParticle(EnumParticleTypes.WATER_SPLASH, x + entity.posX, y, z + entity.posZ, 30, 0, 0, 0, (double) 0);
+				World.spawnParticle(EnumParticleTypes.WATER_SPLASH, x + entity.posX, y, z + entity.posZ, 15, 0, 0, 0, (double) 0);
 				//NOTE: The higher the amount of particles, the smaller the part of the circle. Lower is the full circle.
 				//Hella lag xD
 			}
