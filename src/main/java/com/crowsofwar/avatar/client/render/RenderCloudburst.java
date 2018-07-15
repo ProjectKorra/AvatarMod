@@ -46,7 +46,7 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 
         float ticks = entity.ticksExisted + partialTicks;
 
-        float rotation = ticks / 5f;
+        float rotation = ticks / 3f;
         float size = .8f + cos(ticks / 5f) * .05f;
         size *= Math.sqrt(entity.getSize() / 30f);
 

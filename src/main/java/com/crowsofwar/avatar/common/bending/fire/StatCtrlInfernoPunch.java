@@ -61,7 +61,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 				world.spawnEntity(fireball);
 				return true;
 			}
-
 		return false;
 
 	}
