@@ -31,8 +31,9 @@ public class WaterParticleSpawner extends TickHandler {
 			 if (duration % 2 == 0) {
 				 for (int degree = 0; degree < 360; degree++) {
 					 double radians = Math.toRadians(degree);
-					 double x = Math.cos(radians) * ((maxDuration - duration) / 10) > 0 ? Math.cos(radians) : Math.cos(radians) * ((maxDuration - duration) / 10);
-					 double z = Math.sin(radians) * ((maxDuration - duration) / 10) > 0 ? Math.sin(radians) : Math.sin(radians) * ((maxDuration - duration) / 10);
+					 double radius = (maxDuration - duration) / 10;
+					 double x = radius > 0 ? Math.cos(radians) * radius : Math.cos(radians);
+					 double z = radius > 0 ? Math.sin(radians) * radius : Math.sin(radians);
 					 //Prevents a possible null pointer exception with the value being zero
 					 double y = entity.posY;
 					 World.spawnParticle(EnumParticleTypes.WATER_SPLASH, x + entity.posX, y, z + entity.posZ, 50, 0, 0, 0, (double) 0);
