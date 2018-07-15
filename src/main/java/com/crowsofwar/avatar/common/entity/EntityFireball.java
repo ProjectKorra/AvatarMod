@@ -88,42 +88,41 @@ public class EntityFireball extends AvatarEntity {
 
 	@Override
 	public void onUpdate() {
-			super.onUpdate();
 
-			setBehavior((FireballBehavior) getBehavior().onUpdate(this));
+		super.onUpdate();
+		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
 
-			//if (!world.isRemote) {
-				/*if (!world.isRemote) {
-					if (getServer().getPosition() != getPosition()) {
-						this.setPosition(this.position());
-					}
-				}**/
-			//}
-
-			if (ticksExisted % 30 == 0) {
-				world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 6, 0.8F);
-			}
-
-			// Add hook or something
-			if (getOwner() == null) {
-				setDead();
-				removeStatCtrl();
-			}
-
-			BendingData data = BendingData.get(getOwner());
-			if (getBehavior() instanceof FireballBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
-				setDead();
-			}
-
-			if (getOwner() != null && !world.isRemote) {
-				EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
-				BendingData bD = BendingData.get(getOwner());
-				if (fireball == null && bD.hasStatusControl(StatusControl.THROW_FIREBALL)) {
-					bD.removeStatusControl(StatusControl.THROW_FIREBALL);
-				}
+		if (!world.isRemote) {
+			if (getServer().getPosition() != getPosition()) {
+				this.setPosition(this.position());
 			}
 		}
+		//Fixes (kind of) fireball entity glitching, that causes it to go invisible and not render anything properly
 
+
+		if (ticksExisted % 30 == 0) {
+			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 6, 0.8F);
+		}
+
+		// Add hook or something
+		if (getOwner() == null) {
+			setDead();
+			removeStatCtrl();
+		}
+
+		BendingData data = BendingData.get(getOwner());
+		if (getBehavior() instanceof FireballBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
+			setDead();
+		}
+
+		if (getOwner() != null && !world.isRemote) {
+			EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
+			BendingData bD = BendingData.get(getOwner());
+			if (fireball == null && bD.hasStatusControl(StatusControl.THROW_FIREBALL)) {
+				bD.removeStatusControl(StatusControl.THROW_FIREBALL);
+			}
+		}
+	}
 
 
 	@Override

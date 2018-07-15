@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
@@ -40,20 +41,24 @@ public class AbilityWaterCannon extends Ability {
 		boolean hasChi = bender.consumeChi(STATS_CONFIG.chiWaterCannon);
 		boolean hasWaterCharge = data.hasTickHandler(TickHandler.WATER_CHARGE);
 
+
 		if (ctx.consumeWater(3)) {
 			if (hasChi && !hasWaterCharge) {
 				ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
+				data.addTickHandler(TickHandler.WATER_PARTICLE_SPAWNER);
 			}
 		} else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
 			if (!hasWaterCharge) {
 				ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
+				data.addTickHandler(TickHandler.WATER_PARTICLE_SPAWNER);
 			}
 		} else if (targetPos != null && ctx.getLevel() >= 2) {
 			if (hasChi && !hasWaterCharge) {
 				world.setBlockToAir(targetPos.toBlockPos());
-				Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
+				//Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 
 				ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
+				data.addTickHandler(TickHandler.WATER_PARTICLE_SPAWNER);
 			}
 		} else {
 			bender.sendMessage("avatar.waterCannonFail");

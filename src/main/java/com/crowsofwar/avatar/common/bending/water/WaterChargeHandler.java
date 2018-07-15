@@ -22,7 +22,6 @@ import org.lwjgl.Sys;
 import java.util.UUID;
 
 public class WaterChargeHandler extends TickHandler {
-
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
 
@@ -54,20 +53,6 @@ public class WaterChargeHandler extends TickHandler {
 
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 
-		if (duration < durationToFire && !world.isRemote) {
-			WorldServer World = (WorldServer) bender.getWorld();
-			if (duration % 20 == 0) {
-				System.out.println("Particles");
-				for (int degree = 0; degree < 360; degree++) {
-					double radians = Math.toRadians(degree);
-					double x = Math.cos(radians);// + ((360-degree)/100);
-					double z = Math.sin(radians);
-					double y = entity.posZ;
-					World.spawnParticle(EnumParticleTypes.WATER_SPLASH, x + entity.posX, y, z + entity.posZ, 300, 0, 0, 0, (double) 0);
-
-				}
-			}
-		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 
@@ -96,17 +81,19 @@ public class WaterChargeHandler extends TickHandler {
 			size = 0.25F;
 
 			if (abilityData.getLevel() >= 1) {
-				damage = (float) (1 * bender.getDamageMult(Waterbending.ID));;
+				damage = (float) (1 * bender.getDamageMult(Waterbending.ID));
+				;
 				size = 0.5f;
 				ticks = 75;
 			}
 			if (abilityData.getLevel() >= 2) {
-				damage =(float) (1.5 * bender.getDamageMult(Waterbending.ID));
+				damage = (float) (1.5 * bender.getDamageMult(Waterbending.ID));
 				size = 0.75f;
 				ticks = 100;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				damage = (float) (3 * bender.getDamageMult(Waterbending.ID));;
+				damage = (float) (3 * bender.getDamageMult(Waterbending.ID));
+				;
 				size = 1f;
 				ticks = 200;
 			}
