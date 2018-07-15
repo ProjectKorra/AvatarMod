@@ -287,18 +287,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 				bD.removeStatusControl(StatusControl.THROW_WATER);
 			}
 
-		/*	if (inWater && behavior instanceof WaterArcBehavior.PlayerControlled) {
-				// try to go upwards
-				for (double i = 0.1; i <= 3; i += 0.05) {
-					BlockPos pos = new Vector(this).plus(0, i, 0).toBlockPos();
-					if (world.getBlockState(pos).getBlock() == Blocks.AIR) {
-						setPosition(posX, posY + i, posZ);
-						inWater = false;
-						break;
-					}
-				}
-			}**/
-
 		}
 	}
 

@@ -15,6 +15,7 @@ import com.crowsofwar.avatar.common.world.AvatarFireExplosion;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -51,15 +52,16 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				Vector playerPos = getEyePos(entity);
 				Vector target = playerPos.plus(getLookRectangular(entity).times(2.5));
-
 				fireball.setPosition(target);
 				fireball.setOwner(entity);
 				fireball.setDamage(0.5F);
+				fireball.setSize(14);
 				fireball.addVelocity(Vector.getLookRectangular(entity).times(20));
 				fireball.setBehavior(new FireballBehavior.Thrown());
 				world.spawnEntity(fireball);
 				return true;
 			}
+
 		return false;
 
 	}
