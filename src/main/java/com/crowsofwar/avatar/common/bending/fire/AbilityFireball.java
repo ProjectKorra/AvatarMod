@@ -96,7 +96,7 @@ public class AbilityFireball extends Ability {
 			fireball.setDamage(damage);
 			fireball.setPowerRating(bender.calcPowerRating(Firebending.ID));
 			fireball.setSize(size);
-			fireball.setAbility("fireball");
+			fireball.setAbility(this);
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(20);
 
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {

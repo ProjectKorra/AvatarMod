@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -92,11 +93,11 @@ public class EntityFireball extends AvatarEntity {
 			setBehavior((FireballBehavior) getBehavior().onUpdate(this));
 
 			//if (!world.isRemote) {
-				if (!world.isRemote) {
+				/*if (!world.isRemote) {
 					if (getServer().getPosition() != getPosition()) {
 						this.setPosition(this.position());
 					}
-				}
+				}**/
 			//}
 
 			if (ticksExisted % 30 == 0) {
@@ -190,13 +191,13 @@ public class EntityFireball extends AvatarEntity {
 
 			if (getOwner() != null && !world.isRemote) {
 
-				/*if (getAbility().equals("fireball")) {
+				if (getAbility() instanceof AbilityFireball) {
 					AbilityData abilityData = BendingData.get(getOwner())
 							.getAbilityData("fireball");
 					if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 						destroyObsidian = true;
-					}**/
-				//}
+					}
+				}
 
 			}
 

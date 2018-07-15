@@ -44,13 +44,11 @@ public class SmashGroundHandler extends TickHandler {
 
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
-		int ticks = 0;
 
 		if (entity.isInWater() || entity.onGround || bender.isFlying()) {
 
 			if (entity.onGround) {
 
-				ticks++;
 				double range = getRange();
 
 				World world = entity.world;

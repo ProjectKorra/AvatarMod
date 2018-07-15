@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
@@ -64,7 +65,7 @@ public abstract class AvatarEntity extends Entity {
 	protected boolean putsOutFires;
 	protected boolean flammable;
 	private double powerRating;
-	private String ability;
+	private Ability ability;
 
 	private SyncedEntity<EntityLivingBase> ownerRef;
 
@@ -210,11 +211,11 @@ public abstract class AvatarEntity extends Entity {
 		this.powerRating = powerRating;
 	}
 
-	public void setAbility (String ability) {
+	public void setAbility (Ability ability) {
 		this.ability = ability;
 	}
 
-	public String getAbility() {
+	public Ability getAbility() {
 		return ability;
 	}
 

@@ -12,9 +12,12 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import org.lwjgl.Sys;
 
 import java.util.UUID;
 
@@ -51,6 +54,21 @@ public class WaterChargeHandler extends TickHandler {
 
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 
+		if (duration < durationToFire && !world.isRemote) {
+			WorldServer World = (WorldServer) bender.getWorld();
+			if (duration % 20 == 0) {
+				System.out.println("Particles");
+				for (int degree = 0; degree < 360; degree++) {
+					double radians = Math.toRadians(degree);
+					double x = Math.cos(radians);// + ((360-degree)/100);
+					double z = Math.sin(radians);
+					double y = entity.posZ;
+					World.spawnParticle(EnumParticleTypes.WATER_SPLASH, x + entity.posX, y, z + entity.posZ, 300, 0, 0, 0, (double) 0);
+
+				}
+			}
+		}
+
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 
 			size = 0.1F;
@@ -70,7 +88,7 @@ public class WaterChargeHandler extends TickHandler {
 
 			}
 
-		} else if (duration == durationToFire) {
+		} else if (duration >= durationToFire) {
 
 			speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			speed += powerRating / 15;
