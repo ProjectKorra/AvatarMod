@@ -255,12 +255,6 @@ public class EntityFireball extends AvatarEntity {
 	}
 	//Mostly fixes a glitch where the entity turns invisible
 
-	@Override
-	public boolean canRenderOnFire() {
-		return true;
-	}
-
-
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();

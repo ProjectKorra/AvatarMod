@@ -317,12 +317,6 @@ public class EntityCloudBall extends AvatarEntity {
 	}
 	//Fixes a glitch where the entity turns invisible
 
-
-	@Override
-	public boolean canRenderOnFire() {
-		return true;
-	}
-
 	@Override
 	public int getBrightnessForRender() {
 		return 100;

@@ -101,13 +101,13 @@ public class RenderFireball extends Render<EntityFireball> {
 		} else {
 
 			disableLighting();
+			//Makes it so that the fireball isn't affected by shadow
 			pushMatrix();
 			renderCube(x, y, z, //
 					8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
 					size, //
 					rotation * .2f, rotation, rotation * -.4f);
 			popMatrix();
-			enableLighting();
 
 
 		}
@@ -119,6 +119,7 @@ public class RenderFireball extends Render<EntityFireball> {
 
 	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,
 							float rotateX, float rotateY, float rotateZ) {
+		disableLighting();
 		Matrix4f mat = new Matrix4f();
 		mat.translate(x, y + .4f, z);
 
