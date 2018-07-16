@@ -18,10 +18,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
@@ -55,25 +57,45 @@ public class StatCtrlFireJump extends StatusControl {
 			int lvl = abilityData.getLevel();
 			double jumpMultiplier = 0.2;
 			float fallAbsorption = 3;
+			double range = 2;
+			double speed = 1;
+			float damage = 1;
 			if (lvl >= 1) {
 				jumpMultiplier = 0.3;
 				fallAbsorption = 4;
+				range = 2.5;
+				damage = 2;
+				speed = 1.5;
 			}
 			if (lvl >= 2) {
 				jumpMultiplier = 0.4;
 				fallAbsorption = 5;
+				speed = 2;
+				range = 3;
+				damage = 3;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				jumpMultiplier = 0.6;
 				fallAbsorption = 8;
+				speed = 4;
+				range = 5;
+				damage = 5;
+
 			}
-			if (abilityData.getLevel() < 2) {
+
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				jumpMultiplier = 0.3;
+				fallAbsorption = 15;
+				speed = 2.5;
+				range = 3;
+				damage = 3;
+			}
+
+			if (abilityData.getLevel() < 3 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE);
-				entity.onGround = true;
 			}
 			else {
 				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE_BIG);
-				entity.onGround = true;
 			}
 
 			// Calculate direction to jump -- in the direction the player is currently already going
@@ -116,17 +138,18 @@ public class StatCtrlFireJump extends StatusControl {
 				((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 			}
 
+			damageNearbyEntities(ctx, range, speed, damage);
+
 			ParticleSpawner spawner = new NetworkParticleSpawner();
 			spawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 15, 20,
 					new Vector(entity), new Vector(1, 0, 1));
 
 			data.getMiscData().setFallAbsorption(fallAbsorption);
 
-			data.addTickHandler(TickHandler.FIRE_PARTICLE_SPAWNER);
+
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			//	damageNearbyEntities(ctx, 5, 3);
-				//data.addTickHandler(TickHandler.SMASH_GROUND_FIRE_BIG);
+				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE_BIG);
 			}
 
 			abilityData.addXp(ConfigSkills.SKILLS_CONFIG.fireJump);
@@ -142,7 +165,7 @@ public class StatCtrlFireJump extends StatusControl {
 
 	}
 
-/*	private void damageNearbyEntities(BendingContext ctx, double range, double speed) {
+	private void damageNearbyEntities(BendingContext ctx, double range, double speed, float damage) {
 
 		EntityLivingBase entity = ctx.getBenderEntity();
 
@@ -150,10 +173,21 @@ public class StatCtrlFireJump extends StatusControl {
 		AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.posY - range,
 				entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range);
 
+		if (!world.isRemote) {
+			WorldServer World = (WorldServer) world;
+			for (int degree = 0; degree < 360; degree++) {
+				double radians = Math.toRadians(degree);
+				double x =  Math.cos(radians) * range;
+				double z = Math.sin(radians) * range;
+				double y = entity.posY;
+				World.spawnParticle(EnumParticleTypes.FLAME, x + entity.posX, y, z + entity.posZ, 10, 0, 0, 0, 0.1);
+			}
+		}
+
 		List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 		for (EntityLivingBase target : nearby) {
 			if (target != entity) {
-				target.attackEntityFrom(AvatarDamageSource.causeSmashDamage(target, entity), 5);
+				target.attackEntityFrom(AvatarDamageSource.causeSmashDamage(target, entity), damage);
 				BattlePerformanceScore.addSmallScore(entity);
 
 				Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
@@ -165,7 +199,7 @@ public class StatCtrlFireJump extends StatusControl {
 			}
 		}
 
-	}**/
+	}
 
 }
 
