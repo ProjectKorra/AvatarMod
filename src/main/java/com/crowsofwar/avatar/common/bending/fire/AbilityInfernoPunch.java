@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.INFERNO_PUNCH;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandler.INFERNO_PARTICLE_SPAWNER;
 
 public class AbilityInfernoPunch extends Ability {
 	public AbilityInfernoPunch() {
@@ -40,6 +41,7 @@ public class AbilityInfernoPunch extends Ability {
 
 		if (bender.consumeChi(chi)) {
 			data.addStatusControl(INFERNO_PUNCH);
+			data.addTickHandler(INFERNO_PARTICLE_SPAWNER);
 		}
 	}
 }
