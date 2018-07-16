@@ -114,6 +114,9 @@ public class ConfigStats {
 	public float icePrisonDamage = 2;
 
 	@Load
+	public float cloudBurstDamage = 2;
+
+	@Load
 	public float sleepChiRegen = 99999;
 
 	@Load

@@ -245,9 +245,10 @@ public class EntityFloatingBlock extends AvatarEntity {
 
 		setVelocity(velocity().times(getFriction()));
 
-		prevPosX = posX;
+		/*prevPosX = posX;
 		prevPosY = posY;
-		prevPosZ = posZ;
+		prevPosZ = posZ;**/
+	//	setPositionAndUpdate(this.posX, this.posY, this.posZ);
 
 		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate(this);
 		if (nextBehavior != getBehavior()) setBehavior(nextBehavior);

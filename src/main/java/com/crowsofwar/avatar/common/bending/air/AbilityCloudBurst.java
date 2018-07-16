@@ -45,25 +45,30 @@ public class AbilityCloudBurst extends Ability {
 				target = playerPos.plus(getLookRectangular(entity).times(2.5));
 			}
 
-			float damage = 4F;
+			float damage = STATS_CONFIG.cloudBurstDamage;
+			//2
+			EntityCloudBall cloudball = new EntityCloudBall(world);
+
+			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+				cloudball.setSize(20);
+				damage = STATS_CONFIG.cloudBurstDamage * 3;
+				//6
+				cloudball.canchiSmash(true);
+			}
+			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+				damage = STATS_CONFIG.cloudBurstDamage * 1.5F;
+				//3
+				cloudball.canAbsorb(true);
+			}
+
 			damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
 			damage *= ctx.getPowerRatingDamageMod();
 
-			EntityCloudBall cloudball = new EntityCloudBall(world);
+
 			cloudball.setPosition(target);
 			cloudball.setOwner(entity);
 			cloudball.setStartingPosition(entity.getPosition());
 			cloudball.setBehavior(new CloudburstBehavior.PlayerControlled());
-
-			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-				cloudball.setSize(20);
-				damage = 15;
-				cloudball.canchiSmash(true);
-			}
-			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-				damage = 5F;
-				cloudball.canAbsorb(true);
-			}
 			cloudball.setDamage(damage);
 			world.spawnEntity(cloudball);
 

@@ -22,15 +22,30 @@ public class StatCtrlThrowCloudBall extends StatusControl {
 	public boolean execute(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
+		AbilityData abilityData = ctx.getData().getAbilityData("cloudburst");
+		double speed = 20;
 
-		double size = 6;
+		if (abilityData.getLevel() == 1) {
+			speed = 22.5;
+		}
+
+		if (abilityData.getLevel() == 2) {
+			speed = 25;
+		}
+
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+			speed = 27.5;
+		}
+
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			speed = 30;
+		}
+
 
 		EntityCloudBall cloudBall = AvatarEntity.lookupControlledEntity(world, EntityCloudBall.class, entity);
 
 		if (cloudBall != null) {
-			AbilityData abilityData = ctx.getData().getAbilityData("cloudburst");
-			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
-			cloudBall.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
+			cloudBall.addVelocity(Vector.getLookRectangular(entity).times(speed));
 			cloudBall.setBehavior(new CloudburstBehavior.Thrown());
 		}
 
