@@ -40,8 +40,6 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 
         float x = (float) xx, y = (float) yy, z = (float) zz;
 
-        float particlePosition = rand.nextInt(2);
-
         Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 
         float ticks = entity.ticksExisted + partialTicks;
@@ -57,10 +55,11 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
             double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
             double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
             double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-            world.spawnParticle(EnumParticleTypes.CLOUD, spawnX + particlePosition, spawnY + particlePosition, spawnZ + particlePosition, 0, 0, 0);
+            world.spawnParticle(EnumParticleTypes.CLOUD, spawnX, spawnY, spawnZ, 0, 0, 0);
         }
 
         if (MinecraftForgeClient.getRenderPass() == 0) {
+			disableLighting();
 
             renderCube(x, y, z, //
                     0, 8 / 256.0, 0, 8 / 256.0, //
@@ -81,7 +80,6 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
                     size, //
                     rotation * .2f, rotation, rotation * -.4f);
             popMatrix();
-            enableLighting();
 
         }
 

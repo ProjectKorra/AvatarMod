@@ -185,10 +185,12 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
 			entity.setVelocity(motion);
 
-			if (data.getAbilityData("fireball").isMasterPath(AbilityTreePath.SECOND)) {
-				int size = entity.getSize();
-				if (size < 60 && entity.ticksExisted % 4 == 0) {
-					entity.setSize(size + 1);
+			if (entity.getAbility() instanceof AbilityFireball) {
+				if (data.getAbilityData("fireball").isMasterPath(AbilityTreePath.SECOND)) {
+					int size = entity.getSize();
+					if (size < 60 && entity.ticksExisted % 4 == 0) {
+						entity.setSize(size + 1);
+					}
 				}
 			}
 

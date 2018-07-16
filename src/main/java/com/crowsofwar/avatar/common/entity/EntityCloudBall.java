@@ -99,9 +99,11 @@ public class EntityCloudBall extends AvatarEntity {
 			setDead();
 			removeStatCtrl();
 		}
-		BendingData data = BendingData.get(getOwner());
-		if (getBehavior() instanceof CloudburstBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_CLOUDBURST)) {
-			setDead();
+		if (getOwner() != null) {
+			BendingData data = BendingData.get(getOwner());
+			if (getBehavior() instanceof CloudburstBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_CLOUDBURST)) {
+				setDead();
+			}
 		}
 
 	}
@@ -316,11 +318,6 @@ public class EntityCloudBall extends AvatarEntity {
 		return true;
 	}
 	//Fixes a glitch where the entity turns invisible
-
-	@Override
-	public int getBrightnessForRender() {
-		return 100;
-	}
 
 
 

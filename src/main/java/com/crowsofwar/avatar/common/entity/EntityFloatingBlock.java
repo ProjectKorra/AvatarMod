@@ -249,7 +249,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 		prevPosY = posY;
 		prevPosZ = posZ;**/
 		//Uhhh what's this for? It just seems to induce glichtiness...
-	    setPosition(position());
 
 		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate(this);
 		if (nextBehavior != getBehavior()) setBehavior(nextBehavior);

@@ -312,8 +312,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			Vector forward = Vector.toRectangular(yaw, pitch);
 			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
-			Vector motion = target.minus(new Vector(entity));
-			motion = motion.times(5);
+			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
 			entity.setVelocity(motion);
 
 			return this;

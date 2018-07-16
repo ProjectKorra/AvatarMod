@@ -87,6 +87,7 @@ public class RenderFireball extends Render<EntityFireball> {
 		}
 
 		if (MinecraftForgeClient.getRenderPass() == 0) {
+			disableLighting();
 
 			renderCube(x, y, z, //
 					0, 8 / 256.0, 0, 8 / 256.0, //
@@ -119,7 +120,6 @@ public class RenderFireball extends Render<EntityFireball> {
 
 	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,
 							float rotateX, float rotateY, float rotateZ) {
-		disableLighting();
 		Matrix4f mat = new Matrix4f();
 		mat.translate(x, y + .4f, z);
 
