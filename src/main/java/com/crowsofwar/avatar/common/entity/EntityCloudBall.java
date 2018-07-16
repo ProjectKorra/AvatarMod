@@ -85,10 +85,6 @@ public class EntityCloudBall extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		int ticks = 0;
-		if (!this.isCollided) {
-			this.setInvisible(false);
-		}
-
 		setBehavior((CloudburstBehavior) getBehavior().onUpdate(this));
 		if (this.getBehavior() instanceof CloudburstBehavior.Thrown) {
 			ticks++;
@@ -317,8 +313,22 @@ public class EntityCloudBall extends AvatarEntity {
 
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 0 || pass == 1;
+		return true;
 	}
+	//Fixes a glitch where the entity turns invisible
+
+
+	@Override
+	public boolean canRenderOnFire() {
+		return true;
+	}
+
+	@Override
+	public int getBrightnessForRender() {
+		return 100;
+	}
+
+
 
 	private void removeStatCtrl() {
 		if (getOwner() != null) {

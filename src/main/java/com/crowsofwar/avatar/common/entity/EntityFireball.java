@@ -92,13 +92,6 @@ public class EntityFireball extends AvatarEntity {
 		super.onUpdate();
 		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
 
-		if (!world.isRemote) {
-			if (getServer().getPosition() != getPosition()) {
-				this.setPosition(this.position());
-			}
-		}
-		//Fixes (kind of) fireball entity glitching, that causes it to go invisible and not render anything properly
-
 
 		if (ticksExisted % 30 == 0) {
 			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 6, 0.8F);
@@ -115,7 +108,7 @@ public class EntityFireball extends AvatarEntity {
 			setDead();
 		}
 
-		if (getOwner() != null && !world.isRemote) {
+		if (getOwner() != null) {
 			EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
 			if (fireball == null && bD.hasStatusControl(StatusControl.THROW_FIREBALL)) {
@@ -258,8 +251,15 @@ public class EntityFireball extends AvatarEntity {
 
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 0 || pass == 1;
+		return true;
 	}
+	//Mostly fixes a glitch where the entity turns invisible
+
+	@Override
+	public boolean canRenderOnFire() {
+		return true;
+	}
+
 
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
