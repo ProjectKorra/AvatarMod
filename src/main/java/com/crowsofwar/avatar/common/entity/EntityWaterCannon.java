@@ -85,8 +85,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				SoundCategory.PLAYERS, 1, 2);
 		int numberOfParticles = (int) (500 * getSizeMultiplier());
 
-		setPositionAndUpdate(this.posX, this.posY, this.posZ);
-
 		if (!world.isRemote && this.isCollided) {
 			WorldServer World = (WorldServer) world;
 			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, numberOfParticles, 0, 0, 0, 0.05 + getSizeMultiplier() / 10);
