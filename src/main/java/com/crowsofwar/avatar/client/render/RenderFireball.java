@@ -32,6 +32,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -60,10 +61,7 @@ public class RenderFireball extends Render<EntityFireball> {
 	public void doRender(EntityFireball entity, double xx, double yy, double zz, float entityYaw,
 						 float partialTicks) {
 
-		double x1 = entity.posX;
-		double z1 = entity.posZ;
-		double y1 = entity.posY + 0.5;
-		entity.world.spawnParticle(EnumParticleTypes.FLAME, x1, y1, z1, 0.01, 0.05, 0.05);
+
 
 		float x = (float) xx, y = (float) yy, z = (float) zz;
 
@@ -110,6 +108,7 @@ public class RenderFireball extends Render<EntityFireball> {
 					rotation * .2f, rotation, rotation * -.4f);
 			popMatrix();
 			enableLighting();
+
 
 		}
 

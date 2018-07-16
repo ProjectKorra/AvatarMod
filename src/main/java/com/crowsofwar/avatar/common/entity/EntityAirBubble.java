@@ -111,23 +111,12 @@ public class EntityAirBubble extends EntityShield {
 		}
 
 
-			if (getServer().getPosition() != getPosition()) {
-				serverPosX = (long) position().x();
-				serverPosY = (long) position().y();
-				serverPosZ = (long) position().z();
-
-			}
-
-
-
 		if (owner.isDead) {
 			dissipateSmall();
 			return;
 		}
-		setPosition(owner.posX, owner.posY, owner.posZ);
-		if (!world.isRemote) {
-			setPositionAndUpdate(owner.posX, owner.posY, owner.posZ);
-		}
+		setPositionAndUpdate(owner.posX, owner.posY, owner.posZ);
+
 
 		this.setVelocity(Vector.ZERO);
 
