@@ -91,7 +91,7 @@ public class StatCtrlFireJump extends StatusControl {
 				damage = 3;
 			}
 
-			if (abilityData.getLevel() < 3 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			if (abilityData.getLevel()  == 2 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE);
 			}
 			else {
