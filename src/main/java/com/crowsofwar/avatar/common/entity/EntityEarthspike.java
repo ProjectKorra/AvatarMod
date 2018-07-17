@@ -109,7 +109,7 @@ public class EntityEarthspike extends AvatarEntity {
 		int attacked = 0;
 
 		// Push collided entities back
-		//if (!world.isRemote) {
+		if (!world.isRemote) {
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
 					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
@@ -121,16 +121,16 @@ public class EntityEarthspike extends AvatarEntity {
 			}
 			if (getOwner() != null) {
 				BendingData data = BendingData.get(getOwner());
-				if (data != null) {
+				if (data != null && !world.isRemote) {
 					data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.earthspikeHit * attacked);
 				}
 			}
 		}
-	//}
+	}
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		//if (!world.isRemote) {
+		if (!world.isRemote) {
 			pushEntity(entity);
 			if (attackEntity(entity)) {
 				if (getOwner() != null) {
@@ -142,8 +142,8 @@ public class EntityEarthspike extends AvatarEntity {
 			}
 			System.out.println("Success??");
 		}
-	//	System.out.println("confusion");
-	//}
+		System.out.println("confusion");
+	}
 
 	private boolean attackEntity(Entity entity) {
 		if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
@@ -159,7 +159,7 @@ public class EntityEarthspike extends AvatarEntity {
 		Vector entityPos = Vector.getEntityPos(entity);
 		Vector direction = entityPos.minus(this.position());
 		Vector velocity = direction.times(STATS_CONFIG.earthspikeSettings.push);
-		entity.addVelocity(velocity.x()/4, velocity.y(), velocity.z()/5);
+		entity.addVelocity(velocity.x() / 4, velocity.y(), velocity.z() / 5);
 	}
 
 	@Override

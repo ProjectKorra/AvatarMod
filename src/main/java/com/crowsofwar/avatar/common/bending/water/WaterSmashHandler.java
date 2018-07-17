@@ -48,9 +48,4 @@ public class WaterSmashHandler extends SmashGroundHandler {
 	protected double getSpeed() {
 		return 6;
 	}
-
-	@Override
-	protected int getNumberOfParticles() {
-		return 400;
-	}
 }

@@ -83,7 +83,7 @@ public class EntityWave extends AvatarEntity {
 
 	@Override
 	public boolean canBeCollidedWith() {
-		return collided >= 1;
+		return false;
 	}
 
 	@Override
@@ -201,7 +201,7 @@ public class EntityWave extends AvatarEntity {
 
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 1;
+		return true;
 	}
 
 	public void setCreateExplosion(boolean createExplosion) {

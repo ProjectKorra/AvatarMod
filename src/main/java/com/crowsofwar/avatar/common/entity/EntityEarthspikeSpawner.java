@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.config.ConfigStats;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -69,7 +70,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (!world.isRemote) {
+
 
 			if (ticksExisted >= maxTicksAlive) {
 				setDead();
@@ -83,15 +84,19 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 					SoundCategory.PLAYERS, 1, 1, false);
 
 			if (ticksExisted % 3 == 0) {
-				World World = this.getEntityWorld();
+				Bender b = Bender.get(getOwner());
+				World world = b.getWorld();
 				EntityEarthspike earthspike = new EntityEarthspike(world);
+				if (!world.isRemote) {
+					System.out.println("server side!");
+				}
 				earthspike.posX = this.posX;
 				earthspike.posY = this.posY;
 				earthspike.posZ = this.posZ;
 				earthspike.setOwner(getOwner());
 				earthspike.setDamageMult(damageMult);
-				earthspike.setAbility(getAbility());
-				World.spawnEntity(earthspike);
+				earthspike.setAbility(this.getAbility());
+				world.spawnEntity(earthspike);
 			}
 
 			if (!world.getBlockState(below).isNormalCube()) {
@@ -121,7 +126,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 				}
 			}
 		}
-	}
+
 
 
 
