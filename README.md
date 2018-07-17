@@ -8,12 +8,10 @@ adds content from [*Avatar: The Last Airbender*](https://en.wikipedia.org/wiki/A
 The mod already has all four major types of bending; many unique, multipurpose Abilities; and mobs
 and animals from the Avatar world. More information is available at the [wiki](http://projectkorra.wikia.com/wiki/Av2).
 
-Important: Looking for developer
+Important: Looking for developers
 --------------------------------
 
-We are currently looking for a new lead developer to carry on the mod. More information is available here:
-
-[Looking for lead developer to take over Avatar Mod 2](http://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/modification-development/2876693-looking-for-lead-developer-to-take-over-avatar-mod)
+We are currently looking for developers to help existing developers on the mod. More information is available through FavouriteDragon or Mist.
 
 Thank you! :)
 
@@ -36,7 +34,7 @@ for other modelers or developers, though pull requests are always welcome.
 If you are looking to join the team to create this mod, please contact with any of the following
 ways:
 
-* CrowsOfWar, the creator and main developer for the Av2 project - reachable via ofwarcrows@gmail.com
+* FavouriteDragon, the current lead developer for the Av2 project - reachable via ninjadragon008@icloud.com
 * Mist, the creator and owner of the ProjectKorra group - apply at [projectkorra.com](http://projectkorra.com/join-the-team/)
 
 We will then contact you with information about getting set up and possible work to complete.
