@@ -117,6 +117,7 @@ public class EntityAirBubble extends EntityShield {
 			return;
 		}
 		setPositionAndUpdate(owner.posX, getOwner().getEntityBoundingBox().minY, owner.posZ);
+		setPositionAndRotation(owner.posX, getOwner().getEntityBoundingBox().minY, owner.posZ, this.rotationYaw, this.rotationPitch);
 
 
 		this.setVelocity(Vector.ZERO);
