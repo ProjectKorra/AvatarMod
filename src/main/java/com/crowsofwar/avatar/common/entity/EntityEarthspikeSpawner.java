@@ -90,6 +90,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 				earthspike.posZ = this.posZ;
 				earthspike.setOwner(getOwner());
 				earthspike.setDamageMult(damageMult);
+				earthspike.setAbility(getAbility());
 				World.spawnEntity(earthspike);
 			}
 
