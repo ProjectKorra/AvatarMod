@@ -54,4 +54,6 @@ public class StatCtrlThrowCloudBall extends StatusControl {
 
 }
 //REGISTER THIS TO SEE IF IT FIXES ITSELF
+//Umm Idk what the line above is referring to- cloudburst is pretty much fixed except for the occasional invisibility
+//weirdness.
 

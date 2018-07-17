@@ -67,10 +67,13 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	}
 
 	@Override
+	public EntityLivingBase getController() {
+		return getOwner();
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
-
-
 
 			if (ticksExisted >= maxTicksAlive) {
 				setDead();
@@ -87,9 +90,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 				Bender b = Bender.get(getOwner());
 				World world = b.getWorld();
 				EntityEarthspike earthspike = new EntityEarthspike(world);
-				if (!world.isRemote) {
-					System.out.println("server side!");
-				}
 				earthspike.posX = this.posX;
 				earthspike.posY = this.posY;
 				earthspike.posZ = this.posZ;

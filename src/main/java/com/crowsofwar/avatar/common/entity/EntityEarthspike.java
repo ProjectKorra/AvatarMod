@@ -20,18 +20,13 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
@@ -84,10 +79,11 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner) {
+		if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner || entity instanceof EntityItem
+				|| (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner())) {
 			return false;
 		}
-		return entity instanceof EntityLivingBase || super.canCollideWith(entity);
+		else return true;
 
 	}
 
@@ -108,7 +104,7 @@ public class EntityEarthspike extends AvatarEntity {
 		int attacked = 0;
 
 		// Push collided entities back
-		if (!world.isRemote) {
+		//if (!world.isRemote) {
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
 					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
@@ -123,26 +119,23 @@ public class EntityEarthspike extends AvatarEntity {
 				if (data != null && !world.isRemote) {
 					data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.earthspikeHit * attacked);
 				}
-			}
+		//	}
 		}
 	}
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (!world.isRemote) {
 			pushEntity(entity);
+			AvatarUtils.afterVelocityAdded(entity);
 			if (attackEntity(entity)) {
-				if (getOwner() != null) {
-					BendingData data = BendingData.get(getOwner());
-					data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.earthspikeHit);
+				if (getOwner() != null && !world.isRemote) {
 					BattlePerformanceScore.addMediumScore(getOwner());
 				}
-
+				System.out.println("Success??");
 			}
-			System.out.println("Success??");
+
 		}
-		System.out.println("confusion");
-	}
+
 
 	private boolean attackEntity(Entity entity) {
 		if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {

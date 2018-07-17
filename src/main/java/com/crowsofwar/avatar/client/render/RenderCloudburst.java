@@ -31,7 +31,6 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 	public RenderCloudburst(RenderManager renderManager) {
 		super(renderManager);
 	}
-	Random rand = new Random();
 
 	// @formatter:off
     @Override
@@ -58,7 +57,7 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
             world.spawnParticle(EnumParticleTypes.CLOUD, spawnX, spawnY, spawnZ, 0, 0, 0);
         }
 
-        if (MinecraftForgeClient.getRenderPass() == 0) {
+     //   if (MinecraftForgeClient.getRenderPass() == 0) {
 			disableLighting();
 
             renderCube(x, y, z, //
@@ -71,7 +70,7 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
             int k = i / 65536;
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
 
-        } else {
+      //  } else {
 
             disableLighting();
             pushMatrix();
@@ -81,7 +80,7 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
                     rotation * .2f, rotation, rotation * -.4f);
             popMatrix();
 
-        }
+      //  }
 
         disableBlend();
 
@@ -147,7 +146,7 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityCloudBall entity) {
-		return null;
+		return TEXTURE;
 	}
 
 }

@@ -27,6 +27,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -35,7 +36,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
@@ -291,7 +291,13 @@ public class EntityAirBubble extends EntityShield {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		return entity != getOwner() && !(entity instanceof AvatarEntity) && !(entity instanceof EntityArrow);
+		if (entity instanceof  AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
+			return false;
+		}
+		else if (entity == getOwner() || entity instanceof EntityArrow || entity instanceof EntityItem) {
+			return false;
+		}
+		else return true;
 	}
 
 	@Override

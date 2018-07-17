@@ -35,7 +35,26 @@ public class AbilityCloudBurst extends Ability {
 
 		if (data.hasStatusControl(StatusControl.THROW_CLOUDBURST)) return;
 
-		if (bender.consumeChi(STATS_CONFIG.chiCloudburst)) {
+		float chi  = STATS_CONFIG.chiCloudburst;
+		//2.5F
+
+		if (ctx.getLevel() == 1) {
+			chi += 1;
+		}
+
+		if (ctx.getLevel() == 2) {
+			chi += 1.5;
+		}
+
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			chi *= 2;
+		}
+
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			chi *= 2.5;
+		}
+
+		if (bender.consumeChi(chi)) {
 
 			Vector target;
 			if (ctx.isLookingAtBlock()) {
@@ -45,23 +64,31 @@ public class AbilityCloudBurst extends Ability {
 				target = playerPos.plus(getLookRectangular(entity).times(2.5));
 			}
 
-			float damage = STATS_CONFIG.cloudBurstDamage;
-			//2
+			double damage = STATS_CONFIG.cloudburstSettings.damage;
+			//1.5
 			EntityCloudBall cloudball = new EntityCloudBall(world);
 
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				cloudball.setSize(20);
-				damage = STATS_CONFIG.cloudBurstDamage * 3;
+				damage = STATS_CONFIG.cloudburstSettings.damage * 4;
 				//6
 				cloudball.canchiSmash(true);
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-				damage = STATS_CONFIG.cloudBurstDamage * 1.5F;
+				damage = STATS_CONFIG.cloudburstSettings.damage * 2;
 				//3
 				cloudball.canAbsorb(true);
 			}
+			if (ctx.getLevel() == 1) {
+				damage = STATS_CONFIG.cloudburstSettings.damage * 1.5;
+				//2.25
+			}
 
-			damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
+			if (ctx.getLevel() == 2) {
+				damage = STATS_CONFIG.cloudburstSettings.damage * 2.25;
+				//3.375
+			}
+
 			damage *= ctx.getPowerRatingDamageMod();
 
 
@@ -69,7 +96,7 @@ public class AbilityCloudBurst extends Ability {
 			cloudball.setOwner(entity);
 			cloudball.setStartingPosition(entity.getPosition());
 			cloudball.setBehavior(new CloudburstBehavior.PlayerControlled());
-			cloudball.setDamage(damage);
+			cloudball.setDamage((float) damage);
 			cloudball.setAbility(this);
 			world.spawnEntity(cloudball);
 

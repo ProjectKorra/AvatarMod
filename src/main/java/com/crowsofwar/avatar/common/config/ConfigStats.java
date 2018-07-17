@@ -61,6 +61,9 @@ public class ConfigStats {
 	@Load
 	public ExplosionSettings explosionSettings = new ExplosionSettings();
 
+	@Load
+	public CloudburstSettings cloudburstSettings = new CloudburstSettings();
+
 	// @formatter:off
 	@Load
 	public float chiAirblade = 1f,
@@ -112,9 +115,6 @@ public class ConfigStats {
 
 	@Load
 	public float icePrisonDamage = 2;
-
-	@Load
-	public float cloudBurstDamage = 2;
 
 	@Load
 	public float sleepChiRegen = 99999;
@@ -278,6 +278,15 @@ public class ConfigStats {
 
 	}
 
+	public static class CloudburstSettings {
+
+		@Load
+		public double damage = 1.5;
+
+		@Load
+		public double push = 1.5;
+
+	}
 	public static class ExplosionSettings {
 		@Load
 		public float damage = 6;
