@@ -56,7 +56,7 @@ public class AbilityRavine extends Ability {
 			World world = ctx.getWorld();
 
 			Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-			Vector position = Vector.getLookRectangular(entity).times(2.5);
+			Vector position = Vector.getLookRectangular(entity).times(1.1);
 
 			double speed = ctx.getLevel() >= 1 ? 14 : 8;
 			speed += ctx.getPowerRating() / 25;
@@ -66,7 +66,7 @@ public class AbilityRavine extends Ability {
 
 			EntityRavine ravine = new EntityRavine(world);
 			ravine.setOwner(entity);
-			ravine.setPosition(position.x(), entity.posY, position.z());
+			ravine.setPosition(entity.posX, entity.posY, entity.posZ);
 			ravine.setVelocity(look.times(speed));
 			ravine.setDamageMult(damage);
 			ravine.setDistance(ctx.getLevel() >= 2 ? 16 : 10);

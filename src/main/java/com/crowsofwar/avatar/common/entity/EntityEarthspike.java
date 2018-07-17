@@ -80,7 +80,6 @@ public class EntityEarthspike extends AvatarEntity {
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		setDead();
 	}
 
 	@Override

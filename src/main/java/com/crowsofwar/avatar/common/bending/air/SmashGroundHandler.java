@@ -62,7 +62,7 @@ public class SmashGroundHandler extends TickHandler {
 							double x = Math.cos(radians) * getRange();
 							double z = Math.sin(radians) * getRange();
 							World.spawnParticle(getParticle(), x + entity.posX, entity.posY,
-									z + entity.posZ, 1, 0, 0, 0, getParticleSpeed() / 4);
+									z + entity.posZ, 5, 0, 0, 0, getParticleSpeed() / 4);
 					}
 				}
 				entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), getSoundCategory(), 4F, 0.5F);
