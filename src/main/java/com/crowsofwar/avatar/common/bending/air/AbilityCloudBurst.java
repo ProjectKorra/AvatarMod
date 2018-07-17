@@ -70,6 +70,7 @@ public class AbilityCloudBurst extends Ability {
 			cloudball.setStartingPosition(entity.getPosition());
 			cloudball.setBehavior(new CloudburstBehavior.PlayerControlled());
 			cloudball.setDamage(damage);
+			cloudball.setAbility(this);
 			world.spawnEntity(cloudball);
 
 			data.addStatusControl(StatusControl.THROW_CLOUDBURST);

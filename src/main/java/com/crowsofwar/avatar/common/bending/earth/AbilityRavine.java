@@ -69,6 +69,7 @@ public class AbilityRavine extends Ability {
 			ravine.setPosition(entity.posX, entity.posY, entity.posZ);
 			ravine.setVelocity(look.times(speed));
 			ravine.setDamageMult(damage);
+			ravine.setAbility(this);
 			ravine.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
 			ravine.setBreakBlocks(ctx.isMasterLevel(AbilityTreePath.FIRST));
 			ravine.setDropEquipment(ctx.isMasterLevel(AbilityTreePath.SECOND));

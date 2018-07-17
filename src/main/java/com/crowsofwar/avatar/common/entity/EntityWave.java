@@ -61,6 +61,7 @@ public class EntityWave extends AvatarEntity {
 		damageMult = 1;
 		Shrink = 0.05F;
 		this.collided = 0;
+		this.putsOutFires = true;
 	}
 
 	@Override

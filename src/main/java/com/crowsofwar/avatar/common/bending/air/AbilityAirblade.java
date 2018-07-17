@@ -71,6 +71,7 @@ public class AbilityAirblade extends Ability {
 		airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 30 : 20));
 		airblade.setDamage(damage);
 		airblade.setOwner(entity);
+		airblade.setAbility(this);
 		airblade.setPierceArmor(abilityData.isMasterPath(SECOND));
 		airblade.setChainAttack(abilityData.isMasterPath(FIRST));
 

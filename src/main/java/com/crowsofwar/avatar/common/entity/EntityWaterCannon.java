@@ -63,6 +63,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		super(world);
 		setSize(1.5f * getSizeMultiplier(), 1.5f * getSizeMultiplier());
 		damage = 0.5F;
+		this.putsOutFires = true;
 	}
 
 	@Override

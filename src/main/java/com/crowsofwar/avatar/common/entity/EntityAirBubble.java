@@ -70,6 +70,7 @@ public class EntityAirBubble extends EntityShield {
 		setSize(0, 0);
 
 		this.airLeft = 600;
+		this.putsOutFires = true;
 	}
 
 	@Override
@@ -115,7 +116,7 @@ public class EntityAirBubble extends EntityShield {
 			dissipateSmall();
 			return;
 		}
-		setPositionAndUpdate(owner.posX, owner.posY, owner.posZ);
+		setPositionAndUpdate(owner.posX, getOwner().getEntityBoundingBox().minY, owner.posZ);
 
 
 		this.setVelocity(Vector.ZERO);

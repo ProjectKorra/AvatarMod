@@ -211,7 +211,7 @@ public abstract class AvatarEntity extends Entity {
 		this.powerRating = powerRating;
 	}
 
-	public void setAbility (Ability ability) {
+	public void setAbility(Ability ability) {
 		this.ability = ability;
 	}
 
@@ -495,5 +495,4 @@ public abstract class AvatarEntity extends Entity {
 	@Override
 	protected void playStepSound(BlockPos pos, Block blockIn) {
 	}
-
 }

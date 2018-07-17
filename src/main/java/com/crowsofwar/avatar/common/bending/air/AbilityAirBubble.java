@@ -75,11 +75,12 @@ public class AbilityAirBubble extends Ability {
 
 			EntityAirBubble bubble = new EntityAirBubble(world);
 			bubble.setOwner(entity);
-			bubble.setPosition(entity.posX, entity.posY, entity.posZ);
+			bubble.setPositionAndUpdate(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
 			bubble.setHealth(health);
 			bubble.setMaxHealth(health);
 			bubble.setSize(size);
 			bubble.setAllowHovering(ctx.isMasterLevel(SECOND));
+			bubble.setAbility(this);
 			world.spawnEntity(bubble);
 
 			data.addStatusControl(StatusControl.BUBBLE_EXPAND);
