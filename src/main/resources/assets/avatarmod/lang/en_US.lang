@@ -199,11 +199,11 @@ avatar.ability.fireball.lvl4_1=§c§l§oFocused §c§l§oexplosion ;; Can someti
 avatar.ability.fireball.lvl4_2=§c§l§oCharged §c§l§oexplosion ;; Takes a few seconds to charge, larger explosion when charged
 
 avatar.ability.fire_jump=§c§lFire Jump
-avatar.ability.fire_jump.desc=Use fire propulsion to jump a short distance
+avatar.ability.fire_jump.desc=Use fire propulsion to jump a short distance, damaging players when you jump!
 avatar.ability.fire_jump.lvl1=THIS (GIRL/BOY/UNKNOWN GENDER) IS ON FIREEEEEE!
 avatar.ability.fire_jump.lvl2=Jump slightly farther
-avatar.ability.fire_jump.lvl3=Attack more targets upon landing, light them on fire
-avatar.ability.fire_jump.lvl4_1=§c§l§oCombustion §c§l§olaunch ;; Also attack nearby targets when jumping off
+avatar.ability.fire_jump.lvl3=Also attack targets upon landing, light them on fire
+avatar.ability.fire_jump.lvl4_1=§c§l§oCombustion §c§l§olaunch ;; Super huge attack when you jump AND land!
 avatar.ability.fire_jump.lvl4_2=§c§l§oWall §c§l§ojumping ;; Gain the ability to wall jump once after fire jumping
 
 avatar.ability.purify=§c§lImmolate

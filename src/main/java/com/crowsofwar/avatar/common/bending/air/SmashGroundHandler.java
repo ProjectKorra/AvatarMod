@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.client.particle.ParticleCloud;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
@@ -58,16 +57,15 @@ public class SmashGroundHandler extends TickHandler {
 
 				if (!world.isRemote) {
 					WorldServer World = (WorldServer) world;
-					for (int degree = 0; degree < 360; degree++) {
-						double radians = Math.toRadians(degree);
-						double x = Math.cos(radians) * getRange();
-						double z = Math.sin(radians) * getRange();
-						World.spawnParticle(getParticle(), x + entity.posX, entity.posY,
-								z + entity.posZ, getNumberOfParticles()/5, 0, 0 , 0, getParticleSpeed()/4);
+						for (int degree = 0; degree < 360; degree++) {
+							double radians = Math.toRadians(degree);
+							double x = Math.cos(radians) * getRange();
+							double z = Math.sin(radians) * getRange();
+							World.spawnParticle(getParticle(), x + entity.posX, entity.posY,
+									z + entity.posZ, getNumberOfParticles() / 5, 0, 0, 0, getParticleSpeed() / 4);
 					}
-					entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), getSoundCategory(), 4F, 0.5F);
-
 				}
+				entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), getSoundCategory(), 4F, 0.5F);
 
 
 				List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
@@ -76,8 +74,6 @@ public class SmashGroundHandler extends TickHandler {
 						smashEntity(target, entity);
 					}
 				}
-
-
 			}
 
 
