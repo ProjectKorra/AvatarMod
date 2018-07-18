@@ -54,7 +54,6 @@ public class EntityWave extends AvatarEntity {
 	private boolean createExplosion;
 	private float Size;
 	private float Shrink;
-	private int collided;
 
 	public EntityWave(World world) {
 		super(world);
@@ -62,7 +61,6 @@ public class EntityWave extends AvatarEntity {
 		setSize(Size, Size * 0.75F);
 		damageMult = 1;
 		Shrink = 0.05F;
-		this.collided = 0;
 		this.putsOutFires = true;
 	}
 
@@ -171,14 +169,11 @@ public class EntityWave extends AvatarEntity {
 	@Override
 	public boolean onCollideWithSolid() {
 
-		collided++;
 
 		if (!this.isCollidedVertically && !this.inWater) {
 			Shrink = 0.005F;
-			return false;
 		}
-		AbilityData ad = AbilityData.get(getOwner(), getAbility().getName());
-		return collided >= 1 + ad.getLevel();
+		return false;
 
 		//help
 		//TODO: Make wave go onto land

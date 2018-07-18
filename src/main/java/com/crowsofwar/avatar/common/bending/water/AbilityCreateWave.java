@@ -85,7 +85,7 @@ public class AbilityCreateWave extends Ability {
 							size = 5;
 						}
 						size += ctx.getPowerRating() / 100;
-						
+
 						speed += ctx.getPowerRating() / 100 * 8;
 
 						EntityWave wave = new EntityWave(world);
