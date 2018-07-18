@@ -53,6 +53,7 @@ public class EntityWave extends AvatarEntity {
 	private float Size;
 	private float Shrink;
 	private int collided;
+	private double originalPosition;
 
 	public EntityWave(World world) {
 		super(world);
@@ -62,6 +63,7 @@ public class EntityWave extends AvatarEntity {
 		Shrink = 0.05F;
 		this.collided = 0;
 		this.putsOutFires = true;
+		this.originalPosition = this.posY;
 	}
 
 	@Override
@@ -82,6 +84,10 @@ public class EntityWave extends AvatarEntity {
 		dataManager.set(SYNC_SIZE, size);
 	}
 
+	public void setOriginalPosition(double position) {
+		this.originalPosition = position;
+	}
+
 	@Override
 	public boolean canBeCollidedWith() {
 		return false;
@@ -91,7 +97,7 @@ public class EntityWave extends AvatarEntity {
 	public void onUpdate() {
 
 		super.onUpdate();
-		//this.noClip = true;
+		this.noClip = true;
 		BendingData data = BendingData.get(getOwner());
 		AbilityData lvl = data.getAbilityData("wave");
 
@@ -102,14 +108,14 @@ public class EntityWave extends AvatarEntity {
 			setSize(Size, Size * 0.75F);
 		}
 
-		BlockPos below = getPosition().offset(EnumFacing.DOWN);
-		Block belowBlock = world.getBlockState(below).getBlock();
-
-		if (belowBlock != Blocks.FLOWING_WATER && belowBlock != Blocks.WATER) {
+		if (!this.inWater) {
 			this.setVelocity(velocity().dividedBy(40));
 			this.posY -= Shrink;
 		}
-		else{
+		if (this.posY - originalPosition >= 1.5) {
+			this.posY -= Shrink;
+		}
+		if (this.inWater && this.posY - originalPosition <= -1){
 			this.posY += Shrink;
 		}
 
@@ -145,8 +151,8 @@ public class EntityWave extends AvatarEntity {
 				}
 
 			}
-			if (!collided.isEmpty() && owner != null) {
-				AbilityData.get(owner, "wave").addXp(SKILLS_CONFIG.waveHit);
+			if (!collided.isEmpty() && owner != null && !world.isRemote) {
+				AbilityData.get(owner, getAbility().getName()).addXp(SKILLS_CONFIG.waveHit);
 			}
 		}
 

@@ -51,6 +51,7 @@ public class EntityEarthspike extends AvatarEntity {
 		super(world);
 		setSize(1, 1);
 		this.damage = STATS_CONFIG.earthspikeSettings.damage;
+		this.noClip = true;
 	}
 
 	public void setDamage(double damage) {
@@ -84,10 +85,11 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner || entity == this.getOwner()) {
+		/*if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner || entity == this.getOwner()) {
 			return false;
 		}
-		 return entity instanceof EntityLivingBase || super.canCollideWith(entity);
+		 return entity instanceof EntityLivingBase || super.canCollideWith(entity);**/
+		return entity != this;
 
 	}
 
@@ -110,6 +112,7 @@ public class EntityEarthspike extends AvatarEntity {
 					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
+					System.out.println(collided);
 					if (attackEntity(entity)) {
 						attacked++;
 						System.out.println(collided);
@@ -128,8 +131,9 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (!world.isRemote) {
+		if (!world.isRemote && entity != getOwner() && !(entity == this)) {
 			pushEntity(entity);
+			System.out.println(entity);
 			if (attackEntity(entity)) {
 				if (getOwner() != null) {
 					BattlePerformanceScore.addMediumScore(getOwner());

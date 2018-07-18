@@ -48,7 +48,7 @@ public class AbilityCreateWave extends Ability {
 
 		Vector look = Vector.getLookRectangular(entity).withY(0);
 		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1)
-				, look, 4, (pos, blockState) -> blockState.getBlock() == Blocks
+				, look, 4 + ctx.getLevel(), (pos, blockState) -> blockState.getBlock() == Blocks
 				.WATER);
 
 		if (result.hitSomething()) {
@@ -86,6 +86,8 @@ public class AbilityCreateWave extends Ability {
 						wave.setOwner(entity);
 						wave.setVelocity(look.times(speed));
 						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
+						wave.setOriginalPosition(pos.y());
+						wave.setAbility(this);
 						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 
 						float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
