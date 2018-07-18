@@ -78,16 +78,15 @@ public class EntityEarthspike extends AvatarEntity {
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
+		setDead();
 	}
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		if (entity instanceof AvatarEntity) {
-			if (((AvatarEntity) entity).getOwner() == getOwner()) {
-				return false;
-			}
+		if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner) {
+			return false;
 		}
-		return entity != getOwner() && !(entity instanceof EntityItem) && !(entity == this) && entity instanceof EntityLivingBase && !(entity instanceof EntityEarthspikeSpawner);
+		return entity instanceof EntityLivingBase || super.canCollideWith(entity);
 
 	}
 
@@ -110,17 +109,18 @@ public class EntityEarthspike extends AvatarEntity {
 					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
-					System.out.println(entity);
-					onCollideWithEntity(entity);
-					attacked++;
-
+					if (attackEntity(entity)) {
+						attacked++;
+						System.out.println(collided);
+					}
 				}
 			}
-			if (getOwner() != null) {
-				BendingData data = BendingData.get(getOwner());
-				if (data != null && !world.isRemote) {
-					data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.earthspikeHit * attacked);
-				}
+		}
+
+		if (!world.isRemote && getOwner() != null) {
+			BendingData data = BendingData.get(getOwner());
+			if (data != null) {
+				data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.earthspikeHit * attacked);
 			}
 		}
 	}
@@ -129,42 +129,30 @@ public class EntityEarthspike extends AvatarEntity {
 	protected void onCollideWithEntity(Entity entity) {
 		if (!world.isRemote) {
 			pushEntity(entity);
-//			AvatarUtils.afterVelocityAdded(entity);
-//			damageEntity((EntityLivingBase) entity);
-			if (getOwner() != null && !world.isRemote) {
-				BattlePerformanceScore.addMediumScore(getOwner());
-			}
-			System.out.println(entity);
-		}
-	}
+			if (attackEntity(entity)) {
+				if (getOwner() != null) {
+					BattlePerformanceScore.addMediumScore(getOwner());
+				}
 
-
-	private void damageEntity(EntityLivingBase entity) {
-
-		if (world.isRemote) {
-			return;
-		}
-
-		DamageSource damageSource = AvatarDamageSource.causeWaterCannonDamage(entity, getOwner());
-		if (entity.attackEntityFrom(damageSource, (float) damage)) {
-
-			BattlePerformanceScore.addMediumScore(getOwner());
-
-			if (getOwner() != null) {
-				BendingData data = BendingData.get(getOwner());
-				AbilityData abilityData = data.getAbilityData(getAbility().getName());
-				abilityData.addXp(SKILLS_CONFIG.earthspikeHit);
 			}
 		}
 
 	}
 
+	private boolean attackEntity(Entity entity) {
+		if (!(entity instanceof EntityItem)) {
+			DamageSource ds = AvatarDamageSource.causeEarthspikeDamage(entity, getOwner());;
+			return entity.attackEntityFrom(ds, (float) damage);
+		}
+
+		else return false;
+	}
 
 	private void pushEntity(Entity entity) {
 		Vector entityPos = Vector.getEntityPos(entity);
 		Vector direction = entityPos.minus(this.position());
 		Vector velocity = direction.times(STATS_CONFIG.earthspikeSettings.push);
-		entity.addVelocity(velocity.x() / 5, velocity.y(), velocity.z() / 5);
+		entity.addVelocity(velocity.x()/5, velocity.y(), velocity.z()/5);
 	}
 
 	@Override

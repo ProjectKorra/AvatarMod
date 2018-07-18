@@ -37,6 +37,7 @@ public class WaterPassives {
 					if (entity.isInWater()) {
 						entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 10));
 						entity.addPotionEffect(new PotionEffect(MobEffects.HASTE, 10, 1));
+						entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 10, 0));
 						}
 					}
 				}
