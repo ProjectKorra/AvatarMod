@@ -269,7 +269,7 @@ public abstract class Bender {
 			} else {
 				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 20f);
 			}
-			if (data.hasBendingId(Waterbending.ID)) {
+			if (data.hasBendingId(Waterbending.ID) && entity.isInWater()) {
 				chi.changeTotalChi(CHI_CONFIG.regenInWater/20F);
 			}
 
