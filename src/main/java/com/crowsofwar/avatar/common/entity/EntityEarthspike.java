@@ -83,7 +83,7 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner) {
+		if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner || entity == this.getOwner()) {
 			return false;
 		}
 		return entity instanceof EntityLivingBase || super.canCollideWith(entity);
@@ -141,8 +141,10 @@ public class EntityEarthspike extends AvatarEntity {
 
 	private boolean attackEntity(Entity entity) {
 		if (!(entity instanceof EntityItem)) {
-			DamageSource ds = AvatarDamageSource.causeEarthspikeDamage(entity, getOwner());;
-			return entity.attackEntityFrom(ds, (float) damage);
+			DamageSource ds = AvatarDamageSource.causeEarthspikeDamage(entity, getOwner());
+			float damage = (float) this.damage;
+			return entity.attackEntityFrom(ds, damage);
+			//Modify damage based on power rating!
 		}
 
 		else return false;
