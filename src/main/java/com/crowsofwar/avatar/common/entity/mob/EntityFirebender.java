@@ -24,6 +24,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 
+import java.util.Random;
+
 /**
  * @author CrowsOfWar
  */
@@ -31,6 +33,8 @@ public class EntityFirebender extends EntityHumanBender {
 
 	public static final ResourceLocation LOOT_TABLE = LootTableList
 			.register(new ResourceLocation("avatarmod", "firebender"));
+	Random rand = new Random();
+	int level = rand.nextInt(1);
 
 	/**
 	 * @param world
@@ -38,7 +42,8 @@ public class EntityFirebender extends EntityHumanBender {
 	public EntityFirebender(World world) {
 		super(world);
 
-		getData().getAbilityData("flamethrower").setLevel(2);
+		getData().getAbilityData("fireball").setLevel(level);
+		getData().getAbilityData("flamethrower").setLevel(level);
 
 	}
 
@@ -53,6 +58,7 @@ public class EntityFirebender extends EntityHumanBender {
 		this.tasks.addTask(1, Abilities.getAi("flamethrower", this, getBender()));
 		this.tasks.addTask(3, Abilities.getAi("fireball", this, getBender()));
 		this.tasks.addTask(2, Abilities.getAi("fire_arc", this, getBender()));
+		//this.tasks.addTask(3, Abilities.getAi("inferno_punch", this, getBender()));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 	}
 

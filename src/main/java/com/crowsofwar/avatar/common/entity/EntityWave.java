@@ -18,25 +18,18 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.air.AbilityCloudBurst;
 import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
-import net.minecraft.client.particle.ParticleExplosion;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
@@ -53,14 +46,12 @@ public class EntityWave extends AvatarEntity {
 	private float damageMult;
 	private boolean createExplosion;
 	private float Size;
-	private float Shrink;
 
 	public EntityWave(World world) {
 		super(world);
 		this.Size = 2;
 		setSize(Size, Size * 0.75F);
 		damageMult = 1;
-		Shrink = 0.05F;
 		this.putsOutFires = true;
 	}
 
@@ -93,7 +84,7 @@ public class EntityWave extends AvatarEntity {
 		super.onUpdate();
 		this.noClip = true;
 
-		if (getAbility() instanceof AbilityCreateWave) {
+		if (getAbility() instanceof AbilityCreateWave && getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 			AbilityData lvl = data.getAbilityData(getAbility().getName());
 
@@ -106,7 +97,6 @@ public class EntityWave extends AvatarEntity {
 
 		if (!this.inWater) {
 			this.setVelocity(velocity().dividedBy(40));
-			this.posY -= Shrink;
 		}
 
 		EntityLivingBase owner = getOwner();
@@ -145,9 +135,7 @@ public class EntityWave extends AvatarEntity {
 			}
 		}
 
-		BlockPos below1 = getPosition();
-		Block belowBlock1 = world.getBlockState(below1).getBlock();
-		if (ticksExisted > 200 && belowBlock1 != Blocks.WATER) {
+		if (ticksExisted > 200 && !this.isInWater()) {
 			setDead();
 
 		}
@@ -168,16 +156,7 @@ public class EntityWave extends AvatarEntity {
 
 	@Override
 	public boolean onCollideWithSolid() {
-
-
-		if (!this.isCollidedVertically && !this.inWater) {
-			Shrink = 0.005F;
-		}
 		return false;
-
-		//help
-		//TODO: Make wave go onto land
-
 	}
 
 	@Override
