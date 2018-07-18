@@ -179,17 +179,15 @@ public class EntityWave extends AvatarEntity {
 
 	@Override
 	public boolean onCollideWithSolid() {
-		onMajorWaterContact();
 
 		collided++;
-		BlockPos below = getPosition().offset(EnumFacing.DOWN);
-		Block belowBlock = world.getBlockState(below).getBlock();
 
-		if (!this.isCollidedVertically && (belowBlock != Blocks.FLOWING_WATER && belowBlock != Blocks.WATER)) {
+		if (!this.isCollidedVertically && !this.inWater) {
 			Shrink = 0.005F;
 			return false;
 		}
-		return collided >= 1;
+		AbilityData ad = AbilityData.get(getOwner(), getAbility().getName());
+		return collided >= 1 + ad.getLevel();
 
 		//help
 		//TODO: Make wave go onto land

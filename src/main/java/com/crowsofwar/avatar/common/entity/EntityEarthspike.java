@@ -30,6 +30,7 @@ import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import org.lwjgl.Sys;
 
 import java.util.List;
 
@@ -98,6 +99,9 @@ public class EntityEarthspike extends AvatarEntity {
 
 		super.onEntityUpdate();
 
+		if (!world.isRemote) {
+			System.out.println("Confused");
+		}
 		setVelocity(Vector.ZERO);
 		if (ticksExisted >= 15) {
 			this.setDead();
