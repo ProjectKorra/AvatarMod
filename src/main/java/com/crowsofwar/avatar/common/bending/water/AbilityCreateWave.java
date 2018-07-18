@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -49,7 +50,8 @@ public class AbilityCreateWave extends Ability {
 		Vector look = Vector.getLookRectangular(entity).withY(0);
 		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1)
 				, look, 4 + ctx.getLevel(), (pos, blockState) -> blockState.getBlock() == Blocks
-				.WATER);
+						.WATER || blockState.getBlock() == Blocks.SNOW || blockState.getBlock() == Blocks.FLOWING_WATER
+						|| blockState.getBlock() == Blocks.ICE);
 
 		if (result.hitSomething()) {
 
@@ -109,6 +111,53 @@ public class AbilityCreateWave extends Ability {
 
 				}
 				pos.add(0, 1, 0);
+			}
+
+		} else if (ctx.consumeWater(2)) {
+			if (bender.consumeChi(STATS_CONFIG.chiWave)) {
+
+				float size = 2;
+				double speed = 6.5;
+				if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+					speed = 12.5;
+					size = 3.5F;
+				}
+				if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+					speed = 17;
+					size = 2.75F;
+				}
+				if (ctx.getLevel() == 1) {
+					size = 2.5F;
+					speed = 8;
+				}
+				if (ctx.getLevel() == 2) {
+					size = 3;
+					speed = 10;
+				}
+
+				if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+					size = 5;
+				}
+				size += ctx.getPowerRating() / 100;
+
+				speed += ctx.getPowerRating() / 100 * 8;
+
+				Vector direction = Vector.getLookRectangular(entity);
+				EntityWave wave = new EntityWave(world);
+				wave.setOwner(entity);
+				wave.setVelocity(look.times(speed));
+				wave.setPosition(direction.x(), entity.posY, direction.z());
+				wave.setAbility(this);
+				wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
+
+				float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
+				damageMult *= ctx.getPowerRatingDamageMod();
+				wave.setDamageMultiplier(damageMult);
+				wave.setWaveSize(size);
+
+				wave.setCreateExplosion(ctx.isMasterLevel(AbilityTreePath.SECOND));
+				world.spawnEntity(wave);
+
 			}
 
 		}
