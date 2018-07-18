@@ -112,8 +112,8 @@ public class EntityWave extends AvatarEntity {
 			this.setVelocity(velocity().dividedBy(40));
 			this.posY -= Shrink;
 		}
-		if (this.posY - originalPosition >= 1.5) {
-			this.posY -= Shrink;
+		if (this.posY - originalPosition > 1.5) {
+			this.posY = originalPosition + 1.5;
 		}
 		if (this.inWater && this.posY - originalPosition <= -1){
 			this.posY += Shrink;
