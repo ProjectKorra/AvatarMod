@@ -59,10 +59,6 @@ public class AbilityCleanse extends Ability {
 
 		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel() * 3);
 
-		if (targetPos == null || (entity instanceof EntityPlayerMP && !((EntityPlayerMP) entity).isCreative())) {
-			bender.sendMessage("avatar.cleanseFail");
-		}
-
 		if ((bender.consumeChi(chi) && targetPos != null) || (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative())
 				|| ctx.consumeWater(4)) {
 
@@ -115,6 +111,9 @@ public class AbilityCleanse extends Ability {
 			//noinspection ConstantConditions
 			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
 
+		}
+		else {
+			bender.sendMessage("avatar.cleanseFail");
 		}
 
 	}

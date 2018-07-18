@@ -43,7 +43,7 @@ public class AbilityWaterCannon extends Ability {
 		int waterAmount = 2;
 
 
-		if(ctx.getLevel >= 2) {
+		if(ctx.getLevel() >= 2) {
 		   waterAmount = 3;
 		}
 		
