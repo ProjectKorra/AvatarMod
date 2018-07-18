@@ -38,7 +38,6 @@ public class ConfigStats {
 	@Load
 	public AttackSettings floatingBlockSettings = new AttackSettings(0.45f, 1),
 			ravineSettings = new AttackSettings(4, 0.25), //
-			earthspikeSettings = new AttackSettings(3, 0.3),
 			waveSettings = new AttackSettings(2, 4), //
 			airbladeSettings = new AttackSettings(4, .03), //
 			fireArcSettings = new AttackSettings(4, 1),   //
@@ -64,6 +63,9 @@ public class ConfigStats {
 	@Load
 	public CloudburstSettings cloudburstSettings = new CloudburstSettings();
 
+	@Load
+	public EarthspikeSettings earthspikeSettings = new EarthspikeSettings();
+
 	// @formatter:off
 	@Load
 	public float chiAirblade = 1f,
@@ -78,7 +80,7 @@ public class ConfigStats {
 			chiBuffLvl4 = 4f,
 			chiBoulderRing = 3F,
 			chiCloudburst = 2.5F,
-			chiEarthspike = 4.5F,
+			chiEarthspike = 3.5F,
 			chiExplosion = 3F,
 			chiExplosionUpgraded = 4.5f,
 			chiExplosivePillar = 4F,
@@ -285,6 +287,23 @@ public class ConfigStats {
 
 		@Load
 		public double push = 1.5;
+
+	}
+
+	public static class EarthspikeSettings {
+
+		@Load
+		public double damage = 3;
+
+		@Load
+		public float frequency = 8;
+
+		@Load
+		public float size = 1;
+
+		@Load
+		public double push = 0.5;
+
 
 	}
 	public static class ExplosionSettings {

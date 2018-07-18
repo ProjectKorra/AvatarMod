@@ -19,10 +19,12 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -41,16 +43,17 @@ public class EntityEarthspike extends AvatarEntity {
 	//private static final DataParameter<Float> SYNC_SIZE = EntityDataManager
 	//		.createKey(EntityEarthspike.class, DataSerializers.FLOAT);
 
-	private float damageMult;
+	private double damage;
 	//private float Size = 1;
 
 	public EntityEarthspike(World world) {
 		super(world);
 		setSize(1, 1);
+		this.damage = STATS_CONFIG.earthspikeSettings.damage;
 	}
 
-	public void setDamageMult(float mult) {
-		this.damageMult = mult;
+	public void setDamage(double damage) {
+		this.damage = damage;
 	}
 
 //	public void setSize (float size) {
@@ -79,11 +82,9 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner || entity instanceof EntityItem
-				|| (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner())) {
-			return false;
-		}
-		else return true;
+		/*return !(entity instanceof EntityEarthspike) && !(entity instanceof EntityEarthspikeSpawner) && !(entity instanceof EntityItem)
+				&& (!(entity instanceof AvatarEntity) || ((AvatarEntity) entity).getOwner() != getOwner());**/
+		return entity != getOwner() || !(entity instanceof EntityEarthspikeSpawner) || !(entity instanceof EntityEarthspike) || entity instanceof EntityLivingBase;
 
 	}
 
@@ -91,9 +92,6 @@ public class EntityEarthspike extends AvatarEntity {
 	public void onEntityUpdate() {
 
 		super.onEntityUpdate();
-
-		//For some reason earthspike thinks it's clientside. I don't why
-		//HHAAAAALLPPP MEEEEE
 
 		setVelocity(Vector.ZERO);
 		if (ticksExisted >= 15) {
@@ -104,14 +102,14 @@ public class EntityEarthspike extends AvatarEntity {
 		int attacked = 0;
 
 		// Push collided entities back
-		//if (!world.isRemote) {
+		if (!world.isRemote) {
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
 					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
-					if (attackEntity(entity)) {
-						attacked++;
-					}
+					onCollideWithEntity(entity);
+					attacked++;
+
 				}
 			}
 			if (getOwner() != null) {
@@ -119,39 +117,55 @@ public class EntityEarthspike extends AvatarEntity {
 				if (data != null && !world.isRemote) {
 					data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.earthspikeHit * attacked);
 				}
-		//	}
+			}
 		}
 	}
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
+		if (!world.isRemote && entity instanceof EntityLivingBase) {
 			pushEntity(entity);
 			AvatarUtils.afterVelocityAdded(entity);
-			if (attackEntity(entity)) {
-				if (getOwner() != null && !world.isRemote) {
-					BattlePerformanceScore.addMediumScore(getOwner());
-				}
-				System.out.println("Success??");
+			damageEntity((EntityLivingBase) entity);
+			if (getOwner() != null && !world.isRemote) {
+				BattlePerformanceScore.addMediumScore(getOwner());
 			}
-
+			System.out.println(entity);
 		}
-
-
-	private boolean attackEntity(Entity entity) {
-		if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
-			DamageSource ds = AvatarDamageSource.causeEarthspikeDamage(entity, getOwner());
-			float damage = STATS_CONFIG.earthspikeSettings.damage * damageMult;
-			return entity.attackEntityFrom(ds, damage);
-		}
-
-		return false;
 	}
+
+
+	private void damageEntity(EntityLivingBase entity) {
+
+		if (world.isRemote) {
+			return;
+		}
+
+		DamageSource damageSource = AvatarDamageSource.causeWaterCannonDamage(entity, getOwner());
+		if (entity.attackEntityFrom(damageSource, (float) damage)) {
+
+			BattlePerformanceScore.addMediumScore(getOwner());
+
+			entity.motionX = this.motionX;
+			entity.motionY = this.motionY;
+			entity.motionZ = this.motionZ;
+			AvatarUtils.afterVelocityAdded(entity);
+
+			if (getOwner() != null) {
+				BendingData data = BendingData.get(getOwner());
+				AbilityData abilityData = data.getAbilityData(getAbility().getName());
+				abilityData.addXp(SKILLS_CONFIG.earthspikeHit / 2);
+			}
+		}
+
+	}
+
 
 	private void pushEntity(Entity entity) {
 		Vector entityPos = Vector.getEntityPos(entity);
 		Vector direction = entityPos.minus(this.position());
 		Vector velocity = direction.times(STATS_CONFIG.earthspikeSettings.push);
-		entity.addVelocity(velocity.x() / 4, velocity.y(), velocity.z() / 5);
+		entity.addVelocity(velocity.x() / 5, velocity.y(), velocity.z() / 5);
 	}
 
 	@Override

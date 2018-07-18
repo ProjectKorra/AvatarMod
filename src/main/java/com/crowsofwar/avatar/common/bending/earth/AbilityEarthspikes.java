@@ -3,6 +3,8 @@ package com.crowsofwar.avatar.common.bending.earth;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.gorecore.util.Vector;
@@ -24,6 +26,7 @@ public class AbilityEarthspikes extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		Bender bender = ctx.getBender();
+		BendingData data = ctx.getData();
 
 		float damage = 1;
 		float xp = abilityData.getTotalXp();
@@ -43,11 +46,13 @@ public class AbilityEarthspikes extends Ability {
 			damage = 1.25f;
 			ticks = 30;
 			speed = 12;
+			chi *= 1.5;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			damage = 3;
 			ticks = 60;
 			speed = 20;
+			chi *= 2;
 		}
 
 		if (bender.consumeChi(chi)) {
@@ -67,6 +72,7 @@ public class AbilityEarthspikes extends Ability {
 				earthspike.setUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
 				world.spawnEntity(earthspike);
 
+
 			} else {
 
 				for (int i = 0; i < 8; i++) {
@@ -80,10 +86,10 @@ public class AbilityEarthspikes extends Ability {
 					earthspike.setDuration(ticks);
 					earthspike.setOwner(entity);
 					earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
-					earthspike.setDamageMult(damage + xp / 100);
 					world.spawnEntity(earthspike);
 				}
 			}
+			data.addTickHandler(TickHandler.SPAWN_EARTHSPIKES_HANDLER);
 
 		}
 	}

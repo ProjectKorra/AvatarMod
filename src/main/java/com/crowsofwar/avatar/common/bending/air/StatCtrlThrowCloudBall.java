@@ -47,6 +47,8 @@ public class StatCtrlThrowCloudBall extends StatusControl {
 		if (cloudBall != null) {
 			cloudBall.setVelocity(0, 0, 0);
 			cloudBall.addVelocity(Vector.getLookRectangular(entity).times(speed));
+			//Necessary so that you can't increase speed by moving your mouse really fast; additionally,
+			//using setVelocity sometimes makes the cloudburst go invisible. Weird.
 			cloudBall.setBehavior(new CloudburstBehavior.Thrown());
 		}
 

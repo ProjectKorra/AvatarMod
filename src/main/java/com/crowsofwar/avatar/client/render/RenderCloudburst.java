@@ -72,7 +72,6 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 
 		//  } else {
 
-			disableLighting();
 			pushMatrix();
 			renderCube(x, y, z, //
 				8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //

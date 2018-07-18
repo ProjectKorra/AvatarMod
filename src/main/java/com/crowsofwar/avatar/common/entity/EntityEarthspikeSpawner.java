@@ -30,7 +30,6 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class EntityEarthspikeSpawner extends AvatarEntity {
 
 	private boolean unstoppable;
-	private float damageMult;
 	private double maxTicksAlive;
 	/**
 	 * @param world
@@ -49,11 +48,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		this.maxTicksAlive = ticks;
 	}
 
-	public void setDamageMult (float mult)
-	{
-		this.damageMult = mult;
-	}
-	//For setting earthspike's damagemult.
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -72,6 +66,11 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	}
 
 	@Override
+	public boolean canBeCollidedWith() {
+		return false;
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 
@@ -85,19 +84,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 			if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
 					world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
 					SoundCategory.PLAYERS, 1, 1, false);
-
-			if (ticksExisted % 3 == 0) {
-				Bender b = Bender.get(getOwner());
-				World world = b.getWorld();
-				EntityEarthspike earthspike = new EntityEarthspike(world);
-				earthspike.posX = this.posX;
-				earthspike.posY = this.posY;
-				earthspike.posZ = this.posZ;
-				earthspike.setOwner(getOwner());
-				earthspike.setDamageMult(damageMult);
-				earthspike.setAbility(this.getAbility());
-				world.spawnEntity(earthspike);
-			}
 
 			if (!world.getBlockState(below).isNormalCube()) {
 				setDead();
@@ -132,10 +118,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner) {
-			return false;
-		}
-		return super.canCollideWith(entity);
+		return false;
 	}
 
 	@Override

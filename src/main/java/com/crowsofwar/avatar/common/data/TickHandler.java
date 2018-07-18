@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.bending.air.AirParticleSpawner;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
+import com.crowsofwar.avatar.common.bending.earth.SpawnEarthspikesHandler;
 import com.crowsofwar.avatar.common.bending.fire.*;
 import com.crowsofwar.avatar.common.bending.lightning.LightningCreateHandler;
 import com.crowsofwar.avatar.common.bending.lightning.LightningRedirectHandler;
@@ -51,6 +52,7 @@ public abstract class TickHandler {
 	public static TickHandler SMASH_GROUND_WATER = new WaterSmashHandler();
 	public static TickHandler WATER_PARTICLE_SPAWNER = new WaterParticleSpawner();
 	public static TickHandler INFERNO_PARTICLE_SPAWNER = new InfernoPunchParticleSpawner();
+	public static TickHandler SPAWN_EARTHSPIKES_HANDLER = new SpawnEarthspikesHandler();
 
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;

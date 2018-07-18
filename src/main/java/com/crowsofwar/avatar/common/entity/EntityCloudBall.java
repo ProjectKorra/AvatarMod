@@ -108,11 +108,6 @@ public class EntityCloudBall extends AvatarEntity {
 
 	}
 
-	@Override
-	public int getBrightnessForRender() {
-		return -50;
-	}
-
 	public CloudburstBehavior getBehavior() {
 		return dataManager.get(SYNC_BEHAVIOR);
 	}
@@ -266,9 +261,11 @@ public class EntityCloudBall extends AvatarEntity {
 						Vector vel = position().minus(getEntityPos(entity));
 						vel = vel.normalize().times(mult).plusY(0.15f);
 
-						entity.motionX = vel.x() + 0.1/distanceTravelled;;
-						entity.motionY = vel.y() > 0 ? vel.y() + 0.1/distanceTravelled : 0.3F + 0.1/distanceTravelled;
-						entity.motionZ = vel.z() + 0.1/distanceTravelled;;
+						entity.motionX = vel.x() + 0.1 / distanceTravelled;
+						;
+						entity.motionY = vel.y() > 0 ? vel.y() + 0.1 / distanceTravelled : 0.3F + 0.1 / distanceTravelled;
+						entity.motionZ = vel.z() + 0.1 / distanceTravelled;
+						;
 						damageEntity(entity);
 
 						if (entity instanceof AvatarEntity) {
@@ -288,7 +285,7 @@ public class EntityCloudBall extends AvatarEntity {
 		if (getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 			AbilityData abilityData = data.getAbilityData("cloudburst");
-			DamageSource ds = AvatarDamageSource.causeWaterDamage(entity, getOwner());
+			DamageSource ds = AvatarDamageSource.causeCloudburstDamage(entity, getOwner());
 			int lvl = abilityData.getLevel();
 			float damage = 0.5F;
 			if (lvl == 1) {
@@ -323,7 +320,6 @@ public class EntityCloudBall extends AvatarEntity {
 		return true;
 	}
 	//Fixes a glitch where the entity turns invisible
-
 
 
 	private void removeStatCtrl() {
