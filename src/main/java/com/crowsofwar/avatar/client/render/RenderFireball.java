@@ -109,6 +109,7 @@ public class RenderFireball extends Render<EntityFireball> {
 					size, //
 					rotation * .2f, rotation, rotation * -.4f);
 			popMatrix();
+			enableLighting();
 
 
 		//}

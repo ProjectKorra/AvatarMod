@@ -17,10 +17,33 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		AbilityData abilityData = AbilityData.get(owner, "earthspike");
 		EntityEarthspikeSpawner entity = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
 
-		if (entity != null) {
-			EntityEarthspike earthspike = new EntityEarthspike(world);
-			return false;
+		float frequency = 8;
+
+		if (abilityData.getLevel() == 1) {
+			frequency = 6;
 		}
-		else return true;
+
+		if (abilityData.getLevel() == 2) {
+			frequency = 4;
+		}
+
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+			frequency = 5;
+		}
+
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			frequency = 2;
+		}
+
+		if (entity != null) {
+			if (entity.ticksExisted % frequency == 0) {
+				EntityEarthspike earthspike = new EntityEarthspike(world);
+				earthspike.posX = entity.posX;
+				earthspike.posY = entity.posY;
+				earthspike.posZ = entity.posZ;
+
+			}
+			return false;
+		} else return true;
 	}
 }

@@ -108,6 +108,11 @@ public class EntityCloudBall extends AvatarEntity {
 
 	}
 
+	@Override
+	public int getBrightnessForRender() {
+		return -50;
+	}
+
 	public CloudburstBehavior getBehavior() {
 		return dataManager.get(SYNC_BEHAVIOR);
 	}
