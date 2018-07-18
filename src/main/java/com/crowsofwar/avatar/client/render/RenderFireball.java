@@ -86,7 +86,7 @@ public class RenderFireball extends Render<EntityFireball> {
 			world.spawnParticle(EnumParticleTypes.FLAME, spawnX, spawnY, spawnZ, 0, 0, 0);
 		}
 
-		if (MinecraftForgeClient.getRenderPass() == 0) {
+		//if (MinecraftForgeClient.getRenderPass() == 0) {
 			disableLighting();
 
 			renderCube(x, y, z, //
@@ -99,7 +99,7 @@ public class RenderFireball extends Render<EntityFireball> {
 			int k = i / 65536;
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
 
-		} else {
+		//} else {
 
 			disableLighting();
 			//Makes it so that the fireball isn't affected by shadow
@@ -111,7 +111,7 @@ public class RenderFireball extends Render<EntityFireball> {
 			popMatrix();
 
 
-		}
+		//}
 
 		disableBlend();
 
@@ -175,7 +175,7 @@ public class RenderFireball extends Render<EntityFireball> {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityFireball entity) {
-		return null;
+		return TEXTURE;
 	}
 
 }

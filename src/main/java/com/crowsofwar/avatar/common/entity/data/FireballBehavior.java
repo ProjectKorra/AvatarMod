@@ -142,8 +142,11 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			}
 
 			// Remove the fireball & spawn particles
-			if (!entity.world.isRemote) entity.setDead();
-			entity.onCollideWithSolid();
+			if (!entity.world.isRemote) {
+				entity.onCollideWithSolid();
+				entity.setDead();
+			}
+
 		}
 
 		@Override

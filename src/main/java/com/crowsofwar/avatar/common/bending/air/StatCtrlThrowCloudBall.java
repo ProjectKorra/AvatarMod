@@ -45,6 +45,7 @@ public class StatCtrlThrowCloudBall extends StatusControl {
 		EntityCloudBall cloudBall = AvatarEntity.lookupControlledEntity(world, EntityCloudBall.class, entity);
 
 		if (cloudBall != null) {
+			cloudBall.setVelocity(0, 0, 0);
 			cloudBall.addVelocity(Vector.getLookRectangular(entity).times(speed));
 			cloudBall.setBehavior(new CloudburstBehavior.Thrown());
 		}
