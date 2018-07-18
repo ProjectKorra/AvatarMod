@@ -114,53 +114,55 @@ public class AbilityCreateWave extends Ability {
 			}
 
 		} else if (ctx.consumeWater(2)) {
-			if (bender.consumeChi(STATS_CONFIG.chiWave)) {
+			for (int i = 0; i < 3; i++) {
+					if (bender.consumeChi(STATS_CONFIG.chiWave)) {
 
-				float size = 2;
-				double speed = 6.5;
-				if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-					speed = 12.5;
-					size = 3.5F;
+						float size = 2;
+						double speed = 6.5;
+						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+							speed = 12.5;
+							size = 3.5F;
+						}
+						if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+							speed = 17;
+							size = 2.75F;
+						}
+						if (ctx.getLevel() == 1) {
+							size = 2.5F;
+							speed = 8;
+						}
+						if (ctx.getLevel() == 2) {
+							size = 3;
+							speed = 10;
+						}
+
+						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+							size = 5;
+						}
+						size += ctx.getPowerRating() / 100;
+
+						speed += ctx.getPowerRating() / 100 * 8;
+
+						Vector direction = Vector.getLookRectangular(entity).withY(0);
+						EntityWave wave = new EntityWave(world);
+						wave.setOwner(entity);
+						wave.setVelocity(direction.times(speed));
+						wave.setPosition(direction);
+						wave.setAbility(this);
+						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
+
+						float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
+						damageMult *= ctx.getPowerRatingDamageMod();
+						wave.setDamageMultiplier(damageMult);
+						wave.setWaveSize(size);
+
+						wave.setCreateExplosion(ctx.isMasterLevel(AbilityTreePath.SECOND));
+						world.spawnEntity(wave);
+
+					}
+
 				}
-				if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-					speed = 17;
-					size = 2.75F;
-				}
-				if (ctx.getLevel() == 1) {
-					size = 2.5F;
-					speed = 8;
-				}
-				if (ctx.getLevel() == 2) {
-					size = 3;
-					speed = 10;
-				}
-
-				if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-					size = 5;
-				}
-				size += ctx.getPowerRating() / 100;
-
-				speed += ctx.getPowerRating() / 100 * 8;
-
-				Vector direction = Vector.getLookRectangular(entity);
-				EntityWave wave = new EntityWave(world);
-				wave.setOwner(entity);
-				wave.setVelocity(look.times(speed));
-				wave.setPosition(direction.x(), entity.posY, direction.z());
-				wave.setAbility(this);
-				wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
-
-				float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
-				damageMult *= ctx.getPowerRatingDamageMod();
-				wave.setDamageMultiplier(damageMult);
-				wave.setWaveSize(size);
-
-				wave.setCreateExplosion(ctx.isMasterLevel(AbilityTreePath.SECOND));
-				world.spawnEntity(wave);
-
 			}
-
-		}
 
 	}
 
