@@ -26,6 +26,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -86,7 +87,7 @@ public class EntityEarthspike extends AvatarEntity {
 		if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner || entity == this.getOwner()) {
 			return false;
 		}
-		return entity instanceof EntityLivingBase || super.canCollideWith(entity);
+		 return entity instanceof EntityLivingBase || super.canCollideWith(entity);
 
 	}
 
