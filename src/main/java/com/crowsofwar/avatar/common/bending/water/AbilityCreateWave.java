@@ -54,12 +54,12 @@ public class AbilityCreateWave extends Ability {
 		if (result.hitSomething()) {
 
 			VectorI pos = result.getPos();
-			IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
+			//IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
 			IBlockState up = world.getBlockState(pos.toBlockPos().up());
 
 			float size = 2;
 			for (int i = 0; i < 3; i++) {
-				if (world.getBlockState(pos.toBlockPos().up()).getBlock() == Blocks.AIR) {
+				if (up.getBlock() == Blocks.AIR) {
 
 					if (bender.consumeChi(STATS_CONFIG.chiWave)) {
 
@@ -80,13 +80,18 @@ public class AbilityCreateWave extends Ability {
 							size = 3;
 							speed = 10;
 						}
+
+						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+							size = 5;
+						}
+						size += ctx.getPowerRating() / 100;
+						
 						speed += ctx.getPowerRating() / 100 * 8;
 
 						EntityWave wave = new EntityWave(world);
 						wave.setOwner(entity);
 						wave.setVelocity(look.times(speed));
 						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
-						wave.setOriginalPosition(pos.y());
 						wave.setAbility(this);
 						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 
@@ -94,9 +99,7 @@ public class AbilityCreateWave extends Ability {
 						damageMult *= ctx.getPowerRatingDamageMod();
 						wave.setDamageMultiplier(damageMult);
 						wave.setWaveSize(size);
-						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-							wave.setWaveSize(5);
-						}
+
 						wave.setCreateExplosion(ctx.isMasterLevel(AbilityTreePath.SECOND));
 						world.spawnEntity(wave);
 

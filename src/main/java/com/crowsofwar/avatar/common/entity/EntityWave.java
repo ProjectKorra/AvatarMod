@@ -20,6 +20,8 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.air.AbilityCloudBurst;
+import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
@@ -53,17 +55,15 @@ public class EntityWave extends AvatarEntity {
 	private float Size;
 	private float Shrink;
 	private int collided;
-	private double originalPosition;
 
 	public EntityWave(World world) {
 		super(world);
 		this.Size = 2;
-		setSize(Size, Size);
+		setSize(Size, Size * 0.75F);
 		damageMult = 1;
 		Shrink = 0.05F;
 		this.collided = 0;
 		this.putsOutFires = true;
-		this.originalPosition = this.posY;
 	}
 
 	@Override
@@ -84,10 +84,6 @@ public class EntityWave extends AvatarEntity {
 		dataManager.set(SYNC_SIZE, size);
 	}
 
-	public void setOriginalPosition(double position) {
-		this.originalPosition = position;
-	}
-
 	@Override
 	public boolean canBeCollidedWith() {
 		return false;
@@ -98,25 +94,21 @@ public class EntityWave extends AvatarEntity {
 
 		super.onUpdate();
 		this.noClip = true;
-		BendingData data = BendingData.get(getOwner());
-		AbilityData lvl = data.getAbilityData("wave");
 
-		if (lvl.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			setSize(Size * 2, Size * 0.75F * 2);
-		}
-		else {
-			setSize(Size, Size * 0.75F);
+		if (getAbility() instanceof AbilityCreateWave) {
+			BendingData data = BendingData.get(getOwner());
+			AbilityData lvl = data.getAbilityData(getAbility().getName());
+
+			if (lvl.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				setSize(Size * 2, Size * 0.75F * 2);
+			} else {
+				setSize(Size, Size * 0.75F);
+			}
 		}
 
 		if (!this.inWater) {
 			this.setVelocity(velocity().dividedBy(40));
 			this.posY -= Shrink;
-		}
-		if (this.posY - originalPosition > 1.5) {
-			this.posY = originalPosition + 1.5;
-		}
-		if (this.inWater && this.posY - originalPosition <= -1){
-			this.posY += Shrink;
 		}
 
 		EntityLivingBase owner = getOwner();
@@ -124,7 +116,6 @@ public class EntityWave extends AvatarEntity {
 		Vector move = velocity().dividedBy(20);
 		Vector newPos = position().plus(move);
 		setPosition(newPos.x(), newPos.y(), newPos.z());
-
 
 
 		if (!world.isRemote) {
