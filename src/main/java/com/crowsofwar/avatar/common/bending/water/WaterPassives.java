@@ -37,12 +37,6 @@ public class WaterPassives {
 					if (entity.isInWater()) {
 						entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 10));
 						entity.addPotionEffect(new PotionEffect(MobEffects.HASTE, 10, 1));
-						Chi chi = ctx.chi();
-						if (world.getWorldTime() % 24000 <= 2) {
-							chi.changeTotalChi(CHI_CONFIG.regenInWater);
-							if (chi.getTotalChi() > chi.getMaxChi()) {
-								chi.setTotalChi(chi.getMaxChi());
-							}
 						}
 					}
 				}

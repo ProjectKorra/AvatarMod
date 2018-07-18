@@ -20,6 +20,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.QueuedAbilityExecutionHandler;
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
@@ -267,6 +268,9 @@ public abstract class Bender {
 				chi.changeTotalChi(CHI_CONFIG.regenInBed / 20f);
 			} else {
 				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 20f);
+			}
+			if (data.hasBendingId(Waterbending.ID)) {
+				chi.changeTotalChi(CHI_CONFIG.regenInWater/20F);
 			}
 
 			if (chi.getAvailableChi() < CHI_CONFIG.maxAvailableChi) {
