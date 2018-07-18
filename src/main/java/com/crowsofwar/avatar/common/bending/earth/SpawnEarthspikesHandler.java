@@ -52,8 +52,9 @@ public class SpawnEarthspikesHandler extends TickHandler {
 			//2
 			damage *= 2;
 			//6
-
 		}
+
+
 		EntityEarthspikeSpawner entity = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {

@@ -82,9 +82,12 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		/*return !(entity instanceof EntityEarthspike) && !(entity instanceof EntityEarthspikeSpawner) && !(entity instanceof EntityItem)
-				&& (!(entity instanceof AvatarEntity) || ((AvatarEntity) entity).getOwner() != getOwner());**/
-		return entity != getOwner() || !(entity instanceof EntityEarthspikeSpawner) || !(entity instanceof EntityEarthspike) || entity instanceof EntityLivingBase;
+		if (entity instanceof AvatarEntity) {
+			if (((AvatarEntity) entity).getOwner() == getOwner()) {
+				return false;
+			}
+		}
+		return entity != getOwner() && !(entity instanceof EntityItem) && !(entity == this) && entity instanceof EntityLivingBase && !(entity instanceof EntityEarthspikeSpawner);
 
 	}
 
@@ -107,6 +110,7 @@ public class EntityEarthspike extends AvatarEntity {
 					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
+					System.out.println(entity);
 					onCollideWithEntity(entity);
 					attacked++;
 
@@ -123,10 +127,10 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (!world.isRemote && entity instanceof EntityLivingBase) {
+		if (!world.isRemote) {
 			pushEntity(entity);
-			AvatarUtils.afterVelocityAdded(entity);
-			damageEntity((EntityLivingBase) entity);
+//			AvatarUtils.afterVelocityAdded(entity);
+//			damageEntity((EntityLivingBase) entity);
 			if (getOwner() != null && !world.isRemote) {
 				BattlePerformanceScore.addMediumScore(getOwner());
 			}
@@ -146,15 +150,10 @@ public class EntityEarthspike extends AvatarEntity {
 
 			BattlePerformanceScore.addMediumScore(getOwner());
 
-			entity.motionX = this.motionX;
-			entity.motionY = this.motionY;
-			entity.motionZ = this.motionZ;
-			AvatarUtils.afterVelocityAdded(entity);
-
 			if (getOwner() != null) {
 				BendingData data = BendingData.get(getOwner());
 				AbilityData abilityData = data.getAbilityData(getAbility().getName());
-				abilityData.addXp(SKILLS_CONFIG.earthspikeHit / 2);
+				abilityData.addXp(SKILLS_CONFIG.earthspikeHit);
 			}
 		}
 
