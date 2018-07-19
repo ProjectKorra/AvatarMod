@@ -155,7 +155,7 @@ public class EntityWave extends AvatarEntity {
 			}
 		}
 
-		if (groundTime >= 20) {
+		if (groundTime >= 25) {
 			this.setDead();
 		}
 
