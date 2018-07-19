@@ -1,8 +1,10 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.INFERNO_PUNCH;
@@ -43,5 +45,10 @@ public class AbilityInfernoPunch extends Ability {
 			data.addStatusControl(INFERNO_PUNCH);
 			data.addTickHandler(INFERNO_PARTICLE_SPAWNER);
 		}
+	}
+
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return super.getAi(entity, bender);
 	}
 }
