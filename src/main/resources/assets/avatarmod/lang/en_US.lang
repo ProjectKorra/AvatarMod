@@ -250,8 +250,8 @@ avatar.ability.water_skate=§9§lWater §9§lSkate
 avatar.ability.water_skate.desc=Run on the surface of water. Useful as an evasive ability, or just to get around.
 avatar.ability.water_skate.lvl1=Slip across the water, can't use abilities
 avatar.ability.water_skate.lvl2=Can use abilities while skating
-avatar.ability.water_skate.lvl3=Much faster
-avatar.ability.water_skate.lvl4_1=§9§l§oBalanced §9§l§oskating ;; Can skate even on flowing water
+avatar.ability.water_skate.lvl3=Much faster, and you can now skate on flowing water!
+avatar.ability.water_skate.lvl4_1=§9§l§oBalanced §9§l§oskating ;; Can skate even on solid blocks!
 avatar.ability.water_skate.lvl4_2=§9§l§oWatery §9§l§oimpact ;; Smash the ground after jumping
 
 avatar.ability.water_cannon=§9§lWater §9§lCannon

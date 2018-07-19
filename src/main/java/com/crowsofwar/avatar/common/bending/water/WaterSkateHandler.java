@@ -179,7 +179,10 @@ public class WaterSkateHandler extends TickHandler {
 		boolean inWaterBlock = below.getBlock() == Blocks.WATER
 				&& (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating);
 
-		return !player.isSneaking() && (player.isInWater() || inWaterBlock) && surface != -1
+		if (allowGroundSkating) {
+			return !player.isSneaking() && surface != -1
+					&& surface - player.posY <= 3;
+		} else return !player.isSneaking() && (player.isInWater() || inWaterBlock) && surface != -1
 				&& surface - player.posY <= 3;
 
 	}
