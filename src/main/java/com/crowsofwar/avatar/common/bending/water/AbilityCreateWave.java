@@ -93,7 +93,7 @@ public class AbilityCreateWave extends Ability {
 						EntityWave wave = new EntityWave(world);
 						wave.setOwner(entity);
 						wave.setVelocity(look.times(speed));
-						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
+						wave.setPosition(pos.x(), pos.y(), pos.z());
 						wave.setAbility(this);
 						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 

@@ -174,7 +174,8 @@ public class WaterSkateHandler extends TickHandler {
 		IBlockState below = player.world.getBlockState(new BlockPos(player.getPosition()).down());
 		int surface = getSurfacePos(player);
 
-		boolean allowWaterfallSkating = data.isMasterPath(AbilityTreePath.FIRST);
+		boolean allowWaterfallSkating = data.getLevel() >= 2;
+		boolean allowGroundSkating = data.isMasterPath(AbilityTreePath.FIRST);
 		boolean inWaterBlock = below.getBlock() == Blocks.WATER
 				&& (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating);
 

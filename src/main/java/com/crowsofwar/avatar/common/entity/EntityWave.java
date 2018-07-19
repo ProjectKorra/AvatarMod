@@ -47,6 +47,7 @@ public class EntityWave extends AvatarEntity {
 	private boolean createExplosion;
 	private float Size;
 	private Vector initialSpeed;
+	private int groundTime;
 
 	public EntityWave(World world) {
 		super(world);
@@ -55,6 +56,7 @@ public class EntityWave extends AvatarEntity {
 		damageMult = 1;
 		this.putsOutFires = true;
 		this.initialSpeed = this.velocity();
+		this.groundTime = 0;
 	}
 
 	@Override
@@ -114,6 +116,7 @@ public class EntityWave extends AvatarEntity {
 
 		if (!this.inWater) {
 			this.setVelocity(velocity().dividedBy(40));
+			groundTime++;
 		}
 
 		EntityLivingBase owner = getOwner();
@@ -152,9 +155,8 @@ public class EntityWave extends AvatarEntity {
 			}
 		}
 
-		if (ticksExisted > 200 && !this.isInWater()) {
-			setDead();
-
+		if (groundTime >= 20) {
+			this.setDead();
 		}
 
 		if (ticksExisted >= 250) {
