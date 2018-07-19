@@ -46,6 +46,7 @@ public class EntityWave extends AvatarEntity {
 	private float damageMult;
 	private boolean createExplosion;
 	private float Size;
+	private Vector initialSpeed;
 
 	public EntityWave(World world) {
 		super(world);
@@ -53,6 +54,7 @@ public class EntityWave extends AvatarEntity {
 		setSize(Size, Size * 0.75F);
 		damageMult = 1;
 		this.putsOutFires = true;
+		this.initialSpeed = this.velocity();
 	}
 
 	@Override
@@ -79,10 +81,25 @@ public class EntityWave extends AvatarEntity {
 	}
 
 	@Override
+	protected boolean canCollideWith(Entity entity) {
+		return entity != this;
+	}
+
+	@Override
+	public boolean canBePushed() {
+		return false;
+	}
+
+	@Override
 	public void onUpdate() {
 
 		super.onUpdate();
 		this.noClip = true;
+
+
+		if (this.velocity() == Vector.ZERO || (this.velocity().magnitude() < (initialSpeed.magnitude()/100))) {
+			this.setDead();
+		}
 
 		if (getAbility() instanceof AbilityCreateWave && getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());

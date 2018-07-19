@@ -117,7 +117,6 @@ public class EntityAirBubble extends EntityShield {
 			return;
 		}
 		setPositionAndUpdate(owner.posX, getOwner().getEntityBoundingBox().minY, owner.posZ);
-		setPositionAndRotation(owner.posX, getOwner().getEntityBoundingBox().minY, owner.posZ, this.rotationYaw, this.rotationPitch);
 
 
 		this.setVelocity(Vector.ZERO);
@@ -294,10 +293,7 @@ public class EntityAirBubble extends EntityShield {
 		if (entity instanceof  AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
 			return false;
 		}
-		else if (entity == getOwner() || entity instanceof EntityArrow || entity instanceof EntityItem) {
-			return false;
-		}
-		else return true;
+		else return entity != getOwner() && !(entity instanceof EntityArrow) && !(entity instanceof EntityItem);
 	}
 
 	@Override
@@ -316,6 +312,11 @@ public class EntityAirBubble extends EntityShield {
 		nbt.setBoolean("AllowHovering", doesAllowHovering());
 		nbt.setFloat("Size", getSize());
 		nbt.setInteger("AirLeft", airLeft);
+	}
+
+	@Override
+	public void setPositionAndUpdate(double x, double y, double z) {
+		super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
 	}
 
 	@Override

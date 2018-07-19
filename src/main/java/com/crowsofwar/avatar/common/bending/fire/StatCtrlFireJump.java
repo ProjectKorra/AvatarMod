@@ -94,7 +94,7 @@ public class StatCtrlFireJump extends StatusControl {
 			if (abilityData.getLevel()  == 2 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE);
 			}
-			else {
+			else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE_BIG);
 			}
 
@@ -146,11 +146,6 @@ public class StatCtrlFireJump extends StatusControl {
 
 			data.getMiscData().setFallAbsorption(fallAbsorption);
 
-
-
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE_BIG);
-			}
 
 			abilityData.addXp(ConfigSkills.SKILLS_CONFIG.fireJump);
 
