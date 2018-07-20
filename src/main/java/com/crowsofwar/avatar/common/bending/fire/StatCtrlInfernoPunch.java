@@ -74,7 +74,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		DamageSource source = event.getSource();
 		if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
 			Bender ctx = Bender.get(entity);
-			if (source == DamageSource.causePlayerDamage((EntityPlayerMP) entity) || source == DamageSource.causeMobDamage(entity)) {
+			if (source == DamageSource.causePlayerDamage((EntityPlayer) entity) || source == DamageSource.causeMobDamage(entity)) {
 				if (ctx.getData() != null) {
 					Vector direction = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 					AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
