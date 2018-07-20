@@ -23,7 +23,8 @@ If you are an end-user planning to play the mod, information is available here:
 * [**Official AvatarMod Wiki**](http://projectkorra.wikia.com/wiki/Av2)
 * [Download/Install](http://projectkorra.wikia.com/wiki/Av2:Install)
 * [MinecraftForums](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2726598)
-* [Community ideas Trello](http://trello.av2.io)
+* [Community ideas Trello](https://trello.com/b/hVroJUQM/av2-development)
+* [MIT License](https://opensource.org/licenses/MIT)
 
 Contributing
 ------------
