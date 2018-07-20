@@ -153,7 +153,7 @@ public class WaterSkateHandler extends TickHandler {
 					List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 					for (EntityLivingBase target : nearby) {
 						if (target != player) {
-							pushEntitiesAway(1, target, player);
+							pushEntitiesAway(2, target, player);
 						}
 					}
 
