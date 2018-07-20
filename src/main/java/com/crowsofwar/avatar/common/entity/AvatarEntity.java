@@ -273,8 +273,8 @@ public abstract class AvatarEntity extends Entity {
 			onFireContact();
 		}
 
-		//Vector v = velocity().dividedBy(20);
-		//move(MoverType.SELF, v.x(), v.y(), v.z());
+		Vector v = velocity().dividedBy(20);
+		move(MoverType.SELF, v.x(), v.y(), v.z());
 
 	}
 

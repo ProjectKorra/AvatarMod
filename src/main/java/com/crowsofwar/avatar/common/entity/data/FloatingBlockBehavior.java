@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.entity.data;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -197,14 +198,14 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 
 			if (collided.attackEntityFrom(
 					AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
-					(float) (speed/30 * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()))) {
+					(float) (speed / 30 * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()))) {
 				BattlePerformanceScore.addMediumScore(entity.getOwner());
 			}
 
 			// Push entity
-			collided.motionX = entity.motionX/2 * STATS_CONFIG.floatingBlockSettings.push;
-			collided.motionY = entity.motionY > 0 ? STATS_CONFIG.floatingBlockSettings.push/4 + entity.motionY/2 : STATS_CONFIG.floatingBlockSettings.push/3;
-			collided.motionZ = entity.motionZ/2 * STATS_CONFIG.floatingBlockSettings.push;
+			collided.motionX = entity.motionX / 2 * STATS_CONFIG.floatingBlockSettings.push;
+			collided.motionY = entity.motionY > 0 ? STATS_CONFIG.floatingBlockSettings.push / 4 + entity.motionY / 2 : STATS_CONFIG.floatingBlockSettings.push / 3;
+			collided.motionZ = entity.motionZ / 2 * STATS_CONFIG.floatingBlockSettings.push;
 
 			// Add XP
 			BendingData data = Bender.get(entity.getOwner()).getData();
