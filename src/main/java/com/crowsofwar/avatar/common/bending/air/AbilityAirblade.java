@@ -57,7 +57,7 @@ public class AbilityAirblade extends Ability {
 			System.out.println(data.getMiscData().getAbilityCooldown());
 			bender.sendMessage("avatar.onCooldown");
 		}
-		
+
 		double pitchDeg = entity.rotationPitch;
 		if (abs(pitchDeg) > 30) {
 			pitchDeg = pitchDeg / abs(pitchDeg) * 30;
