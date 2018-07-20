@@ -52,7 +52,7 @@ public class AbilityCreateWave extends Ability {
 		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1)
 				, look, 4 + ctx.getLevel(), (pos, blockState) -> blockState.getBlock() == Blocks
 						.WATER);
-		Raytrace.Result extraResult = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity), look,
+		Raytrace.Result extraResult = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1), look,
 				4 + ctx.getLevel(), (blockPos, iBlockState) ->  iBlockState.getBlock() == Blocks.SNOW || iBlockState.getBlock() == Blocks.FLOWING_WATER
 						|| iBlockState.getBlock() == Blocks.ICE);
 
@@ -61,6 +61,11 @@ public class AbilityCreateWave extends Ability {
 			VectorI pos = result.getPos();
 			//IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
 			IBlockState up = world.getBlockState(pos.toBlockPos().up());
+
+			int Up = 0;
+			if (extraResult.hitSomething()) {
+				Up = 1;
+			}
 
 			float size = 2;
 			for (int i = 0; i < 3; i++) {
@@ -96,7 +101,7 @@ public class AbilityCreateWave extends Ability {
 						EntityWave wave = new EntityWave(world);
 						wave.setOwner(entity);
 						wave.setVelocity(look.times(speed));
-						wave.setPosition(pos.x(), pos.y(), pos.z());
+						wave.setPosition(pos.x(), pos.y() + Up, pos.z());
 						wave.setAbility(this);
 						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 
@@ -150,7 +155,7 @@ public class AbilityCreateWave extends Ability {
 						EntityWave wave = new EntityWave(world);
 						wave.setOwner(entity);
 						wave.setVelocity(direction.times(speed));
-						wave.setPosition(direction);
+						wave.setPosition(direction.minusY(1));
 						wave.setAbility(this);
 						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 
