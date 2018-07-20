@@ -34,8 +34,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
@@ -144,6 +147,18 @@ public class WaterSkateHandler extends TickHandler {
 				player.motionY = 0;
 				player.motionZ = newVelocity.z();
 
+				if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
+					AxisAlignedBB box = new AxisAlignedBB(player.posX - 1.5, player.posY - 1.5,
+							player.posZ - 1.5, player.posX + 1.5, player.posY + 1.5, player.posZ + 1.5);
+					List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
+					for (EntityLivingBase target : nearby) {
+						if (target != player) {
+							pushEntitiesAway(1, target, player);
+						}
+					}
+
+				}
+
 				if (player.ticksExisted % 5 == 0) {
 					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
 							SoundCategory.PLAYERS, 0.4f, 2f);
@@ -211,6 +226,12 @@ public class WaterSkateHandler extends TickHandler {
 
 		return (int) player.posY + increased;
 
+	}
+
+	private void pushEntitiesAway(float speed, EntityLivingBase target, EntityLivingBase entity) {
+		Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
+		velocity = velocity.withY(0.1).times(speed / 20);
+		target.addVelocity(velocity.x(), velocity.y(), velocity.z());
 	}
 
 }
