@@ -178,9 +178,9 @@ public class WaterSkateHandler extends TickHandler {
 		boolean allowWaterfallSkating = data.getLevel() >= 2;
 		boolean allowGroundSkating = data.isMasterPath(AbilityTreePath.FIRST);
 		boolean onGround = below != Blocks.AIR;
-		boolean inWaterBlock = (below.getBlock() == Blocks.WATER || below.getBlock() == Blocks.SNOW || below.getBlock() == Blocks.ICE
-				|| below.getBlock() == Blocks.PACKED_ICE || below.getBlock() == Blocks.FROSTED_ICE)
-				&& (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating) || player.world.isRainingAt(player.getPosition());
+		boolean inWaterBlock = ((below.getBlock() == Blocks.WATER)
+				&& (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating)) || player.world.isRainingAt(player.getPosition()) || below.getBlock() == Blocks.SNOW || below.getBlock() == Blocks.ICE
+				|| below.getBlock() == Blocks.PACKED_ICE || below.getBlock() == Blocks.FROSTED_ICE;
 
 		if (allowGroundSkating && onGround) {
 			return (!player.isSneaking() && surface != -1
