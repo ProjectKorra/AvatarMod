@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -272,25 +273,27 @@ public class EntityFloatingBlock extends AvatarEntity {
 			spawnCrackParticle(posX, posY + 0.3, posZ, random.nextGaussian() * 0.1,
 					random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
 		}
-		AbilityData data = BendingData.get(getOwner()).getAbilityData("pickup_block");
+		if (getOwner() != null && getAbility() instanceof AbilityPickUpBlock) {
+			AbilityData data = BendingData.get(getOwner()).getAbilityData("pickup_block");
 
-		if (!world.isRemote && areItemDropsEnabled()) {
-			List<ItemStack> drops = getBlock().getDrops(world, new BlockPos(this), getBlockState(), 0);
-			for (ItemStack is : drops) {
-				EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
-				world.spawnEntity(ei);
-			}
-		}
-
-
-		if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
-
-			Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);
-			if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
-				explosion.doExplosionA();
-				explosion.doExplosionB(true);
+			if (!world.isRemote && areItemDropsEnabled()) {
+				List<ItemStack> drops = getBlock().getDrops(world, new BlockPos(this), getBlockState(), 0);
+				for (ItemStack is : drops) {
+					EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
+					world.spawnEntity(ei);
+				}
 			}
 
+
+			if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
+
+				Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);
+				if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
+					explosion.doExplosionA();
+					explosion.doExplosionB(true);
+				}
+
+			}
 		}
 
 		return true;
