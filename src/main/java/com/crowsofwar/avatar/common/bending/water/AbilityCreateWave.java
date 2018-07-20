@@ -53,7 +53,7 @@ public class AbilityCreateWave extends Ability {
 				, look, 4 + ctx.getLevel(), (pos, blockState) -> blockState.getBlock() == Blocks
 						.WATER);
 		Raytrace.Result extraResult = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1), look,
-				4 + ctx.getLevel(), (blockPos, iBlockState) ->  iBlockState.getBlock() == Blocks.SNOW || iBlockState.getBlock() == Blocks.FLOWING_WATER
+				4 + ctx.getLevel(), (blockPos, iBlockState) -> iBlockState.getBlock() == Blocks.SNOW || iBlockState.getBlock() == Blocks.FLOWING_WATER
 						|| iBlockState.getBlock() == Blocks.ICE);
 
 		if (result.hitSomething() || extraResult.hitSomething()) {
@@ -61,11 +61,6 @@ public class AbilityCreateWave extends Ability {
 			VectorI pos = result.getPos();
 			//IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
 			IBlockState up = world.getBlockState(pos.toBlockPos().up());
-
-			int Up = 0;
-			if (extraResult.hitSomething()) {
-				Up = 1;
-			}
 
 			float size = 2;
 			for (int i = 0; i < 3; i++) {
@@ -101,7 +96,7 @@ public class AbilityCreateWave extends Ability {
 						EntityWave wave = new EntityWave(world);
 						wave.setOwner(entity);
 						wave.setVelocity(look.times(speed));
-						wave.setPosition(pos.x(), pos.y() + Up, pos.z());
+						wave.setPosition(pos.x(), pos.y(), pos.z());
 						wave.setAbility(this);
 						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 
@@ -123,54 +118,54 @@ public class AbilityCreateWave extends Ability {
 
 		} else if (ctx.consumeWater(2)) {
 			for (int i = 0; i < 3; i++) {
-					if (bender.consumeChi(STATS_CONFIG.chiWave)) {
+				if (bender.consumeChi(STATS_CONFIG.chiWave)) {
 
-						float size = 2;
-						double speed = 6.5;
-						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-							speed = 12.5;
-							size = 3.5F;
-						}
-						if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-							speed = 17;
-							size = 2.75F;
-						}
-						if (ctx.getLevel() == 1) {
-							size = 2.5F;
-							speed = 8;
-						}
-						if (ctx.getLevel() == 2) {
-							size = 3;
-							speed = 10;
-						}
-
-						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-							size = 5;
-						}
-						size += ctx.getPowerRating() / 100;
-
-						speed += ctx.getPowerRating() / 100 * 8;
-
-						Vector direction = Vector.getLookRectangular(entity).withY(0);
-						EntityWave wave = new EntityWave(world);
-						wave.setOwner(entity);
-						wave.setVelocity(direction.times(speed));
-						wave.setPosition(direction.minusY(1));
-						wave.setAbility(this);
-						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
-
-						float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
-						damageMult *= ctx.getPowerRatingDamageMod();
-						wave.setDamageMultiplier(damageMult);
-						wave.setWaveSize(size);
-
-						wave.setCreateExplosion(ctx.isMasterLevel(AbilityTreePath.SECOND));
-						world.spawnEntity(wave);
-
+					float size = 2;
+					double speed = 6.5;
+					if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+						speed = 12.5;
+						size = 3.5F;
+					}
+					if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+						speed = 17;
+						size = 2.75F;
+					}
+					if (ctx.getLevel() == 1) {
+						size = 2.5F;
+						speed = 8;
+					}
+					if (ctx.getLevel() == 2) {
+						size = 3;
+						speed = 10;
 					}
 
+					if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+						size = 5;
+					}
+					size += ctx.getPowerRating() / 100;
+
+					speed += ctx.getPowerRating() / 100 * 8;
+
+					Vector direction = Vector.getLookRectangular(entity).withY(0);
+					EntityWave wave = new EntityWave(world);
+					wave.setOwner(entity);
+					wave.setVelocity(direction.times(speed));
+					wave.setPosition(direction.minusY(1));
+					wave.setAbility(this);
+					wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
+
+					float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
+					damageMult *= ctx.getPowerRatingDamageMod();
+					wave.setDamageMultiplier(damageMult);
+					wave.setWaveSize(size);
+
+					wave.setCreateExplosion(ctx.isMasterLevel(AbilityTreePath.SECOND));
+					world.spawnEntity(wave);
+
 				}
+
 			}
+		}
 
 	}
 
