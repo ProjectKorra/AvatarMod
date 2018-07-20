@@ -147,9 +147,10 @@ public class WaterSkateHandler extends TickHandler {
 				if (player.ticksExisted % 5 == 0) {
 					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
 							SoundCategory.PLAYERS, 0.4f, 2f);
-					particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 2, 4,
-							Vector.getEntityPos(player).plus(0, .4, 0), new Vector(.2, 1, .2));
 				}
+					particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 50, 60,
+							Vector.getEntityPos(player).plus(0, .1, 0), new Vector(.2, 0.2, .2));
+
 
 				if (player.ticksExisted % 10 == 0) {
 					abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
@@ -176,16 +177,17 @@ public class WaterSkateHandler extends TickHandler {
 
 		boolean allowWaterfallSkating = data.getLevel() >= 2;
 		boolean allowGroundSkating = data.isMasterPath(AbilityTreePath.FIRST);
+		boolean onGround = below != Blocks.AIR;
 		boolean inWaterBlock = (below.getBlock() == Blocks.WATER || below.getBlock() == Blocks.SNOW || below.getBlock() == Blocks.ICE
 				|| below.getBlock() == Blocks.PACKED_ICE || below.getBlock() == Blocks.FROSTED_ICE)
 				&& (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating) || player.world.isRainingAt(player.getPosition());
-		boolean stopSkating = !player.onGround && !player.isInWater();
 
-		if (allowGroundSkating) {
-			return !player.isSneaking() && surface != -1
-					&& surface - player.posY <= 3 || !stopSkating;
+		if (allowGroundSkating && onGround) {
+			return (!player.isSneaking() && surface != -1
+					&& surface - player.posY <= 3);
 		} else return !player.isSneaking() && (player.isInWater() || inWaterBlock) && surface != -1
 				&& surface - player.posY <= 3;
+
 
 	}
 

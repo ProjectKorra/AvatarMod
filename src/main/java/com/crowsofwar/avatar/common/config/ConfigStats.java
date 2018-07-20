@@ -99,7 +99,7 @@ public class ConfigStats {
 			chiWave = 2f,
 			chiWaterArc = 1f,
 			chiWaterBubble = 1.25f,
-			chiWaterSkateSecond = 0.5f,
+			chiWaterSkateSecond = 1.5f,
 			chiWallOneSecond = 0.125f,
 			chiPrison = 5,
 			chiSandPrison = 3,
