@@ -78,7 +78,6 @@ public abstract class AvatarEntity extends Entity {
 		this.ownerRef = new SyncedEntity<>(this, SYNC_OWNER);
 		this.putsOutFires = false;
 		this.flammable = false;
-
 	}
 
 	/**
@@ -100,6 +99,7 @@ public abstract class AvatarEntity extends Entity {
 
 		return null;
 	}
+
 
 	/**
 	 * Find the entity controlled by the given player.
