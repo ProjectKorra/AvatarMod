@@ -38,7 +38,7 @@ public class ConfigStats {
 	@Load
 	public AttackSettings floatingBlockSettings = new AttackSettings(0.45f, 1),
 			ravineSettings = new AttackSettings(4, 0.25), //
-			waveSettings = new AttackSettings(2, 4), //
+			waveSettings = new AttackSettings(0.5F, 4), //
 			airbladeSettings = new AttackSettings(4, .03), //
 			fireArcSettings = new AttackSettings(4, 1),   //
 			waterArcSettings = new AttackSettings(1.5F, 1),
@@ -131,7 +131,7 @@ public class ConfigStats {
 	public double waterArcSearchRadius = 4, waterArcAngles = 8;
 
 	@Load
-	public double waterCannonSearchRadius = 3, waterCannonAngles = 8;
+	public double waterCannonSearchRadius = 3, waterCannonAngles = 8, waterCannonDamage = 1;
 
 	@Load
 	public double cleanseSearchRadius = 5, cleanseAngles = 10;

@@ -21,6 +21,8 @@ import org.lwjgl.Sys;
 
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 public class WaterChargeHandler extends TickHandler {
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
@@ -58,7 +60,7 @@ public class WaterChargeHandler extends TickHandler {
 
 			size = 0.1F;
 			ticks = 50;
-			damage = (float) (0.25 * bender.getDamageMult(Waterbending.ID));
+			damage = (float) (STATS_CONFIG.waterCannonDamage * 0.5 * bender.getDamageMult(Waterbending.ID));
 
 			// Fire once every 10 ticks, until we get to 100 ticks
 			// So at fire at 60, 70, 80, 90, 100
@@ -77,22 +79,22 @@ public class WaterChargeHandler extends TickHandler {
 
 			speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			speed += powerRating / 15;
-			damage = (float) (0.5 * bender.getDamageMult(Waterbending.ID));
+			damage = (float) (STATS_CONFIG.waterCannonDamage * bender.getDamageMult(Waterbending.ID));
+			//Default damage is 1
 			size = 0.25F;
 
 			if (abilityData.getLevel() >= 1) {
-				damage = (float) (1 * bender.getDamageMult(Waterbending.ID));
-				;
+				damage = (float) (STATS_CONFIG.waterCannonDamage * 1.25 * bender.getDamageMult(Waterbending.ID));
 				size = 0.5f;
 				ticks = 75;
 			}
 			if (abilityData.getLevel() >= 2) {
-				damage = (float) (1.5 * bender.getDamageMult(Waterbending.ID));
+				damage = (float) (STATS_CONFIG.waterCannonDamage * 1.5 * bender.getDamageMult(Waterbending.ID));
 				size = 0.75f;
 				ticks = 100;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				damage = (float) (3 * bender.getDamageMult(Waterbending.ID));
+				damage = (float) (STATS_CONFIG.waterCannonDamage * 3 * bender.getDamageMult(Waterbending.ID));
 				;
 				size = 1f;
 				ticks = 200;
