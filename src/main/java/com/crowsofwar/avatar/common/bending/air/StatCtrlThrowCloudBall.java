@@ -23,22 +23,22 @@ public class StatCtrlThrowCloudBall extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		AbilityData abilityData = ctx.getData().getAbilityData("cloudburst");
-		double speed = 20;
+		double speed = 17.5;
 
 		if (abilityData.getLevel() == 1) {
-			speed = 22.5;
+			speed = 20;
 		}
 
 		if (abilityData.getLevel() == 2) {
-			speed = 25;
+			speed = 22.5;
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			speed = 27.5;
+			speed = 25;
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			speed = 30;
+			speed = 27.5;
 		}
 
 

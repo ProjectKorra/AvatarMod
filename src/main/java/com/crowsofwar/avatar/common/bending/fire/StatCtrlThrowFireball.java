@@ -52,7 +52,7 @@ public class StatCtrlThrowFireball extends StatusControl {
 
 		if (fireball != null) {
 			AbilityData abilityData = ctx.getData().getAbilityData("fireball");
-			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
+			double speedMult = abilityData.getLevel() >= 2 ? 27.5 : 22.5;
 			fireball.addVelocity(fireball.velocity().dividedBy(-1));
 			fireball.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
 			//Necessary so that you can't increase speed by moving your mouse really fast; additionally,

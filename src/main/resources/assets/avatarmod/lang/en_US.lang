@@ -194,8 +194,8 @@ avatar.ability.flamethrower.lvl4_2=The world will burn!! ;; Unfocused flames tha
 avatar.ability.fireball=§c§lFireball
 avatar.ability.fireball.desc=Create a glowing orb of flame. It makes a firey explosion on impact.
 avatar.ability.fireball.lvl1=I ate too many chilies!
-avatar.ability.fireball.lvl2=Faster when thrown
-avatar.ability.fireball.lvl3=Tons more damage upon direct hit
+avatar.ability.fireball.lvl2=Bigger, bigger explosion!!!
+avatar.ability.fireball.lvl3=Tons more damage upon direct hit, wayy faster!
 avatar.ability.fireball.lvl4_1=§c§l§oFocused §c§l§oexplosion ;; Can sometimes destroy obsidian
 avatar.ability.fireball.lvl4_2=§c§l§oCharged §c§l§oexplosion ;; Takes a few seconds to charge, larger explosion when charged
 
