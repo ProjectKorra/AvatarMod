@@ -103,9 +103,11 @@ public class EntityFireball extends AvatarEntity {
 			removeStatCtrl();
 		}
 
-		BendingData data = BendingData.get(getOwner());
-		if (getBehavior() instanceof FireballBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
-			setDead();
+		if (getOwner() != null) {
+			BendingData data = BendingData.get(getOwner());
+			if (getBehavior() instanceof FireballBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
+				setDead();
+			}
 		}
 
 		if (getOwner() != null) {
