@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
@@ -74,7 +75,7 @@ public class AbilityAirGust extends Ability {
 
 		int coolDown = 50;
 
-		if (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative()) {
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
 			coolDown = 0;
 		}
 

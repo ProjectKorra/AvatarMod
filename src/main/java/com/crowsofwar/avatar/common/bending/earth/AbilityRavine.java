@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
@@ -86,7 +87,7 @@ public class AbilityRavine extends Ability {
 
 		int coolDown = 100;
 
-		if (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative()) {
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
 			coolDown = 0;
 		}
 

@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
@@ -76,7 +77,7 @@ public class AbilitySlipstream extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		int coolDown = 160;
 
-		if (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative()) {
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
 			coolDown = 0;
 		}
 

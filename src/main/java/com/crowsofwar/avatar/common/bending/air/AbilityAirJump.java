@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import javax.swing.text.html.parser.Entity;
@@ -73,7 +74,7 @@ public class AbilityAirJump extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		int coolDown = 60;
 
-		if (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative()) {
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
 			coolDown = 0;
 		}
 
