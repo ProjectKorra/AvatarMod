@@ -60,7 +60,8 @@ public class StatCtrlThrowBubble extends StatusControl {
 			speed += powerRating / 30f;
 
 			bubble.setBehavior(new WaterBubbleBehavior.Thrown());
-			bubble.setVelocity(Vector.getLookRectangular(ctx.getBenderEntity()).times(speed));
+			bubble.addVelocity(bubble.velocity().dividedBy(-1));
+			bubble.addVelocity(Vector.getLookRectangular(ctx.getBenderEntity()).times(speed));
 		}
 
 		return true;

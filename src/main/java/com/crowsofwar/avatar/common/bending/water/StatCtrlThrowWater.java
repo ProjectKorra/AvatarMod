@@ -74,7 +74,7 @@ public class StatCtrlThrowWater extends StatusControl {
 			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
 					Math.toRadians(entity.rotationPitch));
 			force = force.times(velocity);
-			arc.setVelocity(0, 0, 0);
+			arc.addVelocity(arc.velocity().dividedBy(-1));
 			arc.addVelocity(force);
 			arc.setBehavior(new WaterArcBehavior.Thrown());
 
