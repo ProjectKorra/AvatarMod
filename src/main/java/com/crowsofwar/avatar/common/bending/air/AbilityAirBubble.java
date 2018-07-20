@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -97,7 +98,7 @@ public class AbilityAirBubble extends Ability {
 
 		int coolDown = 200;
 
-		if (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative()) {
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
 			coolDown = 0;
 		}
 
