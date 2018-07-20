@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -86,6 +87,31 @@ public class AbilityAirblade extends Ability {
 
 		world.spawnEntity(airblade);
 
+	}
+
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+		int coolDown = 60;
+
+		if (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative()) {
+			coolDown = 0;
+		}
+
+		if (ctx.getLevel() == 1) {
+			coolDown = 50;
+		}
+		if (ctx.getLevel() == 2) {
+			coolDown = 40;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			coolDown = 30;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			coolDown = 25;
+		}
+		return coolDown;
 	}
 
 	@Override

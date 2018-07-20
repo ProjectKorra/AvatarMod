@@ -19,12 +19,14 @@ package com.crowsofwar.avatar.common.bending.air;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -87,6 +89,31 @@ public class AbilityAirBubble extends Ability {
 			data.addStatusControl(StatusControl.BUBBLE_CONTRACT);
 		}
 
+	}
+
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+		int coolDown = 100;
+
+		if (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative()) {
+			coolDown = 0;
+		}
+
+		if (ctx.getLevel() == 1) {
+			coolDown = 80;
+		}
+		if (ctx.getLevel() == 2) {
+			coolDown = 60;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			coolDown = 40;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			coolDown = 30;
+		}
+		return coolDown;
 	}
 
 	@Override
