@@ -153,8 +153,6 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
 
-			AbilityData data = BendingData.get(entity.getOwner()).getAbilityData("pickup_block");
-
 			if (entity.isCollided) {
 				if (!entity.world.isRemote) entity.setDead();
 				entity.onCollideWithSolid();

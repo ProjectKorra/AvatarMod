@@ -122,6 +122,7 @@ public class AbilityPickUpBlock extends Ability {
 				floating.setVelocity(force);
 				floating.setBehavior(new FloatingBlockBehavior.PickUp());
 				floating.setOwner(entity);
+				floating.setAbility(this);
 				floating.setDamageMult(damageMult);
 
 				if (STATS_CONFIG.preventPickupBlockGriefing) {
