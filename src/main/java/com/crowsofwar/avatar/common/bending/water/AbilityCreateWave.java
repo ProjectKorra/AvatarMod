@@ -31,6 +31,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -50,10 +51,12 @@ public class AbilityCreateWave extends Ability {
 		Vector look = Vector.getLookRectangular(entity).withY(0);
 		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1)
 				, look, 4 + ctx.getLevel(), (pos, blockState) -> blockState.getBlock() == Blocks
-						.WATER || blockState.getBlock() == Blocks.SNOW || blockState.getBlock() == Blocks.FLOWING_WATER
-						|| blockState.getBlock() == Blocks.ICE);
+						.WATER);
+		Raytrace.Result extraResult = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity), look,
+				4 + ctx.getLevel(), (blockPos, iBlockState) ->  iBlockState.getBlock() == Blocks.SNOW || iBlockState.getBlock() == Blocks.FLOWING_WATER
+						|| iBlockState.getBlock() == Blocks.ICE);
 
-		if (result.hitSomething()) {
+		if (result.hitSomething() || extraResult.hitSomething()) {
 
 			VectorI pos = result.getPos();
 			//IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
