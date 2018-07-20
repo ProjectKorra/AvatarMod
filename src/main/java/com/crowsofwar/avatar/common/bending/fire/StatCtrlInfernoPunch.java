@@ -50,17 +50,17 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		EntityFireball fireball = new EntityFireball(world);
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				Vector playerPos = getEyePos(entity);
-				Vector target = playerPos.plus(getLookRectangular(entity).times(1.25));
-				fireball.setPosition(target);
-				fireball.setOwner(entity);
-				fireball.setDamage(0.5F);
-				fireball.setSize(14);
-				fireball.addVelocity(Vector.getLookRectangular(entity).times(20));
-				fireball.setBehavior(new FireballBehavior.Thrown());
-				world.spawnEntity(fireball);
-				return true;
-			}
+			Vector playerPos = getEyePos(entity);
+			Vector target = playerPos.plus(getLookRectangular(entity).times(1.25));
+			fireball.setPosition(target);
+			fireball.setOwner(entity);
+			fireball.setDamage(0.5F);
+			fireball.setSize(14);
+			fireball.addVelocity(Vector.getLookRectangular(entity).times(20));
+			fireball.setBehavior(new FireballBehavior.Thrown());
+			world.spawnEntity(fireball);
+			return true;
+		}
 		return false;
 
 	}
@@ -71,59 +71,62 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
 		EntityLivingBase target = (EntityLivingBase) event.getEntity();
 		World world = target.getEntityWorld();
+		DamageSource source = event.getSource();
 		if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
 			Bender ctx = Bender.get(entity);
-			if (ctx.getData() != null) {
-				Vector direction = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-				AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
-				float knockBack = 1F;
-				int fireTime = 5;
-				float damageModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
-				float damage = 3 + (3 * damageModifier);
+			if (source == DamageSource.causePlayerDamage((EntityPlayerMP) entity) || source == DamageSource.causeMobDamage(entity)) {
+				if (ctx.getData() != null) {
+					Vector direction = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
+					AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
+					float knockBack = 1F;
+					int fireTime = 5;
+					float damageModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
+					float damage = 3 + (3 * damageModifier);
 
-				if (abilityData.getLevel() >= 1) {
-					damage = 4 + (4 * damageModifier);
-					knockBack = 1.125F;
-					fireTime = 6;
-				} else if (abilityData.getLevel() >= 2) {
-					damage = 5 + (5 * damageModifier);
-					knockBack = 1.25F;
-					fireTime = 8;
-				}
-				if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-					damage = 10 + (10 * damageModifier);
-					knockBack = 1.5F;
-					fireTime = 15;
-				} else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-					damage = 2 + (2 * damageModifier);
-					knockBack = 0.75F;
-					fireTime = 4;
-				}
-				if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
-					if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
-						if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-							BlockPos blockPos = target.getPosition();
-							AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, target, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 3F, true, false);
-							fireExplosion.doExplosionA();
-							if (world instanceof WorldServer) {
-								WorldServer World = (WorldServer) target.getEntityWorld();
-								World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY, target.posZ, 200, 0.05, 0.05, 0.05, 0.75);
-								fireExplosion.doExplosionB(true);
+					if (abilityData.getLevel() >= 1) {
+						damage = 4 + (4 * damageModifier);
+						knockBack = 1.125F;
+						fireTime = 6;
+					} else if (abilityData.getLevel() >= 2) {
+						damage = 5 + (5 * damageModifier);
+						knockBack = 1.25F;
+						fireTime = 8;
+					}
+					if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+						damage = 10 + (10 * damageModifier);
+						knockBack = 1.5F;
+						fireTime = 15;
+					} else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+						damage = 2 + (2 * damageModifier);
+						knockBack = 0.75F;
+						fireTime = 4;
+					}
+					if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
+						if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
+							if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+								BlockPos blockPos = target.getPosition();
+								AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, target, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 3F, true, false);
+								fireExplosion.doExplosionA();
+								if (world instanceof WorldServer) {
+									WorldServer World = (WorldServer) target.getEntityWorld();
+									World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY, target.posZ, 200, 0.05, 0.05, 0.05, 0.75);
+									fireExplosion.doExplosionB(true);
+								}
 							}
+
+							world.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
+									SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
+
+							target.attackEntityFrom(DamageSource.IN_FIRE, damage);
+							target.setFire(fireTime);
+							target.motionX += direction.x() * knockBack;
+							target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
+							target.motionZ += direction.z() * knockBack;
+							target.isAirBorne = true;
+							// this line is needed to prevent a bug where players will not be pushed in multiplayer
+							AvatarUtils.afterVelocityAdded(target);
+							ctx.getData().removeStatusControl(INFERNO_PUNCH);
 						}
-
-						world.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
-								SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
-
-						target.attackEntityFrom(DamageSource.IN_FIRE, damage);
-						target.setFire(fireTime);
-						target.motionX += direction.x() * knockBack;
-						target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
-						target.motionZ += direction.z() * knockBack;
-						target.isAirBorne = true;
-						// this line is needed to prevent a bug where players will not be pushed in multiplayer
-						AvatarUtils.afterVelocityAdded(target);
-						ctx.getData().removeStatusControl(INFERNO_PUNCH);
 					}
 				}
 			}
