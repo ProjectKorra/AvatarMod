@@ -148,12 +148,12 @@ public class WaterSkateHandler extends TickHandler {
 				player.motionZ = newVelocity.z();
 
 				if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
-					AxisAlignedBB box = new AxisAlignedBB(player.posX - 1.5, player.posY - 1.5,
-							player.posZ - 1.5, player.posX + 1.5, player.posY + 1.5, player.posZ + 1.5);
+					AxisAlignedBB box = new AxisAlignedBB(player.posX - 1.5, player.posY,
+							player.posZ - 1.5, player.posX, player.posY + 1.5, player.posZ + 1.5);
 					List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 					for (EntityLivingBase target : nearby) {
 						if (target != player) {
-							pushEntitiesAway(2, target, player);
+							pushEntitiesAway(target, player);
 						}
 					}
 
@@ -228,9 +228,9 @@ public class WaterSkateHandler extends TickHandler {
 
 	}
 
-	private void pushEntitiesAway(float speed, EntityLivingBase target, EntityLivingBase entity) {
+	private void pushEntitiesAway(EntityLivingBase target, EntityLivingBase entity) {
 		Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
-		velocity = velocity.withY(0.1).times(speed / 20);
+		velocity = velocity.withY(0.1).times(2 / 20);
 		target.addVelocity(velocity.x(), velocity.y(), velocity.z());
 	}
 
