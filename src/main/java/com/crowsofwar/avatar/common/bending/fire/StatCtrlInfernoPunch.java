@@ -51,7 +51,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				Vector playerPos = getEyePos(entity);
-				Vector target = playerPos.plus(getLookRectangular(entity).times(2.5));
+				Vector target = playerPos.plus(getLookRectangular(entity).times(1.25));
 				fireball.setPosition(target);
 				fireball.setOwner(entity);
 				fireball.setDamage(0.5F);
