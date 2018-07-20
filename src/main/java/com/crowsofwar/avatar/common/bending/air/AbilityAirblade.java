@@ -20,6 +20,7 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.gorecore.util.Vector;
@@ -48,9 +49,15 @@ public class AbilityAirblade extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
+		BendingData data = ctx.getData();
 
 		if (!bender.consumeChi(STATS_CONFIG.chiAirblade)) return;
 
+		if (data.getMiscData().getAbilityCooldown() > 0) {
+			System.out.println(data.getMiscData().getAbilityCooldown());
+			bender.sendMessage("avatar.onCooldown");
+		}
+		
 		double pitchDeg = entity.rotationPitch;
 		if (abs(pitchDeg) > 30) {
 			pitchDeg = pitchDeg / abs(pitchDeg) * 30;
