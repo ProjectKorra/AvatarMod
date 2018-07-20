@@ -204,9 +204,9 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			}
 
 			// Push entity
-			Vector motion = new Vector(collided).minus(new Vector(entity));
-			motion = motion.times(STATS_CONFIG.floatingBlockSettings.push).withY(0.08);
-			collided.addVelocity(motion.x(), motion.y(), motion.z());
+			collided.motionX = entity.motionX/2 * STATS_CONFIG.floatingBlockSettings.push;
+			collided.motionY = STATS_CONFIG.floatingBlockSettings.push/4;
+			collided.motionZ = entity.motionZ/2 * STATS_CONFIG.floatingBlockSettings.push;
 
 			// Add XP
 			BendingData data = Bender.get(entity.getOwner()).getData();
