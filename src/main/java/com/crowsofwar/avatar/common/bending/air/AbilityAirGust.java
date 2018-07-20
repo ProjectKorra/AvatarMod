@@ -72,17 +72,17 @@ public class AbilityAirGust extends Ability {
 	public int getCooldown(AbilityContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 
-		int coolDown = 40;
+		int coolDown = 50;
 
 		if (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative()) {
 			coolDown = 0;
 		}
 
 		if (ctx.getLevel() == 1) {
-			coolDown = 30;
+			coolDown = 40;
 		}
 		if (ctx.getLevel() == 2) {
-			coolDown = 20;
+			coolDown = 30;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			coolDown = 25;

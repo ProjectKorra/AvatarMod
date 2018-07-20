@@ -74,23 +74,23 @@ public class AbilitySlipstream extends Ability {
 	@Override
 	public int getCooldown(AbilityContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
-		int coolDown = 80;
+		int coolDown = 160;
 
 		if (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative()) {
 			coolDown = 0;
 		}
 
 		if (ctx.getLevel() == 1) {
-			coolDown = 70;
+			coolDown = 140;
 		}
 		if (ctx.getLevel() == 2) {
-			coolDown = 60;
+			coolDown = 120;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 50;
+			coolDown = 100;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 50;
+			coolDown = 100;
 		}
 		return coolDown;
 	}

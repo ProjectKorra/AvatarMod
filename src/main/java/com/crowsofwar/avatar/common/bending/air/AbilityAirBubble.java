@@ -95,23 +95,23 @@ public class AbilityAirBubble extends Ability {
 	public int getCooldown(AbilityContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 
-		int coolDown = 100;
+		int coolDown = 200;
 
 		if (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative()) {
 			coolDown = 0;
 		}
 
 		if (ctx.getLevel() == 1) {
-			coolDown = 80;
+			coolDown = 180;
 		}
 		if (ctx.getLevel() == 2) {
-			coolDown = 60;
+			coolDown = 160;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 40;
+			coolDown = 140;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 30;
+			coolDown = 130;
 		}
 		return coolDown;
 	}

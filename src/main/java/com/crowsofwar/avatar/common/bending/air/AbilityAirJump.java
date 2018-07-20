@@ -78,13 +78,13 @@ public class AbilityAirJump extends Ability {
 		}
 
 		if (ctx.getLevel() == 1) {
-			coolDown = 40;
+			coolDown = 50;
 		}
 		if (ctx.getLevel() == 2) {
-			coolDown = 30;
+			coolDown = 40;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 5;
+			coolDown = 10;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			coolDown = 40;

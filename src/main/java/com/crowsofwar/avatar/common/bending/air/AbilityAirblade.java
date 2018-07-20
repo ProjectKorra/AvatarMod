@@ -53,11 +53,6 @@ public class AbilityAirblade extends Ability {
 
 		if (!bender.consumeChi(STATS_CONFIG.chiAirblade)) return;
 
-		if (data.getMiscData().getAbilityCooldown() > 0) {
-			System.out.println(data.getMiscData().getAbilityCooldown());
-			bender.sendMessage("avatar.onCooldown");
-		}
-
 		double pitchDeg = entity.rotationPitch;
 		if (abs(pitchDeg) > 30) {
 			pitchDeg = pitchDeg / abs(pitchDeg) * 30;
@@ -100,23 +95,23 @@ public class AbilityAirblade extends Ability {
 	public int getCooldown(AbilityContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 
-		int coolDown = 60;
+		int coolDown = 100;
 
 		if (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative()) {
 			coolDown = 0;
 		}
 
 		if (ctx.getLevel() == 1) {
-			coolDown = 50;
+			coolDown = 80;
 		}
 		if (ctx.getLevel() == 2) {
-			coolDown = 40;
+			coolDown = 60;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 30;
+			coolDown = 40;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 25;
+			coolDown = 35;
 		}
 		return coolDown;
 	}
