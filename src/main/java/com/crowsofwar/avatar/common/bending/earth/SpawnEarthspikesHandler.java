@@ -29,6 +29,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 
 	@Override
 	public boolean tick(BendingContext ctx) {
+		boolean stop = false;
 		World world = ctx.getWorld();
 		EntityLivingBase owner = ctx.getBenderEntity();
 		AbilityData abilityData = AbilityData.get(owner, "earthspike");
@@ -68,11 +69,16 @@ public class SpawnEarthspikesHandler extends TickHandler {
 			//2
 		}
 
+
 		//For some reason using *= or += seems to glitch out everything- that's why
 		//I'm using tedious equations.
 
 		size += data.getTickHandlerDuration(this) / 20;
 		EntityEarthspikeSpawner entity = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
+
+		if (data.getTickHandlerDuration(this) >= 60 && entity == null) {
+				stop = true;
+		}
 
 		if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			if (entity != null) {
@@ -94,7 +100,26 @@ public class SpawnEarthspikesHandler extends TickHandler {
 				return false;
 			}
 		}
-		return entity == null;
+		else {
+			if (data.getTickHandlerDuration(this) % frequency == 0) {
+				for (int degree = 0; degree < 360; degree++) {
+					double radians = Math.toRadians(degree);
+					double radius = data.getTickHandlerDuration(this)/5;
+					double x = Math.cos(radians) * (1 + radius);
+					double z = Math.sin(radians) * (1 + radius);;
+					double y = owner.posY;
+					if (((x == Math.floor(x)) && !Double.isInfinite(x)) || ((z == Math.floor(z)) && !Double.isInfinite(z))) {
+						EntityEarthspike earthspike = new EntityEarthspike(world);
+						earthspike.setPosition(x + owner.posX, y, z + owner.posZ);
+						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
+						earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
+						earthspike.setOwner(owner);
+						world.spawnEntity(earthspike);
+					}
+				}
+			}
+		}
+		return stop;
 	}
 }
 
