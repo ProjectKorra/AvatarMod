@@ -32,6 +32,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 			damage = STATS_CONFIG.earthspikeSettings.damage * 1.33;
 			//4
 			size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
+			//1.25
 		}
 
 		if (abilityData.getLevel() == 2) {
@@ -40,6 +41,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 			damage = STATS_CONFIG.earthspikeSettings.damage * 1.66;
 			//5
 			size = STATS_CONFIG.earthspikeSettings.size * 1.5F;
+			//1.5
 
 		}
 
@@ -48,6 +50,8 @@ public class SpawnEarthspikesHandler extends TickHandler {
 			//4
 			damage = STATS_CONFIG.earthspikeSettings.damage;
 			//1.5
+			size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
+			//1.25
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
@@ -55,6 +59,8 @@ public class SpawnEarthspikesHandler extends TickHandler {
 			//2
 			damage = STATS_CONFIG.earthspikeSettings.damage * 2;
 			//6
+			size = STATS_CONFIG.earthspikeSettings.size * 2F;
+			//2
 		}
 
 		//For some reason using *= or += seems to glitch out everything- that's why
@@ -74,6 +80,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 						earthspike.setAbility(abilityData.getAbility());
 						earthspike.setDamage(damage);
 						earthspike.setOwner(owner);
+						earthspike.setSize(size);
 						world.spawnEntity(earthspike);
 					}
 					return false;
@@ -89,6 +96,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.posZ = entity.posZ;
 					earthspike.setAbility(abilityData.getAbility());
 					earthspike.setDamage(damage);
+					earthspike.setSize(size);
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
 
