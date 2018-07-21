@@ -21,36 +21,34 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		BendingData data = ctx.getData();
 
 		float frequency = STATS_CONFIG.earthspikeSettings.frequency;
-		//6 (by default)
+		//4 (by default)
 		double damage = STATS_CONFIG.earthspikeSettings.damage;
 		//3 (by default)
 
 
 		if (abilityData.getLevel() == 1) {
-			frequency *= 0.87;
-			//5
-			damage *= 1.33;
+			damage = STATS_CONFIG.earthspikeSettings.damage * 1.33;
 			//4
 		}
 
 		if (abilityData.getLevel() == 2) {
-			frequency *= 0.66;
-			//4
-			damage *= 1.66;
+			frequency = STATS_CONFIG.earthspikeSettings.frequency * 0.75F;
+			//3
+			damage = STATS_CONFIG.earthspikeSettings.damage * 1.66;
 			//5
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			frequency *= 0.66;
+			frequency = STATS_CONFIG.earthspikeSettings.frequency;
 			//4
 			damage = STATS_CONFIG.earthspikeSettings.damage;
 			//1.5
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			frequency *= 0.5;
-			//3
-			damage *= 2;
+			frequency = STATS_CONFIG.earthspikeSettings.frequency * 0.5F;
+			//2
+			damage = STATS_CONFIG.earthspikeSettings.damage * 2;
 			//6
 		}
 
@@ -58,8 +56,8 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		EntityEarthspikeSpawner entity = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			EntityEarthspikeSpawner entity1 = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
 			for (int i = 0; i < 8; i++) {
-				EntityEarthspikeSpawner entity1 = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
 				if (entity1 != null) {
 					if (data.getTickHandlerDuration(this) % frequency == 0) {
 						EntityEarthspike earthspike = new EntityEarthspike(world);

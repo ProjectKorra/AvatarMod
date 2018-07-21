@@ -296,7 +296,7 @@ public class ConfigStats {
 		public double damage = 3;
 
 		@Load
-		public float frequency = 6;
+		public float frequency = 4;
 
 		@Load
 		public float size = 1;

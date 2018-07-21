@@ -110,7 +110,6 @@ public class EntityEarthspike extends AvatarEntity {
 		// Push collided entities back
 		if (!world.isRemote) {
 			AxisAlignedBB box = new AxisAlignedBB(posX - Size, posY - Size, posZ - Size, posX + Size, posY + Size, posZ + Size);
-			System.out.println("Whaaaattttt");
 			List<Entity> collided = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
