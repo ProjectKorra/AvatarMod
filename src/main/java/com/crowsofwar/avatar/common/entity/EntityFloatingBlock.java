@@ -244,6 +244,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 
 		}
 
+
 		setVelocity(velocity().times(getFriction()));
 
 		/*prevPosX = posX;

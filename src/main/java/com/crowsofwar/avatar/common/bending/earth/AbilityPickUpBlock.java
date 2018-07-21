@@ -118,7 +118,7 @@ public class AbilityPickUpBlock extends Ability {
 				damageMult *= ctx.getPowerRatingDamageMod();
 
 				double dist = 2.5;
-				Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
+				Vector force = new Vector(0, Math.sqrt(20 * dist), 0);
 				floating.setVelocity(force);
 				floating.setBehavior(new FloatingBlockBehavior.PickUp());
 				floating.setOwner(entity);
