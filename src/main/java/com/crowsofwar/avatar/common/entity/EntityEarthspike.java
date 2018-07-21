@@ -77,7 +77,7 @@ public class EntityEarthspike extends AvatarEntity {
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_SIZE, Size);
+		dataManager.register(SYNC_SIZE, 1F);
 	}
 
 	@Override
