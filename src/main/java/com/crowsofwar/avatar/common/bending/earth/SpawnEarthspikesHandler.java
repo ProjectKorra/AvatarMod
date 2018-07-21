@@ -20,11 +20,13 @@ import java.util.List;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class SpawnEarthspikesHandler extends TickHandler {
+
 	private final ParticleSpawner particles;
 
 	public SpawnEarthspikesHandler() {
 		particles = new NetworkParticleSpawner();
 	}
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 		World world = ctx.getWorld();
@@ -89,8 +91,8 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.posY = entity.posY;
 					earthspike.posZ = entity.posZ;
 					if (!world.isRemote) {
-						particles.spawnParticles(world, EnumParticleTypes.CRIT, 50, 60, Vector.getEntityPos(earthspike).plusY(0.1),
-								new Vector(0.1, 0.9, 0.1));
+						particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 70, 80, Vector.getEntityPos(earthspike).plusY(0.1),
+								new Vector(0.4, 3, 0.4));
 					}
 					earthspike.setAbility(abilityData.getAbility());
 					earthspike.setDamage(damage);

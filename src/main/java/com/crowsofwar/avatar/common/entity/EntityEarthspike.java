@@ -111,7 +111,7 @@ public class EntityEarthspike extends AvatarEntity {
 		if (!world.isRemote) {
 			System.out.println("Yas");
 		}
-		
+
 
 		// Push collided entities back
 		if (!world.isRemote) {
