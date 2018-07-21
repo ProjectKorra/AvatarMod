@@ -9,9 +9,11 @@ import com.crowsofwar.avatar.common.entity.EntityEarthspike;
 import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
+import org.lwjgl.Sys;
 
 import java.util.List;
 
@@ -81,7 +83,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 
 		if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			if (entity != null) {
-				if (data.getTickHandlerDuration(this) % frequency == 0) {
+				if (data.getTickHandlerDuration(this) % frequency == 0 && data.getTickHandlerDuration(this) > frequency/3) {
 					EntityEarthspike earthspike = new EntityEarthspike(world);
 					earthspike.posX = entity.posX;
 					earthspike.posY = entity.posY;
@@ -91,9 +93,10 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.setSize(size);
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
-					particles.spawnParticles(world, EnumParticleTypes.BLOCK_CRACK, 50, 60, earthspike.posX,
-							earthspike.posY, earthspike.posZ, 0.1, 0.6, 0.1);
-
+					if (!world.isRemote) {
+						particles.spawnParticles(world, EnumParticleTypes.CRIT, 50, 60, Vector.getEntityPos(earthspike).plusY(0.1),
+								new Vector(0.1, 0.9, 0.1));
+					}
 				}
 				return false;
 			}

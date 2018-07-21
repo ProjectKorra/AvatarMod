@@ -51,11 +51,13 @@ public class EntityEarthspike extends AvatarEntity {
 
 	private double damage;
 	private float Size = 1;
+	private int attacked;
 
 	public EntityEarthspike(World world) {
 		super(world);
 		this.Size = 1;
 		setSize(Size, Size);
+		this.attacked = 0;
 		//DO NOT CALL THIS ONUPDATE; THE EARTHSPIKE WILL HAVE SIZE VARIATION DEPENDING ON HOW
 		// LONG THE SPAWNER HAS EXISTED.
 		this.damage = STATS_CONFIG.earthspikeSettings.damage;
@@ -66,7 +68,7 @@ public class EntityEarthspike extends AvatarEntity {
 		this.damage = damage;
 	}
 
-	public void setSize (float size) {
+	public void setSize(float size) {
 		dataManager.set(SYNC_SIZE, size);
 	}
 
@@ -111,7 +113,6 @@ public class EntityEarthspike extends AvatarEntity {
 		}
 
 		// amount of entities which were successfully attacked
-		int attacked = 0;
 
 		// Push collided entities back
 		if (!world.isRemote) {
@@ -120,17 +121,10 @@ public class EntityEarthspike extends AvatarEntity {
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
 					System.out.println(collided);
-						onCollideWithEntity(entity);
-						attacked++;
-						System.out.println(collided);
+					onCollideWithEntity(entity);
+					attacked++;
+					System.out.println(collided);
 				}
-			}
-		}
-
-		if (!world.isRemote && getOwner() != null) {
-			BendingData data = BendingData.get(getOwner());
-			if (data != null) {
-				data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.earthspikeHit * attacked);
 			}
 		}
 	}
@@ -145,6 +139,12 @@ public class EntityEarthspike extends AvatarEntity {
 				}
 
 			}
+			if (getOwner() != null) {
+				BendingData data = BendingData.get(getOwner());
+				if (data != null) {
+					data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.earthspikeHit * attacked);
+				}
+			}
 		}
 
 	}
@@ -155,15 +155,13 @@ public class EntityEarthspike extends AvatarEntity {
 			float damage = (float) this.damage;
 			return entity.attackEntityFrom(ds, damage);
 			//Modify damage based on power rating!
-		}
-
-		else return false;
+		} else return false;
 	}
 
 	private void pushEntity(Entity entity) {
-		entity.motionX = this.motionX/5;
-		entity.motionY = STATS_CONFIG.earthspikeSettings.push/2 + this.velocity().magnitude()/10;
-		entity.motionZ = this.motionZ/5;
+		entity.motionX = this.motionX / 5;
+		entity.motionY = STATS_CONFIG.earthspikeSettings.push / 2 + this.velocity().magnitude() / 10;
+		entity.motionZ = this.motionZ / 5;
 	}
 
 	@Override
