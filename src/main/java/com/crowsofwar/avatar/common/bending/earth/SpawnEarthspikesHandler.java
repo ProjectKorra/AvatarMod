@@ -27,21 +27,21 @@ public class SpawnEarthspikesHandler extends TickHandler {
 
 
 		if (abilityData.getLevel() == 1) {
-			frequency *= (5 / 6);
+			frequency *= 0.87;
 			//5
-			damage *= (4 / 3);
+			damage *= 1.33;
 			//4
 		}
 
 		if (abilityData.getLevel() == 2) {
-			frequency *= (2 / 3);
+			frequency *= 0.66;
 			//4
-			damage *= 5 / 3;
+			damage *= 1.66;
 			//5
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			frequency *= (2 / 3);
+			frequency *= 0.66;
 			//4
 			damage = STATS_CONFIG.earthspikeSettings.damage;
 			//1.5

@@ -100,10 +100,6 @@ public class AbilityEarthspikes extends Ability {
 
 		int coolDown = 140;
 
-		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-			coolDown = 0;
-		}
-
 		if (ctx.getLevel() == 1) {
 			coolDown = 120;
 		}
@@ -116,6 +112,11 @@ public class AbilityEarthspikes extends Ability {
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			coolDown = 75;
 		}
+
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+			coolDown = 0;
+		}
+
 		return coolDown;
 	}
 }
