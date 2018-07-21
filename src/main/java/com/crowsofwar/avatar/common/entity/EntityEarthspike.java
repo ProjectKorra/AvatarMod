@@ -29,6 +29,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import org.lwjgl.Sys;
 
@@ -46,7 +47,7 @@ public class EntityEarthspike extends AvatarEntity {
 	//		.createKey(EntityEarthspike.class, DataSerializers.FLOAT);
 
 	private double damage;
-	//private float Size = 1;
+	private float Size = 1;
 
 	public EntityEarthspike(World world) {
 		super(world);
@@ -90,7 +91,7 @@ public class EntityEarthspike extends AvatarEntity {
 			return false;
 		}
 		 return entity instanceof EntityLivingBase || super.canCollideWith(entity);**/
-		return entity != this;
+		return true;
 
 	}
 
@@ -108,14 +109,15 @@ public class EntityEarthspike extends AvatarEntity {
 
 		// Push collided entities back
 		if (!world.isRemote) {
-			List<Entity> collided = world.getEntitiesWithinAABB(EntityLivingBase.class, getEntityBoundingBox());
+			AxisAlignedBB box = new AxisAlignedBB(posX - Size/2, posY - Size/2, posZ - Size/2, posX + Size/2, posY + Size/2, posZ + Size/2);
+			System.out.println("Whaaaattttt");
+			List<Entity> collided = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
 					System.out.println(collided);
-					if (attackEntity(entity)) {
+						onCollideWithEntity(entity);
 						attacked++;
 						System.out.println(collided);
-					}
 				}
 			}
 		}
@@ -130,7 +132,7 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (!world.isRemote && entity != getOwner() && entity != this) {
+		if (!world.isRemote && entity != getOwner() && entity != this && !(entity instanceof EntityEarthspikeSpawner)) {
 			pushEntity(entity);
 			if (attackEntity(entity)) {
 				if (getOwner() != null) {
