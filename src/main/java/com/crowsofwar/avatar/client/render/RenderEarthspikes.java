@@ -27,7 +27,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * @author CrowsOfWar
  */
-public class RenderEarthspikes extends Render<EntityEarthspike> {
+public class RenderEarthspikes extends RenderModel<EntityEarthspike> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/entity/earthspike.png");
@@ -38,7 +38,7 @@ public class RenderEarthspikes extends Render<EntityEarthspike> {
 	 * @param renderManager
 	 */
 	public RenderEarthspikes(RenderManager renderManager) {
-		super(renderManager);
+		super(renderManager, new ModelEarthspikes());
 		this.model = new ModelEarthspikes();
 	}
 
@@ -56,11 +56,16 @@ public class RenderEarthspikes extends Render<EntityEarthspike> {
 		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
 		GlStateManager.translate(0, -1.5, 0);
 
-		model.render(entity, 0, 0, 0, 0, 0, 0.0625f * entity.getSize());
+		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
 		GlStateManager.popMatrix();
 
 		GlStateManager.disableBlend();
 
+	}
+
+	@Override
+	protected void performGlTransforms(EntityEarthspike entity, double x, double y, double z, float entityYaw, float partialTicks) {
+		GlStateManager.scale(entity.getSize()/2, (entity.getSize()/2), entity.getSize()/2);
 	}
 
 	@Override
