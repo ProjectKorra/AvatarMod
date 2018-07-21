@@ -77,13 +77,13 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		size += duration / 20;
 		EntityEarthspikeSpawner entity = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
 
-		if (duration >= 60 && entity == null) {
-				stop = true;
+		if (duration >= 30 && entity == null) {
+			stop = true;
 		}
 
 		if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			if (entity != null) {
-				if (duration % frequency == 0 && duration > frequency/3) {
+				if (duration % frequency == 0 && duration > frequency / 3) {
 					EntityEarthspike earthspike = new EntityEarthspike(world);
 					earthspike.posX = entity.posX;
 					earthspike.posY = entity.posY;
@@ -100,16 +100,17 @@ public class SpawnEarthspikesHandler extends TickHandler {
 				}
 				return false;
 			}
-		}
-		else {
-			if (duration % 20 == 0) {
+		} else {
+			if (duration % 10 == 0) {
 				//Try using rotation yaw instead of circle particles
 				for (int i = 0; i < 8; i++) {
 					Vector direction1 = Vector.toRectangular(Math.toRadians(owner.rotationYaw +
-							i * 45), 0).withY(0).times(duration/10);
+							i * 45), 0).withY(0).times(duration / 5);
 					EntityEarthspike earthspike = new EntityEarthspike(world);
-					earthspike.setPosition(direction1.x() + owner.posX, owner.posY, direction1.z() + owner.posZ);
-					earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
+					if (direction1.x() + owner.posX != owner.posX && direction1.z() + owner.posZ != owner.posZ) {
+						earthspike.setPosition(direction1.x() + owner.posX, owner.posY, direction1.z() + owner.posZ);
+					}
+					earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 2);
 					earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
