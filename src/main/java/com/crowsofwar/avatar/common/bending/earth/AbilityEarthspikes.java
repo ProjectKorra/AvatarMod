@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.EntityEarthspike;
 import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -70,19 +71,20 @@ public class AbilityEarthspikes extends Ability {
 
 
 			} else {
-
-				for (int i = 0; i < 8; i++) {
-
-					Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-							i * 45), 0);
-					Vector velocity = direction1.times(speed);
-
-					EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
-					earthspike.setVelocity(velocity);
-					earthspike.setDuration(ticks);
+				for (int degree = 0; degree < 360; degree++) {
+					double radians = Math.toRadians(degree);
+					double x = Math.cos(radians);
+					double z = Math.sin(radians);
+					double y = entity.posY;
+					EntityEarthspike earthspike = new EntityEarthspike(world);
+					earthspike.posX = (int) x;
+					earthspike.posY = y;
+					earthspike.posZ = (int) z;
+					earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
+					earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
 					earthspike.setOwner(entity);
-					earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
 					world.spawnEntity(earthspike);
+					//Ring of instantaneous earthspikes.
 				}
 			}
 			data.addTickHandler(TickHandler.SPAWN_EARTHSPIKES_HANDLER);
