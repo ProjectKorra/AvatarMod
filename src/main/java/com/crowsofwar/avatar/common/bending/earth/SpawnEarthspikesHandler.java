@@ -88,15 +88,15 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.posX = entity.posX;
 					earthspike.posY = entity.posY;
 					earthspike.posZ = entity.posZ;
+					if (!world.isRemote) {
+						particles.spawnParticles(world, EnumParticleTypes.CRIT, 50, 60, Vector.getEntityPos(earthspike).plusY(0.1),
+								new Vector(0.1, 0.9, 0.1));
+					}
 					earthspike.setAbility(abilityData.getAbility());
 					earthspike.setDamage(damage);
 					earthspike.setSize(size);
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
-					if (!world.isRemote) {
-						particles.spawnParticles(world, EnumParticleTypes.CRIT, 50, 60, Vector.getEntityPos(earthspike).plusY(0.1),
-								new Vector(0.1, 0.9, 0.1));
-					}
 				}
 				return false;
 			}

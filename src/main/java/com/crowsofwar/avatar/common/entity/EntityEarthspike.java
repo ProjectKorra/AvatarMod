@@ -111,8 +111,7 @@ public class EntityEarthspike extends AvatarEntity {
 		if (!world.isRemote) {
 			System.out.println("Yas");
 		}
-
-		// amount of entities which were successfully attacked
+		
 
 		// Push collided entities back
 		if (!world.isRemote) {
@@ -122,8 +121,6 @@ public class EntityEarthspike extends AvatarEntity {
 				for (Entity entity : collided) {
 					System.out.println(collided);
 					onCollideWithEntity(entity);
-					attacked++;
-					System.out.println(collided);
 				}
 			}
 		}
@@ -134,12 +131,13 @@ public class EntityEarthspike extends AvatarEntity {
 		if (!world.isRemote && entity != getOwner() && entity != this && !(entity instanceof EntityEarthspikeSpawner)) {
 			pushEntity(entity);
 			if (attackEntity(entity)) {
+				attacked++;
 				if (getOwner() != null) {
 					BattlePerformanceScore.addMediumScore(getOwner());
 				}
 
 			}
-			if (getOwner() != null) {
+			if (getOwner() != null && getAbility() != null) {
 				BendingData data = BendingData.get(getOwner());
 				if (data != null) {
 					data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.earthspikeHit * attacked);
