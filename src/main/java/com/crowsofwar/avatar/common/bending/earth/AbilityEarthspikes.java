@@ -84,7 +84,7 @@ public class AbilityEarthspikes extends Ability {
 					//Ring of instantaneous earthspikes.
 				}
 			}
-			//data.addTickHandler(TickHandler.SPAWN_EARTHSPIKES_HANDLER);
+			data.addTickHandler(TickHandler.SPAWN_EARTHSPIKES_HANDLER);
 
 
 		}
