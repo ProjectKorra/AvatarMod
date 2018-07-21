@@ -12,6 +12,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -69,23 +70,24 @@ public class AbilityEarthspikes extends Ability {
 				earthspike.setUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
 				world.spawnEntity(earthspike);
 
-				data.addTickHandler(TickHandler.SPAWN_EARTHSPIKES_HANDLER);
-
 			} else {
 				for (int degree = 0; degree < 360; degree++) {
 					double radians = Math.toRadians(degree);
 					double x = Math.cos(radians);
 					double z = Math.sin(radians);
 					double y = entity.posY;
-					EntityEarthspike earthspike = new EntityEarthspike(world);
-					earthspike.setPosition(x + entity.posX, y, z + entity.posZ);
-					earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
-					earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
-					earthspike.setOwner(entity);
-					world.spawnEntity(earthspike);
+					if (((x == Math.floor(x)) && !Double.isInfinite(x)) && ((z == Math.floor(z)) && !Double.isInfinite(z))) {
+						EntityEarthspike earthspike = new EntityEarthspike(world);
+						earthspike.setPosition(x + entity.posX, y, z + entity.posZ);
+						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
+						earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
+						earthspike.setOwner(entity);
+						world.spawnEntity(earthspike);
+					}
 					//Ring of instantaneous earthspikes.
 				}
 			}
+			data.addTickHandler(TickHandler.SPAWN_EARTHSPIKES_HANDLER);
 
 
 		}
