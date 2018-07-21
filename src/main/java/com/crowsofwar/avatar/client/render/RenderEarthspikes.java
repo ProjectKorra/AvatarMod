@@ -46,6 +46,8 @@ public class RenderEarthspikes extends RenderModel<EntityEarthspike> {
 	public void doRender(EntityEarthspike entity, double x, double y, double z, float entityYaw,
 						 float partialTicks) {
 
+		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+
 		GlStateManager.enableBlend();
 
 		GlStateManager.pushMatrix();
@@ -56,7 +58,6 @@ public class RenderEarthspikes extends RenderModel<EntityEarthspike> {
 		GlStateManager.translate(0, -1.5, 0);
 
 		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
-		GlStateManager.scale(entity.getSize(), entity.getSize(), entity.getSize());
 		GlStateManager.popMatrix();
 
 		GlStateManager.disableBlend();
