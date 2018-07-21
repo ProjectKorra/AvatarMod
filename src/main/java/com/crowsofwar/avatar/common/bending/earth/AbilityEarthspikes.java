@@ -76,7 +76,7 @@ public class AbilityEarthspikes extends Ability {
 					double x = Math.cos(radians);
 					double z = Math.sin(radians);
 					double y = entity.posY;
-					if (((x == Math.floor(x)) && !Double.isInfinite(x)) && ((z == Math.floor(z)) && !Double.isInfinite(z))) {
+					if (((x == Math.floor(x)) && !Double.isInfinite(x)) || ((z == Math.floor(z)) && !Double.isInfinite(z))) {
 						EntityEarthspike earthspike = new EntityEarthspike(world);
 						earthspike.setPosition(x + entity.posX, y, z + entity.posZ);
 						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
