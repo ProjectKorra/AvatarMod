@@ -54,7 +54,8 @@ public class EntityEarthspike extends AvatarEntity {
 
 	public EntityEarthspike(World world) {
 		super(world);
-		setSize(1, 1);
+		this.Size = 1;
+		setSize(Size, Size);
 		this.damage = STATS_CONFIG.earthspikeSettings.damage;
 		this.noClip = true;
 	}
