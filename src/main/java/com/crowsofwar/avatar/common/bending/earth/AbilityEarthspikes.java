@@ -30,30 +30,26 @@ public class AbilityEarthspikes extends Ability {
 		Bender bender = ctx.getBender();
 		BendingData data = ctx.getData();
 
-		float damage = 1;
 		float xp = abilityData.getTotalXp();
 		float ticks = 20;
-		double speed = 8;
+		double speed = 10;
 		float chi = STATS_CONFIG.chiEarthspike;
 
 		if (ctx.getLevel() >= 1) {
-			damage = 1.5f;
 			ticks = 40;
+			speed = 13;
 		}
 		if (ctx.getLevel() >= 2) {
-			speed = 14;
-			damage = 2;
+			speed = 16;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			damage = 1.25f;
 			ticks = 30;
-			speed = 12;
+			speed = 14;
 			chi *= 1.5;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			damage = 3;
 			ticks = 60;
-			speed = 20;
+			speed = 22;
 			chi *= 2;
 		}
 
