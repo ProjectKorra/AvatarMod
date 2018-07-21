@@ -101,12 +101,13 @@ public class SpawnEarthspikesHandler extends TickHandler {
 			}
 		}
 		else {
-			if (data.getTickHandlerDuration(this) % frequency == 0) {
+			if (data.getTickHandlerDuration(this) % 20 == 0) {
+				//Try using rotation yaw instead of circle particles
 				for (int degree = 0; degree < 360; degree++) {
 					double radians = Math.toRadians(degree);
-					double radius = data.getTickHandlerDuration(this)/5;
-					double x = Math.cos(radians) * (1 + radius);
-					double z = Math.sin(radians) * (1 + radius);;
+					double radius = data.getTickHandlerDuration(this)/20;
+					double x = Math.cos(radians) * radius;
+					double z = Math.sin(radians) * radius;
 					double y = owner.posY;
 					if (((x == Math.floor(x)) && !Double.isInfinite(x)) || ((z == Math.floor(z)) && !Double.isInfinite(z))) {
 						EntityEarthspike earthspike = new EntityEarthspike(world);

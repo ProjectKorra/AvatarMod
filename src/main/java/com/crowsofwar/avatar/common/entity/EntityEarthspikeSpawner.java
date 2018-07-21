@@ -34,6 +34,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
 	private boolean unstoppable;
 	private double maxTicksAlive;
+
 	/**
 	 * @param world
 	 */
@@ -77,64 +78,44 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
-			if (ticksExisted >= maxTicksAlive) {
-				setDead();
-			}
-
-			BlockPos below = getPosition().offset(EnumFacing.DOWN);
-			Block belowBlock = world.getBlockState(below).getBlock();
-
-			if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
-					world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
-					SoundCategory.PLAYERS, 1, 1, false);
-
-			if (!world.getBlockState(below).isNormalCube()) {
-				setDead();
-			}
-
-			if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && !unstoppable) {
-				setDead();
-			}
-
-			/*if (ticksExisted % 4 == 0 && getOwner() != null) {
-				if (getAbility() instanceof AbilityEarthspikes) {
-					AbilityData ad = AbilityData.get(getOwner(), getAbility().getName());
-					Bender b = Bender.get(getOwner());
-					World world = b.getWorld();
-					if (ad.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-						EntityEarthspike earthspike = new EntityEarthspike(world);
-						earthspike.posX = this.posX;
-						earthspike.posY = this.posY;
-						earthspike.posZ = this.posZ;
-						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage);
-						earthspike.setSize(1);
-						earthspike.setOwner(getOwner());
-						earthspike.setAbility(getAbility());
-						world.spawnEntity(earthspike);
-					}
-				}
-			}**/
-			// Destroy if in a block
-			IBlockState inBlock = world.getBlockState(getPosition());
-			if (inBlock.isFullBlock()) {
-				setDead();
-			}
-
-			// Destroy non-solid blocks in the earthspike
-			if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
-
-				if (inBlock.getBlockHardness(world, getPosition()) == 0) {
-
-					breakBlock(getPosition());
-
-				} else {
-
-					setDead();
-				}
-			}
+		if (ticksExisted >= maxTicksAlive) {
+			setDead();
 		}
 
+		BlockPos below = getPosition().offset(EnumFacing.DOWN);
+		Block belowBlock = world.getBlockState(below).getBlock();
 
+		if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
+				world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
+				SoundCategory.PLAYERS, 1, 1, false);
+
+		if (!world.getBlockState(below).isNormalCube()) {
+			setDead();
+		}
+
+		if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && !unstoppable) {
+			setDead();
+		}
+
+		// Destroy if in a block
+		IBlockState inBlock = world.getBlockState(getPosition());
+		if (inBlock.isFullBlock()) {
+			setDead();
+		}
+
+		// Destroy non-solid blocks in the earthspike
+		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
+
+			if (inBlock.getBlockHardness(world, getPosition()) == 0) {
+
+				breakBlock(getPosition());
+
+			} else {
+
+				setDead();
+			}
+		}
+	}
 
 
 	@Override

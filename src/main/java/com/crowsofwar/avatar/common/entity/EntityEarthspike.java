@@ -57,9 +57,9 @@ public class EntityEarthspike extends AvatarEntity {
 		super(world);
 		this.Size = 1;
 		setSize(Size, Size);
-		this.attacked = 0;
 		//DO NOT CALL THIS ONUPDATE; THE EARTHSPIKE WILL HAVE SIZE VARIATION DEPENDING ON HOW
 		// LONG THE SPAWNER HAS EXISTED.
+		this.attacked = 0;
 		this.damage = STATS_CONFIG.earthspikeSettings.damage;
 		this.noClip = true;
 	}
@@ -125,7 +125,7 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (!world.isRemote && entity != getOwner() && entity != this && !(entity instanceof EntityEarthspikeSpawner)) {
+		if (!world.isRemote && entity != getOwner() && !(entity instanceof EntityEarthspike) && !(entity instanceof EntityEarthspikeSpawner)) {
 			pushEntity(entity);
 			if (attackEntity(entity)) {
 				attacked++;

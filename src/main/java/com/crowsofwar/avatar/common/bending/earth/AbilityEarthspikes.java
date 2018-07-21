@@ -71,23 +71,20 @@ public class AbilityEarthspikes extends Ability {
 				world.spawnEntity(earthspike);
 
 			} else {
-				for (int degree = 0; degree < 360; degree++) {
-					double radians = Math.toRadians(degree);
-					double x = Math.cos(radians);
-					double z = Math.sin(radians);
-					double y = entity.posY;
-					if (((x == Math.floor(x)) && !Double.isInfinite(x)) || ((z == Math.floor(z)) && !Double.isInfinite(z))) {
+				//Try using rotation yaw instead of circle particles
+				for (int i = 0; i < 8; i++) {
+					Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+							i * 45), 0);
 						EntityEarthspike earthspike = new EntityEarthspike(world);
-						earthspike.setPosition(x + entity.posX, y, z + entity.posZ);
+						earthspike.setPosition(direction1.x(), entity.posY, direction1.z());
 						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
 						earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
 						earthspike.setOwner(entity);
 						world.spawnEntity(earthspike);
-					}
 					//Ring of instantaneous earthspikes.
 				}
 			}
-			data.addTickHandler(TickHandler.SPAWN_EARTHSPIKES_HANDLER);
+			//data.addTickHandler(TickHandler.SPAWN_EARTHSPIKES_HANDLER);
 
 
 		}
