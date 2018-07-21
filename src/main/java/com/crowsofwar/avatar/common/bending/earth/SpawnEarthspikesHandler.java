@@ -21,35 +21,35 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		BendingData data = ctx.getData();
 
 		float frequency = STATS_CONFIG.earthspikeSettings.frequency;
-		//8 (by default)
+		//6 (by default)
 		double damage = STATS_CONFIG.earthspikeSettings.damage;
 		//3 (by default)
 
 
 		if (abilityData.getLevel() == 1) {
-			frequency *= 0.75;
-			//6
+			frequency *= (5 / 6);
+			//5
 			damage *= (4 / 3);
 			//4
 		}
 
 		if (abilityData.getLevel() == 2) {
-			frequency *= 0.5;
+			frequency *= (2 / 3);
 			//4
 			damage *= 5 / 3;
 			//5
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			frequency *= (5 / 8);
-			//5
+			frequency *= (2 / 3);
+			//4
 			damage = STATS_CONFIG.earthspikeSettings.damage;
 			//1.5
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			frequency *= 0.25;
-			//2
+			frequency *= 0.5;
+			//3
 			damage *= 2;
 			//6
 		}

@@ -67,8 +67,6 @@ public class AbilityEarthspikes extends Ability {
 				earthspike.setOwner(entity);
 				earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
 				earthspike.setVelocity(look.times(speed));
-				//earthspike.setDamage
-				//As earthspike won't collide with anything, this is temporary
 				earthspike.setDuration(ticks);
 				earthspike.setAbility(this);
 				earthspike.setUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
