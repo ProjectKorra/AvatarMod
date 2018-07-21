@@ -98,10 +98,6 @@ public class EntityEarthspike extends AvatarEntity {
 	public void onEntityUpdate() {
 
 		super.onEntityUpdate();
-
-		if (!world.isRemote) {
-			System.out.println("Confused");
-		}
 		addVelocity(velocity().times(-1));
 		if (ticksExisted >= 15) {
 			this.setDead();
@@ -112,8 +108,8 @@ public class EntityEarthspike extends AvatarEntity {
 
 		// Push collided entities back
 		if (!world.isRemote) {
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-					entity -> entity != getOwner());
+			List<Entity> collided = world.getEntitiesWithinAABB(EntityLivingBase.class, getEntityBoundingBox(),
+					entity -> entity != getOwner() && entity != this);
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
 					System.out.println(collided);
