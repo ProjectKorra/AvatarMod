@@ -102,7 +102,7 @@ public class EntityEarthspike extends AvatarEntity {
 		if (!world.isRemote) {
 			System.out.println("Confused");
 		}
-		setVelocity(Vector.ZERO);
+		addVelocity(velocity().times(-1));
 		if (ticksExisted >= 15) {
 			this.setDead();
 		}
