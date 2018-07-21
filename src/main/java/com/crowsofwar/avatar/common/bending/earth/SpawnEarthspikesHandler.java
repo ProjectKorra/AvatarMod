@@ -81,6 +81,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 						earthspike.setAbility(abilityData.getAbility());
 						earthspike.setDamage(damage);
 						earthspike.setOwner(owner);
+						earthspike.setShouldDie(entity1.isDead);
 						earthspike.setSize(size);
 						world.spawnEntity(earthspike);
 					}
@@ -98,6 +99,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.setAbility(abilityData.getAbility());
 					earthspike.setDamage(damage);
 					earthspike.setSize(size);
+					earthspike.setShouldDie(entity.isDead);
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
 
