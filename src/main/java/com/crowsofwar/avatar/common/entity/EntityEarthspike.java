@@ -108,8 +108,7 @@ public class EntityEarthspike extends AvatarEntity {
 
 		// Push collided entities back
 		if (!world.isRemote) {
-			List<Entity> collided = world.getEntitiesWithinAABB(EntityLivingBase.class, getEntityBoundingBox(),
-					entity -> entity != getOwner() && entity != this);
+			List<Entity> collided = world.getEntitiesWithinAABB(EntityLivingBase.class, getEntityBoundingBox());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
 					System.out.println(collided);
@@ -131,9 +130,8 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (!world.isRemote && entity != getOwner() && !(entity == this)) {
+		if (!world.isRemote && entity != getOwner() && entity != this) {
 			pushEntity(entity);
-			System.out.println(entity);
 			if (attackEntity(entity)) {
 				if (getOwner() != null) {
 					BattlePerformanceScore.addMediumScore(getOwner());
