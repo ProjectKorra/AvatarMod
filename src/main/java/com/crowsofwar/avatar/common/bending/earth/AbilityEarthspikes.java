@@ -74,9 +74,9 @@ public class AbilityEarthspikes extends Ability {
 				//Try using rotation yaw instead of circle particles
 				for (int i = 0; i < 8; i++) {
 					Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-							i * 45), 0);
+							i * 45), 0).withY(0);
 						EntityEarthspike earthspike = new EntityEarthspike(world);
-						earthspike.setPosition(direction1.x(), entity.posY, direction1.z());
+						earthspike.setPosition(direction1.x() + entity.posX, entity.posY, direction1.z() + entity.posZ);
 						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
 						earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
 						earthspike.setOwner(entity);

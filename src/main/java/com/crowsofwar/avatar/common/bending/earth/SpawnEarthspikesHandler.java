@@ -34,6 +34,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		EntityLivingBase owner = ctx.getBenderEntity();
 		AbilityData abilityData = AbilityData.get(owner, "earthspike");
 		BendingData data = ctx.getData();
+		int duration = data.getTickHandlerDuration(this);
 
 		float frequency = STATS_CONFIG.earthspikeSettings.frequency;
 		//4 (by default)
@@ -73,16 +74,16 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		//For some reason using *= or += seems to glitch out everything- that's why
 		//I'm using tedious equations.
 
-		size += data.getTickHandlerDuration(this) / 20;
+		size += duration / 20;
 		EntityEarthspikeSpawner entity = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
 
-		if (data.getTickHandlerDuration(this) >= 60 && entity == null) {
+		if (duration >= 60 && entity == null) {
 				stop = true;
 		}
 
 		if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			if (entity != null) {
-				if (data.getTickHandlerDuration(this) % frequency == 0 && data.getTickHandlerDuration(this) > frequency/3) {
+				if (duration % frequency == 0 && duration > frequency/3) {
 					EntityEarthspike earthspike = new EntityEarthspike(world);
 					earthspike.posX = entity.posX;
 					earthspike.posY = entity.posY;
@@ -101,22 +102,18 @@ public class SpawnEarthspikesHandler extends TickHandler {
 			}
 		}
 		else {
-			if (data.getTickHandlerDuration(this) % 20 == 0) {
+			if (duration % 20 == 0) {
 				//Try using rotation yaw instead of circle particles
-				for (int degree = 0; degree < 360; degree++) {
-					double radians = Math.toRadians(degree);
-					double radius = data.getTickHandlerDuration(this)/20;
-					double x = Math.cos(radians) * radius;
-					double z = Math.sin(radians) * radius;
-					double y = owner.posY;
-					if (((x == Math.floor(x)) && !Double.isInfinite(x)) || ((z == Math.floor(z)) && !Double.isInfinite(z))) {
-						EntityEarthspike earthspike = new EntityEarthspike(world);
-						earthspike.setPosition(x + owner.posX, y, z + owner.posZ);
-						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
-						earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
-						earthspike.setOwner(owner);
-						world.spawnEntity(earthspike);
-					}
+				for (int i = 0; i < 8; i++) {
+					Vector direction1 = Vector.toRectangular(Math.toRadians(owner.rotationYaw +
+							i * 45), 0).withY(0).times(duration/10);
+					EntityEarthspike earthspike = new EntityEarthspike(world);
+					earthspike.setPosition(direction1.x() + owner.posX, owner.posY, direction1.z() + owner.posZ);
+					earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
+					earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
+					earthspike.setOwner(owner);
+					world.spawnEntity(earthspike);
+					//Ring of instantaneous earthspikes.
 				}
 			}
 		}
