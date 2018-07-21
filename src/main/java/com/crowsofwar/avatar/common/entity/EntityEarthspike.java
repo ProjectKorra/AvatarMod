@@ -108,9 +108,6 @@ public class EntityEarthspike extends AvatarEntity {
 		if (ticksExisted >= 40) {
 			this.setDead();
 		}
-		if (!world.isRemote) {
-			System.out.println("Yas");
-		}
 
 
 		// Push collided entities back

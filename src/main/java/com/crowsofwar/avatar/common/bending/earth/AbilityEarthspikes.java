@@ -69,6 +69,7 @@ public class AbilityEarthspikes extends Ability {
 				earthspike.setUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
 				world.spawnEntity(earthspike);
 
+				data.addTickHandler(TickHandler.SPAWN_EARTHSPIKES_HANDLER);
 
 			} else {
 				for (int degree = 0; degree < 360; degree++) {
@@ -77,9 +78,7 @@ public class AbilityEarthspikes extends Ability {
 					double z = Math.sin(radians);
 					double y = entity.posY;
 					EntityEarthspike earthspike = new EntityEarthspike(world);
-					earthspike.posX = (int) x;
-					earthspike.posY = y;
-					earthspike.posZ = (int) z;
+					earthspike.setPosition(x + entity.posX, y, z + entity.posZ);
 					earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
 					earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
 					earthspike.setOwner(entity);
@@ -87,7 +86,7 @@ public class AbilityEarthspikes extends Ability {
 					//Ring of instantaneous earthspikes.
 				}
 			}
-			data.addTickHandler(TickHandler.SPAWN_EARTHSPIKES_HANDLER);
+
 
 		}
 	}
