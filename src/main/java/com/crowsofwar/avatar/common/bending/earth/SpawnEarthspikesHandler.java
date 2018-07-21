@@ -10,6 +10,8 @@ import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class SpawnEarthspikesHandler extends TickHandler {
@@ -69,27 +71,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		size += data.getTickHandlerDuration(this)/20;
 		EntityEarthspikeSpawner entity = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
 
-		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			EntityEarthspikeSpawner entity1 = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
-			for (int i = 0; i < 8; i++) {
-				if (entity1 != null) {
-					if (data.getTickHandlerDuration(this) % frequency == 0) {
-						EntityEarthspike earthspike = new EntityEarthspike(world);
-						earthspike.posX = entity1.posX;
-						earthspike.posY = entity1.posY;
-						earthspike.posZ = entity1.posZ;
-						earthspike.setAbility(abilityData.getAbility());
-						earthspike.setDamage(damage);
-						earthspike.setOwner(owner);
-						earthspike.setShouldDie(entity1.isDead);
-						earthspike.setSize(size);
-						world.spawnEntity(earthspike);
-					}
-					return false;
-				}
-			}
-		} else {
-
+		if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			if (entity != null) {
 				if (data.getTickHandlerDuration(this) % frequency == 0) {
 					EntityEarthspike earthspike = new EntityEarthspike(world);
@@ -99,13 +81,30 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.setAbility(abilityData.getAbility());
 					earthspike.setDamage(damage);
 					earthspike.setSize(size);
-					earthspike.setShouldDie(entity.isDead);
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
 
 				}
 				return false;
 			}
+		}
+		else {
+			for (int i = 0; i < 8; i++) {
+				EntityEarthspikeSpawner spawner = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
+				if (spawner != null) {
+					EntityEarthspike earthspike = new EntityEarthspike(world);
+					earthspike.posX = spawner.posX;
+					earthspike.posY = spawner.posY;
+					earthspike.posZ = spawner.posZ;
+					earthspike.setAbility(abilityData.getAbility());
+					earthspike.setDamage(damage);
+					earthspike.setSize(size);
+					earthspike.setOwner(owner);
+					world.spawnEntity(earthspike);
+
+				}
+			}
+
 		}
 		return entity == null;
 	}

@@ -1,7 +1,10 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.earth.AbilityEarthspikes;
 import com.crowsofwar.avatar.common.config.ConfigStats;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -93,6 +96,24 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 				setDead();
 			}
 
+			/*if (ticksExisted % 4 == 0 && getOwner() != null) {
+				if (getAbility() instanceof AbilityEarthspikes) {
+					AbilityData ad = AbilityData.get(getOwner(), getAbility().getName());
+					Bender b = Bender.get(getOwner());
+					World world = b.getWorld();
+					if (ad.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+						EntityEarthspike earthspike = new EntityEarthspike(world);
+						earthspike.posX = this.posX;
+						earthspike.posY = this.posY;
+						earthspike.posZ = this.posZ;
+						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage);
+						earthspike.setSize(1);
+						earthspike.setOwner(getOwner());
+						earthspike.setAbility(getAbility());
+						world.spawnEntity(earthspike);
+					}
+				}
+			}**/
 			// Destroy if in a block
 			IBlockState inBlock = world.getBlockState(getPosition());
 			if (inBlock.isFullBlock()) {
