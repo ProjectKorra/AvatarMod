@@ -28,6 +28,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -43,8 +46,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class EntityEarthspike extends AvatarEntity {
 
-	//private static final DataParameter<Float> SYNC_SIZE = EntityDataManager
-	//		.createKey(EntityEarthspike.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager
+			.createKey(EntityEarthspike.class, DataSerializers.FLOAT);
 
 	private double damage;
 	private float Size = 1;
@@ -60,18 +63,18 @@ public class EntityEarthspike extends AvatarEntity {
 		this.damage = damage;
 	}
 
-//	public void setSize (float size) {
-	//	dataManager.set(SYNC_SIZE, size);
-	//}
+	public void setSize (float size) {
+		dataManager.set(SYNC_SIZE, size);
+	}
 
-	//public float getSize() {
-	//	return dataManager.get(SYNC_SIZE);
-	//}
+	public float getSize() {
+		return dataManager.get(SYNC_SIZE);
+	}
 
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		//dataManager.register(SYNC_SIZE, Size);
+		dataManager.register(SYNC_SIZE, Size);
 	}
 
 	@Override
@@ -87,10 +90,6 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		/*if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner || entity == this.getOwner()) {
-			return false;
-		}
-		 return entity instanceof EntityLivingBase || super.canCollideWith(entity);**/
 		return true;
 
 	}
