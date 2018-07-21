@@ -66,6 +66,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		//For some reason using *= or += seems to glitch out everything- that's why
 		//I'm using tedious equations.
 
+		size += data.getTickHandlerDuration(this)/20;
 		EntityEarthspikeSpawner entity = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
