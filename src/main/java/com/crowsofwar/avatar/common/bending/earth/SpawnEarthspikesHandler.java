@@ -60,10 +60,8 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			frequency = STATS_CONFIG.earthspikeSettings.frequency;
-			//4
-			damage = STATS_CONFIG.earthspikeSettings.damage;
-			//1.5
+			damage = STATS_CONFIG.earthspikeSettings.damage * 3;
+			//9
 			size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
 			//1.25
 		}
@@ -91,8 +89,8 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.posY = entity.posY;
 					earthspike.posZ = entity.posZ;
 					if (!world.isRemote) {
-						particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 70, 80, Vector.getEntityPos(earthspike).plusY(0.1),
-								new Vector(0.4, 3, 0.4));
+						particles.spawnParticles(world, EnumParticleTypes.BLOCK_CRACK, 100, 120, Vector.getEntityPos(earthspike).plusY(0.3),
+								new Vector(1, 10, 1));
 					}
 					earthspike.setAbility(abilityData.getAbility());
 					earthspike.setDamage(damage);
@@ -104,6 +102,19 @@ public class SpawnEarthspikesHandler extends TickHandler {
 			}
 		} else {
 			for (int degree = 0; degree < 360; degree++) {
+				double radians = Math.toRadians(degree);
+				double x = Math.cos(radians);
+				double z = Math.sin(radians);
+				double y = owner.posY;
+				EntityEarthspike earthspike = new EntityEarthspike(world);
+				earthspike.posX = (int) x;
+				earthspike.posY =  y;
+				earthspike.posZ = (int) z;
+				earthspike.setDamage(damage);
+				earthspike.setSize(size);
+				earthspike.setOwner(owner);
+				world.spawnEntity(earthspike);
+
 				//Ring of instantaneous earthspikes
 
 			}
