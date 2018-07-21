@@ -56,6 +56,8 @@ public class EntityEarthspike extends AvatarEntity {
 		super(world);
 		this.Size = 1;
 		setSize(Size, Size);
+		//DO NOT CALL THIS ONUPDATE; THE EARTHSPIKE WILL HAVE SIZE VARIATION DEPENDING ON HOW
+		// LONG THE SPAWNER HAS EXISTED.
 		this.damage = STATS_CONFIG.earthspikeSettings.damage;
 		this.noClip = true;
 	}
