@@ -99,6 +99,7 @@ public class EntityEarthspike extends AvatarEntity {
 
 		super.onEntityUpdate();
 		addVelocity(velocity().times(-1));
+		setVelocity(Vector.ZERO);
 		if (ticksExisted >= 15) {
 			this.setDead();
 		}
@@ -154,10 +155,9 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	private void pushEntity(Entity entity) {
-		Vector entityPos = Vector.getEntityPos(entity);
-		Vector direction = entityPos.minus(this.position());
-		Vector velocity = direction.times(STATS_CONFIG.earthspikeSettings.push);
-		entity.addVelocity(velocity.x()/5, velocity.y(), velocity.z()/5);
+		entity.motionX = this.motionX/5;
+		entity.motionY = STATS_CONFIG.earthspikeSettings.push/2;
+		entity.motionZ = this.motionZ/5;
 	}
 
 	@Override
