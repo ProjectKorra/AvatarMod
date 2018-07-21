@@ -156,7 +156,7 @@ public class EntityEarthspike extends AvatarEntity {
 
 	private void pushEntity(Entity entity) {
 		entity.motionX = this.motionX/5;
-		entity.motionY = STATS_CONFIG.earthspikeSettings.push/2;
+		entity.motionY = STATS_CONFIG.earthspikeSettings.push/2 + this.velocity().magnitude()/10;
 		entity.motionZ = this.motionZ/5;
 	}
 

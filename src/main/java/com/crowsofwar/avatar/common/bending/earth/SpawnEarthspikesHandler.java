@@ -24,11 +24,14 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		//4 (by default)
 		double damage = STATS_CONFIG.earthspikeSettings.damage;
 		//3 (by default)
+		float size = STATS_CONFIG.earthspikeSettings.size;
+		//1 (by default)
 
 
 		if (abilityData.getLevel() == 1) {
 			damage = STATS_CONFIG.earthspikeSettings.damage * 1.33;
 			//4
+			size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
 		}
 
 		if (abilityData.getLevel() == 2) {
@@ -36,6 +39,8 @@ public class SpawnEarthspikesHandler extends TickHandler {
 			//3
 			damage = STATS_CONFIG.earthspikeSettings.damage * 1.66;
 			//5
+			size = STATS_CONFIG.earthspikeSettings.size * 1.5F;
+
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
@@ -52,6 +57,8 @@ public class SpawnEarthspikesHandler extends TickHandler {
 			//6
 		}
 
+		//For some reason using *= or += seems to glitch out everything- that's why
+		//I'm using tedious equations.
 
 		EntityEarthspikeSpawner entity = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
 
