@@ -65,7 +65,11 @@ public class RenderEarthspikes extends RenderModel<EntityEarthspike> {
 
 	@Override
 	protected void performGlTransforms(EntityEarthspike entity, double x, double y, double z, float entityYaw, float partialTicks) {
+		GlStateManager.enableBlend();
+		GlStateManager.pushMatrix();
 		GlStateManager.scale(entity.getSize(), entity.getSize(), entity.getSize());
+		GlStateManager.popMatrix();
+		GlStateManager.disableBlend();
 	}
 
 	@Override
