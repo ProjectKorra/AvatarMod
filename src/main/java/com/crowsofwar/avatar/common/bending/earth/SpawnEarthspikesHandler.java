@@ -7,7 +7,10 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityEarthspike;
 import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -15,6 +18,11 @@ import java.util.List;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class SpawnEarthspikesHandler extends TickHandler {
+	private final ParticleSpawner particles;
+
+	public SpawnEarthspikesHandler() {
+		particles = new NetworkParticleSpawner();
+	}
 	@Override
 	public boolean tick(BendingContext ctx) {
 		World world = ctx.getWorld();
@@ -68,7 +76,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		//For some reason using *= or += seems to glitch out everything- that's why
 		//I'm using tedious equations.
 
-		size += data.getTickHandlerDuration(this)/20;
+		size += data.getTickHandlerDuration(this) / 20;
 		EntityEarthspikeSpawner entity = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
 
 		if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
@@ -83,29 +91,20 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.setSize(size);
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
+					particles.spawnParticles(world, EnumParticleTypes.BLOCK_CRACK, 50, 60, earthspike.posX,
+							earthspike.posY, earthspike.posZ, 0.1, 0.6, 0.1);
 
 				}
 				return false;
 			}
-		}
-		else {
-			for (int i = 0; i < 8; i++) {
-				EntityEarthspikeSpawner spawner = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
-				if (spawner != null) {
-					EntityEarthspike earthspike = new EntityEarthspike(world);
-					earthspike.posX = spawner.posX;
-					earthspike.posY = spawner.posY;
-					earthspike.posZ = spawner.posZ;
-					earthspike.setAbility(abilityData.getAbility());
-					earthspike.setDamage(damage);
-					earthspike.setSize(size);
-					earthspike.setOwner(owner);
-					world.spawnEntity(earthspike);
+		} else {
+			for (int degree = 0; degree < 360; degree++) {
+				//Ring of instantaneous earthspikes
 
-				}
 			}
 
 		}
 		return entity == null;
 	}
 }
+
