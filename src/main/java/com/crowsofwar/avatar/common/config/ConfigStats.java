@@ -304,8 +304,8 @@ public class ConfigStats {
 		@Load
 		public double push = 0.5;
 
-
 	}
+
 	public static class ExplosionSettings {
 		@Load
 		public float damage = 6;

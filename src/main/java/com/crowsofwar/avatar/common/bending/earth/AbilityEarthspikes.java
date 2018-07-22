@@ -35,23 +35,30 @@ public class AbilityEarthspikes extends Ability {
 		float ticks = 20;
 		double speed = 10;
 		float chi = STATS_CONFIG.chiEarthspike;
+		//3.5 (by default)
 
 		if (ctx.getLevel() >= 1) {
 			ticks = 40;
 			speed = 13;
+			chi = STATS_CONFIG.chiEarthspike + 0.5F;
+			//4
 		}
 		if (ctx.getLevel() >= 2) {
 			speed = 16;
+			chi = STATS_CONFIG.chiEarthspike + 2F;
+			//5.5
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			ticks = 30;
 			speed = 14;
-			chi *= 2.5;
+			chi = STATS_CONFIG.chiEarthspike * 2.5F;
+			//8.75
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			ticks = 60;
 			speed = 22;
-			chi *= 2;
+			chi = STATS_CONFIG.chiEarthspike * 2;
+			//7
 		}
 
 		if (bender.consumeChi(chi)) {
@@ -80,6 +87,7 @@ public class AbilityEarthspikes extends Ability {
 						earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
 						earthspike.setOwner(entity);
 						world.spawnEntity(earthspike);
+						//Ring of instantaneous earthspikes.
 						if (!world.isRemote) {
 							WorldServer World = (WorldServer) world;
 							for (int degree = 0; degree < 360; degree++) {
@@ -91,7 +99,7 @@ public class AbilityEarthspikes extends Ability {
 
 							}
 						}
-						//Ring of instantaneous earthspikes.
+
 					}
 				}
 			}
