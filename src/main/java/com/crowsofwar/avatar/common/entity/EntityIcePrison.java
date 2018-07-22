@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.ice.Icebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -95,14 +96,15 @@ public class EntityIcePrison extends AvatarEntity {
 
 	}
 
-	public static void imprison(EntityLivingBase entity, EntityLivingBase owner) {
+	public static void imprison(EntityLivingBase entity, EntityLivingBase owner, Ability ab) {
 		World world = entity.world;
 		EntityIcePrison prison = new EntityIcePrison(world);
 
 		prison.setImprisoned(entity);
 		prison.setOwner(owner);
 		prison.copyLocationAndAnglesFrom(entity);
-
+		prison.setAbility(ab);
+		
 		Bender bender = Bender.get(owner);
 		prison.setStats(bender.getData().getAbilityData("ice_prison"), bender.calcPowerRating(Icebending.ID));
 

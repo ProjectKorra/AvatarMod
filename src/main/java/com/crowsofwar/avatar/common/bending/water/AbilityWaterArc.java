@@ -137,6 +137,7 @@ public class AbilityWaterArc extends Ability {
 					water.setVelocity(force);
 					water.setGravity(gravity);
 					water.setBehavior(new WaterArcBehavior.Thrown());
+					water.setAbility(this);
 					world.spawnEntity(water);
 
 				} else {
@@ -149,6 +150,7 @@ public class AbilityWaterArc extends Ability {
 					water.setBehavior(new WaterArcBehavior.PlayerControlled());
 					water.isSpear(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
 					water.setGravity(gravity);
+					water.setAbility(this);
 					world.spawnEntity(water);
 					ctx.getData().addStatusControl(StatusControl.THROW_WATER);
 				}
