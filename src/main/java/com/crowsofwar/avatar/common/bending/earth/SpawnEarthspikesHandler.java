@@ -108,7 +108,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 			}
 		} else {
 			applyMovementModifier(owner, MathHelper.clamp(movementMultiplier, 0.1f, 1));
-			if (duration % 10 == 0) {
+			if (duration % 10 == 0 && owner.onGround) {
 				//Try using rotation yaw instead of circle particles
 				for (int i = 0; i < 8; i++) {
 					Vector direction1 = Vector.toRectangular(Math.toRadians(owner.rotationYaw +

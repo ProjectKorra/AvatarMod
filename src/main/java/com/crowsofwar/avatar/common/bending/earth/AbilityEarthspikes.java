@@ -11,9 +11,7 @@ import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
@@ -34,7 +32,6 @@ public class AbilityEarthspikes extends Ability {
 		Bender bender = ctx.getBender();
 		BendingData data = ctx.getData();
 
-		float xp = abilityData.getTotalXp();
 		float ticks = 20;
 		double speed = 10;
 		float chi = STATS_CONFIG.chiEarthspike;
@@ -49,7 +46,7 @@ public class AbilityEarthspikes extends Ability {
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			ticks = 30;
 			speed = 14;
-			chi *= 1.5;
+			chi *= 2.5;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			ticks = 60;
@@ -73,27 +70,29 @@ public class AbilityEarthspikes extends Ability {
 				world.spawnEntity(earthspike);
 
 			} else {
-				for (int i = 0; i < 8; i++) {
-					Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-							i * 45), 0).withY(0);
-					EntityEarthspike earthspike = new EntityEarthspike(world);
-					earthspike.setPosition(direction1.x() + entity.posX, entity.posY, direction1.z() + entity.posZ);
-					earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
-					earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
-					earthspike.setOwner(entity);
-					world.spawnEntity(earthspike);
-					if (!world.isRemote) {
-						WorldServer World = (WorldServer) world;
-						for (int degree = 0; degree < 360; degree++) {
-							double radians = Math.toRadians(degree);
-							double x = Math.cos(radians) / 2 + earthspike.posX;
-							double y = earthspike.posY;
-							double z = Math.sin(radians) / 2 + earthspike.posZ;
-							World.spawnParticle(EnumParticleTypes.CRIT, x, y, z, 1, 0, 0, 0, 0.5);
+				if (entity.onGround) {
+					for (int i = 0; i < 8; i++) {
+						Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+								i * 45), 0).withY(0);
+						EntityEarthspike earthspike = new EntityEarthspike(world);
+						earthspike.setPosition(direction1.x() + entity.posX, entity.posY, direction1.z() + entity.posZ);
+						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
+						earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
+						earthspike.setOwner(entity);
+						world.spawnEntity(earthspike);
+						if (!world.isRemote) {
+							WorldServer World = (WorldServer) world;
+							for (int degree = 0; degree < 360; degree++) {
+								double radians = Math.toRadians(degree);
+								double x = Math.cos(radians) / 2 + earthspike.posX;
+								double y = earthspike.posY;
+								double z = Math.sin(radians) / 2 + earthspike.posZ;
+								World.spawnParticle(EnumParticleTypes.CRIT, x, y, z, 1, 0, 0, 0, 0.5);
 
+							}
 						}
+						//Ring of instantaneous earthspikes.
 					}
-					//Ring of instantaneous earthspikes.
 				}
 			}
 			data.addTickHandler(TickHandler.SPAWN_EARTHSPIKES_HANDLER);
