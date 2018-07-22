@@ -50,7 +50,7 @@ public class EntityEarthspike extends AvatarEntity {
 			.createKey(EntityEarthspike.class, DataSerializers.FLOAT);
 
 	private double damage;
-	private float Size = 1;
+	private float Size;
 	private int attacked;
 	private double lifetime;
 
