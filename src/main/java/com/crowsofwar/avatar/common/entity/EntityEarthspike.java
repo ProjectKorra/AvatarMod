@@ -122,7 +122,6 @@ public class EntityEarthspike extends AvatarEntity {
 			List<Entity> collided = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
-					System.out.println(collided);
 					onCollideWithEntity(entity);
 				}
 			}
