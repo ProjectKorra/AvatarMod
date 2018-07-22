@@ -17,6 +17,8 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -25,12 +27,6 @@ public class SpawnEarthspikesHandler extends TickHandler {
 
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("78723aa8-8d42-11e8-9eb6-529269fb1459");
-
-	private final ParticleSpawner particles;
-
-	public SpawnEarthspikesHandler() {
-		particles = new NetworkParticleSpawner();
-	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {
@@ -53,7 +49,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		if (abilityData.getLevel() == 1) {
 			damage = STATS_CONFIG.earthspikeSettings.damage * 1.33;
 			//4
-			size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
+			//size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
 			//1.25
 		}
 
@@ -62,7 +58,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 			//3
 			damage = STATS_CONFIG.earthspikeSettings.damage * 1.66;
 			//5
-			size = STATS_CONFIG.earthspikeSettings.size * 1.5F;
+			//size = STATS_CONFIG.earthspikeSettings.size * 1.5F;
 			//1.5
 
 		}
@@ -72,7 +68,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 			//2
 			damage = STATS_CONFIG.earthspikeSettings.damage * 2;
 			//6
-			size = STATS_CONFIG.earthspikeSettings.size * 2F;
+			//size = STATS_CONFIG.earthspikeSettings.size * 2F;
 			//2
 		}
 
@@ -90,16 +86,23 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.posX = entity.posX;
 					earthspike.posY = entity.posY;
 					earthspike.posZ = entity.posZ;
-					if (!world.isRemote) {
-						particles.spawnParticles(world, EnumParticleTypes.VILLAGER_HAPPY, 100, 120, Vector.getEntityPos(earthspike).plusY(0.3),
-								new Vector(1, 10, 1));
-					}
 					earthspike.setAbility(abilityData.getAbility());
 					earthspike.setDamage(damage);
 					earthspike.setSize(size);
 					earthspike.setLifetime(entity.getDuration());
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
+					if (!world.isRemote) {
+						WorldServer World = (WorldServer) world;
+						for (int degree = 0; degree < 360; degree++) {
+							double radians = Math.toRadians(degree);
+							double x = Math.cos(radians) / 2 + earthspike.posX;
+							double y = earthspike.posY;
+							double z = Math.sin(radians) / 2 + earthspike.posZ;
+							World.spawnParticle(EnumParticleTypes.BLOCK_CRACK, x, y, z, 1, 0, 0, 0, 0.1);
+
+						}
+					}
 				}
 				return false;
 			}
@@ -115,15 +118,21 @@ public class SpawnEarthspikesHandler extends TickHandler {
 						earthspike.setPosition(direction1.x() + owner.posX, owner.posY, direction1.z() + owner.posZ);
 					}
 					earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 2);
-					earthspike.setSize(STATS_CONFIG.earthspikeSettings.size + duration/10);
-					if (!world.isRemote) {
-						particles.spawnParticles(world, EnumParticleTypes.VILLAGER_HAPPY, 100, 120, Vector.getEntityPos(earthspike).plusY(0.3),
-								new Vector(1, 100, 1));
-					}
+					earthspike.setSize(STATS_CONFIG.earthspikeSettings.size);
 					earthspike.setLifetime(20);
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
-					//Ring of instantaneous earthspikes.
+					if (!world.isRemote) {
+						WorldServer World = (WorldServer) world;
+						for (int degree = 0; degree < 360; degree++) {
+							double radians = Math.toRadians(degree);
+							double x = Math.cos(radians) / 2 + earthspike.posX;
+							double y = earthspike.posY;
+							double z = Math.sin(radians) / 2 + earthspike.posZ;
+							World.spawnParticle(EnumParticleTypes.BLOCK_CRACK, x, y, z, 1, 0, 0, 0, 0.1);
+
+						}
+					}
 				}
 			}
 		}
