@@ -163,9 +163,4 @@ public class EntityEarthspike extends AvatarEntity {
 		entity.motionY = STATS_CONFIG.earthspikeSettings.push/1.5 + damage/20;
 		entity.motionZ = this.motionZ / 4;
 	}
-
-	@Override
-	public boolean isProjectile() {
-		return true;
-	}
 }
