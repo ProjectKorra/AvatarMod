@@ -157,7 +157,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	protected void collideWithNearbyEntities() {
 
-		BendingData data = BendingData.get(getOwner());
+		if (getOwner() != null) {
+			BendingData data = BendingData.get(getOwner());
 
 			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), velocity(), velocity
 					().magnitude() / 20, entity -> entity != getOwner() && entity != this);
@@ -174,6 +175,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				}
 			}
 		}
+	}
 
 	private void damageEntity(EntityLivingBase entity) {
 
