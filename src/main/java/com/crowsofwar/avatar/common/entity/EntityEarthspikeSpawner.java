@@ -48,8 +48,12 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		this.unstoppable = isUnstoppable;
 	}
 
-	public void setDuration(float ticks) {
+	public void setDuration(double ticks) {
 		this.maxTicksAlive = ticks;
+	}
+
+	public double getDuration() {
+		return this.maxTicksAlive;
 	}
 
 

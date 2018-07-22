@@ -52,6 +52,7 @@ public class EntityEarthspike extends AvatarEntity {
 	private double damage;
 	private float Size = 1;
 	private int attacked;
+	private double lifetime;
 
 	public EntityEarthspike(World world) {
 		super(world);
@@ -62,6 +63,7 @@ public class EntityEarthspike extends AvatarEntity {
 		this.attacked = 0;
 		this.damage = STATS_CONFIG.earthspikeSettings.damage;
 		this.noClip = true;
+		this.lifetime = 30;
 	}
 
 	public void setDamage(double damage) {
@@ -74,6 +76,10 @@ public class EntityEarthspike extends AvatarEntity {
 
 	public float getSize() {
 		return dataManager.get(SYNC_SIZE);
+	}
+
+	public void setLifetime(double lifetime) {
+		this.lifetime = lifetime;
 	}
 
 	@Override
@@ -105,7 +111,7 @@ public class EntityEarthspike extends AvatarEntity {
 		super.onEntityUpdate();
 		addVelocity(velocity().times(-1));
 		setVelocity(Vector.ZERO);
-		if (ticksExisted >= 40) {
+		if (ticksExisted >= lifetime) {
 			this.setDead();
 		}
 

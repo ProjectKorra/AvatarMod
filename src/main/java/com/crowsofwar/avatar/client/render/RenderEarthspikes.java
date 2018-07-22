@@ -42,7 +42,7 @@ public class RenderEarthspikes extends RenderModel<EntityEarthspike> {
 		this.model = new ModelEarthspikes();
 	}
 
-	@Override
+	/*@Override
 	public void doRender(EntityEarthspike entity, double x, double y, double z, float entityYaw,
 						 float partialTicks) {
 
@@ -62,10 +62,14 @@ public class RenderEarthspikes extends RenderModel<EntityEarthspike> {
 
 		GlStateManager.disableBlend();
 
-	}
+	}**/
 
 	@Override
 	protected void performGlTransforms(EntityEarthspike entity, double x, double y, double z, float entityYaw, float partialTicks) {
+		GlStateManager.rotate(180, 1, 0, 0);
+		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
+		GlStateManager.translate(0, -1.5, 0);
+		GlStateManager.scale(entity.getSize(), entity.getSize(), entity.getSize());
 	}
 
 	@Override
