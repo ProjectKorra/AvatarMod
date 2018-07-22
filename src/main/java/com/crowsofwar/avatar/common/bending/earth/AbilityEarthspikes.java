@@ -12,8 +12,10 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -71,16 +73,26 @@ public class AbilityEarthspikes extends Ability {
 				world.spawnEntity(earthspike);
 
 			} else {
-				//Try using rotation yaw instead of circle particles
 				for (int i = 0; i < 8; i++) {
 					Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
 							i * 45), 0).withY(0);
-						EntityEarthspike earthspike = new EntityEarthspike(world);
-						earthspike.setPosition(direction1.x() + entity.posX, entity.posY, direction1.z() + entity.posZ);
-						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
-						earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
-						earthspike.setOwner(entity);
-						world.spawnEntity(earthspike);
+					EntityEarthspike earthspike = new EntityEarthspike(world);
+					earthspike.setPosition(direction1.x() + entity.posX, entity.posY, direction1.z() + entity.posZ);
+					earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
+					earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
+					earthspike.setOwner(entity);
+					world.spawnEntity(earthspike);
+					if (!world.isRemote) {
+						WorldServer World = (WorldServer) world;
+						for (int degree = 0; degree < 360; degree++) {
+							double radians = Math.toRadians(degree);
+							double x = Math.cos(radians) / 2 + earthspike.posX;
+							double y = earthspike.posY;
+							double z = Math.sin(radians) / 2 + earthspike.posZ;
+							World.spawnParticle(EnumParticleTypes.CRIT, x, y, z, 1, 0, 0, 0, 1D);
+
+						}
+					}
 					//Ring of instantaneous earthspikes.
 				}
 			}

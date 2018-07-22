@@ -99,7 +99,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 							double x = Math.cos(radians) / 2 + earthspike.posX;
 							double y = earthspike.posY;
 							double z = Math.sin(radians) / 2 + earthspike.posZ;
-							World.spawnParticle(EnumParticleTypes.CRIT, x, y, z, 1, 0, 0, 0, 0.1);
+							World.spawnParticle(EnumParticleTypes.CRIT, x, y, z, 1, 0, 0, 0, 1D);
 
 						}
 					}
@@ -129,7 +129,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 							double x = Math.cos(radians) / 2 + earthspike.posX;
 							double y = earthspike.posY;
 							double z = Math.sin(radians) / 2 + earthspike.posZ;
-							World.spawnParticle(EnumParticleTypes.CRIT, x, y, z, 1, 0, 0, 0, 0.1);
+							World.spawnParticle(EnumParticleTypes.CRIT, x, y, z, 1, 0, 0, 0, 1D);
 
 						}
 					}
