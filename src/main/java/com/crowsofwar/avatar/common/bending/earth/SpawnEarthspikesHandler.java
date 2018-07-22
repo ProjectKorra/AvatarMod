@@ -91,7 +91,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.posY = entity.posY;
 					earthspike.posZ = entity.posZ;
 					if (!world.isRemote) {
-						particles.spawnParticles(world, EnumParticleTypes.BLOCK_CRACK, 100, 120, Vector.getEntityPos(earthspike).plusY(0.3),
+						particles.spawnParticles(world, EnumParticleTypes.VILLAGER_HAPPY, 100, 120, Vector.getEntityPos(earthspike).plusY(0.3),
 								new Vector(1, 10, 1));
 					}
 					earthspike.setAbility(abilityData.getAbility());
@@ -116,6 +116,10 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					}
 					earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 2);
 					earthspike.setSize(STATS_CONFIG.earthspikeSettings.size + duration/10);
+					if (!world.isRemote) {
+						particles.spawnParticles(world, EnumParticleTypes.VILLAGER_HAPPY, 100, 120, Vector.getEntityPos(earthspike).plusY(0.3),
+								new Vector(1, 100, 1));
+					}
 					earthspike.setLifetime(20);
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
