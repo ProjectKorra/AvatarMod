@@ -70,6 +70,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 	public static void onInfernoPunch(LivingAttackEvent event) {
 		EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
 		EntityLivingBase target = (EntityLivingBase) event.getEntity();
+		DamageSource source = event.getSource();
 		World world = target.getEntityWorld();
 		if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
 			Bender ctx = Bender.get(entity);
@@ -100,7 +101,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 					fireTime = 4;
 				}
 				if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
-					if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
+					if (entity.getHeldItemMainhand() == ItemStack.EMPTY && !(event.getSource().getDamageType().equals("avatar_groundSmash"))) {
 						if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 							BlockPos blockPos = target.getPosition();
 							AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, target, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 3F, true, false);
