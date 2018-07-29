@@ -106,6 +106,14 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+		if (this.isDead && !world.isRemote) {
+			Thread.dumpStack();
+		}
+	}
+
+	@Override
 	public void onEntityUpdate() {
 
 		super.onEntityUpdate();
