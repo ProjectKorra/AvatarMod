@@ -32,7 +32,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import org.lwjgl.Sys;
 
 import java.util.List;
 
@@ -41,8 +40,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityWave extends AvatarEntity {
 
-	/*private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWave.class,
-			DataSerializers.FLOAT);**/
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWave.class,
+			DataSerializers.FLOAT);
 
 	private float damageMult;
 	private boolean createExplosion;
@@ -63,7 +62,7 @@ public class EntityWave extends AvatarEntity {
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		//dataManager.register(SYNC_SIZE, Size);
+		dataManager.register(SYNC_SIZE, Size);
 	}
 
 	public void setDamageMultiplier(float damageMult) {
@@ -71,13 +70,11 @@ public class EntityWave extends AvatarEntity {
 	}
 
 	public float getWaveSize() {
-		//return dataManager.get(SYNC_SIZE);
-		return Size;
+		return dataManager.get(SYNC_SIZE);
 	}
 
 	public void setWaveSize(float size) {
-		//dataManager.set(SYNC_SIZE, size);
-		this.Size = size;
+		dataManager.set(SYNC_SIZE, size);
 	}
 
 	@Override
