@@ -28,6 +28,7 @@ import net.minecraft.world.WorldServer;
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandler.FIRE_PARTICLE_SPAWNER;
 
 public class StatCtrlFireJump extends StatusControl {
 	public StatCtrlFireJump() {
@@ -144,6 +145,7 @@ public class StatCtrlFireJump extends StatusControl {
 			spawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 15, 20,
 					new Vector(entity), new Vector(1, 0, 1));
 
+			data.addTickHandler(FIRE_PARTICLE_SPAWNER);
 			data.getMiscData().setFallAbsorption(fallAbsorption);
 
 
