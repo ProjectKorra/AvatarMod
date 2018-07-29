@@ -83,6 +83,7 @@ public class AbilityWaterBubble extends Ability {
 					bubble.setBehavior(new WaterBubbleBehavior.PlayerControlled());
 					bubble.setOwner(entity);
 					bubble.setSourceBlock(ctx.getLevel() >= 2);
+					bubble.setAbility(this);
 
 					// Workaround to fix issue where water bubble gets destroyed quickly after creation
 					// This is because the water bubble is destroyed once it's inside water, and after being created,

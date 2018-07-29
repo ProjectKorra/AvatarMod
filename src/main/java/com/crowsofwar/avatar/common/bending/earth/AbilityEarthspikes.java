@@ -86,6 +86,7 @@ public class AbilityEarthspikes extends Ability {
 						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
 						earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
 						earthspike.setOwner(entity);
+						earthspike.setAbility(this);
 						world.spawnEntity(earthspike);
 						//Ring of instantaneous earthspikes.
 						if (!world.isRemote) {
