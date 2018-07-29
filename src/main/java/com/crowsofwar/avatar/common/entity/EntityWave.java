@@ -52,7 +52,8 @@ public class EntityWave extends AvatarEntity {
 	public EntityWave(World world) {
 		super(world);
 		this.Size = 2;
-		setSize(Size, Size * 0.75F);
+		setSize(getWaveSize(), getWaveSize()* 0.75F);
+		System.out.println(getWaveSize());
 		damageMult = 1;
 		this.putsOutFires = true;
 		this.initialSpeed = this.velocity();
@@ -62,7 +63,7 @@ public class EntityWave extends AvatarEntity {
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_SIZE, 2F);
+		dataManager.register(SYNC_SIZE, Size);
 	}
 
 	public void setDamageMultiplier(float damageMult) {
@@ -108,9 +109,9 @@ public class EntityWave extends AvatarEntity {
 			AbilityData lvl = data.getAbilityData(getAbility().getName());
 
 			if (lvl.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				setSize(getWaveSize() * 2, getWaveSize() * 0.75F * 2);
+				setSize(Size * 2, Size * 0.75F * 2);
 			} else {
-				setSize(getWaveSize(), getWaveSize() * 0.75F);
+				setSize(Size, Size * 0.75F);
 			}
 		}
 
@@ -175,16 +176,6 @@ public class EntityWave extends AvatarEntity {
 	@Override
 	public boolean onCollideWithSolid() {
 		return false;
-	}
-
-	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		setDead();
-	}
-
-	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		setDead();
 	}
 
 	@Override

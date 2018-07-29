@@ -89,6 +89,7 @@ public class AbilityCreateWave extends Ability {
 						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 							size = 5;
 						}
+
 						size += ctx.getPowerRating() / 100;
 
 						speed += ctx.getPowerRating() / 100 * 8;
