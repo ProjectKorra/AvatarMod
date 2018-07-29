@@ -44,7 +44,7 @@ public class RadialSegment extends Gui {
 
 	public RadialSegment(RadialMenu gui, MenuTheme theme, int index, Ability ability, BendingStyle element) {
 		this.gui = gui;
-		this.angle = index * 45;
+		this.angle = 45F + index * 45;
 		this.index = index;
 		this.ability = ability;
 		this.theme = theme;
