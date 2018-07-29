@@ -45,7 +45,7 @@ public class WaterParticleSpawner extends TickHandler {
 				//Hella lag xD
 			}
 			AxisAlignedBB box = new AxisAlignedBB(entity.posX + (1 * radius) , entity.posY + 2, entity.posZ + (1 * radius),
-					entity.posX - (1 * radius), entity.posY, entity.posZ - (1 * radius));
+					entity.posX - (1 * radius), entity.posY - 2, entity.posZ - (1 * radius));
 			List<EntityThrowable> projectiles = world.getEntitiesWithinAABB(EntityThrowable.class, box);
 			if (!projectiles.isEmpty()) {
 				for (Entity e : projectiles) {

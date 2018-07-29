@@ -98,7 +98,7 @@ public class EntityWave extends AvatarEntity {
 		this.noClip = true;
 
 
-		if (this.velocity() == Vector.ZERO || (this.velocity().magnitude() < (initialSpeed.magnitude()/100))) {
+		if (this.velocity() == Vector.ZERO || (this.velocity().magnitude() < (initialSpeed.magnitude() / 100))) {
 			this.setDead();
 		}
 
@@ -140,6 +140,7 @@ public class EntityWave extends AvatarEntity {
 				if (entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner),
 						STATS_CONFIG.waveSettings.damage * damageMult)) {
 
+					AbilityData.get(owner, getAbility().getName()).addXp(SKILLS_CONFIG.waveHit);
 					BattlePerformanceScore.addLargeScore(getOwner());
 
 				}
@@ -148,9 +149,6 @@ public class EntityWave extends AvatarEntity {
 					world.createExplosion(null, posX, posY, posZ, 2, false);
 				}
 
-			}
-			if (!collided.isEmpty() && owner != null && !world.isRemote) {
-				AbilityData.get(owner, getAbility().getName()).addXp(SKILLS_CONFIG.waveHit);
 			}
 		}
 
