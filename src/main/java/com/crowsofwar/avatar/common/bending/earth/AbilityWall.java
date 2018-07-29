@@ -111,6 +111,7 @@ public class AbilityWall extends Ability {
 				seg.setPosition(x + .5, y, z + .5);
 				seg.setDirection(cardinal);
 				seg.setOwner(entity);
+				seg.setAbility(this);
 
 				boolean foundAir = false, dontBreakMore = false;
 				for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {

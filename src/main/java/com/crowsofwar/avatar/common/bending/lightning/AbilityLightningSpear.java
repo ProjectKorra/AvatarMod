@@ -81,6 +81,7 @@ public class AbilityLightningSpear extends Ability {
 			spear.rotationPitch = entity.rotationPitch;
 			spear.rotationYaw = entity.rotationYaw;
 			spear.setPiercing(abilityData.isMasterPath(AbilityTreePath.FIRST));
+			spear.setAbility(this);
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
 				spear.setSize(20);
 				spear.setGroupAttack(true);

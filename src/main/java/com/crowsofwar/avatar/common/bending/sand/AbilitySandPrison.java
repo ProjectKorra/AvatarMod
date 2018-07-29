@@ -56,7 +56,7 @@ public class AbilitySandPrison extends Ability {
 
 				EntityLivingBase prisoner = (EntityLivingBase) hit.get(0);
 				if (canImprison(prisoner, allowEarthbendable)) {
-					EntitySandPrison.imprison(prisoner, entity);
+					EntitySandPrison.imprison(prisoner, entity, this);
 					world.playSound(null, prisoner.getPosition(), SoundEvents.BLOCK_SAND_STEP,
 							SoundCategory.PLAYERS, 1, 1);
 

@@ -91,6 +91,7 @@ public class AbilityBoulderRing extends Ability {
 					//boulder.setSize(4);
 					boulder.setKnockBack(0.1F);
 					boulder.setBehavior(new BoulderBehavior.PlayerControlled());
+					boulder.setAbility(this);
 					world.spawnEntity(boulder);
 
 				//}

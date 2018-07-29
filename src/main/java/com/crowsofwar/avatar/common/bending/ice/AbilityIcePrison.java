@@ -65,7 +65,7 @@ public class AbilityIcePrison extends Ability {
 
 			if (!hit.isEmpty()) {
 				EntityLivingBase prisoner = (EntityLivingBase) hit.get(0);
-				EntityIcePrison.imprison(prisoner, entity);
+				EntityIcePrison.imprison(prisoner, entity, this);
 
 				world.playSound(null, prisoner.posX, prisoner.posY, prisoner.posZ,
 						SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.PLAYERS, 2, 2);
