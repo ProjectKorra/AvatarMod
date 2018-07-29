@@ -32,6 +32,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import org.lwjgl.Sys;
 
 import java.util.List;
 
@@ -45,12 +46,13 @@ public class EntityWave extends AvatarEntity {
 
 	private float damageMult;
 	private boolean createExplosion;
-	private float Size = 2;
+	private float Size;
 	private Vector initialSpeed;
 	private int groundTime;
 
 	public EntityWave(World world) {
 		super(world);
+		this.Size = 2;
 		setSize(Size, Size * 0.75F);
 		damageMult = 1;
 		this.putsOutFires = true;
@@ -107,8 +109,11 @@ public class EntityWave extends AvatarEntity {
 			AbilityData lvl = data.getAbilityData(getAbility().getName());
 
 			if (lvl.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				setSize(Size * 2, Size * 0.75F * 2);
+			//	setSize(Size * 2, Size * 0.75F * 2);
+				System.out.println(Size);
+				this.setSize(6, 6);
 			} else {
+				System.out.println("help");
 				setSize(Size, Size * 0.75F);
 			}
 		}
