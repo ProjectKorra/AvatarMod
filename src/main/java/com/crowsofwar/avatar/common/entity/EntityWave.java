@@ -52,8 +52,7 @@ public class EntityWave extends AvatarEntity {
 	public EntityWave(World world) {
 		super(world);
 		this.Size = 2;
-		setSize(getWaveSize(), getWaveSize()* 0.75F);
-		System.out.println(getWaveSize());
+		setSize(Size, Size * 0.75F);
 		damageMult = 1;
 		this.putsOutFires = true;
 		this.initialSpeed = this.velocity();
@@ -75,6 +74,7 @@ public class EntityWave extends AvatarEntity {
 	}
 
 	public void setWaveSize(float size) {
+		this.Size = size;
 		dataManager.set(SYNC_SIZE, size);
 	}
 
