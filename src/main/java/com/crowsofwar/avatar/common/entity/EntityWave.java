@@ -62,7 +62,7 @@ public class EntityWave extends AvatarEntity {
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_SIZE, Size);
+		dataManager.register(SYNC_SIZE, 2F);
 	}
 
 	public void setDamageMultiplier(float damageMult) {
