@@ -41,8 +41,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityWave extends AvatarEntity {
 
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWave.class,
-			DataSerializers.FLOAT);
+	/*private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWave.class,
+			DataSerializers.FLOAT);**/
 
 	private float damageMult;
 	private boolean createExplosion;
@@ -63,7 +63,7 @@ public class EntityWave extends AvatarEntity {
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_SIZE, Size);
+		//dataManager.register(SYNC_SIZE, Size);
 	}
 
 	public void setDamageMultiplier(float damageMult) {
@@ -71,11 +71,13 @@ public class EntityWave extends AvatarEntity {
 	}
 
 	public float getWaveSize() {
-		return dataManager.get(SYNC_SIZE);
+		//return dataManager.get(SYNC_SIZE);
+		return Size;
 	}
 
 	public void setWaveSize(float size) {
-		dataManager.set(SYNC_SIZE, size);
+		//dataManager.set(SYNC_SIZE, size);
+		this.Size = size;
 	}
 
 	@Override
@@ -109,12 +111,9 @@ public class EntityWave extends AvatarEntity {
 			AbilityData lvl = data.getAbilityData(getAbility().getName());
 
 			if (lvl.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			//	setSize(Size * 2, Size * 0.75F * 2);
-				System.out.println(Size);
-				this.setSize(6, 6);
+				setSize(getWaveSize() * 2, getWaveSize() * 0.75F * 2);
 			} else {
-				System.out.println("help");
-				setSize(Size, Size * 0.75F);
+				setSize(getWaveSize(), getWaveSize() * 0.75F);
 			}
 		}
 
