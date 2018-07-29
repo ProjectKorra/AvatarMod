@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityWave;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -29,21 +30,25 @@ public class RenderWave extends RenderModel<EntityWave> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/entity/wave.png");
+	private ModelBase model;
 
 	/**
 	 * @param renderManager
 	 */
 	public RenderWave(RenderManager renderManager) {
+
 		super(renderManager, new ModelWave());
+		this.model = new ModelWave();
 	}
 
 	@Override
 	protected void performGlTransforms(EntityWave entity, double x, double y, double z, float
 			entityYaw, float partialTicks) {
+
 		GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
 		GlStateManager.rotate(180, 1, 0, 0);
 		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
-		GlStateManager.translate(0, -1.5, 0);
+		GlStateManager.translate(0, -(entity.getWaveSize() * 0.75), 0);
 		GlStateManager.scale(entity.getWaveSize()/2, (entity.getWaveSize()/2) * 0.75, entity.getWaveSize()/2);
 	}
 

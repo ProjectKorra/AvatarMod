@@ -45,13 +45,12 @@ public class EntityWave extends AvatarEntity {
 
 	private float damageMult;
 	private boolean createExplosion;
-	private float Size;
+	private float Size = 2;
 	private Vector initialSpeed;
 	private int groundTime;
 
 	public EntityWave(World world) {
 		super(world);
-		this.Size = 2;
 		setSize(Size, Size * 0.75F);
 		damageMult = 1;
 		this.putsOutFires = true;
@@ -84,7 +83,7 @@ public class EntityWave extends AvatarEntity {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		return entity != this;
+		return entity != this && entity != getOwner();
 	}
 
 	@Override
@@ -103,7 +102,7 @@ public class EntityWave extends AvatarEntity {
 			this.setDead();
 		}
 
-		if (getAbility() instanceof AbilityCreateWave && getOwner() != null) {
+		if (getAbility() instanceof AbilityCreateWave && getOwner() != null && !world.isRemote) {
 			BendingData data = BendingData.get(getOwner());
 			AbilityData lvl = data.getAbilityData(getAbility().getName());
 
@@ -162,6 +161,7 @@ public class EntityWave extends AvatarEntity {
 		if (ticksExisted >= 250) {
 			this.setDead();
 		}
+		//setSize(Size, Size * 0.75F);
 
 	}
 
