@@ -36,7 +36,7 @@ public class AbilityLightningRaze extends Ability {
 		int bolts = 1;
 		//The number of  bolts the lightning spawner spawns per ticks
 		//Ticks determined by frequency
-		float accuracy = 2;
+		float accuracy = 1;
 		/*0 accuracy is the most accurate; each number represents how far away from the spawn position
 		it will be.**/
 
@@ -58,7 +58,7 @@ public class AbilityLightningRaze extends Ability {
 			frequency = 3;
 			chi = 7;
 			bolts = 3;
-			accuracy = 2;
+			accuracy = 0.75F;
 			damageMult = 1.25F;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
@@ -78,9 +78,10 @@ public class AbilityLightningRaze extends Ability {
 			speed = 3;
 			chi = 8;
 			bolts = 5;
-			accuracy = 3;
+			accuracy = 2;
 			damageMult = 0.25F;
 			//Thor's wrath
+			//Cloud of lightning that follows your cursor
 		}
 
 		if (bender.consumeChi(chi)) {
@@ -109,6 +110,7 @@ public class AbilityLightningRaze extends Ability {
 			boltSpawner.setSpeed(speed);
 			//This is so that the player can control the entity; otherwise unnecessary.
 			boltSpawner.setDamageMult(damageMult);
+			//So the lightning bolt's damage multiplier can be set
 			boltSpawner.setDuration(ticks);
 			boltSpawner.setLightningFrequency(frequency);
 			boltSpawner.setPlayerControl(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));

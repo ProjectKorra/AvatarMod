@@ -100,19 +100,21 @@ public class EntityLightningSpawner extends AvatarEntity {
 				setDead();
 			}
 
-			float Pos = 0 + rand.nextFloat() * (boltAccuracy - 0);
+			float Pos = rand.nextFloat() * (boltAccuracy);
+			//Does a number from 0 to 1 multiplied by the accuracy
+
 
 
 			if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
 				for (int i = 0; i < amountofBolts; i++) {
 					int random = rand.nextInt(2) + 1;
 					BlockPos blockPos = this.getPosition();
-					int x = random == 1 ? blockPos.getX() + (int) Pos : blockPos.getX() - (int) Pos;
+					float x = random == 1 ? Pos : -Pos;
 					int y = blockPos.getY();
-					int z = random == 1 ? blockPos.getZ() + (int) Pos : blockPos.getZ() - (int) Pos;
+					float z = random == 1 ? Pos : -Pos;
 
-					EntityAvatarLightning bolt = new EntityAvatarLightning(world, x, y,
-							z + Pos);
+					EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + x, y,
+							blockPos.getZ() + z);
 					bolt.setBoltLivingTime(rand.nextInt(3) + 1);
 					bolt.setMult(damageMult);
 					bolt.setSpawner(this);
