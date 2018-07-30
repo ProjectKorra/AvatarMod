@@ -118,15 +118,7 @@ public class EntityAirBubble extends EntityShield {
 			return;
 		}
 
-		//setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
-		if (!world.isRemote) {
-			this.posX = owner.posX;
-			this.posY = owner.posY;
-			this.posZ = owner.posZ;
-		}
-		if (!world.isRemote) {
-			setVelocity(Vector.ZERO);
-		}
+		this.setVelocity(owner.motionX, owner.motionY, owner.motionZ);
 
 		if (getOwner() != null) {
 			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
@@ -305,10 +297,9 @@ public class EntityAirBubble extends EntityShield {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		if (entity instanceof  AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
+		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
 			return false;
-		}
-		else return entity != getOwner() && !(entity instanceof EntityArrow) && !(entity instanceof EntityItem);
+		} else return entity != getOwner() && !(entity instanceof EntityArrow) && !(entity instanceof EntityItem);
 	}
 
 	@Override
