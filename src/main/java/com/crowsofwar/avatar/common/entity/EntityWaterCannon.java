@@ -162,14 +162,15 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		if (getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 
-			//List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), velocity(), velocity
-			//		().magnitude() / 20, entity -> entity != getOwner() && entity != this);
+			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), velocity(), velocity
+					().magnitude() / 20, entity -> entity != getOwner() && entity != this);
 			/*Original raytrace- but, it's pretty glitchy. Basically, look at an entity, and the water cannon will teleport.
 			That's why you have to use this complex vector maths to get the water cannon to face the player.**/
-			double dist = this.getDistanceToEntity(getOwner());
+			/*double dist = this.getDistanceToEntity(getOwner());
 			Vec3d direction = Vec3d.fromPitchYaw(rotationPitch, rotationYaw);
 
 			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(0).position(),Vector.getLookRectangular(this), dist, entity -> entity != getOwner());
+			**/
 			if (!collisions.isEmpty()) {
 				for (Entity collided : collisions) {
 					if (canCollideWith(collided)) {
@@ -195,9 +196,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 			BattlePerformanceScore.addSmallScore(getOwner());
 
-			entity.motionX = this.motionX * 10;
-			entity.motionY = this.motionY * 10;
-			entity.motionZ = this.motionZ * 10;
+			entity.motionX = this.motionX * 5;
+			entity.motionY = this.motionY * 5;
+			entity.motionZ = this.motionZ * 5;
 			AvatarUtils.afterVelocityAdded(entity);
 
 			// Add Experience
