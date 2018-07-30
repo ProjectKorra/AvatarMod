@@ -196,9 +196,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 			BattlePerformanceScore.addSmallScore(getOwner());
 
-			entity.motionX = this.motionX * 5;
-			entity.motionY = this.motionY * 5;
-			entity.motionZ = this.motionZ * 5;
+			entity.motionX = this.motionX * 2;
+			entity.motionY = this.motionY * 2;
+			entity.motionZ = this.motionZ * 2;
 			AvatarUtils.afterVelocityAdded(entity);
 
 			// Add Experience

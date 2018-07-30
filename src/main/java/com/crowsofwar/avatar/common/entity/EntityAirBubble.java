@@ -118,8 +118,18 @@ public class EntityAirBubble extends EntityShield {
 			return;
 		}
 
-		setPosition(getOwner().getPositionVector());
-		setVelocity(0, 0, 0);
+		setPosition(owner.getPositionVector().x, owner.getPositionVector().y, owner.getPositionVector().z);
+
+		this.motionX = 0;
+		this.motionY = 0;
+		this.motionZ = 0;
+
+		this.serverPosX = owner.getPosition().getX();
+		this.serverPosY = owner.getPosition().getY();
+		this.serverPosZ = owner.getPosition().getZ();
+		this.resetPositionToBB();
+		this.setPositionNonDirty();
+
 
 		if (getOwner() != null) {
 			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
@@ -266,9 +276,6 @@ public class EntityAirBubble extends EntityShield {
 	public void setDead() {
 		super.setDead();
 		removeStatCtrl();
-		if (this.isDead && !world.isRemote) {
-			Thread.dumpStack();
-		}
 	}
 
 	@Override
