@@ -129,7 +129,8 @@ public class EntityAirBubble extends EntityShield {
 		if (getOwner() != null) {
 			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
 			BendingData data = BendingData.get(getOwner());
-			if (!bubble.isDead && (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT) || !data.hasStatusControl(StatusControl.BUBBLE_EXPAND))) {
+			if (!bubble.isDead && (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT) || !data.hasStatusControl(StatusControl.BUBBLE_EXPAND))
+					&& (!this.isDissipating() || !this.isDissipatingLarge() || !this.isDissipatingSmall())) {
 				setDead();
 				data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
 				data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
