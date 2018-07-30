@@ -18,6 +18,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -125,11 +126,6 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 						(this.posX - 1.50D, this.posY - 1.5D, this.posZ - 1.5D, this.posX + 1.5D, this.posY + 6.0D + 1.5D, this.posZ + 1.5D));
 
 				for (Entity entity : list) {
-					if (entity instanceof AvatarEntity) {
-						((AvatarEntity) entity).onFireContact();
-					} else if (entity instanceof EntityLivingBase) {
-						handleCollision((EntityLivingBase) entity);
-					}
 					if (!ForgeEventFactory.onEntityStruckByLightning(entity, this))
 						entity.onStruckByLightning(this);
 
@@ -144,12 +140,19 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	public static void onLightningStrike(LivingHurtEvent event) {
 		Entity entity = event.getSource().getTrueSource();
 		DamageSource source = event.getSource();
+		Entity living = event.getEntity();
 		if (entity instanceof EntityAvatarLightning && source == DamageSource.LIGHTNING_BOLT) {
 			if (event.getAmount() == 5) {
 				System.out.println("as I thought....");
 			}
 			System.out.println("success!");
 			System.out.println(event.getAmount());
+
+			if (living instanceof AvatarEntity) {
+				((AvatarEntity) living).onFireContact();
+			} else if (living instanceof EntityLivingBase) {
+				((EntityAvatarLightning) entity).handleCollision((EntityLivingBase) entity);
+			}
 			event.setAmount(0);
 			event.setCanceled(true);
 		}
@@ -157,7 +160,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	}
 
 
-	private void handleCollision(EntityLivingBase collided) {
+	public void handleCollision(EntityLivingBase collided) {
 		damageEntity(collided);
 		collided.setFire(collided.isImmuneToFire() ? 0 : 8);
 	}
