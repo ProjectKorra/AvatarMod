@@ -126,16 +126,6 @@ public class EntityAirBubble extends EntityShield {
 		}
 
 
-		if (getOwner() != null) {
-			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
-			BendingData data = BendingData.get(getOwner());
-			if (!bubble.isDead && (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT) || !data.hasStatusControl(StatusControl.BUBBLE_EXPAND))
-					&& (!this.isDissipating() || !this.isDissipatingLarge() || !this.isDissipatingSmall())) {
-				setDead();
-				data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
-				data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
-			}
-		}
 
 		if (getOwner() != null) {
 			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
@@ -281,13 +271,7 @@ public class EntityAirBubble extends EntityShield {
 	@Override
 	public void setDead() {
 		super.setDead();
-		EntityLivingBase owner = getOwner();
-		if (owner != null) {
-			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-			if (attribute.getModifier(SLOW_ATTR_ID) != null) {
-				attribute.removeModifier(SLOW_ATTR);
-			}
-		}
+		removeStatCtrl();
 		if (this.isDead && !world.isRemote) {
 			Thread.dumpStack();
 		}
