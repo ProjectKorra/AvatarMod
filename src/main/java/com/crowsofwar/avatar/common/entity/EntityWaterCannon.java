@@ -17,6 +17,9 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
@@ -88,7 +91,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		if (getOwner() != null) {
 			Vector direction = Vector.getLookRectangular(getOwner());
 			this.setVelocity(direction.times(20));
-			this.setRotation(getOwner().rotationYaw * -1, getOwner().rotationPitch * -1);
+			double x = getOwner().posX - posX;
+			double y = getOwner().posY - posY;
+			double z = getOwner().posZ - posZ;
+			this.rotationYaw = (float) (MathHelper.atan2(x, z) * (180 / Math.PI));
+			this.rotationPitch = (float) (MathHelper.atan2(y, MathHelper.sqrt(x * x + z * z)) * (180 / Math.PI));
 		}
 
 
@@ -150,13 +157,19 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	 */
 	@Override
 	protected void collideWithNearbyEntities() {
+		//Gonna try something crazy.
 
 		if (getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 
-			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), velocity(), velocity
-					().magnitude() / 20, entity -> entity != getOwner() && entity != this);
+			//List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), velocity(), velocity
+			//		().magnitude() / 20, entity -> entity != getOwner() && entity != this);
+			/*Original raytrace- but, it's pretty glitchy. Basically, look at an entity, and the water cannon will teleport.
+			That's why you have to use this complex vector maths to get the water cannon to face the player.**/
+			double dist = this.getDistanceToEntity(getOwner());
+			Vec3d direction = Vec3d.fromPitchYaw(rotationPitch, rotationYaw);
 
+			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(0).position(),Vector.getLookRectangular(this), dist, entity -> entity != getOwner());
 			if (!collisions.isEmpty()) {
 				for (Entity collided : collisions) {
 					if (canCollideWith(collided)) {

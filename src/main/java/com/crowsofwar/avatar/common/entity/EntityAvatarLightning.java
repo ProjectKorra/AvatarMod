@@ -141,20 +141,19 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 		Entity entity = event.getSource().getTrueSource();
 		DamageSource source = event.getSource();
 		Entity living = event.getEntity();
-		if (entity instanceof EntityAvatarLightning && source == DamageSource.LIGHTNING_BOLT) {
+		if (entity instanceof EntityAvatarLightning) {
 			if (event.getAmount() == 5) {
 				System.out.println("as I thought....");
 			}
 			System.out.println("success!");
 			System.out.println(event.getAmount());
+			event.setAmount(0);
 
 			if (living instanceof AvatarEntity) {
 				((AvatarEntity) living).onFireContact();
 			} else if (living instanceof EntityLivingBase) {
 				((EntityAvatarLightning) entity).handleCollision((EntityLivingBase) entity);
 			}
-			event.setAmount(0);
-			event.setCanceled(true);
 		}
 
 	}
@@ -173,7 +172,8 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, spawner.getOwner());
 		float damage = STATS_CONFIG.lightningRazeSettings.damage;
-		entity.attackEntityFrom(damageSource, damage);
+		//entity.attackEntityFrom(damageSource, damage);
+		//Otherwise the entity is attacked twice
 
 		if (entity.attackEntityFrom(damageSource, damage)) {
 			if (spawner.getOwner() != null) {

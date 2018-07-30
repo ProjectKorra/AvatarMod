@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -78,10 +79,13 @@ public class AbilityAirBubble extends Ability {
 
 			EntityAirBubble bubble = new EntityAirBubble(world);
 			bubble.setOwner(entity);
-			bubble.setPositionAndUpdate(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
+			bubble.posX = entity.posX;
+			bubble.posY = entity.posY;
+			bubble.posZ = entity.posZ;
 			bubble.setHealth(health);
 			bubble.setMaxHealth(health);
 			bubble.setSize(size);
+			bubble.setVelocity(Vector.ZERO);
 			bubble.setAllowHovering(ctx.isMasterLevel(SECOND));
 			bubble.setAbility(this);
 			world.spawnEntity(bubble);

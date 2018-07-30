@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.material.Material;
@@ -116,10 +117,34 @@ public class EntityAirBubble extends EntityShield {
 			dissipateSmall();
 			return;
 		}
-		setPositionAndUpdate(owner.posX, getOwner().getEntityBoundingBox().minY, owner.posZ);
+
+		setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
+		if (!world.isRemote) {
+			this.posX = owner.posX;
+			this.posY = owner.posY;
+			this.posZ = owner.posZ;
+		}
 
 
-		this.setVelocity(Vector.ZERO);
+		if (getOwner() != null) {
+			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
+			BendingData data = BendingData.get(getOwner());
+			if (!bubble.isDead && (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT) || !data.hasStatusControl(StatusControl.BUBBLE_EXPAND))) {
+				setDead();
+				data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
+				data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
+			}
+		}
+
+		if (getOwner() != null) {
+			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
+			BendingData bD = BendingData.get(getOwner());
+			if (bubble == null && (bD.hasStatusControl(StatusControl.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControl.BUBBLE_EXPAND))) {
+				bD.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
+				bD.removeStatusControl(StatusControl.BUBBLE_EXPAND);
+			}
+		}
+
 
 		if (!world.isRemote && owner.isInsideOfMaterial(Material.WATER)) {
 			owner.setAir(Math.min(airLeft, 300));
@@ -210,6 +235,7 @@ public class EntityAirBubble extends EntityShield {
 		double x = owner.posX;
 		double y = owner.posY;
 		double z = owner.posZ;
+		//Don't use setPosition; that makes it super duper ultra glitchy
 		AxisAlignedBB hitbox = new AxisAlignedBB(x, y, z, x, y, z);
 		hitbox = hitbox.grow(0.2, 0, 0.2);
 		hitbox = hitbox.expand(0, -maxFloatHeight, 0);
@@ -260,6 +286,9 @@ public class EntityAirBubble extends EntityShield {
 			if (attribute.getModifier(SLOW_ATTR_ID) != null) {
 				attribute.removeModifier(SLOW_ATTR);
 			}
+		}
+		if (this.isDead && !world.isRemote) {
+			Thread.dumpStack();
 		}
 	}
 
