@@ -66,6 +66,9 @@ public class ConfigStats {
 	@Load
 	public EarthspikeSettings earthspikeSettings = new EarthspikeSettings();
 
+	@Load
+	public LightningRazeSettings lightningRazeSettings = new LightningRazeSettings();
+
 	// @formatter:off
 	@Load
 	public float chiAirblade = 1f,
@@ -104,6 +107,7 @@ public class ConfigStats {
 			chiPrison = 5,
 			chiSandPrison = 3,
 			chiLightning = 6,
+			chiLightningRaze = 5,
 			chiIceShieldCreate = 4,
 			chiIceShieldProtect = 0.15f,
 			chiInfernoPunch = 3F,
@@ -303,6 +307,38 @@ public class ConfigStats {
 
 		@Load
 		public double push = 0.5;
+
+	}
+
+	public static class LightningRazeSettings {
+
+		@Load
+		public double accuracy = 1;
+		//0 is the most accurate; the bigger the number, the worse the accuracy
+
+		@Load
+		public double frequency = 5;
+		//How many ticks pass per lightning bolt spawned- 20 ticks per second.
+		//In this case, the lightning bolts spawn 4 times per second.
+
+		@Load
+		public int bolts = 1;
+		//The number of bolts spawned every time the amount of ticks
+		//frequency is has passed. Default is every 5 ticks, so 4 bolts a second.
+
+		@Load
+		public int ticks = 20;
+		//How long the spawner stays alive- in this case, one second.
+
+		@Load
+		public double damage = 2;
+		//The amount of damage dealt per lightning bolt.
+
+		@Load
+		public double speed = 5;
+		//How quickly the cloud of lightning for Level 4 Path Two moves.
+
+
 
 	}
 

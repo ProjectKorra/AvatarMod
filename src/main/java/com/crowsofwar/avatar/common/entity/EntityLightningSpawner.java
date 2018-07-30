@@ -25,8 +25,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 	private boolean playerControl;
 	private float amountofBolts;
 	private float boltAccuracy;
-	private int Speed;
-	private float damageMult;
+	private double Speed;
 	Random random = new Random();
 
 	/**
@@ -39,12 +38,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 
 	}
 
-
-	public void setDamageMult(float mult) {
-		this.damageMult = mult;
-	}
-
-	public void setSpeed(int speed) {
+	public void setSpeed(double speed) {
 		this.Speed = speed;
 	}
 
@@ -91,7 +85,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 		if (this.getOwner() != null) {
 
 
-			if (playerControl && !this.isDead && this.getOwner() != null) {
+			if (playerControl && !this.isDead && this.getOwner() != null && !world.isRemote) {
 				this.rotationYaw = getOwner().rotationYaw;
 				Vector direction = Vector.toRectangular(Math.toRadians(this.rotationYaw), 0);
 				this.setVelocity(direction.times(Speed));
@@ -116,7 +110,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 					EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + x, y,
 							blockPos.getZ() + z);
 					bolt.setBoltLivingTime(rand.nextInt(3) + 1);
-					bolt.setMult(damageMult);
+					//Damage is calculated in the lightning bolt's class.
 					bolt.setSpawner(this);
 					world.addWeatherEffect(bolt);
 
@@ -153,7 +147,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		if (entity instanceof EntityLightningSpawner || entity instanceof EntityLivingBase) {
+		if (entity instanceof EntityLightningSpawner || entity instanceof EntityLivingBase || entity == getOwner()) {
 			return false;
 		}
 		return entity instanceof EntityShield || super.canCollideWith(entity);

@@ -10,6 +10,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
@@ -28,9 +29,12 @@ public class AbilityLightningRaze extends Ability {
 		Bender bender = ctx.getBender();
 
 		int ticks = 20;
-		//How long the spawner tays alive.
-		int speed = 5;
-		float chi = 5;
+		//How long the spawner stays alive.
+		double speed = STATS_CONFIG.lightningRazeSettings.speed;
+		//How quickly the cloud of lightning for Level 4 Path Two moves.
+		//Default 5
+		float chi = STATS_CONFIG.chiLightningRaze;
+		//Default 5
 		float frequency = 5;
 		//How many ticks pass before each lightning bolt strikes.
 		int bolts = 1;
@@ -40,8 +44,6 @@ public class AbilityLightningRaze extends Ability {
 		/*0 accuracy is the most accurate; each number represents how far away from the spawn position
 		it will be.**/
 
-		float damageMult = 1;
-		//Times the damage mult by 2 to get damage
 
 
 
@@ -59,7 +61,6 @@ public class AbilityLightningRaze extends Ability {
 			chi = 7;
 			bolts = 3;
 			accuracy = 0.75F;
-			damageMult = 1.25F;
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			frequency = 2;
@@ -68,7 +69,6 @@ public class AbilityLightningRaze extends Ability {
 			speed = 20;
 			chi = 7;
 			accuracy = 0;
-			damageMult = 4.5F;
 			//Super-fast line of lightning that lights up the ground
 			//Zeus' Wrath
 		}
@@ -79,7 +79,6 @@ public class AbilityLightningRaze extends Ability {
 			chi = 8;
 			bolts = 5;
 			accuracy = 2;
-			damageMult = 0.25F;
 			//Thor's wrath
 			//Cloud of lightning that follows your cursor
 		}
@@ -108,9 +107,8 @@ public class AbilityLightningRaze extends Ability {
 			}
 			boltSpawner.setVelocity(look.times(speed));
 			boltSpawner.setSpeed(speed);
+			boltSpawner.setAbility(this);
 			//This is so that the player can control the entity; otherwise unnecessary.
-			boltSpawner.setDamageMult(damageMult);
-			//So the lightning bolt's damage multiplier can be set
 			boltSpawner.setDuration(ticks);
 			boltSpawner.setLightningFrequency(frequency);
 			boltSpawner.setPlayerControl(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));

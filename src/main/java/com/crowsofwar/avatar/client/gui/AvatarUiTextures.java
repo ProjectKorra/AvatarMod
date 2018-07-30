@@ -49,7 +49,7 @@ public class AvatarUiTextures {
 	public static final ResourceLocation[] BLOCK_BREAK = getBlockBreakTextures();
 	public static final ResourceLocation WHITE = new ResourceLocation("avatarmod", "textures/gui/white.png");
 	static final ResourceLocation radialMenu = new ResourceLocation("avatarmod",
-			"textures/radial/earthbending_segment.png");
+			"textures/radial/default_segment.png");
 	static final ResourceLocation icons = new ResourceLocation("avatarmod", "textures/gui/ability_icons.png");
 	static final ResourceLocation blurredIcons = new ResourceLocation("avatarmod",
 			"textures/gui/blurred_icons.png");
