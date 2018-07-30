@@ -30,6 +30,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
@@ -59,6 +60,8 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	 */
 	private int boltLivingTime;
 
+	private EntityLightningSpawner spawner;
+
 	public float Mult;
 
 
@@ -66,14 +69,9 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 		this.Mult = mult;
 	}
 
-	/*public EntityLivingBase getOwner() {
-		return ownerRef.getEntity();
-	}**/
-
-
-	/*public void setDamageMult(float damageMult) {
-		dataManager.set(SYNC_DAMAGE_MULT, damageMult);
-	}**/
+	public void setSpawner (EntityLightningSpawner spawner) {
+		this.spawner = spawner;
+	}
 
 	public void setBoltLivingTime(int livingTime) {
 		this.boltLivingTime = livingTime;
@@ -88,7 +86,6 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 		super(world, x, y, z, false);
 		this.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 		this.lightningState = 2;
-		//	this.ownerRef = new SyncedEntity<>(this, SYNC_OWNER);
 		this.boltVertex = this.rand.nextLong();
 		this.boltLivingTime = this.rand.nextInt(3) + 1;
 		BlockPos blockpos = new BlockPos(this);
@@ -118,7 +115,6 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	 */
 	@Override
 	public void onUpdate() {
-		//super.onUpdate();
 
 
 		if (this.lightningState == 2) {
@@ -150,58 +146,42 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 			if (this.world.isRemote) {
 				this.world.setLastLightningBolt(2);
 			} else if (!this.world.isRemote) {
-				double d0 = 3.0D;
 				List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB
-						(this.posX - 3.0D, this.posY - 3.0D, this.posZ - 3.0D, this.posX + 3.0D, this.posY + 6.0D + 3.0D, this.posZ + 3.0D));
-
-				for (int i = 0; i < list.size(); ++i) {
-					Entity entity = list.get(i);
-					EntityStruckByLightningEvent event = new EntityStruckByLightningEvent(entity, this);
-						if (entity instanceof AvatarEntity) {
-							((AvatarEntity) entity).onFireContact();
-						} else if (entity instanceof EntityLivingBase) {
-							handleCollision((EntityLivingBase) entity);
-					}
-					//	onLightningAttack(eve);
-				}
-			}
-		}
-
-	}
-
-	/*@SubscribeEvent
-	public void LightningEvent(EntityStruckByLightningEvent event) {
-	if (event.getLightning() instanceof EntityAvatarLightning){
-		event.setCanceled(true);
-		}
-	}**/
-
-	/*@SubscribeEvent
-	public static void onLightningAttack(LivingAttackEvent event) {
-		System.out.println(event.getAmount());
-		}
-
-
-
-	@SubscribeEvent
-	public static void onLightningStrike (EntityStruckByLightningEvent event){
-		if (event.getLightning() instanceof EntityAvatarLightning){
-			EntityAvatarLightning castedEntityObject = (EntityAvatarLightning) event.getLightning();
-				List<Entity> list = castedEntityObject.world.getEntitiesWithinAABBExcludingEntity(castedEntityObject, new AxisAlignedBB
-						(castedEntityObject.posX - 3.0D, castedEntityObject.posY - 3.0D, castedEntityObject.posZ - 3.0D, castedEntityObject.posX + 3.0D, castedEntityObject.posY + 6.0D + 3.0D, castedEntityObject.posZ + 3.0D));
+						(this.posX - 1.50D, this.posY - 1.5D, this.posZ - 1.5D, this.posX + 1.5D, this.posY + 6.0D + 1.5D, this.posZ + 1.5D));
 
 				for (int i = 0; i < list.size(); ++i) {
 					Entity entity = list.get(i);
 					if (entity instanceof AvatarEntity) {
 						((AvatarEntity) entity).onFireContact();
 					} else if (entity instanceof EntityLivingBase) {
-						castedEntityObject.handleCollision((EntityLivingBase) entity);
+						handleCollision((EntityLivingBase) entity);
 					}
+					if (!net.minecraftforge.event.ForgeEventFactory.onEntityStruckByLightning(entity, this))
+						entity.onStruckByLightning(this);
+
 				}
 			}
-
 		}
-**/
+
+	}
+
+
+	@SubscribeEvent
+	public static void onLightningStrike(LivingHurtEvent event) {
+		Entity entity = event.getSource().getTrueSource();
+		DamageSource source = event.getSource();
+		if (entity instanceof EntityAvatarLightning && source == DamageSource.LIGHTNING_BOLT) {
+			if (event.getAmount() == 5) {
+				System.out.println("as I thought....");
+			}
+			System.out.println("success!");
+			System.out.println(event.getAmount());
+			event.setAmount(0);
+			event.setCanceled(true);
+		}
+
+	}
+
 
 	public void handleCollision(EntityLivingBase collided) {
 		damageEntity(collided);
@@ -214,14 +194,13 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 			return;
 		}
 
-		EntityLightningSpawner boltSpawner = new EntityLightningSpawner(world);
-		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, boltSpawner.getOwner());
+		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, spawner.getOwner());
 		float damage = 2 * Mult;
 		entity.attackEntityFrom(damageSource, damage);
 
 		if (entity.attackEntityFrom(damageSource, damage)) {
-			if (boltSpawner.getOwner() != null) {
-				BendingData data1 = BendingData.get(boltSpawner.getOwner());
+			if (spawner.getOwner() != null) {
+				BendingData data1 = BendingData.get(spawner.getOwner());
 				AbilityData abilityData1 = data1.getAbilityData("lightning_raze");
 				abilityData1.addXp(SKILLS_CONFIG.struckWithLightning);
 			}

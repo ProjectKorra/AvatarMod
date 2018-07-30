@@ -28,6 +28,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 	private int Speed;
 	private float damageMult;
 	Random random = new Random();
+
 	/**
 	 * @param world
 	 */
@@ -38,9 +39,6 @@ public class EntityLightningSpawner extends AvatarEntity {
 
 	}
 
-	/*public void setDamageMult(float damageMult) {
-		dataManager.set(SYNC_DAMAGE_MULT, damageMult);
-	}**/
 
 	public void setDamageMult(float mult) {
 		this.damageMult = mult;
@@ -104,44 +102,51 @@ public class EntityLightningSpawner extends AvatarEntity {
 
 			float Pos = 0 + rand.nextFloat() * (boltAccuracy - 0);
 
+
 			if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
 				for (int i = 0; i < amountofBolts; i++) {
-						BlockPos blockPos = this.getPosition();
-						EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + Pos, blockPos.getY(),
-								blockPos.getZ() + Pos);
-						bolt.setBoltLivingTime(random.nextInt(3) + 1);
-						bolt.setMult(damageMult);
-						world.addWeatherEffect(bolt);
+					int random = rand.nextInt(2) + 1;
+					BlockPos blockPos = this.getPosition();
+					int x = random == 1 ? blockPos.getX() + (int) Pos : blockPos.getX() - (int) Pos;
+					int y = blockPos.getY();
+					int z = random == 1 ? blockPos.getZ() + (int) Pos : blockPos.getZ() - (int) Pos;
 
-					}
-				}
-			}
-			BlockPos below = getPosition().offset(EnumFacing.DOWN);
+					EntityAvatarLightning bolt = new EntityAvatarLightning(world, x, y,
+							z + Pos);
+					bolt.setBoltLivingTime(rand.nextInt(3) + 1);
+					bolt.setMult(damageMult);
+					bolt.setSpawner(this);
+					world.addWeatherEffect(bolt);
 
-			if (!world.getBlockState(below).isNormalCube()) {
-				setDead();
-			}
-
-
-			// Destroy if in a block
-			IBlockState inBlock = world.getBlockState(getPosition());
-			if (inBlock.isFullBlock()) {
-				setDead();
-			}
-
-			// Destroy non-solid blocks in the earthspike
-			if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
-
-				if (inBlock.getBlockHardness(world, getPosition()) == 0) {
-
-					breakBlock(getPosition());
-
-				} else {
-
-					setDead();
 				}
 			}
 		}
+		BlockPos below = getPosition().offset(EnumFacing.DOWN);
+
+		if (!world.getBlockState(below).isNormalCube()) {
+			setDead();
+		}
+
+
+		// Destroy if in a block
+		IBlockState inBlock = world.getBlockState(getPosition());
+		if (inBlock.isFullBlock()) {
+			setDead();
+		}
+
+		// Destroy non-solid blocks in the earthspike
+		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
+
+			if (inBlock.getBlockHardness(world, getPosition()) == 0) {
+
+				breakBlock(getPosition());
+
+			} else {
+
+				setDead();
+			}
+		}
+	}
 
 
 	@Override
@@ -156,7 +161,6 @@ public class EntityLightningSpawner extends AvatarEntity {
 	public boolean onCollideWithSolid() {
 		return false;
 	}
-
 
 
 }
