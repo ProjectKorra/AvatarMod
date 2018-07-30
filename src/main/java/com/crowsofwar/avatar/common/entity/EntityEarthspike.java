@@ -19,8 +19,10 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -29,7 +31,9 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -104,10 +108,19 @@ public class EntityEarthspike extends AvatarEntity {
 	public void onEntityUpdate() {
 
 		super.onEntityUpdate();
-		addVelocity(velocity().times(-1));
-		setVelocity(Vector.ZERO);
+		this.motionX = 0;
+		this.motionY = 0;
+		this.motionZ = 0;
+
 		if (ticksExisted >= lifetime) {
 			this.setDead();
+		}
+
+		BlockPos below = getPosition().offset(EnumFacing.DOWN);
+		Block belowBlock = world.getBlockState(below).getBlock();
+
+		if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock)) {
+			setDead();
 		}
 
 
