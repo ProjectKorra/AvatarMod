@@ -107,8 +107,8 @@ public class AbilityLightningRaze extends Ability {
 			}
 			boltSpawner.setVelocity(look.times(speed));
 			boltSpawner.setSpeed(speed);
-			boltSpawner.setAbility(this);
 			//This is so that the player can control the entity; otherwise unnecessary.
+			boltSpawner.setAbility(this);
 			boltSpawner.setDuration(ticks);
 			boltSpawner.setLightningFrequency(frequency);
 			boltSpawner.setPlayerControl(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
