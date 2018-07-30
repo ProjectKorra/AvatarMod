@@ -112,6 +112,13 @@ public class StatCtrlInfernoPunch extends StatusControl {
 								fireExplosion.doExplosionB(true);
 							}
 						}
+						if (world instanceof WorldServer) {
+							Vector look = getLookRectangular(entity);
+							Vector vector = look.times(20);
+							WorldServer World = (WorldServer) target.getEntityWorld();
+							World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY + target.getEyeHeight(), target.posZ, 50, 0.05, 0.05, 0.05, 0.2);
+
+						}
 
 						world.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
 								SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
