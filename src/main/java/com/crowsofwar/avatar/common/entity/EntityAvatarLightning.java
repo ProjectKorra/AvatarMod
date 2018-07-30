@@ -2,9 +2,9 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRaze;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,11 +17,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -126,8 +122,11 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 						(this.posX - 1.50D, this.posY - 1.5D, this.posZ - 1.5D, this.posX + 1.5D, this.posY + 6.0D + 1.5D, this.posZ + 1.5D));
 
 				for (Entity entity : list) {
-					if (!ForgeEventFactory.onEntityStruckByLightning(entity, this))
-						entity.onStruckByLightning(this);
+					if (entity instanceof AvatarEntity) {
+						((AvatarEntity) entity).onFireContact();
+					} else if (entity instanceof EntityLivingBase) {
+						handleCollision((EntityLivingBase) entity);
+					}
 
 				}
 			}
@@ -136,30 +135,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	}
 
 
-	@SubscribeEvent
-	public static void onLightningStrike(LivingHurtEvent event) {
-		Entity entity = event.getSource().getTrueSource();
-		DamageSource source = event.getSource();
-		Entity living = event.getEntity();
-		if (entity instanceof EntityAvatarLightning) {
-			if (event.getAmount() == 5) {
-				System.out.println("as I thought....");
-			}
-			System.out.println("success!");
-			System.out.println(event.getAmount());
-			event.setAmount(0);
-
-			if (living instanceof AvatarEntity) {
-				((AvatarEntity) living).onFireContact();
-			} else if (living instanceof EntityLivingBase) {
-				((EntityAvatarLightning) entity).handleCollision((EntityLivingBase) entity);
-			}
-		}
-
-	}
-
-
-	public void handleCollision(EntityLivingBase collided) {
+	private void handleCollision(EntityLivingBase collided) {
 		damageEntity(collided);
 		collided.setFire(collided.isImmuneToFire() ? 0 : 8);
 	}
@@ -172,9 +148,22 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, spawner.getOwner());
 		float damage = STATS_CONFIG.lightningRazeSettings.damage;
-		//entity.attackEntityFrom(damageSource, damage);
-		//Otherwise the entity is attacked twice
 
+		if (spawner.getAbility() instanceof AbilityLightningRaze) {
+			AbilityData aD = AbilityData.get(spawner.getOwner(), spawner.getAbility().getName());
+			if (aD.getLevel() >= 2) {
+				damage = STATS_CONFIG.lightningRazeSettings.damage * 1.5F;
+				//3
+			}
+			if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				damage = STATS_CONFIG.lightningRazeSettings.damage * 2.5F;
+				//5
+			}
+			if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				damage = STATS_CONFIG.lightningRazeSettings.damage * 0.25F;
+				//2
+			}
+		}
 		if (entity.attackEntityFrom(damageSource, damage)) {
 			if (spawner.getOwner() != null) {
 				BendingData data1 = BendingData.get(spawner.getOwner());

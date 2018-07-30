@@ -320,7 +320,7 @@ avatar.ability.slipstream.lvl3=Intermittently become invisible and increase the 
 avatar.ability.slipstream.lvl4_1=§f§l§oDivine §f§l§oBreeze ;; Become stronger in melee and airbending combat
 avatar.ability.slipstream.lvl4_2=§f§l§oRun §f§l§olike §f§l§othe §f§l§owind ;; Become invisible more often and potion effects are stronger
 
-avatar.ability.lightning_arc=§b§lLightning Arc
+avatar.ability.lightning_arc=§b§lLightning §b§lArc
 avatar.ability.lightning_arc.desc=Create imposing arcs of electricity to electrocute your enemies!
 avatar.ability.lightning_arc.lvl1=Intimidate potential boyfriends
 avatar.ability.lightning_arc.lvl2=Lightning travels faster
@@ -328,7 +328,16 @@ avatar.ability.lightning_arc.lvl3=Lightning does more damage
 avatar.ability.lightning_arc.lvl4_1=§b§lFurious lightning ;; Does more damage, slightly smaller, another bolt
 avatar.ability.lightning_arc.lvl4_2=§b§lLarge thunderbolts ;; Has a larger hitbox, making it easier to capture enemies
 
-avatar.ability.lightning_redirect=§b§lLightning Redirection
+avatar.ability.lightning_raze=§b§lLightning §b§lRaze
+avatar.ability.lightning_raze.desc=Rain down lightning bolts where you're looking! Pretty inaccurate.
+avatar.ability.lightning_raze.lvl1=MWAHAHAHAHAHAHA
+avatar.ability.lightning_raze.lvl2=Frequency of lightning bolts increased, along with duration, number of bolts, and the accuracy.
+avatar.ability.lightning_raze.lvl3=Everything gets better, including the damage!
+avatar.ability.lightning_raze.lvl4_1=§b§lZeus' §b§lWrath ;; Super accurately rain down super-fast and dangerous bolts of lightning where you're looking.
+avatar.ability.lightning_raze.lvl4_2=§b§lThor's §b§lWrath ;; Snipe your enemies with a massive cloud of lightning that you can control, spawnable from up to 20 blocks away! Pretty low damage, though.
+
+
+avatar.ability.lightning_redirect=§b§lLightning §b§lRedirection
 avatar.ability.lightning_redirect.desc=Represents your ability to redirect lightning, doesn't appear in the radial menu
 avatar.ability.lightning_redirect.lvl1=60% chance to redirect lightning, be careful!
 avatar.ability.lightning_redirect.lvl2=70% chance to redirect
@@ -336,13 +345,14 @@ avatar.ability.lightning_redirect.lvl3=80% chance to redirect
 avatar.ability.lightning_redirect.lvl4_1=90% chance to redirect lightning
 avatar.ability.lightning_redirect.lvl4_2=90% chance to redirect lightning
 
-avatar.ability.lightning_spear=§b§lLightning Spear
+avatar.ability.lightning_spear=§b§lLightning §b§lSpear
 avatar.ability.lightning_spear.desc=Create a throwable bolt of lightning
 avatar.ability.lightning_spear.lvl1=Basic lightning spear, electrocutes targets in water
 avatar.ability.lightning_spear.lvl2=Faster when thrown
 avatar.ability.lightning_spear.lvl3=Deals much more damage
 avatar.ability.lightning_spear.lvl4_1=§b§lPiercing bolt ;; Goes through enemies instead of stopping on the first one, so it can hurt many targets
 avatar.ability.lightning_spear.lvl4_2=§b§lElectric cloud ;; When hitting a target, nearby targets within 2 blocks are also hurt
+
 
 avatar.ability.ice_prison=§3§lIce §3§lPrison
 avatar.ability.ice_prison.desc=Encase an attacker in a block of ice to prevent them from following you for a short time.
