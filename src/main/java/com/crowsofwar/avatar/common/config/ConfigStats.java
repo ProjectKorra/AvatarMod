@@ -313,18 +313,18 @@ public class ConfigStats {
 	public static class LightningRazeSettings {
 
 		@Load
-		public double accuracy = 1;
+		public float accuracy = 1;
 		//0 is the most accurate; the bigger the number, the worse the accuracy
 
 		@Load
-		public double frequency = 5;
+		public float frequency = 5;
 		//How many ticks pass per lightning bolt spawned- 20 ticks per second.
 		//In this case, the lightning bolts spawn 4 times per second.
 
 		@Load
 		public int bolts = 1;
-		//The number of bolts spawned every time the amount of ticks
-		//frequency is has passed. Default is every 5 ticks, so 4 bolts a second.
+		//The number of  bolts the lightning spawner spawns per amount of ticks
+		//Ticks determined by frequency
 
 		@Load
 		public int ticks = 20;
@@ -336,7 +336,7 @@ public class ConfigStats {
 
 		@Load
 		public double speed = 5;
-		//How quickly the cloud of lightning for Level 4 Path Two moves.
+		//Speed of the spawner
 
 
 

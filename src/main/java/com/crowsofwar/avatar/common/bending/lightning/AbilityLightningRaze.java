@@ -28,31 +28,35 @@ public class AbilityLightningRaze extends Ability {
 		World world = ctx.getWorld();
 		Bender bender = ctx.getBender();
 
-		int ticks = 20;
+		int ticks = STATS_CONFIG.lightningRazeSettings.ticks;
 		//How long the spawner stays alive.
+		//Default 20
 		double speed = STATS_CONFIG.lightningRazeSettings.speed;
-		//How quickly the cloud of lightning for Level 4 Path Two moves.
+		//The speed of the spawner
 		//Default 5
 		float chi = STATS_CONFIG.chiLightningRaze;
 		//Default 5
-		float frequency = 5;
+		float frequency = STATS_CONFIG.lightningRazeSettings.frequency;
 		//How many ticks pass before each lightning bolt strikes.
-		int bolts = 1;
-		//The number of  bolts the lightning spawner spawns per ticks
-		//Ticks determined by frequency
-		float accuracy = 1;
+		//Default 5
+		int bolts = STATS_CONFIG.lightningRazeSettings.bolts;
+		//The number of  bolts the lightning spawner spawns per amount of ticks
+		//Ticks determined by frequency.
+		//Default 1
+		float accuracy = STATS_CONFIG.lightningRazeSettings.accuracy;
 		/*0 accuracy is the most accurate; each number represents how far away from the spawn position
 		it will be.**/
+		//Default 1
 
 
 
 
 		if (ctx.getLevel() >= 1) {
-			ticks = 40;
-			frequency = 4;
-			chi = 6;
-			speed = 7;
-			bolts = 2;
+			ticks = STATS_CONFIG.lightningRazeSettings.ticks * 2;
+			frequency = STATS_CONFIG.lightningRazeSettings.frequency * 0.8F;
+			chi = STATS_CONFIG.chiLightningRaze * 1.2F;
+			speed = STATS_CONFIG.lightningRazeSettings.speed * 1.4;
+			bolts = STATS_CONFIG.lightningRazeSettings.bolts * 2;
 
 		}
 		if (ctx.getLevel() >= 2) {
