@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.world.AvatarFireExplosion;
 import com.crowsofwar.gorecore.util.Vector;
@@ -103,18 +104,14 @@ public class EntityFireball extends AvatarEntity {
 			removeStatCtrl();
 		}
 
+		if (getOwner() == null) {
+			setDead();
+			removeStatCtrl();
+		}
 		if (getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 			if (getBehavior() instanceof FireballBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
 				setDead();
-			}
-		}
-
-		if (getOwner() != null) {
-			EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
-			BendingData bD = BendingData.get(getOwner());
-			if (fireball == null && bD.hasStatusControl(StatusControl.THROW_FIREBALL)) {
-				bD.removeStatusControl(StatusControl.THROW_FIREBALL);
 			}
 		}
 	}

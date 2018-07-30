@@ -128,7 +128,7 @@ public class EntityAirBubble extends EntityShield {
 		this.serverPosY = owner.getPosition().getY();
 		this.serverPosZ = owner.getPosition().getZ();
 		this.resetPositionToBB();
-		//this.setPositionNonDirty();
+		this.setPositionNonDirty();
 
 
 		if (getOwner() != null) {
