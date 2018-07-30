@@ -82,6 +82,14 @@ public class EntityCloudBall extends AvatarEntity {
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+		if (this.isDead && !world.isRemote) {
+			Thread.dumpStack();
+		}
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		int ticks = 0;
