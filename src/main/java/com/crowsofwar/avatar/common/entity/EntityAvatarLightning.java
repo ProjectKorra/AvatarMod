@@ -1,51 +1,33 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.Sys;
-
-import java.awt.*;
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class EntityAvatarLightning extends EntityLightningBolt {
-
-	private SyncedEntity<EntityLivingBase> ownerRef;
 
 	/**
 	 * Declares which state the lightning bolt is in. Whether it's in the air, hit the ground, etc.
@@ -62,18 +44,11 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 	private EntityLightningSpawner spawner;
 
-	public float Mult;
-
-
-	public void setMult(float mult) {
-		this.Mult = mult;
-	}
-
-	public void setSpawner (EntityLightningSpawner spawner) {
+	void setSpawner(EntityLightningSpawner spawner) {
 		this.spawner = spawner;
 	}
 
-	public void setBoltLivingTime(int livingTime) {
+	void setBoltLivingTime(int livingTime) {
 		this.boltLivingTime = livingTime;
 	}
 
@@ -82,7 +57,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 		super.entityInit();
 	}
 
-	public EntityAvatarLightning(World world, double x, double y, double z) {
+	EntityAvatarLightning(World world, double x, double y, double z) {
 		super(world, x, y, z, false);
 		this.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 		this.lightningState = 2;
@@ -149,14 +124,13 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 				List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB
 						(this.posX - 1.50D, this.posY - 1.5D, this.posZ - 1.5D, this.posX + 1.5D, this.posY + 6.0D + 1.5D, this.posZ + 1.5D));
 
-				for (int i = 0; i < list.size(); ++i) {
-					Entity entity = list.get(i);
+				for (Entity entity : list) {
 					if (entity instanceof AvatarEntity) {
 						((AvatarEntity) entity).onFireContact();
 					} else if (entity instanceof EntityLivingBase) {
 						handleCollision((EntityLivingBase) entity);
 					}
-					if (!net.minecraftforge.event.ForgeEventFactory.onEntityStruckByLightning(entity, this))
+					if (!ForgeEventFactory.onEntityStruckByLightning(entity, this))
 						entity.onStruckByLightning(this);
 
 				}
@@ -183,7 +157,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	}
 
 
-	public void handleCollision(EntityLivingBase collided) {
+	private void handleCollision(EntityLivingBase collided) {
 		damageEntity(collided);
 		collided.setFire(collided.isImmuneToFire() ? 0 : 8);
 	}
@@ -195,7 +169,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 		}
 
 		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, spawner.getOwner());
-		float damage = 2 * Mult;
+		float damage = STATS_CONFIG.lightningRazeSettings.damage;
 		entity.attackEntityFrom(damageSource, damage);
 
 		if (entity.attackEntityFrom(damageSource, damage)) {

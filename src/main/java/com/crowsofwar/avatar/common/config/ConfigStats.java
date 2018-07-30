@@ -331,7 +331,7 @@ public class ConfigStats {
 		//How long the spawner stays alive- in this case, one second.
 
 		@Load
-		public double damage = 2;
+		public float damage = 2;
 		//The amount of damage dealt per lightning bolt.
 
 		@Load

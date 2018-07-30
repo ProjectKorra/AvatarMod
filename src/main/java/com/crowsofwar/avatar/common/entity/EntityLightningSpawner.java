@@ -26,7 +26,6 @@ public class EntityLightningSpawner extends AvatarEntity {
 	private float amountofBolts;
 	private float boltAccuracy;
 	private double Speed;
-	Random random = new Random();
 
 	/**
 	 * @param world
