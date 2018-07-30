@@ -118,14 +118,15 @@ public class EntityAirBubble extends EntityShield {
 			return;
 		}
 
-		setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
+		//setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
 		if (!world.isRemote) {
 			this.posX = owner.posX;
 			this.posY = owner.posY;
 			this.posZ = owner.posZ;
 		}
-
-
+		if (!world.isRemote) {
+			setVelocity(Vector.ZERO);
+		}
 
 		if (getOwner() != null) {
 			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
