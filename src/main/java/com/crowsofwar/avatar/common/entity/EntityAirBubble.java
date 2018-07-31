@@ -38,6 +38,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public class EntityAirBubble extends EntityShield {
 			.createKey(EntityAirBubble.class, DataSerializers.BOOLEAN);
 	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirBubble.class,
 			DataSerializers.FLOAT);
-
+	//public static final DataParameter<Vec3d> SYNC_POSITION = EntityDataManager.createKey(EntityAirBubble.class, DataSerializers.)
 	public static final UUID SLOW_ATTR_ID = UUID.fromString("40354c68-6e88-4415-8a6b-e3ddc56d6f50");
 	public static final AttributeModifier SLOW_ATTR = new AttributeModifier(SLOW_ATTR_ID,
 			"airbubble_slowness", -.3, 2);
@@ -104,8 +105,18 @@ public class EntityAirBubble extends EntityShield {
 	}
 
 	@Override
+	public boolean setPositionNonDirty() {
+		return false;
+	}
+
+	@Override
+	public void setPositionAndUpdate(double x, double y, double z) {
+		super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+	}
+
+	@Override
 	public void onUpdate() {
-		super.onUpdate();
+		//super.onUpdate();
 
 		EntityLivingBase owner = getOwner();
 		if (owner == null) {
@@ -124,11 +135,11 @@ public class EntityAirBubble extends EntityShield {
 		this.motionY = 0;
 		this.motionZ = 0;
 
-		this.serverPosX = owner.getPosition().getX();
+		/*this.serverPosX = owner.getPosition().getX();
 		this.serverPosY = owner.getPosition().getY();
 		this.serverPosZ = owner.getPosition().getZ();
-		this.resetPositionToBB();
-		this.setPositionNonDirty();
+
+		this.resetPositionToBB();**/
 
 
 		if (getOwner() != null) {
@@ -328,10 +339,6 @@ public class EntityAirBubble extends EntityShield {
 		nbt.setInteger("AirLeft", airLeft);
 	}
 
-	@Override
-	public void setPositionAndUpdate(double x, double y, double z) {
-		super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
-	}
 
 	@Override
 	protected float getChiDamageCost() {
