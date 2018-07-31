@@ -20,7 +20,12 @@ package com.crowsofwar.avatar.common.bending.earth;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.*;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
+
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -110,10 +115,11 @@ public class AbilityPickUpBlock extends Ability {
 				damageMult *= ctx.getPowerRatingDamageMod();
 
 				double dist = 2.5;
-				Vector force = new Vector(0, Math.sqrt(19.62 * dist), 0);
+				Vector force = new Vector(0, Math.sqrt(20 * dist), 0);
 				floating.setVelocity(force);
 				floating.setBehavior(new FloatingBlockBehavior.PickUp());
 				floating.setOwner(entity);
+				floating.setAbility(this);
 				floating.setDamageMult(damageMult);
 
 				if (STATS_CONFIG.preventPickupBlockGriefing) {
@@ -137,6 +143,31 @@ public class AbilityPickUpBlock extends Ability {
 							(float) (random.nextGaussian() / 0.25 + 0.375));
 		}
 
+	}
+
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+		int coolDown = 120;
+
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+			coolDown = 0;
+		}
+
+		if (ctx.getLevel() == 1) {
+			coolDown = 100;
+		}
+		if (ctx.getLevel() == 2) {
+			coolDown = 80;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			coolDown = 60;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			coolDown = 50;
+		}
+		return coolDown;
 	}
 
 }

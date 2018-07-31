@@ -18,8 +18,13 @@
 package com.crowsofwar.avatar.common.entity;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.*;
-import net.minecraft.entity.player.*;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.*;
@@ -168,6 +173,9 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		super.onUpdate();
 		ignoreFrustumCheck = true;
 
+		if (getOwner() == null) {
+			this.setDead();
+		}
 		// restrict to only vertical movement
 		setVelocity(velocity().withX(0).withZ(0));
 
@@ -224,11 +232,12 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		return false;
 	}
 
+
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
 
 		// Note... only called server-side
-		double amt = 0.4;
+		double amt = 0.05;
 
 		boolean ns = direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH;
 		if (ns) {
@@ -253,7 +262,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			entity.motionX = amt;
 		}
 
-		entity.motionY = .25;
+		entity.motionY = 0.01;
 
 		entity.isAirBorne = true;
 		if (entity instanceof EntityPlayerMP) {
@@ -284,6 +293,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			}
 
 		}
+		//this.setVelocity(Vector.ZERO);
+		//For some reason the wall is affected by explosions and whatnot
 
 	}
 
@@ -305,5 +316,6 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		return notWall && !friendlyProjectile;
 
 	}
+
 
 }

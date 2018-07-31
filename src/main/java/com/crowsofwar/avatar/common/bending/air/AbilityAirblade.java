@@ -20,11 +20,13 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -47,6 +49,7 @@ public class AbilityAirblade extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
+		BendingData data = ctx.getData();
 
 		if (!bender.consumeChi(STATS_CONFIG.chiAirblade)) return;
 
@@ -71,6 +74,7 @@ public class AbilityAirblade extends Ability {
 		airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 30 : 20));
 		airblade.setDamage(damage);
 		airblade.setOwner(entity);
+		airblade.setAbility(this);
 		airblade.setPierceArmor(abilityData.isMasterPath(SECOND));
 		airblade.setChainAttack(abilityData.isMasterPath(FIRST));
 
@@ -85,6 +89,31 @@ public class AbilityAirblade extends Ability {
 
 		world.spawnEntity(airblade);
 
+	}
+
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+		int coolDown = 100;
+
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+			coolDown = 0;
+		}
+
+		if (ctx.getLevel() == 1) {
+			coolDown = 80;
+		}
+		if (ctx.getLevel() == 2) {
+			coolDown = 60;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			coolDown = 40;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			coolDown = 35;
+		}
+		return coolDown;
 	}
 
 	@Override

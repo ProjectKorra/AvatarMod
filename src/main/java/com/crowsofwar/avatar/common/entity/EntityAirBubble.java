@@ -27,15 +27,20 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -56,7 +61,6 @@ public class EntityAirBubble extends EntityShield {
 			.createKey(EntityAirBubble.class, DataSerializers.BOOLEAN);
 	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirBubble.class,
 			DataSerializers.FLOAT);
-
 	public static final UUID SLOW_ATTR_ID = UUID.fromString("40354c68-6e88-4415-8a6b-e3ddc56d6f50");
 	public static final AttributeModifier SLOW_ATTR = new AttributeModifier(SLOW_ATTR_ID,
 			"airbubble_slowness", -.3, 2);
@@ -69,6 +73,7 @@ public class EntityAirBubble extends EntityShield {
 		setSize(0, 0);
 
 		this.airLeft = 600;
+		this.putsOutFires = true;
 	}
 
 	@Override
@@ -101,19 +106,59 @@ public class EntityAirBubble extends EntityShield {
 	}
 
 	@Override
+	public void setPositionAndUpdate(double x, double y, double z) {
+		if (getOwner() != null) {
+			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+		}
+	}
+
+	@Override
 	public void onUpdate() {
-		super.onUpdate();
+		//super.onUpdate();
+		//Otherwise the entity glitches out
+
 
 		EntityLivingBase owner = getOwner();
 		if (owner == null) {
 			return;
 		}
 
+		if (putsOutFires && ticksExisted % 2 == 0) {
+			setFire(0);
+			for (int x = 0; x <= 2; x++) {
+				for (int z = 0; z <= 2; z++) {
+					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
+					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
+						world.setBlockToAir(pos);
+						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
+								SoundCategory.PLAYERS, 1, 1, false);
+					}
+				}
+			}
+		}
+
 		if (owner.isDead) {
 			dissipateSmall();
 			return;
 		}
-		setPosition(owner.posX, owner.posY, owner.posZ);
+
+		setPosition(owner.getPositionVector().x, owner.getPositionVector().y, owner.getPositionVector().z);
+
+		this.motionX = 0;
+		this.motionY = 0;
+		this.motionZ = 0;
+
+
+
+		if (getOwner() != null) {
+			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
+			BendingData bD = BendingData.get(getOwner());
+			if (bubble == null && (bD.hasStatusControl(StatusControl.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControl.BUBBLE_EXPAND))) {
+				bD.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
+				bD.removeStatusControl(StatusControl.BUBBLE_EXPAND);
+			}
+		}
+
 
 		if (!world.isRemote && owner.isInsideOfMaterial(Material.WATER)) {
 			owner.setAir(Math.min(airLeft, 300));
@@ -121,8 +166,7 @@ public class EntityAirBubble extends EntityShield {
 		}
 
 		Bender ownerBender = Bender.get(getOwner());
-		if (!world.isRemote
-				&& !ownerBender.consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
+		if (!world.isRemote && !ownerBender.consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
 
 			dissipateSmall();
 
@@ -186,6 +230,9 @@ public class EntityAirBubble extends EntityShield {
 	 */
 	private void handleHovering() {
 
+		if (getOwner() == null) {
+			return;
+		}
 		if (getOwner() != null) {
 			getOwner().fallDistance = 0;
 		}
@@ -205,6 +252,7 @@ public class EntityAirBubble extends EntityShield {
 		double x = owner.posX;
 		double y = owner.posY;
 		double z = owner.posZ;
+		//Don't use setPosition; that makes it super duper ultra glitchy
 		AxisAlignedBB hitbox = new AxisAlignedBB(x, y, z, x, y, z);
 		hitbox = hitbox.grow(0.2, 0, 0.2);
 		hitbox = hitbox.expand(0, -maxFloatHeight, 0);
@@ -249,13 +297,7 @@ public class EntityAirBubble extends EntityShield {
 	@Override
 	public void setDead() {
 		super.setDead();
-		EntityLivingBase owner = getOwner();
-		if (owner != null) {
-			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-			if (attribute.getModifier(SLOW_ATTR_ID) != null) {
-				attribute.removeModifier(SLOW_ATTR);
-			}
-		}
+		removeStatCtrl();
 	}
 
 	@Override
@@ -285,7 +327,9 @@ public class EntityAirBubble extends EntityShield {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		return entity != getOwner() && !(entity instanceof AvatarEntity) && !(entity instanceof EntityArrow);
+		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
+			return false;
+		} else return entity != getOwner() && !(entity instanceof EntityArrow) && !(entity instanceof EntityItem);
 	}
 
 	@Override
@@ -305,6 +349,7 @@ public class EntityAirBubble extends EntityShield {
 		nbt.setFloat("Size", getSize());
 		nbt.setInteger("AirLeft", airLeft);
 	}
+
 
 	@Override
 	protected float getChiDamageCost() {

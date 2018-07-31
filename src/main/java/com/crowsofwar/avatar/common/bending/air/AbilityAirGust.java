@@ -19,12 +19,15 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -59,15 +62,36 @@ public class AbilityAirGust extends Ability {
 		gust.setOwner(entity);
 		gust.setDestroyProjectiles(ctx.isMasterLevel(FIRST));
 		gust.setAirGrab(ctx.isMasterLevel(SECOND));
+		gust.setAbility(this);
 
-		System.out.println("PR : " + ctx.getPowerRating());
+	//	System.out.println("PR : " + ctx.getPowerRating());
 
 		world.spawnEntity(gust);
 	}
 
 	@Override
 	public int getCooldown(AbilityContext ctx) {
-		return ctx.getLevel() >= 1 ? 30 : 60;
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+		int coolDown = 50;
+
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+			coolDown = 0;
+		}
+
+		if (ctx.getLevel() == 1) {
+			coolDown = 40;
+		}
+		if (ctx.getLevel() == 2) {
+			coolDown = 30;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			coolDown = 25;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			coolDown = 10;
+		}
+		return coolDown;
 	}
 
 	@Override

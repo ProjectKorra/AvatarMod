@@ -23,7 +23,14 @@ import net.minecraft.world.World;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.ctx.*;
+
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.earth.Earthbending;
+import com.crowsofwar.avatar.common.bending.water.Waterbending;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
+
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.network.packets.PacketCPowerRating;
@@ -255,6 +262,13 @@ public abstract class Bender {
 				chi.changeTotalChi(CHI_CONFIG.regenInBed / 20f);
 			} else {
 				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 20f);
+			}
+			if (data.hasBendingId(Waterbending.ID) && entity.isInWater()) {
+				chi.changeTotalChi(CHI_CONFIG.regenInWater/20F);
+			}
+
+			if (data.hasBendingId(Airbending.ID)) {
+				chi.changeTotalChi(CHI_CONFIG.regenPerSecond/10);
 			}
 
 			if (chi.getAvailableChi() < CHI_CONFIG.maxAvailableChi) {

@@ -33,11 +33,11 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 
 		AbilityData abilityData = ctx.getData().getAbilityData(getAbilityName());
 		switch (abilityData.getLevel()) {
+			case -1:
 			case 0:
 			case 1:
 				return getVisions()[0];
 			case 2:
-			case -1:
 				return getVisions()[1];
 			case 3:
 			default:

@@ -1,8 +1,14 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.earth.AbilityEarthspikes;
 import com.crowsofwar.avatar.common.config.ConfigStats;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
@@ -17,6 +23,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
@@ -26,7 +33,6 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class EntityEarthspikeSpawner extends AvatarEntity {
 
 	private boolean unstoppable;
-	private float damageMult;
 	private double maxTicksAlive;
 
 	/**
@@ -35,26 +41,25 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	public EntityEarthspikeSpawner(World world) {
 		super(world);
 		setSize(1, 1);
-		this.damageMult = 1.6F;
 
-	}
-
-	public void setDamageMult(float mult) {
-		this.damageMult = mult;
 	}
 
 	public void setUnstoppable(boolean isUnstoppable) {
 		this.unstoppable = isUnstoppable;
 	}
 
-	public void setDuration(float ticks) {
+	public void setDuration(double ticks) {
 		this.maxTicksAlive = ticks;
 	}
+
+	public double getDuration() {
+		return this.maxTicksAlive;
+	}
+
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		setDead();
 	}
 
 	@Override
@@ -63,10 +68,20 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	}
 
 	@Override
+	public EntityLivingBase getController() {
+		return getOwner();
+	}
+
+	@Override
+	public boolean canBeCollidedWith() {
+		return false;
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (!world.isRemote && ticksExisted >= maxTicksAlive) {
+		if (ticksExisted >= maxTicksAlive) {
 			setDead();
 		}
 
@@ -76,14 +91,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
 				world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
 				SoundCategory.PLAYERS, 1, 1, false);
-		if (ticksExisted % 3 == 0 && !world.isRemote) {
-			EntityEarthspike earthspike = new EntityEarthspike(world);
-			earthspike.posX = this.posX;
-			earthspike.posY = this.posY;
-			earthspike.posZ = this.posZ;
-
-			world.spawnEntity(earthspike);
-		}
 
 		if (!world.getBlockState(below).isNormalCube()) {
 			setDead();
@@ -111,37 +118,12 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 				setDead();
 			}
 		}
-
-		// amount of entities which were successfully attacked
-		int attacked = 0;
-
-		// Push collided entities back
-		if (!world.isRemote) {
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-					entity -> entity != getOwner());
-			if (!collided.isEmpty()) {
-				for (Entity entity : collided) {
-					if (attackEntity(entity)) {
-						attacked++;
-					}
-				}
-			}
-		}
-
-		if (!world.isRemote && getOwner() != null) {
-			BendingData data = BendingData.get(getOwner());
-			if (data != null) {
-				data.getAbilityData("earthspike").addXp(SKILLS_CONFIG.earthspikeHit * attacked);
-			}
-		}
 	}
+
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		if (entity instanceof EntityEarthspike || entity instanceof EntityEarthspikeSpawner) {
-			return false;
-		}
-		return entity instanceof EntityLivingBase || super.canCollideWith(entity);
+		return false;
 	}
 
 	@Override
@@ -150,19 +132,4 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		return false;
 	}
 
-	private boolean attackEntity(Entity entity) {
-
-		if (!(entity instanceof EntityItem && entity.ticksExisted <=
-				10) && canCollideWith(entity)) {
-
-			Vector push = velocity().withY(.8).times(STATS_CONFIG.ravineSettings.push);
-			entity.addVelocity(push.x(), push.y(), push.z());
-			AvatarUtils.afterVelocityAdded(entity);
-
-			DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
-			float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
-			return entity.attackEntityFrom(ds, damage);
-		}
-		return false;
-	}
 }

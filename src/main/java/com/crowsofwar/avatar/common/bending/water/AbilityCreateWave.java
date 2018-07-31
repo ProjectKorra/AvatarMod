@@ -26,10 +26,12 @@ import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -47,43 +49,59 @@ public class AbilityCreateWave extends Ability {
 		World world = ctx.getWorld();
 
 		Vector look = Vector.getLookRectangular(entity).withY(0);
-		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity)
-				.minusY(1), look, 4, (pos, blockState) -> blockState.getBlock() == Blocks
-				.WATER);
+		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1)
+				, look, 4 + ctx.getLevel(), (pos, blockState) -> blockState.getBlock() == Blocks
+						.WATER);
+		Raytrace.Result extraResult = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1), look,
+				4 + ctx.getLevel(), (blockPos, iBlockState) -> iBlockState.getBlock() == Blocks.SNOW || iBlockState.getBlock() == Blocks.FLOWING_WATER
+						|| iBlockState.getBlock() == Blocks.ICE);
 
-		if (result.hitSomething()) {
+		if (result.hitSomething() || extraResult.hitSomething()) {
 
 			VectorI pos = result.getPos();
-			IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
+			//IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
 			IBlockState up = world.getBlockState(pos.toBlockPos().up());
 
 			for (int i = 0; i < 3; i++) {
-				if (world.getBlockState(pos.toBlockPos().up()).getBlock() == Blocks.AIR) {
+				if (up.getBlock() == Blocks.AIR) {
 
 					if (bender.consumeChi(STATS_CONFIG.chiWave)) {
 
-						double speed = 10;
+						float size = 2;
+						double speed = 6.5;
 						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-							speed = 8;
+							speed = 12.5;
+							size = 5F;
 						}
 						if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-							speed = 18;
+							speed = 17;
+							size = 2.75F;
 						}
+						if (ctx.getLevel() == 1) {
+							size = 2.5F;
+							speed = 8;
+						}
+						if (ctx.getLevel() == 2) {
+							size = 3;
+							speed = 10;
+						}
+
+						size += ctx.getPowerRating() / 100;
+
 						speed += ctx.getPowerRating() / 100 * 8;
 
 						EntityWave wave = new EntityWave(world);
 						wave.setOwner(entity);
 						wave.setVelocity(look.times(speed));
-						wave.setPosition(pos.x() + 0.5, pos.y(), pos.z() + 0.5);
+						wave.setPosition(pos.x(), pos.y(), pos.z());
+						wave.setAbility(this);
 						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 
 						float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
 						damageMult *= ctx.getPowerRatingDamageMod();
 						wave.setDamageMultiplier(damageMult);
-						wave.setWaveSize(ctx.getLevel() >= 2 ? 3 : 2);
-						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-							wave.setWaveSize(5);
-						}
+						wave.setWaveSize(size);
+
 						wave.setCreateExplosion(ctx.isMasterLevel(AbilityTreePath.SECOND));
 						world.spawnEntity(wave);
 
@@ -95,6 +113,52 @@ public class AbilityCreateWave extends Ability {
 				pos.add(0, 1, 0);
 			}
 
+		} else if (ctx.consumeWater(2)) {
+			for (int i = 0; i < 3; i++) {
+				if (bender.consumeChi(STATS_CONFIG.chiWave)) {
+
+					float size = 2;
+					double speed = 6.5;
+					if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+						speed = 12.5;
+						size = 5;
+					}
+					if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+						speed = 17;
+						size = 2.75F;
+					}
+					if (ctx.getLevel() == 1) {
+						size = 2.5F;
+						speed = 8;
+					}
+					if (ctx.getLevel() == 2) {
+						size = 3;
+						speed = 10;
+					}
+
+					size += ctx.getPowerRating() / 100;
+
+					speed += ctx.getPowerRating() / 100 * 8;
+
+					Vector direction = Vector.getLookRectangular(entity).withY(0);
+					EntityWave wave = new EntityWave(world);
+					wave.setOwner(entity);
+					wave.setVelocity(direction.times(speed));
+					wave.setPosition(direction.minusY(1));
+					wave.setAbility(this);
+					wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
+
+					float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
+					damageMult *= ctx.getPowerRatingDamageMod();
+					wave.setDamageMultiplier(damageMult);
+					wave.setWaveSize(size);
+
+					wave.setCreateExplosion(ctx.isMasterLevel(AbilityTreePath.SECOND));
+					world.spawnEntity(wave);
+
+				}
+
+			}
 		}
 
 	}

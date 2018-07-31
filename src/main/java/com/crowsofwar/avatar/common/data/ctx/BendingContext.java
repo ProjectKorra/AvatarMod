@@ -27,11 +27,19 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGlassBottle;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * Information when something is executed. Only is used server-side.
@@ -170,9 +178,17 @@ public class BendingContext {
 			return true;
 		}
 
+		EntityLivingBase entity = bender.getEntity();
+
+		if (entity.getHeldItemMainhand().getItem() == Items.WATER_BUCKET || entity.getHeldItemOffhand().getItem() == Items.WATER_BUCKET) {
+			return true;
+		}
+
+
 		VectorI targetPos = getLookPosI();
 		if (targetPos != null) {
 			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
+			//Will need to adjust for passives
 			if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
 
 				if (amount >= 3) {
@@ -198,4 +214,62 @@ public class BendingContext {
 
 	}
 
+
+
+	public boolean consumeSnow(int amount) {
+
+		World world = bender.getWorld();
+
+		if (world.isRainingAt(bender.getEntity().getPosition())) {
+			return true;
+		}
+
+		VectorI targetPos = getLookPosI();
+		if (targetPos != null) {
+			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
+			//Will need to adjust for passives
+			if (STATS_CONFIG.waterBendableBlocks.contains(lookAt)) {
+				if (amount >= 3) {
+					world.setBlockToAir(targetPos.toBlockPos());
+				}
+				return true;
+
+			}
+
+
+		}
+
+		return bender.consumeWaterLevel(amount);
+
+	}
+
+
+
+	public boolean consumePlants(int amount) {
+
+		World world = bender.getWorld();
+
+		if (world.isRainingAt(bender.getEntity().getPosition())) {
+			return true;
+		}
+
+		VectorI targetPos = getLookPosI();
+		if (targetPos != null) {
+			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
+			//Will need to adjust for passives
+			if (STATS_CONFIG.plantBendableBlocks.contains(lookAt)) {
+
+				if (amount >= 3) {
+					world.setBlockToAir(targetPos.toBlockPos());
+				}
+				return true;
+
+			}
+
+
+		}
+
+		return bender.consumeWaterLevel(amount);
+
+	}
 }

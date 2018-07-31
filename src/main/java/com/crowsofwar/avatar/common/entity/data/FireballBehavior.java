@@ -25,8 +25,14 @@ import net.minecraft.world.World;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.*;
+
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
+
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -90,7 +96,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 				entity.onCollideWithSolid();
 			}
 
-			entity.addVelocity(Vector.DOWN.times(9.81 / 40));
+			entity.addVelocity(Vector.DOWN.times(1 / 40));
 
 			World world = entity.world;
 			if (!entity.isDead) {
@@ -128,12 +134,18 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			BendingData data = Bender.get(entity.getOwner()).getData();
 			if (!collided.world.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.fireballHit;
-				data.getAbilityData("fireball").addXp(xp);
+				if (entity.getAbility() != null) {
+					data.getAbilityData(entity.getAbility().getName()).addXp(xp);
+				}
+
 			}
 
 			// Remove the fireball & spawn particles
-			if (!entity.world.isRemote) entity.setDead();
-			entity.onCollideWithSolid();
+			if (!entity.world.isRemote) {
+				entity.onCollideWithSolid();
+				entity.setDead();
+			}
+
 		}
 
 		@Override
@@ -175,10 +187,12 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
 			entity.setVelocity(motion);
 
-			if (data.getAbilityData("fireball").isMasterPath(AbilityTreePath.SECOND)) {
-				int size = entity.getSize();
-				if (size < 60 && entity.ticksExisted % 4 == 0) {
-					entity.setSize(size + 1);
+			if (entity.getAbility() instanceof AbilityFireball) {
+				if (data.getAbilityData("fireball").isMasterPath(AbilityTreePath.SECOND)) {
+					int size = entity.getSize();
+					if (size < 60 && entity.ticksExisted % 4 == 0) {
+						entity.setSize(size + 1);
+					}
 				}
 			}
 

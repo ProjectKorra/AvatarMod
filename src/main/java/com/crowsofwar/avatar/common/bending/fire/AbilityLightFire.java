@@ -18,12 +18,16 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumFacing;
@@ -58,6 +62,7 @@ public class AbilityLightFire extends Ability {
 	public void execute(AbilityContext ctx) {
 
 		World world = ctx.getWorld();
+		EntityLivingBase entity = ctx.getBenderEntity();
 
 		VectorI looking = ctx.getLookPosI();
 		EnumFacing side = ctx.getLookSide();
@@ -106,6 +111,9 @@ public class AbilityLightFire extends Ability {
 
 	private boolean spawnFire(World world, BlockPos blockPos, AbilityContext ctx, boolean useChi,
 							  double chance) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+
 
 		if (world.isRainingAt(blockPos)) {
 
@@ -123,7 +131,7 @@ public class AbilityLightFire extends Ability {
 
 					double random = Math.random() * 100;
 
-					if (random < chance) {
+					if (random < chance || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
 
 						world.setBlockState(blockPos, Blocks.FIRE.getDefaultState());
 						world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
@@ -145,6 +153,31 @@ public class AbilityLightFire extends Ability {
 
 		return false;
 
+	}
+
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+		int coolDown = 50;
+
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+			coolDown = 0;
+		}
+
+		if (ctx.getLevel() == 1) {
+			coolDown = 30;
+		}
+		if (ctx.getLevel() == 2) {
+			coolDown = 20;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			coolDown = 15;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			coolDown = 10;
+		}
+		return coolDown;
 	}
 
 }

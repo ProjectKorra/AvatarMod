@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -28,7 +29,11 @@ import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+import org.lwjgl.Sys;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
@@ -52,9 +57,8 @@ public class AbilityFireball extends Ability {
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
 
-		if (data.hasStatusControl(StatusControl.THROW_FIREBALL)) return;
 
-		if (bender.consumeChi(STATS_CONFIG.chiFireball)) {
+		if (bender.consumeChi(STATS_CONFIG.chiFireball) && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
 
 			Vector target;
 			if (ctx.isLookingAtBlock()) {
@@ -65,8 +69,27 @@ public class AbilityFireball extends Ability {
 			}
 
 			float damage = STATS_CONFIG.fireballSettings.damage;
-			damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
+			float explosionStrength = 0.75f;
+			int size = 14;
+			damage *= ctx.getLevel() >= 2 ? 1.75f : 1f;
 			damage *= ctx.getPowerRatingDamageMod();
+			System.out.println(ctx.getPowerRatingDamageMod());
+
+			if (ctx.getLevel() == 1) {
+				explosionStrength = 1;
+				size = 16;
+			}
+
+			if (ctx.getLevel() == 2) {
+				explosionStrength = 1.25F;
+				size = 18;
+			}
+
+			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+				explosionStrength = 2;
+				size = 30;
+			}
+
 
 			EntityFireball fireball = new EntityFireball(world);
 			fireball.setPosition(target);
@@ -74,10 +97,18 @@ public class AbilityFireball extends Ability {
 			fireball.setBehavior(new FireballBehavior.PlayerControlled());
 			fireball.setDamage(damage);
 			fireball.setPowerRating(bender.calcPowerRating(Firebending.ID));
+			fireball.setSize(size);
+			fireball.setAbility(this);
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(20);
+
+			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+				explosionStrength = fireball.getSize()/20 + 0.75F;
+			}
+
+			fireball.setExplosionStrength(explosionStrength);
+			data.addStatusControl(StatusControl.THROW_FIREBALL);
 			world.spawnEntity(fireball);
 
-			data.addStatusControl(StatusControl.THROW_FIREBALL);
 
 		}
 
@@ -88,4 +119,28 @@ public class AbilityFireball extends Ability {
 		return new AiFireball(this, entity, bender);
 	}
 
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+		int coolDown = 170;
+
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+			coolDown = 0;
+		}
+
+		if (ctx.getLevel() == 1) {
+			coolDown = 150;
+		}
+		if (ctx.getLevel() == 2) {
+			coolDown = 130;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			coolDown = 110;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			coolDown = 100;
+		}
+		return coolDown;
+	}
 }

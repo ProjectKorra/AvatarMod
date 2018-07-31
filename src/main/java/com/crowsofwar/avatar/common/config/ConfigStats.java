@@ -36,11 +36,13 @@ public class ConfigStats {
 	public static final ConfigStats STATS_CONFIG = new ConfigStats();
 
 	@Load
-	public AttackSettings floatingBlockSettings = new AttackSettings(0.45f, 1),
-			ravineSettings = new AttackSettings(7, 0.25), //
-			waveSettings = new AttackSettings(6, 6), //
-			airbladeSettings = new AttackSettings(4, .03), //
-			fireArcSettings = new AttackSettings(4, 1);
+	public AttackSettings floatingBlockSettings = new AttackSettings(2f, 1),
+			ravineSettings = new AttackSettings(3.5F, 0.25), //
+			waveSettings = new AttackSettings(0.25F, 4), //
+			airbladeSettings = new AttackSettings(3, .03), //
+			fireArcSettings = new AttackSettings(2, 1),   //
+			waterArcSettings = new AttackSettings(1.5F, 1),
+			boulderSettings = new AttackSettings(0.1F, 0.1);
 
 	@Load
 	public double wallWaitTime = 10, wallWaitTime2 = 60, wallMomentum = 10;
@@ -49,10 +51,23 @@ public class ConfigStats {
 	public int wallJumpDelay = 10;
 
 	@Load
+	public float waterArcTicks = 40;
+	//Has to be a float so I can times it by a fraction; there aren't any partial ticks, though.
+
+	@Load
 	public FireballSettings fireballSettings = new FireballSettings();
 
 	@Load
 	public ExplosionSettings explosionSettings = new ExplosionSettings();
+
+	@Load
+	public CloudburstSettings cloudburstSettings = new CloudburstSettings();
+
+	@Load
+	public EarthspikeSettings earthspikeSettings = new EarthspikeSettings();
+
+	@Load
+	public LightningRazeSettings lightningRazeSettings = new LightningRazeSettings();
 
 	// @formatter:off
 	@Load
@@ -66,8 +81,9 @@ public class ConfigStats {
 			chiBuffLvl2 = 3f,
 			chiBuffLvl3 = 3.5f,
 			chiBuffLvl4 = 4f,
+			chiBoulderRing = 3F,
 			chiCloudburst = 2.5F,
-			chiEarthspike = 5F,
+			chiEarthspike = 3.5F,
 			chiExplosion = 3F,
 			chiExplosionUpgraded = 4.5f,
 			chiExplosivePillar = 4F,
@@ -86,14 +102,19 @@ public class ConfigStats {
 			chiWave = 2f,
 			chiWaterArc = 1f,
 			chiWaterBubble = 1.25f,
-			chiWaterSkateSecond = 0.5f,
+			chiWaterSkateSecond = 1.5f,
 			chiWallOneSecond = 0.125f,
 			chiPrison = 5,
 			chiSandPrison = 3,
 			chiLightning = 6,
+			chiLightningRaze = 5,
 			chiIceShieldCreate = 4,
 			chiIceShieldProtect = 0.15f,
+			chiInfernoPunch = 3F,
+			chiSmallInfernoPunch = 2F,
+			chiLargeInfernoPunch = 6F,
 			chiSandstorm = 3f,
+			chiShockwave = 6F,
 			chiWaterCannon = 5f,
 			chiFireJump = 2f;
 	// @formatter:on
@@ -105,10 +126,19 @@ public class ConfigStats {
 	public float sleepChiRegen = 99999;
 
 	@Load
+	public float InfernoPunchDamage = 2F;
+
+	@Load
 	public boolean allowAirBubbleElytra = false;
 
 	@Load
 	public double waterArcSearchRadius = 4, waterArcAngles = 8;
+
+	@Load
+	public double waterCannonSearchRadius = 3, waterCannonAngles = 8, waterCannonDamage = 1;
+
+	@Load
+	public double cleanseSearchRadius = 5, cleanseAngles = 10;
 
 	@Load
 	public boolean addDungeonLoot = true;
@@ -148,8 +178,38 @@ public class ConfigStats {
 			"minecraft:redstone_ore",
 			"minecraft:red_sandstone",
 			"minecraft:grass",
-			"minecraft:grass_path");
+			"minecraft:grass_path"
+	);
 
+	@Load
+	public List<String> waterBendableBlockNames = Arrays.asList(
+			"minecraft:snow",
+			"minecraft:snow_layer",
+			"minecraft:ice",
+			"minecraft:packed_ice",
+			"minecraft:frosted_ice",
+			"minecraft:water",
+			"minecraft:flowing_water"
+	);
+
+	@Load
+	public List<String> plantBendableBlockNames = Arrays.asList(
+			"minecraft:tallgrass",
+			"minecraft:wheat",
+			"minecraft:double_grass",
+			"minecraft:waterlily",
+			"minecraft:red_flower",
+			//For some reason, most of the plants in minecraft are tallgrass, double_grass, or red_flowers. Weird.
+			"minecraft:leaves",
+			"minecraft:yellow_flower",
+			"minecraft:red_mushroom",
+			"minecraft:brown_mushroom",
+			"minecraft:vine"
+
+	);
+
+	public List<Block> plantBendableBlocks;
+	public List<Block> waterBendableBlocks;
 	public List<Block> bendableBlocks;
 	public List<Block> sandBlocks;
 
@@ -163,6 +223,8 @@ public class ConfigStats {
 	public void loadBlocks() {
 		bendableBlocks = STATS_CONFIG.loadBlocksList(bendableBlocksNames);
 		sandBlocks = STATS_CONFIG.loadBlocksList(sandBlocksNames);
+		waterBendableBlocks = STATS_CONFIG.loadBlocksList(waterBendableBlockNames);
+		plantBendableBlocks = STATS_CONFIG.loadBlocksList(plantBendableBlockNames);
 	}
 
 	/**
@@ -206,19 +268,77 @@ public class ConfigStats {
 	public static class FireballSettings {
 
 		@Load
-		public float damage = 6;
+		public float damage = 2.5F;
 
 		@Load
 		public int fireTime = 6;
 
 		@Load
-		public float explosionSize = 1.5f;
+		public float explosionSize = 1f;
 
 		@Load
 		public boolean damageBlocks = false;
 
 		@Load
-		public double push = .75;
+		public double push = 0.75;
+
+	}
+
+	public static class CloudburstSettings {
+
+		@Load
+		public double damage = 1.5;
+
+		@Load
+		public double push = 1.5;
+
+	}
+
+	public static class EarthspikeSettings {
+
+		@Load
+		public double damage = 3;
+
+		@Load
+		public float frequency = 4;
+
+		@Load
+		public float size = 1;
+
+		@Load
+		public double push = 0.5;
+
+	}
+
+	public static class LightningRazeSettings {
+
+		@Load
+		public float accuracy = 1;
+		//0 is the most accurate; the bigger the number, the worse the accuracy
+
+		@Load
+		public float frequency = 5;
+		//How many ticks pass per lightning bolt spawned- 20 ticks per second.
+		//In this case, the lightning bolts spawn 4 times per second.
+
+		@Load
+		public int bolts = 1;
+		//The number of  bolts the lightning spawner spawns per amount of ticks
+		//Ticks determined by frequency
+
+		@Load
+		public int ticks = 20;
+		//How long the spawner stays alive- in this case, one second.
+
+		@Load
+		public float damage = 2;
+		//The amount of damage dealt per lightning bolt.
+
+		@Load
+		public double speed = 5;
+		//Speed of the spawner
+
+
 
 	}
 

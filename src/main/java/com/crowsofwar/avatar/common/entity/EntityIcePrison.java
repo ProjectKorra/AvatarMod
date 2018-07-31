@@ -17,11 +17,14 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.ice.Icebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
+import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -93,14 +96,15 @@ public class EntityIcePrison extends AvatarEntity {
 
 	}
 
-	public static void imprison(EntityLivingBase entity, EntityLivingBase owner) {
+	public static void imprison(EntityLivingBase entity, EntityLivingBase owner, Ability ab) {
 		World world = entity.world;
 		EntityIcePrison prison = new EntityIcePrison(world);
 
 		prison.setImprisoned(entity);
 		prison.setOwner(owner);
 		prison.copyLocationAndAnglesFrom(entity);
-
+		prison.setAbility(ab);
+		
 		Bender bender = Bender.get(owner);
 		prison.setStats(bender.getData().getAbilityData("ice_prison"), bender.calcPowerRating(Icebending.ID));
 
@@ -125,6 +129,11 @@ public class EntityIcePrison extends AvatarEntity {
 	}
 
 	@Override
+	protected boolean canCollideWith(Entity entity) {
+		return false;
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		EntityLivingBase imprisoned = getImprisoned();
@@ -137,6 +146,8 @@ public class EntityIcePrison extends AvatarEntity {
 			imprisoned.posX = this.posX;
 			imprisoned.posY = this.posY;
 			imprisoned.posZ = this.posZ;
+			setVelocity(Vector.ZERO);
+			imprisoned.setVelocity(0, 0, 0);
 		}
 
 		// Countdown imprisonedTime

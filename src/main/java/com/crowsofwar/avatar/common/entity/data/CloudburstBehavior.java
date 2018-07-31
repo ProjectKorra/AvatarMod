@@ -8,7 +8,12 @@ import net.minecraft.world.World;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.data.*;
+
+import com.crowsofwar.avatar.common.bending.air.AbilityCloudBurst;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+
 import com.crowsofwar.avatar.common.entity.EntityCloudBall;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -63,8 +68,10 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 
 			time++;
 
-			if (entity.collided || (!entity.world.isRemote && time > 100)) {
-				entity.setDead();
+
+			if (entity.isCollided || (!entity.world.isRemote && time > 200)) {
+				entity.cloudBurst();
+
 				entity.onCollideWithSolid();
 			}
 
@@ -79,8 +86,9 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 						collision((EntityLivingBase) collided, entity);
 					} else if (collided != entity.getOwner()) {
 						Vector motion = new Vector(collided).minus(new Vector(entity));
-						motion = motion.times(0.3).withY(0.08);
+						motion = motion.times(0.5).withY(0.10);
 						collided.addVelocity(motion.x(), motion.y(), motion.z());
+						entity.cloudBurst();
 
 					}
 
@@ -92,27 +100,27 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 		}
 
 		private void collision(EntityLivingBase collided, EntityCloudBall entity) {
-			double speed = entity.velocity().magnitude();
 
 			if (collided.attackEntityFrom(AvatarDamageSource.causeCloudburstDamage(collided, entity.getOwner()), entity.getDamage())) {
 				BattlePerformanceScore.addMediumScore(entity.getOwner());
 			}
 
 			Vector motion = entity.velocity().dividedBy(20);
-			motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.09);
+			motion = motion.times(STATS_CONFIG.cloudburstSettings.push).withY(0.11);
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
 
 			BendingData data = Bender.get(entity.getOwner()).getData();
 			if (!collided.world.isRemote && data != null) {
 				float xp = SKILLS_CONFIG.cloudburstHit;
-				data.getAbilityData("cloudburst").addXp(xp);
+				data.getAbilityData(entity.getAbility().getName()).addXp(xp);
 			}
 
-			// Remove the fireball & spawn particles
-			if (!entity.world.isRemote)
-
+			// Remove the cloudburst & spawn particles
+			if (!entity.world.isRemote) {
+				entity.onCollideWithSolid();
 				entity.setDead();
-			entity.onCollideWithSolid();
+
+			}
 
 		}
 
@@ -155,10 +163,12 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 			Vector motion = target.minus(Vector.getEntityPos(entity)).times(6);
 			entity.setVelocity(motion);
 
-			if (data.getAbilityData("cloudburst").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				int size = entity.getSize();
-				if (size < 60 && entity.ticksExisted % 4 == 0) {
-					entity.setSize(size + 1);
+			if (entity.getAbility() instanceof AbilityCloudBurst && !entity.world.isRemote) {
+				if (data.getAbilityData("cloudburst").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+					int size = entity.getSize();
+					if (size < 60 && entity.ticksExisted % 4 == 0) {
+						entity.setSize(size + 1);
+					}
 				}
 			}
 

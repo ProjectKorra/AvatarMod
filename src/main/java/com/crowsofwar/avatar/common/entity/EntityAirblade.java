@@ -74,7 +74,8 @@ public class EntityAirblade extends AvatarEntity {
 		}
 
 		if (!world.isRemote && chopBlocksThreshold >= 0) {
-			breakCollidingBlocks();
+				breakCollidingBlocks();
+
 		}
 
 		if (!isDead && !world.isRemote) {

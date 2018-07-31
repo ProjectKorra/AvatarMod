@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -35,6 +36,8 @@ import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 
 import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -75,7 +78,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 
 			Vector motion = target.minus(water.position());
-			motion = motion.times(0.3 * 20);
+			motion = motion.times(0.5 * 20);
 			water.setVelocity(motion);
 
 			if (water.world.isRemote && water.canPlaySplash()) {
@@ -109,23 +112,80 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 	public static class Thrown extends WaterArcBehavior {
 
+		float ticks = 0;
+		float startGravity;
 		@Override
 		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
+			ticks++;
+
+
 
 			boolean waterSpear = false;
 			BendingData data = null;
 			AbilityData abilityData = null;
+			int lvl = 0;
 
 			Bender bender = Bender.get(entity.getOwner());
 			if (bender != null) {
 				data = bender.getData();
 				abilityData = data.getAbilityData("water_arc");
 				waterSpear = abilityData.isMasterPath(AbilityTreePath.SECOND);
+				lvl = abilityData.getLevel();
+			}
+			if (lvl <= 0) {
+				//Level I or in Creative Mode
+				startGravity = STATS_CONFIG.waterArcTicks;
+				if (ticks >= STATS_CONFIG.waterArcTicks) {
+					//Default is 40
+					entity.Splash();
+					entity.setDead();
+				}
+			}
+			if (lvl == 1) {
+				//Level II.
+				startGravity = STATS_CONFIG.waterArcTicks * (5/4);
+				if (ticks >= STATS_CONFIG.waterArcTicks * (5/4)) {
+					//50
+					entity.Splash();
+					entity.setDead();
+				}
+			}
+			if (lvl == 2) {
+				//Level III
+				startGravity = STATS_CONFIG.waterArcTicks * (6/4);
+				if (ticks >= STATS_CONFIG.waterArcTicks * (6/4)) {
+					//60
+					entity.Splash();
+					entity.setDead();
+				}
+			}
+			if (waterSpear) {
+				//Level 4 Path Two
+				startGravity = STATS_CONFIG.waterArcTicks * (3);
+				if (ticks >= STATS_CONFIG.waterArcTicks * (3)) {
+					//120 ticks
+					entity.Splash();
+					entity.setDead();
+				}
 			}
 
-			if (waterSpear || entity.ticksExisted >= 40) {
-				entity.addVelocity(Vector.DOWN.times(9.81 / 60));
+			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
+				//Level 4 Path One
+				startGravity = STATS_CONFIG.waterArcTicks * (5/4);
+				if (ticks >= STATS_CONFIG.waterArcTicks * (5/4)) {
+					//50
+					entity.Splash();
+					entity.setDead();
+				}
+
 			}
+
+			if (startGravity/ticks <= 2) {
+				entity.addVelocity(Vector.DOWN.times(entity.getGravity() / 30));
+			}
+
+
+
 
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
 					EntityLivingBase.class, entity.getEntityBoundingBox().grow(0.9, 0.9, 0.9),
@@ -133,11 +193,8 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 			for (EntityLivingBase collided : collidedList) {
 				if (collided == entity.getOwner()) return this;
-				collided.addVelocity(entity.motionX, 0.4, entity.motionZ);
-				if (collided.attackEntityFrom(AvatarDamageSource.causeWaterDamage(collided, entity.getOwner()),
-						6 * entity.getDamageMult())) {
-					BattlePerformanceScore.addMediumScore(entity.getOwner());
-				}
+				collided.addVelocity(entity.motionX/2, STATS_CONFIG.waterArcSettings.push/10, entity.motionZ/2);
+				entity.damageEntity(collided);
 
 				if (!entity.world.isRemote && data != null) {
 
@@ -147,10 +204,16 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 						entity.setBehavior(new PlayerControlled());
 						data.addStatusControl(StatusControl.THROW_WATER);
 					}
+					if (!waterSpear) {
+						entity.Splash();
+						entity.setDead();
+						entity.cleanup();
+					}
 
 				}
 
 			}
+
 
 			return this;
 		}

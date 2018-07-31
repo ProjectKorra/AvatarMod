@@ -51,10 +51,10 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class EntityLightningSpear extends AvatarEntity {
 
-	public static final DataParameter<LightningSpearBehavior> SYNC_BEHAVIOR = EntityDataManager
+	private static final DataParameter<LightningSpearBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityLightningSpear.class, LightningSpearBehavior.DATA_SERIALIZER);
 
-	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityLightningSpear.class,
+	private static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityLightningSpear.class,
 			DataSerializers.VARINT);
 
 	private AxisAlignedBB expandedHitbox;
@@ -97,10 +97,7 @@ public class EntityLightningSpear extends AvatarEntity {
 		super.onUpdate();
 		LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
 		setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
-		if (this.isDead) {
-			removeStatCtrl();
-		}
-		// TODO Temporary fix to avoid extra fireballs
+
 		// Add hook or something
 		if (getOwner() == null) {
 			if (this.getBehavior() == controlled) {
@@ -111,6 +108,13 @@ public class EntityLightningSpear extends AvatarEntity {
 			removeStatCtrl();
 		}
 
+		if (getOwner() != null) {
+
+			BendingData data = BendingData.get(getOwner());
+			if (getBehavior() instanceof LightningSpearBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_LIGHTNINSPEAR)) {
+				setDead();
+			}
+		}
 		// Electrocute enemies in water
 		if (inWater) {
 
@@ -204,16 +208,7 @@ public class EntityLightningSpear extends AvatarEntity {
 		}
 
 		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
-		explosionSize *= getSize() / 30f;
-		boolean destroyObsidian = false;
 
-		if (getOwner() != null) {
-			AbilityData abilityData = BendingData.get(getOwner())
-					.getAbilityData("lightning_spear");
-			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
-				destroyObsidian = false;
-			}
-		}
 
 		Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
 				!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
@@ -222,15 +217,6 @@ public class EntityLightningSpear extends AvatarEntity {
 			explosion.doExplosionA();
 			explosion.doExplosionB(true);
 
-		}
-
-		if (destroyObsidian) {
-			for (EnumFacing dir : EnumFacing.values()) {
-				BlockPos pos = getPosition().offset(dir);
-				if (world.getBlockState(pos).getBlock() == Blocks.OBSIDIAN) {
-					world.destroyBlock(pos, true);
-				}
-			}
 		}
 
 		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory

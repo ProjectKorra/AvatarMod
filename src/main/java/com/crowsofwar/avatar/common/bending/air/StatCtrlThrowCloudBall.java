@@ -22,15 +22,33 @@ public class StatCtrlThrowCloudBall extends StatusControl {
 	public boolean execute(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
+		AbilityData abilityData = ctx.getData().getAbilityData("cloudburst");
+		double speed = 17.5;
 
-		double size = 6;
+		if (abilityData.getLevel() == 1) {
+			speed = 20;
+		}
+
+		if (abilityData.getLevel() == 2) {
+			speed = 22.5;
+		}
+
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+			speed = 25;
+		}
+
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			speed = 27.5;
+		}
+
 
 		EntityCloudBall cloudBall = AvatarEntity.lookupControlledEntity(world, EntityCloudBall.class, entity);
 
 		if (cloudBall != null) {
-			AbilityData abilityData = ctx.getData().getAbilityData("cloudburst");
-			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
-			cloudBall.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
+			cloudBall.addVelocity(cloudBall.velocity().dividedBy(-1));
+			cloudBall.addVelocity(Vector.getLookRectangular(entity).times(speed).times(2));
+			//Necessary so that you can't increase speed by moving your mouse really fast; additionally,
+			//using setVelocity sometimes makes the cloudburst go invisible. Weird.
 			cloudBall.setBehavior(new CloudburstBehavior.Thrown());
 		}
 
@@ -39,4 +57,6 @@ public class StatCtrlThrowCloudBall extends StatusControl {
 
 }
 //REGISTER THIS TO SEE IF IT FIXES ITSELF
+//Umm Idk what the line above is referring to- cloudburst is pretty much fixed except for the occasional invisibility
+//weirdness.
 

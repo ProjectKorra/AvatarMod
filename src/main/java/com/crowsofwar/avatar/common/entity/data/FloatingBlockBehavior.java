@@ -17,8 +17,22 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import net.minecraft.block.*;
-import net.minecraft.entity.*;
+
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.*;
@@ -167,6 +181,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 					}
 
 				}
+				entity.setBehavior(new FloatingBlockBehavior.PlayerControlled());
 			}
 
 			return this;
@@ -177,15 +192,18 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			// Add damage
 			double speed = entity.velocity().magnitude();
 
-			if (collided.attackEntityFrom(AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
-										  (float) (speed * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()))) {
+
+			if (collided.attackEntityFrom(
+					AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
+					(float) (speed / 15 * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()))) {
+
 				BattlePerformanceScore.addMediumScore(entity.getOwner());
 			}
 
 			// Push entity
-			Vector motion = new Vector(collided).minus(new Vector(entity));
-			motion = motion.times(STATS_CONFIG.floatingBlockSettings.push).withY(0.08);
-			collided.addVelocity(motion.x(), motion.y(), motion.z());
+			collided.motionX = entity.motionX / 2 * STATS_CONFIG.floatingBlockSettings.push;
+			collided.motionY = entity.motionY > 0 ? STATS_CONFIG.floatingBlockSettings.push / 4 + entity.motionY / 2 : STATS_CONFIG.floatingBlockSettings.push / 3.5;
+			collided.motionZ = entity.motionZ / 2 * STATS_CONFIG.floatingBlockSettings.push;
 
 			// Add XP
 			BendingData data = Bender.get(entity.getOwner()).getData();
@@ -290,8 +308,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			Vector forward = Vector.toRectangular(yaw, pitch);
 			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
-			Vector motion = target.minus(new Vector(entity));
-			motion = motion.times(5);
+			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
 			entity.setVelocity(motion);
 
 			return this;

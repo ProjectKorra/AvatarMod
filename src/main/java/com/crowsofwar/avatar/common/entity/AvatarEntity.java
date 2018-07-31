@@ -17,6 +17,16 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.AvatarWorldData;
+import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
+import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.base.Optional;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
@@ -24,9 +34,18 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.*;
-import net.minecraft.util.*;
-import net.minecraft.util.math.*;
+
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+
 import net.minecraft.world.World;
 
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
@@ -53,12 +72,9 @@ public abstract class AvatarEntity extends Entity {
 	boolean putsOutFires;
 	private boolean flammable;
 	private double powerRating;
-	/**
-	 * The ability this entity was created by. Empty if not created by an ability.
-	 */
-	@Getter
-	@Setter
-	private String ability;
+
+	private Ability ability;
+
 
 	private SyncedEntity<EntityLivingBase> ownerRef;
 
@@ -68,10 +84,11 @@ public abstract class AvatarEntity extends Entity {
 	public AvatarEntity(World world) {
 		super(world);
 
-		ownerRef = new SyncedEntity<>(this, SYNC_OWNER);
-		putsOutFires = false;
-		flammable = false;
-		ability = "";
+
+		this.ownerRef = new SyncedEntity<>(this, SYNC_OWNER);
+		this.putsOutFires = false;
+		this.flammable = false;
+
 	}
 
 	/**
@@ -93,6 +110,7 @@ public abstract class AvatarEntity extends Entity {
 
 		return null;
 	}
+
 
 	/**
 	 * Find the entity controlled by the given player.
@@ -185,6 +203,10 @@ public abstract class AvatarEntity extends Entity {
 		setPosition(position.x(), position.y(), position.z());
 	}
 
+	public void setPosition (Vec3d position) {
+		setPosition(position.x, position.y, position.z);
+	}
+
 	public int getAvId() {
 		return dataManager.get(SYNC_ID);
 	}
@@ -199,6 +221,14 @@ public abstract class AvatarEntity extends Entity {
 
 	public void setPowerRating(double powerRating) {
 		this.powerRating = powerRating;
+	}
+
+	public void setAbility(Ability ability) {
+		this.ability = ability;
+	}
+
+	public Ability getAbility() {
+		return ability;
 	}
 
 	@Override

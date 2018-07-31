@@ -49,12 +49,13 @@ public class AbilitySandstorm extends Ability {
 			sandstorm.setPosition(Vector.getEntityPos(entity));
 			sandstorm.setOwner(entity);
 			sandstorm.setVelocity(velocity);
-
+			sandstorm.setAbility(this);
+			
 			sandstorm.setVelocityMultiplier(speedMult);
 			sandstorm.setDamageFlungTargets(damageFlung);
 			sandstorm.setDamageContactingTargets(damageContacting);
 			sandstorm.setVulnerableToAirbending(vulnerableToAirbending);
-
+			
 			world.spawnEntity(sandstorm);
 
 			ctx.getData().addStatusControl(StatusControl.SANDSTORM_REDIRECT);

@@ -91,7 +91,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (entity instanceof AvatarEntity) {
+		if (entity instanceof AvatarEntity && getBehavior() instanceof FireArcBehavior.Thrown) {
 			((AvatarEntity) entity).onFireContact();
 		}
 	}

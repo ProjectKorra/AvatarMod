@@ -92,6 +92,7 @@ public class AbilityExplosivePillar extends Ability {
 					explosionSpawner.setExplosionStrength(1F);
 					explosionSpawner.setPosition(entity.posX, entity.posY, entity.posZ);
 					explosionSpawner.maxTicks(ticks * 1.5F);
+					explosionSpawner.setAbility(this);
 					world.spawnEntity(explosionSpawner);
 
 				}

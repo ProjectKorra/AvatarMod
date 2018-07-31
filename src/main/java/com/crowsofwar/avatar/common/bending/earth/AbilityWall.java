@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -93,6 +94,7 @@ public class AbilityWall extends Ability {
 			}
 
 			wall.setPosition(lookPos.getX() + .5, lookPos.getY(), lookPos.getZ() + .5);
+			wall.setOwner(entity);
 			for (int i = 0; i < 5; i++) {
 
 				int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
@@ -109,6 +111,7 @@ public class AbilityWall extends Ability {
 				seg.setPosition(x + .5, y, z + .5);
 				seg.setDirection(cardinal);
 				seg.setOwner(entity);
+				seg.setAbility(this);
 
 				boolean foundAir = false, dontBreakMore = false;
 				for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {
@@ -150,6 +153,31 @@ public class AbilityWall extends Ability {
 
 		}
 
+	}
+
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+		int coolDown = 180;
+
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+			coolDown = 0;
+		}
+
+		if (ctx.getLevel() == 1) {
+			coolDown = 160;
+		}
+		if (ctx.getLevel() == 2) {
+			coolDown = 140;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			coolDown = 120;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			coolDown = 115;
+		}
+		return coolDown;
 	}
 
 }

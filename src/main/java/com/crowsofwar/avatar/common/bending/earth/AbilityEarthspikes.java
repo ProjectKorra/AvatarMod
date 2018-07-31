@@ -3,11 +3,17 @@ package com.crowsofwar.avatar.common.bending.earth;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.EntityEarthspike;
 import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -24,29 +30,35 @@ public class AbilityEarthspikes extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		Bender bender = ctx.getBender();
+		BendingData data = ctx.getData();
 
-		float damage = 0.90f;
-		float xp = abilityData.getTotalXp();
 		float ticks = 20;
-		double speed = 8;
+		double speed = 10;
 		float chi = STATS_CONFIG.chiEarthspike;
+		//3.5 (by default)
 
 		if (ctx.getLevel() >= 1) {
-			damage = 1f;
 			ticks = 40;
+			speed = 13;
+			chi = STATS_CONFIG.chiEarthspike + 0.5F;
+			//4
 		}
 		if (ctx.getLevel() >= 2) {
-			speed = 14;
+			speed = 16;
+			chi = STATS_CONFIG.chiEarthspike + 2F;
+			//5.5
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			damage = 0.75f;
 			ticks = 30;
-			speed = 12;
+			speed = 14;
+			chi = STATS_CONFIG.chiEarthspike * 2.5F;
+			//8.75
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			damage = 2f;
 			ticks = 60;
-			speed = 20;
+			speed = 22;
+			chi = STATS_CONFIG.chiEarthspike * 2;
+			//7
 		}
 
 		if (bender.consumeChi(chi)) {
@@ -59,29 +71,68 @@ public class AbilityEarthspikes extends Ability {
 				earthspike.setOwner(entity);
 				earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
 				earthspike.setVelocity(look.times(speed));
-				earthspike.setDamageMult((float) (damage * ctx.getPowerRatingDamageMod()));
 				earthspike.setDuration(ticks);
+				earthspike.setAbility(this);
 				earthspike.setUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
 				world.spawnEntity(earthspike);
 
 			} else {
+				if (entity.onGround) {
+					for (int i = 0; i < 8; i++) {
+						Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+								i * 45), 0).withY(0);
+						EntityEarthspike earthspike = new EntityEarthspike(world);
+						earthspike.setPosition(direction1.x() + entity.posX, entity.posY, direction1.z() + entity.posZ);
+						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
+						earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
+						earthspike.setOwner(entity);
+						earthspike.setAbility(this);
+						world.spawnEntity(earthspike);
+						//Ring of instantaneous earthspikes.
+						if (!world.isRemote) {
+							WorldServer World = (WorldServer) world;
+							for (int degree = 0; degree < 360; degree++) {
+								double radians = Math.toRadians(degree);
+								double x = Math.cos(radians) / 2 + earthspike.posX;
+								double y = earthspike.posY;
+								double z = Math.sin(radians) / 2 + earthspike.posZ;
+								World.spawnParticle(EnumParticleTypes.CRIT, x, y, z, 1, 0, 0, 0, 0.5);
 
-				for (int i = 0; i < 8; i++) {
+							}
+						}
 
-					Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-							i * 45), 0);
-					Vector velocity = direction1.times(speed);
-
-					EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
-					earthspike.setVelocity(velocity);
-					earthspike.setDuration(ticks);
-					earthspike.setOwner(entity);
-					earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
-					earthspike.setDamageMult(damage + xp / 100);
-					world.spawnEntity(earthspike);
+					}
 				}
 			}
+			data.addTickHandler(TickHandler.SPAWN_EARTHSPIKES_HANDLER);
+
 
 		}
+	}
+
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+		int coolDown = 140;
+
+		if (ctx.getLevel() == 1) {
+			coolDown = 120;
+		}
+		if (ctx.getLevel() == 2) {
+			coolDown = 100;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			coolDown = 80;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			coolDown = 75;
+		}
+
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+			coolDown = 0;
+		}
+
+		return coolDown;
 	}
 }

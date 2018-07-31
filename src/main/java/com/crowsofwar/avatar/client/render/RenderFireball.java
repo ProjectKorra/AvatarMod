@@ -16,9 +16,13 @@
 */
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
+import javafx.scene.effect.Glow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
@@ -28,6 +32,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -54,19 +59,24 @@ public class RenderFireball extends Render<EntityFireball> {
 	// @formatter:off
 	@Override
 	public void doRender(EntityFireball entity, double xx, double yy, double zz, float entityYaw,
-			float partialTicks) {
-		
+						 float partialTicks) {
+
+
+
 		float x = (float) xx, y = (float) yy, z = (float) zz;
-		
+
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
-		
+
 		float ticks = entity.ticksExisted + partialTicks;
-		
-		float rotation = ticks / 5f;
+
+		float rotation = ticks / 3f;
 		float size = .8f + cos(ticks / 5f) * .05f;
 		size *= Math.sqrt(entity.getSize() / 30f);
-		
+
+
 		enableBlend();
+
+		entity.getBrightnessForRender();
 		if (entity.ticksExisted % 3 == 0) {
 			World world = entity.world;
 			AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
@@ -75,34 +85,37 @@ public class RenderFireball extends Render<EntityFireball> {
 			double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 			world.spawnParticle(EnumParticleTypes.FLAME, spawnX, spawnY, spawnZ, 0, 0, 0);
 		}
-		
-		if (MinecraftForgeClient.getRenderPass() == 0) {
-			
+
+		//if (MinecraftForgeClient.getRenderPass() == 0) {
+			disableLighting();
+
 			renderCube(x, y, z, //
 					0, 8 / 256.0, 0, 8 / 256.0, //
 					.5f, //
 					0, ticks / 25f, 0);
-			
+
 			int i = 15728880;
-	        int j = i % 65536;
-	        int k = i / 65536;
-	        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
-	        
-		} else {
-			
+			int j = i % 65536;
+			int k = i / 65536;
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+
+		//} else {
+
 			disableLighting();
-				pushMatrix();
-					renderCube(x, y, z, //
-							8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
-							size, //
-							rotation * .2f, rotation, rotation * -.4f);
-				popMatrix();
+			//Makes it so that the fireball isn't affected by shadow
+			pushMatrix();
+			renderCube(x, y, z, //
+					8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
+					size, //
+					rotation * .2f, rotation, rotation * -.4f);
+			popMatrix();
 			enableLighting();
-			
-		}
-		
+
+
+		//}
+
 		disableBlend();
-		
+
 	}
 	// @formatter:on
 
@@ -118,15 +131,15 @@ public class RenderFireball extends Render<EntityFireball> {
 		// @formatter:off
 		// Can't use .mul(size) here because it would mul the w component
 		Vector4f
-		lbf = new Vector4f(-.5f*size, -.5f*size, -.5f*size, 1).mul(mat),
-		rbf = new Vector4f(0.5f*size, -.5f*size, -.5f*size, 1).mul(mat),
-		ltf = new Vector4f(-.5f*size, 0.5f*size, -.5f*size, 1).mul(mat),
-		rtf = new Vector4f(0.5f*size, 0.5f*size, -.5f*size, 1).mul(mat),
-		lbb = new Vector4f(-.5f*size, -.5f*size, 0.5f*size, 1).mul(mat),
-		rbb = new Vector4f(0.5f*size, -.5f*size, 0.5f*size, 1).mul(mat),
-		ltb = new Vector4f(-.5f*size, 0.5f*size, 0.5f*size, 1).mul(mat),
-		rtb = new Vector4f(0.5f*size, 0.5f*size, 0.5f*size, 1).mul(mat);
-		
+				lbf = new Vector4f(-.5f * size, -.5f * size, -.5f * size, 1).mul(mat),
+				rbf = new Vector4f(0.5f * size, -.5f * size, -.5f * size, 1).mul(mat),
+				ltf = new Vector4f(-.5f * size, 0.5f * size, -.5f * size, 1).mul(mat),
+				rtf = new Vector4f(0.5f * size, 0.5f * size, -.5f * size, 1).mul(mat),
+				lbb = new Vector4f(-.5f * size, -.5f * size, 0.5f * size, 1).mul(mat),
+				rbb = new Vector4f(0.5f * size, -.5f * size, 0.5f * size, 1).mul(mat),
+				ltb = new Vector4f(-.5f * size, 0.5f * size, 0.5f * size, 1).mul(mat),
+				rtb = new Vector4f(0.5f * size, 0.5f * size, 0.5f * size, 1).mul(mat);
+
 		// @formatter:on
 
 		drawQuad(2, ltb, lbb, lbf, ltf, u1, v1, u2, v2); // -x
@@ -163,7 +176,7 @@ public class RenderFireball extends Render<EntityFireball> {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityFireball entity) {
-		return null;
+		return TEXTURE;
 	}
 
 }

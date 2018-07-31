@@ -106,7 +106,7 @@ public abstract class LightningChargeHandler extends TickHandler {
 			lightning.setDamage(damage);
 			lightning.setSizeMultiplier(size);
 			lightning.setMainArc(turbulence == turbulenceValues[0]);
-
+			
 			lightning.setPosition(Vector.getEyePos(entity));
 			lightning.setEndPos(Vector.getEyePos(entity));
 

@@ -85,7 +85,9 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 			time++;
 
-			if (entity.collided || (!entity.world.isRemote && time > 100)) {
+
+			if (entity.isCollided || (!entity.world.isRemote && time > 200)) {
+
 				entity.setDead();
 				entity.onCollideWithSolid();
 			}

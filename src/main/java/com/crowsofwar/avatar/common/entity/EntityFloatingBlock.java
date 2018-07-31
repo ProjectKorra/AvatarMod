@@ -17,6 +17,17 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+
+import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.base.Optional;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
@@ -25,10 +36,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.*;
-import net.minecraft.util.*;
-import net.minecraft.util.math.*;
-import net.minecraft.world.*;
+
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.World;
 
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -229,11 +245,13 @@ public class EntityFloatingBlock extends AvatarEntity {
 
 		}
 
+
 		setVelocity(velocity().times(getFriction()));
 
-		prevPosX = posX;
+		/*prevPosX = posX;
 		prevPosY = posY;
-		prevPosZ = posZ;
+		prevPosZ = posZ;**/
+		//Uhhh what's this for? It just seems to induce glichtiness...
 
 		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate(this);
 		if (nextBehavior != getBehavior()) setBehavior(nextBehavior);
@@ -256,27 +274,31 @@ public class EntityFloatingBlock extends AvatarEntity {
 			spawnCrackParticle(posX, posY + 0.3, posZ, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
 		}
 
-		if (!world.isRemote && areItemDropsEnabled()) {
-			NonNullList<ItemStack> drops = NonNullList.create();
-			getBlock().getDrops(drops, world, new BlockPos(this), getBlockState(), 0);
-			for (ItemStack is : drops) {
-				EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
-				world.spawnEntity(ei);
+		if (getOwner() != null && getAbility() instanceof AbilityPickUpBlock) {
+			AbilityData data = BendingData.get(getOwner()).getAbilityData("pickup_block");
+
+			if (!world.isRemote && areItemDropsEnabled()) {
+				NonNullList<ItemStack> drops = NonNullList.create();
+				getBlock().getDrops(drops, world, new BlockPos(this), getBlockState(), 0);
+				for (ItemStack is : drops) {
+					EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
+					world.spawnEntity(ei);
+				}
+
+			}
+
+
+			if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
+
+				Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);
+				if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
+					explosion.doExplosionA();
+					explosion.doExplosionB(true);
+				}
+
 			}
 		}
 
-		AbilityData data = BendingData.get(getOwner()).getAbilityData("pickup_block");
-		if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
-
-			Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);
-			if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
-				explosion.doExplosionA();
-				explosion.doExplosionB(true);
-			}
-
-		}
-
-		setDead();
 		return true;
 
 	}

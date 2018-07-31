@@ -26,11 +26,11 @@ public class ConfigChi {
 
 	public static final ConfigChi CHI_CONFIG = new ConfigChi();
 	@Load
-	public float regenPerSecond = 0.5f, availablePerSecond = 2f, maxAvailableChi = 6f, regenInBed = 1f;
+	public float regenPerSecond = 0.25f, availablePerSecond = 1f, maxAvailableChi = 8f, regenInBed = 2f, regenInWater = 1.5f, regenOnEarth = 1.5f;
 	@Load
 	public float bonusLearnedBending = 16, bonusAbility = 6, bonusAbilityLevel = 3;
 	@Load
-	public float maxChiCap = 76;
+	public float maxChiCap = 100;
 	@Load
 	public boolean infiniteInCreative = true;
 

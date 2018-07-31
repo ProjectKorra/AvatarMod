@@ -50,12 +50,16 @@ public class StatCtrlThrowWater extends StatusControl {
 		AbilityData abilityData = data.getAbilityData("water_arc");
 
 		int lvl = abilityData.getLevel();
-		double velocity = 6;
-		if (lvl >= 2) {
-			velocity = 10;
+		double velocity = 16;
+
+		if (lvl == 1){
+			velocity = 20;
 		}
-		if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
-			velocity = 8;
+		if (lvl == 2) {
+			velocity = 22;
+		}
+		if (lvl == 3) {
+			velocity = 30;
 		}
 
 		AxisAlignedBB boundingBox = new AxisAlignedBB(entity.posX - 5, entity.posY - 5, entity.posZ - 5,
@@ -70,6 +74,7 @@ public class StatCtrlThrowWater extends StatusControl {
 			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
 					Math.toRadians(entity.rotationPitch));
 			force = force.times(velocity);
+			arc.addVelocity(arc.velocity().dividedBy(-1));
 			arc.addVelocity(force);
 			arc.setBehavior(new WaterArcBehavior.Thrown());
 

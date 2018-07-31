@@ -34,8 +34,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
 import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
@@ -59,7 +62,6 @@ public class WaterSkateHandler extends TickHandler {
 	@Override
 	public boolean tick(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
-		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
 
 		// The tick handler may be active while the player hasn't started
@@ -145,12 +147,25 @@ public class WaterSkateHandler extends TickHandler {
 				player.motionY = 0;
 				player.motionZ = newVelocity.z();
 
+				if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
+					AxisAlignedBB box = new AxisAlignedBB(player.posX - 1.5, player.posY,
+							player.posZ - 1.5, player.posX, player.posY + 1.5, player.posZ + 1.5);
+					List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
+					for (EntityLivingBase target : nearby) {
+						if (target != player) {
+							pushEntitiesAway(target, player);
+						}
+					}
+
+				}
+
 				if (player.ticksExisted % 5 == 0) {
 					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
 							SoundCategory.PLAYERS, 0.4f, 2f);
-					particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 2, 4,
-							Vector.getEntityPos(player).plus(0, .4, 0), new Vector(.2, 1, .2));
 				}
+					particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 50, 60,
+							Vector.getEntityPos(player).plus(0, .1, 0), new Vector(.2, 0.2, .2));
+
 
 				if (player.ticksExisted % 10 == 0) {
 					abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
@@ -175,12 +190,19 @@ public class WaterSkateHandler extends TickHandler {
 		IBlockState below = player.world.getBlockState(new BlockPos(player.getPosition()).down());
 		int surface = getSurfacePos(player);
 
-		boolean allowWaterfallSkating = data.isMasterPath(AbilityTreePath.FIRST);
-		boolean inWaterBlock = below.getBlock() == Blocks.WATER
-				&& (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating);
+		boolean allowWaterfallSkating = data.getLevel() >= 2;
+		boolean allowGroundSkating = data.isMasterPath(AbilityTreePath.FIRST);
+		boolean onGround = below.getBlock() != Blocks.AIR;
+		boolean inWaterBlock = ((below.getBlock() == Blocks.WATER)
+				&& (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating)) || player.world.isRainingAt(player.getPosition()) || below.getBlock() == Blocks.SNOW || below.getBlock() == Blocks.ICE
+				|| below.getBlock() == Blocks.PACKED_ICE || below.getBlock() == Blocks.FROSTED_ICE;
 
-		return !player.isSneaking() && (player.isInWater() || inWaterBlock) && surface != -1
+		if (allowGroundSkating && onGround) {
+			return (!player.isSneaking() && surface != -1
+					&& surface - player.posY <= 3);
+		} else return !player.isSneaking() && (player.isInWater() || inWaterBlock) && surface != -1
 				&& surface - player.posY <= 3;
+
 
 	}
 
@@ -204,6 +226,12 @@ public class WaterSkateHandler extends TickHandler {
 
 		return (int) player.posY + increased;
 
+	}
+
+	private void pushEntitiesAway(EntityLivingBase target, EntityLivingBase entity) {
+		Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
+		velocity = velocity.withY(0.1).times(2 / 20);
+		target.addVelocity(velocity.x(), velocity.y(), velocity.z());
 	}
 
 }

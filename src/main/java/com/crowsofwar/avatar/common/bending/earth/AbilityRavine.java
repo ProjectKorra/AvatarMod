@@ -25,6 +25,8 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityRavine;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -52,11 +54,11 @@ public class AbilityRavine extends Ability {
 
 			AbilityData abilityData = ctx.getData().getAbilityData(this);
 			float xp = abilityData.getTotalXp();
-
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
 
 			Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
+			Vector position = Vector.getLookRectangular(entity).times(1.1);
 
 			double speed = ctx.getLevel() >= 1 ? 14 : 8;
 			speed += ctx.getPowerRating() / 25;
@@ -69,6 +71,7 @@ public class AbilityRavine extends Ability {
 			ravine.setPosition(entity.posX, entity.posY, entity.posZ);
 			ravine.setVelocity(look.times(speed));
 			ravine.setDamageMult(damage);
+			ravine.setAbility(this);
 			ravine.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
 			ravine.setBreakBlocks(ctx.isMasterLevel(AbilityTreePath.FIRST));
 			ravine.setDropEquipment(ctx.isMasterLevel(AbilityTreePath.SECOND));
@@ -76,6 +79,31 @@ public class AbilityRavine extends Ability {
 
 		}
 
+	}
+
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+		int coolDown = 100;
+
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+			coolDown = 0;
+		}
+
+		if (ctx.getLevel() == 1) {
+			coolDown = 90;
+		}
+		if (ctx.getLevel() == 2) {
+			coolDown = 80;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			coolDown = 70;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			coolDown = 65;
+		}
+		return coolDown;
 	}
 
 }

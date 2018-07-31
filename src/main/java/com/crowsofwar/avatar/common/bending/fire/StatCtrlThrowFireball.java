@@ -24,6 +24,8 @@ import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
@@ -42,6 +44,7 @@ public class StatCtrlThrowFireball extends StatusControl {
 	public boolean execute(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
+		world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.HOSTILE, 4F, 0.8F);
 
 		double size = 6;
 
@@ -49,8 +52,11 @@ public class StatCtrlThrowFireball extends StatusControl {
 
 		if (fireball != null) {
 			AbilityData abilityData = ctx.getData().getAbilityData("fireball");
-			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
+			double speedMult = abilityData.getLevel() >= 2 ? 27.5 : 22.5;
+			fireball.addVelocity(fireball.velocity().dividedBy(-1));
 			fireball.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
+			//Necessary so that you can't increase speed by moving your mouse really fast; additionally,
+			//using setVelocity sometimes makes the fireball go invisible. Weird.
 			fireball.setBehavior(new FireballBehavior.Thrown());
 		}
 

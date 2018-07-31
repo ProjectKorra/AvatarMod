@@ -53,14 +53,15 @@ public class StatCtrlThrowBubble extends StatusControl {
 		if (bubble != null) {
 
 			AbilityData adata = data.getAbilityData("water_bubble");
-			double speed = adata.getLevel() >= 1 ? 14 : 8;
+			double speed = adata.getLevel() >= 1 ? 16 : 10;
 			if (adata.isMasterPath(AbilityTreePath.FIRST)) {
-				speed = 20;
+				speed = 22;
 			}
 			speed += powerRating / 30f;
 
 			bubble.setBehavior(new WaterBubbleBehavior.Thrown());
-			bubble.setVelocity(Vector.getLookRectangular(ctx.getBenderEntity()).times(speed));
+			bubble.addVelocity(bubble.velocity().dividedBy(-1));
+			bubble.addVelocity(Vector.getLookRectangular(ctx.getBenderEntity()).times(speed));
 		}
 
 		return true;

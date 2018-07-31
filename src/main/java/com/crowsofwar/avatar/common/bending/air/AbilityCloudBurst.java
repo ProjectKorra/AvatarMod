@@ -12,6 +12,8 @@ import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -35,7 +37,26 @@ public class AbilityCloudBurst extends Ability {
 
 		if (data.hasStatusControl(StatusControl.THROW_CLOUDBURST)) return;
 
-		if (bender.consumeChi(STATS_CONFIG.chiCloudburst)) {
+		float chi  = STATS_CONFIG.chiCloudburst;
+		//2.5F
+
+		if (ctx.getLevel() == 1) {
+			chi += 1;
+		}
+
+		if (ctx.getLevel() == 2) {
+			chi += 1.5;
+		}
+
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			chi *= 2;
+		}
+
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			chi *= 2.5;
+		}
+
+		if (bender.consumeChi(chi)) {
 
 			Vector target;
 			if (ctx.isLookingAtBlock()) {
@@ -45,25 +66,40 @@ public class AbilityCloudBurst extends Ability {
 				target = playerPos.plus(getLookRectangular(entity).times(2.5));
 			}
 
-			float damage = 4F;
-			damage *= ctx.getLevel() >= 2 ? 2.5f : 1f;
-			damage *= ctx.getPowerRatingDamageMod();
-
+			double damage = STATS_CONFIG.cloudburstSettings.damage;
+			//1.5
 			EntityCloudBall cloudball = new EntityCloudBall(world);
-			cloudball.setPosition(target);
-			cloudball.setOwner(entity);
-			cloudball.setBehavior(new CloudburstBehavior.PlayerControlled());
 
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				cloudball.setSize(20);
-				damage = 15;
+				damage = STATS_CONFIG.cloudburstSettings.damage * 4;
+				//6
 				cloudball.canchiSmash(true);
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-				damage = 5F;
+				damage = STATS_CONFIG.cloudburstSettings.damage * 2;
+				//3
 				cloudball.canAbsorb(true);
 			}
-			cloudball.setDamage(damage);
+			if (ctx.getLevel() == 1) {
+				damage = STATS_CONFIG.cloudburstSettings.damage * 1.5;
+				//2.25
+			}
+
+			if (ctx.getLevel() == 2) {
+				damage = STATS_CONFIG.cloudburstSettings.damage * 2.25;
+				//3.375
+			}
+
+			damage *= ctx.getPowerRatingDamageMod();
+
+
+			cloudball.setPosition(target);
+			cloudball.setOwner(entity);
+			cloudball.setStartingPosition(entity.getPosition());
+			cloudball.setBehavior(new CloudburstBehavior.PlayerControlled());
+			cloudball.setDamage((float) damage);
+			cloudball.setAbility(this);
 			world.spawnEntity(cloudball);
 
 			data.addStatusControl(StatusControl.THROW_CLOUDBURST);
@@ -75,6 +111,31 @@ public class AbilityCloudBurst extends Ability {
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiCloudBall(this, entity, bender);
+	}
+
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+		int coolDown = 140;
+
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+			coolDown = 0;
+		}
+
+		if (ctx.getLevel() == 1) {
+			coolDown = 120;
+		}
+		if (ctx.getLevel() == 2) {
+			coolDown = 100;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			coolDown = 70;
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			coolDown = 85;
+		}
+		return coolDown;
 	}
 
 }

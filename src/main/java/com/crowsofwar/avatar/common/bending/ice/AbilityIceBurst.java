@@ -79,6 +79,7 @@ public class AbilityIceBurst extends Ability {
 		shield.setPitchAngles(shardPitchAngles);
 		shield.setHealth(health);
 		shield.setMaxHealth(health);
+		shield.setAbility(this);
 
 		world.spawnEntity(shield);
 		data.addStatusControl(StatusControl.SHIELD_SHATTER);

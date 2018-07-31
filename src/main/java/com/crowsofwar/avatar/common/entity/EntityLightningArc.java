@@ -16,6 +16,7 @@ import org.joml.*;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
@@ -171,9 +172,12 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	protected void updateCpBehavior() {
 		for (LightningControlPoint controlPoint : getControlPoints()) {
 
-			controlPoint.setPosition(controlPoint.getPosition(ticksExisted));
+
+			controlPoint.setPosition(controlPoint.getPosition
+					(ticksExisted));
 
 		}
+
 	}
 
 	@Override

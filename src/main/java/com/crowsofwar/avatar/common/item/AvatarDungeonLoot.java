@@ -118,6 +118,15 @@ public class AvatarDungeonLoot {
 		if (isLootTable(e, CHESTS_STRONGHOLD_LIBRARY)) {
 			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 100).withMetadata(5)); // lightning
 		}
+		if (isLootTable(e, CHESTS_WOODLAND_MANSION)) {
+			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 100).withMetadata(1)); // Earth
+		}
+		if (isLootTable(e, CHESTS_DESERT_PYRAMID)) {
+			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 80).withMetadata(7)); //Sand
+			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 20).withMetadata(1)); //Earth
+
+		}
+
 
 	}
 

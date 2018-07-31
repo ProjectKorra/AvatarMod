@@ -188,6 +188,7 @@ public class ItemScroll extends Item implements AvatarItem {
 
 		}
 
+
 	}
 
 	@Override
@@ -219,15 +220,15 @@ public class ItemScroll extends Item implements AvatarItem {
 
 	public enum ScrollType {
 
-		ALL(null),
-		EARTH(Earthbending.ID),
-		FIRE(Firebending.ID),
-		WATER(Waterbending.ID),
-		AIR(Airbending.ID),
-		LIGHTNING(Lightningbending.ID),
-		ICE(Icebending.ID),
-		SAND(Sandbending.ID),
-		COMBUSTION(Combustionbending.ID);
+		ALL(null), // 0
+		EARTH(Earthbending.ID), // 1
+		FIRE(Firebending.ID), // 2
+		WATER(Waterbending.ID), // 3
+		AIR(Airbending.ID), // 4
+		LIGHTNING(Lightningbending.ID), // 5
+		ICE(Icebending.ID), // 6
+		SAND(Sandbending.ID), // 7
+		COMBUSTION(Combustionbending.ID); // 8
 
 		private final UUID bendingId;
 

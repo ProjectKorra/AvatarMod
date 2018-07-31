@@ -31,7 +31,10 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.common.bending.*;
+
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRaze;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
 import com.crowsofwar.avatar.common.bending.combustion.*;
 import com.crowsofwar.avatar.common.bending.earth.*;
@@ -107,6 +110,9 @@ public class AvatarMod {
 		Abilities.register(new AbilityExplosion());
 		Abilities.register(new AbilityExplosivePillar());
 		Abilities.register(new AbilitySandstorm());
+		Abilities.register(new AbilityInfernoPunch());
+		Abilities.register(new AbilityBoulderRing());
+		Abilities.register(new AbilityLightningRaze());
 	}
 
 	private static void registerBendingStyles() {
@@ -173,6 +179,7 @@ public class AvatarMod {
 		CloudburstBehavior.register();
 		AvatarChatMessages.loadAll();
 		LightningSpearBehavior.register();
+		BoulderBehavior.register();
 
 		EarthbendingEvents.register();
 
@@ -218,6 +225,8 @@ public class AvatarMod {
 		registerEntity(EntityWaterCannon.class, "water_cannon");
 		registerEntity(EntitySandstorm.class, "sandstorm");
 		registerEntity(EntityExplosionSpawner.class, "explosion_spawner");
+		registerEntity(EntityBoulder.class, "entity_boulder");
+		registerEntity(EntityLightningSpawner.class, "lightning_spawner");
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 								EXTREME_HILLS, MUTATED_SAVANNA);

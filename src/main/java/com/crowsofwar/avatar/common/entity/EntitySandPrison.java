@@ -16,13 +16,20 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import java.util.List;
+import java.util.UUID;
+
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.sand.Sandbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
+import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
+
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -36,9 +43,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * @author CrowsOfWar
@@ -91,12 +95,13 @@ public class EntitySandPrison extends AvatarEntity {
 
 	}
 
-	public static void imprison(EntityLivingBase entity, EntityLivingBase owner) {
+	public static void imprison(EntityLivingBase entity, EntityLivingBase owner, Ability ab) {
 		World world = entity.world;
 		EntitySandPrison prison = new EntitySandPrison(world);
 		prison.setImprisoned(entity);
 		prison.copyLocationAndAnglesFrom(entity);
-
+		prison.setAbility(ab);
+		
 		double powerRating = Bender.get(owner).calcPowerRating(Sandbending.ID);
 		prison.setStats(AbilityData.get(owner, "sand_prison"), powerRating);
 
@@ -123,6 +128,11 @@ public class EntitySandPrison extends AvatarEntity {
 	}
 
 	@Override
+	protected boolean canCollideWith(Entity entity) {
+		return false;
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		EntityLivingBase imprisoned = getImprisoned();
@@ -136,6 +146,8 @@ public class EntitySandPrison extends AvatarEntity {
 			imprisoned.posY = this.posY;
 			imprisoned.posZ = this.posZ;
 			imprisoned.motionX = imprisoned.motionY = imprisoned.motionZ = 0;
+			setVelocity(Vector.ZERO);
+			imprisoned.setVelocity(0, 0, 0);
 		}
 
 		if (!world.isRemote) {

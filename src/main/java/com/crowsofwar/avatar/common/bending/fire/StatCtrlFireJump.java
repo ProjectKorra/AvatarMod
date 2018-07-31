@@ -18,14 +18,17 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandler.FIRE_PARTICLE_SPAWNER;
 
 public class StatCtrlFireJump extends StatusControl {
 	public StatCtrlFireJump() {
@@ -42,7 +45,7 @@ public class StatCtrlFireJump extends StatusControl {
 
 		AbilityData abilityData = data.getAbilityData("fire_jump");
 		boolean allowDoubleJump = abilityData.getLevel() == 3
-				&& abilityData.getPath() == AbilityData.AbilityTreePath.FIRST;
+				&& abilityData.getPath() == AbilityData.AbilityTreePath.SECOND;
 
 		// Figure out whether entity is on ground by finding collisions with
 		// ground - if found a collision box, then is not on ground
@@ -55,17 +58,45 @@ public class StatCtrlFireJump extends StatusControl {
 			int lvl = abilityData.getLevel();
 			double jumpMultiplier = 0.2;
 			float fallAbsorption = 3;
+			double range = 2;
+			double speed = 1;
+			float damage = 1;
 			if (lvl >= 1) {
 				jumpMultiplier = 0.3;
 				fallAbsorption = 4;
+				range = 2.5;
+				damage = 2;
+				speed = 1.5;
 			}
 			if (lvl >= 2) {
 				jumpMultiplier = 0.4;
 				fallAbsorption = 5;
+				speed = 2;
+				range = 3;
+				damage = 3;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				jumpMultiplier = 0.6;
 				fallAbsorption = 8;
+				speed = 4;
+				range = 5;
+				damage = 5;
+
+			}
+
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				jumpMultiplier = 0.3;
+				fallAbsorption = 15;
+				speed = 2.5;
+				range = 3;
+				damage = 3;
+			}
+
+			if (abilityData.getLevel()  == 2 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE);
+			}
+			else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE_BIG);
 			}
 
 			// Calculate direction to jump -- in the direction the player is currently already going
@@ -96,6 +127,7 @@ public class StatCtrlFireJump extends StatusControl {
 			velocity = velocity.withZ(velocity.z() * 2);
 
 			velocity = velocity.times(jumpMultiplier);
+			entity.onGround = false;
 			if (!onGround) {
 				velocity = velocity.times(1);
 				entity.motionX = 0;
@@ -107,23 +139,19 @@ public class StatCtrlFireJump extends StatusControl {
 				((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 			}
 
+			damageNearbyEntities(ctx, range, speed, damage);
+
 			ParticleSpawner spawner = new NetworkParticleSpawner();
 			spawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 15, 20,
 					new Vector(entity), new Vector(1, 0, 1));
 
+			data.addTickHandler(FIRE_PARTICLE_SPAWNER);
 			data.getMiscData().setFallAbsorption(fallAbsorption);
 
-			data.addTickHandler(TickHandler.FIRE_PARTICLE_SPAWNER);
-			data.addTickHandler(abilityData.getLevel() >= 2 ?
-					TickHandler.SMASH_GROUND_FIRE_BIG : TickHandler.SMASH_GROUND_FIRE);
-
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				damageNearbyEntities(ctx, 5, 3);
-			}
 
 			abilityData.addXp(ConfigSkills.SKILLS_CONFIG.fireJump);
 
-			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BLAZE_HURT,
+			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_SHOOT,
 					SoundCategory.PLAYERS, 1, .7f);
 
 			return true;
@@ -134,7 +162,7 @@ public class StatCtrlFireJump extends StatusControl {
 
 	}
 
-	private void damageNearbyEntities(BendingContext ctx, double range, double speed) {
+	private void damageNearbyEntities(BendingContext ctx, double range, double speed, float damage) {
 
 		EntityLivingBase entity = ctx.getBenderEntity();
 
@@ -142,10 +170,21 @@ public class StatCtrlFireJump extends StatusControl {
 		AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.posY - range,
 				entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range);
 
+		if (!world.isRemote) {
+			WorldServer World = (WorldServer) world;
+			for (int degree = 0; degree < 360; degree++) {
+				double radians = Math.toRadians(degree);
+				double x =  Math.cos(radians) * range;
+				double z = Math.sin(radians) * range;
+				double y = entity.posY;
+				World.spawnParticle(EnumParticleTypes.FLAME, x + entity.posX, y, z + entity.posZ, 10, 0, 0, 0, 0.1);
+			}
+		}
+
 		List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 		for (EntityLivingBase target : nearby) {
 			if (target != entity) {
-				target.attackEntityFrom(AvatarDamageSource.causeSmashDamage(target, entity), 5);
+				target.attackEntityFrom(AvatarDamageSource.causeSmashDamage(target, entity), damage);
 				BattlePerformanceScore.addSmallScore(entity);
 
 				Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));

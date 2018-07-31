@@ -17,25 +17,36 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
+import com.crowsofwar.avatar.common.world.AvatarFireExplosion;
+import com.crowsofwar.gorecore.util.Vector;
+import jdk.nashorn.internal.ir.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+import org.lwjgl.Sys;
+
+import javax.annotation.Nullable;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -53,6 +64,12 @@ public class EntityFireball extends AvatarEntity {
 	private AxisAlignedBB expandedHitbox;
 
 	private float damage;
+	private float explosionStrength;
+
+	public void setExplosionStrength(float strength) {
+		this.explosionStrength = strength;
+	}
+
 
 	/**
 	 * @param world
@@ -60,6 +77,7 @@ public class EntityFireball extends AvatarEntity {
 	public EntityFireball(World world) {
 		super(world);
 		setSize(.8f, .8f);
+		this.explosionStrength = 0.75f;
 	}
 
 	@Override
@@ -71,22 +89,40 @@ public class EntityFireball extends AvatarEntity {
 
 	@Override
 	public void onUpdate() {
+
 		super.onUpdate();
 		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
 
-		// TODO Temporary fix to avoid extra fireballs
+
+		if (ticksExisted % 30 == 0) {
+			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 6, 0.8F);
+		}
+
 		// Add hook or something
 		if (getOwner() == null) {
 			setDead();
 			removeStatCtrl();
 		}
 
+		if (getOwner() == null) {
+			setDead();
+			removeStatCtrl();
+		}
+		if (getOwner() != null) {
+			BendingData data = BendingData.get(getOwner());
+			if (getBehavior() instanceof FireballBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
+				setDead();
+			}
+		}
 	}
+
 
 	@Override
 	public boolean onMajorWaterContact() {
 		spawnExtinguishIndicators();
-		removeStatCtrl();
+		if (getBehavior() instanceof FireballBehavior.PlayerControlled) {
+			removeStatCtrl();
+		}
 		setDead();
 		return true;
 	}
@@ -136,38 +172,48 @@ public class EntityFireball extends AvatarEntity {
 	@Override
 	public boolean onCollideWithSolid() {
 
-		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
-		explosionSize *= getSize() / 30f;
-		explosionSize += getPowerRating() * 2.0 / 100;
-		boolean destroyObsidian = false;
 
-		if (getOwner() != null) {
-			AbilityData abilityData = BendingData.get(getOwner())
-					.getAbilityData("fireball");
-			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
-				destroyObsidian = true;
+		if (getBehavior() instanceof FireballBehavior.Thrown) {
+			float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
+
+			explosionSize *= getSize() / 15f;
+			explosionSize += getPowerRating() * 2.0 / 100;
+			boolean destroyObsidian = false;
+
+			if (getOwner() != null && !world.isRemote) {
+				if (getAbility() instanceof AbilityFireball) {
+					AbilityData abilityData = BendingData.get(getOwner())
+							.getAbilityData("fireball");
+					if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
+						destroyObsidian = true;
+					}
+				}
+
 			}
-		}
 
-		Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
-				!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
-		if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
+			AvatarFireExplosion fireExplosion = new AvatarFireExplosion(world, this, posX, posY, posZ, explosionSize * this.explosionStrength,
+					!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
 
-			explosion.doExplosionA();
-			explosion.doExplosionB(true);
+			if (!ForgeEventFactory.onExplosionStart(world, fireExplosion)) {
+				fireExplosion.doExplosionA();
+				fireExplosion.doExplosionB(true);
 
-		}
+			}
 
-		if (destroyObsidian) {
-			for (EnumFacing dir : EnumFacing.values()) {
-				BlockPos pos = getPosition().offset(dir);
-				if (world.getBlockState(pos).getBlock() == Blocks.OBSIDIAN) {
-					world.destroyBlock(pos, true);
+			if (destroyObsidian) {
+				for (EnumFacing dir : EnumFacing.values()) {
+					BlockPos pos = getPosition().offset(dir);
+					if (world.getBlockState(pos).getBlock() == Blocks.OBSIDIAN) {
+						world.destroyBlock(pos, true);
+					}
 				}
 			}
-		}
 
-		setDead();
+
+			setDead();
+			removeStatCtrl();
+
+		}
 		return true;
 
 	}
@@ -186,6 +232,12 @@ public class EntityFireball extends AvatarEntity {
 		nbt.setInteger("Behavior", getBehavior().getId());
 	}
 
+	@Override
+	public int getBrightnessForRender() {
+		return 150;
+	}
+
+
 	public AxisAlignedBB getExpandedHitbox() {
 		return this.expandedHitbox;
 	}
@@ -198,8 +250,9 @@ public class EntityFireball extends AvatarEntity {
 
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 0 || pass == 1;
+		return true;
 	}
+	//Mostly fixes a glitch where the entity turns invisible
 
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
