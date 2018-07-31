@@ -1,19 +1,19 @@
 package com.crowsofwar.avatar.common.data;
 
+import net.minecraft.block.Block;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -56,10 +56,10 @@ public class WallJumpManager {
 			entity.motionZ = n.z();
 			AvatarUtils.afterVelocityAdded(entity);
 
-			new NetworkParticleSpawner().spawnParticles(world, particles, 4, 10, new Vector
-					(entity).plus(n), n.times(3));
-			world.playSound(null, new BlockPos(entity), block.getSoundType().getBreakSound(),
-					SoundCategory.PLAYERS, 1, 0.6f);
+			new NetworkParticleSpawner().spawnParticles(world, particles, 4, 10, new Vector(entity).plus(n), n.times(3));
+			world.playSound(null, new BlockPos(entity),
+							Objects.requireNonNull(block).getSoundType(world.getBlockState(new BlockPos(entity)), world, new BlockPos(entity), entity)
+											.getBreakSound(), SoundCategory.PLAYERS, 1, 0.6f);
 
 			bender.getData().getMiscData().addFallAbsorption(3);
 			if (particles == EnumParticleTypes.CLOUD && STATS_CONFIG.allowMultiAirbendingWalljump) {
@@ -79,20 +79,19 @@ public class WallJumpManager {
 		EntityLivingBase entity = bender.getEntity();
 
 		// Detect whether the player is horizontally collided (i.e. touching a wall)
-		// Calculation different between client/server b/c client has isCollidedVertically
+		// Calculation different between client/server b/c client has collidedVertically
 		// properly setup, while server doesn't and needs trickier calculation
 
 		boolean collidedWithWall;
 		if (bender.getWorld().isRemote) {
-			collidedWithWall = entity.isCollidedHorizontally && !entity.isCollidedVertically;
+			collidedWithWall = entity.collidedHorizontally && !entity.collidedVertically;
 		} else {
 			collidedWithWall = getHorizontalCollisionBlock() != null;
 		}
 
 		MiscData md = bender.getData().getMiscData();
 
-		return collidedWithWall && !md.isWallJumping() && md.getTimeInAir() >= STATS_CONFIG
-				.wallJumpDelay;
+		return collidedWithWall && !md.isWallJumping() && md.getTimeInAir() >= STATS_CONFIG.wallJumpDelay;
 
 	}
 

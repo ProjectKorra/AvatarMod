@@ -11,7 +11,8 @@
     "a4.4": "Bugfixes and improvements - please see av2.io/a4.4-changelog",
     "a5.0": "Massive SPECIALTY BENDING update\n\n- Added Icebending, Combustionbending, Lightningbending, and Sandbending\n- Added ostrich horses, ostrich armor, and more\n- Added Power Rating and Performance system for heated battles\n- Tons of bugfixes & improvements, full changelog available at: bit.ly/2CsUEJH",
     "a5.1": "Critical patch which fixes crash when using skill menu",
-    "a5.2": "Fixes server crashing and many other bugs. Added in-game announcement system."
+    "a5.2": "Fixes server crashing and many other bugs. Added in-game announcement system.",
+    "a5.3": "Fixed a server crash when preforming sandstorm, added Russian translations. Made ostriches spawn."
   },
   "promos": {
     "1.11-latest": "a5.2",
@@ -19,11 +20,11 @@
     "1.11.2-latest": "a5.2",
     "1.11.2-recommended": "a5.2",
 
-    "1.12-latest": "a5.2",
-    "1.12-recommended": "a5.2",
-    "1.12.1-latest": "a5.2",
-    "1.12.1-recommended": "a5.2",
-    "1.12.2-latest": "a5.2",
-    "1.12.2-recommended": "a5.2"
+    "1.12-latest": "a5.3",
+    "1.12-recommended": "a5.3",
+    "1.12.1-latest": "a5.3",
+    "1.12.1-recommended": "a5.3",
+    "1.12.2-latest": "a5.3",
+    "1.12.2-recommended": "a5.3"
   }
 }

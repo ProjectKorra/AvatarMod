@@ -1,11 +1,10 @@
 package com.crowsofwar.avatar.common.item;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import net.minecraftforge.fml.relauncher.*;
 
 import javax.annotation.Nullable;
 
@@ -50,10 +49,7 @@ public class ItemOstrichEquipment extends Item implements AvatarItem {
 	}
 
 	public enum EquipmentTier {
-
-		WOVEN,
-		CHAIN,
-		PLATE;
+		WOVEN, CHAIN, PLATE;
 
 		/**
 		 * Get the lowercase of the equipment tier specified by the index, or null if there isn't
@@ -61,6 +57,7 @@ public class ItemOstrichEquipment extends Item implements AvatarItem {
 		 */
 		@Nullable
 		public static String getTierName(int index) {
+			System.out.println("getTierName: " + index);
 			if (!isValidIndex(index)) return null;
 			return values()[index].name().toLowerCase();
 		}

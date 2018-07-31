@@ -16,17 +16,14 @@
 */
 package com.crowsofwar.avatar.client.gui;
 
-import com.crowsofwar.avatar.common.config.ConfigAnalytics;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.*;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraftforge.fml.relauncher.*;
+
+import com.crowsofwar.avatar.common.config.ConfigAnalytics;
+
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class AnalyticsWarningGui extends GuiScreen {
@@ -41,29 +38,26 @@ public class AnalyticsWarningGui extends GuiScreen {
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
+	protected void actionPerformed(GuiButton button) {
 
 		if (button.id == 1) {
 			ConfigAnalytics.ANALYTICS_CONFIG.optOutAnalytics();
 		}
 		ConfigAnalytics.ANALYTICS_CONFIG.dontShowAnalyticsWarning();
 
-		this.mc.displayGuiScreen(new GuiMainMenu());
+		mc.displayGuiScreen(new GuiMainMenu());
 
 	}
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		this.drawDefaultBackground();
+		drawDefaultBackground();
 
-		String text = "Avatar Mod 2 - Analytics Notification \n \n " +
-				"Hello! We would like to notify you of a new feature of Avatar Mod 2. We've " +
-				"introduced a statistic feature called " + TextFormatting.BOLD + "analytics" +
-				TextFormatting.RESET + ", which gathers " +
-				"anonymous statistics on what features of AV2 players are using. " +
-				"This is completely anonymous and the statistics are only used to improve avatar mod. " +
-				"(Not used for commercial purposes) \n \n " +
-				"Detailed info is available here: http://bit.ly/2Bda6EY";
+		String text = "Avatar Mod 2 - Analytics Notification \n \n " + "Hello! We would like to notify you of a new feature of Avatar Mod 2. We've "
+						+ "introduced a statistic feature called " + TextFormatting.BOLD + "analytics" + TextFormatting.RESET + ", which gathers "
+						+ "anonymous statistics on what features of AV2 players are using. "
+						+ "This is completely anonymous and the statistics are only used to improve avatar mod. "
+						+ "(Not used for commercial purposes) \n \n " + "Detailed info is available here: http://bit.ly/2Bda6EY";
 
 		// Split into lines, such that each line isn't too long and stretches off the screen
 		List<String> lineList = new ArrayList<>();
@@ -74,7 +68,6 @@ public class AnalyticsWarningGui extends GuiScreen {
 		for (String word : words) {
 
 			// Want to check if this the same last word instance
-			//noinspection StringEquality
 			boolean lastWord = word == words[words.length - 1];
 			if (lastWord) {
 				currentLine.append(word);

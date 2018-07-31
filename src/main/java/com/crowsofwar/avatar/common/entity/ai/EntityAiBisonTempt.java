@@ -16,12 +16,13 @@
 */
 package com.crowsofwar.avatar.common.entity.ai;
 
-import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 import java.util.List;
 
@@ -39,25 +40,24 @@ public class EntityAiBisonTempt extends EntityAIBase {
 
 	public EntityAiBisonTempt(EntitySkyBison bison, double maxDist) {
 		this.bison = bison;
-		this.maxDistSq = maxDist * maxDist;
-		this.following = null;
+		maxDistSq = maxDist * maxDist;
+		following = null;
 		setMutexBits(1);
 	}
 
 	@Override
 	public boolean shouldExecute() {
-
 		if (bison.getCondition().getFoodPoints() >= 25) return false;
 
 		List<EntityPlayer> players = bison.world.getEntities(EntityPlayer.class, player -> {
-			if (bison.getDistanceSqToEntity(player) > maxDistSq) return false;
+			if (bison.getDistanceSq(player) > maxDistSq) return false;
 			return isHoldingFood(player);
 		});
 
 		players.sort((p1, p2) -> {
-			double d1 = bison.getDistanceSqToEntity(p1);
-			double d2 = bison.getDistanceSqToEntity(p2);
-			return d1 < d2 ? -1 : (d1 > d2 ? 1 : 0);
+			double d1 = bison.getDistanceSq(p1);
+			double d2 = bison.getDistanceSq(p2);
+			return Double.compare(d1, d2);
 		});
 
 		if (!players.isEmpty()) {
@@ -71,18 +71,15 @@ public class EntityAiBisonTempt extends EntityAIBase {
 
 	@Override
 	public void startExecuting() {
-		bison.getMoveHelper().setMoveTo(following.posX,
-				following.posY + following.eyeHeight - bison.getEyeHeight(), following.posZ, 1);
+		bison.getMoveHelper().setMoveTo(following.posX, following.posY + following.eyeHeight - bison.getEyeHeight(), following.posZ, 1);
 	}
 
 	@Override
 	public boolean shouldContinueExecuting() {
 
-		if (!following.isDead && bison.getDistanceSqToEntity(following) <= maxDistSq
-				&& isHoldingFood(following)) {
+		if (!following.isDead && bison.getDistanceSq(following) <= maxDistSq && isHoldingFood(following)) {
 
-			bison.getMoveHelper().setMoveTo(following.posX,
-					following.posY + following.eyeHeight - bison.getEyeHeight(), following.posZ, 1);
+			bison.getMoveHelper().setMoveTo(following.posX, following.posY + following.eyeHeight - bison.getEyeHeight(), following.posZ, 1);
 			return true;
 
 		} else {

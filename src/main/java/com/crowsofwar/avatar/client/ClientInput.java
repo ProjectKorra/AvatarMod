@@ -17,33 +17,27 @@
 
 package com.crowsofwar.avatar.client;
 
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarMod;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextComponentString;
+
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.*;
+import net.minecraftforge.fml.relauncher.*;
+
+import com.crowsofwar.avatar.*;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.controls.IControlsHandler;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.controls.*;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
+import org.lwjgl.input.*;
 
 import java.util.*;
 
@@ -84,7 +78,7 @@ public class ClientInput implements IControlsHandler {
 		addKeybinding("Skills", Keyboard.KEY_K, "main");
 		addKeybinding("TransferBison", Keyboard.KEY_O, "main");
 
-		this.wasAbilityDown = new boolean[Abilities.all().size()];
+		wasAbilityDown = new boolean[Abilities.all().size()];
 
 	}
 
@@ -140,7 +134,7 @@ public class ClientInput implements IControlsHandler {
 	public int getKeyCode(AvatarControl control) {
 		String keyName = control.getName().substring("avatar.".length());
 		KeyBinding kb = keybindings.get(keyName);
-		if (kb == null) AvatarLog.warn("Key control '" + keyName + "' is undefined");
+		if (kb == null) AvatarLog.warn(WarningType.CONFIGURATION, "Key control '" + keyName + "' is undefined");
 		return kb == null ? -1 : kb.getKeyCode();
 	}
 
@@ -179,7 +173,7 @@ public class ClientInput implements IControlsHandler {
 		Integer key = CLIENT_CONFIG.keymappings.get(ability);
 		if (key != null) {
 			if (key < 0 && Mouse.isButtonDown(key + 100)) return true;
-			if (key >= 0 && Keyboard.isKeyDown(key)) return true;
+			return key >= 0 && Keyboard.isKeyDown(key);
 		}
 		return false;
 	}
@@ -196,8 +190,7 @@ public class ClientInput implements IControlsHandler {
 			} else {
 
 				String message = I18n.format(MSG_DONT_HAVE_BENDING.getTranslateKey());
-				message = FormattedMessageProcessor.formatText(MSG_DONT_HAVE_BENDING, message,
-						mc.player.getName());
+				message = FormattedMessageProcessor.formatText(MSG_DONT_HAVE_BENDING, message, mc.player.getName());
 				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(message));
 
 			}
@@ -263,12 +256,10 @@ public class ClientInput implements IControlsHandler {
 				Ability ability = allAbilities.get(i);
 				boolean down = isAbilityPressed(ability);
 
-				if (!CLIENT_CONFIG.conflicts.containsKey(ability))
-					CLIENT_CONFIG.conflicts.put(ability, false);
+				if (!CLIENT_CONFIG.conflicts.containsKey(ability)) CLIENT_CONFIG.conflicts.put(ability, false);
 				boolean conflict = CLIENT_CONFIG.conflicts.get(ability);
 
-				if (!conflict && mc.inGameHasFocus && mc.currentScreen == null && down
-						&& !wasAbilityDown[i]) {
+				if (!conflict && mc.inGameHasFocus && mc.currentScreen == null && down && !wasAbilityDown[i]) {
 					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player, ability.getRaytrace());
 					AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace));
 				}

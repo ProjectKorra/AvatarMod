@@ -19,6 +19,7 @@ buildscript {
 }
 plugins {
     id "org.sonarqube" version "2.2"
+    id 'io.franzbecker.gradle-lombok' version '1.14'
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -35,7 +36,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
     compile files("libs/joml/joml-1.8.1.jar")
-    compile files("libs/yaml/snakeyaml-1.16.jar");
+    compile files("libs/yaml/snakeyaml-1.16.jar")
 }
 
 minecraft {
@@ -61,7 +62,7 @@ processResources {
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
 
-    // copy everything else, thats not the mcmod.info
+    // copy everything else, that's not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
@@ -85,7 +86,7 @@ shadowJar {
   configurations = [project.configurations.compile]
 }
 
-def parseConfig(File config) {
+static def parseConfig(File config) {
     config.withReader {
         def prop = new Properties()
         prop.load(it)

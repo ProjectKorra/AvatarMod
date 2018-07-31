@@ -16,12 +16,13 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
-import com.crowsofwar.avatar.client.uitools.UiComponent;
-import com.crowsofwar.avatar.common.bending.Ability;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.settings.*;
+
+import com.crowsofwar.avatar.client.uitools.UiComponent;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.config.ConfigClient;
 import org.lwjgl.input.Keyboard;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
@@ -40,11 +41,11 @@ public class ComponentAbilityKeybind extends UiComponent {
 
 	public ComponentAbilityKeybind(Ability ability) {
 		this.ability = ability;
-		this.text1 = this.text2 = "";
-		this.color = 0xffffff;
+		text1 = text2 = "";
+		color = 0xffffff;
 
-		this.editing = false;
-		this.conflict = null;
+		editing = false;
+		conflict = null;
 
 		updateText();
 
@@ -166,7 +167,7 @@ public class ComponentAbilityKeybind extends UiComponent {
 
 	private void storeKey(Integer key) {
 		CLIENT_CONFIG.keymappings.put(ability, key);
-		CLIENT_CONFIG.save();
+		ConfigClient.save();
 	}
 
 	public boolean isEditing() {

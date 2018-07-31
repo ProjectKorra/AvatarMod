@@ -17,43 +17,30 @@
 
 package com.crowsofwar.avatar.common.network;
 
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarMod;
+import net.minecraft.entity.player.*;
+import net.minecraft.inventory.*;
+import net.minecraft.item.ItemStack;
+
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+import net.minecraftforge.fml.relauncher.Side;
+
+import com.crowsofwar.avatar.*;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
-import com.crowsofwar.avatar.common.analytics.AnalyticEvent;
-import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
-import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.analytics.*;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.WallJumpManager;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
-import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
-import com.crowsofwar.avatar.common.gui.ContainerGetBending;
-import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
+import com.crowsofwar.avatar.common.gui.*;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 import static com.crowsofwar.avatar.common.analytics.AnalyticEvents.getAbilityExecutionEvent;
@@ -81,39 +68,29 @@ public class PacketHandlerServer implements IPacketHandler {
 	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
 		AvatarLog.debug("Server: Received a packet");
 
-		if (packet instanceof PacketSUseAbility)
-			return handleKeypress((PacketSUseAbility) packet, ctx);
+		if (packet instanceof PacketSUseAbility) return handleKeypress((PacketSUseAbility) packet, ctx);
 
-		if (packet instanceof PacketSRequestData)
-			return handleRequestData((PacketSRequestData) packet, ctx);
+		if (packet instanceof PacketSRequestData) return handleRequestData((PacketSRequestData) packet, ctx);
 
-		if (packet instanceof PacketSUseStatusControl)
-			return handleUseStatusControl((PacketSUseStatusControl) packet, ctx);
+		if (packet instanceof PacketSUseStatusControl) return handleUseStatusControl((PacketSUseStatusControl) packet, ctx);
 
 		if (packet instanceof PacketSWallJump) return handleWallJump((PacketSWallJump) packet, ctx);
 
-		if (packet instanceof PacketSSkillsMenu)
-			return handleSkillsMenu((PacketSSkillsMenu) packet, ctx);
+		if (packet instanceof PacketSSkillsMenu) return handleSkillsMenu((PacketSSkillsMenu) packet, ctx);
 
-		if (packet instanceof PacketSUseScroll)
-			return handleUseScroll((PacketSUseScroll) packet, ctx);
+		if (packet instanceof PacketSUseScroll) return handleUseScroll((PacketSUseScroll) packet, ctx);
 
-		if (packet instanceof PacketSBisonInventory)
-			return handleInventory((PacketSBisonInventory) packet, ctx);
+		if (packet instanceof PacketSBisonInventory) return handleInventory((PacketSBisonInventory) packet, ctx);
 
-		if (packet instanceof PacketSOpenUnlockGui)
-			return handleGetBending((PacketSOpenUnlockGui) packet, ctx);
+		if (packet instanceof PacketSOpenUnlockGui) return handleGetBending((PacketSOpenUnlockGui) packet, ctx);
 
-		if (packet instanceof PacketSUnlockBending)
-			return handleUnlockBending((PacketSUnlockBending) packet, ctx);
+		if (packet instanceof PacketSUnlockBending) return handleUnlockBending((PacketSUnlockBending) packet, ctx);
 
-		if (packet instanceof PacketSConfirmTransfer)
-			return handleConfirmTransfer((PacketSConfirmTransfer) packet, ctx);
+		if (packet instanceof PacketSConfirmTransfer) return handleConfirmTransfer((PacketSConfirmTransfer) packet, ctx);
 
-		if (packet instanceof PacketSCycleBending)
-			return handleCycleBending((PacketSCycleBending) packet, ctx);
+		if (packet instanceof PacketSCycleBending) return handleCycleBending((PacketSCycleBending) packet, ctx);
 
-		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
+		AvatarLog.warn(WarningType.BAD_CLIENT_PACKET, "Unknown packet received: " + packet.getClass().getName());
 		return null;
 	}
 
@@ -159,14 +136,12 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleRequestData(PacketSRequestData packet, MessageContext ctx) {
 
 		UUID id = packet.getAskedPlayer();
-		EntityPlayer player = AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().player.world,
-				id);
+		EntityPlayer player = AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().player.world, id);
 
 		if (player == null) {
 
 			AvatarLog.warnHacking(ctx.getServerHandler().player.getName(),
-					"Sent request data for a player with account '" + id
-							+ "', but that player is not in the world.");
+								  "Sent request data for a player with account '" + id + "', but that player is not in the world.");
 			return null;
 
 		}
@@ -209,7 +184,6 @@ public class PacketHandlerServer implements IPacketHandler {
 
 		if (jumpManager.knowsWallJump()) {
 
-			//noinspection ConstantConditions
 			if (jumpManager.canWallJump()) {
 				jumpManager.doWallJump(jumpManager.getWallJumpParticleType());
 			}
@@ -301,8 +275,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (player.getRidingEntity() instanceof EntitySkyBison) {
 			EntitySkyBison bison = (EntitySkyBison) player.getRidingEntity();
 			if (bison.canPlayerViewInventory(player)) {
-				player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, player.world,
-						bison.getId(), 0, 0);
+				player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, player.world, bison.getId(), 0, 0);
 			}
 		}
 
@@ -338,7 +311,6 @@ public class PacketHandlerServer implements IPacketHandler {
 					data.addBendingId(bending);
 
 					// Unlock first ability
-					//noinspection ConstantConditions - can safely assume bending is present if
 					// the ID is in use to unlock it
 					Ability ability = BendingStyles.get(bending).getAllAbilities().get(0);
 					data.getAbilityData(ability).unlockAbility();

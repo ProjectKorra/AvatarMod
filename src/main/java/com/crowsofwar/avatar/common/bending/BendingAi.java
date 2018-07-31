@@ -16,13 +16,12 @@
 */
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.EntityAIBase;
+
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIBase;
 
 /**
  * Represents behavior needed for use of an ability by a mob. When most
@@ -50,7 +49,7 @@ public abstract class BendingAi extends EntityAIBase {
 		this.ability = ability;
 		this.entity = entity;
 		this.bender = bender;
-		this.timeExecuting = 0;
+		timeExecuting = 0;
 	}
 
 	@Override
@@ -77,7 +76,7 @@ public abstract class BendingAi extends EntityAIBase {
 	@Override
 	public final boolean shouldExecute() {
 		EntityLivingBase target = entity.getAttackTarget();
-		boolean targetInRange = target == null || entity.getDistanceSqToEntity(target) < 12 * 12;
+		boolean targetInRange = target == null || entity.getDistanceSq(target) < 12 * 12;
 		return bender.getData().getMiscData().getAbilityCooldown() == 0 && targetInRange && shouldExec();
 	}
 

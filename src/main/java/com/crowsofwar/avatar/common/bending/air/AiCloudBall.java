@@ -1,19 +1,14 @@
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityCloudBall;
+import net.minecraft.entity.*;
+
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import static com.crowsofwar.gorecore.util.Vector.*;
 import static java.lang.Math.toDegrees;
 
 public class AiCloudBall extends BendingAi {
@@ -63,8 +58,8 @@ public class AiCloudBall extends BendingAi {
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSqToEntity(target) > 4 * 4
-				&& bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
+		return target != null && entity.getDistanceSq(target) > 4 * 4 && bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG()
+						.nextBoolean();
 	}
 
 	@Override
@@ -76,8 +71,8 @@ public class AiCloudBall extends BendingAi {
 	public void resetTask() {
 
 		EntityCloudBall cloudball = AvatarEntity.lookupEntity(entity.world, EntityCloudBall.class, //
-				cloud -> cloud.getBehavior() instanceof CloudburstBehavior.PlayerControlled
-						&& cloud.getOwner() == entity);
+															  cloud -> cloud.getBehavior() instanceof CloudburstBehavior.PlayerControlled
+																			  && cloud.getOwner() == entity);
 
 		if (cloudball != null) {
 			cloudball.setDead();

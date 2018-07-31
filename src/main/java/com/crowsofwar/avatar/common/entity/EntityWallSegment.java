@@ -17,34 +17,31 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
-import com.crowsofwar.avatar.common.entity.data.WallBehavior;
-import com.crowsofwar.gorecore.util.Vector;
-import com.google.common.base.Optional;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.datasync.*;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.entity.data.*;
+import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.base.Optional;
+import io.netty.buffer.ByteBuf;
 
 import java.util.UUID;
 
@@ -54,23 +51,20 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 /**
  * @author CrowsOfWar
  */
-@SuppressWarnings("Guava")
 public class EntityWallSegment extends AvatarEntity implements IEntityAdditionalSpawnData {
 
 	public static final int SEGMENT_HEIGHT = 5;
 
 	private static final DataParameter<Optional<UUID>> SYNC_WALL = EntityDataManager
-			.createKey(EntityWallSegment.class, DataSerializers.OPTIONAL_UNIQUE_ID);
-	private static final DataParameter<WallBehavior> SYNC_BEHAVIOR = EntityDataManager
-			.createKey(EntityWallSegment.class, WallBehavior.SERIALIZER);
+					.createKey(EntityWallSegment.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+	private static final DataParameter<WallBehavior> SYNC_BEHAVIOR = EntityDataManager.createKey(EntityWallSegment.class, WallBehavior.SERIALIZER);
 
 	private static final DataParameter<Optional<IBlockState>>[] SYNC_BLOCKS_DATA;
 
 	static {
 		SYNC_BLOCKS_DATA = new DataParameter[SEGMENT_HEIGHT];
 		for (int i = 0; i < SEGMENT_HEIGHT; i++) {
-			SYNC_BLOCKS_DATA[i] = EntityDataManager.createKey(EntityWallSegment.class,
-					DataSerializers.OPTIONAL_BLOCK_STATE);
+			SYNC_BLOCKS_DATA[i] = EntityDataManager.createKey(EntityWallSegment.class, DataSerializers.OPTIONAL_BLOCK_STATE);
 		}
 	}
 
@@ -83,9 +77,9 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 
 	public EntityWallSegment(World world) {
 		super(world);
-		this.wallReference = new SyncedEntity<>(this, SYNC_WALL);
-		this.wallReference.preventNullSaving();
-		this.setSize(.9f, 5);
+		wallReference = new SyncedEntity<>(this, SYNC_WALL);
+		wallReference.preventNullSaving();
+		setSize(.9f, 5);
 	}
 
 	@Override
@@ -121,8 +115,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	}
 
 	public void setBlock(int i, IBlockState block) {
-		dataManager.set(SYNC_BLOCKS_DATA[i],
-				block == null ? Optional.of(Blocks.AIR.getDefaultState()) : Optional.of(block));
+		dataManager.set(SYNC_BLOCKS_DATA[i], block == null ? Optional.of(Blocks.AIR.getDefaultState()) : Optional.of(block));
 	}
 
 	public WallBehavior getBehavior() {
@@ -142,7 +135,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	}
 
 	public void setDirection(EnumFacing dir) {
-		this.direction = dir;
+		direction = dir;
 	}
 
 	public int getBlocksOffset() {
@@ -171,8 +164,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	public void dropBlocks() {
 		for (int i = 0; i < SEGMENT_HEIGHT; i++) {
 			IBlockState state = getBlock(i);
-			if (state.getBlock() != Blocks.AIR)
-				world.setBlockState(new BlockPos(this).up(i + getBlocksOffset()), state);
+			if (state.getBlock() != Blocks.AIR) world.setBlockState(new BlockPos(this).up(i + getBlocksOffset()), state);
 		}
 	}
 
@@ -193,10 +185,10 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 
 	@Override
 	public boolean processInitialInteract(EntityPlayer player, EnumHand stack) {
-		if (!this.isDead && !world.isRemote && player.capabilities.isCreativeMode && player.isSneaking()) {
+		if (!isDead && !world.isRemote && player.capabilities.isCreativeMode && player.isSneaking()) {
 			setDead();
 			dropBlocks();
-			setBeenAttacked();
+			markVelocityChanged();
 			return true;
 		}
 		return false;
@@ -249,18 +241,18 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 
 		boolean ns = direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH;
 		if (ns) {
-			if (entity.posZ > this.posZ) {
-				entity.posZ = this.posZ + 1.1;
+			if (entity.posZ > posZ) {
+				entity.posZ = posZ + 1.1;
 			} else {
 				amt = -amt;
-				entity.posZ = this.posZ - 1.1;
+				entity.posZ = posZ - 1.1;
 			}
 		} else {
-			if (entity.posX > this.posX) {
-				entity.posX = this.posX + 1.1;
+			if (entity.posX > posX) {
+				entity.posX = posX + 1.1;
 			} else {
 				amt = -amt;
-				entity.posX = this.posX - 1.1;
+				entity.posX = posX - 1.1;
 			}
 		}
 
@@ -316,8 +308,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			AbilityData data = Bender.get(getOwner()).getData().getAbilityData("wall");
 			if (data.isMaxLevel() && data.getPath() == AbilityTreePath.FIRST) {
 
-				friendlyProjectile = entity instanceof AvatarEntity
-						&& ((AvatarEntity) entity).getOwner() == this.getOwner();
+				friendlyProjectile = entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner();
 
 			}
 		}

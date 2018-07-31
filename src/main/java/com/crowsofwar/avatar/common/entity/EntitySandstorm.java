@@ -1,28 +1,22 @@
 package com.crowsofwar.avatar.common.entity;
 
+import net.minecraft.block.*;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.World;
+
+import net.minecraftforge.fml.relauncher.*;
+
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.SandstormMovementHandler;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
@@ -81,7 +75,7 @@ public class EntitySandstorm extends AvatarEntity {
 			movementHandler.update();
 		}
 
-		if (isCollided) {
+		if (collided) {
 			setDead();
 		}
 
@@ -173,9 +167,9 @@ public class EntitySandstorm extends AvatarEntity {
 	protected void onCollideWithEntity(Entity entity) {
 
 		// Number of blocks that the target "floats" above the ground
-		final double floatingDistance = 2;
+		double floatingDistance = 2;
 		// The maximum distance between a sandstorm and an orbiting mob before the mob is thrown
-		final double maxPickupRange = 1.3;
+		double maxPickupRange = 1.3;
 
 		if (entity == getOwner()) {
 			return;
@@ -189,8 +183,7 @@ public class EntitySandstorm extends AvatarEntity {
 		double currentAngle = Vector.getRotationTo(position(), Vector.getEntityPos(entity)).y();
 		double nextAngle = currentAngle + Math.toRadians(360 / 20);
 
-		double currentDistance = entity.getDistance(this.posX, this.posY + floatingDistance, this
-				.posZ);
+		double currentDistance = entity.getDistance(posX, posY + floatingDistance, posZ);
 		double nextDistance = currentDistance + 0.01;
 
 		// Prevent entities from orbiting too closely
@@ -215,8 +208,7 @@ public class EntitySandstorm extends AvatarEntity {
 			onFlingEntity(entity);
 		}
 
-		Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0).times(nextDistance))
-				.plusY(floatingDistance);
+		Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0).times(nextDistance)).plusY(floatingDistance);
 		Vector delta = nextPos.minus(Vector.getEntityPos(entity));
 
 		Vector nextVelocity = velocity().plus(delta.times(20));

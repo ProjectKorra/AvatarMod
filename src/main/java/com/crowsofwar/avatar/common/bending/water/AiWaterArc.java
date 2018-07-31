@@ -16,20 +16,15 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import net.minecraft.entity.*;
+
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import static com.crowsofwar.gorecore.util.Vector.*;
 import static java.lang.Math.toDegrees;
 
 /**
@@ -64,8 +59,7 @@ public class AiWaterArc extends BendingAi {
 		entity.rotationYaw = (float) toDegrees(targetRotations.y());
 		entity.rotationPitch = (float) toDegrees(targetRotations.x());
 
-		entity.getLookHelper().setLookPosition(target.posX, target.posY + target.getEyeHeight(), target.posZ,
-				10, 10);
+		entity.getLookHelper().setLookPosition(target.posX, target.posY + target.getEyeHeight(), target.posZ, 10, 10);
 
 		if (timeExecuting == 20) {
 			BendingData data = bender.getData();
@@ -90,8 +84,7 @@ public class AiWaterArc extends BendingAi {
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSqToEntity(target) > 4 * 4
-				&& bender.getData().getMiscData().getAbilityCooldown() == 0;
+		return target != null && entity.getDistanceSq(target) > 4 * 4 && bender.getData().getMiscData().getAbilityCooldown() == 0;
 	}
 
 	@Override
@@ -103,8 +96,8 @@ public class AiWaterArc extends BendingAi {
 	public void resetTask() {
 
 		EntityWaterArc water = AvatarEntity.lookupEntity(entity.world, EntityWaterArc.class, //
-				arc -> arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled
-						&& arc.getOwner() == entity);
+														 arc -> arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled
+																		 && arc.getOwner() == entity);
 
 		if (water != null) {
 			water.setDead();

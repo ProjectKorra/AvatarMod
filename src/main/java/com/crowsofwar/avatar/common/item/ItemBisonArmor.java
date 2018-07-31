@@ -17,8 +17,7 @@
 package com.crowsofwar.avatar.common.item;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nullable;
@@ -68,15 +67,12 @@ public class ItemBisonArmor extends Item implements AvatarItem {
 
 	public enum ArmorTier {
 
-		WOVEN(8, 0.8f),
-		CHAIN(16, 0.7f),
-		WROUGHT(20, 0.6f),
-		LEGENDARY(26, 0.75f);
+		WOVEN(8, 0.8f), CHAIN(16, 0.7f), WROUGHT(20, 0.6f), LEGENDARY(26, 0.75f);
 
 		private final float armorPoints;
 		private final float speedMultiplier;
 
-		private ArmorTier(float armorPoints, float speedMultiplier) {
+		ArmorTier(float armorPoints, float speedMultiplier) {
 			this.armorPoints = armorPoints;
 			this.speedMultiplier = speedMultiplier;
 		}

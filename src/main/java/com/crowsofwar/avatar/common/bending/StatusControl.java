@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending;
 
+
 import com.crowsofwar.avatar.common.bending.air.StatCtrlAirJump;
 import com.crowsofwar.avatar.common.bending.air.StatCtrlBubbleContract;
 import com.crowsofwar.avatar.common.bending.air.StatCtrlBubbleExpand;
@@ -28,16 +29,12 @@ import com.crowsofwar.avatar.common.bending.fire.*;
 import com.crowsofwar.avatar.common.bending.ice.StatCtrlShieldShatter;
 import com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear;
 import com.crowsofwar.avatar.common.bending.sand.StatCtrlSandstormRedirect;
-import com.crowsofwar.avatar.common.bending.water.StatCtrlSkateJump;
-import com.crowsofwar.avatar.common.bending.water.StatCtrlSkateStart;
-import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowBubble;
-import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowWater;
+import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Describes a temporary effect where a callback listener is added to a control
@@ -93,10 +90,10 @@ public abstract class StatusControl {
 		if (allControls == null) allControls = new ArrayList<>();
 
 		this.texture = texture;
-		this.control = subscribeTo;
-		this.raytrace = new Raytrace.Info();
+		control = subscribeTo;
+		raytrace = new Raytrace.Info();
 		this.position = position;
-		this.id = ++nextId;
+		id = ++nextId;
 		allControls.add(this);
 
 	}
@@ -114,7 +111,7 @@ public abstract class StatusControl {
 	 * @param raycastLiquids Whether to keep going when hit liquids
 	 */
 	protected void requireRaytrace(int range, boolean raycastLiquids) {
-		this.raytrace = new Raytrace.Info(range, raycastLiquids);
+		raytrace = new Raytrace.Info(range, raycastLiquids);
 	}
 
 	/**
@@ -152,10 +149,7 @@ public abstract class StatusControl {
 
 	public enum CrosshairPosition {
 
-		ABOVE_CROSSHAIR(4, 14),
-		LEFT_OF_CROSSHAIR(14, 3),
-		RIGHT_OF_CROSSHAIR(-6, 3),
-		BELOW_CROSSHAIR(4, -8);
+		ABOVE_CROSSHAIR(4, 14), LEFT_OF_CROSSHAIR(14, 3), RIGHT_OF_CROSSHAIR(-6, 3), BELOW_CROSSHAIR(4, -8);
 
 		private final int x, y;
 
@@ -167,7 +161,7 @@ public abstract class StatusControl {
 		 * @param x
 		 * @param y
 		 */
-		private CrosshairPosition(int x, int y) {
+		CrosshairPosition(int x, int y) {
 			this.x = x;
 			this.y = y;
 		}

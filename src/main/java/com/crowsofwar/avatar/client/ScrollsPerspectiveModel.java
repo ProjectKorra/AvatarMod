@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.vecmath.Matrix4f;
@@ -38,12 +39,12 @@ public class ScrollsPerspectiveModel implements IBakedModel {
 	private final ItemOverrideList overrideList;
 	private final IBakedModel baseModel, baseModelGlow;
 
-	public ScrollsPerspectiveModel(ModelResourceLocation mrlRegular, ModelResourceLocation mrlGlow,
-								   IBakedModel baseModel, IBakedModel baseModelGlow) {
+	public ScrollsPerspectiveModel(ModelResourceLocation mrlRegular, ModelResourceLocation mrlGlow, IBakedModel baseModel,
+					IBakedModel baseModelGlow) {
 		this.mrlRegular = mrlRegular;
 		this.mrlGlow = mrlGlow;
-		this.cameraTransforms = ItemCameraTransforms.DEFAULT;
-		this.overrideList = ItemOverrideList.NONE;
+		cameraTransforms = ItemCameraTransforms.DEFAULT;
+		overrideList = ItemOverrideList.NONE;
 		this.baseModel = baseModel;
 		this.baseModelGlow = baseModelGlow;
 	}
@@ -82,11 +83,6 @@ public class ScrollsPerspectiveModel implements IBakedModel {
 	@Override
 	public TextureAtlasSprite getParticleTexture() {
 		return baseModel.getParticleTexture();
-	}
-
-	@Override
-	public ItemCameraTransforms getItemCameraTransforms() {
-		return baseModel.getItemCameraTransforms();
 	}
 
 	@Override

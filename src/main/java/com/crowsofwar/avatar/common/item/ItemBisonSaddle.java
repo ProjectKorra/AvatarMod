@@ -17,8 +17,7 @@
 package com.crowsofwar.avatar.common.item;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.util.NonNullList;
 
 /**
@@ -66,15 +65,12 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 
 	public enum SaddleTier {
 
-		BASIC(2, 1),
-		STURDY(4, 2),
-		STUDDED(6, 4),
-		MAJESTIC(10, 6);
+		BASIC(2, 1), STURDY(4, 2), STUDDED(6, 4), MAJESTIC(10, 6);
 
 		private final float armorPoints;
 		private final int maxPassengers;
 
-		private SaddleTier(float armorPoints, int maxPassengers) {
+		SaddleTier(float armorPoints, int maxPassengers) {
 			this.armorPoints = armorPoints;
 			this.maxPassengers = maxPassengers;
 		}

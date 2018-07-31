@@ -17,17 +17,14 @@
 
 package com.crowsofwar.avatar.common.util;
 
+import net.minecraft.block.Block;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.datasync.*;
+
 import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.item.ItemBisonArmor.ArmorTier;
 import com.crowsofwar.avatar.common.item.ItemBisonSaddle.SaddleTier;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializer;
-import net.minecraft.network.datasync.DataSerializers;
-
-import java.io.IOException;
 
 /**
  * @author CrowsOfWar
@@ -43,7 +40,7 @@ public class AvatarDataSerializers {
 		}
 
 		@Override
-		public Block read(PacketBuffer buf) throws IOException {
+		public Block read(PacketBuffer buf) {
 			return Block.getBlockById(buf.readInt());
 		}
 
@@ -67,7 +64,7 @@ public class AvatarDataSerializers {
 		}
 
 		@Override
-		public Vector read(PacketBuffer buf) throws IOException {
+		public Vector read(PacketBuffer buf) {
 			return new Vector(buf.readDouble(), buf.readDouble(), buf.readDouble());
 		}
 
@@ -89,7 +86,7 @@ public class AvatarDataSerializers {
 		}
 
 		@Override
-		public BenderInfo read(PacketBuffer buf) throws IOException {
+		public BenderInfo read(PacketBuffer buf) {
 			return BenderInfo.readFromBytes(buf);
 		}
 
@@ -112,7 +109,7 @@ public class AvatarDataSerializers {
 		}
 
 		@Override
-		public SaddleTier read(PacketBuffer buf) throws IOException {
+		public SaddleTier read(PacketBuffer buf) {
 			int id = buf.readInt();
 			return id == -1 ? null : SaddleTier.get(id);
 		}
@@ -135,7 +132,7 @@ public class AvatarDataSerializers {
 		}
 
 		@Override
-		public ArmorTier read(PacketBuffer buf) throws IOException {
+		public ArmorTier read(PacketBuffer buf) {
 			int id = buf.readInt();
 			return id == -1 ? null : ArmorTier.get(id);
 		}

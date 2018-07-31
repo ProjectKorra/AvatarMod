@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -49,6 +50,7 @@ import scala.Int;
 
 import java.util.List;
 import java.util.Objects;
+
 import java.util.Random;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
@@ -59,7 +61,7 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> {
 
 	private static final DataParameter<WaterArcBehavior> SYNC_BEHAVIOR = EntityDataManager
-			.createKey(EntityWaterArc.class, WaterArcBehavior.DATA_SERIALIZER);
+					.createKey(EntityWaterArc.class, WaterArcBehavior.DATA_SERIALIZER);
 
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager
 			.createKey(EntityWaterArc.class, DataSerializers.FLOAT);
@@ -81,12 +83,14 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	public EntityWaterArc(World world) {
 		super(world);
+
 		setSize(Size, Size);
 		this.lastPlayedSplash = -1;
 		this.damageMult = 1;
 		this.putsOutFires = true;
 		this.Size = 0.4F;
 		this.Gravity = 9.81F;
+
 
 	}
 
@@ -95,7 +99,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	public void setDamageMult(float mult) {
-		this.damageMult = mult;
+		damageMult = mult;
 	}
 
 	public void isSpear(boolean isSpear) {
@@ -196,8 +200,10 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 
 
+
 			if (world.isRemote) {
 				Random random = new Random();
+
 
 				double xVel = 0, yVel = 0, zVel = 0;
 				double offX = 0, offY = 0, offZ = 0;
@@ -222,9 +228,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 				}
 
+
 				xVel *= 0.0;
 				yVel *= 0.0;
 				zVel *= 0.0;
+
 
 				int particles = random.nextInt(3) + 4;
 				for (int i = 0; i < particles; i++) {
@@ -300,8 +308,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	public void playSplash() {
-		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_SWIM, SoundCategory.PLAYERS, 0.3f,
-				1.5f, false);
+		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_SWIM, SoundCategory.PLAYERS, 0.3f, 1.5f, false);
 		lastPlayedSplash = 0;
 	}
 

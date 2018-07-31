@@ -16,38 +16,33 @@
 */
 package com.crowsofwar.avatar.client.gui;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.*;
 
-import java.io.IOException;
+import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class PreviewWarningGui extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		this.buttonList.clear();
+		buttonList.clear();
 
-		this.buttonList
-				.add(new GuiButton(0, (width - 200) / 2, height - height / 5, 200, 20, "To Main Menu"));
+		buttonList.add(new GuiButton(0, (width - 200) / 2, height - height / 5, 200, 20, "To Main Menu"));
 
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
+	protected void actionPerformed(GuiButton button) {
 		if (button.id == 0) {
-			this.mc.displayGuiScreen(new GuiMainMenu());
+			mc.displayGuiScreen(new GuiMainMenu());
 		} else if (button.id == 1) {
-			this.mc.shutdown();
+			mc.shutdown();
 		}
 	}
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		this.drawDefaultBackground();
+		drawDefaultBackground();
 
 		// @formatter:off
 		String[] lines = {

@@ -16,23 +16,17 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityFireArc;
+import net.minecraft.entity.*;
+
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.common.util.AvatarUtils.normalizeAngle;
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
-import static java.lang.Math.abs;
-import static java.lang.Math.toDegrees;
+import static com.crowsofwar.gorecore.util.Vector.*;
+import static java.lang.Math.*;
 
 /**
  * @author CrowsOfWar
@@ -111,8 +105,7 @@ public class AiFireArc extends BendingAi {
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSqToEntity(target) > 4 * 4
-				&& bender.getData().getMiscData().getAbilityCooldown() == 0;
+		return target != null && entity.getDistanceSq(target) > 4 * 4 && bender.getData().getMiscData().getAbilityCooldown() == 0;
 	}
 
 	@Override
@@ -124,8 +117,8 @@ public class AiFireArc extends BendingAi {
 	public void resetTask() {
 
 		EntityFireArc fire = AvatarEntity.lookupEntity(entity.world, EntityFireArc.class, //
-				arc -> arc.getBehavior() instanceof FireArcBehavior.PlayerControlled
-						&& arc.getOwner() == entity);
+													   arc -> arc.getBehavior() instanceof FireArcBehavior.PlayerControlled
+																	   && arc.getOwner() == entity);
 
 		if (fire != null) {
 			fire.setDead();

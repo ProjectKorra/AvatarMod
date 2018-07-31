@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
@@ -25,16 +26,15 @@ import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -45,11 +45,18 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+
 import net.minecraft.world.World;
 
+import com.crowsofwar.avatar.common.data.AvatarWorldData;
+import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
+import com.crowsofwar.avatar.common.particle.*;
+import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.base.Optional;
+import lombok.*;
+
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -57,28 +64,31 @@ import java.util.function.Predicate;
  */
 public abstract class AvatarEntity extends Entity {
 
-	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(AvatarEntity.class,
-			DataSerializers.VARINT);
+	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(AvatarEntity.class, DataSerializers.VARINT);
 
-	private static final DataParameter<Optional<UUID>> SYNC_OWNER = EntityDataManager.createKey
-			(AvatarEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+	private static final DataParameter<Optional<UUID>> SYNC_OWNER = EntityDataManager
+					.createKey(AvatarEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
-	protected boolean putsOutFires;
-	protected boolean flammable;
+	boolean putsOutFires;
+	private boolean flammable;
 	private double powerRating;
+
 	private Ability ability;
+
 
 	private SyncedEntity<EntityLivingBase> ownerRef;
 
 	/**
-	 * @param world
+	 * @param world the world the entity exists in
 	 */
 	public AvatarEntity(World world) {
 		super(world);
 
+
 		this.ownerRef = new SyncedEntity<>(this, SYNC_OWNER);
 		this.putsOutFires = false;
 		this.flammable = false;
+
 	}
 
 	/**
@@ -105,8 +115,7 @@ public abstract class AvatarEntity extends Entity {
 	/**
 	 * Find the entity controlled by the given player.
 	 */
-	public static <T extends AvatarEntity> T lookupControlledEntity(World world, Class<T> cls,
-																	EntityLivingBase controller) {
+	public static <T extends AvatarEntity> T lookupControlledEntity(World world, Class<T> cls, EntityLivingBase controller) {
 		List<T> list = world.getEntities(cls, ent -> ent.getController() == controller);
 		return list.isEmpty() ? null : list.get(0);
 	}
@@ -114,16 +123,14 @@ public abstract class AvatarEntity extends Entity {
 	/**
 	 * Find the entity owned by the given entity.
 	 */
-	public static <T extends AvatarEntity> T lookupOwnedEntity(World world, Class<T> cls,
-															   EntityLivingBase owner) {
+	public static <T extends AvatarEntity> T lookupOwnedEntity(World world, Class<T> cls, EntityLivingBase owner) {
 		List<T> list = world.getEntities(cls, ent -> ent.getOwner() == owner);
 		return list.isEmpty() ? null : list.get(0);
 	}
 
 	@Override
 	protected void entityInit() {
-		dataManager.register(SYNC_ID,
-				world.isRemote ? -1 : AvatarWorldData.getDataFromWorld(world).nextEntityId());
+		dataManager.register(SYNC_ID, world.isRemote ? -1 : AvatarWorldData.getDataFromWorld(world).nextEntityId());
 		dataManager.register(SYNC_OWNER, Optional.absent());
 	}
 
@@ -248,7 +255,6 @@ public abstract class AvatarEntity extends Entity {
 
 	@Override
 	public void onUpdate() {
-
 		super.onUpdate();
 		collideWithNearbyEntities();
 		if (putsOutFires && ticksExisted % 2 == 0) {
@@ -258,14 +264,13 @@ public abstract class AvatarEntity extends Entity {
 					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
 					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
 						world.setBlockToAir(pos);
-						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
-								SoundCategory.PLAYERS, 1, 1, false);
+						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 1, 1, false);
 					}
 				}
 			}
 		}
 
-		if (isCollided) {
+		if (collided) {
 			onCollideWithSolid();
 		}
 		if (inWater) {
@@ -274,7 +279,7 @@ public abstract class AvatarEntity extends Entity {
 		if (world.isRainingAt(getPosition())) {
 			onMinorWaterContact();
 		}
-		if (world.isFlammableWithin(this.getEntityBoundingBox().shrink(0.001D))) {
+		if (world.isFlammableWithin(getEntityBoundingBox().shrink(0.001D))) {
 			onFireContact();
 		}
 
@@ -285,13 +290,12 @@ public abstract class AvatarEntity extends Entity {
 
 	// copied from EntityLivingBase -- mostly
 	protected void collideWithNearbyEntities() {
-		List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this,
-				this.getEntityBoundingBox());
+		List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox());
 
 		if (!list.isEmpty()) {
-			int i = this.world.getGameRules().getInt("maxEntityCramming");
+			int i = world.getGameRules().getInt("maxEntityCramming");
 
-			if (i > 0 && list.size() > i - 1 && this.rand.nextInt(4) == 0) {
+			if (i > 0 && list.size() > i - 1 && rand.nextInt(4) == 0) {
 				int j = 0;
 
 				for (int k = 0; k < list.size(); ++k) {
@@ -301,7 +305,7 @@ public abstract class AvatarEntity extends Entity {
 				}
 
 				if (j > i - 1) {
-					this.attackEntityFrom(DamageSource.CRAMMING, 6.0F);
+					attackEntityFrom(DamageSource.CRAMMING, 6.0F);
 				}
 			}
 
@@ -416,30 +420,30 @@ public abstract class AvatarEntity extends Entity {
 	 */
 	protected void breakBlock(BlockPos position) {
 
-		IBlockState blockState = world.getBlockState(position);
+		IBlockState state = world.getBlockState(position);
 
-		Block destroyed = blockState.getBlock();
+		Block destroyed = state.getBlock();
 		SoundEvent sound;
 		if (destroyed == Blocks.FIRE) {
 			sound = SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE;
 		} else {
-			sound = destroyed.getSoundType().getBreakSound();
+			sound = destroyed.getSoundType(state, world, position, this).getBreakSound();
 		}
 		world.playSound(null, position, sound, SoundCategory.BLOCKS, 1, 1);
 
 		// Spawn particles
 
 		for (int i = 0; i < 7; i++) {
-			world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
-					3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
-					3 * (rand.nextGaussian() - 0.5), Block.getStateId(blockState));
+			world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ, 3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
+								3 * (rand.nextGaussian() - 0.5), Block.getStateId(state));
 		}
 		world.setBlockToAir(position);
 
 		// Create drops
 
 		if (!world.isRemote) {
-			List<ItemStack> drops = blockState.getBlock().getDrops(world, position, blockState, 0);
+			NonNullList<ItemStack> drops = NonNullList.create();
+			state.getBlock().getDrops(drops, world, position, state, 0);
 			for (ItemStack stack : drops) {
 				EntityItem item = new EntityItem(world, posX, posY, posZ, stack);
 				item.setDefaultPickupDelay();
@@ -463,11 +467,9 @@ public abstract class AvatarEntity extends Entity {
 		} else {
 			particleSpawner = new NetworkParticleSpawner();
 		}
-		particleSpawner.spawnParticles(world, EnumParticleTypes.CLOUD, 4, 8, posX, posY, posZ,
-				0.05, 0.2, 0.05);
+		particleSpawner.spawnParticles(world, EnumParticleTypes.CLOUD, 4, 8, posX, posY, posZ, 0.05, 0.2, 0.05);
 
-		world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-				SoundCategory.PLAYERS, 1, rand.nextFloat() * 0.3f + 1.1f);
+		world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.PLAYERS, 1, rand.nextFloat() * 0.3f + 1.1f);
 
 	}
 

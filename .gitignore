@@ -1,44 +1,23 @@
-.gradle/
-.settings/
-.metadata/
-bin/
-build/
-run/
-eclipse/
+# eclipse
+bin
+# *.launch
+# .settings
+# .metadata
+# .classpath
+# .project
 
-.classpath
-.project
-1.10_Client.launch
-1.10_Server.launch
-1.10_Client 2.launch
-sonarqube.sh
+# idea
+out
+classes
+# *.ipr
+# *.iws
+# *.iml
+$ .idea
 
-GoreCore_ClientUUIDCache.txt
-/config
-logs/
-options.txt
-saves/
-usercache.json
-usernamecache.json
-screenshots/
+# gradle
+build
+.gradle
 
-crash-reports/
-resourcepacks/
-
-docs/.sass-cache
-docs/styles.css.map
-Client.launch
-Client 2.launch
-Server.launch
-
-**/.sass-cache
-**/.sass-cache/*
-.idea/
-code.iml
-out/
-
-*.ipr
-*.iws
-*.iml
-
-**/Thumbs.db
+# other
+eclipse
+run

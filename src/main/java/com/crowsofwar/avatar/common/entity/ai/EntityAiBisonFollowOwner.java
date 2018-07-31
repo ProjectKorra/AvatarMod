@@ -16,11 +16,12 @@
 */
 package com.crowsofwar.avatar.common.entity.ai;
 
+import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.player.EntityPlayer;
+
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.player.EntityPlayer;
 
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 
@@ -33,7 +34,7 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 
 	public EntityAiBisonFollowOwner(EntitySkyBison bison) {
 		this.bison = bison;
-		this.setMutexBits(1);
+		setMutexBits(1);
 	}
 
 	/**
@@ -47,7 +48,7 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 		EntityPlayer owner = bison.getOwner();
 		if (owner != null) {
 
-			if (bison.getLeashedToEntity() == owner) {
+			if (bison.getLeashHolder() == owner) {
 				return true;
 			}
 
@@ -55,7 +56,7 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 			if (followMode) {
 				double maxDist = bison.getAttackTarget() == null ? 6 : 20;
 				double maxDistSq = maxDist * maxDist;
-				double distSq = bison.getDistanceSqToEntity(owner);
+				double distSq = bison.getDistanceSq(owner);
 				return distSq >= maxDistSq && !bison.isSitting();
 			}
 
@@ -79,7 +80,7 @@ public class EntityAiBisonFollowOwner extends EntityAIBase {
 		EntityPlayer owner = bison.getOwner();
 		if (owner == null) return;
 
-		double dist = bison.getDistanceToEntity(owner);
+		double dist = bison.getDistance(owner);
 
 		Vector direction = getEyePos(owner).minus(getEyePos(bison)).normalize();
 		Vector targetPos = getEyePos(bison).plus(direction.times(dist * 0.8));

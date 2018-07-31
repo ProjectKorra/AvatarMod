@@ -59,7 +59,8 @@ public class GoreCoreCommonProxy {
 	public void sideSpecifics() {
 		
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	public String translate(String key, Object... args) {
 		return String.format(I18n.translateToLocal(key), args);
 	}

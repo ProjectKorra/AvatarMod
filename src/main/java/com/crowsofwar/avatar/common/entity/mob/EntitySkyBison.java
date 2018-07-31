@@ -16,78 +16,52 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
-import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AvatarWorldData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BenderEntityComponent;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.ai.*;
-import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
-import com.crowsofwar.avatar.common.entity.data.BisonSpawnData;
-import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
-import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
-import com.crowsofwar.avatar.common.gui.InventoryBisonChest;
-import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.item.ItemBisonArmor.ArmorTier;
-import com.crowsofwar.avatar.common.item.ItemBisonSaddle.SaddleTier;
-import com.crowsofwar.avatar.common.item.ItemBisonWhistle;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.AccountUUIDs;
-import com.crowsofwar.gorecore.util.Vector;
-import com.google.common.base.Optional;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.ai.EntityMoveHelper.Action;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.IInventoryChangedListener;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.*;
+import net.minecraft.init.*;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.World;
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 
+import com.crowsofwar.avatar.*;
+import com.crowsofwar.avatar.common.analytics.*;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.ai.*;
+import com.crowsofwar.avatar.common.entity.data.*;
+import com.crowsofwar.avatar.common.gui.*;
+import com.crowsofwar.avatar.common.item.*;
+import com.crowsofwar.avatar.common.item.ItemBisonArmor.ArmorTier;
+import com.crowsofwar.avatar.common.item.ItemBisonSaddle.SaddleTier;
+import com.crowsofwar.avatar.common.util.*;
+import com.crowsofwar.gorecore.util.*;
+import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.base.Optional;
+
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.common.util.AvatarUtils.*;
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.toRectangular;
+import static com.crowsofwar.gorecore.util.Vector.*;
 import static java.lang.Math.*;
 import static net.minecraft.entity.SharedMonsterAttributes.ARMOR;
-import static net.minecraft.init.Blocks.STONE;
 import static net.minecraft.item.ItemStack.EMPTY;
 import static net.minecraft.util.SoundCategory.NEUTRAL;
 
@@ -99,34 +73,27 @@ import static net.minecraft.util.SoundCategory.NEUTRAL;
 public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInventoryChangedListener {
 
 	private static final DataParameter<Optional<UUID>> SYNC_OWNER = EntityDataManager
-			.createKey(EntitySkyBison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+					.createKey(EntitySkyBison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
-	private static final DataParameter<Boolean> SYNC_SITTING = EntityDataManager
-			.createKey(EntitySkyBison.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> SYNC_SITTING = EntityDataManager.createKey(EntitySkyBison.class, DataSerializers.BOOLEAN);
 
-	private static final DataParameter<Float> SYNC_FOOD = EntityDataManager.createKey(EntitySkyBison.class,
-			DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_FOOD = EntityDataManager.createKey(EntitySkyBison.class, DataSerializers.FLOAT);
 
-	private static final DataParameter<Integer> SYNC_DOMESTICATION = EntityDataManager
-			.createKey(EntitySkyBison.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> SYNC_DOMESTICATION = EntityDataManager.createKey(EntitySkyBison.class, DataSerializers.VARINT);
 
-	private static final DataParameter<Integer> SYNC_EAT_GRASS = EntityDataManager
-			.createKey(EntitySkyBison.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> SYNC_EAT_GRASS = EntityDataManager.createKey(EntitySkyBison.class, DataSerializers.VARINT);
 
-	private static final DataParameter<Integer> SYNC_AGE = EntityDataManager.createKey(EntitySkyBison.class,
-			DataSerializers.VARINT);
+	private static final DataParameter<Integer> SYNC_AGE = EntityDataManager.createKey(EntitySkyBison.class, DataSerializers.VARINT);
 
-	private static final DataParameter<Boolean> SYNC_LOVE_PARTICLES = EntityDataManager
-			.createKey(EntitySkyBison.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> SYNC_LOVE_PARTICLES = EntityDataManager.createKey(EntitySkyBison.class, DataSerializers.BOOLEAN);
 
-	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(EntitySkyBison.class,
-			DataSerializers.VARINT);
+	private static final DataParameter<Integer> SYNC_ID = EntityDataManager.createKey(EntitySkyBison.class, DataSerializers.VARINT);
 
 	private static final DataParameter<SaddleTier> SYNC_SADDLE = EntityDataManager
-			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_SADDLE);
+					.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_SADDLE);
 
 	private static final DataParameter<ArmorTier> SYNC_ARMOR = EntityDataManager
-			.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_ARMOR);
+					.createKey(EntitySkyBison.class, AvatarDataSerializers.SERIALIZER_ARMOR);
 
 	private final SyncedEntity<EntityLivingBase> ownerAttr;
 	private final AnimalCondition condition;
@@ -171,8 +138,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	 * no sky bison with that uuid.
 	 */
 	public static EntitySkyBison findBison(World world, UUID id) {
-		List<EntitySkyBison> list = world.getEntities(EntitySkyBison.class,
-				bison -> bison.getUniqueID().equals(id));
+		List<EntitySkyBison> list = world.getEntities(EntitySkyBison.class, bison -> bison.getUniqueID().equals(id));
 		return list.isEmpty() ? null : list.get(0);
 	}
 
@@ -185,8 +151,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	protected void entityInit() {
 		super.entityInit();
 
-		int domestication = MOBS_CONFIG.bisonMinDomestication
-				+ rand.nextInt(MOBS_CONFIG.bisonMaxDomestication - MOBS_CONFIG.bisonMinDomestication);
+		int domestication = MOBS_CONFIG.bisonMinDomestication + rand.nextInt(MOBS_CONFIG.bisonMaxDomestication - MOBS_CONFIG.bisonMinDomestication);
 
 		dataManager.register(SYNC_OWNER, Optional.absent());
 		dataManager.register(SYNC_SITTING, false);
@@ -195,8 +160,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		dataManager.register(SYNC_EAT_GRASS, -1);
 		dataManager.register(SYNC_AGE, 0);
 		dataManager.register(SYNC_LOVE_PARTICLES, false);
-		dataManager.register(SYNC_ID,
-				world.isRemote ? -1 : AvatarWorldData.getDataFromWorld(world).nextEntityId());
+		dataManager.register(SYNC_ID, world.isRemote ? -1 : AvatarWorldData.getDataFromWorld(world).nextEntityId());
 		dataManager.register(SYNC_SADDLE, null);
 		dataManager.register(SYNC_ARMOR, null);
 
@@ -213,7 +177,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 
-		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
+		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
 		this.targetTasks.addTask(2, new EntityAiBisonDefendOwner(this));
 		this.targetTasks.addTask(3, new EntityAiBisonHelpOwnerTarget(this));
 
@@ -237,8 +201,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	// this)
 	@Override
 	@Nullable
-	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty,
-											@Nullable IEntityLivingData livingData) {
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingData) {
 
 		boolean sterile = false;
 		if (livingData instanceof BisonSpawnData) {
@@ -247,8 +210,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		condition.setSterile(sterile);
 		condition.setBreedTimer((int) (MOBS_CONFIG.bisonBreedMaxMinutes * 1200));
 
-		IBlockState walkingOn = world.getBlockState(getEntityPos(this).minusY(0.01)
-				.toBlockPos());
+		IBlockState walkingOn = world.getBlockState(getEntityPos(this).minusY(0.01).toBlockPos());
 		wasTouchingGround = walkingOn.getMaterial() != Material.AIR;
 
 		condition.setAge(rand.nextInt(48000) + 40000);
@@ -578,8 +540,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 				// This would never trigger normally since bison whistle doesn't have durability
 
-				CriteriaTriggers.ITEM_DURABILITY_CHANGED.trigger((EntityPlayerMP) player, new
-						ItemStack(AvatarItems.itemBisonWhistle), 0);
+				CriteriaTriggers.ITEM_DURABILITY_CHANGED.trigger((EntityPlayerMP) player, new ItemStack(AvatarItems.itemBisonWhistle), 0);
 
 			}
 
@@ -712,8 +673,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 				// Send id as the x-coordinate; used by guiHandler to determine
 				// which bison is being opened
-				player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, world, getId(), 0,
-						0);
+				player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_BISON_CHEST, world, getId(), 0, 0);
 			} else {
 				// Mount bison
 				if (!world.isRemote) {
@@ -735,14 +695,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private void onLiftoff() {
 		if (!isEatingGrass()) {
 			getBender().executeAbility(Abilities.get("air_jump"));
-			StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, getBender(), new
-					Raytrace.Result()));
+			StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, getBender(), new Raytrace.Result()));
 			getData().removeStatusControl(StatusControl.AIR_JUMP);
 		}
 	}
 
 	private void onLand() {
-		world.playSound(null, getPosition(), STONE.getSoundType().getBreakSound(), NEUTRAL, 1, 1);
+		world.playSound(null, getPosition(), SoundType.STONE.getBreakSound(), NEUTRAL, 1, 1);
 	}
 
 	@Override
@@ -871,8 +830,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 			// Log bison kills
 			if (cause.getTrueSource() instanceof EntityPlayer) {
-				AvatarLog.info("Bison " + getName() + " (owned by " + getOwner() + ") was just killed" +
-						" by " + cause.getTrueSource().getName());
+				AvatarLog.info("Bison " + getName() + " (owned by " + getOwner() + ") was just killed" + " by " + cause.getTrueSource().getName());
 			}
 
 		}
@@ -904,10 +862,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			double d1 = this.rand.nextGaussian() * 0.02D;
 			double d2 = this.rand.nextGaussian() * 0.02D;
 
-			this.world.spawnParticle(EnumParticleTypes.HEART,
-					this.posX + this.rand.nextFloat() * this.width * 2 - this.width,
-					this.posY + 0.5D + this.rand.nextFloat() * this.height,
-					this.posZ + this.rand.nextFloat() * this.width * 2 - this.width, d0, d1, d2, new int[0]);
+			this.world.spawnParticle(EnumParticleTypes.HEART, this.posX + this.rand.nextFloat() * this.width * 2 - this.width,
+									 this.posY + 0.5D + this.rand.nextFloat() * this.height,
+									 this.posZ + this.rand.nextFloat() * this.width * 2 - this.width, d0, d1, d2);
 
 		}
 
@@ -933,8 +890,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		if (!world.isRemote) {
 
-			IBlockState walkingOn = world.getBlockState(getEntityPos(this).withY(0.01)
-					.toBlockPos());
+			IBlockState walkingOn = world.getBlockState(getEntityPos(this).withY(0.01).toBlockPos());
 			boolean touchingGround = walkingOn.getMaterial() != Material.AIR;
 
 			if (!touchingGround && wasTouchingGround) {
@@ -967,8 +923,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 
 		// onGround apparently doesn't work client-side
-		IBlockState walkingOn = world.getBlockState(getEntityPos(this).withY(0.01).toBlockPos
-				());
+		IBlockState walkingOn = world.getBlockState(getEntityPos(this).withY(0.01).toBlockPos());
 		boolean touchingGround = walkingOn.getMaterial() != Material.AIR;
 
 		if (this.isBeingRidden() && this.canBeSteered()) {
@@ -1011,8 +966,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 			if (this.canPassengerSteer()) {
 
-				float moveAttribute = (float) getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED)
-						.getAttributeValue();
+				float moveAttribute = (float) getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue();
 				setAIMoveSpeed(moveAttribute * condition.getSpeedMultiplier());
 
 				travelFlying(strafe, jump * speedMult, forward);
@@ -1071,9 +1025,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			float f = 0.91F;
 
 			if (this.onGround) {
-				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX),
-						MathHelper.floor(this.getEntityBoundingBox().minY) - 1,
-						MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
+				BlockPos pos = new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(getEntityBoundingBox().minY) - 1,
+											MathHelper.floor(this.posZ));
+				IBlockState state = world.getBlockState(pos);
+				f = state.getBlock().getSlipperiness(state, world, pos, this) * 0.91F;
 			}
 
 			float f1 = 0.16277136F / (f * f * f);
@@ -1081,9 +1036,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			f = 0.91F;
 
 			if (this.onGround) {
-				f = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX),
-						MathHelper.floor(this.getEntityBoundingBox().minY) - 1,
-						MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
+				BlockPos pos = new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(getEntityBoundingBox().minY) - 1,
+											MathHelper.floor(this.posZ));
+				IBlockState state = world.getBlockState(pos);
+				f = state.getBlock().getSlipperiness(state, world, pos, this) * 0.91F;
 			}
 
 			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
@@ -1127,11 +1083,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			double mx = this.rand.nextGaussian() * 0.02D;
 			double my = this.rand.nextGaussian() * 0.02D;
 			double mz = this.rand.nextGaussian() * 0.02D;
-			this.world.spawnParticle(particle,
-					this.posX + this.rand.nextFloat() * this.width * 2.0F - this.width,
-					this.posY + 0.5D + this.rand.nextFloat() * this.height,
-					this.posZ + this.rand.nextFloat() * this.width * 2.0F - this.width, //
-					mx, my, mz, new int[0]);
+			this.world.spawnParticle(particle, this.posX + this.rand.nextFloat() * this.width * 2.0F - this.width,
+									 this.posY + 0.5D + this.rand.nextFloat() * this.height,
+									 this.posZ + this.rand.nextFloat() * this.width * 2.0F - this.width, //
+									 mx, my, mz);
 		}
 
 	}

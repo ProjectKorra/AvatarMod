@@ -16,19 +16,18 @@
 */
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.common.bending.*;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
+
+import javax.annotation.*;
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
@@ -53,6 +52,7 @@ public class BendingData {
 	private MiscData miscData;
 	private Map<UUID, PowerRatingManager> powerRatingManagers;
 	private Vision vision;
+
 	/**
 	 * Create a new BendingData
 	 *
@@ -334,8 +334,7 @@ public class BendingData {
 		float chi = 0;
 		chi += getAllBending().size() * CHI_CONFIG.bonusLearnedBending;
 		for (AbilityData aData : getAllAbilityData()) {
-			boolean hasBending = aData.getAbility() != null && hasBendingId(aData.getAbility()
-					.getBendingId());
+			boolean hasBending = aData.getAbility() != null && hasBendingId(aData.getAbility().getBendingId());
 			if (!aData.isLocked() && hasBending) {
 				chi += CHI_CONFIG.bonusAbility;
 				chi += aData.getLevel() * CHI_CONFIG.bonusAbilityLevel;
@@ -404,8 +403,7 @@ public class BendingData {
 		tickHandlers.clear();
 		tickHandlers.addAll(handlers);
 
-		Map<TickHandler, Integer> newDurations = handlers.stream().collect(Collectors.toMap(Function.identity()
-				, h -> 0));
+		Map<TickHandler, Integer> newDurations = handlers.stream().collect(Collectors.toMap(Function.identity(), h -> 0));
 		tickHandlerDuration.clear();
 		tickHandlerDuration.putAll(newDurations);
 	}
@@ -428,9 +426,7 @@ public class BendingData {
 		if (hasBendingId(bendingId)) {
 			return powerRatingManagers.computeIfAbsent(bendingId, PowerRatingManager::new);
 		} else {
-			if (powerRatingManagers.containsKey(bendingId)) {
-				powerRatingManagers.remove(bendingId);
-			}
+			powerRatingManagers.remove(bendingId);
 			return null;
 		}
 	}
@@ -450,8 +446,7 @@ public class BendingData {
 	public List<PowerRatingManager> getPowerRatingManagers() {
 		// Ensure that power rating managers are up-to-date - if a bending style was removed, remove
 		// that power rating manager
-		Iterator<Map.Entry<UUID, PowerRatingManager>> iterator = powerRatingManagers.entrySet()
-				.iterator();
+		Iterator<Map.Entry<UUID, PowerRatingManager>> iterator = powerRatingManagers.entrySet().iterator();
 		while (iterator.hasNext()) {
 			UUID bendingId = iterator.next().getKey();
 			if (!hasBendingId(bendingId)) {
@@ -490,7 +485,7 @@ public class BendingData {
 		this.performance = performance;
 	}
 
-// ================================================================================
+	// ================================================================================
 	// MISC
 	// ================================================================================
 
@@ -499,7 +494,7 @@ public class BendingData {
 	}
 
 	public void setMiscData(MiscData md) {
-		this.miscData = md;
+		miscData = md;
 	}
 
 	public void writeToNbt(NBTTagCompound writeTo) {
