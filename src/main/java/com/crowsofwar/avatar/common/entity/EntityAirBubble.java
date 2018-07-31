@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.material.Material;
@@ -42,7 +41,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -108,13 +106,10 @@ public class EntityAirBubble extends EntityShield {
 	}
 
 	@Override
-	public boolean setPositionNonDirty() {
-		return false;
-	}
-
-	@Override
 	public void setPositionAndUpdate(double x, double y, double z) {
-		super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+		if (getOwner() != null) {
+			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+		}
 	}
 
 	@Override
@@ -153,11 +148,6 @@ public class EntityAirBubble extends EntityShield {
 		this.motionY = 0;
 		this.motionZ = 0;
 
-		/*this.serverPosX = owner.getPosition().getX();
-		this.serverPosY = owner.getPosition().getY();
-		this.serverPosZ = owner.getPosition().getZ();
-
-		this.resetPositionToBB();**/
 
 
 		if (getOwner() != null) {
@@ -240,6 +230,9 @@ public class EntityAirBubble extends EntityShield {
 	 */
 	private void handleHovering() {
 
+		if (getOwner() == null) {
+			return;
+		}
 		if (getOwner() != null) {
 			getOwner().fallDistance = 0;
 		}
