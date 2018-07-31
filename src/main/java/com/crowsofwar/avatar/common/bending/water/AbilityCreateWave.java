@@ -62,16 +62,16 @@ public class AbilityCreateWave extends Ability {
 			//IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
 			IBlockState up = world.getBlockState(pos.toBlockPos().up());
 
-			float size = 2;
 			for (int i = 0; i < 3; i++) {
 				if (up.getBlock() == Blocks.AIR) {
 
 					if (bender.consumeChi(STATS_CONFIG.chiWave)) {
 
+						float size = 2;
 						double speed = 6.5;
 						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 							speed = 12.5;
-							size = 3.5F;
+							size = 5F;
 						}
 						if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
 							speed = 17;
@@ -84,10 +84,6 @@ public class AbilityCreateWave extends Ability {
 						if (ctx.getLevel() == 2) {
 							size = 3;
 							speed = 10;
-						}
-
-						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-							size = 5;
 						}
 
 						size += ctx.getPowerRating() / 100;
