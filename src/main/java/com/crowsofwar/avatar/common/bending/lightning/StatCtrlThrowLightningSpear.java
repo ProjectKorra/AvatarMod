@@ -27,12 +27,13 @@ public class StatCtrlThrowLightningSpear extends StatusControl {
 
 		if (spear != null) {
 			AbilityData abilityData = ctx.getData().getAbilityData("lightning_spear");
-			double speedMult = abilityData.getLevel() >= 1 ? 25 : 15;
+			double speedMult = abilityData.getLevel() >= 1 ? 40 : 30;
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				speedMult = 45;
+				speedMult = 70;
 			}
 
+			spear.addVelocity(spear.velocity().times(-1));
 			spear.addVelocity(Vector.getLookRectangular(entity).times(speedMult));
 			spear.setBehavior(new LightningSpearBehavior.Thrown());
 		}
