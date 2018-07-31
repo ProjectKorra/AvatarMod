@@ -141,7 +141,7 @@ public class EntityAirBubble extends EntityShield {
 				}
 			}
 		}
-		
+
 		if (owner.isDead) {
 			dissipateSmall();
 			return;
