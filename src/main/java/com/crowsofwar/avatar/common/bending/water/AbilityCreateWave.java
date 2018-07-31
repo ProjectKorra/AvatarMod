@@ -121,7 +121,7 @@ public class AbilityCreateWave extends Ability {
 					double speed = 6.5;
 					if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 						speed = 12.5;
-						size = 3.5F;
+						size = 5;
 					}
 					if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
 						speed = 17;
@@ -136,9 +136,6 @@ public class AbilityCreateWave extends Ability {
 						speed = 10;
 					}
 
-					if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-						size = 5;
-					}
 					size += ctx.getPowerRating() / 100;
 
 					speed += ctx.getPowerRating() / 100 * 8;
