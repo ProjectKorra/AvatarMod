@@ -125,8 +125,8 @@ public class EntityAirBubble extends EntityShield {
 
 		if (putsOutFires && ticksExisted % 2 == 0) {
 			setFire(0);
-			for (int x = 0; x <= 1; x++) {
-				for (int z = 0; z <= 1; z++) {
+			for (int x = 0; x <= 2; x++) {
+				for (int z = 0; z <= 2; z++) {
 					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
 					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
 						world.setBlockToAir(pos);
