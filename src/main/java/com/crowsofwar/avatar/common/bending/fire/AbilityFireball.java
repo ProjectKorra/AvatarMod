@@ -73,7 +73,6 @@ public class AbilityFireball extends Ability {
 			int size = 14;
 			damage *= ctx.getLevel() >= 2 ? 1.75f : 1f;
 			damage *= ctx.getPowerRatingDamageMod();
-			System.out.println(ctx.getPowerRatingDamageMod());
 
 			if (ctx.getLevel() == 1) {
 				explosionStrength = 1;
