@@ -23,7 +23,7 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 					double x = Math.cos(radians) * 0.2;
 					double z = Math.sin(radians) * 0.2;
 					double y = entity.posY + entity.getEyeHeight() - 0.65;
-					World.spawnParticle(EnumParticleTypes.FLAME, x + entity.posX, y, z + entity.posZ, 1, 0, 0, 0, 0.05);
+					World.spawnParticle(EnumParticleTypes.FLAME, x + entity.posX, y, z + entity.posZ, 1, 0, 0, 0, 0.01);
 				}
 			}
 
