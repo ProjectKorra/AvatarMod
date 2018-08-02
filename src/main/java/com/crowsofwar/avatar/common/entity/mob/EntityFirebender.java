@@ -50,7 +50,8 @@ public class EntityFirebender extends EntityHumanBender {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(50);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2);
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class EntityFirebender extends EntityHumanBender {
 		this.tasks.addTask(1, Abilities.getAi("fireball", this, getBender()));
 		this.tasks.addTask(2, Abilities.getAi("fire_arc", this, getBender()));
 		//this.tasks.addTask(3, Abilities.getAi("inferno_punch", this, getBender()));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.2, true));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.4, true));
 	}
 
 	@Override
