@@ -89,7 +89,7 @@ public class EntityFlames extends AvatarEntity {
 
 		setVelocity(velocity().times(0.94));
 
-		if (velocity().sqrMagnitude() <= 0.5 * 0.5 || isCollided) setDead();
+		if (velocity().sqrMagnitude() <= 0.5 * 0.5 || collided) setDead();
 
 		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.3,
 				true);

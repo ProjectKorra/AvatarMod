@@ -265,7 +265,7 @@ public abstract class AvatarEntity extends Entity {
 			}
 		}
 
-		if (isCollided) {
+		if (collided) {
 			onCollideWithSolid();
 		}
 		if (inWater) {

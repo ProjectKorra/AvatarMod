@@ -84,7 +84,7 @@ public class WallJumpManager {
 
 		boolean collidedWithWall;
 		if (bender.getWorld().isRemote) {
-			collidedWithWall = entity.isCollidedHorizontally && !entity.isCollidedVertically;
+			collidedWithWall = entity.collidedHorizontally && !entity.collidedVertically;
 		} else {
 			collidedWithWall = getHorizontalCollisionBlock() != null;
 		}

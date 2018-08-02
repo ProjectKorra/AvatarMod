@@ -196,7 +196,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		if (!this.isDead && !world.isRemote && player.capabilities.isCreativeMode && player.isSneaking()) {
 			setDead();
 			dropBlocks();
-			setBeenAttacked();
+			//setBeenAttacked();
+			//Uhh I Hope that doesn't do anything important....
 			return true;
 		}
 		return false;
