@@ -39,7 +39,6 @@ public class AvatarFireExplosion extends Explosion {
 	private final double z;
 	private final Entity exploder;
 	private final float size;
-	private final EntityLivingBase living;
 	/** A list of ChunkPositions of blocks affected by this explosion */
 	private final List<BlockPos> affectedBlockPositions;
 	/** Maps players to the knockback vector applied by the explosion, to send to the client */
@@ -47,7 +46,7 @@ public class AvatarFireExplosion extends Explosion {
 	private final Vec3d position;
 
 
-	public AvatarFireExplosion(World worldIn, Entity entityIn, double x, double y, double z, float size, boolean flaming, boolean damagesTerrain, EntityLivingBase entity) {
+	public AvatarFireExplosion(World worldIn, Entity entityIn, double x, double y, double z, float size, boolean flaming, boolean damagesTerrain) {
 		super(worldIn, entityIn, x, y, z, size, true, damagesTerrain);
 		this.random = new Random();
 		this.affectedBlockPositions = Lists.newArrayList();
@@ -61,7 +60,6 @@ public class AvatarFireExplosion extends Explosion {
 		this.causesFire = flaming;
 		this.damagesTerrain = damagesTerrain;
 		this.position = new Vec3d(this.x, this.y, this.z);
-		this.living = entity;
 	}
 
 	@Override
@@ -193,7 +191,7 @@ public class AvatarFireExplosion extends Explosion {
 						d9 = d9 / d13;
 						double d14 = (double) this.world.getBlockDensity(vec3d, entity.getEntityBoundingBox());
 						double d10 = (1.0D - d12) * d14;
-						entity.attackEntityFrom(AvatarDamageSource.causeFireDamage(entity, living), 4F);
+						entity.attackEntityFrom(DamageSource.causeExplosionDamage(this), 4F);
 						double d11 = d10;
 
 						if (entity instanceof EntityLivingBase) {
