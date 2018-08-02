@@ -62,6 +62,7 @@ public class RenderFireball extends Render<EntityFireball> {
 						 float partialTicks) {
 
 
+
 		float x = (float) xx, y = (float) yy, z = (float) zz;
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
@@ -100,8 +101,8 @@ public class RenderFireball extends Render<EntityFireball> {
 
 		//  } else {
 
-		disableLighting();
 		pushMatrix();
+		disableLighting();
 		renderCube(x, y, z, //
 				8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
 				size, //
