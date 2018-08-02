@@ -191,8 +191,7 @@ public class AvatarFireExplosion extends Explosion {
 						d9 = d9 / d13;
 						double d14 = (double) this.world.getBlockDensity(vec3d, entity.getEntityBoundingBox());
 						double d10 = (1.0D - d12) * d14;
-						DamageSource ds = DamageSource.causeExplosionDamage(this);
-						entity.attackEntityFrom(ds, 3F);
+						entity.attackEntityFrom(DamageSource.causeExplosionDamage(this), 4F);
 						double d11 = d10;
 
 						if (entity instanceof EntityLivingBase) {
