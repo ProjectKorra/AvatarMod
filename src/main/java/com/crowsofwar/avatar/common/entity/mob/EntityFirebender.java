@@ -33,8 +33,8 @@ public class EntityFirebender extends EntityHumanBender {
 
 	public static final ResourceLocation LOOT_TABLE = LootTableList
 			.register(new ResourceLocation("avatarmod", "firebender"));
-	Random rand = new Random();
-	int level = rand.nextInt(1);
+	private Random rand = new Random();
+	private int level = rand.nextInt(1) + 3;
 
 	/**
 	 * @param world
@@ -59,7 +59,7 @@ public class EntityFirebender extends EntityHumanBender {
 		this.tasks.addTask(1, Abilities.getAi("fireball", this, getBender()));
 		this.tasks.addTask(2, Abilities.getAi("fire_arc", this, getBender()));
 		//this.tasks.addTask(3, Abilities.getAi("inferno_punch", this, getBender()));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 2, true));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.2, true));
 	}
 
 	@Override
