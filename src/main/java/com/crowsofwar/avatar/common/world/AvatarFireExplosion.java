@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.world;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -38,13 +39,18 @@ public class AvatarFireExplosion extends Explosion {
 	private final double z;
 	private final Entity exploder;
 	private final float size;
+	private EntityLivingBase living;
 	/** A list of ChunkPositions of blocks affected by this explosion */
 	private final List<BlockPos> affectedBlockPositions;
 	/** Maps players to the knockback vector applied by the explosion, to send to the client */
 	private final Map<EntityPlayer, Vec3d> playerKnockbackMap;
 	private final Vec3d position;
 
-	public AvatarFireExplosion(World worldIn, Entity entityIn, double x, double y, double z, float size, boolean flaming, boolean damagesTerrain) {
+	public void setOwner(EntityLivingBase owner) {
+		this.living = owner;
+	}
+
+	public AvatarFireExplosion(World worldIn, Entity entityIn, double x, double y, double z, float size, boolean flaming, boolean damagesTerrain, EntityLivingBase entity) {
 		super(worldIn, entityIn, x, y, z, size, true, damagesTerrain);
 		this.random = new Random();
 		this.affectedBlockPositions = Lists.newArrayList();
@@ -52,6 +58,7 @@ public class AvatarFireExplosion extends Explosion {
 		this.world = worldIn;
 		this.exploder = entityIn;
 		this.size = size;
+		this.living = entity;
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -174,7 +181,7 @@ public class AvatarFireExplosion extends Explosion {
 		Vec3d vec3d = new Vec3d(this.x, this.y, this.z);
 
 		for (Entity entity : list) {
-			if (!entity.isImmuneToExplosions()) {
+			if (!entity.isImmuneToExplosions() && (entity != this.living)) {
 				double d12 = entity.getDistance(this.x, this.y, this.z) / (double) f3;
 
 				if (d12 <= 1.0D) {
@@ -189,7 +196,8 @@ public class AvatarFireExplosion extends Explosion {
 						d9 = d9 / d13;
 						double d14 = (double) this.world.getBlockDensity(vec3d, entity.getEntityBoundingBox());
 						double d10 = (1.0D - d12) * d14;
-						entity.attackEntityFrom(DamageSource.causeExplosionDamage(this), 4F);
+						DamageSource ds = AvatarDamageSource.causeFireDamage(entity, living);
+						entity.attackEntityFrom(ds, 3F);
 						double d11 = d10;
 
 						if (entity instanceof EntityLivingBase) {
