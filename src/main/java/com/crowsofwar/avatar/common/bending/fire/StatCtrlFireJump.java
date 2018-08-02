@@ -177,7 +177,7 @@ public class StatCtrlFireJump extends StatusControl {
 				double x =  Math.cos(radians) * range;
 				double z = Math.sin(radians) * range;
 				double y = entity.posY;
-				World.spawnParticle(EnumParticleTypes.FLAME, x + entity.posX, y, z + entity.posZ, 10, 0, 0, 0, 0.01);
+				World.spawnParticle(EnumParticleTypes.FLAME, x + entity.posX, y, z + entity.posZ, 10, 0, 0, 0, 0.05);
 			}
 		}
 
