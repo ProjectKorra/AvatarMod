@@ -62,7 +62,6 @@ public class RenderFireball extends Render<EntityFireball> {
 						 float partialTicks) {
 
 
-
 		float x = (float) xx, y = (float) yy, z = (float) zz;
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
@@ -86,33 +85,30 @@ public class RenderFireball extends Render<EntityFireball> {
 			world.spawnParticle(EnumParticleTypes.FLAME, spawnX, spawnY, spawnZ, 0, 0, 0);
 		}
 
-		//if (MinecraftForgeClient.getRenderPass() == 0) {
-			disableLighting();
+		//   if (MinecraftForgeClient.getRenderPass() == 0) {
+		disableLighting();
 
-			renderCube(x, y, z, //
-					0, 8 / 256.0, 0, 8 / 256.0, //
-					.5f, //
-					0, ticks / 25f, 0);
+		renderCube(x, y, z, //
+				0, 8 / 256.0, 0, 8 / 256.0, //
+				.5f, //
+				0, ticks / 25f, 0);
 
-			int i = 15728880;
-			int j = i % 65536;
-			int k = i / 65536;
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+		int i = 15728880;
+		int j = i % 65536;
+		int k = i / 65536;
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
 
-		//} else {
+		//  } else {
 
+		disableLighting();
+		pushMatrix();
+		renderCube(x, y, z, //
+				8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
+				size, //
+				rotation * .2f, rotation, rotation * -.4f);
+		popMatrix();
 
-			//Makes it so that the fireball isn't affected by shadow
-			pushMatrix();
-			renderCube(x, y, z, //
-					8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
-					size, //
-					rotation * .2f, rotation, rotation * -.4f);
-			popMatrix();
-
-
-		//}
-
+		//  }
 		disableBlend();
 
 	}
