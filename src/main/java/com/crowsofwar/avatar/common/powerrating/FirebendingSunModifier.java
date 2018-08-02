@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.powerrating;
 
 import com.crowsofwar.avatar.common.data.PowerRatingModifier;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
@@ -15,17 +16,18 @@ public class FirebendingSunModifier extends PowerRatingModifier {
 	public double get(BendingContext ctx) {
 
 		World world = ctx.getWorld();
+		EntityLivingBase entity = ctx.getBenderEntity();
 
 		// Ignore dimensions other than the overworld
-		if (world.provider.getDimension() != 0) {
+		if (entity.world.provider.getDimension() != 0) {
 			return 0;
 		}
 
 		int reduce = world.getSkylightSubtracted();
-		if (world.isRaining()) {
+		if (entity.world.isRainingAt(entity.getPosition())) {
 			reduce += 3;
 		}
-		if (world.isThundering()) {
+		if (entity.world.isThundering()) {
 			reduce += 2;
 		}
 
