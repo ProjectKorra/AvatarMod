@@ -197,7 +197,6 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			setDead();
 			dropBlocks();
 			markVelocityChanged();
-			//Uhh I Hope that doesn't do anything important....
 			return true;
 		}
 		return false;
