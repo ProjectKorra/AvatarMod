@@ -104,7 +104,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 					if (entity.getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().equals("avatar_groundSmash"))) {
 						if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 							BlockPos blockPos = target.getPosition();
-							AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, target, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 3F, true, false, entity);
+							AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, entity, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 3F, true, false);
 							fireExplosion.doExplosionA();
 							if (world instanceof WorldServer) {
 								WorldServer World = (WorldServer) target.getEntityWorld();

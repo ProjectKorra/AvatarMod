@@ -192,7 +192,7 @@ public class EntityFireball extends AvatarEntity {
 			}
 
 			AvatarFireExplosion fireExplosion = new AvatarFireExplosion(world, this, posX, posY, posZ, explosionSize * this.explosionStrength,
-					!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks, getOwner());
+					!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
 
 			if (!ForgeEventFactory.onExplosionStart(world, fireExplosion)) {
 				fireExplosion.doExplosionA();
