@@ -93,7 +93,7 @@ public class WaterChargeHandler extends TickHandler {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage = (float) (STATS_CONFIG.waterCannonDamage * 2.5 * bender.getDamageMult(Waterbending.ID));
 				size = 1f;
-				ticks = 200;
+				ticks = 150;
 			}
 
 			damage *= bender.getDamageMult(Waterbending.ID);
