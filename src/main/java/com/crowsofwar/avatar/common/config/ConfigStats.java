@@ -126,7 +126,7 @@ public class ConfigStats {
 	public float sleepChiRegen = 99999;
 
 	@Load
-	public float InfernoPunchDamage = 2F;
+	public float InfernoPunchDamage = 3F;
 
 	@Load
 	public boolean allowAirBubbleElytra = false;

@@ -11,8 +11,11 @@ import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.world.AvatarFireExplosion;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -30,6 +33,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
@@ -47,19 +53,19 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
-		EntityFireball fireball = new EntityFireball(world);
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			Vector playerPos = getEyePos(entity);
-			Vector target = playerPos.plus(getLookRectangular(entity).times(1.25));
-			fireball.setPosition(target);
-			fireball.setOwner(entity);
-			fireball.setDamage(0.5F);
-			fireball.setSize(14);
-			fireball.addVelocity(Vector.getLookRectangular(entity).times(20));
-			fireball.setBehavior(new FireballBehavior.Thrown());
-			world.spawnEntity(fireball);
-			return true;
+			List<Entity> hit = Raytrace.entityRaytrace(world, Vector.getEyePos(entity), Vector.getLookRectangular(entity), 8);
+			if (!hit.isEmpty()) {
+				for (Entity e : hit) {
+					if (e instanceof EntityLivingBase && ((EntityLivingBase) e).getHeldItemMainhand() == ItemStack.EMPTY) {
+						e.attackEntityFrom(DamageSource.IN_FIRE, 1);
+						//Should be overridden by the subscribe event i
+
+					}
+				}
+			}
+
 		}
 		return false;
 
@@ -80,7 +86,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 				float knockBack = 1F;
 				int fireTime = 5;
 				float damageModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
-				float damage = 3 + (3 * damageModifier);
+				float damage = STATS_CONFIG.InfernoPunchDamage + (3 * damageModifier);
 
 				if (abilityData.getLevel() >= 1) {
 					damage = 4 + (4 * damageModifier);
@@ -114,7 +120,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						}
 						if (world instanceof WorldServer) {
 							Vector look = getLookRectangular(entity);
-							Vector vector = look.times(20);
 							WorldServer World = (WorldServer) target.getEntityWorld();
 							World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY + target.getEyeHeight(), target.posZ, 50, 0.05, 0.05, 0.05, 0.2);
 

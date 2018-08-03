@@ -34,12 +34,12 @@ public class AbilityInfernoPunch extends Ability {
 			//5
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			chi = STATS_CONFIG.chiLargeInfernoPunch;
+			chi = STATS_CONFIG.chiLargeInfernoPunch * 2F;
 			//6
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			chi = STATS_CONFIG.chiSmallInfernoPunch * 2F;
-			//4
+			//6
 		}
 
 		if (bender.consumeChi(chi)) {
@@ -51,30 +51,5 @@ public class AbilityInfernoPunch extends Ability {
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return super.getAi(entity, bender);
-	}
-
-	@Override
-	public int getCooldown(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-
-		int coolDown = 150;
-
-		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-			coolDown = 0;
-		}
-
-		if (ctx.getLevel() == 1) {
-			coolDown = 130;
-		}
-		if (ctx.getLevel() == 2) {
-			coolDown = 110;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 100;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 60;
-		}
-		return coolDown;
 	}
 }
