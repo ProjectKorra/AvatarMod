@@ -138,6 +138,9 @@ public class ConfigStats {
 	public double waterCannonSearchRadius = 3, waterCannonAngles = 8, waterCannonDamage = 1;
 
 	@Load
+	public double waterBubbleSearchRadius = 5, waterBubbleAngles = 8;
+
+	@Load
 	public double cleanseSearchRadius = 5, cleanseAngles = 10;
 
 	@Load

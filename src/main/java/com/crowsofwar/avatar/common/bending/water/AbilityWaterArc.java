@@ -61,12 +61,15 @@ public class AbilityWaterArc extends Ability {
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
 
-		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel() * 2);
+		Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel() * 2);
 
 		if (targetPos != null || ctx.consumeWater(1) || (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative())) {
 
 			if (targetPos == null) {
 				targetPos = Vector.getEyePos(entity).plus(getLookRectangular(entity).times(2.5));
+			}
+			if (targetPos != null) {
+				world.setBlockToAir(targetPos.toBlockPos());
 			}
 
 			float damageMult = 1F;
@@ -214,8 +217,8 @@ public class AbilityWaterArc extends Ability {
 				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterArcAngles;
 				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterArcAngles;
 
-				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> STATS_CONFIG.waterBendableBlocks.contains(state.getBlock())
-						|| STATS_CONFIG.plantBendableBlocks.contains(state.getBlock());
+				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> (STATS_CONFIG.waterBendableBlocks.contains(state.getBlock())
+						|| STATS_CONFIG.plantBendableBlocks.contains(state.getBlock())) && state.getBlock() != Blocks.AIR;
 
 				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
 				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
