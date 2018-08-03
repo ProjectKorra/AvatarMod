@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
@@ -103,17 +102,7 @@ public class EntityWave extends AvatarEntity {
 			this.setDead();
 		}
 
-		if (getAbility() instanceof AbilityCreateWave && getOwner() != null) {
-			BendingData data = BendingData.get(getOwner());
-			AbilityData lvl = data.getAbilityData(getAbility().getName());
-
-			if (lvl.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				setSize(Size * 2, Size * 0.75F * 2);
-			}
-		}
-		else {
-			setSize(Size, Size * 0.75F);
-		}
+		setSize(getWaveSize(), getWaveSize() * 0.75F);
 
 		if (!this.inWater) {
 			this.setVelocity(velocity().dividedBy(40));
