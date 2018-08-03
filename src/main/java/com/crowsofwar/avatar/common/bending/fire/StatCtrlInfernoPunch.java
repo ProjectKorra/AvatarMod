@@ -52,18 +52,39 @@ public class StatCtrlInfernoPunch extends StatusControl {
 	public boolean execute(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
+		Bender bender = ctx.getBender();
 		AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
+		int i = 0;
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			float damageModifier = (float) (bender.calcPowerRating(Firebending.ID) / 100);
+			float damage = STATS_CONFIG.InfernoPunchDamage * 2 + (2 * damageModifier);
+			float knockBack = 0.75F;
+			int fireTime = 4;
+			Vector direction = Vector.getLookRectangular(entity);
 			List<Entity> hit = Raytrace.entityRaytrace(world, Vector.getEyePos(entity), Vector.getLookRectangular(entity), 8);
 			if (!hit.isEmpty()) {
 				for (Entity e : hit) {
 					if (e instanceof EntityLivingBase && ((EntityLivingBase) e).getHeldItemMainhand() == ItemStack.EMPTY) {
-						e.attackEntityFrom(DamageSource.IN_FIRE, 1);
+						i++;
+
+						world.playSound(null, e.posX, e.posY, e.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
+								SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
+
+						e.attackEntityFrom(DamageSource.IN_FIRE, damage - (i/2));
+						e.setFire(fireTime - (i/2));
+						e.motionX += direction.x() * (knockBack - (i/2));
+						e.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
+						e.motionZ += direction.z() * knockBack;
+						e.isAirBorne = true;
+						// this line is needed to prevent a bug where players will not be pushed in multiplayer
+						AvatarUtils.afterVelocityAdded(e);
+						System.out.println("success!");
 						//Should be overridden by the subscribe event i
 
 					}
 				}
+				return true;
 			}
 
 		}
@@ -81,7 +102,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
 			Bender ctx = Bender.get(entity);
 			if (ctx.getData() != null) {
-				Vector direction = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
+				Vector direction = Vector.getLookRectangular(entity);
 				AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
 				float knockBack = 1F;
 				int fireTime = 5;
@@ -101,12 +122,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 					damage = 10 + (2 * damageModifier);
 					knockBack = 1.5F;
 					fireTime = 15;
-				} else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-					damage = 2 + (2 * damageModifier);
-					knockBack = 0.75F;
-					fireTime = 4;
 				}
-				if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
+				if (ctx.getData().hasStatusControl(INFERNO_PUNCH) && !abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 					if (entity.getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().equals("avatar_groundSmash"))) {
 						if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 							BlockPos blockPos = target.getPosition();
