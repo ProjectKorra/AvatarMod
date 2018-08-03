@@ -38,17 +38,31 @@ public class AbilityWaterCannon extends Ability {
 		World world = ctx.getWorld();
 
 		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel() * 2);
-		boolean hasChi = bender.consumeChi(STATS_CONFIG.chiWaterCannon);
+		float chi = STATS_CONFIG.chiWaterCannon;
+		//5
 		boolean hasWaterCharge = data.hasTickHandler(TickHandler.WATER_CHARGE);
 		int waterAmount = 2;
-
 
 		if(ctx.getLevel() >= 2) {
 		   waterAmount = 3;
 		}
+
+		if (ctx.getLevel() == 2) {
+			chi = STATS_CONFIG.chiWaterCannon * 1.2F;
+			//6
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			chi = STATS_CONFIG.chiWaterCannon * 1.6F;
+			//8
+		}
+		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			chi = STATS_CONFIG.chiWaterCannon * 1.4F;
+			//7
+		}
+
 		
 		if (ctx.consumeWater(waterAmount)) {
-			if (hasChi && !hasWaterCharge) {
+			if (bender.consumeChi(chi) && !hasWaterCharge) {
 				ctx.getData().addTickHandler(TickHandler.WATER_CHARGE);
 				data.addTickHandler(TickHandler.WATER_PARTICLE_SPAWNER);
 			}
@@ -58,7 +72,7 @@ public class AbilityWaterCannon extends Ability {
 				data.addTickHandler(TickHandler.WATER_PARTICLE_SPAWNER);
 			}
 		} else if (targetPos != null && ctx.getLevel() >= 2) {
-			if (hasChi && !hasWaterCharge) {
+			if (bender.consumeChi(chi) && !hasWaterCharge) {
 				world.setBlockToAir(targetPos.toBlockPos());
 				//Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 
@@ -89,7 +103,7 @@ public class AbilityWaterCannon extends Ability {
 				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterCannonAngles;
 
 				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> STATS_CONFIG.waterBendableBlocks.contains(state.getBlock())
-						|| STATS_CONFIG.plantBendableBlocks.contains(state.getBlock()) || state.getBlock() != Blocks.AIR;
+						|| STATS_CONFIG.plantBendableBlocks.contains(state.getBlock()) && state.getBlock() != Blocks.AIR;
 
 
 				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
