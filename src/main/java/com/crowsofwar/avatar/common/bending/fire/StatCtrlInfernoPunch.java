@@ -75,7 +75,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						}
 						world.playSound(null, e.posX, e.posY, e.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
 								SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
-						AxisAlignedBB box = new AxisAlignedBB(e.posX  + (2 - (i/2)), e.posY  + (2 - (i/2)), e.posZ  + (2 - (i/2)), e.posX  + (2 - (i/2)), e.posY - (2 + (i/2)), e.posZ - (2 + (i/2)));
+						AxisAlignedBB box = new AxisAlignedBB(e.posX  + 2, e.posY  + 2, e.posZ  + 2, e.posX - 2, e.posY - 2, e.posZ - 2);
 						List<Entity> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 						if (!nearby.isEmpty()) {
 							for (Entity living : nearby) {
