@@ -109,9 +109,12 @@ public class EntityFireball extends AvatarEntity {
 			removeStatCtrl();
 		}
 		if (getOwner() != null) {
+			EntityFireball ball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
 			BendingData data = BendingData.get(getOwner());
-			if (getBehavior() instanceof FireballBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
-				setDead();
+			if (ball != null && ball.getBehavior() != null) {
+				if (ball.getBehavior() instanceof FireballBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
+					this.setDead();
+				}
 			}
 		}
 	}

@@ -84,7 +84,8 @@ public class EntityWall extends AvatarEntity {
 
 	@Override
 	public void onUpdate() {
-		super.onUpdate();
+		//super.onUpdate();
+		//Helps reduce glitchiness
 
 		if (this.getOwner() == null) {
 			this.setDead();

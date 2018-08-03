@@ -109,10 +109,12 @@ public class EntityLightningSpear extends AvatarEntity {
 		}
 
 		if (getOwner() != null) {
-
+			EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, getOwner());
 			BendingData data = BendingData.get(getOwner());
-			if (getBehavior() instanceof LightningSpearBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_LIGHTNINSPEAR)) {
-				setDead();
+			if (spear != null && spear.getBehavior() != null) {
+				if (spear.getBehavior() instanceof LightningSpearBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_LIGHTNINSPEAR)) {
+					this.setDead();
+				}
 			}
 		}
 		// Electrocute enemies in water

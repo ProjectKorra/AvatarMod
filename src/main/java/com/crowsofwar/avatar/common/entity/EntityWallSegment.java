@@ -214,6 +214,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		wallReference.writeToNbt(nestedCompound(nbt, "Parent"));
 	}
 
+
 	@Override
 	public boolean isInRangeToRenderDist(double distance) {
 		return true;

@@ -10,6 +10,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
+import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -99,10 +100,14 @@ public class EntityCloudBall extends AvatarEntity {
 			setDead();
 			removeStatCtrl();
 		}
+
 		if (getOwner() != null) {
+			EntityCloudBall ball = AvatarEntity.lookupControlledEntity(world, EntityCloudBall.class, getOwner());
 			BendingData data = BendingData.get(getOwner());
-			if (getBehavior() instanceof CloudburstBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_CLOUDBURST)) {
-				setDead();
+			if (ball != null && ball.getBehavior() != null) {
+				if (ball.getBehavior() instanceof CloudburstBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_CLOUDBURST)) {
+					this.setDead();
+				}
 			}
 		}
 
