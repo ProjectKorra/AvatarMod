@@ -175,6 +175,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 					entity.motionY = vel.y() * (BendingData.get(getOwner()).getAbilityData("water_arc").getLevel() + 1) > 0 ? vel.y() * (BendingData.get(getOwner()).getAbilityData("water_arc").getLevel() + 1) + 0.1/distanceTravelled : 0.15F + 0.1/distanceTravelled;
 					entity.motionZ = vel.z() * (BendingData.get(getOwner()).getAbilityData("water_arc").getLevel() + 1) + 0.1/distanceTravelled;;
 					damageEntity(entity);
+					BattlePerformanceScore.addMediumScore(getOwner());
 
 					if (entity instanceof AvatarEntity) {
 						AvatarEntity avent = (AvatarEntity) entity;
@@ -253,15 +254,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	protected void onCollideWithEntity(Entity entity) {
 		if (entity instanceof AvatarEntity && getBehavior() instanceof WaterArcBehavior.Thrown && ((AvatarEntity) entity).getOwner() != getOwner()) {
 			((AvatarEntity) entity).onMinorWaterContact();
-			if (!isSpear) {
-				Splash();
-				this.setDead();
-				cleanup();
-			}
 		}
 		if (!isSpear && getBehavior() instanceof WaterArcBehavior.Thrown) {
 			Splash();
 			this.setDead();
+			BattlePerformanceScore.addMediumScore(getOwner());
 			cleanup();
 		}
 
