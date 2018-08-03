@@ -60,6 +60,7 @@ public class AbilityCreateWave extends Ability {
 
 			VectorI pos = result.getPos();
 			//IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
+			assert pos != null;
 			IBlockState up = world.getBlockState(pos.toBlockPos().up());
 
 			for (int i = 0; i < 3; i++) {
