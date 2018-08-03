@@ -24,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -62,20 +63,39 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			float knockBack = 0.75F;
 			int fireTime = 4;
 			Vector direction = Vector.getLookRectangular(entity);
-			List<Entity> hit = Raytrace.entityRaytrace(world, Vector.getEyePos(entity), Vector.getLookRectangular(entity).times(8), 8, entity1 -> entity1 != entity);
+			List<Entity> hit = Raytrace.entityRaytrace(world, Vector.getEyePos(entity), Vector.getLookRectangular(entity).times(1.5), 8, entity1 -> entity1 != entity);
 			if (!hit.isEmpty()) {
 				for (Entity e : hit) {
 					System.out.println(e);
 					if (e instanceof EntityLivingBase && entity.getHeldItemMainhand() == ItemStack.EMPTY) {
-
 						if (world instanceof WorldServer) {
 							WorldServer World = (WorldServer) e.getEntityWorld();
 							World.spawnParticle(EnumParticleTypes.FLAME, e.posX, e.posY + e.getEyeHeight(), e.posZ, 50, 0.05, 0.05, 0.05, 0.1);
 
 						}
-
 						world.playSound(null, e.posX, e.posY, e.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
 								SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
+						AxisAlignedBB box = new AxisAlignedBB(e.posX  + (2 - (i/2)), e.posY  + (2 - (i/2)), e.posZ  + (2 - (i/2)), e.posX  + (2 - (i/2)), e.posY - (2 + (i/2)), e.posZ - (2 + (i/2)));
+						List<Entity> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
+						if (!nearby.isEmpty()) {
+							for (Entity living : nearby) {
+								if (world instanceof WorldServer) {
+									WorldServer World = (WorldServer) e.getEntityWorld();
+									World.spawnParticle(EnumParticleTypes.FLAME, living.posX, living.posY + living.getEyeHeight(), living.posZ, 50, 0.05, 0.05, 0.05, 0.05);
+
+								}
+								living.attackEntityFrom(DamageSource.IN_FIRE, damage - (i/2));
+								living.setFire(fireTime - (i/2));
+								living.motionX += direction.x() * (knockBack - (i/2));
+								living.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
+								living.motionZ += direction.z() * knockBack;
+								living.isAirBorne = true;
+								// this line is needed to prevent a bug where players will not be pushed in multiplayer
+								AvatarUtils.afterVelocityAdded(e);
+								i++;
+
+							}
+						}
 
 						e.attackEntityFrom(DamageSource.IN_FIRE, damage - (i/2));
 						e.setFire(fireTime - (i/2));
@@ -85,8 +105,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						e.isAirBorne = true;
 						// this line is needed to prevent a bug where players will not be pushed in multiplayer
 						AvatarUtils.afterVelocityAdded(e);
-						System.out.println("success!");
-						//Should be overridden by the subscribe event
 						i++;
 
 					}
@@ -129,6 +147,11 @@ public class StatCtrlInfernoPunch extends StatusControl {
 					damage = 10 + (2 * damageModifier);
 					knockBack = 1.5F;
 					fireTime = 15;
+				}
+				if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+					damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * damageModifier);
+					knockBack = 0.75F;
+					fireTime = 4;
 				}
 				if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
 					if (entity.getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().equals("avatar_groundSmash"))) {
