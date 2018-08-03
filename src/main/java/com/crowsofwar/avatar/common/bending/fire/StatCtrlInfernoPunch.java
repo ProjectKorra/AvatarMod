@@ -58,7 +58,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			float damageModifier = (float) (bender.calcPowerRating(Firebending.ID) / 100);
-			float damage = STATS_CONFIG.InfernoPunchDamage * 2 + (2 * damageModifier);
+			float damage = STATS_CONFIG.InfernoPunchDamage * 1.5F + (2 * damageModifier);
 			float knockBack = 0.75F;
 			int fireTime = 4;
 			Vector direction = Vector.getLookRectangular(entity);
@@ -67,6 +67,12 @@ public class StatCtrlInfernoPunch extends StatusControl {
 				for (Entity e : hit) {
 					System.out.println(e);
 					if (e instanceof EntityLivingBase && entity.getHeldItemMainhand() == ItemStack.EMPTY) {
+
+						if (world instanceof WorldServer) {
+							WorldServer World = (WorldServer) e.getEntityWorld();
+							World.spawnParticle(EnumParticleTypes.FLAME, e.posX, e.posY + e.getEyeHeight(), e.posZ, 50, 0.05, 0.05, 0.05, 0.1);
+
+						}
 
 						world.playSound(null, e.posX, e.posY, e.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
 								SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
@@ -124,7 +130,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 					knockBack = 1.5F;
 					fireTime = 15;
 				}
-				if (ctx.getData().hasStatusControl(INFERNO_PUNCH) && !abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
 					if (entity.getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().equals("avatar_groundSmash"))) {
 						if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 							BlockPos blockPos = target.getPosition();
@@ -137,9 +143,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 							}
 						}
 						if (world instanceof WorldServer) {
-							Vector look = getLookRectangular(entity);
 							WorldServer World = (WorldServer) target.getEntityWorld();
-							World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY + target.getEyeHeight(), target.posZ, 50, 0.05, 0.05, 0.05, 0.2);
+							World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY + target.getEyeHeight(), target.posZ, 50, 0.05, 0.05, 0.05, 0.1);
 
 						}
 
