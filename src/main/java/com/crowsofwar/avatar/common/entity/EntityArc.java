@@ -174,7 +174,7 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getBrightnessForRender() {
-		return 15728880;
+		return 300;
 	}
 
 	@Override
