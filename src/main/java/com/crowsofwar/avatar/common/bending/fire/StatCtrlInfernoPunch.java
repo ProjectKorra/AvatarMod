@@ -62,11 +62,11 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			float knockBack = 0.75F;
 			int fireTime = 4;
 			Vector direction = Vector.getLookRectangular(entity);
-			List<Entity> hit = Raytrace.entityRaytrace(world, Vector.getEyePos(entity), Vector.getLookRectangular(entity), 8);
+			List<Entity> hit = Raytrace.entityRaytrace(world, Vector.getEyePos(entity), Vector.getLookRectangular(entity).times(8), 8, entity1 -> entity1 != entity);
 			if (!hit.isEmpty()) {
 				for (Entity e : hit) {
-					if (e instanceof EntityLivingBase && ((EntityLivingBase) e).getHeldItemMainhand() == ItemStack.EMPTY) {
-						i++;
+					System.out.println(e);
+					if (e instanceof EntityLivingBase && entity.getHeldItemMainhand() == ItemStack.EMPTY) {
 
 						world.playSound(null, e.posX, e.posY, e.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
 								SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
@@ -80,7 +80,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						// this line is needed to prevent a bug where players will not be pushed in multiplayer
 						AvatarUtils.afterVelocityAdded(e);
 						System.out.println("success!");
-						//Should be overridden by the subscribe event i
+						//Should be overridden by the subscribe event
+						i++;
 
 					}
 				}
