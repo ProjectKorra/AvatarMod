@@ -86,19 +86,19 @@ public class StatCtrlInfernoPunch extends StatusControl {
 				float knockBack = 1F;
 				int fireTime = 5;
 				float damageModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
-				float damage = STATS_CONFIG.InfernoPunchDamage + (3 * damageModifier);
+				float damage = STATS_CONFIG.InfernoPunchDamage + (2 * damageModifier);
 
 				if (abilityData.getLevel() >= 1) {
-					damage = 4 + (4 * damageModifier);
+					damage = 4 + (2 * damageModifier);
 					knockBack = 1.125F;
 					fireTime = 6;
 				} else if (abilityData.getLevel() >= 2) {
-					damage = 5 + (5 * damageModifier);
+					damage = 5 + (2 * damageModifier);
 					knockBack = 1.25F;
 					fireTime = 8;
 				}
 				if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-					damage = 10 + (10 * damageModifier);
+					damage = 10 + (2 * damageModifier);
 					knockBack = 1.5F;
 					fireTime = 15;
 				} else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
