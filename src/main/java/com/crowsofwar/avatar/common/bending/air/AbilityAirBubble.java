@@ -95,31 +95,6 @@ public class AbilityAirBubble extends Ability {
 	}
 
 	@Override
-	public int getCooldown(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-
-		int coolDown = 200;
-
-		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-			coolDown = 0;
-		}
-
-		if (ctx.getLevel() == 1) {
-			coolDown = 180;
-		}
-		if (ctx.getLevel() == 2) {
-			coolDown = 160;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 140;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 130;
-		}
-		return coolDown;
-	}
-
-	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiAirBubble(this, entity, bender);
 	}

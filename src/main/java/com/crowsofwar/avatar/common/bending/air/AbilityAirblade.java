@@ -92,31 +92,6 @@ public class AbilityAirblade extends Ability {
 	}
 
 	@Override
-	public int getCooldown(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-
-		int coolDown = 100;
-
-		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-			coolDown = 0;
-		}
-
-		if (ctx.getLevel() == 1) {
-			coolDown = 80;
-		}
-		if (ctx.getLevel() == 2) {
-			coolDown = 60;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 40;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 35;
-		}
-		return coolDown;
-	}
-
-	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiAirblade(this, entity, bender);
 	}

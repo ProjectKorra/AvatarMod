@@ -194,7 +194,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {
 			if (isSpear) {
-				
+
 			}
 			Splash();
 			setDead();

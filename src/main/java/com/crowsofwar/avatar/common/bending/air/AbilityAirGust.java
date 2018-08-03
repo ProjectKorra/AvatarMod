@@ -64,35 +64,9 @@ public class AbilityAirGust extends Ability {
 		gust.setAirGrab(ctx.isMasterLevel(SECOND));
 		gust.setAbility(this);
 
-	//	System.out.println("PR : " + ctx.getPowerRating());
-
 		world.spawnEntity(gust);
 	}
 
-	@Override
-	public int getCooldown(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-
-		int coolDown = 50;
-
-		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-			coolDown = 0;
-		}
-
-		if (ctx.getLevel() == 1) {
-			coolDown = 40;
-		}
-		if (ctx.getLevel() == 2) {
-			coolDown = 30;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 25;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 10;
-		}
-		return coolDown;
-	}
 
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
