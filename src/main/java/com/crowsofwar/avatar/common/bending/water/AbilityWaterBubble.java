@@ -120,7 +120,7 @@ public class AbilityWaterBubble extends Ability {
 					existing.setOwner(null);
 				}
 
-				Vector pos = ctx.getLookPos();
+				Vector pos = Vector.getLookRectangular(entity).times(1.5);
 
 				EntityWaterBubble bubble = new EntityWaterBubble(world);
 				bubble.setPosition(pos.x(), pos.y(), pos.z());
