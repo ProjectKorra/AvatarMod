@@ -142,7 +142,7 @@ public class EntityAirBubble extends EntityShield {
 			return;
 		}
 
-		setPosition(owner.getPositionVector().x, owner.getPositionVector().y, owner.getPositionVector().z);
+		setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
 
 		this.motionX = 0;
 		this.motionY = 0;

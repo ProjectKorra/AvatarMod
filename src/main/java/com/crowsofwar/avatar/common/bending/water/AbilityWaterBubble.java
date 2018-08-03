@@ -107,7 +107,7 @@ public class AbilityWaterBubble extends Ability {
 
 				}
 			}
-		} else if (targetPos != null) {
+		} /*else if (targetPos != null) {
 			if (bender.consumeChi(STATS_CONFIG.chiWaterBubble)) {
 
 				EntityWaterBubble existing = AvatarEntity.lookupEntity(world, EntityWaterBubble.class, //
@@ -123,7 +123,7 @@ public class AbilityWaterBubble extends Ability {
 				Vector pos = Vector.getLookRectangular(entity).times(1.5);
 
 				EntityWaterBubble bubble = new EntityWaterBubble(world);
-				bubble.setPosition(pos.x(), pos.y(), pos.z());
+				bubble.setPosition(pos);
 				bubble.setBehavior(new WaterBubbleBehavior.PlayerControlled());
 				bubble.setOwner(entity);
 				bubble.setSourceBlock(ctx.getLevel() >= 2);
@@ -145,7 +145,7 @@ public class AbilityWaterBubble extends Ability {
 				}
 
 			}
-		}
+		}**/
 	}
 
 	private Vector getClosestWaterbendableBlock (EntityLivingBase entity, int level) {
