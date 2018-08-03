@@ -103,15 +103,16 @@ public class EntityWave extends AvatarEntity {
 			this.setDead();
 		}
 
-		if (getAbility() instanceof AbilityCreateWave && getOwner() != null && !world.isRemote) {
+		if (getAbility() instanceof AbilityCreateWave && getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 			AbilityData lvl = data.getAbilityData(getAbility().getName());
 
 			if (lvl.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				setSize(Size * 2, Size * 0.75F * 2);
-			} else {
-				setSize(Size, Size * 0.75F);
 			}
+		}
+		else {
+			setSize(Size, Size * 0.75F);
 		}
 
 		if (!this.inWater) {
