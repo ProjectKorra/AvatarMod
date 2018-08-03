@@ -135,7 +135,8 @@ public class EntityIcePrison extends AvatarEntity {
 
 	@Override
 	public void onUpdate() {
-		super.onUpdate();
+		//super.onUpdate();
+		//Otherwise stuff collides with it
 		EntityLivingBase imprisoned = getImprisoned();
 		if (imprisoned != null) {
 			IAttributeInstance speed = imprisoned.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
