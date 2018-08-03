@@ -68,7 +68,7 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 
 	@Override
 	protected float getDamage() {
-		return 5;
+		return 4;
 	}
 
 	@Override

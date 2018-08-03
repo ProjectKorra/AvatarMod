@@ -65,7 +65,7 @@ public class StatCtrlFireJump extends StatusControl {
 				jumpMultiplier = 0.3;
 				fallAbsorption = 4;
 				range = 2.5;
-				damage = 2;
+				damage = 1.5F;
 				speed = 1.5;
 			}
 			if (lvl >= 2) {
@@ -73,14 +73,14 @@ public class StatCtrlFireJump extends StatusControl {
 				fallAbsorption = 5;
 				speed = 2;
 				range = 3;
-				damage = 3;
+				damage = 2;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				jumpMultiplier = 0.6;
 				fallAbsorption = 8;
 				speed = 4;
 				range = 5;
-				damage = 5;
+				damage = 3;
 
 			}
 
@@ -89,7 +89,7 @@ public class StatCtrlFireJump extends StatusControl {
 				fallAbsorption = 15;
 				speed = 2.5;
 				range = 3;
-				damage = 3;
+				damage = 2.5F;
 			}
 
 			if (abilityData.getLevel()  == 2 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
