@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
@@ -324,7 +325,10 @@ public abstract class AvatarEntity extends Entity {
 	 * pushes the entities away.
 	 */
 	protected boolean canCollideWith(Entity entity) {
-		return entity instanceof AvatarEntity;
+		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
+			return false;
+		}
+		else  return entity instanceof AvatarEntity;
 	}
 
 	@Override
