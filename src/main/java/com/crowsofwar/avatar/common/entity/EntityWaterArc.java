@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -145,9 +146,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	public void Splash() {
-		AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("water_arc");
-		int lvl = abilityData.getLevel();
-		onMinorWaterContact();
 		if (world instanceof WorldServer) {
 			WorldServer World = (WorldServer) this.world;
 			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0.2, 0.1, 0.2, 0.03);
@@ -156,10 +154,16 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
+					if (getAbility() instanceof AbilityWaterArc) {
+						AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("water_arc");
+						int lvl = abilityData.getLevel();
+						this.damageMult = lvl >= 2 ? 2 : 0.5F;
+						//If the player's water arc level is level III or greater the aoe will do 2+ damage.
+					}
+					else this.damageMult = 0.5f;
 
-					this.damageMult = lvl >= 2 ? 2 : 0.5F;
-					//If the player's water arc level is level III or greater the aoe will do 2+ damage.
 					damageEntity(entity);
+
 
 					double mult = -0.5;
 					double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
@@ -188,8 +192,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	@Override
 	public boolean onCollideWithSolid() {
 
-		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {
-			onMinorWaterContact();
+		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown && !isSpear) {
 			Splash();
 			setDead();
 			cleanup();
