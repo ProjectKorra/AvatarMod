@@ -19,7 +19,7 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 			WorldServer World = (WorldServer) world;
 			if (data.getTickHandlerDuration(this) % 5 == 0) {
 				double y = entity.posY + entity.getEyeHeight() - 0.65;
-				World.spawnParticle(EnumParticleTypes.FLAME, entity.posX, y, entity.posZ, 20, 0, 0, 0, 0.02);
+				World.spawnParticle(EnumParticleTypes.FLAME, entity.posX, y, entity.posZ, 20, 0, 0, 0, 0.015);
 
 			}
 
