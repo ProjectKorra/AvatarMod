@@ -70,7 +70,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 					if (e instanceof EntityLivingBase && entity.getHeldItemMainhand() == ItemStack.EMPTY) {
 						if (world instanceof WorldServer) {
 							WorldServer World = (WorldServer) e.getEntityWorld();
-							World.spawnParticle(EnumParticleTypes.FLAME, e.posX, e.posY + e.getEyeHeight(), e.posZ, 50, 0.05, 0.05, 0.05, 0.1);
+							World.spawnParticle(EnumParticleTypes.FLAME, e.posX, e.posY + e.getEyeHeight(), e.posZ, 50, 0.05, 0.05, 0.05, 0.05);
 
 						}
 						world.playSound(null, e.posX, e.posY, e.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
@@ -81,7 +81,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 							for (Entity living : nearby) {
 								if (world instanceof WorldServer) {
 									WorldServer World = (WorldServer) e.getEntityWorld();
-									World.spawnParticle(EnumParticleTypes.FLAME, living.posX, living.posY + living.getEyeHeight(), living.posZ, 50, 0.05, 0.05, 0.05, 0.05);
+									World.spawnParticle(EnumParticleTypes.FLAME, living.posX, living.posY + living.getEyeHeight(), living.posZ, 50, 0.05, 0.05, 0.05, 0.01);
 
 								}
 								living.attackEntityFrom(DamageSource.IN_FIRE, damage - (i/2));
@@ -167,7 +167,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						}
 						if (world instanceof WorldServer) {
 							WorldServer World = (WorldServer) target.getEntityWorld();
-							World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY + target.getEyeHeight(), target.posZ, 50, 0.05, 0.05, 0.05, 0.1);
+							World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY + target.getEyeHeight(), target.posZ, 50, 0.05, 0.05, 0.05, 0.05);
 
 						}
 
