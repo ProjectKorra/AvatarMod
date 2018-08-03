@@ -64,7 +64,7 @@ public abstract class Ability {
 	 * Get cooldown after the ability is activated.
 	 */
 	public int getCooldown(AbilityContext ctx) {
-		return 15;
+		return 0;
 	}
 
 	/*
