@@ -60,6 +60,11 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	}
 
 	@Override
+	public int getBrightnessForRender() {
+		return 15728880;
+	}
+
+	@Override
 	public boolean onMajorWaterContact() {
 		spawnExtinguishIndicators();
 		setDead();

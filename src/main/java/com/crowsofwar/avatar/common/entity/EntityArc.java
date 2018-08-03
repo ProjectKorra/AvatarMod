@@ -31,6 +31,7 @@ import java.util.function.Consumer;
 public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 
 	private List<T> points;
+	private int brightness = 15728880;
 
 	public EntityArc(World world) {
 		super(world);
@@ -69,6 +70,10 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 				point.setPosition(position());
 			}
 		}
+		if (!this.world.isDaytime()) {
+			brightness = 500;
+		}
+		else brightness = 15728880;
 
 		ignoreFrustumCheck = true;
 
@@ -174,7 +179,7 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getBrightnessForRender() {
-		return 15728880;
+		return brightness;
 	}
 
 	@Override

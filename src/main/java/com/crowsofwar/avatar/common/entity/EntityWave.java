@@ -74,7 +74,6 @@ public class EntityWave extends AvatarEntity {
 	}
 
 	public void setWaveSize(float size) {
-		this.Size = size;
 		dataManager.set(SYNC_SIZE, size);
 	}
 

@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
@@ -49,7 +51,18 @@ public class RenderWave extends RenderModel<EntityWave> {
 		GlStateManager.rotate(180, 1, 0, 0);
 		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
 		GlStateManager.translate(0, -(entity.getWaveSize()/2 * 0.75), 0);
-		GlStateManager.scale(entity.getWaveSize()/2, (entity.getWaveSize()/2) * 0.75, entity.getWaveSize()/2);
+		if (entity.getAbility() instanceof AbilityCreateWave) {
+			AbilityData data = AbilityData.get(entity.getOwner(), entity.getAbility().getName());
+			if (data.getLevel() >= 1) {
+				GlStateManager.scale(entity.getWaveSize()/2, (entity.getWaveSize()/2) * 0.75, entity.getWaveSize()/2);
+			}
+			else {
+				GlStateManager.scale(entity.getWaveSize(), (entity.getWaveSize()) * 0.75, entity.getWaveSize());
+			}
+		}
+		else {
+			GlStateManager.scale(entity.getWaveSize() / 2, (entity.getWaveSize() / 2) * 0.75, entity.getWaveSize() / 2);
+		}
 	}
 
 	@Override
