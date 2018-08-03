@@ -21,8 +21,10 @@ import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
+import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
@@ -166,8 +168,20 @@ public class PlayerBender extends Bender {
 			return false;
 		}
 
+
+		EntityLivingBase owner = lightningArc.getOwner();
 		BendingData data = getData();
 		AbilityData abilityData = data.getAbilityData("lightning_redirect");
+
+		if ((owner instanceof EntityPlayer && !((EntityPlayer) owner).isCreative()) && abilityData.getLevel() == -1) {
+			return false;
+		}
+		else  if ((abilityData.getLevel() == -1 && (owner instanceof EntityBender))) {
+			return false;
+		}
+		else if (!data.hasBendingId(Lightningbending.ID)){
+			return false;
+		}
 
 		// Percent chance to redirect lightning; 0..100
 		double chance = abilityData.getLevel() * 10 + 60;
