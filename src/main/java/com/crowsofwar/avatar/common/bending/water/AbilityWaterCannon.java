@@ -37,7 +37,7 @@ public class AbilityWaterCannon extends Ability {
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
 
-		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel() * 2);
+		Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel() * 2);
 		float chi = STATS_CONFIG.chiWaterCannon;
 		//5
 		boolean hasWaterCharge = data.hasTickHandler(TickHandler.WATER_CHARGE);
@@ -102,8 +102,8 @@ public class AbilityWaterCannon extends Ability {
 				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterCannonAngles;
 				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterCannonAngles;
 
-				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> STATS_CONFIG.waterBendableBlocks.contains(state.getBlock())
-						|| STATS_CONFIG.plantBendableBlocks.contains(state.getBlock()) && state.getBlock() != Blocks.AIR;
+				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> (STATS_CONFIG.waterBendableBlocks.contains(state.getBlock())
+						|| STATS_CONFIG.plantBendableBlocks.contains(state.getBlock())) && state.getBlock() != Blocks.AIR;
 
 
 				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
