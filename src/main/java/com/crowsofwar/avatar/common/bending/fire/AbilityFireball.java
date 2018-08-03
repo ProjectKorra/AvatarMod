@@ -117,29 +117,4 @@ public class AbilityFireball extends Ability {
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiFireball(this, entity, bender);
 	}
-
-	@Override
-	public int getCooldown(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-
-		int coolDown = 170;
-
-		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-			coolDown = 0;
-		}
-
-		if (ctx.getLevel() == 1) {
-			coolDown = 150;
-		}
-		if (ctx.getLevel() == 2) {
-			coolDown = 130;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 110;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 100;
-		}
-		return coolDown;
-	}
 }

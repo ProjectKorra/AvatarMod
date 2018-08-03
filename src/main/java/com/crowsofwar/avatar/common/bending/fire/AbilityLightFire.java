@@ -154,30 +154,4 @@ public class AbilityLightFire extends Ability {
 		return false;
 
 	}
-
-	@Override
-	public int getCooldown(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-
-		int coolDown = 50;
-
-		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-			coolDown = 0;
-		}
-
-		if (ctx.getLevel() == 1) {
-			coolDown = 30;
-		}
-		if (ctx.getLevel() == 2) {
-			coolDown = 20;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 15;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 10;
-		}
-		return coolDown;
-	}
-
 }
