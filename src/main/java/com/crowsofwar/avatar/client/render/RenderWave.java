@@ -50,7 +50,7 @@ public class RenderWave extends RenderModel<EntityWave> {
 		GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
 		GlStateManager.rotate(180, 1, 0, 0);
 		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
-		GlStateManager.translate(0, -(entity.getWaveSize()/2 * 0.75), 0);
+		GlStateManager.translate(0, -(entity.getWaveSize()/1.1 * 0.75), 0);
 		if (entity.getAbility() instanceof AbilityCreateWave) {
 			AbilityData data = AbilityData.get(entity.getOwner(), entity.getAbility().getName());
 			if (data.getLevel() >= 1) {
