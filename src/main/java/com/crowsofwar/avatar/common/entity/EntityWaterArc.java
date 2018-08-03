@@ -164,8 +164,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 					}
 					else this.damageMult = 0.5f;
 
-					damageEntity(entity);
-
 
 					double mult = -0.5;
 					double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
@@ -262,12 +260,9 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		if (!isSpear && getBehavior() instanceof WaterArcBehavior.Thrown) {
 			Splash();
 			this.setDead();
-			BattlePerformanceScore.addMediumScore(getOwner());
 			cleanup();
 		}
-		if (entity != getOwner()) {
-			BattlePerformanceScore.addMediumScore(getOwner());
-		}
+
 
 	}
 
