@@ -192,7 +192,10 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	@Override
 	public boolean onCollideWithSolid() {
 
-		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown && !isSpear) {
+		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {
+			if (isSpear) {
+				
+			}
 			Splash();
 			setDead();
 			cleanup();
