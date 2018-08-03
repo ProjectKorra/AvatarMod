@@ -97,7 +97,7 @@ public class ConfigStats {
 			chiFireball = 2f,
 			chiFlamethrowerSecond = 1.75f,
 			chiFlamethrowerSecondLvl4_1 = 2.625f,
-			chiFlamethrowerSecondLvl4_2 = 3.5f,
+			chiFlamethrowerSecondLvl4_2 = 2f,
 			chiLightFire = 2f,
 			chiWave = 2f,
 			chiWaterArc = 1f,
