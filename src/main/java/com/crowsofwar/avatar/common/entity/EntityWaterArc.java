@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -39,6 +40,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -192,11 +194,13 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	@Override
 	public boolean onCollideWithSolid() {
+		if (isSpear) {
+			breakCollidingBlocks();
+
+		}
 
 		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {
-			if (isSpear) {
 
-			}
 			Splash();
 			setDead();
 			cleanup();
@@ -260,6 +264,9 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			this.setDead();
 			BattlePerformanceScore.addMediumScore(getOwner());
 			cleanup();
+		}
+		if (entity != getOwner()) {
+			BattlePerformanceScore.addMediumScore(getOwner());
 		}
 
 	}
@@ -335,5 +342,41 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		}
 
 	}
+
+	private void breakCollidingBlocks() {
+		// Hitbox expansion (in each direction) to destroy blocks before the
+		// airblade collides with them
+		double expansion = 0.1;
+		AxisAlignedBB hitbox = getEntityBoundingBox().grow(expansion, expansion, expansion);
+
+		for (int ix = 0; ix <= 1; ix++) {
+			for (int iz = 0; iz <= 1; iz++) {
+
+				double x = ix == 0 ? hitbox.minX : hitbox.maxX;
+				double y = hitbox.minY;
+				double z = iz == 0 ? hitbox.minZ : hitbox.maxZ;
+				BlockPos pos = new BlockPos(x, y, z);
+
+				tryBreakBlock(world.getBlockState(pos), pos);
+
+			}
+		}
+	}
+
+	/**
+	 * Assuming the airblade can break blocks, tries to break the block.
+	 */
+	private void tryBreakBlock(IBlockState state, BlockPos pos) {
+		if (state.getBlock() == Blocks.AIR) {
+			return;
+		}
+
+		float hardness = state.getBlockHardness(world, pos);
+		if (hardness <= 3) {
+			breakBlock(pos);
+			setVelocity(velocity().times(0.5));
+		}
+	}
+
 
 }
