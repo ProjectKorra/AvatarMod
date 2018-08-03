@@ -199,7 +199,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 		}
 
-		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown) {
+		if (!world.isRemote && getBehavior() instanceof WaterArcBehavior.Thrown && !isSpear) {
 
 			Splash();
 			setDead();
@@ -345,7 +345,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	private void breakCollidingBlocks() {
 		// Hitbox expansion (in each direction) to destroy blocks before the
-		// airblade collides with them
+		// waterarc collides with them
 		double expansion = 0.1;
 		AxisAlignedBB hitbox = getEntityBoundingBox().grow(expansion, expansion, expansion);
 
@@ -364,7 +364,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	/**
-	 * Assuming the airblade can break blocks, tries to break the block.
+	 * Assuming the waterarc can break blocks, tries to break the block.
 	 */
 	private void tryBreakBlock(IBlockState state, BlockPos pos) {
 		if (state.getBlock() == Blocks.AIR) {
@@ -372,9 +372,9 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		}
 
 		float hardness = state.getBlockHardness(world, pos);
-		if (hardness <= 3) {
+		if (hardness <= 4) {
 			breakBlock(pos);
-			setVelocity(velocity().times(0.5));
+			setVelocity(velocity().times(0.75));
 		}
 	}
 
