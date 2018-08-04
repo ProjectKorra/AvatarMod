@@ -2,17 +2,14 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirShockwave;
-import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import com.google.common.base.Predicate;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,7 +18,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -230,7 +226,7 @@ public class EntityAirShockwave extends AvatarEntity {
 		DamageSource source = AvatarDamageSource.causeAirDamage(collided, getOwner());
 		boolean successfulHit = collided.attackEntityFrom(source, (float) this.damage);
 
-		if (getOwner() != null && getAbility() instanceof AbilityAirShockwave && !world.isRemote) {
+		if (getOwner() != null && getAbility() instanceof AbilityAirBurst && !world.isRemote) {
 			BendingData data = BendingData.get(getOwner());
 			data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.airShockwaveHit);
 		}
