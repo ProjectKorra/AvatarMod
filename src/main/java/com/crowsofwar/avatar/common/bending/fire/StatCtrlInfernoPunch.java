@@ -84,7 +84,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 									World.spawnParticle(EnumParticleTypes.FLAME, living.posX, living.posY + living.getEyeHeight(), living.posZ, 50, 0.05, 0.05, 0.05, 0.01);
 
 								}
-								living.attackEntityFrom(DamageSource.IN_FIRE, damage - (i/2));
+								living.attackEntityFrom(AvatarDamageSource.causeFireDamage(living, entity), damage - (i/2));
 								living.setFire(fireTime - (i/2));
 								living.motionX += direction.x() * (knockBack - (i/2));
 								living.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
