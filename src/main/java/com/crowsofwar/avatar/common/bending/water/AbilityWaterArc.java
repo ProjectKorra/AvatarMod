@@ -31,6 +31,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -63,12 +64,12 @@ public class AbilityWaterArc extends Ability {
 
 		Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel() * 2);
 
-		if (targetPos != null || ctx.consumeWater(1) || (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative())) {
+		if (targetPos != null || ctx.consumeWater(1) || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
 
 			if (targetPos == null) {
 				targetPos = Vector.getEyePos(entity).plus(getLookRectangular(entity).times(2.5));
 			}
-			if (targetPos != null) {
+			if (targetPos != null && (entity instanceof EntityPlayer && !((EntityPlayer) entity).isCreative())) {
 				world.setBlockToAir(targetPos.toBlockPos());
 			}
 
