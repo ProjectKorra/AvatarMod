@@ -14,7 +14,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -99,6 +101,8 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.setLifetime(entity.getDuration());
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
+					world.playSound(null, earthspike.posX, earthspike.posY, earthspike.posZ, SoundEvents.BLOCK_GRASS_STEP,
+							SoundCategory.BLOCKS, 1F, 0.5F);
 					if (!world.isRemote) {
 						WorldServer World = (WorldServer) world;
 						for (int degree = 0; degree < 360; degree++) {
@@ -129,6 +133,8 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.setLifetime(20);
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
+					world.playSound(null, earthspike.posX, earthspike.posY, earthspike.posZ, SoundEvents.BLOCK_GRASS_STEP,
+							SoundCategory.BLOCKS, 1F, 0.5F);
 					if (!world.isRemote) {
 						WorldServer World = (WorldServer) world;
 						for (int degree = 0; degree < 360; degree++) {
