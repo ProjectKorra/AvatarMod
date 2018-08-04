@@ -1,23 +1,14 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -28,23 +19,23 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.UUID;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 public class EntityAirShockwave extends AvatarEntity {
 
 	private static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
-		.createKey(EntityAirShockwave.class, DataSerializers.VARINT);
+			.createKey(EntityAirShockwave.class, DataSerializers.VARINT);
 	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirShockwave.class,
 			DataSerializers.FLOAT);
 
+	private int expandStop;
+	//Sets the amount of ticks when the shockwave should stop expanding
+
 	public EntityAirShockwave(World world) {
 		super(world);
-		setSize(0.5f, 0.5f);
-		//setSize(0, 0);
+		this.expandStop = 30;
+		setSize(0.25f, 0.25f);
 
 		this.putsOutFires = true;
 	}
@@ -58,7 +49,7 @@ public class EntityAirShockwave extends AvatarEntity {
 
 	@Override
 	public EntityLivingBase getController() {
-		return !isDissipating() ? getOwner() : null;
+		return getOwner();
 	}
 
 	public float getSize() {
@@ -67,6 +58,10 @@ public class EntityAirShockwave extends AvatarEntity {
 
 	public void setSize(float size) {
 		dataManager.set(SYNC_SIZE, size);
+	}
+
+	public void setExpandStopTime (int time) {
+		this.expandStop = time;
 	}
 
 
@@ -103,7 +98,7 @@ public class EntityAirShockwave extends AvatarEntity {
 		}
 
 		if (owner.isDead) {
-			dissipateLarge();
+			Expand();
 			return;
 		}
 
@@ -113,101 +108,17 @@ public class EntityAirShockwave extends AvatarEntity {
 		this.motionY = 0;
 		this.motionZ = 0;
 
-
-		Bender ownerBender = Bender.get(getOwner());
-
-
 		float size = getSize();
 
-		if (isDissipatingLarge()) {
-			setDissipateTime(getDissipateTime() + 1);
-			float mult = 1 + getDissipateTime() / 10f;
-			setSize(size * mult, size * mult);
-			if (getDissipateTime() >= 10) {
-				setDead();
-			}
-		} else if (isDissipatingSmall()) {
-			setDissipateTime(getDissipateTime() - 1);
-			float mult = 1 + getDissipateTime() / 40f;
-			setSize(size * mult, size * mult);
-			if (getDissipateTime() <= -10) {
-				setDead();
-			}
-		} else {
-			setSize(size, size);
+		setDissipateTime(getDissipateTime() + 1);
+		float mult = 1 + getDissipateTime() / 5f;
+		setSize(size * mult, size * mult);
+		if (getDissipateTime() >= 30) {
+			setDead();
 		}
 
 	}
 
-	/**
-	 * Handles hovering logic to make the owner hover. Preconditions (not in water, owner
-	 * present, etc) are handled by the caller
-	 */
-	private void handleHovering() {
-
-		if (getOwner() == null) {
-			return;
-		}
-		if (getOwner() != null) {
-			getOwner().fallDistance = 0;
-		}
-
-		// Min/max acceptable hovering distance
-		// Hovering is allowed between these two values
-		// Hover distance doesn't need to be EXACT
-		final double minFloatHeight = 1.8;
-		final double maxFloatHeight = 2.2;
-
-		EntityLivingBase owner = getOwner();
-
-		// Find whether there are blocks under the owner
-		// Done by making a hitbox around the owner's feet and checking if there are blocks
-		// colliding with that hitbox
-
-		double x = owner.posX;
-		double y = owner.posY;
-		double z = owner.posZ;
-		//Don't use setPosition; that makes it super duper ultra glitchy
-		AxisAlignedBB hitbox = new AxisAlignedBB(x, y, z, x, y, z);
-		hitbox = hitbox.grow(0.2, 0, 0.2);
-		hitbox = hitbox.expand(0, -maxFloatHeight, 0);
-
-		List<AxisAlignedBB> blockCollisions = world.getCollisionBoxes(null, hitbox);
-
-		if (!blockCollisions.isEmpty()) {
-
-			// Calculate the top-of-ground ground y position
-			// Performed by finding the maximum ypos of each collided block
-			double groundPosition = Double.MIN_VALUE;
-			for (AxisAlignedBB blockHitbox : blockCollisions) {
-				if (blockHitbox.maxY > groundPosition) {
-					groundPosition = blockHitbox.maxY;
-				}
-			}
-			// Now calculate the distance from ground
-			// and use that to determine whether owner should float
-			double distanceFromGround = owner.posY - groundPosition;
-
-			// Tweak motion based on distance to ground, and target distance
-			// Minecraft gravity is 0.08 blocks/tick
-
-			if (distanceFromGround < minFloatHeight) {
-				owner.motionY += 0.11;
-			}
-			if (distanceFromGround >= minFloatHeight && distanceFromGround < maxFloatHeight) {
-				owner.motionY *= 0.7;
-			}
-			if (distanceFromGround >= maxFloatHeight) {
-				owner.motionY += 0.07;
-
-				// Avoid falling at over 3 m/s
-				if (owner.motionY < -3.0 / 20) {
-					owner.motionY = 0;
-				}
-			}
-
-		}
-	}
 
 	@Override
 	public void setDead() {
@@ -261,7 +172,6 @@ public class EntityAirShockwave extends AvatarEntity {
 	}
 
 
-
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;
@@ -275,7 +185,7 @@ public class EntityAirShockwave extends AvatarEntity {
 		dataManager.set(SYNC_DISSIPATE, dissipate);
 	}
 
-	public void dissipateLarge() {
+	public void Expand() {
 		if (!isDissipating()) setDissipateTime(1);
 	}
 
@@ -288,10 +198,7 @@ public class EntityAirShockwave extends AvatarEntity {
 		return getDissipateTime() > 0;
 	}
 
-	public boolean isDissipatingSmall() {
-		return getDissipateTime() < 0;
-	}
 
-	}
+}
 
 
