@@ -34,6 +34,8 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -265,6 +267,16 @@ public abstract class Bender {
 
 		if (!world.isRemote) {
 			Chi chi = data.chi();
+
+			if (CHI_CONFIG.lowChiDebuffs) {
+				if (chi.getTotalChi() <= chi.getMaxChi()/15) {
+					entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 5));
+				}
+				if (chi.getTotalChi() <= chi.getMaxChi()/10) {
+					entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 5));
+				}
+
+			}
 
 			if (entity.isPlayerSleeping()) {
 				chi.changeTotalChi(CHI_CONFIG.regenInBed / 20f);

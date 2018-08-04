@@ -33,6 +33,8 @@ public class ConfigChi {
 	public float maxChiCap = 100;
 	@Load
 	public boolean infiniteInCreative = true;
+	@Load
+	public boolean lowChiDebuffs = false;
 
 	private ConfigChi() {
 	}
