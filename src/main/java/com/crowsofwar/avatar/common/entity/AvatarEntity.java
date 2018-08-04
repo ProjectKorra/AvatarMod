@@ -266,6 +266,10 @@ public abstract class AvatarEntity extends Entity {
 			}
 		}
 
+		if (getOwner() == null) {
+			this.setDead();
+		}
+		
 		if (collided) {
 			onCollideWithSolid();
 		}
