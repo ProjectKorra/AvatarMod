@@ -10,13 +10,16 @@ import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -101,8 +104,12 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.setLifetime(entity.getDuration());
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
-					world.playSound(null, earthspike.posX, earthspike.posY, earthspike.posZ, SoundEvents.BLOCK_GRASS_STEP,
-							SoundCategory.BLOCKS, 1F, 0.5F);
+
+					BlockPos below = earthspike.getPosition().offset(EnumFacing.DOWN);
+					Block belowBlock = world.getBlockState(below).getBlock();
+					world.playSound(earthspike.posX, earthspike.posY, earthspike.posZ,
+							belowBlock.getSoundType().getBreakSound(),
+							SoundCategory.PLAYERS, 1, 1, false);
 					if (!world.isRemote) {
 						WorldServer World = (WorldServer) world;
 						for (int degree = 0; degree < 360; degree++) {
@@ -133,8 +140,12 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.setLifetime(20);
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
-					world.playSound(null, earthspike.posX, earthspike.posY, earthspike.posZ, SoundEvents.BLOCK_GRASS_STEP,
-							SoundCategory.BLOCKS, 1F, 0.5F);
+
+					BlockPos below = earthspike.getPosition().offset(EnumFacing.DOWN);
+					Block belowBlock = world.getBlockState(below).getBlock();
+					world.playSound(earthspike.posX, earthspike.posY, earthspike.posZ,
+							belowBlock.getSoundType().getBreakSound(),
+							SoundCategory.PLAYERS, 1, 1, false);
 					if (!world.isRemote) {
 						WorldServer World = (WorldServer) world;
 						for (int degree = 0; degree < 360; degree++) {
