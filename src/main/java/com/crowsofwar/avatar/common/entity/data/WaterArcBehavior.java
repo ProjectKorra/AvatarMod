@@ -169,15 +169,17 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				}
 			}
 
-			if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
-				//Level 4 Path One
-				startGravity = STATS_CONFIG.waterArcTicks * (5/4);
-				if (ticks >= STATS_CONFIG.waterArcTicks * (5/4)) {
-					//50
-					entity.Splash();
-					entity.setDead();
-				}
+			if (abilityData != null) {
+				if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
+					//Level 4 Path One
+					startGravity = STATS_CONFIG.waterArcTicks * (5 / 4);
+					if (ticks >= STATS_CONFIG.waterArcTicks * (5 / 4)) {
+						//50
+						entity.Splash();
+						entity.setDead();
+					}
 
+				}
 			}
 
 			if (startGravity/ticks <= 2) {

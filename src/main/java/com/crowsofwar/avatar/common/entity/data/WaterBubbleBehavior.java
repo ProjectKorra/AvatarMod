@@ -127,7 +127,8 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 
 		@Override
 		public Behavior onUpdate(EntityWaterBubble entity) {
-			entity.addVelocity(Vector.DOWN.times(0.981));
+			entity.addVelocity(Vector.DOWN.times(0.8));
+			if (entity.getOwner() == null) return this;
 			if (entity.collided) {
 
 				IBlockState state = Blocks.FLOWING_WATER.getDefaultState();
