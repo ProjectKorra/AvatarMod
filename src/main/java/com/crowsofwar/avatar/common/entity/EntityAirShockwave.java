@@ -1,8 +1,13 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirShockwave;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.base.Predicate;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -14,6 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -21,6 +27,8 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 public class EntityAirShockwave extends AvatarEntity {
@@ -32,10 +40,12 @@ public class EntityAirShockwave extends AvatarEntity {
 
 	private int expandStop;
 	//Sets the amount of ticks when the shockwave should stop expanding
+	private double damage;
 
 	public EntityAirShockwave(World world) {
 		super(world);
 		this.expandStop = 30;
+		this.damage = 0.5F;
 		setSize(0.25f, 0.25f);
 
 		this.putsOutFires = true;
@@ -63,6 +73,10 @@ public class EntityAirShockwave extends AvatarEntity {
 
 	public void setExpandStopTime (int time) {
 		this.expandStop = time;
+	}
+
+	public void setDamage (double damage) {
+		this.damage = damage;
 	}
 
 
@@ -114,7 +128,7 @@ public class EntityAirShockwave extends AvatarEntity {
 		setDissipateTime(getDissipateTime() + 1);
 		float mult = 1 + getDissipateTime() / 5f;
 		setSize(size * mult, size * mult);
-		if (getDissipateTime() >= 30) {
+		if (getDissipateTime() >= expandStop) {
 			setDead();
 		}
 
@@ -147,21 +161,24 @@ public class EntityAirShockwave extends AvatarEntity {
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
+		if (canCollideWith(entity)) {
 
-		double mult = -4;
-		Vector vel = position().minus(getEntityPos(entity));
-		vel = vel.normalize().times(mult).plusY(0.3f);
+			double mult = -4 * STATS_CONFIG.airShockwaveSettings.push;
+			Vector vel = position().minus(getEntityPos(entity));
+			vel = vel.normalize().times(mult).plusY(0.3f);
 
-		entity.motionX = vel.x();
-		entity.motionY = vel.y();
-		entity.motionZ = vel.z();
+			entity.motionX = vel.x();
+			entity.motionY = vel.y();
+			entity.motionZ = vel.z();
 
-		if (entity instanceof AvatarEntity) {
-			AvatarEntity avent = (AvatarEntity) entity;
-			avent.setVelocity(vel);
+			if (entity instanceof AvatarEntity) {
+				AvatarEntity avent = (AvatarEntity) entity;
+				avent.setVelocity(vel);
+			}
+			entity.isAirBorne = true;
+			AvatarUtils.afterVelocityAdded(entity);
+			damageEntity(entity);
 		}
-		entity.isAirBorne = true;
-		AvatarUtils.afterVelocityAdded(entity);
 	}
 
 	@Override
@@ -208,8 +225,21 @@ public class EntityAirShockwave extends AvatarEntity {
 		return getDissipateTime() != 0;
 	}
 
-	public boolean isDissipatingLarge() {
-		return getDissipateTime() > 0;
+	private void damageEntity(Entity collided) {
+
+		DamageSource source = AvatarDamageSource.causeAirDamage(collided, getOwner());
+		boolean successfulHit = collided.attackEntityFrom(source, (float) this.damage);
+
+		if (getOwner() != null && getAbility() instanceof AbilityAirShockwave && !world.isRemote) {
+			BendingData data = BendingData.get(getOwner());
+			data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.airShockwaveHit);
+		}
+
+		if (successfulHit) {
+			BattlePerformanceScore.addMediumScore(getOwner());
+		}
+
+
 	}
 
 

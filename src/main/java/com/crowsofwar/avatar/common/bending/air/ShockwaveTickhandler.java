@@ -27,7 +27,7 @@ public class ShockwaveTickhandler extends TickHandler {
 		double powerRating = ctx.getBender().calcPowerRating(Airbending.ID);
 		int duration = data.getTickHandlerDuration(this);
 		double speed = abilityData.getLevel() >= 1 ? 20 : 30;
-		float damage;
+		float damage = 0.5F;
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		float size;
 		float ticks = 50;

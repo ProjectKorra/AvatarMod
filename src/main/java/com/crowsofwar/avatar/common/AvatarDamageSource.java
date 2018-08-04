@@ -50,6 +50,18 @@ public class AvatarDamageSource {
 	}
 
 	/**
+	 * Create a DamageSource for damage caused by an air shockwave, or other air abilities that cause non-slicing damage.
+	 *
+	 * @param hit   Who was hit by the compressed air
+	 * @param owner Who released the compressed air
+	 * @return DamageSource for the compressed air
+	 */
+
+	public static DamageSource causeAirDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_Air", hit, owner);
+	}
+
+	/**
 	 * Create a DamageSource for damage caused by a water arc.
 	 *
 	 * @param hit   Who was hit by the water arc

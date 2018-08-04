@@ -33,6 +33,7 @@ public class ConfigSkills {
 		blockKill = 4f,
 		airJump = 2f,
 		airGustHit = 4f,
+		airShockwaveHit = 3F,
 		buffUsed = 2f,
 		earthspikeHit = 3.5F,
 		ravineHit = 3f,
