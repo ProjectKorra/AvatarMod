@@ -69,8 +69,8 @@ public class EntityAirBubble extends EntityShield {
 
 	public EntityAirBubble(World world) {
 		super(world);
-		// setSize(2.5f, 2.5f);
-		setSize(0, 0);
+		setSize(2.5f, 2.5f);
+		//setSize(0, 0);
 
 		this.airLeft = 600;
 		this.putsOutFires = true;
@@ -104,6 +104,7 @@ public class EntityAirBubble extends EntityShield {
 	public void setSize(float size) {
 		dataManager.set(SYNC_SIZE, size);
 	}
+
 
 	@Override
 	public void setPositionAndUpdate(double x, double y, double z) {
@@ -147,7 +148,6 @@ public class EntityAirBubble extends EntityShield {
 		this.motionX = 0;
 		this.motionY = 0;
 		this.motionZ = 0;
-
 
 
 		if (getOwner() != null) {
