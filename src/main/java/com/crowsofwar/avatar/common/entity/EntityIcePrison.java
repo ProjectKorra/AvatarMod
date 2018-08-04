@@ -147,8 +147,8 @@ public class EntityIcePrison extends AvatarEntity {
 			imprisoned.posX = this.posX;
 			imprisoned.posY = this.posY;
 			imprisoned.posZ = this.posZ;
-			setVelocity(Vector.ZERO);
-			imprisoned.setVelocity(0, 0, 0);
+			imprisoned.motionX = imprisoned.motionY = imprisoned.motionZ = 0;
+			this.motionX = this.motionY = this.motionZ = 0;
 		}
 
 		// Countdown imprisonedTime

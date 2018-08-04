@@ -147,8 +147,7 @@ public class EntitySandPrison extends AvatarEntity {
 			imprisoned.posY = this.posY;
 			imprisoned.posZ = this.posZ;
 			imprisoned.motionX = imprisoned.motionY = imprisoned.motionZ = 0;
-			setVelocity(Vector.ZERO);
-			imprisoned.setVelocity(0, 0, 0);
+			this.motionX = this.motionY = this.motionZ = 0;
 		}
 
 		if (!world.isRemote) {

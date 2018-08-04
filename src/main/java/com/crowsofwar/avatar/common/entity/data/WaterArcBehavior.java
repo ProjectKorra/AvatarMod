@@ -127,7 +127,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			int lvl = 0;
 
 			Bender bender = Bender.get(entity.getOwner());
-			if (bender != null) {
+			if (bender != null && entity.getAbility() != null && !entity.world.isRemote) {
 				data = bender.getData();
 				abilityData = data.getAbilityData(entity.getAbility().getName());
 				if (entity.getAbility() instanceof AbilityWaterArc) {
