@@ -107,9 +107,9 @@ public class SpawnEarthspikesHandler extends TickHandler {
 
 					BlockPos below = earthspike.getPosition().offset(EnumFacing.DOWN);
 					Block belowBlock = world.getBlockState(below).getBlock();
-					world.playSound(earthspike.posX, earthspike.posY, earthspike.posZ,
+					world.playSound(null, earthspike.posX, earthspike.posY, earthspike.posZ,
 							belowBlock.getSoundType().getBreakSound(),
-							SoundCategory.PLAYERS, 1, 1, false);
+							SoundCategory.BLOCKS, 1, 1);
 					if (!world.isRemote) {
 						WorldServer World = (WorldServer) world;
 						for (int degree = 0; degree < 360; degree++) {
@@ -143,9 +143,9 @@ public class SpawnEarthspikesHandler extends TickHandler {
 
 					BlockPos below = earthspike.getPosition().offset(EnumFacing.DOWN);
 					Block belowBlock = world.getBlockState(below).getBlock();
-					world.playSound(earthspike.posX, earthspike.posY, earthspike.posZ,
+					world.playSound(null, earthspike.posX, earthspike.posY, earthspike.posZ,
 							belowBlock.getSoundType().getBreakSound(),
-							SoundCategory.PLAYERS, 1, 1, false);
+							SoundCategory.BLOCKS, 1, 1);
 					if (!world.isRemote) {
 						WorldServer World = (WorldServer) world;
 						for (int degree = 0; degree < 360; degree++) {
