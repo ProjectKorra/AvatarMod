@@ -39,8 +39,8 @@ public class WaterChargeHandler extends TickHandler {
 		float damage;
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		float size;
-		float ticks = 50;
 		//Multiply by 1.5 to get water cannon size
+		float ticks = 50;
 		int durationToFire = 40;
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			durationToFire = 60;

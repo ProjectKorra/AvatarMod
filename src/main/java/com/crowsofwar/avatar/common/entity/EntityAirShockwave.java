@@ -6,6 +6,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -117,6 +118,20 @@ public class EntityAirShockwave extends AvatarEntity {
 			setDead();
 		}
 
+		if (!isDead && !world.isRemote) {
+			List<Entity> collidedList = world.getEntitiesWithinAABB(Entity.class,
+					getEntityBoundingBox(), entity1 -> entity1 != getOwner());
+
+			if (!collidedList.isEmpty()) {
+				for (Entity entity : collidedList) {
+					if (entity != getOwner() && canCollideWith(entity)) {
+						onCollideWithEntity(entity);
+					}
+
+				}
+
+			}
+		}
 	}
 
 
@@ -133,8 +148,7 @@ public class EntityAirShockwave extends AvatarEntity {
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
 
-		double mult = -2;
-		if (isDissipatingLarge()) mult = -4;
+		double mult = -4;
 		Vector vel = position().minus(getEntityPos(entity));
 		vel = vel.normalize().times(mult).plusY(0.3f);
 
@@ -154,7 +168,7 @@ public class EntityAirShockwave extends AvatarEntity {
 	protected boolean canCollideWith(Entity entity) {
 		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
 			return false;
-		} else return entity != getOwner() && !(entity instanceof EntityArrow) && !(entity instanceof EntityItem);
+		} else return entity != getOwner() && !(entity instanceof EntityXPOrb) && !(entity instanceof EntityItem);
 	}
 
 	@Override
