@@ -6,19 +6,14 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityFireball;
-import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.world.AvatarFireExplosion;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -29,17 +24,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
 
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
-import static com.crowsofwar.gorecore.util.Vector.getEyePos;
-import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 
@@ -75,7 +66,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						}
 						world.playSound(null, e.posX, e.posY, e.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
 								SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
-						AxisAlignedBB box = new AxisAlignedBB(e.posX  + 2, e.posY  + 2, e.posZ  + 2, e.posX - 2, e.posY - 2, e.posZ - 2);
+						AxisAlignedBB box = new AxisAlignedBB(e.posX + 2, e.posY + 2, e.posZ + 2, e.posX - 2, e.posY - 2, e.posZ - 2);
 						List<Entity> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 						if (!nearby.isEmpty()) {
 							for (Entity living : nearby) {
@@ -84,9 +75,9 @@ public class StatCtrlInfernoPunch extends StatusControl {
 									World.spawnParticle(EnumParticleTypes.FLAME, living.posX, living.posY + living.getEyeHeight(), living.posZ, 50, 0.05, 0.05, 0.05, 0.01);
 
 								}
-								living.attackEntityFrom(AvatarDamageSource.causeFireDamage(living, entity), damage - (i/2));
-								living.setFire(fireTime - (i/2));
-								living.motionX += direction.x() * (knockBack - (i/2));
+								living.attackEntityFrom(AvatarDamageSource.causeFireDamage(living, entity), damage - (i / 2));
+								living.setFire(fireTime - (i / 2));
+								living.motionX += direction.x() * (knockBack - (i / 2));
 								living.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
 								living.motionZ += direction.z() * knockBack;
 								living.isAirBorne = true;
@@ -97,9 +88,9 @@ public class StatCtrlInfernoPunch extends StatusControl {
 							}
 						}
 
-						e.attackEntityFrom(DamageSource.IN_FIRE, damage - (i/2));
-						e.setFire(fireTime - (i/2));
-						e.motionX += direction.x() * (knockBack - (i/2));
+						e.attackEntityFrom(DamageSource.IN_FIRE, damage - (i / 2));
+						e.setFire(fireTime - (i / 2));
+						e.motionX += direction.x() * (knockBack - (i / 2));
 						e.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
 						e.motionZ += direction.z() * knockBack;
 						e.isAirBorne = true;

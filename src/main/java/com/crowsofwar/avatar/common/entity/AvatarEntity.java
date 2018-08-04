@@ -299,8 +299,8 @@ public abstract class AvatarEntity extends Entity {
 			if (i > 0 && list.size() > i - 1 && this.rand.nextInt(4) == 0) {
 				int j = 0;
 
-				for (int k = 0; k < list.size(); ++k) {
-					if (!list.get(k).isRiding()) {
+				for (Entity aList : list) {
+					if (!aList.isRiding()) {
 						++j;
 					}
 				}
@@ -310,8 +310,7 @@ public abstract class AvatarEntity extends Entity {
 				}
 			}
 
-			for (int l = 0; l < list.size(); ++l) {
-				Entity entity = list.get(l);
+			for (Entity entity : list) {
 				if (canCollideWith(entity)) {
 					entity.applyEntityCollision(this);
 					onCollideWithEntity(entity);
