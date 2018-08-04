@@ -1,19 +1,3 @@
-/* 
-  This file is part of AvatarMod.
-    
-  AvatarMod is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-  
-  AvatarMod is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  
-  You should have received a copy of the GNU General Public License
-  along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
-*/
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -50,29 +34,18 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
-/**
- * @author CrowsOfWar
- */
-public class EntityAirBubble extends EntityShield {
+public class EntityAirShockwave extends AvatarEntity {
 
-	public static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
-			.createKey(EntityAirBubble.class, DataSerializers.VARINT);
-	public static final DataParameter<Boolean> SYNC_HOVERING = EntityDataManager
-			.createKey(EntityAirBubble.class, DataSerializers.BOOLEAN);
-	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirBubble.class,
+	private static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
+		.createKey(EntityAirShockwave.class, DataSerializers.VARINT);
+	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirShockwave.class,
 			DataSerializers.FLOAT);
-	public static final UUID SLOW_ATTR_ID = UUID.fromString("40354c68-6e88-4415-8a6b-e3ddc56d6f50");
-	public static final AttributeModifier SLOW_ATTR = new AttributeModifier(SLOW_ATTR_ID,
-			"airbubble_slowness", -.3, 2);
 
-	private int airLeft;
-
-	public EntityAirBubble(World world) {
+	public EntityAirShockwave(World world) {
 		super(world);
-		setSize(2.5f, 2.5f);
+		setSize(0.5f, 0.5f);
 		//setSize(0, 0);
 
-		this.airLeft = 600;
 		this.putsOutFires = true;
 	}
 
@@ -80,21 +53,12 @@ public class EntityAirBubble extends EntityShield {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_DISSIPATE, 0);
-		dataManager.register(SYNC_HOVERING, false);
-		dataManager.register(SYNC_SIZE, 2.5f);
+		dataManager.register(SYNC_SIZE, 0.5f);
 	}
 
 	@Override
 	public EntityLivingBase getController() {
 		return !isDissipating() ? getOwner() : null;
-	}
-
-	public boolean doesAllowHovering() {
-		return dataManager.get(SYNC_HOVERING);
-	}
-
-	public void setAllowHovering(boolean floating) {
-		dataManager.set(SYNC_HOVERING, floating);
 	}
 
 	public float getSize() {
@@ -139,7 +103,7 @@ public class EntityAirBubble extends EntityShield {
 		}
 
 		if (owner.isDead) {
-			dissipateSmall();
+			dissipateLarge();
 			return;
 		}
 
@@ -150,57 +114,8 @@ public class EntityAirBubble extends EntityShield {
 		this.motionZ = 0;
 
 
-		if (getOwner() != null) {
-			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
-			BendingData bD = BendingData.get(getOwner());
-			if (bubble == null && (bD.hasStatusControl(StatusControl.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControl.BUBBLE_EXPAND))) {
-				bD.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
-				bD.removeStatusControl(StatusControl.BUBBLE_EXPAND);
-			}
-		}
-
-
-		if (!world.isRemote && owner.isInsideOfMaterial(Material.WATER)) {
-			owner.setAir(Math.min(airLeft, 300));
-			airLeft--;
-		}
-
 		Bender ownerBender = Bender.get(getOwner());
-		if (!world.isRemote && !ownerBender.consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
 
-			dissipateSmall();
-
-		}
-
-		ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-		boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
-		if (!elytraOk) {
-			ownerBender.sendMessage("avatar.airBubbleElytra");
-			dissipateSmall();
-		}
-
-		if (!isDissipating()) {
-			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-			if (attribute.getModifier(SLOW_ATTR_ID) == null) {
-				attribute.applyModifier(SLOW_ATTR);
-			}
-
-			if (!owner.isInWater() && !ownerBender.isFlying() && chest.getItem() != Items.ELYTRA) {
-
-				owner.motionY += 0.03;
-
-				if (doesAllowHovering()) {
-
-					if (doesAllowHovering() && !owner.isSneaking()) {
-						handleHovering();
-					} else {
-						owner.motionY += 0.03;
-					}
-				}
-
-			}
-
-		}
 
 		float size = getSize();
 
@@ -297,7 +212,6 @@ public class EntityAirBubble extends EntityShield {
 	@Override
 	public void setDead() {
 		super.setDead();
-		removeStatCtrl();
 	}
 
 	@Override
@@ -336,40 +250,17 @@ public class EntityAirBubble extends EntityShield {
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		setDissipateTime(nbt.getInteger("Dissipate"));
-		setAllowHovering(nbt.getBoolean("AllowHovering"));
 		setSize(nbt.getFloat("Size"));
-		airLeft = nbt.getInteger("AirLeft");
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("Dissipate", getDissipateTime());
-		nbt.setBoolean("AllowHovering", doesAllowHovering());
 		nbt.setFloat("Size", getSize());
-		nbt.setInteger("AirLeft", airLeft);
 	}
 
 
-	@Override
-	protected float getChiDamageCost() {
-		return STATS_CONFIG.chiAirBubbleTakeDamage;
-	}
-
-	@Override
-	protected float getProtectionXp() {
-		return SKILLS_CONFIG.airbubbleProtect;
-	}
-
-	@Override
-	protected String getAbilityName() {
-		return "air_bubble";
-	}
-
-	@Override
-	protected void onDeath() {
-		dissipateLarge();
-	}
 
 	@Override
 	public boolean shouldRenderInPass(int pass) {
@@ -386,13 +277,8 @@ public class EntityAirBubble extends EntityShield {
 
 	public void dissipateLarge() {
 		if (!isDissipating()) setDissipateTime(1);
-		removeStatCtrl();
 	}
 
-	public void dissipateSmall() {
-		if (!isDissipating()) setDissipateTime(-1);
-		removeStatCtrl();
-	}
 
 	public boolean isDissipating() {
 		return getDissipateTime() != 0;
@@ -406,18 +292,6 @@ public class EntityAirBubble extends EntityShield {
 		return getDissipateTime() < 0;
 	}
 
-	private void removeStatCtrl() {
-		if (getOwner() != null) {
-			BendingData data = Bender.get(getOwner()).getData();
-			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
-			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
-
-			IAttributeInstance attribute = getOwner()
-					.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-			if (attribute.getModifier(SLOW_ATTR_ID) != null) {
-				attribute.removeModifier(SLOW_ATTR);
-			}
-		}
 	}
 
-}
+
