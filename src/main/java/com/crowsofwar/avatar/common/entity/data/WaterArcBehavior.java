@@ -35,6 +35,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+import org.lwjgl.Sys;
 
 import java.util.List;
 
@@ -115,10 +116,10 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 		float ticks = 0;
 		float startGravity;
+
 		@Override
 		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
 			ticks++;
-
 
 
 			boolean waterSpear = false;
@@ -146,8 +147,8 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			if (lvl == 1) {
 				//Level II.
-				startGravity = STATS_CONFIG.waterArcTicks * (5/4);
-				if (ticks >= STATS_CONFIG.waterArcTicks * (5/4)) {
+				startGravity = STATS_CONFIG.waterArcTicks * (5 / 4);
+				if (ticks >= STATS_CONFIG.waterArcTicks * (5 / 4)) {
 					//50
 					entity.Splash();
 					entity.setDead();
@@ -155,8 +156,8 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			if (lvl == 2) {
 				//Level III
-				startGravity = STATS_CONFIG.waterArcTicks * (6/4);
-				if (ticks >= STATS_CONFIG.waterArcTicks * (6/4)) {
+				startGravity = STATS_CONFIG.waterArcTicks * (6 / 4);
+				if (ticks >= STATS_CONFIG.waterArcTicks * (6 / 4)) {
 					//60
 					entity.Splash();
 					entity.setDead();
@@ -185,11 +186,9 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				}
 			}
 
-			if (startGravity/ticks <= 2) {
+			if (startGravity / ticks <= 2) {
 				entity.addVelocity(Vector.DOWN.times(entity.getGravity() / 30));
 			}
-
-
 
 
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
@@ -198,9 +197,9 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 			for (EntityLivingBase collided : collidedList) {
 				if (collided == entity.getOwner()) return this;
-				double x = entity.motionX/2 * STATS_CONFIG.waterArcSettings.push;
-				double y = entity.motionY/20 * STATS_CONFIG.waterArcSettings.push > 0.75 ? 0.75 : entity.motionY/20 * STATS_CONFIG.waterArcSettings.push;
-				double z = entity.motionZ/2 * STATS_CONFIG.waterArcSettings.push;
+				double x = entity.motionX / 2 * STATS_CONFIG.waterArcSettings.push;
+				double y = entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push > 0.75 ? 0.75 : entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push;
+				double z = entity.motionZ / 2 * STATS_CONFIG.waterArcSettings.push;
 				collided.addVelocity(x, y, z);
 				entity.damageEntity(collided);
 
