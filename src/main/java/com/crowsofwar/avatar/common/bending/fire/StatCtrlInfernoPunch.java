@@ -70,21 +70,23 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						List<Entity> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 						if (!nearby.isEmpty()) {
 							for (Entity living : nearby) {
-								if (world instanceof WorldServer) {
-									WorldServer World = (WorldServer) e.getEntityWorld();
-									World.spawnParticle(EnumParticleTypes.FLAME, living.posX, living.posY + living.getEyeHeight(), living.posZ, 50, 0.05, 0.05, 0.05, 0.01);
+								if (living != entity) {
+									if (world instanceof WorldServer) {
+										WorldServer World = (WorldServer) e.getEntityWorld();
+										World.spawnParticle(EnumParticleTypes.FLAME, living.posX, living.posY + living.getEyeHeight(), living.posZ, 50, 0.05, 0.05, 0.05, 0.01);
+
+									}
+									living.attackEntityFrom(AvatarDamageSource.causeFireDamage(living, entity), damage - (i / 2));
+									living.setFire(fireTime - (i / 2));
+									living.motionX += direction.x() * (knockBack - (i / 2));
+									living.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
+									living.motionZ += direction.z() * knockBack;
+									living.isAirBorne = true;
+									// this line is needed to prevent a bug where players will not be pushed in multiplayer
+									AvatarUtils.afterVelocityAdded(e);
+									i++;
 
 								}
-								living.attackEntityFrom(AvatarDamageSource.causeFireDamage(living, entity), damage - (i / 2));
-								living.setFire(fireTime - (i / 2));
-								living.motionX += direction.x() * (knockBack - (i / 2));
-								living.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
-								living.motionZ += direction.z() * knockBack;
-								living.isAirBorne = true;
-								// this line is needed to prevent a bug where players will not be pushed in multiplayer
-								AvatarUtils.afterVelocityAdded(e);
-								i++;
-
 							}
 						}
 

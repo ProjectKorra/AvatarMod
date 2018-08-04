@@ -137,9 +137,9 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		float damage = STATS_CONFIG.waterArcSettings.damage * damageMult;
 		entity.attackEntityFrom(ds, damage);
 		if (entity.attackEntityFrom(ds, damage)) {
-			if (getOwner() != null) {
+			if (getOwner() != null && !world.isRemote && getAbility() != null) {
 				BendingData data1 = BendingData.get(getOwner());
-				AbilityData abilityData1 = data1.getAbilityData("water_arc");
+				AbilityData abilityData1 = data1.getAbilityData(getAbility().getName());
 				abilityData1.addXp(SKILLS_CONFIG.waterHit);
 				BattlePerformanceScore.addMediumScore(getOwner());
 
@@ -194,6 +194,9 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	public boolean onCollideWithSolid() {
 		if (isSpear) {
 			breakCollidingBlocks();
+			Splash();
+			setDead();
+			cleanup();
 
 		}
 
