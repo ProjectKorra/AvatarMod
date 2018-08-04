@@ -240,7 +240,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 		public CannonControlPoint(EntityArc arc, int index) {
 			// Make all control points the same size
-			super(arc, index == 1 ? 0.5f : 0.75f, 0, 0, 0);
+			super(arc, index == 1 ? 0.75f : 0.75f, 0, 0, 0);
 		}
 
 	}
