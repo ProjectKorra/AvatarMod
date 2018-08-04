@@ -34,6 +34,8 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.Objects;
+
 /**
  * @author CrowsOfWar
  */
@@ -100,11 +102,14 @@ public class EntityWaterBubble extends AvatarEntity {
 		if (!world.isRemote && inWaterSource) {
 			setDead();
 			if (getOwner() != null) {
-				BendingData data = Bender.get(getOwner()).getData();
+				BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
 				if (data != null) {
 					data.removeStatusControl(StatusControl.THROW_BUBBLE);
 				}
 			}
+		}
+		if (this.getOwner() == null) {
+			this.setDead();
 		}
 
 	}
