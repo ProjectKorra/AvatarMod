@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -18,13 +19,17 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import scala.xml.dtd.impl.WordBerrySethi;
 
 import java.util.List;
@@ -182,5 +187,17 @@ public class AirBurstHandler extends TickHandler {
 			AvatarUtils.afterVelocityAdded(collided);
 		}
 
+	}
+
+	@SubscribeEvent
+	public static void onDragonHurt(LivingHurtEvent event) {
+		Entity attacker = event.getSource().getTrueSource();
+		Entity target =  event.getEntity();
+		DamageSource source = event.getSource();
+		if (source.getDamageType().equals("avatar_Air")) {
+			if (attacker instanceof EntityPlayer || attacker instanceof EntityBender) {
+
+			}
+		}
 	}
 }
