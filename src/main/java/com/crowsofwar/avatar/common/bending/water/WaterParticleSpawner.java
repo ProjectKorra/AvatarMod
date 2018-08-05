@@ -28,7 +28,7 @@ public class WaterParticleSpawner extends TickHandler {
 			maxDuration = 60;
 		}
 		int duration = data.getTickHandlerDuration(this);
-		double radius =  (maxDuration - duration) / 10;;
+		double radius =  (maxDuration - duration) / 10;
 
 
 

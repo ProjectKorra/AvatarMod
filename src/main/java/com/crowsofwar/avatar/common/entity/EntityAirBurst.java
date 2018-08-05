@@ -27,18 +27,18 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
-public class EntityAirShockwave extends AvatarEntity {
+public class EntityAirBurst extends AvatarEntity {
 
 	private static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
-			.createKey(EntityAirShockwave.class, DataSerializers.VARINT);
-	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirShockwave.class,
+			.createKey(EntityAirBurst.class, DataSerializers.VARINT);
+	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirBurst.class,
 			DataSerializers.FLOAT);
 
 	private int expandStop;
 	//Sets the amount of ticks when the shockwave should stop expanding
 	private double damage;
 
-	public EntityAirShockwave(World world) {
+	public EntityAirBurst(World world) {
 		super(world);
 		this.expandStop = 30;
 		this.damage = 0.5F;
