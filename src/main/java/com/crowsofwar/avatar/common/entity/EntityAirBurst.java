@@ -79,7 +79,7 @@ public class EntityAirBurst extends AvatarEntity {
 	@Override
 	public void setPositionAndUpdate(double x, double y, double z) {
 		if (getOwner() != null) {
-			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY + getOwner().getEyeHeight()/2, getOwner().posZ);
 		}
 	}
 
@@ -113,7 +113,7 @@ public class EntityAirBurst extends AvatarEntity {
 			return;
 		}
 
-		setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
+		setPosition(owner.posX, owner.getEntityBoundingBox().minY + owner.getEyeHeight()/2, owner.posZ);
 
 		this.motionX = 0;
 		this.motionY = 0;

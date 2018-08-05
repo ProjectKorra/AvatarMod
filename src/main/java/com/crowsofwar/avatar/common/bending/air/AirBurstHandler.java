@@ -88,6 +88,8 @@ public class AirBurstHandler extends TickHandler {
 				burst.setExpandStopTime(ticks);
 				burst.setSize(size);
 				burst.setAbility(new AbilityAirBurst(Airbending.ID, "air_burst"));
+				burst.setOwner(entity);
+				burst.setPosition(entity.posX, entity.getEntityBoundingBox().minY + entity.getEyeHeight()/2, entity.posZ);
 				world.spawnEntity(burst);
 				System.out.println(burst.getAbility());
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
