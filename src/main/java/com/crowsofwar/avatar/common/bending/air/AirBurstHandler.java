@@ -7,7 +7,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -81,7 +81,7 @@ public class AirBurstHandler extends TickHandler {
 				WorldServer World = (WorldServer) world;
 				for (int i = 0; i < 9; i++) {
 					Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-							i * 40), 0).times(inverseRadius).withY(entity.getEyeHeight()/2);
+							i * 40), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
 					World.spawnParticle(EnumParticleTypes.CLOUD, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
 							lookpos.z() + entity.posZ, 1, 0, 0, 0, 0.005);
 				}
@@ -92,34 +92,34 @@ public class AirBurstHandler extends TickHandler {
 			if (duration >= durationToFire) {
 				if (world instanceof WorldServer) {
 					WorldServer World = (WorldServer) world;
-						double x, y, z;
+					double x, y, z;
 
-						for (double theta = 0; theta <= 180; theta += 1) {
-							double dphi = 10 / Math.sin(Math.toRadians(theta));
+					for (double theta = 0; theta <= 180; theta += 1) {
+						double dphi = 10 / Math.sin(Math.toRadians(theta));
 
-							for (double phi = 0; phi < 360; phi += dphi) {
-								double rphi = Math.toRadians(phi);
-								double rtheta = Math.toRadians(theta);
+						for (double phi = 0; phi < 360; phi += dphi) {
+							double rphi = Math.toRadians(phi);
+							double rtheta = Math.toRadians(theta);
 
-								x = radius * Math.cos(rphi) * Math.sin(rtheta);
-								y = radius * Math.sin(rphi) * Math.sin(rtheta);
-								z = radius * Math.cos(rtheta);
-								//Decrease radius so you can use particle speed
+							x = radius * Math.cos(rphi) * Math.sin(rtheta);
+							y = radius * Math.sin(rphi) * Math.sin(rtheta);
+							z = radius * Math.cos(rtheta);
+							//Decrease radius so you can use particle speed
 
-								World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x + entity.posX, y + entity.getEntityBoundingBox().minY + entity.getEyeHeight(),
-										z + entity.posZ, 1, 0, 0, 0, (double) radius / 100);
+							World.spawnParticle(EnumParticleTypes.CLOUD, x + entity.posX, y + entity.getEntityBoundingBox().minY + entity.getEyeHeight(),
+									z + entity.posZ, 1, 0, 0, 0, (double) radius / 100);
 
-							}
-						}//Creates a sphere. Courtesy of Project Korra's Air Burst!
+						}
+					}//Creates a sphere. Courtesy of Project Korra's Air Burst!
 
 					for (int i = 0; i < radius; i++) {
 						for (int degree = 0; degree < 360; degree++) {
 							double radians = Math.toRadians(degree);
 							double x1 = Math.cos(radians) * i;
 							double z1 = Math.sin(radians) * i;
-							double y1 = entity.getEntityBoundingBox().minY + entity.getEyeHeight()/2;
-							World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x1 + entity.posX, y1,
-									z1 + entity.posZ, 1, 0, 0, 0, (double) radius/100);
+							double y1 = entity.getEntityBoundingBox().minY + entity.getEyeHeight() / 2;
+							World.spawnParticle(EnumParticleTypes.CLOUD, x1 + entity.posX, y1,
+									z1 + entity.posZ, 1, 0, 0, 0, (double) radius / 100);
 						}
 					}
 				}
@@ -173,11 +173,13 @@ public class AirBurstHandler extends TickHandler {
 		collided.motionY += y;
 		collided.motionZ += z;
 		if (collided instanceof AvatarEntity) {
-			AvatarEntity avent = (AvatarEntity) collided;
-			avent.addVelocity(x, y, z);
+			if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+				AvatarEntity avent = (AvatarEntity) collided;
+				avent.addVelocity(x, y, z);
+			}
+			collided.isAirBorne = true;
+			AvatarUtils.afterVelocityAdded(collided);
 		}
-		collided.isAirBorne = true;
-		AvatarUtils.afterVelocityAdded(collided);
-	}
 
+	}
 }
