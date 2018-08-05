@@ -30,7 +30,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import scala.xml.dtd.impl.WordBerrySethi;
 
 import java.util.List;
 import java.util.UUID;
@@ -69,13 +68,27 @@ public class AirBurstHandler extends TickHandler {
 			if (abilityData.getLevel() == 1) {
 				damage = 0.75 + powerRating;
 				knockBack = -2.5 - powerRating;
+				radius = 10;
 			}
 
 			if (abilityData.getLevel() >= 2) {
 				damage = 1 + powerRating;
 				knockBack = -3 - powerRating;
-				radius = 20;
+				radius = 15;
 				durationToFire = 50;
+			}
+
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				//Piercing Winds
+				damage = 10 + powerRating;
+				radius = 20;
+			}
+
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				//Maximum Pressure
+				//Pulls enemies in then blasts them out
+				radius = 15;
+				knockBack = -3.5 - powerRating;
 			}
 
 			applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
