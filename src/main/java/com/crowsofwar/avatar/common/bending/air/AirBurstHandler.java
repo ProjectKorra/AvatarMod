@@ -11,6 +11,7 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBurst;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -89,13 +90,14 @@ public class AirBurstHandler extends TickHandler {
 				burst.setSize(size);
 				burst.setAbility(new AbilityAirBurst());
 				burst.setOwner(entity);
-				burst.setPosition(entity.posX, entity.getEntityBoundingBox().minY + entity.getEyeHeight()/2, entity.posZ);
+				burst.setVelocity(Vector.ZERO);
+				burst.setPosition(entity.posX, entity.getEntityBoundingBox().minY + 0.5, entity.posZ);
 				world.spawnEntity(burst);
 				System.out.println(burst.getAbility());
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-						SoundCategory.BLOCKS, 1, 1.5F);
+						SoundCategory.BLOCKS, 1, 0.5F);
 				return true;
 			}
 

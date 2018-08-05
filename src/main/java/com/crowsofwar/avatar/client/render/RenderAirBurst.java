@@ -14,6 +14,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
+import javax.swing.text.html.parser.Entity;
+
 import static net.minecraft.client.renderer.GlStateManager.disableBlend;
 import static net.minecraft.client.renderer.GlStateManager.enableBlend;
 
@@ -42,16 +44,17 @@ public class RenderAirBurst extends Render<EntityAirBurst> {
 		enableBlend();
 		GlStateManager.disableLighting();
 
+		GlStateManager.translate(0, -0.5, 0);
 		float ticks = entity.ticksExisted + partialTicks;
 
 		float sizeMult = 1, alpha = 1;
-		if (ticks > 10) {
+		if (entity.isDissipatingLarge()) {
 			sizeMult = 1 + entity.getDissipateTime() / 10f;
 			alpha = 1 - entity.getDissipateTime() / 10f;
-		} /*else if (ticks < 10) {
+		} else if (ticks < 10) {
 			sizeMult = .75f + ticks / 40f;
 			alpha = ticks / 10f;
-		}**/
+		}
 		sizeMult *= entity.getSize() / 2.5f;
 
 		GlStateManager.color(1, 1, 1, .5f * alpha);
@@ -129,7 +132,7 @@ public class RenderAirBurst extends Render<EntityAirBurst> {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityAirBurst entity) {
-		return TEXTURE;
+		return null;
 	}
 
 }

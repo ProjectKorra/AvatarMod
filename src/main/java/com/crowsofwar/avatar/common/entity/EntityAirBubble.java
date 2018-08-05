@@ -395,7 +395,7 @@ public class EntityAirBubble extends EntityShield {
 		removeStatCtrl();
 	}
 
-	public boolean isDissipating() {
+	private boolean isDissipating() {
 		return getDissipateTime() != 0;
 	}
 

@@ -48,13 +48,12 @@ public class AbilityAirBurst extends Ability {
 		}
 
 
-			if (bender.consumeChi(chi) && !hasAirCharge) {
+		if (bender.consumeChi(chi) && !hasAirCharge) {
+			data.addTickHandler(TickHandler.AIRBURST_CHARGE_HANDLER);
+		} else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+			if (!hasAirCharge) {
 				data.addTickHandler(TickHandler.AIRBURST_CHARGE_HANDLER);
 			}
-		 else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-				if (!hasAirCharge) {
-					data.addTickHandler(TickHandler.AIRBURST_CHARGE_HANDLER);
-				}
-			}
+		}
 	}
 }

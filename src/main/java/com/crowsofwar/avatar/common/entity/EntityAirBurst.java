@@ -79,7 +79,7 @@ public class EntityAirBurst extends AvatarEntity {
 	@Override
 	public void setPositionAndUpdate(double x, double y, double z) {
 		if (getOwner() != null) {
-			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY + getOwner().getEyeHeight()/2, getOwner().posZ);
+			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY + 0.5, getOwner().posZ);
 		}
 	}
 
@@ -113,7 +113,7 @@ public class EntityAirBurst extends AvatarEntity {
 			return;
 		}
 
-		setPosition(owner.posX, owner.getEntityBoundingBox().minY + owner.getEyeHeight()/2, owner.posZ);
+		setPosition(owner.posX, owner.getEntityBoundingBox().minY + 0.5, owner.posZ);
 
 		this.motionX = 0;
 		this.motionY = 0;
@@ -121,11 +121,18 @@ public class EntityAirBurst extends AvatarEntity {
 
 		float size = getSize();
 
-		setDissipateTime(getDissipateTime() + 1);
-		float mult = 1 + getDissipateTime() / 5f;
-		setSize(size * mult, size * mult);
-		if (getDissipateTime() >= expandStop) {
-			setDead();
+		Expand();
+
+		if (isDissipatingLarge()) {
+			setDissipateTime(getDissipateTime() + 1);
+			float mult = 2 * (getDissipateTime() / 5f);
+			setSize(size * mult, size * mult);
+			if (getDissipateTime() >= expandStop) {
+				setDead();
+			}
+		}
+		else {
+			setSize(size, size);
 		}
 
 		if (!isDead && !world.isRemote) {
@@ -212,13 +219,18 @@ public class EntityAirBurst extends AvatarEntity {
 		dataManager.set(SYNC_DISSIPATE, dissipate);
 	}
 
-	public void Expand() {
+	private void Expand() {
 		if (!isDissipating()) setDissipateTime(1);
 	}
 
 
-	public boolean isDissipating() {
+	private boolean isDissipating() {
 		return getDissipateTime() != 0;
+	}
+
+
+	public boolean isDissipatingLarge() {
+		return getDissipateTime() > 0;
 	}
 
 	private void damageEntity(Entity collided) {
