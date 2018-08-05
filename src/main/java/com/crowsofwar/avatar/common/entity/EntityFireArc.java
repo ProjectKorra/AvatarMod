@@ -57,6 +57,15 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		super.onUpdate();
 		FireArcBehavior newBehavior = (FireArcBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != newBehavior) setBehavior(newBehavior);
+
+		if (getOwner() != null) {
+			EntityFireArc arc = AvatarEntity.lookupControlledEntity(world, EntityFireArc.class, getOwner());
+			BendingData bD = BendingData.get(getOwner());
+			if (arc == null && bD.hasStatusControl(StatusControl.THROW_FIRE)) {
+				bD.removeStatusControl(StatusControl.THROW_FIRE);
+			}
+
+		}
 	}
 
 	@Override

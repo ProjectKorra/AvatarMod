@@ -11,6 +11,7 @@ import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -129,7 +130,7 @@ public class AirBurstHandler extends TickHandler {
 				if (!collided.isEmpty()) {
 					for (Entity e : collided) {
 						if (!(e instanceof EntityItem) && !(e instanceof EntityXPOrb)) {
-							if (e instanceof EntityLivingBase) {
+							if (e instanceof EntityLiving) {
 								e.attackEntityFrom(AvatarDamageSource.causeAirDamage(e, entity), (float) damage);
 							}
 							abilityData.addXp(SKILLS_CONFIG.airShockwaveHit);
