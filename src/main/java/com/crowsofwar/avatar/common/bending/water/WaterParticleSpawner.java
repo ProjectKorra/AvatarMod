@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -34,15 +35,11 @@ public class WaterParticleSpawner extends TickHandler {
 
 		if (data.hasTickHandler(WATER_CHARGE) && !world.isRemote) {
 			WorldServer World = (WorldServer) world;
-			for (int degree = 0; degree < 360; degree++) {
-				double radians = Math.toRadians(degree);
-				double x = radius > 0 ? Math.cos(radians) * radius : Math.cos(radians);
-				double z = radius > 0 ? Math.sin(radians) * radius : Math.sin(radians);
-				//Prevents a possible null pointer exception with the value of radius being zero
-				double y = entity.posY + entity.getEyeHeight()/2;
-				World.spawnParticle(EnumParticleTypes.WATER_SPLASH, x + entity.posX, y, z + entity.posZ, 1, 0, 0, 0, 0.001);
-				//NOTE: The higher the amount of particles, the smaller the part of the circle. Lower is the full circle.
-				//Hella lag xD
+			for (int i = 0; i < 180; i++) {
+				Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+						i * 2), 0).times(radius).withY(entity.getEyeHeight() / 2);
+				World.spawnParticle(EnumParticleTypes.WATER_SPLASH, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
+						lookpos.z() + entity.posZ, 1, 0, 0, 0, 0.05);
 			}
 			AxisAlignedBB box = new AxisAlignedBB(entity.posX + (1 * radius) , entity.posY + 2, entity.posZ + (1 * radius),
 					entity.posX - (1 * radius), entity.posY - 2, entity.posZ - (1 * radius));
