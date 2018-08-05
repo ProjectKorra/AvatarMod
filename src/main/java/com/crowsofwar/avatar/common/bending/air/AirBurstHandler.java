@@ -102,6 +102,7 @@ public class AirBurstHandler extends TickHandler {
 							x = radius * Math.cos(rphi) * Math.sin(rtheta);
 							y = radius * Math.sin(rphi) * Math.sin(rtheta);
 							z = radius * Math.cos(rtheta);
+							//Decrease radius so you can use particle speed
 
 							World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x + entity.posX, y + entity.getEntityBoundingBox().minY + entity.getEyeHeight(),
 									z + entity.posZ, 1, 0, 0, 0, (double) radius/100);
@@ -109,6 +110,16 @@ public class AirBurstHandler extends TickHandler {
 						}
 					}
 					//Creates a sphere. Courtesy of Project Korra's Air Burst!
+					for (int i = 0; i < radius; i++) {
+						for (int degree = 0; degree < 360; degree++) {
+							double radians = Math.toRadians(degree);
+							double x1 = Math.cos(radians) * i;
+							double z1 = Math.sin(radians) * i;
+							double y1 = entity.getEntityBoundingBox().minY + entity.getEyeHeight()/2;
+							World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x1 + entity.posX, y1,
+									z1 + entity.posZ, 1, 0, 0, 0, (double) radius/100);
+						}
+					}
 				}
 
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius, entity.posY - radius, entity.posZ - radius);
