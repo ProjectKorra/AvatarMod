@@ -77,9 +77,9 @@ public class AirBurstHandler extends TickHandler {
 
 			if (world instanceof WorldServer) {
 				WorldServer World = (WorldServer) world;
-				for (int i = 0; i < 8; i++) {
+				for (int i = 0; i < 9; i++) {
 					Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-							i * 45), 0).times(inverseRadius).withY(entity.getEyeHeight()/2);
+							i * 40), 0).times(inverseRadius).withY(entity.getEyeHeight()/2);
 					World.spawnParticle(EnumParticleTypes.CLOUD, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
 							lookpos.z() + entity.posZ, 1, 0, 0, 0, 0.005);
 				}
@@ -88,15 +88,6 @@ public class AirBurstHandler extends TickHandler {
 
 
 			if (duration >= durationToFire) {
-				/*EntityAirBurst burst = new EntityAirBurst(world);
-				burst.setDamage(damage);
-				burst.setExpandStopTime(ticks);
-				burst.setSize(size);
-				burst.setAbility(new AbilityAirBurst());
-				burst.setOwner(entity);
-				burst.setVelocity(Vector.ZERO);
-				burst.setPosition(entity.posX, entity.getEntityBoundingBox().minY + 0.5, entity.posZ);
-				world.spawnEntity(burst);**/
 				if (world instanceof WorldServer) {
 					WorldServer World = (WorldServer) world;
 					double x, y, z;
@@ -113,7 +104,7 @@ public class AirBurstHandler extends TickHandler {
 							y = r * Math.sin(rphi) * Math.sin(rtheta);
 							z = r * Math.cos(rtheta);
 
-							World.spawnParticle(EnumParticleTypes.CLOUD, x + entity.posX, y + entity.getEntityBoundingBox().minY + entity.getEyeHeight(), z + entity.posZ, 1, 0, 0, 0, 0D);
+							World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x + entity.posX, y + entity.getEntityBoundingBox().minY + entity.getEyeHeight(), z + entity.posZ, 1, 0, 0, 0, 0.05);
 
 						}
 					}
