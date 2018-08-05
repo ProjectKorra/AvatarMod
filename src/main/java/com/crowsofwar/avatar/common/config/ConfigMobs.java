@@ -66,20 +66,25 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_DROP.put("elder_guardian", 20.0);
 		DEFAULT_SCROLL_TYPE.put("elder_guardian", "water");
 
-		DEFAULT_SCROLL_DROP.put("zombie_pigman", 5.0);
+		DEFAULT_SCROLL_DROP.put("zombie_pigman", 15.0);
 		DEFAULT_SCROLL_TYPE.put("zombie_pigman", "fire");
-		DEFAULT_SCROLL_DROP.put("magma_cube", 4.0);
+		DEFAULT_SCROLL_DROP.put("magma_cube", 10.0);
 		DEFAULT_SCROLL_TYPE.put("magma_cube", "fire");
 		DEFAULT_SCROLL_DROP.put("wither_skeleton", 15.0);
 		DEFAULT_SCROLL_TYPE.put("wither_skeleton", "fire");
 		DEFAULT_SCROLL_DROP.put("ghast", 30.0);
 		DEFAULT_SCROLL_TYPE.put("ghast", "fire");
-		DEFAULT_SCROLL_DROP.put("blaze", 8.0);
+		DEFAULT_SCROLL_DROP.put("blaze", 30.0);
 		DEFAULT_SCROLL_TYPE.put("blaze", "fire");
 
-		DEFAULT_SCROLL_DROP.put("bat", 25.0);
+		DEFAULT_SCROLL_DROP.put("bat", 15.0);
 		DEFAULT_SCROLL_TYPE.put("bat", "air");
-		DEFAULT_SCROLL_DROP.put("parrot", 5.0);
+		DEFAULT_SCROLL_DROP.put("parrot", 10.0);
+		DEFAULT_SCROLL_TYPE.put("parrot", "air");
+		DEFAULT_SCROLL_DROP.put("chicken", 10.0);
+		DEFAULT_SCROLL_TYPE.put("chicken", "air");
+		DEFAULT_SCROLL_DROP.put("sheep", 1.0);
+		DEFAULT_SCROLL_TYPE.put("sheep", "air");
 
 
 		DEFAULT_SCROLL_DROP.put("mooshroom", 10.0);
@@ -89,13 +94,36 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_DROP.put("silverfish", 10.0);
 		DEFAULT_SCROLL_TYPE.put("silverfish", "earth");
 
-		DEFAULT_SCROLL_DROP.put("creeper", 3.0);
+		DEFAULT_SCROLL_DROP.put("creeper", 0.5);
+		DEFAULT_SCROLL_TYPE.put("creeper", "lightning");
+		DEFAULT_SCROLL_DROP.put("creeper", 1.0);
+		DEFAULT_SCROLL_TYPE.put("creeper", "combustion");
+
 		DEFAULT_SCROLL_DROP.put("skeleton", 4.0);
 		DEFAULT_SCROLL_DROP.put("zombie", 3.0);
 		DEFAULT_SCROLL_DROP.put("spider", 4.0);
 		DEFAULT_SCROLL_DROP.put("witch", 10.0);
 		DEFAULT_SCROLL_DROP.put("husk", 6.0);
 		DEFAULT_SCROLL_DROP.put("stray", 6.0);
+
+		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("ender_dragon", "air");
+		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("ender_dragon", "earth");
+		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("ender_dragon", "fire");
+		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("ender_dragon", "water");
+		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("ender_dragon", "combustion");
+		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("ender_dragon", "lightning");
+		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("ender_dragon", "ice");
+		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("ender_dragon", "sand");
+		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
+
 
 	}
 

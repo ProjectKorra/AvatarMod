@@ -170,6 +170,19 @@ public class EntityFireball extends AvatarEntity {
 		if (entity instanceof AvatarEntity) {
 			((AvatarEntity) entity).onFireContact();
 		}
+		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
+
+		explosionSize *= getSize() / 15f;
+		explosionSize += getPowerRating() * 2.0 / 100;
+
+		AvatarFireExplosion fireExplosion = new AvatarFireExplosion(world, this, posX, posY, posZ, explosionSize * this.explosionStrength,
+				!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
+
+		if (!ForgeEventFactory.onExplosionStart(world, fireExplosion)) {
+			fireExplosion.doExplosionA();
+			fireExplosion.doExplosionB(true);
+
+		}
 	}
 
 	@Override

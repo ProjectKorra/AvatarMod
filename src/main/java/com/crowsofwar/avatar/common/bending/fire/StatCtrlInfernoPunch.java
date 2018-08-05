@@ -57,7 +57,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			List<Entity> hit = Raytrace.entityRaytrace(world, Vector.getEyePos(entity), Vector.getLookRectangular(entity).times(1.5), 8, entity1 -> entity1 != entity);
 			if (!hit.isEmpty()) {
 				for (Entity e : hit) {
-					System.out.println(e);
 					if (e instanceof EntityLivingBase && entity.getHeldItemMainhand() == ItemStack.EMPTY) {
 						if (world instanceof WorldServer) {
 							WorldServer World = (WorldServer) e.getEntityWorld();
