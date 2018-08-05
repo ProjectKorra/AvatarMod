@@ -55,18 +55,19 @@ public class AbilityAirGust extends Ability {
 		Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
 				Math.toRadians(entity.rotationPitch));
 		Vector pos = Vector.getEyePos(entity);
+		if (bender.consumeChi(STATS_CONFIG.chiAirGust)) {
 
-		EntityAirGust gust = new EntityAirGust(world);
-		gust.setVelocity(look.times(25));
-		gust.setPosition(pos.x(), pos.y(), pos.z());
-		gust.setOwner(entity);
-		gust.setDestroyProjectiles(ctx.isMasterLevel(FIRST));
-		gust.setAirGrab(ctx.isMasterLevel(SECOND));
-		gust.setAbility(this);
+			EntityAirGust gust = new EntityAirGust(world);
+			gust.setVelocity(look.times(25));
+			gust.setPosition(pos.x(), pos.y(), pos.z());
+			gust.setOwner(entity);
+			gust.setDestroyProjectiles(ctx.isMasterLevel(FIRST));
+			gust.setAirGrab(ctx.isMasterLevel(SECOND));
+			gust.setAbility(this);
 
-		world.spawnEntity(gust);
+			world.spawnEntity(gust);
+		}
 	}
-
 
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {

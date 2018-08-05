@@ -78,7 +78,10 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_TYPE.put("blaze", "fire");
 
 		DEFAULT_SCROLL_DROP.put("bat", 25.0);
-		DEFAULT_SCROLL_TYPE.put("bat", "earth");
+		DEFAULT_SCROLL_TYPE.put("bat", "air");
+		DEFAULT_SCROLL_DROP.put("parrot", 5.0);
+
+
 		DEFAULT_SCROLL_DROP.put("mooshroom", 10.0);
 		DEFAULT_SCROLL_TYPE.put("mooshroom", "earth");
 		DEFAULT_SCROLL_DROP.put("cave_spider", 5.0);
