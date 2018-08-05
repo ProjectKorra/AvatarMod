@@ -100,6 +100,7 @@ public class AirBurstHandler extends TickHandler {
 				world.spawnEntity(burst);**/
 				if (world instanceof WorldServer) {
 					WorldServer World = (WorldServer) world;
+					//Spawn particles in a horizontal circle on the y-axis
 					for (int r = 0; r < ticks; r++) {
 						for (int degree = 0; degree < 360; degree++) {
 							double radians = Math.toRadians(degree);
@@ -107,6 +108,24 @@ public class AirBurstHandler extends TickHandler {
 							double z = r > 0 ? Math.sin(radians) * r : Math.sin(radians);
 							double y = entity.posY + entity.getEyeHeight() / 2;
 							World.spawnParticle(EnumParticleTypes.CLOUD, x + entity.posX, y, z + entity.posZ, 1, 0, 0, 0, 0.1);
+						}
+					}
+					//Spawn particles in a vertical circle on the x-axis
+					for (int r = 0; r < ticks; r++) {
+						for (int degree = 0; degree < 360; degree++) {
+							double radians = Math.toRadians(degree);
+							double x = r > 0 ? Math.cos(radians) * r : Math.cos(radians);
+							double y = r > 0 ? Math.sin(radians) * r + entity.posY + entity.getEyeHeight() / 2 : Math.sin(radians) + entity.posY + entity.getEyeHeight() / 2;
+							World.spawnParticle(EnumParticleTypes.CLOUD, x + entity.posX, y, entity.posZ, 1, 0, 0, 0, 0.1);
+						}
+					}
+					//Spawn particles in a vertical circle on the z-axis
+					for (int r = 0; r < ticks; r++) {
+						for (int degree = 0; degree < 360; degree++) {
+							double radians = Math.toRadians(degree);
+							double y = r > 0 ? Math.cos(radians) * r + entity.posY + entity.getEyeHeight() / 2 : Math.cos(radians)+ entity.posY + entity.getEyeHeight() / 2;
+							double z = r > 0 ? Math.sin(radians) * r : Math.sin(radians);
+							World.spawnParticle(EnumParticleTypes.CLOUD, entity.posX, y, z + entity.posZ, 1, 0, 0, 0, 0.1);
 						}
 					}
 
