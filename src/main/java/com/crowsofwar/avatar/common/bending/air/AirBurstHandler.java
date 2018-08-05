@@ -104,7 +104,7 @@ public class AirBurstHandler extends TickHandler {
 							y = r * Math.sin(rphi) * Math.sin(rtheta);
 							z = r * Math.cos(rtheta);
 
-							World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x + entity.posX, y + entity.getEntityBoundingBox().minY + entity.getEyeHeight(), z + entity.posZ, 1, 0, 0, 0, 0.05);
+							World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x + entity.posX, y + entity.getEntityBoundingBox().minY + entity.getEyeHeight(), z + entity.posZ, 1, 0, 0, 0, 0.1);
 
 						}
 					}
