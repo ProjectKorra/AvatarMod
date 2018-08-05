@@ -106,23 +106,23 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_DROP.put("husk", 6.0);
 		DEFAULT_SCROLL_DROP.put("stray", 6.0);
 
-		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("ender_dragon", "air");
-		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("ender_dragon", "earth");
-		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("ender_dragon", "fire");
-		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("ender_dragon", "water");
-		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("ender_dragon", "combustion");
-		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("ender_dragon", "lightning");
-		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("ender_dragon", "ice");
-		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("ender_dragon", "sand");
-		DEFAULT_SCROLL_DROP.put("ender_dragon", 10000.0);
+		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("enderman", "air");
+		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("enderman", "earth");
+		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("enderman", "fire");
+		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("enderman", "water");
+		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("enderman", "combustion");
+		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("enderman", "lightning");
+		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("enderman", "ice");
+		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
+		DEFAULT_SCROLL_TYPE.put("enderman", "sand");
+		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
 
 
 	}
