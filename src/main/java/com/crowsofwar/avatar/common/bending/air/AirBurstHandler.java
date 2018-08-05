@@ -55,7 +55,7 @@ public class AirBurstHandler extends TickHandler {
 			float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 			double knockBack = -2 - powerRating;
 			//The negative number doesn't mean it's small- in fact, the smaller the number, the larger the knockback
-			int ticks = 10;
+			int radius = 5;
 			int durationToFire = 40;
 
 			if (abilityData.getLevel() == 1) {
@@ -66,7 +66,7 @@ public class AirBurstHandler extends TickHandler {
 			if (abilityData.getLevel() >= 2) {
 				damage = 1 + powerRating;
 				knockBack = -3 - powerRating;
-				ticks = 50;
+				radius = 50;
 				durationToFire = 50;
 			}
 
@@ -104,14 +104,15 @@ public class AirBurstHandler extends TickHandler {
 							y = r * Math.sin(rphi) * Math.sin(rtheta);
 							z = r * Math.cos(rtheta);
 
-							World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x + entity.posX, y + entity.getEntityBoundingBox().minY + entity.getEyeHeight(), z + entity.posZ, 1, 0, 0, 0, 0.1);
+							World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x + entity.posX, y + entity.getEntityBoundingBox().minY + entity.getEyeHeight(),
+									z + entity.posZ, 1, 0, 0, 0, (double) radius/100);
 
 						}
 					}
 					//Creates a sphere. Courtesy of Project Korra's Air Burst!
 				}
 
-				AxisAlignedBB box = new AxisAlignedBB(entity.posX + 10, entity.posY + 10, entity.posZ + 10, entity.posX - 10, entity.posY - 10, entity.posZ - 10);
+				AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius, entity.posY - radius, entity.posZ - radius);
 				List<Entity> collided = world.getEntitiesWithinAABB(EntityLivingBase.class, box, entity1 -> entity1 != entity);
 				if (!collided.isEmpty()) {
 					for (Entity e : collided) {
