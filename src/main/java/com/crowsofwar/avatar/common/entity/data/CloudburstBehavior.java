@@ -161,6 +161,7 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 			Vector target = forward.times(2).plus(eye);
 			Vector motion = target.minus(Vector.getEntityPos(entity)).times(6);
 			entity.setVelocity(motion);
+			entity.setStartingPosition(entity.getPosition());
 
 			if (entity.getAbility() instanceof AbilityCloudBurst && !entity.world.isRemote) {
 				if (data.getAbilityData("cloudburst").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
