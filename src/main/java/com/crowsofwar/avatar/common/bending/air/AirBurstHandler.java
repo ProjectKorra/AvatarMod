@@ -66,7 +66,7 @@ public class AirBurstHandler extends TickHandler {
 			if (abilityData.getLevel() >= 2) {
 				damage = 1 + powerRating;
 				knockBack = -3 - powerRating;
-				radius = 50;
+				radius = 20;
 				durationToFire = 50;
 			}
 
@@ -91,7 +91,6 @@ public class AirBurstHandler extends TickHandler {
 				if (world instanceof WorldServer) {
 					WorldServer World = (WorldServer) world;
 					double x, y, z;
-					double r = 1;
 
 					for (double theta = 0; theta <= 180; theta += 1) {
 						double dphi = 10 / Math.sin(Math.toRadians(theta));
@@ -100,9 +99,9 @@ public class AirBurstHandler extends TickHandler {
 							double rphi = Math.toRadians(phi);
 							double rtheta = Math.toRadians(theta);
 
-							x = r * Math.cos(rphi) * Math.sin(rtheta);
-							y = r * Math.sin(rphi) * Math.sin(rtheta);
-							z = r * Math.cos(rtheta);
+							x = radius * Math.cos(rphi) * Math.sin(rtheta);
+							y = radius * Math.sin(rphi) * Math.sin(rtheta);
+							z = radius * Math.cos(rtheta);
 
 							World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x + entity.posX, y + entity.getEntityBoundingBox().minY + entity.getEyeHeight(),
 									z + entity.posZ, 1, 0, 0, 0, (double) radius/100);
