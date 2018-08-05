@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -21,6 +22,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import scala.xml.dtd.impl.WordBerrySethi;
 
 import java.util.List;
 import java.util.UUID;
@@ -73,18 +75,15 @@ public class AirBurstHandler extends TickHandler {
 			//gets smaller
 
 
-
 			if (world instanceof WorldServer) {
 				WorldServer World = (WorldServer) world;
-				if (duration % 2 == 0) {
-					for (int degree = 0; degree < 360; degree++) {
-						double radians = Math.toRadians(degree);
-						double x = inverseRadius > 0 ? Math.cos(radians) * inverseRadius : Math.cos(radians);
-						double z = inverseRadius > 0 ? Math.sin(radians) * inverseRadius : Math.sin(radians);
-						double y = entity.posY + entity.getEyeHeight() / 2;
-						World.spawnParticle(EnumParticleTypes.CLOUD, x + entity.posX, y, z + entity.posZ, 1, 0, 0, 0, 0.005);
-					}
+				for (int i = 0; i < 8; i++) {
+					Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+							i * 45), 0).times(inverseRadius).withY(entity.getEyeHeight()/2);
+					World.spawnParticle(EnumParticleTypes.CLOUD, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
+							lookpos.z() + entity.posZ, 1, 0, 0, 0, 0.005);
 				}
+
 			}
 
 
@@ -100,35 +99,25 @@ public class AirBurstHandler extends TickHandler {
 				world.spawnEntity(burst);**/
 				if (world instanceof WorldServer) {
 					WorldServer World = (WorldServer) world;
-					//Spawn particles in a horizontal circle on the y-axis
-					for (int r = 0; r < ticks; r++) {
-						for (int degree = 0; degree < 360; degree++) {
-							double radians = Math.toRadians(degree);
-							double x = r > 0 ? Math.cos(radians) * r : Math.cos(radians);
-							double z = r > 0 ? Math.sin(radians) * r : Math.sin(radians);
-							double y = entity.posY + entity.getEyeHeight() / 2;
-							World.spawnParticle(EnumParticleTypes.CLOUD, x + entity.posX, y, z + entity.posZ, 1, 0, 0, 0, 0.1);
-						}
-					}
-					//Spawn particles in a vertical circle on the x-axis
-					for (int r = 0; r < ticks; r++) {
-						for (int degree = 0; degree < 360; degree++) {
-							double radians = Math.toRadians(degree);
-							double x = r > 0 ? Math.cos(radians) * r : Math.cos(radians);
-							double y = r > 0 ? Math.sin(radians) * r + entity.posY + entity.getEyeHeight() / 2 : Math.sin(radians) + entity.posY + entity.getEyeHeight() / 2;
-							World.spawnParticle(EnumParticleTypes.CLOUD, x + entity.posX, y, entity.posZ, 1, 0, 0, 0, 0.1);
-						}
-					}
-					//Spawn particles in a vertical circle on the z-axis
-					for (int r = 0; r < ticks; r++) {
-						for (int degree = 0; degree < 360; degree++) {
-							double radians = Math.toRadians(degree);
-							double y = r > 0 ? Math.cos(radians) * r + entity.posY + entity.getEyeHeight() / 2 : Math.cos(radians)+ entity.posY + entity.getEyeHeight() / 2;
-							double z = r > 0 ? Math.sin(radians) * r : Math.sin(radians);
-							World.spawnParticle(EnumParticleTypes.CLOUD, entity.posX, y, z + entity.posZ, 1, 0, 0, 0, 0.1);
-						}
-					}
+					double x, y, z;
+					double r = 1;
 
+					for (double theta = 0; theta <= 180; theta += 1) {
+						double dphi = 10 / Math.sin(Math.toRadians(theta));
+
+						for (double phi = 0; phi < 360; phi += dphi) {
+							double rphi = Math.toRadians(phi);
+							double rtheta = Math.toRadians(theta);
+
+							x = r * Math.cos(rphi) * Math.sin(rtheta);
+							y = r * Math.sin(rphi) * Math.sin(rtheta);
+							z = r * Math.cos(rtheta);
+
+							World.spawnParticle(EnumParticleTypes.CLOUD, x + entity.posX, y + entity.getEntityBoundingBox().minY + entity.getEyeHeight(), z + entity.posZ, 1, 0, 0, 0, 0D);
+
+						}
+					}
+					//Creates a sphere. Courtesy of Project Korra's Air Burst!
 				}
 
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX + 10, entity.posY + 10, entity.posZ + 10, entity.posX - 10, entity.posY - 10, entity.posZ - 10);
