@@ -15,6 +15,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -90,26 +92,26 @@ public class AirBurstHandler extends TickHandler {
 			if (duration >= durationToFire) {
 				if (world instanceof WorldServer) {
 					WorldServer World = (WorldServer) world;
-					double x, y, z;
+						double x, y, z;
 
-					for (double theta = 0; theta <= 180; theta += 1) {
-						double dphi = 10 / Math.sin(Math.toRadians(theta));
+						for (double theta = 0; theta <= 180; theta += 1) {
+							double dphi = 10 / Math.sin(Math.toRadians(theta));
 
-						for (double phi = 0; phi < 360; phi += dphi) {
-							double rphi = Math.toRadians(phi);
-							double rtheta = Math.toRadians(theta);
+							for (double phi = 0; phi < 360; phi += dphi) {
+								double rphi = Math.toRadians(phi);
+								double rtheta = Math.toRadians(theta);
 
-							x = radius * Math.cos(rphi) * Math.sin(rtheta);
-							y = radius * Math.sin(rphi) * Math.sin(rtheta);
-							z = radius * Math.cos(rtheta);
-							//Decrease radius so you can use particle speed
+								x = radius * Math.cos(rphi) * Math.sin(rtheta);
+								y = radius * Math.sin(rphi) * Math.sin(rtheta);
+								z = radius * Math.cos(rtheta);
+								//Decrease radius so you can use particle speed
 
-							World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x + entity.posX, y + entity.getEntityBoundingBox().minY + entity.getEyeHeight(),
-									z + entity.posZ, 1, 0, 0, 0, (double) radius/100);
+								World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x + entity.posX, y + entity.getEntityBoundingBox().minY + entity.getEyeHeight(),
+										z + entity.posZ, 1, 0, 0, 0, (double) radius / 100);
 
-						}
-					}
-					//Creates a sphere. Courtesy of Project Korra's Air Burst!
+							}
+						}//Creates a sphere. Courtesy of Project Korra's Air Burst!
+
 					for (int i = 0; i < radius; i++) {
 						for (int degree = 0; degree < 360; degree++) {
 							double radians = Math.toRadians(degree);
@@ -123,15 +125,16 @@ public class AirBurstHandler extends TickHandler {
 				}
 
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius, entity.posY - radius, entity.posZ - radius);
-				List<Entity> collided = world.getEntitiesWithinAABB(EntityLivingBase.class, box, entity1 -> entity1 != entity);
+				List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box, entity1 -> entity1 != entity);
 				if (!collided.isEmpty()) {
 					for (Entity e : collided) {
-						if (e instanceof EntityLivingBase) {
-							e.attackEntityFrom(AvatarDamageSource.causeAirDamage(e, entity), (float) damage);
+						if (!(e instanceof EntityItem) && !(e instanceof EntityXPOrb)) {
+							if (e instanceof EntityLivingBase) {
+								e.attackEntityFrom(AvatarDamageSource.causeAirDamage(e, entity), (float) damage);
+							}
 							abilityData.addXp(SKILLS_CONFIG.airShockwaveHit);
 							BattlePerformanceScore.addLargeScore(entity);
 							applyKnockback(e, entity, knockBack);
-
 						}
 					}
 				}
@@ -166,12 +169,12 @@ public class AirBurstHandler extends TickHandler {
 		double x = ((attacker.posX - collided.posX) * knockBack);
 		double y = ((attacker.posY - collided.posY) * knockBack) > 0 ? ((attacker.posY - collided.posY) * knockBack) : 0.3F;
 		double z = ((attacker.posZ - collided.posZ) * knockBack);
-		collided.motionX = x;
-		collided.motionY = y;
-		collided.motionZ = z;
+		collided.motionX += x;
+		collided.motionY += y;
+		collided.motionZ += z;
 		if (collided instanceof AvatarEntity) {
 			AvatarEntity avent = (AvatarEntity) collided;
-			avent.setVelocity(x, y, z);
+			avent.addVelocity(x, y, z);
 		}
 		collided.isAirBorne = true;
 		AvatarUtils.afterVelocityAdded(collided);
