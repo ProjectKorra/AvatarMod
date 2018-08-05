@@ -87,7 +87,7 @@ public class AirBurstHandler extends TickHandler {
 				burst.setDamage(damage);
 				burst.setExpandStopTime(ticks);
 				burst.setSize(size);
-				burst.setAbility(new AbilityAirBurst(Airbending.ID, "air_burst"));
+				burst.setAbility(new AbilityAirBurst());
 				burst.setOwner(entity);
 				burst.setPosition(entity.posX, entity.getEntityBoundingBox().minY + entity.getEyeHeight()/2, entity.posZ);
 				world.spawnEntity(burst);

@@ -39,6 +39,7 @@ public class Airbending extends BendingStyle {
 		addAbility("air_bubble");
 		addAbility("cloudburst");
 		addAbility("slipstream");
+		addAbility("air_burst");
 
 		Color light = new Color(220, 220, 220);
 		Color dark = new Color(172, 172, 172);

@@ -126,6 +126,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityInfernoPunch());
 		Abilities.register(new AbilityBoulderRing());
 		Abilities.register(new AbilityLightningRaze());
+		Abilities.register(new AbilityAirBurst());
 	}
 
 	private static void registerBendingStyles() {
@@ -230,16 +231,17 @@ public class AvatarMod {
 		registerEntity(EntityIcePrison.class, "iceprison");
 		registerEntity(EntityOstrichHorse.class, "OstrichHorse", 0x5c5b46, 0x0f1108);
 		registerEntity(EntitySandPrison.class, "sandprison");
-		registerEntity(EntityLightningArc.class, "lightningarc");
-		registerEntity(EntityCloudBall.class, "cloudburst");
+		registerEntity(EntityLightningArc.class, "Lightning_arc");
+		registerEntity(EntityCloudBall.class, "Cloudburst");
 		registerEntity(EntityEarthspike.class, "earthspike");
-		registerEntity(EntityLightningSpear.class, "lightning_spear");
+		registerEntity(EntityLightningSpear.class, "Lightning_Spear");
 		registerEntity(EntityEarthspikeSpawner.class, "earthspike_spawner");
-		registerEntity(EntityWaterCannon.class, "water_cannon");
-		registerEntity(EntitySandstorm.class, "sandstorm");
+		registerEntity(EntityWaterCannon.class, "Water_Cannon");
+		registerEntity(EntitySandstorm.class, "Sandstorm");
 		registerEntity(EntityExplosionSpawner.class, "explosion_spawner");
 		registerEntity(EntityBoulder.class, "entity_boulder");
-		registerEntity(EntityLightningSpawner.class, "lightning_spawner");
+		registerEntity(EntityLightningSpawner.class, "Lightning_Spawnerr");
+		registerEntity(EntityAirBurst.class, "Air_Burst");
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);

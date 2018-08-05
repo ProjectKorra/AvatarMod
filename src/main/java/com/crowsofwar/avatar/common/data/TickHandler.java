@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.data;
 
+import com.crowsofwar.avatar.common.bending.air.AirBurstHandler;
 import com.crowsofwar.avatar.common.bending.air.AirParticleSpawner;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
 import com.crowsofwar.avatar.common.bending.earth.SpawnEarthspikesHandler;
@@ -53,6 +54,7 @@ public abstract class TickHandler {
 	public static TickHandler WATER_PARTICLE_SPAWNER = new WaterParticleSpawner();
 	public static TickHandler INFERNO_PARTICLE_SPAWNER = new InfernoPunchParticleSpawner();
 	public static TickHandler SPAWN_EARTHSPIKES_HANDLER = new SpawnEarthspikesHandler();
+	public static TickHandler AIRBURST_CHARGE_HANDLER = new AirBurstHandler();
 
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;
