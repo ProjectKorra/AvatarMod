@@ -81,48 +81,40 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_TYPE.put("bat", "air");
 		DEFAULT_SCROLL_DROP.put("parrot", 10.0);
 		DEFAULT_SCROLL_TYPE.put("parrot", "air");
-		DEFAULT_SCROLL_DROP.put("chicken", 10.0);
+		DEFAULT_SCROLL_DROP.put("chicken", 5.0);
 		DEFAULT_SCROLL_TYPE.put("chicken", "air");
 		DEFAULT_SCROLL_DROP.put("sheep", 1.0);
 		DEFAULT_SCROLL_TYPE.put("sheep", "air");
 
 
-		DEFAULT_SCROLL_DROP.put("mooshroom", 10.0);
+		DEFAULT_SCROLL_DROP.put("mooshroom", 5.0);
 		DEFAULT_SCROLL_TYPE.put("mooshroom", "earth");
 		DEFAULT_SCROLL_DROP.put("cave_spider", 5.0);
 		DEFAULT_SCROLL_TYPE.put("cave_spider", "earth");
 		DEFAULT_SCROLL_DROP.put("silverfish", 10.0);
 		DEFAULT_SCROLL_TYPE.put("silverfish", "earth");
+		DEFAULT_SCROLL_DROP.put("spider", 2.0);
+		DEFAULT_SCROLL_TYPE.put("spider", "earth");
+		DEFAULT_SCROLL_DROP.put("skeleton", 1.5);
+		DEFAULT_SCROLL_TYPE.put("skeleton", "earth");
+		DEFAULT_SCROLL_DROP.put("zombie", 1.5);
+		DEFAULT_SCROLL_TYPE.put("zombie", "earth");
 
 		DEFAULT_SCROLL_DROP.put("creeper", 0.5);
 		DEFAULT_SCROLL_TYPE.put("creeper", "lightning");
+
 		DEFAULT_SCROLL_DROP.put("creeper", 1.0);
 		DEFAULT_SCROLL_TYPE.put("creeper", "combustion");
 
-		DEFAULT_SCROLL_DROP.put("skeleton", 4.0);
-		DEFAULT_SCROLL_DROP.put("zombie", 3.0);
-		DEFAULT_SCROLL_DROP.put("spider", 4.0);
-		DEFAULT_SCROLL_DROP.put("witch", 10.0);
-		DEFAULT_SCROLL_DROP.put("husk", 6.0);
-		DEFAULT_SCROLL_DROP.put("stray", 6.0);
+		DEFAULT_SCROLL_DROP.put("husk", 3.0);
+		DEFAULT_SCROLL_TYPE.put("husk", "sand");
 
-		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("enderman", "air");
-		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("enderman", "earth");
-		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("enderman", "fire");
-		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("enderman", "water");
-		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("enderman", "combustion");
-		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("enderman", "lightning");
-		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("enderman", "ice");
-		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
-		DEFAULT_SCROLL_TYPE.put("enderman", "sand");
-		DEFAULT_SCROLL_DROP.put("enderman", 10000.0);
+		DEFAULT_SCROLL_DROP.put("stray", 3.0);
+		DEFAULT_SCROLL_TYPE.put("stray", "ice");
+
+		DEFAULT_SCROLL_DROP.put("witch", 5.0);
+		DEFAULT_SCROLL_DROP.put("enderman", 10.0);
+
 
 
 	}
