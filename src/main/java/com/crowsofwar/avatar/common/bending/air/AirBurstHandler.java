@@ -62,32 +62,32 @@ public class AirBurstHandler extends TickHandler {
 			float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 			double knockBack = -2 - powerRating;
 			//The negative number doesn't mean it's small- in fact, the smaller the number, the larger the knockback
-			int radius = 5;
+			int radius = 6;
 			int durationToFire = 40;
 
 			if (abilityData.getLevel() == 1) {
 				damage = 0.75 + powerRating;
 				knockBack = -2.5 - powerRating;
-				radius = 10;
+				radius = 8;
 			}
 
 			if (abilityData.getLevel() >= 2) {
 				damage = 1 + powerRating;
 				knockBack = -3 - powerRating;
-				radius = 15;
+				radius = 12;
 				durationToFire = 50;
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				//Piercing Winds
 				damage = 10 + powerRating;
-				radius = 20;
+				radius = 18;
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				//Maximum Pressure
 				//Pulls enemies in then blasts them out
-				radius = 15;
+				radius = 16;
 				knockBack = -3.5 - powerRating;
 			}
 
@@ -131,7 +131,7 @@ public class AirBurstHandler extends TickHandler {
 						}
 					}//Creates a sphere. Courtesy of Project Korra's Air Burst!
 
-					for (int i = 0; i < radius; i++) {
+					for (int i = 0; i < radius;) {
 						for (int degree = 0; degree < 360; degree++) {
 							double radians = Math.toRadians(degree);
 							double x1 = Math.cos(radians) * i;
@@ -140,6 +140,7 @@ public class AirBurstHandler extends TickHandler {
 							World.spawnParticle(EnumParticleTypes.CLOUD, x1 + entity.posX, y1,
 									z1 + entity.posZ, 1, 0, 0, 0, (double) radius / 100);
 						}
+						i += 2;
 					}
 				}
 
@@ -208,6 +209,7 @@ public class AirBurstHandler extends TickHandler {
 		Entity target =  event.getEntity();
 		DamageSource source = event.getSource();
 		if (source.getDamageType().equals("avatar_Air")) {
+			System.out.println("Step 1");
 			if (attacker instanceof EntityPlayer || attacker instanceof EntityBender) {
 				Bender ctx = Bender.get(attacker);
 				if (ctx.getData() != null) {
@@ -223,6 +225,7 @@ public class AirBurstHandler extends TickHandler {
 					}
 
 					event.setAmount(damage);
+					System.out.println(event.getAmount());
 
 
 				}
