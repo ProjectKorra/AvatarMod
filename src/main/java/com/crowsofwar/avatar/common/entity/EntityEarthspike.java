@@ -24,13 +24,19 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityHanging;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityItemFrame;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -100,8 +106,7 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		return true;
-
+		return super.canCollideWith(entity);
 	}
 
 	@Override
@@ -127,10 +132,12 @@ public class EntityEarthspike extends AvatarEntity {
 		// Push collided entities back
 		if (!world.isRemote) {
 			AxisAlignedBB box = new AxisAlignedBB(posX - Size, posY - Size, posZ - Size, posX + Size, posY + Size, posZ + Size);
-			List<Entity> collided = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
+			List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box);
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
-					onCollideWithEntity(entity);
+					if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb)) {
+						onCollideWithEntity(entity);
+					}
 				}
 			}
 		}
@@ -158,7 +165,7 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	private boolean attackEntity(Entity entity) {
-		if (!(entity instanceof EntityItem)) {
+		if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb) && !(entity instanceof EntityHanging)) {
 			DamageSource ds = AvatarDamageSource.causeEarthspikeDamage(entity, getOwner());
 			float damage = (float) this.damage;
 			return entity.attackEntityFrom(ds, damage);

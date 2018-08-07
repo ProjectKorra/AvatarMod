@@ -49,7 +49,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -330,6 +332,9 @@ public abstract class AvatarEntity extends Entity {
 	protected boolean canCollideWith(Entity entity) {
 		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
 			return false;
+		}
+		if (entity.canBePushed() && entity.canBeCollidedWith()) {
+			return true;
 		}
 		else  return entity instanceof AvatarEntity;
 	}
