@@ -335,7 +335,7 @@ public abstract class AvatarEntity extends Entity {
 		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
 			return false;
 		}
-		if (entity.canBePushed() && entity.canBeCollidedWith()) {
+		if (entity.canBeCollidedWith()) {
 			return true;
 		}
 		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem) {

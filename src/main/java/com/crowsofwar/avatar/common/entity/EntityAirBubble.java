@@ -306,9 +306,14 @@ public class EntityAirBubble extends EntityShield {
 		return true;
 	}
 
+	//@Override
+	//public boolean canBePushed() {
+	//	return false;
+	//}
+
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (canCollideWith(entity)) {
+		if (canCollideWith(entity) && entity != getOwner()) {
 
 			double mult = -2;
 			if (isDissipatingLarge()) mult = -4;
