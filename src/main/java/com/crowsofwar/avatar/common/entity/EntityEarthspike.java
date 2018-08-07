@@ -105,11 +105,6 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	@Override
-	protected boolean canCollideWith(Entity entity) {
-		return super.canCollideWith(entity);
-	}
-
-	@Override
 	public void onEntityUpdate() {
 
 		super.onEntityUpdate();

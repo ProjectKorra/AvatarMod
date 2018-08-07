@@ -212,16 +212,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	}
 
 	@Override
-	protected boolean canCollideWith(Entity entity) {
-		if (entity instanceof AvatarEntity) {
-			if (((AvatarEntity) entity).getOwner() == getOwner()) {
-				return false;
-			}
-		}
-		return entity != getOwner() && !(entity instanceof EntityItem) && !(entity instanceof EntityWaterCannon) && entity instanceof EntityLivingBase;
-	}
-
-	@Override
 	public boolean onCollideWithSolid() {
 		setVelocity(Vector.ZERO);
 		onMajorWaterContact();

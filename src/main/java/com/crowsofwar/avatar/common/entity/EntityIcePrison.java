@@ -129,7 +129,7 @@ public class EntityIcePrison extends AvatarEntity {
 	}
 
 	@Override
-	protected boolean canCollideWith(Entity entity) {
+	public boolean canCollideWith(Entity entity) {
 		return false;
 	}
 

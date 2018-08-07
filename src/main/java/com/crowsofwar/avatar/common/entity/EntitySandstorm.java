@@ -165,11 +165,6 @@ public class EntitySandstorm extends AvatarEntity {
 	}
 
 	@Override
-	protected boolean canCollideWith(Entity entity) {
-		return super.canCollideWith(entity) || entity instanceof EntityLivingBase;
-	}
-
-	@Override
 	protected void onCollideWithEntity(Entity entity) {
 
 		// Number of blocks that the target "floats" above the ground

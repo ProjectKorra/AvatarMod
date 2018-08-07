@@ -243,17 +243,6 @@ public class EntityBoulder extends AvatarEntity {
 		}
 	}
 
-	@Override
-	protected boolean canCollideWith(Entity entity) {
-		if ((entity instanceof EntityBender || entity instanceof EntityPlayer) && this.getOwner() == entity) {
-			return false;
-		}
-		else if (entity instanceof EntityBoulder && ((EntityBoulder) entity).getOwner() == this.getOwner()){
-			return false;
-		}
-		else return entity instanceof EntityLivingBase || super.canCollideWith(entity);
-	}
-
 	public boolean attackEntity(Entity entity) {
 		if (!(entity instanceof EntityItem && entity.ticksExisted <= 10)) {
 			DamageSource ds = AvatarDamageSource.causeFloatingBlockDamage(entity, getOwner());

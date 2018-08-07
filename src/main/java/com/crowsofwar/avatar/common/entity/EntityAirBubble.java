@@ -308,29 +308,24 @@ public class EntityAirBubble extends EntityShield {
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
+		if (canCollideWith(entity)) {
 
-		double mult = -2;
-		if (isDissipatingLarge()) mult = -4;
-		Vector vel = position().minus(getEntityPos(entity));
-		vel = vel.normalize().times(mult).plusY(0.3f);
+			double mult = -2;
+			if (isDissipatingLarge()) mult = -4;
+			Vector vel = position().minus(getEntityPos(entity));
+			vel = vel.normalize().times(mult).plusY(0.3f);
 
-		entity.motionX = vel.x();
-		entity.motionY = vel.y();
-		entity.motionZ = vel.z();
+			entity.motionX = vel.x();
+			entity.motionY = vel.y();
+			entity.motionZ = vel.z();
 
-		if (entity instanceof AvatarEntity) {
-			AvatarEntity avent = (AvatarEntity) entity;
-			avent.setVelocity(vel);
+			if (entity instanceof AvatarEntity) {
+				AvatarEntity avent = (AvatarEntity) entity;
+				avent.setVelocity(vel);
+			}
+			entity.isAirBorne = true;
+			AvatarUtils.afterVelocityAdded(entity);
 		}
-		entity.isAirBorne = true;
-		AvatarUtils.afterVelocityAdded(entity);
-	}
-
-	@Override
-	protected boolean canCollideWith(Entity entity) {
-		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
-			return false;
-		} else return entity != getOwner() && !(entity instanceof EntityXPOrb) && !(entity instanceof EntityItem);
 	}
 
 	@Override

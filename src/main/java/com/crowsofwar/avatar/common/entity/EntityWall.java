@@ -187,7 +187,7 @@ public class EntityWall extends AvatarEntity {
 	}
 
 	@Override
-	protected boolean canCollideWith(Entity entity) {
+	public boolean canCollideWith(Entity entity) {
 		return super.canCollideWith(entity) && !(entity instanceof EntityWall)
 				&& !(entity instanceof EntityWallSegment);
 	}

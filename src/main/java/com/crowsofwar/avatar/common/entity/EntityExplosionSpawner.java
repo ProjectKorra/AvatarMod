@@ -117,9 +117,14 @@ public class EntityExplosionSpawner extends AvatarEntity {
 	}
 
 	@Override
-	protected boolean canCollideWith(Entity entity) {
-		return !(entity instanceof EntityExplosionSpawner) && (entity instanceof EntityLivingBase || super.canCollideWith(entity));
+	public boolean canCollideWith(Entity entity) {
+		return false;
 
+	}
+
+	@Override
+	public boolean canBePushed() {
+		return false;
 	}
 
 	@Override

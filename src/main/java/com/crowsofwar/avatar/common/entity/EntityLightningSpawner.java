@@ -145,11 +145,13 @@ public class EntityLightningSpawner extends AvatarEntity {
 
 
 	@Override
-	protected boolean canCollideWith(Entity entity) {
-		if (entity instanceof EntityLightningSpawner || entity instanceof EntityLivingBase || entity == getOwner()) {
-			return false;
-		}
-		return entity instanceof EntityShield || super.canCollideWith(entity);
+	public boolean canCollideWith(Entity entity) {
+		return false;
+	}
+
+	@Override
+	public boolean canBePushed() {
+		return false;
 	}
 
 	@Override

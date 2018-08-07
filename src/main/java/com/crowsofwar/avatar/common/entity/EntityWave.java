@@ -82,11 +82,6 @@ public class EntityWave extends AvatarEntity {
 	}
 
 	@Override
-	protected boolean canCollideWith(Entity entity) {
-		return entity != this && entity != getOwner();
-	}
-
-	@Override
 	public boolean canBePushed() {
 		return false;
 	}
@@ -124,22 +119,24 @@ public class EntityWave extends AvatarEntity {
 
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
 			for (Entity entity : collided) {
-				Vector motion = velocity().dividedBy(20).times(STATS_CONFIG.waveSettings.push);
-				motion = motion.withY(Size * 0.75 / 10);
-				entity.addVelocity(motion.x(), motion.y(), motion.z());
+				if (canCollideWith(entity)) {
+					Vector motion = velocity().dividedBy(20).times(STATS_CONFIG.waveSettings.push);
+					motion = motion.withY(Size * 0.75 / 10);
+					entity.addVelocity(motion.x(), motion.y(), motion.z());
 
-				if (entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner),
-						STATS_CONFIG.waveSettings.damage * damageMult)) {
+					if (entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner),
+							STATS_CONFIG.waveSettings.damage * damageMult)) {
 
-					AbilityData.get(owner, getAbility().getName()).addXp(SKILLS_CONFIG.waveHit);
-					BattlePerformanceScore.addLargeScore(getOwner());
+						AbilityData.get(owner, getAbility().getName()).addXp(SKILLS_CONFIG.waveHit);
+						BattlePerformanceScore.addLargeScore(getOwner());
+
+					}
+
+					if (createExplosion) {
+						world.createExplosion(null, posX, posY, posZ, 2, false);
+					}
 
 				}
-
-				if (createExplosion) {
-					world.createExplosion(null, posX, posY, posZ, 2, false);
-				}
-
 			}
 		}
 

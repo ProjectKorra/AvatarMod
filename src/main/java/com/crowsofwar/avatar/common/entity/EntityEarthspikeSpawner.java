@@ -122,7 +122,12 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
 
 	@Override
-	protected boolean canCollideWith(Entity entity) {
+	public boolean canCollideWith(Entity entity) {
+		return false;
+	}
+
+	@Override
+	public boolean canBePushed() {
 		return false;
 	}
 

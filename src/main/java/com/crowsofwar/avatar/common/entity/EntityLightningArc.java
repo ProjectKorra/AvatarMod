@@ -213,7 +213,9 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 				().magnitude() / 20, entity -> entity != getOwner() && entity != this);
 
 		for (Entity collided : collisions) {
-			onCollideWithEntity(collided);
+			if (canCollideWith(collided)) {
+				onCollideWithEntity(collided);
+			}
 		}
 
 	}
@@ -277,14 +279,9 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	}
 
 	@Override
-	protected boolean canCollideWith(Entity entity) {
-		return entity != getOwner();
-	}
-
-	@Override
 	public boolean onCollideWithSolid() {
 //		setDead();
-		setVelocity(Vector.ZERO);
+		this.motionX = this.motionY = this.motionZ = 0;
 		if (!world.isRemote) {
 			if (world.isAirBlock(getPosition())) {
 				world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());

@@ -308,7 +308,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	}
 
 	@Override
-	protected boolean canCollideWith(Entity entity) {
+	public boolean canCollideWith(Entity entity) {
 
 		boolean notWall = !(entity instanceof EntityWall) && !(entity instanceof EntityWallSegment);
 
