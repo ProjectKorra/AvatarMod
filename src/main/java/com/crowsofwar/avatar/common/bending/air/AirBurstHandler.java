@@ -131,7 +131,7 @@ public class AirBurstHandler extends TickHandler {
 						}
 					}//Creates a sphere. Courtesy of Project Korra's Air Burst!
 
-					for (int i = 0; i < radius;) {
+					for (int i = 0; i < radius; ) {
 						for (int degree = 0; degree < 360; degree++) {
 							double radians = Math.toRadians(degree);
 							double x1 = Math.cos(radians) * i;
@@ -148,26 +148,25 @@ public class AirBurstHandler extends TickHandler {
 				List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box, entity1 -> entity1 != entity);
 				if (!collided.isEmpty()) {
 					for (Entity e : collided) {
-						if (!(e instanceof EntityItem) && !(e instanceof EntityXPOrb)) {
-							if (e instanceof EntityLiving) {
-								e.attackEntityFrom(AvatarDamageSource.causeAirDamage(e, entity), (float) damage);
-							}
+						if (e.canBeCollidedWith() && e.canBePushed()) {
+							e.attackEntityFrom(AvatarDamageSource.causeAirDamage(e, entity), (float) damage);
 							abilityData.addXp(SKILLS_CONFIG.airShockwaveHit);
 							BattlePerformanceScore.addLargeScore(entity);
 							applyKnockback(e, entity, knockBack);
 						}
 					}
 				}
-				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
-
-				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-						SoundCategory.BLOCKS, 1, 0.5F);
-				return true;
 			}
+			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
-			return false;
-		} else return true;
-	}
+			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+					SoundCategory.BLOCKS, 1, 0.5F);
+			return true;
+		}
+
+		return false;
+	} else return true;
+}
 
 	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
 
@@ -206,7 +205,7 @@ public class AirBurstHandler extends TickHandler {
 	@SubscribeEvent
 	public static void onDragonHurt(LivingHurtEvent event) {
 		EntityLivingBase attacker = (EntityLivingBase) event.getSource().getTrueSource();
-		Entity target =  event.getEntity();
+		Entity target = event.getEntity();
 		DamageSource source = event.getSource();
 		if (source.getDamageType().equals("avatar_Air")) {
 			System.out.println("Step 1");
