@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
@@ -101,29 +102,31 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 		public FireArcBehavior onUpdate(EntityFireArc entity) {
 			entity.addVelocity(Vector.DOWN.times(9.81 / 60));
 
-			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
-					EntityLivingBase.class, entity.getEntityBoundingBox().grow(0.9, 0.9, 0.9),
+			List<Entity> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
+					Entity.class, entity.getEntityBoundingBox().grow(0.9, 0.9, 0.9),
 					collided -> collided != entity.getOwner());
 
-			for (EntityLivingBase collided : collidedList) {
+			for (Entity collided : collidedList) {
+				if (collided.canBeCollidedWith() && collided.canBePushed()) {
 
-				double push = STATS_CONFIG.fireballSettings.push;
-				collided.addVelocity(entity.motionX * push, 0.4 * push, entity.motionZ * push);
-				collided.setFire(3);
+					double push = STATS_CONFIG.fireArcSettings.push;
+					collided.addVelocity(entity.motionX * push, 0.4 * push, entity.motionZ * push);
+					collided.setFire(3);
 
-				if (collided.attackEntityFrom(AvatarDamageSource.causeFireDamage(collided, entity.getOwner()),
-						STATS_CONFIG.fireballSettings.damage * entity.getDamageMult())) {
-					BattlePerformanceScore.addMediumScore(entity.getOwner());
-				}
-
-				if (!entity.world.isRemote) {
-					BendingData data = Bender.get(entity.getOwner()).getData();
-					if (data != null) {
-						data.getAbilityData("fire_arc")
-								.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);
+					if (collided.attackEntityFrom(AvatarDamageSource.causeFireDamage(collided, entity.getOwner()),
+							STATS_CONFIG.fireArcSettings.damage * entity.getDamageMult())) {
+						BattlePerformanceScore.addMediumScore(entity.getOwner());
 					}
-				}
 
+					if (!entity.world.isRemote) {
+						BendingData data = Bender.get(entity.getOwner()).getData();
+						if (data != null) {
+							data.getAbilityData("fire_arc")
+									.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);
+						}
+					}
+
+				}
 			}
 
 			if (!collidedList.isEmpty() && entity.getOwner() != null) {

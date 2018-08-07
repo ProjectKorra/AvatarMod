@@ -54,9 +54,11 @@ public class RenderFireArc extends RenderArc {
 		double x = Math.random(); // 0-1
 		Vector spawnAt = m.times(x).plus(b);
 		Vector velocity = new Vector(0, 0, 0);
+		if (arc != null) {
 
-		particleSpawner.spawnOneParticle(arc.world, AvatarParticles.getParticleFlames(), spawnAt,
-				velocity);
+			particleSpawner.spawnOneParticle(arc.world, AvatarParticles.getParticleFlames(), spawnAt,
+					velocity);
+		}
 
 	}
 
