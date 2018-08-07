@@ -315,7 +315,7 @@ public abstract class AvatarEntity extends Entity {
 			}
 
 			for (Entity entity : list) {
-				if (canCollideWith(entity)) {
+				if (canCollideWith(entity) && entity != getOwner()) {
 					entity.applyEntityCollision(this);
 					onCollideWithEntity(entity);
 				}

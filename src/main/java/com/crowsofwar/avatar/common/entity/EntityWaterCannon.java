@@ -171,7 +171,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			**/
 			if (!collisions.isEmpty()) {
 				for (Entity collided : collisions) {
-					if (canCollideWith(collided)) {
+					if (canCollideWith(collided) && collided != getOwner()) {
 						onCollideWithEntity(collided);
 						//Needed because the water cannon will still glitch through the entity
 						if (!(data.getAbilityData("water_cannon").isMasterPath(AbilityData.AbilityTreePath.SECOND))) {
