@@ -85,15 +85,14 @@ public class EntityAirblade extends AvatarEntity {
 					getEntityBoundingBox());
 
 			if (!collidedList.isEmpty()) {
+				for (Entity collided : collidedList) {
+					if (collided instanceof AvatarEntity) {
+						((AvatarEntity) collided).onAirContact();
+					} else if (canCollideWith(collided)) {
+						handleCollision((EntityLivingBase) collided);
+					}
 
-				Entity collided = collidedList.get(0);
-
-				if (collided instanceof AvatarEntity) {
-					((AvatarEntity) collided).onAirContact();
-				} else if (collided instanceof EntityLivingBase) {
-					handleCollision((EntityLivingBase) collided);
 				}
-
 			}
 		}
 
