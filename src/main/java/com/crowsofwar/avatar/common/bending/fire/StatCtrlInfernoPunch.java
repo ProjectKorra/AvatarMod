@@ -183,6 +183,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
 						target.motionZ += direction.z() * knockBack;
 						target.isAirBorne = true;
+						abilityData.addXp(4 - abilityData.getLevel());
 						// this line is needed to prevent a bug where players will not be pushed in multiplayer
 						AvatarUtils.afterVelocityAdded(target);
 						if (!(target instanceof EntityDragon)) {
