@@ -135,7 +135,7 @@ public class EntityEarthspike extends AvatarEntity {
 			List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box);
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
-					if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb)) {
+					if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb) && canCollideWith(entity)) {
 						onCollideWithEntity(entity);
 					}
 				}
@@ -145,7 +145,7 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (!world.isRemote && entity != getOwner() && !(entity instanceof EntityEarthspike) && !(entity instanceof EntityEarthspikeSpawner)) {
+		if (!world.isRemote && entity != getOwner() && !(entity instanceof EntityEarthspike) && !(entity instanceof EntityEarthspikeSpawner) && canCollideWith(entity)) {
 			pushEntity(entity);
 			if (attackEntity(entity)) {
 				attacked++;
@@ -165,7 +165,7 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	private boolean attackEntity(Entity entity) {
-		if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb) && !(entity instanceof EntityHanging)) {
+		if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb) && canCollideWith(entity)) {
 			DamageSource ds = AvatarDamageSource.causeEarthspikeDamage(entity, getOwner());
 			float damage = (float) this.damage;
 			return entity.attackEntityFrom(ds, damage);
