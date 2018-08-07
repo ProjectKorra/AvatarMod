@@ -148,7 +148,7 @@ public class AirBurstHandler extends TickHandler {
 				List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box, entity1 -> entity1 != entity);
 				if (!collided.isEmpty()) {
 					for (Entity e : collided) {
-						if (e.canBePushed() && e.canBeCollidedWith()) {
+						if (e.canBePushed() && e.canBeCollidedWith() && e != entity) {
 							e.attackEntityFrom(AvatarDamageSource.causeAirDamage(e, entity), (float) damage);
 							abilityData.addXp(SKILLS_CONFIG.airShockwaveHit);
 							BattlePerformanceScore.addLargeScore(entity);
