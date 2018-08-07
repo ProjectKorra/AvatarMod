@@ -69,7 +69,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
 		EntityLivingBase owner = getOwner();
-		if (!entity.world.isRemote && entity != owner) {
+		if (!entity.world.isRemote && entity != owner && canCollideWith(entity)) {
 
 			if (entity instanceof AvatarEntity) {
 				AvatarEntity avatarEntity = (AvatarEntity) entity;
@@ -91,18 +91,12 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 			afterVelocityAdded(entity);
 
-			setDead();
-
 			if (entity instanceof AvatarEntity) {
 				((AvatarEntity) entity).onAirContact();
 			}
+			setDead();
 
 		}
-	}
-
-	@Override
-	protected boolean canCollideWith(Entity entity) {
-		return true;
 	}
 
 	@Override
