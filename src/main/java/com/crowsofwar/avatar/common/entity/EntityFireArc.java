@@ -67,9 +67,11 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 			if (controlled == null && thrown == null && bD.hasStatusControl(StatusControl.THROW_FIRE)) {
 				bD.removeStatusControl(StatusControl.THROW_FIRE);
 			}
-			if (controlled.getBehavior() != null && thrown.getBehavior() != null) {
-				if (!(controlled.getBehavior() instanceof FireArcBehavior.PlayerControlled) && !(thrown.getBehavior() instanceof FireArcBehavior.PlayerControlled)) {
-					bD.removeStatusControl(StatusControl.THROW_FIRE);
+			if (controlled != null && thrown != null) {
+				if (controlled.getBehavior() != null && thrown.getBehavior() != null) {
+					if (!(controlled.getBehavior() instanceof FireArcBehavior.PlayerControlled) && !(thrown.getBehavior() instanceof FireArcBehavior.PlayerControlled)) {
+						bD.removeStatusControl(StatusControl.THROW_FIRE);
+					}
 				}
 			}
 		}
