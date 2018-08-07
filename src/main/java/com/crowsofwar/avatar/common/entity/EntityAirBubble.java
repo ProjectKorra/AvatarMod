@@ -150,6 +150,7 @@ public class EntityAirBubble extends EntityShield {
 		}
 
 		setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
+
 		this.posX = owner.posX;
 		this.posY = owner.getEntityBoundingBox().minY;
 		this.posZ = owner.posZ;
@@ -314,10 +315,6 @@ public class EntityAirBubble extends EntityShield {
 		return true;
 	}
 
-	@Override
-	public boolean canBePushed() {
-		return false;
-	}
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {

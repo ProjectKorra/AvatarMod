@@ -71,6 +71,10 @@ public abstract class EntityShield extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
+		if (getOwner() != null) {
+			setPosition(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+		}
+
 		EntityLivingBase owner = getOwner();
 		if (owner == null) {
 			setDead();
@@ -95,6 +99,11 @@ public abstract class EntityShield extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		nbt.setFloat("Health", getHealth());
 		nbt.setFloat("MaxHealth", getMaxHealth());
+	}
+
+	@Override
+	public void setPositionAndUpdate(double x, double y, double z) {
+		super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
 	}
 
 	@Override
