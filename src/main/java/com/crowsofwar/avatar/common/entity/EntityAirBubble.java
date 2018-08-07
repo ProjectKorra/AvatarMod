@@ -327,6 +327,12 @@ public class EntityAirBubble extends EntityShield {
 			AvatarUtils.afterVelocityAdded(entity);
 		}
 	}
+	@Override
+	public boolean canCollideWith(Entity entity) {
+		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
+			return false;
+		} else return entity != getOwner() && !(entity instanceof EntityXPOrb) && !(entity instanceof EntityItem);
+	}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {

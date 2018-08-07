@@ -202,6 +202,11 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		}
 	}
 
+	@Override
+	public boolean canCollideWith(Entity entity) {
+		return entity != getOwner();
+	}
+
 	/**
 	 * Custom lightning collision detection which uses raytrace. Required since lightning moves
 	 * quickly and can sometimes "glitch" through an entity without detecting the collision.

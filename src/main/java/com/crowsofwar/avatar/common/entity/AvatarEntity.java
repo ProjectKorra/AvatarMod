@@ -29,9 +29,11 @@ import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -336,10 +338,10 @@ public abstract class AvatarEntity extends Entity {
 		if (entity.canBePushed() && entity.canBeCollidedWith()) {
 			return true;
 		}
-		if (entity == getOwner()) {
+		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem) {
 			return false;
 		}
-		else  return entity instanceof AvatarEntity;
+		else  return entity instanceof AvatarEntity || entity != getOwner();
 	}
 
 	@Override
