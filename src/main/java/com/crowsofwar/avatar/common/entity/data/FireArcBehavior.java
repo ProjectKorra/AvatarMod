@@ -107,7 +107,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 					collided -> collided != entity.getOwner());
 
 			for (Entity collided : collidedList) {
-				if (collided.canBeCollidedWith() && collided.canBePushed()) {
+				if (entity.canCollideWith(collided)) {
 
 					double push = STATS_CONFIG.fireArcSettings.push;
 					collided.addVelocity(entity.motionX * push, 0.4 * push, entity.motionZ * push);

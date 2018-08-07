@@ -79,15 +79,15 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
 						entity.getExpandedHitbox());
 				if (!collidedList.isEmpty()) {
-					Entity collided = collidedList.get(0);
-					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
-						collision((EntityLivingBase) collided, entity);
-					} else if (collided != entity.getOwner()) {
-						Vector motion = new Vector(collided).minus(new Vector(entity));
-						motion = motion.times(0.5).withY(0.10);
-						collided.addVelocity(motion.x(), motion.y(), motion.z());
-						entity.cloudBurst();
+					for (Entity collided : collidedList) {
+						if (entity.canCollideWith(collided)) {
+							collision((EntityLivingBase) collided, entity);
+							Vector motion = new Vector(collided).minus(new Vector(entity));
+							motion = motion.times(0.5).withY(0.10);
+							collided.addVelocity(motion.x(), motion.y(), motion.z());
+							entity.cloudBurst();
 
+						}
 					}
 
 				}

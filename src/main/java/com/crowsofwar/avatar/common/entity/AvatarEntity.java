@@ -329,12 +329,15 @@ public abstract class AvatarEntity extends Entity {
 	 * {@link #applyEntityCollision(Entity) vanilla logic} from occurring which
 	 * pushes the entities away.
 	 */
-	protected boolean canCollideWith(Entity entity) {
+	public boolean canCollideWith(Entity entity) {
 		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
 			return false;
 		}
 		if (entity.canBePushed() && entity.canBeCollidedWith()) {
 			return true;
+		}
+		if (entity == getOwner()) {
+			return false;
 		}
 		else  return entity instanceof AvatarEntity;
 	}

@@ -159,7 +159,7 @@ public class EntityCloudBall extends AvatarEntity {
 	}
 
 	@Override
-	protected boolean canCollideWith(Entity entity) {
+	public boolean canCollideWith(Entity entity) {
 		if (getOwner() != null) {
 
 			if (absorbtion) {
@@ -201,7 +201,7 @@ public class EntityCloudBall extends AvatarEntity {
 		if (getBehavior() instanceof CloudburstBehavior.Thrown) {
 			cloudBurst();
 		}
-		return super.canCollideWith(entity) || entity instanceof EntityLivingBase;
+		return super.canCollideWith(entity);
 
 	}
 
