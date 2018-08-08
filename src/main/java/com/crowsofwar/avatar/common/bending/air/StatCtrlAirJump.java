@@ -129,7 +129,7 @@ public class StatCtrlAirJump extends StatusControl {
 			}
 			abilityData.addXp(SKILLS_CONFIG.airJump);
 
-			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_BAT_TAKEOFF,
+			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH,
 					SoundCategory.PLAYERS, 1, .7f);
 
 			PowerRatingModifier powerRatingModifier = new AirJumpPowerModifier(powerModifier);
