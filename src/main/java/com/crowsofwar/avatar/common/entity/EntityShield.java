@@ -60,6 +60,7 @@ public abstract class EntityShield extends AvatarEntity {
 		super.entityInit();
 		dataManager.register(SYNC_HEALTH, 20f);
 		dataManager.register(SYNC_MAX_HEALTH, 20f);
+		this.putsOutFires = true;
 	}
 
 	@Override
