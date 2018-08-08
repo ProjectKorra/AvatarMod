@@ -51,7 +51,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		float totalXp = abilityData.getTotalXp();
 		int level = abilityData.getLevel();
 
-		int flamesPerSecond = level == 0 ? 6 : 10;
+		int flamesPerSecond = level <= 0 ? 6 : 10;
 		if (level == 3 && path == AbilityTreePath.FIRST) {
 			flamesPerSecond = 15;
 		}
@@ -86,15 +86,15 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 				World world = ctx.getWorld();
 
-				double speedMult = 6 + 5 * totalXp / 100;
-				double randomness = 20 - 10 * totalXp / 100;
+				double speedMult = 15 + 5 * totalXp / 100;
+				double randomness = 7.5 - 5 * totalXp / 100;
 				boolean lightsFires = false;
 				if (level == 3 && path == AbilityTreePath.FIRST) {
-					speedMult = 15;
+					speedMult = 25;
 					randomness = 1;
 				}
 				if (level == 3 && path == AbilityTreePath.SECOND) {
-					speedMult = 8;
+					speedMult = 12;
 					randomness = 20;
 					lightsFires = true;
 				}

@@ -153,7 +153,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 					fireTime = 4;
 				}
 				if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
-					if (entity.getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().equals("avatar_groundSmash"))) {
+					if (entity.getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().startsWith("avatar_"))) {
 						if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 							BlockPos blockPos = target.getPosition();
 							AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, target, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 3F, true, false);
