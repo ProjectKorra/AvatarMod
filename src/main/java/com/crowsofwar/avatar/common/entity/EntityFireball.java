@@ -302,7 +302,7 @@ public class EntityFireball extends AvatarEntity {
 
 				this.setInvisible(true);
 				WorldServer World = (WorldServer) this.world;
-				World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, 300, 0, 0, 0, hitBox/50);
+				World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, getSize() * 15, 0, 0, 0, getSize()/100F);
 				World.spawnParticle(EnumParticleTypes.LAVA, posX, posY, posZ, 50, 0, 0, 0, speed);
 				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(hitBox, hitBox, hitBox),
