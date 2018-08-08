@@ -103,7 +103,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 						entity.getExpandedHitbox());
 				if (!collidedList.isEmpty()) {
 					Entity collided = collidedList.get(0);
-					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
+					if (entity.canCollideWith(collided) && collided != entity.getOwner()) {
 						collision((EntityLivingBase) collided, entity);
 					} else if (collided != entity.getOwner()) {
 						Vector motion = new Vector(collided).minus(new Vector(entity));
