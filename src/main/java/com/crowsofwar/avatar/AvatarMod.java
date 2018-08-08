@@ -233,14 +233,14 @@ public class AvatarMod {
 		registerEntity(EntitySandPrison.class, "sandprison");
 		registerEntity(EntityLightningArc.class, "Lightning_arc");
 		registerEntity(EntityCloudBall.class, "Cloudburst");
-		registerEntity(EntityEarthspike.class, "earthspike");
+		registerEntity(EntityEarthspike.class, "Earthspike");
 		registerEntity(EntityLightningSpear.class, "Lightning_Spear");
-		registerEntity(EntityEarthspikeSpawner.class, "earthspike_spawner");
-		registerEntity(EntityWaterCannon.class, "Water_Cannon");
+		registerEntity(EntityEarthspikeSpawner.class, "EarthspikeSpawner");
+		registerEntity(EntityWaterCannon.class, "WaterCannon");
 		registerEntity(EntitySandstorm.class, "Sandstorm");
-		registerEntity(EntityExplosionSpawner.class, "explosion_spawner");
-		registerEntity(EntityBoulder.class, "entity_boulder");
-		registerEntity(EntityLightningSpawner.class, "Lightning_Spawnerr");
+		registerEntity(EntityExplosionSpawner.class, "ExplosionSpawner");
+		registerEntity(EntityBoulder.class, "Boulder");
+		registerEntity(EntityLightningSpawner.class, "LightningSpawnerr");
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);
