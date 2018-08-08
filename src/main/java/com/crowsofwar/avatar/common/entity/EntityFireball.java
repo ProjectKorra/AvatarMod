@@ -80,6 +80,12 @@ public class EntityFireball extends AvatarEntity {
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+		removeStatCtrl();
+	}
+
+	@Override
 	public void onUpdate() {
 
 		super.onUpdate();
@@ -95,19 +101,17 @@ public class EntityFireball extends AvatarEntity {
 			setDead();
 			removeStatCtrl();
 		}
-
-		if (getOwner() == null) {
-			setDead();
-			removeStatCtrl();
-		}
+		
 		if (getOwner() != null) {
 			EntityFireball ball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
-			BendingData data = BendingData.get(getOwner());
-			if (ball != null && ball.getBehavior() != null) {
-				if (ball.getBehavior() instanceof FireballBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
-					this.setDead();
-				}
+			BendingData bD = BendingData.get(getOwner());
+			if (ball == null && bD.hasStatusControl(StatusControl.THROW_FIREBALL)) {
+				bD.removeStatusControl(StatusControl.THROW_FIREBALL);
 			}
+			if (ball != null && ball.getBehavior() instanceof FireballBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_FIREBALL))) {
+				bD.addStatusControl(StatusControl.THROW_FIREBALL);
+			}
+
 		}
 	}
 
