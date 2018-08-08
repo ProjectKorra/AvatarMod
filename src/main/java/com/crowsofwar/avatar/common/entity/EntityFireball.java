@@ -170,7 +170,7 @@ public class EntityFireball extends AvatarEntity {
 		if (entity instanceof AvatarEntity) {
 			((AvatarEntity) entity).onFireContact();
 		}
-		if (canCollideWith(entity)) {
+		if (canCollideWith(entity) && entity != getOwner() && getBehavior() instanceof FireballBehavior.Thrown) {
 			float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
 
 			explosionSize *= getSize() / 15f;
