@@ -19,8 +19,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
@@ -29,17 +27,14 @@ import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -93,6 +88,12 @@ public class EntityLightningSpear extends AvatarEntity {
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+		removeStatCtrl();
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
@@ -110,12 +111,14 @@ public class EntityLightningSpear extends AvatarEntity {
 
 		if (getOwner() != null) {
 			EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, getOwner());
-			BendingData data = BendingData.get(getOwner());
-			if (spear != null && spear.getBehavior() != null) {
-				if (spear.getBehavior() instanceof LightningSpearBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_LIGHTNINSPEAR)) {
-					this.setDead();
-				}
+			BendingData bD = BendingData.get(getOwner());
+			if (spear == null && bD.hasStatusControl(StatusControl.THROW_LIGHTNINGSPEAR)) {
+				bD.removeStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
 			}
+			if (spear != null && spear.getBehavior() instanceof LightningSpearBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_LIGHTNINGSPEAR))) {
+				bD.addStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
+			}
+
 		}
 		// Electrocute enemies in water
 		if (inWater) {
@@ -261,7 +264,7 @@ public class EntityLightningSpear extends AvatarEntity {
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
-			data.removeStatusControl(StatusControl.THROW_LIGHTNINSPEAR);
+			data.removeStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
 		}
 	}
 

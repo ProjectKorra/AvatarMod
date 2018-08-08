@@ -70,7 +70,7 @@ public abstract class StatusControl {
 			SKATING_START = new StatCtrlSkateStart(),
 			THROW_FIREBALL = new StatCtrlThrowFireball(),
 			THROW_CLOUDBURST = new StatCtrlThrowCloudBall(),
-			THROW_LIGHTNINSPEAR = new StatCtrlThrowLightningSpear(),
+			THROW_LIGHTNINGSPEAR = new StatCtrlThrowLightningSpear(),
 			BUBBLE_EXPAND = new StatCtrlBubbleExpand(),
 			BUBBLE_CONTRACT = new StatCtrlBubbleContract(),
 			SHIELD_SHATTER = new StatCtrlShieldShatter(),

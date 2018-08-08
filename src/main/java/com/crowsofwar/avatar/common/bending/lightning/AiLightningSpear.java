@@ -51,7 +51,7 @@ public class AiLightningSpear extends BendingAi {
 
 		if (timeExecuting >= 40) {
 			BendingData data = bender.getData();
-			execStatusControl(StatusControl.THROW_LIGHTNINSPEAR);
+			execStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
 			timeExecuting = 0;
 			return false;
 		} else {
@@ -81,7 +81,7 @@ public class AiLightningSpear extends BendingAi {
 
 		if (spear != null) {
 			spear.setDead();
-			bender.getData().removeStatusControl(StatusControl.THROW_LIGHTNINSPEAR);
+			bender.getData().removeStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
 		}
 
 	}
