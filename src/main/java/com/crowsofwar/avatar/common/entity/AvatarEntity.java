@@ -333,10 +333,12 @@ public abstract class AvatarEntity extends Entity {
 		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
 			return false;
 		}
-		if (entity.canBeCollidedWith()) {
+		if (entity.canBeCollidedWith() && !(entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
+				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud)) {
 			return true;
 		}
-		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem || entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud) {
+		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
+				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud) {
 			return false;
 		}
 		if (entity == getOwner()) {
