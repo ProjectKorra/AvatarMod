@@ -131,19 +131,21 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
+		if (this.canCollideWith(entity) && getOwner() != entity) {
 
 
-		if (!world.isRemote) {
-			int numberOfParticles = (int) (500 * getSizeMultiplier());
-			WorldServer World = (WorldServer) world;
-			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, numberOfParticles, 0, 0, 0, 0.05 + getSizeMultiplier() / 10);
-			//Change based on size
+			if (!world.isRemote) {
+				int numberOfParticles = (int) (500 * getSizeMultiplier());
+				WorldServer World = (WorldServer) world;
+				World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, numberOfParticles, 0, 0, 0, 0.05 + getSizeMultiplier() / 10);
+				//Change based on size
+			}
+
+			damageEntity((EntityLivingBase) entity);
+			world.playSound(null, getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH,
+					SoundCategory.PLAYERS, 1, 1);
+
 		}
-
-		damageEntity((EntityLivingBase) entity);
-		world.playSound(null, getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH,
-				SoundCategory.PLAYERS, 1, 1);
-
 	}
 
 	/**

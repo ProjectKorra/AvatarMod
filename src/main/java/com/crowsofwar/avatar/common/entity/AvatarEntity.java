@@ -341,7 +341,10 @@ public abstract class AvatarEntity extends Entity {
 		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem) {
 			return false;
 		}
-		else  return entity instanceof AvatarEntity || entity != getOwner();
+		if (entity == getOwner()) {
+			return false;
+		}
+		else return entity instanceof AvatarEntity;
 	}
 
 	@Override
