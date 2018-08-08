@@ -59,21 +59,15 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		if (getBehavior() != newBehavior) setBehavior(newBehavior);
 
 		if (getOwner() != null) {
-			EntityFireArc thrown = AvatarEntity.lookupControlledEntity(world, EntityFireArc.class, getOwner());
+			EntityFireArc arc = AvatarEntity.lookupControlledEntity(world, EntityFireArc.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			EntityFireArc controlled = AvatarEntity.lookupControlledEntity(world, EntityFireArc.class, getOwner());
-
-			//if (controlled)
-			if (controlled == null && thrown == null && bD.hasStatusControl(StatusControl.THROW_FIRE)) {
+			if (arc == null && bD.hasStatusControl(StatusControl.THROW_FIRE)) {
 				bD.removeStatusControl(StatusControl.THROW_FIRE);
 			}
-			if (controlled != null && thrown != null) {
-				if (controlled.getBehavior() != null && thrown.getBehavior() != null) {
-					if (!(controlled.getBehavior() instanceof FireArcBehavior.PlayerControlled) && !(thrown.getBehavior() instanceof FireArcBehavior.PlayerControlled)) {
-						bD.removeStatusControl(StatusControl.THROW_FIRE);
-					}
-				}
+			if (arc != null && arc.getBehavior() instanceof FireArcBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_FIRE))) {
+				bD.addStatusControl(StatusControl.THROW_FIRE);
 			}
+
 		}
 
 		if (getOwner() == null) {
