@@ -24,7 +24,6 @@ import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -39,16 +38,10 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
-import org.lwjgl.Sys;
-import scala.Int;
 
 import java.util.List;
 import java.util.Objects;
@@ -270,6 +263,12 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+		cleanup();
+	}
+
+	@Override
 	public void onUpdate() {
 
 		super.onUpdate();
@@ -293,6 +292,9 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			BendingData bD = BendingData.get(getOwner());
 			if (arc == null && bD.hasStatusControl(StatusControl.THROW_WATER)) {
 				bD.removeStatusControl(StatusControl.THROW_WATER);
+			}
+			if (arc != null && arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_WATER))) {
+				bD.addStatusControl(StatusControl.THROW_WATER);
 			}
 
 		}
