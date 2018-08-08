@@ -83,6 +83,12 @@ public class EntityCloudBall extends AvatarEntity {
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+		removeStatCtrl();
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		int ticks = 0;
@@ -103,12 +109,14 @@ public class EntityCloudBall extends AvatarEntity {
 
 		if (getOwner() != null) {
 			EntityCloudBall ball = AvatarEntity.lookupControlledEntity(world, EntityCloudBall.class, getOwner());
-			BendingData data = BendingData.get(getOwner());
-			if (ball != null && ball.getBehavior() != null) {
-				if (ball.getBehavior() instanceof CloudburstBehavior.PlayerControlled && !data.hasStatusControl(StatusControl.THROW_CLOUDBURST)) {
-					this.setDead();
-				}
+			BendingData bD = BendingData.get(getOwner());
+			if (ball == null && bD.hasStatusControl(StatusControl.THROW_CLOUDBURST)) {
+				bD.removeStatusControl(StatusControl.THROW_CLOUDBURST);
 			}
+			if (ball != null && ball.getBehavior() instanceof CloudburstBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_CLOUDBURST))) {
+				bD.addStatusControl(StatusControl.THROW_CLOUDBURST);
+			}
+
 		}
 
 	}

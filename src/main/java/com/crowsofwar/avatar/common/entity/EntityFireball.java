@@ -101,7 +101,7 @@ public class EntityFireball extends AvatarEntity {
 			setDead();
 			removeStatCtrl();
 		}
-		
+
 		if (getOwner() != null) {
 			EntityFireball ball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
