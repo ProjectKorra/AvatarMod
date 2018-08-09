@@ -277,9 +277,9 @@ public class EntityCloudBall extends AvatarEntity {
 						Vector vel = position().minus(getEntityPos(entity));
 						vel = vel.normalize().times(mult).plusY(0.15f);
 
-						entity.motionX = vel.x() + distanceTravelled / 10;
+						entity.motionX = vel.x() + distanceTravelled / 50;
 						entity.motionY = vel.y() > 0 ? vel.y() + distanceTravelled / 100 : 0.3F + distanceTravelled / 100;
-						entity.motionZ = vel.z() + distanceTravelled / 10;
+						entity.motionZ = vel.z() + distanceTravelled / 50;
 
 						if (entity instanceof AvatarEntity) {
 							AvatarEntity avent = (AvatarEntity) entity;

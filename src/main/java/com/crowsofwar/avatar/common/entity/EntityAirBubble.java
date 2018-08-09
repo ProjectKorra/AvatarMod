@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -39,6 +40,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -251,7 +253,7 @@ public class EntityAirBubble extends EntityShield {
 		// Hovering is allowed between these two values
 		// Hover distance doesn't need to be EXACT
 		final double minFloatHeight = 1.5;
-		final double maxFloatHeight = 2.4;
+		final double maxFloatHeight = 3;
 
 		EntityLivingBase owner = getOwner();
 
@@ -268,6 +270,10 @@ public class EntityAirBubble extends EntityShield {
 		hitbox = hitbox.expand(0, -maxFloatHeight, 0);
 
 		List<AxisAlignedBB> blockCollisions = world.getCollisionBoxes(null, hitbox);
+
+		BlockPos pos = new BlockPos(getPosition().getX(), getPosition().getY()-maxFloatHeight, getPosition().getZ());
+		BlockPos below = pos.offset(EnumFacing.DOWN);
+		Block belowBlock = world.getBlockState(below).getBlock();
 
 		if (!blockCollisions.isEmpty()) {
 
