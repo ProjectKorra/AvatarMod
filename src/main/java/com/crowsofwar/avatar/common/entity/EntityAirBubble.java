@@ -317,6 +317,11 @@ public class EntityAirBubble extends EntityShield {
 
 
 	@Override
+	public boolean canPush() {
+		return false;
+	}
+
+	@Override
 	protected void onCollideWithEntity(Entity entity) {
 		if (canCollideWith(entity) && entity != getOwner()) {
 

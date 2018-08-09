@@ -337,8 +337,8 @@ public abstract class AvatarEntity extends Entity {
 				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud)) {
 			return true;
 		}
-		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
-				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud) {
+		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem
+				|| entity instanceof EntityAreaEffectCloud) {
 			return false;
 		}
 		if (entity == getOwner()) {
@@ -410,6 +410,16 @@ public abstract class AvatarEntity extends Entity {
 	 */
 	public boolean canPush() {
 		return true;
+	}
+
+	/**
+	 *Returns whether the entity the avatar entity collided with can be damaged- useful for preventing crashes.
+	 * Ex: You can collide with an armour stand, but you can't damage it.
+	 */
+
+	public boolean canDamageEntity(Entity entity) {
+		return canCollideWith(entity) && entity != getOwner() && !(entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
+				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud);
 	}
 
 	/**

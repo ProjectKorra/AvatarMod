@@ -212,10 +212,33 @@ public class ConfigStats {
 
 	);
 
+	@Load
+	public List<String> airBladeBreakableBlockNames = Arrays.asList(
+			"minecraft:stone",
+			"minecraft:sand",
+			"minecraft:sandstone",
+			"minecraft:cobblestone",
+			"minecraft:dirt",
+			"minecraft:gravel",
+			"minecraft:brick_block",
+			"minecraft:mossy_cobblestone",
+			"minecraft:stonebrick",
+			"minecraft:clay",
+			"minecraft:hardened_clay",
+			"minecraft:stained_hardened_clay",
+			"minecraft:coal_ore",
+			"minecraft:iron_ore",
+			"minecraft:red_sandstone",
+			"minecraft:grass",
+			"minecraft:grass_path"
+
+	);
+
 	public List<Block> plantBendableBlocks;
 	public List<Block> waterBendableBlocks;
 	public List<Block> bendableBlocks;
 	public List<Block> sandBlocks;
+	public List<Block> airBladeBreakableBlocks;
 
 	private ConfigStats() {
 	}
@@ -226,6 +249,7 @@ public class ConfigStats {
 
 	public void loadBlocks() {
 		bendableBlocks = STATS_CONFIG.loadBlocksList(bendableBlocksNames);
+		airBladeBreakableBlocks = STATS_CONFIG.loadBlocksList(airBladeBreakableBlockNames);
 		sandBlocks = STATS_CONFIG.loadBlocksList(sandBlocksNames);
 		waterBendableBlocks = STATS_CONFIG.loadBlocksList(waterBendableBlockNames);
 		plantBendableBlocks = STATS_CONFIG.loadBlocksList(plantBendableBlockNames);

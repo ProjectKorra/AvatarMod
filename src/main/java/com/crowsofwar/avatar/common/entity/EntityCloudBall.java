@@ -271,15 +271,15 @@ public class EntityCloudBall extends AvatarEntity {
 
 						damageEntity(entity);
 
-						double mult = abilityData.getLevel() >= 2 ? -2 : -1;
+						double mult = abilityData.getLevel() >= 2 ? -3 : -1.5;
 						double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
 
 						Vector vel = position().minus(getEntityPos(entity));
 						vel = vel.normalize().times(mult).plusY(0.15f);
 
-						entity.motionX = vel.x() + 0.1 / distanceTravelled;
-						entity.motionY = vel.y() > 0 ? vel.y() + 0.1 / distanceTravelled : 0.3F + 0.1 / distanceTravelled;
-						entity.motionZ = vel.z() + 0.1 / distanceTravelled;
+						entity.motionX = vel.x() + distanceTravelled / 10;
+						entity.motionY = vel.y() > 0 ? vel.y() + distanceTravelled / 100 : 0.3F + distanceTravelled / 100;
+						entity.motionZ = vel.z() + distanceTravelled / 10;
 
 						if (entity instanceof AvatarEntity) {
 							AvatarEntity avent = (AvatarEntity) entity;
