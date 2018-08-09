@@ -174,7 +174,7 @@ public class EntityAirblade extends AvatarEntity {
 	 * Assuming the airblade can break blocks, tries to break the block.
 	 */
 	private void tryBreakBlock(IBlockState state, BlockPos pos) {
-		if (state.getBlock() == Blocks.AIR) {
+		if (state.getBlock() == Blocks.AIR || !STATS_CONFIG.airBladeBreakableBlocks.contains(state.getBlock())) {
 			return;
 		}
 
