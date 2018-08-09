@@ -1,6 +1,7 @@
 // For those who want the bleeding edge
 buildscript {
     repositories {
+        mavenCentral()
         jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
@@ -17,6 +18,7 @@ buildscript {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2"
     }
 }
+
 plugins {
     id "org.sonarqube" version "2.2"
     id 'io.franzbecker.gradle-lombok' version '1.14'
@@ -28,6 +30,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
 
+version = config.version
 group = "com.crowsofwar.avatarmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "avatarmod"
 
