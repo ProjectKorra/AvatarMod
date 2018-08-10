@@ -64,11 +64,15 @@ public class AirBurstHandler extends TickHandler {
 			//The negative number doesn't mean it's small- in fact, the smaller the number, the larger the knockback
 			int radius = 6;
 			int durationToFire = 40;
+			double knockbackMax = 12;
+			double knockbackMin = 6;
 
 			if (abilityData.getLevel() == 1) {
 				damage = 0.75 + powerRating;
 				knockBack = -2.5 - powerRating;
 				radius = 8;
+				knockbackMax = 16;
+				knockbackMin = 8;
 			}
 
 			if (abilityData.getLevel() >= 2) {
@@ -76,18 +80,24 @@ public class AirBurstHandler extends TickHandler {
 				knockBack = -3 - powerRating;
 				radius = 12;
 				durationToFire = 50;
+				knockbackMax = 20;
+				knockbackMin = 10;
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				//Piercing Winds
 				damage = 10 + powerRating;
 				radius = 18;
+				knockbackMax = 30;
+				knockbackMin = 16;
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				//Maximum Pressure
 				//Pulls enemies in then blasts them out
 				radius = 16;
+				knockbackMin = 14;
+				knockbackMax = 26;
 				knockBack = -3.5 - powerRating;
 			}
 
@@ -137,13 +147,12 @@ public class AirBurstHandler extends TickHandler {
 							if (i >= 1) {
 								lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
 										j * 4), 0).times(i);
-							}
-							else {
+							} else {
 								lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
 										j * 4), 0);
 							}
 							World.spawnParticle(EnumParticleTypes.CLOUD, lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
-									lookPos.z() + entity.posZ, 2, 0, 0, 0, (double) radius/50);
+									lookPos.z() + entity.posZ, 2, 0, 0, 0, (double) radius / 50);
 						}
 					}
 				}
@@ -156,7 +165,7 @@ public class AirBurstHandler extends TickHandler {
 							e.attackEntityFrom(AvatarDamageSource.causeAirDamage(e, entity), (float) damage);
 							abilityData.addXp(SKILLS_CONFIG.airShockwaveHit);
 							BattlePerformanceScore.addLargeScore(entity);
-							applyKnockback(e, entity, knockBack);
+							applyKnockback(e, entity, knockBack, knockbackMax, knockbackMin);
 						}
 					}
 				}
@@ -183,14 +192,40 @@ public class AirBurstHandler extends TickHandler {
 
 	}
 
-	private void applyKnockback(Entity collided, Entity attacker, double knockBack) {
+	private void applyKnockback(Entity collided, Entity attacker, double knockBack, double knockbackMax, double knockbackMin) {
 		knockBack *= STATS_CONFIG.airShockwaveSettings.push;
-		//Vector vel = attacker.getPositionVector().minus(getEntityPos(collided));
-		//vel = vel.normalize().times(mult).plusY(0.3f);
 
-		double x = (1/(attacker.posX - collided.posX) * knockBack);
-		double y = (1/(attacker.posY - collided.posY) * knockBack) > 0 ? (1/(attacker.posY - collided.posY) * knockBack) : 0.3F;
-		double z = (1/(attacker.posZ - collided.posZ) * knockBack);
+		//Divide the result of the position difference to make entities fly
+		//further the closer they are to the player.
+		double x = (0.5 / (attacker.posX - collided.posX) * knockBack);
+		double y = (0.5 / (attacker.posY - collided.posY) * knockBack) > 0 ? (0.5 / (attacker.posY - collided.posY) * knockBack) : 0.3F;
+		double z = (0.5 / (attacker.posZ - collided.posZ) * knockBack);
+		//These make sure the knockback for the x and y is never great than the maximum. and never
+		//less than the minimum.
+		if (x > 0 && x > knockbackMax) {
+			x = knockbackMax;
+		}
+		if (x > 0 && x < knockbackMin) {
+			x = knockbackMin;
+		}
+		if (x < 0 && x < -knockbackMax) {
+			x = -knockbackMax;
+		}
+		if (x < 0 && x > -knockbackMin) {
+			x = -knockbackMin;
+		}
+		if (z > 0 && z > knockbackMax) {
+			z = knockbackMax;
+		}
+		if (z > 0 && z < knockbackMin) {
+			z = knockbackMin;
+		}
+		if (z < 0 && z < -knockbackMax) {
+			z = -knockbackMax;
+		}
+		if (z < 0 && z > -knockbackMin) {
+			z = -knockbackMin;
+		}
 		collided.motionX += x;
 		collided.motionY += y;
 		collided.motionZ += z;
@@ -208,7 +243,7 @@ public class AirBurstHandler extends TickHandler {
 	@SubscribeEvent
 	public static void onDragonHurt(LivingHurtEvent event) {
 		EntityLivingBase attacker = (EntityLivingBase) event.getSource().getTrueSource();
-		Entity target =  event.getEntity();
+		Entity target = event.getEntity();
 		DamageSource source = event.getSource();
 		if (source.getDamageType().equals("avatar_Air")) {
 			System.out.println("Step 1");
