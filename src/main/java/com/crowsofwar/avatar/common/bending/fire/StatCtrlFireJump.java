@@ -70,7 +70,7 @@ public class StatCtrlFireJump extends StatusControl {
 				damage = 1.5F;
 				speed = 1.5;
 				numberOfParticles = 7;
-				particleSpeed = 1.25;
+				particleSpeed = 0.125;
 			}
 			if (lvl >= 2) {
 				jumpMultiplier = 0.4;
@@ -79,7 +79,7 @@ public class StatCtrlFireJump extends StatusControl {
 				range = 3;
 				damage = 2;
 				numberOfParticles = 10;
-				particleSpeed = 1.5;
+				particleSpeed = 0.15;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				jumpMultiplier = 0.6;
