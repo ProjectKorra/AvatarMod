@@ -43,7 +43,7 @@ public class ConfigStats {
 			fireArcSettings = new AttackSettings(2, 1),   //
 			waterArcSettings = new AttackSettings(1.5F, 1),
 			boulderSettings = new AttackSettings(0.1F, 0.1),
-			airShockwaveSettings = new AttackSettings (0.5F, 1);
+			airBurstSettings = new AttackSettings (0.5F, 1);
 
 	@Load
 	public double wallWaitTime = 10, wallWaitTime2 = 60, wallMomentum = 10;
@@ -70,12 +70,16 @@ public class ConfigStats {
 	@Load
 	public LightningRazeSettings lightningRazeSettings = new LightningRazeSettings();
 
+	@Load
+	public AirBurstSettings AirBurstSettings = new AirBurstSettings();
+
 	// @formatter:off
 	@Load
 	public float chiAirblade = 1f,
 			chiAirGust = 0.5f,
 			chiAirJump = 0.4f,
 			chiAirBubble = 1.5f,
+			chiAirBurst = 4F,
 			chiAirBubbleTakeDamage = 0.25f,
 			chiAirBubbleOneSecond = 0.125f,
 			chiBuff = 2F,
@@ -290,6 +294,21 @@ public class ConfigStats {
 			this.damage = damage;
 			this.push = push;
 		}
+
+	}
+
+	public static class AirBurstSettings {
+
+		@Load
+		public float radius = 6;
+
+		@Load
+		public float knockback = 2;
+		//Multiply by push to get the total knockback
+
+		@Load
+		public int durationToFire = 40;
+		//How long it takes to shoot the air burst, in ticks
 
 	}
 

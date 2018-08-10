@@ -56,12 +56,15 @@ public class AirBurstHandler extends TickHandler {
 
 			float powerRating = (float) (bender.calcPowerRating(Airbending.ID) / 100);
 			int duration = data.getTickHandlerDuration(this);
-			double damage = 0.5 + powerRating;
-			float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
-			double knockBack = 2 + powerRating;
-			//The negative number doesn't mean it's small- in fact, the smaller the number, the larger the knockback
-			int radius = 6;
-			int durationToFire = 40;
+			double damage = STATS_CONFIG.airBurstSettings.damage + powerRating;
+			//0.5
+			float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(40F / duration);
+			double knockBack = STATS_CONFIG.AirBurstSettings.knockback + powerRating;
+			//Default 2 + Power rating
+			float radius = STATS_CONFIG.AirBurstSettings.radius;
+			//Default 6
+			int durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire;
+			//Default 40
 
 			if (abilityData.getLevel() == 1) {
 				damage = 0.75 + powerRating;
@@ -91,7 +94,7 @@ public class AirBurstHandler extends TickHandler {
 			}
 
 			applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
-			double inverseRadius = (durationToFire - duration) / 10;
+			double inverseRadius = ((float) durationToFire - duration) / 10;
 			//gets smaller
 
 
@@ -148,13 +151,14 @@ public class AirBurstHandler extends TickHandler {
 
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius, entity.posY - radius, entity.posZ - radius);
 				List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box, entity1 -> entity1 != entity);
+				float xp = abilityData.getLevel() > 0 ? SKILLS_CONFIG.airBurstHit - abilityData.getLevel() : SKILLS_CONFIG.airBurstHit;
 				if (!collided.isEmpty()) {
 					for (Entity e : collided) {
 						if (e.canBePushed() && e.canBeCollidedWith() && e != entity) {
 							if (canDamageEntity(e)) {
 								e.attackEntityFrom(AvatarDamageSource.causeAirDamage(e, entity), (float) damage);
 							}
-							abilityData.addXp(SKILLS_CONFIG.airShockwaveHit);
+							abilityData.addXp(xp);
 							BattlePerformanceScore.addLargeScore(entity);
 							applyKnockback(e, entity, knockBack);
 						}
@@ -184,7 +188,7 @@ public class AirBurstHandler extends TickHandler {
 	}
 
 	private void applyKnockback(Entity collided, Entity attacker, double knockBack) {
-		knockBack *= STATS_CONFIG.airShockwaveSettings.push;
+		knockBack *= STATS_CONFIG.airBurstSettings.push;
 
 		//Divide the result of the position difference to make entities fly
 		//further the closer they are to the player.
@@ -192,7 +196,7 @@ public class AirBurstHandler extends TickHandler {
 		velocity = velocity.times(knockBack / 7.5);
 
 		double x = (1/velocity.x());
-		double y = (velocity.y()) > 0 ? (velocity.y()) : STATS_CONFIG.airShockwaveSettings.push/3F;
+		double y = (velocity.y()) > 0 ? (velocity.y()) : STATS_CONFIG.airBurstSettings.push/3F;
 		double z = (1/velocity.z());
 
 		if (!collided.world.isRemote) {
