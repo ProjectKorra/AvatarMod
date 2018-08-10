@@ -188,9 +188,9 @@ public class AirBurstHandler extends TickHandler {
 		//Vector vel = attacker.getPositionVector().minus(getEntityPos(collided));
 		//vel = vel.normalize().times(mult).plusY(0.3f);
 
-		double x = ((attacker.posX - collided.posX) * knockBack);
-		double y = ((attacker.posY - collided.posY) * knockBack) > 0 ? ((attacker.posY - collided.posY) * knockBack) : 0.3F;
-		double z = ((attacker.posZ - collided.posZ) * knockBack);
+		double x = (1/(attacker.posX - collided.posX) * knockBack);
+		double y = (1/(attacker.posY - collided.posY) * knockBack) > 0 ? (1/(attacker.posY - collided.posY) * knockBack) : 0.3F;
+		double z = (1/(attacker.posZ - collided.posZ) * knockBack);
 		collided.motionX += x;
 		collided.motionY += y;
 		collided.motionZ += z;
