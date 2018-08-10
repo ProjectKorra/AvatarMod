@@ -62,15 +62,11 @@ public class AirBurstHandler extends TickHandler {
 			//The negative number doesn't mean it's small- in fact, the smaller the number, the larger the knockback
 			int radius = 6;
 			int durationToFire = 40;
-			double knockbackMax = 12;
-			double knockbackMin = 6;
 
 			if (abilityData.getLevel() == 1) {
 				damage = 0.75 + powerRating;
 				knockBack = 2.5 + powerRating;
 				radius = 8;
-				knockbackMax = 16;
-				knockbackMin = 8;
 			}
 
 			if (abilityData.getLevel() >= 2) {
@@ -78,24 +74,19 @@ public class AirBurstHandler extends TickHandler {
 				knockBack = 3 + powerRating;
 				radius = 12;
 				durationToFire = 50;
-				knockbackMax = 20;
-				knockbackMin = 10;
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				//Piercing Winds
-				damage = 10 + powerRating;
+				damage = 5 + powerRating;
 				radius = 18;
-				knockbackMax = 30;
-				knockbackMin = 16;
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				//Maximum Pressure
 				//Pulls enemies in then blasts them out
+				damage = 2.5 + powerRating;
 				radius = 16;
-				knockbackMin = 14;
-				knockbackMax = 26;
 				knockBack = 3.5 + powerRating;
 			}
 
@@ -165,7 +156,7 @@ public class AirBurstHandler extends TickHandler {
 							}
 							abilityData.addXp(SKILLS_CONFIG.airShockwaveHit);
 							BattlePerformanceScore.addLargeScore(entity);
-							applyKnockback(e, entity, knockBack, knockbackMax, knockbackMin);
+							applyKnockback(e, entity, knockBack);
 						}
 					}
 				}
@@ -192,7 +183,7 @@ public class AirBurstHandler extends TickHandler {
 
 	}
 
-	private void applyKnockback(Entity collided, Entity attacker, double knockBack, double knockbackMax, double knockbackMin) {
+	private void applyKnockback(Entity collided, Entity attacker, double knockBack) {
 		knockBack *= STATS_CONFIG.airShockwaveSettings.push;
 
 		//Divide the result of the position difference to make entities fly
@@ -225,7 +216,6 @@ public class AirBurstHandler extends TickHandler {
 		Entity target = event.getEntity();
 		DamageSource source = event.getSource();
 		if (source.getDamageType().equals("avatar_Air")) {
-			System.out.println("Step 1");
 			if (attacker instanceof EntityPlayer || attacker instanceof EntityBender) {
 				Bender ctx = Bender.get(attacker);
 				if (ctx.getData() != null) {
@@ -240,8 +230,17 @@ public class AirBurstHandler extends TickHandler {
 						damage = 1 + powerRating;
 					}
 
+					if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+						//Piercing Winds
+						damage = 5 + powerRating;
+					}
+
+					if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+						//Maximum Pressure
+						//Pulls enemies in then blasts them out
+						damage = 2.5f + powerRating;
+					}
 					event.setAmount(damage);
-					System.out.println(event.getAmount());
 
 
 				}
