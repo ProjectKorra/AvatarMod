@@ -11,11 +11,12 @@ import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
@@ -158,8 +159,10 @@ public class AirBurstHandler extends TickHandler {
 				List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box, entity1 -> entity1 != entity);
 				if (!collided.isEmpty()) {
 					for (Entity e : collided) {
-						if (e.canBePushed() && e.canBeCollidedWith() && e != entity || (e instanceof AvatarEntity && ((AvatarEntity) e).getOwner() != entity)) {
-							e.attackEntityFrom(AvatarDamageSource.causeAirDamage(e, entity), (float) damage);
+						if (e.canBePushed() && e.canBeCollidedWith() && e != entity) {
+							if (canDamageEntity(e)) {
+								e.attackEntityFrom(AvatarDamageSource.causeAirDamage(e, entity), (float) damage);
+							}
 							abilityData.addXp(SKILLS_CONFIG.airShockwaveHit);
 							BattlePerformanceScore.addLargeScore(entity);
 							applyKnockback(e, entity, knockBack, knockbackMax, knockbackMin);
@@ -244,5 +247,16 @@ public class AirBurstHandler extends TickHandler {
 				}
 			}
 		}
+	}
+
+	private boolean canDamageEntity(Entity entity) {
+		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != entity) {
+			return false;
+		}
+		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
+				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud) {
+			return false;
+		}
+		else return entity.canBeCollidedWith() && entity.canBePushed();
 	}
 }
