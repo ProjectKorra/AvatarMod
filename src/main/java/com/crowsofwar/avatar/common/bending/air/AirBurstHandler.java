@@ -12,13 +12,10 @@ import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
@@ -60,7 +57,7 @@ public class AirBurstHandler extends TickHandler {
 			int duration = data.getTickHandlerDuration(this);
 			double damage = 0.5 + powerRating;
 			float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
-			double knockBack = -2 - powerRating;
+			double knockBack = 2 + powerRating;
 			//The negative number doesn't mean it's small- in fact, the smaller the number, the larger the knockback
 			int radius = 6;
 			int durationToFire = 40;
@@ -69,7 +66,7 @@ public class AirBurstHandler extends TickHandler {
 
 			if (abilityData.getLevel() == 1) {
 				damage = 0.75 + powerRating;
-				knockBack = -2.5 - powerRating;
+				knockBack = 2.5 + powerRating;
 				radius = 8;
 				knockbackMax = 16;
 				knockbackMin = 8;
@@ -77,7 +74,7 @@ public class AirBurstHandler extends TickHandler {
 
 			if (abilityData.getLevel() >= 2) {
 				damage = 1 + powerRating;
-				knockBack = -3 - powerRating;
+				knockBack = 3 + powerRating;
 				radius = 12;
 				durationToFire = 50;
 				knockbackMax = 20;
@@ -98,7 +95,7 @@ public class AirBurstHandler extends TickHandler {
 				radius = 16;
 				knockbackMin = 14;
 				knockbackMax = 26;
-				knockBack = -3.5 - powerRating;
+				knockBack = 3.5 + powerRating;
 			}
 
 			applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
@@ -197,10 +194,12 @@ public class AirBurstHandler extends TickHandler {
 
 		//Divide the result of the position difference to make entities fly
 		//further the closer they are to the player.
-		double x = (0.5 / (attacker.posX - collided.posX) * knockBack);
-		double y = (0.5 / (attacker.posY - collided.posY) * knockBack) > 0 ? (0.5 / (attacker.posY - collided.posY) * knockBack) : 0.3F;
-		double z = (0.5 / (attacker.posZ - collided.posZ) * knockBack);
-		//These make sure the knockback for the x and y is never great than the maximum. and never
+		Vector velocity = Vector.getEntityPos(collided).minus(Vector.getEntityPos(attacker));
+
+		double x = (velocity.x() * knockBack);
+		double y = (velocity.y() * knockBack) > 0 ? (velocity.y() * knockBack) : STATS_CONFIG.airShockwaveSettings.push/3F;
+		double z = (velocity.z() * knockBack);
+		//These make sure the knockback for the x and y is never greater than the maximum. and never
 		//less than the minimum.
 		if (x > 0 && x > knockbackMax) {
 			x = knockbackMax;
@@ -226,16 +225,19 @@ public class AirBurstHandler extends TickHandler {
 		if (z < 0 && z > -knockbackMin) {
 			z = -knockbackMin;
 		}
-		collided.motionX += x;
-		collided.motionY += y;
-		collided.motionZ += z;
-		if (collided instanceof AvatarEntity) {
-			if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
-				AvatarEntity avent = (AvatarEntity) collided;
-				avent.addVelocity(x, y, z);
+		if (!collided.world.isRemote) {
+			collided.motionX += x;
+			collided.motionY += y;
+			collided.motionZ += z;
+
+			if (collided instanceof AvatarEntity) {
+				if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+					AvatarEntity avent = (AvatarEntity) collided;
+					avent.addVelocity(x, y, z);
+				}
+				collided.isAirBorne = true;
+				AvatarUtils.afterVelocityAdded(collided);
 			}
-			collided.isAirBorne = true;
-			AvatarUtils.afterVelocityAdded(collided);
 		}
 
 	}
