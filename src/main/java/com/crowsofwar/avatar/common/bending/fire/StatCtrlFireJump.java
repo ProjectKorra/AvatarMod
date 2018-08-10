@@ -195,7 +195,7 @@ public class StatCtrlFireJump extends StatusControl {
 					World.spawnParticle(EnumParticleTypes.FLAME, lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
 							lookPos.z() + entity.posZ, numberOfParticles, 0, 0, 0, particleSpeed / 4);
 				}
-				i = i + range;
+				i += range/10;
 			}
 		}
 
