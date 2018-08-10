@@ -195,13 +195,14 @@ public class AirBurstHandler extends TickHandler {
 		//Divide the result of the position difference to make entities fly
 		//further the closer they are to the player.
 		Vector velocity = Vector.getEntityPos(collided).minus(Vector.getEntityPos(attacker));
+		velocity = velocity.times(knockBack / 10);
 
-		double x = (velocity.x() * knockBack);
-		double y = (velocity.y() * knockBack) > 0 ? (velocity.y() * knockBack) : STATS_CONFIG.airShockwaveSettings.push/3F;
-		double z = (velocity.z() * knockBack);
+		double x = (0.5/velocity.x());
+		double y = (0.5/velocity.y()) > 0 ? (0.5/velocity.y()) : STATS_CONFIG.airShockwaveSettings.push/3F;
+		double z = (0.5/velocity.z());
 		//These make sure the knockback for the x and y is never greater than the maximum. and never
 		//less than the minimum.
-		if (x > 0 && x > knockbackMax) {
+		/*if (x > 0 && x > knockbackMax) {
 			x = knockbackMax;
 		}
 		if (x > 0 && x < knockbackMin) {
@@ -224,11 +225,9 @@ public class AirBurstHandler extends TickHandler {
 		}
 		if (z < 0 && z > -knockbackMin) {
 			z = -knockbackMin;
-		}
+		}**/
 		if (!collided.world.isRemote) {
-			collided.motionX += x;
-			collided.motionY += y;
-			collided.motionZ += z;
+			collided.addVelocity(velocity.x(), velocity.y(), velocity.z());
 
 			if (collided instanceof AvatarEntity) {
 				if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {

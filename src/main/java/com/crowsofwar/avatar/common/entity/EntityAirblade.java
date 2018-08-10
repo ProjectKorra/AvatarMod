@@ -67,7 +67,10 @@ public class EntityAirblade extends AvatarEntity {
 
 		super.onUpdate();
 
-		setVelocity(velocity().times(0.96));
+		this.motionX = this.motionX * 0.99;
+		this.motionY = this.motionY * 0.99;
+		this.motionZ = this.motionZ * 0.99;
+
 		if (!world.isRemote && velocity().sqrMagnitude() <= .9) {
 			setDead();
 		}
@@ -75,7 +78,7 @@ public class EntityAirblade extends AvatarEntity {
 			setDead();
 		}
 
-		if (!world.isRemote && chopBlocksThreshold >= 0) {
+		if (!world.isRemote && chopBlocksThreshold >= 0 && this.collidedHorizontally) {
 				breakCollidingBlocks();
 
 		}
@@ -175,6 +178,9 @@ public class EntityAirblade extends AvatarEntity {
 	 */
 	private void tryBreakBlock(IBlockState state, BlockPos pos) {
 		if (state.getBlock() == Blocks.AIR || !STATS_CONFIG.airBladeBreakableBlocks.contains(state.getBlock())) {
+			return;
+		}
+		if (!this.collidedHorizontally) {
 			return;
 		}
 
