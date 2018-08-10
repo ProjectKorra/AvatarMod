@@ -61,12 +61,16 @@ public class StatCtrlFireJump extends StatusControl {
 			double range = 2;
 			double speed = 1;
 			float damage = 1;
+			int numberOfParticles = 5;
+			double particleSpeed = 0.1;
 			if (lvl >= 1) {
 				jumpMultiplier = 0.3;
 				fallAbsorption = 4;
 				range = 2.5;
 				damage = 1.5F;
 				speed = 1.5;
+				numberOfParticles = 7;
+				particleSpeed = 1.25;
 			}
 			if (lvl >= 2) {
 				jumpMultiplier = 0.4;
@@ -74,6 +78,8 @@ public class StatCtrlFireJump extends StatusControl {
 				speed = 2;
 				range = 3;
 				damage = 2;
+				numberOfParticles = 10;
+				particleSpeed = 1.5;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				jumpMultiplier = 0.6;
@@ -81,6 +87,8 @@ public class StatCtrlFireJump extends StatusControl {
 				speed = 4;
 				range = 5;
 				damage = 3;
+				numberOfParticles = 12;
+				particleSpeed = 0.175;
 
 			}
 
@@ -139,7 +147,7 @@ public class StatCtrlFireJump extends StatusControl {
 				((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 			}
 
-			damageNearbyEntities(ctx, range, speed, damage);
+			damageNearbyEntities(ctx, range, speed, damage, numberOfParticles, particleSpeed);
 
 			ParticleSpawner spawner = new NetworkParticleSpawner();
 			spawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 15, 20,
@@ -162,22 +170,32 @@ public class StatCtrlFireJump extends StatusControl {
 
 	}
 
-	private void damageNearbyEntities(BendingContext ctx, double range, double speed, float damage) {
+	private void damageNearbyEntities(BendingContext ctx, double range, double speed, float damage, int numberOfParticles, double particleSpeed) {
 
 		EntityLivingBase entity = ctx.getBenderEntity();
 
 		World world = entity.world;
-		AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.posY - range,
-				entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range);
+		AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.getEntityBoundingBox().minY,
+				entity.posZ - range, entity.posX + range, entity.posY + entity.getEyeHeight(), entity.posZ + range);
+
 
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
-			for (int degree = 0; degree < 360; degree++) {
-				double radians = Math.toRadians(degree);
-				double x =  Math.cos(radians) * range;
-				double z = Math.sin(radians) * range;
-				double y = entity.posY;
-				World.spawnParticle(EnumParticleTypes.FLAME, x + entity.posX, y, z + entity.posZ, 10, 0, 0, 0, 0.03);
+			for (double i = 0; i < range;){
+				for (int j = 0; j < 90; j++) {
+					Vector lookPos;
+					if (i >= 1) {
+						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+								j * 4), 0).times(i);
+					}
+					else {
+						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+								j * 4), 0);
+					}
+					World.spawnParticle(EnumParticleTypes.FLAME, lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
+							lookPos.z() + entity.posZ, numberOfParticles, 0, 0, 0, particleSpeed / 4);
+				}
+				i = i + range;
 			}
 		}
 

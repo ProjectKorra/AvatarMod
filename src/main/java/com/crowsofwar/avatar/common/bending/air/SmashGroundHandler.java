@@ -57,7 +57,7 @@ public class SmashGroundHandler extends TickHandler {
 
 				if (!world.isRemote) {
 					WorldServer World = (WorldServer) world;
-					for (double i = 0; i < getRange();){
+					for (double i = 0; i < range;){
 						for (int j = 0; j < 90; j++) {
 							Vector lookPos;
 							if (i >= 1) {
@@ -71,7 +71,7 @@ public class SmashGroundHandler extends TickHandler {
 							World.spawnParticle(getParticle(), lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
 									lookPos.z() + entity.posZ, getNumberOfParticles(), 0, 0, 0, getParticleSpeed() / 4);
 						}
-						i = i + getRange()/10;
+						i = i + range/10;
 					}
 				}
 				entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), getSoundCategory(), 4F, 0.5F);
@@ -122,7 +122,7 @@ public class SmashGroundHandler extends TickHandler {
 	}
 
 	protected SoundEvent getSound() {
-		return SoundEvents.ENTITY_FIREWORK_LAUNCH;
+		return SoundEvents.BLOCK_FIRE_EXTINGUISH;
 	}
 
 	protected SoundCategory getSoundCategory() {
