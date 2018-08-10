@@ -132,13 +132,18 @@ public class AirBurstHandler extends TickHandler {
 					}//Creates a sphere. Courtesy of Project Korra's Air Burst!
 
 					for (int i = 0; i < radius;) {
-						for (int degree = 0; degree < 360; degree++) {
-							double radians = Math.toRadians(degree);
-							double x1 = Math.cos(radians) * i;
-							double z1 = Math.sin(radians) * i;
-							double y1 = entity.getEntityBoundingBox().minY + entity.getEyeHeight() / 2;
-							World.spawnParticle(EnumParticleTypes.CLOUD, x1 + entity.posX, y1,
-									z1 + entity.posZ, 1, 0, 0, 0, (double) radius / 100);
+						for (int j = 0; j < 90; j++) {
+							Vector lookPos;
+							if (i >= 1) {
+								lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+										j * 4), 0).times(i);
+							}
+							else {
+								lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+										j * 4), 0);
+							}
+							World.spawnParticle(EnumParticleTypes.CLOUD, lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
+									lookPos.z() + entity.posZ, 2, 0, 0, 0, 0.025);
 						}
 						i += 2;
 					}
