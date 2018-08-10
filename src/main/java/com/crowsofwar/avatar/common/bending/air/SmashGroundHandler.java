@@ -98,8 +98,8 @@ public class SmashGroundHandler extends TickHandler {
 		}
 
 		Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
-		velocity = velocity.withY(getKnockbackHeight()).times(getSpeed() / 20);
-		target.addVelocity(velocity.x(), velocity.y(), velocity.z());
+		velocity = velocity.withY(getKnockbackHeight()).times(getSpeed() / 10);
+		target.addVelocity(1/velocity.x(), velocity.y(), 1/velocity.z());
 	}
 
 	protected double getRange() {
