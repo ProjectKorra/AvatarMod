@@ -15,8 +15,8 @@ public class WaterSmashHandler extends SmashGroundHandler {
 	}
 
 	@Override
-	protected double getRange() {
-		return 3;
+	protected int getNumberOfParticles() {
+		return 10;
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class WaterSmashHandler extends SmashGroundHandler {
 
 	@Override
 	protected EnumParticleTypes getParticle() {
-		return EnumParticleTypes.WATER_WAKE;
+		return EnumParticleTypes.WATER_SPLASH;
 	}
 
 	@Override

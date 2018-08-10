@@ -51,18 +51,27 @@ public class SmashGroundHandler extends TickHandler {
 				double range = getRange();
 
 				World world = entity.world;
-				AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.posY - range,
-						entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range);
+				AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.getEntityBoundingBox().minY,
+						entity.posZ - range, entity.posX + range, entity.posY + entity.getEyeHeight(), entity.posZ + range);
 
 
 				if (!world.isRemote) {
 					WorldServer World = (WorldServer) world;
-						for (int degree = 0; degree < 360; degree++) {
-							double radians = Math.toRadians(degree);
-							double x = Math.cos(radians) * getRange();
-							double z = Math.sin(radians) * getRange();
-							World.spawnParticle(getParticle(), x + entity.posX, entity.posY,
-									z + entity.posZ, 5, 0, 0, 0, getParticleSpeed() / 4);
+					for (double i = 0; i < getRange();){
+						for (int j = 0; j < 90; j++) {
+							Vector lookPos;
+							if (i >= 1) {
+								lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+										j * 4), 0).times(i);
+							}
+							else {
+								lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+										j * 4), 0);
+							}
+							World.spawnParticle(getParticle(), lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
+									lookPos.z() + entity.posZ, getNumberOfParticles(), 0, 0, 0, getParticleSpeed() / 4);
+						}
+						i = i + getRange()/10;
 					}
 				}
 				entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), getSoundCategory(), 4F, 0.5F);
@@ -118,6 +127,10 @@ public class SmashGroundHandler extends TickHandler {
 
 	protected SoundCategory getSoundCategory() {
 		return SoundCategory.BLOCKS;
+	}
+
+	protected int getNumberOfParticles() {
+		return 2;
 	}
 
 	protected float getParticleSpeed() {

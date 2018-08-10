@@ -47,6 +47,11 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 	}
 
 	@Override
+	protected int getNumberOfParticles() {
+		return 15;
+	}
+
+	@Override
 	protected EnumParticleTypes getParticle() {
 		return EnumParticleTypes.FLAME;
 	}
