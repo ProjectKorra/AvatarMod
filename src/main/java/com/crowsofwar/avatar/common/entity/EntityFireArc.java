@@ -84,16 +84,16 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	@Override
 	public boolean onMajorWaterContact() {
 		spawnExtinguishIndicators();
-		setDead();
 		cleanup();
+		setDead();
 		return true;
 	}
 
 	@Override
 	public boolean onMinorWaterContact() {
 		spawnExtinguishIndicators();
-		setDead();
 		cleanup();
+		setDead();
 		return true;
 	}
 
@@ -134,6 +134,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 				}
 			}
 
+			cleanup();
 			setDead();
 
 		}
