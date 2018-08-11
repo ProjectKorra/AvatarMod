@@ -214,7 +214,7 @@ public class StatCtrlFireJump extends StatusControl {
 
 				Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
 				double distance = Vector.getEntityPos(target).dist(Vector.getEntityPos(entity));
-				double direction = (range - distance) * (speed / 7.5) / range;
+				double direction = (range - distance) * (speed / 5) / range;
 				velocity = velocity.times(direction).withY(0.3);
 				target.addVelocity(velocity.x(), velocity.y(), velocity.z());
 
