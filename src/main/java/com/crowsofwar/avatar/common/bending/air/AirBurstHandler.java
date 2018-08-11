@@ -65,7 +65,8 @@ public class AirBurstHandler extends TickHandler {
 			//Default 3
 			float durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire - (powerRating * 10);
 			//Default 40
-			double upwardKnockback = STATS_CONFIG.airBurstSettings.push/5;
+			double upwardKnockback = STATS_CONFIG.airBurstSettings.push/7;
+			float knockbackDivider = 1.2F;
 
 			if (abilityData.getLevel() == 1) {
 				damage = (STATS_CONFIG.airBurstSettings.damage * (3F / 2)) + powerRating;
@@ -75,7 +76,8 @@ public class AirBurstHandler extends TickHandler {
 				//4
 				durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire * 0.75F;
 				//30
-				upwardKnockback = STATS_CONFIG.airBurstSettings.push/4;
+				upwardKnockback = STATS_CONFIG.airBurstSettings.push/5;
+				knockbackDivider = 1.5F;
 			}
 
 			if (abilityData.getLevel() >= 2) {
@@ -87,11 +89,13 @@ public class AirBurstHandler extends TickHandler {
 				durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire * 0.5F;
 				//20
 				upwardKnockback = STATS_CONFIG.airBurstSettings.push/3;
+				knockbackDivider = 2;
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				//Piercing Winds
 				damage = 3 + powerRating;
+
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
@@ -100,7 +104,8 @@ public class AirBurstHandler extends TickHandler {
 				damage = 1.5 + powerRating;
 				radius = (STATS_CONFIG.AirBurstSettings.radius * 7/3) + powerRating;
 				//7
-				upwardKnockback = STATS_CONFIG.airBurstSettings.push/2.5;
+				upwardKnockback = STATS_CONFIG.airBurstSettings.push/2.5F;
+				knockbackDivider = 1.5F;
 			}
 
 			applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
@@ -170,7 +175,7 @@ public class AirBurstHandler extends TickHandler {
 							}
 							abilityData.addXp(xp);
 							BattlePerformanceScore.addLargeScore(entity);
-							applyKnockback(e, entity, knockBack, radius, upwardKnockback);
+							applyKnockback(e, entity, knockBack, radius, upwardKnockback, knockbackDivider);
 						}
 					}
 				}
@@ -197,14 +202,14 @@ public class AirBurstHandler extends TickHandler {
 
 	}
 
-	private void applyKnockback(Entity collided, Entity attacker, double knockBack, float radius, double upwardKnockback) {
+	private void applyKnockback(Entity collided, Entity attacker, double knockBack, float radius, double upwardKnockback, float knockbackDivider) {
 		knockBack *= STATS_CONFIG.airBurstSettings.push;
 
 		//Divide the result of the position difference to make entities fly
 		//further the closer they are to the player.
 		Vector velocity = Vector.getEntityPos(collided).minus(Vector.getEntityPos(attacker));
 		double distance = Vector.getEntityPos(collided).dist(Vector.getEntityPos(attacker));
-		double direction = (radius-distance) * (knockBack / 4) /radius;
+		double direction = (radius-distance) * (knockBack / knockbackDivider) /radius;
 		velocity = velocity.times(direction).withY(upwardKnockback);
 
 		double x = (velocity.x());
