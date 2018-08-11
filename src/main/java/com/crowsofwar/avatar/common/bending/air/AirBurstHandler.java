@@ -65,7 +65,7 @@ public class AirBurstHandler extends TickHandler {
 			//Default 3
 			float durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire - (powerRating * 10);
 			//Default 40
-			float knockbackDivider = (float) STATS_CONFIG.airBurstSettings.push/4;
+			double upwardKnockback = STATS_CONFIG.airBurstSettings.push/5;
 
 			if (abilityData.getLevel() == 1) {
 				damage = (STATS_CONFIG.airBurstSettings.damage * (3F / 2)) + powerRating;
@@ -75,6 +75,7 @@ public class AirBurstHandler extends TickHandler {
 				//4
 				durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire * 0.75F;
 				//30
+				upwardKnockback = STATS_CONFIG.airBurstSettings.push/4;
 			}
 
 			if (abilityData.getLevel() >= 2) {
@@ -85,6 +86,7 @@ public class AirBurstHandler extends TickHandler {
 				//5
 				durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire * 0.5F;
 				//20
+				upwardKnockback = STATS_CONFIG.airBurstSettings.push/3;
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
@@ -98,6 +100,7 @@ public class AirBurstHandler extends TickHandler {
 				damage = 1.5 + powerRating;
 				radius = (STATS_CONFIG.AirBurstSettings.radius * 7/3) + powerRating;
 				//7
+				upwardKnockback = STATS_CONFIG.airBurstSettings.push/2.5;
 			}
 
 			applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
@@ -167,7 +170,7 @@ public class AirBurstHandler extends TickHandler {
 							}
 							abilityData.addXp(xp);
 							BattlePerformanceScore.addLargeScore(entity);
-							applyKnockback(e, entity, knockBack);
+							applyKnockback(e, entity, knockBack, radius, upwardKnockback);
 						}
 					}
 				}
@@ -194,17 +197,19 @@ public class AirBurstHandler extends TickHandler {
 
 	}
 
-	private void applyKnockback(Entity collided, Entity attacker, double knockBack) {
+	private void applyKnockback(Entity collided, Entity attacker, double knockBack, float radius, double upwardKnockback) {
 		knockBack *= STATS_CONFIG.airBurstSettings.push;
 
 		//Divide the result of the position difference to make entities fly
 		//further the closer they are to the player.
 		Vector velocity = Vector.getEntityPos(collided).minus(Vector.getEntityPos(attacker));
-		velocity = velocity.times(knockBack / 7.5);
+		double distance = Vector.getEntityPos(collided).dist(Vector.getEntityPos(attacker));
+		double direction = (radius-distance) * (knockBack / 4) /radius;
+		velocity = velocity.times(direction).withY(upwardKnockback);
 
-		double x = (0.25/velocity.x());
-		double y = (velocity.y()) > 0 ? (velocity.y()) : STATS_CONFIG.airBurstSettings.push/3F;
-		double z = (0.25/velocity.z());
+		double x = (velocity.x());
+		double y = (velocity.y());
+		double z = (velocity.z());
 
 		if (!collided.world.isRemote) {
 			collided.addVelocity(x, y, z);
