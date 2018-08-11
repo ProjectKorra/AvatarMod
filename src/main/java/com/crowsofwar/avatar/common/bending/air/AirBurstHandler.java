@@ -58,39 +58,46 @@ public class AirBurstHandler extends TickHandler {
 			int duration = data.getTickHandlerDuration(this);
 			double damage = STATS_CONFIG.airBurstSettings.damage + powerRating;
 			//0.5
-			float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(40F / duration);
+			float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40F);
 			double knockBack = STATS_CONFIG.AirBurstSettings.knockback + powerRating;
 			//Default 2 + Power rating
-			float radius = STATS_CONFIG.AirBurstSettings.radius;
-			//Default 6
-			int durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire;
+			float radius = STATS_CONFIG.AirBurstSettings.radius + powerRating;
+			//Default 3
+			float durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire - (powerRating * 10);
 			//Default 40
+			float knockbackDivider = (float) STATS_CONFIG.airBurstSettings.push/4;
 
 			if (abilityData.getLevel() == 1) {
-				damage = 0.75 + powerRating;
-				knockBack = 2.5 + powerRating;
-				radius = 8;
+				damage = (STATS_CONFIG.airBurstSettings.damage * (3F / 2)) + powerRating;
+				//0.75
+				knockBack = 3 + powerRating;
+				radius = (STATS_CONFIG.AirBurstSettings.radius * 4/3) + powerRating;
+				//4
+				durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire * 0.75F;
+				//30
 			}
 
 			if (abilityData.getLevel() >= 2) {
-				damage = 1 + powerRating;
-				knockBack = 3 + powerRating;
-				radius = 12;
-				durationToFire = 50;
+				damage = (STATS_CONFIG.airBurstSettings.damage * 2) + powerRating;
+				//1
+				knockBack = 5 + powerRating;
+				radius = (STATS_CONFIG.AirBurstSettings.radius * 5/3) + powerRating;
+				//5
+				durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire * 0.5F;
+				//20
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				//Piercing Winds
-				damage = 5 + powerRating;
-				radius = 18;
+				damage = 3 + powerRating;
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				//Maximum Pressure
 				//Pulls enemies in then blasts them out
-				damage = 2.5 + powerRating;
-				radius = 16;
-				knockBack = 3.5 + powerRating;
+				damage = 1.5 + powerRating;
+				radius = (STATS_CONFIG.AirBurstSettings.radius * 7/3) + powerRating;
+				//7
 			}
 
 			applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
@@ -127,7 +134,7 @@ public class AirBurstHandler extends TickHandler {
 							z = radius * Math.cos(rtheta);
 							//Decrease radius so you can use particle speed
 
-							World.spawnParticle(EnumParticleTypes.CLOUD, x + entity.posX, y + entity.getEntityBoundingBox().minY + entity.getEyeHeight(),
+							World.spawnParticle(EnumParticleTypes.CLOUD, x + entity.posX, y + entity.getEntityBoundingBox().minY,
 									z + entity.posZ, 1, 0, 0, 0, (double) radius / 100);
 
 						}
@@ -195,9 +202,9 @@ public class AirBurstHandler extends TickHandler {
 		Vector velocity = Vector.getEntityPos(collided).minus(Vector.getEntityPos(attacker));
 		velocity = velocity.times(knockBack / 7.5);
 
-		double x = (1/velocity.x());
+		double x = (0.25/velocity.x());
 		double y = (velocity.y()) > 0 ? (velocity.y()) : STATS_CONFIG.airBurstSettings.push/3F;
-		double z = (1/velocity.z());
+		double z = (0.25/velocity.z());
 
 		if (!collided.world.isRemote) {
 			collided.addVelocity(x, y, z);

@@ -300,14 +300,14 @@ public class ConfigStats {
 	public static class AirBurstSettings {
 
 		@Load
-		public float radius = 6;
+		public float radius = 3;
 
 		@Load
 		public float knockback = 2;
 		//Multiply by push to get the total knockback
 
 		@Load
-		public int durationToFire = 40;
+		public float durationToFire = 40;
 		//How long it takes to shoot the air burst, in ticks
 
 	}
