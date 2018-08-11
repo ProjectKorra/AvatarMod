@@ -115,11 +115,11 @@ public class EntityAirBubble extends EntityShield {
 			this.posX = getOwner().posX;
 			this.posY = getOwner().getEntityBoundingBox().minY;
 			this.posZ = getOwner().posZ;
-			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
 			this.motionX = 0;
 			this.motionY = 0;
 			this.motionZ = 0;
-			this.world.updateEntityWithOptionalForce(this, false);
+			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+		//	this.world.updateEntityWithOptionalForce(this, false);
 		}
 	}
 
@@ -141,8 +141,8 @@ public class EntityAirBubble extends EntityShield {
 
 		if (putsOutFires) {
 			setFire(0);
-			for (int x = 0; x <= 2; x++) {
-				for (int z = 0; z <= 2; z++) {
+			for (int x = 0; x <= 1; x++) {
+				for (int z = 0; z <= 1; z++) {
 					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
 					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
 						world.setBlockToAir(pos);
@@ -151,8 +151,8 @@ public class EntityAirBubble extends EntityShield {
 					}
 				}
 			}
-			for (int x = 0; x >= -2; x--) {
-				for (int z = 0; z >= -2; z--) {
+			for (int x = 0; x >= -1; x--) {
+				for (int z = 0; z >= -1; z--) {
 					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
 					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
 						world.setBlockToAir(pos);

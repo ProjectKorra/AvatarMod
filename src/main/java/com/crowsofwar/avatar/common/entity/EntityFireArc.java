@@ -85,6 +85,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	public boolean onMajorWaterContact() {
 		spawnExtinguishIndicators();
 		setDead();
+		cleanup();
 		return true;
 	}
 
@@ -92,6 +93,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	public boolean onMinorWaterContact() {
 		spawnExtinguishIndicators();
 		setDead();
+		cleanup();
 		return true;
 	}
 
@@ -99,21 +101,12 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(StatusControl.THROW_FIRE);
-			if (!world.isRemote) {
-				data.removeStatusControl(StatusControl.THROW_FIRE);
-			}
 		}
 	}
 
 	@Override
-	public void setDead() {
-		super.setDead();
-		cleanup();
-	}
-
-	@Override
 	protected void onCollideWithEntity(Entity entity) {
-		if (entity instanceof AvatarEntity && getBehavior() instanceof FireArcBehavior.Thrown) {
+		if (entity instanceof AvatarEntity && this.getBehavior() instanceof FireArcBehavior.Thrown) {
 			((AvatarEntity) entity).onFireContact();
 		}
 	}

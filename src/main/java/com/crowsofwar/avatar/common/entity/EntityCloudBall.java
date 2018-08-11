@@ -81,11 +81,6 @@ public class EntityCloudBall extends AvatarEntity {
 		dataManager.register(SYNC_SIZE, 30);
 	}
 
-	@Override
-	public void setDead() {
-		super.setDead();
-		removeStatCtrl();
-	}
 
 	@Override
 	public void onUpdate() {

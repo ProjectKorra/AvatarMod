@@ -303,7 +303,9 @@ public abstract class AvatarEntity extends Entity {
 
 				for (Entity aList : list) {
 					if (!aList.isRiding()) {
-						++j;
+						if (canDamageEntity(aList)) {
+							++j;
+						}
 					}
 				}
 
@@ -417,9 +419,14 @@ public abstract class AvatarEntity extends Entity {
 	 * Ex: You can collide with an armour stand, but you can't damage it.
 	 */
 
-	public boolean canDamageEntity(Entity entity) {
-		return canCollideWith(entity) && entity != getOwner() && !(entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
-				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud);
+	private boolean canDamageEntity(Entity entity) {
+		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != entity) {
+			return false;
+		}
+		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
+				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud) {
+			return false;
+		} else return entity.canBeCollidedWith() && entity.canBePushed();
 	}
 
 	/**

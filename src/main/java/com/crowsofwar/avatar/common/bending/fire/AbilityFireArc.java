@@ -54,9 +54,6 @@ public class AbilityFireArc extends Ability {
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
 
-		if (data.hasStatusControl(StatusControl.THROW_FIRE)) {
-			return;
-		}
 
 		if (bender.consumeChi(STATS_CONFIG.chiFireArc)) {
 

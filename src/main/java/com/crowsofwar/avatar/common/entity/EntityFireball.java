@@ -93,12 +93,6 @@ public class EntityFireball extends AvatarEntity {
 	}
 
 	@Override
-	public void setDead() {
-		super.setDead();
-		removeStatCtrl();
-	}
-
-	@Override
 	public void onUpdate() {
 
 		super.onUpdate();
@@ -139,6 +133,7 @@ public class EntityFireball extends AvatarEntity {
 			removeStatCtrl();
 		}
 		setDead();
+		removeStatCtrl();
 		return true;
 	}
 

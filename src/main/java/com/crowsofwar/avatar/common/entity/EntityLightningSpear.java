@@ -88,12 +88,6 @@ public class EntityLightningSpear extends AvatarEntity {
 	}
 
 	@Override
-	public void setDead() {
-		super.setDead();
-		removeStatCtrl();
-	}
-
-	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
