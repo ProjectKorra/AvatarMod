@@ -57,21 +57,20 @@ public class SmashGroundHandler extends TickHandler {
 
 				if (!world.isRemote) {
 					WorldServer World = (WorldServer) world;
-					for (double i = 0; i < range;){
+					for (double i = 0; i < range; ) {
 						for (int j = 0; j < 90; j++) {
 							Vector lookPos;
 							if (i >= 1) {
 								lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
 										j * 4), 0).times(i);
-							}
-							else {
+							} else {
 								lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
 										j * 4), 0);
 							}
 							World.spawnParticle(getParticle(), lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
 									lookPos.z() + entity.posZ, getNumberOfParticles(), 0, 0, 0, getParticleSpeed() / 4);
 						}
-						i = i + range/10;
+						i = i + range / 10;
 					}
 				}
 				entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), getSoundCategory(), 4F, 0.5F);
@@ -99,8 +98,8 @@ public class SmashGroundHandler extends TickHandler {
 
 		Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
 		double distance = Vector.getEntityPos(target).dist(Vector.getEntityPos(entity));
-		double direction = (getRange()-distance) * (getSpeed() / 5) /getRange();
-		velocity = velocity.times(direction).withY(getKnockbackHeight()/4);
+		double direction = (getRange() - distance) * (getSpeed() / 5) / getRange();
+		velocity = velocity.times(direction).withY(getKnockbackHeight() / 4);
 		target.addVelocity(velocity.x(), velocity.y(), velocity.z());
 	}
 

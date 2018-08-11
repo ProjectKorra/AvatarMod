@@ -65,18 +65,18 @@ public class AirBurstHandler extends TickHandler {
 			//Default 3
 			float durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire - (powerRating * 10);
 			//Default 40
-			double upwardKnockback = STATS_CONFIG.airBurstSettings.push/7;
+			double upwardKnockback = STATS_CONFIG.airBurstSettings.push / 7;
 			float knockbackDivider = 1.2F;
 
 			if (abilityData.getLevel() == 1) {
 				damage = (STATS_CONFIG.airBurstSettings.damage * (3F / 2)) + powerRating;
 				//0.75
 				knockBack = 3 + powerRating;
-				radius = (STATS_CONFIG.AirBurstSettings.radius * 4/3) + powerRating;
+				radius = (STATS_CONFIG.AirBurstSettings.radius * 4 / 3) + powerRating;
 				//4
 				durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire * 0.75F;
 				//30
-				upwardKnockback = STATS_CONFIG.airBurstSettings.push/5;
+				upwardKnockback = STATS_CONFIG.airBurstSettings.push / 5;
 				knockbackDivider = 1.5F;
 			}
 
@@ -84,11 +84,11 @@ public class AirBurstHandler extends TickHandler {
 				damage = (STATS_CONFIG.airBurstSettings.damage * 2) + powerRating;
 				//1
 				knockBack = 5 + powerRating;
-				radius = (STATS_CONFIG.AirBurstSettings.radius * 5/3) + powerRating;
+				radius = (STATS_CONFIG.AirBurstSettings.radius * 5 / 3) + powerRating;
 				//5
 				durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire * 0.5F;
 				//20
-				upwardKnockback = STATS_CONFIG.airBurstSettings.push/3;
+				upwardKnockback = STATS_CONFIG.airBurstSettings.push / 3;
 				knockbackDivider = 2;
 			}
 
@@ -102,9 +102,9 @@ public class AirBurstHandler extends TickHandler {
 				//Maximum Pressure
 				//Pulls enemies in then blasts them out
 				damage = 1.5 + powerRating;
-				radius = (STATS_CONFIG.AirBurstSettings.radius * 7/3) + powerRating;
+				radius = (STATS_CONFIG.AirBurstSettings.radius * 7 / 3) + powerRating;
 				//7
-				upwardKnockback = STATS_CONFIG.airBurstSettings.push/2.5F;
+				upwardKnockback = STATS_CONFIG.airBurstSettings.push / 2.5F;
 				knockbackDivider = 1.5F;
 			}
 
@@ -209,7 +209,7 @@ public class AirBurstHandler extends TickHandler {
 		//further the closer they are to the player.
 		Vector velocity = Vector.getEntityPos(collided).minus(Vector.getEntityPos(attacker));
 		double distance = Vector.getEntityPos(collided).dist(Vector.getEntityPos(attacker));
-		double direction = (radius-distance) * (knockBack / knockbackDivider) /radius;
+		double direction = (radius - distance) * (knockBack / knockbackDivider) / radius;
 		velocity = velocity.times(direction).withY(upwardKnockback);
 
 		double x = (velocity.x());
@@ -276,7 +276,6 @@ public class AirBurstHandler extends TickHandler {
 		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
 				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud) {
 			return false;
-		}
-		else return entity.canBeCollidedWith() && entity.canBePushed();
+		} else return entity.canBeCollidedWith() && entity.canBePushed();
 	}
 }
