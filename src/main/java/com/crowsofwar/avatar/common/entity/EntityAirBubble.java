@@ -119,7 +119,7 @@ public class EntityAirBubble extends EntityShield {
 			this.motionX = 0;
 			this.motionY = 0;
 			this.motionZ = 0;
-			this.world.updateEntityWithOptionalForce(this, true);
+			this.world.updateEntityWithOptionalForce(this, false);
 		}
 	}
 
@@ -139,10 +139,20 @@ public class EntityAirBubble extends EntityShield {
 			return;
 		}
 
-		if (putsOutFires && ticksExisted % 2 == 0) {
+		if (putsOutFires) {
 			setFire(0);
 			for (int x = 0; x <= 2; x++) {
 				for (int z = 0; z <= 2; z++) {
+					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
+					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
+						world.setBlockToAir(pos);
+						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
+								SoundCategory.PLAYERS, 1, 1, false);
+					}
+				}
+			}
+			for (int x = 0; x >= -2; x--) {
+				for (int z = 0; z >= -2; z--) {
 					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
 					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
 						world.setBlockToAir(pos);
