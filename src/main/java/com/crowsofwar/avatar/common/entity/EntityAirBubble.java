@@ -112,7 +112,14 @@ public class EntityAirBubble extends EntityShield {
 	@Override
 	public void setPositionAndUpdate(double x, double y, double z) {
 		if (getOwner() != null) {
+			this.posX = getOwner().posX;
+			this.posY = getOwner().getEntityBoundingBox().minY;
+			this.posZ = getOwner().posZ;
 			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+			this.motionX = 0;
+			this.motionY = 0;
+			this.motionZ = 0;
+			this.world.updateEntityWithOptionalForce(this, true);
 		}
 	}
 
