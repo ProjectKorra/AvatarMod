@@ -11,10 +11,17 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityAreaEffectCloud;
+import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
@@ -100,10 +107,9 @@ public class StatCtrlFireJump extends StatusControl {
 				damage = 2.5F;
 			}
 
-			if (abilityData.getLevel()  == 2 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			if (abilityData.getLevel() == 2 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE);
-			}
-			else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+			} else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE_BIG);
 			}
 
@@ -181,32 +187,35 @@ public class StatCtrlFireJump extends StatusControl {
 
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
-			for (double i = 0; i < range;){
+			for (double i = 0; i < range; ) {
 				for (int j = 0; j < 90; j++) {
 					Vector lookPos;
 					if (i >= 1) {
 						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
 								j * 4), 0).times(i);
-					}
-					else {
+					} else {
 						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
 								j * 4), 0);
 					}
 					World.spawnParticle(EnumParticleTypes.FLAME, lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
 							lookPos.z() + entity.posZ, numberOfParticles, 0, 0, 0, particleSpeed / 4);
 				}
-				i += range/10;
+				i += range / 10;
 			}
 		}
 
 		List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 		for (EntityLivingBase target : nearby) {
-			if (target != entity) {
-				target.attackEntityFrom(AvatarDamageSource.causeSmashDamage(target, entity), damage);
-				BattlePerformanceScore.addSmallScore(entity);
+			if (target != entity && target.canBeCollidedWith() && target.canBePushed()) {
+				if (canDamageEntity(target)) {
+					target.attackEntityFrom(AvatarDamageSource.causeSmashDamage(target, entity), damage);
+				}
+				BattlePerformanceScore.addMediumScore(entity);
 
 				Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
-				velocity = velocity.withY(1).times(speed / 20);
+				double distance = Vector.getEntityPos(target).dist(Vector.getEntityPos(entity));
+				double direction = (range - distance) * (speed / 7.5) / range;
+				velocity = velocity.times(direction).withY(0.3);
 				target.addVelocity(velocity.x(), velocity.y(), velocity.z());
 
 				target.setFire(3);
@@ -214,6 +223,16 @@ public class StatCtrlFireJump extends StatusControl {
 			}
 		}
 
+	}
+
+	private boolean canDamageEntity(Entity entity) {
+		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != entity) {
+			return false;
+		}
+		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
+				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud) {
+			return false;
+		} else return entity.canBeCollidedWith() && entity.canBePushed();
 	}
 
 }
