@@ -94,11 +94,14 @@ public class EntityLightningSpear extends AvatarEntity {
 		setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
 
 		// Add hook or something
-		if (getOwner() == null) {
+		if (getOwner()!= null) {
 			if (this.getBehavior() == controlled) {
 				this.rotationYaw = this.getOwner().rotationYaw;
 				this.rotationPitch = this.getOwner().rotationPitch;
 			}
+		}
+
+		if (getOwner() == null) {
 			setDead();
 			removeStatCtrl();
 		}

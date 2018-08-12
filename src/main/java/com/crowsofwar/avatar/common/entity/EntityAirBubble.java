@@ -194,7 +194,7 @@ public class EntityAirBubble extends EntityShield {
 
 			this.motionX = this.motionY = this.motionZ = 0;
 		}
-		
+
 		if (getOwner() != null) {
 			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
