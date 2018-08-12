@@ -1,6 +1,7 @@
 // For those who want the bleeding edge
 buildscript {
     repositories {
+        mavenCentral()
         jcenter()
         maven {
             url = "https://plugins.gradle.org/m2/"
@@ -17,6 +18,7 @@ buildscript {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2"
     }
 }
+
 plugins {
     id "org.sonarqube" version "2.2"
     id 'io.franzbecker.gradle-lombok' version '1.14'
@@ -28,12 +30,15 @@ apply plugin: 'com.github.johnrengelman.shadow'
 ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
 
+version = config.version
 group = "com.crowsofwar.avatarmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "avatarmod"
 version = config.version
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
 
 dependencies {
     compile files("libs/joml/joml-1.8.1.jar")

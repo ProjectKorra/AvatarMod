@@ -16,17 +16,15 @@
 */
 package com.crowsofwar.avatar.common.config;
 
+import net.minecraft.entity.*;
+import net.minecraft.item.Item;
+
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
-import com.crowsofwar.gorecore.config.ConfigLoader;
-import com.crowsofwar.gorecore.config.Load;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.item.Item;
+import com.crowsofwar.gorecore.config.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author CrowsOfWar
@@ -100,8 +98,7 @@ public class ConfigMobs {
 	public int bisonMinDomestication = 500, bisonMaxDomestication = 800;
 
 	@Load
-	public int bisonRiderTameness = 800, bisonOwnableTameness = 900, bisonLeashTameness = 1000,
-			bisonChestTameness = 1000;
+	public int bisonRiderTameness = 800, bisonOwnableTameness = 900, bisonLeashTameness = 1000, bisonChestTameness = 1000;
 
 	@Load
 	public int bisonGrassFoodBonus = 5, bisonRideOneSecondTameness = 3;
@@ -140,7 +137,7 @@ public class ConfigMobs {
 	}
 
 	public int getDomesticationValue(Item item) {
-		return bisonFoodList.containsKey(item) ? bisonFoodList.get(item) : 0;
+		return bisonFoodList.getOrDefault(item, 0);
 	}
 
 	public boolean isBisonFood(Item item) {

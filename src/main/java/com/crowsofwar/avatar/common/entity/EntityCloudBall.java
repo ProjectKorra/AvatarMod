@@ -1,37 +1,24 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.air.CloudburstPowerModifier;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.data.Behavior;
-import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.entity.*;
+import net.minecraft.entity.projectile.*;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
 
-import java.util.List;
-import java.util.UUID;
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.bending.air.CloudburstPowerModifier;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.data.*;
+import com.crowsofwar.avatar.common.util.*;
+import com.crowsofwar.gorecore.util.Vector;
+
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
@@ -41,10 +28,9 @@ public class EntityCloudBall extends AvatarEntity {
 	 * @param world
 	 */
 	public static final DataParameter<CloudburstBehavior> SYNC_BEHAVIOR = EntityDataManager
-			.createKey(EntityCloudBall.class, CloudburstBehavior.DATA_SERIALIZER);
+					.createKey(EntityCloudBall.class, CloudburstBehavior.DATA_SERIALIZER);
 
-	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityCloudBall.class,
-			DataSerializers.VARINT);
+	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityCloudBall.class, DataSerializers.VARINT);
 
 	private AxisAlignedBB expandedHitbox;
 
@@ -183,9 +169,8 @@ public class EntityCloudBall extends AvatarEntity {
 						for (UUID uuid : data.getAllBendingIds()) {
 							CloudburstPowerModifier cloudModifier = new CloudburstPowerModifier();
 							cloudModifier.setTicks(100);
-							data.getPowerRatingManager(uuid).addModifier(cloudModifier, new
-									BendingContext(data, (EntityLivingBase) entity, new
-									Raytrace.Result()));
+							data.getPowerRatingManager(uuid)
+											.addModifier(cloudModifier, new BendingContext(data, (EntityLivingBase) entity, new Raytrace.Result()));
 						}
 
 					}
@@ -246,9 +231,10 @@ public class EntityCloudBall extends AvatarEntity {
 				this.setInvisible(true);
 				WorldServer World = (WorldServer) this.world;
 				World.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, 50, 0, 0, 0, speed);
-				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 4.0F,
+								(1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(hitBox, hitBox, hitBox),
-						entity -> entity != getOwner());
+																		 entity -> entity != getOwner());
 
 				if (!collided.isEmpty()) {
 					for (Entity entity : collided) {
@@ -262,10 +248,10 @@ public class EntityCloudBall extends AvatarEntity {
 						vel = vel.normalize().times(mult).plusY(0.15f);
 
 						entity.motionX = vel.x() + 0.1 / distanceTravelled;
-						;
+
 						entity.motionY = vel.y() > 0 ? vel.y() + 0.1 / distanceTravelled : 0.3F + 0.1 / distanceTravelled;
 						entity.motionZ = vel.z() + 0.1 / distanceTravelled;
-						;
+
 						damageEntity(entity);
 
 						if (entity instanceof AvatarEntity) {
@@ -320,7 +306,6 @@ public class EntityCloudBall extends AvatarEntity {
 		return true;
 	}
 	//Fixes a glitch where the entity turns invisible
-
 
 	private void removeStatCtrl() {
 		if (getOwner() != null) {

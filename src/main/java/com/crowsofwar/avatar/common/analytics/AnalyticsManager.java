@@ -1,9 +1,10 @@
 package com.crowsofwar.avatar.common.analytics;
 
-import com.crowsofwar.avatar.AvatarInfo;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import com.crowsofwar.avatar.AvatarInfo;
 
 /**
  * Manages the relation between analytics and the game; sends analytics at the right time to do so.
@@ -42,7 +43,7 @@ public class AnalyticsManager {
 
 	private static void uploadEvents() {
 		lastSendTime = System.currentTimeMillis();
-		Runnable runnable = () -> AvatarAnalytics.INSTANCE.uploadEvents();
+		Runnable runnable = AvatarAnalytics.INSTANCE::uploadEvents;
 		new Thread(runnable).start();
 	}
 

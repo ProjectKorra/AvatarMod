@@ -16,37 +16,30 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
-import com.crowsofwar.avatar.client.uitools.*;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.gui.AvatarGui;
-import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
-import com.crowsofwar.gorecore.format.FormattedMessage;
-import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
+
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
+import com.crowsofwar.avatar.client.uitools.*;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.gui.*;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
+import com.crowsofwar.gorecore.format.*;
+import org.lwjgl.input.*;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
-import static com.crowsofwar.avatar.client.uitools.ScreenInfo.screenHeight;
+import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static net.minecraft.client.Minecraft.getMinecraft;
 import static org.lwjgl.input.Keyboard.KEY_ESCAPE;
 
@@ -55,8 +48,7 @@ import static org.lwjgl.input.Keyboard.KEY_ESCAPE;
  */
 public class SkillsGui extends GuiContainer implements AvatarGui {
 
-	private static final FormattedMessage MSG_TITLE = FormattedMessage.newChatMessage("avatar.ui.skillsMenu",
-			"bending");
+	private static final FormattedMessage MSG_TITLE = FormattedMessage.newChatMessage("avatar.ui.skillsMenu", "bending");
 
 	private final UUID bendingId;
 
@@ -74,7 +66,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 
 	public SkillsGui(UUID guiBending) {
 		super(new ContainerSkillsGui(getMinecraft().player, guiBending));
-		this.bendingId = guiBending;
+		bendingId = guiBending;
 
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
 		BendingData data = BendingData.get(getMinecraft().player);
@@ -96,13 +88,13 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		handler = new UiComponentHandler();
 
 		UUID[] types = data.getAllBending().stream()//
-				.map(BendingStyle::getId)//
-				.sorted((id1, id2) -> {
-					BendingStyle c1 = BendingStyles.get(id1);
-					BendingStyle c2 = BendingStyles.get(id2);
-					return c1.getName().compareTo(c2.getName());
-				})//
-				.toArray(UUID[]::new);
+						.map(BendingStyle::getId)//
+						.sorted((id1, id2) -> {
+							BendingStyle c1 = BendingStyles.get(id1);
+							BendingStyle c2 = BendingStyles.get(id2);
+							return c1.getName().compareTo(c2.getName());
+						})//
+						.toArray(UUID[]::new);
 
 		tabs = new ComponentBendingTab[types.length];
 		for (int i = 0; i < types.length; i++) {
@@ -115,20 +107,18 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 			handler.add(tabs[i]);
 		}
 
-		inventory = new ComponentInventorySlots(inventorySlots, 9, 3, skillsContainer.getInvIndex(),
-				skillsContainer.getInvIndex() + 26);
+		inventory = new ComponentInventorySlots(inventorySlots, 9, 3, skillsContainer.getInvIndex(), skillsContainer.getInvIndex() + 26);
 		inventory.useTexture(AvatarUiTextures.skillsGui, 0, 54, 169, 83);
 		inventory.setPosition(StartingPosition.BOTTOM_RIGHT);
 		inventory.setPadding(fromPixels(7, 7));
 		inventory.setVisible(false);
 
-		hotbar = new ComponentInventorySlots(inventorySlots, 9, 1, skillsContainer.getHotbarIndex(),
-				skillsContainer.getHotbarIndex() + 8);
+		hotbar = new ComponentInventorySlots(inventorySlots, 9, 1, skillsContainer.getHotbarIndex(), skillsContainer.getHotbarIndex() + 8);
 		hotbar.setPosition(StartingPosition.BOTTOM_RIGHT);
 		hotbar.setVisible(false);
 
-		title = new ComponentText(TextFormatting.BOLD + FormattedMessageProcessor.formatText(MSG_TITLE,
-				I18n.format("avatar.ui.skillsMenu"), BendingStyles.get(guiBending).getName().toLowerCase()));
+		title = new ComponentText(TextFormatting.BOLD + FormattedMessageProcessor
+						.formatText(MSG_TITLE, I18n.format("avatar.ui.skillsMenu"), BendingStyles.get(guiBending).getName().toLowerCase()));
 		title.setPosition(StartingPosition.TOP_CENTER);
 		title.setOffset(Measurement.fromPixels(0, 10));
 		handler.add(title);
@@ -169,9 +159,9 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 
 			int mouseX = Mouse.getX(), mouseY = screenHeight() - Mouse.getY();
 
-			for (int i = 0; i < cards.length; i++) {
-				if (cards[i].isMouseHover(mouseX, mouseY, scroll)) {
-					openWindow(cards[i]);
+			for (AbilityCard card : cards) {
+				if (card.isMouseHover(mouseX, mouseY, scroll)) {
+					openWindow(card);
 					break;
 				}
 			}
@@ -207,8 +197,8 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 			window.draw(partialTicks);
 		} else {
 
-			for (int i = 0; i < cards.length; i++) {
-				cards[i].draw(partialTicks, scroll, mouseX, mouseY);
+			for (AbilityCard card : cards) {
+				card.draw(partialTicks, scroll, mouseX, mouseY);
 			}
 
 		}
@@ -221,7 +211,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		
+
 		if (isWindowOpen()) {
 			KeyBinding invKb = mc.gameSettings.keyBindInventory;
 
@@ -242,7 +232,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 				super.keyTyped(typedChar, keyCode);
 			}
 		}
-		
+
 	}
 
 	@Override

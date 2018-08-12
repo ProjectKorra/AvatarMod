@@ -25,7 +25,6 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.controls.*;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
-import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 
 /**
@@ -49,14 +48,6 @@ public interface AvatarCommonProxy {
 	IControlsHandler getKeyHandler();
 
 	/**
-	 * Get a client-side packet handler safely. When the machine is running a
-	 * minecraft client (even if in the integrated server thread), returns the
-	 * packet handler for the client. Otherwise (this only happens on dedicated
-	 * servers), returns null.
-	 */
-	IPacketHandler getClientPacketHandler();
-
-	/**
 	 * Get client player's reach. Returns 0 on server.
 	 */
 	double getPlayerReach();
@@ -71,11 +62,9 @@ public interface AvatarCommonProxy {
 	PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher();
 
 	/**
-	 * Get client-side IThreadListener, null on server
-	 *
-	 * @return
+	 * @return An IThreadListener
 	 */
-	IThreadListener getClientThreadListener();
+	IThreadListener getThreadListener();
 
 	/**
 	 * Get amount of particles. 0 = All, 1 = decreased, 2 = minimal

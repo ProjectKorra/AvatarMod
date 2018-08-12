@@ -16,12 +16,19 @@
 */
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.network.PacketRedirector;
-import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 
-import java.util.UUID;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.gui.*;
+import io.netty.buffer.ByteBuf;
+
+import java.util.*;
 
 /**
  * @author CrowsOfWar
@@ -47,18 +54,41 @@ public class PacketSUnlockBending extends AvatarPacket<PacketSUnlockBending> {
 		buf.writeByte(type);
 	}
 
-	@Override
-	protected Side getReceivedSide() {
-		return Side.SERVER;
-	}
-
-	@Override
-	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketSUnlockBending> getPacketHandler() {
-		return PacketRedirector::redirectMessage;
-	}
-
 	public UUID getUnlockType() {
 		return BendingStyles.get(type).getId();
 	}
 
+	public static class Handler extends AvatarPacketHandler<PacketSUnlockBending, IMessage> {
+		/**
+		 * This method will always be called on the main thread. In the case that that's not wanted, create your own {@link IMessageHandler}
+		 *
+		 * @param message The packet that is received
+		 * @param ctx     The context to that packet
+		 * @return An optional packet to reply with, or null
+		 */
+		@Override
+		IMessage avatarOnMessage(PacketSUnlockBending message, MessageContext ctx) {
+			EntityPlayerMP player = ctx.getServerHandler().player;
+			BendingData data = BendingData.get(player);
+			Container container = player.openContainer;
+			if (container instanceof ContainerGetBending) {
+				UUID bending = message.getUnlockType();
+				if (((ContainerGetBending) container).getEligibleBending().contains(bending)) {
+					if (data.getAllBending().isEmpty()) {
+						data.addBendingId(bending);
+						// Unlock first ability
+						// the ID is in use to unlock it
+						Ability ability = Objects.requireNonNull(BendingStyles.get(bending)).getAllAbilities().get(0);
+						data.getAbilityData(ability).unlockAbility();
+						for (int i = 0; i < ((ContainerGetBending) container).getSize(); i++) {
+							container.getSlot(i).putStack(ItemStack.EMPTY);
+						}
+						int guiId = AvatarGuiHandler.getGuiId(bending);
+						player.openGui(AvatarMod.instance, guiId, player.world, 0, 0, 0);
+					}
+				}
+			}
+			return null;
+		}
+	}
 }

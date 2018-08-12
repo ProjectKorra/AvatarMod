@@ -17,17 +17,15 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import net.minecraft.entity.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
+
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
 
 import java.util.UUID;
 
@@ -40,8 +38,7 @@ import static net.minecraft.util.EnumFacing.NORTH;
  */
 public class EntityWall extends AvatarEntity {
 
-	private static final DataParameter<Integer> SYNC_DIRECTION = EntityDataManager.createKey(EntityWall.class,
-			DataSerializers.VARINT);
+	private static final DataParameter<Integer> SYNC_DIRECTION = EntityDataManager.createKey(EntityWall.class, DataSerializers.VARINT);
 	private static final DataParameter<Optional<UUID>>[] SYNC_SEGMENTS;
 
 	static {
@@ -65,7 +62,7 @@ public class EntityWall extends AvatarEntity {
 	@SuppressWarnings("unchecked")
 	public EntityWall(World world) {
 		super(world);
-		this.segments = new SyncedEntity[5];
+		segments = new SyncedEntity[5];
 		for (int i = 0; i < segments.length; i++) {
 			segments[i] = new SyncedEntity(this, SYNC_SEGMENTS[i]);
 			segments[i].preventNullSaving();
@@ -77,8 +74,8 @@ public class EntityWall extends AvatarEntity {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_DIRECTION, NORTH.ordinal());
-		for (int i = 0; i < SYNC_SEGMENTS.length; i++) {
-			dataManager.register(SYNC_SEGMENTS[i], Optional.absent());
+		for (DataParameter<Optional<UUID>> SYNC_SEGMENT : SYNC_SEGMENTS) {
+			dataManager.register(SYNC_SEGMENT, Optional.absent());
 		}
 	}
 
@@ -86,8 +83,8 @@ public class EntityWall extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (this.getOwner() == null) {
-			this.setDead();
+		if (getOwner() == null) {
+			setDead();
 		}
 
 		// Sync y-velocity with slowest moving wall segment
@@ -126,7 +123,7 @@ public class EntityWall extends AvatarEntity {
 		}
 
 		setVelocity(Vector.ZERO);
-		this.noClip = true;
+		noClip = true;
 		move(MoverType.SELF, 0, slowest / 20, 0);
 	}
 
@@ -147,9 +144,8 @@ public class EntityWall extends AvatarEntity {
 	}
 
 	public void setDirection(EnumFacing direction) {
-		if (direction.getAxis().isVertical())
-			throw new IllegalArgumentException("Cannot face up/down: " + direction);
-		this.dataManager.set(SYNC_DIRECTION, direction.ordinal());
+		if (direction.getAxis().isVertical()) throw new IllegalArgumentException("Cannot face up/down: " + direction);
+		dataManager.set(SYNC_DIRECTION, direction.ordinal());
 	}
 
 	@Override
@@ -187,8 +183,7 @@ public class EntityWall extends AvatarEntity {
 
 	@Override
 	protected boolean canCollideWith(Entity entity) {
-		return super.canCollideWith(entity) && !(entity instanceof EntityWall)
-				&& !(entity instanceof EntityWallSegment);
+		return super.canCollideWith(entity) && !(entity instanceof EntityWall) && !(entity instanceof EntityWallSegment);
 	}
 
 }

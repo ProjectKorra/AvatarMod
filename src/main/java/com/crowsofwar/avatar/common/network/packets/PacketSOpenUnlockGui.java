@@ -16,9 +16,14 @@
 */
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.network.PacketRedirector;
+import net.minecraft.entity.player.EntityPlayerMP;
+
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author CrowsOfWar
@@ -33,14 +38,21 @@ public class PacketSOpenUnlockGui extends AvatarPacket<PacketSOpenUnlockGui> {
 	public void avatarToBytes(ByteBuf buf) {
 	}
 
-	@Override
-	protected Side getReceivedSide() {
-		return Side.SERVER;
+	public static class Handler extends AvatarPacketHandler<PacketSOpenUnlockGui, IMessage> {
+		/**
+		 * This method will always be called on the main thread. In the case that that's not wanted, create your own {@link IMessageHandler}
+		 *
+		 * @param message The packet that is received
+		 * @param ctx     The context to that packet
+		 * @return An optional packet to reply with, or null
+		 */
+		@Override
+		IMessage avatarOnMessage(PacketSOpenUnlockGui message, MessageContext ctx) {
+			EntityPlayerMP player = ctx.getServerHandler().player;
+			if (BendingData.get(player).getAllBending().isEmpty()) {
+				player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, player.world, 0, 0, 0);
+			}
+			return null;
+		}
 	}
-
-	@Override
-	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketSOpenUnlockGui> getPacketHandler() {
-		return PacketRedirector::redirectMessage;
-	}
-
 }

@@ -8,12 +8,8 @@ import net.minecraft.world.World;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-
 import com.crowsofwar.avatar.common.bending.air.AbilityCloudBurst;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.entity.EntityCloudBall;
 import com.crowsofwar.gorecore.util.Vector;
 
@@ -68,8 +64,7 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 
 			time++;
 
-
-			if (entity.isCollided || (!entity.world.isRemote && time > 200)) {
+			if (entity.collided || (!entity.world.isRemote && time > 200)) {
 				entity.cloudBurst();
 
 				entity.onCollideWithSolid();

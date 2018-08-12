@@ -29,7 +29,6 @@ import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import com.google.common.base.Predicate;
 
 import java.util.List;
 
@@ -74,7 +73,7 @@ public class EntityAirblade extends AvatarEntity {
 		}
 
 		if (!world.isRemote && chopBlocksThreshold >= 0) {
-				breakCollidingBlocks();
+			breakCollidingBlocks();
 
 		}
 
@@ -121,10 +120,9 @@ public class EntityAirblade extends AvatarEntity {
 			if (successfulHit) {
 
 				AxisAlignedBB aabb = getEntityBoundingBox().grow(10);
-				Predicate<EntityLivingBase> notFriendly =//
-								entity -> entity != collided && entity != getOwner();
 
-				List<EntityLivingBase> nextTargets = world.getEntitiesWithinAABB(EntityLivingBase.class, aabb, notFriendly);
+				List<EntityLivingBase> nextTargets = world
+								.getEntitiesWithinAABB(EntityLivingBase.class, aabb, entity -> entity != collided && entity != getOwner());
 
 				nextTargets.sort(AvatarUtils.getSortByDistanceComparator(this::getDistance));
 

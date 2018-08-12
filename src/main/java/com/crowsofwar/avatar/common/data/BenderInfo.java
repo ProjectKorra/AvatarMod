@@ -16,14 +16,16 @@
 */
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
-import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+
+import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
+import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
+import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -45,24 +47,23 @@ public abstract class BenderInfo {
 	public static BenderInfo readFromNbt(NBTTagCompound nbt) {
 		String type = nbt.getString("Type");
 		UUID id = nbt.getUniqueId("Id");
-		if (type.equals("Player")) {
-			return new BenderInfoPlayer(id);
-		} else if (type.equals("Entity")) {
-			return new BenderInfoEntity(id);
-		} else {
-			return new NoBenderInfo();
-		}
+		return read(type, id);
 	}
 
 	public static BenderInfo readFromBytes(ByteBuf buf) {
 		String type = ByteBufUtils.readUTF8String(buf);
 		UUID id = GoreCoreByteBufUtil.readUUID(buf);
-		if (type.equals("Player")) {
-			return new BenderInfoPlayer(id);
-		} else if (type.equals("Entity")) {
-			return new BenderInfoEntity(id);
-		} else {
-			return new NoBenderInfo();
+		return read(type, id);
+	}
+
+	public static BenderInfo read(String type, UUID id) {
+		switch (type) {
+			case "Player":
+				return new BenderInfoPlayer(id);
+			case "Entity":
+				return new BenderInfoEntity(id);
+			default:
+				return new NoBenderInfo();
 		}
 	}
 

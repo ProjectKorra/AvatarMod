@@ -1,9 +1,9 @@
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.DataCategory;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.MathHelper;
+
+import com.crowsofwar.avatar.common.data.*;
 
 /**
  * Represents a numeric score of how well a bender is doing in a battle. This score is increased by
@@ -65,12 +65,12 @@ public class BattlePerformanceScore {
 	 * close to zero move towards zero more slowly.
 	 * <p>
 	 */
-	private static final double getScoreChangePerSecond(double currentScore) {
+	private static double getScoreChangePerSecond(double currentScore) {
 
 		// Minimum / maximum score change per second, where min. change occurs when score is near 0,
 		// and max. change occurs when score is at 100
-		final double min = 2;
-		final double max = 4;
+		double min = 2;
+		double max = 4;
 
 		// Generates a curve from minimum to maximum
 
