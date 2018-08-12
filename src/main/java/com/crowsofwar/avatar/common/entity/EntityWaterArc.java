@@ -126,16 +126,18 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 
 	public void damageEntity(Entity entity) {
-		DamageSource ds = AvatarDamageSource.causeWaterDamage(entity, getOwner());
-		float damage = STATS_CONFIG.waterArcSettings.damage * damageMult;
-		entity.attackEntityFrom(ds, damage);
-		if (entity.attackEntityFrom(ds, damage)) {
-			if (getOwner() != null && !world.isRemote && getAbility() != null) {
-				BendingData data1 = BendingData.get(getOwner());
-				AbilityData abilityData1 = data1.getAbilityData(getAbility().getName());
-				abilityData1.addXp(SKILLS_CONFIG.waterHit);
-				BattlePerformanceScore.addMediumScore(getOwner());
+		if (canDamageEntity(entity)) {
+			DamageSource ds = AvatarDamageSource.causeWaterDamage(entity, getOwner());
+			float damage = STATS_CONFIG.waterArcSettings.damage * damageMult;
+			//entity.attackEntityFrom(ds, damage);
+			if (entity.attackEntityFrom(ds, damage)) {
+				if (getOwner() != null && !world.isRemote && getAbility() != null) {
+					BendingData data1 = BendingData.get(getOwner());
+					AbilityData abilityData1 = data1.getAbilityData(getAbility().getName());
+					abilityData1.addXp(SKILLS_CONFIG.waterHit);
+					BattlePerformanceScore.addMediumScore(getOwner());
 
+				}
 			}
 		}
 	}
