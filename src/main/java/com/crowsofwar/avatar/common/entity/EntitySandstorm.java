@@ -165,6 +165,11 @@ public class EntitySandstorm extends AvatarEntity {
 	}
 
 	@Override
+	public boolean canPush() {
+		return vulnerableToAirbending;
+	}
+
+	@Override
 	protected void onCollideWithEntity(Entity entity) {
 
 		// Number of blocks that the target "floats" above the ground
@@ -242,9 +247,9 @@ public class EntitySandstorm extends AvatarEntity {
 	 * Called when the sandstorm "flings" an entity away after it's been orbiting for a while
 	 */
 	private void onFlingEntity(Entity entity) {
-		if (!world.isRemote && damageFlungTargets) {
+		if (!world.isRemote && damageFlungTargets && canDamageEntity(entity)) {
 			DamageSource ds = AvatarDamageSource.causeSandstormDamage(entity, getOwner());
-			entity.attackEntityFrom(DamageSource.ANVIL, 5);
+			entity.attackEntityFrom(ds, 5);
 		}
 	}
 
@@ -254,7 +259,7 @@ public class EntitySandstorm extends AvatarEntity {
 	private void onContact(Entity entity) {
 		if (!world.isRemote && damageContactingTargets) {
 			DamageSource ds = AvatarDamageSource.causeSandstormDamage(entity, getOwner());
-			entity.attackEntityFrom(DamageSource.ANVIL, 1);
+			entity.attackEntityFrom(ds, 1);
 		}
 	}
 

@@ -110,6 +110,11 @@ public class EntityAirBubble extends EntityShield {
 
 
 	@Override
+	public void setVelocity(double x, double y, double z) {
+		super.setVelocity(0, 0, 0);
+	}
+
+	@Override
 	public void setPositionAndUpdate(double x, double y, double z) {
 		if (getOwner() != null) {
 			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
@@ -120,7 +125,6 @@ public class EntityAirBubble extends EntityShield {
 
 			this.motionX = this.motionY = this.motionZ = 0;
 
-			this.world.updateEntityWithOptionalForce(this, true);
 		}
 	}
 
@@ -136,9 +140,16 @@ public class EntityAirBubble extends EntityShield {
 
 
 		EntityLivingBase owner = getOwner();
+
+		if (owner == null && !isDissipating()) {
+			this.setDead();
+			removeStatCtrl();
+		}
+
 		if (owner == null) {
 			return;
 		}
+
 
 		if (putsOutFires) {
 			setFire(0);
@@ -166,6 +177,7 @@ public class EntityAirBubble extends EntityShield {
 
 		if (owner.isDead) {
 			dissipateSmall();
+			removeStatCtrl();
 			return;
 		}
 		setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
