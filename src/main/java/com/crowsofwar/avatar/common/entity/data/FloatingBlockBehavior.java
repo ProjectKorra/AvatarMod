@@ -317,7 +317,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			}
 
 			Vector motion = target.minus(entity.position());
-			motion = motion.times(0.5 * 7.5);
+			motion = motion.times(1.5);
 			entity.setVelocity(motion);
 
 
