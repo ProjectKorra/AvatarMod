@@ -141,7 +141,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				//Change based on size
 			}
 
-			damageEntity((EntityLivingBase) entity);
+			damageEntity(entity);
 			world.playSound(null, getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH,
 					SoundCategory.PLAYERS, 1, 1);
 
@@ -185,37 +185,38 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 	}
 
-	private void damageEntity(EntityLivingBase entity) {
+	private void damageEntity(Entity entity) {
 
 		if (world.isRemote) {
 			return;
 		}
 
-		DamageSource damageSource = AvatarDamageSource.causeWaterCannonDamage(entity, getOwner());
-		if (entity.attackEntityFrom(damageSource, damage)) {
+		if (this.canDamageEntity(entity)) {
+			DamageSource damageSource = AvatarDamageSource.causeWaterCannonDamage(entity, getOwner());
+			if (entity.attackEntityFrom(damageSource, damage)) {
 
-			BattlePerformanceScore.addSmallScore(getOwner());
+				BattlePerformanceScore.addSmallScore(getOwner());
 
-			entity.motionX = this.motionX * 2;
-			entity.motionY = this.motionY * 2;
-			entity.motionZ = this.motionZ * 2;
-			AvatarUtils.afterVelocityAdded(entity);
+				entity.motionX = this.motionX * 2;
+				entity.motionY = this.motionY * 2;
+				entity.motionZ = this.motionZ * 2;
+				AvatarUtils.afterVelocityAdded(entity);
 
-			// Add Experience
-			// Although 2 water cannon entities are fired in each water cannon ability, this won't
-			// cause 2x XP rewards as this only happens when the entity is successfully attacked
-			if (getOwner() != null) {
-				BendingData data = BendingData.get(getOwner());
-				AbilityData abilityData = data.getAbilityData("water_cannon");
-				abilityData.addXp(SKILLS_CONFIG.waterHit / 2);
+				// Add Experience
+				// Although 2 water cannon entities are fired in each water cannon ability, this won't
+				// cause 2x XP rewards as this only happens when the entity is successfully attacked
+				if (getOwner() != null) {
+					BendingData data = BendingData.get(getOwner());
+					AbilityData abilityData = data.getAbilityData("water_cannon");
+					abilityData.addXp(SKILLS_CONFIG.waterHit / 2);
+				}
 			}
 		}
-
 	}
 
 	@Override
 	public boolean onCollideWithSolid() {
-		setVelocity(Vector.ZERO);
+		this.motionX = this.motionY = this.motionZ = 0;
 		onMajorWaterContact();
 		return false;
 	}

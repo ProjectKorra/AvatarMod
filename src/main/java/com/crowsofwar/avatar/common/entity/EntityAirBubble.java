@@ -77,7 +77,6 @@ public class EntityAirBubble extends EntityShield {
 
 		this.airLeft = 600;
 		this.putsOutFires = true;
-		this.noClip = true;
 	}
 
 	@Override
@@ -114,10 +113,14 @@ public class EntityAirBubble extends EntityShield {
 	public void setPositionAndUpdate(double x, double y, double z) {
 		if (getOwner() != null) {
 			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+
 			this.posX = getOwner().posX;
 			this.posY = getOwner().getEntityBoundingBox().minY;
 			this.posZ = getOwner().posZ;
+
 			this.motionX = this.motionY = this.motionZ = 0;
+
+			this.world.updateEntityWithOptionalForce(this, true);
 		}
 	}
 
@@ -165,16 +168,14 @@ public class EntityAirBubble extends EntityShield {
 			dissipateSmall();
 			return;
 		}
-
-		this.posX = owner.posX;
-		this.posY = owner.getEntityBoundingBox().minY;
-		this.posZ = owner.posZ;
-
-		this.motionX = 0;
-		this.motionY = 0;
-		this.motionZ = 0;
-
 		setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
+
+		this.posX = getOwner().posX;
+		this.posY = getOwner().getEntityBoundingBox().minY;
+		this.posZ = getOwner().posZ;
+
+
+		this.motionX = this.motionY = this.motionZ = 0;
 
 
 		if (getOwner() != null) {

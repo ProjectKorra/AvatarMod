@@ -422,7 +422,7 @@ public abstract class AvatarEntity extends Entity {
 	 * Ex: You can collide with an armour stand, but you can't damage it.
 	 */
 
-	private boolean canDamageEntity(Entity entity) {
+	public boolean canDamageEntity(Entity entity) {
 		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != entity) {
 			return false;
 		}
