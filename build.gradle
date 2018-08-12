@@ -3,7 +3,7 @@ buildscript {
     repositories {
         jcenter()
         maven {
-            url "https://plugins.gradle.org/m2/"
+            url = "https://plugins.gradle.org/m2/"
         }
         maven {
             name = "forge"
@@ -30,6 +30,7 @@ ext.config = parseConfig(configFile)
 
 group = "com.crowsofwar.avatarmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "avatarmod"
+version = config.version
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
