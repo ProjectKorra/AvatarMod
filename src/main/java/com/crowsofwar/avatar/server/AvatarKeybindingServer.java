@@ -17,11 +17,9 @@
 
 package com.crowsofwar.avatar.server;
 
-import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.controls.IControlsHandler;
+import com.crowsofwar.avatar.common.controls.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class AvatarKeybindingServer implements IControlsHandler {
 
@@ -47,7 +45,7 @@ public class AvatarKeybindingServer implements IControlsHandler {
 
 	@Override
 	public List<AvatarControl> getAllPressed() {
-		return new ArrayList<AvatarControl>();
+		return new ArrayList<>();
 	}
 
 }

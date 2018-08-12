@@ -17,53 +17,40 @@
 
 package com.crowsofwar.avatar.client;
 
-import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarLog.WarningType;
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.gui.AnalyticsWarningGui;
-import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
-import com.crowsofwar.avatar.client.gui.GuiBisonChest;
-import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
-import com.crowsofwar.avatar.client.gui.skills.GetBendingGui;
-import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
-import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
-import com.crowsofwar.avatar.client.particles.AvatarParticleFlames;
-import com.crowsofwar.avatar.client.render.*;
-import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
-import com.crowsofwar.avatar.common.AvatarCommonProxy;
-import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.controls.IControlsHandler;
-import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.entity.*;
-import com.crowsofwar.avatar.common.entity.mob.*;
-import com.crowsofwar.avatar.common.gui.AvatarGui;
-import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
-import com.crowsofwar.avatar.common.network.IPacketHandler;
-import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
-import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
-import com.crowsofwar.gorecore.data.PlayerDataFetcher;
-import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
+
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.*;
+
+import com.crowsofwar.avatar.*;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
+import com.crowsofwar.avatar.client.gui.*;
+import com.crowsofwar.avatar.client.gui.skills.*;
+import com.crowsofwar.avatar.client.particles.*;
+import com.crowsofwar.avatar.client.render.*;
+import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
+import com.crowsofwar.avatar.common.*;
+import com.crowsofwar.avatar.common.controls.*;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.avatar.common.entity.mob.*;
+import com.crowsofwar.avatar.common.gui.*;
+import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
+import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
+import com.crowsofwar.gorecore.data.*;
 
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.common.config.ConfigAnalytics.ANALYTICS_CONFIG;
@@ -72,9 +59,7 @@ import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerE
 
 @SideOnly(Side.CLIENT)
 public class AvatarClientProxy implements AvatarCommonProxy {
-
 	private Minecraft mc;
-	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;
 	private PlayerDataFetcher<AvatarPlayerData> clientFetcher;
 	private boolean displayedMainMenu;
@@ -86,7 +71,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 
 		displayedMainMenu = false;
 
-		packetHandler = new PacketHandlerClient();
 		AvatarUiRenderer.instance = new AvatarUiRenderer();
 
 		inputHandler = new ClientInput();
@@ -106,8 +90,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityWaterArc.class, RenderWaterArc::new);
 		registerEntityRenderingHandler(EntityAirGust.class, RenderAirGust::new);
 		registerEntityRenderingHandler(EntityRavine.class, RenderRavine::new);
-		registerEntityRenderingHandler(EntityFlames.class,
-				rm -> new RenderFlames(rm, new ClientParticleSpawner()));
+		registerEntityRenderingHandler(EntityFlames.class, rm -> new RenderFlames(rm, new ClientParticleSpawner()));
 		registerEntityRenderingHandler(EntityWave.class, RenderWave::new);
 		registerEntityRenderingHandler(EntityWaterBubble.class, RenderWaterBubble::new);
 		registerEntityRenderingHandler(EntityWallSegment.class, RenderWallSegment::new);
@@ -133,24 +116,15 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityLightningSpawner.class, RenderLightningSpawner::new);
 		registerEntityRenderingHandler(EntityAvatarLightning.class, RenderAvatarLightning::new);
 
-
-		registerEntityRenderingHandler(EntityAirbender.class,
-				rm -> new RenderHumanBender(rm, "airbender", 7));
-		registerEntityRenderingHandler(EntityFirebender.class,
-				rm -> new RenderHumanBender(rm, "firebender", 1));
-		registerEntityRenderingHandler(EntityWaterbender.class,
-				rm -> new RenderHumanBender(rm, "waterbender", 1));
+		registerEntityRenderingHandler(EntityAirbender.class, rm -> new RenderHumanBender(rm, "airbender", 7));
+		registerEntityRenderingHandler(EntityFirebender.class, rm -> new RenderHumanBender(rm, "firebender", 1));
+		registerEntityRenderingHandler(EntityWaterbender.class, rm -> new RenderHumanBender(rm, "waterbender", 1));
 
 	}
 
 	@Override
 	public IControlsHandler getKeyHandler() {
 		return inputHandler;
-	}
-
-	@Override
-	public IPacketHandler getClientPacketHandler() {
-		return packetHandler;
 	}
 
 	@Override
@@ -167,8 +141,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		ParticleManager pm = mc.effectRenderer;
 
 		if (CLIENT_CONFIG.useCustomParticles) {
-			pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(),
-					AvatarParticleFlames::new);
+			pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(), AvatarParticleFlames::new);
 			pm.registerParticle(AvatarParticles.getParticleAir().getParticleID(), AvatarParticleAir::new);
 		}
 
@@ -182,15 +155,13 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		}
 		if (id == AvatarGuiHandler.GUI_ID_BISON_CHEST) {
 			// x-coordinate represents ID of sky bison
-			int bisonId = x;
-			EntitySkyBison bison = EntitySkyBison.findBison(world, bisonId);
+			EntitySkyBison bison = EntitySkyBison.findBison(world, x);
 			if (bison != null) {
 
 				return new GuiBisonChest(player.inventory, bison);
 
 			} else {
-				AvatarLog.warn(WarningType.WEIRD_PACKET, player.getName()
-						+ " tried to open skybison inventory, was not found. BisonId: " + bisonId);
+				AvatarLog.warn(WarningType.WEIRD_PACKET, player.getName() + " tried to open skybison inventory, was not found. BisonId: " + x);
 			}
 		}
 		if (id == AvatarGuiHandler.GUI_ID_GET_BENDING) {
@@ -206,7 +177,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	}
 
 	@Override
-	public IThreadListener getClientThreadListener() {
+	public IThreadListener getThreadListener() {
 		return mc;
 	}
 
@@ -272,12 +243,10 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			Field field = KeyBinding.class.getDeclaredFields()[0];
 			field.setAccessible(true);
 			Map<String, KeyBinding> kbMap = (Map<String, KeyBinding>) field.get(null);
-			this.allKeybindings = kbMap.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
+			allKeybindings = kbMap.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
 
 		} catch (Exception ex) {
-			AvatarLog.error(
-					"Could not load all keybindings list by using reflection. Will probably have serious problems",
-					ex);
+			AvatarLog.error("Could not load all keybindings list by using reflection. Will probably have serious problems", ex);
 		}
 	}
 

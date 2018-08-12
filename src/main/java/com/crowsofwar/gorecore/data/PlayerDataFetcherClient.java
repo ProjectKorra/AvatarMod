@@ -17,111 +17,102 @@
 
 package com.crowsofwar.gorecore.data;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.UUID;
-import java.util.function.Consumer;
-
-import com.crowsofwar.gorecore.GoreCore;
-import com.crowsofwar.gorecore.util.AccountUUIDs;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.*;
+
+import com.crowsofwar.gorecore.GoreCore;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
+
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Manages player data fetching on a client. Caches player data, creating as
  * necessary using reflection. Supports a callback for player data creation.
- * 
+ *
  * @param <T>
- * 
  * @author CrowsOfWar
  */
 @SideOnly(Side.CLIENT)
 public class PlayerDataFetcherClient<T extends PlayerData> implements PlayerDataFetcher<T> {
-	
+
 	private final Minecraft mc;
-	
+
 	/**
 	 * Keeps track of client-side player data by mapping player UUID to player
 	 * data.
 	 */
-	private Map<UUID, T> playerData = new HashMap<UUID, T>();
+	private Map<UUID, T> playerData = new HashMap<>();
 	private Class<T> dataClass;
 	private Consumer<T> onCreate;
-	
+
 	/**
 	 * Amount of ticks until check if player data can unload.
 	 */
 	private int ticksUntilCheck;
-	
+
 	/**
 	 * Create a client-side player data fetcher.
-	 * 
-	 * @param dataClass
-	 *            The class of your player data
+	 *
+	 * @param dataClass The class of your player data
 	 */
 	public PlayerDataFetcherClient(Class<T> dataClass) {
 		this(dataClass, t -> {
 		});
 	}
-	
+
 	/**
 	 * Create a client-side player data fetcher.
-	 * 
-	 * @param dataClass
-	 *            The class of your player data
-	 * @param callback
-	 *            A handler which will be invoked when a new instance of your
-	 *            player data was created
+	 *
+	 * @param dataClass The class of your player data
+	 * @param callback  A handler which will be invoked when a new instance of your
+	 *                  player data was created
 	 */
 	public PlayerDataFetcherClient(Class<T> dataClass, Consumer<T> callback) {
-		this.mc = Minecraft.getMinecraft();
+		mc = Minecraft.getMinecraft();
 		this.dataClass = dataClass;
-		this.onCreate = callback;
-		this.ticksUntilCheck = 20;
+		onCreate = callback;
+		ticksUntilCheck = 20;
 		MinecraftForge.EVENT_BUS.register(this);
 	}
-	
+
 	private T createPlayerData(Class<T> dataClass, UUID playerID) {
 		try {
-			
+
 			EntityPlayer player = AccountUUIDs.findEntityFromUUID(mc.world, playerID);
-			return dataClass.getConstructor(DataSaver.class, UUID.class, EntityPlayer.class)
-					.newInstance(new DataSaverDontSave(), playerID, player);
-			
+			return dataClass.getConstructor(DataSaver.class, UUID.class, EntityPlayer.class).newInstance(new DataSaverDontSave(), playerID, player);
+
 		} catch (Exception e) {
 			GoreCore.LOGGER.warn("Found an error when trying to make new client-side player data!");
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
+
 	@Override
 	public T fetch(World world, UUID playerID) {
 		if (world == null) throw new IllegalArgumentException("Cannot get client player data for null world");
-		if (playerID == null)
-			throw new IllegalArgumentException("Cannot get client player data for null player ID");
-		
+		if (playerID == null) throw new IllegalArgumentException("Cannot get client player data for null player ID");
+
 		T data = playerData.get(playerID);
 		if (data == null) {
 			data = createPlayerData(dataClass, playerID);
 			playerData.put(playerID, data);
 			if (onCreate != null) onCreate.accept(data);
 		}
-		
+
 		data.setPlayerEntity(AccountUUIDs.findEntityFromUUID(world, playerID));
 		return data;
 	}
-	
+
 	/**
 	 * Player data cache is cleared when world is unloaded.
 	 */
@@ -130,7 +121,7 @@ public class PlayerDataFetcherClient<T extends PlayerData> implements PlayerData
 		playerData.clear();
 		GoreCore.LOGGER.info("Client fetcher- all player data decached");
 	}
-	
+
 	/**
 	 * Every second, check player data if it needs to unload.
 	 */
@@ -149,5 +140,5 @@ public class PlayerDataFetcherClient<T extends PlayerData> implements PlayerData
 			}
 		}
 	}
-	
+
 }

@@ -17,19 +17,19 @@
 
 package com.crowsofwar.gorecore.tree;
 
-import java.util.List;
-
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.tree.TreeCommandException.Reason;
 
+import java.util.List;
+
 public class NodeBranch implements ICommandNode {
-	
+
 	private final ICommandNode[] nodes;
 	private final IArgument<String> argName;
 	private final IArgument<?>[] args;
 	private final String name;
 	private final FormattedMessage infoMessage;
-	
+
 	public NodeBranch(FormattedMessage infoMessage, String name, ICommandNode... nodes) {
 		this.nodes = nodes;
 		// this.argName = new ArgumentDirect<String>("node-name",
@@ -37,50 +37,49 @@ public class NodeBranch implements ICommandNode {
 		String[] possibilities = new String[nodes.length];
 		for (int i = 0; i < possibilities.length; i++)
 			possibilities[i] = nodes[i].getNodeName();
-		this.argName = new ArgumentOptions<String>(ITypeConverter.CONVERTER_STRING, "node-name",
-				possibilities);
-		this.args = new IArgument<?>[] { argName };
+		argName = new ArgumentOptions<>(ITypeConverter.CONVERTER_STRING, "node-name", possibilities);
+		args = new IArgument<?>[] { argName };
 		this.name = name;
 		this.infoMessage = infoMessage;
 	}
-	
+
 	@Override
 	public ICommandNode execute(CommandCall call, List<String> options) {
 		ArgumentList args = call.popArguments(this);
 		String name = args.get(argName);
-		for (int i = 0; i < nodes.length; i++) {
-			if (nodes[i].getNodeName().equals(name)) return nodes[i];
+		for (ICommandNode node : nodes) {
+			if (node.getNodeName().equals(name)) return node;
 		}
 		throw new TreeCommandException(Reason.NO_BRANCH_NODE, name, getHelp());
 	}
-	
+
 	@Override
 	public boolean needsOpPermission() {
 		return false;
 	}
-	
+
 	@Override
 	public String getNodeName() {
 		return name;
 	}
-	
+
 	@Override
 	public IArgument<?>[] getArgumentList() {
 		return args;
 	}
-	
+
 	@Override
 	public String getHelp() {
 		return getNodeName() + " " + argName.getHelpString();
 	}
-	
+
 	public ICommandNode[] getSubNodes() {
 		return nodes;
 	}
-	
+
 	@Override
 	public FormattedMessage getInfoMessage() {
 		return infoMessage;
 	}
-	
+
 }

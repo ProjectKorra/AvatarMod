@@ -255,7 +255,7 @@ public final class AccountUUIDs {
 			BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
 			String line;
-			StringBuffer response = new StringBuffer();
+			StringBuilder response = new StringBuilder();
 			while ((line = br.readLine()) != null) response.append(line);
 			br.close();
 
@@ -279,7 +279,7 @@ public final class AccountUUIDs {
 			String resultOfExtraction = result.replace("{", "");
 			resultOfExtraction = resultOfExtraction.replace("}", "");
 			resultOfExtraction = resultOfExtraction.substring(0, resultOfExtraction.indexOf(','));
-			resultOfExtraction = resultOfExtraction.substring(resultOfExtraction.indexOf(':'), resultOfExtraction.length());
+			resultOfExtraction = resultOfExtraction.substring(resultOfExtraction.indexOf(':'));
 			resultOfExtraction = resultOfExtraction.replace("\"", "");
 			resultOfExtraction = resultOfExtraction.replace(":", "");
 
@@ -287,8 +287,7 @@ public final class AccountUUIDs {
 			uuidCleaned = (uuidCleaned.substring(0, 8) + "-" + uuidCleaned.substring(8, 12) + "-" + uuidCleaned.substring(12, 16) + "-" + uuidCleaned
 							.substring(16, 20) + "-" + uuidCleaned.substring(20, 32));
 
-			UUID uuidResult = UUID.fromString(uuidCleaned);
-			return uuidResult;
+			return UUID.fromString(uuidCleaned);
 
 		} catch (Exception e) {
 			GoreCore.LOGGER.error("Unexpected error getting UUID for " + username, e);
@@ -316,7 +315,7 @@ public final class AccountUUIDs {
 			BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
 			String line;
-			StringBuffer response = new StringBuffer();
+			StringBuilder response = new StringBuilder();
 			while ((line = br.readLine()) != null) response.append(line);
 			br.close();
 

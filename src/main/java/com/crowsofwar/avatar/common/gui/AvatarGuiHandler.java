@@ -17,14 +17,15 @@
 
 package com.crowsofwar.avatar.common.gui;
 
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarLog.WarningType;
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.common.network.IGuiHandler;
+
+import com.crowsofwar.avatar.*;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 import java.util.UUID;
 
@@ -53,15 +54,13 @@ public class AvatarGuiHandler implements IGuiHandler {
 		}
 		if (id == GUI_ID_BISON_CHEST) {
 			// x-coordinate represents ID of sky bison
-			int bisonId = x;
-			EntitySkyBison bison = EntitySkyBison.findBison(world, bisonId);
+			EntitySkyBison bison = EntitySkyBison.findBison(world, x);
 			if (bison != null) {
 
 				return new ContainerBisonChest(player.inventory, bison.getInventory(), bison, player);
 
 			} else {
-				AvatarLog.warn(WarningType.WEIRD_PACKET, player.getName()
-						+ " tried to open skybison inventory, was not found. BisonId: " + bisonId);
+				AvatarLog.warn(WarningType.WEIRD_PACKET, player.getName() + " tried to open skybison inventory, was not found. BisonId: " + x);
 			}
 		}
 		if (id == GUI_ID_GET_BENDING) {

@@ -17,14 +17,12 @@
 
 package com.crowsofwar.gorecore.util;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
+
+import io.netty.buffer.ByteBuf;
 
 import static java.lang.Math.*;
 
@@ -47,7 +45,7 @@ public class Vector {
 	public static final Vector NORTH = new Vector(0, 0, -1);
 	public static final Vector SOUTH = new Vector(0, 0, 1);
 
-	public static final Vector[] DIRECTION_VECTORS = {UP, DOWN, EAST, WEST, NORTH, SOUTH};
+	public static final Vector[] DIRECTION_VECTORS = { UP, DOWN, EAST, WEST, NORTH, SOUTH };
 
 	private final double x, y, z;
 	private double cachedMagnitude;
@@ -70,7 +68,7 @@ public class Vector {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.cachedMagnitude = -1;
+		cachedMagnitude = -1;
 	}
 
 	/**
@@ -118,6 +116,140 @@ public class Vector {
 	}
 
 	/**
+	 * Reflects the vector across the given normal. Returns a new vector.
+	 *
+	 * @see #reflect(Vector)
+	 */
+	public static Vector reflect(Vector vec, Vector normal) {
+		return vec.reflect(normal);
+	}
+
+	/**
+	 * Returns the euler angles from position 1 to position 2.
+	 * <p>
+	 * The returned vector has Y for yaw, and X for pitch. Measurements are in
+	 * radians.
+	 *
+	 * @param pos1 Where we are
+	 * @param pos2 Where to look at
+	 */
+	public static Vector getRotationTo(Vector pos1, Vector pos2) {
+		Vector diff = pos2.minus(pos1).normalize();
+		double x = diff.x();
+		double y = diff.y();
+		double z = diff.z();
+		double d3 = MathHelper.sqrt(x * x + z * z);
+		double rotY = Math.atan2(z, x) - Math.PI / 2;
+		double rotX = -Math.atan2(y, d3);
+		double rotZ = 0;
+		return new Vector(rotX, rotY, rotZ);
+	}
+
+	/**
+	 * Gets the position of the entity
+	 */
+	public static Vector getEntityPos(Entity entity) {
+		return new Vector(entity);
+	}
+
+	/**
+	 * Gets the position of the entity, but adjusted so ypos is the eyepos
+	 */
+	public static Vector getEyePos(Entity entity) {
+		return getEntityPos(entity).plus(0, entity.getEyeHeight(), 0);
+	}
+
+	/**
+	 * Get velocity of the entity in m/s.
+	 */
+	public static Vector getVelocity(Entity entity) {
+		return new Vector(entity.motionX * 20, entity.motionY * 20, entity.motionZ * 20);
+	}
+
+	/**
+	 * Get the pitch to lob a projectile in radians. Example: pitch to target
+	 * can be used in {@link #toRectangular(double, double)}
+	 *
+	 * @param v Force of the projectile, going FORWARDS
+	 * @param g Gravity constant
+	 * @param x Horizontal distance to target
+	 * @param y Vertical distance to target
+	 */
+	public static double getProjectileAngle(double v, double g, double x, double y) {
+		return -Math.atan2((v * v + Math.sqrt(v * v * v * v - g * (g * x * x + 2 * y * v * v))), g * x);
+	}
+
+	/**
+	 * Create a rectangular vector from the entity's rotations. This can be used
+	 * to determine the coordinates the entity is looking at (without raytrace).
+	 *
+	 * @param entity The entity to use
+	 */
+	public static Vector getLookRectangular(Entity entity) {
+		return toRectangular(toRadians(entity.rotationYaw), toRadians(entity.rotationPitch));
+	}
+
+	/**
+	 * Create a rotation vector from the entity's rotations. This is a euler and
+	 * is in radians.
+	 *
+	 * @see #getEuler(double, double)
+	 */
+	public static Vector getLookRotations(Entity entity) {
+		return getEuler(toRadians(entity.rotationYaw), toRadians(entity.rotationPitch));
+	}
+
+	/**
+	 * Gets a vector representing rotations for the given yaw/pitch. Parameters
+	 * should be in radians.
+	 */
+	public static Vector getEuler(double yaw, double pitch) {
+		return new Vector(pitch, yaw, 0);
+	}
+
+	/**
+	 * Converts a rotation vector into a rectangular (Cartesian) vector. Euler
+	 * must be in radians.
+	 *
+	 * @see #toRectangular(double, double)
+	 * @see #getEuler(double, double)
+	 */
+	public static Vector toRectangular(Vector euler) {
+		return new Vector(-sin(euler.y()) * cos(euler.x()), -sin(euler.x()), cos(euler.y()) * cos(euler.x()));
+	}
+
+	/**
+	 * Converts the given rotations into a rectangular (Cartesian) vector.
+	 * Parameters must be in radians.
+	 *
+	 * @see #toRectangular(Vector)
+	 */
+	public static Vector toRectangular(double yaw, double pitch) {
+		return new Vector(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
+	}
+
+	/**
+	 * Creates a new vector from the packet information in the byte buffer.
+	 * Vectors should be encoded using the non-static {@link #toBytes(ByteBuf)
+	 * toBytes}.
+	 *
+	 * @param buf Buffer to read from
+	 * @see #toBytes(ByteBuf)
+	 */
+	public static Vector fromBytes(ByteBuf buf) {
+		return new Vector(buf.readDouble(), buf.readDouble(), buf.readDouble());
+	}
+
+	/**
+	 * Creates a new vector from the x,y,z information in NBT. Reads directly
+	 * off the NBT compound provided.
+	 */
+
+	public static Vector readFromNbt(NBTTagCompound nbt) {
+		return new Vector(nbt.getDouble("x"), nbt.getDouble("y"), nbt.getDouble("z"));
+	}
+
+	/**
 	 * Get the x-coordinate of this vector.
 	 */
 	public double x() {
@@ -143,7 +275,7 @@ public class Vector {
 	 * x-coordinate.
 	 */
 	public Vector withX(double x) {
-		return new Vector(x, this.y, this.z);
+		return new Vector(x, y, z);
 	}
 
 	/**
@@ -151,7 +283,7 @@ public class Vector {
 	 * y-coordinate.
 	 */
 	public Vector withY(double y) {
-		return new Vector(this.x, y, this.z);
+		return new Vector(x, y, z);
 	}
 
 	/**
@@ -159,7 +291,7 @@ public class Vector {
 	 * z-coordinate.
 	 */
 	public Vector withZ(double z) {
-		return new Vector(this.x, this.y, z);
+		return new Vector(x, y, z);
 	}
 
 	/**
@@ -271,7 +403,7 @@ public class Vector {
 	 * @return this
 	 */
 	public Vector normalize() {
-		return this.dividedBy(magnitude());
+		return dividedBy(magnitude());
 	}
 
 	/**
@@ -300,8 +432,7 @@ public class Vector {
 	 * @param z The z-position of the other vector
 	 */
 	public double sqrDist(double x, double y, double z) {
-		return (this.x() - x) * (this.x() - x) + (this.y() - y) * (this.y() - y)
-				+ (this.z() - z) * (this.z() - z);
+		return (x() - x) * (x() - x) + (y() - y) * (y() - y) + (z() - z) * (z() - z);
 	}
 
 	/**
@@ -341,7 +472,7 @@ public class Vector {
 	 * @param z Z-coordinate of the other vector
 	 */
 	public double dot(double x, double y, double z) {
-		return this.x() * x + this.y() * y + this.z() * z;
+		return x() * x + y() * y + z() * z;
 	}
 
 	/**
@@ -362,8 +493,7 @@ public class Vector {
 	 * @param z Z-coordinate of other vector
 	 */
 	public Vector cross(double x, double y, double z) {
-		return new Vector(this.y() * z - this.z() * y, this.z() * x - this.x() * z,
-				this.x() * y - this.y() * x);
+		return new Vector(y() * z - z() * y, z() * x - x() * z, x() * y - y() * x);
 	}
 
 	/**
@@ -374,7 +504,7 @@ public class Vector {
 	 */
 	public double angle(Vector vec) {
 		double dot = dot(vec);
-		return Math.acos(dot / (this.magnitude() * vec.magnitude()));
+		return Math.acos(dot / (magnitude() * vec.magnitude()));
 	}
 
 	/**
@@ -387,7 +517,7 @@ public class Vector {
 		if (!normal.isNormalized()) {
 			throw new IllegalArgumentException("Normal vector must be normalized");
 		}
-		return this.minus(normal.times(2).times(this.dot(normal)));
+		return minus(normal.times(2).times(dot(normal)));
 	}
 
 	/**
@@ -476,147 +606,10 @@ public class Vector {
 		if (obj == null) return false;
 		if (obj instanceof Vector) {
 			Vector vec = (Vector) obj;
-			return this.x() == vec.x() && this.y() == vec.y() && this.z() == vec.z();
+			return x() == vec.x() && y() == vec.y() && z() == vec.z();
 		} else {
 			return false;
 		}
-	}
-
-	/**
-	 * Reflects the vector across the given normal. Returns a new vector.
-	 *
-	 * @see #reflect(Vector)
-	 */
-	public static Vector reflect(Vector vec, Vector normal) {
-		return vec.reflect(normal);
-	}
-
-	/**
-	 * Returns the euler angles from position 1 to position 2.
-	 * <p>
-	 * The returned vector has Y for yaw, and X for pitch. Measurements are in
-	 * radians.
-	 *
-	 * @param pos1 Where we are
-	 * @param pos2 Where to look at
-	 */
-	public static Vector getRotationTo(Vector pos1, Vector pos2) {
-		Vector diff = pos2.minus(pos1).normalize();
-		double x = diff.x();
-		double y = diff.y();
-		double z = diff.z();
-		double d0 = x;
-		double d1 = y;
-		double d2 = z;
-		double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
-		double rotY = Math.atan2(d2, d0) - Math.PI / 2;
-		double rotX = -Math.atan2(d1, d3);
-		double rotZ = 0;
-		return new Vector(rotX, rotY, rotZ);
-	}
-
-	/**
-	 * Gets the position of the entity
-	 */
-	public static Vector getEntityPos(Entity entity) {
-		return new Vector(entity);
-	}
-
-	/**
-	 * Gets the position of the entity, but adjusted so ypos is the eyepos
-	 */
-	public static Vector getEyePos(Entity entity) {
-		return getEntityPos(entity).plus(0, entity.getEyeHeight(), 0);
-	}
-
-	/**
-	 * Get velocity of the entity in m/s.
-	 */
-	public static Vector getVelocity(Entity entity) {
-		return new Vector(entity.motionX * 20, entity.motionY * 20, entity.motionZ * 20);
-	}
-
-	/**
-	 * Get the pitch to lob a projectile in radians. Example: pitch to target
-	 * can be used in {@link #toRectangular(double, double)}
-	 *
-	 * @param v Force of the projectile, going FORWARDS
-	 * @param g Gravity constant
-	 * @param x Horizontal distance to target
-	 * @param y Vertical distance to target
-	 */
-	public static double getProjectileAngle(double v, double g, double x, double y) {
-		return -Math.atan2((v * v + Math.sqrt(v * v * v * v - g * (g * x * x + 2 * y * v * v))), g * x);
-	}
-
-	/**
-	 * Create a rectangular vector from the entity's rotations. This can be used
-	 * to determine the coordinates the entity is looking at (without raytrace).
-	 *
-	 * @param entity The entity to use
-	 */
-	public static Vector getLookRectangular(Entity entity) {
-		return toRectangular(toRadians(entity.rotationYaw), toRadians(entity.rotationPitch));
-	}
-
-	/**
-	 * Create a rotation vector from the entity's rotations. This is a euler and
-	 * is in radians.
-	 *
-	 * @see #getEuler(double, double)
-	 */
-	public static Vector getLookRotations(Entity entity) {
-		return getEuler(toRadians(entity.rotationYaw), toRadians(entity.rotationPitch));
-	}
-
-	/**
-	 * Gets a vector representing rotations for the given yaw/pitch. Parameters
-	 * should be in radians.
-	 */
-	public static Vector getEuler(double yaw, double pitch) {
-		return new Vector(pitch, yaw, 0);
-	}
-
-	/**
-	 * Converts a rotation vector into a rectangular (Cartesian) vector. Euler
-	 * must be in radians.
-	 *
-	 * @see #toRectangular(double, double)
-	 * @see #getEuler(double, double)
-	 */
-	public static Vector toRectangular(Vector euler) {
-		return new Vector(-sin(euler.y()) * cos(euler.x()), -sin(euler.x()), cos(euler.y()) * cos(euler.x()));
-	}
-
-	/**
-	 * Converts the given rotations into a rectangular (Cartesian) vector.
-	 * Parameters must be in radians.
-	 *
-	 * @see #toRectangular(Vector)
-	 */
-	public static Vector toRectangular(double yaw, double pitch) {
-		return new Vector(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
-	}
-
-	/**
-	 * Creates a new vector from the packet information in the byte buffer.
-	 * Vectors should be encoded using the non-static {@link #toBytes(ByteBuf)
-	 * toBytes}.
-	 *
-	 * @param buf Buffer to read from
-	 * @see #toBytes(ByteBuf)
-	 */
-	public static Vector fromBytes(ByteBuf buf) {
-		return new Vector(buf.readDouble(), buf.readDouble(), buf.readDouble());
-	}
-
-	/**
-	 * Creates a new vector from the x,y,z information in NBT. Reads directly
-	 * off the NBT compound provided.
-	 */
-
-	public static Vector readFromNbt(NBTTagCompound nbt) {
-		return new Vector(nbt.getDouble("x"), nbt.getDouble("y"), nbt.getDouble("z"));
 	}
 
 }

@@ -36,6 +36,7 @@ import com.crowsofwar.avatar.common.controls.*;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.avatar.common.util.Raytrace.Result;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 import org.lwjgl.input.*;
 
@@ -237,13 +238,9 @@ public class ClientInput implements IControlsHandler {
 				if (mc.inGameHasFocus) {
 					Collection<AvatarControl> pressed = getAllPressed();
 					Collection<StatusControl> statusControls = data.getAllStatusControls();
-
-					Iterator<StatusControl> sci = statusControls.iterator();
-					while (sci.hasNext()) {
-						StatusControl sc = sci.next();
+					for (StatusControl sc : statusControls) {
 						if (pressed.contains(sc.getSubscribedControl())) {
-							Raytrace.Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
-
+							Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
 							AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
 						}
 					}

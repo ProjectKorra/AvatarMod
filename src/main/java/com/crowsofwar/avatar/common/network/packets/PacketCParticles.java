@@ -17,16 +17,21 @@
 
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.network.PacketRedirector;
-import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraftforge.fml.relauncher.Side;
+
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
+import io.netty.buffer.ByteBuf;
+
+import java.util.Random;
 
 /**
  * @author CrowsOfWar
  */
 public class PacketCParticles extends AvatarPacket<PacketCParticles> {
-
 	private EnumParticleTypes particle;
 	private int minimum, maximum;
 	private double x, y, z;
@@ -35,19 +40,8 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	public PacketCParticles() {
 	}
 
-	/**
-	 * @param particle
-	 * @param minimum
-	 * @param maximum
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param maxVelocityX
-	 * @param maxVelocityY
-	 * @param maxVelocityZ
-	 */
-	public PacketCParticles(EnumParticleTypes particle, int minimum, int maximum, double x, double y,
-							double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ) {
+	public PacketCParticles(EnumParticleTypes particle, int minimum, int maximum, double x, double y, double z, double maxVelocityX,
+					double maxVelocityY, double maxVelocityZ) {
 		this.particle = particle;
 		this.minimum = minimum;
 		this.maximum = maximum;
@@ -83,16 +77,6 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 		buf.writeDouble(maxVelocityX);
 		buf.writeDouble(maxVelocityY);
 		buf.writeDouble(maxVelocityZ);
-	}
-
-	@Override
-	protected Side getReceivedSide() {
-		return Side.CLIENT;
-	}
-
-	@Override
-	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketCParticles> getPacketHandler() {
-		return PacketRedirector::redirectMessage;
 	}
 
 	public EnumParticleTypes getParticle() {
@@ -131,4 +115,31 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 		return maxVelocityZ;
 	}
 
+	public static class Handler extends AvatarPacketHandler<PacketCParticles, IMessage> {
+
+		/**
+		 * This method will always be called on the main thread. In the case that that's not wanted, create your own {@link IMessageHandler}
+		 *
+		 * @param message The packet that is received
+		 * @param ctx     The context to that packet
+		 * @return An optional packet to reply with, or null
+		 */
+		@Override
+		IMessage avatarOnMessage(PacketCParticles message, MessageContext ctx) {
+			EnumParticleTypes particle = message.getParticle();
+			if (particle == null) {
+				AvatarLog.warn(WarningType.WEIRD_PACKET, "Unknown particle received from server");
+				return null;
+			}
+			Random random = new Random();
+			int particles = random.nextInt(message.getMaximum() - message.getMinimum() + 1) + message.getMinimum();
+			for (int i = 0; i < particles; i++) {
+				Minecraft.getMinecraft().world.spawnParticle(particle, message.getX(), message.getY(), message.getZ(),
+															 message.getMaxVelocityX() * random.nextGaussian(),
+															 message.getMaxVelocityY() * random.nextGaussian(),
+															 message.getMaxVelocityZ() * random.nextGaussian());
+			}
+			return null;
+		}
+	}
 }

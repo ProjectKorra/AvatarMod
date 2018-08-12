@@ -16,13 +16,6 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
-import com.crowsofwar.avatar.client.uitools.*;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.gui.AvatarGui;
-import com.crowsofwar.avatar.common.gui.ContainerGetBending;
-import com.crowsofwar.avatar.common.network.packets.PacketSUnlockBending;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -31,8 +24,14 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
 
-import java.util.List;
-import java.util.UUID;
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
+import com.crowsofwar.avatar.client.uitools.*;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.gui.*;
+import com.crowsofwar.avatar.common.network.packets.PacketSUnlockBending;
+
+import java.util.*;
 
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.scaleFactor;
 
@@ -53,7 +52,7 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 
 	public GetBendingGui(EntityPlayer player) {
 		super(new ContainerGetBending(player));
-		this.container = (ContainerGetBending) inventorySlots;
+		container = (ContainerGetBending) inventorySlots;
 
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		xSize = res.getScaledWidth();
@@ -83,21 +82,18 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		scrollSlots.setPadding(Measurement.fromPixels(7, 9));
 		handler.add(scrollSlots);
 
-		hotbarComp = new ComponentInventorySlots(container, 9, 1, container.getHotbarIndex(),
-				container.getHotbarIndex() + 8);
+		hotbarComp = new ComponentInventorySlots(container, 9, 1, container.getHotbarIndex(), container.getHotbarIndex() + 8);
 		hotbarComp.setPosition(StartingPosition.MIDDLE_BOTTOM);
 		hotbarComp.setOffset(Measurement.fromPixels(0, -7 * scaleFactor()));
 		handler.add(hotbarComp);
 
-		inventoryComp = new ComponentInventorySlots(container, 9, 3, container.getInvIndex(),
-				container.getInvIndex() + 26);
+		inventoryComp = new ComponentInventorySlots(container, 9, 3, container.getInvIndex(), container.getInvIndex() + 26);
 		inventoryComp.setPosition(StartingPosition.MIDDLE_BOTTOM);
 		inventoryComp.useTexture(AvatarUiTextures.getBending, 0, 34, 176, 90);
 		inventoryComp.setPadding(Measurement.fromPixels(7, 7));
 		handler.add(inventoryComp);
 
-		incompatibleMsg = new ComponentText(
-				TextFormatting.RED + I18n.format("avatar.getBending.incompatible")) {
+		incompatibleMsg = new ComponentText(TextFormatting.RED + I18n.format("avatar.getBending.incompatible")) {
 			@Override
 			protected void componentDraw(float partialTicks, boolean mouseHover) {
 				float ticks = container.getIncompatibleMsgTicks();
@@ -119,8 +115,7 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 		incompatibleMsg.setOffset(Measurement.fromPixels(slotsFrame, 0, 20));
 		handler.add(incompatibleMsg);
 
-		instructions = new ComponentLongText(I18n.format("avatar.getBending.guide"),
-				Measurement.fromPercent(50, 0));
+		instructions = new ComponentLongText(I18n.format("avatar.getBending.guide"), Measurement.fromPercent(50, 0));
 		instructions.setFrame(slotsFrame);
 		instructions.setPosition(StartingPosition.TOP_CENTER);
 		instructions.setOffset(Measurement.fromPixels(slotsFrame, 0, title.height() + 20));
@@ -135,9 +130,8 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 			int u = (i % 2) * 120;
 			int v = 124 + 60 * (i / 2);
 
-			UiComponent comp = new ComponentCustomButton(AvatarUiTextures.getBending, u, v, 60, 60, () -> {
-				AvatarMod.network.sendToServer(new PacketSUnlockBending(bendingId));
-			});
+			UiComponent comp = new ComponentCustomButton(AvatarUiTextures.getBending, u, v, 60, 60,
+														 () -> AvatarMod.network.sendToServer(new PacketSUnlockBending(bendingId)));
 
 			comp.setFrame(buttonsFrame);
 			comp.setScale(0.5f);
@@ -198,9 +192,8 @@ public class GetBendingGui extends GuiContainer implements AvatarGui {
 
 		float yPx = buttonsFrame.getDimensions().yInPixels();
 		buttonsFrame.setDimensions(Measurement.fromPixels(totalWidth, yPx));
-		buttonsFrame
-				.setPosition(Measurement.fromPercent((100 - buttonsFrame.getDimensions().xInPercent()) / 2,
-						slotsFrame.getCoordsMax().yInPercent()));
+		buttonsFrame.setPosition(
+						Measurement.fromPercent((100 - buttonsFrame.getDimensions().xInPercent()) / 2, slotsFrame.getCoordsMax().yInPercent()));
 
 	}
 

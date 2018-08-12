@@ -16,9 +16,10 @@
 */
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.network.PacketRedirector;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+
+import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author CrowsOfWar
@@ -33,14 +34,18 @@ public class PacketSConfirmTransfer extends AvatarPacket<PacketSConfirmTransfer>
 	public void avatarToBytes(ByteBuf buf) {
 	}
 
-	@Override
-	protected Side getReceivedSide() {
-		return Side.SERVER;
+	public static class Handler extends AvatarPacketHandler<PacketSConfirmTransfer, IMessage> {
+		/**
+		 * This method will always be called on the main thread. In the case that that's not wanted, create your own {@link IMessageHandler}
+		 *
+		 * @param message The packet that is received
+		 * @param ctx     The context to that packet
+		 * @return An optional packet to reply with, or null
+		 */
+		@Override
+		IMessage avatarOnMessage(PacketSConfirmTransfer message, MessageContext ctx) {
+			TransferConfirmHandler.confirmTransfer(ctx.getServerHandler().player);
+			return null;
+		}
 	}
-
-	@Override
-	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketSConfirmTransfer> getPacketHandler() {
-		return PacketRedirector::redirectMessage;
-	}
-
 }

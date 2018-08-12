@@ -17,16 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AvatarWorldData;
-import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
-import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.gorecore.util.Vector;
-import com.google.common.base.Optional;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
@@ -34,26 +24,17 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.particle.*;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
-import lombok.*;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -75,7 +56,6 @@ public abstract class AvatarEntity extends Entity {
 
 	private Ability ability;
 
-
 	private SyncedEntity<EntityLivingBase> ownerRef;
 
 	/**
@@ -84,10 +64,9 @@ public abstract class AvatarEntity extends Entity {
 	public AvatarEntity(World world) {
 		super(world);
 
-
-		this.ownerRef = new SyncedEntity<>(this, SYNC_OWNER);
-		this.putsOutFires = false;
-		this.flammable = false;
+		ownerRef = new SyncedEntity<>(this, SYNC_OWNER);
+		putsOutFires = false;
+		flammable = false;
 
 	}
 
@@ -110,7 +89,6 @@ public abstract class AvatarEntity extends Entity {
 
 		return null;
 	}
-
 
 	/**
 	 * Find the entity controlled by the given player.
@@ -203,7 +181,7 @@ public abstract class AvatarEntity extends Entity {
 		setPosition(position.x(), position.y(), position.z());
 	}
 
-	public void setPosition (Vec3d position) {
+	public void setPosition(Vec3d position) {
 		setPosition(position.x, position.y, position.z);
 	}
 
@@ -223,12 +201,12 @@ public abstract class AvatarEntity extends Entity {
 		this.powerRating = powerRating;
 	}
 
-	public void setAbility(Ability ability) {
-		this.ability = ability;
-	}
-
 	public Ability getAbility() {
 		return ability;
+	}
+
+	public void setAbility(Ability ability) {
+		this.ability = ability;
 	}
 
 	@Override
@@ -298,8 +276,8 @@ public abstract class AvatarEntity extends Entity {
 			if (i > 0 && list.size() > i - 1 && rand.nextInt(4) == 0) {
 				int j = 0;
 
-				for (int k = 0; k < list.size(); ++k) {
-					if (!list.get(k).isRiding()) {
+				for (Entity entity : list) {
+					if (!entity.isRiding()) {
 						++j;
 					}
 				}
@@ -309,8 +287,7 @@ public abstract class AvatarEntity extends Entity {
 				}
 			}
 
-			for (int l = 0; l < list.size(); ++l) {
-				Entity entity = list.get(l);
+			for (Entity entity : list) {
 				if (canCollideWith(entity)) {
 					entity.applyEntityCollision(this);
 					onCollideWithEntity(entity);

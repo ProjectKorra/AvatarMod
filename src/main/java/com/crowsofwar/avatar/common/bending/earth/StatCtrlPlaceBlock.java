@@ -17,19 +17,15 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import net.minecraft.block.SoundType;
+import net.minecraft.util.*;
+
+import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
+import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
-import com.crowsofwar.gorecore.util.Vector;
-import com.crowsofwar.gorecore.util.VectorI;
-import net.minecraft.block.SoundType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
+import com.crowsofwar.gorecore.util.*;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -55,8 +51,8 @@ public class StatCtrlPlaceBlock extends StatusControl {
 		BendingData data = ctx.getData();
 
 		EntityFloatingBlock floating = AvatarEntity.lookupEntity(ctx.getWorld(), EntityFloatingBlock.class,
-				fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
-						&& fb.getOwner() == ctx.getBenderEntity());
+																 fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
+																				 && fb.getOwner() == ctx.getBenderEntity());
 
 		if (floating != null) {
 			VectorI looking = ctx.getLookPosI();
@@ -68,11 +64,10 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				Vector force = looking.precision().minus(new Vector(floating)).normalize();
 				floating.addVelocity(force);
 
-				SoundType sound = floating.getBlock().getSoundType();
-				if (sound != null) {
-					floating.world.playSound(null, floating.getPosition(), sound.getPlaceSound(),
-							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
-				}
+				SoundType sound = floating.getBlock()
+								.getSoundType(floating.getBlockState(), floating.getEntityWorld(), floating.getPosition(), floating);
+				floating.world.playSound(null, floating.getPosition(), sound.getPlaceSound(), SoundCategory.PLAYERS, sound.getVolume(),
+										 sound.getPitch());
 
 				data.removeStatusControl(THROW_BLOCK);
 

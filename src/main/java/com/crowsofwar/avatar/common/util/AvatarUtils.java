@@ -17,29 +17,43 @@
 
 package com.crowsofwar.avatar.common.util;
 
-import com.crowsofwar.avatar.AvatarLog;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.play.server.SPacketEntityTeleport;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.nbt.*;
+import net.minecraft.network.play.server.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.IThreadListener;
+import net.minecraft.world.WorldServer;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import com.crowsofwar.avatar.*;
+
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
 
 import static com.crowsofwar.avatar.AvatarLog.WarningType.INVALID_SAVE;
 
 public class AvatarUtils {
+	public static void addScheduledTask(Runnable runnable) {
+		AvatarMod.proxy.getThreadListener().addScheduledTask(runnable);
+	}
 
-	public static <T extends Entity> Comparator<T> getSortByDistanceComparator
-			(Function<T, Float> distanceSupplier) {
+	public static <V> Future<V> callFromMainThread(Callable<V> callable) {
+		IThreadListener listener = AvatarMod.proxy.getThreadListener();
+		if (listener instanceof Minecraft) {
+			return ((Minecraft) listener).addScheduledTask(callable);
+		} else if (listener instanceof MinecraftServer) {
+			return ((MinecraftServer) listener).callFromMainThread(callable);
+		} else if (listener instanceof WorldServer) {
+			return Objects.requireNonNull(((WorldServer) listener).getMinecraftServer()).callFromMainThread(callable);
+		}
+		return null;
+	}
+
+	public static <T extends Entity> Comparator<T> getSortByDistanceComparator(Function<T, Float> distanceSupplier) {
 
 		return (e1, e2) -> {
 			float d1 = distanceSupplier.apply(e1);
@@ -85,8 +99,7 @@ public class AvatarUtils {
 	 * @param nbt          NBT compound to load the list from
 	 * @param listName     The name of the list tag
 	 */
-	public static <T> void readList(Collection<T> list, Function<NBTTagCompound, T> itemProvider,
-									NBTTagCompound nbt, String listName) {
+	public static <T> void readList(Collection<T> list, Function<NBTTagCompound, T> itemProvider, NBTTagCompound nbt, String listName) {
 
 		list.clear();
 
@@ -97,8 +110,7 @@ public class AvatarUtils {
 			if (read != null) {
 				list.add(read);
 			} else {
-				AvatarLog.warn(INVALID_SAVE,
-						"Invalid list " + listName + ", contains unknown value: " + item);
+				AvatarLog.warn(INVALID_SAVE, "Invalid list " + listName + ", contains unknown value: " + item);
 			}
 		}
 
@@ -113,8 +125,7 @@ public class AvatarUtils {
 	 * @param nbt      NBT compound to write list to
 	 * @param listName The name of the list tag
 	 */
-	public static <T> void writeList(Collection<T> list, BiConsumer<NBTTagCompound, T> writer,
-									 NBTTagCompound nbt, String listName) {
+	public static <T> void writeList(Collection<T> list, BiConsumer<NBTTagCompound, T> writer, NBTTagCompound nbt, String listName) {
 
 		NBTTagList listTag = new NBTTagList();
 
@@ -142,8 +153,8 @@ public class AvatarUtils {
 	 * @param nbt           NBT to read from
 	 * @param mapName       Name to store it as
 	 */
-	public static <K, V> void readMap(Map<K, V> map, Function<NBTTagCompound, K> keyProvider,
-									  Function<NBTTagCompound, V> valueProvider, NBTTagCompound nbt, String mapName) {
+	public static <K, V> void readMap(Map<K, V> map, Function<NBTTagCompound, K> keyProvider, Function<NBTTagCompound, V> valueProvider,
+					NBTTagCompound nbt, String mapName) {
 
 		map.clear();
 
@@ -159,15 +170,13 @@ public class AvatarUtils {
 				AvatarLog.error("MapError: Issue reading map " + mapName + "'s key for item " + i);
 				AvatarLog.error("MapError: Item compound- " + item);
 				AvatarLog.error("MapError: Key compound- " + item.getCompoundTag("Key"));
-				throw new DiskException("readMap- Cannot have null key for map (see log for " +
-						"details)");
+				throw new DiskException("readMap- Cannot have null key for map (see log for " + "details)");
 			}
 			if (value == null) {
 				AvatarLog.error("MapError: Issue reading map " + mapName + "'s value for item" + i);
 				AvatarLog.error("MapError: Item compound- " + item);
 				AvatarLog.error("MapError: Value compound- " + item.getCompoundTag("Value"));
-				throw new DiskException("readMap- Cannot have null value for map (see log for " +
-						"details)");
+				throw new DiskException("readMap- Cannot have null value for map (see log for " + "details)");
 			}
 
 			map.put(key, value);
@@ -184,18 +193,16 @@ public class AvatarUtils {
 	 * @param nbt         NBT to read from
 	 * @param mapName     Name to store map as
 	 */
-	public static <K, V> void writeMap(Map<K, V> map, BiConsumer<NBTTagCompound, K> keyWriter,
-									   BiConsumer<NBTTagCompound, V> valueWriter, NBTTagCompound nbt, String mapName) {
+	public static <K, V> void writeMap(Map<K, V> map, BiConsumer<NBTTagCompound, K> keyWriter, BiConsumer<NBTTagCompound, V> valueWriter,
+					NBTTagCompound nbt, String mapName) {
 
 		NBTTagList listTag = new NBTTagList();
 		Set<Map.Entry<K, V>> entries = map.entrySet();
 
 		for (Map.Entry<K, V> entry : entries) {
 
-			if (entry.getKey() == null)
-				throw new DiskException("writeMap- does not permit null keys in map " + map);
-			if (entry.getValue() == null)
-				throw new DiskException("writeMap- does not permit null values in map " + map);
+			if (entry.getKey() == null) throw new DiskException("writeMap- does not permit null keys in map " + map);
+			if (entry.getValue() == null) throw new DiskException("writeMap- does not permit null values in map " + map);
 
 			NBTTagCompound item = new NBTTagCompound();
 			NBTTagCompound keyNbt = new NBTTagCompound();

@@ -17,16 +17,17 @@
 
 package com.crowsofwar.avatar.server;
 
-import com.crowsofwar.avatar.common.AvatarCommonProxy;
-import com.crowsofwar.avatar.common.controls.IControlsHandler;
-import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.gui.AvatarGui;
-import com.crowsofwar.avatar.common.network.IPacketHandler;
-import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
+
+import net.minecraftforge.fml.common.FMLCommonHandler;
+
+import com.crowsofwar.avatar.common.AvatarCommonProxy;
+import com.crowsofwar.avatar.common.controls.*;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.gui.AvatarGui;
+import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 
 public class AvatarServerProxy implements AvatarCommonProxy {
 
@@ -40,11 +41,6 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	@Override
 	public IControlsHandler getKeyHandler() {
 		return keys;
-	}
-
-	@Override
-	public IPacketHandler getClientPacketHandler() {
-		return null;
 	}
 
 	@Override
@@ -68,8 +64,8 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	}
 
 	@Override
-	public IThreadListener getClientThreadListener() {
-		return null;
+	public IThreadListener getThreadListener() {
+		return FMLCommonHandler.instance().getMinecraftServerInstance();
 	}
 
 	@Override

@@ -16,12 +16,23 @@
 */
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.network.PacketRedirector;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.*;
+import net.minecraft.item.ItemStack;
+
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+
+import com.crowsofwar.avatar.common.analytics.*;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
+import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.Objects;
 
 /**
  * @author CrowsOfWar
@@ -44,22 +55,59 @@ public class PacketSUseScroll extends AvatarPacket<PacketSUseScroll> {
 
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
-		GoreCoreByteBufUtil.writeString(buf, ability.getName
-				());
-	}
-
-	@Override
-	protected Side getReceivedSide() {
-		return Side.SERVER;
-	}
-
-	@Override
-	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketSUseScroll> getPacketHandler() {
-		return PacketRedirector::redirectMessage;
+		GoreCoreByteBufUtil.writeString(buf, ability.getName());
 	}
 
 	public Ability getAbility() {
 		return ability;
 	}
 
+	public static class Handler extends AvatarPacketHandler<PacketSUseScroll, IMessage> {
+
+		/**
+		 * This method will always be called on the main thread. In the case that that's not wanted, create your own {@link IMessageHandler}
+		 *
+		 * @param message The packet that is received
+		 * @param ctx     The context to that packet
+		 * @return An optional packet to reply with, or null
+		 */
+		@Override
+		IMessage avatarOnMessage(PacketSUseScroll message, MessageContext ctx) {
+			EntityPlayerMP player = ctx.getServerHandler().player;
+			AbilityData abilityData = BendingData.get(player).getAbilityData(message.getAbility());
+
+			if (!abilityData.isMaxLevel() && (abilityData.getXp() == 100 || abilityData.isLocked())) {
+				Container container = player.openContainer;
+				if (container instanceof ContainerSkillsGui) {
+					ContainerSkillsGui skills = (ContainerSkillsGui) container;
+					Slot slot1 = skills.getSlot(0);
+					Slot slot2 = skills.getSlot(1);
+					Slot activeSlot = null;
+					if (slot1.getHasStack()) {
+						activeSlot = slot1;
+						abilityData.setPath(AbilityTreePath.FIRST);
+					} else if (slot2.getHasStack()) {
+						activeSlot = slot2;
+						abilityData.setPath(AbilityTreePath.SECOND);
+					}
+					if (activeSlot != null) {
+						ItemStack stack = activeSlot.getStack();
+						if (stack.getItem() == AvatarItems.itemScroll) {
+							// Try to use this scroll
+							if (Objects.requireNonNull(ScrollType.get(stack.getMetadata())).accepts(message.getAbility().getBendingId())) {
+								activeSlot.putStack(ItemStack.EMPTY);
+								abilityData.addLevel();
+								abilityData.setXp(0);
+
+								// Send analytics
+								AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.getAbilityUpgradeEvent(abilityData.getAbilityName(),
+																										 abilityData.getLevelDesc()));
+							}
+						}
+					}
+				}
+			}
+			return null;
+		}
+	}
 }

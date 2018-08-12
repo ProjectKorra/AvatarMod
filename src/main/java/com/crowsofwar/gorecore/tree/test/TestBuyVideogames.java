@@ -17,28 +17,22 @@
 
 package com.crowsofwar.gorecore.tree.test;
 
-import java.util.List;
-
-import com.crowsofwar.gorecore.format.FormattedMessage;
-import com.crowsofwar.gorecore.tree.ArgumentDirect;
-import com.crowsofwar.gorecore.tree.ArgumentList;
-import com.crowsofwar.gorecore.tree.CommandCall;
-import com.crowsofwar.gorecore.tree.IArgument;
-import com.crowsofwar.gorecore.tree.ICommandNode;
-import com.crowsofwar.gorecore.tree.ITypeConverter;
-import com.crowsofwar.gorecore.tree.NodeFunctional;
-
 import net.minecraft.util.text.TextComponentTranslation;
 
+import com.crowsofwar.gorecore.format.FormattedMessage;
+import com.crowsofwar.gorecore.tree.*;
+
+import java.util.List;
+
 public class TestBuyVideogames extends NodeFunctional {
-	
+
 	private final IArgument<Integer> argAmount;
-	
+
 	public TestBuyVideogames() {
 		super("buy", true);
-		argAmount = addArgument(new ArgumentDirect<Integer>("amount", ITypeConverter.CONVERTER_INTEGER, 1));
+		argAmount = addArgument(new ArgumentDirect<>("amount", ITypeConverter.CONVERTER_INTEGER, 1));
 	}
-	
+
 	@Override
 	protected ICommandNode doFunction(CommandCall call, List<String> options) {
 		ArgumentList args = call.popArguments(this);
@@ -46,10 +40,10 @@ public class TestBuyVideogames extends NodeFunctional {
 		call.getFrom().sendMessage(new TextComponentTranslation("test.buyVideogames", amount));
 		return null;
 	}
-	
+
 	@Override
 	public FormattedMessage getInfoMessage() {
 		return TestMessages.MSG_VIDEOGAME_HELP;
 	}
-	
+
 }

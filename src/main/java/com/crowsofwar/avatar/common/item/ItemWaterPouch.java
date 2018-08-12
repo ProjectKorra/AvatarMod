@@ -32,7 +32,7 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.*;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * @author CrowsOfWar
@@ -75,41 +75,42 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		ItemStack itemstack = player.getHeldItem(hand);
 		boolean isFull = itemstack.getMetadata() == 5;
 		if (isFull) {
 			// We're already completely filled
-			return new ActionResult(EnumActionResult.PASS, itemstack);
+			return new ActionResult<>(EnumActionResult.PASS, itemstack);
 		}
 		// Last boolean is useLiquids, which obviously should be true
 		RayTraceResult raytraceresult = rayTrace(world, player, true);
-		if (raytraceresult == null || raytraceresult.typeOfHit != RayTraceResult.Type.BLOCK) {
+		if (raytraceresult.typeOfHit != RayTraceResult.Type.BLOCK) {
 			// We're not looking at a block
-			return new ActionResult(EnumActionResult.PASS, itemstack);
+			return new ActionResult<>(EnumActionResult.PASS, itemstack);
 		} else {
 			BlockPos blockpos = raytraceresult.getBlockPos();
 			// We're not allowed to edit the block
 			if (!world.isBlockModifiable(player, blockpos) || !player
 							.canPlayerEdit(blockpos.offset(raytraceresult.sideHit), raytraceresult.sideHit, itemstack)) {
-				return new ActionResult(EnumActionResult.PASS, itemstack);
+				return new ActionResult<>(EnumActionResult.PASS, itemstack);
 			}
 			IBlockState state = world.getBlockState(blockpos);
 			Material material = state.getMaterial();
 			if (state.getBlock() instanceof BlockCauldron) {
 				// Get how full the block is
-				int canBeFilled = state.getValue(BlockCauldron.LEVEL).intValue();
+				int canBeFilled = state.getValue(BlockCauldron.LEVEL);
 				int toBeFilled = 5 - itemstack.getItemDamage();
 				int willBeFilled = Math.min(canBeFilled, toBeFilled);
 				((BlockCauldron) state.getBlock()).setWaterLevel(world, blockpos, state, canBeFilled - willBeFilled);
 				player.addStat(StatList.CAULDRON_USED);
-				player.addStat(StatList.getObjectUseStats(this));
+				player.addStat(Objects.requireNonNull(StatList.getObjectUseStats(this)));
 				// TODO: Custom sound?
 				player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
 				return new ActionResult<>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, willBeFilled));
 			} else if (material == Material.WATER) {
 				// Get how full the block is
-				int level = state.getValue(BlockLiquid.LEVEL).intValue();
+				int level = state.getValue(BlockLiquid.LEVEL);
 				// Level will be 0 when completely filled, and 7 when nearly empty, so we have to invert it
 				int canBeFilled = 8 - level;
 				int toBeFilled = 5 - itemstack.getItemDamage();
@@ -131,12 +132,12 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				 * For more information see {@link net.minecraft.world.World#setBlockState World#setBlockState}
 				 */
 				world.setBlockState(blockpos, newState, 11);
-				player.addStat(StatList.getObjectUseStats(this));
+				player.addStat(Objects.requireNonNull(StatList.getObjectUseStats(this)));
 				// TODO: Custom sound?
 				player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
 				return new ActionResult<>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, willBeFilled));
 			} else {
-				return new ActionResult(EnumActionResult.PASS, itemstack);
+				return new ActionResult<>(EnumActionResult.PASS, itemstack);
 			}
 		}
 	}

@@ -31,10 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRaze;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.bending.air.*;
 import com.crowsofwar.avatar.common.bending.combustion.*;
 import com.crowsofwar.avatar.common.bending.earth.*;
@@ -52,7 +49,6 @@ import com.crowsofwar.avatar.common.entity.data.*;
 import com.crowsofwar.avatar.common.entity.mob.*;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
@@ -60,9 +56,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
-@Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false, //
-				updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "[1.12,1.13)")
-
+@Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", //
+				updateJSON = "https://avatar.amuzil.com/updates.json", acceptedMinecraftVersions = "[1.12,1.13)")
 public class AvatarMod {
 
 	@SidedProxy(serverSide = "com.crowsofwar.avatar.server.AvatarServerProxy", clientSide = "com.crowsofwar.avatar.client.AvatarClientProxy")
@@ -148,22 +143,23 @@ public class AvatarMod {
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
 
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(AvatarInfo.MOD_ID + "_Network");
-		registerPacket(PacketSUseAbility.class, Side.SERVER);
-		registerPacket(PacketSRequestData.class, Side.SERVER);
-		registerPacket(PacketSUseStatusControl.class, Side.SERVER);
-		registerPacket(PacketCParticles.class, Side.CLIENT);
-		registerPacket(PacketCPlayerData.class, Side.CLIENT);
-		registerPacket(PacketSWallJump.class, Side.SERVER);
-		registerPacket(PacketSSkillsMenu.class, Side.SERVER);
-		registerPacket(PacketSUseScroll.class, Side.SERVER);
-		registerPacket(PacketCErrorMessage.class, Side.CLIENT);
-		registerPacket(PacketSBisonInventory.class, Side.SERVER);
-		registerPacket(PacketSOpenUnlockGui.class, Side.SERVER);
-		registerPacket(PacketSUnlockBending.class, Side.SERVER);
-		registerPacket(PacketSConfirmTransfer.class, Side.SERVER);
-		registerPacket(PacketSCycleBending.class, Side.SERVER);
-		registerPacket(PacketCPowerRating.class, Side.CLIENT);
-		registerPacket(PacketCOpenSkillCard.class, Side.CLIENT);
+		network.registerMessage(PacketSUseAbility.Handler.class, PacketSUseAbility.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSRequestData.Handler.class, PacketSRequestData.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSUseStatusControl.Handler.class, PacketSUseStatusControl.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketCParticles.Handler.class, PacketCParticles.class, nextMessageID++, Side.CLIENT);
+		network.registerMessage(PacketCPlayerData.Handler.class, PacketCPlayerData.class, nextMessageID++, Side.CLIENT);
+		network.registerMessage(PacketSWallJump.Handler.class, PacketSWallJump.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSSkillsMenu.Handler.class, PacketSSkillsMenu.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSUseScroll.Handler.class, PacketSUseScroll.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketCErrorMessage.Handler.class, PacketCErrorMessage.class, nextMessageID++, Side.CLIENT);
+		network.registerMessage(PacketSBisonInventory.Handler.class, PacketSBisonInventory.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSOpenUnlockGui.Handler.class, PacketSOpenUnlockGui.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSUnlockBending.Handler.class, PacketSUnlockBending.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSConfirmTransfer.Handler.class, PacketSConfirmTransfer.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSCycleBending.Handler.class, PacketSCycleBending.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketCPowerRating.Handler.class, PacketCPowerRating.class, nextMessageID++, Side.CLIENT);
+		network.registerMessage(PacketCOpenSkillCard.Handler.class, PacketCOpenSkillCard.class, nextMessageID++, Side.CLIENT);
+		AvatarLog.info("Registered " + nextMessageID + " packet types");
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 
@@ -182,8 +178,6 @@ public class AvatarMod {
 		BoulderBehavior.register();
 
 		EarthbendingEvents.register();
-
-		PacketHandlerServer.register();
 
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {
 		});
@@ -251,10 +245,6 @@ public class AvatarMod {
 	@EventHandler
 	public void onServerStarting(FMLServerStartingEvent e) {
 		e.registerServerCommand(new AvatarCommand());
-	}
-
-	private <MSG extends AvatarPacket<MSG>> void registerPacket(Class<MSG> packet, Side side) {
-		network.registerMessage(packet, packet, nextMessageID++, side);
 	}
 
 	private void registerEntity(Class<? extends Entity> entity, String name) {

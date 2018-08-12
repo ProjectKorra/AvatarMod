@@ -72,8 +72,7 @@ public abstract class Behavior<E extends Entity> {
 	public static Behavior lookup(int id, Entity entity) {
 		try {
 
-			Behavior behavior = behaviorIdToClass.get(id).newInstance();
-			return behavior;
+			return behaviorIdToClass.get(id).newInstance();
 
 		} catch (Exception e) {
 

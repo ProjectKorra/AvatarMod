@@ -308,8 +308,7 @@ public class FormattedMessageProcessor {
 
 		public boolean isBold() {
 			boolean bold = false;
-			for (int i = 0; i < formats.size(); i++) {
-				ChatFormat format = formats.get(i);
+			for (ChatFormat format : formats) {
 				if (!format.bold.isUnknown()) bold = format.bold.value();
 			}
 			return bold;
@@ -317,8 +316,7 @@ public class FormattedMessageProcessor {
 
 		public boolean isItalic() {
 			boolean italic = false;
-			for (int i = 0; i < formats.size(); i++) {
-				ChatFormat format = formats.get(i);
+			for (ChatFormat format : formats) {
 				if (!format.italic.isUnknown()) italic = format.italic.value();
 			}
 			return italic;
@@ -326,8 +324,7 @@ public class FormattedMessageProcessor {
 
 		public TextFormatting getColor() {
 			TextFormatting color = TextFormatting.WHITE;
-			for (int i = 0; i < formats.size(); i++) {
-				ChatFormat format = formats.get(i);
+			for (ChatFormat format : formats) {
 				if (format.color != null) color = format.color;
 			}
 			return color;

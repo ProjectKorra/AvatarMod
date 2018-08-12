@@ -1,31 +1,23 @@
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.*;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import org.lwjgl.Sys;
+
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class WaterChargeHandler extends TickHandler {
-	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
-			("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
+	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
 
 	@Override
 	public boolean tick(BendingContext ctx) {
@@ -55,7 +47,6 @@ public class WaterChargeHandler extends TickHandler {
 
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 
-
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 
 			size = 0.1F;
@@ -67,8 +58,7 @@ public class WaterChargeHandler extends TickHandler {
 			if (duration >= 40 && duration % 10 == 0) {
 
 				fireCannon(world, entity, damage, speed, size, ticks);
-				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
-						SoundCategory.PLAYERS, 1, 2);
+				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.PLAYERS, 1, 2);
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
 				return duration >= 100;
@@ -95,7 +85,7 @@ public class WaterChargeHandler extends TickHandler {
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage = (float) (STATS_CONFIG.waterCannonDamage * 3 * bender.getDamageMult(Waterbending.ID));
-				;
+
 				size = 1f;
 				ticks = 200;
 			}
@@ -105,8 +95,7 @@ public class WaterChargeHandler extends TickHandler {
 
 			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
-			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_SPLASH,
-					SoundCategory.PLAYERS, 1, 2);
+			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.PLAYERS, 1, 2);
 
 			return true;
 		}
@@ -115,8 +104,7 @@ public class WaterChargeHandler extends TickHandler {
 
 	}
 
-	private void fireCannon(World world, EntityLivingBase entity, float damage, double speed,
-							float size, float ticks) {
+	private void fireCannon(World world, EntityLivingBase entity, float damage, double speed, float size, float ticks) {
 
 		EntityWaterCannon cannon = new EntityWaterCannon(world);
 
@@ -135,13 +123,11 @@ public class WaterChargeHandler extends TickHandler {
 
 	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
 
-		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes
-				.MOVEMENT_SPEED);
+		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 
 		moveSpeed.removeModifier(MOVEMENT_MODIFIER_ID);
 
-		moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID,
-				"Water charge modifier", multiplier - 1, 1));
+		moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID, "Water charge modifier", multiplier - 1, 1));
 
 	}
 

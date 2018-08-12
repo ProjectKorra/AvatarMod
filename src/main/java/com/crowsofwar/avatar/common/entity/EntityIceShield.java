@@ -16,21 +16,18 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.*;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.List;
 
@@ -58,8 +55,7 @@ public class EntityIceShield extends EntityShield {
 
 	public void shatter() {
 
-		world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1,
-				1);
+		world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1, 1);
 		setDead();
 
 		EntityLivingBase owner = getOwner();
@@ -71,8 +67,8 @@ public class EntityIceShield extends EntityShield {
 
 			double range = 40;
 			AxisAlignedBB aabb = new AxisAlignedBB(//
-					owner.posX - range / 2, owner.posY - range / 2, owner.posZ - range / 2, //
-					owner.posX + range / 2, owner.posY + range / 2, owner.posZ + range / 2);
+												   owner.posX - range / 2, owner.posY - range / 2, owner.posZ - range / 2, //
+												   owner.posX + range / 2, owner.posY + range / 2, owner.posZ + range / 2);
 			List<EntityMob> targets = world.getEntitiesWithinAABB(EntityMob.class, aabb);
 
 			int shardsAtMobs = Math.min(targets.size(), 5);
@@ -108,9 +104,9 @@ public class EntityIceShield extends EntityShield {
 				speed.setBaseValue(0);
 			}
 			owner.setPosition(posX, posY, posZ);
-			owner.motionX = this.motionX;
-			owner.motionY = this.motionY;
-			owner.motionZ = this.motionZ;
+			owner.motionX = motionX;
+			owner.motionY = motionY;
+			owner.motionZ = motionZ;
 		}
 	}
 
@@ -211,8 +207,7 @@ public class EntityIceShield extends EntityShield {
 
 		double horizDist = targetPos.withY(0).dist(ownerPos.withY(0));
 		double vertDist = targetPos.y() - ownerPos.y();
-		float pitch = (float) Math.toDegrees(Vector.getProjectileAngle(20, 20, horizDist,
-				vertDist));
+		float pitch = (float) Math.toDegrees(Vector.getProjectileAngle(20, 20, horizDist, vertDist));
 
 		EntityIceShard shard = new EntityIceShard(world);
 		shard.setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, yaw, pitch);
@@ -241,18 +236,15 @@ public class EntityIceShield extends EntityShield {
 
 		for (int i = 0; i < yawAngles; i++) {
 			float yaw = 360f / yawAngles * i;
-			for (int j = 0; j < pitchAngles.length; j++) {
+			for (float pitchAngle : pitchAngles) {
 
 				if (shardsLimit == 0) {
 					break;
 				}
 
-				float pitch = pitchAngles[j];
-
 				EntityIceShard shard = new EntityIceShard(world);
-				shard.setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ,
-						0, 0);
-				shard.aim(yaw + shooter.rotationYaw, pitch + shooter.rotationPitch, 53);
+				shard.setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ, 0, 0);
+				shard.aim(yaw + shooter.rotationYaw, pitchAngle + shooter.rotationPitch, 53);
 				shard.setDamageMult(damageMult);
 				world.spawnEntity(shard);
 
