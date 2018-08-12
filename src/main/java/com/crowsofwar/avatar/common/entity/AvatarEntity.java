@@ -250,6 +250,13 @@ public abstract class AvatarEntity extends Entity {
 	}
 
 	@Override
+	public void setPositionAndUpdate(double x, double y, double z) {
+		super.setPositionAndUpdate(x, y, z);
+		this.world.updateEntityWithOptionalForce(this, true);
+
+	}
+
+	@Override
 	public void onUpdate() {
 
 		super.onUpdate();
@@ -267,6 +274,7 @@ public abstract class AvatarEntity extends Entity {
 				}
 			}
 		}
+
 
 		if (getOwner() == null) {
 			this.setDead();

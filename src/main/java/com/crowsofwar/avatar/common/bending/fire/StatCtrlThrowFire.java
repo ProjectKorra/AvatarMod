@@ -49,6 +49,7 @@ public class StatCtrlThrowFire extends StatusControl {
 				arc -> arc.getBehavior() instanceof FireArcBehavior.PlayerControlled
 						&& arc.getOwner() == ctx.getBenderEntity());
 
+
 		if (fire != null) {
 
 			AbilityData abilityData = data.getAbilityData("fire_arc");
@@ -63,11 +64,9 @@ public class StatCtrlThrowFire extends StatusControl {
 			fire.addVelocity(force);
 			fire.setBehavior(new FireArcBehavior.Thrown());
 
-			return true;
-
 		}
 
-		return false;
+		return true;
 	}
 
 }
