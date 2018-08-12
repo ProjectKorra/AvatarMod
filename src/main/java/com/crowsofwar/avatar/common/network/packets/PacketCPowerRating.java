@@ -1,17 +1,16 @@
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.network.PacketRedirector;
+import net.minecraft.client.Minecraft;
+
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class PacketCPowerRating extends AvatarPacket<PacketCPowerRating> {
-
 	private Map<UUID, Double> powerRatings;
 
 	public PacketCPowerRating() {
@@ -42,17 +41,25 @@ public class PacketCPowerRating extends AvatarPacket<PacketCPowerRating> {
 		}
 	}
 
-	@Override
-	protected Side getReceivedSide() {
-		return Side.CLIENT;
-	}
-
-	@Override
-	protected Handler<PacketCPowerRating> getPacketHandler() {
-		return PacketRedirector::redirectMessage;
-	}
-
 	public Map<UUID, Double> getPowerRatings() {
 		return powerRatings;
+	}
+
+	public static class Handler extends AvatarPacketHandler<PacketCPowerRating, IMessage> {
+		/**
+		 * This method will always be called on the main thread. In the case that that's not wanted, create your own {@link IMessageHandler}
+		 *
+		 * @param message The packet that is received
+		 * @param ctx     The context to that packet
+		 * @return An optional packet to reply with, or null
+		 */
+		@Override
+		IMessage avatarOnMessage(PacketCPowerRating message, MessageContext ctx) {
+			BendingData data = BendingData.get(Minecraft.getMinecraft().player);
+			for (Map.Entry<UUID, Double> entry : message.getPowerRatings().entrySet()) {
+				Objects.requireNonNull(data.getPowerRatingManager(entry.getKey())).setCachedRatingValue(entry.getValue());
+			}
+			return null;
+		}
 	}
 }

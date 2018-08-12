@@ -16,12 +16,15 @@
 */
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.network.PacketRedirector;
+import net.minecraft.entity.player.EntityPlayerMP;
+
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -30,7 +33,6 @@ import java.util.UUID;
  * @author CrowsOfWar
  */
 public class PacketSSkillsMenu extends AvatarPacket<PacketSSkillsMenu> {
-
 	private byte element;
 	private int abilityId;
 
@@ -62,16 +64,6 @@ public class PacketSSkillsMenu extends AvatarPacket<PacketSSkillsMenu> {
 		buf.writeInt(abilityId);
 	}
 
-	@Override
-	protected Side getReceivedSide() {
-		return Side.SERVER;
-	}
-
-	@Override
-	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketSSkillsMenu> getPacketHandler() {
-		return PacketRedirector::redirectMessage;
-	}
-
 	public UUID getElement() {
 		return BendingStyles.get(element).getId();
 	}
@@ -82,6 +74,30 @@ public class PacketSSkillsMenu extends AvatarPacket<PacketSSkillsMenu> {
 			return null;
 		}
 		return Abilities.all().get(abilityId);
+	}
+
+	public static class Handler extends AvatarPacketHandler<PacketSSkillsMenu, IMessage> {
+		/**
+		 * This method will always be called on the main thread. In the case that that's not wanted, create your own {@link IMessageHandler}
+		 *
+		 * @param message The packet that is received
+		 * @param ctx     The context to that packet
+		 * @return An optional packet to reply with, or null
+		 */
+		@Override
+		IMessage avatarOnMessage(PacketSSkillsMenu message, MessageContext ctx) {
+			EntityPlayerMP player = ctx.getServerHandler().player;
+			UUID element = message.getElement();
+			if (BendingStyles.has(element)) {
+				if (BendingData.get(player).hasBendingId(element)) {
+					player.openGui(AvatarMod.instance, AvatarGuiHandler.getGuiId(element), player.world, 0, 0, 0);
+					if (message.getAbility() != null) {
+						return new PacketCOpenSkillCard(message.getAbility());
+					}
+				}
+			}
+			return null;
+		}
 	}
 
 }

@@ -17,22 +17,17 @@
 
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.AvatarLog;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+
+import com.crowsofwar.avatar.*;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.DataCategory;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.gorecore.GoreCore;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.UUID;
+import java.util.*;
 
-import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.readUUID;
-import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.writeUUID;
+import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.*;
 
 /**
  * @author CrowsOfWar
@@ -58,7 +53,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 
 	public PacketCPlayerData(BendingData data, UUID player, SortedSet<DataCategory> changed) {
 		this.data = data;
-		this.playerId = player;
+		playerId = player;
 		this.changed = changed;
 	}
 
@@ -66,8 +61,7 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	public void avatarFromBytes(ByteBuf buf) {
 		playerId = readUUID(buf);
 
-		final BendingData data = AvatarPlayerData.fetcher()
-				.fetch(GoreCore.proxy.getClientSidePlayer().world, playerId).getData();
+		BendingData data = AvatarPlayerData.fetcher().fetch(GoreCore.proxy.getClientSidePlayer().world, playerId).getData();
 
 		if (data != null) {
 
@@ -84,15 +78,15 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 			// deallocated and trying to read it will throw an error
 			// So, just make a copy of the bytebuf, which will NOT be deallocated
 			ByteBuf copyBuf = buf.copy();
-			AvatarMod.proxy.getClientThreadListener().addScheduledTask(() -> {
+			AvatarMod.proxy.getThreadListener().addScheduledTask(() -> {
 				for (DataCategory category : changed) {
 					category.read(copyBuf, data);
 				}
 			});
 
 		} else {
-			AvatarLog.warn(WarningType.WEIRD_PACKET, "Server sent a packet about data for player " + playerId
-					+ " but data couldn't be found for them");
+			AvatarLog.warn(WarningType.WEIRD_PACKET,
+						   "Server sent a packet about data for player " + playerId + " but data couldn't be found for them");
 
 			// Get rid of bytes from ByteBuf which were unread
 			// They aren't used, but this is necessary since read/write need to use same number
@@ -132,23 +126,26 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 
 	}
 
-	@Override
-	protected Side getReceivedSide() {
-		return Side.CLIENT;
-	}
-
-	@Override
-	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketCPlayerData> getPacketHandler() {
-
-		// Do nothing!
-		// In the avatarFromBytes method, already saved the data into the
-		// player-data (when DataCategory.read is called)
-
-		return (msg, ctx) -> null;
-	}
-
 	public UUID getPlayerId() {
 		return playerId;
 	}
 
+	public static class Handler extends AvatarPacketHandler<PacketCPlayerData, IMessage> {
+
+		/**
+		 * This method will always be called on the main thread. In the case that that's not wanted, create your own {@link IMessageHandler}
+		 *
+		 * @param message The packet that is received
+		 * @param ctx     The context to that packet
+		 * @return An optional packet to reply with, or null
+		 */
+		@Override
+		IMessage avatarOnMessage(PacketCPlayerData message, MessageContext ctx) {
+			// Do nothing!
+			// In the avatarFromBytes method, already saved the data into the
+			// player-data (when DataCategory.read is called)
+
+			return null;
+		}
+	}
 }

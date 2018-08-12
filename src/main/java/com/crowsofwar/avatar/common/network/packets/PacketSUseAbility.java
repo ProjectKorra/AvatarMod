@@ -17,14 +17,22 @@
 
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
+import net.minecraft.entity.player.EntityPlayerMP;
+
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+
+import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
+import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.network.PacketRedirector;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.UUID;
+
+import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
+import static com.crowsofwar.avatar.common.analytics.AnalyticEvents.getAbilityExecutionEvent;
 
 /**
  * Packet which tells the server that the client pressed a control. The control
@@ -33,7 +41,6 @@ import net.minecraftforge.fml.relauncher.Side;
  * @see AvatarControl
  */
 public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
-
 	private Ability ability;
 	private Raytrace.Result raytrace;
 
@@ -47,9 +54,10 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
-		ability = Abilities.get(GoreCoreByteBufUtil.readString(buf));
+		String abilityName = GoreCoreByteBufUtil.readString(buf);
+		ability = Abilities.get(abilityName);
 		if (ability == null) {
-			throw new NullPointerException("Server sent invalid ability over network: ID " + ability);
+			throw new NullPointerException("Server sent invalid ability over network: ID " + abilityName);
 		}
 		raytrace = Raytrace.Result.fromBytes(buf);
 	}
@@ -60,11 +68,6 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 		raytrace.toBytes(buf);
 	}
 
-	@Override
-	public Side getReceivedSide() {
-		return Side.SERVER;
-	}
-
 	public Ability getAbility() {
 		return ability;
 	}
@@ -73,9 +76,34 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 		return raytrace;
 	}
 
-	@Override
-	protected AvatarPacket.Handler<PacketSUseAbility> getPacketHandler() {
-		return PacketRedirector::redirectMessage;
-	}
+	public static class Handler extends AvatarPacketHandler<PacketSUseAbility, IMessage> {
+		@Override
+		public IMessage avatarOnMessage(PacketSUseAbility message, MessageContext ctx) {
+			EntityPlayerMP player = ctx.getServerHandler().player;
+			Bender bender = Bender.get(player);
+			if (bender != null) {
+				bender.executeAbility(message.getAbility(), message.getRaytrace());
+				// Send analytics
+				String abilityName = message.getAbility().getName();
+				String level = AbilityData.get(player, abilityName).getLevelDesc();
+				AvatarAnalytics.INSTANCE.pushEvent(getAbilityExecutionEvent(abilityName, level));
 
+				// If player just got to 100% XP so they can upgrade, send them a message
+				AbilityData abilityData = AbilityData.get(player, abilityName);
+				boolean notLevel4 = abilityData.getLevel() < 3;
+				if (abilityData.getXp() == 100 && abilityData.getLastXp() < 100 && notLevel4) {
+
+					UUID bendingId = message.getAbility().getBendingId();
+
+					MSG_CAN_UPGRADE_ABILITY.send(player, abilityName, abilityData.getLevel() + 2);
+					MSG_CAN_UPGRADE_ABILITY_2.send(player);
+					MSG_CAN_UPGRADE_ABILITY_3.send(player, BendingStyles.getName(bendingId));
+
+					// Prevent this message from appearing again by updating lastXp to show current Xp
+					abilityData.resetLastXp();
+				}
+			}
+			return null;
+		}
+	}
 }

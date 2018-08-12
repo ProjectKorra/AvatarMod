@@ -17,27 +17,28 @@
 
 package com.crowsofwar.avatar;
 
+import net.minecraft.entity.*;
+import net.minecraft.util.ResourceLocation;
+
+import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.Mod.*;
+import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRaze;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.bending.air.*;
-import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosion;
-import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosivePillar;
-import com.crowsofwar.avatar.common.bending.combustion.Combustionbending;
+import com.crowsofwar.avatar.common.bending.combustion.*;
 import com.crowsofwar.avatar.common.bending.earth.*;
 import com.crowsofwar.avatar.common.bending.fire.*;
-import com.crowsofwar.avatar.common.bending.ice.AbilityIceBurst;
-import com.crowsofwar.avatar.common.bending.ice.AbilityIcePrison;
-import com.crowsofwar.avatar.common.bending.ice.Icebending;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRedirect;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
-import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
-import com.crowsofwar.avatar.common.bending.sand.AbilitySandPrison;
-import com.crowsofwar.avatar.common.bending.sand.AbilitySandstorm;
-import com.crowsofwar.avatar.common.bending.sand.Sandbending;
+import com.crowsofwar.avatar.common.bending.ice.*;
+import com.crowsofwar.avatar.common.bending.lightning.*;
+import com.crowsofwar.avatar.common.bending.sand.*;
 import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.*;
@@ -51,23 +52,6 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.relauncher.Side;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;
@@ -162,22 +146,23 @@ public class AvatarMod {
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
 
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(AvatarInfo.MOD_ID + "_Network");
-		registerPacket(PacketSUseAbility.class, Side.SERVER);
-		registerPacket(PacketSRequestData.class, Side.SERVER);
-		registerPacket(PacketSUseStatusControl.class, Side.SERVER);
-		registerPacket(PacketCParticles.class, Side.CLIENT);
-		registerPacket(PacketCPlayerData.class, Side.CLIENT);
-		registerPacket(PacketSWallJump.class, Side.SERVER);
-		registerPacket(PacketSSkillsMenu.class, Side.SERVER);
-		registerPacket(PacketSUseScroll.class, Side.SERVER);
-		registerPacket(PacketCErrorMessage.class, Side.CLIENT);
-		registerPacket(PacketSBisonInventory.class, Side.SERVER);
-		registerPacket(PacketSOpenUnlockGui.class, Side.SERVER);
-		registerPacket(PacketSUnlockBending.class, Side.SERVER);
-		registerPacket(PacketSConfirmTransfer.class, Side.SERVER);
-		registerPacket(PacketSCycleBending.class, Side.SERVER);
-		registerPacket(PacketCPowerRating.class, Side.CLIENT);
-		registerPacket(PacketCOpenSkillCard.class, Side.CLIENT);
+		network.registerMessage(PacketSUseAbility.Handler.class, PacketSUseAbility.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSRequestData.Handler.class, PacketSRequestData.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSUseStatusControl.Handler.class, PacketSUseStatusControl.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketCParticles.Handler.class, PacketCParticles.class, nextMessageID++, Side.CLIENT);
+		network.registerMessage(PacketCPlayerData.Handler.class, PacketCPlayerData.class, nextMessageID++, Side.CLIENT);
+		network.registerMessage(PacketSWallJump.Handler.class, PacketSWallJump.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSSkillsMenu.Handler.class, PacketSSkillsMenu.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSUseScroll.Handler.class, PacketSUseScroll.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketCErrorMessage.Handler.class, PacketCErrorMessage.class, nextMessageID++, Side.CLIENT);
+		network.registerMessage(PacketSBisonInventory.Handler.class, PacketSBisonInventory.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSOpenUnlockGui.Handler.class, PacketSOpenUnlockGui.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSUnlockBending.Handler.class, PacketSUnlockBending.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSConfirmTransfer.Handler.class, PacketSConfirmTransfer.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketSCycleBending.Handler.class, PacketSCycleBending.class, nextMessageID++, Side.SERVER);
+		network.registerMessage(PacketCPowerRating.Handler.class, PacketCPowerRating.class, nextMessageID++, Side.CLIENT);
+		network.registerMessage(PacketCOpenSkillCard.Handler.class, PacketCOpenSkillCard.class, nextMessageID++, Side.CLIENT);
+		AvatarLog.info("Registered " + nextMessageID + " packet types");
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 
@@ -265,10 +250,6 @@ public class AvatarMod {
 	@EventHandler
 	public void onServerStarting(FMLServerStartingEvent e) {
 		e.registerServerCommand(new AvatarCommand());
-	}
-
-	private <MSG extends AvatarPacket<MSG>> void registerPacket(Class<MSG> packet, Side side) {
-		network.registerMessage(packet, packet, nextMessageID++, side);
 	}
 
 	private void registerEntity(Class<? extends Entity> entity, String name) {

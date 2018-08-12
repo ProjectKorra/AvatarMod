@@ -16,16 +16,16 @@
 */
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.network.PacketRedirector;
-import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+
+import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
+import io.netty.buffer.ByteBuf;
 
 /**
  * @author CrowsOfWar
  */
 public class PacketCErrorMessage extends AvatarPacket<PacketCErrorMessage> {
-
 	private String message;
 
 	public PacketCErrorMessage() {
@@ -45,18 +45,22 @@ public class PacketCErrorMessage extends AvatarPacket<PacketCErrorMessage> {
 		ByteBufUtils.writeUTF8String(buf, message);
 	}
 
-	@Override
-	protected Side getReceivedSide() {
-		return Side.CLIENT;
-	}
-
-	@Override
-	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketCErrorMessage> getPacketHandler() {
-		return PacketRedirector::redirectMessage;
-	}
-
 	public String getMessage() {
 		return message;
 	}
 
+	public static class Handler extends AvatarPacketHandler<PacketCErrorMessage, IMessage> {
+		/**
+		 * This method will always be called on the main thread. In the case that that's not wanted, create your own {@link IMessageHandler}
+		 *
+		 * @param message The packet that is received
+		 * @param ctx     The context to that packet
+		 * @return An optional packet to reply with, or null
+		 */
+		@Override
+		IMessage avatarOnMessage(PacketCErrorMessage message, MessageContext ctx) {
+			AvatarUiRenderer.displayErrorMessage(message.getMessage());
+			return null;
+		}
+	}
 }
