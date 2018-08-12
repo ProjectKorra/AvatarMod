@@ -87,6 +87,7 @@ public class EntityFlames extends AvatarEntity {
 
 		super.onUpdate();
 
+		ignoreFrustumCheck = true;
 		setVelocity(velocity().times(0.99999));
 
 		if (velocity().sqrMagnitude() <= 0.5 * 0.5 || collided) setDead();

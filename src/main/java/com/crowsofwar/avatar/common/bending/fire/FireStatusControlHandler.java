@@ -36,6 +36,7 @@ public class FireStatusControlHandler extends TickHandler {
 			ticks++;
 			if (ticks >= 20) {
 				data.removeStatusControl(StatusControl.THROW_FIRE);
+				ticks = 0;
 				return true;
 			}
 		}

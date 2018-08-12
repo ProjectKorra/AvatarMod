@@ -142,8 +142,8 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 	}
 
 	@Override
-	public void setPosition(double x, double y, double z) {
-		super.setPosition(x, y, z);
+	public void setPositionAndUpdate(double x, double y, double z) {
+		super.setPositionAndUpdate(x, y, z);
 		// Set position - called from entity constructor, so points might be
 		// null
 		if (points != null) {
