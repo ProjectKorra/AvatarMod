@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -304,17 +305,29 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 
 			if (owner == null) return this;
 
-			BendingData data = Bender.get(owner).getData();
+			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
 
-			double yaw = Math.toRadians(owner.rotationYaw);
-			double pitch = Math.toRadians(owner.rotationPitch);
-			Vector forward = Vector.toRectangular(yaw, pitch);
-			Vector eye = Vector.getEyePos(owner);
-			Vector target = forward.times(2).plus(eye);
-			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
+			Vector target;
+			if (res.hitSomething()) {
+				target = res.getPosPrecise();
+			} else {
+				Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
+						Math.toRadians(owner.rotationPitch));
+				target = Vector.getEyePos(owner).plus(look.times(3));
+			}
+
+			Vector motion = target.minus(entity.position());
+			motion = motion.times(0.5 * 7.5);
 			entity.setVelocity(motion);
 
+
+			// Ensure that owner always has stat ctrl active
+			if (entity.ticksExisted % 10 == 0) {
+				BendingData.get(owner).addStatusControl(StatusControl.THROW_BLOCK);
+				BendingData.get(owner).addStatusControl(StatusControl.PLACE_BLOCK);
+			}
 			return this;
+
 		}
 
 		@Override
