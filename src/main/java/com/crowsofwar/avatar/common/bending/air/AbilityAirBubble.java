@@ -80,7 +80,7 @@ public class AbilityAirBubble extends Ability {
 			bubble.setHealth(health);
 			bubble.setMaxHealth(health);
 			bubble.setSize(size);
-			bubble.setVelocity(Vector.ZERO);
+			bubble.motionX = bubble.motionY = bubble.motionZ = 0;
 			bubble.setAllowHovering(ctx.isMasterLevel(SECOND));
 			bubble.setAbility(this);
 			world.spawnEntity(bubble);

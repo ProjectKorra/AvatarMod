@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -67,12 +68,27 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			if (owner == null) {
 				return this;
 			}
+			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
 
-			Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
-					Math.toRadians(owner.rotationPitch));
-			Vector lookPos = Vector.getEyePos(owner).plus(look.times(3));
-			Vector motion = lookPos.minus(new Vector(entity)).times(0.3);
-			entity.move(MoverType.SELF, motion.x(), motion.y(), motion.z());
+			Vector target;
+			if (res.hitSomething()) {
+				target = res.getPosPrecise();
+			} else {
+				Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
+						Math.toRadians(owner.rotationPitch));
+				target = Vector.getEyePos(owner).plus(look.times(3));
+			}
+
+			Vector motion = target.minus(entity.position());
+			motion = motion.times(0.5 * 20);
+			entity.setVelocity(motion);
+
+
+			// Ensure that owner always has stat ctrl active
+			if (entity.ticksExisted % 10 == 0) {
+				BendingData.get(owner).addStatusControl(StatusControl.THROW_FIRE);
+			}
+			//If statement reduces lag
 
 			return this;
 

@@ -122,7 +122,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 		// Second control point (at back) should stay near the player
 		if (getOwner() != null) {
-			Vector eyePos = Vector.getEyePos(getOwner()).minus(0, 0.5, 0);
+			Vector eyePos = Vector.getEyePos(getOwner()).minus(0, 0.3, 0);
 			Vector directionToEnd = position().minus(eyePos).normalize();
 			getControlPoint(1).setPosition(eyePos.plus(directionToEnd.times(0.5)));
 		}

@@ -77,6 +77,7 @@ public class EntityAirBubble extends EntityShield {
 
 		this.airLeft = 600;
 		this.putsOutFires = true;
+		this.noClip = true;
 	}
 
 	@Override
@@ -112,15 +113,11 @@ public class EntityAirBubble extends EntityShield {
 	@Override
 	public void setPositionAndUpdate(double x, double y, double z) {
 		if (getOwner() != null) {
+			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
 			this.posX = getOwner().posX;
 			this.posY = getOwner().getEntityBoundingBox().minY;
 			this.posZ = getOwner().posZ;
-			this.motionX = 0;
-			this.motionY = 0;
-			this.motionZ = 0;
-
-			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
-		//	this.world.updateEntityWithOptionalForce(this, false);
+			this.motionX = this.motionY = this.motionZ = 0;
 		}
 	}
 
@@ -178,7 +175,6 @@ public class EntityAirBubble extends EntityShield {
 		this.motionZ = 0;
 
 		setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
-
 
 
 		if (getOwner() != null) {
@@ -290,7 +286,7 @@ public class EntityAirBubble extends EntityShield {
 
 		List<AxisAlignedBB> blockCollisions = world.getCollisionBoxes(null, hitbox);
 
-		BlockPos pos = new BlockPos(getPosition().getX(), getPosition().getY()-maxFloatHeight, getPosition().getZ());
+		BlockPos pos = new BlockPos(getPosition().getX(), getPosition().getY() - maxFloatHeight, getPosition().getZ());
 		BlockPos below = pos.offset(EnumFacing.DOWN);
 		Block belowBlock = world.getBlockState(below).getBlock();
 
@@ -367,6 +363,7 @@ public class EntityAirBubble extends EntityShield {
 			AvatarUtils.afterVelocityAdded(entity);
 		}
 	}
+
 	@Override
 	public boolean canCollideWith(Entity entity) {
 		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {

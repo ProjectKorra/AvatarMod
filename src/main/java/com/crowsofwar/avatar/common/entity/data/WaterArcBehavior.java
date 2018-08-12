@@ -88,7 +88,9 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 
 			// Ensure that owner always has stat ctrl active
-			BendingData.get(owner).addStatusControl(StatusControl.THROW_WATER);
+			if (water.ticksExisted % 10 == 0) {
+				BendingData.get(owner).addStatusControl(StatusControl.THROW_WATER);
+			}
 
 			return this;
 
