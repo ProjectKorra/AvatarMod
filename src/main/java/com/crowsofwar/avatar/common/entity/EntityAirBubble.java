@@ -180,14 +180,19 @@ public class EntityAirBubble extends EntityShield {
 			removeStatCtrl();
 			return;
 		}
-		setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
+		for (int i = 0; i < 2; i++) {
+			setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
 
-		this.posX = getOwner().posX;
-		this.posY = getOwner().getEntityBoundingBox().minY;
-		this.posZ = getOwner().posZ;
+			this.motionX = this.motionY = this.motionZ = 0;
 
+			if (!world.isRemote) {
+				this.posX = owner.posX;
+				this.posY = owner.getEntityBoundingBox().minY;
+				this.posZ = owner.posZ;
+			}
 
-		this.motionX = this.motionY = this.motionZ = 0;
+			this.motionX = this.motionY = this.motionZ = 0;
+		}
 
 
 		if (getOwner() != null) {
