@@ -17,26 +17,41 @@
 
 package com.crowsofwar.avatar.common.util;
 
-import com.crowsofwar.avatar.AvatarLog;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.play.server.SPacketEntityTeleport;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.nbt.*;
+import net.minecraft.network.play.server.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.IThreadListener;
+import net.minecraft.world.WorldServer;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import com.crowsofwar.avatar.*;
+
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
 
 import static com.crowsofwar.avatar.AvatarLog.WarningType.INVALID_SAVE;
 
 public class AvatarUtils {
+	public static void addScheduledTask(Runnable runnable) {
+		AvatarMod.proxy.getThreadListener().addScheduledTask(runnable);
+	}
+
+	public static <V> Future<V> callFromMainThread(Callable<V> callable) {
+		IThreadListener listener = AvatarMod.proxy.getThreadListener();
+		if (listener instanceof Minecraft) {
+			return ((Minecraft) listener).addScheduledTask(callable);
+		} else if (listener instanceof MinecraftServer) {
+			return ((MinecraftServer) listener).callFromMainThread(callable);
+		} else if (listener instanceof WorldServer) {
+			return Objects.requireNonNull(((WorldServer) listener).getMinecraftServer()).callFromMainThread(callable);
+		}
+		return null;
+	}
 
 	public static <T extends Entity> Comparator<T> getSortByDistanceComparator
 			(Function<T, Float> distanceSupplier) {

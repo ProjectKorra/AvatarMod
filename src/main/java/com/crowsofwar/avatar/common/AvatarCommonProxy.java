@@ -63,6 +63,11 @@ public interface AvatarCommonProxy {
 	PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher();
 
 	/**
+	 * @return An IThreadListener
+	 */
+	IThreadListener getThreadListener();
+
+	/**
 	 * Get client-side IThreadListener, null on server
 	 *
 	 * @return

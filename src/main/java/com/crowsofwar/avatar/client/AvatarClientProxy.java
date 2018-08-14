@@ -199,6 +199,11 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	}
 
 	@Override
+	public IThreadListener getThreadListener() {
+		return mc;
+	}
+
+	@Override
 	public IThreadListener getClientThreadListener() {
 		return mc;
 	}
