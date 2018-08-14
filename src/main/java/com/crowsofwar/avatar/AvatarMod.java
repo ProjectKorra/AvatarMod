@@ -49,7 +49,6 @@ import com.crowsofwar.avatar.common.entity.data.*;
 import com.crowsofwar.avatar.common.entity.mob.*;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
@@ -181,8 +180,6 @@ public class AvatarMod {
 		BoulderBehavior.register();
 
 		EarthbendingEvents.register();
-
-		PacketHandlerServer.register();
 
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {
 		});

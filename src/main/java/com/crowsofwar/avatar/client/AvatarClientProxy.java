@@ -40,7 +40,6 @@ import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.mob.*;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
-import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
@@ -74,7 +73,6 @@ import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerE
 public class AvatarClientProxy implements AvatarCommonProxy {
 
 	private Minecraft mc;
-	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;
 	private PlayerDataFetcher<AvatarPlayerData> clientFetcher;
 	private boolean displayedMainMenu;
@@ -86,7 +84,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 
 		displayedMainMenu = false;
 
-		packetHandler = new PacketHandlerClient();
 		AvatarUiRenderer.instance = new AvatarUiRenderer();
 
 		inputHandler = new ClientInput();
@@ -148,10 +145,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		return inputHandler;
 	}
 
-	@Override
-	public IPacketHandler getClientPacketHandler() {
-		return packetHandler;
-	}
 
 	@Override
 	public double getPlayerReach() {
