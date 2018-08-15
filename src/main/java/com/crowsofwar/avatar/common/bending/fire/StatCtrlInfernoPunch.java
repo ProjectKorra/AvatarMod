@@ -122,7 +122,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		Entity target = event.getEntity();
 		DamageSource source = event.getSource();
 		World world = target.getEntityWorld();
-		if (entity instanceof EntityLivingBase) {
 			if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
 				Bender ctx = Bender.get((EntityLivingBase) entity);
 				if (ctx.getData() != null) {
@@ -153,6 +152,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						fireTime = 4;
 					}
 					if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
+						System.out.println(ctx.getData().hasStatusControl(INFERNO_PUNCH));
 						if (((EntityLivingBase) entity).getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().startsWith("avatar_"))) {
 							if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 								BlockPos blockPos = target.getPosition();
@@ -164,7 +164,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 									fireExplosion.doExplosionB(true);
 								}
 							}
-							if (world instanceof WorldServer) {
+							if (world instanceof WorldServer || !world.isRemote) {
 								WorldServer World = (WorldServer) target.getEntityWorld();
 								World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY + target.getEyeHeight(), target.posZ, 50, 0.05, 0.05, 0.05, 0.05);
 
@@ -192,7 +192,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 				}
 			}
 		}
-	}
+
 	@SubscribeEvent
 	public static void onDragonHurt(LivingHurtEvent event) {
 		EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();

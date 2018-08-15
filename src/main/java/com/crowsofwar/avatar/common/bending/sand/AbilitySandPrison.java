@@ -88,7 +88,7 @@ public class AbilitySandPrison extends Ability {
 			blocksList = ConfigStats.STATS_CONFIG.sandBlocks;
 		}
 
-		return blocksList.contains(standingOn) || true;
+		return blocksList.contains(standingOn);
 
 	}
 
