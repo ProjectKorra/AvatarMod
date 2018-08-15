@@ -107,7 +107,7 @@ public class WaterSkateHandler extends TickHandler {
 
 		if (!player.world.isRemote && !shouldSkate(player, abilityData)) {
 			return true;
-		} else {
+		} else if (!world.isRemote){
 
 			float requiredChi = STATS_CONFIG.chiWaterSkateSecond / 20f;
 			requiredChi -= powerRating / 100 * 0.25f;
@@ -147,7 +147,7 @@ public class WaterSkateHandler extends TickHandler {
 				player.motionY = 0;
 				player.motionZ = newVelocity.z();
 
-				if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
+				if (abilityData.isMasterPath(AbilityTreePath.SECOND) && !world.isRemote) {
 					AxisAlignedBB box = new AxisAlignedBB(player.posX - 1.5, player.posY,
 							player.posZ - 1.5, player.posX, player.posY + 1.5, player.posZ + 1.5);
 					List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);

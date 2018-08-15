@@ -152,7 +152,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						fireTime = 4;
 					}
 					if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
-						System.out.println(ctx.getData().hasStatusControl(INFERNO_PUNCH));
+						System.out.println(((EntityLivingBase) entity).getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().startsWith("avatar_")));
 						if (((EntityLivingBase) entity).getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().startsWith("avatar_"))) {
 							if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 								BlockPos blockPos = target.getPosition();
@@ -173,7 +173,9 @@ public class StatCtrlInfernoPunch extends StatusControl {
 							world.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
 									SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
+							System.out.println(target.canBePushed() && target.canBeCollidedWith());
 							if (target.canBePushed() && target.canBeCollidedWith()) {
+
 								target.attackEntityFrom(DamageSource.IN_FIRE, damage);
 								target.setFire(fireTime);
 								target.motionX += direction.x() * knockBack;
