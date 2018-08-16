@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.bending.air.*;
+import com.crowsofwar.avatar.common.bending.earth.RestoreParticleHandler;
 import com.crowsofwar.avatar.common.bending.earth.SpawnEarthspikesHandler;
 import com.crowsofwar.avatar.common.bending.fire.*;
 import com.crowsofwar.avatar.common.bending.lightning.LightningCreateHandler;
@@ -56,6 +57,7 @@ public abstract class TickHandler {
 	public static TickHandler AIR_STATCTRL_HANDLER = new AirStatusControlHandler();
 	public static TickHandler FIRE_STATCTRL_HANDLER = new FireStatusControlHandler();
 	public static TickHandler AIR_DODGE = new AirDodgeHandler();
+	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler();
 
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;

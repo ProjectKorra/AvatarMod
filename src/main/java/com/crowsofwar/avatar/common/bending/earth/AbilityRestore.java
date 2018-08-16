@@ -7,12 +7,12 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandler.RESTORE_PARTICLE_SPAWNER;
 
 public class AbilityRestore extends Ability {
 	public AbilityRestore() {
@@ -82,6 +82,7 @@ public class AbilityRestore extends Ability {
 			// Ignore warning; we know manager != null if they have the bending style
 			//noinspection ConstantConditions
 			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
+			data.addTickHandler(RESTORE_PARTICLE_SPAWNER);
 
 		}
 
