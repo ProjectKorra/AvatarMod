@@ -35,12 +35,12 @@ public class PurifyParticleHandler extends TickHandler {
 		Random rand = new Random();
 		double r = rand.nextDouble();
 		if (!world.isRemote) {
-			for (int i = 0; i < 60; i++) {
+			for (int i = 0; i < 20; i++) {
 				WorldServer World = (WorldServer) world;
 				int random = rand.nextInt(2) + 1;
 				r = random == 1 ? r : r * -1;
-				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 6) + (r * 2)), 0).times(0.5).withY(entity.getEyeHeight()-0.7);
-				particles.spawnParticles(world, EnumParticleTypes.FLAME, 1, 5, location.plus(Vector.getEntityPos(entity)),
+				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 8) + (r * 2)), 0).times(0.5).withY(entity.getEyeHeight()-0.7);
+				particles.spawnParticles(world, EnumParticleTypes.FLAME, 1, 1, location.plus(Vector.getEntityPos(entity)),
 							new Vector(0.2, 0.7, 0.2));
 				}
 			}
