@@ -37,11 +37,11 @@ public class RestoreParticleHandler extends TickHandler {
 		Random rand = new Random();
 		double r = rand.nextDouble();
 		if (!world.isRemote) {
-			for (int i = 0; i < 60; i++) {
+			for (int i = 0; i < 40; i++) {
 				WorldServer World = (WorldServer) world;
 				int random = rand.nextInt(2) + 1;
 				r = random == 1 ? r : r * -1;
-				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 6) + (r * 2)), 0).times(0.5).withY(0);
+				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 9) + (r * 2)), 0).times(0.5).withY(0);
 				if (!CLIENT_CONFIG.useCustomParticles) {
 					World.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, location.x() + entity.posX, location.y() + entity.getEntityBoundingBox().minY + (r * 2),
 							location.z() + entity.posZ, 1, 0, 0, 0, 10D);
