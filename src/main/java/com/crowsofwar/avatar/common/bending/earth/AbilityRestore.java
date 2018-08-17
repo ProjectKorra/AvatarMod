@@ -49,7 +49,7 @@ public class AbilityRestore extends Ability {
 			abilityData.addXp(SKILLS_CONFIG.buffUsed);
 
 			// 3s + 2.5s per level
-			int duration = 60 + 50 * abilityData.getLevel();
+			int duration = ctx.getLevel()  > 0 ? 60 + 10 * ctx.getLevel() : 60;
 			int effectLevel = 0;
 			int slownessLevel = abilityData.getLevel() >= 2 ? 1 : 2;
 			int regenLevel = abilityData.getLevel() >= 2 ? 1 : 0;

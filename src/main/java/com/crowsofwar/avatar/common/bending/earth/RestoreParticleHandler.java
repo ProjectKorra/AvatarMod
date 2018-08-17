@@ -17,19 +17,19 @@ public class RestoreParticleHandler extends TickHandler {
 		AbilityData aD = data.getAbilityData("restore");
 		World world = ctx.getWorld();
 		int duration = data.getTickHandlerDuration(this);
-		int restoreDuration = 60 + 50 * aD.getLevel();
+		int restoreDuration = aD.getLevel()  > 0 ? 60 + 10 * aD.getLevel() : 60;
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
 			double maxHeight = 3;
-			double heightUnit = maxHeight / 2.0 / Math.PI;
+			double heightUnit = maxHeight / 6.0 / Math.PI;
 			double step = Math.PI / 16;
-			double radius = 1.5;
-			for (double rad = 0; rad < Math.PI * 2; rad += step) {
+			double radius = 1;
+			for (double rad = 0; rad < Math.PI * 4; rad += step) {
 				double x = Math.cos(rad) * radius;
 				double z = Math.sin(rad) * radius;
 				double y = heightUnit * rad;
 				World.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, x + entity.posX, y + entity.getEntityBoundingBox().minY, z + entity.posZ,
-						10, 0, 0, 0, 0.3);
+						1, 0, 0, 0, 0.3);
 			}
 		}
 		return duration >= restoreDuration;
