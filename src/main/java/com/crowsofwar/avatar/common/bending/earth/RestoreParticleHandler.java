@@ -47,7 +47,7 @@ public class RestoreParticleHandler extends TickHandler {
 							location.z() + entity.posZ, 1, 0, 0, 0, 10D);
 				}
 				else {
-					particles.spawnParticles(world, AvatarParticles.getParticleRestore(), 1, 5, location.plus(Vector.getEntityPos(entity)),
+					particles.spawnParticles(world, AvatarParticles.getParticleRestore(), 1, 2, location.plus(Vector.getEntityPos(entity)),
 							new Vector(0.2, 0.6, 0.2));
 				}
 			}
