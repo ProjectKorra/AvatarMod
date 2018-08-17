@@ -59,6 +59,7 @@ public abstract class TickHandler {
 	public static TickHandler AIR_DODGE = new AirDodgeHandler();
 	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler();
 	public static TickHandler PURIFY_PARTICLE_SPAWNER = new PurifyParticleHandler();
+	public static TickHandler SLIPSTREAM_COOLDOWN_HANDLER = new SlipstreamCooldownHandler();
 
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;

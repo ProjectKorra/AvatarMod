@@ -13,6 +13,7 @@ import net.minecraft.potion.PotionEffect;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandler.SLIPSTREAM_COOLDOWN_HANDLER;
 
 public class AbilitySlipstream extends Ability {
 
@@ -42,7 +43,7 @@ public class AbilitySlipstream extends Ability {
 			chi = STATS_CONFIG.chiBuffLvl4;
 		}
 
-		if (bender.consumeChi(chi)) {
+		if (bender.consumeChi(chi) && !data.hasTickHandler(SLIPSTREAM_COOLDOWN_HANDLER)) {
 			float xp = SKILLS_CONFIG.buffUsed;
 
 			// 4s base + 1s per level
@@ -67,34 +68,12 @@ public class AbilitySlipstream extends Ability {
 			SlipstreamPowerModifier modifier = new SlipstreamPowerModifier();
 			modifier.setTicks(duration);
 			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
+			data.addTickHandler(SLIPSTREAM_COOLDOWN_HANDLER);
 
 		}
 
 	}
 
-	@Override
-	public int getCooldown(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-		int coolDown = 160;
-
-		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-			coolDown = 0;
-		}
-
-		if (ctx.getLevel() == 1) {
-			coolDown = 140;
-		}
-		if (ctx.getLevel() == 2) {
-			coolDown = 120;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 100;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 100;
-		}
-		return coolDown;
-	}
 }
 
 
