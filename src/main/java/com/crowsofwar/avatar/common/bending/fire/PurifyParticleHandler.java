@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
@@ -15,7 +14,6 @@ import net.minecraft.world.WorldServer;
 
 import java.util.Random;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
 public class PurifyParticleHandler extends TickHandler {
 

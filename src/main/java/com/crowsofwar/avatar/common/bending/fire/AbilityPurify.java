@@ -12,6 +12,7 @@ import net.minecraft.potion.PotionEffect;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandler.PURIFY_PARTICLE_SPAWNER;
 import static net.minecraft.init.MobEffects.*;
 
 public class AbilityPurify extends Ability {
@@ -81,6 +82,7 @@ public class AbilityPurify extends Ability {
 			}
 
 			abilityData.addXp(SKILLS_CONFIG.buffUsed);
+			data.addTickHandler(PURIFY_PARTICLE_SPAWNER);
 
 		}
 	}

@@ -58,6 +58,7 @@ public abstract class TickHandler {
 	public static TickHandler FIRE_STATCTRL_HANDLER = new FireStatusControlHandler();
 	public static TickHandler AIR_DODGE = new AirDodgeHandler();
 	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler();
+	public static TickHandler PURIFY_PARTICLE_SPAWNER = new PurifyParticleHandler();
 
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;
