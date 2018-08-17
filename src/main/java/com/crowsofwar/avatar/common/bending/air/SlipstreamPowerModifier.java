@@ -8,6 +8,8 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+
 public class SlipstreamPowerModifier extends BuffPowerModifier {
 
 	@Override
@@ -56,8 +58,11 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 
 	@Override
 	protected Vision[] getVisions() {
-		return new Vision[]{Vision.SLIPSTREAM_WEAK, Vision.SLIPSTREAM_MEDIUM,
-				Vision.SLIPSTREAM_POWERFUL};
+		if (CLIENT_CONFIG.shaderSettings.useSlipstreamShaders) {
+			return new Vision[]{Vision.SLIPSTREAM_WEAK, Vision.SLIPSTREAM_MEDIUM,
+					Vision.SLIPSTREAM_POWERFUL};
+		}
+		else return null;
 	}
 
 	@Override

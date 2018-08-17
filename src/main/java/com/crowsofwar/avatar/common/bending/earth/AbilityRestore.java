@@ -64,13 +64,13 @@ public class AbilityRestore extends Ability {
 			entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, duration, slownessLevel));
 
 			if (abilityData.getLevel() >= 1) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, regenLevel));
+				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, duration, regenLevel));
 			}
 			if (abilityData.getLevel() >= 2) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration, effectLevel));
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, duration));
+				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH));
 				entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, duration));
 			}
 
