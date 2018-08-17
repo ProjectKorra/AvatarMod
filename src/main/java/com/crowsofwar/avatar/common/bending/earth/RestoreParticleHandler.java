@@ -1,9 +1,12 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumParticleTypes;
@@ -12,7 +15,15 @@ import net.minecraft.world.WorldServer;
 
 import java.util.Random;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+
 public class RestoreParticleHandler extends TickHandler {
+
+	private final ParticleSpawner particles;
+
+	public RestoreParticleHandler() {
+		particles = new NetworkParticleSpawner();
+	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {
@@ -25,11 +36,19 @@ public class RestoreParticleHandler extends TickHandler {
 		Random rand = new Random();
 		double r = rand.nextDouble();
 		if (!world.isRemote) {
-			for (int i = 0; i < 90; i++) {
+			for (int i = 0; i < 60; i++) {
 				WorldServer World = (WorldServer) world;
-				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 4) + (r * 2)), 0).withY(0);
-				World.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, location.x() + entity.posX, location.y() + entity.getEntityBoundingBox().minY + r * 2,
-						location.z() + entity.posZ, 1, 0, 0, 0, 10D);
+				int random = rand.nextInt(2) + 1;
+				r = random == 1 ? r : r * -1;
+				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 6) + (r * 2)), 0).withY(0);
+				if (!CLIENT_CONFIG.useCustomParticles) {
+					World.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, location.x() + entity.posX, location.y() + entity.getEntityBoundingBox().minY + (r * 2),
+							location.z() + entity.posZ, 1, 0, 0, 0, 10D);
+				}
+				else {
+					particles.spawnParticles(world, AvatarParticles.getParticleHealing(), 1, 5, location.plus(Vector.getEntityPos(entity)),
+							new Vector(0.1, 0.5, 0.1));
+				}
 				//World.spawnParticle(EnumParticleTypes.);
 			}
 		}

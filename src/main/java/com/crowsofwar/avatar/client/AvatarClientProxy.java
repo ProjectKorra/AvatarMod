@@ -27,8 +27,10 @@ import com.crowsofwar.avatar.client.gui.GuiBisonChest;
 import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
 import com.crowsofwar.avatar.client.gui.skills.GetBendingGui;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
+import com.crowsofwar.avatar.client.particles.AvatarParticle;
 import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
 import com.crowsofwar.avatar.client.particles.AvatarParticleFlames;
+import com.crowsofwar.avatar.client.particles.AvatarParticleHealing;
 import com.crowsofwar.avatar.client.render.*;
 import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
@@ -167,9 +169,9 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		ParticleManager pm = mc.effectRenderer;
 
 		if (CLIENT_CONFIG.useCustomParticles) {
-			pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(),
-					AvatarParticleFlames::new);
+			pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(), AvatarParticleFlames::new);
 			pm.registerParticle(AvatarParticles.getParticleAir().getParticleID(), AvatarParticleAir::new);
+			pm.registerParticle(AvatarParticles.getParticleHealing().getParticleID(), AvatarParticleHealing::new);
 		}
 
 	}
