@@ -32,7 +32,8 @@ public class RestoreParticleHandler extends TickHandler {
 		AbilityData aD = data.getAbilityData("restore");
 		World world = ctx.getWorld();
 		int duration = data.getTickHandlerDuration(this);
-		int restoreDuration = aD.getLevel()  > 0 ? 60 + 10 * aD.getLevel() : 60;
+		int restoreDuration = aD.getLevel()  > 0 ? 40 + 10 * aD.getLevel() : 40;
+		//The particles take a while to disappear after the ability finishes- so you decrease the time the particles can spawn
 		Random rand = new Random();
 		double r = rand.nextDouble();
 		if (!world.isRemote) {
@@ -40,14 +41,14 @@ public class RestoreParticleHandler extends TickHandler {
 				WorldServer World = (WorldServer) world;
 				int random = rand.nextInt(2) + 1;
 				r = random == 1 ? r : r * -1;
-				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 6) + (r * 2)), 0).withY(0);
+				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 6) + (r * 2)), 0).times(0.5).withY(0);
 				if (!CLIENT_CONFIG.useCustomParticles) {
 					World.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, location.x() + entity.posX, location.y() + entity.getEntityBoundingBox().minY + (r * 2),
 							location.z() + entity.posZ, 1, 0, 0, 0, 10D);
 				}
 				else {
 					particles.spawnParticles(world, AvatarParticles.getParticleHealing(), 1, 5, location.plus(Vector.getEntityPos(entity)),
-							new Vector(0.1, 0.5, 0.1));
+							new Vector(0.1, 0.6, 0.1));
 				}
 				//World.spawnParticle(EnumParticleTypes.);
 			}
