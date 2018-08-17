@@ -35,6 +35,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
@@ -155,9 +156,9 @@ public class StatCtrlInfernoPunch extends StatusControl {
 					}
 
 					if (((EntityLivingBase) entity).isPotionActive(MobEffects.STRENGTH)) {
-						damage += ((EntityLivingBase) entity).getActivePotionEffect(MobEffects.STRENGTH).getAmplifier()/2F;
+						damage += (Objects.requireNonNull(((EntityLivingBase) entity).getActivePotionEffect(MobEffects.STRENGTH)).getAmplifier() + 1) / 2F;
 					}
-					
+
 					if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
 						if (((EntityLivingBase) entity).getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().startsWith("avatar_"))) {
 							if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
@@ -199,6 +200,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			}
 		}
 	}
+
 	@SubscribeEvent
 	public static void onDragonHurt(LivingHurtEvent event) {
 		EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
@@ -233,6 +235,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			}
 		}
 	}
+
 	private boolean canDamageEntity(Entity entity) {
 		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != entity) {
 			return false;
