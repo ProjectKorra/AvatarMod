@@ -19,6 +19,7 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -128,30 +129,35 @@ public class StatCtrlInfernoPunch extends StatusControl {
 				if (ctx.getData() != null) {
 					Vector direction = Vector.getLookRectangular(entity);
 					AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
-					float knockBack = 1F;
-					int fireTime = 5;
-					float damageModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
-					float damage = STATS_CONFIG.InfernoPunchDamage + (2 * damageModifier);
+					float powerModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
+					float damage = STATS_CONFIG.InfernoPunchDamage + (2 * powerModifier);
+					float knockBack = 1 + powerModifier;
+					int fireTime = 5 + (int) (powerModifier * 10);
 
 					if (abilityData.getLevel() >= 1) {
-						damage = 4 + (2 * damageModifier);
-						knockBack = 1.125F;
+						damage = 4 + (2 * powerModifier);
+						knockBack = 1.125F + powerModifier;
 						fireTime = 6;
 					} else if (abilityData.getLevel() >= 2) {
-						damage = 5 + (2 * damageModifier);
-						knockBack = 1.25F;
-						fireTime = 8;
+						damage = 5 + (2 * powerModifier);
+						knockBack = 1.25F + powerModifier;
+						fireTime = 8 + (int) (powerModifier * 10);
 					}
 					if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-						damage = 10 + (2 * damageModifier);
-						knockBack = 1.5F;
-						fireTime = 15;
+						damage = 10 + (2 * powerModifier);
+						knockBack = 1.5F + powerModifier;
+						fireTime = 15 + (int) (powerModifier * 10);
 					}
 					if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-						damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * damageModifier);
-						knockBack = 0.75F;
-						fireTime = 4;
+						damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * powerModifier);
+						knockBack = 0.75F + powerModifier;
+						fireTime = 4 + (int) (powerModifier * 10);
 					}
+
+					if (((EntityLivingBase) entity).isPotionActive(MobEffects.STRENGTH)) {
+						damage += ((EntityLivingBase) entity).getActivePotionEffect(MobEffects.STRENGTH).getAmplifier()/2F;
+					}
+					
 					if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
 						if (((EntityLivingBase) entity).getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().startsWith("avatar_"))) {
 							if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
