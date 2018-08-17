@@ -30,18 +30,18 @@ public class PurifyParticleHandler extends TickHandler {
 		AbilityData aD = data.getAbilityData("purify");
 		World world = ctx.getWorld();
 		int duration = data.getTickHandlerDuration(this);
-		int immolateDuration = aD.getLevel()  > 0 ? 40 + 40 * aD.getLevel() : 40;
+		int immolateDuration = aD.getLevel()  > 0 ? 60 + 40 * aD.getLevel() : 40;
 		//The particles take a while to disappear after the ability finishes- so you decrease the time the particles can spawn
 		Random rand = new Random();
 		double r = rand.nextDouble();
 		if (!world.isRemote) {
-			for (int i = 0; i < 20; i++) {
+			for (int i = 0; i < 18; i++) {
 				WorldServer World = (WorldServer) world;
 				int random = rand.nextInt(2) + 1;
 				r = random == 1 ? r : r * -1;
-				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 18) + (r * 2)), 0).times(0.5).withY(entity.getEyeHeight()-0.7);
-				particles.spawnParticles(world, EnumParticleTypes.FLAME, 4, 8, location.plus(Vector.getEntityPos(entity)),
-							new Vector(0.5, 1.8, 0.5));
+				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 20) + (r * 2)), 0).times(0.5).withY(entity.getEyeHeight()-0.7);
+				particles.spawnParticles(world, EnumParticleTypes.FLAME, 1, 1, location.plus(Vector.getEntityPos(entity)),
+							new Vector(0.6, 1.8, 0.6));
 				}
 			}
 		return duration >= immolateDuration;

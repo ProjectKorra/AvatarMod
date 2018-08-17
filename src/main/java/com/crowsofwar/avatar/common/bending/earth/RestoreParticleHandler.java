@@ -32,7 +32,7 @@ public class RestoreParticleHandler extends TickHandler {
 		AbilityData aD = data.getAbilityData("restore");
 		World world = ctx.getWorld();
 		int duration = data.getTickHandlerDuration(this);
-		int restoreDuration = aD.getLevel()  > 0 ? 40 + 30 * aD.getLevel() : 40;
+		int restoreDuration = aD.getLevel()  > 0 ? 60 + 30 * aD.getLevel() : 60;
 		//The particles take a while to disappear after the ability finishes- so you decrease the time the particles can spawn
 		Random rand = new Random();
 		double r = rand.nextDouble();
@@ -48,7 +48,7 @@ public class RestoreParticleHandler extends TickHandler {
 				}
 				else {
 					particles.spawnParticles(world, AvatarParticles.getParticleRestore(), 1, 2, location.plus(Vector.getEntityPos(entity)),
-							new Vector(0.2, 0.6, 0.2));
+							new Vector(0.2, 0.65, 0.2));
 				}
 			}
 		}
