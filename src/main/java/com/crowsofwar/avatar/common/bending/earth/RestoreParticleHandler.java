@@ -4,12 +4,21 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 public class RestoreParticleHandler extends TickHandler {
+
+	private final ParticleSpawner particles;
+
+	public RestoreParticleHandler() {
+		particles = new NetworkParticleSpawner();
+	}
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
@@ -19,17 +28,10 @@ public class RestoreParticleHandler extends TickHandler {
 		int duration = data.getTickHandlerDuration(this);
 		int restoreDuration = aD.getLevel()  > 0 ? 60 + 10 * aD.getLevel() : 60;
 		if (!world.isRemote) {
-			WorldServer World = (WorldServer) world;
-			double maxHeight = 3;
-			double heightUnit = maxHeight / 6.0 / Math.PI;
-			double step = Math.PI / 16;
-			double radius = 1;
-			for (double rad = 0; rad < Math.PI * 4; rad += step) {
-				double x = Math.cos(rad) * radius;
-				double z = Math.sin(rad) * radius;
-				double y = heightUnit * rad;
-				World.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, x + entity.posX, y + entity.getEntityBoundingBox().minY, z + entity.posZ,
-						1, 0, 0, 0, 0.3);
+			for (int i = 0; i < 8; i++) {
+				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 45)), 0).times(1.5).withY(0);
+				particles.spawnParticles(world, EnumParticleTypes.VILLAGER_HAPPY, 2, 7,
+						location.plus(Vector.getEntityPos(entity)), new Vector(.01, 1, .01));
 			}
 		}
 		return duration >= restoreDuration;
