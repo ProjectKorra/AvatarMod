@@ -3,12 +3,12 @@ package com.crowsofwar.avatar.client.particles;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class AvatarParticleHealing extends AvatarParticle {
+public class AvatarParticleRestore extends AvatarParticle {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/particles/healing.png");
+			"textures/particles/restore.png");
 
-	private static final ParticleFrame[] FRAMES = new ParticleFrame[8];
+	private static final ParticleFrame[] FRAMES = new ParticleFrame[6];
 
 	static {
 		for (int i = 0; i < FRAMES.length; i++) {
@@ -25,8 +25,8 @@ public class AvatarParticleHealing extends AvatarParticle {
 	 * @param velY
 	 * @param velZ
 	 */
-	public AvatarParticleHealing(int particleID, World world, double x, double y, double z, double velX,
-							 double velY, double velZ, int... parameters) {
+	public AvatarParticleRestore(int particleID, World world, double x, double y, double z, double velX,
+								 double velY, double velZ, int... parameters) {
 		super(world, x, y, z, velX, velY, velZ);
 
 		particleScale = 4f;

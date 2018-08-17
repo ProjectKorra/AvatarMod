@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.bending.earth;
+package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -17,11 +17,11 @@ import java.util.Random;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
-public class RestoreParticleHandler extends TickHandler {
+public class PurifyParticleHandler extends TickHandler {
 
 	private final ParticleSpawner particles;
 
-	public RestoreParticleHandler() {
+	public PurifyParticleHandler() {
 		particles = new NetworkParticleSpawner();
 	}
 
@@ -29,10 +29,10 @@ public class RestoreParticleHandler extends TickHandler {
 	public boolean tick(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
-		AbilityData aD = data.getAbilityData("restore");
+		AbilityData aD = data.getAbilityData("purify");
 		World world = ctx.getWorld();
 		int duration = data.getTickHandlerDuration(this);
-		int restoreDuration = aD.getLevel()  > 0 ? 40 + 30 * aD.getLevel() : 40;
+		int immolateDuration = aD.getLevel()  > 0 ? 40 + 40 * aD.getLevel() : 40;
 		//The particles take a while to disappear after the ability finishes- so you decrease the time the particles can spawn
 		Random rand = new Random();
 		double r = rand.nextDouble();
@@ -41,17 +41,12 @@ public class RestoreParticleHandler extends TickHandler {
 				WorldServer World = (WorldServer) world;
 				int random = rand.nextInt(2) + 1;
 				r = random == 1 ? r : r * -1;
-				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 6) + (r * 2)), 0).times(0.5).withY(0);
-				if (!CLIENT_CONFIG.useCustomParticles) {
-					World.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, location.x() + entity.posX, location.y() + entity.getEntityBoundingBox().minY + (r * 2),
-							location.z() + entity.posZ, 1, 0, 0, 0, 10D);
-				}
-				else {
-					particles.spawnParticles(world, AvatarParticles.getParticleRestore(), 1, 5, location.plus(Vector.getEntityPos(entity)),
+				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 6) + (r * 2)), 0).times(0.5).withY(entity.getEyeHeight()-0.7);
+				particles.spawnParticles(world, EnumParticleTypes.FLAME, 1, 5, location.plus(Vector.getEntityPos(entity)),
 							new Vector(0.2, 0.7, 0.2));
 				}
 			}
-		}
-		return duration >= restoreDuration;
+		return duration >= immolateDuration;
 	}
 }
+
