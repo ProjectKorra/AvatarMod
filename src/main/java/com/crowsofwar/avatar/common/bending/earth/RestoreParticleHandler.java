@@ -4,20 +4,15 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+
+import java.util.Random;
 
 public class RestoreParticleHandler extends TickHandler {
-
-	private final ParticleSpawner particles;
-
-	public RestoreParticleHandler() {
-		particles = new NetworkParticleSpawner();
-	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {
@@ -27,11 +22,17 @@ public class RestoreParticleHandler extends TickHandler {
 		World world = ctx.getWorld();
 		int duration = data.getTickHandlerDuration(this);
 		int restoreDuration = aD.getLevel()  > 0 ? 60 + 10 * aD.getLevel() : 60;
+		Random rand = new Random();
+		float r = rand.nextFloat();
 		if (!world.isRemote) {
-			for (int i = 0; i < 8; i++) {
-				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 45)), 0).times(1.5).withY(0);
-				particles.spawnParticles(world, EnumParticleTypes.VILLAGER_HAPPY, 2, 7,
-						location.plus(Vector.getEntityPos(entity)), new Vector(.01, 1, .01));
+			for (int i = 0; i < 90; i++) {
+				WorldServer World = (WorldServer) world;
+				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 4) + r), 0).withY(0);
+				//World.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, location.x() + entity.posX, location.y() + entity.getEntityBoundingBox().minY,
+				//		location.z() + entity.posZ, 1, 0, 0, 0, 10D);
+				world.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, location.x() + entity.posX, location.y() + entity.getEntityBoundingBox().minY,
+						location.z() + entity.posZ, 0 + r, 2, 0 + r);
+				//World.spawnParticle(EnumParticleTypes.);
 			}
 		}
 		return duration >= restoreDuration;

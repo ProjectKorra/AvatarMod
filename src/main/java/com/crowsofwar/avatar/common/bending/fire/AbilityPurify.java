@@ -45,7 +45,7 @@ public class AbilityPurify extends Ability {
 		if (bender.consumeChi(chi)) {
 
 			// 3s base + 2s per level
-			int duration = 60 + 40 * abilityData.getLevel();
+			int duration = abilityData.getLevel() > 0 ? 60 + 40 * abilityData.getLevel() : 60;
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				duration = 200;
 			}
