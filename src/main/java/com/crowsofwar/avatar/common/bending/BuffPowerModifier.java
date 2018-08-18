@@ -5,6 +5,8 @@ import com.crowsofwar.avatar.common.data.PowerRatingModifier;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+
 /**
  * "Buff abilities", abilities which apply temporary bending and other boosts, usually have a
  * power rating modifier to temporarily increase bending power. Therefore, they all have power
@@ -32,6 +34,11 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 	private Vision getVision(BendingContext ctx) {
 
 		AbilityData abilityData = ctx.getData().getAbilityData(getAbilityName());
+
+		System.out.print(getAbilityName());
+		if (getAbilityName().equals("slipstream") && !CLIENT_CONFIG.shaderSettings.useSlipstreamShaders) {
+			return null;
+		}
 		switch (abilityData.getLevel()) {
 			case -1:
 			case 0:
@@ -44,13 +51,14 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 				return getVisions()[2];
 		}
 
+
 	}
 
 	@Override
 	public boolean onUpdate(BendingContext ctx) {
-	/*	if (ctx.getData().getVision() == null) {
+		if (ctx.getData().getVision() == null) {
 			ctx.getData().setVision(getVision(ctx));
-		}**/
+		}
 		return super.onUpdate(ctx);
 	}
 

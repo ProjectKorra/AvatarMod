@@ -7,16 +7,15 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
 public class SlipstreamCooldownHandler extends TickHandler {
 	@Override
 	public boolean tick(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
-		AbilityData aD = data.getAbilityData("slipstream");
 		int duration = data.getTickHandlerDuration(this);
 		int coolDown = 160;
+		AbilityData aD = data.getAbilityData("slipstream");
 
 		if (aD.getLevel() == 1) {
 			coolDown = 140;
@@ -35,9 +34,6 @@ public class SlipstreamCooldownHandler extends TickHandler {
 			coolDown = 0;
 		}
 
-		if (!CLIENT_CONFIG.shaderSettings.useSlipstreamShaders) {
-			data.setVision(null);
-		}
 
 		return duration >= coolDown;
 	}
