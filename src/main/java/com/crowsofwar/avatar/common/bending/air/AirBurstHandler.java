@@ -117,9 +117,9 @@ public class AirBurstHandler extends TickHandler {
 
 			if (world instanceof WorldServer) {
 				WorldServer World = (WorldServer) world;
-				for (int i = 0; i < 9; i++) {
+				for (int i = 0; i < 12; i++) {
 					Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-							i * 40), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
+							i * 30), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
 					World.spawnParticle(EnumParticleTypes.CLOUD, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
 							lookpos.z() + entity.posZ, 1, 0, 0, 0, 0.005);
 				}
@@ -190,6 +190,21 @@ public class AirBurstHandler extends TickHandler {
 							BattlePerformanceScore.addLargeScore(entity);
 							applyKnockback(e, entity, knockBack, radius, upwardKnockback, knockbackDivider);
 						}
+					}
+				}
+
+				if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+					for (int i = 0; i < 8; i++) {
+						Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+								i * 45), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
+						Vector pos = Vector.getEntityPos(entity).withY(entity.getEyeHeight());
+						EntityAirblade blade = new EntityAirblade(world);
+						blade.setDamage(2);
+						blade.setAbility(new AbilityAirBurst());
+						blade.setOwner(entity);
+						blade.setPosition(pos.x(), pos.y(), pos.z());
+						blade.setVelocity(lookpos.times(30));
+						world.spawnEntity(blade);
 					}
 				}
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
