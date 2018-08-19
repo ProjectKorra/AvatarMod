@@ -45,10 +45,6 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 	private Vision getVision(BendingContext ctx) {
 
 		AbilityData abilityData = ctx.getData().getAbilityData(getAbilityName());
-		if (abilityData.getAbility() instanceof AbilitySlipstream && !CLIENT_CONFIG.shaderSettings.useSlipstreamShaders) {
-			return null;
-		}
-		System.out.print(abilityData.getAbility());
 
 		switch (abilityData.getLevel()) {
 			case -1:
