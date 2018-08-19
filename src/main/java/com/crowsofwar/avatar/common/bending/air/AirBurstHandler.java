@@ -67,6 +67,7 @@ public class AirBurstHandler extends TickHandler {
 			//Default 40
 			double upwardKnockback = STATS_CONFIG.airBurstSettings.push / 7;
 			float knockbackDivider = 1.2F;
+			double suction = 0.5;
 
 			if (abilityData.getLevel() == 1) {
 				damage = (STATS_CONFIG.airBurstSettings.damage * (3F / 2)) + powerRating;
@@ -109,8 +110,9 @@ public class AirBurstHandler extends TickHandler {
 			}
 
 			applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
-			double inverseRadius = ((float) durationToFire - duration) / 10;
+			double inverseRadius = (durationToFire - duration) / 10;
 			//gets smaller
+			suction -= (float) duration /100;
 
 
 			if (world instanceof WorldServer) {
@@ -124,6 +126,17 @@ public class AirBurstHandler extends TickHandler {
 
 			}
 
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius, entity.posY - radius, entity.posZ - radius);
+				List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box, entity1 -> entity1 != entity);
+				if (!collided.isEmpty()) {
+					for (Entity e : collided) {
+						if (e.canBePushed() && e.canBeCollidedWith() && e != entity) {
+							pullEntities(e, entity, suction, radius);
+						}
+					}
+				}
+			}
 
 			if (duration >= durationToFire) {
 				if (world instanceof WorldServer) {
@@ -228,6 +241,30 @@ public class AirBurstHandler extends TickHandler {
 				AvatarUtils.afterVelocityAdded(collided);
 			}
 		}
+
+	}
+
+	private void pullEntities(Entity collided, Entity attacker, double suction, float radius) {
+		Vector velocity = Vector.getEntityPos(collided).minus(Vector.getEntityPos(attacker));
+		velocity = velocity.times(suction).times(-1);
+
+		double x = (velocity.x());
+		double y = (velocity.y());
+		double z = (velocity.z());
+
+		if (!collided.world.isRemote) {
+			collided.addVelocity(x, y, z);
+
+			if (collided instanceof AvatarEntity) {
+				if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+					AvatarEntity avent = (AvatarEntity) collided;
+					avent.addVelocity(x, y, z);
+				}
+				collided.isAirBorne = true;
+				AvatarUtils.afterVelocityAdded(collided);
+			}
+		}
+
 
 	}
 
