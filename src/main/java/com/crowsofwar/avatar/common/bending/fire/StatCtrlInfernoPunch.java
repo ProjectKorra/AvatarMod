@@ -44,7 +44,7 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_C
 
 public class StatCtrlInfernoPunch extends StatusControl {
 	public StatCtrlInfernoPunch() {
-		super(15, CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
+		super(18, CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
 
 

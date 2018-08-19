@@ -1,9 +1,12 @@
 package com.crowsofwar.avatar.common.bending;
 
+import com.crowsofwar.avatar.common.bending.air.AbilitySlipstream;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.PowerRatingModifier;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import org.lwjgl.Sys;
+import org.lwjgl.opencl.CL;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
@@ -31,14 +34,22 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 
 	protected abstract String getAbilityName();
 
+	private boolean useSlipstreamShaders = CLIENT_CONFIG.shaderSettings.useSlipstreamShaders;
+
+	private boolean useCleanseShaders = CLIENT_CONFIG.shaderSettings.useCleanseShaders;
+
+	private boolean useRestoreShaders = CLIENT_CONFIG.shaderSettings.useRestoreShaders;
+
+	private boolean usePurifyShaders = CLIENT_CONFIG.shaderSettings.usePurifyShaders;
+
 	private Vision getVision(BendingContext ctx) {
 
 		AbilityData abilityData = ctx.getData().getAbilityData(getAbilityName());
-
-		System.out.print(getAbilityName());
-		if (getAbilityName().equals("slipstream") && !CLIENT_CONFIG.shaderSettings.useSlipstreamShaders) {
+		if (abilityData.getAbility() instanceof AbilitySlipstream && !CLIENT_CONFIG.shaderSettings.useSlipstreamShaders) {
 			return null;
 		}
+		System.out.print(abilityData.getAbility());
+
 		switch (abilityData.getLevel()) {
 			case -1:
 			case 0:
@@ -57,7 +68,9 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 	@Override
 	public boolean onUpdate(BendingContext ctx) {
 		if (ctx.getData().getVision() == null) {
-			ctx.getData().setVision(getVision(ctx));
+			if (!(ctx.getData().getAbilityData(getAbilityName()).getAbility() instanceof AbilitySlipstream && !useSlipstreamShaders)) {
+				ctx.getData().setVision(getVision(ctx));
+			}
 		}
 		return super.onUpdate(ctx);
 	}
