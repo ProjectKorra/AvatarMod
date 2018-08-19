@@ -139,7 +139,7 @@ public class AirBurstHandler extends TickHandler {
 			}
 
 			if (duration >= durationToFire) {
-				if (world instanceof WorldServer) {
+			/*	if (world instanceof WorldServer) {
 					WorldServer World = (WorldServer) world;
 					double x, y, z;
 
@@ -175,7 +175,7 @@ public class AirBurstHandler extends TickHandler {
 									lookPos.z() + entity.posZ, 2, 0, 0, 0, (double) radius / 50);
 						}
 					}
-				}
+				}**/
 
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius, entity.posY - radius, entity.posZ - radius);
 				List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box, entity1 -> entity1 != entity);
@@ -200,10 +200,11 @@ public class AirBurstHandler extends TickHandler {
 						Vector pos = Vector.getEntityPos(entity).withY(entity.getEyeHeight());
 						EntityAirblade blade = new EntityAirblade(world);
 						blade.setDamage(2);
-						blade.setAbility(new AbilityAirBurst());
+						blade.setAbility(new AbilityAirblade());
 						blade.setOwner(entity);
-						blade.setPosition(pos.x(), pos.y(), pos.z());
+						blade.setPosition(pos.x(), pos.y() + 1, pos.z());
 						blade.setVelocity(lookpos.times(30));
+						blade.setInvisible(false);
 						world.spawnEntity(blade);
 					}
 				}
@@ -322,7 +323,7 @@ public class AirBurstHandler extends TickHandler {
 	}
 
 	private boolean canDamageEntity(Entity entity) {
-		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != entity) {
+		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == entity) {
 			return false;
 		}
 		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||

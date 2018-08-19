@@ -63,6 +63,11 @@ public class EntityAirblade extends AvatarEntity {
 	}
 
 	@Override
+	public boolean canCollideWith(Entity entity) {
+		return super.canCollideWith(entity) && entity != getOwner();
+	}
+
+	@Override
 	public void onUpdate() {
 
 		super.onUpdate();
@@ -72,7 +77,7 @@ public class EntityAirblade extends AvatarEntity {
 		this.motionZ = this.motionZ * 0.99;
 
 		if (!world.isRemote && velocity().sqrMagnitude() <= .9) {
-			setDead();
+			//setDead();
 		}
 		if (!world.isRemote && inWater) {
 			setDead();
@@ -194,6 +199,9 @@ public class EntityAirblade extends AvatarEntity {
 	@Override
 	public void setDead() {
 		super.setDead();
+		if (!world.isRemote && this.isDead) {
+			Thread.dumpStack();
+		}
 	}
 
 	public Bender getOwnerBender() {
