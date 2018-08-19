@@ -67,7 +67,7 @@ public class AirBurstHandler extends TickHandler {
 			//Default 40
 			double upwardKnockback = STATS_CONFIG.airBurstSettings.push / 7;
 			float knockbackDivider = 1.2F;
-			double suction = 0.5;
+			double suction = 0.05;
 
 			if (abilityData.getLevel() == 1) {
 				damage = (STATS_CONFIG.airBurstSettings.damage * (3F / 2)) + powerRating;
@@ -112,7 +112,7 @@ public class AirBurstHandler extends TickHandler {
 			applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 			double inverseRadius = (durationToFire - duration) / 10;
 			//gets smaller
-			suction -= (float) duration /100;
+			suction -= (float) duration / 400;
 
 
 			if (world instanceof WorldServer) {
@@ -132,7 +132,7 @@ public class AirBurstHandler extends TickHandler {
 				if (!collided.isEmpty()) {
 					for (Entity e : collided) {
 						if (e.canBePushed() && e.canBeCollidedWith() && e != entity) {
-							pullEntities(e, entity, suction, radius);
+							pullEntities(e, entity, suction);
 						}
 					}
 				}
@@ -244,7 +244,7 @@ public class AirBurstHandler extends TickHandler {
 
 	}
 
-	private void pullEntities(Entity collided, Entity attacker, double suction, float radius) {
+	private void pullEntities(Entity collided, Entity attacker, double suction) {
 		Vector velocity = Vector.getEntityPos(collided).minus(Vector.getEntityPos(attacker));
 		velocity = velocity.times(suction).times(-1);
 
