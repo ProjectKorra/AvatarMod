@@ -32,11 +32,13 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 
 	private List<T> points;
 	private int brightness = 15728880;
+	public double velocityMultiplier = 8;
 
 	public EntityArc(World world) {
 		super(world);
 		float size = .2f;
 		setSize(size, size);
+		this.velocityMultiplier = 8;
 
 		this.points = new ArrayList<>();
 		for (int i = 0; i < getAmountOfControlPoints(); i++) {
@@ -122,7 +124,7 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 			} else if (sqrDist > getControlPointMaxDistanceSq()) {
 
 				Vector diff = leader.position().minus(p.position());
-				diff = diff.normalize().times(8);
+				diff = diff.normalize().times(velocityMultiplier);
 				p.setVelocity(p.velocity().plus(diff));
 
 			}

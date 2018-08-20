@@ -289,6 +289,10 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			this.setDead();
 		}
 
+		if (getBehavior() != null && getBehavior() instanceof WaterArcBehavior.PlayerControlled) {
+			this.velocityMultiplier = 4;
+		}
+
 		if (getOwner() != null) {
 			EntityWaterArc arc = AvatarEntity.lookupControlledEntity(world, EntityWaterArc.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
