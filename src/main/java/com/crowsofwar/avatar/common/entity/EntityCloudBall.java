@@ -266,19 +266,18 @@ public class EntityCloudBall extends AvatarEntity {
 
 						damageEntity(entity);
 
-						double mult = abilityData.getLevel() >= 2 ? -3 : -1.5;
 						double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
 
 						//Divide the result of the position difference to make entities fly
 						//further the closer they are to the player.
 						Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
 						double distance = Vector.getEntityPos(entity).dist(Vector.getEntityPos(this));
-						double direction = (hitBox - distance) * (speed * 10 / 1) / hitBox;
+						double direction = (hitBox - distance) * (speed * 10 / 2) / hitBox;
 						velocity = velocity.times(direction).withY(speed);
 
-						double x = (velocity.x())+ distanceTravelled / 50;
+						double x = (velocity.x()) + distanceTravelled / 50;
 						double y = (velocity.y()) > 0 ? velocity.y() + distanceTravelled / 100 : 0.3F + distanceTravelled / 100;
-						double z = (velocity.z()) + distanceTravelled/50;
+						double z = (velocity.z()) + distanceTravelled / 50;
 
 						if (!entity.world.isRemote) {
 							entity.addVelocity(x, y, z);
@@ -292,13 +291,6 @@ public class EntityCloudBall extends AvatarEntity {
 								AvatarUtils.afterVelocityAdded(entity);
 							}
 						}
-
-						if (entity instanceof AvatarEntity) {
-							AvatarEntity avent = (AvatarEntity) entity;
-							avent.setVelocity(velocity);
-						}
-						entity.isAirBorne = true;
-						AvatarUtils.afterVelocityAdded(entity);
 					}
 				}
 

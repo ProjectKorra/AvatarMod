@@ -72,7 +72,7 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 				entity.onCollideWithSolid();
 			}
 
-			entity.addVelocity(0, -1 / 120, 0);
+			entity.addVelocity(0, -1F / 120, 0);
 
 			World world = entity.world;
 			if (!entity.isDead) {
@@ -82,10 +82,6 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 					for (Entity collided : collidedList) {
 						if (entity.canCollideWith(collided)) {
 							collision((EntityLivingBase) collided, entity);
-							Vector motion = new Vector(collided).minus(new Vector(entity));
-							motion = motion.times(0.5).withY(0.10);
-							collided.addVelocity(motion.x(), motion.y(), motion.z());
-							entity.cloudBurst();
 
 						}
 					}
