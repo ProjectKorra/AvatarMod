@@ -100,8 +100,8 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 				BattlePerformanceScore.addMediumScore(entity.getOwner());
 			}
 
-			Vector motion = entity.velocity().dividedBy(40);
-			motion = motion.times(STATS_CONFIG.cloudburstSettings.push).withY(0.11);
+			Vector motion = entity.velocity().dividedBy(80);
+			motion = motion.times(STATS_CONFIG.cloudburstSettings.push).withY(0.05);
 			collided.addVelocity(motion.x(), motion.y(), motion.z());
 
 			BendingData data = Bender.get(entity.getOwner()).getData();
