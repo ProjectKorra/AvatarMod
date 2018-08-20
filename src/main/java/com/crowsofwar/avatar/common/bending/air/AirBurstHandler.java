@@ -106,7 +106,6 @@ public class AirBurstHandler extends TickHandler {
 				radius = (STATS_CONFIG.AirBurstSettings.radius * 7 / 3) + powerRating;
 				//7
 				upwardKnockback = STATS_CONFIG.airBurstSettings.push / 2.5F;
-				knockbackDivider = 1.5F;
 			}
 
 			applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
@@ -197,7 +196,7 @@ public class AirBurstHandler extends TickHandler {
 					for (int i = 0; i < 8; i++) {
 						Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
 								i * 45), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
-						Vector pos = Vector.getEntityPos(entity).withY(entity.getEyeHeight());
+						Vector pos = Vector.getEntityPos(entity).plus(lookpos.times(2)).plus(0, 1, 0);
 						EntityAirblade blade = new EntityAirblade(world);
 						blade.setDamage(2);
 						blade.setAbility(new AbilityAirblade());
