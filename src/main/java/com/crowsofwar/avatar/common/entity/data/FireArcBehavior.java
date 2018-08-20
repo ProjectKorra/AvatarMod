@@ -116,7 +116,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 
 		@Override
 		public FireArcBehavior onUpdate(EntityFireArc entity) {
-			entity.addVelocity(Vector.DOWN.times(9.81 / 60));
+			entity.addVelocity(Vector.DOWN.times(9.81 / 120));
 
 			List<Entity> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
 					Entity.class, entity.getEntityBoundingBox().grow(0.9, 0.9, 0.9),

@@ -55,12 +55,14 @@ public class StatCtrlThrowFire extends StatusControl {
 			AbilityData abilityData = data.getAbilityData("fire_arc");
 
 			double powerRating = bender.calcPowerRating(Firebending.ID);
-			double velocity = abilityData.getLevel() >= 1 ? 12 : 8;
+			double velocity = abilityData.getLevel() >= 1 ? 30 : 22;
 			velocity += powerRating / 30;
 
 			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
 					Math.toRadians(entity.rotationPitch));
 			force = force.times(velocity);
+			fire.addVelocity(fire.velocity().times(-1));
+			//ensures the fire arc's velocity can't be increased by flicking your mouse
 			fire.addVelocity(force);
 			fire.setBehavior(new FireArcBehavior.Thrown());
 

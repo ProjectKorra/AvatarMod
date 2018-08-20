@@ -52,7 +52,7 @@ public class ConfigStats {
 	public int wallJumpDelay = 10;
 
 	@Load
-	public float waterArcTicks = 40;
+	public float waterArcTicks = 120;
 	//Has to be a float so I can times it by a fraction; there aren't any partial ticks, though.
 
 	@Load
