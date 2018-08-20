@@ -273,7 +273,7 @@ public class EntityCloudBall extends AvatarEntity {
 						Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
 						double distance = Vector.getEntityPos(entity).dist(Vector.getEntityPos(this));
 						double direction = (hitBox - distance) * (speed * 10 / 2) / hitBox;
-						velocity = velocity.times(direction).withY(speed);
+						velocity = velocity.times(direction).withY(speed/2);
 
 						double x = (velocity.x()) + distanceTravelled / 50;
 						double y = (velocity.y()) > 0 ? velocity.y() + distanceTravelled / 100 : 0.3F + distanceTravelled / 100;
