@@ -122,7 +122,7 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 			} else if (sqrDist > getControlPointMaxDistanceSq()) {
 
 				Vector diff = leader.position().minus(p.position());
-				diff = diff.normalize().times(3);
+				diff = diff.normalize().times(8);
 				p.setVelocity(p.velocity().plus(diff));
 
 			}

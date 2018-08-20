@@ -55,7 +55,7 @@ public class StatCtrlThrowFire extends StatusControl {
 			AbilityData abilityData = data.getAbilityData("fire_arc");
 
 			double powerRating = bender.calcPowerRating(Firebending.ID);
-			double velocity = abilityData.getLevel() >= 1 ? 30 : 22;
+			double velocity = abilityData.getLevel() >= 1 ? 22 : 16;
 			velocity += powerRating / 30;
 
 			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
