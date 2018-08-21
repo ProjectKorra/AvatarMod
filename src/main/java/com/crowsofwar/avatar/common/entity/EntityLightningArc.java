@@ -118,6 +118,8 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			onUpdateMainArc();
 		}
 
+		this.velocityMultiplier = 1;
+
 		if (getOwner() != null) {
 			Vector controllerPos = Vector.getEyePos(getOwner());
 			Vector endPosition = getEndPos();

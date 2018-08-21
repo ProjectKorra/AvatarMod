@@ -32,13 +32,13 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 
 	private List<T> points;
 	private int brightness = 15728880;
-	public double velocityMultiplier = 8;
+	public double velocityMultiplier;
 
 	public EntityArc(World world) {
 		super(world);
 		float size = .2f;
 		setSize(size, size);
-		this.velocityMultiplier = 8;
+		this.velocityMultiplier = 4;
 
 		this.points = new ArrayList<>();
 		for (int i = 0; i < getAmountOfControlPoints(); i++) {

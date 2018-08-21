@@ -49,7 +49,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	@Override
 	protected void updateCpBehavior() {
 		super.updateCpBehavior();
-		getControlPoint(0).setPosition(Vector.getEntityPos(this).plusY(0.25));
+		getControlPoint(0).setPosition(Vector.getEntityPos(this));
 	}
 
 	@Override

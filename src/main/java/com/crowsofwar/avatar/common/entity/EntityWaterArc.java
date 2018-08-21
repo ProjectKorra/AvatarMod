@@ -82,7 +82,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.damageMult = 1;
 		this.putsOutFires = true;
 		this.Size = 0.4F;
-		this.Gravity = 9.81F;
+		this.Gravity = 9.82F;
 
 	}
 
