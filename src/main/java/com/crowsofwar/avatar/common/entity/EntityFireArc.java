@@ -47,6 +47,12 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	}
 
 	@Override
+	protected void updateCpBehavior() {
+		super.updateCpBehavior();
+		getControlPoint(0).setPosition(Vector.getEntityPos(this).plusY(0.25));
+	}
+
+	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new FireArcBehavior.Idle());
@@ -57,6 +63,11 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		super.onUpdate();
 		FireArcBehavior newBehavior = (FireArcBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != newBehavior) setBehavior(newBehavior);
+
+		if (getBehavior() != null && getBehavior() instanceof FireArcBehavior.PlayerControlled) {
+			this.velocityMultiplier = 4;
+		}
+		else this.velocityMultiplier = 8;
 
 		if (getOwner() != null) {
 			EntityFireArc arc = AvatarEntity.lookupControlledEntity(world, EntityFireArc.class, getOwner());
