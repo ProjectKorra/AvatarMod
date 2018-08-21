@@ -255,11 +255,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		if (entity instanceof AvatarEntity && getBehavior() instanceof WaterArcBehavior.Thrown && ((AvatarEntity) entity).getOwner() != getOwner()) {
 			((AvatarEntity) entity).onMinorWaterContact();
 		}
-		if (!isSpear && getBehavior() instanceof WaterArcBehavior.Thrown) {
-			Splash();
-			this.setDead();
-			cleanup();
-		}
 
 
 	}

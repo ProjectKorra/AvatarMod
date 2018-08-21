@@ -188,9 +188,9 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				}
 			}
 
-			if (startGravity / ticks <= 2) {
-				entity.addVelocity(Vector.DOWN.times(entity.getGravity() / 10));
-			}
+		//	if (startGravity / ticks <= 2) {
+				entity.addVelocity(Vector.DOWN.times(entity.getGravity() / 90));
+			//}
 
 
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
@@ -209,10 +209,6 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 					abilityData.addXp(ConfigSkills.SKILLS_CONFIG.waterHit);
 
-					if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
-						entity.setBehavior(new PlayerControlled());
-						data.addStatusControl(StatusControl.THROW_WATER);
-					}
 					if (!waterSpear) {
 						entity.Splash();
 						entity.setDead();

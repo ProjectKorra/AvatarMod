@@ -51,16 +51,16 @@ public class StatCtrlThrowWater extends StatusControl {
 		AbilityData abilityData = data.getAbilityData("water_arc");
 
 		int lvl = abilityData.getLevel();
-		double velocity = 8;
+		double velocity = 14;
 
 		if (lvl == 1){
-			velocity = 10;
+			velocity = 16;
 		}
 		if (lvl == 2) {
-			velocity = 12;
+			velocity = 18;
 		}
 		if (lvl == 3) {
-			velocity = 18;
+			velocity = 22;
 		}
 
 		EntityWaterArc arc = AvatarEntity.lookupEntity(ctx.getWorld(), EntityWaterArc.class, //
