@@ -28,6 +28,7 @@ public class RenderAvatarLightning extends Render<EntityAvatarLightning> {
 	/**
 	 * Renders the desired {@code T} type Entity.
 	 */
+
 	public void doRender(EntityAvatarLightning entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
@@ -119,10 +120,10 @@ public class RenderAvatarLightning extends Render<EntityAvatarLightning> {
 							d11 += d7 * 2.0D;
 						}
 
-						bufferbuilder.pos(d10 + d2, y + (double) (i1 * 16), d11 + d3).color(0F, 1F, 1F, 0.3F).endVertex();
-						bufferbuilder.pos(d8 + d4, y + (double) ((i1 + 1) * 16), d9 + d5).color(0F, 1F, 1F, 0.3F).endVertex();
-						bufferbuilder.color(0F, 1F, 1F, 0.3F);
-						GlStateManager.color(0F, 1F, 1F, 0.3F);
+						bufferbuilder.pos(d10 + d2, y + (double) (i1 * 16), d11 + d3).color(0F, 0, 1F, 0.3F).endVertex();
+						bufferbuilder.pos(d8 + d4, y + (double) ((i1 + 1) * 16), d9 + d5).color(0F, 0, 1F, 0.3F).endVertex();
+						bufferbuilder.color(0F, 0, 1F, 0.3F);
+						GlStateManager.color(0F, 0, 1F, 0.3F);
 
 					}
 
