@@ -68,21 +68,8 @@ public class AbilityWaterArc extends Ability {
 
 		List<Entity> waterArc = Raytrace.entityRaytrace(world, Vector.getEntityPos(entity).withY(entity.getEyeHeight()), Vector.getLookRectangular(entity).times(10), 3,
 				entity1 -> entity1 != entity);
-		if (ctx.getLevel() >= 2) {
-			for (Entity a : waterArc) {
-				if (a instanceof AvatarEntity) {
-					if (((AvatarEntity) a).getOwner() != entity) {
-						if (a instanceof EntityWaterArc) {
-							((EntityWaterArc) a).setOwner(entity);
-							((EntityWaterArc) a).setBehavior(new WaterArcBehavior.PlayerControlled());
-							((EntityWaterArc) a).setAbility(this);
-						}
-					}
-				}
-			}
-		}
 
-		if (targetPos != null || ctx.consumeWater(1) || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
+		if (targetPos != null || ctx.consumeWater(1) || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) || !waterArc.isEmpty()) {
 
 			if (targetPos == null) {
 				targetPos = Vector.getEyePos(entity).plus(getLookRectangular(entity).times(2.5));
@@ -143,12 +130,27 @@ public class AbilityWaterArc extends Ability {
 						size = 1F;
 					}
 
-					System.out.println(comboNumber);
 
 					Vector playerEye = Vector.getEyePos(entity);
 					Vector look = playerEye.plus(getLookRectangular(entity).times(1.5));
 					Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch));
 					force = force.times(15 + comboNumber);
+
+					if (ctx.getLevel() >= 2) {
+						for (Entity a : waterArc) {
+							if (a instanceof AvatarEntity) {
+								if (((AvatarEntity) a).getOwner() != entity) {
+									if (a instanceof EntityWaterArc) {
+										((EntityWaterArc) a).setOwner(entity);
+										((EntityWaterArc) a).setBehavior(new WaterArcBehavior.PlayerControlled());
+										((EntityWaterArc) a).setAbility(this);
+										((EntityWaterArc) a).setDamageMult(damageMult);
+										((EntityWaterArc) a).setStartingPosition(entity.getPosition());
+									}
+								}
+							}
+						}
+					}
 
 					water.setOwner(entity);
 					water.setPosition(look);

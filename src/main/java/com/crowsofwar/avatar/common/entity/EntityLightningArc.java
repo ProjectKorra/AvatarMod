@@ -118,7 +118,6 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			onUpdateMainArc();
 		}
 
-		this.velocityMultiplier = 1;
 
 		if (getOwner() != null) {
 			Vector controllerPos = Vector.getEyePos(getOwner());
@@ -142,7 +141,9 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			if (!wasSuccessfullyRedirected) {
 				damageEntity(stuckTo, 0.333f);
 			}
+			this.velocityMultiplier = 4;
 		}
+		else this.velocityMultiplier = 1;
 
 		if (velocity().equals(Vector.ZERO)) {
 			stuckTime++;
@@ -173,7 +174,6 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 				world.setLastLightningBolt(2);
 			}
 		}
-
 		// Electrocute enemies in water
 		if (inWater && !world.isRemote) {
 			if (floodFill == null) {
@@ -187,12 +187,13 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	@Override
 	protected void updateCpBehavior() {
-		for (LightningControlPoint controlPoint : getControlPoints()) {
+		if (getOwner() != null) {
+			for (LightningControlPoint controlPoint : getControlPoints()) {
 
-			controlPoint.setPosition(controlPoint.getPosition
-					(ticksExisted));
+				controlPoint.setPosition(controlPoint.getPosition
+						(ticksExisted));
+			}
 		}
-
 	}
 
 	@Override
