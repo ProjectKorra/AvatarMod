@@ -20,8 +20,7 @@ package com.crowsofwar.avatar.common.controls;
 import com.crowsofwar.avatar.AvatarMod;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Represents all controls needed to access by AvatarMod. This includes:
@@ -48,8 +47,6 @@ public class AvatarControl {
 		CONTROL_LEFT_CLICK_DOWN,
 		CONTROL_RIGHT_CLICK_DOWN,
 		CONTROL_MIDDLE_CLICK_DOWN,
-		CONTROL_SPACE,
-		CONTROL_SPACE_DOWN,
 		CONTROL_JUMP,
 		CONTROL_LEFT_CLICK_UP,
 		CONTROL_RIGHT_CLICK_UP,
@@ -64,7 +61,7 @@ public class AvatarControl {
 	 */
 	private AvatarControl(String name, boolean keybinding) {
 		this.name = name;
-		this.needsKeybinding = keybinding;
+		needsKeybinding = keybinding;
 		ALL_CONTROLS.add(this);
 	}
 	
@@ -81,8 +78,6 @@ public class AvatarControl {
 		CONTROL_LEFT_CLICK_DOWN = new AvatarControl("LeftClickDown", false);
 		CONTROL_RIGHT_CLICK_DOWN = new AvatarControl("RightClickDown", false);
 		CONTROL_MIDDLE_CLICK_DOWN = new AvatarControl("MiddleClickDown", false);
-		CONTROL_SPACE = new AvatarControl("Space", false);
-		CONTROL_SPACE_DOWN = new AvatarControl("SpaceDown", false);
 		CONTROL_JUMP = new AvatarControl("key.jump", true);
 		CONTROL_LEFT_CLICK_UP = new AvatarControl("LeftClickUp", false);
 		CONTROL_RIGHT_CLICK_UP = new AvatarControl("RightClickUp", false);
