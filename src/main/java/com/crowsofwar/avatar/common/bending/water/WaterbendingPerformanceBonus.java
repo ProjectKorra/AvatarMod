@@ -1,20 +1,22 @@
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.data.BendingData;
+
 /**
  * @author CrowsOfWar
  */
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+@Mod.EventBusSubscriber(modid = AvatarInfo.MODID)
 public class WaterbendingPerformanceBonus {
 
 	@SubscribeEvent

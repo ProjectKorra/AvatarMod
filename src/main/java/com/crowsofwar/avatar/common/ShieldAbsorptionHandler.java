@@ -1,20 +1,21 @@
 package com.crowsofwar.avatar.common;
 
-import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityShield;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.entity.*;
+
 /**
  * @author CrowsOfWar
  */
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+@Mod.EventBusSubscriber(modid = AvatarInfo.MODID)
 public class ShieldAbsorptionHandler {
 
 	@SubscribeEvent
@@ -23,14 +24,12 @@ public class ShieldAbsorptionHandler {
 		World world = e.getEntity().world;
 		EntityLivingBase attacked = (EntityLivingBase) e.getEntity();
 
-		EntityShield shield = AvatarEntity.lookupControlledEntity(world, EntityShield.class,
-				attacked);
+		EntityShield shield = AvatarEntity.lookupControlledEntity(world, EntityShield.class, attacked);
 
 		if (shield != null) {
 			if (shield.attackEntityFrom(e.getSource(), e.getAmount())) {
 				e.setCanceled(true);
-				world.playSound(null, attacked.getPosition(), SoundEvents.BLOCK_CLOTH_HIT,
-						SoundCategory.PLAYERS, 1, 1);
+				world.playSound(null, attacked.getPosition(), SoundEvents.BLOCK_CLOTH_HIT, SoundCategory.PLAYERS, 1, 1);
 			}
 		}
 

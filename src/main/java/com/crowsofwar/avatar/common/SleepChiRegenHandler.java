@@ -16,21 +16,21 @@
 */
 package com.crowsofwar.avatar.common;
 
-import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
-import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.analytics.*;
+import com.crowsofwar.avatar.common.data.*;
+
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+@Mod.EventBusSubscriber(modid = AvatarInfo.MODID)
 public class SleepChiRegenHandler {
 
 	@SubscribeEvent

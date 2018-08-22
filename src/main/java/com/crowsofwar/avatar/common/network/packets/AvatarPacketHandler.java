@@ -10,8 +10,11 @@ import java.util.Objects;
 public abstract class AvatarPacketHandler<MSG extends AvatarPacket, REPLY extends IMessage> implements IMessageHandler<MSG, REPLY> {
 	@Override
 	public final REPLY onMessage(MSG message, MessageContext ctx) {
+		System.out.println(getClass().getCanonicalName());
 		try {
-			return Objects.requireNonNull(AvatarUtils.callFromMainThread(() -> avatarOnMessage(message, ctx))).get();
+			REPLY reply = Objects.requireNonNull(AvatarUtils.callFromMainThread(() -> avatarOnMessage(message, ctx))).get();
+			System.out.println("Returned");
+			return reply;
 		} catch (Exception ex) {
 			AvatarLog.error("Packet " + getClass().getSimpleName() + " generated an error upon handling. Report this to the authors!", ex);
 			return null;

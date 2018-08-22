@@ -16,21 +16,20 @@
 */
 package com.crowsofwar.avatar.common;
 
-import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.data.AvatarWorldData;
-import com.crowsofwar.avatar.common.data.TemporaryWaterLocation;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.*;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.Iterator;
-import java.util.List;
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.data.*;
+
+import java.util.*;
 
 /**
  * A hacky workaround to manage a temporary water block at a position. The water
@@ -39,7 +38,7 @@ import java.util.List;
  *
  * @author CrowsOfWar
  */
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+@Mod.EventBusSubscriber(modid = AvatarInfo.MODID)
 public class TemporaryWaterHandler {
 
 	@SubscribeEvent

@@ -16,16 +16,18 @@
 */
 package com.crowsofwar.avatar.common;
 
-import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
+
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+
+@Mod.EventBusSubscriber(modid = AvatarInfo.MODID)
 public class BisonLeftClickHandler {
 
 	@SubscribeEvent

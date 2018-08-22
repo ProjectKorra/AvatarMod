@@ -16,26 +16,25 @@
 */
 package com.crowsofwar.avatar.common;
 
-import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
-import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.item.ItemScroll;
-import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.analytics.*;
+import com.crowsofwar.avatar.common.item.*;
+import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+@Mod.EventBusSubscriber(modid = AvatarInfo.MODID)
 public class AvatarScrollDrops {
 
 	@SubscribeEvent
@@ -55,8 +54,7 @@ public class AvatarScrollDrops {
 				ItemStack stack = new ItemStack(AvatarItems.itemScroll);
 				ItemScroll.setScrollType(stack, type);
 
-				EntityItem entityItem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
-						stack);
+				EntityItem entityItem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ, stack);
 				entityItem.setDefaultPickupDelay();
 				e.getDrops().add(entityItem);
 
@@ -74,8 +72,7 @@ public class AvatarScrollDrops {
 
 				ScrollType type = ScrollType.values()[stack.getMetadata()];
 				String entityName = EntityList.getEntityString(entity);
-				AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onMobScrollDrop(entityName,
-						type.name().toLowerCase()));
+				AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onMobScrollDrop(entityName, type.name().toLowerCase()));
 
 			}
 		}

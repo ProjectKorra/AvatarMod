@@ -1,14 +1,14 @@
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.data.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 
@@ -18,7 +18,7 @@ import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
  *
  * @author CrowsOfWar
  */
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+@Mod.EventBusSubscriber(modid = AvatarInfo.MODID)
 public class AirbendingPerformanceChiBonus {
 
 	@SubscribeEvent

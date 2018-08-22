@@ -52,19 +52,18 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
+import static com.crowsofwar.avatar.AvatarInfo.*;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
-@Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false, //
-		updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "[1.12,1.13)")
+@Mod(modid = MODID, name = MOD_NAME, version = VERSION, dependencies = "required-after:gorecore", useMetadata = true, acceptedMinecraftVersions = MC_VERSION)
 
 public class AvatarMod {
-
 	@SidedProxy(serverSide = "com.crowsofwar.avatar.server.AvatarServerProxy", clientSide = "com.crowsofwar.avatar.client.AvatarClientProxy")
 	public static AvatarCommonProxy proxy;
 
-	@Instance(value = AvatarInfo.MOD_ID)
+	@Instance(MODID)
 	public static AvatarMod instance;
 
 	public static SimpleNetworkWrapper network;
@@ -144,7 +143,7 @@ public class AvatarMod {
 		proxy.preInit();
 		AvatarPlayerData.initFetcher(proxy.getClientDataFetcher());
 
-		network = NetworkRegistry.INSTANCE.newSimpleChannel(AvatarInfo.MOD_ID + "_Network");
+		network = NetworkRegistry.INSTANCE.newSimpleChannel(AvatarInfo.MODID + "_Network");
 		network.registerMessage(PacketSUseAbility.Handler.class, PacketSUseAbility.class, nextMessageID++, Side.SERVER);
 		network.registerMessage(PacketSRequestData.Handler.class, PacketSRequestData.class, nextMessageID++, Side.SERVER);
 		network.registerMessage(PacketSUseStatusControl.Handler.class, PacketSUseStatusControl.class, nextMessageID++, Side.SERVER);
@@ -225,11 +224,11 @@ public class AvatarMod {
 		registerEntity(EntityLightningSpawner.class, "LightningSpawnerr");
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
-				EXTREME_HILLS, MUTATED_SAVANNA);
+								EXTREME_HILLS, MUTATED_SAVANNA);
 		EntityRegistry.addSpawn(EntityOtterPenguin.class, 4, 5, 9, EnumCreatureType.CREATURE, //
-				COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
+								COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
 		EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 3, 6, EnumCreatureType.CREATURE, //
-				DESERT, DESERT_HILLS, SAVANNA, SAVANNA_PLATEAU, PLAINS);
+								DESERT, DESERT_HILLS, SAVANNA, SAVANNA_PLATEAU, PLAINS);
 
 		// Second loading required since other mods blocks might not be
 		// registered
@@ -250,8 +249,7 @@ public class AvatarMod {
 	}
 
 	private void registerEntity(Class<? extends Entity> entity, String name) {
-		EntityRegistry.registerModEntity(new ResourceLocation("avatarmod", name), entity, name,
-				nextEntityID++, this, 128, 3, true);
+		EntityRegistry.registerModEntity(new ResourceLocation("avatarmod", name), entity, name, nextEntityID++, this, 128, 3, true);
 	}
 
 	private void registerEntity(Class<? extends Entity> entity, String name, int primary, int secondary) {

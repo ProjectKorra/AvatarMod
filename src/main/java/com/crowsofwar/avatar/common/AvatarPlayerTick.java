@@ -17,16 +17,16 @@
 
 package com.crowsofwar.avatar.common;
 
-import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.entity.player.EntityPlayer;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.*;
 
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.data.*;
+
+@Mod.EventBusSubscriber(modid = AvatarInfo.MODID)
 public class AvatarPlayerTick {
 
 	@SubscribeEvent

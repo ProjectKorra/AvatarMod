@@ -16,29 +16,26 @@
 */
 package com.crowsofwar.avatar.common;
 
-import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
-import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
-import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
 import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.*;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenVillage;
+
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.terraingen.InitMapGenEvent.EventType;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.entity.mob.*;
+
+import java.util.*;
 
 /**
  * @author CrowsOfWar
  */
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+@Mod.EventBusSubscriber(modid = AvatarInfo.MODID)
 public class HumanBenderSpawner {
 
 	@SubscribeEvent
@@ -74,17 +71,14 @@ public class HumanBenderSpawner {
 				// To attempt to have all humanbenders be same type, check if
 				// there are nearby humanbenders
 				// If there are just copy their type
-				AxisAlignedBB aabb = new AxisAlignedBB(chunkCoord.getBlock(-30, 50, -30),
-						chunkCoord.getBlock(30, 150, 30));
-				List<EntityHumanBender> nearbyBenders = worldIn.getEntitiesWithinAABB(EntityHumanBender.class,
-						aabb);
+				AxisAlignedBB aabb = new AxisAlignedBB(chunkCoord.getBlock(-30, 50, -30), chunkCoord.getBlock(30, 150, 30));
+				List<EntityHumanBender> nearbyBenders = worldIn.getEntitiesWithinAABB(EntityHumanBender.class, aabb);
 
 				double chance = 100;
 				Random rand = new Random();
 				if (!villagers.isEmpty() && rand.nextDouble() * 100 < chance) {
 
-					Village village = worldIn.getVillageCollection()
-							.getNearestVillage(chunkCoord.getBlock(0, 0, 0), 200);
+					Village village = worldIn.getVillageCollection().getNearestVillage(chunkCoord.getBlock(0, 0, 0), 200);
 
 					boolean firebender;
 
@@ -94,8 +88,7 @@ public class HumanBenderSpawner {
 						firebender = nearbyBenders.get(0) instanceof EntityFirebender;
 					}
 
-					EntityHumanBender bender = firebender ? new EntityFirebender(worldIn)
-							: new EntityAirbender(worldIn);
+					EntityHumanBender bender = firebender ? new EntityFirebender(worldIn) : new EntityAirbender(worldIn);
 					bender.copyLocationAndAnglesFrom(villagers.get(0));
 					worldIn.spawnEntity(bender);
 

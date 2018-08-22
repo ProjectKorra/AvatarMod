@@ -16,18 +16,17 @@
 */
 package com.crowsofwar.avatar.common;
 
-import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import net.minecraft.entity.player.EntityPlayer;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 
@@ -84,12 +83,12 @@ public class TransferConfirmHandler {
 			this.from = from;
 			this.to = to;
 			this.bison = bison;
-			this.ticksLeft = 100;
+			ticksLeft = 100;
 		}
 
 	}
 
-	@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+	@Mod.EventBusSubscriber(modid = AvatarInfo.MODID)
 	public static class TickHandler {
 
 		@SubscribeEvent
