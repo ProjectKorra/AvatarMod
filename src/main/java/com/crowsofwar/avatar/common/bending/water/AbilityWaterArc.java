@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,6 +39,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.List;
 import java.util.function.BiPredicate;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -63,6 +65,22 @@ public class AbilityWaterArc extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 
 		Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel() * 2);
+
+		List<Entity> waterArc = Raytrace.entityRaytrace(world, Vector.getEntityPos(entity).withY(entity.getEyeHeight()), Vector.getLookRectangular(entity).times(10), 3,
+				entity1 -> entity1 != entity);
+		if (ctx.getLevel() >= 2) {
+			for (Entity a : waterArc) {
+				if (a instanceof AvatarEntity) {
+					if (((AvatarEntity) a).getOwner() != entity) {
+						if (a instanceof EntityWaterArc) {
+							((EntityWaterArc) a).setOwner(entity);
+							((EntityWaterArc) a).setBehavior(new WaterArcBehavior.PlayerControlled());
+							((EntityWaterArc) a).setAbility(this);
+						}
+					}
+				}
+			}
+		}
 
 		if (targetPos != null || ctx.consumeWater(1) || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
 
@@ -116,8 +134,7 @@ public class AbilityWaterArc extends Ability {
 						size = 1.5F;
 						gravity = 2;
 						comboNumber = 1;
-					}
-					else {
+					} else {
 						comboNumber++;
 					}
 
