@@ -148,6 +148,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 			float speed = 0.025F;
 			float hitBox = 0.5F;
+			int numberOfParticles = 500;
 
 			if (getAbility() instanceof AbilityWaterArc) {
 				AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("water_arc");
@@ -156,13 +157,14 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 				//If the player's water arc level is level III or greater the aoe will do 2+ damage.
 				hitBox = lvl <= 0 ? 0.5F : 0.5f * (lvl + 1);
 				speed = lvl <= 0 ? 0.025F : 0.025F * (lvl + 1);
+				numberOfParticles = lvl <= 0 ? 500 : 500 + 100 * lvl;
 			}
 			else this.damageMult = 0.5f;
 
 
 
 			WorldServer World = (WorldServer) this.world;
-			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0.2, 0.1, 0.2, speed);
+			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, numberOfParticles, 0.2, 0.1, 0.2, speed);
 			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(1, 1, 1),
