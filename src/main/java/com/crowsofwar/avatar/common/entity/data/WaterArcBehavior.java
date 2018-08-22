@@ -117,7 +117,6 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 	public static class Thrown extends WaterArcBehavior {
 
 		float ticks = 0;
-		float startGravity;
 
 		@Override
 		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
@@ -140,7 +139,6 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			if (lvl <= 0) {
 				//Level I or in Creative Mode
-				startGravity = STATS_CONFIG.waterArcTicks;
 				if (ticks >= STATS_CONFIG.waterArcTicks) {
 					//Default is 120
 					entity.Splash();
@@ -149,7 +147,6 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			if (lvl == 1) {
 				//Level II.
-				startGravity = STATS_CONFIG.waterArcTicks * (5F / 4);
 				if (ticks >= STATS_CONFIG.waterArcTicks * (5 / 4)) {
 					//150
 					entity.Splash();
@@ -158,7 +155,6 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			if (lvl == 2) {
 				//Level III
-				startGravity = STATS_CONFIG.waterArcTicks * (6F / 4);
 				if (ticks >= STATS_CONFIG.waterArcTicks * (6 / 4)) {
 					//180
 					entity.Splash();
@@ -167,7 +163,6 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			if (waterSpear) {
 				//Level 4 Path Two
-				startGravity = STATS_CONFIG.waterArcTicks * (3);
 				if (ticks >= STATS_CONFIG.waterArcTicks * (3)) {
 					//360 ticks
 					entity.Splash();
@@ -178,7 +173,6 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			if (abilityData != null) {
 				if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 					//Level 4 Path One
-					startGravity = STATS_CONFIG.waterArcTicks * (5F / 4);
 					if (ticks >= STATS_CONFIG.waterArcTicks * (5 / 4)) {
 						//150
 						entity.Splash();
@@ -188,9 +182,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				}
 			}
 
-		//	if (startGravity / ticks <= 2) {
-				entity.addVelocity(Vector.DOWN.times(entity.getGravity() / 90));
-			//}
+			entity.addVelocity(Vector.DOWN.times(entity.getGravity() / 90));
 
 
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
@@ -203,7 +195,9 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				double y = entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push > 0.75 ? 0.75 : entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push;
 				double z = entity.motionZ / 2 * STATS_CONFIG.waterArcSettings.push;
 				collided.addVelocity(x, y, z);
-				entity.damageEntity(collided);
+				if (entity.canDamageEntity(collided)) {
+					entity.damageEntity(collided);
+				}
 
 				if (!entity.world.isRemote && data != null) {
 

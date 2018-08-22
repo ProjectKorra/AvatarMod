@@ -144,37 +144,52 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	public void Splash() {
 		if (world instanceof WorldServer) {
+
+			float speed = 0.025F;
+			float hitBox = 0.5F;
+
+			if (getAbility() instanceof AbilityWaterArc) {
+				AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("water_arc");
+				int lvl = abilityData.getLevel();
+				this.damageMult = lvl >= 2 ? 2 : 0.5F;
+				//If the player's water arc level is level III or greater the aoe will do 2+ damage.
+				hitBox = lvl <= 0 ? 0.5F : 0.5f * (lvl + 1);
+				speed = lvl <= 0 ? 0.025F : 0.025F * (lvl + 1);
+			}
+			else this.damageMult = 0.5f;
+
+
+
 			WorldServer World = (WorldServer) this.world;
-			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0.2, 0.1, 0.2, 0.03);
+			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0.2, 0.1, 0.2, speed);
 			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(1, 1, 1),
 					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
-					if (getAbility() instanceof AbilityWaterArc) {
-						AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("water_arc");
-						int lvl = abilityData.getLevel();
-						this.damageMult = lvl >= 2 ? 2 : 0.5F;
-						//If the player's water arc level is level III or greater the aoe will do 2+ damage.
-					}
-					else this.damageMult = 0.5f;
 
 
-					double mult = -0.5;
+
 					double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
 
-					Vector vel = position().minus(getEntityPos(entity));
-					vel = vel.normalize().times(mult).plusY(0.15f);
+					Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
+					double distance = Vector.getEntityPos(entity).dist(Vector.getEntityPos(this));
+					double direction = (hitBox - distance) * (speed * 5) / hitBox;
+					velocity = velocity.times(direction).times(-1 + (-1 * hitBox/2)).withY(speed/2);
 
-					entity.motionX = vel.x() * (BendingData.get(getOwner()).getAbilityData("water_arc").getLevel() + 1) + 0.1/distanceTravelled;
-					entity.motionY = vel.y() * (BendingData.get(getOwner()).getAbilityData("water_arc").getLevel() + 1) > 0 ? vel.y() * (BendingData.get(getOwner()).getAbilityData("water_arc").getLevel() + 1) + 0.1/distanceTravelled : 0.15F + 0.1/distanceTravelled;
-					entity.motionZ = vel.z() * (BendingData.get(getOwner()).getAbilityData("water_arc").getLevel() + 1) + 0.1/distanceTravelled;;
-					damageEntity(entity);
-					BattlePerformanceScore.addMediumScore(getOwner());
+					double x = (velocity.x()) + distanceTravelled / 50;
+					double y = (velocity.y()) > 0 ? velocity.y() + distanceTravelled / 100 : 0.3F + distanceTravelled / 100;
+					double z = (velocity.z()) + distanceTravelled / 50;
+					entity.addVelocity(x, y, z);
+					if (canDamageEntity(entity)) {
+						damageEntity(entity);
+					}
+					BattlePerformanceScore.addSmallScore(getOwner());
 
 					if (entity instanceof AvatarEntity) {
 						AvatarEntity avent = (AvatarEntity) entity;
-						avent.setVelocity(vel);
+						avent.addVelocity(x, y, z);
 					}
 					entity.isAirBorne = true;
 					AvatarUtils.afterVelocityAdded(entity);
@@ -286,6 +301,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 		if (getBehavior() != null && getBehavior() instanceof WaterArcBehavior.PlayerControlled) {
 			this.velocityMultiplier = 4;
+			this.setStartingPosition(this.getPosition());
 		}
 		else this.velocityMultiplier = 8;
 
