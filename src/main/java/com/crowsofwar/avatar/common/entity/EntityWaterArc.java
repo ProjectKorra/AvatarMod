@@ -301,6 +301,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 		if (getBehavior() != null && getBehavior() instanceof WaterArcBehavior.PlayerControlled) {
 			this.velocityMultiplier = 4;
+			this.setStartingPosition(this.getPosition());
 		}
 		else this.velocityMultiplier = 8;
 

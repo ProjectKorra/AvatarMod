@@ -195,7 +195,9 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				double y = entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push > 0.75 ? 0.75 : entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push;
 				double z = entity.motionZ / 2 * STATS_CONFIG.waterArcSettings.push;
 				collided.addVelocity(x, y, z);
-				entity.damageEntity(collided);
+				if (entity.canDamageEntity(collided)) {
+					entity.damageEntity(collided);
+				}
 
 				if (!entity.world.isRemote && data != null) {
 
