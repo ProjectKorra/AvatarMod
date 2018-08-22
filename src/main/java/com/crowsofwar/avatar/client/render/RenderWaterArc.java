@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.entity.ControlPoint;
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumParticleTypes;
@@ -64,6 +65,7 @@ public class RenderWaterArc extends RenderArc {
 
 		EntityWaterArc arc = (EntityWaterArc) entity;
 		renderArc(arc, partialTicks, 3f, 3 * arc.getSize());
+		GlStateManager.scale(arc.getSize(), arc.getSize(), arc.getSize());
 
 	}
 

@@ -35,7 +35,7 @@ public class RenderAvatarLightning extends Render<EntityAvatarLightning> {
 		//GlStateManager.disableTexture2D();
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+	//	GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 		double[] adouble = new double[8];
 		double[] adouble1 = new double[8];
 		double d0 = 0.0D;
