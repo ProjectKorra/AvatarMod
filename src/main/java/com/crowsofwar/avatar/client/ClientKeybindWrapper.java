@@ -16,20 +16,17 @@
 */
 package com.crowsofwar.avatar.client;
 
-import net.minecraft.client.settings.KeyBinding;
-
 import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
-
-import javax.annotation.Nonnull;
+import net.minecraft.client.settings.KeyBinding;
 
 /**
  * @author CrowsOfWar
  */
 public class ClientKeybindWrapper extends KeybindingWrapper {
-	@Nonnull
+
 	private final KeyBinding kb;
 
-	public ClientKeybindWrapper(@Nonnull KeyBinding kb) {
+	public ClientKeybindWrapper(KeyBinding kb) {
 		this.kb = kb;
 	}
 

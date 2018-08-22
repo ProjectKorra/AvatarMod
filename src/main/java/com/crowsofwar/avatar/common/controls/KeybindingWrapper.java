@@ -17,7 +17,7 @@
 package com.crowsofwar.avatar.common.controls;
 
 /**
- * Wrapper class so vanilla KeyBindings don't crash the server
+ * Wrapper class so vanilla KeyBinding class can be used on both sides
  *
  * @author CrowsOfWar
  */
