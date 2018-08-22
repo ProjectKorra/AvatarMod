@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
@@ -303,7 +304,19 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			this.velocityMultiplier = 4;
 			this.setStartingPosition(this.getPosition());
 		}
-		else this.velocityMultiplier = 8;
+
+		if (getAbility() instanceof AbilityWaterArc && !world.isRemote && getOwner() != null) {
+			if (getBehavior() != null && getBehavior() instanceof WaterArcBehavior.Thrown) {
+				AbilityData aD = AbilityData.get(getOwner(), "water_arc");
+				int lvl = aD.getLevel();
+				this.velocityMultiplier = lvl >= 1 ? 8 + (2 * lvl) : 8;
+			}
+		}
+
+		else if (getBehavior() != null && getBehavior() instanceof WaterArcBehavior.Thrown) {
+			this.velocityMultiplier = 8;
+		}
+
 
 		if (getOwner() != null) {
 			EntityWaterArc arc = AvatarEntity.lookupControlledEntity(world, EntityWaterArc.class, getOwner());
