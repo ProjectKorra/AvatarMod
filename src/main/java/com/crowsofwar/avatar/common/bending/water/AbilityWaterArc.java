@@ -119,7 +119,7 @@ public class AbilityWaterArc extends Ability {
 				size = 0.4F;
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-				damageMult = comboNumber >= 3 ? 0.5F : 1;
+				damageMult = comboNumber >= 3 ? 1.25F : 0.5F;
 				gravity = 9.81F;
 				size = 0.5F;
 			}
@@ -136,9 +136,13 @@ public class AbilityWaterArc extends Ability {
 						comboNumber = 1;
 					}
 
+					if (comboNumber <= 1) {
+						size = 0.5F;
+					}
+
 					if (comboNumber == 3) {
 						//Massive Singular water arc; kinda like airgust
-						size = 1.5F;
+						size = 1F;
 						gravity = 2;
 						comboNumber = 1;
 					} else {
@@ -147,7 +151,7 @@ public class AbilityWaterArc extends Ability {
 
 					if (comboNumber == 2) {
 						gravity = -9.81F;
-						size = 1F;
+						size = 0.5F;
 					}
 
 
