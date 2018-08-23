@@ -79,7 +79,7 @@ public class AbilityWaterArc extends Ability {
 								((EntityWaterArc) a).setBehavior(new WaterArcBehavior.PlayerControlled());
 								((EntityWaterArc) a).setAbility(this);
 								((EntityWaterArc) a).setStartingPosition(entity.getPosition());
-								((EntityWaterArc) a).setSize(1);
+								((EntityWaterArc) a).setSize(0.5F);
 								((EntityWaterArc) a).setGravity(9.82F);
 								((EntityWaterArc) a).setPosition(Vector.getLookRectangular(entity).times(1.5F));
 							}
@@ -100,26 +100,26 @@ public class AbilityWaterArc extends Ability {
 
 			float damageMult = 1F;
 			float gravity = 8;
-			float size = 0.5F;
+			float size = 0.4F;
 			//The water arc number in the combo.
 
 			if (ctx.getLevel() == 1) {
 				damageMult = 1.25F;
 				gravity = 7.5F;
-				size = 0.75F;
+				size = 0.5F;
 			}
 			if (ctx.getLevel() == 2) {
 				damageMult = 1.5F;
 				gravity = 7;
-				size = 1F;
+				size = 0.6F;
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				damageMult = 3F;
 				gravity = 3;
-				size = 1.25F;
+				size = 0.4F;
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-				damageMult = comboNumber >= 3 ? 1 : 2;
+				damageMult = comboNumber >= 3 ? 0.5F : 1;
 				gravity = 9.81F;
 				size = 0.5F;
 			}

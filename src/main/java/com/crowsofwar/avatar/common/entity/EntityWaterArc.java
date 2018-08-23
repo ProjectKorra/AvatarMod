@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
@@ -51,7 +50,6 @@ import java.util.Random;
 import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> {
 
@@ -78,11 +76,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	public EntityWaterArc(World world) {
 		super(world);
+		this.Size = 0.4F;
 		setSize(Size, Size);
 		this.lastPlayedSplash = -1;
 		this.damageMult = 1;
 		this.putsOutFires = true;
-		this.Size = 0.4F;
 		this.Gravity = 9.82F;
 
 	}
@@ -100,7 +98,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	public void setSize(float size) {
-		dataManager.set(SYNC_SIZE, Size);
+		dataManager.set(SYNC_SIZE, size);
 	}
 
 	public float getSize() {
@@ -115,9 +113,10 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.Gravity = gravity;
 	}
 
-	public void setStartingPosition (BlockPos position) {
+	public void setStartingPosition(BlockPos position) {
 		this.position = position;
 	}
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -125,6 +124,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		dataManager.register(SYNC_SIZE, Size);
 	}
 
+	@Override
+	protected void updateCpBehavior() {
+		super.updateCpBehavior();
+		getControlPoint(0).setPosition(this.position());
+	}
 
 	public void damageEntity(Entity entity) {
 		if (canDamageEntity(entity)) {
@@ -158,9 +162,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 				hitBox = lvl <= 0 ? 0.5F : 0.5f * (lvl + 1);
 				speed = lvl <= 0 ? 0.025F : 0.025F * (lvl + 1);
 				numberOfParticles = lvl <= 0 ? 500 : 500 + 100 * lvl;
-			}
-			else this.damageMult = 0.5f;
-
+			} else this.damageMult = 0.5f;
 
 
 			WorldServer World = (WorldServer) this.world;
@@ -173,13 +175,12 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 				for (Entity entity : collided) {
 
 
-
 					double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
 
 					Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
 					double distance = Vector.getEntityPos(entity).dist(Vector.getEntityPos(this));
 					double direction = (hitBox - distance) * (speed * 5) / hitBox;
-					velocity = velocity.times(direction).times(-1 + (-1 * hitBox/2)).withY(speed/2);
+					velocity = velocity.times(direction).times(-1 + (-1 * hitBox / 2)).withY(speed / 2);
 
 					double x = (velocity.x()) + distanceTravelled / 50;
 					double y = (velocity.y()) > 0 ? velocity.y() + distanceTravelled / 100 : 0.3F + distanceTravelled / 100;
@@ -205,7 +206,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	@Override
 	public boolean onCollideWithSolid() {
-		if (isSpear) {
+		if (isSpear && getBehavior() != null && getBehavior() instanceof WaterArcBehavior.Thrown) {
 			breakCollidingBlocks();
 			Splash();
 			setDead();
@@ -220,12 +221,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			cleanup();
 
 
-
 			if (world.isRemote) {
 				Random random = new Random();
 
-				double xVel = 0, yVel = 0, zVel = 0;
-				double offX = 0, offY = 0, offZ = 0;
+				double xVel, yVel, zVel;
+				double offX, offY, offZ;
 
 				if (collidedVertically) {
 
@@ -313,9 +313,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 				int lvl = aD.getLevel();
 				this.velocityMultiplier = lvl >= 1 ? 8 + (2 * lvl) : 8;
 			}
-		}
-
-		else if (getBehavior() != null && getBehavior() instanceof WaterArcBehavior.Thrown) {
+		} else if (getBehavior() != null && getBehavior() instanceof WaterArcBehavior.Thrown) {
 			this.velocityMultiplier = 8;
 		}
 
@@ -363,14 +361,16 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	public void cleanup() {
 		if (getOwner() != null) {
-			BendingData data = Bender.get(getOwner()).getData();
-			data.removeStatusControl(THROW_WATER);
+			BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
+			if (data != null) {
+				data.removeStatusControl(THROW_WATER);
+			}
 		}
 	}
 
 	public static class WaterControlPoint extends ControlPoint {
 
-		public WaterControlPoint(EntityArc arc, float size, double x, double y, double z) {
+		private WaterControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);
 		}
 

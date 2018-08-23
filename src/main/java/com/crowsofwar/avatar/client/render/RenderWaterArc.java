@@ -65,7 +65,6 @@ public class RenderWaterArc extends RenderArc {
 
 		EntityWaterArc arc = (EntityWaterArc) entity;
 		renderArc(arc, partialTicks, 3f, 3 * arc.getSize());
-		GlStateManager.scale(arc.getSize(), arc.getSize(), arc.getSize());
 
 	}
 
