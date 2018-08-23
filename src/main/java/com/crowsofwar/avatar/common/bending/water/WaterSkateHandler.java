@@ -237,7 +237,7 @@ public class WaterSkateHandler extends TickHandler {
 
 	private void pushEntitiesAway(EntityLivingBase target, EntityLivingBase entity) {
 		Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
-		velocity = velocity.withY(0.1).times(2 / 20);
+		velocity = velocity.withY(0.1).times(2F / 20);
 		target.addVelocity(velocity.x(), velocity.y(), velocity.z());
 	}
 

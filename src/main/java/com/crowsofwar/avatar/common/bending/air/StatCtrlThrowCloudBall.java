@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
+import static com.crowsofwar.avatar.common.data.TickHandler.AIR_STATCTRL_HANDLER;
 
 public class StatCtrlThrowCloudBall extends StatusControl {
 	public StatCtrlThrowCloudBall() {
@@ -50,6 +51,7 @@ public class StatCtrlThrowCloudBall extends StatusControl {
 			//Necessary so that you can't increase speed by moving your mouse really fast; additionally,
 			//using setVelocity sometimes makes the cloudburst go invisible. Weird.
 			cloudBall.setBehavior(new CloudburstBehavior.Thrown());
+			ctx.getData().addTickHandler(AIR_STATCTRL_HANDLER);
 		}
 
 		return true;
