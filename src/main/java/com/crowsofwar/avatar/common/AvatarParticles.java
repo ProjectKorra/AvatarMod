@@ -32,7 +32,7 @@ import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
  */
 public class AvatarParticles {
 
-	private static EnumParticleTypes particleFlames, particleAir, particleRestore;
+	private static EnumParticleTypes particleFlames, particleAir, particleRestore, particleStatic;
 	private static Map<Integer, EnumParticleTypes> lookup;
 
 	public static void register() {
@@ -40,6 +40,8 @@ public class AvatarParticles {
 		particleFlames = addParticle("flames");
 		particleAir = addParticle("air");
 		particleRestore = addParticle("restore");
+		particleStatic = addParticle("static");
+
 	}
 
 	private static EnumParticleTypes addParticle(String particleName) {
@@ -77,6 +79,10 @@ public class AvatarParticles {
 
 	public static EnumParticleTypes getParticleRestore() {
 		return CLIENT_CONFIG.useCustomParticles ? particleRestore : EnumParticleTypes.VILLAGER_HAPPY;
+	}
+
+	public static EnumParticleTypes getParticleStatic() {
+		return CLIENT_CONFIG.useCustomParticles ? particleStatic : EnumParticleTypes.CRIT_MAGIC;
 	}
 
 	/**

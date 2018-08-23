@@ -18,7 +18,9 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -96,6 +98,7 @@ public class AirBurstHandler extends TickHandler {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				//Piercing Winds
 				damage = 3 + powerRating;
+				//Blinds enemies
 
 			}
 
@@ -138,7 +141,7 @@ public class AirBurstHandler extends TickHandler {
 			}
 
 			if (duration >= durationToFire) {
-			/*	if (world instanceof WorldServer) {
+				if (world instanceof WorldServer) {
 					WorldServer World = (WorldServer) world;
 					double x, y, z;
 
@@ -174,7 +177,7 @@ public class AirBurstHandler extends TickHandler {
 									lookPos.z() + entity.posZ, 2, 0, 0, 0, (double) radius / 50);
 						}
 					}
-				}**/
+				}
 
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius, entity.posY - radius, entity.posZ - radius);
 				List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box, entity1 -> entity1 != entity);
@@ -184,29 +187,20 @@ public class AirBurstHandler extends TickHandler {
 						if (e.canBePushed() && e.canBeCollidedWith() && e != entity) {
 							if (canDamageEntity(e)) {
 								e.attackEntityFrom(AvatarDamageSource.causeAirDamage(e, entity), (float) damage);
+								if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST) && e instanceof EntityLivingBase) {
+									((EntityLivingBase) e).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
+									((EntityLivingBase) e).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
+									((EntityLivingBase) e).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
+								}
 							}
 							abilityData.addXp(xp);
 							BattlePerformanceScore.addLargeScore(entity);
 							applyKnockback(e, entity, knockBack, radius, upwardKnockback, knockbackDivider);
+
 						}
 					}
 				}
 
-				if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-					for (int i = 0; i < 8; i++) {
-						Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-								i * 45), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
-						Vector pos = Vector.getEntityPos(entity).plus(lookpos.times(2)).plus(0, 1, 0);
-						EntityAirblade blade = new EntityAirblade(world);
-						blade.setDamage(2);
-						blade.setAbility(new AbilityAirblade());
-						blade.setOwner(entity);
-						blade.setPosition(pos.x(), pos.y() + 1, pos.z());
-						blade.setVelocity(lookpos.times(30));
-						blade.setInvisible(false);
-						world.spawnEntity(blade);
-					}
-				}
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,

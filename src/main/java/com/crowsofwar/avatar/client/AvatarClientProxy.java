@@ -152,6 +152,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(), AvatarParticleFlames::new);
 			pm.registerParticle(AvatarParticles.getParticleAir().getParticleID(), AvatarParticleAir::new);
 			pm.registerParticle(AvatarParticles.getParticleRestore().getParticleID(), AvatarParticleRestore::new);
+			pm.registerParticle(AvatarParticles.getParticleStatic().getParticleID(), AvatarParticleStatic::new);
 		}
 
 	}
