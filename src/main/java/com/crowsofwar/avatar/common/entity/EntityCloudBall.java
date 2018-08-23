@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandler.AIR_STATCTRL_HANDLER;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 public class EntityCloudBall extends AvatarEntity {
@@ -146,6 +147,15 @@ public class EntityCloudBall extends AvatarEntity {
 
 	public void setSize(int size) {
 		dataManager.set(SYNC_SIZE, size);
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
+		if (getOwner() != null && !world.isRemote && this.isDead) {
+			BendingData data = BendingData.get(getOwner());
+			data.addTickHandler(AIR_STATCTRL_HANDLER);
+		}
 	}
 
 	@Override

@@ -63,7 +63,7 @@ public class StatCtrlFireJump extends StatusControl {
 		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiFireJump))) {
 
 			int lvl = abilityData.getLevel();
-			double jumpMultiplier = 0.2;
+			double jumpMultiplier = 0.4;
 			float fallAbsorption = 3;
 			double range = 2;
 			double speed = 1;
@@ -71,7 +71,7 @@ public class StatCtrlFireJump extends StatusControl {
 			int numberOfParticles = 5;
 			double particleSpeed = 0.1;
 			if (lvl >= 1) {
-				jumpMultiplier = 0.3;
+				jumpMultiplier = 0.5;
 				fallAbsorption = 4;
 				range = 2.5;
 				damage = 1.5F;
@@ -80,7 +80,7 @@ public class StatCtrlFireJump extends StatusControl {
 				particleSpeed = 0.125;
 			}
 			if (lvl >= 2) {
-				jumpMultiplier = 0.4;
+				jumpMultiplier = 0.65;
 				fallAbsorption = 5;
 				speed = 2;
 				range = 3;
@@ -89,7 +89,7 @@ public class StatCtrlFireJump extends StatusControl {
 				particleSpeed = 0.15;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				jumpMultiplier = 0.6;
+				jumpMultiplier = 0.8;
 				fallAbsorption = 8;
 				speed = 4;
 				range = 5;
@@ -100,7 +100,7 @@ public class StatCtrlFireJump extends StatusControl {
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				jumpMultiplier = 0.3;
+				jumpMultiplier = 0.4;
 				fallAbsorption = 15;
 				speed = 2.5;
 				range = 3;
