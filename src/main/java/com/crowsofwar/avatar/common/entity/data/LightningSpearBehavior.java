@@ -239,7 +239,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			if (size < maxSize && entity.ticksExisted % 4 == 0) {
 				entity.setSize(size + 0.005F);
 			}
-			entity.setDegreesPerSecond(size * 200);
+
 
 			return this;
 		}

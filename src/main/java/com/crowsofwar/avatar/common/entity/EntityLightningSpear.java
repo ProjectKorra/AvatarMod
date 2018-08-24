@@ -86,7 +86,7 @@ public class EntityLightningSpear extends AvatarEntity {
 	public EntityLightningSpear(World world) {
 		super(world);
 		this.Size = 0.8F;
-		this.degreesPerSecond = 10;
+		this.degreesPerSecond = 600;
 		setSize(Size, Size);
 	}
 
@@ -117,7 +117,7 @@ public class EntityLightningSpear extends AvatarEntity {
 			removeStatCtrl();
 		}
 
-		setSize(getSize()/4, getSize()/4);
+		this.setSize(getSize()/4, getSize()/4);
 
 		if (getOwner() != null) {
 			EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, getOwner());
@@ -243,7 +243,7 @@ public class EntityLightningSpear extends AvatarEntity {
 		}
 
 		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory
-				.PLAYERS, 1, 1, false);
+				.PLAYERS, 8, 1, false);
 
 		setDead();
 		return true;
