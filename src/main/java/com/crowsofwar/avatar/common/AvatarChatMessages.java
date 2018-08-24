@@ -91,6 +91,8 @@ public class AvatarChatMessages {
 	
 	public static final FormattedMessage MSG_HUMANBENDER_NO_SCROLLS = newChatMessage(CFG, "avatar.outOfScrolls");
 
+	public static final FormattedMessage MSG_NEED_TRADE_ITEM = newChatMessage(CFG, "avatar.needTradeItem");
+
 	public static final FormattedMessage MSG_SKATING_BENDING_DISABLED = newChatMessage(CFG,
 			"avatar.skatingBendingDisabled");
 

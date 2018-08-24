@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiGiveScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -28,6 +29,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -43,7 +45,11 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+import java.util.List;
+
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_HUMANBENDER_NO_SCROLLS;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_NEED_TRADE_ITEM;
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -116,6 +122,10 @@ public abstract class EntityHumanBender extends EntityBender {
 	protected abstract void addBendingTasks();
 
 	protected abstract ScrollType getScrollType();
+
+	protected boolean isTradeItem(Item item) {
+		return MOBS_CONFIG.isTradeItem(item);
+	}
 
 	protected abstract int getNumSkins();
 
@@ -205,7 +215,8 @@ public abstract class EntityHumanBender extends EntityBender {
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 
 		ItemStack stack = player.getHeldItem(hand);
-		if (stack.getItem() == Items.DIAMOND && !world.isRemote) {
+
+		if (this.isTradeItem(stack.getItem()) && !world.isRemote) {
 
 			if (scrollsLeft > 0) {
 				if (aiGiveScroll.giveScrollTo(player)) {
@@ -223,6 +234,10 @@ public abstract class EntityHumanBender extends EntityBender {
 			return true;
 
 		}
+		else {
+			MSG_NEED_TRADE_ITEM.send(player);
+		}
+
 
 		return false;
 

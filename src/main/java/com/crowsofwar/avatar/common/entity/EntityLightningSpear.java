@@ -87,6 +87,7 @@ public class EntityLightningSpear extends AvatarEntity {
 		this.Size = 0.8F;
 		this.degreesPerSecond = 400;
 		setSize(Size, Size);
+
 	}
 
 	@Override
@@ -97,13 +98,13 @@ public class EntityLightningSpear extends AvatarEntity {
 		dataManager.register(SYNC_DEGREES_PER_SECOND, degreesPerSecond);
 	}
 
-	@Override
+	/*@Override
 	public void setDead() {
 		super.setDead();
 		if (!world.isRemote && this.isDead) {
 			Thread.dumpStack();
 		}
-	}
+	}**/
 
 	@Override
 	public void onUpdate() {
@@ -123,8 +124,14 @@ public class EntityLightningSpear extends AvatarEntity {
 			setDead();
 			removeStatCtrl();
 		}
+		if (!world.isRemote && this.isInvisible()) {
+			Thread.dumpStack();
+			this.setInvisible(false);
+		}
 
-		this.setSize(getSize()/8, getSize()/8);
+		if (getBehavior() != null && getBehavior() instanceof LightningSpearBehavior.PlayerControlled) {
+			this.setSize(getSize() / 8, getSize() / 8);
+		}
 
 		if (getOwner() != null) {
 			EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, getOwner());
@@ -148,6 +155,9 @@ public class EntityLightningSpear extends AvatarEntity {
 			setInvisible(true);
 			setVelocity(Vector.ZERO);
 
+		}
+		else {
+			this.setInvisible(false);
 		}
 		if (inWater && !world.isRemote) {
 			if (floodFill == null) {

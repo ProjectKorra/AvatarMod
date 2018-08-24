@@ -20,6 +20,8 @@ import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -78,4 +80,8 @@ public class EntityFirebender extends EntityHumanBender {
 		return 1;
 	}
 
+	@Override
+	protected Item tradeItem() {
+		return Items.MAGMA_CREAM;
+	}
 }

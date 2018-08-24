@@ -93,15 +93,11 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 			if (entity.collided || (!entity.world.isRemote && time > 200)) {
 				entity.onCollideWithSolid();
-				entity.setDead();
 
 			}
 
-			entity.addVelocity(Vector.DOWN.times(1F / 12000));
+			entity.addVelocity(0, -1F / 120, 0);
 
-			Vector direction = entity.velocity().toSpherical();
-			entity.rotationYaw = (float) Math.toDegrees(direction.y());
-			entity.rotationPitch = (float) Math.toDegrees(direction.x());
 
 			if (!entity.isInWater()) {
 				entity.setInvisible(false);
@@ -148,7 +144,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				data.getAbilityData("lightning_spear").addXp(xp);
 			}
 
-			// Remove the fireball & spawn particles
+
 			if (!entity.world.isRemote && !entity.isPiercing()) entity.setDead();
 
 			if (triggerGroupAttack) {

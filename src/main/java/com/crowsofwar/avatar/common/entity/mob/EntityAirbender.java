@@ -17,12 +17,17 @@
 package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
+
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -47,9 +52,9 @@ public class EntityAirbender extends EntityHumanBender {
 
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(2, Abilities.getAi("air_bubble", this, getBender()));
-		this.tasks.addTask(1, Abilities.getAi("air_gust", this, getBender()));
-		this.tasks.addTask(3, Abilities.getAi("airblade", this, getBender()));
+		this.tasks.addTask(1, Abilities.getAi("air_bubble", this, Bender.get(this)));
+		this.tasks.addTask(1, Abilities.getAi("air_gust", this, Bender.get(this)));
+		this.tasks.addTask(1, Abilities.getAi("airblade", this, Bender.get(this)));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.7, true));
 	}
 
@@ -68,4 +73,8 @@ public class EntityAirbender extends EntityHumanBender {
 		return 7;
 	}
 
+	@Override
+	protected boolean isTradeItem(Item item) {
+		return super.isTradeItem(item) || MOBS_CONFIG.isAirTradeItem(item);
+	}
 }

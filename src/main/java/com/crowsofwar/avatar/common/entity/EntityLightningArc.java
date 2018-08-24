@@ -142,6 +142,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 				damageEntity(stuckTo, 0.333f);
 			}
 			getControlPoint(5).setPosition(Vector.getLookRectangular(getOwner()).times(2).plus(Vector.getEntityPos(getOwner())));
+			getControlPoint(0).setPosition(Vector.getEntityPos(stuckTo));
 		}
 
 

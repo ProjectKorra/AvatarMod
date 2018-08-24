@@ -23,9 +23,12 @@ import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import scala.actors.threadpool.Arrays;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,11 +37,28 @@ import java.util.Map;
 public class ConfigMobs {
 
 	private static final Map<String, Integer> DEFAULT_FOODS = new HashMap<>();
+	private static final Map<String, Integer> DEFAULT_TRADE_ITEMS = new HashMap<>();
+	private static final Map<String, Integer> AIRBENDING_TRADE_ITEMS = new HashMap<>();
+	private static final Map<String, Integer> FIREBENDING_TRADE_ITEMS = new HashMap<>();
+
 	private static final Map<String, Double> DEFAULT_SCROLL_DROP = new HashMap<>();
 	private static final Map<String, String> DEFAULT_SCROLL_TYPE = new HashMap<>();
 	public static ConfigMobs MOBS_CONFIG = new ConfigMobs();
 
 	static {
+		//Default items that are tradable for scrolls- the number is just random for now.
+		//TODO: Make the number correspond to the amount of the item the player has to hold
+		DEFAULT_TRADE_ITEMS.put("minecraft:diamond", 1);
+		DEFAULT_TRADE_ITEMS.put("minecraft:gold", 1);
+		DEFAULT_TRADE_ITEMS.put("minecraft:emerald", 1);
+		//Required items for trading for a airbending scroll
+		AIRBENDING_TRADE_ITEMS.put("minecraft:elytra", 1);
+		AIRBENDING_TRADE_ITEMS.put("minecraft:dragon_breath", 1);
+		AIRBENDING_TRADE_ITEMS.put("minecraft:totem_of_undying", 1);
+		//Required items for trading for a firebending scroll
+		FIREBENDING_TRADE_ITEMS.put("minecraft:magma_cream", 1);
+		FIREBENDING_TRADE_ITEMS.put("minecraft:blaze_rod", 1);
+
 		// Wheat
 		DEFAULT_FOODS.put("minecraft:bread", 5);
 		DEFAULT_FOODS.put("minecraft:hay_block", 75);
@@ -141,12 +161,27 @@ public class ConfigMobs {
 	@Load
 	private Map<String, String> scrollType;
 
+	@Load
+	private Map<String, Integer> scrollTradeItems;
+	private Map<Item, Integer> tradeItems;
+	private Map<String, Integer> airScrollTradeItems;
+	private Map<Item, Integer> airTradeItems;
+	private Map<String, Integer> fireScrollTradeItems;
+	private Map<Item, Integer> fireTradeItems;
+
+
+
+
 	public static void load() {
+		MOBS_CONFIG.scrollTradeItems = DEFAULT_TRADE_ITEMS;
+		MOBS_CONFIG.airScrollTradeItems = AIRBENDING_TRADE_ITEMS;
+		MOBS_CONFIG.fireScrollTradeItems = FIREBENDING_TRADE_ITEMS;
 		MOBS_CONFIG.bisonFoods = DEFAULT_FOODS;
 		MOBS_CONFIG.scrollDropChance = DEFAULT_SCROLL_DROP;
 		MOBS_CONFIG.scrollType = DEFAULT_SCROLL_TYPE;
 		ConfigLoader.load(MOBS_CONFIG, "avatar/mobs.yml");
 		MOBS_CONFIG.loadLists();
+
 	}
 
 	private void loadLists() {
@@ -160,10 +195,52 @@ public class ConfigMobs {
 				AvatarLog.warn(WarningType.CONFIGURATION, "Invalid bison food; item " + name + " not found");
 			}
 		}
+		tradeItems = new HashMap<>();
+		for (Map.Entry<String, Integer> entry : scrollTradeItems.entrySet()) {
+			String name = entry.getKey();
+			Item item = Item.getByNameOrId(name);
+			if (item != null) {
+				tradeItems.put(item, entry.getValue());
+			} else {
+				AvatarLog.warn(WarningType.CONFIGURATION, "Invalid trade item; item " + name + " not found");
+			}
+		}
+		airTradeItems = new HashMap<>();
+		for (Map.Entry<String, Integer> entry : airScrollTradeItems.entrySet()) {
+			String name = entry.getKey();
+			Item item = Item.getByNameOrId(name);
+			if (item != null) {
+				airTradeItems.put(item, entry.getValue());
+			} else {
+				AvatarLog.warn(WarningType.CONFIGURATION, "Invalid trade item; item " + name + " not found");
+			}
+		}
+		fireTradeItems = new HashMap<>();
+		for (Map.Entry<String, Integer> entry : fireScrollTradeItems.entrySet()) {
+			String name = entry.getKey();
+			Item item = Item.getByNameOrId(name);
+			if (item != null) {
+				fireTradeItems.put(item, entry.getValue());
+			} else {
+				AvatarLog.warn(WarningType.CONFIGURATION, "Invalid trade item; item " + name + " not found");
+			}
+		}
 	}
 
 	public int getDomesticationValue(Item item) {
 		return bisonFoodList.containsKey(item) ? bisonFoodList.get(item) : 0;
+	}
+
+	public boolean isTradeItem(Item item) {
+		return tradeItems.containsKey(item);
+	}
+
+	public boolean isAirTradeItem(Item item) {
+		return airTradeItems.containsKey(item);
+	}
+
+	public boolean isFireTradeItem(Item item) {
+		return fireTradeItems.containsKey(item);
 	}
 
 	public boolean isBisonFood(Item item) {

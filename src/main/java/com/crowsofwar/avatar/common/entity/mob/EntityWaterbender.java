@@ -21,6 +21,8 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -77,4 +79,8 @@ public class EntityWaterbender extends EntityHumanBender {
 
 	}
 
+	@Override
+	protected Item tradeItem() {
+		return Items.PRISMARINE_SHARD;
+	}
 }
