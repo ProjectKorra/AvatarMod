@@ -37,6 +37,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
@@ -58,11 +59,16 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	private static final DataParameter<FireArcBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityFireArc.class, FireArcBehavior.DATA_SERIALIZER);
 
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager
+			.createKey(EntityFireArc.class, DataSerializers.FLOAT);
+
 	private float damageMult;
 
 	private boolean createBigFire;
 
 	private float Gravity;
+
+	private float Size;
 
 	private BlockPos position;
 
@@ -71,6 +77,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 
 	public EntityFireArc(World world) {
 		super(world);
+		this.Size = 0.4F;
 		this.damageMult = 1;
 		this.Gravity = 9.82F;
 		this.particles = new ClientParticleSpawner();
@@ -88,16 +95,26 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		this.position = position;
 	}
 
+	public void setSize(float size) {
+		dataManager.set(SYNC_SIZE, size);
+	}
+
+	public float getSize() {
+		return dataManager.get(SYNC_SIZE);
+	}
+
 	@Override
 	protected void updateCpBehavior() {
 		super.updateCpBehavior();
-		getControlPoint(0).setPosition(Vector.getEntityPos(this).plusY(0.1));
+		getControlPoint(0).setPosition(this.position());
+		getLeader().setPosition(this.position().plusY(getSize()/4));
 	}
 
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new FireArcBehavior.Idle());
+		dataManager.register(SYNC_SIZE, Size);
 	}
 
 	@Override
@@ -122,6 +139,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 			}
 
 		}
+		setSize(getSize()/2, getSize()/2);
 
 		if (getOwner() == null) {
 			this.setDead();

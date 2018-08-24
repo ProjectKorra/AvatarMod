@@ -127,9 +127,8 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	@Override
 	protected void updateCpBehavior() {
 		super.updateCpBehavior();
-		getLeader().setPosition(this.position().plusY(Size/2));
-		getControlPoint(0).setPosition(this.position().plusY(Size/2));
-
+		getControlPoint(0).setPosition(this.position());
+		getLeader().setPosition(this.position().plusY(getSize()/4));
 	}
 
 	public void damageEntity(Entity entity) {
@@ -177,16 +176,14 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 				for (Entity entity : collided) {
 
 
-					double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
-
 					Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
 					double distance = Vector.getEntityPos(entity).dist(Vector.getEntityPos(this));
 					double direction = (hitBox - distance) * (speed * 5) / hitBox;
 					velocity = velocity.times(direction).times(-1 + (-1 * hitBox / 2)).withY(speed / 2);
 
-					double x = (velocity.x()) + distanceTravelled / 50;
-					double y = (velocity.y()) > 0 ? velocity.y() + distanceTravelled / 100 : 0.3F + distanceTravelled / 100;
-					double z = (velocity.z()) + distanceTravelled / 50;
+					double x = (velocity.x());
+					double y = (velocity.y()) > 0 ? velocity.y() : 0.25F;
+					double z = (velocity.z());
 					entity.addVelocity(x, y, z);
 					if (canDamageEntity(entity)) {
 						damageEntity(entity);

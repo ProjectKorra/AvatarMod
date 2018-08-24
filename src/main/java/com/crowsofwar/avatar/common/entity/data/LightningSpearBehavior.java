@@ -92,7 +92,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				entity.onCollideWithSolid();
 			}
 
-			entity.addVelocity(Vector.DOWN.times(1 / 12000));
+			entity.addVelocity(Vector.DOWN.times(1F / 12000));
 
 			Vector direction = entity.velocity().toSpherical();
 			entity.rotationYaw = (float) Math.toDegrees(direction.y());
@@ -205,9 +205,13 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			entity.rotationYaw = (float) Math.toDegrees(direction.y());
 			entity.rotationPitch = (float) Math.toDegrees(direction.x());
 
-			int size = entity.getSize();
-			if (size < 60 && entity.ticksExisted % 4 == 0) {
-				entity.setSize(size + 1);
+			float size = entity.getSize();
+			if (size < size * 2 && entity.ticksExisted % 4 == 0) {
+				entity.setSize(size + 0.1F);
+			}
+			float degrees = entity.getDegreesPerSecond();
+			if (degrees < 30 && entity.ticksExisted % 4 == 0) {
+				entity.setDegreesPerSecond(degrees + 1);
 			}
 
 			return this;

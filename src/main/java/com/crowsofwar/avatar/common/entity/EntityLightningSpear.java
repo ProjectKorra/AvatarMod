@@ -49,8 +49,11 @@ public class EntityLightningSpear extends AvatarEntity {
 	private static final DataParameter<LightningSpearBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityLightningSpear.class, LightningSpearBehavior.DATA_SERIALIZER);
 
-	private static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityLightningSpear.class,
-			DataSerializers.VARINT);
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityLightningSpear.class,
+			DataSerializers.FLOAT);
+
+	private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityLightningSpear.class,
+			DataSerializers.FLOAT);
 
 	private AxisAlignedBB expandedHitbox;
 
@@ -72,19 +75,27 @@ public class EntityLightningSpear extends AvatarEntity {
 	 */
 	private LightningFloodFill floodFill;
 
+
+	private float Size;
+
+	private float degreesPerSecond;
+
 	/**
 	 * @param world
 	 */
 	public EntityLightningSpear(World world) {
 		super(world);
-		setSize(.8f, .8f);
+		this.Size = 0.8F;
+		this.degreesPerSecond = 10;
+		setSize(Size, Size);
 	}
 
 	@Override
 	public void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new LightningSpearBehavior.Idle());
-		dataManager.register(SYNC_SIZE, 30);
+		dataManager.register(SYNC_SIZE, Size);
+		dataManager.register(SYNC_DEGREES_PER_SECOND, degreesPerSecond);
 	}
 
 	@Override
@@ -178,11 +189,11 @@ public class EntityLightningSpear extends AvatarEntity {
 		this.damage = damage;
 	}
 
-	public int getSize() {
+	public float getSize() {
 		return dataManager.get(SYNC_SIZE);
 	}
 
-	public void setSize(int size) {
+	public void setSize(float size) {
 		dataManager.set(SYNC_SIZE, size);
 	}
 
@@ -200,6 +211,14 @@ public class EntityLightningSpear extends AvatarEntity {
 
 	public void setGroupAttack(boolean groupAttack) {
 		this.groupAttack = groupAttack;
+	}
+
+	public void setDegreesPerSecond (float degrees) {
+		dataManager.set(SYNC_DEGREES_PER_SECOND, degrees);
+	}
+
+	public float getDegreesPerSecond() {
+		return dataManager.get(SYNC_DEGREES_PER_SECOND);
 	}
 
 	@Override

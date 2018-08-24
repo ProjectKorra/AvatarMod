@@ -234,9 +234,17 @@ public class AirBurstHandler extends TickHandler {
 		double direction = (radius - distance) * (knockBack / knockbackDivider) / radius;
 		velocity = velocity.times(direction).withY(upwardKnockback);
 
+
 		double x = (velocity.x());
 		double y = (velocity.y());
 		double z = (velocity.z());
+
+		if (radius - distance == 0) {
+			velocity = Vector.getEntityPos(collided).minus(Vector.getEntityPos(attacker));
+			velocity = velocity.times(-1).withY(upwardKnockback);
+			x = 0.01/velocity.x();
+			z = 0.01/velocity.z();
+		}
 
 		if (!collided.world.isRemote) {
 			collided.addVelocity(x, y, z);

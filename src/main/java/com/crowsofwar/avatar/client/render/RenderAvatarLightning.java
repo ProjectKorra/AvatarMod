@@ -14,12 +14,13 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
 
-public class RenderAvatarLightning extends RenderLightningBolt {
+public class RenderAvatarLightning extends Render<EntityAvatarLightning> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/entity/lightning-ribbon.png");
@@ -28,21 +29,23 @@ public class RenderAvatarLightning extends RenderLightningBolt {
 		super(renderManagerIn);
 	}
 
-	@Override
-	public void doRender(EntityLightningBolt entity, double x, double y, double z, float entityYaw, float partialTicks) {
+	public void doRender(EntityAvatarLightning entity, double x, double y, double z, float entityYaw, float partialTicks) {
 
+			GlStateManager.pushMatrix();
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder bufferbuilder = tessellator.getBuffer();
-			//GlStateManager.disableTexture2D();
+			GlStateManager.disableTexture2D();
 			GlStateManager.disableLighting();
 			GlStateManager.enableBlend();
-			//	GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 			double[] adouble = new double[8];
 			double[] adouble1 = new double[8];
 			double d0 = 0.0D;
 			double d1 = 0.0D;
 			Random random = new Random(entity.boltVertex);
-			Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+			GlStateManager.enableColorLogic();
+			GL11.glColor3f(0, 0, 1);
+			//Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 
 			for (int i = 7; i >= 0; --i) {
 				adouble[i] = d0;
@@ -82,6 +85,7 @@ public class RenderAvatarLightning extends RenderLightningBolt {
 						}
 
 						bufferbuilder.begin(5, DefaultVertexFormats.POSITION_COLOR);
+
 						float f = 0.5F;
 						float f1 = 0.45F;
 						float f2 = 0.45F;
@@ -121,10 +125,14 @@ public class RenderAvatarLightning extends RenderLightningBolt {
 								d11 += d7 * 2.0D;
 							}
 
+							//Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+							GlStateManager.color(0F, 0, 1F, 0.3F);
+							GlStateManager.color(0, 0,1);
+							GL11.glColor3f(0, 0, 1);
 							bufferbuilder.pos(d10 + d2, y + (double) (i1 * 16), d11 + d3).color(0F, 0, 1F, 0.3F).endVertex();
 							bufferbuilder.pos(d8 + d4, y + (double) ((i1 + 1) * 16), d9 + d5).color(0F, 0, 1F, 0.3F).endVertex();
 							bufferbuilder.color(0F, 0, 1F, 0.3F);
-							GlStateManager.color(0F, 0, 1F, 0.3F);
+
 
 						}
 
@@ -136,12 +144,13 @@ public class RenderAvatarLightning extends RenderLightningBolt {
 			GlStateManager.disableBlend();
 			GlStateManager.enableLighting();
 			GlStateManager.enableTexture2D();
+			GlStateManager.popMatrix();
+
 		}
 
 
 	@Nullable
-	@Override
-	protected ResourceLocation getEntityTexture(EntityLightningBolt entity) {
+	protected ResourceLocation getEntityTexture(EntityAvatarLightning entity) {
 		return TEXTURE;
 	}
 
