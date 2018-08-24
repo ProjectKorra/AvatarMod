@@ -19,9 +19,13 @@ package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -185,34 +189,57 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		public PlayerControlled() {
 		}
 
+		float maxSize = 1.2F;
 		@Override
 		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
 			EntityLivingBase owner = entity.getOwner();
 
 			if (owner == null) return this;
 
-			BendingData data = Bender.get(owner).getData();
+			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
 
-			double yaw = Math.toRadians(owner.rotationYaw);
-			double pitch = Math.toRadians(owner.rotationPitch);
-			Vector forward = Vector.toRectangular(yaw, pitch);
-			Vector eye = Vector.getEyePos(owner);
-			Vector target = forward.times(2).plus(eye);
-			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
+			Vector target;
+			if (res.hitSomething()) {
+				target = res.getPosPrecise();
+			} else {
+				Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
+						Math.toRadians(owner.rotationPitch));
+				target = Vector.getEyePos(owner).plus(look.times(3));
+			}
+
+			Vector motion = target.minus(entity.position());
+			motion = motion.times(0.5 * 20);
 			entity.setVelocity(motion);
 
 			Vector direction = entity.position().minus(Vector.getEyePos(owner)).toSpherical();
 			entity.rotationYaw = (float) Math.toDegrees(direction.y());
 			entity.rotationPitch = (float) Math.toDegrees(direction.x());
 
+
+			// Ensure that owner always has stat ctrl active
+			if (entity.ticksExisted % 10 == 0) {
+				BendingData.get(owner).addStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
+			}
+
 			float size = entity.getSize();
-			if (size < size * 2 && entity.ticksExisted % 4 == 0) {
-				entity.setSize(size + 0.1F);
+
+			if (entity.getAbility() instanceof AbilityLightningSpear && !entity.world.isRemote) {
+				AbilityData aD = AbilityData.get(entity.getOwner(), "lightning_spear");
+				int lvl = aD.getLevel();
+				if (lvl == 1) {
+					maxSize = 1.4F;
+				}
+				if (lvl == 2) {
+					maxSize = 1.6F;
+				}
+				if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+					maxSize = 1.8F;
+				}
 			}
-			float degrees = entity.getDegreesPerSecond();
-			if (degrees < 30 && entity.ticksExisted % 4 == 0) {
-				entity.setDegreesPerSecond(degrees + 1);
+			if (size < maxSize && entity.ticksExisted % 4 == 0) {
+				entity.setSize(size + 0.005F);
 			}
+			entity.setDegreesPerSecond(size * 200);
 
 			return this;
 		}

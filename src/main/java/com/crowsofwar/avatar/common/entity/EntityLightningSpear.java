@@ -117,6 +117,8 @@ public class EntityLightningSpear extends AvatarEntity {
 			removeStatCtrl();
 		}
 
+		setSize(getSize()/4, getSize()/4);
+
 		if (getOwner() != null) {
 			EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
