@@ -6,6 +6,8 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+
 public class CleansePowerModifier extends BuffPowerModifier {
 
 	@Override
@@ -28,7 +30,10 @@ public class CleansePowerModifier extends BuffPowerModifier {
 
 	@Override
 	protected Vision[] getVisions() {
-		return new Vision[]{Vision.CLEANSE_WEAK, Vision.CLEANSE_MEDIUM, Vision.CLEANSE_POWERFUL};
+		if (CLIENT_CONFIG.shaderSettings.useCleanseShaders) {
+			return new Vision[]{Vision.CLEANSE_WEAK, Vision.CLEANSE_MEDIUM, Vision.CLEANSE_POWERFUL};
+		}
+		else return null;
 	}
 
 	@Override

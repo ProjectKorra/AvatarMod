@@ -53,25 +53,32 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 			case -1:
 			case 0:
 			case 1:
-				return getVisions()[0];
+				if (getVisions()[0] != null) {
+					return getVisions()[0];
+				}
 			case 2:
-				return getVisions()[1];
+				if (getVisions()[1] != null) {
+					return getVisions()[1];
+				}
 			case 3:
 			default:
-				return getVisions()[2];
+				if (getVisions()[2] != null) {
+					return getVisions()[2];
+				}
+				else return getVisions()[0];
 		}
 
 
 	}
 
+
 	@Override
 	public boolean onUpdate(BendingContext ctx) {
 		if (ctx.getData().getVision() == null) {
-			if (!(ctx.getData().getAbilityData(getAbilityName()).getAbility() instanceof AbilitySlipstream && !useSlipstreamShaders) ||
-			!(ctx.getData().getAbilityData(getAbilityName()).getAbility() instanceof AbilityCleanse && !useCleanseShaders) || !(ctx.getData().getAbilityData(getAbilityName()).getAbility() instanceof AbilityPurify && !usePurifyShaders)
-			|| !(ctx.getData().getAbilityData(getAbilityName()).getAbility() instanceof AbilityRestore && !useRestoreShaders)) {
+			if (getVision(ctx) != null && getVisions()[0] != null && getVisions()[1] != null && getVisions()[2] != null) {
 				ctx.getData().setVision(getVision(ctx));
 			}
+
 		}
 		return super.onUpdate(ctx);
 	}
