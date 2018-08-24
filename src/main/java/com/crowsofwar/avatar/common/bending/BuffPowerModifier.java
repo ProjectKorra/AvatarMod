@@ -1,6 +1,9 @@
 package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.common.bending.air.AbilitySlipstream;
+import com.crowsofwar.avatar.common.bending.earth.AbilityRestore;
+import com.crowsofwar.avatar.common.bending.fire.AbilityPurify;
+import com.crowsofwar.avatar.common.bending.water.AbilityCleanse;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.PowerRatingModifier;
 import com.crowsofwar.avatar.common.data.Vision;
@@ -64,7 +67,9 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 	@Override
 	public boolean onUpdate(BendingContext ctx) {
 		if (ctx.getData().getVision() == null) {
-			if (!(ctx.getData().getAbilityData(getAbilityName()).getAbility() instanceof AbilitySlipstream && !useSlipstreamShaders)) {
+			if (!(ctx.getData().getAbilityData(getAbilityName()).getAbility() instanceof AbilitySlipstream && !useSlipstreamShaders) ||
+			!(ctx.getData().getAbilityData(getAbilityName()).getAbility() instanceof AbilityCleanse && !useCleanseShaders) || !(ctx.getData().getAbilityData(getAbilityName()).getAbility() instanceof AbilityPurify && !usePurifyShaders)
+			|| !(ctx.getData().getAbilityData(getAbilityName()).getAbility() instanceof AbilityRestore && !useRestoreShaders)) {
 				ctx.getData().setVision(getVision(ctx));
 			}
 		}
