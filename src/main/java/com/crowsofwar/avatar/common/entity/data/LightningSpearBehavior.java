@@ -92,8 +92,9 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			time++;
 
 			if (entity.collided || (!entity.world.isRemote && time > 200)) {
-				entity.setDead();
 				entity.onCollideWithSolid();
+				entity.setDead();
+
 			}
 
 			entity.addVelocity(Vector.DOWN.times(1F / 12000));
@@ -102,10 +103,14 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			entity.rotationYaw = (float) Math.toDegrees(direction.y());
 			entity.rotationPitch = (float) Math.toDegrees(direction.x());
 
+			if (!entity.isInWater()) {
+				entity.setInvisible(false);
+			}
+
 			World world = entity.world;
 			if (!entity.isDead) {
 				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
-						entity.getExpandedHitbox());
+						entity.getEntityBoundingBox());
 				if (!collidedList.isEmpty()) {
 					Entity collided = collidedList.get(0);
 					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
@@ -122,6 +127,8 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			return this;
 
 		}
+
+
 
 		private void collision(EntityLivingBase collided, EntityLightningSpear entity, boolean triggerGroupAttack) {
 			double speed = entity.velocity().magnitude();
@@ -189,7 +196,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		public PlayerControlled() {
 		}
 
-		float maxSize = 1.2F;
+		float maxSize = 1.4F;
 		@Override
 		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
 			EntityLivingBase owner = entity.getOwner();
@@ -217,9 +224,9 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 
 			// Ensure that owner always has stat ctrl active
-			if (entity.ticksExisted % 10 == 0) {
+			/*if (entity.ticksExisted % 10 == 0) {
 				BendingData.get(owner).addStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
-			}
+			}**/
 
 			float size = entity.getSize();
 
@@ -227,13 +234,13 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				AbilityData aD = AbilityData.get(entity.getOwner(), "lightning_spear");
 				int lvl = aD.getLevel();
 				if (lvl == 1) {
-					maxSize = 1.4F;
-				}
-				if (lvl == 2) {
 					maxSize = 1.6F;
 				}
-				if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				if (lvl == 2) {
 					maxSize = 1.8F;
+				}
+				if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+					maxSize = 2F;
 				}
 			}
 			if (size < maxSize && entity.ticksExisted % 4 == 0) {

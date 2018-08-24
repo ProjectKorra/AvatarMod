@@ -55,7 +55,6 @@ public class EntityLightningSpear extends AvatarEntity {
 	private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityLightningSpear.class,
 			DataSerializers.FLOAT);
 
-	private AxisAlignedBB expandedHitbox;
 
 	private float damage;
 
@@ -86,7 +85,7 @@ public class EntityLightningSpear extends AvatarEntity {
 	public EntityLightningSpear(World world) {
 		super(world);
 		this.Size = 0.8F;
-		this.degreesPerSecond = 600;
+		this.degreesPerSecond = 400;
 		setSize(Size, Size);
 	}
 
@@ -96,6 +95,14 @@ public class EntityLightningSpear extends AvatarEntity {
 		dataManager.register(SYNC_BEHAVIOR, new LightningSpearBehavior.Idle());
 		dataManager.register(SYNC_SIZE, Size);
 		dataManager.register(SYNC_DEGREES_PER_SECOND, degreesPerSecond);
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
+		if (!world.isRemote && this.isDead) {
+			Thread.dumpStack();
+		}
 	}
 
 	@Override
@@ -117,7 +124,7 @@ public class EntityLightningSpear extends AvatarEntity {
 			removeStatCtrl();
 		}
 
-		this.setSize(getSize()/4, getSize()/4);
+		this.setSize(getSize()/8, getSize()/8);
 
 		if (getOwner() != null) {
 			EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, getOwner());
@@ -264,20 +271,7 @@ public class EntityLightningSpear extends AvatarEntity {
 		nbt.setInteger("Behavior", getBehavior().getId());
 	}
 
-	public AxisAlignedBB getExpandedHitbox() {
-		return this.expandedHitbox;
-	}
 
-	@Override
-	public void setEntityBoundingBox(AxisAlignedBB bb) {
-		super.setEntityBoundingBox(bb);
-		expandedHitbox = bb.grow(0.35, 0.35, 0.35);
-	}
-
-	@Override
-	public boolean shouldRenderInPass(int pass) {
-		return pass == 1;
-	}
 
 	private void removeStatCtrl() {
 		if (getOwner() != null) {

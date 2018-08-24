@@ -75,10 +75,12 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 	public void onRemoval(BendingContext ctx) {
 		Vision[] visions = getVisions();
 		Vision vision = ctx.getData().getVision();
-		if (vision == visions[0] || vision == visions[1] || vision == visions[2]) {
-			ctx.getData().setVision(null);
+		if (vision != null && visions != null) {
+			if (vision == visions[0] || vision == visions[1] || vision == visions[2]) {
+				ctx.getData().setVision(null);
+			}
+			super.onRemoval(ctx);
 		}
-		super.onRemoval(ctx);
 	}
 
 }

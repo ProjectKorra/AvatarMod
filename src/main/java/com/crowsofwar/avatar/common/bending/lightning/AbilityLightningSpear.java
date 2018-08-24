@@ -101,7 +101,7 @@ public class AbilityLightningSpear extends Ability {
 			spear.setPiercing(abilityData.isMasterPath(AbilityTreePath.FIRST));
 			spear.setAbility(this);
 			spear.setSize(size);
-			spear.setDegreesPerSecond(600);
+			spear.setDegreesPerSecond(400);
 			spear.setGroupAttack(abilityData.isMasterPath(AbilityTreePath.SECOND));
 			world.spawnEntity(spear);
 

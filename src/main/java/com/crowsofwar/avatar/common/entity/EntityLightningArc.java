@@ -141,9 +141,9 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			if (!wasSuccessfullyRedirected) {
 				damageEntity(stuckTo, 0.333f);
 			}
-			this.velocityMultiplier = 4;
+			getControlPoint(5).setPosition(Vector.getLookRectangular(getOwner()).times(2).plus(Vector.getEntityPos(getOwner())));
 		}
-		else this.velocityMultiplier = 1;
+
 
 		if (velocity().equals(Vector.ZERO)) {
 			stuckTime++;

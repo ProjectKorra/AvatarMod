@@ -43,7 +43,6 @@ public class RenderAvatarLightning extends Render<EntityAvatarLightning> {
 			double d0 = 0.0D;
 			double d1 = 0.0D;
 			Random random = new Random(entity.boltVertex);
-			GlStateManager.enableColorLogic();
 			GL11.glColor3f(0, 0, 1);
 			//Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 
@@ -129,9 +128,9 @@ public class RenderAvatarLightning extends Render<EntityAvatarLightning> {
 							GlStateManager.color(0F, 0, 1F, 0.3F);
 							GlStateManager.color(0, 0,1);
 							GL11.glColor3f(0, 0, 1);
-							bufferbuilder.pos(d10 + d2, y + (double) (i1 * 16), d11 + d3).color(0F, 0, 1F, 0.3F).endVertex();
-							bufferbuilder.pos(d8 + d4, y + (double) ((i1 + 1) * 16), d9 + d5).color(0F, 0, 1F, 0.3F).endVertex();
-							bufferbuilder.color(0F, 0, 1F, 0.3F);
+							bufferbuilder.pos(d10 + d2, y + (double) (i1 * 16), d11 + d3).color(0F, 0, 255F, 0.3F).endVertex();
+							bufferbuilder.pos(d8 + d4, y + (double) ((i1 + 1) * 16), d9 + d5).color(0F, 0, 255F, 0.3F).endVertex();
+							bufferbuilder.color(0F, 0, 255F, 0.3F);
 
 
 						}

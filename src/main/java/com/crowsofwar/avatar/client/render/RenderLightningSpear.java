@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
+import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -42,11 +43,13 @@ public class RenderLightningSpear extends RenderModel<EntityLightningSpear> {
 	protected void performGlTransforms(EntityLightningSpear entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		// Should be rotating in degrees here...?
 		// radians doesn't work
-		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
 		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
-		GlStateManager.scale(entity.getSize()/2, entity.getSize()/2, entity.getSize()/2);
-		GlStateManager.rotate((float) (entity.ticksExisted / 20.0 * 360), 0, 0, 1);
+		GlStateManager.scale(entity.getSize() / 2, entity.getSize() / 2, entity.getSize() / 2);
+
+		GlStateManager.translate(0, entity.getSize() / 14, 0);
+
+		//GlStateManager.rotate((float) (entity.ticksExisted / 20.0 * entity.getDegreesPerSecond()), 0, 0, 1);
 
 	}
 
