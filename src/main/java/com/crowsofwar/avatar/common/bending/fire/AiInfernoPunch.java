@@ -15,7 +15,7 @@ public class AiInfernoPunch extends BendingAi {
 
 	@Override
 	protected boolean shouldExec() {
-		return false;
+		return timeExecuting < 5;
 	}
 
 	@Override
@@ -25,6 +25,11 @@ public class AiInfernoPunch extends BendingAi {
 		data.addStatusControl(StatusControl.INFERNO_PUNCH);
 		data.getMiscData().setAbilityCooldown(60);
 
+	}
+
+	@Override
+	public void updateTask() {
+		timeExecuting++;
 	}
 
 

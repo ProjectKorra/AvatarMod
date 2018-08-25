@@ -48,15 +48,12 @@ public class AiAirGust extends BendingAi {
 		EntityLivingBase target = entity.getAttackTarget();
 		BendingData data = bender.getData();
 
-		if (target != null && target.getHealth() >= 10) {
+		if (target != null) {
 
 			Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(target));
 			entity.rotationYaw = (float) toDegrees(rotations.y());
 			entity.rotationPitch = (float) toDegrees(rotations.x());
 
-			data.chi().setMaxChi(10);
-			data.chi().setTotalChi(10);
-			data.chi().setAvailableChi(10);
 
 			execAbility();
 			data.getMiscData().setAbilityCooldown(20);
@@ -67,7 +64,7 @@ public class AiAirGust extends BendingAi {
 	@Override
 	protected boolean shouldExec() {
 		return entity.getAttackTarget() != null
-				&& entity.getDistanceSq(entity.getAttackTarget()) < 4 * 4;
+				&& entity.getDistanceSq(entity.getAttackTarget()) < 10 * 10;
 	}
 
 }

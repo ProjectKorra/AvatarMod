@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
+import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.world.AvatarFireExplosion;
@@ -124,6 +125,11 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		Entity target = event.getEntity();
 		DamageSource source = event.getSource();
 		World world = target.getEntityWorld();
+		if (entity instanceof EntityFirebender) {
+			if (((EntityFirebender) entity).getHeldItemMainhand() == ItemStack.EMPTY) {
+				System.out.println(source);
+			}
+		}
 		if (entity instanceof EntityLivingBase) {
 			if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
 				Bender ctx = Bender.get((EntityLivingBase) entity);

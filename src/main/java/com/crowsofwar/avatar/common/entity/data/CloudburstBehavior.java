@@ -81,7 +81,7 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 				if (!collidedList.isEmpty()) {
 					for (Entity collided : collidedList) {
 						if (entity.canCollideWith(collided)) {
-							collision((EntityLivingBase) collided, entity);
+							collision( collided, entity);
 
 						}
 					}
@@ -93,30 +93,34 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 
 		}
 
-		private void collision(EntityLivingBase collided, EntityCloudBall entity) {
+		private void collision(Entity collided, EntityCloudBall entity) {
 
-			if (collided.attackEntityFrom(AvatarDamageSource.causeCloudburstDamage(collided, entity.getOwner()),
-					entity.getDamage())) {
-				BattlePerformanceScore.addMediumScore(entity.getOwner());
+			if (entity.canDamageEntity(collided) && collided.canBeCollidedWith() && collided != entity.getOwner()) {
+				if (collided.attackEntityFrom(AvatarDamageSource.causeCloudburstDamage(collided, entity.getOwner()),
+						entity.getDamage())) {
+					BattlePerformanceScore.addMediumScore(entity.getOwner());
+				}
 			}
+			if (collided.canBeCollidedWith() && entity.canCollideWith(collided)) {
 
-			Vector motion = entity.velocity().dividedBy(80);
-			motion = motion.times(STATS_CONFIG.cloudburstSettings.push).withY(0.05);
-			collided.addVelocity(motion.x(), motion.y(), motion.z());
+				Vector motion = entity.velocity().dividedBy(80);
+				motion = motion.times(STATS_CONFIG.cloudburstSettings.push).withY(0.05);
+				collided.addVelocity(motion.x(), motion.y(), motion.z());
 
-			BendingData data = Bender.get(entity.getOwner()).getData();
-			if (!collided.world.isRemote && data != null) {
-				float xp = SKILLS_CONFIG.cloudburstHit;
-				data.getAbilityData(entity.getAbility().getName()).addXp(xp);
+				BendingData data = Bender.get(entity.getOwner()).getData();
+				if (!collided.world.isRemote && data != null) {
+					float xp = SKILLS_CONFIG.cloudburstHit;
+					data.getAbilityData(entity.getAbility().getName()).addXp(xp);
+				}
+
+				// Remove the cloudburst & spawn particles
+				if (!entity.world.isRemote) {
+					entity.onCollideWithSolid();
+					entity.setDead();
+
+				}
+
 			}
-
-			// Remove the cloudburst & spawn particles
-			if (!entity.world.isRemote) {
-				entity.onCollideWithSolid();
-				entity.setDead();
-
-			}
-
 		}
 
 		@Override

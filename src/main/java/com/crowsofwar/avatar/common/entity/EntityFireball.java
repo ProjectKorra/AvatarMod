@@ -285,7 +285,7 @@ public class EntityFireball extends AvatarEntity {
 			float hitBox = size + 0.5F;
 			if (getOwner() != null) {
 				BendingData data = BendingData.get(getOwner());
-				AbilityData abilityData = data.getAbilityData("cloudburst");
+				AbilityData abilityData = data.getAbilityData("fireball");
 				if (abilityData.getLevel() == 1) {
 					speed = size/8;
 					hitBox = size + 1.5F;
@@ -353,7 +353,6 @@ public class EntityFireball extends AvatarEntity {
 				if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 					damage = 3.5F;
 				}
-				entity.attackEntityFrom(ds, damage);
 				if (entity.attackEntityFrom(ds, damage)) {
 					abilityData.addXp(SKILLS_CONFIG.fireballHit);
 					BattlePerformanceScore.addMediumScore(getOwner());

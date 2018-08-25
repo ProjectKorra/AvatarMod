@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
@@ -50,14 +51,25 @@ public class AiAirBubble extends BendingAi {
 	@Override
 	protected boolean shouldExec() {
 
-		boolean underAttack = entity.getCombatTracker().getCombatDuration() <= 200;
+		boolean underAttack = entity.getCombatTracker().getCombatDuration() <= 100;
 		boolean already = AvatarEntity.lookupEntity(entity.world, EntityAirBubble.class,
 				bubble -> bubble.getOwner() == entity) != null;
 		boolean lowHealth = entity.getHealth() / entity.getMaxHealth() <= 0.25f;
 
-		// 2% chance to get air bubble every tick
-		return !already && (underAttack || lowHealth);
+		if (timeExecuting > 200) {
+			execStatusControl(StatusControl.BUBBLE_EXPAND);
+			return false;
+
+		}
+		// 50% chance to get air bubble every tick
+		return !already && (underAttack && lowHealth && random.nextDouble() < 0.5);
 
 	}
+
+	@Override
+	public void updateTask() {
+		timeExecuting++;
+	}
+
 
 }

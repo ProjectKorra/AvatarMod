@@ -18,9 +18,6 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiGiveScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -68,7 +65,7 @@ public abstract class EntityHumanBender extends EntityBender {
 	 */
 	public EntityHumanBender(World world) {
 		super(world);
-		scrollsLeft = rand.nextInt(3) + 1;
+		scrollsLeft = getScrollsLeft();
 
 
 	}
@@ -130,6 +127,10 @@ public abstract class EntityHumanBender extends EntityBender {
 	}
 
 	protected abstract int getNumSkins();
+
+	protected int getScrollsLeft() {
+		return  rand.nextInt(3) + 1;
+	}
 
 	public int getSkin() {
 		return dataManager.get(SYNC_SKIN);

@@ -77,7 +77,11 @@ public class EntityAirblade extends AvatarEntity {
 		this.motionZ = this.motionZ * 0.99;
 
 		if (!world.isRemote && velocity().sqrMagnitude() <= .9) {
-			//setDead();
+			setDead();
+		}
+
+		if (this.ticksExisted > 200) {
+			this.setDead();
 		}
 		if (!world.isRemote && inWater) {
 			setDead();

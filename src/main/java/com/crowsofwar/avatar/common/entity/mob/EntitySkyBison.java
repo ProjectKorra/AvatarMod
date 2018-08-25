@@ -134,6 +134,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private final SyncedEntity<EntityLivingBase> ownerAttr;
 	private final AnimalCondition condition;
 	private Vector originalPos;
+	private boolean hasSpawnedAirbender;
 	/**
 	 * Note: Is null clientside.
 	 */
@@ -165,6 +166,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		ownerAttr = new SyncedEntity<>(this, SYNC_OWNER);
 		condition = new AnimalCondition(this, 30, 20, SYNC_FOOD, SYNC_DOMESTICATION, SYNC_AGE);
 		setSize(2.5f, 2);
+		this.hasSpawnedAirbender = false;
 
 
 		initChest();
@@ -231,8 +233,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		this.targetTasks.addTask(2, new EntityAiBisonDefendOwner(this));
 		this.targetTasks.addTask(3, new EntityAiBisonHelpOwnerTarget(this));
 
-		this.tasks.addTask(1, Abilities.get("air_bubble").getAi(this, getBender()));
-		this.tasks.addTask(2, Abilities.get("air_gust").getAi(this, getBender()));
+		this.tasks.addTask(4, Abilities.get("air_bubble").getAi(this, getBender()));
+		this.tasks.addTask(1, Abilities.get("air_gust").getAi(this, getBender()));
 		this.tasks.addTask(3, Abilities.get("airblade").getAi(this, getBender()));
 
 		this.tasks.addTask(2, new EntityAiBisonFollowAttacker(this));
@@ -900,10 +902,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (ticksExisted < 1) {
-			EntityAirbender a = new EntityAirbender(world);
-			a.setPosition(this.posX, this.posY, this.posZ);
-			world.spawnEntity(a);
+		if (ticksExisted < 5) {
+			int random = rand.nextInt(3) + 1;
+			if (ticksExisted == 2 && random == 2 && !hasSpawnedAirbender) {
+				EntityAirbender a = new EntityAirbender(world);
+				a.setPositionAndRotation(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+				world.spawnEntity(a);
+				hasSpawnedAirbender = true;
+			}
 		}
 
 		if (this.ticksExisted % 20 == 0) {

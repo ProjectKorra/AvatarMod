@@ -43,6 +43,9 @@ public class EntityAirbender extends EntityHumanBender {
 	public static final ResourceLocation LOOT_TABLE = LootTableList
 			.register(new ResourceLocation("avatarmod", "airbender"));
 
+	private int scrollsLeft;
+	private boolean despawn;
+
 	/**
 	 * @param world
 	 */
@@ -53,9 +56,26 @@ public class EntityAirbender extends EntityHumanBender {
 		data.addBendingId(Airbending.ID);
 		Random rand = new Random();
 		int level = rand.nextInt(3) + 1;
-		getData().getAbilityData("air_bubble").setLevel(level);
-		getData().getAbilityData("air_gust").setLevel(level);
-		getData().getAbilityData("airblade").setLevel(level);
+		if (level == 1) {
+			getData().getAbilityData("air_bubble").setLevel(-1);
+			getData().getAbilityData("air_gust").setLevel(0);
+			getData().getAbilityData("airblade").setLevel(-1);
+			scrollsLeft = 1;
+		}
+		if (level == 1) {
+			getData().getAbilityData("air_bubble").setLevel(0);
+			getData().getAbilityData("air_gust").setLevel(1);
+			getData().getAbilityData("airblade").setLevel(-1);
+			scrollsLeft = 2;
+		}
+		if (level == 3) {
+			getData().getAbilityData("air_bubble").setLevel(1);
+			getData().getAbilityData("air_gust").setLevel(2);
+			getData().getAbilityData("airblade").setLevel(0);
+			scrollsLeft = 3;
+		}
+
+		this.despawn = false;
 	}
 
 	@Override
@@ -67,9 +87,9 @@ public class EntityAirbender extends EntityHumanBender {
 
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("air_bubble", this, Bender.get(this))));
+		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("air_bubble", this, Bender.get(this))));
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("air_gust", this, Bender.get(this))));
-		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("airblade", this, Bender.get(this))));
+		this.tasks.addTask(4, Objects.requireNonNull(Abilities.getAi("airblade", this, Bender.get(this))));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.4, true));
 	}
 
@@ -89,6 +109,11 @@ public class EntityAirbender extends EntityHumanBender {
 	}
 
 	@Override
+	protected int getScrollsLeft() {
+		return scrollsLeft;
+	}
+
+	@Override
 	protected boolean isTradeItem(Item item) {
 		return super.isTradeItem(item) || MOBS_CONFIG.isAirTradeItem(item);
 	}
@@ -100,5 +125,14 @@ public class EntityAirbender extends EntityHumanBender {
 			BendingData data = BendingData.get(this);
 			data.addBendingId(Airbending.ID);
 		}
+		if ((this.hasNoGravity() || !this.canBeCollidedWith() || !this.canBePushed() || !this.attackable() || !this.canBeAttackedWithItem()) && !world.isRemote) {
+			this.despawn = true;
+			this.setDead();
+		}
+	}
+
+	@Override
+	protected boolean canDespawn() {
+		return despawn;
 	}
 }

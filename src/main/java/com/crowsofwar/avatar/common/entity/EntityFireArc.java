@@ -180,7 +180,9 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		if (entity instanceof AvatarEntity && this.getBehavior() instanceof FireArcBehavior.Thrown) {
 			((AvatarEntity) entity).onFireContact();
 		}
-		Firesplosion();
+		if(getBehavior() != null && getBehavior() instanceof FireArcBehavior.Thrown) {
+			Firesplosion();
+		}
 	}
 
 	@Override
@@ -274,6 +276,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 					AvatarUtils.afterVelocityAdded(entity);
 				}
 			}
+			this.setDead();
 
 		}
 
