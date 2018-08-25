@@ -26,17 +26,18 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 
+import java.util.Objects;
 import java.util.Random;
+
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
  * @author CrowsOfWar
  */
 public class EntityFirebender extends EntityHumanBender {
 
-	public static final ResourceLocation LOOT_TABLE = LootTableList
+	private static final ResourceLocation LOOT_TABLE = LootTableList
 			.register(new ResourceLocation("avatarmod", "firebender"));
-	private Random rand = new Random();
-	private int level = rand.nextInt(1) + 3;
 
 	/**
 	 * @param world
@@ -44,8 +45,11 @@ public class EntityFirebender extends EntityHumanBender {
 	public EntityFirebender(World world) {
 		super(world);
 
+		Random rand = new Random();
+		int level = rand.nextInt(1) + 3;
 		getData().getAbilityData("fireball").setLevel(level);
 		getData().getAbilityData("flamethrower").setLevel(level);
+		getData().getAbilityData("fire_arc").setLevel(level);
 
 	}
 
@@ -58,11 +62,11 @@ public class EntityFirebender extends EntityHumanBender {
 
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(1, Abilities.getAi("flamethrower", this, getBender()));
-		this.tasks.addTask(1, Abilities.getAi("fireball", this, getBender()));
-		this.tasks.addTask(2, Abilities.getAi("fire_arc", this, getBender()));
+		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
+		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
+		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fire_arc", this, getBender())));
 		//this.tasks.addTask(3, Abilities.getAi("inferno_punch", this, getBender()));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.4, true));
+		this.tasks.addTask(6, new EntityAIAttackMelee(this, 1.3, true));
 	}
 
 	@Override
@@ -81,7 +85,7 @@ public class EntityFirebender extends EntityHumanBender {
 	}
 
 	@Override
-	protected Item tradeItem() {
-		return Items.MAGMA_CREAM;
+	protected boolean isTradeItem(Item item) {
+		return super.isTradeItem(item) || MOBS_CONFIG.isFireTradeItem(item);
 	}
 }

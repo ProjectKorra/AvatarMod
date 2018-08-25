@@ -55,7 +55,7 @@ public class EntityAirbender extends EntityHumanBender {
 		this.tasks.addTask(1, Abilities.getAi("air_bubble", this, Bender.get(this)));
 		this.tasks.addTask(1, Abilities.getAi("air_gust", this, Bender.get(this)));
 		this.tasks.addTask(1, Abilities.getAi("airblade", this, Bender.get(this)));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.7, true));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.5, true));
 	}
 
 	@Override

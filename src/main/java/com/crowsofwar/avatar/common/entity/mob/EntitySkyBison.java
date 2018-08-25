@@ -77,6 +77,7 @@ import net.minecraftforge.common.ForgeChunkManager.Type;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -147,6 +148,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	 */
 	public EntitySkyBison(World world) {
 		super(world);
+		Random rand = new Random();
+		int level = rand.nextInt(1) + 3;
+
+		getData().getAbilityData("air_bubble").setLevel(level);
+		getData().getAbilityData("airblade").setLevel(level);
+		getData().getAbilityData("air_gust").setLevel(level);
 
 		moveHelper = new SkyBisonMoveHelper(this);
 		ownerAttr = new SyncedEntity<>(this, SYNC_OWNER);

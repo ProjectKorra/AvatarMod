@@ -47,6 +47,7 @@ public class HumanBenderSpawner {
 		if (e.getType() == EventType.VILLAGE) {
 			// TODO See if this messes up superflat world options
 			e.setNewGen(new MapGenVillageWithHumanbenders());
+
 		}
 
 	}
@@ -66,22 +67,25 @@ public class HumanBenderSpawner {
 			boolean result = super.generateStructure(worldIn, randomIn, chunkCoord);
 			if (result) {
 
+
 				// This list contains villagers in that structure
 				List<EntityVillager> villagers = worldIn.getEntities(EntityVillager.class, villager -> {
+					assert villager != null;
 					return new ChunkPos(villager.getPosition()).equals(chunkCoord);
 				});
 
 				// To attempt to have all humanbenders be same type, check if
 				// there are nearby humanbenders
 				// If there are just copy their type
-				AxisAlignedBB aabb = new AxisAlignedBB(chunkCoord.getBlock(-30, 50, -30),
+				AxisAlignedBB aabb = new AxisAlignedBB(chunkCoord.getBlock(-30, -50, -30),
 						chunkCoord.getBlock(30, 150, 30));
 				List<EntityHumanBender> nearbyBenders = worldIn.getEntitiesWithinAABB(EntityHumanBender.class,
 						aabb);
 
 				double chance = 100;
 				Random rand = new Random();
-				if (!villagers.isEmpty() && rand.nextDouble() * 100 < chance) {
+				if (!villagers.isEmpty()/* && rand.nextDouble() * 100 < chance**/) {
+
 
 					Village village = worldIn.getVillageCollection()
 							.getNearestVillage(chunkCoord.getBlock(0, 0, 0), 200);
@@ -100,8 +104,8 @@ public class HumanBenderSpawner {
 					worldIn.spawnEntity(bender);
 
 				}
-
 			}
+
 			return result;
 		}
 

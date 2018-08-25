@@ -20,6 +20,7 @@ package com.crowsofwar.avatar;
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRaze;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
@@ -54,7 +55,9 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.village.Village;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -246,8 +249,12 @@ public class AvatarMod {
 				EXTREME_HILLS, MUTATED_SAVANNA);
 		EntityRegistry.addSpawn(EntityOtterPenguin.class, 4, 5, 9, EnumCreatureType.CREATURE, //
 				COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
-		EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 3, 6, EnumCreatureType.CREATURE, //
+		EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 1, 4, EnumCreatureType.CREATURE, //
 				DESERT, DESERT_HILLS, SAVANNA, SAVANNA_PLATEAU, PLAINS);
+		EntityRegistry.addSpawn(EntityAirbender.class, 1, 1, 2, EnumCreatureType.CREATURE, //
+			SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, COLD_TAIGA_HILLS, REDWOOD_TAIGA_HILLS, TAIGA_HILLS );
+		EntityRegistry.addSpawn(EntityFirebender.class, 3, 1, 5, EnumCreatureType.CREATURE, //
+				SAVANNA_PLATEAU, HELL, SAVANNA, PLAINS, DESERT, MUSHROOM_ISLAND, DESERT_HILLS, MESA, MESA_ROCK);
 
 		// Second loading required since other mods blocks might not be
 		// registered

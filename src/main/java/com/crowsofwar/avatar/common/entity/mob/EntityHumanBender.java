@@ -18,7 +18,6 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiGiveScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -45,7 +44,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-import java.util.List;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_HUMANBENDER_NO_SCROLLS;
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_NEED_TRADE_ITEM;
@@ -87,14 +85,13 @@ public abstract class EntityHumanBender extends EntityBender {
 
 	@Override
 	protected void initEntityAI() {
+		addBendingTasks();
 		this.tasks.addTask(0, new EntityAISwimming(this));
 
 		// this.targetTasks.addTask(2,
 		// new EntityAINearestAttackableTarget(this, EntityPlayer.class, true,
 		// false));
 		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, EntityHumanBender.class));
-
-		addBendingTasks();
 
 		this.tasks.addTask(4, aiGiveScroll = new EntityAiGiveScroll(this, getScrollType()));
 		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));
@@ -220,7 +217,7 @@ public abstract class EntityHumanBender extends EntityBender {
 
 			if (scrollsLeft > 0) {
 				if (aiGiveScroll.giveScrollTo(player)) {
-					// Take diamond
+					// Take item
 					scrollsLeft--;
 					if (!player.capabilities.isCreativeMode) {
 						stack.shrink(1);
@@ -234,8 +231,9 @@ public abstract class EntityHumanBender extends EntityBender {
 			return true;
 
 		}
-		else {
+		else if (!(this.isTradeItem(stack.getItem())) && !world.isRemote){
 			MSG_NEED_TRADE_ITEM.send(player);
+			return true;
 		}
 
 

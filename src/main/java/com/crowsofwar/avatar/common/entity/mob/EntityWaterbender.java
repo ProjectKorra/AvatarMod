@@ -79,8 +79,4 @@ public class EntityWaterbender extends EntityHumanBender {
 
 	}
 
-	@Override
-	protected Item tradeItem() {
-		return Items.PRISMARINE_SHARD;
-	}
 }
