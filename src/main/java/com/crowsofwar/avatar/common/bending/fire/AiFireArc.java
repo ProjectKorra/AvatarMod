@@ -56,11 +56,11 @@ public class AiFireArc extends BendingAi {
 
 	@Override
 	protected void startExec() {
+		BendingData data = bender.getData();
 		velocityYaw = 0;
 		velocityPitch = 0;
-		BendingData data = bender.getData();
 		execAbility();
-		data.getMiscData().setAbilityCooldown(20);
+		data.getMiscData().setAbilityCooldown(80);
 	}
 
 	@Override
@@ -68,17 +68,40 @@ public class AiFireArc extends BendingAi {
 
 		if (entity.getAttackTarget() == null) return false;
 
-		Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
-		entity.rotationYaw = (float) toDegrees(rotations.y());
-		entity.rotationPitch = (float) toDegrees(rotations.x());
+		Vector target = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
+		float targetYaw = (float) toDegrees(target.y());
+		float targetPitch = (float) toDegrees(target.x());
 
-		if (timeExecuting >= 40) {
+		float currentYaw = normalizeAngle(entity.rotationYaw);
+		float currentPitch = normalizeAngle(entity.rotationPitch);
+
+		float yawLeft = abs(normalizeAngle(currentYaw - targetYaw));
+		float yawRight = abs(normalizeAngle(targetYaw - currentYaw));
+		if (yawRight < yawLeft) {
+			velocityYaw += yawRight / 10;
+		} else {
+			velocityYaw -= yawLeft / 10;
+		}
+
+		entity.rotationYaw += velocityYaw;
+		entity.rotationPitch += velocityPitch;
+
+		if (timeExecuting < 60) {
+			entity.rotationYaw = targetYaw;
+			entity.rotationPitch = targetPitch;
+		}
+
+
+
+		if (timeExecuting >= 60) {
+			BendingData data = bender.getData();
 			execStatusControl(StatusControl.THROW_FIRE);
 			timeExecuting = 0;
 			return false;
 		} else {
 			return true;
 		}
+
 	}
 
 	@Override
@@ -86,6 +109,11 @@ public class AiFireArc extends BendingAi {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSq(target) > 4 * 4
 				&& bender.getData().getMiscData().getAbilityCooldown() == 0;
+	}
+
+	@Override
+	public void updateTask() {
+		timeExecuting++;
 	}
 
 	@Override

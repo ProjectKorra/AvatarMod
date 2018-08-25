@@ -61,16 +61,16 @@ public class EntityAirbender extends EntityHumanBender {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25);
 
 	}
 
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("air_bubble", this, Bender.get(this))));
+		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("air_bubble", this, Bender.get(this))));
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("air_gust", this, Bender.get(this))));
-		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("airblade", this, Bender.get(this))));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.5, true));
+		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("airblade", this, Bender.get(this))));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.4, true));
 	}
 
 	@Override

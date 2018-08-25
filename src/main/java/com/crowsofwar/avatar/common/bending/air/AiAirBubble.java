@@ -50,13 +50,13 @@ public class AiAirBubble extends BendingAi {
 	@Override
 	protected boolean shouldExec() {
 
-		boolean underAttack = entity.getCombatTracker().getCombatDuration() <= 100 || true;
+		boolean underAttack = entity.getCombatTracker().getCombatDuration() <= 200;
 		boolean already = AvatarEntity.lookupEntity(entity.world, EntityAirBubble.class,
 				bubble -> bubble.getOwner() == entity) != null;
-		boolean lowHealth = entity.getHealth() / entity.getMaxHealth() <= 0.25f || entity.getHealth() < 10;
+		boolean lowHealth = entity.getHealth() / entity.getMaxHealth() <= 0.25f;
 
 		// 2% chance to get air bubble every tick
-		return !already && underAttack && lowHealth && random.nextDouble() <= 0.02;
+		return !already && (underAttack || lowHealth);
 
 	}
 

@@ -61,9 +61,7 @@ public class StatCtrlThrowFire extends StatusControl {
 			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
 					Math.toRadians(entity.rotationPitch));
 			force = force.times(velocity);
-			fire.addVelocity(fire.velocity().times(-1));
-			//ensures the fire arc's velocity can't be increased by flicking your mouse
-			fire.addVelocity(force);
+			fire.setVelocity(force);
 			fire.setBehavior(new FireArcBehavior.Thrown());
 
 		}

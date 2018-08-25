@@ -55,6 +55,7 @@ public class EntityFirebender extends EntityHumanBender {
 		getData().getAbilityData("fireball").setLevel(level);
 		getData().getAbilityData("flamethrower").setLevel(level);
 		getData().getAbilityData("fire_arc").setLevel(level);
+		getData().getAbilityData("inferno_punch").setLevel(level);
 
 	}
 
@@ -67,7 +68,7 @@ public class EntityFirebender extends EntityHumanBender {
 
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(6, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
+		this.tasks.addTask(4, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
 		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_arc", this, getBender())));
 		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("inferno_punch", this, getBender())));

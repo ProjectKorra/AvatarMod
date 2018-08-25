@@ -50,6 +50,6 @@ public class AbilityInfernoPunch extends Ability {
 
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
-		return super.getAi(entity, bender);
+		return new AiInfernoPunch(this, entity, bender);
 	}
 }
