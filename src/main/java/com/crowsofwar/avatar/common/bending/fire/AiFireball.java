@@ -53,9 +53,6 @@ public class AiFireball extends BendingAi {
 	@Override
 	protected void startExec() {
 		BendingData data = bender.getData();
-		data.chi().setMaxChi(10);
-		data.chi().setTotalChi(10);
-		data.chi().setAvailableChi(10);
 		execAbility();
 		data.getMiscData().setAbilityCooldown(100);
 	}

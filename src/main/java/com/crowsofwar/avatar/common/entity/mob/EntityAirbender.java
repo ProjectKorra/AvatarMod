@@ -17,15 +17,21 @@
 package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
+
+import java.util.Objects;
+import java.util.Random;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
@@ -42,19 +48,28 @@ public class EntityAirbender extends EntityHumanBender {
 	 */
 	public EntityAirbender(World world) {
 		super(world);
+
+		BendingData data = BendingData.get(this);
+		data.addBendingId(Airbending.ID);
+		Random rand = new Random();
+		int level = rand.nextInt(3) + 1;
+		getData().getAbilityData("air_bubble").setLevel(level);
+		getData().getAbilityData("air_gust").setLevel(level);
+		getData().getAbilityData("airblade").setLevel(level);
 	}
 
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
+
 	}
 
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(1, Abilities.getAi("air_bubble", this, Bender.get(this)));
-		this.tasks.addTask(1, Abilities.getAi("air_gust", this, Bender.get(this)));
-		this.tasks.addTask(1, Abilities.getAi("airblade", this, Bender.get(this)));
+		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("air_bubble", this, Bender.get(this))));
+		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("air_gust", this, Bender.get(this))));
+		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("airblade", this, Bender.get(this))));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.5, true));
 	}
 
@@ -76,5 +91,14 @@ public class EntityAirbender extends EntityHumanBender {
 	@Override
 	protected boolean isTradeItem(Item item) {
 		return super.isTradeItem(item) || MOBS_CONFIG.isAirTradeItem(item);
+	}
+
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		if (this.ticksExisted % 20 == 0) {
+			BendingData data = BendingData.get(this);
+			data.addBendingId(Airbending.ID);
+		}
 	}
 }

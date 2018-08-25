@@ -17,6 +17,9 @@
 package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -45,6 +48,8 @@ public class EntityFirebender extends EntityHumanBender {
 	public EntityFirebender(World world) {
 		super(world);
 
+		BendingData data = BendingData.get(this);
+		data.addBendingId(Firebending.ID);
 		Random rand = new Random();
 		int level = rand.nextInt(1) + 3;
 		getData().getAbilityData("fireball").setLevel(level);
@@ -62,11 +67,15 @@ public class EntityFirebender extends EntityHumanBender {
 
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
-		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
-		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fire_arc", this, getBender())));
-		//this.tasks.addTask(3, Abilities.getAi("inferno_punch", this, getBender()));
-		this.tasks.addTask(6, new EntityAIAttackMelee(this, 1.3, true));
+		this.tasks.addTask(6, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
+		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
+		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_arc", this, getBender())));
+		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("inferno_punch", this, getBender())));
+		BendingData data = BendingData.get(this);
+		if (data.hasStatusControl(StatusControl.INFERNO_PUNCH)) {
+			this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.35, true));
+		}
+		this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.3, true));
 	}
 
 	@Override
@@ -87,5 +96,14 @@ public class EntityFirebender extends EntityHumanBender {
 	@Override
 	protected boolean isTradeItem(Item item) {
 		return super.isTradeItem(item) || MOBS_CONFIG.isFireTradeItem(item);
+	}
+
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		if (ticksExisted % 20 == 0) {
+			BendingData data = BendingData.get(this);
+			data.addBendingId(Firebending.ID);
+		}
 	}
 }

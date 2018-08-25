@@ -43,7 +43,17 @@ public class AiFlamethrower extends BendingAi {
 	}
 
 	@Override
+	public void resetTask() {
+		super.resetTask();
+		bender.getData().removeStatusControl(StatusControl.START_FLAMETHROW);
+		bender.getData().removeTickHandler(TickHandler.FLAMETHROWER);
+		bender.getData().addStatusControl(StatusControl.STOP_FLAMETHROW);
+	}
+
+	@Override
 	public boolean shouldContinueExecuting() {
+
+
 
 		if (entity.getAttackTarget() == null) return false;
 
@@ -60,13 +70,15 @@ public class AiFlamethrower extends BendingAi {
 
 		}
 
-		if (timeExecuting > 20) {
+		if (timeExecuting > 20 && timeExecuting < 60) {
 			BendingContext ctx = new BendingContext(bender.getData(), entity, bender, new Raytrace.Result());
 			TickHandler.FLAMETHROWER.tick(ctx);
 		}
-		if (timeExecuting >= 80) {
-			BendingData data = bender.getData();
+		if (timeExecuting >= 60) {
+			bender.getData().removeStatusControl(StatusControl.START_FLAMETHROW);
+			bender.getData().removeTickHandler(TickHandler.FLAMETHROWER);
 			execStatusControl(StatusControl.STOP_FLAMETHROW);
+
 			return false;
 		}
 

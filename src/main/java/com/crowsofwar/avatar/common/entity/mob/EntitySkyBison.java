@@ -22,9 +22,11 @@ import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.ai.*;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
@@ -148,6 +150,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	 */
 	public EntitySkyBison(World world) {
 		super(world);
+
+		BendingData data = BendingData.get(this);
+		data.addBendingId(Airbending.ID);
+
 		Random rand = new Random();
 		int level = rand.nextInt(1) + 3;
 
@@ -159,6 +165,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		ownerAttr = new SyncedEntity<>(this, SYNC_OWNER);
 		condition = new AnimalCondition(this, 30, 20, SYNC_FOOD, SYNC_DOMESTICATION, SYNC_AGE);
 		setSize(2.5f, 2);
+
 
 		initChest();
 
@@ -892,6 +899,17 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+
+		if (ticksExisted < 1) {
+			EntityAirbender a = new EntityAirbender(world);
+			a.setPosition(this.posX, this.posY, this.posZ);
+			world.spawnEntity(a);
+		}
+
+		if (this.ticksExisted % 20 == 0) {
+			BendingData data = BendingData.get(this);
+			data.addBendingId(Airbending.ID);
+		}
 
 		// Client-side chest sometimes doesn't have enough slots, since when the
 		// # of slots changes, it doesn't necessarily re-init chest

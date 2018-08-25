@@ -245,16 +245,16 @@ public class AvatarMod {
 		registerEntity(EntityBoulder.class, "Boulder");
 		registerEntity(EntityLightningSpawner.class, "LightningSpawnerr");
 
-		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
+		EntityRegistry.addSpawn(EntitySkyBison.class, 8, 1, 3, EnumCreatureType.CREATURE, //
 				EXTREME_HILLS, MUTATED_SAVANNA);
 		EntityRegistry.addSpawn(EntityOtterPenguin.class, 4, 5, 9, EnumCreatureType.CREATURE, //
 				COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
 		EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 1, 4, EnumCreatureType.CREATURE, //
 				DESERT, DESERT_HILLS, SAVANNA, SAVANNA_PLATEAU, PLAINS);
-		EntityRegistry.addSpawn(EntityAirbender.class, 1, 1, 2, EnumCreatureType.CREATURE, //
-			SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, COLD_TAIGA_HILLS, REDWOOD_TAIGA_HILLS, TAIGA_HILLS );
-		EntityRegistry.addSpawn(EntityFirebender.class, 3, 1, 5, EnumCreatureType.CREATURE, //
-				SAVANNA_PLATEAU, HELL, SAVANNA, PLAINS, DESERT, MUSHROOM_ISLAND, DESERT_HILLS, MESA, MESA_ROCK);
+		//EntityRegistry.addSpawn(EntityAirbender.class, 1, 1, 2, EnumCreatureType.CREATURE, //
+		//	SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, COLD_TAIGA_HILLS, REDWOOD_TAIGA_HILLS, TAIGA_HILLS );
+		//EntityRegistry.addSpawn(EntityFirebender.class, 3, 1, 5, EnumCreatureType.CREATURE, //
+			//	SAVANNA_PLATEAU, HELL, SAVANNA, PLAINS, DESERT, MUSHROOM_ISLAND, DESERT_HILLS, MESA, MESA_ROCK);
 
 		// Second loading required since other mods blocks might not be
 		// registered
