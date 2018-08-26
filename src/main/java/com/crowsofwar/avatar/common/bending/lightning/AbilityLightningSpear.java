@@ -92,7 +92,7 @@ public class AbilityLightningSpear extends Ability {
 				target = ctx.getLookPos();
 			} else {
 				Vector playerPos = getEyePos(entity);
-				target = playerPos.plus(getLookRectangular(entity).times(1 + spear.getSize()));
+				target = playerPos.plus(getLookRectangular(entity).times(spear.getSize()));
 			}
 
 

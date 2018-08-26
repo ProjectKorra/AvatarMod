@@ -88,6 +88,7 @@ public class EntityLightningSpear extends AvatarEntity {
 		this.degreesPerSecond = 400;
 		setSize(Size, Size);
 		this.damage = 3F;
+		this.piercing = false;
 
 	}
 
@@ -198,11 +199,6 @@ public class EntityLightningSpear extends AvatarEntity {
 		return getBehavior() instanceof LightningSpearBehavior.PlayerControlled ? getOwner() : null;
 	}
 
-	@Override
-	public AxisAlignedBB getCollisionBox(Entity entityIn) {
-		return new AxisAlignedBB(this.posX + getSize()/8, this.posY + getSize()/8, this.posZ + getSize()/8,
-				this.posX - getSize()/8, this.posY - getSize()/8, this.posZ - getSize()/8);
-	}
 
 	public float getDamage() {
 		return damage;

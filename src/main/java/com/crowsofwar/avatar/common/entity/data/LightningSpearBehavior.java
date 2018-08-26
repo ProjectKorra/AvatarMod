@@ -102,14 +102,12 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 			World world = entity.world;
 			if (!entity.isDead) {
-				AxisAlignedBB box = new AxisAlignedBB(entity.posX + entity.getSize()/8, entity.posY + entity.getSize()/8,
-						entity.posZ + entity.getSize()/8, entity.posX - entity.getSize()/8, entity.posY - entity.getSize()/8,
-						entity.posZ - entity.getSize()/8);
-				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
-						box);
+			//	AxisAlignedBB box = new AxisAlignedBB(entity.getEntityBoundingBox());
+				List<Entity> collidedList = world.getEntitiesWithinAABB(Entity.class,
+						entity.getEntityBoundingBox());
 				if (!collidedList.isEmpty()) {
 					for (Entity collided : collidedList) {
-						if (collided instanceof EntityLivingBase && collided != entity.getOwner() && entity.canCollideWith(collided)) {
+						if (collided != entity.getOwner() && entity.canCollideWith(collided) && collided.canBePushed() && collided.canBeCollidedWith() && collided != entity) {
 							collision(collided, entity, entity.isGroupAttack());
 						}
 					}
@@ -126,14 +124,16 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			double speed = entity.velocity().magnitude();
 
 			if (entity.canDamageEntity(collided) && collided != entity) {
-				if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
+				if (collided.attackEntityFrom(AvatarDamageSource.causeLightningDamage(collided, entity.getOwner()),
 						entity.getDamage())) {
 					BattlePerformanceScore.addMediumScore(entity.getOwner());
 				}
 			}
 			if (collided.canBeCollidedWith() && collided.canBePushed() && collided != entity) {
 
-				entity.onCollideWithSolid();
+				if (!entity.isPiercing()) {
+					entity.onCollideWithSolid();
+				}
 				Vector motion = entity.velocity().dividedBy(20);
 				motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.07);
 				collided.addVelocity(motion.x(), motion.y(), motion.z());
@@ -155,9 +155,9 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 						entity.posX - radius, entity.posY - radius, entity.posZ - radius,
 						entity.posX + radius, entity.posY + radius, entity.posZ + radius);
 
-				List<EntityLivingBase> targets = entity.world.getEntitiesWithinAABB(
-						EntityLivingBase.class, aabb);
-				for (EntityLivingBase target : targets) {
+				List<Entity> targets = entity.world.getEntitiesWithinAABB(
+						Entity.class, aabb);
+				for (Entity target : targets) {
 					if (target.getDistanceSq(entity) > radius * radius) {
 						continue;
 					}
