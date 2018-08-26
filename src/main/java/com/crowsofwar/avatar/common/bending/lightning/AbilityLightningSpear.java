@@ -71,22 +71,22 @@ public class AbilityLightningSpear extends Ability {
 			if (abilityData.getLevel() >= 2) {
 				damage = 8;
 			}
-			float size = 1.2F;
+			float size = 1.4F;
 
 			if (ctx.getLevel() == 1) {
-				size = 1.4F;
-			}
-
-			if (ctx.getLevel() == 2) {
 				size = 1.6F;
 			}
 
+			if (ctx.getLevel() == 2) {
+				size = 1.8F;
+			}
+
 			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-				size =  1.2F;
+				size =  1.4F;
 			}
 
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-				size = 2F;
+				size = 2.2F;
 			}
 
 			damage *= ctx.getPowerRatingDamageMod();

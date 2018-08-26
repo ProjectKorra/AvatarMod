@@ -102,8 +102,11 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 			World world = entity.world;
 			if (!entity.isDead) {
+				AxisAlignedBB box = new AxisAlignedBB(entity.posX + entity.getSize()/8, entity.posY + entity.getSize()/8,
+						entity.posZ + entity.getSize()/8, entity.posX - entity.getSize()/8, entity.posY - entity.getSize()/8,
+						entity.posZ - entity.getSize()/8);
 				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
-						entity.getEntityBoundingBox());
+						box);
 				if (!collidedList.isEmpty()) {
 					for (Entity collided : collidedList) {
 						if (collided instanceof EntityLivingBase && collided != entity.getOwner() && entity.canCollideWith(collided)) {
@@ -189,7 +192,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		public PlayerControlled() {
 		}
 
-		float maxSize = 1.8F;
+		float maxSize = 2F;
 		@Override
 		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
 			EntityLivingBase owner = entity.getOwner();
@@ -216,24 +219,19 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			entity.rotationPitch = (float) Math.toDegrees(direction.x());
 
 
-			// Ensure that owner always has stat ctrl active
-			if (entity.ticksExisted % 10 == 0) {
-				BendingData.get(owner).addStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
-			}
-
 			float size = entity.getSize();
 
 			if (entity.getAbility() instanceof AbilityLightningSpear && !entity.world.isRemote) {
 				AbilityData aD = AbilityData.get(entity.getOwner(), "lightning_spear");
 				int lvl = aD.getLevel();
 				if (lvl == 1) {
-					maxSize = 2F;
-				}
-				if (lvl == 2) {
 					maxSize = 2.2F;
 				}
+				if (lvl == 2) {
+					maxSize = 2.4F;
+				}
 				if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-					maxSize = 2.6F;
+					maxSize = 2.8F;
 				}
 			}
 			if (size < maxSize && entity.ticksExisted % 4 == 0) {
