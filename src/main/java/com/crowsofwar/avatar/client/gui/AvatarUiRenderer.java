@@ -115,9 +115,11 @@ public class AvatarUiRenderer extends Gui {
 
 		renderRadialMenu(resolution);
 		renderStatusControls(resolution);
-		renderChiBar(resolution);
-		renderChiMsg(resolution);
-		renderActiveBending(resolution);
+		if (CLIENT_CONFIG.shouldBendingMenuRender) {
+			renderChiBar(resolution);
+			renderChiMsg(resolution);
+			renderActiveBending(resolution);
+		}
 		renderAirBubbleHealth(resolution);
 		renderIceShieldHealth(resolution);
 		renderPrisonCracks(resolution);

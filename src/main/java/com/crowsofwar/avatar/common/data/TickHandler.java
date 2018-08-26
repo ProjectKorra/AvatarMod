@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.data;
 
+import com.crowsofwar.avatar.client.gui.RenderElementTickHandler;
 import com.crowsofwar.avatar.common.bending.air.*;
 import com.crowsofwar.avatar.common.bending.earth.RestoreParticleHandler;
 import com.crowsofwar.avatar.common.bending.earth.SpawnEarthspikesHandler;
@@ -60,6 +61,7 @@ public abstract class TickHandler {
 	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler();
 	public static TickHandler PURIFY_PARTICLE_SPAWNER = new PurifyParticleHandler();
 	public static TickHandler SLIPSTREAM_COOLDOWN_HANDLER = new SlipstreamCooldownHandler();
+	public static TickHandler RENDER_ELEMENT_HANDLER = new RenderElementTickHandler();
 
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;
