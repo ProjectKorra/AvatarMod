@@ -51,30 +51,6 @@ public class EntityAirbender extends EntityHumanBender {
 	 */
 	public EntityAirbender(World world) {
 		super(world);
-
-		BendingData data = BendingData.get(this);
-		data.addBendingId(Airbending.ID);
-		Random rand = new Random();
-		int level = rand.nextInt(3) + 1;
-		if (level == 1) {
-			getData().getAbilityData("air_bubble").setLevel(-1);
-			getData().getAbilityData("air_gust").setLevel(0);
-			getData().getAbilityData("airblade").setLevel(-1);
-			scrollsLeft = 1;
-		}
-		if (level == 1) {
-			getData().getAbilityData("air_bubble").setLevel(0);
-			getData().getAbilityData("air_gust").setLevel(1);
-			getData().getAbilityData("airblade").setLevel(-1);
-			scrollsLeft = 2;
-		}
-		if (level == 3) {
-			getData().getAbilityData("air_bubble").setLevel(1);
-			getData().getAbilityData("air_gust").setLevel(2);
-			getData().getAbilityData("airblade").setLevel(0);
-			scrollsLeft = 3;
-		}
-
 		this.despawn = false;
 	}
 
@@ -86,10 +62,40 @@ public class EntityAirbender extends EntityHumanBender {
 	}
 
 	@Override
+	protected void entityInit() {
+		super.entityInit();
+		BendingData data = BendingData.get(this);
+		data.addBendingId(Airbending.ID);
+		Random rand = new Random();
+		int level = rand.nextInt(3) + 1;
+		if (level == 1) {
+			getData().getAbilityData("air_bubble").setLevel(-1);
+			getData().getAbilityData("air_gust").setLevel(0);
+			getData().getAbilityData("airblade").setLevel(0);
+			scrollsLeft = 1;
+		}
+		if (level == 1) {
+			getData().getAbilityData("air_bubble").setLevel(-1);
+			getData().getAbilityData("air_gust").setLevel(1);
+			getData().getAbilityData("airblade").setLevel(0);
+			scrollsLeft = 2;
+		}
+		if (level == 3) {
+			getData().getAbilityData("air_bubble").setLevel(1);
+			getData().getAbilityData("air_gust").setLevel(2);
+			getData().getAbilityData("airblade").setLevel(1);
+			scrollsLeft = 3;
+		}
+
+		this.despawn = false;
+
+	}
+
+	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("air_bubble", this, Bender.get(this))));
+		this.tasks.addTask(4, Objects.requireNonNull(Abilities.getAi("air_bubble", this, Bender.get(this))));
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("air_gust", this, Bender.get(this))));
-		this.tasks.addTask(4, Objects.requireNonNull(Abilities.getAi("airblade", this, Bender.get(this))));
+		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("airblade", this, Bender.get(this))));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.4, true));
 	}
 
@@ -125,10 +131,32 @@ public class EntityAirbender extends EntityHumanBender {
 			BendingData data = BendingData.get(this);
 			data.addBendingId(Airbending.ID);
 		}
+			if (this.ticksExisted == 2) {
+				Random rand = new Random();
+				int level = rand.nextInt(3) + 1; {
+					scrollsLeft = level;
+				}
+				if (level == 1) {
+					getData().getAbilityData("air_bubble").setLevel(-1);
+					getData().getAbilityData("air_gust").setLevel(0);
+					getData().getAbilityData("airblade").setLevel(0);
+				}
+				if (level == 1) {
+					getData().getAbilityData("air_bubble").setLevel(-1);
+					getData().getAbilityData("air_gust").setLevel(1);
+					getData().getAbilityData("airblade").setLevel(0);
+				}
+				if (level == 3) {
+					getData().getAbilityData("air_bubble").setLevel(0);
+					getData().getAbilityData("air_gust").setLevel(2);
+					getData().getAbilityData("airblade").setLevel(1);
+			}
+	}
 		if ((this.hasNoGravity() || !this.canBeCollidedWith() || !this.canBePushed() || !this.attackable() || !this.canBeAttackedWithItem()) && !world.isRemote) {
 			this.despawn = true;
 			this.setDead();
 		}
+
 	}
 
 	@Override

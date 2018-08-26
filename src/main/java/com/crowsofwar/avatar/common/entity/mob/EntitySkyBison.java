@@ -134,8 +134,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private final SyncedEntity<EntityLivingBase> ownerAttr;
 	private final AnimalCondition condition;
 	private Vector originalPos;
-	private boolean hasSpawnedAirbender;
-	/**
+		/**
 	 * Note: Is null clientside.
 	 */
 	private EntityAiBisonEatGrass aiEatGrass;
@@ -145,6 +144,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private InventoryBisonChest chest;
 
 	private boolean wasTouchingGround;
+
+	private boolean hasSpawnedAirbender;
 
 	/**
 	 * @param world
@@ -901,16 +902,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-
-		if (ticksExisted < 5) {
-			int random = rand.nextInt(3) + 1;
-			if (ticksExisted == 2 && random == 2 && !hasSpawnedAirbender) {
-				EntityAirbender a = new EntityAirbender(world);
-				a.setPositionAndRotation(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-				world.spawnEntity(a);
-				hasSpawnedAirbender = true;
-			}
-		}
 
 		if (this.ticksExisted % 20 == 0) {
 			BendingData data = BendingData.get(this);

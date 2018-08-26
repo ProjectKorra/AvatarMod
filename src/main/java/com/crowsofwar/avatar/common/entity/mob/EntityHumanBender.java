@@ -89,20 +89,17 @@ public abstract class EntityHumanBender extends EntityBender {
 
 	@Override
 	protected void initEntityAI() {
-		addBendingTasks();
 		this.tasks.addTask(0, new EntityAISwimming(this));
 
 		// this.targetTasks.addTask(2,
 		// new EntityAINearestAttackableTarget(this, EntityPlayer.class, true,
 		// false));
 		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, EntityHumanBender.class));
-
 		this.tasks.addTask(4, aiGiveScroll = new EntityAiGiveScroll(this, getScrollType()));
+		addBendingTasks();
 		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
-
-		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[0]));
 
 	}
 
