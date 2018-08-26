@@ -143,6 +143,9 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 									.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);
 						}
 					}
+					entity.Firesplosion();
+					entity.cleanup();
+					entity.setDead();
 
 				}
 			}
@@ -153,11 +156,6 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 				if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
 					data.addStatusControl(StatusControl.THROW_FIRE);
 					return new FireArcBehavior.PlayerControlled();
-				}
-				else {
-					entity.Firesplosion();
-					entity.cleanup();
-					entity.setDead();
 				}
 			}
 

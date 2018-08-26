@@ -227,7 +227,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		if (!world.isRemote && world instanceof WorldServer) {
 
 
-			float speed = 0.025F;
+			float speed = 0.05F;
 			float hitBox = 0.5F;
 			int numberOfParticles = 250;
 
@@ -248,7 +248,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 			 //}
 			 //else {
 				 WorldServer World = (WorldServer) this.world;
-				 World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, numberOfParticles, 0.2, 0.1, 0.2, speed * 2);
+				 World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, numberOfParticles, 0.2, 0.1, 0.2, speed);
 			 //}
 			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 
