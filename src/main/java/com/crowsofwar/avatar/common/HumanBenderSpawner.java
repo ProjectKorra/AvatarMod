@@ -21,12 +21,14 @@ import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
 import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenVillage;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.terraingen.InitMapGenEvent.EventType;
 import net.minecraftforge.fml.common.Mod;
@@ -42,7 +44,7 @@ import java.util.Random;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class HumanBenderSpawner {
 
-	@SubscribeEvent
+/*	@SubscribeEvent
 	public static void modifyVillageSpawner(InitMapGenEvent e) {
 
 		if (e.getType() == EventType.VILLAGE) {
@@ -52,6 +54,33 @@ public class HumanBenderSpawner {
 
 		}
 
+	}**/
+
+	@SubscribeEvent
+	public static void modifyVillagerSpawns(LivingSpawnEvent event) {
+		Entity e = event.getEntity();
+		World world = e.getEntityWorld();
+		if (event.getEntity() == e && e instanceof EntityVillager) {
+
+			AxisAlignedBB box = new AxisAlignedBB(e.posX + 200,
+					 e.posY + 200, e.posZ + 200,
+					e.posX - 200, e.posY -  200,
+					e.posZ - 200);
+			List<Entity> nearbyBenders = world.getEntitiesWithinAABB(EntityHumanBender.class, box);
+			int size = nearbyBenders.size();
+			System.out.print(size);
+			Random rand = new Random();
+			int chance = rand.nextInt(3) + 1;
+			int bender = rand.nextInt(2) + 1;
+			//Will be changed when more benders are added
+			//if (chance == 3) {
+			if (size <= 2) {
+				EntityAirbender a = new EntityAirbender(world);
+				a.copyLocationAndAnglesFrom(e);
+				world.spawnEntity(a);
+			}
+			//}
+		}
 	}
 
 	private static class MapGenVillageWithHumanbenders extends MapGenVillage {
@@ -75,6 +104,7 @@ public class HumanBenderSpawner {
 					assert villager != null;
 					return new ChunkPos(villager.getPosition()).equals(chunkCoord);
 				});
+
 
 				// To attempt to have all humanbenders be same type, check if
 				// there are nearby humanbenders
@@ -129,7 +159,7 @@ public class HumanBenderSpawner {
 				}
 			}
 
-			return result;
+			return false;
 		}
 
 	}

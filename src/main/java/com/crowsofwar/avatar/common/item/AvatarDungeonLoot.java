@@ -17,9 +17,12 @@
 package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
+import net.minecraft.entity.projectile.EntityEgg;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.datafix.fixes.SpawnEggNames;
 import net.minecraft.world.storage.loot.*;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.functions.LootFunction;
@@ -59,7 +62,8 @@ public class AvatarDungeonLoot {
 					new LootItem(AvatarItems.itemScroll, 5).withMetadata(1), //
 					new LootItem(AvatarItems.itemScroll, 5).withMetadata(2), //
 					new LootItem(AvatarItems.itemScroll, 5).withMetadata(3), //
-					new LootItem(AvatarItems.itemScroll, 5).withMetadata(4));
+					new LootItem(AvatarItems.itemScroll, 5).withMetadata(4),
+					new LootItem(AvatarItems.itemScroll, 10).withMetadata(5));
 			addLoot(e, 65, //
 					new LootItem(AvatarItems.itemOstrichEquipment, 10).withMetadata(0),
 					new LootItem(AvatarItems.itemOstrichEquipment, 10).withMetadata(1),

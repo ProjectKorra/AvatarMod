@@ -110,7 +110,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				if (!collidedList.isEmpty()) {
 					Entity collided = collidedList.get(0);
 					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
-						collision((EntityLivingBase) collided, entity, entity.isGroupAttack());
+						collision(collided, entity, entity.isGroupAttack());
 					} else if (collided != entity.getOwner()) {
 						Vector motion = new Vector(collided).minus(new Vector(entity));
 						motion = motion.times(0.7).withY(0.09);
@@ -126,7 +126,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 
 
-		private void collision(EntityLivingBase collided, EntityLightningSpear entity, boolean triggerGroupAttack) {
+		private void collision(Entity collided, EntityLightningSpear entity, boolean triggerGroupAttack) {
 			double speed = entity.velocity().magnitude();
 
 			if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),

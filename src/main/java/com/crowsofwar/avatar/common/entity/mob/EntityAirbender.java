@@ -24,6 +24,10 @@ import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAIZombieAttack;
+import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -97,6 +101,12 @@ public class EntityAirbender extends EntityHumanBender {
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("air_gust", this, Bender.get(this))));
 		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("airblade", this, Bender.get(this))));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.4, true));
+	}
+
+	@Override
+	protected void initEntityAI() {
+		super.initEntityAI();
+		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityZombie.class, false));
 	}
 
 	@Override
