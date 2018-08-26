@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
+
 /**
  * @author CrowsOfWar
  */
@@ -67,11 +69,13 @@ public class HumanBenderSpawner {
 					e.posX - 200, e.posY - 200,
 					e.posZ - 200);
 			List<Entity> nearbyBenders = world.getEntitiesWithinAABB(EntityHumanBender.class, box);
+			List<Entity> nearbyVillagers = world.getEntitiesWithinAABB(EntityVillager.class, box);
+			int villagerSize = nearbyVillagers.size();
 			int size = nearbyBenders.size();
 			Random rand = new Random();
 			boolean bender = rand.nextBoolean();
 			//Will be changed when more benders are added
-			if (size <= 2) {
+			if (size < MOBS_CONFIG.maxNumberOfBenders && villagerSize >= 5) {
 				EntityHumanBender b = bender ? new EntityAirbender(world) : new EntityFirebender(world);
 				b.copyLocationAndAnglesFrom(e);
 				world.spawnEntity(b);

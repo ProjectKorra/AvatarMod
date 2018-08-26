@@ -162,6 +162,10 @@ public class ConfigMobs {
 	private Map<String, String> scrollType;
 
 	@Load
+	public int maxNumberOfBenders = 3;
+	//The largest of amount of benders that can spawn in a village
+
+	@Load
 	private Map<String, Integer> scrollTradeItems;
 	private Map<Item, Integer> tradeItems;
 	private Map<String, Integer> airScrollTradeItems;
