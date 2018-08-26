@@ -263,6 +263,8 @@ public class EntityLightningSpear extends AvatarEntity {
 				.PLAYERS, 8, 1, false);
 
 
+		removeStatCtrl();
+		setDead();
 		return true;
 
 	}
@@ -281,7 +283,10 @@ public class EntityLightningSpear extends AvatarEntity {
 		nbt.setInteger("Behavior", getBehavior().getId());
 	}
 
-
+	@Override
+	protected void onCollideWithEntity(Entity entity) {
+		super.onCollideWithEntity(entity);
+	}
 
 	public void removeStatCtrl() {
 		if (getOwner() != null) {
