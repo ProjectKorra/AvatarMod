@@ -59,30 +59,23 @@ public class AbilityLightningSpear extends Ability {
 
 		if (bender.consumeChi(STATS_CONFIG.chiCloudburst)) {
 
-			Vector target;
-			if (ctx.isLookingAtBlock()) {
-				target = ctx.getLookPos();
-			} else {
-				Vector playerPos = getEyePos(entity);
-				target = playerPos.plus(getLookRectangular(entity).times(2.5));
-			}
 
 			float damage = 5F;
 			if (abilityData.getLevel() >= 2) {
 				damage = 8;
 			}
-			float size = 1.4F;
+			float size = 1.2F;
 
 			if (ctx.getLevel() == 1) {
-				size = 1.6F;
+				size = 1.4F;
 			}
 
 			if (ctx.getLevel() == 2) {
-				size = 1.8F;
+				size = 1.6F;
 			}
 
 			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-				size =  1.4F;
+				size =  1.2F;
 			}
 
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
@@ -92,6 +85,17 @@ public class AbilityLightningSpear extends Ability {
 			damage *= ctx.getPowerRatingDamageMod();
 
 			EntityLightningSpear spear = new EntityLightningSpear(world);
+			spear.setSize(size);
+
+			Vector target;
+			if (ctx.isLookingAtBlock()) {
+				target = ctx.getLookPos();
+			} else {
+				Vector playerPos = getEyePos(entity);
+				target = playerPos.plus(getLookRectangular(entity).times(1 + spear.getSize()));
+			}
+
+
 			spear.setPosition(target);
 			spear.setOwner(entity);
 			spear.setBehavior(new LightningSpearBehavior.PlayerControlled());
@@ -100,7 +104,6 @@ public class AbilityLightningSpear extends Ability {
 			spear.rotationYaw = entity.rotationYaw;
 			spear.setPiercing(abilityData.isMasterPath(AbilityTreePath.FIRST));
 			spear.setAbility(this);
-			spear.setSize(size);
 			spear.setDegreesPerSecond(400);
 			spear.setGroupAttack(abilityData.isMasterPath(AbilityTreePath.SECOND));
 			world.spawnEntity(spear);

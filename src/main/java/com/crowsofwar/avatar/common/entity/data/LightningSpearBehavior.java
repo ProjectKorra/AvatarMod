@@ -192,7 +192,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		public PlayerControlled() {
 		}
 
-		float maxSize = 2F;
+		float maxSize = 1.6F;
 		@Override
 		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
 			EntityLivingBase owner = entity.getOwner();
@@ -225,13 +225,13 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				AbilityData aD = AbilityData.get(entity.getOwner(), "lightning_spear");
 				int lvl = aD.getLevel();
 				if (lvl == 1) {
-					maxSize = 2.2F;
+					maxSize = 1.8F;
 				}
 				if (lvl == 2) {
-					maxSize = 2.4F;
+					maxSize = 2F;
 				}
 				if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-					maxSize = 2.8F;
+					maxSize = 2.6F;
 				}
 			}
 			if (size < maxSize && entity.ticksExisted % 4 == 0) {
