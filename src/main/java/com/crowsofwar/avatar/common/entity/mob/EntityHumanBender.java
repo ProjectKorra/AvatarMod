@@ -20,6 +20,7 @@ import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiGiveScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -135,6 +136,10 @@ public abstract class EntityHumanBender extends EntityBender {
 		return dataManager.get(SYNC_SKIN);
 	}
 
+	protected FormattedMessage getTradeFailMessage() {
+		return MSG_NEED_TRADE_ITEM;
+	}
+
 	public void setSkin(int skin) {
 		dataManager.set(SYNC_SKIN, skin);
 	}
@@ -240,7 +245,7 @@ public abstract class EntityHumanBender extends EntityBender {
 
 		}
 		else if (!(this.isTradeItem(stack.getItem())) && !world.isRemote && !hasAttemptedTrade){
-			MSG_NEED_TRADE_ITEM.send(player);
+			getTradeFailMessage().send(player);
 			hasAttemptedTrade = true;
 			return true;
 		}

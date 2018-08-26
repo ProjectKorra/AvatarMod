@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.init.Items;
@@ -32,6 +33,7 @@ import net.minecraft.world.storage.loot.LootTableList;
 import java.util.Objects;
 import java.util.Random;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_NEED_FIRE_TRADE_ITEM;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
@@ -53,6 +55,11 @@ public class EntityFirebender extends EntityHumanBender {
 		data.addBendingId(Firebending.ID);
 
 
+	}
+
+	@Override
+	protected FormattedMessage getTradeFailMessage() {
+		return MSG_NEED_FIRE_TRADE_ITEM;
 	}
 
 	@Override

@@ -93,6 +93,10 @@ public class AvatarChatMessages {
 
 	public static final FormattedMessage MSG_NEED_TRADE_ITEM = newChatMessage(CFG, "avatar.needTradeItem");
 
+	public static final FormattedMessage MSG_NEED_AIR_TRADE_ITEM = newChatMessage(CFG, "avatar.needAirTradeItem");
+
+	public static final FormattedMessage MSG_NEED_FIRE_TRADE_ITEM = newChatMessage(CFG, "avatar.needFireTradeItem");
+
 
 
 	public static final FormattedMessage MSG_SKATING_BENDING_DISABLED = newChatMessage(CFG,

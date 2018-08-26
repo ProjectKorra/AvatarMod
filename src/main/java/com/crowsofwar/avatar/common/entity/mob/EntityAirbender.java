@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -37,6 +38,7 @@ import net.minecraft.world.storage.loot.LootTableList;
 import java.util.Objects;
 import java.util.Random;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_NEED_AIR_TRADE_ITEM;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
@@ -93,6 +95,11 @@ public class EntityAirbender extends EntityHumanBender {
 
 		this.despawn = false;
 
+	}
+
+	@Override
+	protected FormattedMessage getTradeFailMessage() {
+		return MSG_NEED_AIR_TRADE_ITEM;
 	}
 
 	@Override
