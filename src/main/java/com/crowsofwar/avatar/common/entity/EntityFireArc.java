@@ -224,7 +224,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 
 			float speed = 0.025F;
 			float hitBox = 0.5F;
-			int numberOfParticles = 500;
+			int numberOfParticles = 250;
 
 			if (getAbility() instanceof AbilityFireArc) {
 				AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("fire_arc");
@@ -233,17 +233,17 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 				//If the player's water arc level is level III or greater the aoe will do 2+ damage.
 				hitBox = lvl <= 0 ? 0.5F : 0.5f * (lvl + 1);
 				speed = lvl <= 0 ? 0.025F : 0.025F * (lvl + 1);
-				numberOfParticles = lvl <= 0 ? 500 : 500 + 100 * lvl;
+				numberOfParticles = lvl <= 0 ? 250 : 250 + 100 * lvl;
 			} else this.damageMult = 0.5f;
 
 
 			 //if (CLIENT_CONFIG.useCustomParticles) {
 			 	particles.spawnParticles(world, AvatarParticles.getParticleFlames(), 100, 200, Vector.getEntityPos(this),
-						new Vector(speed * 50, speed * 50, speed * 50));
+						new Vector(speed * 50, speed * 50, speed * 10));
 			 //}
 			 //else {
 				 WorldServer World = (WorldServer) this.world;
-				 World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, numberOfParticles, 0.2, 0.1, 0.2, speed * 5);
+				 World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, numberOfParticles, 0.2, 0.1, 0.2, speed);
 			 //}
 			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 
