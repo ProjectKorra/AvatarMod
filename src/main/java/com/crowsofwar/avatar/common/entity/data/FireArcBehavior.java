@@ -123,15 +123,17 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 					collided -> collided != entity.getOwner());
 
 			for (Entity collided : collidedList) {
-				if (entity.canCollideWith(collided)) {
+				if (entity.canCollideWith(collided) && collided != entity && collided != entity.getOwner()) {
 
 					double push = STATS_CONFIG.fireArcSettings.push;
 					collided.addVelocity(entity.motionX * push, 0.4 * push, entity.motionZ * push);
 					collided.setFire(3);
 
-					if (collided.attackEntityFrom(AvatarDamageSource.causeFireDamage(collided, entity.getOwner()),
-							STATS_CONFIG.fireArcSettings.damage * entity.getDamageMult())) {
-						BattlePerformanceScore.addMediumScore(entity.getOwner());
+					if (entity.canDamageEntity(collided)) {
+						if (collided.attackEntityFrom(AvatarDamageSource.causeFireDamage(collided, entity.getOwner()),
+								STATS_CONFIG.fireArcSettings.damage * entity.getDamageMult())) {
+							BattlePerformanceScore.addMediumScore(entity.getOwner());
+						}
 					}
 
 					if (!entity.world.isRemote) {
@@ -151,6 +153,11 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 				if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
 					data.addStatusControl(StatusControl.THROW_FIRE);
 					return new FireArcBehavior.PlayerControlled();
+				}
+				else {
+					entity.Firesplosion();
+					entity.cleanup();
+					entity.setDead();
 				}
 			}
 

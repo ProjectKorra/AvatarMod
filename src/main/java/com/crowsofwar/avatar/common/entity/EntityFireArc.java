@@ -168,7 +168,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		return true;
 	}
 
-	private void cleanup() {
+	public void cleanup() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(StatusControl.THROW_FIRE);
@@ -182,6 +182,8 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		}
 		if(getBehavior() != null && getBehavior() instanceof FireArcBehavior.Thrown) {
 			Firesplosion();
+			cleanup();
+			this.setDead();
 		}
 	}
 
@@ -209,18 +211,21 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 					}
 				}
 			}
-
-			cleanup();
-			setDead();
+			AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("fire_arc");
+			if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				cleanup();
+				setDead();
+			}
 
 		}
 		return true;
 	}
 
-	//Creates a fire EXPLOSION where it lands
+	//Creates a FIRESPLOSION where it lands
 	//Sorry for caps that was just fun to write :P
-	private void Firesplosion() {
+	public void Firesplosion() {
 		if (!world.isRemote && world instanceof WorldServer) {
+
 
 			float speed = 0.025F;
 			float hitBox = 0.5F;
@@ -232,7 +237,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 				this.damageMult = lvl >= 2 ? 2 : 0.5F;
 				//If the player's water arc level is level III or greater the aoe will do 2+ damage.
 				hitBox = lvl <= 0 ? 0.5F : 0.5f * (lvl + 1);
-				speed = lvl <= 0 ? 0.025F : 0.025F * (lvl + 1);
+				speed = lvl <= 0 ? 0.05F : 0.075F;
 				numberOfParticles = lvl <= 0 ? 250 : 250 + 100 * lvl;
 			} else this.damageMult = 0.5f;
 
@@ -243,7 +248,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 			 //}
 			 //else {
 				 WorldServer World = (WorldServer) this.world;
-				 World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, numberOfParticles, 0.2, 0.1, 0.2, speed);
+				 World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, numberOfParticles, 0.2, 0.1, 0.2, speed * 2);
 			 //}
 			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 
@@ -276,8 +281,6 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 					AvatarUtils.afterVelocityAdded(entity);
 				}
 			}
-			this.setDead();
-
 		}
 
 	}
