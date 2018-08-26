@@ -188,7 +188,7 @@ public class ConfigMobs {
 
 	}
 
-	private void loadLists() {
+	public void loadLists() {
 		bisonFoodList = new HashMap<>();
 		for (Map.Entry<String, Integer> entry : bisonFoods.entrySet()) {
 			String name = entry.getKey();

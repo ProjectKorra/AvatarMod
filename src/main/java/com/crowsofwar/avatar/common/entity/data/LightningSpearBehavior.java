@@ -96,9 +96,6 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 			}
 
-			entity.addVelocity(0, -1F / 120, 0);
-
-
 			if (!entity.isInWater()) {
 				entity.setInvisible(false);
 			}
@@ -108,15 +105,11 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
 						entity.getEntityBoundingBox());
 				if (!collidedList.isEmpty()) {
-					Entity collided = collidedList.get(0);
-					if (collided instanceof EntityLivingBase && collided != entity.getOwner() && entity.canCollideWith(collided)) {
-						collision(collided, entity, entity.isGroupAttack());
-					} else if (collided != entity.getOwner()) {
-						Vector motion = new Vector(collided).minus(new Vector(entity));
-						motion = motion.times(0.7).withY(0.09);
-						collided.addVelocity(motion.x(), motion.y(), motion.z());
+					for (Entity collided : collidedList) {
+						if (collided instanceof EntityLivingBase && collided != entity.getOwner() && entity.canCollideWith(collided)) {
+							collision(collided, entity, entity.isGroupAttack());
+						}
 					}
-
 				}
 			}
 
@@ -129,15 +122,16 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		private void collision(Entity collided, EntityLightningSpear entity, boolean triggerGroupAttack) {
 			double speed = entity.velocity().magnitude();
 
-			if (entity.canDamageEntity(collided)) {
+			if (entity.canDamageEntity(collided) && collided != entity) {
 				if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
 						entity.getDamage())) {
 					BattlePerformanceScore.addMediumScore(entity.getOwner());
 				}
 			}
-			if (collided.canBeCollidedWith() && collided.canBePushed()) {
+			if (collided.canBeCollidedWith() && collided.canBePushed() && collided != entity) {
 
-				Vector motion = entity.velocity().dividedBy(5);
+				entity.onCollideWithSolid();
+				Vector motion = entity.velocity().dividedBy(20);
 				motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.07);
 				collided.addVelocity(motion.x(), motion.y(), motion.z());
 
@@ -148,7 +142,6 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				}
 			}
 
-			if (!entity.world.isRemote && !entity.isPiercing()) entity.setDead();
 
 			if (triggerGroupAttack) {
 
@@ -169,6 +162,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				}
 
 			}
+			if (!entity.world.isRemote && !entity.isPiercing()) entity.setDead();
 
 		}
 
@@ -195,7 +189,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		public PlayerControlled() {
 		}
 
-		float maxSize = 1.4F;
+		float maxSize = 1.8F;
 		@Override
 		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
 			EntityLivingBase owner = entity.getOwner();
@@ -223,9 +217,9 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 
 			// Ensure that owner always has stat ctrl active
-			/*if (entity.ticksExisted % 10 == 0) {
+			if (entity.ticksExisted % 10 == 0) {
 				BendingData.get(owner).addStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
-			}**/
+			}
 
 			float size = entity.getSize();
 
@@ -233,13 +227,13 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				AbilityData aD = AbilityData.get(entity.getOwner(), "lightning_spear");
 				int lvl = aD.getLevel();
 				if (lvl == 1) {
-					maxSize = 1.6F;
+					maxSize = 2F;
 				}
 				if (lvl == 2) {
-					maxSize = 1.8F;
+					maxSize = 2.2F;
 				}
 				if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-					maxSize = 2F;
+					maxSize = 2.6F;
 				}
 			}
 			if (size < maxSize && entity.ticksExisted % 4 == 0) {

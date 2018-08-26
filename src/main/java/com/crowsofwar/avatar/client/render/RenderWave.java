@@ -32,7 +32,6 @@ public class RenderWave extends RenderModel<EntityWave> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/entity/wave.png");
-	private ModelBase model;
 
 	/**
 	 * @param renderManager
@@ -40,7 +39,6 @@ public class RenderWave extends RenderModel<EntityWave> {
 	public RenderWave(RenderManager renderManager) {
 
 		super(renderManager, new ModelWave());
-		this.model = new ModelWave();
 	}
 
 	@Override

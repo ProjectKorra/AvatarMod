@@ -80,7 +80,7 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 						entity.getExpandedHitbox());
 				if (!collidedList.isEmpty()) {
 					for (Entity collided : collidedList) {
-						if (entity.canCollideWith(collided)) {
+						if (entity.canCollideWith(collided) && collided != entity.getOwner() && collided != entity) {
 							collision( collided, entity);
 
 						}

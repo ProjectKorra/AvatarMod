@@ -43,7 +43,7 @@ public class AbilityLightningSpear extends Ability {
 
 	public AbilityLightningSpear() {
 		super(Lightningbending.ID, "lightning_spear");
-		requireRaytrace(2.5, false);
+		requireRaytrace(-1, false);
 	}
 
 	@Override
@@ -64,29 +64,29 @@ public class AbilityLightningSpear extends Ability {
 				target = ctx.getLookPos();
 			} else {
 				Vector playerPos = getEyePos(entity);
-				target = playerPos.plus(getLookRectangular(entity).times(3));
+				target = playerPos.plus(getLookRectangular(entity).times(2.5));
 			}
 
 			float damage = 5F;
 			if (abilityData.getLevel() >= 2) {
 				damage = 8;
 			}
-			float size = 0.8F;
+			float size = 1.2F;
 
 			if (ctx.getLevel() == 1) {
-				size = 1F;
+				size = 1.4F;
 			}
 
 			if (ctx.getLevel() == 2) {
-				size = 1.2F;
+				size = 1.6F;
 			}
 
 			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-				size =  0.8F;
+				size =  1.2F;
 			}
 
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-				size = 1.4F;
+				size = 2F;
 			}
 
 			damage *= ctx.getPowerRatingDamageMod();

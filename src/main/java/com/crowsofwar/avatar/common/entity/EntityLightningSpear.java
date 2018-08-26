@@ -87,6 +87,7 @@ public class EntityLightningSpear extends AvatarEntity {
 		this.Size = 0.8F;
 		this.degreesPerSecond = 400;
 		setSize(Size, Size);
+		this.damage = 3F;
 
 	}
 
@@ -98,13 +99,13 @@ public class EntityLightningSpear extends AvatarEntity {
 		dataManager.register(SYNC_DEGREES_PER_SECOND, degreesPerSecond);
 	}
 
-	/*@Override
+	@Override
 	public void setDead() {
 		super.setDead();
 		if (!world.isRemote && this.isDead) {
 			Thread.dumpStack();
 		}
-	}**/
+	}
 
 	@Override
 	public void onUpdate() {
@@ -114,24 +115,20 @@ public class EntityLightningSpear extends AvatarEntity {
 
 		// Add hook or something
 		if (getOwner()!= null) {
-			if (this.getBehavior() == controlled) {
+			if (getBehavior() != null && getBehavior() instanceof LightningSpearBehavior.PlayerControlled) {
 				this.rotationYaw = this.getOwner().rotationYaw;
 				this.rotationPitch = this.getOwner().rotationPitch;
 			}
 		}
 
-		if (getOwner() == null) {
-			setDead();
-			removeStatCtrl();
-		}
+
 		if (!world.isRemote && this.isInvisible()) {
 			Thread.dumpStack();
 			this.setInvisible(false);
 		}
 
-		if (getBehavior() != null && getBehavior() instanceof LightningSpearBehavior.PlayerControlled) {
-			this.setSize(getSize() / 8, getSize() / 8);
-		}
+		this.setSize(getSize() / 8, getSize() / 8);
+
 
 		if (getOwner() != null) {
 			EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, getOwner());
@@ -197,7 +194,7 @@ public class EntityLightningSpear extends AvatarEntity {
 
 	@Override
 	public EntityLivingBase getController() {
-		return getBehavior() instanceof LightningSpearBehavior.PlayerControlled ? getOwner() : null;
+		return getOwner();
 	}
 
 	public float getDamage() {

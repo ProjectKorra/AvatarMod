@@ -72,6 +72,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
@@ -246,20 +247,16 @@ public class AvatarMod {
 		registerEntity(EntityLightningSpawner.class, "LightningSpawnerr");
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 1, 2, EnumCreatureType.CREATURE, //
-				SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, TAIGA_HILLS);
+				SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, TAIGA_HILLS, ICE_MOUNTAINS);
 		EntityRegistry.addSpawn(EntityOtterPenguin.class, 10, 3, 6, EnumCreatureType.CREATURE, //
 				COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
 		EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 1, 3, EnumCreatureType.CREATURE, //
 				DESERT, DESERT_HILLS, SAVANNA, SAVANNA_PLATEAU, PLAINS);
 
-	//	EntityRegistry.addSpawn(EntityAirbender.class, 50, 1, 2, EnumCreatureType.CREATURE, //
-	//		SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, COLD_TAIGA_HILLS, REDWOOD_TAIGA_HILLS, TAIGA_HILLS );
-		//EntityRegistry.addSpawn(EntityFirebender.class, 3, 1, 5, EnumCreatureType.CREATURE, //
-			//	SAVANNA_PLATEAU, HELL, SAVANNA, PLAINS, DESERT, MUSHROOM_ISLAND, DESERT_HILLS, MESA, MESA_ROCK);
-
-		// Second loading required since other mods blocks might not be
+		// Second loading required since other mods blocks and items might not be
 		// registered
 		STATS_CONFIG.loadBlocks();
+		MOBS_CONFIG.loadLists();
 
 		proxy.init();
 
