@@ -127,7 +127,7 @@ public class EntityLightningSpear extends AvatarEntity {
 			this.setInvisible(false);
 		}
 
-		this.setSize(getSize() / 4, getSize() / 4);
+		this.setSize(getSize() / 2, getSize() / 2);
 		//Even though doing size/8 would be better, the entity gets too small, and doesn't render far away enough. Super annoying.
 
 
@@ -196,6 +196,12 @@ public class EntityLightningSpear extends AvatarEntity {
 	@Override
 	public EntityLivingBase getController() {
 		return getBehavior() instanceof LightningSpearBehavior.PlayerControlled ? getOwner() : null;
+	}
+
+	@Override
+	public AxisAlignedBB getCollisionBox(Entity entityIn) {
+		return new AxisAlignedBB(this.posX + getSize()/8, this.posY + getSize()/8, this.posZ + getSize()/8,
+				this.posX - getSize()/8, this.posY - getSize()/8, this.posZ - getSize()/8);
 	}
 
 	public float getDamage() {
