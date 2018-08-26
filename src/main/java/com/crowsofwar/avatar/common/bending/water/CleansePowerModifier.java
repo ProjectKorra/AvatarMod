@@ -30,10 +30,10 @@ public class CleansePowerModifier extends BuffPowerModifier {
 
 	@Override
 	protected Vision[] getVisions() {
-		if (CLIENT_CONFIG.shaderSettings.useCleanseShaders) {
+		//if (CLIENT_CONFIG.shaderSettings.useCleanseShaders) {
 			return new Vision[]{Vision.CLEANSE_WEAK, Vision.CLEANSE_MEDIUM, Vision.CLEANSE_POWERFUL};
-		}
-		else return null;
+		//}
+		//else return null;
 	}
 
 	@Override
