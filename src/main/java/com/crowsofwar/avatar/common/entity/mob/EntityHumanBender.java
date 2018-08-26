@@ -59,7 +59,7 @@ public abstract class EntityHumanBender extends EntityBender {
 
 	private EntityAiGiveScroll aiGiveScroll;
 	private int scrollsLeft;
-	private boolean hasTraded;
+	private boolean hasAttemptedTrade;
 
 	/**
 	 * @param world
@@ -67,7 +67,7 @@ public abstract class EntityHumanBender extends EntityBender {
 	public EntityHumanBender(World world) {
 		super(world);
 		scrollsLeft = getScrollsLeft();
-		this.hasTraded = false;
+		this.hasAttemptedTrade = false;
 
 
 	}
@@ -215,6 +215,7 @@ public abstract class EntityHumanBender extends EntityBender {
 
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
+		hasAttemptedTrade = false;
 
 		ItemStack stack = player.getHeldItem(hand);
 
@@ -229,7 +230,7 @@ public abstract class EntityHumanBender extends EntityBender {
 					}
 
 				}
-				hasTraded = true;
+				hasAttemptedTrade = true;
 			} else {
 				MSG_HUMANBENDER_NO_SCROLLS.send(player);
 				AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onNpcNoScrolls());
@@ -238,13 +239,14 @@ public abstract class EntityHumanBender extends EntityBender {
 			return true;
 
 		}
-		else if (!(this.isTradeItem(stack.getItem())) && !world.isRemote && !hasTraded){
+		else if (!(this.isTradeItem(stack.getItem())) && !world.isRemote && !hasAttemptedTrade){
 			MSG_NEED_TRADE_ITEM.send(player);
+			hasAttemptedTrade = true;
 			return true;
 		}
 
 
-		return false;
+		return true;
 
 	}
 }

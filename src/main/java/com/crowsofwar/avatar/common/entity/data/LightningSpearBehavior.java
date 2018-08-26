@@ -109,7 +109,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 						entity.getEntityBoundingBox());
 				if (!collidedList.isEmpty()) {
 					Entity collided = collidedList.get(0);
-					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
+					if (collided instanceof EntityLivingBase && collided != entity.getOwner() && entity.canCollideWith(collided)) {
 						collision(collided, entity, entity.isGroupAttack());
 					} else if (collided != entity.getOwner()) {
 						Vector motion = new Vector(collided).minus(new Vector(entity));
@@ -129,21 +129,24 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		private void collision(Entity collided, EntityLightningSpear entity, boolean triggerGroupAttack) {
 			double speed = entity.velocity().magnitude();
 
-			if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
-					entity.getDamage())) {
-				BattlePerformanceScore.addMediumScore(entity.getOwner());
+			if (entity.canDamageEntity(collided)) {
+				if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
+						entity.getDamage())) {
+					BattlePerformanceScore.addMediumScore(entity.getOwner());
+				}
 			}
+			if (collided.canBeCollidedWith() && collided.canBePushed()) {
 
-			Vector motion = entity.velocity().dividedBy(5);
-			motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.07);
-			collided.addVelocity(motion.x(), motion.y(), motion.z());
+				Vector motion = entity.velocity().dividedBy(5);
+				motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.07);
+				collided.addVelocity(motion.x(), motion.y(), motion.z());
 
-			BendingData data = Bender.get(entity.getOwner()).getData();
-			if (!collided.world.isRemote && data != null) {
-				float xp = SKILLS_CONFIG.lightningspearHit;
-				data.getAbilityData("lightning_spear").addXp(xp);
+				BendingData data = Bender.get(entity.getOwner()).getData();
+				if (!collided.world.isRemote && data != null) {
+					float xp = SKILLS_CONFIG.lightningspearHit;
+					data.getAbilityData("lightning_spear").addXp(xp);
+				}
 			}
-
 
 			if (!entity.world.isRemote && !entity.isPiercing()) entity.setDead();
 

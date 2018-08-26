@@ -200,13 +200,6 @@ public class EntityAirblade extends AvatarEntity {
 		}
 	}
 
-	@Override
-	public void setDead() {
-		super.setDead();
-		if (!world.isRemote && this.isDead) {
-			Thread.dumpStack();
-		}
-	}
 
 	public Bender getOwnerBender() {
 		return Bender.get(getOwner());

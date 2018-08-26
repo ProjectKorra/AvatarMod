@@ -63,23 +63,19 @@ public class HumanBenderSpawner {
 		if (event.getEntity() == e && e instanceof EntityVillager) {
 
 			AxisAlignedBB box = new AxisAlignedBB(e.posX + 200,
-					 e.posY + 200, e.posZ + 200,
-					e.posX - 200, e.posY -  200,
+					e.posY + 200, e.posZ + 200,
+					e.posX - 200, e.posY - 200,
 					e.posZ - 200);
 			List<Entity> nearbyBenders = world.getEntitiesWithinAABB(EntityHumanBender.class, box);
 			int size = nearbyBenders.size();
-			System.out.print(size);
 			Random rand = new Random();
-			int chance = rand.nextInt(3) + 1;
-			int bender = rand.nextInt(2) + 1;
+			boolean bender = rand.nextBoolean();
 			//Will be changed when more benders are added
-			//if (chance == 3) {
 			if (size <= 2) {
-				EntityAirbender a = new EntityAirbender(world);
-				a.copyLocationAndAnglesFrom(e);
-				world.spawnEntity(a);
+				EntityHumanBender b = bender ? new EntityAirbender(world) : new EntityFirebender(world);
+				b.copyLocationAndAnglesFrom(e);
+				world.spawnEntity(b);
 			}
-			//}
 		}
 	}
 
@@ -122,15 +118,13 @@ public class HumanBenderSpawner {
 				}
 
 
-					for (Entity e : villagers) {
-						int i = rand.nextInt(3) + 1;
-						if (i == 3) {
-							EntityHumanBender b = new EntityAirbender(worldIn);
-							b.setPosition(villagers.get(0).posX, villagers.get(0).posY, villagers.get(0).posZ);
-						}
+				for (Entity e : villagers) {
+					int i = rand.nextInt(3) + 1;
+					if (i == 3) {
+						EntityHumanBender b = new EntityAirbender(worldIn);
+						b.setPosition(villagers.get(0).posX, villagers.get(0).posY, villagers.get(0).posZ);
 					}
-
-
+				}
 
 
 				double chance = 100;

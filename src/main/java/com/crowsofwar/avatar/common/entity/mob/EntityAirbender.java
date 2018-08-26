@@ -72,7 +72,7 @@ public class EntityAirbender extends EntityHumanBender {
 		data.addBendingId(Airbending.ID);
 		Random rand = new Random();
 		int level = rand.nextInt(3) + 1;
-		if (level == 1) {
+		if (level <= 1) {
 			getData().getAbilityData("air_bubble").setLevel(-1);
 			getData().getAbilityData("air_gust").setLevel(0);
 			getData().getAbilityData("airblade").setLevel(0);
@@ -84,7 +84,7 @@ public class EntityAirbender extends EntityHumanBender {
 			getData().getAbilityData("airblade").setLevel(0);
 			scrollsLeft = 2;
 		}
-		if (level == 3) {
+		if (level >= 3) {
 			getData().getAbilityData("air_bubble").setLevel(1);
 			getData().getAbilityData("air_gust").setLevel(2);
 			getData().getAbilityData("airblade").setLevel(1);
@@ -106,7 +106,7 @@ public class EntityAirbender extends EntityHumanBender {
 	@Override
 	protected void initEntityAI() {
 		super.initEntityAI();
-		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityZombie.class, false));
+		//this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityZombie.class, false));
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public class EntityAirbender extends EntityHumanBender {
 				int level = rand.nextInt(3) + 1; {
 					scrollsLeft = level;
 				}
-				if (level == 1) {
+				if (level <= 1) {
 					getData().getAbilityData("air_bubble").setLevel(-1);
 					getData().getAbilityData("air_gust").setLevel(0);
 					getData().getAbilityData("airblade").setLevel(0);
@@ -156,7 +156,7 @@ public class EntityAirbender extends EntityHumanBender {
 					getData().getAbilityData("air_gust").setLevel(1);
 					getData().getAbilityData("airblade").setLevel(0);
 				}
-				if (level == 3) {
+				if (level >= 3) {
 					getData().getAbilityData("air_bubble").setLevel(0);
 					getData().getAbilityData("air_gust").setLevel(2);
 					getData().getAbilityData("airblade").setLevel(1);
