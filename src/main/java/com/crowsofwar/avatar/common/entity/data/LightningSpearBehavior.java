@@ -35,6 +35,7 @@ import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import org.lwjgl.Sys;
 
 import java.util.List;
 
@@ -107,7 +108,8 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 						entity.getEntityBoundingBox());
 				if (!collidedList.isEmpty()) {
 					for (Entity collided : collidedList) {
-						if (collided != entity.getOwner() && entity.canCollideWith(collided) && collided.canBePushed() && collided.canBeCollidedWith() && collided != entity) {
+						if (collided != entity.getOwner() && collided.canBePushed() && collided.canBeCollidedWith() && collided != entity) {
+							System.out.println(collided);
 							collision(collided, entity, entity.isGroupAttack());
 						}
 					}
@@ -131,17 +133,21 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			}
 			if (collided.canBeCollidedWith() && collided.canBePushed() && collided != entity) {
 
-				if (!entity.isPiercing()) {
-					entity.onCollideWithSolid();
-				}
+
+				entity.onCollideWithSolid();
+
 				Vector motion = entity.velocity().dividedBy(20);
 				motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.07);
 				collided.addVelocity(motion.x(), motion.y(), motion.z());
 
 				BendingData data = Bender.get(entity.getOwner()).getData();
-				if (!collided.world.isRemote && data != null) {
+				if (!entity.world.isRemote && data != null) {
 					float xp = SKILLS_CONFIG.lightningspearHit;
 					data.getAbilityData("lightning_spear").addXp(xp);
+					if (!data.getAbilityData("lightning_spear").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+						entity.removeStatCtrl();
+						entity.setDead();
+					}
 				}
 			}
 

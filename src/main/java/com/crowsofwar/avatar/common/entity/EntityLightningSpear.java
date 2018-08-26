@@ -262,7 +262,7 @@ public class EntityLightningSpear extends AvatarEntity {
 		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory
 				.PLAYERS, 8, 1, false);
 
-		setDead();
+
 		return true;
 
 	}
@@ -283,7 +283,7 @@ public class EntityLightningSpear extends AvatarEntity {
 
 
 
-	private void removeStatCtrl() {
+	public void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
 			data.removeStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
