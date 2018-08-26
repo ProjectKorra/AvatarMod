@@ -243,8 +243,8 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 
 
 			 //if (CLIENT_CONFIG.useCustomParticles) {
-			 	particles.spawnParticles(world, AvatarParticles.getParticleFlames(), 100, 200, Vector.getEntityPos(this),
-						new Vector(speed * 50, speed * 50, speed * 10));
+			 	/*particles.spawnParticles(world, AvatarParticles.getParticleFlames(), 100, 200, Vector.getEntityPos(this),
+						new Vector(speed * 50, speed * 50, speed * 10));**/
 			 //}
 			 //else {
 				 WorldServer World = (WorldServer) this.world;
