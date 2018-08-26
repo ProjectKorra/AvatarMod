@@ -42,6 +42,18 @@ public class ConfigClient {
 	public float bendingCycleAlpha = 0.5f;
 
 	@Load
+	public int bendingImageDuration = 200;
+	//How long before the menu disappears
+
+	@Load
+	public boolean shouldBendingMenuDisppear = true;
+	//Makes the menu disappear after the duration- affects chi as well.
+
+	@Load
+	public boolean shouldBendingMenuRender = true;
+	//Determines if the chi and element menu should render at all
+
+	@Load
 	public boolean useCustomParticles = true;
 	public Map<Ability, Integer> keymappings = new HashMap<>();
 	public Map<Ability, Boolean> conflicts = new HashMap<>();

@@ -323,6 +323,14 @@ avatar.ability.slipstream.lvl3=Intermittently become invisible and increase the 
 avatar.ability.slipstream.lvl4_1=§f§l§oDivine §f§l§oBreeze ;; Become stronger in melee and airbending combat
 avatar.ability.slipstream.lvl4_2=§f§l§oRun §f§l§olike §f§l§othe §f§l§owind ;; Become invisible more often and potion effects are stronger
 
+avatar.ability.air_burst=§f§lSAir Burst
+avatar.ability.air_burst.desc=Slowly draw the surrounding air inwards, then release it in a massive blast that knocks back enemies!
+avatar.ability.air_burst.lvl1=
+avatar.ability.air_burst.lvl2=
+avatar.ability.air_burst.lvl3=
+avatar.ability.air_burst.lvl4_1=
+avatar.ability.air_burst.lvl4_2=
+
 avatar.ability.lightning_arc=§b§lLightning §b§lArc
 avatar.ability.lightning_arc.desc=Create imposing arcs of electricity to electrocute your enemies!
 avatar.ability.lightning_arc.lvl1=Intimidate potential boyfriends
