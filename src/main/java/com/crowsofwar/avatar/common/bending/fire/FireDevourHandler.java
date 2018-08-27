@@ -31,6 +31,7 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandler.FIRE_DEVOUR_HANDLER;
 import static java.lang.Math.toRadians;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
@@ -46,30 +47,9 @@ public class FireDevourHandler {
 				BendingData data = BendingData.get((EntityLivingBase) e);
 				Bender b = Bender.get((EntityLivingBase) e);
 				if (b != null) {
-					if (e.isSneaking()) {
-						ParticleSpawner particles = new ClientParticleSpawner();
+					if (e.isSneaking() && STATS_CONFIG.shiftActiveFireDevour) {
 						if (data.hasBendingId(Firebending.ID)) {
-							Vector eye = Vector.getEyePos(e);
-							double range = STATS_CONFIG.fireSearchRadius;
-							for (int i = 0; i < STATS_CONFIG.fireAngles; i++) {
-								for (int j = 0; j < STATS_CONFIG.fireAngles; j++) {
-
-									double yaw = e.rotationYaw + i * 360.0 / STATS_CONFIG.fireAngles;
-									double pitch = e.rotationPitch + j * 360.0 / STATS_CONFIG.fireAngles;
-
-									BiPredicate<BlockPos, IBlockState> isFire = (pos, state) -> state.getBlock() == Blocks.FIRE;
-
-									Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
-									Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isFire);
-
-									if (result.hitSomething()) {
-										particles.spawnParticles(world, AvatarParticles.getParticleFlames(), 2, 10, result.getPosPrecise(),
-												Vector.getEntityPos(e).minus(result.getPosPrecise()));
-										world.setBlockToAir(Objects.requireNonNull(result.getPosPrecise()).toBlockPos());
-									}
-
-								}
-							}
+							data.addTickHandler(FIRE_DEVOUR_HANDLER);
 						}
 
 					}
