@@ -149,6 +149,9 @@ public class ConfigStats {
 	public double cleanseSearchRadius = 5, cleanseAngles = 10;
 
 	@Load
+	public double fireSearchRadius = 4, fireAngles = 8;
+
+	@Load
 	public boolean addDungeonLoot = true;
 
 	@Load

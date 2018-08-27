@@ -225,10 +225,10 @@ public class AvatarMod {
 		registerEntity(EntityFireball.class, "Fireball");
 		registerEntity(EntityAirblade.class, "Airblade");
 		registerEntity(EntityAirBubble.class, "AirBubble");
-		registerEntity(EntityFirebender.class, "Firebender", 0xffffff, 0xffffff);
-		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xffffff);
-		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
-		registerEntity(EntityOtterPenguin.class, "OtterPenguin", 0xffffff, 0xffffff);
+		registerEntity(EntityFirebender.class, "Firebender", 0xB0171F, 0xFFFF00);
+		registerEntity(EntityAirbender.class, "Airbender", 0xffffff,0xDDA0DD);
+		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0x8B5A00);
+		registerEntity(EntityOtterPenguin.class, "OtterPenguin", 0xffffff, 0x104E8B);
 		registerEntity(AvatarEntityItem.class, "Item");
 		registerEntity(EntityIceShield.class, "iceshield");
 		registerEntity(EntityIceShard.class, "iceshard");
