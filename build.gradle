@@ -24,6 +24,13 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.github.johnrengelman.shadow'
 
+// Needs this for IntelliJ to recognize assets folder
+idea {
+    module {
+        inheritOutputDirs = true
+    }
+}
+
 ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
 
