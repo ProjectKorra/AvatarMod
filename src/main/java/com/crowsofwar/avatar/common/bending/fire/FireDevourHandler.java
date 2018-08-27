@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
@@ -62,7 +63,7 @@ public class FireDevourHandler {
 									Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isFire);
 
 									if (result.hitSomething()) {
-										particles.spawnParticles(world, EnumParticleTypes.FLAME, 2, 10, result.getPosPrecise(),
+										particles.spawnParticles(world, AvatarParticles.getParticleFlames(), 2, 10, result.getPosPrecise(),
 												Vector.getEntityPos(e).minus(result.getPosPrecise()));
 										world.setBlockToAir(Objects.requireNonNull(result.getPosPrecise()).toBlockPos());
 									}
