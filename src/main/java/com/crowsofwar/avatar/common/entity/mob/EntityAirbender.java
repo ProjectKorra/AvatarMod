@@ -142,6 +142,7 @@ public class EntityAirbender extends EntityHumanBender {
 		return super.isTradeItem(item) || MOBS_CONFIG.isAirTradeItem(item);
 	}
 
+
 	@Override
 	public void onUpdate() {
 		super.onUpdate();

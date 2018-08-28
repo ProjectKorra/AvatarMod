@@ -239,6 +239,10 @@ public class ConfigMobs {
 		return tradeItems.containsKey(item);
 	}
 
+	/*public int getTradeItemAmount(Item item) {
+		return tradeItems.getOrDefault(item, 0);
+	}**/
+
 	public boolean isAirTradeItem(Item item) {
 		return airTradeItems.containsKey(item);
 	}

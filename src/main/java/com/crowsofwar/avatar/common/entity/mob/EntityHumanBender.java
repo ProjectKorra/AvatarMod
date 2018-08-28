@@ -126,6 +126,10 @@ public abstract class EntityHumanBender extends EntityBender {
 		return MOBS_CONFIG.isTradeItem(item);
 	}
 
+	protected int getTradeAmount(Item item) {
+		return MOBS_CONFIG.getTradeItemAmount(item);
+	}
+
 	protected abstract int getNumSkins();
 
 	protected int getScrollsLeft() {
@@ -223,8 +227,10 @@ public abstract class EntityHumanBender extends EntityBender {
 		hasAttemptedTrade = false;
 
 		ItemStack stack = player.getHeldItem(hand);
+		/*int amount = stack.getCount();
+		int tradeAmount = getTradeAmount(stack.getItem());**/
 
-		if (this.isTradeItem(stack.getItem()) && !world.isRemote) {
+		if (this.isTradeItem(stack.getItem()) && !world.isRemote/* && amount >= tradeAmount**/) {
 
 			if (scrollsLeft > 0) {
 				if (aiGiveScroll.giveScrollTo(player)) {
