@@ -101,14 +101,6 @@ public class EntityLightningSpear extends AvatarEntity {
 	}
 
 	@Override
-	public void setDead() {
-		super.setDead();
-		if (!world.isRemote && this.isDead) {
-			Thread.dumpStack();
-		}
-	}
-
-	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();

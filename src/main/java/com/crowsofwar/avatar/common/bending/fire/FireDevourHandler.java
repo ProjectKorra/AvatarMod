@@ -47,7 +47,7 @@ public class FireDevourHandler {
 				BendingData data = BendingData.get((EntityLivingBase) e);
 				Bender b = Bender.get((EntityLivingBase) e);
 				if (b != null) {
-					if (e.isSneaking() && STATS_CONFIG.shiftActiveFireDevour) {
+					if (e.isSneaking() && STATS_CONFIG.shiftActivateFireDevour) {
 						if (data.hasBendingId(Firebending.ID)) {
 							data.addTickHandler(FIRE_DEVOUR_HANDLER);
 						}

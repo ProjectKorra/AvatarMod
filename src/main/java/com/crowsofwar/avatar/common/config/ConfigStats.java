@@ -152,7 +152,7 @@ public class ConfigStats {
 	public double fireSearchRadius = 4, fireAngles = 8;
 
 	@Load
-	public boolean shiftActiveFireDevour = true;
+	public boolean shiftActivateFireDevour = true;
 
 	@Load
 	public boolean addDungeonLoot = true;

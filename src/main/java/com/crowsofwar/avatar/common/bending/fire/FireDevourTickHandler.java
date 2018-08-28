@@ -14,6 +14,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import java.util.Objects;
 import java.util.function.BiPredicate;
@@ -46,14 +47,24 @@ public class FireDevourTickHandler extends TickHandler {
 				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
 				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isFire);
 
-				if (result.hitSomething()) {
-					particles.spawnParticles(world, EnumParticleTypes.FLAME, 2, 10, result.getPosPrecise(),
-							Vector.getEntityPos(entity).minus(result.getPosPrecise()));
+				if (result.hitSomething() && result.getPosPrecise() != null) {
+					double position = Vector.getEntityPos(entity).dist(result.getPosPrecise());
+					Vector pos = Vector.getEntityPos(entity).plusY(entity.getEyeHeight());
+					for (double h = position; h > 0;) {
+						if (world instanceof WorldServer && !world.isRemote) {
+							WorldServer World = (WorldServer) world;
+							World.spawnParticle(EnumParticleTypes.FLAME, pos.x() + position, pos.y(), pos.z() + position, 1, 0, 0, 0, 0D);
+						}
+						else {
+							particles.spawnParticles(world, EnumParticleTypes.FLAME, 1, 2, pos.x() + position, pos.y(), pos.z() + position, 0, 0, 0);
+						}
+						h -= 0.1;
+					}
 					world.setBlockToAir(Objects.requireNonNull(result.getPosPrecise()).toBlockPos());
 				}
 
 			}
 		}
-		return false;
+		return ctx.getData().getTickHandlerDuration(this) >= 10;
 	}
 }
