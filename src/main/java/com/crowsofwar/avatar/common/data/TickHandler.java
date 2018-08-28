@@ -39,30 +39,31 @@ import java.util.Map;
  */
 public abstract class TickHandler {
 
-	public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner();
-	public static TickHandler FIRE_PARTICLE_SPAWNER = new FireParticleSpawner();
-	public static TickHandler FLAMETHROWER = new FlamethrowerUpdateTick();
-	public static TickHandler WATER_SKATE = new WaterSkateHandler();
-	public static TickHandler BISON_SUMMONER = new BisonSummonHandler();
-	public static TickHandler SMASH_GROUND = new SmashGroundHandler();
-	public static TickHandler LIGHTNING_CHARGE = new LightningCreateHandler();
-	public static TickHandler WATER_CHARGE = new WaterChargeHandler();
-	public static TickHandler LIGHTNING_REDIRECT = new LightningRedirectHandler();
-	public static TickHandler SMASH_GROUND_FIRE = new FireSmashGroundHandler();
-	public static TickHandler SMASH_GROUND_FIRE_BIG = new FireSmashGroundHandlerBig();
-	public static TickHandler SMASH_GROUND_WATER = new WaterSmashHandler();
-	public static TickHandler WATER_PARTICLE_SPAWNER = new WaterParticleSpawner();
-	public static TickHandler INFERNO_PARTICLE_SPAWNER = new InfernoPunchParticleSpawner();
-	public static TickHandler SPAWN_EARTHSPIKES_HANDLER = new SpawnEarthspikesHandler();
-	public static TickHandler AIRBURST_CHARGE_HANDLER = new AirBurstHandler();
-	public static TickHandler AIR_STATCTRL_HANDLER = new AirStatusControlHandler();
-	public static TickHandler FIRE_STATCTRL_HANDLER = new FireStatusControlHandler();
-	public static TickHandler AIR_DODGE = new AirDodgeHandler();
-	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler();
-	public static TickHandler PURIFY_PARTICLE_SPAWNER = new PurifyParticleHandler();
-	public static TickHandler SLIPSTREAM_COOLDOWN_HANDLER = new SlipstreamCooldownHandler();
-	public static TickHandler RENDER_ELEMENT_HANDLER = new RenderElementTickHandler();
-	public static TickHandler FIRE_DEVOUR_HANDLER = new FireDevourTickHandler();
+	public static TickHandler
+			AIR_PARTICLE_SPAWNER = new AirParticleSpawner(),
+			FIRE_PARTICLE_SPAWNER = new FireParticleSpawner(),
+			FLAMETHROWER = new FlamethrowerUpdateTick(),
+			WATER_SKATE = new WaterSkateHandler(),
+			BISON_SUMMONER = new BisonSummonHandler(),
+			SMASH_GROUND = new SmashGroundHandler(),
+			LIGHTNING_CHARGE = new LightningCreateHandler(),
+			WATER_CHARGE = new WaterChargeHandler(),
+			LIGHTNING_REDIRECT = new LightningRedirectHandler(),
+			SMASH_GROUND_FIRE = new FireSmashGroundHandler(),
+			SMASH_GROUND_FIRE_BIG = new FireSmashGroundHandlerBig(),
+			SMASH_GROUND_WATER = new WaterSmashHandler(),
+			WATER_PARTICLE_SPAWNER = new WaterParticleSpawner(),
+			INFERNO_PARTICLE_SPAWNER = new InfernoPunchParticleSpawner(),
+			SPAWN_EARTHSPIKES_HANDLER = new SpawnEarthspikesHandler(),
+			AIRBURST_CHARGE_HANDLER = new AirBurstHandler(),
+			AIR_STATCTRL_HANDLER = new AirStatusControlHandler(),
+			FIRE_STATCTRL_HANDLER = new FireStatusControlHandler(),
+			AIR_DODGE = new AirDodgeHandler(),
+			RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler(),
+			PURIFY_PARTICLE_SPAWNER = new PurifyParticleHandler(),
+			SLIPSTREAM_COOLDOWN_HANDLER = new SlipstreamCooldownHandler(),
+			RENDER_ELEMENT_HANDLER = new RenderElementTickHandler(),
+			FIRE_DEVOUR_HANDLER = new FireDevourTickHandler();
 
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;
