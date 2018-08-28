@@ -128,7 +128,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	protected void updateCpBehavior() {
 		super.updateCpBehavior();
 		getControlPoint(0).setPosition(this.position());
-		getLeader().setPosition(this.position().plusY(getSize()/4));
+		getLeader().setPosition(this.position().plusY(getSize()/8));
 	}
 
 	public void damageEntity(Entity entity) {
