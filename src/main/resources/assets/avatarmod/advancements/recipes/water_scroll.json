@@ -1,0 +1,19 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+          "avatarmod:water_pouch"
+    ]
+  },
+  "criteria": {
+    "attacked": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "item": {
+          "item": "avatarmod:scroll",
+          "data": "2"
+        }
+      }
+    }
+  }
+}

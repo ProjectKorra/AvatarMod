@@ -48,17 +48,31 @@ public class FireDevourTickHandler extends TickHandler {
 				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isFire);
 
 				if (result.hitSomething() && result.getPosPrecise() != null) {
-					double position = Vector.getEntityPos(entity).dist(result.getPosPrecise());
+					double position = result.getPosPrecise().dist(Vector.getEntityPos(entity));
 					Vector pos = Vector.getEntityPos(entity).plusY(entity.getEyeHeight());
-					for (double h = position; h > 0;) {
-						if (world instanceof WorldServer && !world.isRemote) {
-							WorldServer World = (WorldServer) world;
-							World.spawnParticle(EnumParticleTypes.FLAME, pos.x() + position, pos.y(), pos.z() + position, 1, 0, 0, 0, 0D);
+					if (ctx.getData().getTickHandlerDuration(this) % 5 == 0) {
+						if (position > 0) {
+							for (double h = position; h > 0; ) {
+								if (world instanceof WorldServer && !world.isRemote) {
+									WorldServer World = (WorldServer) world;
+									World.spawnParticle(EnumParticleTypes.FLAME, pos.x() + h, pos.y(), pos.z() + h, 1, 0, 0, 0, 0D);
+								} else {
+									particles.spawnParticles(world, EnumParticleTypes.FLAME, 1, 2, pos.x() + h, pos.y(), pos.z() + h, 0, 0, 0);
+								}
+								h -= 0.1;
+							}
 						}
-						else {
-							particles.spawnParticles(world, EnumParticleTypes.FLAME, 1, 2, pos.x() + position, pos.y(), pos.z() + position, 0, 0, 0);
+						else if (position < 0) {
+							for (double h = position; h < 0; ) {
+								if (world instanceof WorldServer && !world.isRemote) {
+									WorldServer World = (WorldServer) world;
+									World.spawnParticle(EnumParticleTypes.FLAME, pos.x() + h, pos.y(), pos.z() + h, 1, 0, 0, 0, 0D);
+								} else {
+									particles.spawnParticles(world, EnumParticleTypes.FLAME, 1, 2, pos.x() + h, pos.y(), pos.z() + h, 0, 0, 0);
+								}
+								h += 0.1;
+							}
 						}
-						h -= 0.1;
 					}
 					world.setBlockToAir(Objects.requireNonNull(result.getPosPrecise()).toBlockPos());
 				}
