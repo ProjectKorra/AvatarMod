@@ -38,7 +38,6 @@ import static java.lang.Math.toRadians;
 public class FireDevourHandler {
 
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
 	public static void onShift(LivingEvent.LivingUpdateEvent event) {
 		Entity e = event.getEntity();
 		World world = e.getEntityWorld();
