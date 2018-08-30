@@ -7,15 +7,12 @@
       "item": "avatarmod:scroll",
       "data": 4
     },
-    "background": "avatarmod:textures/gui/background/airbending.png",
+    "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "goal"
   },
 
   "rewards": {
-    "experience": 250,
-    "recipes": [
-      "minecraft:elytra"
-    ]
+    "experience": 250
   },
   "criteria": {
     "gained_air_scroll": {

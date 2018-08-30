@@ -28,7 +28,7 @@ import java.util.UUID;
 
 public class Airbending extends BendingStyle {
 
-	public static final UUID ID = UUID.fromString("231edc16-639e-4dc4-92f5-924e9102df0f");
+	public static UUID ID = UUID.fromString("231edc16-639e-4dc4-92f5-924e9102df0f");
 
 	private BendingMenuInfo menu;
 
