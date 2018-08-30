@@ -1,17 +1,29 @@
 {
-  "parent": "minecraft:recipes/root",
+
+  "display": {
+    "title": "Opening the Iceberg",
+    "description": "Gain a waterbending scroll!",
+    "icon": {
+      "item": "avatarmod:scroll",
+      "data": 3
+    },
+    "background": "minecraft:textures/blocks/water_still.png",
+    "frame": "goal"
+  },
+
   "rewards": {
+    "experience": 250,
     "recipes": [
           "avatarmod:water_pouch"
     ]
   },
   "criteria": {
-    "attacked": {
+    "gained_scroll": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "item": {
           "item": "avatarmod:scroll",
-          "data": "2"
+          "data": 3
         }
       }
     }
