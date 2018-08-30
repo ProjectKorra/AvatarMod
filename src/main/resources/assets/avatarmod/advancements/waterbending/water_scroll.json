@@ -1,13 +1,13 @@
 {
 
   "display": {
-    "title": "Opening the Iceberg",
+    "title": "Cracking the Iceberg",
     "description": "Gain a waterbending scroll!",
     "icon": {
       "item": "avatarmod:scroll",
       "data": 3
     },
-    "background": "minecraft:textures/blocks/water_still.png",
+    "background": "avatarmod:textures/advancements/background/water.png",
     "frame": "goal"
   },
 

@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "gcg",
+    "fsf",
+    "g g"
+  ],
+  "key": {
+    "f": {
+      "item": "minecraft:feather"
+    },
+    "c": {
+      "item": "avatarmod:scroll",
+      "data": 4
+    },
+    "s": {
+      "item": "minecraft:stick"
+    },
+    "g": {
+      "item": "minecraft:gold"
+    },
+    "result": {
+      "item": "minecraft:elytra"
+    }
+  }
+}
