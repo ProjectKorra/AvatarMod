@@ -1,29 +1,29 @@
 {
 
   "display": {
-    "title": "Cracking the Iceberg",
-    "description": "Gain a waterbending scroll!",
+    "title": "Awakening in the Iceberg",
+    "description": "Gain an airbending scroll!",
     "icon": {
       "item": "avatarmod:scroll",
-      "data": 3
+      "data": 4
     },
-    "background": "avatarmod:textures/advancements/background/water.png",
+    "background": "avatarmod:textures/gui/background/airbending.png",
     "frame": "goal"
   },
 
   "rewards": {
     "experience": 250,
     "recipes": [
-          "avatarmod:water_pouch"
+      "minecraft:elytra"
     ]
   },
   "criteria": {
-    "gained_water_scroll": {
+    "gained_air_scroll": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "item": {
           "item": "avatarmod:scroll",
-          "data": 3
+          "data": 4
         }
       }
     }
