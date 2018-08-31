@@ -502,5 +502,7 @@ item.avatarmod:ostrich_equip.woven.name=Woven Ostrich Armor
 item.avatarmod:ostrich_equip.chain.name=Chainmail Ostrich Armor
 item.avatarmod:ostrich_equip.plate.name=Golden Ostrich Armor
 
+item.avatarmod:airbender_staff.name=Airbending Staff
+
 avatar.tooltip.water_pouch=%d/5 Water
 avatar.tooltip.water_pouch.empty=Empty
