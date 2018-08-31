@@ -60,7 +60,7 @@ AvatarItems {
 		addItem(itemBisonArmor = new ItemBisonArmor());
 		addItem(itemBisonSaddle = new ItemBisonSaddle());
 		addItem(itemOstrichEquipment = new ItemOstrichEquipment());
-		addItem(airbenderStaff = new ItemAirbenderStaff());
+		addItem(airbenderStaff = new ItemAirbenderStaff(Item.ToolMaterial.WOOD));
 
 		stackScroll = new ItemStack(itemScroll);
 		MinecraftForge.EVENT_BUS.register(new AvatarItems());

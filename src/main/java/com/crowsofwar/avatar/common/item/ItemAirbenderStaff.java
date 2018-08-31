@@ -11,14 +11,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
-public class ItemAirbenderStaff extends Item implements AvatarItem {
+public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
-	public ItemAirbenderStaff() {
+	public ItemAirbenderStaff(Item.ToolMaterial material) {
+		super(material);
 		setUnlocalizedName("airbender_staff");
 		setCreativeTab(AvatarItems.tabItems);
 		setMaxStackSize(1);
@@ -30,6 +32,7 @@ public class ItemAirbenderStaff extends Item implements AvatarItem {
 	public boolean hasEffect(ItemStack stack) {
 		return true;
 	}
+
 
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
@@ -60,6 +63,11 @@ public class ItemAirbenderStaff extends Item implements AvatarItem {
 		worldIn.spawnEntity(gust);
 		//Add cooldown
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
+	}
+
+	@Override
+	public boolean isDamageable() {
+		return false;
 	}
 
 	@Override
