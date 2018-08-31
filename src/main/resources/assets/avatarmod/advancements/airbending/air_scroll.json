@@ -12,7 +12,10 @@
   },
 
   "rewards": {
-    "experience": 250
+    "experience": 250,
+    "recipes": [
+      "avatarmod:airbending_staff"
+    ]
   },
   "criteria": {
     "gained_air_scroll": {
