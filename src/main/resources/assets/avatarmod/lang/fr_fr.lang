@@ -1,0 +1,288 @@
+avatar.category.main=Mod Avatar
+
+avatar.BendingList=Afficher la liste des Maîtrises
+avatar.CheatEarthbending=Triche Maîtrise de la Terre
+avatar.ThrowBlock=Lancer bloc
+avatar.ToggleBending=Ramasser bloc
+
+avatar.RadialMenu=Maîtrise de la Terre
+avatar.Bend=Utiliser la Maîtrise
+avatar.BendingCycleLeft=Cycle de Maîtrises Gauche
+avatar.BendingCycleRight=Cycle de Maîtrises Droite
+avatar.Skills=Menu de Compétences
+avatar.TransferBison=Confirmer le transfert de Bison
+
+avatar.earthbending=Maîtrise de la Terre
+avatar.earthbending.demonym=Maître de la Terre
+avatar.firebending=Maîtrise du Feu
+avatar.firebending.demonym=Maître du Feu
+avatar.waterbending=Maîtrise de l'Eau
+avatar.waterbending.demonym=Maître de l'Eau
+avatar.airbending=Maîtrise de l'Air
+avatar.airbending.demonym=Maître de l'Air
+avatar.all=Universel
+
+avatar.ui.openSkillsMenu=Cliquez pour ouvrir
+
+avatar.cmd.bending=Gérer les controleurs de la Maîtrise d'un joueur.
+avatar.cmd.bending.list.noData=[error][error_value]${player}[/error_value] n'est pas un compte enregistré.[/error]
+avatar.cmd.bending.list.nonbender=[italic][value]${player}[/value] n'est pas un Maître.[/italic]
+avatar.cmd.bending.list.item=- [translate=avatar.${bending}]
+avatar.cmd.bending.list.top=[bold]Lister [value]${amount}[/value] controleurs de Maîtrise de [value]${player}[/value][/bold]:
+
+avatar.cmd.bending.add.alreadyHas=[error][error_value]${player}[/error_value] est déjà un [error_value][translate=avatar.${bending}.demonym][/error_value][/error].
+avatar.cmd.bending.add.success=[bold][value]${player}[/value] est maintenant un [value][translate=avatar.${bending}.demonym][/value]![/bold]
+
+avatar.cmd.bending.remove.doesntHave=[error][error_value]${player}[/error_value] n'est pas un [error_value][translate=avatar.${bending}.demonym][/error_value][/error].
+avatar.cmd.bending.remove.success=[bold] [value][translate=avatar.${bending}][/value] retirée de [value]${player}[/value]![/bold]
+
+avatar.cmd.ability.set.range=[error]L'XP de compétence doit être de [error_value]0[/error_value] à [error_value]100[/error_value].
+avatar.cmd.ability.set.success=[bold]L'Experience de [value]${player}[/value] pour [value]${ability}[/value] a été mise avec succès à [value]${amount}[/value][/bold]
+
+avatar.cmd.ability.get=[bold]L'Experience de [value]${player}[/value] pour [value]${ability}[/value] est égal à [value]${amount}[/value][/bold]
+
+avatar.cmd.cfg.exception1=[error]Une erreur s'est produite lors de la recharge de la configuration[/error]
+avatar.cmd.cfg.exception2=[error]Détails: [error_value]${details}[/error_value] voir les logs pour plus d'informations[/error]
+
+avatar.cmd.cfg.successful=[bold]Valeurs de configurations rechargées avec succès[/bold]
+
+avatar.cmd.pp.add=Points de progression de [value]${player}[/value] [value][translate=avatar.${bending}][/value] ont été augmentés à [value]${pps}[/value].
+avatar.cmd.pp.get=[value]${player}[/value] a actuellement [value]${pps}[/value] [value][translate=avatar.${bending}][/value] points de progression.
+avatar.cmd.pp.set=Points de progression de [value]${player}[/value] [value][translate=avatar.${bending}][/value] ont été mit à [value]${pps}[/value].
+avatar.cmd.pp.set.range=[error]Les Points de progression doivent être supérieurs à 0.[/error]
+
+avatar.spec.locked=bloqué
+avatar.spec.lvl1=niveau I
+avatar.spec.lvl2=niveau II
+avatar.spec.lvl3=niveau III
+avatar.spec.lvl4_1=niveau IV, premier chemin
+avatar.spec.lvl4_2=niveau IV, deuxieme chemin
+avatar.cmd.xpset=Progrès de [value]${player}[/value] [value]${ability}[/value] a été mit à [value][translate=avatar.spec.${spec}][/value]
+avatar.cmd.noAbility=Il n'y a pas de compétence nommée %s
+
+avatar.donthavebending=[error]Vous n'avez pas encore appris la ${bending}. Pour l'avoir, ecrivez: [error_value]/avatar bending add ${username} ${bending}[/error_value][/error]
+avatar.nochi=Pas assez de chi!
+avatar.airBubbleElytra=Vous ne pouvez pas utiliser la Bulle d'Air avec des elytres
+avatar.bisonStats=Le Bison est à ${food}%% de nourriture, ${health}%% de santé, et ${domestication} de domestication.
+avatar.outOfScrolls=Ce sac de Maître est vide. Il n'avait sûrement aucun manuscrit à vous donner.
+avatar.abilityLocked=Vous avez besoin de débloquer cette compétence pour pouvoir l'utiliser!
+
+avatar.bisonWhistle.summon=Votre Bison à été appelé et il arrivera dans environ ${time} secondes!
+avatar.bisonWhistle.assign=Ce sifflet de Bison à été lié à ${bison}.
+avatar.bisonWhistle.notAssigned=[error]Ce sifflet de Bison n'a été lié à aucun Bison; accroupissez-vous et cliquez sur un Bison avec cet objet pour les lier.[/error]
+avatar.bisonWhistle.notFound=[error]${bison} ne vit plus dans le monde physique.[/error]
+avatar.bisonWhistle.notOwned=[error]Ce bison volant ne vous appartient pas.[/error]
+avatar.bisonWhistle.untamed=[error]Ce bison volant est sauvage et vous devez d'abord l'apprivoiser.[/error]
+avatar.bisonWhistle.tooltipBound=Lié à %s
+avatar.bisonWhistle.tooltipUnbound=Pas lié
+avatar.bisonWhistle.transferAway=Votre bison volant ${bison} à été transféré à ${newOwner}.
+avatar.bisonWhistle.transferTo=Vous possedez à présent le bison volant de ${oldOwner} nommé ${bison}!
+avatar.bisonWhistle.noTransfer=[error]Personne n'a reclamé un transfert de bison récemment.[/error]
+avatar.bisonWhistle.transferAway.start=${newOwner} aimerait posséder votre bison ${bison}. Appuyez sur [keybinding=avatar.TransferBison] pour confirmer, ignorer pour décliner.
+avatar.bisonWhistle.transferTo.start=Un message à été envoyé à ${oldOwner} pour confirmer le transfert de ${bison}.
+avatar.bisonWhistle.transferAway.ignore=Le transfert avec ${newOwner} a été ignoré.
+avatar.bisonWhistle.transferTo.ignore=${oldOwner} has chosen not to respond to your transfer request.
+avatar.bisonWhistle.transferOffline=[error]Ce bison n'est pas le votre. Vous ne pouvez pas transferer ce bison puisque le propriétaire ${owner} n'est pas en ligne.[/error]
+avatar.bisonChestSlots1=Votre bison n'a pas encore
+avatar.bisonChestSlots2=d'inventaire, mais va obtenir
+avatar.bisonChestSlots3=plus de places quand il grandira.
+
+avatar.ability.pickup_block=Ramasser un bloc
+avatar.ability.pickup_block.desc=Utilisez la Maîtrise de la Terre pour déplacer des blocs maitrisables. Placez-les dans la position désirée, ou jetez les sur vos ennemis.
+avatar.ability.pickup_block.lvl1=Deplacez et jetez des blocs maitrisables
+avatar.ability.pickup_block.lvl2=Plus vite et plus loin quand il est jeté
+avatar.ability.pickup_block.lvl3=Double de dégats
+avatar.ability.pickup_block.lvl4_1=Boomerang de bloc ;; Le bloc revient après avoir touché un mob
+avatar.ability.pickup_block.lvl4_2=Large impacte ;; 1/2 chance de créer une explosion à l'aterrisage.
+
+avatar.ability.ravine=Ravin
+avatar.ability.ravine.desc=Créez une puissante mais petite fissure dans le sol. Fonctionne seulement sur le sol et la Terre, mais peut faire beaucoup de dégats.
+avatar.ability.ravine.lvl1=Lent, ravin basic
+avatar.ability.ravine.lvl2=Plus rapide
+avatar.ability.ravine.lvl3=Le ravin parcourt plus loin, sauf s'il y a un obstacle
+avatar.ability.ravine.lvl4_1=Fissure ;; Destruit les blocs en dessous, atteint plusieurs ennemies, mais coûte 1.5x de chi
+avatar.ability.ravine.lvl4_2=Terre tremblante ;; Chance de renverse l'armure et les armes, et de frapper les ennemis
+
+avatar.ability.earth_wall=Mur
+avatar.ability.earth_wall.desc=Elevez une barrière protective en face de vous. Il peut bloquer les projectiles et mobs.
+avatar.ability.earth_wall.lvl1=Invoquez un petit mur
+avatar.ability.earth_wall.lvl2=Créez un plus large mur
+avatar.ability.earth_wall.lvl3=Créez un encore plus large mur
+avatar.ability.earth_wall.lvl4_1=Tirez des projéctiles à travers le mur
+avatar.ability.earth_wall.lvl4_2=Le mur reste elevé plus longtemps, mais utilise du chi
+
+avatar.ability.mine_blocks=Miner des Blocs
+avatar.ability.mine_blocks.desc=Detruisez rapidement des blocs pour miner des tunnels
+avatar.ability.mine_blocks.lvl1=Minez des blocs
+avatar.ability.mine_blocks.lvl2=Minez encore plus de blocs
+avatar.ability.mine_blocks.lvl3=Fortune niveau I quand vous minez
+avatar.ability.mine_blocks.lvl4_1=Minez très profondement, fortune niveau III
+avatar.ability.mine_blocks.lvl4_2=Minez des veines de minerai, fortune niveau IV
+
+avatar.ability.light_fire=Léger Feu
+avatar.ability.light_fire.desc=Une petite capacité utile, pour allumer des feux. Moins pratique en combat que certaines capacités.
+avatar.ability.light_fire.fail=Vous n'etiez pas capable d'allumer le feu. Vous devriez peut être réessayer...
+avatar.ability.light_fire.lvl1=Essayez de créer un petit feu
+avatar.ability.light_fire.lvl2=Plus de chance de créer du feu
+avatar.ability.light_fire.lvl3=Encore plus de chance de créer du feu
+avatar.ability.light_fire.lvl4_1=Mur de flammes ;; Créez une ligne de feu dans la direction où vous regardez
+avatar.ability.light_fire.lvl4_2=Large portée ;; Enflammez aussi les proches blocs
+
+avatar.ability.fire_arc=Arc de feu
+avatar.ability.fire_arc.desc=Faites un fouet enflammé et jetez le sur vos ennemis.
+avatar.ability.fire_arc.lvl1=Créez un arc de feu
+avatar.ability.fire_arc.lvl2=Se déplace plus rapidement
+avatar.ability.fire_arc.lvl3=Beaucoup plus de dégats
+avatar.ability.fire_arc.lvl4_1=Large feu ;; Peut faire encore plus de feu à l'atterissage
+avatar.ability.fire_arc.lvl4_2=Boomerang ;; Revient suite à une frappe réussite
+
+avatar.ability.flamethrower=Lance-flammes
+avatar.ability.flamethrower.desc=Genère un flux de puissantes, flames à distance. Un symbole de la Maîtrise du feu.
+avatar.ability.flamethrower.lvl1=Attaque de courte rangée
+avatar.ability.flamethrower.lvl2=Presque le double de flammes; mais plus de chi
+avatar.ability.flamethrower.lvl3=Plus grande portée, plus de précision
+avatar.ability.flamethrower.lvl4_1=Flux de flammes ;; Flammes concentrées, de très grand portée
+avatar.ability.flamethrower.lvl4_2=Le Monde va bruler!! ;; Flammes non-concentrées, qui mettent le feu partout
+
+avatar.ability.fireball=Boule de Feu
+avatar.ability.fireball.desc=Créez une orbe incandescante de flammes. Cela fait une explosion ardente à l'impact.
+avatar.ability.fireball.lvl1=Créez une boule de feu basique.
+avatar.ability.fireball.lvl2=Plus rapide au lancé.
+avatar.ability.fireball.lvl3=Beaucoup plus de dégats lors d'un coup direct.
+avatar.ability.fireball.lvl4_1=Explosion concentrée ;; Peut parfois détruire de l'obsidienne
+avatar.ability.fireball.lvl4_2=Explosion chargée ;; Prend quelque secondes à charger, plus large explosion quand chargée
+
+avatar.ability.water_arc=Arc d'eau
+avatar.ability.water_arc.desc=Une des attaques les plus communes de la Maîtrise de l'eau. Tirez un arc d'eau sur votre ennemi, mais seulement quand de l'eau est dans les parages.
+avatar.ability.water_arc.lvl1=Arc d'eau basique
+avatar.ability.water_arc.lvl2=Plus grande rangée de recupérage
+avatar.ability.water_arc.lvl3=Beaucoup plus rapide
+avatar.ability.water_arc.lvl4_1=Boomerang ;; Revient vers vous si vous touchez une cible
+avatar.ability.water_arc.lvl4_2=Lance d'eau ;; Gravité desactivée pendant 2 secondes après etre lancé, plus lent
+
+avatar.ability.wave=Vague
+avatar.ability.wave.desc=Invoquez une vague d'eau pour détruire vos ennemis. Marche seulement quand vous etes sous l'eau.
+avatar.ability.wave.lvl1=Vague lente pour noyer vos ennemis.
+avatar.ability.wave.lvl2=Beaucoup plus de dégats
+avatar.ability.wave.lvl3=Beaucoup plus large
+avatar.ability.wave.lvl4_1=Tsunami ;; Beaucoup plus large et affecte les créatures sur le sol
+avatar.ability.wave.lvl4_2=Vague de force ;; Vague très rapide
+
+avatar.ability.water_bubble=Bulle d'eau
+avatar.ability.water_bubble.desc=Suspendez et transportez une bulle d'eau. Peut etre utilisé comme un seau de longe rangée.
+avatar.ability.water_bubble.lvl1=Bulle d'eau de petite rangée, l'eau sèche après l'impact
+avatar.ability.water_bubble.lvl2=Lancez la bulle beaucoup plus loin
+avatar.ability.water_bubble.lvl3=La bulle créée une sourve d'eau permanente à l'atterissage
+avatar.ability.water_bubble.lvl4_1=Lancez la bulle d'eau très loin
+avatar.ability.water_bubble.lvl4_2=N'utilise pas d'eau pour créer la bulle - eau infinie
+
+avatar.ability.water_skate=Patin d'eau
+avatar.ability.water_skate.desc=Courez sur une surface d'eau. Pratique abilité evasive, ou juste pour se balader.
+avatar.ability.water_skate.lvl1=Glissez à travers l'eau, ne pouvez pas utiliser d'abilités
+avatar.ability.water_skate.lvl2=Peut utiliser des abilités en patinant
+avatar.ability.water_skate.lvl3=Beaucoup plus rapide
+avatar.ability.water_skate.lvl4_1=Patin equilibré ;; Peut patiner sur de l'eau coulante
+avatar.ability.water_skate.lvl4_2=Impact aqueux ;; Fracassez le sol après avoir sauté
+
+avatar.ability.air_gust=Rafale d'air
+avatar.ability.air_gust.desc=Generez une puissant rafale d'air pour repousser vos ennemis, vous permettant de vous concentrez sur un autre problème.
+avatar.ability.air_gust.lvl1=Propulez vos ennemis au loin
+avatar.ability.air_gust.lvl2=Moitié de temps de recharge
+avatar.ability.air_gust.lvl3=Propulsion plus puissante
+avatar.ability.air_gust.lvl4_1=Extincteur ;; Détruit des projectiles plus faibles
+avatar.ability.air_gust.lvl4_2=Aspirateur ;; Aspire les ennemis VERS vous
+
+avatar.ability.air_jump=Saut d'air
+avatar.ability.air_jump.desc=Manipulez l'air autour de vous pour vous propulser. Parfait pour rattraper un ennemi sans méfiance.
+avatar.ability.air_jump.lvl1=Sautez dans les airs
+avatar.ability.air_jump.lvl2=Pouvoir de saut légèrement amélioré
+avatar.ability.air_jump.lvl3=Saut encore plus performant
+avatar.ability.air_jump.lvl4_1=Double saut ;; Coûte le doule de chi
+avatar.ability.air_jump.lvl4_2=Attaque au sol ;; Attaque les ennemis proches sur le sol
+
+avatar.ability.airblade=Lame d'air
+avatar.ability.airblade.desc=Un puissant disque d'air en rotation suffisant pour couper de la chair. Peut etre fatale en succession rapide.
+avatar.ability.airblade.lvl1=Abilité de base
+avatar.ability.airblade.lvl2=Plus rapide et plus de dégats
+avatar.ability.airblade.lvl3=Peut maintenant couper des blocs
+avatar.ability.airblade.lvl4_1=Lame enchainée ;; Rebondit vers de multiples ennemis
+avatar.ability.airblade.lvl4_2=Perceur d'armures ;; Coupe à travers des armures et de la pierre
+
+avatar.ability.air_bubble=Bulle d'air
+avatar.ability.air_bubble.desc=Créez une bulle d'air autour de vous pour vous proteger des attaques. En revanche, cela utilise beaucoup de chi pour la maintenir.
+avatar.ability.air_bubble.lvl1=Petite rangée et propulsion arrière
+avatar.ability.air_bubble.lvl2=Bulle d'air d'une taille médium
+avatar.ability.air_bubble.lvl3=Plus de propulsion vers l'arrière
+avatar.ability.air_bubble.lvl4_1=Bulle préssurisé ;; Très large taille
+avatar.ability.air_bubble.lvl4_2=Sous-courant ;; Survol limité, désactivé en s'accroupissant
+
+avatar.ability.undefined=???
+
+avatar.ui.level0=Niveau I
+avatar.ui.level1=Niveau II
+avatar.ui.level2=Niveau III
+avatar.ui.level3=-MAX-
+avatar.ui.path_first=Premier Chemin
+avatar.ui.path_second=Second Chemin
+avatar.ui.unlock=Compétence bloquée
+avatar.ui.unlockDesc=Utilisez un(e) [translate=avatar.${bending}] ou un Manuscrit Universel pour débloquer
+avatar.ui.skillsMenu=[translate=avatar.${bending}] Expérience de compétence
+
+avatar.radial.undefined=A venir!
+avatar.radial.xp=[translate=avatar.ui.level${level}], ${xp}%%
+avatar.radial.max=Niveau IV, [translate=avatar.ui.path_${xp}]
+avatar.radial.locked1=Compétence bloquée
+avatar.radial.locked2=Appuyez sur ${level} pour débloquer
+avatar.radial.lockedCreative1=Mode Créatif
+avatar.radial.lockedCreative2=Bloqué mais en mode créatif
+
+avatar.getBending.title=Maîtrise bloquée
+avatar.getBending.incompatible=Vous pouvez seulement utiliser des manuscrits du même type ou type universel
+avatar.getBending.guide=Inserez 3 manuscrit du même type ou type universel pour débloquer la Maîtrise
+
+avatar.key.none1=Aucune touche
+avatar.key.none2=Cliquez pour éditer
+avatar.key.set1=%1$s
+avatar.key.set2=Cliquez pour éditer
+avatar.key.editing1=> %1$s <
+avatar.key.editing2=ESC pour délier
+avatar.key.conflict1=%1$s
+avatar.key.conflict2=Conflit w/ %1$s
+
+death.attack.avatar_earthbendBlock=%2$s a brisé %1$s avec la Maîtrise de la Terre
+death.attack.avatar_waterArc=%2$s a utilisé la Maîtrise de l'Eau pour abattre %1$s
+death.attack.avatar_ravine=%2$s a brisé %1$s dans une ravine
+death.attack.avatar_wave=%1$s ne peut pas surfer
+death.attack.avatar_fireball=%2$s a foudroyé %1$s avec une boule de feu
+death.attack.avatar_airblade=%1$s a été découpé par %2$s
+death.attack.avatar_flamethrower=%1$s vient d'etre roti par %2$s!!
+death.attack.avatar_groundSmash=%2$s a brisé %1$s en chair
+
+entity.Airbender.name=Maître de l'Air
+entity.Firebender.name=Maître du Feu
+entity.Waterbender.name=Maître e l'Eau
+entity.SkyBison.name=Bison Volant
+entity.OtterPenguin.name=Pingouin-Loutre
+
+itemGroup.avatar.items=Objects d'Avatar
+
+item.avatarmod:scroll.all.name=Manuscrit
+item.avatarmod:scroll.air.name=Manuscrit de Maîtrise de l'Air
+item.avatarmod:scroll.fire.name=Manuscrit de Maîtrise du Feu
+item.avatarmod:scroll.earth.name=Manuscrit de Maîtrise de la Terre
+item.avatarmod:scroll.water.name=Manuscrit de Maîtrise de l'Eau
+item.avatarmod:water_pouch.name=Pochette d'Eau
+item.avatarmod:bison_whistle.name=Sifflet de Bison
+
+item.avatarmod:bison_saddle.basic.name=Selle Basique de Bison
+item.avatarmod:bison_saddle.sturdy.name=Selle Solide de Bison
+item.avatarmod:bison_saddle.studded.name=Selle Clouté de Bison
+item.avatarmod:bison_saddle.majestic.name=Majestueuse Selle de Bison
+
+item.avatarmod:bison_armor.woven.name=Armure tissée de Bison
+item.avatarmod:bison_armor.chain.name=Armure de Bison en Chaîne
+item.avatarmod:bison_armor.wrought.name=Armure Forgée de Bison
+item.avatarmod:bison_armor.legendary.name=Armure Légendaire de Bison
+
+avatar.tooltip.water_pouch=%d/5 d'Eau
+avatar.tooltip.water_pouch.empty=Vide

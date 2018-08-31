@@ -59,7 +59,7 @@ public class AbilityAirGust extends Ability {
 
 			EntityAirGust gust = new EntityAirGust(world);
 			gust.setVelocity(look.times(25));
-			gust.setPosition(Vector.getLookRectangular(entity).plus(Vector.getEntityPos(entity).plusY(0.2)));
+			gust.setPosition(Vector.getLookRectangular(entity).plus(Vector.getEntityPos(entity).withY(entity.getEyeHeight())));
 			gust.setOwner(entity);
 			gust.setDestroyProjectiles(ctx.isMasterLevel(FIRST));
 			gust.setAirGrab(ctx.isMasterLevel(SECOND));

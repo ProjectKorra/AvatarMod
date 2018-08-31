@@ -63,7 +63,8 @@ public abstract class TickHandler {
 			PURIFY_PARTICLE_SPAWNER = new PurifyParticleHandler(),
 			SLIPSTREAM_COOLDOWN_HANDLER = new SlipstreamCooldownHandler(),
 			RENDER_ELEMENT_HANDLER = new RenderElementTickHandler(),
-			FIRE_DEVOUR_HANDLER = new FireDevourTickHandler();
+			FIRE_DEVOUR_HANDLER = new FireDevourTickHandler(),
+			STAFF_GUST_HANDLER = new StaffGustCooldown();
 
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;
