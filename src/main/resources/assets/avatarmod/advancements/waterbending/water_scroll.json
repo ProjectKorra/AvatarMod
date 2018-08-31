@@ -1,5 +1,4 @@
 {
-
   "display": {
     "title": "Cracking the Iceberg",
     "description": "Gain a waterbending scroll!",
@@ -10,11 +9,10 @@
     "background": "avatarmod:textures/advancements/background/water.png",
     "frame": "goal"
   },
-
   "rewards": {
     "experience": 250,
     "recipes": [
-          "avatarmod:water_pouch"
+      "avatarmod:water_pouch"
     ]
   },
   "criteria": {

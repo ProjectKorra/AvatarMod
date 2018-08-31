@@ -1,5 +1,4 @@
 {
-
   "display": {
     "title": "Awakening in the Iceberg",
     "description": "Gain an airbending scroll!",
@@ -10,11 +9,10 @@
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "goal"
   },
-
   "rewards": {
     "experience": 250,
     "recipes": [
-      "avatarmod:airbending_staff"
+      "avatarmod:airbender_staff"
     ]
   },
   "criteria": {
