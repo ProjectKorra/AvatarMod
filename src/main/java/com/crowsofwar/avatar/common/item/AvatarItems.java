@@ -41,6 +41,7 @@ AvatarItems {
 	public static ItemBisonArmor itemBisonArmor;
 	public static ItemOstrichEquipment itemOstrichEquipment;
 	private static ItemStack stackScroll;
+	public static ItemAirbenderStaff airbenderStaff;
 	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
 		@Override
 		public ItemStack getTabIconItem() {
@@ -59,6 +60,7 @@ AvatarItems {
 		addItem(itemBisonArmor = new ItemBisonArmor());
 		addItem(itemBisonSaddle = new ItemBisonSaddle());
 		addItem(itemOstrichEquipment = new ItemOstrichEquipment());
+		addItem(airbenderStaff = new ItemAirbenderStaff());
 
 		stackScroll = new ItemStack(itemScroll);
 		MinecraftForge.EVENT_BUS.register(new AvatarItems());

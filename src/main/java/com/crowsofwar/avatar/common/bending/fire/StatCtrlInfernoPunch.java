@@ -20,6 +20,8 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -125,116 +127,113 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		Entity target = event.getEntity();
 		DamageSource source = event.getSource();
 		World world = target.getEntityWorld();
-		if (entity instanceof EntityFirebender) {
-			if (((EntityFirebender) entity).getHeldItemMainhand() == ItemStack.EMPTY) {
-				System.out.println(source);
-			}
-		}
-		if (entity instanceof EntityLivingBase) {
-			if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
-				Bender ctx = Bender.get((EntityLivingBase) entity);
-				if (ctx.getData() != null) {
-					Vector direction = Vector.getLookRectangular(entity);
-					AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
-					float powerModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
-					float damage = STATS_CONFIG.InfernoPunchDamage + (2 * powerModifier);
-					float knockBack = 1 + powerModifier;
-					int fireTime = 5 + (int) (powerModifier * 10);
+			if (entity instanceof EntityLivingBase) {
+				if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
+					Bender ctx = Bender.get((EntityLivingBase) entity);
+					if (ctx.getData() != null) {
+						Vector direction = Vector.getLookRectangular(entity);
+						AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
+						float powerModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
+						float damage = STATS_CONFIG.InfernoPunchDamage + (2 * powerModifier);
+						float knockBack = 1 + powerModifier;
+						int fireTime = 5 + (int) (powerModifier * 10);
 
-					if (abilityData.getLevel() >= 1) {
-						damage = 4 + (2 * powerModifier);
-						knockBack = 1.125F + powerModifier;
-						fireTime = 6;
-					} else if (abilityData.getLevel() >= 2) {
-						damage = 5 + (2 * powerModifier);
-						knockBack = 1.25F + powerModifier;
-						fireTime = 8 + (int) (powerModifier * 10);
-					}
-					if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-						damage = 10 + (2 * powerModifier);
-						knockBack = 1.5F + powerModifier;
-						fireTime = 15 + (int) (powerModifier * 10);
-					}
-					if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-						damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * powerModifier);
-						knockBack = 0.75F + powerModifier;
-						fireTime = 4 + (int) (powerModifier * 10);
-					}
+						if (abilityData.getLevel() >= 1) {
+							damage = 4 + (2 * powerModifier);
+							knockBack = 1.125F + powerModifier;
+							fireTime = 6;
+						} else if (abilityData.getLevel() >= 2) {
+							damage = 5 + (2 * powerModifier);
+							knockBack = 1.25F + powerModifier;
+							fireTime = 8 + (int) (powerModifier * 10);
+						}
+						if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+							damage = 10 + (2 * powerModifier);
+							knockBack = 1.5F + powerModifier;
+							fireTime = 15 + (int) (powerModifier * 10);
+						}
+						if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+							damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * powerModifier);
+							knockBack = 0.75F + powerModifier;
+							fireTime = 4 + (int) (powerModifier * 10);
+						}
 
-					if (((EntityLivingBase) entity).isPotionActive(MobEffects.STRENGTH)) {
-						damage += (Objects.requireNonNull(((EntityLivingBase) entity).getActivePotionEffect(MobEffects.STRENGTH)).getAmplifier() + 1) / 2F;
-					}
+						if (((EntityLivingBase) entity).isPotionActive(MobEffects.STRENGTH)) {
+							damage += (Objects.requireNonNull(((EntityLivingBase) entity).getActivePotionEffect(MobEffects.STRENGTH)).getAmplifier() + 1) / 2F;
+						}
 
-					if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
-						if (((EntityLivingBase) entity).getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().startsWith("avatar_"))) {
-							if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-								BlockPos blockPos = target.getPosition();
-								AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, target, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 3F, true, false);
-								fireExplosion.doExplosionA();
+						if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
+							if (((EntityLivingBase) entity).getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().startsWith("avatar_"))) {
+								if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+									BlockPos blockPos = target.getPosition();
+									AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, target, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 3F, true, false);
+									fireExplosion.doExplosionA();
+									if (world instanceof WorldServer) {
+										WorldServer World = (WorldServer) target.getEntityWorld();
+										World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY, target.posZ, 200, 0.05, 0.05, 0.05, 0.75);
+										fireExplosion.doExplosionB(true);
+									}
+								}
 								if (world instanceof WorldServer) {
 									WorldServer World = (WorldServer) target.getEntityWorld();
-									World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY, target.posZ, 200, 0.05, 0.05, 0.05, 0.75);
-									fireExplosion.doExplosionB(true);
+									World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY + target.getEyeHeight(), target.posZ, 50, 0.05, 0.05, 0.05, 0.05);
+
 								}
-							}
-							if (world instanceof WorldServer) {
-								WorldServer World = (WorldServer) target.getEntityWorld();
-								World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY + target.getEyeHeight(), target.posZ, 50, 0.05, 0.05, 0.05, 0.05);
 
-							}
+								world.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
+										SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
-							world.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
-									SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
-
-							if (target.canBePushed() && target.canBeCollidedWith()) {
-								target.attackEntityFrom(DamageSource.IN_FIRE, damage);
-								target.setFire(fireTime);
-								target.motionX += direction.x() * knockBack;
-								target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
-								target.motionZ += direction.z() * knockBack;
-								target.isAirBorne = true;
-								abilityData.addXp(4 - abilityData.getLevel());
-								// this line is needed to prevent a bug where players will not be pushed in multiplayer
-								AvatarUtils.afterVelocityAdded(target);
-							}
-							if (!(target instanceof EntityDragon)) {
-								ctx.getData().removeStatusControl(INFERNO_PUNCH);
+								if (target.canBePushed() && target.canBeCollidedWith()) {
+									target.attackEntityFrom(DamageSource.IN_FIRE, damage);
+									target.setFire(fireTime);
+									target.motionX += direction.x() * knockBack;
+									target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
+									target.motionZ += direction.z() * knockBack;
+									target.isAirBorne = true;
+									abilityData.addXp(4 - abilityData.getLevel());
+									// this line is needed to prevent a bug where players will not be pushed in multiplayer
+									AvatarUtils.afterVelocityAdded(target);
+								}
+								if (!(target instanceof EntityDragon)) {
+									ctx.getData().removeStatusControl(INFERNO_PUNCH);
+								}
 							}
 						}
 					}
 				}
 			}
 		}
-	}
 
 	@SubscribeEvent
 	public static void onDragonHurt(LivingHurtEvent event) {
-		EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
-		Entity target = event.getEntity();
-		if (entity instanceof EntityPlayer || entity instanceof EntityBender) {
-			BendingData data = BendingData.get(entity);
-			if (data != null) {
-				AbilityData aD = AbilityData.get(entity, "inferno_punch");
-				Bender ctx = Bender.get(entity);
-				float damageModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
-				float damage = STATS_CONFIG.InfernoPunchDamage + (2 * damageModifier);
-				if (data.hasStatusControl(INFERNO_PUNCH) && !(event.getSource().getDamageType().equals("avatar_groundSmash")) &&
-						!(event.getSource().getDamageType().equals("avatar_Air"))) {
-					if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
-						if (aD.getLevel() >= 1) {
-							damage = 4 + (2 * damageModifier);
-						} else if (aD.getLevel() >= 2) {
-							damage = 5 + (2 * damageModifier);
-						}
-						if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-							damage = 10 + (2 * damageModifier);
-						}
-						if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-							damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * damageModifier);
-						}
-						if (target instanceof EntityDragon) {
-							event.setAmount(damage);
-							data.removeStatusControl(INFERNO_PUNCH);
+		if (event.getSource().getTrueSource() instanceof EntityLivingBase) {
+			EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
+			Entity target = event.getEntity();
+			if (entity instanceof EntityPlayer || entity instanceof EntityBender) {
+				BendingData data = BendingData.get(entity);
+				if (data != null) {
+					AbilityData aD = AbilityData.get(entity, "inferno_punch");
+					Bender ctx = Bender.get(entity);
+					float damageModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
+					float damage = STATS_CONFIG.InfernoPunchDamage + (2 * damageModifier);
+					if (data.hasStatusControl(INFERNO_PUNCH) && !(event.getSource().getDamageType().equals("avatar_groundSmash")) &&
+							!(event.getSource().getDamageType().equals("avatar_Air"))) {
+						if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
+							if (aD.getLevel() >= 1) {
+								damage = 4 + (2 * damageModifier);
+							} else if (aD.getLevel() >= 2) {
+								damage = 5 + (2 * damageModifier);
+							}
+							if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+								damage = 10 + (2 * damageModifier);
+							}
+							if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+								damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * damageModifier);
+							}
+							if (target instanceof EntityDragon) {
+								event.setAmount(damage);
+								data.removeStatusControl(INFERNO_PUNCH);
+							}
 						}
 					}
 				}
