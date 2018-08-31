@@ -2,10 +2,16 @@ package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.air.StaffPowerModifier;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.collect.Multimap;
 import net.minecraft.entity.Entity;
@@ -102,14 +108,13 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+		ParticleSpawner particles = new NetworkParticleSpawner();
 
-		if (isSelected) {
+		if (isSelected && entityIn instanceof EntityLivingBase) {
 			if (!worldIn.isRemote && worldIn instanceof WorldServer) {
 				WorldServer world = (WorldServer) worldIn;
-				if (entityIn.ticksExisted % 10 == 0) {
-					world.spawnParticle(EnumParticleTypes.CLOUD, entityIn.posX, entityIn.posY + entityIn.getEyeHeight(),
-							entityIn.posZ, 10, 0, 0, 0, 0.02);
-				}
+				particles.spawnParticles(world, EnumParticleTypes.CLOUD,1, 4, entityIn.posX, entityIn.posY + entityIn.getEyeHeight(),
+						entityIn.posZ, 0.2, 0.8, 0.2);
 			}
 		}
 	}
