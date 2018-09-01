@@ -125,7 +125,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 			}
 			BendingData data = BendingData.get((EntityLivingBase) entityIn);
 			Chi chi = data.chi();
-			if (entityIn.ticksExisted % 40 == 0 && chi != null && data.getActiveBendingId() == Airbending.ID) {
+			if (entityIn.ticksExisted % 40 == 0 && chi != null && data.hasBendingId(Airbending.ID)) {
 				if (stack.isItemDamaged()) {
 					float availableChi = chi.getAvailableChi();
 					if (availableChi > 0) {
