@@ -31,7 +31,10 @@ public class AvatarAnalytics {
 		// Send initial analytics to server
 
 		boolean isServer = AvatarMod.proxy instanceof AvatarServerProxy;
-		String language = isServer ? "server" : FMLCommonHandler.instance().getCurrentLanguage();
+		String language = "server";
+		if (FMLCommonHandler.instance().getCurrentLanguage() != null) {
+			language = isServer ? "server" : FMLCommonHandler.instance().getCurrentLanguage();
+		}
 		int mods = Loader.instance().getModList().size() - 5;
 
 		String params = AnalyticsUtils.getBasicParameters();

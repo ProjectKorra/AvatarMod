@@ -121,7 +121,13 @@ public class AvatarUiTextures {
 		InputStream instr = null;
 		try {
 
-			String path = "assets/avatarmod/textures/gui/background/";
+			String path;
+			if (!CLIENT_CONFIG.useSimpleBackgroundTextures) {
+				path = "assets/avatarmod/textures/gui/background/";
+			}
+			else  {
+				path = "assets/avatarmod/textures/gui/backgrounds/";
+			}
 			String file = path + bendingName + ".png";
 
 			BufferedImage image = ImageIO.read(AvatarUiTextures.class.getClassLoader().getResourceAsStream(file));

@@ -64,9 +64,6 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 @SideOnly(Side.CLIENT)
 public class AvatarUiRenderer extends Gui {
 
-	private static final ResourceLocation PURIFY_VISION_SHADER = new ResourceLocation
-			("avatarmod", "shaders/post/purify_weak.json");
-
 	public static AvatarUiRenderer instance;
 	private final Minecraft mc;
 	private RadialMenu currentBendingMenu;

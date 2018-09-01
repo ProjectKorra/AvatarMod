@@ -86,6 +86,46 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 		return this;
 	}
 
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+		if (handIn == EnumHand.OFF_HAND) {
+			boolean isCreative = playerIn.isCreative();
+			BendingData data = BendingData.get(playerIn);
+			if (!data.hasTickHandler(STAFF_GUST_HANDLER) && !playerIn.world.isRemote) {
+				if (spawnGust) {
+					EntityAirGust gust = new EntityAirGust(playerIn.world);
+					gust.setPosition(Vector.getLookRectangular(playerIn).plus(Vector.getEntityPos(playerIn)).withY(playerIn.getEyeHeight() +
+							playerIn.getEntityBoundingBox().minY));
+					gust.setAbility(new AbilityAirGust());
+					gust.setOwner(playerIn);
+					gust.setVelocity(Vector.getLookRectangular(playerIn).times(30));
+					playerIn.world.spawnEntity(gust);
+					data.addTickHandler(STAFF_GUST_HANDLER);
+					if (!isCreative) {
+						ItemStack stack = playerIn.getHeldItemOffhand().copy();
+						stack.damageItem(2, playerIn);
+					}
+					return new ActionResult<ItemStack>(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
+				} else {
+					EntityAirblade blade = new EntityAirblade(playerIn.world);
+					blade.setPosition(Vector.getLookRectangular(playerIn).plus(Vector.getEntityPos(playerIn)));
+					blade.setAbility(new AbilityAirblade());
+					blade.setOwner(playerIn);
+					blade.setVelocity(Vector.getLookRectangular(playerIn).times(30).withY(playerIn.getEyeHeight()));
+					blade.setDamage(2);
+					playerIn.world.spawnEntity(blade);
+					data.addTickHandler(STAFF_GUST_HANDLER);
+					if (!isCreative) {
+						ItemStack stack = playerIn.getHeldItemOffhand().copy();
+						stack.damageItem(2, playerIn);
+					}
+					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
+				}
+			}
+			return new ActionResult<ItemStack>(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
+		}
+		return new ActionResult<ItemStack>(EnumActionResult.FAIL, playerIn.getHeldItem(handIn));
+	}
 
 	@Override
 	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack) {
@@ -104,8 +144,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 					stack.damageItem(2, entityLiving);
 				}
 				return true;
-			}
-			else {
+			} else {
 				EntityAirblade blade = new EntityAirblade(entityLiving.world);
 				blade.setPosition(Vector.getLookRectangular(entityLiving).plus(Vector.getEntityPos(entityLiving)));
 				blade.setAbility(new AbilityAirblade());
@@ -142,6 +181,22 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 			}
 		}
 		if (entityIn instanceof EntityLivingBase) {
+			if (((EntityLivingBase) entityIn).getHeldItemOffhand().getItem() == this) {
+				if (!worldIn.isRemote && worldIn instanceof WorldServer) {
+					WorldServer world = (WorldServer) worldIn;
+					if (entityIn.ticksExisted % 40 == 0) {
+						world.spawnParticle(EnumParticleTypes.CLOUD, entityIn.posX, entityIn.posY + entityIn.getEyeHeight(),
+								entityIn.posZ, 1, 0, 0, 0, 0.04);
+						((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.SPEED, 40));
+						((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 40));
+						if ((new Random().nextInt(2) + 1) >= 2) {
+							((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 20));
+						}
+					}
+				}
+			}
+		}
+		if (entityIn instanceof EntityLivingBase) {
 			//Heals the item's durability if you have airbending
 			BendingData data = BendingData.get((EntityLivingBase) entityIn);
 			Chi chi = data.chi();
@@ -161,12 +216,10 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
 
 	@Override
-	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot)
-	{
+	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
 		Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(equipmentSlot);
 
-		if (equipmentSlot == EntityEquipmentSlot.MAINHAND)
-		{
+		if (equipmentSlot == EntityEquipmentSlot.MAINHAND) {
 			spawnGust = new Random().nextBoolean();
 			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 1, 0));
 			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", 0, 0));
