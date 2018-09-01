@@ -33,6 +33,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
@@ -96,7 +97,7 @@ public class EntityFlames extends AvatarEntity {
 				true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
-			setVelocity(velocity().reflect(new Vector(sideHit)).times(0.5));
+			setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.5));
 
 			// Try to light firest
 			if (lightsFires && sideHit != EnumFacing.DOWN && !world.isRemote) {

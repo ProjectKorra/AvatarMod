@@ -39,6 +39,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		super(world);
 		setSize(1.5f, 1.5f);
 		putsOutFires = true;
+		this.noClip = true;
 	}
 
 	@Override

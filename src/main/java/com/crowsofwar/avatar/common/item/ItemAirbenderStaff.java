@@ -79,7 +79,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 	@Override
 	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack) {
 		BendingData data = BendingData.get(entityLiving);
-		if (!data.hasTickHandler(STAFF_GUST_HANDLER)) {
+		if (!data.hasTickHandler(STAFF_GUST_HANDLER) && !entityLiving.world.isRemote) {
 			if (spawnGust) {
 				EntityAirGust gust = new EntityAirGust(entityLiving.world);
 				gust.setPosition(Vector.getLookRectangular(entityLiving).plus(Vector.getEntityPos(entityLiving)).withY(entityLiving.getEyeHeight() + entityLiving.getEntityBoundingBox().minY));
@@ -113,8 +113,10 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 		if (isSelected && entityIn instanceof EntityLivingBase) {
 			if (!worldIn.isRemote && worldIn instanceof WorldServer) {
 				WorldServer world = (WorldServer) worldIn;
-				particles.spawnParticles(world, EnumParticleTypes.CLOUD,1, 4, entityIn.posX, entityIn.posY + entityIn.getEyeHeight(),
-						entityIn.posZ, 0.2, 0.8, 0.2);
+				if (entityIn.ticksExisted % 10 == 0) {
+					world.spawnParticle(EnumParticleTypes.CLOUD, entityIn.posX, entityIn.posY + entityIn.getEyeHeight(),
+							entityIn.posZ, 4, 0, 0, 0, 0.1 );
+				}
 			}
 		}
 	}

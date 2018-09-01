@@ -287,37 +287,39 @@ public class AirBurstHandler extends TickHandler {
 
 	@SubscribeEvent
 	public static void onDragonHurt(LivingHurtEvent event) {
-		EntityLivingBase attacker = (EntityLivingBase) event.getSource().getTrueSource();
-		Entity target = event.getEntity();
-		DamageSource source = event.getSource();
-		if (source.getDamageType().equals("avatar_Air")) {
-			if (attacker instanceof EntityPlayer || attacker instanceof EntityBender) {
-				Bender ctx = Bender.get(attacker);
-				if (ctx.getData() != null) {
-					AbilityData aD = AbilityData.get(attacker, "air_burst");
-					float powerRating = (float) (ctx.calcPowerRating(Airbending.ID) / 100);
-					float damage = 0.5F + powerRating;
-					if (aD.getLevel() == 1) {
-						damage = 0.75F + powerRating;
+		if (event.getSource().getTrueSource() instanceof EntityLivingBase) {
+			EntityLivingBase attacker = (EntityLivingBase) event.getSource().getTrueSource();
+			Entity target = event.getEntity();
+			DamageSource source = event.getSource();
+			if (source.getDamageType().equals("avatar_Air")) {
+				if (attacker instanceof EntityPlayer || attacker instanceof EntityBender) {
+					Bender ctx = Bender.get(attacker);
+					if (ctx.getData() != null) {
+						AbilityData aD = AbilityData.get(attacker, "air_burst");
+						float powerRating = (float) (ctx.calcPowerRating(Airbending.ID) / 100);
+						float damage = 0.5F + powerRating;
+						if (aD.getLevel() == 1) {
+							damage = 0.75F + powerRating;
+						}
+
+						if (aD.getLevel() >= 2) {
+							damage = 1 + powerRating;
+						}
+
+						if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+							//Piercing Winds
+							damage = 5 + powerRating;
+						}
+
+						if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+							//Maximum Pressure
+							//Pulls enemies in then blasts them out
+							damage = 2.5f + powerRating;
+						}
+						event.setAmount(damage);
+
+
 					}
-
-					if (aD.getLevel() >= 2) {
-						damage = 1 + powerRating;
-					}
-
-					if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-						//Piercing Winds
-						damage = 5 + powerRating;
-					}
-
-					if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-						//Maximum Pressure
-						//Pulls enemies in then blasts them out
-						damage = 2.5f + powerRating;
-					}
-					event.setAmount(damage);
-
-
 				}
 			}
 		}
