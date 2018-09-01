@@ -46,7 +46,8 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 		setUnlocalizedName("airbender_staff");
 		setCreativeTab(AvatarItems.tabItems);
 		setMaxStackSize(1);
-		setMaxDamage(2);
+		setMaxDamage(200);
+		//Max damage is the durability of the item, or the max damage the item can take
 		this.spawnGust = new Random().nextBoolean();
 
 	}
@@ -123,6 +124,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 							entityIn.posZ, 2, 0, 0, 0, 0.08 );
 				}
 			}
+			//Heals the item's durability if you have airbending
 			BendingData data = BendingData.get((EntityLivingBase) entityIn);
 			Chi chi = data.chi();
 			if (entityIn.ticksExisted % 40 == 0 && chi != null && data.hasBendingId(Airbending.ID)) {
