@@ -62,17 +62,19 @@ public class AbilityAirBubble extends Ability {
 
 			if (!bender.consumeChi(STATS_CONFIG.chiAirBubble)) return;
 
-			float size = 1.5f;
-			float health = 12;
-			if (ctx.getLevel() > 0) {
-				size = 2.5f;
-				health = 18;
+			float powerRating = (float) bender.calcPowerRating(Airbending.ID)/100;
+
+			float size = 1.5f + powerRating;
+			float health = 12 + powerRating;
+			if (ctx.getLevel() > 1) {
+				size = 2.5f + powerRating;
+				health = 18 + powerRating;
 			}
 			if (ctx.isMasterLevel(FIRST)) {
-				size = 4f;
-				health = 24;
+				size = 4f + powerRating;
+				health = 24 + powerRating;
 			}
-			if (ctx.isMasterLevel(SECOND)) health = 10f;
+			if (ctx.isMasterLevel(SECOND)) health = 10f + powerRating;
 
 			EntityAirBubble bubble = new EntityAirBubble(world);
 			bubble.setOwner(entity);
