@@ -113,9 +113,9 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 		if (isSelected && entityIn instanceof EntityLivingBase) {
 			if (!worldIn.isRemote && worldIn instanceof WorldServer) {
 				WorldServer world = (WorldServer) worldIn;
-				if (entityIn.ticksExisted % 10 == 0) {
+				if (entityIn.ticksExisted % 40 == 0) {
 					world.spawnParticle(EnumParticleTypes.CLOUD, entityIn.posX, entityIn.posY + entityIn.getEyeHeight(),
-							entityIn.posZ, 4, 0, 0, 0, 0.1 );
+							entityIn.posZ, 4, 0, 0, 0, 0.08 );
 				}
 			}
 		}
