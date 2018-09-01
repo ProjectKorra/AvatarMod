@@ -63,8 +63,11 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
-		stack.damageItem(1, attacker);
-		Vector velocity = Vector.getLookRectangular(attacker);
+		boolean isCreative = attacker instanceof EntityPlayer && ((EntityPlayer) attacker).isCreative();
+		if (!isCreative) {
+			stack.damageItem(1, attacker);
+		}
+		Vector velocity = Vector.getLookRectangular(attacker).times(1.1);
 		target.motionX += velocity.x();
 		target.motionY += velocity.y() > 0 ? velocity.y() + 0.2 : 0.3;
 		target.motionZ += velocity.z();
@@ -86,6 +89,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
 	@Override
 	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack) {
+		boolean isCreative = entityLiving instanceof EntityPlayer && ((EntityPlayer) entityLiving).isCreative();
 		BendingData data = BendingData.get(entityLiving);
 		if (!data.hasTickHandler(STAFF_GUST_HANDLER) && !entityLiving.world.isRemote) {
 			if (spawnGust) {
@@ -96,7 +100,9 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 				gust.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
 				entityLiving.world.spawnEntity(gust);
 				data.addTickHandler(STAFF_GUST_HANDLER);
-				stack.damageItem(2, entityLiving);
+				if (!isCreative) {
+					stack.damageItem(2, entityLiving);
+				}
 				return true;
 			}
 			else {
@@ -108,7 +114,9 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 				blade.setDamage(2);
 				entityLiving.world.spawnEntity(blade);
 				data.addTickHandler(STAFF_GUST_HANDLER);
-				stack.damageItem(2, entityLiving);
+				if (!isCreative) {
+					stack.damageItem(2, entityLiving);
+				}
 				return true;
 			}
 
@@ -139,7 +147,9 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 				if (stack.isItemDamaged()) {
 					float availableChi = chi.getAvailableChi();
 					if (availableChi > 1) {
-						chi.setTotalChi(chi.getTotalChi() - 2);
+						if (!(entityIn instanceof EntityPlayer && (((EntityPlayer) entityIn).isCreative()))) {
+							chi.setTotalChi(chi.getTotalChi() - 2);
+						}
 						stack.damageItem(-1, (EntityLivingBase) entityIn);
 					}
 				}
