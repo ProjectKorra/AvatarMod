@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.air.StaffPowerModifier;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
@@ -108,17 +109,28 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-		ParticleSpawner particles = new NetworkParticleSpawner();
 
 		if (isSelected && entityIn instanceof EntityLivingBase) {
 			if (!worldIn.isRemote && worldIn instanceof WorldServer) {
 				WorldServer world = (WorldServer) worldIn;
 				if (entityIn.ticksExisted % 40 == 0) {
 					world.spawnParticle(EnumParticleTypes.CLOUD, entityIn.posX, entityIn.posY + entityIn.getEyeHeight(),
-							entityIn.posZ, 4, 0, 0, 0, 0.08 );
+							entityIn.posZ, 2, 0, 0, 0, 0.08 );
+				}
+			}
+			BendingData data = BendingData.get((EntityLivingBase) entityIn);
+			Chi chi = data.chi();
+			if (entityIn.ticksExisted % 40 == 0 && chi != null && data.getActiveBendingId() == Airbending.ID) {
+				if (item().isDamaged(stack)) {
+					float availableChi = chi.getAvailableChi();
+					if (availableChi > 0) {
+						chi.setTotalChi(chi.getTotalChi() - 1);
+						item().setDamage(stack, getDamage(stack) - 1);
+					}
 				}
 			}
 		}
+
 	}
 
 	@Override
@@ -138,7 +150,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
 	@Override
 	public boolean isDamageable() {
-		return false;
+		return true;
 	}
 
 	@Override
