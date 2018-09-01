@@ -18,10 +18,8 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
@@ -35,6 +33,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -62,57 +61,59 @@ public class AbilityLightFire extends Ability {
 	public void execute(AbilityContext ctx) {
 
 		World world = ctx.getWorld();
-		EntityLivingBase entity = ctx.getBenderEntity();
+	//	EntityLivingBase entity = ctx.getBenderEntity();
 
 		VectorI looking = ctx.getLookPosI();
 		EnumFacing side = ctx.getLookSide();
+
 		if (ctx.isLookingAtBlock()) {
-			VectorI setAt = new VectorI(looking.x(), looking.y(), looking.z());
-			setAt.offset(side);
-			BlockPos blockPos = setAt.toBlockPos();
+			if (looking != null) {
+				VectorI setAt = new VectorI(looking.x(), looking.y(), looking.z());
+				setAt.offset(side);
+				BlockPos blockPos = setAt.toBlockPos();
 
-			double chance = 20 * ctx.getLevel() + 40;
-			chance += ctx.getPowerRating() / 10;
+				double chance = 20 * ctx.getLevel() + 40;
+				chance += ctx.getPowerRating() / 10;
 
-			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+				if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 
-				int yaw = (int) floor((ctx.getBenderEntity().rotationYaw * 8 / 360) + 0.5) & 7;
-				int x = 0, z = 0;
-				if (yaw == 1 || yaw == 2 || yaw == 3) x = -1;
-				if (yaw == 5 || yaw == 6 || yaw == 7) x = 1;
-				if (yaw == 3 || yaw == 4 || yaw == 5) z = -1;
-				if (yaw == 0 || yaw == 1 || yaw == 7) z = 1;
+					int yaw = (int) floor((ctx.getBenderEntity().rotationYaw * 8 / 360) + 0.5) & 7;
+					int x = 0, z = 0;
+					if (yaw == 1 || yaw == 2 || yaw == 3) x = -1;
+					if (yaw == 5 || yaw == 6 || yaw == 7) x = 1;
+					if (yaw == 3 || yaw == 4 || yaw == 5) z = -1;
+					if (yaw == 0 || yaw == 1 || yaw == 7) z = 1;
 
-				if (spawnFire(world, blockPos, ctx, true, chance)) {
-					for (int i = 1; i < 5; i++) {
-						spawnFire(world, blockPos.add(x * i, 0, z * i), ctx, false, 100);
+					if (spawnFire(world, blockPos, ctx, true, chance)) {
+						for (int i = 1; i < 5; i++) {
+							spawnFire(world, blockPos.add(x * i, 0, z * i), ctx, false, 100);
+						}
+						ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
 					}
-					ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
+
+				} else if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+
+					if (spawnFire(world, blockPos, ctx, true, chance)) {
+						spawnFire(world, blockPos.add(1, 0, 0), ctx, false, 100);
+						spawnFire(world, blockPos.add(-1, 0, 0), ctx, false, 100);
+						spawnFire(world, blockPos.add(0, 0, 1), ctx, false, 100);
+						spawnFire(world, blockPos.add(0, 0, -1), ctx, false, 100);
+						ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
+					}
+
+				} else {
+					if (spawnFire(world, blockPos, ctx, true, chance)) {
+						ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
+					}
 				}
 
-			} else if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-
-				if (spawnFire(world, blockPos, ctx, true, chance)) {
-					spawnFire(world, blockPos.add(1, 0, 0), ctx, false, 100);
-					spawnFire(world, blockPos.add(-1, 0, 0), ctx, false, 100);
-					spawnFire(world, blockPos.add(0, 0, 1), ctx, false, 100);
-					spawnFire(world, blockPos.add(0, 0, -1), ctx, false, 100);
-					ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
-				}
-
-			} else {
-				if (spawnFire(world, blockPos, ctx, true, chance)) {
-					ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
-				}
 			}
-
 		}
 	}
 
 	private boolean spawnFire(World world, BlockPos blockPos, AbilityContext ctx, boolean useChi,
 							  double chance) {
 		EntityLivingBase entity = ctx.getBenderEntity();
-
 
 
 		if (world.isRainingAt(blockPos)) {
