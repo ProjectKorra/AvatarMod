@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.item;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
@@ -21,11 +22,13 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityFireball;
+import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -122,16 +125,21 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 				if (entityIn.ticksExisted % 40 == 0) {
 					world.spawnParticle(EnumParticleTypes.CLOUD, entityIn.posX, entityIn.posY + entityIn.getEyeHeight(),
 							entityIn.posZ, 2, 0, 0, 0, 0.08 );
+					((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.SPEED, 40));
+					((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 40));
+					if ((new Random().nextInt(2) + 1) >= 2) {
+						((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 10));
+					}
 				}
 			}
 			//Heals the item's durability if you have airbending
 			BendingData data = BendingData.get((EntityLivingBase) entityIn);
 			Chi chi = data.chi();
-			if (entityIn.ticksExisted % 40 == 0 && chi != null && data.hasBendingId(Airbending.ID)) {
+			if (entityIn.ticksExisted % 80 == 0 && chi != null && data.hasBendingId(Airbending.ID) && ((new Random().nextInt(2) + 1) >= 2)) {
 				if (stack.isItemDamaged()) {
 					float availableChi = chi.getAvailableChi();
-					if (availableChi > 0) {
-						chi.setTotalChi(chi.getTotalChi() - 1);
+					if (availableChi > 1) {
+						chi.setTotalChi(chi.getTotalChi() - 2);
 						stack.damageItem(-1, (EntityLivingBase) entityIn);
 					}
 				}
