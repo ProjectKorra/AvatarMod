@@ -59,12 +59,15 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
+		stack.damageItem(1, attacker);
 		Vector velocity = Vector.getLookRectangular(attacker);
 		target.motionX += velocity.x();
 		target.motionY += velocity.y() > 0 ? velocity.y() + 0.2 : 0.3;
 		target.motionZ += velocity.z();
 		return true;
+
 	}
+
 
 	@Override
 	public EnumRarity getRarity(ItemStack stack) {
@@ -89,6 +92,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 				gust.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
 				entityLiving.world.spawnEntity(gust);
 				data.addTickHandler(STAFF_GUST_HANDLER);
+				stack.damageItem(2, entityLiving);
 				return true;
 			}
 			else {
@@ -100,6 +104,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 				blade.setDamage(2);
 				entityLiving.world.spawnEntity(blade);
 				data.addTickHandler(STAFF_GUST_HANDLER);
+				stack.damageItem(2, entityLiving);
 				return true;
 			}
 
@@ -121,11 +126,11 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 			BendingData data = BendingData.get((EntityLivingBase) entityIn);
 			Chi chi = data.chi();
 			if (entityIn.ticksExisted % 40 == 0 && chi != null && data.getActiveBendingId() == Airbending.ID) {
-				if (item().isDamaged(stack)) {
+				if (stack.isItemDamaged()) {
 					float availableChi = chi.getAvailableChi();
 					if (availableChi > 0) {
 						chi.setTotalChi(chi.getTotalChi() - 1);
-						item().setDamage(stack, getDamage(stack) - 1);
+						stack.damageItem(-1, (EntityLivingBase) entityIn);
 					}
 				}
 			}
