@@ -1,0 +1,23 @@
+{
+
+  "display": {
+    "title": "The Journey Begins!",
+    "description": "Use airgust for the first time!",
+    "icon": "avatarmod:textures/gui/icon/airbending.png",
+    "frame": "goal"
+  },
+  "parent": "avatarmod:airbending/air_scroll",
+  "rewards": {
+    "experience": 200,
+  },
+  "criteria": {
+    "summoned_air_gust": {
+      "trigger": "minecraft:summoned_entity",
+        "conditions": {
+          "entity": {
+            "type": "avatarmod:air_gust"
+        }
+      }
+    }
+  }
+}
