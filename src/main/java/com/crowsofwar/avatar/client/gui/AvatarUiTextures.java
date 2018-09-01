@@ -31,6 +31,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+
 /**
  * @author CrowsOfWar
  */
@@ -95,7 +97,13 @@ public class AvatarUiTextures {
 
 	public static ResourceLocation getBendingBackgroundTexture(UUID bendingId) {
 		String bendingName = BendingStyles.getName(bendingId);
-		String location = "textures/gui/background/" + bendingName + ".png";
+		String location;
+		if (!CLIENT_CONFIG.useSimpleBackgroundTextures) {
+			location = "textures/gui/background/" + bendingName + ".png";
+		}
+		else {
+			location = "textures/gui/backgrounds/" + bendingName + ".png";
+		}
 		return getCachedImage(bendingBackgrounds, bendingId, location);
 	}
 

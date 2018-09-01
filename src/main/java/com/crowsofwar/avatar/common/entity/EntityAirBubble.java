@@ -181,7 +181,7 @@ public class EntityAirBubble extends EntityShield {
 			removeStatCtrl();
 			return;
 		}
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 10; i++) {
 			setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
 
 			this.motionX = this.motionY = this.motionZ = 0;

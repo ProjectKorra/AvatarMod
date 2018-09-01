@@ -58,6 +58,12 @@ public class PrModifierHandler {
 						manager.addModifier(new StaffPowerModifier(), ctx);
 					}
 				}
+				if (bender.getEntity().getHeldItemOffhand() != ItemStack.EMPTY) {
+					Item item = bender.getEntity().getHeldItemOffhand().getItem();
+					if (item instanceof ItemAirbenderStaff) {
+						manager.addModifier(new StaffPowerModifier(), ctx);
+					}
+				}
 			}
 
 		}

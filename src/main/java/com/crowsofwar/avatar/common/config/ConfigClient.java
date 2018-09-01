@@ -46,6 +46,9 @@ public class ConfigClient {
 	//How long before the menu disappears
 
 	@Load
+	public boolean useSimpleBackgroundTextures = true;
+
+	@Load
 	public boolean shouldBendingMenuDisappear = true;
 	//Makes the menu disappear after the duration- affects chi as well.
 

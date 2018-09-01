@@ -58,11 +58,8 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 
 	@Override
 	protected Vision[] getVisions() {
-		//if (CLIENT_CONFIG.shaderSettings.useSlipstreamShaders) {
 			return new Vision[]{Vision.SLIPSTREAM_WEAK, Vision.SLIPSTREAM_MEDIUM,
 					Vision.SLIPSTREAM_POWERFUL};
-		//}
-		//else return null;
 	}
 
 	@Override

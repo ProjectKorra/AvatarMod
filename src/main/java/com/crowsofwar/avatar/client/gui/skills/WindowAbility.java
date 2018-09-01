@@ -72,7 +72,7 @@ public class WindowAbility {
 
 		frame = new Frame();
 		frame.setDimensions(fromPercent(80, 80));
-		frame.setPosition(fromPercent((100 - 80) / 2, (100 - 80) / 2));
+		frame.setPosition(fromPercent((100F - 80) / 2, (100F - 80) / 2));
 
 		Frame frameLeft = new Frame(frame);
 		frameLeft.setDimensions(fromPercent(frame, 30, 100));

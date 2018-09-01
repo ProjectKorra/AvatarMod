@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
@@ -11,32 +12,33 @@ import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.event.entity.player.AdvancementEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.Objects;
 import java.util.function.BiPredicate;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static java.lang.Math.toRadians;
 
 public class FireDevourTickHandler extends TickHandler {
-	private ParticleSpawner particles;
 
-	public FireDevourTickHandler() {
-		this.particles = new NetworkParticleSpawner();
-	}
-
+	private double powerRatingBoost = 10;
+	private int fireConsumed = 0;
+	private int handlerLength = 20;
 	@Override
 	public boolean tick(BendingContext ctx) {
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
+		BendingData data = ctx.getData();
+		if (data.getTickHandlerDuration(this) < 2) {
+			fireConsumed = 0;
+		}
 
+		double inverseRadius = (20F - ctx.getData().getTickHandlerDuration(this)) / 10;
 		Vector eye = Vector.getEyePos(entity);
 		double range = STATS_CONFIG.fireSearchRadius;
 		for (int i = 0; i < STATS_CONFIG.fireAngles; i++) {
@@ -51,30 +53,35 @@ public class FireDevourTickHandler extends TickHandler {
 				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isFire);
 
 				if (result.hitSomething() && result.getPosPrecise() != null) {
-					double position = result.getPosPrecise().dist(Vector.getEntityPos(entity));
-
-					Vector pos = Vector.getEntityPos(entity).plusY(entity.getEyeHeight());
-					if (ctx.getData().getTickHandlerDuration(this) % 5 == 0) {
-						if (position > 0) {
-							for (double h = 1; h > 0; ) {
-								if (world instanceof WorldServer && !world.isRemote) {
-									position = position * h;
-									WorldServer World = (WorldServer) world;
-									World.spawnParticle(EnumParticleTypes.FLAME, pos.x() + position, pos.y(), pos.z() + position, 1, 0, 0, 0, 0D);
-								} else {
-									particles.spawnParticles(world, EnumParticleTypes.FLAME, 1, 2, pos.x() + h, pos.y(), pos.z() + h, 0, 0, 0);
+						if (world instanceof WorldServer) {
+							WorldServer World = (WorldServer) world;
+							for (double k = 1.2; k > 0; k-= 0.2) {
+								if (entity.ticksExisted % 2 == 0) {
+									for (int h = 0; h < 12; h++) {
+										Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+												h * 30), 0).times(k).withY(entity.getEyeHeight() / 2);
+										World.spawnParticle(EnumParticleTypes.FLAME, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
+												lookpos.z() + entity.posZ, 2, 0, 0, 0, 0.05);
+									}
 								}
-								h -= 0.1;
 							}
-						}
-						world.setBlockToAir(Objects.requireNonNull(result.getPosPrecise()).toBlockPos());
 
-					}
+						}
+						world.setBlockToAir(result.getPosPrecise().toBlockPos());
+						fireConsumed++;
+						handlerLength += 20;
+						FireDevourPowerModifier modifier = new FireDevourPowerModifier();
+						modifier.setTicks(handlerLength);
+						modifier.setPowerRating(fireConsumed * powerRatingBoost);
+						data.getPowerRatingManager(Firebending.ID).addModifier(modifier, ctx);
 
 				}
 
 			}
 		}
-		return ctx.getData().getTickHandlerDuration(this) >= 10;
+		if (entity instanceof EntityPlayer) {
+			return !entity.isSneaking();
+		}
+		else return data.getTickHandlerDuration(this) >= handlerLength;
 	}
 }
