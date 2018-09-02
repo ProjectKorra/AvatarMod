@@ -55,13 +55,17 @@ public class RenderEarthspikes extends RenderModel<EntityEarthspike> {
 		Block belowBlock = entity.world.getBlockState(below).getBlock();
 		if (belowBlock == Blocks.GRASS) {
 			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike" + ".png");
-		} else if (belowBlock == Blocks.DIRT) {
+		}
+		else if (belowBlock == Blocks.DIRT) {
 			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_dirt" + ".png");
-		} else if (belowBlock == Blocks.SAND) {
+		}
+	else 	if (belowBlock == Blocks.SAND) {
 			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_sand" + ".png");
-		} else if (belowBlock == Blocks.SANDSTONE) {
+		}
+		else if (belowBlock == Blocks.SANDSTONE) {
 			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_sandstone" + ".png");
-		} else if (belowBlock == Blocks.STONE) {
+		}
+		else if (belowBlock == Blocks.STONE) {
 			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_stone" + ".png");
 		} else {
 			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_stone" + ".png");
