@@ -1,19 +1,12 @@
 package com.crowsofwar.avatar.common.item;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.bending.air.StaffPowerModifier;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.collect.Multimap;
 import net.minecraft.entity.Entity;
@@ -21,7 +14,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
@@ -38,6 +30,7 @@ import net.minecraft.world.WorldServer;
 
 import java.util.Random;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_AIR_STAFF_COOLDOWN;
 import static com.crowsofwar.avatar.common.data.TickHandler.STAFF_GUST_HANDLER;
 
 public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
@@ -100,29 +93,32 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 					gust.setOwner(playerIn);
 					gust.setVelocity(Vector.getLookRectangular(playerIn).times(30));
 					playerIn.world.spawnEntity(gust);
-					data.addTickHandler(STAFF_GUST_HANDLER);
 					if (!isCreative) {
-						ItemStack stack = playerIn.getHeldItemOffhand().copy();
+						data.addTickHandler(STAFF_GUST_HANDLER);
+						ItemStack stack = playerIn.getHeldItemOffhand();
 						stack.damageItem(2, playerIn);
 					}
 					return new ActionResult<ItemStack>(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
 				} else {
 					EntityAirblade blade = new EntityAirblade(playerIn.world);
-					blade.setPosition(Vector.getLookRectangular(playerIn).plus(Vector.getEntityPos(playerIn)));
+					blade.setPosition(Vector.getLookRectangular(playerIn).plus(Vector.getEntityPos(playerIn)).withY(playerIn.getEyeHeight() + playerIn.getEntityBoundingBox().minY));
 					blade.setAbility(new AbilityAirblade());
 					blade.setOwner(playerIn);
-					blade.setVelocity(Vector.getLookRectangular(playerIn).times(30).withY(playerIn.getEyeHeight()));
+					blade.setVelocity(Vector.getLookRectangular(playerIn).times(30));
 					blade.setDamage(2);
 					playerIn.world.spawnEntity(blade);
-					data.addTickHandler(STAFF_GUST_HANDLER);
 					if (!isCreative) {
-						ItemStack stack = playerIn.getHeldItemOffhand().copy();
+						data.addTickHandler(STAFF_GUST_HANDLER);
+						ItemStack stack = playerIn.getHeldItemOffhand();
 						stack.damageItem(2, playerIn);
 					}
 					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
 				}
 			}
-			return new ActionResult<ItemStack>(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
+			if (data.hasTickHandler(STAFF_GUST_HANDLER) && !worldIn.isRemote) {
+				MSG_AIR_STAFF_COOLDOWN.send(playerIn);
+			}
+			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
 		}
 		return new ActionResult<ItemStack>(EnumActionResult.FAIL, playerIn.getHeldItem(handIn));
 	}
@@ -139,26 +135,29 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 				gust.setOwner(entityLiving);
 				gust.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
 				entityLiving.world.spawnEntity(gust);
-				data.addTickHandler(STAFF_GUST_HANDLER);
 				if (!isCreative) {
+					data.addTickHandler(STAFF_GUST_HANDLER);
 					stack.damageItem(2, entityLiving);
 				}
 				return true;
 			} else {
 				EntityAirblade blade = new EntityAirblade(entityLiving.world);
-				blade.setPosition(Vector.getLookRectangular(entityLiving).plus(Vector.getEntityPos(entityLiving)));
+				blade.setPosition(Vector.getLookRectangular(entityLiving).plus(Vector.getEntityPos(entityLiving)).withY(entityLiving.getEyeHeight() + entityLiving.getEntityBoundingBox().minY));
 				blade.setAbility(new AbilityAirblade());
 				blade.setOwner(entityLiving);
-				blade.setVelocity(Vector.getLookRectangular(entityLiving).times(30).withY(entityLiving.getEyeHeight()));
+				blade.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
 				blade.setDamage(2);
 				entityLiving.world.spawnEntity(blade);
-				data.addTickHandler(STAFF_GUST_HANDLER);
 				if (!isCreative) {
+					data.addTickHandler(STAFF_GUST_HANDLER);
 					stack.damageItem(2, entityLiving);
 				}
 				return true;
 			}
 
+		}
+		if (data.hasTickHandler(STAFF_GUST_HANDLER) && entityLiving instanceof EntityPlayer && !entityLiving.world.isRemote) {
+			MSG_AIR_STAFF_COOLDOWN.send(entityLiving);
 		}
 		return false;
 	}
