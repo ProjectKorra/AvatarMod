@@ -181,6 +181,7 @@ public class ConfigStats {
 			"minecraft:brick_block",
 			"minecraft:mossy_cobblestone",
 			"minecraft:stonebrick",
+			"minecraft:stone_slab",
 			"minecraft:clay",
 			"minecraft:hardened_clay",
 			"minecraft:stained_hardened_clay",
