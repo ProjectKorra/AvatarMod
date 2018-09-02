@@ -10,8 +10,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_RESTORE_COOLDOWN;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandler.RESTORE_COOLDOWN_HANLDER;
 import static com.crowsofwar.avatar.common.data.TickHandler.RESTORE_PARTICLE_SPAWNER;
 
 public class AbilityRestore extends Ability {
@@ -44,12 +46,12 @@ public class AbilityRestore extends Ability {
 			chi = STATS_CONFIG.chiBuffLvl4;
 		}
 
-		if (bender.consumeChi(chi)) {
+		if (bender.consumeChi(chi) && !data.hasTickHandler(RESTORE_COOLDOWN_HANLDER)) {
 
 			abilityData.addXp(SKILLS_CONFIG.buffUsed);
 
 			// 3s + 1.5s per level
-			int duration = ctx.getLevel()  > 0 ? 60 + 30 * ctx.getLevel() : 60;
+			int duration = ctx.getLevel() > 0 ? 60 + 30 * ctx.getLevel() : 60;
 			int effectLevel = 0;
 			int slownessLevel = abilityData.getLevel() >= 2 ? 1 : 2;
 			int regenLevel = abilityData.getLevel() >= 2 ? 1 : 0;
@@ -83,34 +85,13 @@ public class AbilityRestore extends Ability {
 			//noinspection ConstantConditions
 			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
 			data.addTickHandler(RESTORE_PARTICLE_SPAWNER);
+			data.addTickHandler(RESTORE_COOLDOWN_HANLDER);
 
 		}
-
-	}
-
-	@Override
-	public int getCooldown(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-
-		int coolDown = 200;
-
-		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-			coolDown = 0;
+		if (data.hasTickHandler(RESTORE_COOLDOWN_HANLDER) && entity instanceof EntityPlayer) {
+			MSG_RESTORE_COOLDOWN.send(entity);
 		}
 
-		if (ctx.getLevel() == 1) {
-			coolDown = 180;
-		}
-		if (ctx.getLevel() == 2) {
-			coolDown = 160;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 140;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 135;
-		}
-		return coolDown;
 	}
 }
 

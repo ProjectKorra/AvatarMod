@@ -6,9 +6,13 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
+import java.util.Objects;
+
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SLIPSTREAM_COOLDOWN;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.TickHandler.SLIPSTREAM_COOLDOWN_HANDLER;
@@ -65,9 +69,12 @@ public class AbilitySlipstream extends Ability {
 
 			SlipstreamPowerModifier modifier = new SlipstreamPowerModifier();
 			modifier.setTicks(duration);
-			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
+			Objects.requireNonNull(data.getPowerRatingManager(getBendingId())).addModifier(modifier, ctx);
 			data.addTickHandler(SLIPSTREAM_COOLDOWN_HANDLER);
 
+		}
+		if (data.hasTickHandler(SLIPSTREAM_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
+			MSG_SLIPSTREAM_COOLDOWN.send(entity);
 		}
 
 	}

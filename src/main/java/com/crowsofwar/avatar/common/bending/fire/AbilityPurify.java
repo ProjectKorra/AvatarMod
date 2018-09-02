@@ -5,13 +5,14 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.google.common.math.Stats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_PURIFY_COOLDOWN;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandler.PURIFY_COOLDOWN_HANDLER;
 import static com.crowsofwar.avatar.common.data.TickHandler.PURIFY_PARTICLE_SPAWNER;
 import static net.minecraft.init.MobEffects.*;
 
@@ -43,7 +44,7 @@ public class AbilityPurify extends Ability {
 			chi = STATS_CONFIG.chiBuffLvl4;
 		}
 
-		if (bender.consumeChi(chi)) {
+		if (bender.consumeChi(chi) && !data.hasTickHandler(PURIFY_COOLDOWN_HANDLER)) {
 
 			// 3s base + 2s per level
 			int duration = abilityData.getLevel() > 0 ? 60 + 40 * abilityData.getLevel() : 60;
@@ -85,30 +86,9 @@ public class AbilityPurify extends Ability {
 			data.addTickHandler(PURIFY_PARTICLE_SPAWNER);
 
 		}
+		if (data.hasTickHandler(PURIFY_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
+			MSG_PURIFY_COOLDOWN.send(entity);
+		}
 	}
 
-	@Override
-	public int getCooldown(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-
-		int coolDown = 200;
-
-		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-			coolDown = 0;
-		}
-
-		if (ctx.getLevel() == 1) {
-			coolDown = 180;
-		}
-		if (ctx.getLevel() == 2) {
-			coolDown = 160;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 120;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 120;
-		}
-		return coolDown;
-	}
 }

@@ -18,15 +18,13 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.client.gui.RenderElementTickHandler;
 import com.crowsofwar.avatar.common.bending.air.*;
+import com.crowsofwar.avatar.common.bending.earth.RestoreCooldownHandler;
 import com.crowsofwar.avatar.common.bending.earth.RestoreParticleHandler;
 import com.crowsofwar.avatar.common.bending.earth.SpawnEarthspikesHandler;
 import com.crowsofwar.avatar.common.bending.fire.*;
 import com.crowsofwar.avatar.common.bending.lightning.LightningCreateHandler;
 import com.crowsofwar.avatar.common.bending.lightning.LightningRedirectHandler;
-import com.crowsofwar.avatar.common.bending.water.WaterChargeHandler;
-import com.crowsofwar.avatar.common.bending.water.WaterParticleSpawner;
-import com.crowsofwar.avatar.common.bending.water.WaterSkateHandler;
-import com.crowsofwar.avatar.common.bending.water.WaterSmashHandler;
+import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.BisonSummonHandler;
 import io.netty.buffer.ByteBuf;
@@ -62,6 +60,9 @@ public abstract class TickHandler {
 			RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler(),
 			PURIFY_PARTICLE_SPAWNER = new PurifyParticleHandler(),
 			SLIPSTREAM_COOLDOWN_HANDLER = new SlipstreamCooldownHandler(),
+			CLEANSE_COOLDOWN_HANDLER = new CleanseCooldownHandler(),
+			RESTORE_COOLDOWN_HANLDER = new RestoreCooldownHandler(),
+			PURIFY_COOLDOWN_HANDLER = new PurifyCooldownHandler(),
 			RENDER_ELEMENT_HANDLER = new RenderElementTickHandler(),
 			FIRE_DEVOUR_HANDLER = new FireDevourTickHandler(),
 			STAFF_GUST_HANDLER = new StaffGustCooldown();
