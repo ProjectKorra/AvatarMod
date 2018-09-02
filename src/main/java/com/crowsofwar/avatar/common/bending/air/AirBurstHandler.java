@@ -109,6 +109,8 @@ public class AirBurstHandler extends TickHandler {
 				radius = (STATS_CONFIG.AirBurstSettings.radius * 7 / 3) + powerRating;
 				//7
 				upwardKnockback = STATS_CONFIG.airBurstSettings.push / 2.5F;
+				durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire * 0.75F;
+				//30
 			}
 
 			applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
@@ -145,24 +147,6 @@ public class AirBurstHandler extends TickHandler {
 					WorldServer World = (WorldServer) world;
 					double x, y, z;
 
-					for (double theta = 0; theta <= 180; theta += 1) {
-						double dphi = 10 / Math.sin(Math.toRadians(theta));
-
-						for (double phi = 0; phi < 360; phi += dphi) {
-							double rphi = Math.toRadians(phi);
-							double rtheta = Math.toRadians(theta);
-
-							x = radius * Math.cos(rphi) * Math.sin(rtheta);
-							y = radius * Math.sin(rphi) * Math.sin(rtheta);
-							z = radius * Math.cos(rtheta);
-							//Decrease radius so you can use particle speed
-
-							World.spawnParticle(EnumParticleTypes.CLOUD, x + entity.posX, y + entity.getEntityBoundingBox().minY,
-									z + entity.posZ, 1, 0, 0, 0, (double) radius / 100);
-
-						}
-					}//Creates a sphere. Courtesy of Project Korra's Air Burst!
-
 					for (int i = 0; i < radius; i++) {
 						for (int j = 0; j < 90; j++) {
 							Vector lookPos;
@@ -173,10 +157,29 @@ public class AirBurstHandler extends TickHandler {
 								lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
 										j * 4), 0);
 							}
-							World.spawnParticle(EnumParticleTypes.CLOUD, lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
-									lookPos.z() + entity.posZ, 2, 0, 0, 0, (double) radius / 50);
+							World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
+									lookPos.z() + entity.posZ, 1, 0, 0, 0, (double) radius / 200);
 						}
 					}
+
+					for (double theta = 0; theta <= 180; theta += 1) {
+						double dphi = 20 / Math.sin(Math.toRadians(theta));
+
+						for (double phi = 0; phi < 360; phi += dphi) {
+							double rphi = Math.toRadians(phi);
+							double rtheta = Math.toRadians(theta);
+
+							x = radius * Math.cos(rphi) * Math.sin(rtheta);
+							y = radius * Math.sin(rphi) * Math.sin(rtheta);
+							z = radius * Math.cos(rtheta);
+							//Decrease radius so you can use particle speed
+
+							World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x + entity.posX, y + entity.getEntityBoundingBox().minY,
+									z + entity.posZ, 1, 0, 0, 0, (double) radius / 100);
+
+						}
+					}//Creates a sphere. Courtesy of Project Korra's Air Burst!
+
 				}
 
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius, entity.posY - radius, entity.posZ - radius);
