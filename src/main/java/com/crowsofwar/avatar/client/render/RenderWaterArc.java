@@ -29,8 +29,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderWaterArc extends RenderArc {
 
-	private static final ResourceLocation water = new ResourceLocation("avatarmod",
-			"textures/entity/water-ribbon.png");
+	private static final ResourceLocation water = new ResourceLocation("minecraft",
+			"textures/blocks/water_overlay.png");
 
 	/**
 	 * @param renderManager

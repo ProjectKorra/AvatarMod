@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.common.entity.ControlPoint;
+import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -11,14 +13,13 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderWaterCannon extends RenderArc {
-	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/entity/water-ribbon.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation("minecraft",
+			"textures/blocks/water_overlay.png");
 
 	private final ParticleSpawner particleSpawner;
 
 	public RenderWaterCannon(RenderManager renderManager) {
 		super(renderManager, true);
-		enableFullBrightness();
 		particleSpawner = new ClientParticleSpawner();
 	}
 
@@ -49,6 +50,20 @@ public class RenderWaterCannon extends RenderArc {
 
 	}
 
+	@Override
+	protected void onDrawSegment(EntityArc arc, ControlPoint first, ControlPoint second) {
+		// Parametric equation
+
+		Vector from = new Vector(0, 0, 0);
+		Vector to = second.position().minus(first.position());
+		Vector diff = to.minus(from);
+		Vector offset = first.position();
+		Vector direction = diff.normalize();
+		Vector spawnAt = offset.plus(direction.times(Math.random()));
+		Vector velocity = first.velocity();
+		arc.world.spawnParticle(EnumParticleTypes.WATER_SPLASH, spawnAt.x(), spawnAt.y(), spawnAt.z(),
+				velocity.x(), velocity.y(), velocity.z());
+	}
 
 	@Override
 	protected ResourceLocation getTexture() {

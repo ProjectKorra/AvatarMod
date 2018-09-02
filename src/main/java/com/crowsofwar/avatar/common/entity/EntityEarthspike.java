@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.EntityLiving;
@@ -38,12 +39,15 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.lwjgl.Sys;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.client.render.RenderEarthspikes.TEXTURE;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -170,7 +174,7 @@ public class EntityEarthspike extends AvatarEntity {
 
 	private void pushEntity(Entity entity) {
 		entity.motionX = this.motionX / 4;
-		entity.motionY = STATS_CONFIG.earthspikeSettings.push/1.5 + damage/20;
+		entity.motionY = STATS_CONFIG.earthspikeSettings.push / 1.5 + damage / 20;
 		entity.motionZ = this.motionZ / 4;
 	}
 }

@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -43,9 +44,15 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 		setCreativeTab(AvatarItems.tabItems);
 		setMaxStackSize(1);
 		setMaxDamage(200);
+
 		//Max damage is the durability of the item, or the max damage the item can take
 		this.spawnGust = new Random().nextBoolean();
 
+	}
+
+	@Override
+	public float getAttackDamage() {
+		return 1F;
 	}
 
 	@Override
@@ -216,11 +223,11 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
 	@Override
 	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
-		Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(equipmentSlot);
+		Multimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
 
 		if (equipmentSlot == EntityEquipmentSlot.MAINHAND) {
 			spawnGust = new Random().nextBoolean();
-			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 1, 0));
+			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", getAttackDamage(), 0));
 			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", 0, 0));
 		}
 

@@ -97,13 +97,8 @@ public class AvatarUiTextures {
 
 	public static ResourceLocation getBendingBackgroundTexture(UUID bendingId) {
 		String bendingName = BendingStyles.getName(bendingId);
-		String location;
-		if (!CLIENT_CONFIG.useSimpleBackgroundTextures) {
-			location = "textures/gui/background/" + bendingName + ".png";
-		}
-		else {
-			location = "textures/gui/backgrounds/" + bendingName + ".png";
-		}
+		String location = "textures/gui/background/" + bendingName + ".png";
+
 		return getCachedImage(bendingBackgrounds, bendingId, location);
 	}
 
@@ -121,13 +116,7 @@ public class AvatarUiTextures {
 		InputStream instr = null;
 		try {
 
-			String path;
-			if (!CLIENT_CONFIG.useSimpleBackgroundTextures) {
-				path = "assets/avatarmod/textures/gui/background/";
-			}
-			else  {
-				path = "assets/avatarmod/textures/gui/backgrounds/";
-			}
+			String path = "assets/avatarmod/textures/gui/background/";
 			String file = path + bendingName + ".png";
 
 			BufferedImage image = ImageIO.read(AvatarUiTextures.class.getClassLoader().getResourceAsStream(file));
