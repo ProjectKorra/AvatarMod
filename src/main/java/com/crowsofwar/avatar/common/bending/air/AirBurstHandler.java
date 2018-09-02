@@ -162,8 +162,9 @@ public class AirBurstHandler extends TickHandler {
 						}
 					}
 
+					int particleController = abilityData.getLevel() >= 1 ? 20 - (4 * abilityData.getLevel()) : 20;
 					for (double theta = 0; theta <= 180; theta += 1) {
-						double dphi = 20 / Math.sin(Math.toRadians(theta));
+						double dphi = particleController / Math.sin(Math.toRadians(theta));
 
 						for (double phi = 0; phi < 360; phi += dphi) {
 							double rphi = Math.toRadians(phi);
