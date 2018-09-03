@@ -89,8 +89,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 									living.attackEntityFrom(AvatarDamageSource.causeFireDamage(living, entity), damage - (i / 2F));
 									living.setFire(fireTime - (i / 2));
 									living.motionX += direction.x() * (knockBack - (i / 2F));
-									living.motionY += direction.y() * knockBack >= 0 ? (direction.y() * knockBack / 3) : knockBack / 3;
-									living.motionZ += direction.z() * knockBack;
+									living.motionY += direction.y() * knockBack >= 0 ? (direction.y() * (knockBack / 10)) : knockBack / 10;
+									living.motionZ += direction.x() * (knockBack - (i / 2F));
 									living.isAirBorne = true;
 									// this line is needed to prevent a bug where players will not be pushed in multiplayer
 									AvatarUtils.afterVelocityAdded(e);
@@ -102,8 +102,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 
 						e.attackEntityFrom(AvatarDamageSource.causeFireDamage(e, entity), damage - (i / 2F));
 						e.setFire(fireTime - (i / 2));
-						e.motionX += direction.x() * (knockBack - (i / 2F));
-						e.motionY += direction.y() * knockBack >= 0 ? (direction.y() * knockBack / 2) : knockBack / 2;
+						e.motionX += direction.x() * knockBack;
+						e.motionY += direction.y() * knockBack >= 0 ? (direction.y() * knockBack / 7) : knockBack / 7;
 						e.motionZ += direction.z() * knockBack;
 						e.isAirBorne = true;
 						// this line is needed to prevent a bug where players will not be pushed in multiplayer

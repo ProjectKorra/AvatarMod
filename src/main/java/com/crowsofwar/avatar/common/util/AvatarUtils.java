@@ -18,7 +18,9 @@
 package com.crowsofwar.avatar.common.util;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -64,6 +66,32 @@ public class AvatarUtils {
 			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 		}
 	}
+
+	/**
+	 * Returns the location of the player's right side
+	 * @param entity
+	 * @param distance
+	 * @return
+	 */
+
+	public static Vector getRightSide(EntityLivingBase entity, double distance) {
+		final float angle = entity.rotationYaw / 60;
+		return Vector.getEntityPos(entity).minus(new Vector(Math.cos(angle), -entity.getEyeHeight(), Math.sin(angle)).normalize().times(distance));
+	}
+
+	/**
+	 * Returns the location of the player's left side
+	 * @param entity
+	 * @param distance
+	 * @return
+	 */
+
+	public static Vector getLeftSide(EntityLivingBase entity, double distance) {
+		final float angle = entity.rotationYaw / 60;
+		return Vector.getEntityPos(entity).plus(new Vector(Math.cos(angle), -entity.getEyeHeight(), Math.sin(angle)).normalize().times(distance));
+	}
+
+
 
 	/**
 	 * Ensures that the angle is in the range of 0-360.

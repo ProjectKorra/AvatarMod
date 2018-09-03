@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.powerrating.FirebendingSunModifier;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.advancements.PlayerAdvancements;
@@ -19,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
+import java.util.Objects;
 import java.util.function.BiPredicate;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -26,7 +28,6 @@ import static java.lang.Math.toRadians;
 
 public class FireDevourTickHandler extends TickHandler {
 
-	private double powerRatingBoost = 10;
 	private int fireConsumed = 0;
 	private int handlerLength = 20;
 	@Override
@@ -56,24 +57,26 @@ public class FireDevourTickHandler extends TickHandler {
 						if (world instanceof WorldServer) {
 							WorldServer World = (WorldServer) world;
 							for (double k = 1.2; k > 0; k-= 0.2) {
-								if (entity.ticksExisted % 2 == 0) {
 									for (int h = 0; h < 12; h++) {
 										Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
 												h * 30), 0).times(k).withY(entity.getEyeHeight() / 2);
 										World.spawnParticle(EnumParticleTypes.FLAME, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
 												lookpos.z() + entity.posZ, 2, 0, 0, 0, 0.05);
 									}
-								}
 							}
 
 						}
 						world.setBlockToAir(result.getPosPrecise().toBlockPos());
 						fireConsumed++;
-						handlerLength += 20;
+						handlerLength += 10;
 						FireDevourPowerModifier modifier = new FireDevourPowerModifier();
-						modifier.setTicks(handlerLength);
-						modifier.setPowerRating(fireConsumed * powerRatingBoost);
-						data.getPowerRatingManager(Firebending.ID).addModifier(modifier, ctx);
+						double power = Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).getRating(ctx);
+						Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).clearModifiers(ctx);
+						modifier.setTicks(20);
+					double powerRatingBoost = 10;
+					modifier.setPowerRating((fireConsumed * powerRatingBoost) + (power - 20));
+					//20 is the power rating boost a firebender gets during the day
+						Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).addModifier(modifier, ctx);
 
 				}
 

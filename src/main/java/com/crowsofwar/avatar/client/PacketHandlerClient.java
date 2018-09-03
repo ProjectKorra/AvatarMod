@@ -34,10 +34,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Handles packets addressed to the client. Packets like this have a C in their
@@ -107,7 +104,7 @@ public class PacketHandlerClient implements IPacketHandler {
 		Set<Map.Entry<UUID, Double>> entrySet = powerRatings.entrySet();
 		for (Map.Entry<UUID, Double> entry : entrySet) {
 
-			data.getPowerRatingManager(entry.getKey()).setCachedRatingValue(entry.getValue());
+			Objects.requireNonNull(data.getPowerRatingManager(entry.getKey())).setCachedRatingValue(entry.getValue());
 
 		}
 
