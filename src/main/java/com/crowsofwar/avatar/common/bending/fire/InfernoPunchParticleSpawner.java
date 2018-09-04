@@ -22,32 +22,31 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 		World world = ctx.getWorld();
 		AbilityData abilityData = AbilityData.get(entity, "inferno_punch");
 
-		int particleCount = 5;
+		int particleCount = 1;
 		if (abilityData.getLevel() == 1) {
-			particleCount = 8;
+			particleCount = 2;
 		}
 		if (abilityData.getLevel() == 2) {
-			particleCount = 10;
+			particleCount = 3;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			particleCount = 20;
+			particleCount = 5;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			particleCount = 15;
+			particleCount = 4;
 		}
 		if (data.hasStatusControl(StatusControl.INFERNO_PUNCH) && !world.isRemote) {
 			WorldServer World = (WorldServer) world;
-			if (data.getTickHandlerDuration(this) % 2 == 0) { ;
-				Vector pos = AvatarUtils.getRightSide(entity, 0.55).plus(0, 1.2,0);
+
+				Vector pos = AvatarUtils.getRightSide(entity, 0.55).plus(0, 0.65,0);
 				Vector direction = Vector.getLookRectangular(entity);
 
 				if (entity instanceof EntityPlayer &&  entity.getPrimaryHand() == EnumHandSide.LEFT) {
-					pos = AvatarUtils.getLeftSide(entity, 0.55).plus(0, 3, 0);
+					pos = AvatarUtils.getLeftSide(entity, 0.55).plus(0, 1.7, 0);
 				}
-				Vector hand = pos.plus(direction.times(0.1));
+				Vector hand = pos.plus(direction.times(0.6));
 				World.spawnParticle(EnumParticleTypes.FLAME, hand.x(), hand.y(), hand.z(), particleCount, 0, 0, 0, 0.015);
 
-			}
 
 			return false;
 		} else return true;

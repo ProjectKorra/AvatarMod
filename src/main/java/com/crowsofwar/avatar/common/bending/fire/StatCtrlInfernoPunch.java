@@ -101,9 +101,9 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						}
 
 						e.attackEntityFrom(AvatarDamageSource.causeFireDamage(e, entity), damage - (i / 2F));
-						e.setFire(fireTime - (i / 2));
+						e.setFire(fireTime);
 						e.motionX += direction.x() * knockBack;
-						e.motionY += direction.y() * knockBack >= 0 ? (direction.y() * knockBack / 7) : knockBack / 7;
+						e.motionY += direction.y() * knockBack >= 0 ? (direction.y() * (knockBack / 8)) : knockBack / 8;
 						e.motionZ += direction.z() * knockBack;
 						e.isAirBorne = true;
 						// this line is needed to prevent a bug where players will not be pushed in multiplayer
@@ -176,7 +176,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 								}
 								if (world instanceof WorldServer) {
 									WorldServer World = (WorldServer) target.getEntityWorld();
-									World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY + target.getEyeHeight(), target.posZ, 50, 0.05, 0.05, 0.05, 0.05);
+									World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY + target.getEyeHeight()/2, target.posZ, 50, 0.05, 0.05, 0.05, 0.05);
 
 								}
 
@@ -214,25 +214,27 @@ public class StatCtrlInfernoPunch extends StatusControl {
 				if (data != null) {
 					AbilityData aD = AbilityData.get(entity, "inferno_punch");
 					Bender ctx = Bender.get(entity);
-					float damageModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
-					float damage = STATS_CONFIG.InfernoPunchDamage + (2 * damageModifier);
-					if (data.hasStatusControl(INFERNO_PUNCH) && !(event.getSource().getDamageType().equals("avatar_groundSmash")) &&
-							!(event.getSource().getDamageType().equals("avatar_Air"))) {
-						if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
-							if (aD.getLevel() >= 1) {
-								damage = 4 + (2 * damageModifier);
-							} else if (aD.getLevel() >= 2) {
-								damage = 5 + (2 * damageModifier);
-							}
-							if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-								damage = 10 + (2 * damageModifier);
-							}
-							if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-								damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * damageModifier);
-							}
-							if (target instanceof EntityDragon) {
-								event.setAmount(damage);
-								data.removeStatusControl(INFERNO_PUNCH);
+					if (ctx != null) {
+						float damageModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
+						float damage = STATS_CONFIG.InfernoPunchDamage + (2 * damageModifier);
+						if (data.hasStatusControl(INFERNO_PUNCH) && !(event.getSource().getDamageType().equals("avatar_groundSmash")) &&
+								!(event.getSource().getDamageType().equals("avatar_Air"))) {
+							if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
+								if (aD.getLevel() >= 1) {
+									damage = 4 + (2 * damageModifier);
+								} else if (aD.getLevel() >= 2) {
+									damage = 5 + (2 * damageModifier);
+								}
+								if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+									damage = 10 + (2 * damageModifier);
+								}
+								if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+									damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * damageModifier);
+								}
+								if (target instanceof EntityDragon) {
+									event.setAmount(damage);
+									data.removeStatusControl(INFERNO_PUNCH);
+								}
 							}
 						}
 					}

@@ -52,6 +52,13 @@ public class PowerRatingManager {
 		modifiers.remove(modifier);
 	}
 
+	public PowerRatingModifier getModifiers() {
+		for (PowerRatingModifier mod : modifiers) {
+				return mod;
+			}
+		return null;
+	}
+	
 	public boolean hasModifier(Class<? extends PowerRatingModifier> modifier) {
 		for (PowerRatingModifier mod : modifiers) {
 			if (mod.getClass() == modifier) {

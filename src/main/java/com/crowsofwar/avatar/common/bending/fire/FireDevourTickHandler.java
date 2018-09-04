@@ -30,6 +30,7 @@ public class FireDevourTickHandler extends TickHandler {
 
 	private int fireConsumed = 0;
 	private int handlerLength = 20;
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 		World world = ctx.getWorld();
@@ -54,29 +55,31 @@ public class FireDevourTickHandler extends TickHandler {
 				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isFire);
 
 				if (result.hitSomething() && result.getPosPrecise() != null) {
-						if (world instanceof WorldServer) {
-							WorldServer World = (WorldServer) world;
-							for (double k = 1.2; k > 0; k-= 0.2) {
-									for (int h = 0; h < 12; h++) {
-										Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-												h * 30), 0).times(k).withY(entity.getEyeHeight() / 2);
-										World.spawnParticle(EnumParticleTypes.FLAME, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
-												lookpos.z() + entity.posZ, 2, 0, 0, 0, 0.05);
-									}
+					if (world instanceof WorldServer) {
+						WorldServer World = (WorldServer) world;
+						for (double k = 1.2; k > 0; k -= 0.2) {
+							for (int h = 0; h < 12; h++) {
+								Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+										h * 30), 0).times(k).withY(entity.getEyeHeight() / 2);
+								World.spawnParticle(EnumParticleTypes.FLAME, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
+										lookpos.z() + entity.posZ, 2, 0, 0, 0, 0.05);
 							}
-
 						}
-						world.setBlockToAir(result.getPosPrecise().toBlockPos());
-						fireConsumed++;
-						handlerLength += 10;
-						FireDevourPowerModifier modifier = new FireDevourPowerModifier();
-						double power = Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).getRating(ctx);
-						Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).clearModifiers(ctx);
-						modifier.setTicks(20);
-					double powerRatingBoost = 10;
-					modifier.setPowerRating((fireConsumed * powerRatingBoost) + (power - 20));
+
+					}
+					world.setBlockToAir(result.getPosPrecise().toBlockPos());
+					fireConsumed++;
+					handlerLength += 10;
+					FireDevourPowerModifier modifier = new FireDevourPowerModifier();
+					if (data.getPowerRatingManager(Firebending.ID).hasModifier(FireDevourPowerModifier.class)) {
+						data.getPowerRatingManager(Firebending.ID).removeModifier(FireDevourPowerModifier, ctx);
+					}
+					double power = Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).getRating(ctx);
+					Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).clearModifiers(ctx);
+					modifier.setTicks(handlerLength);
+					modifier.setPowerRating((fireConsumed * 5) + (power - 20));
 					//20 is the power rating boost a firebender gets during the day
-						Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).addModifier(modifier, ctx);
+					Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).addModifier(modifier, ctx);
 
 				}
 
@@ -84,7 +87,6 @@ public class FireDevourTickHandler extends TickHandler {
 		}
 		if (entity instanceof EntityPlayer) {
 			return !entity.isSneaking();
-		}
-		else return data.getTickHandlerDuration(this) >= handlerLength;
+		} else return data.getTickHandlerDuration(this) >= handlerLength;
 	}
 }
