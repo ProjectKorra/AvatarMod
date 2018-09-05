@@ -25,6 +25,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
+import static com.crowsofwar.avatar.common.bending.fire.FlamethrowerUpdateTick.FLAMETHROWER;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_UP;
 
@@ -51,9 +52,9 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 		if (data.hasBendingId(Firebending.ID)) {
 			if (setting) {
 				data.addStatusControl(STOP_FLAMETHROW);
-				data.addTickHandler(TickHandler.FLAMETHROWER);
+				data.addTickHandler(FLAMETHROWER);
 			} else {
-				data.removeTickHandler(TickHandler.FLAMETHROWER);
+				data.removeTickHandler(FLAMETHROWER);
 			}
 		}
 

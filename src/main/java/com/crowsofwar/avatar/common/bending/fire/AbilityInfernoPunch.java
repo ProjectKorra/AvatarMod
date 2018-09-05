@@ -6,11 +6,10 @@ import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.INFERNO_PUNCH;
+import static com.crowsofwar.avatar.common.bending.fire.InfernoPunchParticleSpawner.INFERNO_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.common.bending.fire.StatCtrlInfernoPunch.INFERNO_PUNCH;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandler.INFERNO_PARTICLE_SPAWNER;
 
 public class AbilityInfernoPunch extends Ability {
 	public AbilityInfernoPunch() {

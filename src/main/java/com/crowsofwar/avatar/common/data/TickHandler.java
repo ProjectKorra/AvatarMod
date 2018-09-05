@@ -40,7 +40,6 @@ public abstract class TickHandler {
 	public static TickHandler
 			AIR_PARTICLE_SPAWNER = new AirParticleSpawner(),
 			FIRE_PARTICLE_SPAWNER = new FireParticleSpawner(),
-			FLAMETHROWER = new FlamethrowerUpdateTick(),
 			WATER_SKATE = new WaterSkateHandler(),
 			BISON_SUMMONER = new BisonSummonHandler(),
 			SMASH_GROUND = new SmashGroundHandler(),
@@ -51,9 +50,7 @@ public abstract class TickHandler {
 			SMASH_GROUND_FIRE_BIG = new FireSmashGroundHandlerBig(),
 			SMASH_GROUND_WATER = new WaterSmashHandler(),
 			WATER_PARTICLE_SPAWNER = new WaterParticleSpawner(),
-			INFERNO_PARTICLE_SPAWNER = new InfernoPunchParticleSpawner(),
 			SPAWN_EARTHSPIKES_HANDLER = new SpawnEarthspikesHandler(),
-			AIRBURST_CHARGE_HANDLER = new AirBurstHandler(),
 			AIR_STATCTRL_HANDLER = new AirStatusControlHandler(),
 			FIRE_STATCTRL_HANDLER = new FireStatusControlHandler(),
 			AIR_DODGE = new AirDodgeHandler(),

@@ -223,7 +223,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
 	@Override
 	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
-		Multimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
+		Multimap<String, AttributeModifier> multimap = HashMultimap.create();
 
 		if (equipmentSlot == EntityEquipmentSlot.MAINHAND) {
 			spawnGust = new Random().nextBoolean();

@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.common.bending.air.AirBurstHandler.AIRBURST_CHARGE_HANDLER;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AbilityAirBurst extends Ability {
@@ -28,7 +29,7 @@ public class AbilityAirBurst extends Ability {
 
 		float chi = 6;
 		//6
-		boolean hasAirCharge = data.hasTickHandler(TickHandler.AIRBURST_CHARGE_HANDLER);
+		boolean hasAirCharge = data.hasTickHandler(AIRBURST_CHARGE_HANDLER);
 
 		if (ctx.getLevel() == 1) {
 			chi = 7;
@@ -39,20 +40,20 @@ public class AbilityAirBurst extends Ability {
 			//7
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			chi = STATS_CONFIG.chiWaterCannon * 1.6F;
+			chi = STATS_CONFIG.chiAirBurst * 1.6F;
 			//11
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			chi = STATS_CONFIG.chiWaterCannon * 1.4F;
+			chi = STATS_CONFIG.chiAirBurst * 1.4F;
 			//11
 		}
 
 
 		if (bender.consumeChi(chi) && !hasAirCharge) {
-			data.addTickHandler(TickHandler.AIRBURST_CHARGE_HANDLER);
+			data.addTickHandler(AIRBURST_CHARGE_HANDLER);
 		} else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
 			if (!hasAirCharge) {
-				data.addTickHandler(TickHandler.AIRBURST_CHARGE_HANDLER);
+				data.addTickHandler(AIRBURST_CHARGE_HANDLER);
 			}
 		}
 	}

@@ -34,6 +34,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_NEED_FIRE_TRADE_ITEM;
+import static com.crowsofwar.avatar.common.bending.fire.StatCtrlInfernoPunch.INFERNO_PUNCH;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
@@ -107,7 +108,7 @@ public class EntityFirebender extends EntityHumanBender {
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_arc", this, getBender())));
 		//this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("inferno_punch", this, getBender())));
 		BendingData data = BendingData.get(this);
-		if (data.hasStatusControl(StatusControl.INFERNO_PUNCH)) {
+		if (data.hasStatusControl(INFERNO_PUNCH)) {
 			this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.35, true));
 		}
 		this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.3, true));

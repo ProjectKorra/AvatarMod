@@ -19,10 +19,12 @@
     "gained_water_scroll": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "item": {
-          "item": "avatarmod:scroll",
-          "data": 3
-        }
+        "items": [
+          {
+            "item": "avatarmod:scroll",
+            "data": 3
+          }
+        ]
       }
     }
   }

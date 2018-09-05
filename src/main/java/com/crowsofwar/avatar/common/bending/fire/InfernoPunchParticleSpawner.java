@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
@@ -14,7 +13,12 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
+import static com.crowsofwar.avatar.common.bending.fire.StatCtrlInfernoPunch.INFERNO_PUNCH;
+
 public class InfernoPunchParticleSpawner extends TickHandler {
+
+	static TickHandler INFERNO_PARTICLE_SPAWNER = new InfernoPunchParticleSpawner();
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
@@ -35,7 +39,7 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			particleCount = 4;
 		}
-		if (data.hasStatusControl(StatusControl.INFERNO_PUNCH) && !world.isRemote) {
+		if (data.hasStatusControl(INFERNO_PUNCH) && !world.isRemote) {
 			WorldServer World = (WorldServer) world;
 
 				Vector pos = AvatarUtils.getRightSide(entity, 0.55).plus(0, 0.8,0);

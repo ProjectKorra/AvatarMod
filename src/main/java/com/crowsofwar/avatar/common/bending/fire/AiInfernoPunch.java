@@ -7,6 +7,8 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.entity.EntityLiving;
 
+import static com.crowsofwar.avatar.common.bending.fire.StatCtrlInfernoPunch.INFERNO_PUNCH;
+
 public class AiInfernoPunch extends BendingAi {
 
 	protected AiInfernoPunch(Ability ability, EntityLiving entity, Bender bender) {
@@ -22,7 +24,7 @@ public class AiInfernoPunch extends BendingAi {
 	protected void startExec() {
 		BendingData data = bender.getData();
 		execAbility();
-		data.addStatusControl(StatusControl.INFERNO_PUNCH);
+		data.addStatusControl(INFERNO_PUNCH);
 		data.getMiscData().setAbilityCooldown(60);
 
 	}

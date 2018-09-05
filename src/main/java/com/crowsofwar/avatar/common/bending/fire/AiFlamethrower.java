@@ -28,6 +28,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
+import static com.crowsofwar.avatar.common.bending.fire.FlamethrowerUpdateTick.FLAMETHROWER;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
@@ -46,7 +47,7 @@ public class AiFlamethrower extends BendingAi {
 	public void resetTask() {
 		super.resetTask();
 		bender.getData().removeStatusControl(StatusControl.START_FLAMETHROW);
-		bender.getData().removeTickHandler(TickHandler.FLAMETHROWER);
+		bender.getData().removeTickHandler(FLAMETHROWER);
 		bender.getData().addStatusControl(StatusControl.STOP_FLAMETHROW);
 	}
 
@@ -72,11 +73,11 @@ public class AiFlamethrower extends BendingAi {
 
 		if (timeExecuting > 20 && timeExecuting < 60) {
 			BendingContext ctx = new BendingContext(bender.getData(), entity, bender, new Raytrace.Result());
-			TickHandler.FLAMETHROWER.tick(ctx);
+			FLAMETHROWER.tick(ctx);
 		}
 		if (timeExecuting >= 60) {
 			bender.getData().removeStatusControl(StatusControl.START_FLAMETHROW);
-			bender.getData().removeTickHandler(TickHandler.FLAMETHROWER);
+			bender.getData().removeTickHandler(FLAMETHROWER);
 			execStatusControl(StatusControl.STOP_FLAMETHROW);
 
 			return false;

@@ -19,10 +19,12 @@
     "gained_air_scroll": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "item": {
-          "item": "avatarmod:scroll",
-          "data": 4
-        }
+        "items": [
+          {
+            "item": "avatarmod:scroll",
+            "data": 4
+          }
+        ]
       }
     }
   }
