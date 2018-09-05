@@ -71,14 +71,18 @@ public class FireDevourTickHandler extends TickHandler {
 					fireConsumed++;
 					handlerLength += 10;
 					FireDevourPowerModifier modifier = new FireDevourPowerModifier();
-					if (data.getPowerRatingManager(Firebending.ID).hasModifier(FireDevourPowerModifier.class)) {
-						data.getPowerRatingManager(Firebending.ID).removeModifier(FireDevourPowerModifier, ctx);
-					}
-					double power = Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).getRating(ctx);
+					/*if (data.getPowerRatingManager(Firebending.ID).hasModifier(FireDevourPowerModifier.class)) {
+						if (data.getPowerRatingManager(Firebending.ID).getModifiers() != null) {
+							if (data.getPowerRatingManager(Firebending.ID).getModifiers().contains(new FireDevourPowerModifier())) {
+								data.getPowerRatingManager(Firebending.ID).removeModifier(new FireDevourPowerModifier(), ctx);
+							}
+						}
+					}**/
+
 					Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).clearModifiers(ctx);
+					double power = Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).getRating(ctx);
 					modifier.setTicks(handlerLength);
-					modifier.setPowerRating((fireConsumed * 5) + (power - 20));
-					//20 is the power rating boost a firebender gets during the day
+					modifier.setPowerRating((fireConsumed * 5) + power);
 					Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).addModifier(modifier, ctx);
 
 				}

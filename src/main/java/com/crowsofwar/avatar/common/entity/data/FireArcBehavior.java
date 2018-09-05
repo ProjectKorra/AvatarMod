@@ -79,10 +79,11 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 				target = Vector.getEyePos(owner).plus(look.times(3));
 			}
 
-			Vector motion = target.minus(entity.position());
-			motion = motion.times(0.5 * 20);
-			entity.setVelocity(motion);
-
+			if (target != null) {
+				Vector motion = target.minus(entity.position());
+				motion = motion.times(0.5 * 20);
+				entity.setVelocity(motion);
+			}
 
 			// Ensure that owner always has stat ctrl active
 			if (entity.ticksExisted % 10 == 0) {
