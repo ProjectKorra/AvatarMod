@@ -38,31 +38,19 @@ import java.util.Map;
 public abstract class TickHandler {
 
 	public static TickHandler
-			AIR_PARTICLE_SPAWNER = new AirParticleSpawner(),
-			FIRE_PARTICLE_SPAWNER = new FireParticleSpawner(),
-			WATER_SKATE = new WaterSkateHandler(),
 			BISON_SUMMONER = new BisonSummonHandler(),
-			SMASH_GROUND = new SmashGroundHandler(),
 			LIGHTNING_CHARGE = new LightningCreateHandler(),
-			WATER_CHARGE = new WaterChargeHandler(),
 			LIGHTNING_REDIRECT = new LightningRedirectHandler(),
 			SMASH_GROUND_FIRE = new FireSmashGroundHandler(),
 			SMASH_GROUND_FIRE_BIG = new FireSmashGroundHandlerBig(),
 			SMASH_GROUND_WATER = new WaterSmashHandler(),
 			WATER_PARTICLE_SPAWNER = new WaterParticleSpawner(),
-			SPAWN_EARTHSPIKES_HANDLER = new SpawnEarthspikesHandler(),
-			AIR_STATCTRL_HANDLER = new AirStatusControlHandler(),
 			FIRE_STATCTRL_HANDLER = new FireStatusControlHandler(),
-			AIR_DODGE = new AirDodgeHandler(),
-			RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler(),
 			PURIFY_PARTICLE_SPAWNER = new PurifyParticleHandler(),
-			SLIPSTREAM_COOLDOWN_HANDLER = new SlipstreamCooldownHandler(),
 			CLEANSE_COOLDOWN_HANDLER = new CleanseCooldownHandler(),
-			RESTORE_COOLDOWN_HANLDER = new RestoreCooldownHandler(),
 			PURIFY_COOLDOWN_HANDLER = new PurifyCooldownHandler(),
 			RENDER_ELEMENT_HANDLER = new RenderElementTickHandler(),
-			FIRE_DEVOUR_HANDLER = new FireDevourTickHandler(),
-			STAFF_GUST_HANDLER = new StaffGustCooldown();
+			FIRE_DEVOUR_HANDLER = new FireDevourTickHandler();
 
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;

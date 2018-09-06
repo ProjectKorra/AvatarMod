@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+import static com.crowsofwar.avatar.common.bending.fire.FireParticleSpawner.FIRE_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -116,7 +117,7 @@ public class WallJumpManager {
 		// Fire jumping?
 		AbilityData fireJumpData = bender.getData().getAbilityData("fire_jump");
 		boolean learnedSkill = fireJumpData.isMasterPath(AbilityData.AbilityTreePath.SECOND);
-		boolean isFireJumping = bender.getData().hasTickHandler(TickHandler.FIRE_PARTICLE_SPAWNER);
+		boolean isFireJumping = bender.getData().hasTickHandler(FIRE_PARTICLE_SPAWNER);
 		if (isFireJumping && learnedSkill) {
 			return AvatarParticles.getParticleFlames();
 		}

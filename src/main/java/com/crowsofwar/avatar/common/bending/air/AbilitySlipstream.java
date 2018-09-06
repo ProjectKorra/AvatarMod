@@ -13,9 +13,9 @@ import net.minecraft.potion.PotionEffect;
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SLIPSTREAM_COOLDOWN;
+import static com.crowsofwar.avatar.common.bending.air.SlipstreamCooldownHandler.SLIPSTREAM_COOLDOWN_HANDLER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandler.SLIPSTREAM_COOLDOWN_HANDLER;
 
 public class AbilitySlipstream extends Ability {
 
@@ -43,6 +43,10 @@ public class AbilitySlipstream extends Ability {
 			chi = STATS_CONFIG.chiBuffLvl3;
 		} else if (abilityData.getLevel() == 3) {
 			chi = STATS_CONFIG.chiBuffLvl4;
+		}
+
+		if (data.hasTickHandler(SLIPSTREAM_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
+			MSG_SLIPSTREAM_COOLDOWN.send(entity);
 		}
 
 		if (bender.consumeChi(chi) && !data.hasTickHandler(SLIPSTREAM_COOLDOWN_HANDLER)) {
@@ -73,9 +77,7 @@ public class AbilitySlipstream extends Ability {
 			data.addTickHandler(SLIPSTREAM_COOLDOWN_HANDLER);
 
 		}
-		if (data.hasTickHandler(SLIPSTREAM_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
-			MSG_SLIPSTREAM_COOLDOWN.send(entity);
-		}
+
 
 	}
 

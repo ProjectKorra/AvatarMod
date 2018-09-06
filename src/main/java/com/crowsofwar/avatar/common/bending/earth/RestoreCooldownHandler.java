@@ -8,6 +8,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class RestoreCooldownHandler extends TickHandler {
+
+	static  TickHandler RESTORE_COOLDOWN_HANLDER = new RestoreCooldownHandler();
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();

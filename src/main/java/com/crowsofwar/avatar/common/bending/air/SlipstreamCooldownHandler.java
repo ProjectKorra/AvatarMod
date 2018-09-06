@@ -9,6 +9,9 @@ import net.minecraft.entity.player.EntityPlayer;
 
 
 public class SlipstreamCooldownHandler extends TickHandler {
+
+	static TickHandler SLIPSTREAM_COOLDOWN_HANDLER = new SlipstreamCooldownHandler();
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();

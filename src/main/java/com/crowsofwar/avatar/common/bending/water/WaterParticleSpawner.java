@@ -16,7 +16,11 @@ import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.bending.water.WaterChargeHandler.WATER_CHARGE;
+
 public class WaterParticleSpawner extends TickHandler {
+
+	static TickHandler WATER_SKATE = new WaterSkateHandler();
 
 	@Override
 	public boolean tick(BendingContext ctx) {

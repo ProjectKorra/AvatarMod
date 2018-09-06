@@ -32,6 +32,8 @@ public class AirParticleSpawner extends TickHandler {
 
 	private static final ParticleSpawner particles = new ClientParticleSpawner();
 
+	static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner();
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 		EntityLivingBase target = ctx.getBenderEntity();

@@ -34,8 +34,8 @@ import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.bending.fire.FireParticleSpawner.FIRE_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandler.FIRE_PARTICLE_SPAWNER;
 
 public class StatCtrlFireJump extends StatusControl {
 	public StatCtrlFireJump() {

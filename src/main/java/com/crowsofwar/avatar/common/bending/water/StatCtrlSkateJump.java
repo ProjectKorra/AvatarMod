@@ -27,6 +27,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.BELOW_CROSSHAIR;
+import static com.crowsofwar.avatar.common.bending.water.WaterParticleSpawner.WATER_SKATE;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_JUMP;
 
 /**
@@ -42,8 +43,8 @@ public class StatCtrlSkateJump extends StatusControl {
 	public boolean execute(BendingContext ctx) {
 		BendingData data = ctx.getData();
 		EntityLivingBase entity = ctx.getBenderEntity();
-		if (data.hasTickHandler(TickHandler.WATER_SKATE)) {
-			data.removeTickHandler(TickHandler.WATER_SKATE);
+		if (data.hasTickHandler(WATER_SKATE)) {
+			data.removeTickHandler(WATER_SKATE);
 			data.getMiscData().setCanUseAbilities(true);
 
 			Vector velocity = Vector.getLookRectangular(entity).times(1.5);

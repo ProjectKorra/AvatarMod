@@ -38,6 +38,8 @@ import java.util.List;
  */
 public class SmashGroundHandler extends TickHandler {
 
+	static TickHandler SMASH_GROUND = new SmashGroundHandler();
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 

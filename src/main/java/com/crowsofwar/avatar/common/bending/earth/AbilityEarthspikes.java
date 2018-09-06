@@ -15,6 +15,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
+import static com.crowsofwar.avatar.common.bending.earth.SpawnEarthspikesHandler.SPAWN_EARTHSPIKES_HANDLER;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AbilityEarthspikes extends Ability {
@@ -104,7 +105,7 @@ public class AbilityEarthspikes extends Ability {
 					}
 				}
 			}
-			data.addTickHandler(TickHandler.SPAWN_EARTHSPIKES_HANDLER);
+			data.addTickHandler(SPAWN_EARTHSPIKES_HANDLER);
 
 
 		}

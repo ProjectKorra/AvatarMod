@@ -37,6 +37,8 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.bending.air.AirParticleSpawner.AIR_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.common.bending.air.SmashGroundHandler.SMASH_GROUND;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -123,9 +125,9 @@ public class StatCtrlAirJump extends StatusControl {
 
 			data.getMiscData().setFallAbsorption(fallAbsorption);
 
-			data.addTickHandler(TickHandler.AIR_PARTICLE_SPAWNER);
+			data.addTickHandler(AIR_PARTICLE_SPAWNER);
 			if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.SECOND) {
-				data.addTickHandler(TickHandler.SMASH_GROUND);
+				data.addTickHandler(SMASH_GROUND);
 			}
 			abilityData.addXp(SKILLS_CONFIG.airJump);
 

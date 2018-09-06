@@ -13,6 +13,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.FIRE_JUMP;
+import static com.crowsofwar.avatar.common.bending.fire.FireParticleSpawner.FIRE_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AbilityFireJump extends Ability {
@@ -34,7 +35,7 @@ public class AbilityFireJump extends Ability {
 		if (!data.hasStatusControl(FIRE_JUMP) && bender.consumeChi(STATS_CONFIG.chiAirJump)) {
 
 			data.addStatusControl(FIRE_JUMP);
-			if (data.hasTickHandler(TickHandler.FIRE_PARTICLE_SPAWNER)) {
+			if (data.hasTickHandler(FIRE_PARTICLE_SPAWNER)) {
 				StatusControl sc = FIRE_JUMP;
 				Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
 				if (FIRE_JUMP.execute(

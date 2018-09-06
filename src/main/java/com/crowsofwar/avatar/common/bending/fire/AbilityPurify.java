@@ -44,6 +44,10 @@ public class AbilityPurify extends Ability {
 			chi = STATS_CONFIG.chiBuffLvl4;
 		}
 
+		if (data.hasTickHandler(PURIFY_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
+			MSG_PURIFY_COOLDOWN.send(entity);
+		}
+
 		if (bender.consumeChi(chi) && !data.hasTickHandler(PURIFY_COOLDOWN_HANDLER)) {
 
 			// 3s base + 2s per level
@@ -86,9 +90,7 @@ public class AbilityPurify extends Ability {
 			data.addTickHandler(PURIFY_PARTICLE_SPAWNER);
 
 		}
-		if (data.hasTickHandler(PURIFY_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
-			MSG_PURIFY_COOLDOWN.send(entity);
-		}
+
 	}
 
 }

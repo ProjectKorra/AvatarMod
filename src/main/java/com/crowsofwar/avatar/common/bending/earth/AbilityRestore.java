@@ -11,10 +11,10 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_RESTORE_COOLDOWN;
+import static com.crowsofwar.avatar.common.bending.earth.RestoreCooldownHandler.RESTORE_COOLDOWN_HANLDER;
+import static com.crowsofwar.avatar.common.bending.earth.RestoreParticleHandler.RESTORE_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandler.RESTORE_COOLDOWN_HANLDER;
-import static com.crowsofwar.avatar.common.data.TickHandler.RESTORE_PARTICLE_SPAWNER;
 
 public class AbilityRestore extends Ability {
 	public AbilityRestore() {
@@ -44,6 +44,10 @@ public class AbilityRestore extends Ability {
 			chi = STATS_CONFIG.chiBuffLvl3;
 		} else if (abilityData.getLevel() == 3) {
 			chi = STATS_CONFIG.chiBuffLvl4;
+		}
+
+		if (data.hasTickHandler(RESTORE_COOLDOWN_HANLDER) && entity instanceof EntityPlayer) {
+			MSG_RESTORE_COOLDOWN.send(entity);
 		}
 
 		if (bender.consumeChi(chi) && !data.hasTickHandler(RESTORE_COOLDOWN_HANLDER)) {
@@ -87,9 +91,6 @@ public class AbilityRestore extends Ability {
 			data.addTickHandler(RESTORE_PARTICLE_SPAWNER);
 			data.addTickHandler(RESTORE_COOLDOWN_HANLDER);
 
-		}
-		if (data.hasTickHandler(RESTORE_COOLDOWN_HANLDER) && entity instanceof EntityPlayer) {
-			MSG_RESTORE_COOLDOWN.send(entity);
 		}
 
 	}

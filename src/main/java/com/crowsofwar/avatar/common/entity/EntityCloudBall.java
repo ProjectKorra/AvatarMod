@@ -33,8 +33,9 @@ import net.minecraft.world.WorldServer;
 import java.util.List;
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.common.bending.air.AirStatusControlHandler.AIR_STATCTRL_HANDLER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandler.AIR_STATCTRL_HANDLER;
+
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 public class EntityCloudBall extends AvatarEntity {

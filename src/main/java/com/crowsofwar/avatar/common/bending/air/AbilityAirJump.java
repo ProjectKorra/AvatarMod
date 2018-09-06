@@ -32,6 +32,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import javax.swing.text.html.parser.Entity;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.AIR_JUMP;
+import static com.crowsofwar.avatar.common.bending.air.AirParticleSpawner.AIR_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -57,7 +58,7 @@ public class AbilityAirJump extends Ability {
 		if (!data.hasStatusControl(AIR_JUMP) && bender.consumeChi(STATS_CONFIG.chiAirJump)) {
 
 			data.addStatusControl(AIR_JUMP);
-			if (data.hasTickHandler(TickHandler.AIR_PARTICLE_SPAWNER)) {
+			if (data.hasTickHandler(AIR_PARTICLE_SPAWNER)) {
 				Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
 				if (AIR_JUMP.execute(
 						new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
