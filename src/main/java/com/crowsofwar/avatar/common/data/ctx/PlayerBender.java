@@ -36,6 +36,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_LIGHTNING_REDIRECT_SUCCESS;
+import static com.crowsofwar.avatar.common.bending.lightning.LightningRedirectHandler.LIGHTNING_REDIRECT;
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 
 /**
@@ -192,7 +193,7 @@ public class PlayerBender extends Bender {
 			if (lightningArc.getOwner() != null) {
 
 				data.getMiscData().setRedirectionSource(originalShooterInfo);
-				data.addTickHandler(TickHandler.LIGHTNING_REDIRECT);
+				data.addTickHandler(LIGHTNING_REDIRECT);
 
 			}
 

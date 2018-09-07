@@ -29,6 +29,8 @@ import java.util.Random;
  */
 public class BisonSummonHandler extends TickHandler {
 
+	public static TickHandler BISON_SUMMONER = new BisonSummonHandler();
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 

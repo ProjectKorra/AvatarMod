@@ -56,6 +56,8 @@ public class Airbending extends BendingStyle {
 
 	}
 
+
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 

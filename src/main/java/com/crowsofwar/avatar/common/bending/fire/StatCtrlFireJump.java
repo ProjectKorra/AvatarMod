@@ -35,6 +35,8 @@ import net.minecraft.world.WorldServer;
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.bending.fire.FireParticleSpawner.FIRE_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.common.bending.fire.FireSmashGroundHandler.SMASH_GROUND_FIRE;
+import static com.crowsofwar.avatar.common.bending.fire.FireSmashGroundHandlerBig.SMASH_GROUND_FIRE_BIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class StatCtrlFireJump extends StatusControl {
@@ -108,9 +110,9 @@ public class StatCtrlFireJump extends StatusControl {
 			}
 
 			if (abilityData.getLevel() == 2 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE);
+				data.addTickHandler(SMASH_GROUND_FIRE);
 			} else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE_BIG);
+				data.addTickHandler(SMASH_GROUND_FIRE_BIG);
 			}
 
 			// Calculate direction to jump -- in the direction the player is currently already going

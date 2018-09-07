@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.lightning;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BenderInfo;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
@@ -16,6 +17,7 @@ import javax.annotation.Nullable;
  * @author CrowsOfWar
  */
 public class LightningRedirectHandler extends LightningChargeHandler {
+	public static TickHandler LIGHTNING_REDIRECT = new LightningRedirectHandler();
 
 	@Override
 	@Nullable

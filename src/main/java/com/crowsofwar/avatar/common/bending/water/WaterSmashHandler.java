@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
@@ -8,6 +9,9 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 
 public class WaterSmashHandler extends SmashGroundHandler {
+
+	static TickHandler SMASH_GROUND_WATER = new WaterSmashHandler();
+
 	@Override
 	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {
 		super.smashEntity(target, entity);

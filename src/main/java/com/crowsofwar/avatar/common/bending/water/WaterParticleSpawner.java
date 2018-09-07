@@ -20,6 +20,8 @@ import static com.crowsofwar.avatar.common.bending.water.WaterChargeHandler.WATE
 
 public class WaterParticleSpawner extends TickHandler {
 
+	static 	TickHandler WATER_PARTICLE_SPAWNER = new WaterParticleSpawner();
+
 	static TickHandler WATER_SKATE = new WaterSkateHandler();
 
 	@Override

@@ -28,6 +28,7 @@ import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.BELOW_CROSSHAIR;
 import static com.crowsofwar.avatar.common.bending.water.WaterParticleSpawner.WATER_SKATE;
+import static com.crowsofwar.avatar.common.bending.water.WaterSmashHandler.SMASH_GROUND_WATER;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_JUMP;
 
 /**
@@ -57,7 +58,7 @@ public class StatCtrlSkateJump extends StatusControl {
 
 			AbilityData abilityData = data.getAbilityData("water_skate");
 			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
-				data.addTickHandler(TickHandler.SMASH_GROUND_WATER);
+				data.addTickHandler(SMASH_GROUND_WATER);
 			}
 
 		}

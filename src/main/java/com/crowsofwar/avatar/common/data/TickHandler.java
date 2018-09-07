@@ -38,18 +38,8 @@ import java.util.Map;
 public abstract class TickHandler {
 
 	public static TickHandler
-			BISON_SUMMONER = new BisonSummonHandler(),
-			LIGHTNING_CHARGE = new LightningCreateHandler(),
-			LIGHTNING_REDIRECT = new LightningRedirectHandler(),
-			SMASH_GROUND_FIRE = new FireSmashGroundHandler(),
-			SMASH_GROUND_FIRE_BIG = new FireSmashGroundHandlerBig(),
-			SMASH_GROUND_WATER = new WaterSmashHandler(),
-			WATER_PARTICLE_SPAWNER = new WaterParticleSpawner(),
 			FIRE_STATCTRL_HANDLER = new FireStatusControlHandler(),
 			PURIFY_PARTICLE_SPAWNER = new PurifyParticleHandler(),
-			CLEANSE_COOLDOWN_HANDLER = new CleanseCooldownHandler(),
-			PURIFY_COOLDOWN_HANDLER = new PurifyCooldownHandler(),
-			RENDER_ELEMENT_HANDLER = new RenderElementTickHandler(),
 			FIRE_DEVOUR_HANDLER = new FireDevourTickHandler();
 
 	private static int nextId = 1;

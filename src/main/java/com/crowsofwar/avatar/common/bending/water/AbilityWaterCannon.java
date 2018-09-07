@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import java.util.function.BiPredicate;
 
 import static com.crowsofwar.avatar.common.bending.water.WaterChargeHandler.WATER_CHARGE;
+import static com.crowsofwar.avatar.common.bending.water.WaterParticleSpawner.WATER_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static java.lang.Math.toRadians;
 
@@ -62,12 +63,12 @@ public class AbilityWaterCannon extends Ability {
 		if (ctx.consumeWater(waterAmount)) {
 			if (bender.consumeChi(chi) && !hasWaterCharge) {
 				ctx.getData().addTickHandler(WATER_CHARGE);
-				data.addTickHandler(TickHandler.WATER_PARTICLE_SPAWNER);
+				data.addTickHandler(WATER_PARTICLE_SPAWNER);
 			}
 		} else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
 			if (!hasWaterCharge) {
 				ctx.getData().addTickHandler(WATER_CHARGE);
-				data.addTickHandler(TickHandler.WATER_PARTICLE_SPAWNER);
+				data.addTickHandler(WATER_PARTICLE_SPAWNER);
 			}
 		} else if (targetPos != null && ctx.getLevel() >= 2) {
 			if (bender.consumeChi(chi) && !hasWaterCharge) {
@@ -75,7 +76,7 @@ public class AbilityWaterCannon extends Ability {
 				//Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 
 				ctx.getData().addTickHandler(WATER_CHARGE);
-				data.addTickHandler(TickHandler.WATER_PARTICLE_SPAWNER);
+				data.addTickHandler(WATER_PARTICLE_SPAWNER);
 			}
 		} else {
 			bender.sendMessage("avatar.waterCannonFail");

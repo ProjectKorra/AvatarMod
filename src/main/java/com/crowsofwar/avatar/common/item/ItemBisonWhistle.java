@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
+import static com.crowsofwar.avatar.common.entity.mob.BisonSummonHandler.BISON_SUMMONER;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
 import static net.minecraft.util.EnumActionResult.PASS;
 import static net.minecraft.util.EnumActionResult.SUCCESS;
@@ -143,7 +144,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 
 						BendingData data = BendingData.get(entity);
 						data.getMiscData().setPetSummonCooldown((int) (seconds * 20));
-						data.addTickHandler(TickHandler.BISON_SUMMONER);
+						data.addTickHandler(BISON_SUMMONER);
 
 						MSG_BISON_WHISTLE_SUMMON.send(entity, (int) seconds);
 					} else {

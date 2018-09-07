@@ -26,9 +26,9 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_CLEANSE_COOLDOWN;
+import static com.crowsofwar.avatar.common.bending.water.CleanseCooldownHandler.CLEANSE_COOLDOWN_HANDLER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandler.CLEANSE_COOLDOWN_HANDLER;
 import static java.lang.Math.toRadians;
 
 public class AbilityCleanse extends Ability {
