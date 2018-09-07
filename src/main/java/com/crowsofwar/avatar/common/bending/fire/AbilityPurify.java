@@ -10,10 +10,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_PURIFY_COOLDOWN;
+import static com.crowsofwar.avatar.common.bending.fire.PurifyCooldownHandler.PURIFY_COOLDOWN_HANDLER;
+import static com.crowsofwar.avatar.common.bending.fire.PurifyParticleHandler.PURIFY_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandler.PURIFY_COOLDOWN_HANDLER;
-import static com.crowsofwar.avatar.common.data.TickHandler.PURIFY_PARTICLE_SPAWNER;
 import static net.minecraft.init.MobEffects.*;
 
 public class AbilityPurify extends Ability {

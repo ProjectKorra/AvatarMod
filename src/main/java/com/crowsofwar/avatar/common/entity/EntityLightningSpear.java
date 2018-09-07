@@ -39,6 +39,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 
+import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -127,11 +128,11 @@ public class EntityLightningSpear extends AvatarEntity {
 		if (getOwner() != null) {
 			EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (spear == null && bD.hasStatusControl(StatusControl.THROW_LIGHTNINGSPEAR)) {
-				bD.removeStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
+			if (spear == null && bD.hasStatusControl(THROW_LIGHTNINGSPEAR)) {
+				bD.removeStatusControl(THROW_LIGHTNINGSPEAR);
 			}
-			if (spear != null && spear.getBehavior() instanceof LightningSpearBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_LIGHTNINGSPEAR))) {
-				bD.addStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
+			if (spear != null && spear.getBehavior() instanceof LightningSpearBehavior.PlayerControlled && !(bD.hasStatusControl(THROW_LIGHTNINGSPEAR))) {
+				bD.addStatusControl(THROW_LIGHTNINGSPEAR);
 			}
 
 		}
@@ -283,7 +284,7 @@ public class EntityLightningSpear extends AvatarEntity {
 	public void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
-			data.removeStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
+			data.removeStatusControl(THROW_LIGHTNINGSPEAR);
 		}
 	}
 

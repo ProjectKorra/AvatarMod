@@ -12,6 +12,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
+import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
@@ -51,7 +52,7 @@ public class AiLightningSpear extends BendingAi {
 
 		if (timeExecuting >= 40) {
 			BendingData data = bender.getData();
-			execStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
+			execStatusControl(THROW_LIGHTNINGSPEAR);
 			timeExecuting = 0;
 			return false;
 		} else {
@@ -81,7 +82,7 @@ public class AiLightningSpear extends BendingAi {
 
 		if (spear != null) {
 			spear.setDead();
-			bender.getData().removeStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
+			bender.getData().removeStatusControl(THROW_LIGHTNINGSPEAR);
 		}
 
 	}

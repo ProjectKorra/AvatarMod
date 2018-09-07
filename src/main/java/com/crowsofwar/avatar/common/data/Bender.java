@@ -46,8 +46,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandler.FIRE_DEVOUR_HANDLER;
-import static com.crowsofwar.avatar.common.data.TickHandler.PURIFY_PARTICLE_SPAWNER;
 
 /**
  * A wrapper for any mob/player that can bend to provide greater abstraction

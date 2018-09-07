@@ -36,12 +36,6 @@ import java.util.Map;
  * @author CrowsOfWar
  */
 public abstract class TickHandler {
-
-	public static TickHandler
-			FIRE_STATCTRL_HANDLER = new FireStatusControlHandler(),
-			PURIFY_PARTICLE_SPAWNER = new PurifyParticleHandler(),
-			FIRE_DEVOUR_HANDLER = new FireDevourTickHandler();
-
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;
 	private final int id;

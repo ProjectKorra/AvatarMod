@@ -28,6 +28,8 @@ import static java.lang.Math.toRadians;
 
 public class FireDevourTickHandler extends TickHandler {
 
+	static TickHandler FIRE_DEVOUR_HANDLER = new FireDevourTickHandler();
+
 	private int fireConsumed = 0;
 	private int handlerLength = 20;
 

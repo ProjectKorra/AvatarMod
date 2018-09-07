@@ -32,6 +32,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
@@ -55,7 +56,7 @@ public class AbilityLightningSpear extends Ability {
 		BendingData data = ctx.getData();
 		AbilityData abilityData = ctx.getAbilityData();
 
-		if (data.hasStatusControl(StatusControl.THROW_LIGHTNINGSPEAR)) return;
+		if (data.hasStatusControl(THROW_LIGHTNINGSPEAR)) return;
 
 		if (bender.consumeChi(STATS_CONFIG.chiCloudburst)) {
 
@@ -108,7 +109,7 @@ public class AbilityLightningSpear extends Ability {
 			spear.setGroupAttack(abilityData.isMasterPath(AbilityTreePath.SECOND));
 			world.spawnEntity(spear);
 
-			data.addStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
+			data.addStatusControl(THROW_LIGHTNINGSPEAR);
 
 		}
 

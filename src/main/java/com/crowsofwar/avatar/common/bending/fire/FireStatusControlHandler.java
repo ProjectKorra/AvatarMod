@@ -13,6 +13,8 @@ import net.minecraft.world.World;
 
 public class FireStatusControlHandler extends TickHandler {
 
+	static TickHandler FIRE_STATCTRL_HANDLER = new FireStatusControlHandler();
+
 	private int ticks = 0;
 	@Override
 	public boolean tick(BendingContext ctx) {
