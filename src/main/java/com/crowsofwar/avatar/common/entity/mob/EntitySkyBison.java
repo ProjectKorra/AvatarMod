@@ -145,7 +145,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 	private boolean wasTouchingGround;
 
-	private boolean hasSpawnedAirbender;
 
 	/**
 	 * @param world
@@ -167,7 +166,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		ownerAttr = new SyncedEntity<>(this, SYNC_OWNER);
 		condition = new AnimalCondition(this, 30, 20, SYNC_FOOD, SYNC_DOMESTICATION, SYNC_AGE);
 		setSize(2.5f, 2);
-		this.hasSpawnedAirbender = false;
 
 
 		initChest();

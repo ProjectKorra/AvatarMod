@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
+import com.crowsofwar.avatar.common.entity.ai.EntityAiBenderAttackZombie;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiGiveScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.gorecore.format.FormattedMessage;
@@ -95,7 +96,7 @@ public abstract class EntityHumanBender extends EntityBender {
 		// this.targetTasks.addTask(2,
 		// new EntityAINearestAttackableTarget(this, EntityPlayer.class, true,
 		// false));
-		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, EntityHumanBender.class));
+		this.tasks.addTask(2, new EntityAiBenderAttackZombie(this));
 		this.tasks.addTask(4, aiGiveScroll = new EntityAiGiveScroll(this, getScrollType()));
 		addBendingTasks();
 		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));

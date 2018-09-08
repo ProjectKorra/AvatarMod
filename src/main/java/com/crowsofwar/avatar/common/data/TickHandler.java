@@ -48,7 +48,7 @@ public abstract class TickHandler {
 
 	}
 
-	public static TickHandler fromId(int id) {
+	 static TickHandler fromId(int id) {
 		return allHandlers.get(id);
 	}
 
