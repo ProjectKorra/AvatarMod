@@ -274,32 +274,34 @@ public class EntityCloudBall extends AvatarEntity {
 
 				if (!collided.isEmpty()) {
 					for (Entity entity : collided) {
+						if (entity != getOwner() && entity != null && getOwner() != null) {
 
-						damageEntity(entity);
+							damageEntity(entity);
 
-						double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
+							double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
 
-						//Divide the result of the position difference to make entities fly
-						//further the closer they are to the player.
-						Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
-						double distance = Vector.getEntityPos(entity).dist(Vector.getEntityPos(this));
-						double direction = (hitBox - distance) * (speed * 5) / hitBox;
-						velocity = velocity.times(direction).times(-1 + (-1 * hitBox/2)).withY(speed/2);
+							//Divide the result of the position difference to make entities fly
+							//further the closer they are to the player.
+							Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
+							double distance = Vector.getEntityPos(entity).dist(Vector.getEntityPos(this));
+							double direction = (hitBox - distance) * (speed * 5) / hitBox;
+							velocity = velocity.times(direction).times(-1 + (-1 * hitBox / 2)).withY(speed / 2);
 
-						double x = (velocity.x()) + distanceTravelled / 50;
-						double y = (velocity.y()) > 0 ? velocity.y() + distanceTravelled / 100 : 0.3F + distanceTravelled / 100;
-						double z = (velocity.z()) + distanceTravelled / 50;
+							double x = (velocity.x()) + distanceTravelled / 50;
+							double y = (velocity.y()) > 0 ? velocity.y() + distanceTravelled / 100 : 0.3F + distanceTravelled / 100;
+							double z = (velocity.z()) + distanceTravelled / 50;
 
-						if (!entity.world.isRemote) {
-							entity.addVelocity(x, y, z);
+							if (!entity.world.isRemote) {
+								entity.addVelocity(x, y, z);
 
-							if (collided instanceof AvatarEntity) {
-								if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
-									AvatarEntity avent = (AvatarEntity) collided;
-									avent.addVelocity(x, y, z);
+								if (collided instanceof AvatarEntity) {
+									if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+										AvatarEntity avent = (AvatarEntity) collided;
+										avent.addVelocity(x, y, z);
+									}
+									entity.isAirBorne = true;
+									AvatarUtils.afterVelocityAdded(entity);
 								}
-								entity.isAirBorne = true;
-								AvatarUtils.afterVelocityAdded(entity);
 							}
 						}
 					}

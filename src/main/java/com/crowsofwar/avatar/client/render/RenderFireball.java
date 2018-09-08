@@ -110,6 +110,7 @@ public class RenderFireball extends Render<EntityFireball> {
 		popMatrix();
 
 		//  }
+		enableLighting();
 		disableBlend();
 
 	}

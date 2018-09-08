@@ -52,16 +52,16 @@ public class WaterParticleSpawner extends TickHandler {
 			List<EntityThrowable> projectiles = world.getEntitiesWithinAABB(EntityThrowable.class, box);
 			if (!projectiles.isEmpty()) {
 				for (Entity e : projectiles) {
-					e.applyEntityCollision(e);
-					e.setDead();
+					Vector vel = Vector.getVelocity(e).times(-1.1);
+					e.addVelocity(vel.x(), vel.y(), vel.z());
 				}
 			}
 			if (abilityData.getLevel() >= 2) {
 				List<EntityArrow> arrows = world.getEntitiesWithinAABB(EntityArrow.class, box);
 				if (!arrows.isEmpty()) {
 					for (Entity e : arrows) {
-						e.applyEntityCollision(e);
-						e.setDead();
+						Vector vel = Vector.getVelocity(e).times(-1.1);
+						e.addVelocity(vel.x(), vel.y(), vel.z());
 					}
 				}
 			}

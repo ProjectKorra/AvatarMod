@@ -82,6 +82,7 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 			popMatrix();
 
 		//  }
+		enableLighting();
 		disableBlend();
 
 	}

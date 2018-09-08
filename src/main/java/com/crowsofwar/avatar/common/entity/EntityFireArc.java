@@ -256,29 +256,30 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
+					if (entity != getOwner() && entity != null && getOwner() != null) {
+						double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
 
-					double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
+						Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
+						double distance = Vector.getEntityPos(entity).dist(Vector.getEntityPos(this));
+						double direction = (hitBox - distance) * (speed * 5) / hitBox;
+						velocity = velocity.times(direction).times(-1 + (-1 * hitBox / 2)).withY(speed / 2);
 
-					Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
-					double distance = Vector.getEntityPos(entity).dist(Vector.getEntityPos(this));
-					double direction = (hitBox - distance) * (speed * 5) / hitBox;
-					velocity = velocity.times(direction).times(-1 + (-1 * hitBox / 2)).withY(speed / 2);
+						double x = (velocity.x()) + distanceTravelled / 50;
+						double y = (velocity.y()) > 0 ? velocity.y() + distanceTravelled / 100 : 0.3F + distanceTravelled / 100;
+						double z = (velocity.z()) + distanceTravelled / 50;
+						entity.addVelocity(x, y, z);
+						if (canDamageEntity(entity)) {
+							damageEntity(entity);
+						}
+						BattlePerformanceScore.addSmallScore(getOwner());
 
-					double x = (velocity.x()) + distanceTravelled / 50;
-					double y = (velocity.y()) > 0 ? velocity.y() + distanceTravelled / 100 : 0.3F + distanceTravelled / 100;
-					double z = (velocity.z()) + distanceTravelled / 50;
-					entity.addVelocity(x, y, z);
-					if (canDamageEntity(entity)) {
-						damageEntity(entity);
+						if (entity instanceof AvatarEntity) {
+							AvatarEntity avent = (AvatarEntity) entity;
+							avent.addVelocity(x, y, z);
+						}
+						entity.isAirBorne = true;
+						AvatarUtils.afterVelocityAdded(entity);
 					}
-					BattlePerformanceScore.addSmallScore(getOwner());
-
-					if (entity instanceof AvatarEntity) {
-						AvatarEntity avent = (AvatarEntity) entity;
-						avent.addVelocity(x, y, z);
-					}
-					entity.isAirBorne = true;
-					AvatarUtils.afterVelocityAdded(entity);
 				}
 			}
 		}
