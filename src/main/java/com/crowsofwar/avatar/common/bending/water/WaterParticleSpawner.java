@@ -52,7 +52,7 @@ public class WaterParticleSpawner extends TickHandler {
 			List<EntityThrowable> projectiles = world.getEntitiesWithinAABB(EntityThrowable.class, box);
 			if (!projectiles.isEmpty()) {
 				for (Entity e : projectiles) {
-					Vector vel = Vector.getVelocity(e).times(-1.1);
+					Vector vel = Vector.getVelocity(e).times(-1);
 					e.addVelocity(vel.x(), vel.y(), vel.z());
 				}
 			}
@@ -60,7 +60,7 @@ public class WaterParticleSpawner extends TickHandler {
 				List<EntityArrow> arrows = world.getEntitiesWithinAABB(EntityArrow.class, box);
 				if (!arrows.isEmpty()) {
 					for (Entity e : arrows) {
-						Vector vel = Vector.getVelocity(e).times(-1.1);
+						Vector vel = Vector.getVelocity(e).times(-1);
 						e.addVelocity(vel.x(), vel.y(), vel.z());
 					}
 				}

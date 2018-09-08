@@ -49,7 +49,7 @@ public class ConfigMobs {
 		//Default items that are tradable for scrolls- the number is just random for now.
 		//TODO: Make the number correspond to the amount of the item the player has to hold
 		DEFAULT_TRADE_ITEMS.put("minecraft:diamond", 1);
-		DEFAULT_TRADE_ITEMS.put("minecraft:gold", 1);
+		DEFAULT_TRADE_ITEMS.put("minecraft:gold_ingot", 1);
 		DEFAULT_TRADE_ITEMS.put("minecraft:emerald", 1);
 		//Required items for trading for a airbending scroll
 		AIRBENDING_TRADE_ITEMS.put("minecraft:elytra", 1);
