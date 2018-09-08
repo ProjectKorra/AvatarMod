@@ -76,7 +76,6 @@ public class RenderFireball extends Render<EntityFireball> {
 
 		enableBlend();
 
-		entity.getBrightnessForRender();
 		if (entity.ticksExisted % 3 == 0) {
 			World world = entity.world;
 			AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
@@ -102,7 +101,6 @@ public class RenderFireball extends Render<EntityFireball> {
 		//  } else {
 
 		pushMatrix();
-		disableLighting();
 		renderCube(x, y, z, //
 				8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
 				size, //

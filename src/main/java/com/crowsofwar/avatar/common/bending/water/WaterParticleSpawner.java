@@ -47,13 +47,13 @@ public class WaterParticleSpawner extends TickHandler {
 				World.spawnParticle(EnumParticleTypes.WATER_SPLASH, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
 						lookpos.z() + entity.posZ, 1, 0, 0, 0, 0.05);
 			}
-			AxisAlignedBB box = new AxisAlignedBB(entity.posX + (1 * radius) , entity.posY + 2, entity.posZ + (1 * radius),
-					entity.posX - (1 * radius), entity.posY - 2, entity.posZ - (1 * radius));
+			AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius , entity.posY + entity.getEyeHeight()/2 + radius/4, entity.posZ + radius,
+					entity.posX - radius, entity.posY + entity.getEyeHeight()/2 - radius/4, entity.posZ - radius);
 			List<EntityThrowable> projectiles = world.getEntitiesWithinAABB(EntityThrowable.class, box);
 			if (!projectiles.isEmpty()) {
 				for (Entity e : projectiles) {
 					Vector vel = Vector.getVelocity(e).times(-1);
-					e.addVelocity(vel.x(), vel.y(), vel.z());
+					e.addVelocity(vel.x(), 0, vel.z());
 				}
 			}
 			if (abilityData.getLevel() >= 2) {
@@ -61,7 +61,7 @@ public class WaterParticleSpawner extends TickHandler {
 				if (!arrows.isEmpty()) {
 					for (Entity e : arrows) {
 						Vector vel = Vector.getVelocity(e).times(-1);
-						e.addVelocity(vel.x(), vel.y(), vel.z());
+						e.addVelocity(vel.x(), 0, vel.z());
 					}
 				}
 			}
