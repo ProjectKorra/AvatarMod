@@ -79,11 +79,7 @@ public abstract class TickHandler {
 
 	}
 
-	 public static TickHandler fromId(int id) {
-		if (allHandlers.get(id) != null) {
-			System.out.println(allHandlers.get(id));
-		}
-		System.out.println(allHandlers.size());
+	 static TickHandler fromId(int id) {
 		return allHandlers.get(id);
 	}
 
