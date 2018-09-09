@@ -80,7 +80,10 @@ public abstract class TickHandler {
 	}
 
 	 public static TickHandler fromId(int id) {
-		System.out.println(allHandlers.get(id));
+		if (allHandlers.get(id) != null) {
+			System.out.println(allHandlers.get(id));
+		}
+		System.out.println(allHandlers.size());
 		return allHandlers.get(id);
 	}
 
