@@ -67,6 +67,7 @@ import static com.crowsofwar.avatar.common.entity.mob.BisonSummonHandler.BISON_S
  * @author CrowsOfWar
  */
 public abstract class TickHandler {
+
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;
 	private int id;
