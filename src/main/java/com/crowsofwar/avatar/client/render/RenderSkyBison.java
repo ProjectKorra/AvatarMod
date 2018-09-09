@@ -17,6 +17,8 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
@@ -31,7 +33,7 @@ public class RenderSkyBison extends RenderLiving<EntitySkyBison> {
 			"textures/mob/flyingbison.png");
 
 	/**
-	 * @param rendermanager
+	 * @param rm (RenderManager)
 	 */
 	public RenderSkyBison(RenderManager rm) {
 		super(rm, new ModelFlyingBison(), 0);
@@ -52,5 +54,4 @@ public class RenderSkyBison extends RenderLiving<EntitySkyBison> {
 		super.doRenderShadowAndFire(entity, x, y, z, yaw, partialTicks);
 
 	}
-
 }

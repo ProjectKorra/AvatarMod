@@ -42,6 +42,7 @@ public class EntityAiBenderAttackZombie  extends EntityAIBase {
 		if (!zombie.isEmpty()) {
 			EntityZombie z =  zombie.get(0);
 			if (z == null || z.isDead) {
+				bender.setAttackTarget(null);
 				return false;
 			}
 
@@ -62,6 +63,7 @@ public class EntityAiBenderAttackZombie  extends EntityAIBase {
 
 
 			if (!bender.canEntityBeSeen(z)) {
+				bender.setAttackTarget(null);
 				return false;
 			}
 

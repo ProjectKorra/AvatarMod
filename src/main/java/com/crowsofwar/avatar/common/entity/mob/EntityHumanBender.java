@@ -93,10 +93,8 @@ public abstract class EntityHumanBender extends EntityBender {
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 
-		// this.targetTasks.addTask(2,
-		// new EntityAINearestAttackableTarget(this, EntityPlayer.class, true,
-		// false));
-		this.tasks.addTask(2, new EntityAiBenderAttackZombie(this));
+		this.tasks.addTask(4, new EntityAiBenderAttackZombie(this));
+		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.tasks.addTask(4, aiGiveScroll = new EntityAiGiveScroll(this, getScrollType()));
 		addBendingTasks();
 		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));
@@ -132,6 +130,10 @@ public abstract class EntityHumanBender extends EntityBender {
 	}
 
 	protected abstract int getNumSkins();
+
+	protected int getLevel() {
+		return 1;
+	}
 
 	protected int getScrollsLeft() {
 		return  rand.nextInt(3) + 1;

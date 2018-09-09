@@ -125,7 +125,7 @@ public class EntityFlames extends AvatarEntity {
 
 			for (Entity entity : collided) {
 
-				entity.setFire((int) (3 * 1 + abilityData.getTotalXp() / 100f));
+				entity.setFire((int) (3F * 1 + abilityData.getTotalXp() / 100f));
 
 				// Add extra damage
 				// Adding 0 since even though this doesn't affect health, will

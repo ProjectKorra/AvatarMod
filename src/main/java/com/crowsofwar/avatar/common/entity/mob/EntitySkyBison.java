@@ -152,20 +152,34 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	public EntitySkyBison(World world) {
 		super(world);
 
-		BendingData data = BendingData.get(this);
-		data.addBendingId(Airbending.ID);
+		getData().addBendingId(Airbending.ID);
 
 		Random rand = new Random();
-		int level = rand.nextInt(1) + 3;
+		int level = rand.nextInt(3) + 1;
 
-		getData().getAbilityData("air_bubble").setLevel(level);
-		getData().getAbilityData("airblade").setLevel(level);
-		getData().getAbilityData("air_gust").setLevel(level);
+		if (level <= 1) {
+			getData().getAbilityData("air_bubble").setLevel(0);
+			getData().getAbilityData("air_gust").setLevel(1);
+			getData().getAbilityData("airblade").setLevel(0);
+		}
+		if (level == 2) {
+			getData().getAbilityData("air_bubble").setLevel(1);
+			getData().getAbilityData("air_gust").setLevel(1);
+			getData().getAbilityData("airblade").setLevel(1);
+		}
+		if (level >= 3) {
+			getData().getAbilityData("air_bubble").setLevel(2);
+			getData().getAbilityData("air_gust").setLevel(3);
+			getData().getAbilityData("airblade").setLevel(1);
+		}
+
 
 		moveHelper = new SkyBisonMoveHelper(this);
 		ownerAttr = new SyncedEntity<>(this, SYNC_OWNER);
 		condition = new AnimalCondition(this, 30, 20, SYNC_FOOD, SYNC_DOMESTICATION, SYNC_AGE);
 		setSize(2.5f, 2);
+
+		this.noClip = false;
 
 
 		initChest();
@@ -902,8 +916,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		super.onUpdate();
 
 		if (this.ticksExisted % 20 == 0) {
-			BendingData data = BendingData.get(this);
-			data.addBendingId(Airbending.ID);
+			getData().addBendingId(Airbending.ID);
 		}
 
 		// Client-side chest sometimes doesn't have enough slots, since when the
