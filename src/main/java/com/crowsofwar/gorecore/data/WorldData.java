@@ -22,6 +22,8 @@ import net.minecraft.world.storage.WorldSavedData;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraftforge.fml.common.FMLLog;
 
+import java.util.Objects;
+
 /**
  * A base class for WorldSavedData.
  * 
@@ -88,7 +90,7 @@ public abstract class WorldData extends WorldSavedData implements DataSaver {
 			boolean separatePerDimension) {
 		try {
 			MapStorage ms = separatePerDimension ? world.getPerWorldStorage() : world.getMapStorage();
-			T data = worldDataClass.cast(ms.getOrLoadData(worldDataClass, key));
+			T data = worldDataClass.cast(Objects.requireNonNull(ms).getOrLoadData(worldDataClass, key));
 			
 			if (data == null) {
 				// TODO [1.10] Not sure if this is actually called anymore- need
