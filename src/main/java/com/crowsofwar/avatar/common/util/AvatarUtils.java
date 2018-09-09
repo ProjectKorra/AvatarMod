@@ -91,6 +91,40 @@ public class AvatarUtils {
 		return Vector.getEntityPos(entity).plus(new Vector(Math.cos(angle), -entity.getEyeHeight(), Math.sin(angle)).normalize().times(distance));
 	}
 
+	/**
+	 *
+	 * @param axis
+	 * @param degrees
+	 * @param length
+	 * @return
+	 */
+
+	public static Vector getOrthogonalVector(final Vector axis, final double degrees, final double length) {
+		Vector ortho = new Vector(axis.y(), -axis.x(), 0);
+		ortho = ortho.normalize();
+		ortho = ortho.times(length);
+
+		return rotateVectorAroundVector(axis, ortho, degrees);
+	}
+
+	/**
+	 *
+	 * @param axis
+	 * @param rotator
+	 * @param degrees
+	 * @return
+	 */
+
+	public static Vector rotateVectorAroundVector(final Vector axis, final Vector rotator, final double degrees) {
+		final double angle = Math.toRadians(degrees);
+		Vector rotation = axis;
+		final Vector rotate = rotator;
+		rotation = rotation.normalize();
+
+		final Vector thirdaxis = rotation.cross(rotate).normalize().times(rotate.magnitude());
+
+		return rotate.times(Math.cos(angle)).plus(thirdaxis.times(Math.sin(angle)));
+	}
 
 
 	/**
