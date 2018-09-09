@@ -6,7 +6,7 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
 public class RenderElementTickHandler extends TickHandler {
-	static TickHandler RENDER_ELEMENT_HANDLER = new RenderElementTickHandler();
+	public static TickHandler RENDER_ELEMENT_HANDLER = new RenderElementTickHandler();
 
 	@Override
 	public boolean tick(BendingContext ctx) {

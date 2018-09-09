@@ -66,8 +66,7 @@ public class AiFireball extends BendingAi {
 		entity.rotationYaw = (float) toDegrees(rotations.y());
 		entity.rotationPitch = (float) toDegrees(rotations.x());
 
-		if (timeExecuting >= 40) {
-			BendingData data = bender.getData();
+		if (timeExecuting >= 20) {
 			execStatusControl(StatusControl.THROW_FIREBALL);
 			timeExecuting = 0;
 			return false;

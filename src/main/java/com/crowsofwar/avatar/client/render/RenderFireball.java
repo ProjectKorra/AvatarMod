@@ -91,7 +91,7 @@ public class RenderFireball extends Render<EntityFireball> {
 		renderCube(x, y, z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
 				.5f, //
-				0, ticks / 25f, 0);
+				ticks / 25F, ticks / 25f, ticks / 25F);
 
 		int i = 15728880;
 		int j = i % 65536;

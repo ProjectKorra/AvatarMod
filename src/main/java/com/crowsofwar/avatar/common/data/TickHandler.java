@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.common.bending.earth.RestoreCooldownHandler;
 import com.crowsofwar.avatar.common.bending.earth.RestoreParticleHandler;
 import com.crowsofwar.avatar.common.bending.earth.SpawnEarthspikesHandler;
 import com.crowsofwar.avatar.common.bending.fire.*;
+import com.crowsofwar.avatar.common.bending.lightning.LightningChargeHandler;
 import com.crowsofwar.avatar.common.bending.lightning.LightningCreateHandler;
 import com.crowsofwar.avatar.common.bending.lightning.LightningRedirectHandler;
 import com.crowsofwar.avatar.common.bending.water.*;
@@ -29,8 +30,38 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.BisonSummonHandler;
 import io.netty.buffer.ByteBuf;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.crowsofwar.avatar.client.gui.RenderElementTickHandler.RENDER_ELEMENT_HANDLER;
+import static com.crowsofwar.avatar.common.bending.air.AirBurstHandler.AIRBURST_CHARGE_HANDLER;
+import static com.crowsofwar.avatar.common.bending.air.AirDodgeHandler.AIR_DODGE;
+import static com.crowsofwar.avatar.common.bending.air.AirParticleSpawner.AIR_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.common.bending.air.AirStatusControlHandler.AIR_STATCTRL_HANDLER;
+import static com.crowsofwar.avatar.common.bending.air.SlipstreamCooldownHandler.SLIPSTREAM_COOLDOWN_HANDLER;
+import static com.crowsofwar.avatar.common.bending.air.SmashGroundHandler.SMASH_GROUND;
+import static com.crowsofwar.avatar.common.bending.air.StaffGustCooldown.STAFF_GUST_HANDLER;
+import static com.crowsofwar.avatar.common.bending.earth.RestoreCooldownHandler.RESTORE_COOLDOWN_HANDLER;
+import static com.crowsofwar.avatar.common.bending.earth.RestoreParticleHandler.RESTORE_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.common.bending.earth.SpawnEarthspikesHandler.SPAWN_EARTHSPIKES_HANDLER;
+import static com.crowsofwar.avatar.common.bending.fire.FireDevourTickHandler.FIRE_DEVOUR_HANDLER;
+import static com.crowsofwar.avatar.common.bending.fire.FireParticleSpawner.FIRE_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.common.bending.fire.FireSmashGroundHandler.SMASH_GROUND_FIRE;
+import static com.crowsofwar.avatar.common.bending.fire.FireSmashGroundHandlerBig.SMASH_GROUND_FIRE_BIG;
+import static com.crowsofwar.avatar.common.bending.fire.FireStatusControlHandler.FIRE_STATCTRL_HANDLER;
+import static com.crowsofwar.avatar.common.bending.fire.FlamethrowerUpdateTick.FLAMETHROWER;
+import static com.crowsofwar.avatar.common.bending.fire.InfernoPunchParticleSpawner.INFERNO_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.common.bending.fire.PurifyCooldownHandler.PURIFY_COOLDOWN_HANDLER;
+import static com.crowsofwar.avatar.common.bending.fire.PurifyParticleHandler.PURIFY_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.common.bending.lightning.LightningChargeHandler.LIGHTNING_CHARGE;
+import static com.crowsofwar.avatar.common.bending.lightning.LightningRedirectHandler.LIGHTNING_REDIRECT;
+import static com.crowsofwar.avatar.common.bending.water.CleanseCooldownHandler.CLEANSE_COOLDOWN_HANDLER;
+import static com.crowsofwar.avatar.common.bending.water.WaterChargeHandler.WATER_CHARGE;
+import static com.crowsofwar.avatar.common.bending.water.WaterParticleSpawner.WATER_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.common.bending.water.WaterParticleSpawner.WATER_SKATE;
+import static com.crowsofwar.avatar.common.bending.water.WaterSmashHandler.SMASH_GROUND_WATER;
+import static com.crowsofwar.avatar.common.entity.mob.BisonSummonHandler.BISON_SUMMONER;
 
 /**
  * @author CrowsOfWar
@@ -38,7 +69,7 @@ import java.util.Map;
 public abstract class TickHandler {
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;
-	private final int id;
+	private int id;
 
 	public TickHandler() {
 		if (allHandlers == null) allHandlers = new HashMap<>();
@@ -48,7 +79,8 @@ public abstract class TickHandler {
 
 	}
 
-	 static TickHandler fromId(int id) {
+	 public static TickHandler fromId(int id) {
+		System.out.println(allHandlers.get(id));
 		return allHandlers.get(id);
 	}
 

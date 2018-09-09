@@ -12,19 +12,19 @@ import java.util.List;
 public class EntityAiBenderAttackZombie  extends EntityAIBase {
 
 	private final EntityHumanBender bender;
-	private final double followRange;
+	private double followRange;
 
 	public EntityAiBenderAttackZombie(EntityHumanBender bender) {
 		this.bender = bender;
-		this.followRange = 20;
+		this.followRange = 15;
 		setMutexBits(1);
 	}
 
 	@Override
 	public boolean shouldExecute() {
 		boolean nearbyZombie = false;
-		AxisAlignedBB box= new AxisAlignedBB(bender.posX + 20, bender.posY + 5, bender.posZ + 20, bender.posX - 20, bender.posY - 5,
-				bender.posZ - 20);
+		AxisAlignedBB box= new AxisAlignedBB(bender.posX + 15, bender.posY + 10, bender.posZ + 15, bender.posX - 15, bender.posY - 15,
+				bender.posZ - 15);
 		List<EntityZombie> zombie = bender.world.getEntitiesWithinAABB(EntityZombie.class, box);
 		if (!zombie.isEmpty()) {
 			nearbyZombie = true;
@@ -36,8 +36,8 @@ public class EntityAiBenderAttackZombie  extends EntityAIBase {
 	@Override
 	public boolean shouldContinueExecuting() {
 
-		AxisAlignedBB box = new AxisAlignedBB(bender.posX + 20, bender.posY + 5, bender.posZ + 20, bender.posX - 20, bender.posY - 5,
-				bender.posZ - 20);
+		AxisAlignedBB box = new AxisAlignedBB(bender.posX + 15, bender.posY + 10, bender.posZ + 15, bender.posX - 15, bender.posY - 10,
+				bender.posZ - 15);
 		List<EntityZombie> zombie = bender.world.getEntitiesWithinAABB(EntityZombie.class, box);
 		if (!zombie.isEmpty()) {
 			EntityZombie z =  zombie.get(0);
@@ -45,18 +45,25 @@ public class EntityAiBenderAttackZombie  extends EntityAIBase {
 				return false;
 			}
 
-			bender.setAttackTarget(z);
+			if (bender.getAttackTarget() == null) {
+				bender.setAttackTarget(z);
+			}
 
 			if (bender.getDistanceSq(z) > followRange * followRange) {
 				bender.setAttackTarget(null);
 				return false;
 			}
-			
+
+			followRange -= followRange > 5 ? 0.005 : 0;
+
 
 			bender.getMoveHelper().setMoveTo(z.posX, z.posY, z.posZ, 1);
 			bender.getLookHelper().setLookPositionWithEntity(z, 20, 20);
 
 
+			if (!bender.canEntityBeSeen(z)) {
+				return false;
+			}
 
 		}
 		return !zombie.isEmpty();

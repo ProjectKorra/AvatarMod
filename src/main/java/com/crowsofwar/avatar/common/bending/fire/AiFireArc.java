@@ -86,14 +86,14 @@ public class AiFireArc extends BendingAi {
 		entity.rotationYaw += velocityYaw;
 		entity.rotationPitch += velocityPitch;
 
-		if (timeExecuting < 60) {
+		if (timeExecuting < 40) {
 			entity.rotationYaw = targetYaw;
 			entity.rotationPitch = targetPitch;
 		}
 
 
 
-		if (timeExecuting >= 60) {
+		if (timeExecuting >= 40) {
 			BendingData data = bender.getData();
 			execStatusControl(StatusControl.THROW_FIRE);
 			timeExecuting = 0;

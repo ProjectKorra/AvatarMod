@@ -69,7 +69,7 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 	public T getPlayerData(UUID player) {
 		if (players.containsKey(player)) {
 			T data = getPlayerDataWithoutCreate(player);
-			if (getWorld() != null) {
+			if (getWorld() != null && player != null) {
 				assert data != null;
 				data.setPlayerEntity(AccountUUIDs.findEntityFromUUID(getWorld(), player));
 			}

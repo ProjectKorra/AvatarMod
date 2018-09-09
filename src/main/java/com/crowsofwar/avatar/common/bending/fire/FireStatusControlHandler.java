@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 public class FireStatusControlHandler extends TickHandler {
 
-	static TickHandler FIRE_STATCTRL_HANDLER = new FireStatusControlHandler();
+	public static TickHandler FIRE_STATCTRL_HANDLER = new FireStatusControlHandler();
 
 	private int ticks = 0;
 	@Override

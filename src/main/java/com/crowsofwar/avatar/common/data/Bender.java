@@ -303,13 +303,15 @@ public abstract class Bender {
 		List<TickHandler> tickHandlers = data.getAllTickHandlers();
 		if (tickHandlers != null) {
 			for (TickHandler handler : tickHandlers) {
-				if (handler.tick(ctx)) {
-					// Can use this since the list is a COPY of the
-					// underlying list
-					data.removeTickHandler(handler);
-				} else {
-					int newDuration = data.getTickHandlerDuration(handler) + 1;
-					data.setTickHandlerDuration(handler, newDuration);
+				if (handler != null) {
+					if (handler.tick(ctx)) {
+						// Can use this since the list is a COPY of the
+						// underlying list
+						data.removeTickHandler(handler);
+					} else {
+						int newDuration = data.getTickHandlerDuration(handler) + 1;
+						data.setTickHandlerDuration(handler, newDuration);
+					}
 				}
 			}
 		}

@@ -33,7 +33,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("78723aa8-8d42-11e8-9eb6-529269fb1459");
 
-	static TickHandler SPAWN_EARTHSPIKES_HANDLER = new SpawnEarthspikesHandler();
+	public static TickHandler SPAWN_EARTHSPIKES_HANDLER = new SpawnEarthspikesHandler();
 
 	@Override
 	public boolean tick(BendingContext ctx) {
