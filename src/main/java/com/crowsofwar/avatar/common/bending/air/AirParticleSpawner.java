@@ -33,7 +33,7 @@ public class AirParticleSpawner extends TickHandler {
 
 	private static final ParticleSpawner particles = new NetworkParticleSpawner();
 
-	public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner();
+	//public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner();
 
 	@Override
 	public boolean tick(BendingContext ctx) {

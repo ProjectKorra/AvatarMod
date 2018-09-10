@@ -15,7 +15,7 @@ public class AirStatusControlHandler extends TickHandler {
 
 	private int ticks = 0;
 
-	public static TickHandler AIR_STATCTRL_HANDLER = new AirStatusControlHandler();
+	//public static TickHandler AIR_STATCTRL_HANDLER = new AirStatusControlHandler();
 
 	@Override
 	public boolean tick(BendingContext ctx) {

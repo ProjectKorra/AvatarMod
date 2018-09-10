@@ -59,6 +59,8 @@ public class WaterSkateHandler extends TickHandler {
 		particles = new NetworkParticleSpawner();
 	}
 
+	//public static TickHandler WATER_SKATE = new WaterSkateHandler();
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();

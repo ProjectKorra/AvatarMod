@@ -25,7 +25,7 @@ public class RestoreParticleHandler extends TickHandler {
 		particles = new NetworkParticleSpawner();
 	}
 
-	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler();
+	//public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler();
 
 	@Override
 	public boolean tick(BendingContext ctx) {

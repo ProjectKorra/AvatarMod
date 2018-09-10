@@ -23,7 +23,7 @@ public class AirDodgeHandler extends TickHandler {
 	public static final int MAX_CoolDown = 20;
 	private int leftDown, rightDown, cooldown;
 
-	public static TickHandler AIR_DODGE = new AirDodgeHandler();
+	//public static TickHandler AIR_DODGE = new AirDodgeHandler();
 
 	@Override
 	public boolean tick(BendingContext ctx) {

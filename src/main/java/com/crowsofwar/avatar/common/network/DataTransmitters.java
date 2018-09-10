@@ -156,11 +156,11 @@ public class DataTransmitters {
 			int size = buf.readInt();
 			List<TickHandler> out = new ArrayList<>();
 			for (int i = 0; i < size; i++) {
-				TickHandler sc = TickHandler.fromId(buf.readInt());
-				if (sc == null)
+				TickHandler list = TickHandler.fromId(buf.readInt());
+				if (list == null)
 					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid tick hander id");
 				else
-					out.add(sc);
+					out.add(list);
 			}
 			return out;
 		}
