@@ -43,6 +43,8 @@ public class AirBurstHandler extends TickHandler {
 			("f82d325c-9828-11e8-9eb6-529269fb1459");
 	public static TickHandler AIRBURST_CHARGE_HANDLER = new AirBurstHandler();
 
+	
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 		AbilityData abilityData = null;

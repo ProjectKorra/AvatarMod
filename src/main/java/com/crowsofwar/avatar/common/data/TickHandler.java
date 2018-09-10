@@ -16,22 +16,15 @@
 */
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.avatar.client.gui.RenderElementTickHandler;
-import com.crowsofwar.avatar.common.bending.air.*;
-import com.crowsofwar.avatar.common.bending.earth.RestoreCooldownHandler;
-import com.crowsofwar.avatar.common.bending.earth.RestoreParticleHandler;
-import com.crowsofwar.avatar.common.bending.earth.SpawnEarthspikesHandler;
-import com.crowsofwar.avatar.common.bending.fire.*;
-import com.crowsofwar.avatar.common.bending.lightning.LightningChargeHandler;
-import com.crowsofwar.avatar.common.bending.lightning.LightningCreateHandler;
-import com.crowsofwar.avatar.common.bending.lightning.LightningRedirectHandler;
-import com.crowsofwar.avatar.common.bending.water.*;
+
+
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.mob.BisonSummonHandler;
 import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.crowsofwar.avatar.client.gui.RenderElementTickHandler.RENDER_ELEMENT_HANDLER;
@@ -68,20 +61,21 @@ import static com.crowsofwar.avatar.common.entity.mob.BisonSummonHandler.BISON_S
  */
 public abstract class TickHandler {
 
-	private static int nextId = 1;
-	private static Map<Integer, TickHandler> allHandlers;
+	private static int nextId = 0;
+	public static List<TickHandler> allHandlers;
 	private int id;
 
-	public TickHandler() {
-		if (allHandlers == null) allHandlers = new HashMap<>();
 
-		id = nextId++;
-		allHandlers.put(id, this);
+	public TickHandler() {
+		if (allHandlers == null) allHandlers = new ArrayList<>();
+		this.id = ++nextId;
+		allHandlers.add(this);
 
 	}
 
-	 static TickHandler fromId(int id) {
-		return allHandlers.get(id);
+	 public static TickHandler fromId(int id) {
+		 id--;
+		 return id >= 0 && id < allHandlers.size() ? allHandlers.get(id) : null;
 	}
 
 	public static TickHandler fromBytes(ByteBuf buf) {
