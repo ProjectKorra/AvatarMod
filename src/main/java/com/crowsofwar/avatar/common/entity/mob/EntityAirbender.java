@@ -92,11 +92,6 @@ public class EntityAirbender extends EntityHumanBender {
 	}
 
 	@Override
-	public boolean getAlwaysRenderNameTagForRender() {
-		return true;
-	}
-
-	@Override
 	protected int getLevel() {
 		return level;
 	}
@@ -117,11 +112,8 @@ public class EntityAirbender extends EntityHumanBender {
 	protected void addBendingTasks() {
 		this.tasks.addTask(4, Objects.requireNonNull(Abilities.getAi("air_bubble", this, Bender.get(this))));
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("air_gust", this, Bender.get(this))));
-		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("airblade", this, Bender.get(this))));
+		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("airblade", this, Bender.get(this))));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.4, true));
-		if (this.getHeldItemMainhand().getItem() == AvatarItems.airbenderStaff) {
-			this.tasks.addTask(3, new EntityAiUseStaff(this));
-		}
 	}
 
 
@@ -163,7 +155,6 @@ public class EntityAirbender extends EntityHumanBender {
 			getData().addBendingId(Airbending.ID);
 		}
 		if (this.ticksExisted == 2 && !world.isRemote) {
-			System.out.println(level);
 
 			if (level == 1) {
 				getData().getAbilityData("air_bubble").setLevel(-1);

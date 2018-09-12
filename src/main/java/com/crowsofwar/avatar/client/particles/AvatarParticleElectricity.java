@@ -3,10 +3,10 @@ package com.crowsofwar.avatar.client.particles;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class AvatarParticleStatic extends AvatarParticle {
+public class AvatarParticleElectricity extends AvatarParticle {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/particles/static.png");
+			"textures/particles/electricity.png");
 
 	private static final ParticleFrame[] FRAMES = new ParticleFrame[8];
 
@@ -25,7 +25,7 @@ public class AvatarParticleStatic extends AvatarParticle {
 	 * @param velY
 	 * @param velZ
 	 */
-	public AvatarParticleStatic(int particleID, World world, double x, double y, double z, double velX,
+	public AvatarParticleElectricity(int particleID, World world, double x, double y, double z, double velX,
 								 double velY, double velZ, int... parameters) {
 		super(world, x, y, z, velX, velY, velZ);
 

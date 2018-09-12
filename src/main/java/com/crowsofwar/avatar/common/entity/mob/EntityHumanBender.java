@@ -75,6 +75,11 @@ public abstract class EntityHumanBender extends EntityBender {
 	}
 
 	@Override
+	public boolean getAlwaysRenderNameTagForRender() {
+		return true;
+	}
+
+	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_SKIN, (int) (rand.nextDouble() * getNumSkins()));
@@ -94,7 +99,7 @@ public abstract class EntityHumanBender extends EntityBender {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 
 		this.tasks.addTask(4, new EntityAiBenderAttackZombie(this));
-		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
 		this.tasks.addTask(4, aiGiveScroll = new EntityAiGiveScroll(this, getScrollType()));
 		addBendingTasks();
 		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));
