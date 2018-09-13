@@ -43,7 +43,8 @@ public class ConfigStats {
 			fireArcSettings = new AttackSettings(2, 1),   //
 			waterArcSettings = new AttackSettings(1.5F, 1),
 			boulderSettings = new AttackSettings(0.1F, 0.1),
-			airBurstSettings = new AttackSettings (0.5F, 1);
+			airBurstSettings = new AttackSettings (0.5F, 1),
+			lightningSpearSettings = new AttackSettings(4F, 2);
 
 	@Load
 	public double wallWaitTime = 10, wallWaitTime2 = 60, wallMomentum = 10;
@@ -112,6 +113,7 @@ public class ConfigStats {
 			chiPrison = 5,
 			chiSandPrison = 3,
 			chiLightning = 6,
+			chiLightningSpear = 4,
 			chiLightningRaze = 5,
 			chiIceShieldCreate = 4,
 			chiIceShieldProtect = 0.15f,

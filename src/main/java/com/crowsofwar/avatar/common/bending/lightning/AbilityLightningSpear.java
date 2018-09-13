@@ -58,10 +58,10 @@ public class AbilityLightningSpear extends Ability {
 
 		if (data.hasStatusControl(THROW_LIGHTNINGSPEAR)) return;
 
-		if (bender.consumeChi(STATS_CONFIG.chiCloudburst)) {
+		if (bender.consumeChi(STATS_CONFIG.chiLightningSpear)) {
 
 
-			float damage = 5F;
+			float damage = 2F;
 			if (abilityData.getLevel() >= 2) {
 				damage = 8;
 			}
@@ -69,18 +69,22 @@ public class AbilityLightningSpear extends Ability {
 
 			if (ctx.getLevel() == 1) {
 				size = 1.4F;
+				damage = 3;
 			}
 
 			if (ctx.getLevel() == 2) {
 				size = 1.6F;
+				damage = 4;
 			}
 
 			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 				size =  1.2F;
+				damage = 6;
 			}
 
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
 				size = 2.2F;
+				damage = 5;
 			}
 
 			damage *= ctx.getPowerRatingDamageMod();

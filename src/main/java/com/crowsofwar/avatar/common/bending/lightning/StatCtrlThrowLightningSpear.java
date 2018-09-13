@@ -32,9 +32,8 @@ public class StatCtrlThrowLightningSpear extends StatusControl {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				speedMult = 70;
 			}
-
-			spear.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
 			spear.setBehavior(new LightningSpearBehavior.Thrown());
+			spear.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
 			Vector direction = spear.velocity().toSpherical();
 			spear.rotationYaw = (float) Math.toDegrees(direction.y());
 			spear.rotationPitch = (float) Math.toDegrees(direction.x());
