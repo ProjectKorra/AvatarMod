@@ -56,7 +56,7 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 	}
 
 	@Override
-	public Class<? extends PlayerData> playerDataClass() {
+	public Class<AvatarPlayerData> playerDataClass() {
 		return AvatarPlayerData.class;
 	}
 
