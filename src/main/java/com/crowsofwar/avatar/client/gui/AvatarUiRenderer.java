@@ -272,7 +272,8 @@ public class AvatarUiRenderer extends Gui {
 			//boolean shouldRender = !CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuDisappear || data.hasTickHandler(RENDER_ELEMENT_HANDLER);
 
 			if (data.getActiveBending() != null) {
-
+				//float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
+				//		((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER)) / 200 : CLIENT_CONFIG.bendingCycleAlpha;
 				GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha);
 				drawBendingIcon(0, 0, data.getActiveBending());
 
