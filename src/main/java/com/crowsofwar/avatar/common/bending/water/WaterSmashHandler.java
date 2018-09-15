@@ -10,7 +10,7 @@ import net.minecraft.util.SoundEvent;
 
 public class WaterSmashHandler extends SmashGroundHandler {
 
-	//public static TickHandler SMASH_GROUND_WATER = new WaterSmashHandler();
+	public static TickHandler SMASH_GROUND_WATER = new WaterSmashHandler();
 
 	@Override
 	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {

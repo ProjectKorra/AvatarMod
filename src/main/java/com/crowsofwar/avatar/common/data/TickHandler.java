@@ -37,7 +37,7 @@ import java.util.Map;
  */
 public abstract class TickHandler {
 
-	public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner();
+	/*public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner();
 	public static TickHandler FIRE_PARTICLE_SPAWNER = new FireParticleSpawner();
 	public static TickHandler FLAMETHROWER = new FlamethrowerUpdateTick();
 	public static TickHandler WATER_SKATE = new WaterSkateHandler();
@@ -65,7 +65,7 @@ public abstract class TickHandler {
 	public static TickHandler CLEANSE_COOLDOWN_HANDLER = new CleanseCooldownHandler();
 	public static TickHandler RESTORE_COOLDOWN_HANDLER = new RestoreCooldownHandler();
 	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler();
-
+**/
 
 	private static int nextId = 1;
 	private static Map<Integer, TickHandler> allHandlers;

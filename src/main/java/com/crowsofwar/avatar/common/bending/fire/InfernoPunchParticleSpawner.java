@@ -17,7 +17,7 @@ import static com.crowsofwar.avatar.common.bending.fire.StatCtrlInfernoPunch.INF
 
 public class InfernoPunchParticleSpawner extends TickHandler {
 
-	//public static TickHandler INFERNO_PARTICLE_SPAWNER = new InfernoPunchParticleSpawner();
+	public static TickHandler INFERNO_PARTICLE_SPAWNER = new InfernoPunchParticleSpawner();
 
 	@Override
 	public boolean tick(BendingContext ctx) {

@@ -21,7 +21,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 
-import static com.crowsofwar.avatar.common.bending.water.WaterParticleSpawner.WATER_SKATE;
+import static com.crowsofwar.avatar.common.bending.water.WaterSkateHandler.WATER_SKATE;
 
 /**
  * @author CrowsOfWar

@@ -30,7 +30,7 @@ import net.minecraft.util.SoundEvent;
  */
 public class FireSmashGroundHandler extends SmashGroundHandler {
 
-	//public static TickHandler SMASH_GROUND_FIRE = new FireSmashGroundHandler();
+	public static TickHandler SMASH_GROUND_FIRE = new FireSmashGroundHandler();
 
 	@Override
 	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {

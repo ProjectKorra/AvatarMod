@@ -57,7 +57,6 @@ import java.util.UUID;
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandler.RENDER_ELEMENT_HANDLER;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 /**

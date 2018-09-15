@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -218,6 +219,13 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 			if (owner == null) return this;
 
+			BendingData data = BendingData.get(owner);
+			if (!data.hasStatusControl(StatusControl.THROW_LIGHTNINGSPEAR)) {
+				EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(entity.world, EntityLightningSpear.class, entity.getOwner());
+				if (spear != null) {
+					spear.setDead();
+				}
+			}
 			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
 
 			Vector target;

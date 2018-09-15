@@ -187,6 +187,7 @@ public class EntityLightningSpear extends AvatarEntity {
 				WorldServer World = (WorldServer) this.world;
 				World.spawnParticle(AvatarParticles.getParticleElectricity(), posX, posY, posZ, 25, 0, 0, 0, getSize()/20);
 				World.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+				World.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(getSize() * 2, getSize() * 2, getSize() * 2),
 						entity -> entity != getOwner());
 

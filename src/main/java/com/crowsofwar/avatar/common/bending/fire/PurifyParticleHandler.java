@@ -23,7 +23,7 @@ public class PurifyParticleHandler extends TickHandler {
 		particles = new NetworkParticleSpawner();
 	}
 
-	//public static TickHandler PURIFY_PARTICLE_SPAWNER = new PurifyParticleHandler();
+	public static TickHandler PURIFY_PARTICLE_SPAWNER = new PurifyParticleHandler();
 
 	@Override
 	public boolean tick(BendingContext ctx) {

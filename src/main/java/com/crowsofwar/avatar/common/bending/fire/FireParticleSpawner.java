@@ -12,7 +12,7 @@ import net.minecraft.entity.EntityLivingBase;
 
 public class FireParticleSpawner extends TickHandler {
 	private static final ParticleSpawner particles = new NetworkParticleSpawner();
-	//public static TickHandler FIRE_PARTICLE_SPAWNER = new FireParticleSpawner();
+	public static TickHandler FIRE_PARTICLE_SPAWNER = new FireParticleSpawner();
 
 	@Override
 	public boolean tick(BendingContext ctx) {
