@@ -32,7 +32,8 @@ import net.minecraft.world.WorldServer;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_AIR_STAFF_COOLDOWN;
-import static com.crowsofwar.avatar.common.bending.air.StaffGustCooldown.STAFF_GUST_HANDLER;
+import static com.crowsofwar.avatar.common.data.TickHandler.STAFF_GUST_HANDLER;
+//import static com.crowsofwar.avatar.common.bending.air.StaffGustCooldown.STAFF_GUST_HANDLER;
 
 public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 

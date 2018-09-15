@@ -46,10 +46,6 @@ public class AvatarChatMessages {
 	public static final FormattedMessage MSG_BENDING_REMOVE_SUCCESS = newChatMessage(CFG, "avatar.cmd.bending.remove.success", "player",
 			"bending");
 
-	public static final FormattedMessage MSG_EARTHBENDING = newChatMessage(CFG, "avatar.earthbending");
-	public static final FormattedMessage MSG_FIREBENDING = newChatMessage(CFG, "avatar.firebending");
-	public static final FormattedMessage MSG_WATERBENDING = newChatMessage(CFG, "avatar.waterbending");
-
 	public static final FormattedMessage MSG_CONFIG_EXCEPTION_1 = newChatMessage(CFG, "avatar.cmd.cfg.exception1");
 	public static final FormattedMessage MSG_CONFIG_EXCEPTION_2 = newChatMessage(CFG, "avatar.cmd.cfg.exception2", "details");
 	public static final FormattedMessage MSG_CONFIG_SUCCESS = newChatMessage(CFG, "avatar.cmd.cfg.successful");
@@ -61,10 +57,6 @@ public class AvatarChatMessages {
 
 	public static final FormattedMessage MSG_XPSET_SUCCESS = newChatMessage(CFG, "avatar.cmd.xpset", "player", "ability", "spec");
 
-	public static final FormattedMessage MSG_PROGRESS_POINT_ADDED = newChatMessage(CFG, "avatar.cmd.pp.add", "player", "pps", "bending");
-	public static final FormattedMessage MSG_PROGRESS_POINT_GET = newChatMessage(CFG, "avatar.cmd.pp.get", "player", "pps", "bending");
-	public static final FormattedMessage MSG_PROGRESS_POINT_SET = newChatMessage(CFG, "avatar.cmd.pp.set", "player", "pps", "bending");
-	public static final FormattedMessage MSG_PROGRESS_POINT_SET_RANGE = newChatMessage(CFG, "avatar.cmd.pp.set.range");
 
 	public static final FormattedMessage MSG_DONT_HAVE_BENDING = newChatMessage(CFG, "avatar.donthavebending", "username");
 

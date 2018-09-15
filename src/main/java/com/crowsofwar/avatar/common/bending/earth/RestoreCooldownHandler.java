@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class RestoreCooldownHandler extends TickHandler {
 
-	public static  TickHandler RESTORE_COOLDOWN_HANDLER = new RestoreCooldownHandler();
+	//public static  TickHandler RESTORE_COOLDOWN_HANDLER = new RestoreCooldownHandler();
 
 	@Override
 	public boolean tick(BendingContext ctx) {

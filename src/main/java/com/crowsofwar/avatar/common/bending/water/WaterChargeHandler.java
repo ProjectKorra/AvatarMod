@@ -23,7 +23,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class WaterChargeHandler extends TickHandler {
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
-	public static TickHandler WATER_CHARGE = new WaterChargeHandler();
+	//public static TickHandler WATER_CHARGE = new WaterChargeHandler();
 
 	@Override
 	public boolean tick(BendingContext ctx) {

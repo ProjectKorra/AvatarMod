@@ -317,18 +317,18 @@ public class EntityCloudBall extends AvatarEntity {
 			AbilityData abilityData = data.getAbilityData("cloudburst");
 			DamageSource ds = AvatarDamageSource.causeCloudburstDamage(entity, getOwner());
 			int lvl = abilityData.getLevel();
-			float damage = 0.5F;
+			float damage = getDamage()/3;
 			if (lvl == 1) {
-				damage = 1;
+				damage = getDamage()/2;
 			}
 			if (lvl == 2) {
-				damage = 1.5F;
+				damage = getDamage()/1.5F;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				damage = 2;
+				damage = getDamage();
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				damage = 2.5F;
+				damage = getDamage();
 			}
 			entity.attackEntityFrom(ds, damage);
 			if (entity.attackEntityFrom(ds, damage)) {

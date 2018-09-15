@@ -153,12 +153,16 @@ public class DataTransmitters {
 
 		@Override
 		public List<TickHandler> read(ByteBuf buf, BendingData data) {
-			List<TickHandler> list = new ArrayList<>();
-			int length = buf.readInt();
-			for (int i = 0; i < length; i++) {
-				list.add(TickHandler.fromBytes(buf));
+			int size = buf.readInt();
+			List<TickHandler> out = new ArrayList<>();
+			for (int i = 0; i < size; i++) {
+				TickHandler list = TickHandler.fromId(buf.readInt());
+				if (list == null)
+					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid tick hander id");
+				else
+					out.add(list);
 			}
-			return list;
+			return out;
 		}
 
 	};

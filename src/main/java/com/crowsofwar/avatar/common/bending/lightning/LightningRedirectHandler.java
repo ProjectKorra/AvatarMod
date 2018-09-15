@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
  * @author CrowsOfWar
  */
 public class LightningRedirectHandler extends LightningChargeHandler {
-	public static TickHandler LIGHTNING_REDIRECT = new LightningRedirectHandler();
+	//public static TickHandler LIGHTNING_REDIRECT = new LightningRedirectHandler();
 
 	@Override
 	@Nullable

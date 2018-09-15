@@ -185,10 +185,12 @@ public class ClientInput implements IControlsHandler {
 				AvatarUiRenderer.openBendingGui(data.getActiveBendingId());
 			} else {
 
-				String message = I18n.format(MSG_DONT_HAVE_BENDING.getTranslateKey());
-				message = FormattedMessageProcessor.formatText(MSG_DONT_HAVE_BENDING, message, mc.player.getName());
-				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(message));
+				if (CLIENT_CONFIG.displayGetBendingMessage) {
+					String message = I18n.format(MSG_DONT_HAVE_BENDING.getTranslateKey());
+					message = FormattedMessageProcessor.formatText(MSG_DONT_HAVE_BENDING, message, mc.player.getName());
+					mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(message));
 
+				}
 			}
 
 		}

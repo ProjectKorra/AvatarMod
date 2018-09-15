@@ -28,7 +28,7 @@ import java.util.UUID;
  */
 public abstract class LightningChargeHandler extends TickHandler {
 
-	public static TickHandler LIGHTNING_CHARGE = new LightningCreateHandler();
+	//public static TickHandler LIGHTNING_CHARGE = new LightningCreateHandler();
 
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("dfb6235c-82b6-407e-beaf-a48045735a82");

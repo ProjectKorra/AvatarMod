@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class SlipstreamCooldownHandler extends TickHandler {
 
-	public static TickHandler SLIPSTREAM_COOLDOWN_HANDLER = new SlipstreamCooldownHandler();
+	//public static TickHandler SLIPSTREAM_COOLDOWN_HANDLER = new SlipstreamCooldownHandler();
 
 	@Override
 	public boolean tick(BendingContext ctx) {
