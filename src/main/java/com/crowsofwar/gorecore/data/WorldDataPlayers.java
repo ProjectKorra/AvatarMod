@@ -17,13 +17,10 @@
 
 package com.crowsofwar.gorecore.data;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import com.crowsofwar.gorecore.GoreCore;
-import com.crowsofwar.gorecore.util.AccountUUIDs;
-import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
+import com.crowsofwar.gorecore.util.*;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -67,21 +64,18 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 	 * @return Player data for that player
 	 */
 	public T getPlayerData(UUID player) {
-		if (players.containsKey(player)) {
-			T data = getPlayerDataWithoutCreate(player);
-			if (getWorld() != null && player != null) {
-				assert data != null;
-				data.setPlayerEntity(AccountUUIDs.findEntityFromUUID(getWorld(), player));
-			}
-			return data;
-		} else {
+		Objects.requireNonNull(player, "Tried to create data for null player");
+		Objects.requireNonNull(getWorld(), "Tried to create data for null world");
+		T data = getPlayerDataWithoutCreate(player);
+		if (data == null) {
 			T data = createNewPlayerData(player);
 			players.put(player, data);
-			if (getWorld() != null)
-				data.setPlayerEntity(AccountUUIDs.findEntityFromUUID(getWorld(), player));
+			data.setPlayerEntity(AccountUUIDs.findEntityFromUUID(getWorld(), player));
 			saveChanges();
-			return data;
 		}
+		Objects.requireNonNull(data, String.format("Couldn't create data for player \"%s\" and world \"%s\"!", player, world.provider.getDimensionName()));
+		return data;
+		
 	}
 	
 	/**
@@ -100,7 +94,7 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 		return data;
 	}
 	
-	public abstract Class<? extends PlayerData> playerDataClass();
+	public abstract Class<T> playerDataClass();
 	
 	private T createNewPlayerData(UUID player) {
 		try {
