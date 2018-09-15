@@ -73,7 +73,7 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 			data.setPlayerEntity(AccountUUIDs.findEntityFromUUID(getWorld(), player));
 			saveChanges();
 		}
-		Objects.requireNonNull(data, String.format("Couldn't create data for player \"%s\" and world \"%s\"!", player, getWorld().provider.getDimensionName()));
+		Objects.requireNonNull(data, String.format("Couldn't create data for player \"%s\" and world \"%s\"!", player, getWorld().provider.getDimensionType().getName()));
 		return data;
 		
 	}
