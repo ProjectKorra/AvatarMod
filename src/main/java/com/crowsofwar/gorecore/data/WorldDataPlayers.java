@@ -68,12 +68,12 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 		Objects.requireNonNull(getWorld(), "Tried to create data for null world");
 		T data = getPlayerDataWithoutCreate(player);
 		if (data == null) {
-			T data = createNewPlayerData(player);
+			data = createNewPlayerData(player);
 			players.put(player, data);
 			data.setPlayerEntity(AccountUUIDs.findEntityFromUUID(getWorld(), player));
 			saveChanges();
 		}
-		Objects.requireNonNull(data, String.format("Couldn't create data for player \"%s\" and world \"%s\"!", player, world.provider.getDimensionName()));
+		Objects.requireNonNull(data, String.format("Couldn't create data for player \"%s\" and world \"%s\"!", player, getWorld().provider.getDimensionName()));
 		return data;
 		
 	}
