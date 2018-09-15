@@ -42,16 +42,11 @@ public class ConfigClient {
 	public float bendingCycleAlpha = 0.5f;
 
 	@Load
-	public int bendingImageDuration = 200;
-	//How long before the menu disappears
+	public final boolean displayGetBendingMessage = true;
+	//For some reason if it's not final it won't work
+	//Controls whether or not to show the get bending message
+	//when you press the use bending key
 
-	@Load
-	public boolean shouldBendingMenuDisappear = true;
-	//Makes the menu disappear after the duration- affects chi as well.
-
-	@Load
-	public boolean shouldBendingMenuRender = true;
-	//Determines if the chi and element menu should render at all
 
 	@Load
 	public boolean useCustomParticles = true;
@@ -64,6 +59,12 @@ public class ConfigClient {
 
 	@Load
 	public ShaderSettings shaderSettings = new ShaderSettings();
+
+	@Load
+	public ActiveBendingSettings activeBendingSettings = new ActiveBendingSettings();
+
+	@Load
+	public ChiBarSettings chiBarSettings = new ChiBarSettings();
 
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
@@ -129,4 +130,42 @@ public class ConfigClient {
 		@Load
 		public boolean usePurifyShaders = true;
 	}
+
+	public static class ActiveBendingSettings {
+
+		@Load
+		public final boolean shouldBendingMenuRender = true;
+		//For some reason if it's not final it won't work
+		//Determines if element menu should render at all
+
+		@Load
+		public final boolean shouldBendingMenuDisappear = true;
+		//For some reason if it's not final it won't work
+		//Makes the menu disappear after the duration- affects chi as well.
+		//Currently unused
+
+		@Load
+		public final int bendingMenuDuration = 200;
+		//If the menu should disappear, how long it should take before disappearing
+		//currently unused
+
+
+	}
+
+	public static class ChiBarSettings {
+		@Load
+		public final boolean shouldChibarRender = true;
+
+		@Load
+		public final boolean shouldChiNumbersRender = true;
+
+		@Load
+		public final boolean shouldChibarDisappear = true;
+		//Currently unused
+
+		@Load
+		public final int chibarDuration = 200;
+		//Currently unused
+	}
+
 }

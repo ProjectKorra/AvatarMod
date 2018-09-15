@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
@@ -56,6 +57,7 @@ import java.util.UUID;
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandler.RENDER_ELEMENT_HANDLER;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 /**
@@ -184,7 +186,7 @@ public class AvatarUiRenderer extends Gui {
 	}
 
 	private void renderChiBar(ScaledResolution resolution) {
-		//if (CLIENT_CONFIG.shouldBendingMenuRender) {
+		if (CLIENT_CONFIG.chiBarSettings.shouldChibarRender) {
 
 			GlStateManager.color(1, 1, 1, CLIENT_CONFIG.chiBarAlpha);
 
@@ -229,11 +231,11 @@ public class AvatarUiRenderer extends Gui {
 
 			popMatrix();
 
-		//}
+		}
 	}
 
 	private void renderChiMsg(ScaledResolution res) {
-		//if (CLIENT_CONFIG.shouldBendingMenuRender) {
+		if (CLIENT_CONFIG.chiBarSettings.shouldChiNumbersRender) {
 			if (errorMsgFade != -1) {
 
 				float seconds = (System.currentTimeMillis() - errorMsgFade) / 1000f;
@@ -255,18 +257,28 @@ public class AvatarUiRenderer extends Gui {
 
 			}
 
-		//}
+		}
 	}
 
 	private void renderActiveBending(ScaledResolution res) {
 
-		BendingData data = BendingData.get(mc.player);
+		if (CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuRender) {
+			BendingData data = BendingData.get(mc.player);
+
+			/*if (CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuDisappear) {
+				data.addTickHandler(RENDER_ELEMENT_HANDLER);
+			}**/
+
+			//boolean shouldRender = !CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuDisappear || data.hasTickHandler(RENDER_ELEMENT_HANDLER);
 
 			if (data.getActiveBending() != null) {
 
 				GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha);
 				drawBendingIcon(0, 0, data.getActiveBending());
 
+
+				//float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
+				//		((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER)) / 200 : CLIENT_CONFIG.bendingCycleAlpha;
 				GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha * 0.5f);
 
 				List<BendingStyle> allBending = data.getAllBending();
@@ -297,10 +309,10 @@ public class AvatarUiRenderer extends Gui {
 			}
 
 		}
+	}
 
 
 	private void drawBendingIcon(int xOff, int yOff, BendingStyle controller) {
-		//if (CLIENT_CONFIG.shouldBendingMenuRender) {
 			int x = screenWidth() / scaleFactor() - 85 + xOff;
 			int y = screenHeight() / scaleFactor() - 60 + yOff;
 			mc.renderEngine.bindTexture(AvatarUiTextures.getBendingIconTexture(controller.getId()));
@@ -309,7 +321,6 @@ public class AvatarUiRenderer extends Gui {
 			GlStateManager.scale(50.0 / 256, 50.0 / 256, 1);
 			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 			GlStateManager.popMatrix();
-		//}
 	}
 
 	private void renderAirBubbleHealth(ScaledResolution res) {
