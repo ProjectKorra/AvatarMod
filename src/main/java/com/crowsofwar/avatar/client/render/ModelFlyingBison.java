@@ -202,8 +202,8 @@ public class ModelFlyingBison extends ModelBase {
 		float size = bison.getCondition().getSizeMultiplier();
 
 		pushMatrix();
-		float scale = 1.5f * size;
-		translate(0, 1.5, 0);
+		float scale = 2 * size;
+		translate(0, 2, 0);
 		GlStateManager.scale(scale, scale, scale);
 
 		this.leg2.render(f5);
@@ -218,10 +218,10 @@ public class ModelFlyingBison extends ModelBase {
 
 		if (bison.getSaddle() != null) {
 			pushMatrix();
-			translate(0, -1.55, 0.2);
+			translate(0, -1.6, 0.2);
 
 			if (bison.isSitting()) {
-				translate(0, 0.20, 0);
+				translate(0, 0.2667, 0);
 			}
 
 			scale(0.5, 0.5, 0.5);

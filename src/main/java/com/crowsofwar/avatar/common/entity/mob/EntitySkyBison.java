@@ -134,6 +134,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private final SyncedEntity<EntityLivingBase> ownerAttr;
 	private final AnimalCondition condition;
 	private Vector originalPos;
+	private boolean madeSitByPlayer = false;
 		/**
 	 * Note: Is null clientside.
 	 */
@@ -500,14 +501,15 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		if (index > -1) {
 
+			float sizeOffset = condition.getAdultAge() < 5 ? condition.getAgeDays()/condition.getAdultAge() : 5;
 			double offset = 0.75;
 			double angle = (index + 0.5) * Math.PI - toRadians(rotationYaw);
-			double yOffset = passenger.getYOffset() + 1.75;
+			double yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.15));
 
 			if (passenger == getControllingPassenger()) {
 				angle = -toRadians(passenger.rotationYaw);
 				offset = 1;
-				yOffset = passenger.getYOffset() + 2 - Math.sin(toRadians(rotationPitch));
+				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.25))  - Math.sin(toRadians(rotationPitch));
 			}
 
 			passenger.setPosition(posX + sin(angle) * offset, posY + yOffset, posZ + cos(angle) * offset);
@@ -721,6 +723,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		if (player.isSneaking() && getOwner() == player) {
 			setSitting(!isSitting());
+			madeSitByPlayer = true;
 			return true;
 		}
 
@@ -915,6 +918,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	public void onUpdate() {
 		super.onUpdate();
 
+		if(this.isSitting() && hasOwner() && (world.getBlockState(getEntityPos(this)
+				.toBlockPos()).getBlock() != Blocks.AIR)) {
+			this.motionX = this.motionY = this.motionZ = 0;
+		}
+
 		if (this.ticksExisted % 20 == 0) {
 			getData().addBendingId(Airbending.ID);
 		}
@@ -945,11 +953,20 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 
 		float sizeMult = condition.getSizeMultiplier();
-		setSize(2.5f * sizeMult, 2 * sizeMult);
+		setSize(3.33333F * sizeMult, 2.666667F * sizeMult);
 
 		condition.onUpdate();
+
+		if (!madeSitByPlayer && this.isSitting() && condition.getFoodPoints() > 0) {
+			this.setSitting(false);
+		}
+
 		if (condition.getFoodPoints() == 0 && getOwner() != null) {
 			setSitting(true);
+			madeSitByPlayer = false;
+			if (ticksExisted % 40 == 0) {
+				MSG_BISON_NO_FOOD.send(getOwner());
+			}
 		} else if (!hasOwner()) {
 			setSitting(false);
 		}

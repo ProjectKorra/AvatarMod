@@ -83,6 +83,7 @@ avatar.cleanseCooldown=Cleanse is on cooldown! You can't use it!
 avatar.purifyCooldown=Purify is on cooldown! You can't use it!
 avatar.restoreCooldown=Restore is on cooldown! You can't use it!
 avatar.abilityLocked=You need to unlock that ability before you can use it!
+avatar.bisonNoFood=Your bison is too hungry to fly! You need to feed it apples and hay so it can fly.
 avatar.bisonChestSlots1=Your bison does not have any
 avatar.bisonChestSlots2=inventory yet, but will gain
 avatar.bisonChestSlots3=more slots as it grows older.
@@ -118,7 +119,7 @@ avatar.bisonWhistle.transferAway.ignore=The transfer with ${newOwner} has been i
 avatar.bisonWhistle.transferTo.ignore=${oldOwner} has chosen not to respond to your transfer request.
 avatar.bisonWhistle.transferOffline=[error]This bison isn't yours. You can't transfer the bison since the owner ${owner} is offline.[/error]
 avatar.bisonWhistle.followOn=Your bison will now begin following you.
-avatar.bisonWhistle.followOff=Your bison have stopped following you.
+avatar.bisonWhistle.followOff=Your bison has stopped following you.
 avatar.bisonWhistle.nearby=[error]Your bison is already nearby![/error]
 
 avatar.specialtyScroll.success=You have now unlocked [translate=avatar.${specialtyBending}]!

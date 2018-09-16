@@ -36,22 +36,21 @@ public class BisonSummonHandler extends TickHandler {
 
 		if (ctx.getWorld().isRemote) return false;
 
-		BendingData data = ctx.getData();
+		//BendingData data = ctx.getData();
 
-		int cooldown = data.getMiscData().getPetSummonCooldown();
-		if (cooldown <= 0) {
+		//int cooldown = data.getMiscData().getPetSummonCooldown();
+		//if (cooldown <= 0) {
 
 			trySummonBison(ctx.getBenderEntity());
 			return true;
 
-		} else {
+		/*} else {
 
 			data.getMiscData().setPetSummonCooldown(cooldown - 1);
 			return false;
-
+**/
 		}
 
-	}
 
 	private boolean trySummonBison(EntityLivingBase player) {
 
@@ -59,20 +58,23 @@ public class BisonSummonHandler extends TickHandler {
 				bison -> bison.getOwner() == player);
 
 		if (!entities.isEmpty()) {
-			EntitySkyBison bison = entities.get(0);
-			Random random = new Random();
 
-			// Find suitable location near player
-			for (int i = 0; i < 5; i++) {
+			for (EntitySkyBison bison : entities) {
+				Random random = new Random();
 
-				double x = player.posX + (random.nextDouble() * 2 - 1) * 15;
-				double y = player.posY + (random.nextDouble() * 2 - 1) * 5;
-				double z = player.posZ + (random.nextDouble() * 2 - 1) * 15;
+				// Find suitable location near player
+				for (int i = 0; i < 5; i++) {
 
-				if (bison.attemptTeleport(x, y, z)) {
-					return true;
+					double x = player.posX + (random.nextDouble() * 2 - 1) * 15;
+					double y = player.posY + (random.nextDouble() * 2 - 1) * 5;
+					double z = player.posZ + (random.nextDouble() * 2 - 1) * 15;
+
+					bison.attemptTeleport(x, y, z);
+					if (bison.attemptTeleport(x, y, z)) {
+						return true;
+					}
+
 				}
-
 			}
 		}
 

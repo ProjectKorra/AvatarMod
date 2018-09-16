@@ -67,6 +67,7 @@ public class AvatarChatMessages {
 	public static final FormattedMessage MSG_BISON_WHISTLE_NOTOWNED = newChatMessage(CFG, "avatar.bisonWhistle.notOwned");
 	public static final FormattedMessage MSG_BISON_WHISTLE_UNTAMED = newChatMessage(CFG, "avatar.bisonWhistle.untamed");
 	public static final FormattedMessage MSG_BISON_WHISTLE_NEARBY = newChatMessage(CFG, "avatar.bisonWhistle.nearby");
+	public static final FormattedMessage MSG_BISON_NO_FOOD = newChatMessage(CFG, "avatar.bisonNoFood");
 
 	public static final FormattedMessage MSG_BISON_WHISTLE_FOLLOW_ON = newChatMessage(CFG, "avatar.bisonWhistle.followOn");
 	public static final FormattedMessage MSG_BISON_WHISTLE_FOLLOW_OFF = newChatMessage(CFG, "avatar.bisonWhistle.followOff");

@@ -154,11 +154,9 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 
 			BendingData data = Bender.get(owner).getData();
 
-			double yaw = Math.toRadians(owner.rotationYaw);
-			double pitch = Math.toRadians(owner.rotationPitch);
-			Vector forward = Vector.toRectangular(yaw, pitch);
-			Vector eye = Vector.getEyePos(owner);
-			Vector target = forward.times(2).plus(eye);
+			Vector forward = Vector.getLookRectangular(owner);
+			Vector eye = Vector.getEyePos(owner).minusY(0.5);
+			Vector target = forward.times(1.5).plus(eye);
 			Vector motion = target.minus(Vector.getEntityPos(entity)).times(6);
 			entity.setVelocity(motion);
 			entity.setStartingPosition(entity.getPosition());
