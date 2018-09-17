@@ -504,9 +504,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			float sizeOffset = condition.getAdultAge() < 5 ? condition.getAgeDays()/condition.getAdultAge() : 5;
 			double offset = 0.75;
 			double angle = (index + 0.5) * Math.PI - toRadians(rotationYaw);
-			double yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.15));
+			double yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.25));
 
-			if (passenger == getControllingPassenger()) {
+			if (passenger == getControllingPassenger() && !this.isSitting()) {
+				angle = -toRadians(passenger.rotationYaw);
+				offset = 1;
+				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.75))  - Math.sin(toRadians(rotationPitch));
+			}
+			if (passenger == getControllingPassenger() && this.isSitting()) {
 				angle = -toRadians(passenger.rotationYaw);
 				offset = 1;
 				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.25))  - Math.sin(toRadians(rotationPitch));
