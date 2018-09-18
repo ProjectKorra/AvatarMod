@@ -211,7 +211,7 @@ public class AnimalCondition {
 	}
 
 	public float getSizeMultiplier() {
-		float adultSize = getAgeDays() < 5 ? getAgeDays() / getAdultAge() : 5;
+		float adultSize = getAgeDays() < 5 ? getAgeDays() / getAdultAge() : 1.666777f;
 		return isAdult() ? adultSize : 0.1f + getAgeDays() / getAdultAge() * 0.9f;
 	}
 

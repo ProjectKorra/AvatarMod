@@ -509,12 +509,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			if (passenger == getControllingPassenger() && !this.isSitting()) {
 				angle = -toRadians(passenger.rotationYaw);
 				offset = 1;
-				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.50))  - Math.sin(toRadians(rotationPitch));
+				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.25))  - Math.sin(toRadians(rotationPitch));
 			}
 			if (passenger == getControllingPassenger() && this.isSitting()) {
 				angle = -toRadians(passenger.rotationYaw);
 				offset = 1;
-				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.25))  - Math.sin(toRadians(rotationPitch));
+				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.15))  - Math.sin(toRadians(rotationPitch));
 			}
 
 			passenger.setPosition(posX + sin(angle) * offset, posY + yOffset, posZ + cos(angle) * offset);
@@ -874,7 +874,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	public int getChestSlots() {
 		if (condition.getDomestication() >= MOBS_CONFIG.bisonChestTameness && condition.isAdult()) {
 
-			int age = (int) (condition.getAgeDays() - condition.getAdultAge());
+			int age = (int) (condition.getAgeDays() - 1);
 
 			if (age >= 5) {
 				return 27;
