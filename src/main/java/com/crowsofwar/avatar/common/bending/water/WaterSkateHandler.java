@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -46,6 +47,7 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.toRadians;
+import static net.minecraft.init.Blocks.FLOWING_WATER;
 import static net.minecraft.init.Blocks.WATER;
 
 /**
@@ -125,6 +127,16 @@ public class WaterSkateHandler extends TickHandler {
 						targetSpeed *= 1.3;
 					}
 				}
+
+				/*Block belowBlock = player.world.getBlockState(new BlockPos(player.getPosition()).down()).getBlock();
+				Block playerBlock = player.world.getBlockState(new BlockPos(player.getPosition())).getBlock();
+
+				if (belowBlock != Blocks.WATER && belowBlock != Blocks.FLOWING_WATER) {
+					if (playerBlock == Blocks.AIR) {
+						world.setBlockState(new BlockPos(player.getPosition()), Blocks.FLOWING_WATER.getBlockLayer()getDefaultState());
+					}
+
+				}**/
 
 				player.setPosition(player.posX, yPos + .2, player.posZ);
 				Vector currentVelocity = new Vector(player.motionX, player.motionY, player.motionZ);

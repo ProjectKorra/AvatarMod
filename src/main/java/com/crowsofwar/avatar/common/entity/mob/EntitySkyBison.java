@@ -509,7 +509,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			if (passenger == getControllingPassenger() && !this.isSitting()) {
 				angle = -toRadians(passenger.rotationYaw);
 				offset = 1;
-				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.75))  - Math.sin(toRadians(rotationPitch));
+				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.50))  - Math.sin(toRadians(rotationPitch));
 			}
 			if (passenger == getControllingPassenger() && this.isSitting()) {
 				angle = -toRadians(passenger.rotationYaw);

@@ -218,10 +218,10 @@ public class ModelFlyingBison extends ModelBase {
 
 		if (bison.getSaddle() != null) {
 			pushMatrix();
-			translate(0, -1.6, 0.2);
+			GlStateManager.translate(0, -1.55, 0.2);
 
 			if (bison.isSitting()) {
-				translate(0, 0.2667, 0);
+				GlStateManager.translate(0, 0.2667, 0);
 			}
 
 			scale(0.5, 0.5, 0.5);
