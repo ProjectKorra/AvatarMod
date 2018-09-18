@@ -274,12 +274,8 @@ public class AvatarUiRenderer extends Gui {
 				//float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
 				//		((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER)) / 200 : CLIENT_CONFIG.bendingCycleAlpha;
 				GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha);
-				drawBendingIcon(0, 0, data.getActiveBending());
+				drawBendingIcon(0, 0, data.getActiveBending(), 50.0, 50.0);
 
-
-				//float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
-				//		((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER)) / 200 : CLIENT_CONFIG.bendingCycleAlpha;
-				GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha * 0.5f);
 
 				List<BendingStyle> allBending = data.getAllBending();
 				allBending.sort(Comparator.comparing(BendingStyle::getName));
@@ -291,7 +287,11 @@ public class AvatarUiRenderer extends Gui {
 				if (allBending.size() > 1) {
 					GlStateManager.pushMatrix();
 					GlStateManager.translate(0, 0, -1);
-					drawBendingIcon(25, 25, allBending.get(indexNext));
+					drawBendingIcon(50, 25, allBending.get(indexNext), 35.0, 35.0);
+					//float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
+					//		((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER)) / 200 : CLIENT_CONFIG.bendingCycleAlpha;
+					GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha * 0.5f);
+
 					GlStateManager.popMatrix();
 				}
 
@@ -302,7 +302,11 @@ public class AvatarUiRenderer extends Gui {
 				if (allBending.size() > 2) {
 					GlStateManager.pushMatrix();
 					GlStateManager.translate(0, 0, -1);
-					drawBendingIcon(-25, 25, allBending.get(indexPrevious));
+					drawBendingIcon(-35, 25, allBending.get(indexPrevious), 35.0, 35.0);
+					//float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
+					//		((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER)) / 200 : CLIENT_CONFIG.bendingCycleAlpha;
+					GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha * 0.5f);
+
 					GlStateManager.popMatrix();
 				}
 
@@ -312,14 +316,14 @@ public class AvatarUiRenderer extends Gui {
 	}
 
 
-	private void drawBendingIcon(int xOff, int yOff, BendingStyle controller) {
+	private void drawBendingIcon(int xOff, int yOff, BendingStyle controller, double width, double height) {
 			refreshDimensions();
-			int x = screenWidth() / scaleFactor() - 80 + xOff;
-			int y = screenHeight() / scaleFactor() - 70 + yOff;
+			int x = screenWidth() / scaleFactor() - 90 + xOff;
+			int y = screenHeight() / scaleFactor() - 60 + yOff;
 			mc.renderEngine.bindTexture(AvatarUiTextures.getBendingIconTexture(controller.getId()));
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(x, y, 0);
-			GlStateManager.scale(50.0 / 256, 50.0 / 256, 1);
+			GlStateManager.scale(width / 256F, height / 256F, 1);
 			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 			GlStateManager.popMatrix();
 	}
