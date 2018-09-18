@@ -44,8 +44,7 @@ public class CachedEntity<T extends Entity> {
 	}
 
 	private static UUID getId(Entity entity) {
-		return entity instanceof EntityPlayer ? AccountUUIDs.getId(entity.getName()).getUUID()
-				: entity.getUniqueID();
+		return entity instanceof EntityPlayer ? AccountUUIDs.getId(entity.getName()) : entity.getUniqueID();
 	}
 
 	public void readFromNbt(NBTTagCompound nbt) {
