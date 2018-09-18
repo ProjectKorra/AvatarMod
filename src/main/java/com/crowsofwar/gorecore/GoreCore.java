@@ -57,15 +57,16 @@ public class GoreCore {
 		config = new GoreCoreModConfig(event);
 		ConverterRegistry.addDefaultConverters();
 		
-		AccountUUIDs.readCache();
+		File oldFile = GoreCore.proxy.getUUIDCacheFile();
+		if (oldFile.exists()) {
+			// We don't need a cache anymore
+			oldFile.delete();
+		}
 		GoreCoreChatMessages.register();
 		
 		proxy.sideSpecifics();
 		
 		ChatSender.load();
-		
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> AccountUUIDs.saveCache()));
-		
 	}
 	
 	@EventHandler
