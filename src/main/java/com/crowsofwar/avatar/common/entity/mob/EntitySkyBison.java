@@ -263,8 +263,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 	}
 
-	// Note: Not called when using /summon with NBT tags (w/o nbt will call
-	// this)
+	// Note: Not called when using /summon with NBT tags (w/o nbt will call this)
 	@Override
 	@Nullable
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty,
@@ -600,7 +599,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		if (willBeOwned) {
 			playTameEffect(true);
-			setOwnerId(AccountUUIDs.getId(player.getName()).getUUID());
+			setOwnerId(AccountUUIDs.getId(player.getName()));
 			if (!player.capabilities.isCreativeMode) {
 				stack.shrink(1);
 			}
