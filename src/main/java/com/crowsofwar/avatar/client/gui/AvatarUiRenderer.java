@@ -318,7 +318,7 @@ public class AvatarUiRenderer extends Gui {
 
 	private void drawBendingIcon(int xOff, int yOff, BendingStyle controller, double width, double height) {
 			refreshDimensions();
-			int x = screenWidth() / scaleFactor() - 90 + xOff;
+			int x = screenWidth() / scaleFactor() - 85 + xOff;
 			int y = screenHeight() / scaleFactor() - 60 + yOff;
 			mc.renderEngine.bindTexture(AvatarUiTextures.getBendingIconTexture(controller.getId()));
 			GlStateManager.pushMatrix();
