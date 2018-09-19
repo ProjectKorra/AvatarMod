@@ -46,9 +46,9 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 		setMaxDamage(200);
 
 		//Max damage is the durability of the item, or the max damage the item can take
-		this.spawnGust = new Random().nextBoolean();
 
 	}
+
 
 	@Override
 	public float getAttackDamage() {
@@ -173,6 +173,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 
 		if (isSelected && entityIn instanceof EntityLivingBase) {
+			spawnGust = !entityIn.isSneaking();
 			if (!worldIn.isRemote && worldIn instanceof WorldServer) {
 				WorldServer world = (WorldServer) worldIn;
 				if (entityIn.ticksExisted % 40 == 0) {

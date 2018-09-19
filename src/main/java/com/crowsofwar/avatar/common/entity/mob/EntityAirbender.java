@@ -156,6 +156,10 @@ public class EntityAirbender extends EntityHumanBender {
 		}
 		if (this.ticksExisted == 2 && !world.isRemote) {
 
+			if (level == 0) {
+				level = 1;
+			}
+
 			if (level == 1) {
 				getData().getAbilityData("air_bubble").setLevel(-1);
 				getData().getAbilityData("air_gust").setLevel(0);
@@ -175,6 +179,9 @@ public class EntityAirbender extends EntityHumanBender {
 
 			}
 			scrollsLeft = this.level;
+			if (scrollsLeft == 0) {
+				scrollsLeft = 1;
+			}
 		}
 
 	}
@@ -187,11 +194,5 @@ public class EntityAirbender extends EntityHumanBender {
 		}
 		super.setDead();
 	}
-
-	/*@Override
-	public ITextComponent getDisplayName() {
-		return new TextComponentString("Level " + level + " Airbender");
-	}**/
-
 
 }
