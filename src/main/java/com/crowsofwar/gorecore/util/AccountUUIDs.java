@@ -28,7 +28,6 @@ import java.util.UUID;
 import java.util.Map;
 
 import com.crowsofwar.gorecore.GoreCore;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
@@ -131,7 +130,7 @@ public final class AccountUUIDs {
 			while ((length = inputStream.read(buffer)) != -1) {
 				result.write(buffer, 0, length);
 			}
-			return UUID.fromString(addDashes(JsonUtils.fromString(result.toString(), "id").getAsString()));				
+			return UUID.fromString(addDashes(JsonUtils.fromString(result.toString(), "id").getAsString()));
 		} catch (Exception e) {
 			GoreCore.LOGGER.error("Unexpected error getting UUID for " + username, e);
 			return null;
