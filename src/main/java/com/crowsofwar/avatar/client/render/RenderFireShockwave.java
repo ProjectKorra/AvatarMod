@@ -18,13 +18,19 @@ public class RenderFireShockwave extends Render<EntityFireShockwave> {
 	@Override
 	public void doRender(EntityFireShockwave entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		World world = entity.world;
-		for (int j = 0; j < 360/entity.getParticleAmount(); j++) {
-			Vector lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-					j * entity.getParticleAmount()), 0).times(0.5);
-			world.spawnParticle(entity.getParticle(), entity.posX, entity.getEntityBoundingBox().minY + 1.5, entity.posZ, lookPos.x() * (entity.getSpeed() * entity.ticksExisted/6),
-					lookPos.y(), lookPos.z() * (entity.getSpeed() * entity.ticksExisted/6));
+		for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.getRange() * 10 * 1.5)) {
+
+			// Calculates coordinates for the block to be moved. The radius increases with time. The +1.5 is to
+			// leave
+			// blocks in the centre untouched.
+			double spawnX = (entity.posX + ((entity.ticksExisted * entity.getSpeed()) * Math.sin(angle)));
+			double spawnY = (entity.posY + 1);
+			double spawnZ = (entity.posZ + ((entity.ticksExisted * entity.getSpeed())) * Math.cos(angle));
+			world.spawnParticle(entity.getParticle(), spawnX, spawnY, spawnZ, (entity.posX + ((entity.ticksExisted * entity.getSpeed()) * Math.sin(angle))), 0.1, ((entity.ticksExisted/10f * entity.getSpeed())) * Math.cos(angle));
+
 		}
 	}
+
 
 	@Nullable
 	@Override
