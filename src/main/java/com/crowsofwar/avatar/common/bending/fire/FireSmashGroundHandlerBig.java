@@ -32,14 +32,6 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 	public static TickHandler SMASH_GROUND_FIRE_BIG = new FireSmashGroundHandlerBig();
 
 	@Override
-	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {
-		super.smashEntity(target, entity);
-		target.setFire(4);
-		entity.world.playSound(null, target.posX, target.posY, target.posZ,
-				SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 1, 1);
-	}
-
-	@Override
 	protected double getRange() {
 		return 4;
 	}

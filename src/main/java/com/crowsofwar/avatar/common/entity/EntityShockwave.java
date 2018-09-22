@@ -18,7 +18,7 @@ import java.util.List;
 
 public class EntityShockwave extends AvatarEntity {
 
-	private EnumParticleTypes particle;
+	public EnumParticleTypes particle;
 	//Particles to be spawned
 	private int particleAmount;
 	//The amount of particles to be spawned
@@ -30,13 +30,13 @@ public class EntityShockwave extends AvatarEntity {
 	//The speed of the shockwave and how fast entities will be knocked back
 	private double knockbackHeight;
 	//The amount entities will be knocked back
-	private float damage;
+	public float damage;
 	//The amount of damage the shockwave will do
-	private boolean isFire;
+	public boolean isFire;
 	//Whether or not to set the target entities on fire
-	private int fireTime;
+	public int fireTime;
 	//How long to set the target entity on fire
-	private boolean isSphere;
+	public boolean isSphere;
 	//Whether or not to use a sphere of particles instead of a circular ring
 
 	public void setParticle(EnumParticleTypes particle) {
@@ -119,6 +119,7 @@ public class EntityShockwave extends AvatarEntity {
 	public EntityShockwave(World world){
 		super(world);
 		this.damage = 1;
+		this.particle = EnumParticleTypes.CLOUD;
 		this.particleSpeed = 0;
 		this.particleAmount = 1;
 		this.range = 4;
@@ -155,24 +156,17 @@ public class EntityShockwave extends AvatarEntity {
 			for (Entity target : targets) {
 				if (target != getOwner() && this.canCollideWith(target) && target != this) {
 
-					// Searches in a 1 wide ring.
-					//if (this.getDistance(target) > (this.ticksExisted * speed) + 0.5 && target.posY < this.posY + 1
-					//		&& target.posY > this.posY - 1) {
-
-
 						if (this.canDamageEntity(target)) {
 							target.attackEntityFrom(
 									AvatarDamageSource.causeAirDamage(target, this.getOwner()),
 									damage);
 						}
 						target.setFire(isFire ? fireTime : 0);
-						// All targets are thrown,
-						target.motionX += Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).x() * (range - ticksExisted/10F * speed);
+						target.motionX += Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).x() * (range - ticksExisted/20F * speed);
 						target.motionY += knockbackHeight; // Throws target into the air.
-						target.motionZ += Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).z() * (range - ticksExisted/10F * speed);
+						target.motionZ += Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).z() * (range - ticksExisted/20F * speed);
 
 						AvatarUtils.afterVelocityAdded(target);
-					//}
 				}
 			}
 		}

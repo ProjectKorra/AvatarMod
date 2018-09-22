@@ -51,53 +51,9 @@ public class SmashGroundHandler extends TickHandler {
 		if (entity.isInWater() || entity.onGround || bender.isFlying()) {
 
 			if (entity.onGround) {
-
-				double range = getRange();
-
-				AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.getEntityBoundingBox().minY,
-						entity.posZ - range, entity.posX + range, entity.posY + entity.getEyeHeight(), entity.posZ + range);
-
-
-				EntityShockwave shockwave = new EntityShockwave(world);
-				shockwave.setDamage(getDamage());
-				shockwave.setOwner(entity);
-				shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
-				shockwave.setParticle(getParticle());
-				shockwave.setParticleSpeed(getParticleSpeed());
-				shockwave.setParticleAmount(getNumberOfParticles());
-				shockwave.setKnockbackHeight(getKnockbackHeight());
-				shockwave.setSpeed(getSpeed()/5);
-				shockwave.setRange(getRange());
-				shockwave.setFire(isFire());
-				shockwave.setFireTime(fireTime());
-				world.spawnEntity(shockwave);
-				/*if (!world.isRemote) {
-					WorldServer World = (WorldServer) world;
-					for (double i = 0; i < range; ) {
-						for (int j = 0; j < 90; j++) {
-							Vector lookPos;
-							if (i >= 1) {
-								lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-										j * 4), 0).times(i);
-							} else {
-								lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-										j * 4), 0);
-							}
-							World.spawnParticle(getParticle(), lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
-									lookPos.z() + entity.posZ, getNumberOfParticles(), 0, 0, 0, getParticleSpeed() / 4);
-						}
-						i = i + range / 10;
-					}
-				}**/
+				smashEntity(entity);
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), getSoundCategory(), 4F, 0.5F);
 
-
-			/*	List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
-				for (EntityLivingBase target : nearby) {
-					if (target != entity) {
-						smashEntity(target, entity);
-					}
-				}**/
 			}
 
 
@@ -107,16 +63,27 @@ public class SmashGroundHandler extends TickHandler {
 		return false;
 	}
 
-	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {
-		if (target.attackEntityFrom(AvatarDamageSource.causeSmashDamage(target, entity), getDamage())) {
-			BattlePerformanceScore.addLargeScore(entity);
-		}
+	protected void smashEntity(EntityLivingBase entity) {
+		World world = entity.world;
+		EntityShockwave shockwave = new EntityShockwave(world);
+		shockwave.setDamage(getDamage());
+		shockwave.setOwner(entity);
+		shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
+		shockwave.setParticle(getParticle());
+		shockwave.setParticleSpeed(getParticleSpeed());
+		shockwave.setParticleAmount(getNumberOfParticles());
+		shockwave.setKnockbackHeight(getKnockbackHeight());
+		shockwave.setSpeed(getSpeed()/5);
+		shockwave.setRange(getRange());
+		world.spawnEntity(shockwave);
+	}
 
-		Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
-		double distance = Vector.getEntityPos(target).dist(Vector.getEntityPos(entity));
-		double direction = (getRange() - distance) * (getSpeed() / 2) / getRange();
-		velocity = velocity.times(direction).withY(getKnockbackHeight() / 4);
-		target.addVelocity(velocity.x(), velocity.y(), velocity.z());
+	protected boolean isFire() {
+		return false;
+	}
+
+	protected int fireTime() {
+		return 0;
 	}
 
 	protected double getRange() {
@@ -134,13 +101,6 @@ public class SmashGroundHandler extends TickHandler {
 		return 0.225F;
 	}
 
-	protected boolean isFire() {
-		return false;
-	}
-
-	protected int fireTime() {
-		return 0;
-	}
 
 	protected EnumParticleTypes getParticle() {
 		return EnumParticleTypes.CLOUD;

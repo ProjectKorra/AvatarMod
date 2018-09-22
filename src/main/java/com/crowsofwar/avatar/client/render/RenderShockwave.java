@@ -25,6 +25,9 @@ public class RenderShockwave extends Render<EntityShockwave> {
 			world.spawnParticle(entity.getParticle(), entity.posX, entity.getEntityBoundingBox().minY + 1.5, entity.posZ, lookPos.x() * (entity.getSpeed() * entity.ticksExisted/2),
 					lookPos.y(), lookPos.z() * (entity.getSpeed() * entity.ticksExisted/2));
 		}
+		if (entity.isSphere) {
+			//Sphere stuff
+		}
 
 	}
 
