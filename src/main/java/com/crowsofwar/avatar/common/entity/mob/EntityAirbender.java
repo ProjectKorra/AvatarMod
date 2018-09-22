@@ -134,7 +134,7 @@ public class EntityAirbender extends EntityHumanBender {
 
 	@Override
 	protected int getScrollsLeft() {
-		return scrollsLeft;
+		return scrollsLeft > 0 ? scrollsLeft : 1;
 	}
 
 	@Override

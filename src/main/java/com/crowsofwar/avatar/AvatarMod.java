@@ -256,6 +256,7 @@ public class AvatarMod {
 		// registered
 		STATS_CONFIG.loadBlocks();
 		MOBS_CONFIG.loadLists();
+		ConfigMobs.load();
 
 		proxy.init();
 

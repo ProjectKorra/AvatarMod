@@ -77,7 +77,7 @@ public class ConfigMobs {
 		DEFAULT_FOODS.put("minecraft:cake", 45);
 		DEFAULT_FOODS.put("minecraft:sugar", 2);
 
-		DEFAULT_SCROLL_DROP.put("polar_bear", 15.0);
+		DEFAULT_SCROLL_DROP.put("polar_bear", 5.0);
 		DEFAULT_SCROLL_TYPE.put("polar_bear", "water");
 		DEFAULT_SCROLL_DROP.put("squid", 2.0);
 		DEFAULT_SCROLL_TYPE.put("squid", "water");
@@ -97,21 +97,21 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_DROP.put("blaze", 30.0);
 		DEFAULT_SCROLL_TYPE.put("blaze", "fire");
 
-		DEFAULT_SCROLL_DROP.put("bat", 15.0);
+		DEFAULT_SCROLL_DROP.put("bat", 7.5);
 		DEFAULT_SCROLL_TYPE.put("bat", "air");
-		DEFAULT_SCROLL_DROP.put("parrot", 10.0);
+		DEFAULT_SCROLL_DROP.put("parrot", 5.0);
 		DEFAULT_SCROLL_TYPE.put("parrot", "air");
-		DEFAULT_SCROLL_DROP.put("chicken", 5.0);
+		DEFAULT_SCROLL_DROP.put("chicken", 1.0);
 		DEFAULT_SCROLL_TYPE.put("chicken", "air");
-		DEFAULT_SCROLL_DROP.put("sheep", 1.0);
+		DEFAULT_SCROLL_DROP.put("sheep", 0.25);
 		DEFAULT_SCROLL_TYPE.put("sheep", "air");
 
 
-		DEFAULT_SCROLL_DROP.put("mooshroom", 5.0);
+		DEFAULT_SCROLL_DROP.put("mooshroom", 1.0);
 		DEFAULT_SCROLL_TYPE.put("mooshroom", "earth");
-		DEFAULT_SCROLL_DROP.put("cave_spider", 5.0);
+		DEFAULT_SCROLL_DROP.put("cave_spider", 2.5);
 		DEFAULT_SCROLL_TYPE.put("cave_spider", "earth");
-		DEFAULT_SCROLL_DROP.put("silverfish", 10.0);
+		DEFAULT_SCROLL_DROP.put("silverfish", 5.0);
 		DEFAULT_SCROLL_TYPE.put("silverfish", "earth");
 		DEFAULT_SCROLL_DROP.put("spider", 2.0);
 		DEFAULT_SCROLL_TYPE.put("spider", "earth");
