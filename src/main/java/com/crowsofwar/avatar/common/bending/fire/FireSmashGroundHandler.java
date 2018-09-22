@@ -33,15 +33,8 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 	public static TickHandler SMASH_GROUND_FIRE = new FireSmashGroundHandler();
 
 	@Override
-	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {
-		super.smashEntity(target, entity);
-		entity.world.playSound(null, target.posX, target.posY, target.posZ,
-				SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 1, 1);
-	}
-
-	@Override
 	protected double getRange() {
-		return 2;
+		return 3;
 	}
 
 	@Override
@@ -51,7 +44,7 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 
 	@Override
 	protected int getNumberOfParticles() {
-		return 10;
+		return 15;
 	}
 
 	@Override
@@ -61,16 +54,26 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 
 	@Override
 	protected float getParticleSpeed() {
-		return 0.1F;
+		return 0;
 	}
 
 	@Override
 	protected float getKnockbackHeight() {
-		return 0.25F;
+		return 0.2F;
 	}
 
 	@Override
 	protected double getSpeed() {
 		return 2;
+	}
+
+	@Override
+	protected boolean isFire() {
+		return true;
+	}
+
+	@Override
+	protected int fireTime() {
+		return 5;
 	}
 }

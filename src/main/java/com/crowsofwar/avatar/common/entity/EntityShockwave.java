@@ -32,6 +32,12 @@ public class EntityShockwave extends AvatarEntity {
 	//The amount entities will be knocked back
 	private float damage;
 	//The amount of damage the shockwave will do
+	private boolean isFire;
+	//Whether or not to set the target entities on fire
+	private int fireTime;
+	//How long to set the target entity on fire
+	private boolean isSphere;
+	//Whether or not to use a sphere of particles instead of a circular ring
 
 	public void setParticle(EnumParticleTypes particle) {
 		this.particle = particle;
@@ -59,6 +65,18 @@ public class EntityShockwave extends AvatarEntity {
 
 	public void setDamage(float damage) {
 		this.damage = damage;
+	}
+
+	public void setFire(boolean fire) {
+		this.isFire = fire;
+	}
+
+	public void setFireTime(int time) {
+		this.fireTime = time;
+	}
+
+	public void setSphere(boolean sphere) {
+		this.isSphere = sphere;
 	}
 
 	public EnumParticleTypes getParticle() {
@@ -89,6 +107,10 @@ public class EntityShockwave extends AvatarEntity {
 		return damage;
 	}
 
+	public boolean getSphere() {
+		return isSphere;
+	}
+
 
 
 
@@ -98,11 +120,12 @@ public class EntityShockwave extends AvatarEntity {
 		super(world);
 		this.damage = 1;
 		this.particleSpeed = 0;
-		this.particle = EnumParticleTypes.CLOUD;
 		this.particleAmount = 1;
 		this.range = 4;
-		this.knockbackHeight = 0.4;
+		this.knockbackHeight = 0.2;
 		this.speed = 0.8;
+		this.isFire = false;
+		this.fireTime = 0;
 		this.setSize(1, 1);
 	}
 
@@ -115,20 +138,6 @@ public class EntityShockwave extends AvatarEntity {
 		}
 
 		if (!world.isRemote) {
-			// The further the shockwave is going to spread, the finer the angle increments.
-			/*for (double angle = 0; angle < 4 * Math.PI; angle += Math.PI / (40 * 1.5)) {
-				double x = this.posX < 0 ? (this.posX + ((this.ticksExisted * speed)) * Math.sin(angle))
-						: 	(this.posX + ((this.ticksExisted * speed)) * Math.sin(angle));
-				double y = (this.posY);
-				double z = this.posZ < 0 ? (this.posZ + ((this.ticksExisted * speed)) * Math.cos(angle))
-						: (this.posZ + ((this.ticksExisted * speed)) * Math.cos(angle));
-				if (world instanceof WorldServer) {
-					WorldServer World = (WorldServer) world;
-					World.spawnParticle(particle, x, y, z, particleAmount, 0, 0, 0, particleSpeed);
-				}
-
-
-				}**/
 
 				if (ticksExisted * speed > range) {
 					this.setDead();
@@ -141,8 +150,6 @@ public class EntityShockwave extends AvatarEntity {
 			List<Entity> targets = world.getEntitiesWithinAABB(
 					Entity.class, box);
 
-			// In this particular instance, the caster is completely unaffected because they will always be in the
-			// centre.
 			targets.remove(getOwner());
 
 			for (Entity target : targets) {
@@ -158,7 +165,7 @@ public class EntityShockwave extends AvatarEntity {
 									AvatarDamageSource.causeAirDamage(target, this.getOwner()),
 									damage);
 						}
-
+						target.setFire(isFire ? fireTime : 0);
 						// All targets are thrown,
 						target.motionX += Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).x() * (range - ticksExisted/10F * speed);
 						target.motionY += knockbackHeight; // Throws target into the air.
