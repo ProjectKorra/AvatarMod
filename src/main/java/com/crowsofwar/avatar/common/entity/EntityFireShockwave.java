@@ -16,17 +16,18 @@ public class EntityFireShockwave extends EntityShockwave {
 		this.speed = 0.5;
 		this.isFire = true;
 		this.fireTime = 5;
+		this.particles = new NetworkParticleSpawner();
 		this.setSize(1, 1);
 	}
 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		for (int j = 0; j < 360/getParticleAmount(); j++) {
-			Vector lookPos = Vector.toRectangular(Math.toRadians(rotationYaw +
-					j * getParticleAmount()), 0).times(0.5);
-			particles.spawnParticles(world, particle, 10/getParticleAmount() >= 1 ? 10/getParticleAmount() : 1, 20/getParticleAmount() >= 2 ? 20/getParticleAmount() : 2,
-					lookPos, lookPos.times(ticksExisted * speed));
+		for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (getRange() * 10 * 1.5)) {
+			double x = posX + (ticksExisted * getSpeed()) * Math.sin(angle);
+			double y = posY + 1;
+			double z = posZ + (ticksExisted * getSpeed()) * Math.cos(angle);
+			particles.spawnParticles(world, getParticle(), 1, 2, x, y, z, 0.1, 0.1, 0.1);
 		}
 	}
 }

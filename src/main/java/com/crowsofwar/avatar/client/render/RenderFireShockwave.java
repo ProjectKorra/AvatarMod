@@ -20,9 +20,6 @@ public class RenderFireShockwave extends Render<EntityFireShockwave> {
 		World world = entity.world;
 		for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.getRange() * 10 * 1.5)) {
 
-			// Calculates coordinates for the block to be moved. The radius increases with time. The +1.5 is to
-			// leave
-			// blocks in the centre untouched.
 			double spawnX = (entity.posX + ((entity.ticksExisted * entity.getSpeed()) * Math.sin(angle)));
 			double spawnY = (entity.posY + 1);
 			double spawnZ = (entity.posZ + ((entity.ticksExisted * entity.getSpeed())) * Math.cos(angle));
