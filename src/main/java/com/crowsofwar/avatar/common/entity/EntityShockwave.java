@@ -19,14 +19,20 @@ import java.util.List;
 public class EntityShockwave extends AvatarEntity {
 
 	public EnumParticleTypes particle;
-	//Particles to be spawned
-	private int particleAmount;
+	//Particles to be spawned.This is actually an inverse amount; the bigger the number,
+	// the less particles there are.
+	public int particleAmount;
 	//The amount of particles to be spawned
-	private double particleSpeed;
+	public double particleSpeed;
 	//Speed of the particles
+
+	//As particles are called when the thing spawns in the render file, you can't set the particles to something and have
+	//the render file spawn them. It has to be called in the world constructor, so you need multiple entity shockwaves
+
+
 	private double range;
 	//The range of the shockwave/how far it'll go before dissipating
-	private double speed;
+	public double speed;
 	//The speed of the shockwave and how fast entities will be knocked back
 	private double knockbackHeight;
 	//The amount entities will be knocked back
@@ -38,18 +44,6 @@ public class EntityShockwave extends AvatarEntity {
 	//How long to set the target entity on fire
 	public boolean isSphere;
 	//Whether or not to use a sphere of particles instead of a circular ring
-
-	public void setParticle(EnumParticleTypes particle) {
-		this.particle = particle;
-	}
-
-	public void setParticleAmount(int particleAmount) {
-		this.particleAmount = particleAmount;
-	}
-
-	public void setParticleSpeed(double particleSpeed) {
-		this.particleSpeed = particleSpeed;
-	}
 
 	public void setRange(double range) {
 		this.range = range;
@@ -121,7 +115,7 @@ public class EntityShockwave extends AvatarEntity {
 		this.damage = 1;
 		this.particle = EnumParticleTypes.CLOUD;
 		this.particleSpeed = 0;
-		this.particleAmount = 1;
+		this.particleAmount = 10;
 		this.range = 4;
 		this.knockbackHeight = 0.2;
 		this.speed = 0.8;

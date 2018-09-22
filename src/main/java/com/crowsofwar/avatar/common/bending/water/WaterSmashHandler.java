@@ -12,25 +12,25 @@ public class WaterSmashHandler extends SmashGroundHandler {
 
 	public static TickHandler SMASH_GROUND_WATER = new WaterSmashHandler();
 
-	@Override
+	/*@Override
 	protected int getNumberOfParticles() {
 		return 10;
-	}
+	}**/
 
 	@Override
 	protected SoundEvent getSound() {
 		return SoundEvents.ENTITY_GENERIC_SPLASH;
 	}
 
-	@Override
+	/*@Override
 	protected EnumParticleTypes getParticle() {
 		return EnumParticleTypes.WATER_WAKE;
-	}
+	}**/
 
-	@Override
+	/*@Override
 	protected float getParticleSpeed() {
 		return 0.2F;
-	}
+	}**/
 
 	@Override
 	protected float getDamage() {

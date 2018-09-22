@@ -42,9 +42,6 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 		shockwave.setDamage(getDamage());
 		shockwave.setOwner(entity);
 		shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
-		shockwave.setParticle(getParticle());
-		shockwave.setParticleSpeed(getParticleSpeed());
-		shockwave.setParticleAmount(getNumberOfParticles());
 		shockwave.setKnockbackHeight(getKnockbackHeight());
 		shockwave.setSpeed(getSpeed()/5);
 		shockwave.setRange(getRange());
@@ -61,21 +58,6 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 	@Override
 	protected SoundEvent getSound() {
 		return SoundEvents.ITEM_FIRECHARGE_USE;
-	}
-
-	@Override
-	protected int getNumberOfParticles() {
-		return 15;
-	}
-
-	@Override
-	protected EnumParticleTypes getParticle() {
-		return EnumParticleTypes.FLAME;
-	}
-
-	@Override
-	protected float getParticleSpeed() {
-		return 0;
 	}
 
 	@Override

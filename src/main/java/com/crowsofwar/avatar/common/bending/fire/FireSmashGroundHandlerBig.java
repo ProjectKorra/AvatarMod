@@ -41,7 +41,7 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 		return 8;
 	}
 
-	@Override
+	/*@Override
 	protected int getNumberOfParticles() {
 		return 10;
 	}
@@ -50,7 +50,7 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 	protected EnumParticleTypes getParticle() {
 		return EnumParticleTypes.FLAME;
 	}
-
+**/
 	@Override
 	protected SoundEvent getSound() {
 		return SoundEvents.ITEM_FIRECHARGE_USE;
@@ -61,10 +61,10 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 		return SoundCategory.PLAYERS;
 	}
 
-	@Override
+	/*@Override
 	protected float getParticleSpeed() {
 		return 0.175F;
-	}
+	}**/
 
 	@Override
 	protected float getDamage() {

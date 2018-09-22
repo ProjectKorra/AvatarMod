@@ -244,6 +244,7 @@ public class AvatarMod {
 		registerEntity(EntityBoulder.class, "Boulder");
 		registerEntity(EntityLightningSpawner.class, "LightningSpawner");
 		registerEntity(EntityShockwave.class, "Shockwave");
+		registerEntity(EntityFireShockwave.class, "FireShockwave");
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 1, 2, EnumCreatureType.CREATURE, //
 				SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, TAIGA_HILLS, ICE_MOUNTAINS);
