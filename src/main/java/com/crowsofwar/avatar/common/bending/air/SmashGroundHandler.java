@@ -16,23 +16,16 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-
-import java.util.List;
 
 /**
  * @author CrowsOfWar
@@ -72,6 +65,9 @@ public class SmashGroundHandler extends TickHandler {
 		shockwave.setKnockbackHeight(getKnockbackHeight());
 		shockwave.setSpeed(getSpeed()/5);
 		shockwave.setRange(getRange());
+		shockwave.setParticle(getParticle());
+		shockwave.setParticleAmount(getParticleAmount());
+		shockwave.setParticleSpeed(getParticleSpeed());
 		world.spawnEntity(shockwave);
 	}
 
@@ -87,9 +83,18 @@ public class SmashGroundHandler extends TickHandler {
 		return 3;
 	}
 
-	/**
-	 * The speed applied to hit entities, in m/s
-	 */
+	protected EnumParticleTypes getParticle() {
+		return EnumParticleTypes.CLOUD;
+	}
+
+	protected int getParticleAmount() {
+		return 2;
+	}
+
+	protected double getParticleSpeed() {
+		return 0.2F;
+	}
+
 	protected double getSpeed() {
 		return 4;
 	}

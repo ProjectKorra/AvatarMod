@@ -1,18 +1,12 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityAvatarLightning;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderLightningBolt;
 import net.minecraft.client.renderer.entity.RenderManager;
-
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-
-import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 

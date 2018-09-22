@@ -6,7 +6,6 @@ import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumParticleTypes;

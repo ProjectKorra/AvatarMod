@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.client.particle.ParticleCloud;
@@ -19,15 +20,11 @@ import java.util.List;
 public class EntityShockwave extends AvatarEntity {
 
 	public EnumParticleTypes particle;
-	//Particles to be spawned.This is actually an inverse amount; the bigger the number,
-	// the less particles there are.
-	public int particleAmount;
+	//Particles to be spawned.
+	private int particleAmount;
 	//The amount of particles to be spawned
-	public double particleSpeed;
+	private double particleSpeed;
 	//Speed of the particles
-
-	//As particles are called when the thing spawns in the render file, you can't set the particles to something and have
-	//the render file spawn them. It has to be called in the world constructor, so you need multiple entity shockwaves
 
 
 	private double range;
@@ -38,12 +35,25 @@ public class EntityShockwave extends AvatarEntity {
 	//The amount entities will be knocked back
 	public float damage;
 	//The amount of damage the shockwave will do
-	public boolean isFire;
+	private boolean isFire;
 	//Whether or not to set the target entities on fire
-	public int fireTime;
+	private int fireTime;
 	//How long to set the target entity on fire
-	public boolean isSphere;
+	private boolean isSphere;
 	//Whether or not to use a sphere of particles instead of a circular ring
+	private NetworkParticleSpawner particles;
+
+	public void setParticle(EnumParticleTypes particle) {
+		this.particle = particle;
+	}
+
+	public void setParticleAmount(int amount) {
+		this.particleAmount = amount;
+	}
+
+	public void setParticleSpeed(double speed) {
+		this.particleSpeed = speed;
+	}
 
 	public void setRange(double range) {
 		this.range = range;
@@ -122,6 +132,7 @@ public class EntityShockwave extends AvatarEntity {
 		this.isFire = false;
 		this.fireTime = 0;
 		this.setSize(1, 1);
+		this.particles = new NetworkParticleSpawner();
 	}
 
 	@Override
@@ -137,6 +148,15 @@ public class EntityShockwave extends AvatarEntity {
 				if (ticksExisted * speed > range) {
 					this.setDead();
 				}
+
+
+			for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (getRange() * 10 * 1.5)) {
+				double x = posX + (ticksExisted * getSpeed()) * Math.sin(angle);
+				double y = posY + 1;
+				double z = posZ + (ticksExisted * getSpeed()) * Math.cos(angle);
+				particles.spawnParticles(world, getParticle(), getParticleAmount()/2, getParticleAmount(), x, y, z, getParticleSpeed(),
+						getParticleSpeed(), getParticleSpeed());
+			}
 
 
 			AxisAlignedBB box = new AxisAlignedBB(posX + (ticksExisted * speed), posY + 1.5, posZ + (ticksExisted * speed),

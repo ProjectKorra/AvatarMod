@@ -21,7 +21,6 @@ import com.crowsofwar.avatar.common.entity.ControlPoint;
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumParticleTypes;

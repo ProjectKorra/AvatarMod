@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.client.render;
 import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.EntityWave;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
