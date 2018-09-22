@@ -22,8 +22,8 @@ public class RenderShockwave extends Render<EntityShockwave> {
 		for (int j = 0; j < 360/entity.getParticleAmount(); j++) {
 			Vector lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
 						j * entity.getParticleAmount()), 0).times(0.5);
-			world.spawnParticle(entity.getParticle(), entity.posX, entity.getEntityBoundingBox().minY + 1, entity.posZ, lookPos.x() * (entity.getSpeed() * entity.ticksExisted/5),
-					lookPos.y(), lookPos.z() * (entity.getSpeed() * entity.ticksExisted/5));
+			world.spawnParticle(entity.getParticle(), entity.posX, entity.getEntityBoundingBox().minY + 1.5, entity.posZ, lookPos.x() * (entity.getSpeed() * entity.ticksExisted/2),
+					lookPos.y(), lookPos.z() * (entity.getSpeed() * entity.ticksExisted/2));
 		}
 
 	}

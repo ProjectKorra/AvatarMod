@@ -110,6 +110,9 @@ public class EntityShockwave extends AvatarEntity {
 	public void onUpdate() {
 
 		this.setVelocity(Vector.ZERO);
+		if (getOwner() != null) {
+			this.setPosition(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+		}
 
 		if (!world.isRemote) {
 			// The further the shockwave is going to spread, the finer the angle increments.
@@ -132,8 +135,8 @@ public class EntityShockwave extends AvatarEntity {
 				}
 
 
-			AxisAlignedBB box = new AxisAlignedBB(posX + (ticksExisted * speed), posY + (ticksExisted * speed), posZ + (ticksExisted * speed),
-					posX - (ticksExisted * speed), posY - (ticksExisted * speed), posZ - (ticksExisted * speed));
+			AxisAlignedBB box = new AxisAlignedBB(posX + (ticksExisted * speed), posY + 1.5, posZ + (ticksExisted * speed),
+					posX - (ticksExisted * speed), posY - 1.5, posZ - (ticksExisted * speed));
 
 			List<Entity> targets = world.getEntitiesWithinAABB(
 					Entity.class, box);
@@ -157,9 +160,9 @@ public class EntityShockwave extends AvatarEntity {
 						}
 
 						// All targets are thrown,
-						target.motionX = Vector.getEntityPos(this).minus(Vector.getEntityPos(getOwner())).magnitude() * (range - ticksExisted * speed);
-						target.motionY = knockbackHeight; // Throws target into the air.
-						target.motionZ = Vector.getEntityPos(this).minus(Vector.getEntityPos(getOwner())).magnitude() * (range - ticksExisted * speed);
+						target.motionX += Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).x() * (range - ticksExisted/10F * speed);
+						target.motionY += knockbackHeight; // Throws target into the air.
+						target.motionZ += Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).z() * (range - ticksExisted/10F * speed);
 
 						AvatarUtils.afterVelocityAdded(target);
 					//}

@@ -66,7 +66,7 @@ public class SmashGroundHandler extends TickHandler {
 				shockwave.setParticleSpeed(getParticleSpeed());
 				shockwave.setParticleAmount(getNumberOfParticles());
 				shockwave.setKnockbackHeight(getKnockbackHeight());
-				shockwave.setSpeed(getSpeed()/10);
+				shockwave.setSpeed(getSpeed()/5);
 				shockwave.setRange(getRange());
 				world.spawnEntity(shockwave);
 				/*if (!world.isRemote) {
@@ -129,7 +129,7 @@ public class SmashGroundHandler extends TickHandler {
 	}
 
 	protected float getKnockbackHeight() {
-		return 0.75F;
+		return 0.225F;
 	}
 
 	protected EnumParticleTypes getParticle() {
