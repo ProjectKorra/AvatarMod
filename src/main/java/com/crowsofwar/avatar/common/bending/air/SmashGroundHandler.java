@@ -66,7 +66,7 @@ public class SmashGroundHandler extends TickHandler {
 				shockwave.setParticleSpeed(getParticleSpeed());
 				shockwave.setParticleAmount(getNumberOfParticles());
 				shockwave.setKnockbackHeight(getKnockbackHeight());
-				shockwave.setSpeed(getSpeed()/4);
+				shockwave.setSpeed(getSpeed()/10);
 				shockwave.setRange(getRange());
 				world.spawnEntity(shockwave);
 				/*if (!world.isRemote) {
@@ -125,7 +125,7 @@ public class SmashGroundHandler extends TickHandler {
 	 * The speed applied to hit entities, in m/s
 	 */
 	protected double getSpeed() {
-		return 5;
+		return 4;
 	}
 
 	protected float getKnockbackHeight() {
@@ -144,8 +144,13 @@ public class SmashGroundHandler extends TickHandler {
 		return SoundCategory.BLOCKS;
 	}
 
+	/**
+	 *
+	 * @return The number of the particles. This is actually an inverse function; the bigger the number,
+	 * the less particles there are.
+	 */
 	protected int getNumberOfParticles() {
-		return 2;
+		return 20;
 	}
 
 	protected float getParticleSpeed() {

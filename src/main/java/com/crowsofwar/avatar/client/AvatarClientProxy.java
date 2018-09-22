@@ -118,7 +118,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityExplosionSpawner.class, RenderNothing::new);
 		registerEntityRenderingHandler(EntityLightningSpawner.class, RenderLightningSpawner::new);
 		registerEntityRenderingHandler(EntityAvatarLightning.class, RenderAvatarLightning::new);
-		registerEntityRenderingHandler(EntityShockwave.class, RenderNothing::new);
+		registerEntityRenderingHandler(EntityShockwave.class, RenderShockwave::new);
 
 		registerEntityRenderingHandler(EntityAirbender.class, rm -> new RenderHumanBender(rm, "airbender", 7));
 		registerEntityRenderingHandler(EntityFirebender.class, rm -> new RenderHumanBender(rm, "firebender", 1));

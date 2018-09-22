@@ -61,6 +61,35 @@ public class EntityShockwave extends AvatarEntity {
 		this.damage = damage;
 	}
 
+	public EnumParticleTypes getParticle() {
+		return particle;
+	}
+
+	public int getParticleAmount() {
+		return particleAmount;
+	}
+
+	public double getParticleSpeed() {
+		return particleSpeed;
+	}
+
+	public double getRange() {
+		return range;
+	}
+
+	public double getSpeed() {
+		return speed;
+	}
+
+	public double getKnockbackHeight() {
+		return knockbackHeight;
+	}
+
+	public double getDamage() {
+		return damage;
+	}
+
+
 
 
 
@@ -84,10 +113,10 @@ public class EntityShockwave extends AvatarEntity {
 
 		if (!world.isRemote) {
 			// The further the shockwave is going to spread, the finer the angle increments.
-			for (double angle = 0; angle < 4 * Math.PI; angle += Math.PI / (40 * 1.5)) {
+			/*for (double angle = 0; angle < 4 * Math.PI; angle += Math.PI / (40 * 1.5)) {
 				double x = this.posX < 0 ? (this.posX + ((this.ticksExisted * speed)) * Math.sin(angle))
 						: 	(this.posX + ((this.ticksExisted * speed)) * Math.sin(angle));
-				double y = (this.posY - 0.1);
+				double y = (this.posY);
 				double z = this.posZ < 0 ? (this.posZ + ((this.ticksExisted * speed)) * Math.cos(angle))
 						: (this.posZ + ((this.ticksExisted * speed)) * Math.cos(angle));
 				if (world instanceof WorldServer) {
@@ -96,7 +125,7 @@ public class EntityShockwave extends AvatarEntity {
 				}
 
 
-				}
+				}**/
 
 				if (ticksExisted * speed > range) {
 					this.setDead();
@@ -128,9 +157,9 @@ public class EntityShockwave extends AvatarEntity {
 						}
 
 						// All targets are thrown,
-						//target.motionX = motionX;
+						target.motionX = Vector.getEntityPos(this).minus(Vector.getEntityPos(getOwner())).magnitude() * (range - ticksExisted * speed);
 						target.motionY = knockbackHeight; // Throws target into the air.
-						//target.motionZ = motionZ;
+						target.motionZ = Vector.getEntityPos(this).minus(Vector.getEntityPos(getOwner())).magnitude() * (range - ticksExisted * speed);
 
 						AvatarUtils.afterVelocityAdded(target);
 					//}

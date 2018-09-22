@@ -300,17 +300,19 @@ public abstract class Bender {
 
 		// Tick the TickHandlers
 
-		List<TickHandler> tickHandlers = data.getAllTickHandlers();
-		if (tickHandlers != null) {
-			for (TickHandler handler : tickHandlers) {
-				if (handler != null) {
-					if (handler.tick(ctx)) {
-						// Can use this since the list is a COPY of the
-						// underlying list
-						data.removeTickHandler(handler);
-					} else {
-						int newDuration = data.getTickHandlerDuration(handler) + 1;
-						data.setTickHandlerDuration(handler, newDuration);
+		if (!world.isRemote) {
+			List<TickHandler> tickHandlers = data.getAllTickHandlers();
+			if (tickHandlers != null) {
+				for (TickHandler handler : tickHandlers) {
+					if (handler != null) {
+						if (handler.tick(ctx)) {
+							// Can use this since the list is a COPY of the
+							// underlying list
+							data.removeTickHandler(handler);
+						} else {
+							int newDuration = data.getTickHandlerDuration(handler) + 1;
+							data.setTickHandlerDuration(handler, newDuration);
+						}
 					}
 				}
 			}
