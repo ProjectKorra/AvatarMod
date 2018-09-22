@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ebe",
+    "bpb",
+    "ebe"
+  ],
+  "key": {
+    "b": {
+      "item": "minecraft:emerald"
+    },
+    "p": {
+      "item": "minecraft:paper"
+    },
+    "e": {
+      "item": "minecraft:experience_bottle"
+    }
+  },
+  "result": {
+    "item": "avatarmod:scroll",
+    "data": 1
+  }
+}

@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -45,6 +46,7 @@ public class SmashGroundHandler extends TickHandler {
 
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
+		World world = ctx.getWorld();
 
 		if (entity.isInWater() || entity.onGround || bender.isFlying()) {
 
@@ -52,12 +54,22 @@ public class SmashGroundHandler extends TickHandler {
 
 				double range = getRange();
 
-				World world = entity.world;
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.getEntityBoundingBox().minY,
 						entity.posZ - range, entity.posX + range, entity.posY + entity.getEyeHeight(), entity.posZ + range);
 
 
-				if (!world.isRemote) {
+				EntityShockwave shockwave = new EntityShockwave(world);
+				shockwave.setDamage(getDamage());
+				shockwave.setOwner(entity);
+				shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
+				shockwave.setParticle(getParticle());
+				shockwave.setParticleSpeed(getParticleSpeed());
+				shockwave.setParticleAmount(getNumberOfParticles());
+				shockwave.setKnockbackHeight(getKnockbackHeight());
+				shockwave.setSpeed(getSpeed()/4);
+				shockwave.setRange(getRange());
+				world.spawnEntity(shockwave);
+				/*if (!world.isRemote) {
 					WorldServer World = (WorldServer) world;
 					for (double i = 0; i < range; ) {
 						for (int j = 0; j < 90; j++) {
@@ -74,16 +86,16 @@ public class SmashGroundHandler extends TickHandler {
 						}
 						i = i + range / 10;
 					}
-				}
-				entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), getSoundCategory(), 4F, 0.5F);
+				}**/
+				world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), getSoundCategory(), 4F, 0.5F);
 
 
-				List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
+			/*	List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 				for (EntityLivingBase target : nearby) {
 					if (target != entity) {
 						smashEntity(target, entity);
 					}
-				}
+				}**/
 			}
 
 
@@ -137,7 +149,7 @@ public class SmashGroundHandler extends TickHandler {
 	}
 
 	protected float getParticleSpeed() {
-		return 0.1F;
+		return 0F;
 	}
 
 	protected float getDamage() {

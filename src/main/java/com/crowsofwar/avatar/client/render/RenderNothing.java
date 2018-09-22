@@ -18,6 +18,11 @@ public class RenderNothing<T extends Entity> extends Render<Entity> {
 		super(renderManager);
 	}
 
+	@Override
+	public void doRender(Entity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+
+	}
+
 	@Nullable
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
