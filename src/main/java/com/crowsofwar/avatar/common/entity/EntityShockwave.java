@@ -218,14 +218,14 @@ public class EntityShockwave extends AvatarEntity {
 								amount = amount > SCORE_MOD_MEDIUM ? (int) SCORE_MOD_MEDIUM : performanceAmount;
 								BattlePerformanceScore.addScore(getOwner(), amount);
 								target.setFire(isFire ? fireTime : 0);
-							}
-							if (getAbility() != null && !world.isRemote && getAbility() instanceof AbilityAirBurst) {
-								AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
-								aD.addXp(SKILLS_CONFIG.airBurstHit - aD.getLevel());
-								if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-									((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
-									((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
-									((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
+								if (getAbility() != null && !world.isRemote && getAbility() instanceof AbilityAirBurst) {
+									AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
+									aD.addXp(SKILLS_CONFIG.airBurstHit - aD.getLevel());
+									if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST) && target instanceof EntityLivingBase) {
+										((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
+										((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
+										((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
+									}
 								}
 							}
 						}
