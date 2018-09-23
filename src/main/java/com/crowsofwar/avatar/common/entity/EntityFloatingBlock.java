@@ -48,7 +48,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
 import java.util.Random;
 
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;

@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.common.bending.ice.Icebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
-import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;

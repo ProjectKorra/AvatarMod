@@ -16,9 +16,6 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
@@ -26,9 +23,7 @@ import com.crowsofwar.avatar.common.bending.sand.Sandbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
-import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -43,6 +38,9 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author CrowsOfWar
