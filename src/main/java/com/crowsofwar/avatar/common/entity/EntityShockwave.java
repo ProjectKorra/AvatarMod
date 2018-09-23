@@ -4,16 +4,10 @@ import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.client.particle.ParticleCloud;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
@@ -42,6 +36,9 @@ public class EntityShockwave extends AvatarEntity {
 	private boolean isSphere;
 	//Whether or not to use a sphere of particles instead of a circular ring
 	private NetworkParticleSpawner particles;
+
+	private double particleController;
+	//Used for spherical shockwaves
 
 	public void setParticle(EnumParticleTypes particle) {
 		this.particle = particle;
@@ -81,6 +78,10 @@ public class EntityShockwave extends AvatarEntity {
 
 	public void setSphere(boolean sphere) {
 		this.isSphere = sphere;
+	}
+
+	public void setParticleController(double amount) {
+		this.particleController = amount;
 	}
 
 	public EnumParticleTypes getParticle() {
@@ -131,6 +132,7 @@ public class EntityShockwave extends AvatarEntity {
 		this.speed = 0.8;
 		this.isFire = false;
 		this.fireTime = 0;
+		this.particleAmount = 0;
 		this.setSize(1, 1);
 		this.particles = new NetworkParticleSpawner();
 	}
@@ -150,13 +152,38 @@ public class EntityShockwave extends AvatarEntity {
 				}
 
 
-			for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (getRange() * 10 * 1.5)) {
-				double x = posX + (ticksExisted * getSpeed()) * Math.sin(angle);
-				double y = posY + 1;
-				double z = posZ + (ticksExisted * getSpeed()) * Math.cos(angle);
-				particles.spawnParticles(world, getParticle(), getParticleAmount()/2, getParticleAmount(), x, y, z, getParticleSpeed(),
-						getParticleSpeed(), getParticleSpeed());
-			}
+				if (!isSphere) {
+					for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (getRange() * 10 * 1.5)) {
+						double x = posX + (ticksExisted * getSpeed()) * Math.sin(angle);
+						double y = posY + 0.5;
+						double z = posZ + (ticksExisted * getSpeed()) * Math.cos(angle);
+						particles.spawnParticles(world, getParticle(), getParticleAmount() / 2, getParticleAmount(), x, y, z, getParticleSpeed(),
+								getParticleSpeed(), getParticleSpeed());
+					}
+				}
+				else {
+					double x, y, z;
+
+				//	int particleController = abilityData.getLevel() >= 1 ? 20 - (4 * abilityData.getLevel()) : 20;
+					if (ticksExisted % 2 == 0) {
+						for (double theta = 0; theta <= 180; theta += 1) {
+							double dphi = particleController / Math.sin(Math.toRadians(theta));
+
+							for (double phi = 0; phi < 360; phi += dphi) {
+								double rphi = Math.toRadians(phi);
+								double rtheta = Math.toRadians(theta);
+
+								x = ticksExisted * getSpeed() * Math.cos(rphi) * Math.sin(rtheta);
+								y = ticksExisted * getSpeed() * Math.sin(rphi) * Math.sin(rtheta);
+								z = ticksExisted * getSpeed() * Math.cos(rtheta);
+
+								particles.spawnParticles(world, EnumParticleTypes.EXPLOSION_NORMAL, getParticleAmount() / 2, getParticleAmount(), x + posX, y + posY,
+										z + posZ, getParticleSpeed(), getParticleSpeed(), getParticleSpeed());
+
+							}
+						}//Creates a sphere. Courtesy of Project Korra's Air Burst!
+					}
+				}
 
 
 			AxisAlignedBB box = new AxisAlignedBB(posX + (ticksExisted * speed), posY + 1.5, posZ + (ticksExisted * speed),
@@ -176,9 +203,9 @@ public class EntityShockwave extends AvatarEntity {
 									damage);
 						}
 						target.setFire(isFire ? fireTime : 0);
-						target.motionX += Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).x() * (range - ticksExisted/20F * speed);
-						target.motionY += knockbackHeight; // Throws target into the air.
-						target.motionZ += Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).z() * (range - ticksExisted/20F * speed);
+						target.motionX += Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted/20F * speed);
+						target.motionY += isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted/20F * speed) : knockbackHeight; // Throws target into the air.
+						target.motionZ += Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted/20F * speed);
 
 						AvatarUtils.afterVelocityAdded(target);
 				}

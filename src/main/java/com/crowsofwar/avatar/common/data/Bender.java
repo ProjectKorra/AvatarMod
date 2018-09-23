@@ -21,7 +21,6 @@ import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.QueuedAbilityExecutionHandler;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -31,7 +30,6 @@ import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.network.packets.PacketCPowerRating;
 import com.crowsofwar.avatar.common.powerrating.PrModifierHandler;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -270,10 +268,10 @@ public abstract class Bender {
 			Chi chi = data.chi();
 
 			if (CHI_CONFIG.lowChiDebuffs) {
-				if (chi.getTotalChi() <= chi.getMaxChi()/15) {
+				if (chi.getTotalChi() <= chi.getMaxChi() / 15) {
 					entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 5));
 				}
-				if (chi.getTotalChi() <= chi.getMaxChi()/10) {
+				if (chi.getTotalChi() <= chi.getMaxChi() / 10) {
 					entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 5));
 				}
 
@@ -285,11 +283,11 @@ public abstract class Bender {
 				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 20f);
 			}
 			if (data.hasBendingId(Waterbending.ID) && entity.isInWater()) {
-				chi.changeTotalChi(CHI_CONFIG.regenInWater/20F);
+				chi.changeTotalChi(CHI_CONFIG.regenInWater / 20F);
 			}
 
 			if (data.hasBendingId(Airbending.ID)) {
-				chi.changeTotalChi(CHI_CONFIG.regenPerSecond/10);
+				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 10);
 			}
 
 			if (chi.getAvailableChi() < CHI_CONFIG.maxAvailableChi) {
@@ -300,19 +298,17 @@ public abstract class Bender {
 
 		// Tick the TickHandlers
 
-		if (!world.isRemote) {
-			List<TickHandler> tickHandlers = data.getAllTickHandlers();
-			if (tickHandlers != null) {
-				for (TickHandler handler : tickHandlers) {
-					if (handler != null) {
-						if (handler.tick(ctx)) {
-							// Can use this since the list is a COPY of the
-							// underlying list
-							data.removeTickHandler(handler);
-						} else {
-							int newDuration = data.getTickHandlerDuration(handler) + 1;
-							data.setTickHandlerDuration(handler, newDuration);
-						}
+		List<TickHandler> tickHandlers = data.getAllTickHandlers();
+		if (tickHandlers != null) {
+			for (TickHandler handler : tickHandlers) {
+				if (handler != null) {
+					if (handler.tick(ctx)) {
+						// Can use this since the list is a COPY of the
+						// underlying list
+						data.removeTickHandler(handler);
+					} else {
+						int newDuration = data.getTickHandlerDuration(handler) + 1;
+						data.setTickHandlerDuration(handler, newDuration);
 					}
 				}
 			}

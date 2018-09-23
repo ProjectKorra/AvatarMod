@@ -143,7 +143,7 @@ public class AirBurstHandler extends TickHandler {
 			}
 
 			if (duration >= durationToFire) {
-				if (world instanceof WorldServer) {
+				/*if (world instanceof WorldServer) {
 					WorldServer World = (WorldServer) world;
 					double x, y, z;
 
@@ -160,10 +160,24 @@ public class AirBurstHandler extends TickHandler {
 							World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
 									lookPos.z() + entity.posZ, 1, 0, 0, 0, (double) radius / 200);
 						}
-					}
+					}**/
 
 					int particleController = abilityData.getLevel() >= 1 ? 20 - (4 * abilityData.getLevel()) : 20;
-					for (double theta = 0; theta <= 180; theta += 1) {
+					EntityShockwave shockwave = new EntityShockwave(world);
+					shockwave.setOwner(entity);
+					shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
+					shockwave.setParticle(EnumParticleTypes.EXPLOSION_NORMAL);
+					shockwave.setParticleSpeed(1);
+					shockwave.setKnockbackHeight(upwardKnockback);
+					shockwave.setDamage((float) damage);
+					shockwave.setRange(radius);
+					shockwave.setParticleController(particleController);
+					shockwave.setParticleAmount(2);
+					shockwave.setSphere(true);
+					shockwave.setSpeed(knockBack/4);
+					world.spawnEntity(shockwave);
+
+					/*for (double theta = 0; theta <= 180; theta += 1) {
 						double dphi = particleController / Math.sin(Math.toRadians(theta));
 
 						for (double phi = 0; phi < 360; phi += dphi) {
@@ -181,7 +195,7 @@ public class AirBurstHandler extends TickHandler {
 						}
 					}//Creates a sphere. Courtesy of Project Korra's Air Burst!
 
-				}
+				//}
 
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius, entity.posY - radius, entity.posZ - radius);
 				List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box, entity1 -> entity1 != entity);
@@ -203,7 +217,7 @@ public class AirBurstHandler extends TickHandler {
 
 						}
 					}
-				}
+				}**/
 
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 

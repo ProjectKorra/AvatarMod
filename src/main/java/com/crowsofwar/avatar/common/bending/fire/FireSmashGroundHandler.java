@@ -17,10 +17,9 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.entity.EntityFireShockwave;
-import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
@@ -36,18 +35,13 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 	public static TickHandler SMASH_GROUND_FIRE = new FireSmashGroundHandler();
 
 	@Override
-	protected void smashEntity(EntityLivingBase entity) {
-		World world = entity.world;
-		EntityFireShockwave shockwave = new EntityFireShockwave(world);
-		shockwave.setDamage(getDamage());
-		shockwave.setOwner(entity);
-		shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
-		shockwave.setKnockbackHeight(getKnockbackHeight());
-		shockwave.setSpeed(getSpeed()/5);
-		shockwave.setRange(getRange());
-		shockwave.setFire(isFire());
-		shockwave.setFireTime(fireTime());
-		world.spawnEntity(shockwave);
+	protected EnumParticleTypes getParticle() {
+		return AvatarParticles.getParticleFlames();
+	}
+
+	@Override
+	protected int getParticleAmount() {
+		return 4;
 	}
 
 	@Override
@@ -62,12 +56,12 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 
 	@Override
 	protected float getKnockbackHeight() {
-		return 0.2F;
+		return 0.075F;
 	}
 
 	@Override
 	protected double getSpeed() {
-		return 2;
+		return 2.5;
 	}
 
 	@Override

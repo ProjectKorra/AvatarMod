@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -33,6 +34,12 @@ import net.minecraft.world.World;
 public class SmashGroundHandler extends TickHandler {
 
 	public static TickHandler SMASH_GROUND = new SmashGroundHandler();
+
+	private Ability ability;
+
+	public void setAbility(Ability ability) {
+		this.ability = ability;
+	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {
@@ -68,6 +75,7 @@ public class SmashGroundHandler extends TickHandler {
 		shockwave.setParticle(getParticle());
 		shockwave.setParticleAmount(getParticleAmount());
 		shockwave.setParticleSpeed(getParticleSpeed());
+		shockwave.setAbility(ability);
 		world.spawnEntity(shockwave);
 	}
 
@@ -84,15 +92,19 @@ public class SmashGroundHandler extends TickHandler {
 	}
 
 	protected EnumParticleTypes getParticle() {
-		return EnumParticleTypes.CLOUD;
+		return EnumParticleTypes.EXPLOSION_NORMAL;
 	}
 
 	protected int getParticleAmount() {
 		return 2;
 	}
 
+	protected Ability getAbility() {
+		return ability;
+	}
+
 	protected double getParticleSpeed() {
-		return 0.2F;
+		return 0.1F;
 	}
 
 	protected double getSpeed() {
@@ -100,7 +112,7 @@ public class SmashGroundHandler extends TickHandler {
 	}
 
 	protected float getKnockbackHeight() {
-		return 0.225F;
+		return 0.1F;
 	}
 
 
@@ -114,7 +126,7 @@ public class SmashGroundHandler extends TickHandler {
 
 
 	protected float getDamage() {
-		return 3;
+		return 2.5F;
 	}
 
 }

@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.client.particles.AvatarParticle;
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,24 +35,24 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 
 	@Override
 	protected double getRange() {
-		return 4;
+		return 5;
 	}
 
 	@Override
 	protected double getSpeed() {
-		return 8;
+		return 6;
 	}
 
-	/*@Override
-	protected int getNumberOfParticles() {
-		return 10;
+	@Override
+	protected int getParticleAmount() {
+		return 6;
 	}
 
 	@Override
 	protected EnumParticleTypes getParticle() {
-		return EnumParticleTypes.FLAME;
+		return AvatarParticles.getParticleFlames();
 	}
-**/
+
 	@Override
 	protected SoundEvent getSound() {
 		return SoundEvents.ITEM_FIRECHARGE_USE;
@@ -61,10 +63,10 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 		return SoundCategory.PLAYERS;
 	}
 
-	/*@Override
-	protected float getParticleSpeed() {
-		return 0.175F;
-	}**/
+	@Override
+	protected double getParticleSpeed() {
+		return 0.3F;
+	}
 
 	@Override
 	protected float getDamage() {
@@ -73,7 +75,16 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 
 	@Override
 	protected float getKnockbackHeight() {
-		return 0.75F;
+		return 0.15F;
 	}
 
+	@Override
+	protected boolean isFire() {
+		return true;
+	}
+
+	@Override
+	protected int fireTime() {
+		return 15;
+	}
 }
