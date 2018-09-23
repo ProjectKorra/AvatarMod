@@ -36,7 +36,6 @@ import java.util.Map;
  * @author CrowsOfWar
  */
 public abstract class TickHandler {
-
 	/*public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner();
 	public static TickHandler FIRE_PARTICLE_SPAWNER = new FireParticleSpawner();
 	public static TickHandler FLAMETHROWER = new FlamethrowerUpdateTick();
@@ -65,16 +64,13 @@ public abstract class TickHandler {
 	public static TickHandler CLEANSE_COOLDOWN_HANDLER = new CleanseCooldownHandler();
 	public static TickHandler RESTORE_COOLDOWN_HANDLER = new RestoreCooldownHandler();
 	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler();
-**/
-
-	private static int nextId = 1;
-	private static Map<Integer, TickHandler> allHandlers;
+	**/
+	
+	private static Map<Integer, TickHandler> allHandlers = new HashMap<>();
 	private final int id;
-
-	public TickHandler() {
-		if (allHandlers == null) allHandlers = new HashMap<>();
-
-		id = nextId++;
+	
+	public TickHandler(int id) {
+		this.id = id;
 		allHandlers.put(id, this);
 
 	}
