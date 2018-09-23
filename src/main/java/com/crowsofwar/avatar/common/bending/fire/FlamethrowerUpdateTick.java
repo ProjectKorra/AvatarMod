@@ -38,6 +38,8 @@ import static java.lang.Math.toRadians;
  * @author CrowsOfWar
  */
 public class FlamethrowerUpdateTick extends TickHandler {
+	public static TickHandler FLAMETHROWER = TickHandler.fromId(TickHandler.FLAMETHROWER_ID);
+	
 	public FireParticleSpawner(int id) {
 		super(id);
 	}
