@@ -36,10 +36,41 @@ import java.util.Map;
  * @author CrowsOfWar
  */
 public abstract class TickHandler {
-	/*public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner();
-	public static TickHandler FIRE_PARTICLE_SPAWNER = new FireParticleSpawner();
-	public static TickHandler FLAMETHROWER = new FlamethrowerUpdateTick();
-	public static TickHandler WATER_SKATE = new WaterSkateHandler();
+	public static int AIR_PARTICLE_SPAWNER_ID = 0;
+	public static int FIRE_PARTICLE_SPAWNER_ID = 1;
+	public static int FLAMETHROWER_ID = 2;
+	public static int WATER_SKATE_ID = 3;
+	public static int BISON_SUMMONER_ID = 4;
+	public static int SMASH_GROUND_ID = 5;
+	public static int LIGHTNING_CHARGE_ID = 6;
+	public static int WATER_CHARGE_ID = 7;
+	public static int LIGHTNING_REDIRECT_ID = 8;
+	public static int SMASH_GROUND_FIRE_ID = 9;
+	public static int SMASH_GROUND_FIRE_BIG_ID = 10;
+	public static int SMASH_GROUND_WATER_ID = 11;
+	public static int WATER_PARTICLE_SPAWNER_ID = 12;
+	public static int INFERNO_PARTICLE_SPAWNER_ID = 13;
+	public static int SPAWN_EARTHSPIKES_HANDLER_ID = 14;
+	public static int AIRBURST_CHARGE_HANDLER_ID = 15;
+	public static int AIR_STATCTRL_HANDLER_ID = 16;
+	public static int FIRE_STATCTRL_HANDLER_ID = 17;
+	public static int AIR_DODGE_ID = 18;
+	public static int RENDER_ELEMENT_HANDLER_ID = 19;
+	public static int STAFF_GUST_HANDLER_ID = 20;
+	public static int SLIPSTREAM_COOLDOWN_HANDLER_ID = 21;
+	public static int PURIFY_COOLDOWN_HANDLER_ID = 22;
+	public static int PURIFY_PARTICLE_SPAWNER_ID = 23;
+	public static int FIRE_DEVOUR_HANDLER_ID = 24;
+	public static int CLEANSE_COOLDOWN_HANDLER_ID = 25;
+	public static int RESTORE_COOLDOWN_HANDLER_ID = 26;
+	public static int RESTORE_PARTICLE_SPAWNER_ID = 27;
+	static {
+		new AirParticleSpawner(AIR_PARTICLE_SPAWNER_ID);
+		new FireParticleSpawner(FIRE_PARTICLE_SPAWNER_ID);
+		new FlamethrowerUpdateTick(FLAMETHROWER_ID);
+		new WaterSkateHandler(WATER_SKATE_ID);
+	}
+	/*
 	public static TickHandler BISON_SUMMONER = new BisonSummonHandler();
 	public static TickHandler SMASH_GROUND = new SmashGroundHandler();
 	public static TickHandler LIGHTNING_CHARGE = new LightningCreateHandler();
