@@ -588,6 +588,7 @@ public class BendingData {
 
 		chi().readFromNBT(readFrom);
 
+		FMLLog.info("tickHandlers = %s", readFrom.getTagList("TickHandlers", 10));
 		AvatarUtils.readList(tickHandlers, //
 				nbt -> {		
 					FMLLog.info("Id = %s", nbt.getInteger("Id"));
