@@ -3,13 +3,17 @@ package com.crowsofwar.avatar.common.bending.earth;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class RestoreCooldownHandler extends TickHandler {
+	public static TickHandler RESTORE_COOLDOWN_HANDLER = TickHandlerController.fromId(TickHandlerController.RESTORE_COOLDOWN_HANDLER_ID);
 
-	public static  TickHandler RESTORE_COOLDOWN_HANDLER = new RestoreCooldownHandler();
+	public RestoreCooldownHandler(int id) {
+		super(id);
+	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {

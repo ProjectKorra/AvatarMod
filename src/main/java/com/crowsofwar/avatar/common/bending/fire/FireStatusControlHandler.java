@@ -3,19 +3,24 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 public class FireStatusControlHandler extends TickHandler {
 
-	public static TickHandler FIRE_STATCTRL_HANDLER = new FireStatusControlHandler();
+	public static TickHandler FIRE_STATCTRL_HANDLER = TickHandlerController.fromId(TickHandlerController.FIRE_STATCTRL_HANDLER_ID);
 
 	private int ticks = 0;
+
+	public FireStatusControlHandler(int id) {
+		super(id);
+	}
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 		World world = ctx.getWorld();

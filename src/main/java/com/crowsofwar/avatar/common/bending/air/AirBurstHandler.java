@@ -1,15 +1,11 @@
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityArmorStand;
@@ -36,7 +32,51 @@ public class AirBurstHandler extends TickHandler {
 
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("f82d325c-9828-11e8-9eb6-529269fb1459");
-	public static TickHandler AIRBURST_CHARGE_HANDLER = new AirBurstHandler();
+	public static TickHandler AIRBURST_CHARGE_HANDLER = TickHandlerController.fromId(TickHandlerController.AIRBURST_CHARGE_HANDLER_ID);
+
+	public AirBurstHandler(int id) {
+		super(id);
+	}
+
+	@SubscribeEvent
+	public static void onDragonHurt(LivingHurtEvent event) {
+		if (event.getSource().getTrueSource() instanceof EntityLivingBase) {
+			EntityLivingBase attacker = (EntityLivingBase) event.getSource().getTrueSource();
+			Entity target = event.getEntity();
+			DamageSource source = event.getSource();
+			if (source.getDamageType().equals("avatar_Air")) {
+				if (attacker instanceof EntityPlayer || attacker instanceof EntityBender) {
+					Bender ctx = Bender.get(attacker);
+					if (ctx.getData() != null) {
+						AbilityData aD = AbilityData.get(attacker, "air_burst");
+						float powerRating = (float) (ctx.calcPowerRating(Airbending.ID) / 100);
+						float damage = 0.5F + powerRating;
+						if (aD.getLevel() == 1) {
+							damage = 0.75F + powerRating;
+						}
+
+						if (aD.getLevel() >= 2) {
+							damage = 1 + powerRating;
+						}
+
+						if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+							//Piercing Winds
+							damage = 5 + powerRating;
+						}
+
+						if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+							//Maximum Pressure
+							//Pulls enemies in then blasts them out
+							damage = 2.5f + powerRating;
+						}
+						event.setAmount(damage);
+
+
+					}
+				}
+			}
+		}
+	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {
@@ -140,22 +180,22 @@ public class AirBurstHandler extends TickHandler {
 
 			if (duration >= durationToFire) {
 
-					int particleController = abilityData.getLevel() >= 1 ? 30 - (4 * abilityData.getLevel()) : 30;
-					EntityShockwave shockwave = new EntityShockwave(world);
-					shockwave.setOwner(entity);
-					shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
-					shockwave.setParticle(EnumParticleTypes.EXPLOSION_NORMAL);
-					shockwave.setParticleSpeed(0.1F);
-					shockwave.setKnockbackHeight(upwardKnockback);
-					shockwave.setDamage((float) damage);
-					shockwave.setRange(radius);
-					shockwave.setPerformanceAmount(performanceAmount);
-					shockwave.setParticleController(particleController);
-					shockwave.setParticleAmount(2);
-					shockwave.setSphere(true);
-					shockwave.setAbility(new AbilityAirBurst());
-					shockwave.setSpeed(knockBack/4);
-					world.spawnEntity(shockwave);
+				int particleController = abilityData.getLevel() >= 1 ? 30 - (4 * abilityData.getLevel()) : 30;
+				EntityShockwave shockwave = new EntityShockwave(world);
+				shockwave.setOwner(entity);
+				shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
+				shockwave.setParticle(EnumParticleTypes.EXPLOSION_NORMAL);
+				shockwave.setParticleSpeed(0.1F);
+				shockwave.setKnockbackHeight(upwardKnockback);
+				shockwave.setDamage((float) damage);
+				shockwave.setRange(radius);
+				shockwave.setPerformanceAmount(performanceAmount);
+				shockwave.setParticleController(particleController);
+				shockwave.setParticleAmount(2);
+				shockwave.setSphere(true);
+				shockwave.setAbility(new AbilityAirBurst());
+				shockwave.setSpeed(knockBack / 4);
+				world.spawnEntity(shockwave);
 
 
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
@@ -181,7 +221,6 @@ public class AirBurstHandler extends TickHandler {
 
 	}
 
-
 	private void pullEntities(Entity collided, Entity attacker, double suction) {
 		Vector velocity = Vector.getEntityPos(collided).minus(Vector.getEntityPos(attacker));
 		velocity = velocity.times(suction).times(-1);
@@ -204,46 +243,6 @@ public class AirBurstHandler extends TickHandler {
 		}
 
 
-	}
-
-	@SubscribeEvent
-	public static void onDragonHurt(LivingHurtEvent event) {
-		if (event.getSource().getTrueSource() instanceof EntityLivingBase) {
-			EntityLivingBase attacker = (EntityLivingBase) event.getSource().getTrueSource();
-			Entity target = event.getEntity();
-			DamageSource source = event.getSource();
-			if (source.getDamageType().equals("avatar_Air")) {
-				if (attacker instanceof EntityPlayer || attacker instanceof EntityBender) {
-					Bender ctx = Bender.get(attacker);
-					if (ctx.getData() != null) {
-						AbilityData aD = AbilityData.get(attacker, "air_burst");
-						float powerRating = (float) (ctx.calcPowerRating(Airbending.ID) / 100);
-						float damage = 0.5F + powerRating;
-						if (aD.getLevel() == 1) {
-							damage = 0.75F + powerRating;
-						}
-
-						if (aD.getLevel() >= 2) {
-							damage = 1 + powerRating;
-						}
-
-						if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-							//Piercing Winds
-							damage = 5 + powerRating;
-						}
-
-						if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-							//Maximum Pressure
-							//Pulls enemies in then blasts them out
-							damage = 2.5f + powerRating;
-						}
-						event.setAmount(damage);
-
-
-					}
-				}
-			}
-		}
 	}
 
 	private boolean canDamageEntity(Entity entity) {

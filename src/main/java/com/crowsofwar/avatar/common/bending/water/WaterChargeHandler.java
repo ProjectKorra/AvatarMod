@@ -1,9 +1,6 @@
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
 import com.crowsofwar.gorecore.util.Vector;
@@ -23,7 +20,11 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class WaterChargeHandler extends TickHandler {
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
-	public static TickHandler WATER_CHARGE = new WaterChargeHandler();
+	public static TickHandler WATER_CHARGE = TickHandlerController.fromId(TickHandlerController.WATER_CHARGE_ID);
+
+	public WaterChargeHandler(int id) {
+		super(id);
+	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {
@@ -113,7 +114,7 @@ public class WaterChargeHandler extends TickHandler {
 	}
 
 	private void fireCannon(World world, EntityLivingBase entity, float damage, double speed,
-							float size, float ticks) {
+	                        float size, float ticks) {
 
 		EntityWaterCannon cannon = new EntityWaterCannon(world);
 

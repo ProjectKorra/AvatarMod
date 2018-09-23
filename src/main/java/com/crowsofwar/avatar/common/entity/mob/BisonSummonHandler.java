@@ -16,8 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
 
@@ -28,8 +28,11 @@ import java.util.Random;
  * @author CrowsOfWar
  */
 public class BisonSummonHandler extends TickHandler {
+	public static TickHandler BISON_SUMMONER = TickHandlerController.fromId(TickHandlerController.BISON_SUMMONER_ID);
 
-	public static TickHandler BISON_SUMMONER = new BisonSummonHandler();
+	public BisonSummonHandler(int id) {
+		super(id);
+	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {
@@ -41,15 +44,15 @@ public class BisonSummonHandler extends TickHandler {
 		//int cooldown = data.getMiscData().getPetSummonCooldown();
 		//if (cooldown <= 0) {
 
-			trySummonBison(ctx.getBenderEntity());
-			return true;
+		trySummonBison(ctx.getBenderEntity());
+		return true;
 
 		/*} else {
 
 			data.getMiscData().setPetSummonCooldown(cooldown - 1);
 			return false;
 **/
-		}
+	}
 
 
 	private boolean trySummonBison(EntityLivingBase player) {

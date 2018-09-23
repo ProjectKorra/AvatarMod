@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
 import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
@@ -29,7 +30,11 @@ import net.minecraft.util.SoundEvent;
  */
 public class FireSmashGroundHandler extends SmashGroundHandler {
 
-	public static TickHandler SMASH_GROUND_FIRE = new FireSmashGroundHandler();
+	public static TickHandler SMASH_GROUND_FIRE = TickHandlerController.fromId(TickHandlerController.SMASH_GROUND_FIRE_ID);
+
+	public FireSmashGroundHandler(int id) {
+		super(id);
+	}
 
 	@Override
 	protected EnumParticleTypes getParticle() {

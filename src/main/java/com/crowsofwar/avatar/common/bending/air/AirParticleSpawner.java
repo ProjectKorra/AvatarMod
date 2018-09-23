@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.bending.air;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -29,13 +30,12 @@ import net.minecraft.entity.EntityLivingBase;
  * @author CrowsOfWar
  */
 public class AirParticleSpawner extends TickHandler {
-	public static TickHandler AIR_PARTICLE_SPAWNER = TickHandler.fromId(TickHandler.AIR_PARTICLE_SPAWNER_ID);
-	
+	private static final ParticleSpawner particles = new NetworkParticleSpawner();
+	public static TickHandler AIR_PARTICLE_SPAWNER = TickHandlerController.fromId(TickHandlerController.AIR_PARTICLE_SPAWNER_ID);
+
 	public AirParticleSpawner(int id) {
 		super(id);
 	}
-
-	private static final ParticleSpawner particles = new NetworkParticleSpawner();
 
 	@Override
 	public boolean tick(BendingContext ctx) {

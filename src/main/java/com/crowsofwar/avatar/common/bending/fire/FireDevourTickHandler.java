@@ -1,17 +1,12 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.avatar.common.powerrating.FirebendingSunModifier;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -27,11 +22,14 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static java.lang.Math.toRadians;
 
 public class FireDevourTickHandler extends TickHandler {
-
-	public static TickHandler FIRE_DEVOUR_HANDLER = new FireDevourTickHandler();
+	public static TickHandler FIRE_DEVOUR_HANDLER = TickHandlerController.fromId(TickHandlerController.FIRE_DEVOUR_HANDLER_ID);
 
 	private int fireConsumed = 0;
 	private int handlerLength = 20;
+
+	public FireDevourTickHandler(int id) {
+		super(id);
+	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {

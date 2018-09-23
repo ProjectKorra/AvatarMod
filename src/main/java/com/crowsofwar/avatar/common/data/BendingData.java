@@ -54,6 +54,7 @@ public class BendingData {
 	private MiscData miscData;
 	private Map<UUID, PowerRatingManager> powerRatingManagers;
 	private Vision vision;
+
 	/**
 	 * Create a new BendingData
 	 *
@@ -500,7 +501,7 @@ public class BendingData {
 	}
 
 	public void setMiscData(MiscData md) {
-		this.miscData = md;
+		miscData = md;
 	}
 
 	public void writeToNbt(NBTTagCompound writeTo) {
@@ -590,9 +591,9 @@ public class BendingData {
 
 		FMLLog.info("tickHandlers = %s", readFrom.getTagList("TickHandlers", 10));
 		AvatarUtils.readList(tickHandlers, //
-				nbt -> {		
+				nbt -> {
 					FMLLog.info("Id = %s", nbt.getInteger("Id"));
-					return TickHandler.fromId(nbt.getInteger("Id"));
+					return TickHandlerController.fromId(nbt.getInteger("Id"));
 				}, readFrom, "TickHandlers");
 
 		for (TickHandler tickHandler : tickHandlers) {

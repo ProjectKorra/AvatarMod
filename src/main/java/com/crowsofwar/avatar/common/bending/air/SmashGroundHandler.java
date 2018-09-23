@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.bending.air;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,8 +33,11 @@ import net.minecraft.world.World;
  * @author CrowsOfWar
  */
 public class SmashGroundHandler extends TickHandler {
+	public static TickHandler SMASH_GROUND = TickHandlerController.fromId(TickHandlerController.SMASH_GROUND_ID);
 
-	public static TickHandler SMASH_GROUND = new SmashGroundHandler();
+	public SmashGroundHandler(int id) {
+		super(id);
+	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {

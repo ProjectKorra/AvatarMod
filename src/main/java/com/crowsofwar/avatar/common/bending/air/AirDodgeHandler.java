@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -18,18 +19,11 @@ public class AirDodgeHandler extends TickHandler {
 
 
 	public static final int MAX_CoolDown = 20;
+	public static TickHandler AIR_DODGE = TickHandlerController.fromId(TickHandlerController.AIR_DODGE_ID);
 	private int leftDown, rightDown, cooldown;
 
-	public static TickHandler AIR_DODGE = new AirDodgeHandler();
-
-	@Override
-	public boolean tick(BendingContext ctx) {
-		BendingData data = ctx.getData();
-		int duration = data.getTickHandlerDuration(this);
-		if(FMLCommonHandler.instance().getSide().isClient())
-			MinecraftForge.EVENT_BUS.register(this);
-		return duration <= 10;
-
+	public AirDodgeHandler(int id) {
+		super(id);
 	}
 
 	@SubscribeEvent
@@ -56,5 +50,15 @@ public class AirDodgeHandler extends TickHandler {
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean tick(BendingContext ctx) {
+		BendingData data = ctx.getData();
+		int duration = data.getTickHandlerDuration(this);
+		if (FMLCommonHandler.instance().getSide().isClient())
+			MinecraftForge.EVENT_BUS.register(this);
+		return duration <= 10;
+
 	}
 }

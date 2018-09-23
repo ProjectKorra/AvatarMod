@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -18,14 +19,13 @@ import java.util.Random;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
 public class RestoreParticleHandler extends TickHandler {
-
+	public static TickHandler RESTORE_PARTICLE_SPAWNER = TickHandlerController.fromId(TickHandlerController.RESTORE_PARTICLE_SPAWNER_ID);
 	private final ParticleSpawner particles;
 
-	public RestoreParticleHandler() {
+	public RestoreParticleHandler(int id) {
+		super(id);
 		particles = new NetworkParticleSpawner();
 	}
-
-	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler();
 
 	@Override
 	public boolean tick(BendingContext ctx) {
@@ -34,7 +34,7 @@ public class RestoreParticleHandler extends TickHandler {
 		AbilityData aD = data.getAbilityData("restore");
 		World world = ctx.getWorld();
 		int duration = data.getTickHandlerDuration(this);
-		int restoreDuration = aD.getLevel()  > 0 ? 40 + 30 * aD.getLevel() : 40;
+		int restoreDuration = aD.getLevel() > 0 ? 40 + 30 * aD.getLevel() : 40;
 		//The particles take a while to disappear after the ability finishes- so you decrease the time the particles can spawn
 		Random rand = new Random();
 		double r = rand.nextDouble();
@@ -47,8 +47,7 @@ public class RestoreParticleHandler extends TickHandler {
 				if (!CLIENT_CONFIG.useCustomParticles) {
 					World.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, location.x() + entity.posX, location.y() + entity.getEntityBoundingBox().minY + (r * 2),
 							location.z() + entity.posZ, 1, 0, 0, 0, 10D);
-				}
-				else {
+				} else {
 					particles.spawnParticles(world, AvatarParticles.getParticleRestore(), 1, 2, location.plus(Vector.getEntityPos(entity)),
 							new Vector(0.2, 0.65, 0.2));
 				}

@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.lightning;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.gorecore.util.Vector;
@@ -28,10 +29,13 @@ import java.util.UUID;
  */
 public abstract class LightningChargeHandler extends TickHandler {
 
-	public static TickHandler LIGHTNING_CHARGE = new LightningCreateHandler();
-
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("dfb6235c-82b6-407e-beaf-a48045735a82");
+	public static TickHandler LIGHTNING_CHARGE = TickHandlerController.fromId(TickHandlerController.LIGHTNING_CHARGE_ID);
+
+	public LightningChargeHandler(int id) {
+		super(id);
+	}
 
 	/**
 	 * Gets AbilityData to be used for determining lightning strength. This is normally the
@@ -98,7 +102,7 @@ public abstract class LightningChargeHandler extends TickHandler {
 	}
 
 	private void fireLightning(World world, EntityLivingBase entity, float damage, double speed,
-							   float size, float[] turbulenceValues) {
+	                           float size, float[] turbulenceValues) {
 
 		for (float turbulence : turbulenceValues) {
 
@@ -108,7 +112,7 @@ public abstract class LightningChargeHandler extends TickHandler {
 			lightning.setDamage(damage);
 			lightning.setSizeMultiplier(size);
 			lightning.setMainArc(turbulence == turbulenceValues[0]);
-			
+
 			lightning.setPosition(Vector.getEyePos(entity));
 			lightning.setEndPos(Vector.getEyePos(entity));
 

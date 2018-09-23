@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.water;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -20,7 +21,11 @@ import static com.crowsofwar.avatar.common.bending.water.WaterChargeHandler.WATE
 
 public class WaterParticleSpawner extends TickHandler {
 
-	public static TickHandler WATER_PARTICLE_SPAWNER = new WaterParticleSpawner();
+	public static TickHandler WATER_PARTICLE_SPAWNER = TickHandlerController.fromId(TickHandlerController.WATER_PARTICLE_SPAWNER_ID);
+
+	public WaterParticleSpawner(int id) {
+		super(id);
+	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {
@@ -33,8 +38,7 @@ public class WaterParticleSpawner extends TickHandler {
 			maxDuration = 60;
 		}
 		int duration = data.getTickHandlerDuration(this);
-		double radius =  ((float) maxDuration - duration) / 10;
-
+		double radius = ((float) maxDuration - duration) / 10;
 
 
 		if (data.hasTickHandler(WATER_CHARGE) && !world.isRemote) {
@@ -45,8 +49,8 @@ public class WaterParticleSpawner extends TickHandler {
 				World.spawnParticle(EnumParticleTypes.WATER_SPLASH, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
 						lookpos.z() + entity.posZ, 1, 0, 0, 0, 0.05);
 			}
-			AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius , entity.posY + entity.getEyeHeight()/2 + radius/4, entity.posZ + radius,
-					entity.posX - radius, entity.posY + entity.getEyeHeight()/2 - radius/4, entity.posZ - radius);
+			AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + entity.getEyeHeight() / 2 + radius / 4, entity.posZ + radius,
+					entity.posX - radius, entity.posY + entity.getEyeHeight() / 2 - radius / 4, entity.posZ - radius);
 			List<EntityThrowable> projectiles = world.getEntitiesWithinAABB(EntityThrowable.class, box);
 			if (!projectiles.isEmpty()) {
 				for (Entity e : projectiles) {
@@ -66,7 +70,6 @@ public class WaterParticleSpawner extends TickHandler {
 			return false;
 
 
-		}
-		else return true;
+		} else return true;
 	}
 }

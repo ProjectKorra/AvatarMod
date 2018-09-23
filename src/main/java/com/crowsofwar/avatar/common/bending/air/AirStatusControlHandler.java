@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.air;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityCloudBall;
@@ -11,9 +12,12 @@ import net.minecraft.world.World;
 
 public class AirStatusControlHandler extends TickHandler {
 
+	public static TickHandler AIR_STATCTRL_HANDLER = TickHandlerController.fromId(TickHandlerController.AIR_STATCTRL_HANDLER_ID);
 	private int ticks = 0;
 
-	public static TickHandler AIR_STATCTRL_HANDLER = new AirStatusControlHandler();
+	public AirStatusControlHandler(int id) {
+		super(id);
+	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {

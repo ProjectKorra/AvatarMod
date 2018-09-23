@@ -17,18 +17,14 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -47,15 +43,14 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.toRadians;
-import static net.minecraft.init.Blocks.FLOWING_WATER;
 import static net.minecraft.init.Blocks.WATER;
 
 /**
  * @author CrowsOfWar
  */
 public class WaterSkateHandler extends TickHandler {
-	public static TickHandler WATER_SKATE = TickHandler.fromId(TickHandler.WATER_SKATE_ID);
-	
+	public static TickHandler WATER_SKATE = TickHandlerController.fromId(TickHandlerController.WATER_SKATE_ID);
+
 	private final ParticleSpawner particles;
 
 	public WaterSkateHandler(int id) {
@@ -177,8 +172,8 @@ public class WaterSkateHandler extends TickHandler {
 					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
 							SoundCategory.PLAYERS, 0.4f, 2f);
 				}
-					particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 50, 60,
-							Vector.getEntityPos(player).plus(0, .1, 0), new Vector(.2, 0.2, .2));
+				particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 50, 60,
+						Vector.getEntityPos(player).plus(0, .1, 0), new Vector(.2, 0.2, .2));
 
 
 				if (player.ticksExisted % 10 == 0) {
@@ -215,14 +210,11 @@ public class WaterSkateHandler extends TickHandler {
 				&& (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating)) || (player.world.isRainingAt(player.getPosition()) && onGround) || onWaterBendableBlock || onSnowLayer;
 
 
-
-
 		if (allowGroundSkating && onGround) {
 			return (!player.isSneaking() && surface != -1
 					&& surface - player.posY <= 3);
 		} else return !player.isSneaking() && (player.isInWater() || inWaterBlock) && surface != -1
 				&& surface - player.posY <= 3;
-
 
 
 	}

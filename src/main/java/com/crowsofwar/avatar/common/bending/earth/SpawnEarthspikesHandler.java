@@ -3,19 +3,17 @@ package com.crowsofwar.avatar.common.bending.earth;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityEarthspike;
 import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -33,7 +31,11 @@ public class SpawnEarthspikesHandler extends TickHandler {
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("78723aa8-8d42-11e8-9eb6-529269fb1459");
 
-	public static TickHandler SPAWN_EARTHSPIKES_HANDLER = new SpawnEarthspikesHandler();
+	public static TickHandler SPAWN_EARTHSPIKES_HANDLER = TickHandlerController.fromId(TickHandlerController.SPAWN_EARTHSPIKES_HANDLER_ID);
+
+	public SpawnEarthspikesHandler(int id) {
+		super(id);
+	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {
