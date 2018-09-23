@@ -11,7 +11,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
-import static com.crowsofwar.avatar.common.bending.air.AirStatusControlHandler.AIR_STATCTRL_HANDLER;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 
 public class StatCtrlThrowCloudBall extends StatusControl {

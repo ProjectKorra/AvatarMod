@@ -8,8 +8,6 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-
 public class SlipstreamPowerModifier extends BuffPowerModifier {
 
 	@Override

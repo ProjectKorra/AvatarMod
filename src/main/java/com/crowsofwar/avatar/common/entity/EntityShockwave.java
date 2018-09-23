@@ -179,7 +179,7 @@ public class EntityShockwave extends AvatarEntity {
 				}
 				else {
 					double x, y, z;
-
+					//TODO: Add normal shockwave as well as dome to give it a better feel without lagging out the computer
 					if (ticksExisted % 4 == 0) {
 						for (double theta = 0; theta <= 180; theta += 1) {
 							double dphi = particleController / Math.sin(Math.toRadians(theta));
