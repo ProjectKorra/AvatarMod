@@ -180,7 +180,7 @@ public class EntityShockwave extends AvatarEntity {
 				else {
 					double x, y, z;
 
-					if (ticksExisted % 5 == 0) {
+					if (ticksExisted % 4 == 0) {
 						for (double theta = 0; theta <= 180; theta += 1) {
 							double dphi = particleController / Math.sin(Math.toRadians(theta));
 
