@@ -125,11 +125,6 @@ public class EntityLightningSpear extends AvatarEntity {
 		}
 
 
-		if (!world.isRemote && this.isInvisible()) {
-			Thread.dumpStack();
-			this.setInvisible(false);
-		}
-
 		this.setSize(getSize() / 2, getSize() / 2);
 		//Even though doing size/8 would be better, the entity gets too small, and doesn't render far away enough. Super annoying.
 

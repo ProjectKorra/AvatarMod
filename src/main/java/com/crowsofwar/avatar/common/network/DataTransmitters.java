@@ -23,7 +23,6 @@ import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.*;
 import io.netty.buffer.ByteBuf;
-
 import net.minecraftforge.fml.common.FMLLog;
 
 import java.util.*;
@@ -147,8 +146,8 @@ public class DataTransmitters {
 
 		@Override
 		public void write(ByteBuf buf, List<TickHandler> list) {
-			FMLLog.info("TICK_HANDLERS = %s", list);
 			buf.writeInt(list.size());
+			FMLLog.info("TICK_HANDLERS = %s", list);
 			for (TickHandler handler : list) {
 				buf.writeInt(handler.id());
 			}
@@ -161,7 +160,7 @@ public class DataTransmitters {
 			for (int i = 0; i < size; i++) {
 				TickHandler list = TickHandlerController.fromId(buf.readInt());
 				if (list == null)
-					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid tick hander id");
+					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid tick handler id");
 				else
 					out.add(list);
 			}

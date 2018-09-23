@@ -38,10 +38,10 @@ public class AbilityFireJump extends Ability {
 			if (data.hasTickHandler(FIRE_PARTICLE_SPAWNER)) {
 				StatusControl sc = FIRE_JUMP;
 				Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
-				if (FIRE_JUMP.execute(
+				/*if (FIRE_JUMP.execute(
 						new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
 					data.removeStatusControl(FIRE_JUMP);
-				}
+				}**/
 			}
 
 		}
