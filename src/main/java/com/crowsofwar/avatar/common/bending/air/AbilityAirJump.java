@@ -18,16 +18,11 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.AIR_JUMP;
 import static com.crowsofwar.avatar.common.bending.air.AirParticleSpawner.AIR_PARTICLE_SPAWNER;
@@ -52,18 +47,8 @@ public class AbilityAirJump extends Ability {
 
 		BendingData data = ctx.getData();
 		Bender bender = ctx.getBender();
-		World world = ctx.getWorld();
-		EntityLivingBase entity = ctx.getBenderEntity();
 
 		if (!data.hasStatusControl(AIR_JUMP) && bender.consumeChi(STATS_CONFIG.chiAirJump)) {
-			int numberOfParticles = 20 + 5 * ctx.getLevel();
-			double particleSpeed = 0.1 + (0.1 * ctx.getLevel())/2;
-
-			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-				numberOfParticles = 40;
-				particleSpeed = 0.3;
-			}
-
 			data.addStatusControl(AIR_JUMP);
 			if (data.hasTickHandler(AIR_PARTICLE_SPAWNER)) {
 				Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
@@ -71,10 +56,6 @@ public class AbilityAirJump extends Ability {
 						new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
 					data.removeStatusControl(AIR_JUMP);
 				}
-			}
-			if (world instanceof WorldServer) {
-				WorldServer World = (WorldServer) world;
-				World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.posY, entity.posZ, numberOfParticles, 0, 0, 0, particleSpeed);
 			}
 
 		}

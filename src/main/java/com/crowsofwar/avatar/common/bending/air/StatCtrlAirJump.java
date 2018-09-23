@@ -33,10 +33,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
@@ -78,20 +80,35 @@ public class StatCtrlAirJump extends StatusControl {
 			double multiplier = 0.65;
 			double powerModifier = 10;
 			double powerDuration = 3;
+			int numberOfParticles = 20;
+			double particleSpeed = 0.2;
 			if (lvl >= 1) {
 				multiplier = 1;
 				powerModifier = 15;
 				powerDuration = 4;
+				numberOfParticles = 30;
+				particleSpeed = 0.3;
 			}
 			if (lvl >= 2) {
 				multiplier = 1.2;
 				powerModifier = 20;
 				powerDuration = 5;
+				numberOfParticles = 40;
+				particleSpeed = 0.35;
 			}
 			if (lvl >= 3) {
 				multiplier = 1.4;
 				powerModifier = 25;
 				powerDuration = 6;
+			}
+			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
+				numberOfParticles = 50;
+				particleSpeed = 0.5;
+			}
+
+			if (world instanceof WorldServer) {
+				WorldServer World = (WorldServer) world;
+				World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.getEntityBoundingBox().minY, entity.posZ, numberOfParticles, 0, 0, 0, particleSpeed);
 			}
 
 			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1),
