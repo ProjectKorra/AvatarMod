@@ -29,6 +29,8 @@ import net.minecraft.entity.EntityLivingBase;
  * @author CrowsOfWar
  */
 public class AirParticleSpawner extends TickHandler {
+	public static TickHandler AIR_PARTICLE_SPAWNER = TickHandler.fromId(TickHandler.AIR_PARTICLE_SPAWNER_ID);
+	
 	public AirParticleSpawner(int id) {
 		super(id);
 	}
