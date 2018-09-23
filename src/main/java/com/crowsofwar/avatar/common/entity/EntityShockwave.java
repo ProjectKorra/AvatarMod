@@ -235,4 +235,4 @@ public class EntityShockwave extends AvatarEntity {
 			}
 		}
 	}
-}
+
