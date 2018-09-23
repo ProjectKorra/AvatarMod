@@ -14,6 +14,10 @@ public class FireParticleSpawner extends TickHandler {
 	private static final ParticleSpawner particles = new NetworkParticleSpawner();
 	public static TickHandler FIRE_PARTICLE_SPAWNER = new FireParticleSpawner();
 
+	public FireParticleSpawner(int id) {
+		super(id);
+	}
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 		EntityLivingBase target = ctx.getBenderEntity();
