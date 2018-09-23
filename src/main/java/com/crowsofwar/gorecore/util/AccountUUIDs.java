@@ -27,6 +27,8 @@ import java.util.regex.Pattern;
 import java.util.UUID;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
+
 import com.crowsofwar.gorecore.GoreCore;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -49,6 +51,10 @@ public final class AccountUUIDs {
 	 */
 	private static final Pattern DASHLESS_PATTERN = Pattern.compile("^([A-Fa-f0-9]{8})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{12})$");
 	
+	/**
+	 * A cache of usernames not in Forge's UsernameCache
+	 */
+	private static final Map<String, UUID> localCache = Maps.newHashMap();
 	/**
 	 * <p>
 	 * Finds the player in the world whose account has the given UUID.
@@ -88,12 +94,14 @@ public final class AccountUUIDs {
 	 * @return The UUID result of the getting
 	 */
 	public static UUID getId(String username) {
+		Map<UUID, String> cache = UsernameCache.getMap();
+		if (!cache.containsValue(username)) return localCache.getOrDefault(username, requestId(username));
 		for (Map.Entry<UUID, String> entry : UsernameCache.getMap().entrySet()) {
 			if (entry.getValue().equalsIgnoreCase(username)) {
 				return entry.getKey();
 			}
-    	}
-		return requestId(username);
+    		}
+		return null;
 	}
 	
 	/**
@@ -130,7 +138,9 @@ public final class AccountUUIDs {
 			while ((length = inputStream.read(buffer)) != -1) {
 				result.write(buffer, 0, length);
 			}
-			return UUID.fromString(addDashes(JsonUtils.fromString(result.toString(), "id").getAsString()));
+			UUID uuid = UUID.fromString(addDashes(JsonUtils.fromString(result.toString(), "id").getAsString()));
+			localCache.put(username, uuid);
+			return uuid;
 		} catch (Exception e) {
 			GoreCore.LOGGER.error("Unexpected error getting UUID for " + username, e);
 			return null;
@@ -139,44 +149,54 @@ public final class AccountUUIDs {
 	
 	/**
 	 * Lookup the username based on the account ID. Returns null on errors.
-	 * Warning: is not cached
+	 * Warning: is cached
 	 */
 	public static String getUsername(UUID id) {
-		try {
-			String idString = id.toString().replaceAll("-", "");
-			String url = "https://api.mojang.com/user/profiles/" + idString + "/names";
-			
-			URL obj = new URL(url);
-			HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-			
-			connection.setRequestMethod("GET");
-			connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-			
-			int responseCode = connection.getResponseCode();
-			if (responseCode == 204) {
-				GoreCore.LOGGER.warn("Attempted to get a username for player " + id
-						+ ", but that account is not registered");
+		if (UsernameCache.containsUUID(id)) return UsernameCache.getLastKnownUsername(id);
+		else if (localCache.containsValue(id)) {
+			for (Map.Entry<String, UUID> entry : localCache.entrySet()) {
+			if (entry.getValue().equals(id)) {
+				return entry.getKey();
+			}
+    		}
+		} else {
+			try {
+				String idString = id.toString().replaceAll("-", "");
+				String url = "https://api.mojang.com/user/profiles/" + idString + "/names";
+				
+				URL obj = new URL(url);
+				HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+				
+				connection.setRequestMethod("GET");
+				connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+				
+				int responseCode = connection.getResponseCode();
+				if (responseCode == 204) {
+					GoreCore.LOGGER.warn("Attempted to get a username for player " + id
+							+ ", but that account is not registered");
+					return null;
+				}
+				
+				if (responseCode != 200) {
+					GoreCore.LOGGER.warn("Attempted to get a username for player " + id
+							+ ", but the response code was unexpected (" + responseCode + ")");
+					return null;
+				}
+				
+				ByteArrayOutputStream result = new ByteArrayOutputStream();
+				byte[] buffer = new byte[1024];
+				int length;
+				InputStream inputStream = connection.getInputStream();
+				while ((length = inputStream.read(buffer)) != -1) {
+					result.write(buffer, 0, length);
+				}
+				Stinrg username = JsonUtils.fromString(result.toString(), "name").getAsString();
+				localCache.put(username, id);
+				return username;
+			} catch (Exception e) {
+				GoreCore.LOGGER.error("Unexpected error getting username for " + id, e);
 				return null;
 			}
-			
-			if (responseCode != 200) {
-				GoreCore.LOGGER.warn("Attempted to get a username for player " + id
-						+ ", but the response code was unexpected (" + responseCode + ")");
-				return null;
-			}
-			
-			ByteArrayOutputStream result = new ByteArrayOutputStream();
-			byte[] buffer = new byte[1024];
-			int length;
-			InputStream inputStream = connection.getInputStream();
-			while ((length = inputStream.read(buffer)) != -1) {
-				result.write(buffer, 0, length);
-			}
-			
-			return JsonUtils.fromString(result.toString(), "name").getAsString();
-		} catch (Exception e) {
-			GoreCore.LOGGER.error("Unexpected error getting username for " + id, e);
-			return null;
 		}
 	}
 	
