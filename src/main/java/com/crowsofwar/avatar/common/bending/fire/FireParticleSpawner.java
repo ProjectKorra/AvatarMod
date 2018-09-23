@@ -11,8 +11,8 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 
 public class FireParticleSpawner extends TickHandler {
+	public static TickHandler FIRE_PARTICLE_SPAWNER = TickHandler.fromId(TickHandler.FIRE_PARTICLE_SPAWNER_ID);
 	private static final ParticleSpawner particles = new NetworkParticleSpawner();
-	public static TickHandler FIRE_PARTICLE_SPAWNER = new FireParticleSpawner();
 
 	public FireParticleSpawner(int id) {
 		super(id);
