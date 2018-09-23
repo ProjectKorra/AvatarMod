@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import net.minecraft.entity.EntityLivingBase;
@@ -62,6 +63,11 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 	@Override
 	protected double getSpeed() {
 		return 2.5;
+	}
+
+	@Override
+	protected Ability getAbility() {
+		return new AbilityFireJump();
 	}
 
 	@Override

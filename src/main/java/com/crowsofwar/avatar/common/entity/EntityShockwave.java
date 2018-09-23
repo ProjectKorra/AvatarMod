@@ -165,7 +165,7 @@ public class EntityShockwave extends AvatarEntity {
 					double x, y, z;
 
 				//	int particleController = abilityData.getLevel() >= 1 ? 20 - (4 * abilityData.getLevel()) : 20;
-					if (ticksExisted % 2 == 0) {
+					if (ticksExisted % 4 == 0) {
 						for (double theta = 0; theta <= 180; theta += 1) {
 							double dphi = particleController / Math.sin(Math.toRadians(theta));
 

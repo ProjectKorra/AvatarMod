@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.client.particles.AvatarParticle;
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import net.minecraft.entity.EntityLivingBase;
@@ -76,6 +77,11 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 	@Override
 	protected float getKnockbackHeight() {
 		return 0.15F;
+	}
+
+	@Override
+	protected Ability getAbility() {
+		return new AbilityFireJump();
 	}
 
 	@Override

@@ -35,12 +35,6 @@ public class SmashGroundHandler extends TickHandler {
 
 	public static TickHandler SMASH_GROUND = new SmashGroundHandler();
 
-	private Ability ability;
-
-	public void setAbility(Ability ability) {
-		this.ability = ability;
-	}
-
 	@Override
 	public boolean tick(BendingContext ctx) {
 
@@ -75,7 +69,7 @@ public class SmashGroundHandler extends TickHandler {
 		shockwave.setParticle(getParticle());
 		shockwave.setParticleAmount(getParticleAmount());
 		shockwave.setParticleSpeed(getParticleSpeed());
-		shockwave.setAbility(ability);
+		shockwave.setAbility(getAbility());
 		world.spawnEntity(shockwave);
 	}
 
@@ -100,7 +94,7 @@ public class SmashGroundHandler extends TickHandler {
 	}
 
 	protected Ability getAbility() {
-		return ability;
+		return new AbilityAirJump();
 	}
 
 	protected double getParticleSpeed() {
