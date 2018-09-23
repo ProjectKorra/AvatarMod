@@ -24,6 +24,8 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.*;
 import io.netty.buffer.ByteBuf;
 
+import net.minecraftforge.fml.common.FMLLog;
+
 import java.util.*;
 
 import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.readUUID;
@@ -145,6 +147,7 @@ public class DataTransmitters {
 
 		@Override
 		public void write(ByteBuf buf, List<TickHandler> list) {
+			FMLLog.info("TICK_HANDLERS = %s", list);
 			buf.writeInt(list.size());
 			for (TickHandler handler : list) {
 				buf.writeInt(handler.id());
