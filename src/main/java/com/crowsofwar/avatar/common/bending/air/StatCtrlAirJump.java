@@ -80,20 +80,20 @@ public class StatCtrlAirJump extends StatusControl {
 			double multiplier = 0.65;
 			double powerModifier = 10;
 			double powerDuration = 3;
-			int numberOfParticles = 20;
+			int numberOfParticles = 40;
 			double particleSpeed = 0.2;
 			if (lvl >= 1) {
 				multiplier = 1;
 				powerModifier = 15;
 				powerDuration = 4;
-				numberOfParticles = 30;
+				numberOfParticles = 50;
 				particleSpeed = 0.3;
 			}
 			if (lvl >= 2) {
 				multiplier = 1.2;
 				powerModifier = 20;
 				powerDuration = 5;
-				numberOfParticles = 40;
+				numberOfParticles = 60;
 				particleSpeed = 0.35;
 			}
 			if (lvl >= 3) {
@@ -102,13 +102,13 @@ public class StatCtrlAirJump extends StatusControl {
 				powerDuration = 6;
 			}
 			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
-				numberOfParticles = 50;
+				numberOfParticles = 70;
 				particleSpeed = 0.5;
 			}
 
 			if (world instanceof WorldServer) {
 				WorldServer World = (WorldServer) world;
-				World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.getEntityBoundingBox().minY, entity.posZ, numberOfParticles, 0, 0, 0, particleSpeed);
+				World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.getEntityBoundingBox().minY + 0.1, entity.posZ, numberOfParticles, 0, 0, 0, particleSpeed);
 			}
 
 			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1),
