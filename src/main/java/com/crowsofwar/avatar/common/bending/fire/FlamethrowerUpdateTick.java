@@ -38,12 +38,12 @@ import static java.lang.Math.toRadians;
  * @author CrowsOfWar
  */
 public class FlamethrowerUpdateTick extends TickHandler {
-
-	public static TickHandler FLAMETHROWER = new FlamethrowerUpdateTick();
-
+	public FireParticleSpawner(int id) {
+		super(id);
+	}
+	
 	@Override
 	public boolean tick(BendingContext ctx) {
-
 		BendingData data = ctx.getData();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
