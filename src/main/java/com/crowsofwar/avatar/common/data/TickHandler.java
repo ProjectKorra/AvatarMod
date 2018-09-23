@@ -28,7 +28,7 @@ import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.BisonSummonHandler;
 import io.netty.buffer.ByteBuf;
-
+import net.minecraftforge.fml.common.FMLLog;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,6 +80,7 @@ public abstract class TickHandler {
 	}
 
 	public static TickHandler fromId(int id) {
+		FMLLog.info("allHandlers = %s", allHandlers);
 		return allHandlers.get(id);
 	}
 
