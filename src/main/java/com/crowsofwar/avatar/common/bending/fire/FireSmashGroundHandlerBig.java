@@ -51,7 +51,7 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 
 	@Override
 	protected EnumParticleTypes getParticle() {
-		return AvatarParticles.getParticleFlames();
+		return EnumParticleTypes.FLAME;
 	}
 
 	@Override
@@ -87,6 +87,11 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 	@Override
 	protected boolean isFire() {
 		return true;
+	}
+
+	@Override
+	protected int getPerformanceAmount() {
+		return 15;
 	}
 
 	@Override

@@ -8,6 +8,10 @@ import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -176,8 +180,7 @@ public class EntityShockwave extends AvatarEntity {
 				else {
 					double x, y, z;
 
-				//	int particleController = abilityData.getLevel() >= 1 ? 20 - (4 * abilityData.getLevel()) : 20;
-					if (ticksExisted % (4/speed) == 0) {
+					if (ticksExisted % 5 == 0) {
 						for (double theta = 0; theta <= 180; theta += 1) {
 							double dphi = particleController / Math.sin(Math.toRadians(theta));
 
@@ -207,19 +210,24 @@ public class EntityShockwave extends AvatarEntity {
 			targets.remove(getOwner());
 
 			for (Entity target : targets) {
-				if (target != getOwner() && this.canCollideWith(target) && target != this) {
+				if (target != getOwner() && this.canCollideWith(target) && target != this && !(target instanceof EntityItem)) {
 
 						if (this.canDamageEntity(target)) {
 							target.attackEntityFrom(
 									AvatarDamageSource.causeAirDamage(target, this.getOwner()),
 									damage);
 							BattlePerformanceScore.addScore(getOwner(), performanceAmount);
+							target.setFire(isFire ? fireTime : 0);
 						}
 						if (getAbility() != null && !world.isRemote && getAbility() instanceof AbilityAirBurst) {
 							AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
 							aD.addXp(SKILLS_CONFIG.airBurstHit-aD.getLevel());
+							if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+								((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
+								((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
+								((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
+							}
 						}
-						target.setFire(isFire ? fireTime : 0);
 						target.motionX += Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted/20F * speed);
 						target.motionY += isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted/20F * speed) : knockbackHeight; // Throws target into the air.
 						target.motionZ += Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted/20F * speed);

@@ -72,6 +72,7 @@ public class SmashGroundHandler extends TickHandler {
 		shockwave.setFireTime(fireTime());
 		shockwave.setFire(isFire());
 		shockwave.setAbility(getAbility());
+		shockwave.setPerformanceAmount(getPerformanceAmount());
 		world.spawnEntity(shockwave);
 	}
 
@@ -117,6 +118,10 @@ public class SmashGroundHandler extends TickHandler {
 
 	protected SoundCategory getSoundCategory() {
 		return SoundCategory.BLOCKS;
+	}
+
+	protected int getPerformanceAmount() {
+		return 10;
 	}
 
 	protected float getDamage() {

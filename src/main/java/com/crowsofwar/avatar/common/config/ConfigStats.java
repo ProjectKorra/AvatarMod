@@ -319,6 +319,10 @@ public class ConfigStats {
 		public float durationToFire = 40;
 		//How long it takes to shoot the air burst, in ticks
 
+		@Load
+		public int performanceAmount = 15;
+		//How much performance is added to the player's performance score upon a hit
+
 	}
 
 	public static class FireballSettings {

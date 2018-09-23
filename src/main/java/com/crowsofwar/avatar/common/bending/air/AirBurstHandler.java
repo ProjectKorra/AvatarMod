@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -18,9 +16,7 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -34,7 +30,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.List;
 import java.util.UUID;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AirBurstHandler extends TickHandler {
@@ -68,8 +63,8 @@ public class AirBurstHandler extends TickHandler {
 			float durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire - (powerRating * 10);
 			//Default 40
 			double upwardKnockback = STATS_CONFIG.airBurstSettings.push / 7;
-			float knockbackDivider = 1.2F;
 			double suction = 0.05;
+			int performanceAmount = STATS_CONFIG.AirBurstSettings.performanceAmount;
 
 			if (abilityData.getLevel() == 1) {
 				damage = (STATS_CONFIG.airBurstSettings.damage * (3F / 2)) + powerRating;
@@ -80,7 +75,7 @@ public class AirBurstHandler extends TickHandler {
 				durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire * 0.75F;
 				//30
 				upwardKnockback = STATS_CONFIG.airBurstSettings.push / 5;
-				knockbackDivider = 1.5F;
+				performanceAmount += 3;
 			}
 
 			if (abilityData.getLevel() >= 2) {
@@ -92,7 +87,7 @@ public class AirBurstHandler extends TickHandler {
 				durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire * 0.5F;
 				//20
 				upwardKnockback = STATS_CONFIG.airBurstSettings.push / 3;
-				knockbackDivider = 2;
+				performanceAmount += 5;
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
@@ -111,6 +106,7 @@ public class AirBurstHandler extends TickHandler {
 				upwardKnockback = STATS_CONFIG.airBurstSettings.push / 2.5F;
 				durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire * 0.75F;
 				//30
+				performanceAmount += 8;
 			}
 
 			applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
@@ -153,6 +149,7 @@ public class AirBurstHandler extends TickHandler {
 					shockwave.setKnockbackHeight(upwardKnockback);
 					shockwave.setDamage((float) damage);
 					shockwave.setRange(radius);
+					shockwave.setPerformanceAmount(performanceAmount);
 					shockwave.setParticleController(particleController);
 					shockwave.setParticleAmount(2);
 					shockwave.setSphere(true);
@@ -160,28 +157,6 @@ public class AirBurstHandler extends TickHandler {
 					shockwave.setSpeed(knockBack/4);
 					world.spawnEntity(shockwave);
 
-
-				/*AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius, entity.posY - radius, entity.posZ - radius);
-				List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box, entity1 -> entity1 != entity);
-				float xp = abilityData.getLevel() > 0 ? SKILLS_CONFIG.airBurstHit - abilityData.getLevel() : SKILLS_CONFIG.airBurstHit;
-				if (!collided.isEmpty()) {
-					for (Entity e : collided) {
-						if (e.canBePushed() && e.canBeCollidedWith() && e != entity) {
-							if (canDamageEntity(e)) {
-								e.attackEntityFrom(AvatarDamageSource.causeAirDamage(e, entity), (float) damage);
-								if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST) && e instanceof EntityLivingBase) {
-									((EntityLivingBase) e).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
-									((EntityLivingBase) e).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
-									((EntityLivingBase) e).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
-								}
-							}
-							abilityData.addXp(xp);
-							BattlePerformanceScore.addLargeScore(entity);
-							applyKnockback(e, entity, knockBack, radius, upwardKnockback, knockbackDivider);
-
-						}
-					}
-				}**/
 
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
@@ -206,42 +181,6 @@ public class AirBurstHandler extends TickHandler {
 
 	}
 
-	private void applyKnockback(Entity collided, Entity attacker, double knockBack, float radius, double upwardKnockback, float knockbackDivider) {
-		knockBack *= STATS_CONFIG.airBurstSettings.push;
-
-		//Divide the result of the position difference to make entities fly
-		//further the closer they are to the player.
-		Vector velocity = Vector.getEntityPos(collided).minus(Vector.getEntityPos(attacker));
-		double distance = Vector.getEntityPos(collided).dist(Vector.getEntityPos(attacker));
-		double direction = (radius - distance) * (knockBack / knockbackDivider) / radius;
-		velocity = velocity.times(direction).withY(upwardKnockback);
-
-
-		double x = (velocity.x());
-		double y = (velocity.y());
-		double z = (velocity.z());
-
-		if (radius - distance == 0) {
-			velocity = Vector.getEntityPos(collided).minus(Vector.getEntityPos(attacker));
-			velocity = velocity.times(-1).withY(upwardKnockback);
-			x = 0.01/velocity.x();
-			z = 0.01/velocity.z();
-		}
-
-		if (!collided.world.isRemote) {
-			collided.addVelocity(x, y, z);
-
-			if (collided instanceof AvatarEntity) {
-				if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
-					AvatarEntity avent = (AvatarEntity) collided;
-					avent.addVelocity(x, y, z);
-				}
-				collided.isAirBorne = true;
-				AvatarUtils.afterVelocityAdded(collided);
-			}
-		}
-
-	}
 
 	private void pullEntities(Entity collided, Entity attacker, double suction) {
 		Vector velocity = Vector.getEntityPos(collided).minus(Vector.getEntityPos(attacker));

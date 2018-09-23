@@ -17,16 +17,12 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.world.World;
 
 /**
  * @author CrowsOfWar
@@ -37,12 +33,17 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 
 	@Override
 	protected EnumParticleTypes getParticle() {
-		return AvatarParticles.getParticleFlames();
+		return EnumParticleTypes.FLAME;
 	}
 
 	@Override
 	protected int getParticleAmount() {
 		return 4;
+	}
+
+	@Override
+	protected int getPerformanceAmount() {
+		return 7;
 	}
 
 	@Override
