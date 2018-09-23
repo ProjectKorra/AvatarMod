@@ -23,6 +23,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLLog;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -587,6 +588,7 @@ public class BendingData {
 
 		chi().readFromNBT(readFrom);
 
+		FMLLog.info("Id = %s", nbt.getInteger("Id"));
 		AvatarUtils.readList(tickHandlers, //
 				nbt -> TickHandler.fromId(nbt.getInteger("Id")), //
 				readFrom, "TickHandlers");
