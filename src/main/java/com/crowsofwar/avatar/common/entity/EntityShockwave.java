@@ -18,6 +18,8 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.bending.BattlePerformanceScore.SCORE_MOD_MEDIUM;
+import static com.crowsofwar.avatar.common.bending.BattlePerformanceScore.SCORE_MOD_SMALL;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 public class EntityShockwave extends AvatarEntity {
@@ -211,19 +213,20 @@ public class EntityShockwave extends AvatarEntity {
 				if (target != getOwner() && this.canCollideWith(target) && target != this && !(target instanceof EntityItem)) {
 
 						if (this.canDamageEntity(target)) {
-							target.attackEntityFrom(
-									AvatarDamageSource.causeAirDamage(target, this.getOwner()),
-									damage);
-							BattlePerformanceScore.addScore(getOwner(), performanceAmount);
-							target.setFire(isFire ? fireTime : 0);
-						}
-						if (getAbility() != null && !world.isRemote && getAbility() instanceof AbilityAirBurst) {
-							AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
-							aD.addXp(SKILLS_CONFIG.airBurstHit-aD.getLevel());
-							if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-								((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
-								((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
-								((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
+							if (target.attackEntityFrom(AvatarDamageSource.causeAirDamage(target, getOwner()), damage)) {
+								int amount = performanceAmount > SCORE_MOD_SMALL ? performanceAmount : (int) SCORE_MOD_SMALL;
+								amount = amount > SCORE_MOD_MEDIUM ? (int) SCORE_MOD_MEDIUM : performanceAmount;
+								BattlePerformanceScore.addScore(getOwner(), amount);
+								target.setFire(isFire ? fireTime : 0);
+							}
+							if (getAbility() != null && !world.isRemote && getAbility() instanceof AbilityAirBurst) {
+								AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
+								aD.addXp(SKILLS_CONFIG.airBurstHit - aD.getLevel());
+								if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+									((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
+									((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
+									((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
+								}
 							}
 						}
 						target.motionX += Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted/20F * speed);
