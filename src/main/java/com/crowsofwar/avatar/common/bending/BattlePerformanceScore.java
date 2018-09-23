@@ -37,6 +37,13 @@ public class BattlePerformanceScore {
 		this.score = score;
 	}
 
+	public static void addScore(EntityLivingBase entity, int amount) {
+		BendingData bendingData = BendingData.get(entity);
+		if (bendingData != null) {
+			bendingData.getPerformance().modifyScore(amount);
+		}
+	}
+
 	public static void addSmallScore(EntityLivingBase entity) {
 		BendingData bendingData = BendingData.get(entity);
 		if (bendingData != null) {

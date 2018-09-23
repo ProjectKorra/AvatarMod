@@ -64,11 +64,13 @@ public class SmashGroundHandler extends TickHandler {
 		shockwave.setOwner(entity);
 		shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
 		shockwave.setKnockbackHeight(getKnockbackHeight());
-		shockwave.setSpeed(getSpeed()/5);
+		shockwave.setSpeed(getSpeed() / 5);
 		shockwave.setRange(getRange());
 		shockwave.setParticle(getParticle());
 		shockwave.setParticleAmount(getParticleAmount());
 		shockwave.setParticleSpeed(getParticleSpeed());
+		shockwave.setFireTime(fireTime());
+		shockwave.setFire(isFire());
 		shockwave.setAbility(getAbility());
 		world.spawnEntity(shockwave);
 	}
@@ -109,7 +111,6 @@ public class SmashGroundHandler extends TickHandler {
 		return 0.1F;
 	}
 
-
 	protected SoundEvent getSound() {
 		return SoundEvents.BLOCK_FIRE_EXTINGUISH;
 	}
@@ -117,7 +118,6 @@ public class SmashGroundHandler extends TickHandler {
 	protected SoundCategory getSoundCategory() {
 		return SoundCategory.BLOCKS;
 	}
-
 
 	protected float getDamage() {
 		return 2.5F;

@@ -1,6 +1,9 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -10,6 +13,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 public class EntityShockwave extends AvatarEntity {
 
@@ -21,6 +26,8 @@ public class EntityShockwave extends AvatarEntity {
 	//Speed of the particles
 
 
+	private int performanceAmount;
+	//The amount of battleperformance added per hit
 	private double range;
 	//The range of the shockwave/how far it'll go before dissipating
 	public double speed;
@@ -76,6 +83,10 @@ public class EntityShockwave extends AvatarEntity {
 		this.fireTime = time;
 	}
 
+	public void setPerformanceAmount(int amount) {
+		this.performanceAmount = amount;
+	}
+
 	public void setSphere(boolean sphere) {
 		this.isSphere = sphere;
 	}
@@ -128,6 +139,7 @@ public class EntityShockwave extends AvatarEntity {
 		this.particleSpeed = 0;
 		this.particleAmount = 10;
 		this.range = 4;
+		this.performanceAmount = 10;
 		this.knockbackHeight = 0.2;
 		this.speed = 0.8;
 		this.isFire = false;
@@ -165,7 +177,7 @@ public class EntityShockwave extends AvatarEntity {
 					double x, y, z;
 
 				//	int particleController = abilityData.getLevel() >= 1 ? 20 - (4 * abilityData.getLevel()) : 20;
-					if (ticksExisted % 4 == 0) {
+					if (ticksExisted % (4/speed) == 0) {
 						for (double theta = 0; theta <= 180; theta += 1) {
 							double dphi = particleController / Math.sin(Math.toRadians(theta));
 
@@ -201,6 +213,11 @@ public class EntityShockwave extends AvatarEntity {
 							target.attackEntityFrom(
 									AvatarDamageSource.causeAirDamage(target, this.getOwner()),
 									damage);
+							BattlePerformanceScore.addScore(getOwner(), performanceAmount);
+						}
+						if (getAbility() != null && !world.isRemote && getAbility() instanceof AbilityAirBurst) {
+							AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
+							aD.addXp(SKILLS_CONFIG.airBurstHit-aD.getLevel());
 						}
 						target.setFire(isFire ? fireTime : 0);
 						target.motionX += Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted/20F * speed);

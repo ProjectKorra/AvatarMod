@@ -143,26 +143,8 @@ public class AirBurstHandler extends TickHandler {
 			}
 
 			if (duration >= durationToFire) {
-				/*if (world instanceof WorldServer) {
-					WorldServer World = (WorldServer) world;
-					double x, y, z;
 
-					for (int i = 0; i < radius; i++) {
-						for (int j = 0; j < 90; j++) {
-							Vector lookPos;
-							if (i >= 1) {
-								lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-										j * 4), 0).times(i);
-							} else {
-								lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-										j * 4), 0);
-							}
-							World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
-									lookPos.z() + entity.posZ, 1, 0, 0, 0, (double) radius / 200);
-						}
-					}**/
-
-					int particleController = abilityData.getLevel() >= 1 ? 40 - (4 * abilityData.getLevel()) : 40;
+					int particleController = abilityData.getLevel() >= 1 ? 30 - (4 * abilityData.getLevel()) : 30;
 					EntityShockwave shockwave = new EntityShockwave(world);
 					shockwave.setOwner(entity);
 					shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
@@ -178,27 +160,8 @@ public class AirBurstHandler extends TickHandler {
 					shockwave.setSpeed(knockBack/4);
 					world.spawnEntity(shockwave);
 
-					/*for (double theta = 0; theta <= 180; theta += 1) {
-						double dphi = particleController / Math.sin(Math.toRadians(theta));
 
-						for (double phi = 0; phi < 360; phi += dphi) {
-							double rphi = Math.toRadians(phi);
-							double rtheta = Math.toRadians(theta);
-
-							x = radius * Math.cos(rphi) * Math.sin(rtheta);
-							y = radius * Math.sin(rphi) * Math.sin(rtheta);
-							z = radius * Math.cos(rtheta);
-							//Decrease radius so you can use particle speed
-
-							World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x + entity.posX, y + entity.getEntityBoundingBox().minY,
-									z + entity.posZ, 1, 0, 0, 0, (double) radius / 100);
-
-						}
-					}//Creates a sphere. Courtesy of Project Korra's Air Burst!
-
-				//}
-
-				AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius, entity.posY - radius, entity.posZ - radius);
+				/*AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius, entity.posY - radius, entity.posZ - radius);
 				List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box, entity1 -> entity1 != entity);
 				float xp = abilityData.getLevel() > 0 ? SKILLS_CONFIG.airBurstHit - abilityData.getLevel() : SKILLS_CONFIG.airBurstHit;
 				if (!collided.isEmpty()) {

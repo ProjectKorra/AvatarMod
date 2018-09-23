@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.bending.water;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import net.minecraft.entity.EntityLivingBase;
@@ -45,5 +46,10 @@ public class WaterSmashHandler extends SmashGroundHandler {
 	@Override
 	protected double getSpeed() {
 		return 6;
+	}
+
+	@Override
+	protected Ability getAbility() {
+		return new AbilityWaterSkate();
 	}
 }
