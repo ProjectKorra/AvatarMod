@@ -54,14 +54,14 @@ import static net.minecraft.init.Blocks.WATER;
  * @author CrowsOfWar
  */
 public class WaterSkateHandler extends TickHandler {
-
+	public static TickHandler WATER_SKATE = TickHandler.fromId(TickHandler.WATER_SKATE_ID);
+	
 	private final ParticleSpawner particles;
 
-	public WaterSkateHandler() {
+	public WaterSkateHandler(int id) {
+		super(id)
 		particles = new NetworkParticleSpawner();
 	}
-
-	public static TickHandler WATER_SKATE = new WaterSkateHandler();
 
 	@Override
 	public boolean tick(BendingContext ctx) {
