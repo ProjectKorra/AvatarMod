@@ -32,8 +32,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
@@ -66,9 +64,9 @@ public class AbilityPickUpBlock extends Ability {
 	public void execute(AbilityContext ctx) {
 
 		BendingData data = ctx.getData();
-		EntityLivingBase entity = ctx.getBenderEntity();
-		Bender bender = ctx.getBender();
-		World world = ctx.getWorld();
+		//EntityLivingBase entity = ctx.getBenderEntity();
+		//Bender bender = ctx.getBender();
+		//World world = ctx.getWorld();
 
 		EntityFloatingBlock currentBlock = AvatarEntity.lookupEntity(ctx.getWorld(),
 				EntityFloatingBlock.class,
