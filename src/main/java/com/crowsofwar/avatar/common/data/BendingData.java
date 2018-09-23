@@ -591,7 +591,7 @@ public class BendingData {
 		AvatarUtils.readList(tickHandlers, //
 				nbt -> {		
 					FMLLog.info("Id = %s", nbt.getInteger("Id"));
-					TickHandler.fromId(nbt.getInteger("Id"));
+					return TickHandler.fromId(nbt.getInteger("Id"));
 				}, readFrom, "TickHandlers");
 
 		for (TickHandler tickHandler : tickHandlers) {
