@@ -163,43 +163,41 @@ public class EntityShockwave extends AvatarEntity {
 
 		if (!world.isRemote) {
 
-				if (ticksExisted * speed > range) {
-					this.setDead();
+			if (ticksExisted * speed > range) {
+				this.setDead();
+			}
+
+
+			for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (getRange() * 10 * 1.5)) {
+				double x = posX + (ticksExisted * getSpeed()) * Math.sin(angle);
+				double y = posY + 0.5;
+				double z = posZ + (ticksExisted * getSpeed()) * Math.cos(angle);
+				particles.spawnParticles(world, getParticle(), getParticleAmount() / 2, getParticleAmount(), x, y, z, getParticleSpeed(),
+						getParticleSpeed(), getParticleSpeed());
+			}
+
+			if (isSphere) {
+				double x, y, z;
+				if (ticksExisted % 3 == 0) {
+					for (double theta = 0; theta <= 180; theta += 1) {
+						double dphi = particleController / Math.sin(Math.toRadians(theta));
+
+						for (double phi = 0; phi < 360; phi += dphi) {
+							double rphi = Math.toRadians(phi);
+							double rtheta = Math.toRadians(theta);
+
+							x = ticksExisted * getSpeed() * Math.cos(rphi) * Math.sin(rtheta);
+							y = ticksExisted * getSpeed() * Math.sin(rphi) * Math.sin(rtheta);
+							z = ticksExisted * getSpeed() * Math.cos(rtheta);
+
+							particles.spawnParticles(world, EnumParticleTypes.EXPLOSION_NORMAL, getParticleAmount() / 2, getParticleAmount(), x + posX, y + posY,
+									z + posZ, getParticleSpeed(), getParticleSpeed(), getParticleSpeed());
+
+						}
+					}//Creates a sphere. Courtesy of Project Korra's Air Burst!
 				}
-
-
-				if (!isSphere) {
-					for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (getRange() * 10 * 1.5)) {
-						double x = posX + (ticksExisted * getSpeed()) * Math.sin(angle);
-						double y = posY + 0.5;
-						double z = posZ + (ticksExisted * getSpeed()) * Math.cos(angle);
-						particles.spawnParticles(world, getParticle(), getParticleAmount() / 2, getParticleAmount(), x, y, z, getParticleSpeed(),
-								getParticleSpeed(), getParticleSpeed());
-					}
-				}
-				else {
-					double x, y, z;
-					//TODO: Add normal shockwave as well as dome to give it a better feel without lagging out the computer
-					if (ticksExisted % 4 == 0) {
-						for (double theta = 0; theta <= 180; theta += 1) {
-							double dphi = particleController / Math.sin(Math.toRadians(theta));
-
-							for (double phi = 0; phi < 360; phi += dphi) {
-								double rphi = Math.toRadians(phi);
-								double rtheta = Math.toRadians(theta);
-
-								x = ticksExisted * getSpeed() * Math.cos(rphi) * Math.sin(rtheta);
-								y = ticksExisted * getSpeed() * Math.sin(rphi) * Math.sin(rtheta);
-								z = ticksExisted * getSpeed() * Math.cos(rtheta);
-
-								particles.spawnParticles(world, EnumParticleTypes.EXPLOSION_NORMAL, getParticleAmount() / 2, getParticleAmount(), x + posX, y + posY,
-										z + posZ, getParticleSpeed(), getParticleSpeed(), getParticleSpeed());
-
-							}
-						}//Creates a sphere. Courtesy of Project Korra's Air Burst!
-					}
-				}
-
+			}
+		}
 
 			AxisAlignedBB box = new AxisAlignedBB(posX + (ticksExisted * speed), posY + 1.5, posZ + (ticksExisted * speed),
 					posX - (ticksExisted * speed), posY - 1.5, posZ - (ticksExisted * speed));
