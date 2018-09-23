@@ -155,10 +155,10 @@ public final class AccountUUIDs {
 		if (UsernameCache.containsUUID(id)) return UsernameCache.getLastKnownUsername(id);
 		else if (localCache.containsValue(id)) {
 			for (Map.Entry<String, UUID> entry : localCache.entrySet()) {
-			if (entry.getValue().equals(id)) {
-				return entry.getKey();
-			}
-    		}
+				if (entry.getValue().equals(id)) {
+					return entry.getKey();
+				}
+    			}
 		} else {
 			try {
 				String idString = id.toString().replaceAll("-", "");
@@ -190,7 +190,7 @@ public final class AccountUUIDs {
 				while ((length = inputStream.read(buffer)) != -1) {
 					result.write(buffer, 0, length);
 				}
-				Stinrg username = JsonUtils.fromString(result.toString(), "name").getAsString();
+				String username = JsonUtils.fromString(result.toString(), "name").getAsString();
 				localCache.put(username, id);
 				return username;
 			} catch (Exception e) {
