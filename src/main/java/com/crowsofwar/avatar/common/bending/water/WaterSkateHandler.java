@@ -54,7 +54,7 @@ public class WaterSkateHandler extends TickHandler {
 	private final ParticleSpawner particles;
 
 	public WaterSkateHandler(int id) {
-		super(id)
+		super(id);
 		particles = new NetworkParticleSpawner();
 	}
 
