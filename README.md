@@ -1,7 +1,7 @@
 Avatar Mod 2
 ============
 
-This repository hosts the source code for the [Avatar Mod 2 project](http://av2.io), currently
+This repository hosts the source code for the [Avatar Mod 2 project](https://avatar.amuzil.com/), currently
 developed by members of the ProjectKorra team. This project is a modification for Minecraft which
 adds content from [*Avatar: The Last Airbender*](https://en.wikipedia.org/wiki/Avatar:_The_Last_Airbender).
 
