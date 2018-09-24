@@ -34,9 +34,11 @@ import net.minecraft.entity.ai.EntityAIZombieAttack;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -61,26 +63,28 @@ public class EntityAirbender extends EntityHumanBender {
 			.register(new ResourceLocation("avatarmod", "airbender"));
 
 	private int scrollsLeft;
-	private int level;
+	private int level = 0;
 
 	/**
 	 * @param world
 	 */
 	public EntityAirbender(World world) {
 		super(world);
-		Random rand = new Random();
-		int level = rand.nextInt(3 + 1 - 1) + 1;
-		getData().addBendingId(Airbending.ID);
-		if (level < 2) {
-			this.level = 1;
-		}
-		if (level == 2) {
-			this.level = 2;
-		}
-		if (level > 2) {
-			this.level = 3;
+	/*	if (!world.isRemote && level == 0) {
+			Random rand = new Random();
+			int level = rand.nextInt(3 + 1 - 1) + 1;
+			getData().addBendingId(Airbending.ID);
+			if (level < 2) {
+				this.level = 1;
+			}
+			if (level == 2) {
+				this.level = 2;
+			}
+			if (level > 2) {
+				this.level = 3;
 
-		}
+			}
+		}**/
 
 	}
 
@@ -155,9 +159,20 @@ public class EntityAirbender extends EntityHumanBender {
 			getData().addBendingId(Airbending.ID);
 		}
 		if (this.ticksExisted == 2 && !world.isRemote) {
-
 			if (level == 0) {
-				level = 1;
+				Random rand = new Random();
+				int level = rand.nextInt(3 + 1 - 1) + 1;
+				getData().addBendingId(Airbending.ID);
+				if (level < 2) {
+					this.level = 1;
+				}
+				if (level == 2) {
+					this.level = 2;
+				}
+				if (level > 2) {
+					this.level = 3;
+
+				}
 			}
 
 			if (level == 1) {
@@ -170,7 +185,7 @@ public class EntityAirbender extends EntityHumanBender {
 				getData().getAbilityData("air_gust").setLevel(1);
 				getData().getAbilityData("airblade").setLevel(0);
 			}
-			if (level == 3) {
+			if (level >= 3) {
 				getData().getAbilityData("air_bubble").setLevel(0);
 				getData().getAbilityData("air_gust").setLevel(2);
 				getData().getAbilityData("airblade").setLevel(1);
@@ -182,6 +197,7 @@ public class EntityAirbender extends EntityHumanBender {
 			if (scrollsLeft == 0) {
 				scrollsLeft = 1;
 			}
+			this.getDisplayName();
 		}
 
 	}
@@ -195,4 +211,20 @@ public class EntityAirbender extends EntityHumanBender {
 		super.setDead();
 	}
 
+	@Override
+	public ITextComponent getDisplayName() {
+		TextComponentString textcomponentstring = new TextComponentString("Level "+ level + " " + ScorePlayerTeam.formatPlayerName(this.getTeam(), this.getName()));
+		textcomponentstring.getStyle().setHoverEvent(this.getHoverEvent());
+		textcomponentstring.getStyle().setInsertion(this.getCachedUniqueIdString());
+		return textcomponentstring;
+	}
+
+
+	@Override
+	public boolean processInteract(EntityPlayer player, EnumHand hand) {
+		if (!world.isRemote) {
+			System.out.println(level);
+		}
+		return super.processInteract(player, hand);
+	}
 }
