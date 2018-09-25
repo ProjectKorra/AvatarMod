@@ -173,13 +173,13 @@ public class StatCtrlInfernoPunch extends StatusControl {
 									wave.setSphere(true);
 									wave.setParticle(EnumParticleTypes.FLAME);
 									wave.setParticleSpeed(0.05);
-									wave.setParticleAmount(4);
-									wave.setParticleController(10);
+									wave.setParticleAmount(2);
+									wave.setParticleController(15);
 									//Used for spheres
 									wave.setSpeed(0.7);
 									wave.setParticleAmount(2);
 									wave.setAbility(new AbilityInfernoPunch());
-									wave.setDamage(4);
+									wave.setDamage(3);
 									wave.setOwner((EntityLivingBase) entity);
 									wave.setPosition(target.posX, target.getEntityBoundingBox().minY, target.posZ);
 									wave.setRange(4);
