@@ -211,6 +211,9 @@ public class EntityAirbender extends EntityHumanBender {
 		super.setDead();
 	}
 
+
+
+
 	@Override
 	public ITextComponent getDisplayName() {
 		TextComponentString textcomponentstring = new TextComponentString("Level "+ level + " " + ScorePlayerTeam.formatPlayerName(this.getTeam(), this.getName()));

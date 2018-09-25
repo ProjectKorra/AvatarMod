@@ -80,6 +80,7 @@ public class RenderEarthspikes extends RenderModel<EntityEarthspike> {
 		GlStateManager.rotate(180, 1, 0, 0);
 		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
 		GlStateManager.translate(0, -1.5, 0);
+		//GlStateManager.translate(0, -1.5 * entity.getSize(), 0);
 
 		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
 		GlStateManager.popMatrix();

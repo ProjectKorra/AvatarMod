@@ -84,7 +84,7 @@ public class AbilityEarthspikes extends Ability {
 								i * 45), 0).withY(0);
 						EntityEarthspike earthspike = new EntityEarthspike(world);
 						earthspike.setPosition(direction1.x() + entity.posX, entity.posY, direction1.z() + entity.posZ);
-						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
+						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 2.5);
 						earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
 						earthspike.setOwner(entity);
 						earthspike.setAbility(this);

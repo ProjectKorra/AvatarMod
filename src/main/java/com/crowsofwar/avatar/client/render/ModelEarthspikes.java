@@ -1,7 +1,9 @@
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.common.entity.EntityEarthspike;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 
 /**
@@ -141,6 +143,9 @@ public class ModelEarthspikes extends ModelBase {
 
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+		//EntityEarthspike spike = (EntityEarthspike) entity;
+		//GlStateManager.pushMatrix();
+		//GlStateManager.scale(spike.getSize(), spike.getSize(), spike.getSize());
 		this.shape25.render(f5);
 		this.shape10.render(f5);
 		this.shape7.render(f5);
@@ -150,6 +155,7 @@ public class ModelEarthspikes extends ModelBase {
 		this.shape22.render(f5);
 		this.shape19.render(f5);
 		this.shape1.render(f5);
+		//GlStateManager.popMatrix();
 	}
 
 	/**
