@@ -3,7 +3,9 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -17,13 +19,15 @@ public class FirePassiveHandler {
 	public static void fireResistance(LivingEvent.LivingUpdateEvent event) {
 		if (event.getEntity() instanceof EntityLivingBase) {
 			EntityLivingBase entity = event.getEntityLiving();
-			Bender b = Bender.get(entity);
-			if (b != null) {
-				BendingData data = b.getData();
-				if (data != null){
-					if(data.hasBendingId(Firebending.ID)) {
-						if (entity.ticksExisted % 400 == 0) {
-							entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 400));
+			if (entity instanceof EntityBender || entity instanceof EntityPlayer) {
+				Bender b = Bender.get(entity);
+				if (b != null) {
+					BendingData data = b.getData();
+					if (data != null) {
+						if (data.hasBendingId(Firebending.ID)) {
+							if (entity.ticksExisted % 400 == 0) {
+								entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 400));
+							}
 						}
 					}
 				}

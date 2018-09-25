@@ -149,7 +149,14 @@ public class DataTransmitters {
 			buf.writeInt(list.size());
 			FMLLog.info("TICK_HANDLERS = %s", list);
 			for (TickHandler handler : list) {
-				buf.writeInt(handler.id());
+				if (handler != null) {
+					buf.writeInt(handler.id());
+				}
+				if (handler == null) {
+					System.out.println(handler);
+					System.out.println(handler.id());
+
+				}
 			}
 		}
 
