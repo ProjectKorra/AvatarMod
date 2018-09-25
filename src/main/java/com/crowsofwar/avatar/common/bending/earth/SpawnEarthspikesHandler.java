@@ -92,7 +92,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		//For some reason using *= or += seems to glitch out everything- that's why
 		//I'm using tedious equations.
 
-		size += duration / 20;
+		size += duration / 20F;
 		EntityEarthspikeSpawner entity = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
 
 		if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
@@ -134,11 +134,9 @@ public class SpawnEarthspikesHandler extends TickHandler {
 				//Try using rotation yaw instead of circle particles
 				for (int i = 0; i < 8; i++) {
 					Vector direction1 = Vector.toRectangular(Math.toRadians(owner.rotationYaw +
-							i * 45), 0).withY(0).times(duration / 5);
+							i * 45), 0).withY(0).times(duration / 5F);
 					EntityEarthspike earthspike = new EntityEarthspike(world);
-					if (direction1.x() + owner.posX != owner.posX && direction1.z() + owner.posZ != owner.posZ) {
-						earthspike.setPosition(direction1.x() + owner.posX, owner.posY, direction1.z() + owner.posZ);
-					}
+					earthspike.setPosition(direction1.x() + owner.posX, owner.posY, direction1.z() + owner.posZ);
 					earthspike.setDamage(damage);
 					earthspike.setSize(size);
 					earthspike.setLifetime(20);
