@@ -149,7 +149,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 							fireTime = 8 + (int) (powerModifier * 10);
 						}
 						if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-							damage = 10 + (2 * powerModifier);
+							damage = 7 + (2 * powerModifier);
 							knockBack = 1.5F + powerModifier;
 							fireTime = 15 + (int) (powerModifier * 10);
 						}
@@ -172,9 +172,9 @@ public class StatCtrlInfernoPunch extends StatusControl {
 									wave.setFireTime(15);
 									wave.setSphere(true);
 									wave.setParticle(EnumParticleTypes.FLAME);
-									wave.setParticleSpeed(0.005);
-									wave.setParticleAmount(2);
-									wave.setParticleController(20);
+									wave.setParticleSpeed(0.05);
+									wave.setParticleAmount(4);
+									wave.setParticleController(10);
 									//Used for spheres
 									wave.setSpeed(0.7);
 									wave.setParticleAmount(2);
@@ -183,7 +183,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 									wave.setOwner((EntityLivingBase) entity);
 									wave.setPosition(target.posX, target.getEntityBoundingBox().minY, target.posZ);
 									wave.setRange(4);
-									wave.setKnockbackHeight(0.2);
+									wave.setKnockbackHeight(0.25);
 									world.spawnEntity(wave);
 								}
 								if (world instanceof WorldServer) {
