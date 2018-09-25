@@ -141,7 +141,7 @@ public class EntityShockwave extends AvatarEntity {
 	public EntityShockwave(World world){
 		super(world);
 		this.damage = 1;
-		this.particle = EnumParticleTypes.CLOUD;
+		this.particle = EnumParticleTypes.EXPLOSION_NORMAL;
 		this.particleSpeed = 0;
 		this.particleAmount = 10;
 		this.range = 4;
@@ -159,9 +159,6 @@ public class EntityShockwave extends AvatarEntity {
 	public void onUpdate() {
 
 		this.setVelocity(Vector.ZERO);
-		if (getOwner() != null) {
-			this.setPosition(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
-		}
 
 		if (!world.isRemote) {
 
@@ -180,7 +177,7 @@ public class EntityShockwave extends AvatarEntity {
 
 			if (isSphere) {
 				double x, y, z;
-				if (ticksExisted % 3 == 0) {
+				if (ticksExisted % 2 == 0) {
 					for (double theta = 0; theta <= 180; theta += 1) {
 						double dphi = particleController / Math.sin(Math.toRadians(theta));
 
@@ -192,7 +189,7 @@ public class EntityShockwave extends AvatarEntity {
 							y = ticksExisted * getSpeed() * Math.sin(rphi) * Math.sin(rtheta);
 							z = ticksExisted * getSpeed() * Math.cos(rtheta);
 
-							particles.spawnParticles(world, EnumParticleTypes.EXPLOSION_NORMAL, getParticleAmount() / 2, getParticleAmount(), x + posX, y + posY,
+							particles.spawnParticles(world, getParticle(), getParticleAmount() / 2, getParticleAmount(), x + posX, y + posY,
 									z + posZ, getParticleSpeed(), getParticleSpeed(), getParticleSpeed());
 
 						}

@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -165,18 +166,29 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
 							if (((EntityLivingBase) entity).getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().startsWith("avatar_"))) {
 								if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-									BlockPos blockPos = target.getPosition();
-									AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, target, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 3F, true, false);
-									fireExplosion.doExplosionA();
-									if (world instanceof WorldServer) {
-										WorldServer World = (WorldServer) target.getEntityWorld();
-										World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY, target.posZ, 200, 0.05, 0.05, 0.05, 0.75);
-										fireExplosion.doExplosionB(true);
-									}
+									EntityShockwave wave = new EntityShockwave(world);
+									wave.setPerformanceAmount(15);
+									wave.setFire(true);
+									wave.setFireTime(15);
+									wave.setSphere(true);
+									wave.setParticle(EnumParticleTypes.FLAME);
+									wave.setParticleSpeed(0.005);
+									wave.setParticleAmount(2);
+									wave.setParticleController(20);
+									//Used for spheres
+									wave.setSpeed(0.7);
+									wave.setParticleAmount(2);
+									wave.setAbility(new AbilityInfernoPunch());
+									wave.setDamage(4);
+									wave.setOwner((EntityLivingBase) entity);
+									wave.setPosition(target.posX, target.getEntityBoundingBox().minY, target.posZ);
+									wave.setRange(4);
+									wave.setKnockbackHeight(0.2);
+									world.spawnEntity(wave);
 								}
 								if (world instanceof WorldServer) {
 									WorldServer World = (WorldServer) target.getEntityWorld();
-									World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY + target.getEyeHeight()/2, target.posZ, 50, 0.05, 0.05, 0.05, 0.05);
+									World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY + target.getEyeHeight()/2, target.posZ, 40 + 20 * abilityData.getLevel(), 0.05, 0.05, 0.05, 0.05);
 
 								}
 
