@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * BisonSaddle - Captn_Dubz Created using Tabula 5.1.0
+ * BisonSaddle - Captn_Dubz & Mnesikos Created using Tabula 5.1.0
  */
 public class ModelBisonSaddle extends ModelBase {
 
@@ -45,57 +45,60 @@ public class ModelBisonSaddle extends ModelBase {
 	public ModelRenderer wallSide2;
 
 	public ModelBisonSaddle() {
-		this.textureWidth = 192;
-		this.textureHeight = 128;
-		this.wall2 = new ModelRenderer(this, 2, 48);
-		this.wall2.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.wall2.addBox(18.0F, -6.0F, -20.0F, 1, 6, 42, 0.0F);
-		this.wall1 = new ModelRenderer(this, 2, 48);
-		this.wall1.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.wall1.addBox(-19.0F, -6.0F, -20.0F, 1, 6, 42, 0.0F);
-		this.wallSide2 = new ModelRenderer(this, 2, 2);
-		this.wallSide2.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.wallSide2.addBox(14.0F, -1.5F, -18.0F, 5, 6, 1, 0.0F);
-		this.setRotateAngle(wallSide2, 0.0F, 0.0F, -0.8203047484373349F);
-		this.wallSide1 = new ModelRenderer(this, 2, 2);
-		this.wallSide1.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.wallSide1.addBox(-19.0F, -1.5F, -18.0F, 5, 6, 1, 0.0F);
-		this.setRotateAngle(wallSide1, 0.0F, 0.0F, 0.8203047484373349F);
-		this.wall3 = new ModelRenderer(this, 90, 66);
-		this.wall3.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.wall3.addBox(-18.0F, -6.0F, 21.0F, 36, 6, 1, 0.0F);
-		this.cargo = new ModelRenderer(this, 2, 100);
-		this.cargo.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.cargo.addBox(-14.0F, -8.0F, 18.0F, 28, 10, 8, 0.0F);
-		this.wallTop = new ModelRenderer(this, 96, 88);
-		this.wallTop.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.wallTop.addBox(-12.0F, -15.0F, -18.0F, 24, 5, 1, 0.0F);
-		this.setRotateAngle(wallTop, 0.2617993877991494F, 0.0F, 0.0F);
-		this.saddleBase = new ModelRenderer(this, 2, 2);
-		this.saddleBase.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.saddleBase.addBox(-19.0F, 0.0F, -20.0F, 38, 2, 42, 0.0F);
-		this.wall4 = new ModelRenderer(this, 54, 54);
-		this.wall4.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.wall4.addBox(-18.0F, -6.0F, -20.0F, 36, 6, 1, 0.0F);
+		this.textureWidth = 112;
+		this.textureHeight = 96;
+		this.wall3 = new ModelRenderer(this, 58, 5);
+		this.wall3.mirror = true;
+		this.wall3.setRotationPoint(0.0F, -0.5F, 11.5F);
+		this.wall3.addBox(-7.5F, -3.0F, -0.5F, 15, 3, 1, 0.0F);
+		this.wallTop = new ModelRenderer(this, 0, 0);
+		this.wallTop.setRotationPoint(0.0F, -3.5F, -11.1F);
+		this.wallTop.addBox(-4.5F, -2.0F, -1.0F, 9, 3, 1, 0.0F);
+		this.setRotateAngle(wallTop, 0.20943951023931953F, 0.0F, 0.0F);
+		this.wallSide2 = new ModelRenderer(this, 0, 4);
+		this.wallSide2.setRotationPoint(4.5F, -2.0F, -0.5F);
+		this.wallSide2.addBox(0.0F, 0.0F, -0.5F, 3, 2, 1, 0.0F);
+		this.setRotateAngle(wallSide2, 0.0F, 0.0F, 0.8726646259971648F);
+		this.cargo = new ModelRenderer(this, 26, 25);
+		this.cargo.setRotationPoint(0.0F, -2.02F, 11.75F);
+		this.cargo.addBox(-5.5F, -2.5F, -2.0F, 11, 5, 4, 0.0F);
+		this.saddleBase = new ModelRenderer(this, 0, 0);
+		this.saddleBase.setRotationPoint(0.0F, -3.5F, 4.0F);
+		this.saddleBase.addBox(-8.5F, -0.5F, -12.0F, 17, 1, 24, 0.0F);
+		this.wallSide1 = new ModelRenderer(this, 0, 4);
+		this.wallSide1.mirror = true;
+		this.wallSide1.setRotationPoint(-4.5F, -2.0F, -0.5F);
+		this.wallSide1.addBox(-3.0F, 0.0F, -0.5F, 3, 2, 1, 0.0F);
+		this.setRotateAngle(wallSide1, 0.0F, 0.0F, -0.8726646259971648F);
+		this.wall2 = new ModelRenderer(this, 0, 25);
+		this.wall2.setRotationPoint(8.0F, -0.5F, 0.0F);
+		this.wall2.addBox(-0.5F, -3.0F, -12.0F, 1, 3, 24, 0.0F);
+		this.wall1 = new ModelRenderer(this, 0, 25);
+		this.wall1.mirror = true;
+		this.wall1.setRotationPoint(-8.0F, -0.5F, 0.0F);
+		this.wall1.addBox(-0.5F, -3.0F, -12.0F, 1, 3, 24, 0.0F);
+		this.wall4 = new ModelRenderer(this, 58, 0);
+		this.wall4.setRotationPoint(0.0F, -0.5F, -11.5F);
+		this.wall4.addBox(-7.5F, -3.0F, -0.5F, 15, 3, 2, 0.0F);
+		this.saddleBase.addChild(this.wall3);
+		this.saddleBase.addChild(this.wallTop);
+		this.wallTop.addChild(this.wallSide2);
+		this.saddleBase.addChild(this.cargo);
+		this.wallTop.addChild(this.wallSide1);
 		this.saddleBase.addChild(this.wall2);
 		this.saddleBase.addChild(this.wall1);
-		this.wallTop.addChild(this.wallSide2);
-		this.wallTop.addChild(this.wallSide1);
-		this.saddleBase.addChild(this.wall3);
-		this.saddleBase.addChild(this.cargo);
-		this.saddleBase.addChild(this.wallTop);
 		this.saddleBase.addChild(this.wall4);
 
 		// CrowsOfWar: Slightly adjust position of saddle to make it more
 		// on-center on the bison
-		List<ModelRenderer> allBoxes = Arrays.asList(saddleBase, wall1, wall2, wall3, wall4, cargo, wallTop,
+		/*List<ModelRenderer> allBoxes = Arrays.asList(saddleBase, wall1, wall2, wall3, wall4, cargo, wallTop,
 				wallSide1, wallSide2);
 		for (ModelRenderer box : allBoxes) {
-			box.rotationPointX += 2;
+			box.rotationPointX += 40;
 			if (box != saddleBase) {
-				box.rotationPointX -= 2;
+				box.rotationPointX -= 40;
 			}
-		}
+		}*/
 
 	}
 
