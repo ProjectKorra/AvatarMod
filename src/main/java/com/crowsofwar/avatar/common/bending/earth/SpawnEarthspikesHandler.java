@@ -89,10 +89,9 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		}
 
 
-		//For some reason using *= or += seems to glitch out everything- that's why
-		//I'm using tedious equations.
+		//For some reason using *= or += seems to glitch out everything- that's why I'm using tedious equations.
 
-		size += duration / 20F;
+		size += duration / 40F;
 		EntityEarthspikeSpawner entity = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
 
 		if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
@@ -105,7 +104,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.setAbility(abilityData.getAbility());
 					earthspike.setDamage(damage);
 					earthspike.setSize(size);
-					earthspike.setLifetime(30);
+					earthspike.setLifetime(20 + size * 2);
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
 
@@ -116,14 +115,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 							SoundCategory.BLOCKS, 1, 1);
 					if (!world.isRemote) {
 						WorldServer World = (WorldServer) world;
-						for (int degree = 0; degree < 360; degree++) {
-							double radians = Math.toRadians(degree);
-							double x = Math.cos(radians) / 2 + earthspike.posX;
-							double y = earthspike.posY;
-							double z = Math.sin(radians) / 2 + earthspike.posZ;
-							World.spawnParticle(EnumParticleTypes.CRIT, x, y, z, 1, 0, 0, 0, 0.5);
-
-						}
+						World.spawnParticle(EnumParticleTypes.CRIT, earthspike.posX, earthspike.posY, earthspike.posZ, 20, 0, 0, 0, 0.5);
 					}
 				}
 				return false;
@@ -139,7 +131,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.setPosition(direction1.x() + owner.posX, owner.posY, direction1.z() + owner.posZ);
 					earthspike.setDamage(damage);
 					earthspike.setSize(size);
-					earthspike.setLifetime(20);
+					earthspike.setLifetime(20 + size * 2);
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
 

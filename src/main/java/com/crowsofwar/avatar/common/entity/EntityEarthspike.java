@@ -99,12 +99,16 @@ public class EntityEarthspike extends AvatarEntity {
 	@Override
 	public void onEntityUpdate() {
 
-		super.onEntityUpdate();
 		this.motionX = 0;
 		this.motionY = 0;
 		this.motionZ = 0;
 
-		if (ticksExisted >= lifetime) {
+		if (lifetime < 30) {
+			if (ticksExisted >= 30) {
+				this.setDead();
+			}
+		}
+		else if (ticksExisted >= lifetime) {
 			this.setDead();
 		}
 
@@ -113,15 +117,14 @@ public class EntityEarthspike extends AvatarEntity {
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		Block belowBlock = world.getBlockState(below).getBlock();
 
-		if (!world.isRemote && (!ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) || belowBlock == Blocks.AIR)) {
+		if (!world.isRemote && belowBlock == Blocks.AIR) {
 			setDead();
 		}
 
 
 		// Push collided entities back
 		if (!world.isRemote) {
-			AxisAlignedBB box = new AxisAlignedBB(posX - Size, posY - Size, posZ - Size, posX + Size, posY + Size, posZ + Size);
-			List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box);
+			List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, getEntityBoundingBox());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
 					if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb) && canCollideWith(entity)) {
