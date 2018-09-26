@@ -58,8 +58,6 @@ public class EntityEarthspike extends AvatarEntity {
 		super(world);
 		this.Size = 1;
 		setSize(Size, Size);
-		//DO NOT CALL THIS ONUPDATE; THE EARTHSPIKE WILL HAVE SIZE VARIATION DEPENDING ON HOW
-		// LONG THE SPAWNER HAS EXISTED.
 		this.attacked = 0;
 		this.damage = STATS_CONFIG.earthspikeSettings.damage;
 		this.noClip = true;
@@ -110,6 +108,8 @@ public class EntityEarthspike extends AvatarEntity {
 			this.setDead();
 		}
 
+		setSize(getSize(), getSize());
+
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		Block belowBlock = world.getBlockState(below).getBlock();
 
@@ -129,6 +129,14 @@ public class EntityEarthspike extends AvatarEntity {
 					}
 				}
 			}
+		}
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
+		if (this.isDead && !world.isRemote) {
+			Thread.dumpStack();
 		}
 	}
 
