@@ -19,7 +19,8 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.config.ConfigStats;
+import com.crowsofwar.avatar.common.bending.earth.AbilityEarthspikes;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -32,7 +33,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -103,12 +103,7 @@ public class EntityEarthspike extends AvatarEntity {
 		this.motionY = 0;
 		this.motionZ = 0;
 
-		if (lifetime < 30) {
-			if (ticksExisted >= 30) {
-				this.setDead();
-			}
-		}
-		else if (ticksExisted >= lifetime) {
+		if (ticksExisted >= lifetime) {
 			this.setDead();
 		}
 
@@ -116,9 +111,16 @@ public class EntityEarthspike extends AvatarEntity {
 
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		Block belowBlock = world.getBlockState(below).getBlock();
-
-		if (!world.isRemote && belowBlock == Blocks.AIR) {
-			setDead();
+		if (getAbility() instanceof AbilityEarthspikes) {
+			AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
+			if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				if (!world.isRemote && (!STATS_CONFIG.bendableBlocks.contains(belowBlock) || belowBlock == Blocks.AIR)) {
+					setDead();
+				}
+			}
+		}
+		else if (belowBlock == Blocks.AIR) {
+			setDead();;
 		}
 
 

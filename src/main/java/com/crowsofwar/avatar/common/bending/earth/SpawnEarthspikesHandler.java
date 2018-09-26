@@ -51,14 +51,14 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		//4 (by default)
 		double damage = STATS_CONFIG.earthspikeSettings.damage;
 		//3 (by default)
-		float size = STATS_CONFIG.earthspikeSettings.size;
-		//1 (by default)
+		float size = STATS_CONFIG.earthspikeSettings.size * 0.75F;
+		//0.5 (by default)
 
 
 		if (abilityData.getLevel() == 1) {
 			damage = STATS_CONFIG.earthspikeSettings.damage * 1.33;
 			//4
-			//size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
+			size = STATS_CONFIG.earthspikeSettings.size * 1F;
 			//1.25
 		}
 
@@ -67,7 +67,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 			//3
 			damage = STATS_CONFIG.earthspikeSettings.damage * 1.66;
 			//5
-			//size = STATS_CONFIG.earthspikeSettings.size * 1.5F;
+			size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
 			//1.5
 
 		}
@@ -75,16 +75,17 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			frequency = STATS_CONFIG.earthspikeSettings.frequency * 0.5F;
 			//2
-			damage = STATS_CONFIG.earthspikeSettings.damage * 2;
-			//6
-			//size = STATS_CONFIG.earthspikeSettings.size * 2F;
+			damage = STATS_CONFIG.earthspikeSettings.damage * 2.5;
+			//7.5
+			size = STATS_CONFIG.earthspikeSettings.size * 1.5F;
 			//2
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			damage = STATS_CONFIG.earthspikeSettings.damage * 1.66;
-			//5
-			//size = STATS_CONFIG.earthspikeSettings.size;
+			damage = STATS_CONFIG.earthspikeSettings.damage * 2;
+			//6
+			size = STATS_CONFIG.earthspikeSettings.size * 1.75F;
+			//1.75
 
 		}
 
@@ -104,7 +105,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.setAbility(abilityData.getAbility());
 					earthspike.setDamage(damage);
 					earthspike.setSize(size);
-					earthspike.setLifetime(20 + size * 2);
+					earthspike.setLifetime(entity.getDuration());
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
 
@@ -115,14 +116,14 @@ public class SpawnEarthspikesHandler extends TickHandler {
 							SoundCategory.BLOCKS, 1, 1);
 					if (!world.isRemote) {
 						WorldServer World = (WorldServer) world;
-						World.spawnParticle(EnumParticleTypes.CRIT, earthspike.posX, earthspike.posY, earthspike.posZ, 20, 0, 0, 0, 0.5);
+						World.spawnParticle(EnumParticleTypes.CRIT, earthspike.posX, earthspike.posY, earthspike.posZ, 100, 0, 0, 0, 0.5);
 					}
 				}
 				return false;
 			}
 		} else {
 			applyMovementModifier(owner, MathHelper.clamp(movementMultiplier, 0.1f, 1));
-			if (duration % 10 == 0 && owner.onGround) {
+			if (duration % 15 == 0 && owner.onGround) {
 				//Try using rotation yaw instead of circle particles
 				for (int i = 0; i < 8; i++) {
 					Vector direction1 = Vector.toRectangular(Math.toRadians(owner.rotationYaw +
@@ -154,7 +155,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 				}
 			}
 		}
-		if (duration >= 20 && entity == null) {
+		if (duration >= 30 && entity == null) {
 			owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 			stop = true;
 		}
