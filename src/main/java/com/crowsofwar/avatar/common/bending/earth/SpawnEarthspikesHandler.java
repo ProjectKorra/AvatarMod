@@ -129,7 +129,10 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					Vector direction1 = Vector.toRectangular(Math.toRadians(owner.rotationYaw +
 							i * 45), 0).withY(0).times(duration / 5F);
 					EntityEarthspike earthspike = new EntityEarthspike(world);
-					earthspike.setPosition(direction1.x() + owner.posX, owner.posY, direction1.z() + owner.posZ);
+					if (direction1.x() + owner.posX != owner.posX && direction1.z() + owner.posZ != owner.posZ) {
+						earthspike.setPosition(direction1.x() + owner.posX, owner.posY, direction1.z() + owner.posZ);
+					}
+					//Necessary so that the player doesn't spawn a center earthspike
 					earthspike.setDamage(damage);
 					earthspike.setSize(size);
 					earthspike.setLifetime(20 + size * 2);
