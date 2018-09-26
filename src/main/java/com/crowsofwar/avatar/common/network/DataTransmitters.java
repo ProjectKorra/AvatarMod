@@ -154,7 +154,6 @@ public class DataTransmitters {
 				}
 				if (handler == null) {
 					System.out.println(handler);
-					System.out.println(handler.id());
 
 				}
 			}
