@@ -33,6 +33,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -126,7 +127,8 @@ public class EntityEarthspike extends AvatarEntity {
 
 		// Push collided entities back
 		if (!world.isRemote) {
-			List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, getEntityBoundingBox());
+			AxisAlignedBB box = new AxisAlignedBB(posX + getSize(), posY + getSize(), posZ + getSize(), posX - getSize(), posY, posZ - getSize());
+			List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box);
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
 					if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb) && canCollideWith(entity)) {
@@ -138,19 +140,12 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	@Override
-	public void setDead() {
-		super.setDead();
-		if (this.isDead && !world.isRemote) {
-			Thread.dumpStack();
-		}
-	}
-
-	@Override
 	protected void onCollideWithEntity(Entity entity) {
 		if (!world.isRemote && entity != getOwner() && !(entity instanceof EntityEarthspike) && !(entity instanceof EntityEarthspikeSpawner) && canCollideWith(entity)) {
 			pushEntity(entity);
 			if (attackEntity(entity)) {
 				attacked++;
+				System.out.println(entity);
 				if (getOwner() != null) {
 					BattlePerformanceScore.addMediumScore(getOwner());
 				}
@@ -167,7 +162,7 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	private boolean attackEntity(Entity entity) {
-		if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb) && canCollideWith(entity)) {
+		if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb) && canCollideWith(entity) && canDamageEntity(entity)) {
 			DamageSource ds = AvatarDamageSource.causeEarthspikeDamage(entity, getOwner());
 			float damage = (float) this.damage;
 			return entity.attackEntityFrom(ds, damage);

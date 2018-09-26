@@ -73,18 +73,20 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			//Flash Fissure
 			frequency = STATS_CONFIG.earthspikeSettings.frequency * 0.5F;
 			//2
-			damage = STATS_CONFIG.earthspikeSettings.damage * 2.5;
+			damage = STATS_CONFIG.earthspikeSettings.damage * 2.25;
 			//7.5
-			size = STATS_CONFIG.earthspikeSettings.size * 1.5F;
+			size = STATS_CONFIG.earthspikeSettings.size * 1.75F;
 			//2
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			damage = STATS_CONFIG.earthspikeSettings.damage * 2;
+			//Octopus Fissure
+			damage = STATS_CONFIG.earthspikeSettings.damage * 2.5;
 			//6
-			size = STATS_CONFIG.earthspikeSettings.size * 1.75F;
+			size = STATS_CONFIG.earthspikeSettings.size * 1.5F;
 			//1.75
 
 		}
@@ -102,7 +104,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.posX = entity.posX;
 					earthspike.posY = entity.posY;
 					earthspike.posZ = entity.posZ;
-					earthspike.setAbility(abilityData.getAbility());
+					earthspike.setAbility(new AbilityEarthspikes());
 					earthspike.setDamage(damage);
 					earthspike.setSize(size);
 					earthspike.setLifetime(entity.getDuration());

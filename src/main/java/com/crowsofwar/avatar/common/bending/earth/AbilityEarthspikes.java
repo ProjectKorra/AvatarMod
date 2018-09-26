@@ -81,7 +81,7 @@ public class AbilityEarthspikes extends Ability {
 				if (entity.onGround) {
 					for (int i = 0; i < 8; i++) {
 						Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-								i * 45), 0).withY(0);
+								i * 45), 0).times(1.4).withY(0);
 						EntityEarthspike earthspike = new EntityEarthspike(world);
 						earthspike.setPosition(direction1.x() + entity.posX, entity.posY, direction1.z() + entity.posZ);
 						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 2.5);

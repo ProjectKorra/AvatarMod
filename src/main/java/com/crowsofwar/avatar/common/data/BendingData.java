@@ -534,7 +534,11 @@ public class BendingData {
 		chi().writeToNBT(writeTo);
 
 		AvatarUtils.writeList(tickHandlers,
-				(nbt, handler) -> nbt.setInteger("Id", handler.id()),
+				(nbt, handler) -> {
+					nbt.setInteger("Id", handler.id());
+					System.out.println(nbt);
+					System.out.println(handler);
+				},
 				writeTo,
 				"TickHandlers");
 
