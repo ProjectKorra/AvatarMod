@@ -64,21 +64,22 @@ public class ModelFlyingBison extends ModelBase {
     public ModelRenderer nose;
     public ModelRenderer cheeks;
     public ModelRenderer jaw;
+    private int state = 1;
 
     public ModelFlyingBison() {
         this.textureWidth = 112;
         this.textureHeight = 96;
         this.leg1 = new ModelRenderer(this, 0, 0);
-        this.leg1.setRotationPoint(5.98F, 12.0F, -7.98F);
+        this.leg1.setRotationPoint(5.98F, 11.98F, -7.98F);
         this.leg1.addBox(-3.0F, 0.0F, -3.0F, 6, 12, 6, 0.0F);
         this.cheeks = new ModelRenderer(this, 0, 80);
         this.cheeks.setRotationPoint(0.0F, 4.5F, -9.99F);
         this.cheeks.addBox(-5.5F, 0.0F, 0.0F, 11, 1, 3, 0.0F);
         this.leg2 = new ModelRenderer(this, 0, 0);
-        this.leg2.setRotationPoint(5.98F, 12.0F, 3.0F);
+        this.leg2.setRotationPoint(5.98F, 11.98F, 3.0F);
         this.leg2.addBox(-3.0F, 0.0F, -3.0F, 6, 12, 6, 0.0F);
         this.leg4 = new ModelRenderer(this, 0, 0);
-        this.leg4.setRotationPoint(-5.98F, 12.0F, -7.98F);
+        this.leg4.setRotationPoint(-5.98F, 11.98F, -7.98F);
         this.leg4.addBox(-3.0F, 0.0F, -3.0F, 6, 12, 6, 0.0F);
         this.lowTail = new ModelRenderer(this, 32, 72);
         this.lowTail.setRotationPoint(0.0F, 1.52F, 13.5F);
@@ -93,7 +94,7 @@ public class ModelFlyingBison extends ModelBase {
         this.nose.setRotationPoint(0.0F, 2.5F, -10.0F);
         this.nose.addBox(-2.5F, -1.0F, -1.0F, 5, 2, 1, 0.0F);
         this.jaw = new ModelRenderer(this, 42, 43);
-        this.jaw.setRotationPoint(0.0F, 5.0F, -4.7F);
+        this.jaw.setRotationPoint(0.0F, 4.98F, -4.7F);
         this.jaw.addBox(-5.0F, 0.0F, -5.0F, 10, 2, 10, 0.0F);
         this.body = new ModelRenderer(this, 0, 0);
         this.body.setRotationPoint(0.0F, 4.5F, 3.0F);
@@ -107,7 +108,7 @@ public class ModelFlyingBison extends ModelBase {
         this.horn2.addBox(-1.0F, -9.0F, -1.0F, 2, 9, 2, 0.0F);
         this.setRotateAngle(horn2, -0.20943951023931953F, 0.0F, -0.03490658503988659F);
         this.leg6 = new ModelRenderer(this, 0, 0);
-        this.leg6.setRotationPoint(-5.98F, 12.0F, 13.98F);
+        this.leg6.setRotationPoint(-5.98F, 11.98F, 13.98F);
         this.leg6.addBox(-3.0F, 0.0F, -3.0F, 6, 12, 6, 0.0F);
         this.ear2 = new ModelRenderer(this, 32, 43);
         this.ear2.mirror = true;
@@ -119,10 +120,10 @@ public class ModelFlyingBison extends ModelBase {
         this.ear1.addBox(0.0F, 0.0F, 0.0F, 2, 4, 2, 0.0F);
         this.setRotateAngle(ear1, 0.0F, 0.0F, -0.3839724354387525F);
         this.leg5 = new ModelRenderer(this, 0, 0);
-        this.leg5.setRotationPoint(-5.98F, 12.0F, 3.0F);
+        this.leg5.setRotationPoint(-5.98F, 11.98F, 3.0F);
         this.leg5.addBox(-3.0F, 0.0F, -3.0F, 6, 12, 6, 0.0F);
         this.leg3 = new ModelRenderer(this, 0, 0);
-        this.leg3.setRotationPoint(5.98F, 12.0F, 13.98F);
+        this.leg3.setRotationPoint(5.98F, 11.98F, 13.98F);
         this.leg3.addBox(-3.0F, 0.0F, -3.0F, 6, 12, 6, 0.0F);
         this.horn1 = new ModelRenderer(this, 0, 64);
         this.horn1.setRotationPoint(6.5F, -2.0F, -7.0F);
@@ -153,24 +154,82 @@ public class ModelFlyingBison extends ModelBase {
         float pi = (float) Math.PI;
         EntitySkyBison bison = (EntitySkyBison) entity;
         float degToRad = pi / 180;
+        BlockPos below = bison.getPosition().offset(EnumFacing.DOWN);
+        Block belowBlock = bison.world.getBlockState(below).getBlock();
 
         head.rotateAngleX = headPitch * degToRad + MathHelper.cos(limbSwing * 0.6662f / 3) * 0.1f * limbSwingAmount;
         head.rotateAngleY = netHeadYaw * degToRad;
 
-        if (bison.isSitting()) {
-            float lower = 9;
+        if (!bison.isSitting()) {
+            if (belowBlock == Blocks.AIR) {
+                leg1.rotationPointY = leg4.rotationPointY = leg2.rotationPointY = leg5.rotationPointY =
+                        leg3.rotationPointY = leg6.rotationPointY = 11.98F - 1f;
+            } else {
+                leg1.rotationPointY = leg4.rotationPointY = leg2.rotationPointY = leg5.rotationPointY =
+                        leg3.rotationPointY = leg6.rotationPointY = 11.98F;
+            }
+            body.rotationPointY = 4.5f;
+            head.rotationPointY = 2.5f;
+            upTail.rotationPointY = -2.8f;
+            leg1.rotateAngleY = leg4.rotateAngleY = leg2.rotateAngleY = leg5.rotateAngleY =
+                    leg3.rotateAngleY = leg6.rotateAngleY = 0.0f;
 
+            float globalSpeed;
+            float globalDegree;
+            float globalWeight;
+            if (belowBlock != Blocks.AIR || bison.isEatingGrass()) {
+                globalSpeed = 0.5F;
+                globalDegree = 0.2F;
+                globalWeight = 0F;
+            } else {
+                globalSpeed = 0.14F;
+                globalDegree = 0.076F;
+                globalWeight = 0.2F;
+            }
+            leg2.rotateAngleX = 1 * limbSwingAmount * globalDegree * MathHelper.cos(limbSwing * globalSpeed) + globalWeight;
+            leg4.rotateAngleX = 1 * limbSwingAmount * globalDegree * MathHelper.cos(limbSwing * globalSpeed) + globalWeight;
+            leg6.rotateAngleX = 1 * limbSwingAmount * globalDegree * MathHelper.cos(limbSwing * globalSpeed) + globalWeight;
+
+            leg1.rotateAngleX = -1 * limbSwingAmount * globalDegree * MathHelper.cos(limbSwing * globalSpeed) + globalWeight;
+            leg3.rotateAngleX = -1 * limbSwingAmount * globalDegree * MathHelper.cos(limbSwing * globalSpeed) + globalWeight;
+            leg5.rotateAngleX = -1 * limbSwingAmount * globalDegree * MathHelper.cos(limbSwing * globalSpeed) + globalWeight;
+
+            upTail.rotateAngleX = 1 * limbSwingAmount * 0.4f * MathHelper.cos(limbSwing * 0.2f) - 12 * degToRad;
+            lowTail.rotateAngleX = 1 * limbSwingAmount * 0.2f * MathHelper.cos(limbSwing * 0.2f + 0.6f);
+        }
+
+        if (bison.isEatingGrass()) {
+            float lower = 3;
+            body.rotationPointY = lower + 4.5f;
+            upTail.rotationPointY = lower - 2.8f;
+            head.rotationPointY = 8f;
+
+            head.rotateAngleX = 24 * degToRad;
+            jaw.rotateAngleX = (MathHelper.cos(bison.getEatGrassTime() / 2f) * 15 + 20) * degToRad;
+        } else {
+            jaw.rotateAngleX = 0f;
+        }
+	}
+
+    @Override
+    public void setLivingAnimations(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTickTime) {
+        super.setLivingAnimations(entity, limbSwing, limbSwingAmount, partialTickTime);
+        float pi = (float) Math.PI;
+        EntitySkyBison bison = (EntitySkyBison) entity;
+        float degToRad = pi / 180;
+
+        BlockPos below = bison.getPosition().offset(EnumFacing.DOWN);
+        Block belowBlock = bison.world.getBlockState(below).getBlock();
+
+        if (bison.isSitting() && belowBlock != Blocks.AIR) {
+            this.state = 2;
+            float lower = 9;
             body.rotationPointY = lower + 4.5f;
             head.rotationPointY = lower + 2.5f;
             upTail.rotationPointY = lower - 2.8f;
+
             leg1.rotationPointY = leg4.rotationPointY = leg2.rotationPointY = leg5.rotationPointY =
-                    leg3.rotationPointY = leg6.rotationPointY = lower + 12.0f;
-
-            /*if (bison.onGround) {
-                head.rotateAngleX = 4 * degToRad;
-                head.rotateAngleY = -64 * degToRad;
-            }*/
-
+                    leg3.rotationPointY = leg6.rotationPointY = lower + 11.98F;
             leg1.rotateAngleX = leg4.rotateAngleX = leg2.rotateAngleX = leg5.rotateAngleX =
                     leg3.rotateAngleX = leg6.rotateAngleX = -90 * degToRad;
             leg1.rotateAngleY = -32 * degToRad;
@@ -181,50 +240,13 @@ public class ModelFlyingBison extends ModelBase {
             leg6.rotateAngleY = 148 * degToRad;
 
             upTail.rotateAngleX = -40 * degToRad;
-            lowTail.rotateAngleX = 16 * degToRad ;
-
+            lowTail.rotateAngleX = 16 * degToRad;
         } else {
-            body.rotationPointY = 4.5f;
-            head.rotationPointY = 2.5f;
-            upTail.rotationPointY = -2.8f;
-            leg1.rotationPointY = leg4.rotationPointY = leg2.rotationPointY = leg5.rotationPointY =
-                    leg3.rotationPointY = leg6.rotationPointY = 12.0f;
-            leg1.rotateAngleY = leg4.rotateAngleY = leg2.rotateAngleY = leg5.rotateAngleY =
-                    leg3.rotateAngleY = leg6.rotateAngleY = 0.0f;
-
-            float globalSpeed;
-            float globalDegree;
-            float globalWeight;
-            if (bison.onGround || bison.isEatingGrass()) {
-                globalSpeed = 0.5F;
-                globalDegree = 0.2F;
-                globalWeight = 0F;
-            } else {
-                globalSpeed = 0.14F;
-                globalDegree = 0.076F;
-                globalWeight = 0.2F;
-            }
-            leg2.rotateAngleX = MathHelper.cos(limbSwing * globalSpeed) * globalDegree * limbSwingAmount + globalWeight;
-            leg4.rotateAngleX = MathHelper.cos(limbSwing * globalSpeed) * globalDegree * limbSwingAmount + globalWeight;
-            leg6.rotateAngleX = MathHelper.cos(limbSwing * globalSpeed) * globalDegree * limbSwingAmount + globalWeight;
-
-            leg1.rotateAngleX = -1 * MathHelper.cos(limbSwing * globalSpeed) * globalDegree * limbSwingAmount + globalWeight;
-            leg3.rotateAngleX = -1 * MathHelper.cos(limbSwing * globalSpeed) * globalDegree * limbSwingAmount + globalWeight;
-            leg5.rotateAngleX = -1 * MathHelper.cos(limbSwing * globalSpeed) * globalDegree * limbSwingAmount + globalWeight;
-
-            upTail.rotateAngleX = MathHelper.cos(limbSwing * 0.3331f) * 0.25f * limbSwingAmount - 16 * degToRad;
-            lowTail.rotateAngleX = MathHelper.cos(limbSwing * 0.3331f - 2f) * 0.2f * limbSwingAmount;
+            this.state = 1;
         }
+    }
 
-        if (bison.isEatingGrass()) {
-            head.rotateAngleX = 24 * degToRad;
-            jaw.rotateAngleX = (MathHelper.cos(bison.getEatGrassTime() / 2f) * 15 + 20) * degToRad;
-        } else {
-            jaw.rotateAngleX = 0f;
-        }
-	}
-
-	/**
+    /**
 	 * glStateManager calls and 'float scale' lines by CrowsOfWar, all else by
 	 * Captn_Dubz + edited by Mnesikos
 	 */
@@ -252,8 +274,10 @@ public class ModelFlyingBison extends ModelBase {
 
         if (bison.getSaddle() != null) {
             pushMatrix();
-            if (bison.isSitting()) {
+            if (this.state == 2) {
                 GlStateManager.translate(0f, 0.56f, 0f);
+            } else if (bison.isEatingGrass()) {
+                GlStateManager.translate(0f, 0.186f, 0f);
             }
             this.saddle.render(entity, f, f1, f2, f3, f4, f5);
             popMatrix();
