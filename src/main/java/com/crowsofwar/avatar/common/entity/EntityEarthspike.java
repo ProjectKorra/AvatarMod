@@ -52,14 +52,12 @@ public class EntityEarthspike extends AvatarEntity {
 
 	private double damage;
 	private float Size;
-	private int attacked;
 	private double lifetime;
 
 	public EntityEarthspike(World world) {
 		super(world);
 		this.Size = 1;
 		setSize(Size, Size);
-		this.attacked = 0;
 		this.damage = STATS_CONFIG.earthspikeSettings.damage;
 		this.noClip = true;
 		this.lifetime = 30;
@@ -99,6 +97,7 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	public void onEntityUpdate() {
+		//Add width and height stuff
 
 		this.motionX = 0;
 		this.motionY = 0;
@@ -144,7 +143,6 @@ public class EntityEarthspike extends AvatarEntity {
 		if (!world.isRemote && entity != getOwner() && !(entity instanceof EntityEarthspike) && !(entity instanceof EntityEarthspikeSpawner) && canCollideWith(entity)) {
 			pushEntity(entity);
 			if (attackEntity(entity)) {
-				attacked++;
 				if (getOwner() != null) {
 					BattlePerformanceScore.addMediumScore(getOwner());
 				}
@@ -153,7 +151,7 @@ public class EntityEarthspike extends AvatarEntity {
 			if (getOwner() != null && getAbility() != null) {
 				BendingData data = BendingData.get(getOwner());
 				if (data != null) {
-					data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.earthspikeHit * attacked);
+					data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.earthspikeHit);
 				}
 			}
 		}
@@ -171,7 +169,7 @@ public class EntityEarthspike extends AvatarEntity {
 
 	private void pushEntity(Entity entity) {
 		entity.motionX += this.motionX / 4;
-		entity.motionY += (STATS_CONFIG.earthspikeSettings.push) / 4 + (damage / 50);
+		entity.motionY += (STATS_CONFIG.earthspikeSettings.push / 6) + (damage / 100);
 		entity.motionZ += this.motionZ / 4;
 	}
 }

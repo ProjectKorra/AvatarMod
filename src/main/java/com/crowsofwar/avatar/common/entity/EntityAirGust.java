@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -54,6 +56,11 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		super.writeEntityToNBT(nbt);
 		nbt.setBoolean("AirGrab", airGrab);
 		nbt.setBoolean("DestroyProjectiles", destroyProjectiles);
+	}
+
+	@Override
+	public BendingStyle getElement() {
+		return new Airbending();
 	}
 
 	@Override

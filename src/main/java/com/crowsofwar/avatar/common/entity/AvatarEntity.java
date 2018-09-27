@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
@@ -536,5 +537,10 @@ public abstract class AvatarEntity extends Entity {
 	// disable stepping sounds
 	@Override
 	protected void playStepSound(BlockPos pos, Block blockIn) {
+	}
+
+	//Used to determine what element the entity is
+	public BendingStyle getElement() {
+		return null;
 	}
 }

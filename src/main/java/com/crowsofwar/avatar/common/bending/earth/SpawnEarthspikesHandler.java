@@ -21,6 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import org.lwjgl.Sys;
 
 import java.util.UUID;
 
@@ -101,36 +102,34 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		damage += xpModifier;
 		damage *= ctx.getBender().getDamageMult(Earthbending.ID);
 
-		frequency -= xpModifier / 2;
-
 		EntityEarthspikeSpawner entity = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
 
 		if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			if (entity != null) {
-				if (duration % frequency == 0 && duration > frequency / 3) {
-					EntityEarthspike earthspike = new EntityEarthspike(world);
-					earthspike.posX = entity.posX;
-					earthspike.posY = entity.posY;
-					earthspike.posZ = entity.posZ;
-					earthspike.setAbility(new AbilityEarthspikes());
-					earthspike.setDamage(damage);
-					earthspike.setSize(size);
-					earthspike.setLifetime(entity.getDuration());
-					earthspike.setOwner(owner);
-					world.spawnEntity(earthspike);
+				if (entity != null) {
+					if (duration % frequency == 0 && duration > frequency / 3) {
+						EntityEarthspike earthspike = new EntityEarthspike(world);
+						earthspike.posX = entity.posX;
+						earthspike.posY = entity.posY;
+						earthspike.posZ = entity.posZ;
+						earthspike.setAbility(new AbilityEarthspikes());
+						earthspike.setDamage(damage);
+						earthspike.setSize(size);
+						earthspike.setLifetime(entity.getDuration());
+						earthspike.setOwner(owner);
+						world.spawnEntity(earthspike);
 
-					BlockPos below = earthspike.getPosition().offset(EnumFacing.DOWN);
-					Block belowBlock = world.getBlockState(below).getBlock();
-					world.playSound(null, earthspike.posX, earthspike.posY, earthspike.posZ,
-							belowBlock.getSoundType().getBreakSound(),
-							SoundCategory.BLOCKS, 1, 1);
-					if (!world.isRemote) {
-						WorldServer World = (WorldServer) world;
-						World.spawnParticle(EnumParticleTypes.CRIT, earthspike.posX, earthspike.posY, earthspike.posZ, 100, 0, 0, 0, 0.5);
+						BlockPos below = earthspike.getPosition().offset(EnumFacing.DOWN);
+						Block belowBlock = world.getBlockState(below).getBlock();
+						world.playSound(null, earthspike.posX, earthspike.posY, earthspike.posZ,
+								belowBlock.getSoundType().getBreakSound(),
+								SoundCategory.BLOCKS, 1, 1);
+						if (!world.isRemote) {
+							WorldServer World = (WorldServer) world;
+							World.spawnParticle(EnumParticleTypes.CRIT, earthspike.posX, earthspike.posY, earthspike.posZ, 100, 0, 0, 0, 0.5);
+						}
 					}
+					return false;
 				}
-				return false;
-			}
 		} else {
 			applyMovementModifier(owner, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 			if (duration % 15 == 0 && owner.onGround) {

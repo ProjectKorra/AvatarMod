@@ -35,7 +35,7 @@ public class ConfigSkills {
 		airGustHit = 3f,
 		airBurstHit = 4F,
 		buffUsed = 2f,
-		earthspikeHit = 3.5F,
+		earthspikeHit = 3.0F,
 		ravineHit = 3f,
 		waveHit = 4f,
 		waterHit = 3f,

@@ -16,7 +16,9 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -84,6 +86,11 @@ public class EntityAirBubble extends EntityShield {
 		dataManager.register(SYNC_DISSIPATE, 0);
 		dataManager.register(SYNC_HOVERING, false);
 		dataManager.register(SYNC_SIZE, 2.5f);
+	}
+
+	@Override
+	public BendingStyle getElement() {
+		return new Airbending();
 	}
 
 	@Override

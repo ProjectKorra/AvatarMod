@@ -18,8 +18,10 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -46,6 +48,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -81,6 +84,11 @@ public class EntityFireball extends AvatarEntity {
 		setSize(.8f, .8f);
 		this.explosionStrength = 0.75f;
 		this.position = this.getPosition();
+	}
+
+	@Override
+	public BendingStyle getElement() {
+		return new Firebending();
 	}
 
 	@Override
