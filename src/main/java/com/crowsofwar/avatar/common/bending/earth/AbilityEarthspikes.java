@@ -4,13 +4,11 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityEarthspike;
 import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -63,14 +61,14 @@ public class AbilityEarthspikes extends Ability {
 		}
 		double damage = STATS_CONFIG.earthspikeSettings.damage * 2.5;
 		double size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
-		size += abilityData.getTotalXp()/400;
+		size += abilityData.getTotalXp() / 400;
 
-		damage += abilityData.getTotalXp()/400;
+		damage += abilityData.getTotalXp() / 400;
 		damage *= ctx.getPowerRatingDamageMod();
 
-		ticks += abilityData.getTotalXp()/400;
-		speed += abilityData.getTotalXp()/400;
-		chi -= abilityData.getTotalXp()/400;
+		ticks += abilityData.getTotalXp() / 400;
+		speed += abilityData.getTotalXp() / 400;
+		chi -= abilityData.getTotalXp() / 400;
 
 		if (bender.consumeChi(chi)) {
 
@@ -114,6 +112,9 @@ public class AbilityEarthspikes extends Ability {
 
 					}
 				}
+			}
+			if (data.hasTickHandler(SPAWN_EARTHSPIKES_HANDLER)) {
+				data.removeTickHandler(SPAWN_EARTHSPIKES_HANDLER);
 			}
 			data.addTickHandler(SPAWN_EARTHSPIKES_HANDLER);
 
