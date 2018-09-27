@@ -145,7 +145,6 @@ public class EntityEarthspike extends AvatarEntity {
 			pushEntity(entity);
 			if (attackEntity(entity)) {
 				attacked++;
-				System.out.println(entity);
 				if (getOwner() != null) {
 					BattlePerformanceScore.addMediumScore(getOwner());
 				}
@@ -171,8 +170,8 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	private void pushEntity(Entity entity) {
-		entity.motionX = this.motionX / 4;
-		entity.motionY = STATS_CONFIG.earthspikeSettings.push / 1.5 + damage / 20;
-		entity.motionZ = this.motionZ / 4;
+		entity.motionX += this.motionX / 4;
+		entity.motionY += STATS_CONFIG.earthspikeSettings.push / 1.5 + damage / 20;
+		entity.motionZ += this.motionZ / 4;
 	}
 }

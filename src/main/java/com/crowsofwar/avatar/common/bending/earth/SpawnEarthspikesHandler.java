@@ -53,6 +53,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 		//3 (by default)
 		float size = STATS_CONFIG.earthspikeSettings.size * 0.75F;
 		//0.5 (by default)
+		float xpModifier = abilityData.getTotalXp()/400;
 
 
 		if (abilityData.getLevel() == 1) {
@@ -94,11 +95,20 @@ public class SpawnEarthspikesHandler extends TickHandler {
 
 		//For some reason using *= or += seems to glitch out everything- that's why I'm using tedious equations.
 
-		size += duration / 40F;
+		size += duration / 45F;
+		size += xpModifier;
+
+		damage += xpModifier;
+		damage *= ctx.getBender().getDamageMult(Earthbending.ID);
+
+		frequency -= xpModifier/2;
+
 		EntityEarthspikeSpawner entity = AvatarEntity.lookupControlledEntity(world, EntityEarthspikeSpawner.class, owner);
 
 		if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			if (entity != null) {
+			if (entity == null) {
+				return true;
+			}
 				if (duration % frequency == 0 && duration > frequency / 3) {
 					EntityEarthspike earthspike = new EntityEarthspike(world);
 					earthspike.posX = entity.posX;
@@ -122,7 +132,6 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					}
 				}
 				return false;
-			}
 		} else {
 			applyMovementModifier(owner, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 			if (duration % 15 == 0 && owner.onGround) {

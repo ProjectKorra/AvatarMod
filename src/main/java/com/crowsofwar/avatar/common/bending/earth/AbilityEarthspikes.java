@@ -61,6 +61,16 @@ public class AbilityEarthspikes extends Ability {
 			chi = STATS_CONFIG.chiEarthspike * 2;
 			//7
 		}
+		double damage = STATS_CONFIG.earthspikeSettings.damage * 2.5;
+		double size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
+		size += abilityData.getTotalXp()/400;
+
+		damage += abilityData.getTotalXp()/400;
+		damage *= ctx.getPowerRatingDamageMod();
+
+		ticks += abilityData.getTotalXp()/400;
+		speed += abilityData.getTotalXp()/400;
+		chi -= abilityData.getTotalXp()/400;
 
 		if (bender.consumeChi(chi)) {
 
@@ -84,8 +94,8 @@ public class AbilityEarthspikes extends Ability {
 								i * 45), 0).times(1.4).withY(0);
 						EntityEarthspike earthspike = new EntityEarthspike(world);
 						earthspike.setPosition(direction1.x() + entity.posX, entity.posY, direction1.z() + entity.posZ);
-						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 2.5);
-						earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
+						earthspike.setDamage(damage);
+						earthspike.setSize((float) size);
 						earthspike.setOwner(entity);
 						earthspike.setAbility(this);
 						world.spawnEntity(earthspike);
