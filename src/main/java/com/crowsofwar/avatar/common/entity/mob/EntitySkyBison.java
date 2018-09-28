@@ -957,7 +957,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 
 		float sizeMult = condition.getSizeMultiplier();
-		setSize(3.33333F * sizeMult, 2.666667F * sizeMult);
+		setSize(3.67F * sizeMult, 3.34F * sizeMult);
 
 		condition.onUpdate();
 
