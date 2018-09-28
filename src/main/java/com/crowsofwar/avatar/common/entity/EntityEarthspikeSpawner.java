@@ -11,6 +11,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -69,6 +70,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 			setDead();
 		}
 
+
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		Block belowBlock = world.getBlockState(below).getBlock();
 
@@ -87,6 +89,10 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		if (!world.isRemote && belowBlock == Blocks.AIR) {
 			setDead();
 		}
+
+	//	BlockPos inFront = getPosition().offset(EnumFacing.getFront(0));
+	//	Block belowBlock = world.getBlockState(below).getBlock();
+	//  Add destruction on collision
 
 		// Destroy if in a block
 		IBlockState inBlock = world.getBlockState(getPosition());
