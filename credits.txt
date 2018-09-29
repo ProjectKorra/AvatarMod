@@ -42,7 +42,7 @@ Russian translations by Mo-og
 Mod Team List:
 -ArcaneDragon (Mod Lead)
 -Mahtaran (Developer)
--CrowsOfWar (Creator and Original Head Dev)
+-CrowsOfWar (Creator)
 
 Modelers:
 -BlueGlaciers/Me (Discord, Git Manager/Admin)
