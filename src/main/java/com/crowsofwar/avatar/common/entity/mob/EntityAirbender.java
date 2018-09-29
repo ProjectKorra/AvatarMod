@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -43,6 +44,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 import org.lwjgl.Sys;
@@ -70,21 +72,7 @@ public class EntityAirbender extends EntityHumanBender {
 	 */
 	public EntityAirbender(World world) {
 		super(world);
-	/*	if (!world.isRemote && level == 0) {
-			Random rand = new Random();
-			int level = rand.nextInt(3 + 1 - 1) + 1;
-			getData().addBendingId(Airbending.ID);
-			if (level < 2) {
-				this.level = 1;
-			}
-			if (level == 2) {
-				this.level = 2;
-			}
-			if (level > 2) {
-				this.level = 3;
-
-			}
-		}**/
+		getData().addBendingId(Airbending.ID);
 
 	}
 
@@ -154,72 +142,70 @@ public class EntityAirbender extends EntityHumanBender {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (this.ticksExisted % 20 == 0 && !world.isRemote) {
-
-			getData().addBendingId(Airbending.ID);
-		}
-		if (this.ticksExisted == 2 && !world.isRemote) {
-			if (level == 0) {
-				Random rand = new Random();
-				int level = rand.nextInt(3 + 1 - 1) + 1;
-				getData().addBendingId(Airbending.ID);
-				if (level < 2) {
-					this.level = 1;
-				}
-				if (level == 2) {
-					this.level = 2;
-				}
-				if (level > 2) {
-					this.level = 3;
-
-				}
-			}
-
-			if (level == 1) {
-				getData().getAbilityData("air_bubble").setLevel(-1);
-				getData().getAbilityData("air_gust").setLevel(0);
-				getData().getAbilityData("airblade").setLevel(0);
-			}
-			if (level == 2) {
-				getData().getAbilityData("air_bubble").setLevel(-1);
-				getData().getAbilityData("air_gust").setLevel(1);
-				getData().getAbilityData("airblade").setLevel(0);
-			}
-			if (level >= 3) {
-				getData().getAbilityData("air_bubble").setLevel(0);
-				getData().getAbilityData("air_gust").setLevel(2);
-				getData().getAbilityData("airblade").setLevel(1);
-				ItemStack staff = new ItemStack(AvatarItems.airbenderStaff, 1);
-				this.setHeldItem(EnumHand.MAIN_HAND, staff);
-
-			}
-			scrollsLeft = this.level;
-			if (scrollsLeft == 0) {
-				scrollsLeft = 1;
-			}
-			this.getDisplayName();
-		}
 
 	}
 
 
 	@Override
-	public void setDead() {
-		if (!world.isRemote && level >= 3) {
-			this.entityDropItem(new ItemStack(AvatarItems.airbenderStaff, 1), 0);
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
+		getData().addBendingId(Airbending.ID);
+		if (level == 0 && !world.isRemote) {
+			Random rand = new Random();
+			int level = rand.nextInt(3 + 1 - 1) + 1;
+			getData().addBendingId(Airbending.ID);
+			if (level < 2) {
+				this.level = 1;
+			}
+			if (level == 2) {
+				this.level = 2;
+			}
+			if (level > 2) {
+				this.level = 3;
+
+			}
 		}
+
+		if (level == 1) {
+			getData().getAbilityData("air_bubble").setLevel(-1);
+			getData().getAbilityData("air_gust").setLevel(0);
+			getData().getAbilityData("airblade").setLevel(0);
+		}
+		if (level == 2) {
+			getData().getAbilityData("air_bubble").setLevel(-1);
+			getData().getAbilityData("air_gust").setLevel(1);
+			getData().getAbilityData("airblade").setLevel(0);
+		}
+		if (level >= 3) {
+			getData().getAbilityData("air_bubble").setLevel(0);
+			getData().getAbilityData("air_gust").setLevel(2);
+			getData().getAbilityData("airblade").setLevel(1);
+			ItemStack staff = new ItemStack(AvatarItems.airbenderStaff, 1);
+			this.setHeldItem(EnumHand.MAIN_HAND, staff);
+
+		}
+		scrollsLeft = this.level;
+		if (scrollsLeft == 0) {
+			scrollsLeft = 1;
+		}
+		return super.onInitialSpawn(difficulty, livingdata);
+	}
+
+	@Override
+	public void setDead() {
+		//if (!world.isRemote && level >= 3) {
+		//	this.entityDropItem(new ItemStack(AvatarItems.airbenderStaff, 1), 0);
+		//}
 		super.setDead();
 	}
 
 
-
-
 	@Override
 	public ITextComponent getDisplayName() {
-		TextComponentString textcomponentstring = new TextComponentString("Level "+ level + " " + ScorePlayerTeam.formatPlayerName(this.getTeam(), this.getName()));
+		/*TextComponentString textcomponentstring = new TextComponentString("Level "+ level + " " + ScorePlayerTeam.formatPlayerName(this.getTeam(), this.getName()));
 		textcomponentstring.getStyle().setHoverEvent(this.getHoverEvent());
 		textcomponentstring.getStyle().setInsertion(this.getCachedUniqueIdString());
-		return textcomponentstring;
+		return textcomponentstring;**/
+		return super.getDisplayName();
 	}
 
 

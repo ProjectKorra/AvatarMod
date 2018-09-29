@@ -367,6 +367,10 @@ public class EntityAirBubble extends EntityShield {
 
 	@Override
 	protected void onCollideWithEntity(Entity entity) {
+		if (entity instanceof AvatarEntity) {
+			((AvatarEntity) entity).onAirContact();
+		}
+
 		if (canCollideWith(entity) && entity != getOwner()) {
 
 			double mult = -2;

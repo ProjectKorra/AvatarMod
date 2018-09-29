@@ -114,6 +114,13 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	}
 
 	@Override
+	public boolean onAirContact() {
+		spawnExtinguishIndicators();
+		setDead();
+		return super.onAirContact();
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		FireArcBehavior newBehavior = (FireArcBehavior) getBehavior().onUpdate(this);
@@ -252,7 +259,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
-					if (entity != getOwner() && entity != null && getOwner() != null) {
+					if (entity != getOwner() && entity != null && getOwner() != null && canCollideWith(entity)) {
 						double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
 
 						Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));

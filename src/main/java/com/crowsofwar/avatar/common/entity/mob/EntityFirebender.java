@@ -22,14 +22,22 @@ import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import com.crowsofwar.gorecore.format.FormattedMessage;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.scoreboard.ScorePlayerTeam;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Random;
 
@@ -46,14 +54,13 @@ public class EntityFirebender extends EntityHumanBender {
 			.register(new ResourceLocation("avatarmod", "firebender"));
 
 	private int scrollsLeft;
+	private int level = 0;
 	/**
 	 * @param world
 	 */
 	public EntityFirebender(World world) {
 		super(world);
-
-		BendingData data = BendingData.get(this);
-		data.addBendingId(Firebending.ID);
+		getData().addBendingId(Firebending.ID);
 
 
 	}
@@ -63,36 +70,6 @@ public class EntityFirebender extends EntityHumanBender {
 		return MSG_NEED_FIRE_TRADE_ITEM;
 	}
 
-	@Override
-	protected void entityInit() {
-		super.entityInit();
-		BendingData data = BendingData.get(this);
-		data.addBendingId(Firebending.ID);
-		Random rand = new Random();
-		int level = rand.nextInt(3) + 1;
-		if (level <= 1) {
-			getData().getAbilityData("fireball").setLevel(-1);
-			getData().getAbilityData("flamethrower").setLevel(0);
-			getData().getAbilityData("fire_arc").setLevel(0);
-			getData().getAbilityData("inferno_punch").setLevel(-1);
-			scrollsLeft = 1;
-		}
-		if (level == 1) {
-			getData().getAbilityData("fireball").setLevel(0);
-			getData().getAbilityData("flamethrower").setLevel(0);
-			getData().getAbilityData("fire_arc").setLevel(1);
-			getData().getAbilityData("inferno_punch").setLevel(-1);
-			scrollsLeft = 2;
-		}
-		if (level >= 3) {
-			getData().getAbilityData("fireball").setLevel(1);
-			getData().getAbilityData("flamethrower").setLevel(1);
-			getData().getAbilityData("fire_arc").setLevel(2);
-			getData().getAbilityData("inferno_punch").setLevel(0);
-			scrollsLeft = 3;
-		}
-
-	}
 
 	@Override
 	protected void applyEntityAttributes() {
@@ -119,6 +96,40 @@ public class EntityFirebender extends EntityHumanBender {
 	}
 
 	@Override
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
+		getData().addBendingId(Firebending.ID);
+		if (level == 0 && !world.isRemote) {
+			Random rand = new Random();
+			int level = rand.nextInt(3) + 1;
+			if (level < 2) {
+				getData().getAbilityData("fireball").setLevel(-1);
+				getData().getAbilityData("flamethrower").setLevel(0);
+				getData().getAbilityData("fire_arc").setLevel(0);
+				getData().getAbilityData("inferno_punch").setLevel(-1);
+				this.level = 1;
+				scrollsLeft = 1;
+			}
+			if (level == 2) {
+				getData().getAbilityData("fireball").setLevel(0);
+				getData().getAbilityData("flamethrower").setLevel(0);
+				getData().getAbilityData("fire_arc").setLevel(1);
+				getData().getAbilityData("inferno_punch").setLevel(-1);
+				scrollsLeft = 2;
+				this.level = 2;
+			}
+			if (level > 2) {
+				getData().getAbilityData("fireball").setLevel(1);
+				getData().getAbilityData("flamethrower").setLevel(1);
+				getData().getAbilityData("fire_arc").setLevel(2);
+				getData().getAbilityData("inferno_punch").setLevel(0);
+				scrollsLeft = 3;
+				this.level = 3;
+			}
+		}
+		return super.onInitialSpawn(difficulty, livingdata);
+	}
+
+	@Override
 	protected ScrollType getScrollType() {
 		return ScrollType.FIRE;
 	}
@@ -129,41 +140,13 @@ public class EntityFirebender extends EntityHumanBender {
 	}
 
 	@Override
-	protected boolean isTradeItem(Item item) {
-		return super.isTradeItem(item) || MOBS_CONFIG.isFireTradeItem(item);
+	public boolean processInteract(EntityPlayer player, EnumHand hand) {
+		return super.processInteract(player, hand);
 	}
 
 	@Override
-	public void onUpdate() {
-		super.onUpdate();
-		if (ticksExisted % 20 == 0) {
-			BendingData data = BendingData.get(this);
-			data.addBendingId(Firebending.ID);
-		}
-		if (ticksExisted == 2) {
-			Random rand = new Random();
-			int level = rand.nextInt(3) + 1;
-			if (level <= 1) {
-				getData().getAbilityData("fireball").setLevel(-1);
-				getData().getAbilityData("flamethrower").setLevel(0);
-				getData().getAbilityData("fire_arc").setLevel(0);
-				getData().getAbilityData("inferno_punch").setLevel(-1);
-				scrollsLeft = 1;
-			}
-			if (level == 1) {
-				getData().getAbilityData("fireball").setLevel(0);
-				getData().getAbilityData("flamethrower").setLevel(0);
-				getData().getAbilityData("fire_arc").setLevel(1);
-				getData().getAbilityData("inferno_punch").setLevel(-1);
-				scrollsLeft = 2;
-			}
-			if (level >= 3) {
-				getData().getAbilityData("fireball").setLevel(1);
-				getData().getAbilityData("flamethrower").setLevel(1);
-				getData().getAbilityData("fire_arc").setLevel(2);
-				getData().getAbilityData("inferno_punch").setLevel(0);
-				scrollsLeft = 3;
-			}
-		}
+	protected boolean isTradeItem(Item item) {
+		return super.isTradeItem(item) || MOBS_CONFIG.isFireTradeItem(item);
 	}
 }
+
