@@ -84,6 +84,7 @@ avatar.purifyCooldown=Purify is on cooldown! You can't use it!
 avatar.restoreCooldown=Restore is on cooldown! You can't use it!
 avatar.abilityLocked=You need to unlock that ability before you can use it!
 avatar.bisonNoFood=Your bison is too hungry to fly! You need to feed it apples and hay so it can fly.
+avatar.bisonSitting=Your bison is now sitting!
 avatar.bisonChestSlots1=Your bison does not have any
 avatar.bisonChestSlots2=inventory yet, but will gain
 avatar.bisonChestSlots3=more slots as it grows older.

@@ -726,6 +726,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 
 		if (player.isSneaking() && getOwner() == player) {
+			if (!isSitting()) {
+				MSG_BISON_SITTING.send(player);
+			}
 			setSitting(!isSitting());
 			madeSitByPlayer = true;
 			return true;
@@ -966,6 +969,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 
 		if (condition.getFoodPoints() == 0 && getOwner() != null) {
+			MSG_BISON_SITTING.send(getOwner());
 			setSitting(true);
 			madeSitByPlayer = false;
 			if (ticksExisted % 40 == 0) {
