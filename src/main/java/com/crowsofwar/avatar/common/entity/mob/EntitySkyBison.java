@@ -153,27 +153,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	public EntitySkyBison(World world) {
 		super(world);
 
-		getData().addBendingId(Airbending.ID);
-
-		Random rand = new Random();
-		int level = rand.nextInt(3) + 1;
-
-		if (level <= 1) {
-			getData().getAbilityData("air_bubble").setLevel(0);
-			getData().getAbilityData("air_gust").setLevel(1);
-			getData().getAbilityData("airblade").setLevel(0);
-		}
-		if (level == 2) {
-			getData().getAbilityData("air_bubble").setLevel(1);
-			getData().getAbilityData("air_gust").setLevel(1);
-			getData().getAbilityData("airblade").setLevel(1);
-		}
-		if (level >= 3) {
-			getData().getAbilityData("air_bubble").setLevel(2);
-			getData().getAbilityData("air_gust").setLevel(3);
-			getData().getAbilityData("airblade").setLevel(1);
-		}
-
 
 		moveHelper = new SkyBisonMoveHelper(this);
 		ownerAttr = new SyncedEntity<>(this, SYNC_OWNER);
@@ -268,6 +247,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Nullable
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty,
 											@Nullable IEntityLivingData livingData) {
+		getData().addBendingId(Airbending.ID);
+		getData().getAbilityData("air_gust").setLevel(0);
+		
+
 
 		boolean sterile = false;
 		if (livingData instanceof BisonSpawnData) {
@@ -925,13 +908,25 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	public void onUpdate() {
 		super.onUpdate();
 
+		if (condition.getAgeDays() == 3) {
+				getData().getAbilityData("air_bubble").setLevel(0);
+				getData().getAbilityData("air_gust").setLevel(1);
+				getData().getAbilityData("airblade").setLevel(0);
+		}
+		if (condition.getAgeDays() == 4) {
+				getData().getAbilityData("air_bubble").setLevel(1);
+				getData().getAbilityData("air_gust").setLevel(1);
+				getData().getAbilityData("airblade").setLevel(1);
+		}
+		if (condition.getAgeDays() == 5) {
+				getData().getAbilityData("air_bubble").setLevel(2);
+				getData().getAbilityData("air_gust").setLevel(3);
+				getData().getAbilityData("airblade").setLevel(1);
+		}
+
 		if(this.isSitting() && hasOwner() && (world.getBlockState(getEntityPos(this)
 				.toBlockPos()).getBlock() != Blocks.AIR)) {
 			this.motionX = this.motionY = this.motionZ = 0;
-		}
-
-		if (this.ticksExisted % 20 == 0) {
-			getData().addBendingId(Airbending.ID);
 		}
 
 		// Client-side chest sometimes doesn't have enough slots, since when the
@@ -1015,6 +1010,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 
 	}
+
+
 
 	// moveWithHeading
 	@Override
