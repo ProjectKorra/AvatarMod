@@ -139,7 +139,7 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 		if (!world.isRemote && entity != getOwner() && !(entity instanceof EntityEarthspike) && !(entity instanceof EntityEarthspikeSpawner) && canCollideWith(entity)) {
 			pushEntity(entity);
 			if (attackEntity(entity)) {

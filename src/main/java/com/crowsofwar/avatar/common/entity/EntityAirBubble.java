@@ -366,7 +366,7 @@ public class EntityAirBubble extends EntityShield {
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 		if (entity instanceof AvatarEntity) {
 			if (((AvatarEntity) entity).getOwner() != getOwner()) {
 				((AvatarEntity) entity).onAirContact();
@@ -392,6 +392,7 @@ public class EntityAirBubble extends EntityShield {
 			AvatarUtils.afterVelocityAdded(entity);
 		}
 	}
+
 
 	@Override
 	public boolean canCollideWith(Entity entity) {

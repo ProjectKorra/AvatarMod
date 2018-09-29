@@ -197,7 +197,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 		if (stuckTo == null && entity instanceof EntityLivingBase) {
 
 			stuckTo = (EntityLivingBase) entity;

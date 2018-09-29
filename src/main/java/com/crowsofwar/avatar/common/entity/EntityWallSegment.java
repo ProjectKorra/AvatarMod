@@ -242,7 +242,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 
 		// Note... only called server-side
 		double amt = 0.05;

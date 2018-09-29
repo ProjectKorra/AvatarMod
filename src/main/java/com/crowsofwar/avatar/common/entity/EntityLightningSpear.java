@@ -341,7 +341,7 @@ public class EntityLightningSpear extends AvatarEntity {
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 		if (getBehavior() instanceof LightningSpearBehavior.Thrown && getBehavior() != null) {
 			if (this.canCollideWith(entity) && entity != getOwner()) {
 				if (getAbility() instanceof AbilityLightningSpear && !world.isRemote) {

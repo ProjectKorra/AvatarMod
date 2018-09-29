@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireArc;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -179,12 +180,19 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 		if (entity instanceof AvatarEntity && this.getBehavior() instanceof FireArcBehavior.Thrown) {
 			((AvatarEntity) entity).onFireContact();
 		}
 		if(getBehavior() != null && getBehavior() instanceof FireArcBehavior.Thrown) {
-			Firesplosion();
+			if (entity instanceof AvatarEntity) {
+			if (!(((AvatarEntity) entity).getElement() instanceof Airbending)) {
+					Firesplosion();
+				}
+			}
+			else {
+				Firesplosion();
+			}
 			cleanup();
 			this.setDead();
 		}

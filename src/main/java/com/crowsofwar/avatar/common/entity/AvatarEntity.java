@@ -363,7 +363,7 @@ public abstract class AvatarEntity extends Entity {
 	 * confused with the vanilla {@link #applyEntityCollision(Entity)}, which is
 	 * where another entity is pushing this one.
 	 */
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 	}
 
 	/**

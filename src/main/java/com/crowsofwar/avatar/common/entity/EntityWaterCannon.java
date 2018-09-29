@@ -128,7 +128,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 		if (this.canCollideWith(entity) && getOwner() != entity) {
 
 

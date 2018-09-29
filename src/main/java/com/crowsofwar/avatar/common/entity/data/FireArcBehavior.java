@@ -144,9 +144,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 									.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);
 						}
 					}
-					entity.Firesplosion();
-					entity.cleanup();
-					entity.setDead();
+					entity.onCollideWithEntity(entity);
 
 				}
 			}
