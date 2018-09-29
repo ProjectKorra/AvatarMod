@@ -140,6 +140,11 @@ public class EntityFirebender extends EntityHumanBender {
 	}
 
 	@Override
+	protected int getScrollsLeft() {
+		return scrollsLeft;
+	}
+
+	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		return super.processInteract(player, hand);
 	}

@@ -66,7 +66,7 @@ public class AiFireball extends BendingAi {
 		entity.rotationYaw = (float) toDegrees(rotations.y());
 		entity.rotationPitch = (float) toDegrees(rotations.x());
 
-		if (timeExecuting >= 20) {
+		if (timeExecuting >= 15) {
 			execStatusControl(StatusControl.THROW_FIREBALL);
 			timeExecuting = 0;
 			return false;
@@ -79,7 +79,7 @@ public class AiFireball extends BendingAi {
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSq(target) > 4 * 4
+		return target != null && entity.getDistance(target) > 4
 				&& bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
 	}
 
