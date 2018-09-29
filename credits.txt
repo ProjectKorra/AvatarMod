@@ -38,4 +38,25 @@ Spanish translations by Madwrist (Argentinian Spanish, Spanish, Mexican Spanish,
   Venezuelan Spanish)
 Russian translations by Mo-og
 
+---------------------
+Mod Team List:
+-ArcaneDragon (Mod Lead)
+-Mahtaran (Developer)
+-CrowsOfWar (Creator)
+
+Modelers:
+-BlueGlaciers/Me (Discord, Git Manager/Admin)
+-DragonLuch
+-Talhanation
+-Airswift101
+
+Artists:
+-Kisutora
+-Cornelious
+-Hahdrim
+-Alexutzu
+-MrPerryGuy
+-TheBoogeyMan
+---------------------
+
 Also check our Discord at https://discord.gg/qjQxrSw
