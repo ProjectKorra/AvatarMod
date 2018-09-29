@@ -37,3 +37,5 @@ Polish translations by Gremter
 Spanish translations by Madwrist (Argentinian Spanish, Spanish, Mexican Spanish, Uruguayan Spanish,
   Venezuelan Spanish)
 Russian translations by Mo-og
+
+Also check our Discord at https://discord.gg/qjQxrSw
