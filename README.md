@@ -1,24 +1,23 @@
 Avatar Mod 2
 ============
 
-Welcome to AV2 Mod Repository!
+Welcome to the AV2 Repository!
 This repository stores the source code for the [Avatar Mod 2 project](https://avatar.amuzil.com/), currently
 developed by members of the ProjectKorra team. This project is a modification for Minecraft which
 adds content from [*Avatar: The Last Airbender*](https://en.wikipedia.org/wiki/Avatar:_The_Last_Airbender).
 
-The mod currently has 4 Major Elements, and even more to come!
-We also included already some new mobs, multipurpose-abilities and etc ALL BASED FROM Avatar Movie!
+The mod currently has 4 Major Elements, 4 sub elements, and even more to come!
+There are new mobs, multipurpose-abilities, items, etc all based on the TV show!!
 More information is available at the [wiki](http://projectkorra.wikia.com/wiki/Av2).
 
 Important: Looking for developers
 --------------------------------
 
-We are currently still in Heavy Development, more features and stuffs are already planned!
-Because of that, we are widely open for Artists, Modelers, and Developers to join us!
-Contact for mod team applyments:
+We are currently still in Heavy Development, and there are way more features planned!
+Because of that, we are welcoming Artists, Modellers, and Developers to join us!
+Contact for mod team applications:
 ArcaneDragon,
-Mist,
-PixelsDev,
+Mist
 
 End Users
 ---------
@@ -35,9 +34,9 @@ Contributing
 ------------
 
 We are currently looking for artists for GUI art and several other things. We don't need much
-for modelers or developers, though pull requests are always welcome.
+for modellers or developers, though pull requests are always welcome.
 
-If you are looking to join the team to create this mod, please contact with any of the following
+If you are looking to join the team to create this mod, please contact us in any of the following
 ways:
 
 * FavouriteDragon, the current lead developer for the Av2 project - reachable via ninjadragon008@icloud.com
