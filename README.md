@@ -15,9 +15,7 @@ Important: Looking for developers
 
 We are currently still in Heavy Development, and there are way more features planned!
 Because of that, we are welcoming Artists, Modellers, and Developers to join us!
-Contact for mod team applications:
-ArcaneDragon,
-Mist
+Please contact Mist or FavouriteDragon if you wish to join development.
 
 End Users
 ---------
@@ -39,7 +37,7 @@ for modellers or developers, though pull requests are always welcome.
 If you are looking to join the team to create this mod, please contact us in any of the following
 ways:
 
-* FavouriteDragon, the current lead developer for the Av2 project - reachable via ninjadragon008@icloud.com
+* FavouriteDragon (aka ArcaneDragon), the current lead developer for the Av2 project - reachable via ninjadragon008@icloud.com
 * Mist, the creator and owner of the ProjectKorra group - apply at [projectkorra.com](http://projectkorra.com/join-the-team/)
 
 We will then contact you with information about getting set up and possible work to complete.
