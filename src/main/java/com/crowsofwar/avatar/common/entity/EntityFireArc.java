@@ -302,7 +302,6 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		if (canDamageEntity(entity)) {
 			DamageSource ds = AvatarDamageSource.causeFireDamage(entity, getOwner());
 			float damage = STATS_CONFIG.fireArcSettings.damage * damageMult;
-			entity.attackEntityFrom(ds, damage);
 			if (entity.attackEntityFrom(ds, damage)) {
 				if (getOwner() != null && !world.isRemote && getAbility() != null) {
 					BendingData data1 = BendingData.get(getOwner());

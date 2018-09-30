@@ -185,7 +185,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the water cannon
 	 */
 	public static DamageSource causeWaterCannonDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_watercannon", hit, owner);
+		return new EntityDamageSourceIndirect("avatar_waterCannon", hit, owner);
 	}
 
 	/**

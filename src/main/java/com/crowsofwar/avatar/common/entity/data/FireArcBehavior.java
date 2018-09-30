@@ -30,7 +30,7 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
@@ -124,16 +124,14 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 					collided -> collided != entity.getOwner());
 
 			for (Entity collided : collidedList) {
-				if (entity.canCollideWith(collided) && collided != entity && collided != entity.getOwner()) {
+				if (collided == entity.getOwner()) return this;
+				if (entity.canCollideWith(collided)) {
 
 					double push = STATS_CONFIG.fireArcSettings.push;
 					collided.addVelocity(entity.motionX * push, 0.4 * push, entity.motionZ * push);
 					collided.setFire(3);
 
-					if (entity.canDamageEntity(collided)) {
-						collided.attackEntityFrom(AvatarDamageSource.causeFireDamage(collided, entity.getOwner()),
-								STATS_CONFIG.fireArcSettings.damage * entity.getDamageMult());
-						//For some reason fire arc isn't damaging entities
+					if (entity.canDamageEntity(collided) || collided instanceof EntityPlayer) {
 						if (collided.attackEntityFrom(AvatarDamageSource.causeFireDamage(collided, entity.getOwner()),
 								STATS_CONFIG.fireArcSettings.damage * entity.getDamageMult())) {
 							BattlePerformanceScore.addMediumScore(entity.getOwner());
