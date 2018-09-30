@@ -466,12 +466,13 @@ death.attack.avatar_fireArc=%1$s was §c§lFIRED by %2$s !
 death.attack.avatar_groundSmash=%2$s §2§lsmashed %1$s to a pulp!
 death.attack.avatar_lightningBending=%2$s §b§lelectrocuted %1$s !
 death.attack.avatar_lightningBendingRedirected=%2$s §b§lredirected lightning to §b§lelectrocute %1$s !
-death.attack.avatar_watercannon=%1$s couldn't handle the pressure of %2$s's §9§lWater §9§lCannon!
+death.attack.avatar_waterCannon=%1$s couldn't handle the pressure of %2$s's §9§lWater §9§lCannon!
 death.attack.avatar_cloudburst=%1$s was §f§lblown §f§lapart by %2$s's §f§lcloudburst!
 death.attack.avatar_icePrison=The §3§lintense §3§lfrost of %2$s's §3§lice §3§lprison §3§lfroze %1$s !
 death.attack.avatar_iceShard=%2$s was §3§lstabbed by %1$s's §3§lice §3§lshard!
 death.attack.avatar_sandPrison=%1$s was §6§lentombed by %1$s's §6§lsand §6§lprison!
 death.attack.avatar_sandstorm=%2$s was flung by %1$s's §6§lsandstorm!
+death.attack.avatar_shockWave=%2$s was blasted away by %1$s's shockwave!
 
 entity.Airbender.name=§f§lAirbender
 entity.Firebender.name=§c§lFirebender

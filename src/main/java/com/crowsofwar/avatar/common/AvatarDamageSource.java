@@ -238,4 +238,8 @@ public class AvatarDamageSource {
 		return new EntityDamageSourceIndirect("avatar_sandstorm", hit, owner);
 	}
 
+	public static DamageSource causeShockwaveDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_shockWave", hit, owner).setExplosion();
+	}
+
 }
