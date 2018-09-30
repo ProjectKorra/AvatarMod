@@ -26,7 +26,7 @@ public class FirePassiveHandler {
 					if (data != null) {
 						if (data.hasBendingId(Firebending.ID)) {
 							if (entity.ticksExisted % 400 == 0) {
-								entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 400));
+								entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 400, -1));
 							}
 						}
 					}

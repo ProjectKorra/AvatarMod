@@ -126,6 +126,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 					if (entity instanceof AvatarEntity) {
 						((AvatarEntity) entity).onFireContact();
 					} else if (entity instanceof EntityLivingBase) {
+						//entity.onStruckByLightning(this);
 						handleCollision((EntityLivingBase) entity);
 					}
 
