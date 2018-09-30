@@ -345,7 +345,7 @@ public class EntityFireball extends AvatarEntity {
 			AbilityData abilityData = null;
 			if (!world.isRemote && getAbility() instanceof AbilityFireball) {
 				abilityData = AbilityData.get(getOwner(), getAbility().getName());
-				DamageSource ds = AvatarDamageSource.causeCloudburstDamage(entity, getOwner());
+				DamageSource ds = AvatarDamageSource.causeFireballDamage(entity, getOwner());
 				int lvl = abilityData.getLevel();
 				float damage = 1.5F;
 				if (lvl == 1) {

@@ -120,7 +120,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 			entity.addVelocity(Vector.DOWN.times(9.81 / 120));
 
 			List<Entity> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
-					Entity.class, entity.getEntityBoundingBox().grow(0.9, 0.9, 0.9),
+					Entity.class, entity.getEntityBoundingBox().grow(0.5, 0.5, 0.5),
 					collided -> collided != entity.getOwner());
 
 			for (Entity collided : collidedList) {
@@ -131,6 +131,9 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 					collided.setFire(3);
 
 					if (entity.canDamageEntity(collided)) {
+						collided.attackEntityFrom(AvatarDamageSource.causeFireDamage(collided, entity.getOwner()),
+								STATS_CONFIG.fireArcSettings.damage * entity.getDamageMult());
+						//For some reason fire arc isn't damaging entities
 						if (collided.attackEntityFrom(AvatarDamageSource.causeFireDamage(collided, entity.getOwner()),
 								STATS_CONFIG.fireArcSettings.damage * entity.getDamageMult())) {
 							BattlePerformanceScore.addMediumScore(entity.getOwner());
