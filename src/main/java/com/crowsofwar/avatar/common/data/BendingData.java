@@ -535,9 +535,9 @@ public class BendingData {
 
 		AvatarUtils.writeList(tickHandlers,
 				(nbt, handler) -> {
-					nbt.setInteger("Id", handler.id());
 					System.out.println(nbt);
 					System.out.println(handler);
+					if (handler != null && nbt != null) nbt.setInteger("Id", handler.id());
 				},
 				writeTo,
 				"TickHandlers");
