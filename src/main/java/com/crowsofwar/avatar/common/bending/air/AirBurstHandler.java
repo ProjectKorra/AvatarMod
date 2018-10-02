@@ -190,7 +190,7 @@ public class AirBurstHandler extends TickHandler {
 				shockwave.setRange(radius);
 				shockwave.setPerformanceAmount(performanceAmount);
 				shockwave.setParticleController(particleController);
-				shockwave.setParticleAmount(1);
+				shockwave.setParticleAmount(2);
 				shockwave.setSphere(true);
 				shockwave.setAbility(new AbilityAirBurst());
 				shockwave.setSpeed(knockBack / 4);
