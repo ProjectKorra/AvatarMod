@@ -17,7 +17,9 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
 
@@ -126,8 +128,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 					if (entity instanceof AvatarEntity) {
 						((AvatarEntity) entity).onFireContact();
 					} else if (entity instanceof EntityLivingBase) {
-						//entity.onStruckByLightning(this);
-						handleCollision((EntityLivingBase) entity);
+						handleCollision(entity);
 					}
 
 				}
@@ -136,14 +137,31 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 	}
 
+/*	@SubscribeEvent
+	public static void onLightningStrike(LivingHurtEvent event) {
+		Entity hurt = event.getEntity();
+		Entity source = event.getSource().getTrueSource();
+		DamageSource damage = event.getSource();
+		if (damage == DamageSource.LIGHTNING_BOLT) {
 
-	private void handleCollision(EntityLivingBase collided) {
-		damageEntity(collided);
+			if (source instanceof EntityAvatarLightning) {
+				event.setAmount(0);
+				EntityAvatarLightning lightning = (EntityAvatarLightning) source;
+				lightning.handleCollision(hurt);
+				System.out.println(event.getAmount());
+			}
+		}
+	}**/
+
+	private void handleCollision(Entity collided) {
+		if (spawner.canDamageEntity(collided)) {
+			damageEntity(collided);
+		}
 		collided.setFire(collided.isImmuneToFire() ? 0 : 8);
 	}
 
 
-	private void damageEntity(EntityLivingBase entity) {
+	private void damageEntity(Entity entity) {
 		if (world.isRemote) {
 			return;
 		}
