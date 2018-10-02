@@ -179,7 +179,7 @@ public class AirBurstHandler extends TickHandler {
 
 			if (duration >= durationToFire) {
 
-				int particleController = abilityData.getLevel() >= 1 ? 40 - (4 * abilityData.getLevel()) : 40;
+				int particleController = abilityData.getLevel() >= 1 ? 35 - (5 * abilityData.getLevel()) : 35;
 				EntityShockwave shockwave = new EntityShockwave(world);
 				shockwave.setOwner(entity);
 				shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);

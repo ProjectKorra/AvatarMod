@@ -35,7 +35,7 @@ public class TickHandlerController {
 	public static TickHandler AIRBURST_CHARGE_HANDLER = new AirBurstHandler(15);
 	public static TickHandler AIR_STATCTRL_HANDLER = new AirStatusControlHandler(16);
 	public static TickHandler FIRE_STATCTRL_HANDLER = new FireStatusControlHandler(17);
-	public static TickHandler AIR_DODGE = new AirDodgeHandler(18);
+	//public static TickHandler AIR_DODGE = new AirDodgeHandler(18);
 	public static TickHandler RENDER_ELEMENT_HANDLER = new RenderElementTickHandler(19);
 	public static TickHandler STAFF_GUST_HANDLER = new StaffGustCooldown(20);
 	public static TickHandler SLIPSTREAM_COOLDOWN_HANDLER = new SlipstreamCooldownHandler(21);
