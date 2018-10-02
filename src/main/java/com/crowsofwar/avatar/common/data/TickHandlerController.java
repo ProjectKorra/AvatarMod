@@ -82,13 +82,14 @@ public class TickHandlerController {
 	}
 
 	public static TickHandler fromId(int id) {
-		System.out.println(id);
+		System.out.println("Getting TickHandler for ID: " + id);
 		//FMLLog.info("allHandlers = %s", allHandlers);
 		return allHandlers.get(id);
 	}
 
 	public static TickHandler fromBytes(ByteBuf buf) {
-		System.out.println(buf.readInt());
-		return fromId(buf.readInt());
+		int ID = buf.readInt();
+		System.out.println("Getting TickHandler from ByteBuf for ID: " + ID);
+		return fromId(ID);
 	}
 }
