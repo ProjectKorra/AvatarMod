@@ -82,7 +82,7 @@ public class TickHandlerController {
 	}
 
 	public static TickHandler fromId(int id) {
-		FMLLog.info("allHandlers = %s", allHandlers);
+		//FMLLog.info("allHandlers = %s", allHandlers);
 		return allHandlers.get(id);
 	}
 
