@@ -11,8 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class SlipstreamCooldownHandler extends TickHandler {
 
-	public static TickHandler SLIPSTREAM_COOLDOWN_HANDLER = TickHandlerController.fromId(TickHandlerController.SLIPSTREAM_COOLDOWN_HANDLER_ID);
-
 	public SlipstreamCooldownHandler(int id) {
 		super(id);
 	}

@@ -10,8 +10,6 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class PurifyCooldownHandler extends TickHandler {
 
-	public static TickHandler PURIFY_COOLDOWN_HANDLER = TickHandlerController.fromId(TickHandlerController.PURIFY_COOLDOWN_HANDLER_ID);
-
 	public PurifyCooldownHandler(int id) {
 		super(id);
 	}

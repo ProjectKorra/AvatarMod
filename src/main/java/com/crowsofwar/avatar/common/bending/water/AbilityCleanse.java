@@ -12,9 +12,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -26,7 +24,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_CLEANSE_COOLDOWN;
-import static com.crowsofwar.avatar.common.bending.water.CleanseCooldownHandler.CLEANSE_COOLDOWN_HANDLER;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.CLEANSE_COOLDOWN_HANDLER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static java.lang.Math.toRadians;

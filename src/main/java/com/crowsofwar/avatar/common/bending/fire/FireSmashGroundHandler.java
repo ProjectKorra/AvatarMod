@@ -16,21 +16,16 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.*;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundEvent;
 
 /**
  * @author CrowsOfWar
  */
 public class FireSmashGroundHandler extends SmashGroundHandler {
-
-	public static TickHandler SMASH_GROUND_FIRE = TickHandlerController.fromId(TickHandlerController.SMASH_GROUND_FIRE_ID);
 
 	public FireSmashGroundHandler(int id) {
 		super(id);

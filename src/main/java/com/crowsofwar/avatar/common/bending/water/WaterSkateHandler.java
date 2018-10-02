@@ -49,7 +49,6 @@ import static net.minecraft.init.Blocks.WATER;
  * @author CrowsOfWar
  */
 public class WaterSkateHandler extends TickHandler {
-	public static TickHandler WATER_SKATE = TickHandlerController.fromId(TickHandlerController.WATER_SKATE_ID);
 
 	private final ParticleSpawner particles;
 

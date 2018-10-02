@@ -35,7 +35,6 @@ import static java.lang.Math.toRadians;
  * @author CrowsOfWar
  */
 public class FlamethrowerUpdateTick extends TickHandler {
-	public static TickHandler FLAMETHROWER = TickHandlerController.fromId(TickHandlerController.FLAMETHROWER_ID);
 
 	public FlamethrowerUpdateTick(int id) {
 		super(id);

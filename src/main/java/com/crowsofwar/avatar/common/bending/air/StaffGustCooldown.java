@@ -6,8 +6,6 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
 public class StaffGustCooldown extends TickHandler {
 
-	public static TickHandler STAFF_GUST_HANDLER = TickHandlerController.fromId(TickHandlerController.STAFF_GUST_HANDLER_ID);
-
 	public StaffGustCooldown(int id) {
 		super(id);
 	}

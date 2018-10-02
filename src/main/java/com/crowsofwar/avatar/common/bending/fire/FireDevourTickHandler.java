@@ -22,7 +22,6 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static java.lang.Math.toRadians;
 
 public class FireDevourTickHandler extends TickHandler {
-	public static TickHandler FIRE_DEVOUR_HANDLER = TickHandlerController.fromId(TickHandlerController.FIRE_DEVOUR_HANDLER_ID);
 
 	private int fireConsumed = 0;
 	private int handlerLength = 20;

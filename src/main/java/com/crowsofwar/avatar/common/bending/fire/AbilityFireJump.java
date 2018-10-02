@@ -2,18 +2,13 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.FIRE_JUMP;
-import static com.crowsofwar.avatar.common.bending.fire.FireParticleSpawner.FIRE_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.FIRE_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AbilityFireJump extends Ability {

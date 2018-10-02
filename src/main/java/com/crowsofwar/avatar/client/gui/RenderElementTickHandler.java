@@ -7,7 +7,6 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
 public class RenderElementTickHandler extends TickHandler {
-	public static TickHandler RENDER_ELEMENT_HANDLER = TickHandlerController.fromId(TickHandlerController.RENDER_ELEMENT_HANDLER_ID);
 
 	public RenderElementTickHandler(int id) {
 		super(id);

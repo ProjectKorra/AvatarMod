@@ -1,20 +1,17 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.EntityEarthspike;
-import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.*;
 
-import static com.crowsofwar.avatar.common.bending.earth.SpawnEarthspikesHandler.SPAWN_EARTHSPIKES_HANDLER;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.gorecore.util.Vector;
+
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.SPAWN_EARTHSPIKES_HANDLER;
 
 public class AbilityEarthspikes extends Ability {
 
@@ -88,8 +85,7 @@ public class AbilityEarthspikes extends Ability {
 			} else {
 				if (entity.onGround) {
 					for (int i = 0; i < 8; i++) {
-						Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-								i * 45), 0).times(1.4).withY(0);
+						Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i * 45), 0).times(1.4).withY(0);
 						EntityEarthspike earthspike = new EntityEarthspike(world);
 						earthspike.setPosition(direction1.x() + entity.posX, entity.posY, direction1.z() + entity.posZ);
 						earthspike.setDamage(damage);
@@ -117,7 +113,6 @@ public class AbilityEarthspikes extends Ability {
 				data.removeTickHandler(SPAWN_EARTHSPIKES_HANDLER);
 			}
 			data.addTickHandler(SPAWN_EARTHSPIKES_HANDLER);
-
 
 		}
 	}

@@ -1,20 +1,16 @@
 package com.crowsofwar.avatar.common.bending.lightning;
 
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.EntityLightningArc;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.*;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityLightningArc;
+import com.crowsofwar.gorecore.util.Vector;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -28,10 +24,7 @@ import java.util.UUID;
  * @author CrowsOfWar
  */
 public abstract class LightningChargeHandler extends TickHandler {
-
-	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
-			("dfb6235c-82b6-407e-beaf-a48045735a82");
-	public static TickHandler LIGHTNING_CHARGE = TickHandlerController.fromId(TickHandlerController.LIGHTNING_CHARGE_ID);
+	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString("dfb6235c-82b6-407e-beaf-a48045735a82");
 
 	public LightningChargeHandler(int id) {
 		super(id);
@@ -72,12 +65,12 @@ public abstract class LightningChargeHandler extends TickHandler {
 			double speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			float damage = abilityData.getLevel() >= 2 ? 8 : 6;
 			float size = 1;
-			float[] turbulenceValues = {0.6f, 1.2f};
+			float[] turbulenceValues = { 0.6f, 1.2f };
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage = 12;
 				size = 0.75f;
-				turbulenceValues = new float[]{0.6f, 1.2f, 0.8f};
+				turbulenceValues = new float[] { 0.6f, 1.2f, 0.8f };
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				size = 1.5f;
@@ -90,8 +83,7 @@ public abstract class LightningChargeHandler extends TickHandler {
 
 			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
-			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE,
-					SoundCategory.PLAYERS, 1, 2);
+			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 1, 2);
 
 			return true;
 
@@ -101,8 +93,7 @@ public abstract class LightningChargeHandler extends TickHandler {
 
 	}
 
-	private void fireLightning(World world, EntityLivingBase entity, float damage, double speed,
-	                           float size, float[] turbulenceValues) {
+	private void fireLightning(World world, EntityLivingBase entity, float damage, double speed, float size, float[] turbulenceValues) {
 
 		for (float turbulence : turbulenceValues) {
 
@@ -128,13 +119,11 @@ public abstract class LightningChargeHandler extends TickHandler {
 
 	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
 
-		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes
-				.MOVEMENT_SPEED);
+		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 
 		moveSpeed.removeModifier(MOVEMENT_MODIFIER_ID);
 
-		moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID,
-				"Lightning charge modifier", multiplier - 1, 1));
+		moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID, "Lightning charge modifier", multiplier - 1, 1));
 
 	}
 

@@ -16,19 +16,18 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
+import net.minecraft.entity.EntityLivingBase;
+
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.BELOW_CROSSHAIR;
-import static com.crowsofwar.avatar.common.bending.water.WaterSkateHandler.WATER_SKATE;
-import static com.crowsofwar.avatar.common.bending.water.WaterSmashHandler.SMASH_GROUND_WATER;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_JUMP;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.*;
 
 /**
  * @author CrowsOfWar

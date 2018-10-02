@@ -28,7 +28,6 @@ public abstract class TickHandler {
 	public TickHandler(int id) {
 		this.id = id;
 		TickHandlerController.allHandlers.put(id, this);
-
 	}
 
 	/**

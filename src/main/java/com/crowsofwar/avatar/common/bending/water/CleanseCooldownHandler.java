@@ -9,7 +9,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class CleanseCooldownHandler extends TickHandler {
-	public static TickHandler CLEANSE_COOLDOWN_HANDLER = TickHandlerController.fromId(TickHandlerController.CLEANSE_COOLDOWN_HANDLER_ID);
 
 	public CleanseCooldownHandler(int id) {
 		super(id);

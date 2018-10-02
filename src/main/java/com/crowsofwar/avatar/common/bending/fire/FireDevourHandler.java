@@ -10,9 +10,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static com.crowsofwar.avatar.common.bending.fire.FireDevourTickHandler.FIRE_DEVOUR_HANDLER;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.FIRE_DEVOUR_HANDLER;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 

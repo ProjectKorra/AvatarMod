@@ -1,16 +1,12 @@
 package com.crowsofwar.avatar.common.bending.water;
 
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.*;
+
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundEvent;
 
 public class WaterSmashHandler extends SmashGroundHandler {
-
-	public static TickHandler SMASH_GROUND_WATER = TickHandlerController.fromId(TickHandlerController.SMASH_GROUND_WATER_ID);
 
 	public WaterSmashHandler(int id) {
 		super(id);

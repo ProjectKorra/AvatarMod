@@ -11,8 +11,8 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_RESTORE_COOLDOWN;
-import static com.crowsofwar.avatar.common.bending.earth.RestoreCooldownHandler.RESTORE_COOLDOWN_HANDLER;
-import static com.crowsofwar.avatar.common.bending.earth.RestoreParticleHandler.RESTORE_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.RESTORE_COOLDOWN_HANDLER;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.RESTORE_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 

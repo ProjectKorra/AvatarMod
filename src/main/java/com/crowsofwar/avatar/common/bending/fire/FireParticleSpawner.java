@@ -12,7 +12,6 @@ import net.minecraft.entity.EntityLivingBase;
 
 public class FireParticleSpawner extends TickHandler {
 	private static final ParticleSpawner particles = new NetworkParticleSpawner();
-	public static TickHandler FIRE_PARTICLE_SPAWNER = TickHandlerController.fromId(TickHandlerController.FIRE_PARTICLE_SPAWNER_ID);
 
 	public FireParticleSpawner(int id) {
 		super(id);

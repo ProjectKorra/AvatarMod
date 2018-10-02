@@ -1,50 +1,36 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.air.CloudburstPowerModifier;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.data.Behavior;
-import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.entity.*;
+import net.minecraft.entity.projectile.*;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
 
-import java.util.List;
-import java.util.UUID;
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.bending.air.CloudburstPowerModifier;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.data.*;
+import com.crowsofwar.avatar.common.util.*;
+import com.crowsofwar.gorecore.util.Vector;
 
-import static com.crowsofwar.avatar.common.bending.air.AirStatusControlHandler.AIR_STATCTRL_HANDLER;
+import java.util.*;
+
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.AIR_STATCTRL_HANDLER;
 
 public class EntityCloudBall extends AvatarEntity {
 	/**
 	 * @param world
 	 */
 	public static final DataParameter<CloudburstBehavior> SYNC_BEHAVIOR = EntityDataManager
-			.createKey(EntityCloudBall.class, CloudburstBehavior.DATA_SERIALIZER);
+					.createKey(EntityCloudBall.class, CloudburstBehavior.DATA_SERIALIZER);
 
-	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityCloudBall.class,
-			DataSerializers.VARINT);
+	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityCloudBall.class, DataSerializers.VARINT);
 
 	private AxisAlignedBB expandedHitbox;
 
@@ -63,11 +49,11 @@ public class EntityCloudBall extends AvatarEntity {
 	}
 
 	public void canAbsorb(boolean canAbsorb) {
-		this.absorbtion = canAbsorb;
+		absorbtion = canAbsorb;
 	}
 
 	public void canchiSmash(boolean canchiSmash) {
-		this.chismash = canchiSmash;
+		chismash = canchiSmash;
 	}
 
 	public void setStartingPosition(BlockPos position) {
@@ -81,22 +67,22 @@ public class EntityCloudBall extends AvatarEntity {
 		dataManager.register(SYNC_SIZE, 30);
 	}
 
-
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		int ticks = 0;
 		setBehavior((CloudburstBehavior) getBehavior().onUpdate(this));
-		if (this.getBehavior() instanceof CloudburstBehavior.Thrown) {
+		if (getBehavior() instanceof CloudburstBehavior.Thrown) {
 			ticks++;
 			if (ticks >= 200) {
 				cloudBurst();
-				this.setDead();
+				setDead();
 			}
 		}
 
 		if (ticksExisted % 2 == 0) {
-			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, (0.05F), (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, (0.05F),
+							(1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 		}
 
 		// Add hook or something
@@ -111,7 +97,8 @@ public class EntityCloudBall extends AvatarEntity {
 			if (ball == null && bD.hasStatusControl(StatusControl.THROW_CLOUDBURST)) {
 				bD.removeStatusControl(StatusControl.THROW_CLOUDBURST);
 			}
-			if (ball != null && ball.getBehavior() instanceof CloudburstBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_CLOUDBURST))) {
+			if (ball != null && ball.getBehavior() instanceof CloudburstBehavior.PlayerControlled && !(bD
+							.hasStatusControl(StatusControl.THROW_CLOUDBURST))) {
 				bD.addStatusControl(StatusControl.THROW_CLOUDBURST);
 			}
 
@@ -151,7 +138,7 @@ public class EntityCloudBall extends AvatarEntity {
 	@Override
 	public void setDead() {
 		super.setDead();
-		if (getOwner() != null && !world.isRemote && this.isDead) {
+		if (getOwner() != null && !world.isRemote && isDead) {
 			BendingData data = BendingData.get(getOwner());
 			data.addTickHandler(AIR_STATCTRL_HANDLER);
 		}
@@ -203,9 +190,8 @@ public class EntityCloudBall extends AvatarEntity {
 						for (UUID uuid : data.getAllBendingIds()) {
 							CloudburstPowerModifier cloudModifier = new CloudburstPowerModifier();
 							cloudModifier.setTicks(100);
-							data.getPowerRatingManager(uuid).addModifier(cloudModifier, new
-									BendingContext(data, (EntityLivingBase) entity, new
-									Raytrace.Result()));
+							data.getPowerRatingManager(uuid)
+											.addModifier(cloudModifier, new BendingContext(data, (EntityLivingBase) entity, new Raytrace.Result()));
 						}
 
 					}
@@ -244,7 +230,7 @@ public class EntityCloudBall extends AvatarEntity {
 	}
 
 	public AxisAlignedBB getExpandedHitbox() {
-		return this.expandedHitbox;
+		return expandedHitbox;
 	}
 
 	public void cloudBurst() {
@@ -263,12 +249,13 @@ public class EntityCloudBall extends AvatarEntity {
 					hitBox = 4;
 				}
 
-				this.setInvisible(true);
-				WorldServer World = (WorldServer) this.world;
+				setInvisible(true);
+				WorldServer World = (WorldServer) world;
 				World.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, 50, 0, 0, 0, speed);
-				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+				world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 4.0F,
+								(1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(hitBox, hitBox, hitBox),
-						entity -> entity != getOwner());
+																		 entity -> entity != getOwner());
 
 				if (!collided.isEmpty()) {
 					for (Entity entity : collided) {
@@ -276,7 +263,7 @@ public class EntityCloudBall extends AvatarEntity {
 
 							damageEntity(entity);
 
-							double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
+							double distanceTravelled = entity.getDistance(position.getX(), position.getY(), position.getZ());
 
 							//Divide the result of the position difference to make entities fly
 							//further the closer they are to the player.
@@ -293,7 +280,8 @@ public class EntityCloudBall extends AvatarEntity {
 								entity.addVelocity(x, y, z);
 
 								if (collided instanceof AvatarEntity) {
-									if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+									if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
+													&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
 										AvatarEntity avent = (AvatarEntity) collided;
 										avent.addVelocity(x, y, z);
 									}
@@ -315,12 +303,12 @@ public class EntityCloudBall extends AvatarEntity {
 			AbilityData abilityData = data.getAbilityData("cloudburst");
 			DamageSource ds = AvatarDamageSource.causeCloudburstDamage(entity, getOwner());
 			int lvl = abilityData.getLevel();
-			float damage = getDamage()/3;
+			float damage = getDamage() / 3;
 			if (lvl == 1) {
-				damage = getDamage()/2;
+				damage = getDamage() / 2;
 			}
 			if (lvl == 2) {
-				damage = getDamage()/1.5F;
+				damage = getDamage() / 1.5F;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage = getDamage();
@@ -348,7 +336,6 @@ public class EntityCloudBall extends AvatarEntity {
 		return true;
 	}
 	//Fixes a glitch where the entity turns invisible
-
 
 	private void removeStatCtrl() {
 		if (getOwner() != null) {

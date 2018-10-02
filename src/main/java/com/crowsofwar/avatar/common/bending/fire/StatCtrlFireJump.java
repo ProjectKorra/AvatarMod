@@ -1,43 +1,28 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.config.ConfigSkills;
-import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityAreaEffectCloud;
-import net.minecraft.entity.EntityHanging;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.entity.*;
+import net.minecraft.entity.item.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+
+import com.crowsofwar.avatar.common.*;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.config.ConfigSkills;
+import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.particle.*;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.List;
 
-import static com.crowsofwar.avatar.common.bending.fire.FireParticleSpawner.FIRE_PARTICLE_SPAWNER;
-import static com.crowsofwar.avatar.common.bending.fire.FireSmashGroundHandler.SMASH_GROUND_FIRE;
-import static com.crowsofwar.avatar.common.bending.fire.FireSmashGroundHandlerBig.SMASH_GROUND_FIRE_BIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.*;
 
 public class StatCtrlFireJump extends StatusControl {
 	public StatCtrlFireJump() {
@@ -53,13 +38,11 @@ public class StatCtrlFireJump extends StatusControl {
 		World world = ctx.getWorld();
 
 		AbilityData abilityData = data.getAbilityData("fire_jump");
-		boolean allowDoubleJump = abilityData.getLevel() == 3
-				&& abilityData.getPath() == AbilityData.AbilityTreePath.SECOND;
+		boolean allowDoubleJump = abilityData.getLevel() == 3 && abilityData.getPath() == AbilityData.AbilityTreePath.SECOND;
 
 		// Figure out whether entity is on ground by finding collisions with
 		// ground - if found a collision box, then is not on ground
-		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity,
-				entity.getEntityBoundingBox().grow(0.2, 1, 0.2));
+		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.2, 1, 0.2));
 		boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically;
 
 		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiFireJump))) {
@@ -119,8 +102,7 @@ public class StatCtrlFireJump extends StatusControl {
 
 			// For some reason, velocity is 0 here when player is walking, so must instead
 			// calculate using delta position
-			Vector deltaPos = new Vector(entity.posX - entity.lastTickPosX, 0, entity.posZ -
-					entity.lastTickPosZ);
+			Vector deltaPos = new Vector(entity.posX - entity.lastTickPosX, 0, entity.posZ - entity.lastTickPosZ);
 			double currentYaw = Vector.getRotationTo(Vector.ZERO, deltaPos).y();
 
 			// Just go forwards if not moving right now
@@ -158,17 +140,14 @@ public class StatCtrlFireJump extends StatusControl {
 			damageNearbyEntities(ctx, range, speed, damage, numberOfParticles, particleSpeed);
 
 			ParticleSpawner spawner = new NetworkParticleSpawner();
-			spawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 15, 20,
-					new Vector(entity), new Vector(1, 0, 1));
+			spawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 15, 20, new Vector(entity), new Vector(1, 0, 1));
 
 			data.addTickHandler(FIRE_PARTICLE_SPAWNER);
 			data.getMiscData().setFallAbsorption(fallAbsorption);
 
-
 			abilityData.addXp(ConfigSkills.SKILLS_CONFIG.fireJump);
 
-			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_SHOOT,
-					SoundCategory.PLAYERS, 1, .7f);
+			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1, .7f);
 
 			return true;
 
@@ -183,9 +162,8 @@ public class StatCtrlFireJump extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 
 		World world = entity.world;
-		AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.getEntityBoundingBox().minY,
-				entity.posZ - range, entity.posX + range, entity.posY + entity.getEyeHeight(), entity.posZ + range);
-
+		AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.getEntityBoundingBox().minY, entity.posZ - range, entity.posX + range,
+											  entity.posY + entity.getEyeHeight(), entity.posZ + range);
 
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
@@ -193,14 +171,12 @@ public class StatCtrlFireJump extends StatusControl {
 				for (int j = 0; j < 90; j++) {
 					Vector lookPos;
 					if (i >= 1) {
-						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-								j * 4), 0).times(i);
+						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + j * 4), 0).times(i);
 					} else {
-						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-								j * 4), 0);
+						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + j * 4), 0);
 					}
 					World.spawnParticle(EnumParticleTypes.FLAME, lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
-							lookPos.z() + entity.posZ, numberOfParticles, 0, 0, 0, particleSpeed / 4);
+										lookPos.z() + entity.posZ, numberOfParticles, 0, 0, 0, particleSpeed / 4);
 				}
 				i += range / 10;
 			}
@@ -231,8 +207,8 @@ public class StatCtrlFireJump extends StatusControl {
 		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != entity) {
 			return false;
 		}
-		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
-				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud) {
+		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem || entity instanceof EntityArmorStand
+						|| entity instanceof EntityAreaEffectCloud) {
 			return false;
 		} else return entity.canBeCollidedWith() && entity.canBePushed();
 	}

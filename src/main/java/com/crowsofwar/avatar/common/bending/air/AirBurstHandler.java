@@ -30,10 +30,8 @@ import java.util.UUID;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AirBurstHandler extends TickHandler {
-
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
 			("f82d325c-9828-11e8-9eb6-529269fb1459");
-	public static TickHandler AIRBURST_CHARGE_HANDLER = TickHandlerController.fromId(TickHandlerController.AIRBURST_CHARGE_HANDLER_ID);
 
 	public AirBurstHandler(int id) {
 		super(id);

@@ -19,7 +19,6 @@ import java.util.Random;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
 public class RestoreParticleHandler extends TickHandler {
-	public static TickHandler RESTORE_PARTICLE_SPAWNER = TickHandlerController.fromId(TickHandlerController.RESTORE_PARTICLE_SPAWNER_ID);
 	private final ParticleSpawner particles;
 
 	public RestoreParticleHandler(int id) {

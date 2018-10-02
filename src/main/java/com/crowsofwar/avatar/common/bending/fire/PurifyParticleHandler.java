@@ -17,7 +17,6 @@ import java.util.Random;
 
 
 public class PurifyParticleHandler extends TickHandler {
-	public static TickHandler PURIFY_PARTICLE_SPAWNER = TickHandlerController.fromId(TickHandlerController.PURIFY_PARTICLE_SPAWNER_ID);
 	private final ParticleSpawner particles;
 
 	public PurifyParticleHandler(int id) {
