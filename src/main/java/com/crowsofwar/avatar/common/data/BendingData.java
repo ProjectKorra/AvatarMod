@@ -385,23 +385,17 @@ public class BendingData {
 	}
 
 	public void addTickHandler(TickHandler handler) {
-		System.out.printf("Trying to add TickHandler \"%s\" with ID %d\n", handler.getClass(), handler.id());
 		if (tickHandlers.add(handler)) {
-			System.out.println("Succesfully added, finishing up and saving...");
 			tickHandlerDuration.put(handler, 0);
 			save(DataCategory.TICK_HANDLERS);
-			System.out.println("Done!");
-		} else System.out.println("Addition failed!");
+		}
 	}
 
 	public void removeTickHandler(TickHandler handler) {
-		System.out.printf("Trying to remove TickHandler \"%s\" with ID %d\n", handler.getClass(), handler.id());
 		if (tickHandlers.remove(handler)) {
-			System.out.println("Succesfully removed, finishing up and saving...");
 			tickHandlerDuration.remove(handler);
 			save(DataCategory.TICK_HANDLERS);
-			System.out.println("Done!");
-		} else System.out.println("Addition failed!");
+		}
 	}
 
 	public List<TickHandler> getAllTickHandlers() {
