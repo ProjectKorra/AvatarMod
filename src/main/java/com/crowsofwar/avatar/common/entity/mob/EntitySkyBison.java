@@ -223,13 +223,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		this.targetTasks.addTask(2, new EntityAiBisonDefendOwner(this));
 		this.targetTasks.addTask(3, new EntityAiBisonHelpOwnerTarget(this));
 
-		if (condition.getAgeDays() >= 3) {
-			this.tasks.addTask(4, Objects.requireNonNull(Abilities.get("air_bubble")).getAi(this, getBender()));
-		}
+		this.tasks.addTask(4, Objects.requireNonNull(Abilities.get("air_bubble")).getAi(this, getBender()));
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.get("air_gust")).getAi(this, getBender()));
-		if (condition.getAgeDays() >= 2) {
-			this.tasks.addTask(3, Objects.requireNonNull(Abilities.get("airblade")).getAi(this, getBender()));
-		}
+		this.tasks.addTask(3, Objects.requireNonNull(Abilities.get("airblade")).getAi(this, getBender()));
+		
 
 		this.tasks.addTask(2, new EntityAiBisonFollowAttacker(this));
 		this.tasks.addTask(3, new EntityAiBisonSit(this));
