@@ -82,6 +82,9 @@ public class BendingData {
 	// static methods
 	@Nonnull
 	public static BendingData get(@Nonnull EntityLivingBase entity) {
+		System.out.println(entity);
+		System.out.println(Bender.get(entity));
+		System.out.println(Bender.get(entity).getData());
 		if (entity instanceof EntityPlayer) {
 			return AvatarPlayerData.fetcher().fetch((EntityPlayer) entity).getData();
 		} else {
