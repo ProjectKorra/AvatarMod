@@ -75,7 +75,7 @@ public final class AccountUUIDs {
 	public static EntityPlayer findEntityFromUUID(World world, UUID playerID) {
 		for (int i = 0; i < world.playerEntities.size(); i++) {
 			UUID accountId = getId(world.playerEntities.get(i).getName());
-			if (accountId.equals(playerID)) {
+			if (accountId != null && accountId.equals(playerID)) {
 				return world.playerEntities.get(i);
 			}
 		}
