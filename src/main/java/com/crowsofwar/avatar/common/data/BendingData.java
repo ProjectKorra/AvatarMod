@@ -82,13 +82,16 @@ public class BendingData {
 	// static methods
 	@Nonnull
 	public static BendingData get(@Nonnull EntityLivingBase entity) {
+		System.out.println(entity);
 		if (entity instanceof EntityPlayer) {
+			System.out.println(AvatarPlayerData.fetcher());
+			System.out.println(AvatarPlayerData.fetcher().fetch((EntityPlayer) entity));
+			System.out.println(AvatarPlayerData.fetcher().fetch((EntityPlayer) entity).getData());
 			return AvatarPlayerData.fetcher().fetch((EntityPlayer) entity).getData();
 		} else {
-			System.out.println(entity);
 			System.out.println(Bender.get(entity));
 			System.out.println(Bender.get(entity).getData());
-			return Objects.requireNonNull(Bender.get(entity)).getData();
+			return Bender.get(entity).getData();
 		}
 	}
 
