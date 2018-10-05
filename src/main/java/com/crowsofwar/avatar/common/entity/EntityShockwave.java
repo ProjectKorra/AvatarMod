@@ -171,16 +171,15 @@ public class EntityShockwave extends AvatarEntity {
 		this.setVelocity(Vector.ZERO);
 		this.motionX = this.motionY = this.motionZ = 0;
 
+		if ((this.ticksExisted * speed) > range) {
+			this.setDead();
+		}
+		if (ticksExisted > 140) {
+			setDead();
+		}
+
 		if (!world.isRemote) {
-
-			if ((ticksExisted * speed) > range) {
-				this.setDead();
-			}
-			if (ticksExisted > 140) {
-				setDead();
-			}
-
-
+			
 			for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (getRange() * 10 * 1.5)) {
 				double x = posX + (ticksExisted * getSpeed()) * Math.sin(angle);
 				double y = posY + 0.5;
