@@ -156,9 +156,20 @@ public class EntityShockwave extends AvatarEntity {
 	}
 
 	@Override
+	public boolean canBeCollidedWith() {
+		return false;
+	}
+
+	@Override
+	public boolean canBePushed() {
+		return false;
+	}
+
+	@Override
 	public void onUpdate() {
 
 		this.setVelocity(Vector.ZERO);
+		this.motionX = this.motionY = this.motionZ = 0;
 
 		if (!world.isRemote) {
 

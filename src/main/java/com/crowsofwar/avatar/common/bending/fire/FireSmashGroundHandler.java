@@ -52,6 +52,11 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 	}
 
 	@Override
+	protected double getParticleSpeed() {
+		return 1.5;
+	}
+
+	@Override
 	protected SoundEvent getSound() {
 		return SoundEvents.ITEM_FIRECHARGE_USE;
 	}
@@ -63,7 +68,7 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 
 	@Override
 	protected double getSpeed() {
-		return 2.5;
+		return 3.5;
 	}
 
 	@Override

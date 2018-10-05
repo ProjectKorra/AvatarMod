@@ -83,7 +83,7 @@ public class SmashGroundHandler extends TickHandler {
 	}
 
 	protected double getRange() {
-		return 3;
+		return 4;
 	}
 
 	protected EnumParticleTypes getParticle() {
