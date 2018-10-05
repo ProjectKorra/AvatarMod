@@ -175,7 +175,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 										//Since particles are spawned with the custom particle system, you need a higher speed than normal. Using
 										//Mincraft's World.spawnParticle, however, would require a much lower speed: ~10x lower
 										wave.setParticleAmount(1);
-										wave.setParticleController(15);
+										wave.setParticleController(20);
 										//Used for spheres
 										wave.setSpeed(0.8);
 										wave.setParticleAmount(2);
