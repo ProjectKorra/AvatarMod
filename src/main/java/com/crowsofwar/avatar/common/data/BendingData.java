@@ -19,13 +19,10 @@ package com.crowsofwar.avatar.common.data;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLLog;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -82,15 +79,9 @@ public class BendingData {
 	// static methods
 	@Nonnull
 	public static BendingData get(@Nonnull EntityLivingBase entity) {
-		System.out.println(entity);
 		if (entity instanceof EntityPlayer) {
-			System.out.println(AvatarPlayerData.fetcher());
-			System.out.println(AvatarPlayerData.fetcher().fetch((EntityPlayer) entity));
-			System.out.println(AvatarPlayerData.fetcher().fetch((EntityPlayer) entity).getData());
 			return AvatarPlayerData.fetcher().fetch((EntityPlayer) entity).getData();
 		} else {
-			System.out.println(Bender.get(entity));
-			System.out.println(Bender.get(entity).getData());
 			return Bender.get(entity).getData();
 		}
 	}
