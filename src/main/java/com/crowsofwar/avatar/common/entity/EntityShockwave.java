@@ -162,8 +162,11 @@ public class EntityShockwave extends AvatarEntity {
 
 		if (!world.isRemote) {
 
-			if (ticksExisted * speed > range) {
+			if ((ticksExisted * speed) > range) {
 				this.setDead();
+			}
+			if (ticksExisted > 140) {
+				setDead();
 			}
 
 
