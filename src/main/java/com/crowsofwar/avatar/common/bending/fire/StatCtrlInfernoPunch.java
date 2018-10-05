@@ -171,11 +171,13 @@ public class StatCtrlInfernoPunch extends StatusControl {
 										wave.setFireTime(15);
 										wave.setSphere(true);
 										wave.setParticle(EnumParticleTypes.FLAME);
-										wave.setParticleSpeed(0.2);
-										wave.setParticleAmount(2);
+										wave.setParticleSpeed(1.1);
+										//Since particles are spawned with the custom particle system, you need a higher speed than normal. Using
+										//Mincraft's World.spawnParticle, however, would require a much lower speed; ~10x lower
+										wave.setParticleAmount(1);
 										wave.setParticleController(15);
 										//Used for spheres
-										wave.setSpeed(0.7);
+										wave.setSpeed(0.8);
 										wave.setParticleAmount(2);
 										wave.setAbility(new AbilityInfernoPunch());
 										wave.setDamage(3);
