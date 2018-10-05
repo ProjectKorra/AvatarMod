@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.UUID;
@@ -138,7 +139,7 @@ public final class AccountUUIDs {
 			while ((length = inputStream.read(buffer)) != -1) {
 				result.write(buffer, 0, length);
 			}
-			UUID uuid = UUID.fromString(addDashes(JsonUtils.fromString(result.toString(), "id").getAsString()));
+			UUID uuid = UUID.fromString(addDashes(Objects.requireNonNull(JsonUtils.fromString(result.toString(), "id")).getAsString()));
 			localCache.put(username, uuid);
 			return uuid;
 		} catch (Exception e) {
