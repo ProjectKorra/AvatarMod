@@ -97,7 +97,7 @@ public final class AccountUUIDs {
 	public static UUID getId(String username) {
 		Map<UUID, String> cache = UsernameCache.getMap();
 		if (!cache.containsValue(username)) {
-			if (localCache.contains(username)) return localCache.get(username);
+			if (localCache.get(username) != null) return localCache.get(username);
 			return requestId(username);
 		}
 		for (Map.Entry<UUID, String> entry : UsernameCache.getMap().entrySet()) {
