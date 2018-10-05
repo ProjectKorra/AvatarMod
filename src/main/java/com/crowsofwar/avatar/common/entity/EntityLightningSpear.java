@@ -321,7 +321,16 @@ public class EntityLightningSpear extends AvatarEntity {
 		}
 
 		LightningBurst();
-		setDead();
+		if (getAbility() != null && !world.isRemote) {
+			if (getAbility() instanceof AbilityLightningSpear) {
+				if (!(AbilityData.get(getOwner(), getAbility().getName()).isMasterPath(AbilityData.AbilityTreePath.FIRST))) {
+					setDead();
+				}
+			}
+		}
+		else {
+			setDead();
+		}
 		return true;
 
 	}

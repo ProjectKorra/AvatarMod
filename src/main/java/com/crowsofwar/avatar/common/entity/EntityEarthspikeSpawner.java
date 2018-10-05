@@ -63,6 +63,12 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	}
 
 	@Override
+	public boolean onCollideWithSolid() {
+		setDead();
+		return false;
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 
@@ -89,10 +95,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		if (!world.isRemote && belowBlock == Blocks.AIR) {
 			setDead();
 		}
-
-	//	BlockPos inFront = getPosition().offset(EnumFacing.getFront(0));
-	//	Block belowBlock = world.getBlockState(below).getBlock();
-	//  Add destruction on collision
 
 		// Destroy if in a block
 		IBlockState inBlock = world.getBlockState(getPosition());
