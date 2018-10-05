@@ -1,6 +1,9 @@
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
@@ -131,7 +134,8 @@ public class AirBurstHandler extends TickHandler {
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				//Piercing Winds
-				damage = 3 + powerRating;
+				damage = (STATS_CONFIG.airBurstSettings.damage * 6) + powerRating;
+				//Default: 3
 				//Blinds enemies
 
 			}
@@ -139,7 +143,8 @@ public class AirBurstHandler extends TickHandler {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				//Maximum Pressure
 				//Pulls enemies in then blasts them out
-				damage = 1.5 + powerRating;
+				damage = (STATS_CONFIG.airBurstSettings.damage * 3) + powerRating;
+				//Default: 1.5
 				radius = (STATS_CONFIG.AirBurstSettings.radius * 7 / 3) + powerRating;
 				//7
 				upwardKnockback = STATS_CONFIG.airBurstSettings.push / 2.5F;

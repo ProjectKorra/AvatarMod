@@ -15,6 +15,7 @@ public class RenderElementTickHandler extends TickHandler {
 	@Override
 	public boolean tick(BendingContext ctx) {
 		int duration = ctx.getData().getTickHandlerDuration(this);
-		return duration >= CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration;
+		return duration >= 200;
+		//return duration >= CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration;
 	}
 }
