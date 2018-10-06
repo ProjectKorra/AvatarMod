@@ -179,7 +179,7 @@ public class EntityShockwave extends AvatarEntity {
 		}
 
 		if (!world.isRemote) {
-			
+
 			for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (getRange() * 10 * 1.5)) {
 				double x = posX + (ticksExisted * getSpeed()) * Math.sin(angle);
 				double y = posY + 0.5;

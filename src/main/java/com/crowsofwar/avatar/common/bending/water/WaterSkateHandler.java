@@ -132,7 +132,7 @@ public class WaterSkateHandler extends TickHandler {
 
 				}**/
 
-				player.setPosition(player.posX, yPos + .2, player.posZ);
+				player.setPosition(player.posX, yPos, player.posZ);
 				Vector currentVelocity = new Vector(player.motionX, player.motionY, player.motionZ);
 				Vector targetVelocity = toRectangular(toRadians(player.rotationYaw), 0).times(targetSpeed);
 
