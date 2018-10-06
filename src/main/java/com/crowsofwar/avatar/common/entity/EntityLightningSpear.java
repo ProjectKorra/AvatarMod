@@ -174,7 +174,7 @@ public class EntityLightningSpear extends AvatarEntity {
 
 	public void LightningBurst() {
 			if (getOwner() != null) {
-				particleSpawner.spawnParticles(world, AvatarParticles.getParticleElectricity(), (int) (getSize() * 25), (int) (getSize() * 30), posX, posY, posZ, getSize(), getSize() * 2, getSize()/5);
+				particleSpawner.spawnParticles(world, AvatarParticles.getParticleElectricity(), (int) (getSize() * 25), (int) (getSize() * 30), posX, posY, posZ, getSize() * 1.75, getSize() * 1.75, getSize() * 1.75);
 				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(getSize() * 2, getSize() * 2, getSize() * 2),
@@ -188,11 +188,9 @@ public class EntityLightningSpear extends AvatarEntity {
 
 							//Divide the result of the position difference to make entities fly
 							//further the closer they are to the player.
-							//double dist = (getSize() / 4) - entity.getDistance(entity);
+							double dist = (getSize() * 2 - entity.getDistance(entity)) > 1 ? (getSize() * 2 - entity.getDistance(entity)) : 1;
 							Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
-							double distance = Vector.getEntityPos(entity).dist(Vector.getEntityPos(this));
-							double direction = (getSize() * 2- distance) * (getSize()/50 * 5) / (getSize() * 2);
-							velocity = velocity.times(direction).times(-1 + (-1 * (getSize() * 2) / 2)).withY(getSize()/50 / 2);
+							velocity = velocity.dividedBy(40).times(dist).withY(getSize()/50);
 
 							double x = (velocity.x());
 							double y = (velocity.y()) > 0 ? velocity.y() : 0.2F;
