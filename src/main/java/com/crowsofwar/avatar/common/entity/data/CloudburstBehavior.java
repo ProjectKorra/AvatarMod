@@ -95,13 +95,11 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 
 		private void collision(Entity collided, EntityCloudBall entity) {
 
-			if (entity.canDamageEntity(collided) && collided.canBeCollidedWith() && collided != entity.getOwner()) {
+			if (collided.canBeCollidedWith() && entity.canCollideWith(collided)) {
 				if (collided.attackEntityFrom(AvatarDamageSource.causeCloudburstDamage(collided, entity.getOwner()),
 						entity.getDamage())) {
 					BattlePerformanceScore.addMediumScore(entity.getOwner());
 				}
-			}
-			if (collided.canBeCollidedWith() && entity.canCollideWith(collided)) {
 
 				Vector motion = entity.velocity().dividedBy(80);
 				motion = motion.times(STATS_CONFIG.cloudburstSettings.push).withY(0.05);
@@ -113,12 +111,8 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 					data.getAbilityData(entity.getAbility().getName()).addXp(xp);
 				}
 
-				// Remove the cloudburst & spawn particles
-				if (!entity.world.isRemote) {
-					entity.onCollideWithSolid();
-					entity.setDead();
-
-				}
+				entity.onCollideWithSolid();
+				entity.setDead();
 
 			}
 		}

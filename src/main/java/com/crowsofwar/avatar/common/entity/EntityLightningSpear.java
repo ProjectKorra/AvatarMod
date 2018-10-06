@@ -174,7 +174,7 @@ public class EntityLightningSpear extends AvatarEntity {
 
 	public void LightningBurst() {
 			if (getOwner() != null) {
-				particleSpawner.spawnParticles(world, AvatarParticles.getParticleElectricity(), (int) (getSize() * 25), (int) (getSize() * 30), posX, posY, posZ, getSize() * 1.75, getSize() * 1.75, getSize() * 1.75);
+				particleSpawner.spawnParticles(world, AvatarParticles.getParticleElectricity(), (int) (getSize() * 25), (int) (getSize() * 30), posX, posY, posZ, getSize() * 1.25, getSize() * 1.25, getSize() * 1.25);
 				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(getSize() * 2, getSize() * 2, getSize() * 2),
@@ -182,7 +182,7 @@ public class EntityLightningSpear extends AvatarEntity {
 
 				if (!collided.isEmpty()) {
 					for (Entity entity : collided) {
-						if (entity != getOwner() && entity != null && getOwner() != null && entity != this) {
+						if (entity != getOwner() && entity != null && getOwner() != null && entity != this && canCollideWith(entity)) {
 
 							damageEntity(entity);
 
