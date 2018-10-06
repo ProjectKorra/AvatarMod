@@ -61,11 +61,11 @@ public class AbilityLightningSpear extends Ability {
 		if (bender.consumeChi(STATS_CONFIG.chiLightningSpear)) {
 
 
+			float size = 1.2F;
 			float damage = 2F;
 			if (abilityData.getLevel() >= 2) {
 				damage = 8;
 			}
-			float size = 1.2F;
 
 			if (ctx.getLevel() == 1) {
 				size = 1.4F;

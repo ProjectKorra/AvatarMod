@@ -26,6 +26,8 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -39,7 +41,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
@@ -85,6 +86,7 @@ public class EntityLightningSpear extends AvatarEntity {
 
 	private float degreesPerSecond;
 
+	private ParticleSpawner particleSpawner;
 	/**
 	 * @param world
 	 */
@@ -95,7 +97,9 @@ public class EntityLightningSpear extends AvatarEntity {
 		setSize(Size, Size);
 		this.damage = 3F;
 		this.piercing = false;
+		this.setInvisible(false);
 		this.position = this.position().toBlockPos();
+		this.particleSpawner = new NetworkParticleSpawner();
 
 	}
 
@@ -169,13 +173,10 @@ public class EntityLightningSpear extends AvatarEntity {
 	}
 
 	public void LightningBurst() {
-		if (world instanceof WorldServer) {
 			if (getOwner() != null) {
-				this.setInvisible(true);
-				WorldServer World = (WorldServer) this.world;
-				World.spawnParticle(AvatarParticles.getParticleElectricity(), posX, posY, posZ, 25, 0, 0, 0, getSize()/20);
-				World.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-				World.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+				particleSpawner.spawnParticles(world, AvatarParticles.getParticleElectricity(), (int) (getSize() * 25), (int) (getSize() * 30), posX, posY, posZ, getSize(), getSize() * 2, getSize()/5);
+				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(getSize() * 2, getSize() * 2, getSize() * 2),
 						entity -> entity != getOwner());
 
@@ -187,6 +188,7 @@ public class EntityLightningSpear extends AvatarEntity {
 
 							//Divide the result of the position difference to make entities fly
 							//further the closer they are to the player.
+							//double dist = (getSize() / 4) - entity.getDistance(entity);
 							Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
 							double distance = Vector.getEntityPos(entity).dist(Vector.getEntityPos(this));
 							double direction = (getSize() * 2- distance) * (getSize()/50 * 5) / (getSize() * 2);
@@ -213,7 +215,6 @@ public class EntityLightningSpear extends AvatarEntity {
 				}
 
 			}
-		}
 	}
 
 	public void damageEntity(Entity entity) {
@@ -319,6 +320,7 @@ public class EntityLightningSpear extends AvatarEntity {
 		if (!(getBehavior() instanceof LightningSpearBehavior.Thrown)) {
 			return false;
 		}
+		setInvisible(false);
 
 		LightningBurst();
 		if (getAbility() != null && !world.isRemote) {
