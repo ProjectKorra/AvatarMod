@@ -80,8 +80,7 @@ public class AvatarDamageSource {
 	 * @return DamageSource for the fire arc
 	 */
 	public static DamageSource causeFireDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_fireArc", hit, owner).setProjectile()
-				.setFireDamage();
+		return new EntityDamageSourceIndirect("avatar_fireArc", hit, owner).setProjectile();
 	}
 
 	/**
@@ -112,7 +111,7 @@ public class AvatarDamageSource {
 	 */
 	public static DamageSource causeFireballDamage(Entity hit, @Nullable Entity owner) {
 		return new EntityDamageSourceIndirect("avatar_fireball", hit, owner).setProjectile()
-				.setFireDamage().setExplosion();
+				.setExplosion();
 	}
 
 	/**
@@ -142,8 +141,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the flames
 	 */
 	public static DamageSource causeFlamethrowerDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_flamethrower", hit, owner).setProjectile()
-				.setFireDamage();
+		return new EntityDamageSourceIndirect("avatar_flamethrower", hit, owner).setProjectile();
 	}
 
 	/**

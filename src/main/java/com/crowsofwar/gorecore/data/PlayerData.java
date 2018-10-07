@@ -39,11 +39,9 @@ public abstract class PlayerData implements GoreCoreNBTInterfaces.ReadableWritab
 		@Override
 		public PlayerData createV(NBTTagCompound nbt, UUID key, Object[] constructArgsV) {
 			try {
-				FMLLog.info("UUID: %s, Class: %s, DataSaver: %s", key, constructArgsV[0], constructArgsV[1]);
 				PlayerData data = ((Class<? extends PlayerData>) constructArgsV[0])
 						.getConstructor(DataSaver.class, UUID.class, EntityPlayer.class)
 						.newInstance(constructArgsV[1], key, null);
-				FMLLog.info("Data: %s, NBT: %s", data, nbt);
 				data.readFromNBT(nbt);
 				return data;
 			} catch (Exception e) {

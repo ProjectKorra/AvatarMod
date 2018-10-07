@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -56,6 +58,11 @@ public class EntityFlames extends AvatarEntity {
 	public EntityFlames(World worldIn) {
 		super(worldIn);
 		setSize(0.1f, 0.1f);
+	}
+
+	@Override
+	public BendingStyle getElement() {
+		return new Firebending();
 	}
 
 	public EntityFlames(World world, EntityLivingBase owner) {
