@@ -25,6 +25,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import java.util.*;
@@ -120,8 +121,9 @@ public class AvatarPlayerData extends PlayerData {
 			}
 			double range = Math.sqrt(rangeSq) + 0.01;// +0.01 "just in case"
 
-			AvatarMod.network.sendToAllAround(packet,
-					new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, range));
+			TargetPoint targetPoint = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, range);
+			FMLLog.info("Target Point: " + targetPoint);
+			AvatarMod.network.sendToAllAround(packet, targetPoint);
 
 			changed.clear();
 
