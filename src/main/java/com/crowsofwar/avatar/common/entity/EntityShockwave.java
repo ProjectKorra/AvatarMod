@@ -25,22 +25,20 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 public class EntityShockwave extends AvatarEntity {
 
 	public EnumParticleTypes particle;
+	//The range of the shockwave/how far it'll go before dissipating
+	public double speed;
+	//The amount entities will be knocked back
+	public float damage;
+	//Speed of the particles
 	//Particles to be spawned.
 	private int particleAmount;
 	//The amount of particles to be spawned
 	private double particleSpeed;
-	//Speed of the particles
-
-
 	private int performanceAmount;
 	//The amount of battleperformance added per hit
 	private double range;
-	//The range of the shockwave/how far it'll go before dissipating
-	public double speed;
 	//The speed of the shockwave and how fast entities will be knocked back
 	private double knockbackHeight;
-	//The amount entities will be knocked back
-	public float damage;
 	//The amount of damage the shockwave will do
 	private boolean isFire;
 	//Whether or not to set the target entities on fire
@@ -53,92 +51,7 @@ public class EntityShockwave extends AvatarEntity {
 	private double particleController;
 	//Used for spherical shockwaves
 
-	public void setParticle(EnumParticleTypes particle) {
-		this.particle = particle;
-	}
-
-	public void setParticleAmount(int amount) {
-		this.particleAmount = amount;
-	}
-
-	public void setParticleSpeed(double speed) {
-		this.particleSpeed = speed;
-	}
-
-	public void setRange(double range) {
-		this.range = range;
-	}
-
-	public void setSpeed(double speed) {
-		this.speed = speed;
-	}
-
-	public void setKnockbackHeight(double height) {
-		this.knockbackHeight = height;
-	}
-
-	public void setDamage(float damage) {
-		this.damage = damage;
-	}
-
-	public void setFire(boolean fire) {
-		this.isFire = fire;
-	}
-
-	public void setFireTime(int time) {
-		this.fireTime = time;
-	}
-
-	public void setPerformanceAmount(int amount) {
-		this.performanceAmount = amount;
-	}
-
-	public void setSphere(boolean sphere) {
-		this.isSphere = sphere;
-	}
-
-	public void setParticleController(double amount) {
-		this.particleController = amount;
-	}
-
-	public EnumParticleTypes getParticle() {
-		return particle;
-	}
-
-	public int getParticleAmount() {
-		return particleAmount;
-	}
-
-	public double getParticleSpeed() {
-		return particleSpeed;
-	}
-
-	public double getRange() {
-		return range;
-	}
-
-	public double getSpeed() {
-		return speed;
-	}
-
-	public double getKnockbackHeight() {
-		return knockbackHeight;
-	}
-
-	public double getDamage() {
-		return damage;
-	}
-
-	public boolean getSphere() {
-		return isSphere;
-	}
-
-
-
-
-
-
-	public EntityShockwave(World world){
+	public EntityShockwave(World world) {
 		super(world);
 		this.damage = 1;
 		this.particle = EnumParticleTypes.EXPLOSION_NORMAL;
@@ -153,6 +66,86 @@ public class EntityShockwave extends AvatarEntity {
 		this.particleAmount = 0;
 		this.setSize(1, 1);
 		this.particles = new NetworkParticleSpawner();
+	}
+
+	public void setFire(boolean fire) {
+		this.isFire = fire;
+	}
+
+	public void setFireTime(int time) {
+		this.fireTime = time;
+	}
+
+	public void setPerformanceAmount(int amount) {
+		this.performanceAmount = amount;
+	}
+
+	public void setParticleController(double amount) {
+		this.particleController = amount;
+	}
+
+	public EnumParticleTypes getParticle() {
+		return particle;
+	}
+
+	public void setParticle(EnumParticleTypes particle) {
+		this.particle = particle;
+	}
+
+	public int getParticleAmount() {
+		return particleAmount;
+	}
+
+	public void setParticleAmount(int amount) {
+		this.particleAmount = amount;
+	}
+
+	public double getParticleSpeed() {
+		return particleSpeed;
+	}
+
+	public void setParticleSpeed(double speed) {
+		this.particleSpeed = speed;
+	}
+
+	public double getRange() {
+		return range;
+	}
+
+	public void setRange(double range) {
+		this.range = range;
+	}
+
+	public double getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(double speed) {
+		this.speed = speed;
+	}
+
+	public double getKnockbackHeight() {
+		return knockbackHeight;
+	}
+
+	public void setKnockbackHeight(double height) {
+		this.knockbackHeight = height;
+	}
+
+	public double getDamage() {
+		return damage;
+	}
+
+	public void setDamage(float damage) {
+		this.damage = damage;
+	}
+
+	public boolean getSphere() {
+		return isSphere;
+	}
+
+	public void setSphere(boolean sphere) {
+		this.isSphere = sphere;
 	}
 
 	@Override
@@ -211,45 +204,45 @@ public class EntityShockwave extends AvatarEntity {
 			}
 		}
 
-			AxisAlignedBB box = new AxisAlignedBB(posX + (ticksExisted * speed), posY + 1.5, posZ + (ticksExisted * speed),
-					posX - (ticksExisted * speed), posY - 1.5, posZ - (ticksExisted * speed));
+		AxisAlignedBB box = new AxisAlignedBB(posX + (ticksExisted * speed), posY + 1.5, posZ + (ticksExisted * speed),
+				posX - (ticksExisted * speed), posY - 1.5, posZ - (ticksExisted * speed));
 
-			List<Entity> targets = world.getEntitiesWithinAABB(
-					Entity.class, box);
+		List<Entity> targets = world.getEntitiesWithinAABB(
+				Entity.class, box);
 
-			targets.remove(getOwner());
+		targets.remove(getOwner());
 
-			for (Entity target : targets) {
-				if (target != getOwner() && this.canCollideWith(target) && target != this && !(target instanceof EntityItem)) {
+		for (Entity target : targets) {
+			if (target != getOwner() && this.canCollideWith(target) && target != this && !(target instanceof EntityItem)) {
 
-						if (this.canDamageEntity(target)) {
-							if (target.attackEntityFrom(AvatarDamageSource.causeShockwaveDamage(target, getOwner()), damage)) {
-								int amount = performanceAmount > SCORE_MOD_SMALL ? performanceAmount : (int) SCORE_MOD_SMALL;
-								amount = amount > SCORE_MOD_MEDIUM ? (int) SCORE_MOD_MEDIUM : performanceAmount;
-								BattlePerformanceScore.addScore(getOwner(), amount);
-								target.setFire(isFire ? fireTime : 0);
-								if (getAbility() != null && !world.isRemote && getAbility() instanceof AbilityAirBurst) {
-									AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
-									aD.addXp(SKILLS_CONFIG.airBurstHit - aD.getLevel());
-									if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST) && target instanceof EntityLivingBase) {
-										((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
-										((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
-										((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
-									}
-								}
+				if (this.canDamageEntity(target)) {
+					if (target.attackEntityFrom(AvatarDamageSource.causeShockwaveDamage(target, getOwner()), damage)) {
+						int amount = performanceAmount > SCORE_MOD_SMALL ? performanceAmount : (int) SCORE_MOD_SMALL;
+						amount = amount > SCORE_MOD_MEDIUM ? (int) SCORE_MOD_MEDIUM : performanceAmount;
+						BattlePerformanceScore.addScore(getOwner(), amount);
+						target.setFire(isFire ? fireTime : 0);
+						if (getAbility() != null && !world.isRemote && getAbility() instanceof AbilityAirBurst) {
+							AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
+							aD.addXp(SKILLS_CONFIG.airBurstHit - aD.getLevel());
+							if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST) && target instanceof EntityLivingBase) {
+								((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
+								((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
+								((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
 							}
 						}
-						double xSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted/12.5F * speed) :
-								Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted/20F * speed);
-						double zSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted/12.5F * speed) :
-								Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted/20F * speed);
-						target.motionX += xSpeed;
-						target.motionY += isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted/15F * speed) : knockbackHeight; // Throws target into the air.
-						target.motionZ += zSpeed;
-
-						AvatarUtils.afterVelocityAdded(target);
+					}
 				}
+				double xSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted / 12.5F * speed) :
+						Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted / 20F * speed);
+				double zSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 12.5F * speed) :
+						Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 20F * speed);
+				target.motionX += xSpeed;
+				target.motionY += isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted / 15F * speed) : knockbackHeight; // Throws target into the air.
+				target.motionZ += zSpeed;
+
+				AvatarUtils.afterVelocityAdded(target);
 			}
 		}
 	}
+}
 

@@ -31,6 +31,15 @@ import javax.annotation.Nullable;
  */
 public class AvatarDamageSource {
 
+	public static final DamageSource WATER = new DamageSource("avatar_Water");
+	public static final DamageSource FIRE = new DamageSource("avatar_Fire");
+	public static final DamageSource EARTH = new DamageSource("avatar_Earth");
+	public static final DamageSource AIR = new DamageSource("avatar_Air");
+	public static final DamageSource LIGHTNING = new DamageSource("avatar_Lightning");
+	public static final DamageSource COMBUSTION = new DamageSource("avatar_Combustion");
+	public static final DamageSource SAND = new DamageSource("avatar_Sand");
+	public static final DamageSource ICE = new DamageSource("avatar_Ice");
+
 	/**
 	 * Returns whether the given damage was inflicted using an Avatar damage source.
 	 */

@@ -197,7 +197,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 											SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
 									if (target.canBePushed() && target.canBeCollidedWith()) {
-										target.attackEntityFrom(DamageSource.IN_FIRE, damage);
+										target.attackEntityFrom(AvatarDamageSource.FIRE, damage);
 										target.setFire(fireTime);
 										target.motionX += direction.x() * knockBack;
 										target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
@@ -225,7 +225,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			Entity target = event.getEntity();
 			if (entity instanceof EntityPlayer || entity instanceof EntityBender) {
 				BendingData data = BendingData.get(entity);
-				if (data != null) {
 					AbilityData aD = AbilityData.get(entity, "inferno_punch");
 					Bender ctx = Bender.get(entity);
 					if (ctx != null) {
@@ -254,7 +253,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 					}
 				}
 			}
-		}
 	}
 
 	private boolean canDamageEntity(Entity entity) {
