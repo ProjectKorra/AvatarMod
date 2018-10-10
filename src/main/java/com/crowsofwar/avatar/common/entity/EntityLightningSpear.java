@@ -219,7 +219,6 @@ public class EntityLightningSpear extends AvatarEntity {
 		if (getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 			AbilityData abilityData = data.getAbilityData("lightning_spear");
-			DamageSource ds = AvatarDamageSource.causeCloudburstDamage(entity, getOwner());
 			int lvl = abilityData.getLevel();
 			float damage = getDamage()/3;
 			if (lvl == 1) {
@@ -234,8 +233,8 @@ public class EntityLightningSpear extends AvatarEntity {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				damage = getDamage();
 			}
-			entity.attackEntityFrom(ds, damage);
-			if (entity.attackEntityFrom(ds, damage)) {
+			entity.attackEntityFrom(AvatarDamageSource.LIGHTNING, damage);
+			if (entity.attackEntityFrom(AvatarDamageSource.LIGHTNING, damage)) {
 				abilityData.addXp(SKILLS_CONFIG.cloudburstHit);
 				BattlePerformanceScore.addMediumScore(getOwner());
 

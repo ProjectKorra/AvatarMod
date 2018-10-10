@@ -347,7 +347,7 @@ public class ConfigStats {
 	public static class CloudburstSettings {
 
 		@Load
-		public double damage = 1.5;
+		public double damage = 2;
 
 		@Load
 		public double push = 1.5;
