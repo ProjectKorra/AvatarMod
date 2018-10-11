@@ -216,7 +216,8 @@ public class ConfigStats {
 			"minecraft:double_grass",
 			"minecraft:waterlily",
 			"minecraft:red_flower",
-			//For some reason, most of the plants in minecraft are tallgrass, double_grass, or red_flowers. Weird.
+			"minecraft:double_plant",
+			//For some reason, most of the plants in minecraft are tallgrass, double_grass, double_plant, or red_flowers. Weird.
 			"minecraft:leaves",
 			"minecraft:yellow_flower",
 			"minecraft:red_mushroom",
