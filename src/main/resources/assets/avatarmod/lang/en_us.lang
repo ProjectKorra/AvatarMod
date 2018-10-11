@@ -236,10 +236,10 @@ avatar.ability.inferno_punch.lvl4_2=§c§l§oFIRRRRRREBALLL ;; You can hit enemi
 avatar.ability.water_arc=§9§lWater §9§lArc
 avatar.ability.water_arc.desc=One of waterbending's most common attacks. Shoot a trailing arc of water at your enemy, but only when water is nearby.
 avatar.ability.water_arc.lvl1=Basic water arc
-avatar.ability.water_arc.lvl2=Farther pick-up range
-avatar.ability.water_arc.lvl3=Much faster, damage increase, and you can redirect water arcs that you look at in a 3 block radius!
+avatar.ability.water_arc.lvl2=Farther pick-up range, bigger water splash.
+avatar.ability.water_arc.lvl3=Much faster, damage increase, and you can redirect water arcs that you look at in a 3 block radius! Bigger water splash.
 avatar.ability.water_arc.lvl4_1=§9§l§oWater Flurry ;; You can now instantly fire off water arcs; multiple arcs in quick succession make a combo.
-avatar.ability.water_arc.lvl4_2=§9§l§oWater spear ;; Gravity disabled for 2s after thrown, slower
+avatar.ability.water_arc.lvl4_2=§9§l§oWater spear ;; Super-duper-ultra fast, really high damage, breaks blocks!
 
 avatar.ability.wave=§9§lWave
 avatar.ability.wave.desc=Summon a wave of water to destroy your enemies. Only works when they are in water.
