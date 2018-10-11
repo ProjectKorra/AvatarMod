@@ -210,6 +210,15 @@ public class ConfigStats {
 	);
 
 	@Load
+	public List<String> iceBendableBlockNames = Arrays.asList(
+			"minecraft:snow",
+			"minecraft:snow_layer",
+			"minecraft:ice",
+			"minecraft:packed_ice",
+			"minecraft:frosted_ice"
+	);
+
+	@Load
 	public List<String> plantBendableBlockNames = Arrays.asList(
 			"minecraft:tallgrass",
 			"minecraft:wheat",
@@ -253,6 +262,7 @@ public class ConfigStats {
 	public List<Block> bendableBlocks;
 	public List<Block> sandBlocks;
 	public List<Block> airBladeBreakableBlocks;
+	public List<Block> iceBendableBlocks;
 
 	private ConfigStats() {
 	}
@@ -267,6 +277,7 @@ public class ConfigStats {
 		sandBlocks = STATS_CONFIG.loadBlocksList(sandBlocksNames);
 		waterBendableBlocks = STATS_CONFIG.loadBlocksList(waterBendableBlockNames);
 		plantBendableBlocks = STATS_CONFIG.loadBlocksList(plantBendableBlockNames);
+		iceBendableBlocks = STATS_CONFIG.loadBlocksList(iceBendableBlockNames);
 	}
 
 	/**
