@@ -43,7 +43,7 @@ public class ConfigStats {
 			fireArcSettings = new AttackSettings(3, 1),   //
 			waterArcSettings = new AttackSettings(1.5F, 1),
 			boulderSettings = new AttackSettings(0.1F, 0.1),
-			airBurstSettings = new AttackSettings (0.5F, 1),
+			airBurstSettings = new AttackSettings (1F, 1),
 			lightningSpearSettings = new AttackSettings(4F, 2);
 
 	@Load
