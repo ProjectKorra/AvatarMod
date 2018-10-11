@@ -68,13 +68,13 @@ public class AbilityCloudBurst extends Ability {
 			//2
 			EntityCloudBall cloudball = new EntityCloudBall(world);
 
-			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 				cloudball.setSize(20);
 				damage = STATS_CONFIG.cloudburstSettings.damage * 4;
 				//8
 				cloudball.canchiSmash(true);
 			}
-			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				damage = STATS_CONFIG.cloudburstSettings.damage * 2;
 				//4
 				cloudball.canAbsorb(true);

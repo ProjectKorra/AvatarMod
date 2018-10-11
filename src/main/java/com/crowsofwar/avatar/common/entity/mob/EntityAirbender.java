@@ -211,9 +211,9 @@ public class EntityAirbender extends EntityHumanBender {
 
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		if (!world.isRemote) {
+		/*if (!world.isRemote) {
 			System.out.println(level);
-		}
+		}**/
 		return super.processInteract(player, hand);
 	}
 }
