@@ -316,9 +316,9 @@ avatar.ability.air_bubble.lvl4_2=§f§l§oUndercurrent ;; Limited hovering, disa
 
 avatar.ability.cloudburst=§f§lCloudburst
 avatar.ability.cloudburst.desc=Create a whirling ball of air which can be thrown at enemies; creates a mini burst of air where it lands.
-avatar.ability.cloudburst.lvl1=That was a big-ass burp
-avatar.ability.cloudburst.lvl2=Faster speed when thrown
-avatar.ability.cloudburst.lvl3=Much more damage
+avatar.ability.cloudburst.lvl1=That was a big burp
+avatar.ability.cloudburst.lvl2=Faster speed when thrown, larger explosion of air
+avatar.ability.cloudburst.lvl3=Much more damage, bigger air explosion
 avatar.ability.cloudburst.lvl4_1=§f§l§oChi §f§l§oSmash ;; Temporarily applies severe debuffs to targets' bending power
 avatar.ability.cloudburst.lvl4_2=§f§l§oAbsorption ;; Cloudburst can absorb incoming projectiles, which increases its damage
 
@@ -414,7 +414,7 @@ avatar.ability.explosion.lvl4_2=§8§l§oBOOOOOOOOOOOOOOOOOOM ;; HUGE explosion 
 
 avatar.ability.explosive_pillar=§8§lExplosive Pillar
 avatar.ability.explosive_pillar.desc=Create a line of explosions that appear one after the other in the direction you're looking.
-avatar.ability.explosive_pillar.lvl1=As the common person says, BOOM-BOOM-BOOM-BOOM BOOOOOOOOOM!
+avatar.ability.explosive_pillar.lvl1=BOOM-BOOM-BOOM-BOOM BOOOOOOOOOM!
 avatar.ability.explosive_pillar.lvl2=Explosions are bigger, occur more frequently, and travel further.
 avatar.ability.explosive_pillar.lvl3=I'd say the same thing as above, but that'd be boring. SUPER-POWERED EXPLOSIONS BABY!
 avatar.ability.explosive_pillar.lvl4_1=§8§l§oEXPLOSION §8§l§oMACHINE §8§lGUN ;; Creates 3 explosive pillars that have small explosions and don't travel too far, but occur rapid-fire and are fun to use.
