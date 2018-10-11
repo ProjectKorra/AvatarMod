@@ -119,7 +119,6 @@ public class AbilityWaterArc extends Ability {
 				size = 0.4F;
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-				damageMult = comboNumber >= 3 ? 1.25F : 0.5F;
 				gravity = 9.81F;
 				size = 0.5F;
 			}
@@ -127,7 +126,6 @@ public class AbilityWaterArc extends Ability {
 			if (bender.consumeChi(STATS_CONFIG.chiWaterArc)) {
 
 				removeExisting(ctx);
-				damageMult *= ctx.getPowerRatingDamageMod();
 
 				if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 					EntityWaterArc water = new EntityWaterArc(world);
@@ -153,6 +151,9 @@ public class AbilityWaterArc extends Ability {
 						gravity = -9.81F;
 						size = 0.5F;
 					}
+
+					damageMult = comboNumber >= 3 ? 1.25F : 0.5F;
+					damageMult *= ctx.getPowerRatingDamageMod();
 
 
 					Vector playerEye = Vector.getEyePos(entity);
