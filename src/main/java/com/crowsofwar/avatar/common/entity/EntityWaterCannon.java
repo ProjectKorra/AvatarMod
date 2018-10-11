@@ -57,6 +57,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		setSize(1.5f * getSizeMultiplier(), 1.5f * getSizeMultiplier());
 		damage = 0.5F;
 		this.putsOutFires = true;
+		this.noClip = false;
 	}
 
 	@Override
@@ -87,12 +88,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		if (getOwner() != null) {
 			Vector direction = Vector.getLookRectangular(getOwner());
 			this.setVelocity(direction.times(20));
-			double x = getOwner().posX - posX;
-			double y = getOwner().posY - posY;
-			double z = getOwner().posZ - posZ;
-			this.rotationYaw = (float) (MathHelper.atan2(x, z) * (180 / Math.PI));
-			this.rotationPitch = (float) (MathHelper.atan2(y, MathHelper.sqrt(x * x + z * z)) * (180 / Math.PI));
 		}
+
 
 
 		if (this.ticksExisted >= lifeTime && !world.isRemote) {
@@ -160,22 +157,17 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		if (getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 
-			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), velocity(), velocity
-					().magnitude() / 20, entity -> entity != getOwner() && entity != this);
-			/*Original raytrace- but, it's pretty glitchy. Basically, look at an entity, and the water cannon will teleport.
-			That's why you have to use this complex vector maths to get the water cannon to face the player.**/
-			/*double dist = this.getDistanceToEntity(getOwner());
-			Vec3d direction = Vec3d.fromPitchYaw(rotationPitch, rotationYaw);
 
-			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(0).position(),Vector.getLookRectangular(this), dist, entity -> entity != getOwner());
-			**/
+			double dist = this.getDistance(getOwner());
+			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(0).position(), getControlPoint(1).position().minus(this.position()), dist, entity -> entity != getOwner());
+
 			if (!collisions.isEmpty()) {
 				for (Entity collided : collisions) {
 					if (canCollideWith(collided) && collided != getOwner()) {
 						onCollideWithEntity(collided);
 						//Needed because the water cannon will still glitch through the entity
 						if (!(data.getAbilityData("water_cannon").isMasterPath(AbilityData.AbilityTreePath.SECOND))) {
-							this.setPosition(collided.posX, collided.posY + (collided.getEyeHeight() / 2), collided.posZ);
+							this.setPosition(collided.posX, this.posY, collided.posZ);
 						}
 					}
 				}
