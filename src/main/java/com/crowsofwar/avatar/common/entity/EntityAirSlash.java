@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.entity;
+/*package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
@@ -35,7 +35,7 @@ public class EntityAirSlash extends AvatarEntity {
 		 * Note: Threshold of 0 means that the airblade can chop grass and similar
 		 * blocks. Set to > 0 to avoid chopping blocks at all.
 		 */
-		private float chopBlocksThreshold;
+		/*private float chopBlocksThreshold;
 		private boolean chainAttack;
 		private boolean pierceArmor;
 
@@ -154,7 +154,7 @@ public class EntityAirSlash extends AvatarEntity {
 		 * When the airblade can break blocks, checks any blocks that the airblade
 		 * collides with and tries to break them
 		 */
-		private void breakCollidingBlocks() {
+	/*	private void breakCollidingBlocks() {
 			// Hitbox expansion (in each direction) to destroy blocks before the
 			// airblade collides with them
 			double expansion = 0.1;
@@ -177,7 +177,7 @@ public class EntityAirSlash extends AvatarEntity {
 		/**
 		 * Assuming the airblade can break blocks, tries to break the block.
 		 */
-		private void tryBreakBlock(IBlockState state, BlockPos pos) {
+	/*	private void tryBreakBlock(IBlockState state, BlockPos pos) {
 			if (state.getBlock() == Blocks.AIR || !STATS_CONFIG.airBladeBreakableBlocks.contains(state.getBlock())) {
 				return;
 			}
@@ -221,3 +221,4 @@ public class EntityAirSlash extends AvatarEntity {
 		}
 
 }
+**/
