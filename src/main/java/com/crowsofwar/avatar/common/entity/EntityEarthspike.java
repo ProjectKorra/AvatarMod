@@ -111,6 +111,7 @@ public class EntityEarthspike extends AvatarEntity {
 
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		Block belowBlock = world.getBlockState(below).getBlock();
+		damage = damage * belowBlock.getBlockHardness(world.getBlockState(below), world, below);
 		if (getAbility() instanceof AbilityEarthspikes) {
 			AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
 			if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
