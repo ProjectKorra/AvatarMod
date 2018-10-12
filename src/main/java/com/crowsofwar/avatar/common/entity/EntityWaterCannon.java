@@ -89,15 +89,28 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				double dist = this.getDistance(getOwner());
 				int particleController = 20;
 				if (getAbility() instanceof AbilityWaterCannon && !world.isRemote) {
-					particleController = !(AbilityData.get(getOwner(), getAbility().getName()).isMasterPath(AbilityData.AbilityTreePath.SECOND)) ? (int) (5 / getSizeMultiplier()) : 18;
-				}
+					AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
+					particleController = 23;
+					if (data.getLevel() == 1) {
+						particleController = 20;
+					}
+					if (data.getLevel() == 2) {
+						particleController = 15;
+					}
+					if (data.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+						particleController = 5;
+					}
+					if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+						particleController = 25;
+					}
+						}
 				for (double i = 0; i < 1; i += 1 / dist) {
 					for (double angle = 0; angle < 360; angle += particleController) {
 						Vector position = AvatarUtils.getOrthogonalVector(velocity().normalize(), angle, getSizeMultiplier() * 1.5);
 						Vector startPos = getControlPoint(1).position();
 						Vector distance = this.position().minus(getControlPoint(1).position());
 						distance = distance.times(i);
-						particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 2,
+						particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1,
 								position.x() + startPos.x() + distance.x(), position.y() + startPos.y() + distance.y(), position.z() + startPos.z() + distance.z(), 0, 0, 0);
 					}
 				}
