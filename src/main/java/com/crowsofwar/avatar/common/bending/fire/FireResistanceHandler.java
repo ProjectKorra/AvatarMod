@@ -24,7 +24,7 @@ public class FireResistanceHandler {
 			if (source != null) {
 				if (source instanceof AvatarEntity) {
 					if (entity.isPotionActive(MobEffects.FIRE_RESISTANCE)) {
-						if (((AvatarEntity) source).getElement() instanceof Firebending && !entity.world.isRemote) {
+						if (((AvatarEntity) source).getElement() instanceof Firebending) {
 							event.setAmount(amount - (Objects.requireNonNull(entity.getActivePotionEffect(MobEffects.FIRE_RESISTANCE)).getAmplifier() + 1) / 2F);
 						}
 					}
