@@ -26,12 +26,10 @@ import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
