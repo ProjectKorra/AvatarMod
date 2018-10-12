@@ -93,8 +93,7 @@ public class WaterChargeHandler extends TickHandler {
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage = (float) (STATS_CONFIG.waterCannonDamage * 2.5 * bender.getDamageMult(Waterbending.ID));
-				size = 1f;
-				ticks = 150;
+				ticks = 125;
 			}
 
 			damage *= bender.getDamageMult(Waterbending.ID);
@@ -120,6 +119,7 @@ public class WaterChargeHandler extends TickHandler {
 		cannon.setSizeMultiplier(size);
 		cannon.setPosition(Vector.getEyePos(entity));
 		cannon.setLifeTime(ticks);
+		cannon.setAbility(new AbilityWaterCannon());
 
 		Vector velocity = Vector.getLookRectangular(entity);
 		velocity = velocity.normalize().times(speed);

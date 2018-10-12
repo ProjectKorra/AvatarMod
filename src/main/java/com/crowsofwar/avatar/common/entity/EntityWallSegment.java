@@ -176,6 +176,11 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	}
 
 	@Override
+	public boolean canBePushed() {
+		return false;
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		ignoreFrustumCheck = true;

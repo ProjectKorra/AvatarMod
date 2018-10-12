@@ -84,8 +84,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 				SoundCategory.PLAYERS, 1, 2);
 
+
 		if (getOwner() != null) {
-			if (ticksExisted % 2 == 0) {
+			if (ticksExisted % 2 == 0 && !this.isDead) {
 				double dist = this.getDistance(getOwner());
 				int particleController = 20;
 				if (getAbility() instanceof AbilityWaterCannon && !world.isRemote) {
@@ -94,29 +95,29 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 					if (data.getLevel() == 1) {
 						particleController = 20;
 					}
-					if (data.getLevel() == 2) {
-						particleController = 15;
+					if (data.getLevel() >= 2) {
+						particleController = 10;
 					}
-					if (data.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-						particleController = 5;
-					}
+
 					if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-						particleController = 25;
+						particleController = 120;
 					}
-						}
+				}
 				for (double i = 0; i < 1; i += 1 / dist) {
+					Vector startPos = getControlPoint(1).position();
+					Vector distance = this.position().minus(getControlPoint(1).position());
+					distance = distance.times(i);
 					for (double angle = 0; angle < 360; angle += particleController) {
-						Vector position = AvatarUtils.getOrthogonalVector(velocity().normalize(), angle, getSizeMultiplier() * 1.5);
-						Vector startPos = getControlPoint(1).position();
-						Vector distance = this.position().minus(getControlPoint(1).position());
-						distance = distance.times(i);
+						Vector position = AvatarUtils.getOrthogonalVector(this.position().minus(getControlPoint(1).position()), angle, getSizeMultiplier() * 1.5);
 						particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1,
 								position.x() + startPos.x() + distance.x(), position.y() + startPos.y() + distance.y(), position.z() + startPos.z() + distance.z(), 0, 0, 0);
+
 					}
+					particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1,
+							startPos.x() + distance.x(), startPos.y() + distance.y(), startPos.z() + distance.z(), 0, 0, 0);
 				}
 			}
 		}
-
 
 
 		if (getOwner() != null) {
@@ -127,7 +128,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 		if (this.ticksExisted >= lifeTime && !world.isRemote) {
 			setDead();
-
 		}
 
 		if (getOwner() == null) {
@@ -254,7 +254,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 		private CannonControlPoint(EntityArc arc, int index) {
 			// Make all control points the same size
-			super(arc, index == 1 ? 0.5f : 0.5f, 0, 0, 0);
+			super(arc, index == 1 ? 0.35f : 0.5f, 0, 0, 0);
 		}
 
 	}
