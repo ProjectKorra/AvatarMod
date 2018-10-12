@@ -300,7 +300,7 @@ public class EntityAirBubble extends EntityShield {
 		// Min/max acceptable hovering distance
 		// Hovering is allowed between these two values
 		// Hover distance doesn't need to be EXACT
-		final double minFloatHeight = 1.5;
+		final double minFloatHeight = 1.2;
 		final double maxFloatHeight = 3;
 
 		EntityLivingBase owner = getOwner();
@@ -344,7 +344,7 @@ public class EntityAirBubble extends EntityShield {
 				owner.motionY += 0.11;
 			}
 			if (distanceFromGround >= minFloatHeight && distanceFromGround < maxFloatHeight) {
-				owner.motionY *= 0.7;
+				owner.motionY *= 0.8;
 			}
 			if (distanceFromGround >= maxFloatHeight) {
 				owner.motionY += 0.07;
