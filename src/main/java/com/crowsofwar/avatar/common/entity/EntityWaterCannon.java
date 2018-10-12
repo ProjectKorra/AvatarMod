@@ -24,6 +24,7 @@ import net.minecraft.world.WorldServer;
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControlPoint> {
 
@@ -86,7 +87,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 
 		if (getOwner() != null) {
-			if (ticksExisted % 2 == 0 && !this.isDead) {
+			if (ticksExisted % 2 == 0 && !this.isDead && STATS_CONFIG.useWaterCannonParticles) {
 				double dist = this.getDistance(getOwner());
 				int particleController = 20;
 				if (getAbility() instanceof AbilityWaterCannon && !world.isRemote) {

@@ -142,6 +142,9 @@ public class ConfigStats {
 	public double waterArcSearchRadius = 4, waterArcAngles = 8;
 
 	@Load
+	public boolean useWaterCannonParticles = true;
+
+	@Load
 	public double waterCannonSearchRadius = 3, waterCannonAngles = 8, waterCannonDamage = 1;
 
 	@Load
