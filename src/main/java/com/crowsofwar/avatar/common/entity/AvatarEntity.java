@@ -265,6 +265,16 @@ public abstract class AvatarEntity extends Entity {
 					}
 				}
 			}
+			for (int x = 0; x >= -1; x--) {
+				for (int z = 0; z >= -1; z--) {
+					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
+					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
+						world.setBlockToAir(pos);
+						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
+								SoundCategory.PLAYERS, 1, 1, false);
+					}
+				}
+			}
 		}
 
 
