@@ -43,6 +43,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		this.putsOutFires = true;
 		this.noClip = false;
 		this.particles = new NetworkParticleSpawner();
+		this.setInvisible(false);
 	}
 
 	public float getDamage() {
