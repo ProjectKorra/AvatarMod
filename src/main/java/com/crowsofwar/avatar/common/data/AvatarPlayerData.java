@@ -122,7 +122,7 @@ public class AvatarPlayerData extends PlayerData {
 			double range = Math.sqrt(rangeSq) + 0.01;// +0.01 "just in case"
 
 			TargetPoint targetPoint = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, range);
-			FMLLog.info("Target Point: " + targetPoint);
+			//FMLLog.info("Target Point: " + targetPoint);
 			AvatarMod.network.sendToAllAround(packet, targetPoint);
 
 			changed.clear();
