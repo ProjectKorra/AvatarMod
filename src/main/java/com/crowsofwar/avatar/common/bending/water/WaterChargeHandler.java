@@ -1,16 +1,20 @@
 package com.crowsofwar.avatar.common.bending.water;
 
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.*;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-
-import com.crowsofwar.avatar.common.data.*;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
-import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.UUID;
 

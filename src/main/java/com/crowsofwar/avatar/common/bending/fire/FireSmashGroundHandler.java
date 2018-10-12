@@ -16,11 +16,11 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.*;
-
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundEvent;
 
 /**
  * @author CrowsOfWar

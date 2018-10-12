@@ -11,8 +11,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.crowsofwar.avatar.common.data.TickHandlerController.FIRE_DEVOUR_HANDLER;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.FIRE_DEVOUR_HANDLER;
 
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)

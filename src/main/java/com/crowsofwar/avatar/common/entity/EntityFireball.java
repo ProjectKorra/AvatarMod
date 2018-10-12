@@ -48,7 +48,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 import java.util.List;
-import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
