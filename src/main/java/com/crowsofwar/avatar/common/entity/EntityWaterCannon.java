@@ -84,20 +84,22 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 				SoundCategory.PLAYERS, 1, 2);
 
-		if (ticksExisted % 2 == 0) {
-			double dist = this.getDistance(getOwner());
-			int particleController = 20;
-			if (getAbility() instanceof AbilityWaterCannon && !world.isRemote) {
-				particleController = !(AbilityData.get(getOwner(), getAbility().getName()).isMasterPath(AbilityData.AbilityTreePath.SECOND)) ? (int) (5 / getSizeMultiplier()) : 18;
-			}
-			for (double i = 0; i < 1; i += 1 / dist) {
-				for (double angle = 0; angle < 360; angle += particleController) {
-					Vector position = AvatarUtils.getOrthogonalVector(velocity().normalize(), angle, getSizeMultiplier() * 1.5);
-					Vector startPos = getControlPoint(1).position();
-					Vector distance = this.position().minus(getControlPoint(1).position());
-					distance = distance.times(i);
-					particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 2,
-							position.x() + startPos.x() + distance.x(), position.y() + startPos.y() + distance.y(), position.z() + startPos.z() + distance.z(), 0, 0, 0);
+		if (getOwner() != null) {
+			if (ticksExisted % 2 == 0) {
+				double dist = this.getDistance(getOwner());
+				int particleController = 20;
+				if (getAbility() instanceof AbilityWaterCannon && !world.isRemote) {
+					particleController = !(AbilityData.get(getOwner(), getAbility().getName()).isMasterPath(AbilityData.AbilityTreePath.SECOND)) ? (int) (5 / getSizeMultiplier()) : 18;
+				}
+				for (double i = 0; i < 1; i += 1 / dist) {
+					for (double angle = 0; angle < 360; angle += particleController) {
+						Vector position = AvatarUtils.getOrthogonalVector(velocity().normalize(), angle, getSizeMultiplier() * 1.5);
+						Vector startPos = getControlPoint(1).position();
+						Vector distance = this.position().minus(getControlPoint(1).position());
+						distance = distance.times(i);
+						particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 2,
+								position.x() + startPos.x() + distance.x(), position.y() + startPos.y() + distance.y(), position.z() + startPos.z() + distance.z(), 0, 0, 0);
+					}
 				}
 			}
 		}
