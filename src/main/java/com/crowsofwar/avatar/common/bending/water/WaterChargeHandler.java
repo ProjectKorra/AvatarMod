@@ -49,10 +49,10 @@ public class WaterChargeHandler extends TickHandler {
 			durationToFire = 60;
 		}
 
+
 		if (world.isRemote) {
 			return false;
 		}
-
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
@@ -83,12 +83,12 @@ public class WaterChargeHandler extends TickHandler {
 
 			if (abilityData.getLevel() >= 1) {
 				damage = (float) (STATS_CONFIG.waterCannonDamage * 1.25 * bender.getDamageMult(Waterbending.ID));
-				size = 0.5f;
+				size = 0.4f;
 				ticks = 75;
 			}
 			if (abilityData.getLevel() >= 2) {
 				damage = (float) (STATS_CONFIG.waterCannonDamage * 1.5 * bender.getDamageMult(Waterbending.ID));
-				size = 0.75f;
+				size = 0.55f;
 				ticks = 100;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {

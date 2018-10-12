@@ -64,11 +64,13 @@ public abstract class LightningChargeHandler extends TickHandler {
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 		double inverseRadius = (40F - duration) / 10;
 
-		for (int i = 0; i < 18; i++) {
-			Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-					i * 20), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
-			particleSpawner.spawnParticles(world, AvatarParticles.getParticleElectricity(), 1, 2, lookpos.x() + entity.posX,
-					lookpos.y() + entity.getEntityBoundingBox().minY, lookpos.z() + entity.posZ, 2, 1.2, 2);
+		if (duration % 3 == 0) {
+			for (int i = 0; i < 8; i++) {
+				Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+						i * 45), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
+				particleSpawner.spawnParticles(world, AvatarParticles.getParticleElectricity(), 1, 2, lookpos.x() + entity.posX,
+						lookpos.y() + entity.getEntityBoundingBox().minY, lookpos.z() + entity.posZ, 2, 1.2, 2);
+			}
 		}
 
 		if (duration >= 40) {

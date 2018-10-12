@@ -389,13 +389,13 @@ public class EntityAirBubble extends EntityShield {
 			Vector velocity = getEntityPos(entity).minus(getEntityPos(getOwner()));
 			//Vector that comes from the owner of the air bubble towards the entity being collided with
 			double dist = getOwner().getDistance(entity);
-			double sizeMult = isDissipatingLarge() ? 4 : 2;
+			double sizeMult = isDissipatingLarge() ? 4 * (getSize() * 2/3) : 2 * (getSize() * 2/3);
 			double mult = (dist - getSize()) * sizeMult > 1 ? (dist - getSize()) * sizeMult : 1 * sizeMult;
-			velocity = velocity.normalize().times(mult).withY(0.4);
+			velocity = velocity.normalize().times(mult).withY(getSize()/4);
 
 			//The velocity is 20 times the motion of the entity, so you wanna divide by 20, unless you wanna make the entities
 			//that have been collided with fly super far way
-			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
+			entity.addVelocity(velocity.x()/2, velocity.y(), velocity.z()/2);
 
 			if (entity instanceof AvatarEntity) {
 				AvatarEntity avent = (AvatarEntity) entity;
