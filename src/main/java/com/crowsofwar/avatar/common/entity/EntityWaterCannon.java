@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.water.AbilityWaterCannon;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
@@ -34,6 +35,15 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	private float lifeTime;
 	private ParticleSpawner particles;
 
+	public EntityWaterCannon(World world) {
+		super(world);
+		setSize(1.5f * getSizeMultiplier(), 1.5f * getSizeMultiplier());
+		damage = 0.5F;
+		this.putsOutFires = true;
+		this.noClip = false;
+		this.particles = new NetworkParticleSpawner();
+	}
+
 	public float getDamage() {
 		return damage;
 	}
@@ -52,15 +62,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	public void setLifeTime(float ticks) {
 		this.lifeTime = ticks;
-	}
-
-	public EntityWaterCannon(World world) {
-		super(world);
-		setSize(1.5f * getSizeMultiplier(), 1.5f * getSizeMultiplier());
-		damage = 0.5F;
-		this.putsOutFires = true;
-		this.noClip = false;
-		this.particles = new NetworkParticleSpawner();
 	}
 
 	@Override
@@ -85,8 +86,12 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 		if (ticksExisted % 2 == 0) {
 			double dist = this.getDistance(getOwner());
+			int particleController = 20;
+			if (getAbility() instanceof AbilityWaterCannon && !world.isRemote) {
+				particleController = !(AbilityData.get(getOwner(), getAbility().getName()).isMasterPath(AbilityData.AbilityTreePath.SECOND)) ? (int) (5 / getSizeMultiplier()) : 18;
+			}
 			for (double i = 0; i < 1; i += 1 / dist) {
-				for (double angle = 0; angle < 360; angle += 5/getSizeMultiplier()) {
+				for (double angle = 0; angle < 360; angle += particleController) {
 					Vector position = AvatarUtils.getOrthogonalVector(velocity().normalize(), angle, getSizeMultiplier() * 1.5);
 					Vector startPos = getControlPoint(1).position();
 					Vector distance = this.position().minus(getControlPoint(1).position());
@@ -102,7 +107,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			Vector direction = Vector.getLookRectangular(getOwner());
 			this.setVelocity(direction.times(20));
 		}
-
 
 
 		if (this.ticksExisted >= lifeTime && !world.isRemote) {
@@ -143,7 +147,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 
 			if (!world.isRemote) {
-				int numberOfParticles = (int) (500 * getSizeMultiplier());
+				int numberOfParticles = (int) (400 * getSizeMultiplier());
 				WorldServer World = (WorldServer) world;
 				World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, numberOfParticles, 0, 0, 0, 0.05 + getSizeMultiplier() / 10);
 				//Change based on size
