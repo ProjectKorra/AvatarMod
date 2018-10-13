@@ -234,11 +234,11 @@ public class EntityShockwave extends AvatarEntity {
 				}
 				double xSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted / 12.5F * speed) :
 						Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted / 20F * speed);
+				double ySpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted / 15F * speed) :
+						knockbackHeight; // Throws target into the air.
 				double zSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 12.5F * speed) :
 						Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 20F * speed);
-				target.motionX += xSpeed;
-				target.motionY += isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted / 15F * speed) : knockbackHeight; // Throws target into the air.
-				target.motionZ += zSpeed;
+				target.addVelocity(xSpeed, ySpeed, zSpeed);
 
 				AvatarUtils.afterVelocityAdded(target);
 			}
