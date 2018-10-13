@@ -20,6 +20,8 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -262,6 +264,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			super(arc, index == 1 ? 0.35f : 0.5f, 0, 0, 0);
 		}
 
+	}
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isInRangeToRenderDist(double distance) {
+		return true;
 	}
 }
 

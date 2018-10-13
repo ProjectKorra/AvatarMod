@@ -46,6 +46,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Objects;
@@ -60,18 +62,12 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager
 			.createKey(EntityFireArc.class, DataSerializers.FLOAT);
-
-	private float damageMult;
-
-	private boolean createBigFire;
-
-	private float Gravity;
-
-	private float Size;
-
-	private BlockPos position;
-
 	private final ParticleSpawner particles;
+	private float damageMult;
+	private boolean createBigFire;
+	private float Gravity;
+	private float Size;
+	private BlockPos position;
 
 
 	public EntityFireArc(World world) {
@@ -94,19 +90,19 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		this.position = position;
 	}
 
-	public void setSize(float size) {
-		dataManager.set(SYNC_SIZE, size);
-	}
-
 	public float getSize() {
 		return dataManager.get(SYNC_SIZE);
+	}
+
+	public void setSize(float size) {
+		dataManager.set(SYNC_SIZE, size);
 	}
 
 	@Override
 	protected void updateCpBehavior() {
 		super.updateCpBehavior();
 		getControlPoint(0).setPosition(this.position());
-		getLeader().setPosition(this.position().plusY(getSize()/4));
+		getLeader().setPosition(this.position().plusY(getSize() / 4));
 	}
 
 	@Override
@@ -145,7 +141,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 			}
 
 		}
-		setSize(getSize()/2, getSize()/2);
+		setSize(getSize() / 2, getSize() / 2);
 
 		if (getOwner() == null) {
 			this.setDead();
@@ -191,13 +187,12 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		if (entity instanceof AvatarEntity && this.getBehavior() instanceof FireArcBehavior.Thrown) {
 			((AvatarEntity) entity).onFireContact();
 		}
-		if(getBehavior() != null && getBehavior() instanceof FireArcBehavior.Thrown) {
+		if (getBehavior() != null && getBehavior() instanceof FireArcBehavior.Thrown) {
 			if (entity instanceof AvatarEntity) {
-			if (!(((AvatarEntity) entity).getElement() instanceof Airbending)) {
+				if (!(((AvatarEntity) entity).getElement() instanceof Airbending)) {
 					Firesplosion();
 				}
-			}
-			else {
+			} else {
 				Firesplosion();
 			}
 			cleanup();
@@ -260,14 +255,14 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 			} else this.damageMult = 0.5f;
 
 
-			 //if (CLIENT_CONFIG.useCustomParticles) {
+			//if (CLIENT_CONFIG.useCustomParticles) {
 			 	/*particles.spawnParticles(world, AvatarParticles.getParticleFlames(), 100, 200, Vector.getEntityPos(this),
 						new Vector(speed * 50, speed * 50, speed * 10));**/
-			 //}
-			 //else {
-				 WorldServer World = (WorldServer) this.world;
-				 World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, numberOfParticles, 0.2, 0.1, 0.2, speed);
-			 //}
+			//}
+			//else {
+			WorldServer World = (WorldServer) this.world;
+			World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, numberOfParticles, 0.2, 0.1, 0.2, speed);
+			//}
 			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(1, 1, 1),
@@ -355,12 +350,18 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		this.createBigFire = createBigFire;
 	}
 
-public static class FireControlPoint extends ControlPoint {
-
-	public FireControlPoint(EntityArc arc, float size, double x, double y, double z) {
-		super(arc, size, x, y, z);
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isInRangeToRenderDist(double distance) {
+		return true;
 	}
 
-}
+	public static class FireControlPoint extends ControlPoint {
+
+		public FireControlPoint(EntityArc arc, float size, double x, double y, double z) {
+			super(arc, size, x, y, z);
+		}
+
+	}
 
 }
