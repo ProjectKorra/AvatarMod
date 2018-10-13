@@ -242,12 +242,12 @@ avatar.ability.water_arc.lvl4_1=§9§l§oWater Flurry ;; You can now instantly f
 avatar.ability.water_arc.lvl4_2=§9§l§oWater spear ;; Super-duper-ultra fast, really high damage, breaks blocks!
 
 avatar.ability.wave=§9§lWave
-avatar.ability.wave.desc=Summon a wave of water to destroy your enemies. Only works when they are in water.
+avatar.ability.wave.desc=Summon a wave of water to destroy your enemies, travels a little on land.
 avatar.ability.wave.lvl1=Make your enemies wave goodbye
 avatar.ability.wave.lvl2=A lot more damage
 avatar.ability.wave.lvl3=Much larger
-avatar.ability.wave.lvl4_1=§9§l§oWater §9§l§ospray ;; Creates minor explosion upon contact with enemy
-avatar.ability.wave.lvl4_2=§9§l§oForce §9§l§owave ;; Very fast waves
+avatar.ability.wave.lvl4_1=§9§l§oTsunami ;; Creates a massive wave
+avatar.ability.wave.lvl4_2=§9§l§oForce §9§l§owave ;; Very fast waves, explosions
 
 avatar.ability.water_bubble=§9§lWater §9§lBubble
 avatar.ability.water_bubble.desc=Suspend and transport a bubble of water. Can be used like a long-range bucket.
