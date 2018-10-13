@@ -64,10 +64,11 @@ public class AbilityWall extends Ability {
 
 			int whMin, whMax;
 			Random random = new Random();
-			if (power == 100) {
-				whMin = whMax = 5;
-			} else if (power >= 75) {
+			if (power >= 100) {
 				whMin = 4;
+				whMax = 6;
+			} else if (power >= 75) {
+				whMin = 3;
 				whMax = 5;
 			} else if (power >= 50) {
 				whMin = 3;
@@ -76,8 +77,11 @@ public class AbilityWall extends Ability {
 				whMin = 2;
 				whMax = 4;
 			} else {
-				whMin = 2;
+				whMin = 1;
 				whMax = 3;
+			}
+			if (ctx.getLevel() >= 2) {
+				whMax += 2;
 			}
 
 			abilityData.addXp(SKILLS_CONFIG.wallRaised);
