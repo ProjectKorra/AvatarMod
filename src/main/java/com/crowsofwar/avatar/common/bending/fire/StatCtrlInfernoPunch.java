@@ -142,7 +142,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 								damage = 4 + (2 * powerModifier);
 								knockBack = 1.125F + powerModifier;
 								fireTime = 6;
-							} else if (abilityData.getLevel() >= 2) {
+							}
+							if (abilityData.getLevel() >= 2) {
 								damage = 5 + (2 * powerModifier);
 								knockBack = 1.25F + powerModifier;
 								fireTime = 8 + (int) (powerModifier * 10);

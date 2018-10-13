@@ -14,6 +14,7 @@ import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAreaEffectCloud;
 import net.minecraft.entity.EntityHanging;
@@ -22,6 +23,7 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumParticleTypes;
@@ -149,7 +151,10 @@ public class StatCtrlFireJump extends StatusControl {
 				((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 			}
 
-			damageNearbyEntities(ctx, range, speed, damage, numberOfParticles, particleSpeed);
+			Block currentBlock = world.getBlockState(entity.getPosition()).getBlock();
+			if (currentBlock == Blocks.AIR) {
+				damageNearbyEntities(ctx, range, speed, damage, numberOfParticles, particleSpeed);
+			}
 
 			ParticleSpawner spawner = new NetworkParticleSpawner();
 			spawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 15, 20, new Vector(entity), new Vector(1, 0, 1));

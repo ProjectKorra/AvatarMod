@@ -197,9 +197,9 @@ avatar.ability.flamethrower=§c§lFlamethrower
 avatar.ability.flamethrower.desc=Generate a stream of powerful, close-ranged flames. A trademark of Firebending.
 avatar.ability.flamethrower.lvl1=Attack within a short range
 avatar.ability.flamethrower.lvl2=Nearly twice as many flames; but more chi
-avatar.ability.flamethrower.lvl3=Longer range, more precise
-avatar.ability.flamethrower.lvl4_1=Flamestream ;; Extremely long-ranged, concentrated flames
-avatar.ability.flamethrower.lvl4_2=The world will burn!! ;; Unfocused flames that create fires everywhere
+avatar.ability.flamethrower.lvl3=Longer range, more precise, HUUUUGE damage increase
+avatar.ability.flamethrower.lvl4_1=§c§l§oFlamestream ;; Extremely long-ranged, concentrated flames
+avatar.ability.flamethrower.lvl4_2=§c§l§oThe world will burn!! ;; Unfocused flames that create fires everywhere
 
 avatar.ability.fireball=§c§lFireball
 avatar.ability.fireball.desc=Create a glowing orb of flame. It makes a firey explosion on impact.
@@ -230,7 +230,7 @@ avatar.ability.inferno_punch.desc=Smash your enemies with a fist encased in raw 
 avatar.ability.inferno_punch.lvl1=Incinerate your enemies with the force of a super-powered fist, knocking them back and setting them on fire!
 avatar.ability.inferno_punch.lvl2=Chi cost increases, damage, knockback, and firetime increases!
 avatar.ability.inferno_punch.lvl3=Even more damage!
-avatar.ability.inferno_punch.lvl4_1=§c§l§oINCINERATE ;; Use a super-powerful inferno when you punch to create a massive fire explosion! Be warned, the explosion damages you too!
+avatar.ability.inferno_punch.lvl4_1=§c§l§oINCINERATE ;; Use a super-powerful inferno when you punch to create a massive fire explosion!
 avatar.ability.inferno_punch.lvl4_2=§c§l§oFIRRRRRREBALLL ;; You can hit enemies from really far away, and enemies close to them are hit as well!
 
 avatar.ability.water_arc=§9§lWater §9§lArc
@@ -269,7 +269,7 @@ avatar.ability.water_cannon=§9§lWater §9§lCannon
 avatar.ability.water_cannon.desc=Make a continuous stream of water acts as crowd control. It takes a while to charge up, and takes 3 water charges out of water pouches.
 avatar.ability.water_cannon.lvl1=Basic water cannon
 avatar.ability.water_cannon.lvl2=Deals more damage, slightly larger
-avatar.ability.water_cannon.lvl3=Deals even more damage; you can now just be near a source block to use water cannon, you don't have to look at one!
+avatar.ability.water_cannon.lvl3=Deals even more damage; you can now just be near a waterbendable block to use water cannon, you don't have to look at one!
 avatar.ability.water_cannon.lvl4_1=§9§l§oTitanium §9§l§oTearer ;; Water is much larger and deals much more damage. Did you that water can punch holes through anything? Including humans!!!!
 avatar.ability.water_cannon.lvl4_2=§9§l§oRapidfire ;; Rapidly create many smaller streams of water that pierces through enemies!
 
