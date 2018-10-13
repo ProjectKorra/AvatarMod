@@ -85,6 +85,7 @@ public class AbilityCleanse extends Ability {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, duration));
 				entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, 1));
+				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration));
 			}
 
 			// Perform group heal?
