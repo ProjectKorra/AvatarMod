@@ -96,7 +96,8 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 
 		private void collision(Entity collided, EntityCloudBall entity) {
 
-			if (collided.canBeCollidedWith() && entity.canCollideWith(collided)) {
+			if (collided.canBeCollidedWith() && entity.canCollideWith(collided) && !entity.world
+			.isRemote) {
 				if (collided.attackEntityFrom(AvatarDamageSource.causeAirDamage(collided, entity.getOwner()),
 						entity.getDamage())) {
 					BattlePerformanceScore.addMediumScore(entity.getOwner());

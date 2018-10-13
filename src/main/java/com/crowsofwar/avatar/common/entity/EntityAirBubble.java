@@ -132,6 +132,7 @@ public class EntityAirBubble extends EntityShield {
 		return true;
 	}
 
+
 	@Override
 	public boolean isPushedByWater() {
 		return false;
@@ -190,6 +191,7 @@ public class EntityAirBubble extends EntityShield {
 		this.posX = owner.posX;
 		this.posY = owner.getEntityBoundingBox().minY;
 		this.posZ = owner.posZ;
+		resetPositionToBB();
 		this.motionX = this.motionY = this.motionZ = 0;
 
 
