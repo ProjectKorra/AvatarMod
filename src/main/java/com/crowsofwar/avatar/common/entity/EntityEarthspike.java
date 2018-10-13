@@ -145,7 +145,7 @@ public class EntityEarthspike extends AvatarEntity {
 			pushEntity(entity);
 			if (attackEntity(entity)) {
 				if (getOwner() != null) {
-					BattlePerformanceScore.addMediumScore(getOwner());
+					BattlePerformanceScore.addScore(getOwner(), 15);
 				}
 
 			}
