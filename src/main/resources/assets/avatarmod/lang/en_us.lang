@@ -176,14 +176,14 @@ avatar.ability.restore.lvl3= The amount of speed you lose is decreased, and your
 avatar.ability.restore.lvl4_1= §2§l§oGuardian §2§l§oof §2§l§oLife ;; Your strength and resistance are increased.
 avatar.ability.restore.lvl4_2= §2§l§oSustenance §2§l§oof §2§l§oLife ;; You receive instantaneous health, and your hunger disappears.
 
-avatar.ability.light_fire=Light Fire
+avatar.ability.light_fire=§c§lLight Fire
 avatar.ability.light_fire.desc=A small, utility type ability to light fires. It's less practical in combat than some other abilities.
 avatar.ability.light_fire.fail=You weren't able to light the fire. Maybe you should try again...
 avatar.ability.light_fire.lvl1=When you don't succeed, keep trying, otherwise mobs will start spawning...
 avatar.ability.light_fire.lvl2=Greater chance of creating fire
 avatar.ability.light_fire.lvl3=Greater chance of creating fire
-avatar.ability.light_fire.lvl4_1=§c§l§oFlame §c§l§owall ;; Create a line of fire in the direction you're looking
-avatar.ability.light_fire.lvl4_2=§c§l§oWide §c§l§orange ;; Light nearby blocks on fire as well
+avatar.ability.light_fire.lvl4_1=§c§l§oFlame §c§l§odrive ;; Create a line of fire in the direction you're looking
+avatar.ability.light_fire.lvl4_2=§c§l§oFlame §c§l§owall ;; Light nearby blocks on fire as well
 
 avatar.ability.fire_arc=§c§lFire Arc
 avatar.ability.fire_arc.desc=Make a flaming whip of fire and throw it at your enemies.

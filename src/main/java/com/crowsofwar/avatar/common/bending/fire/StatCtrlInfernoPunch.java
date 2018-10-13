@@ -189,7 +189,12 @@ public class StatCtrlInfernoPunch extends StatusControl {
 									}
 									if (world instanceof WorldServer) {
 										WorldServer World = (WorldServer) target.getEntityWorld();
-										World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY + target.getEyeHeight() / 2, target.posZ, 40 + 20 * abilityData.getLevel(), 0.05, 0.05, 0.05, 0.05);
+										for (double angle = 0; angle < 360; angle += 15) {
+											Vector pos = AvatarUtils.getOrthogonalVector(Vector.getLookRectangular(entity), angle, 0.2);
+											World.spawnParticle(EnumParticleTypes.FLAME, target.posX + pos.x(), (target.posY + (target.getEyeHeight() / 1.25)) + pos.y(), target.posZ + pos.z(),
+													4 + abilityData.getLevel(), 0.0, 0.0, 0.0, 0.03 + (abilityData.getLevel()/100F));
+										}
+
 
 									}
 
