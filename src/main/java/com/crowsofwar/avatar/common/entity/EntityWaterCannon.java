@@ -265,6 +265,12 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 
 	}
+
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return true;
+	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean isInRangeToRenderDist(double distance) {
