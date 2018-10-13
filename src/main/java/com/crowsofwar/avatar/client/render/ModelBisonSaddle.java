@@ -25,6 +25,9 @@ import net.minecraft.util.ResourceLocation;
 
 /**
  * BisonSaddle - Captn_Dubz & Mnesikos Created using Tabula 5.1.0
+ *
+ * Note: This model + texture were edited by Mnesikos to better fit the new Bison model altogether,
+ * heavily based on original model + texture by Captn_Dubz.
  */
 public class ModelBisonSaddle extends ModelBase {
 
@@ -85,18 +88,6 @@ public class ModelBisonSaddle extends ModelBase {
 		this.saddleBase.addChild(this.wall2);
 		this.saddleBase.addChild(this.wall1);
 		this.saddleBase.addChild(this.wall4);
-
-		// CrowsOfWar: Slightly adjust position of saddle to make it more
-		// on-center on the bison
-		/*List<ModelRenderer> allBoxes = Arrays.asList(saddleBase, wall1, wall2, wall3, wall4, cargo, wallTop,
-				wallSide1, wallSide2);
-		for (ModelRenderer box : allBoxes) {
-			box.rotationPointX += 40;
-			if (box != saddleBase) {
-				box.rotationPointX -= 40;
-			}
-		}*/
-
 	}
 
 	@Override
