@@ -108,7 +108,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		wave.setParticle(AvatarParticles.getParticleElectricity());
 		wave.setSpeed(1);
 		wave.setPosition(x, y, z);
-		wave.setDamage(getDamage()/4);
+		wave.setDamage(getDamage() / 2);
 		wave.setRange(getSizeMultiplier() * 2);
 		wave.setParticleController(20);
 		wave.setSphere(true);
@@ -218,6 +218,17 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
+		if (getAbility() instanceof AbilityLightningArc && !world.isRemote) {
+			AbilityData aD = AbilityData.get(getOwner(), "lightning_arc");
+			if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND) && entity instanceof EntityLivingBase) {
+				world.playSound(null, getPosition(), SoundEvents.ENTITY_LIGHTNING_THUNDER,
+						SoundCategory.PLAYERS, 1, 1);
+				damageEntity(((EntityLivingBase) entity), 1);
+				LightningBurst(this.posX, this.posY, this.posZ);
+				entity.noClip = false;
+				this.setDead();
+			}
+		}
 		if (stuckTo == null && entity instanceof EntityLivingBase) {
 			stuckTo = (EntityLivingBase) entity;
 

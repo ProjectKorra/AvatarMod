@@ -20,7 +20,6 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.gorecore.util.Vector;
@@ -51,14 +50,14 @@ public class AbilityAirblade extends Ability {
 
 		if (!bender.consumeChi(STATS_CONFIG.chiAirblade)) return;
 
-		double pitchDeg = entity.rotationPitch;
+		/*double pitchDeg = entity.rotationPitch;
 		if (abs(pitchDeg) > 30) {
 			pitchDeg = pitchDeg / abs(pitchDeg) * 30;
 		}
-		float pitch = (float) Math.toRadians(pitchDeg);
+		float pitch = (float) Math.toRadians(pitchDeg);**/
 
-		Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), pitch);
-		Vector spawnAt = Vector.getEntityPos(entity).plus(look.times(2)).plus(0, 1, 0);
+		Vector look = Vector.getLookRectangular(entity);
+		Vector spawnAt = Vector.getEyePos(entity).plus(look.times(0.5));
 
 		AbilityData abilityData = ctx.getData().getAbilityData(this);
 		float xp = abilityData.getTotalXp();

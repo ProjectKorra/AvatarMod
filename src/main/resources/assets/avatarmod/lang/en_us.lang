@@ -339,12 +339,12 @@ avatar.ability.air_burst.lvl4_1=§f§lPiercing Winds ;; Way higher damage, and r
 avatar.ability.air_burst.lvl4_2=§f§lMaximum Pressure ;; Slowly draw enemies in before firing them away!! A massive radius!
 
 avatar.ability.lightning_arc=§b§lLightning §b§lArc
-avatar.ability.lightning_arc.desc=Create imposing arcs of electricity to electrocute your enemies!
+avatar.ability.lightning_arc.desc=Create imposing arcs of electricity to electrocute your enemies! Explode on impact with the ground, but not mobs or players.
 avatar.ability.lightning_arc.lvl1=Intimidate potential boyfriends
-avatar.ability.lightning_arc.lvl2=Lightning travels faster
-avatar.ability.lightning_arc.lvl3=Lightning does more damage
+avatar.ability.lightning_arc.lvl2=Lightning travels faster, bigger explosion on colliding with the ground.
+avatar.ability.lightning_arc.lvl3=Lightning does more damage, bigger explosion on colliding with the ground.
 avatar.ability.lightning_arc.lvl4_1=§b§lFurious lightning ;; Does more damage, slightly smaller, another bolt
-avatar.ability.lightning_arc.lvl4_2=§b§lLarge thunderbolts ;; Has a larger hitbox, making it easier to capture enemies
+avatar.ability.lightning_arc.lvl4_2=§b§lLarge thunderbolts ;; Has a larger hitbox, and does all of its damage instantly, then explodes, instead of sticking. Additionally, its explosion is huge!
 
 avatar.ability.lightning_raze=§b§lLightning §b§lRaze
 avatar.ability.lightning_raze.desc=Rain down lightning bolts where you're looking! Pretty inaccurate.

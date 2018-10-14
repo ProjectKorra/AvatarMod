@@ -213,7 +213,7 @@ public class EntityShockwave extends AvatarEntity {
 		targets.remove(getOwner());
 
 		for (Entity target : targets) {
-			if (target != getOwner() && this.canCollideWith(target) && target != this && !(target instanceof EntityItem)) {
+			if (target != getOwner() && this.canCollideWith(target) && target != this && !(target instanceof EntityItem) && !world.isRemote) {
 
 				if (this.canDamageEntity(target)) {
 					if (target.attackEntityFrom(AvatarDamageSource.causeShockwaveDamage(target, getOwner()), damage)) {
@@ -238,7 +238,10 @@ public class EntityShockwave extends AvatarEntity {
 						knockbackHeight; // Throws target into the air.
 				double zSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 12.5F * speed) :
 						Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 20F * speed);
-				target.addVelocity(xSpeed, ySpeed, zSpeed);
+				ySpeed = ySpeed > 0 ? ySpeed : 0.4;
+				target.motionX = xSpeed/20;
+				target.motionY = ySpeed;
+				target.motionZ = zSpeed/20;
 
 				AvatarUtils.afterVelocityAdded(target);
 			}
