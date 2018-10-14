@@ -126,7 +126,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 		if (getOwner() != null) {
 			Vector direction = Vector.getLookRectangular(getOwner());
-			this.setVelocity(direction.times(20));
+			this.setVelocity(direction.times(25));
 		}
 
 

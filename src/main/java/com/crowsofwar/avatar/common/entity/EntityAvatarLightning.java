@@ -164,7 +164,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 			return;
 		}
 
-		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, spawner.getOwner());
+		DamageSource damageSource = AvatarDamageSource.LIGHTNING;
 		float damage = STATS_CONFIG.lightningRazeSettings.damage;
 
 		if (spawner.getAbility() instanceof AbilityLightningRaze) {

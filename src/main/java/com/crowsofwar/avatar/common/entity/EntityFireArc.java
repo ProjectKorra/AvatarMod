@@ -195,8 +195,15 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 			} else {
 				Firesplosion();
 			}
-			cleanup();
-			this.setDead();
+			if (getAbility() instanceof AbilityFireArc && !world.isRemote) {
+				AbilityData data = AbilityData.get(getOwner(), "fire_arc");
+				if (!data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+					cleanup();
+					this.setDead();
+				}
+			}
+
+
 		}
 	}
 

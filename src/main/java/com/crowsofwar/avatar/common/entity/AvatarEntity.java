@@ -411,6 +411,12 @@ public abstract class AvatarEntity extends Entity {
 	}
 
 	/**
+	 * Called when a lightning bolt or source of lightning hits the enitty
+	 */
+	public boolean onLightningContact() {
+		return false;
+	}
+	/**
 	 * Called when an airbending entity (such as an air gust) hits the entity. Returns whether
 	 * the entity was destroyed.
 	 */
