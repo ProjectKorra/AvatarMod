@@ -952,6 +952,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		}
 
+		// Adjusts bounding box based on entity's scaling size
 		float sizeMult = condition.getSizeMultiplier();
 		setSize(3.67F * sizeMult, 3.34F * sizeMult);
 
