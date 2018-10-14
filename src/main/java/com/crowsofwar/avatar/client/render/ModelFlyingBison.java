@@ -60,7 +60,7 @@ public class ModelFlyingBison extends ModelBase {
     public ModelRenderer nose;
     public ModelRenderer cheeks;
     public ModelRenderer jaw;
-    private int state = 1;
+    private int state = 1; // This is a little helper to check when the bison is on the ground + sitting in order to adjust the saddle
 
     public ModelFlyingBison() {
         this.textureWidth = 112;
@@ -136,7 +136,6 @@ public class ModelFlyingBison extends ModelBase {
         this.head.addChild(this.horn1);
 
 		this.saddle = new ModelBisonSaddle();
-
 	}
 
 	/**
@@ -154,39 +153,44 @@ public class ModelFlyingBison extends ModelBase {
         BlockPos below = bison.getPosition().offset(EnumFacing.DOWN);
         Block belowBlock = bison.world.getBlockState(below).getBlock();
 
-        /** These set up the head rotations for looking positions*/
+        // These set up the head rotations for looking positions
         head.rotateAngleX = headPitch * degToRad + MathHelper.cos(limbSwing * 0.6662f / 3) * 0.1f * limbSwingAmount;
         head.rotateAngleY = netHeadYaw * degToRad;
 
         if (!bison.isSitting()) {
-            if (belowBlock == Blocks.AIR) {/** This sets each leg further up (-1f) than default for the flying animation*/
+            if (belowBlock == Blocks.AIR) {
+                // This sets each leg's rotation point further up (-1f) than default for the flying animation
                 leg1.rotationPointY = leg4.rotationPointY = leg2.rotationPointY = leg5.rotationPointY =
                         leg3.rotationPointY = leg6.rotationPointY = 11.98F - 1f;
-            } else {/** This sets each leg rotation point to the model's default when on the ground for the walking animation*/
+            } else {
+                // This sets each leg's rotation point to the model's default when on the ground for the walking animation
                 leg1.rotationPointY = leg4.rotationPointY = leg2.rotationPointY = leg5.rotationPointY =
                         leg3.rotationPointY = leg6.rotationPointY = 11.98F;
             }
-            /** These reset the body, head, + tail positions in case they were adjusted by another animation (eating, sitting, etc)
-             * The leg rotations are also reset here for when the bison is not moving*/
+            // These reset the body, head, + tail positions in case they were adjusted by another animation (eating, sitting, etc)
+            // The leg rotations are also reset here for when the bison is not moving
             body.rotationPointY = 4.5f;
             head.rotationPointY = 2.5f;
             upTail.rotationPointY = -2.8f;
             leg1.rotateAngleY = leg4.rotateAngleY = leg2.rotateAngleY = leg5.rotateAngleY =
                     leg3.rotateAngleY = leg6.rotateAngleY = 0.0f;
 
+            // These are bases for easy editing of how an animation looks
             float globalSpeed;
             float globalDegree;
             float globalWeight;
-            if (belowBlock != Blocks.AIR || bison.isEatingGrass()) {/** Bases for walking animation*/
+            if (belowBlock != Blocks.AIR || bison.isEatingGrass()) {
+                // Bases for walking animation
                 globalSpeed = 0.5F;
                 globalDegree = 0.2F;
                 globalWeight = 0F;
-            } else {/** Bases for flying animation*/
+            } else {
+                // Bases for flying animation
                 globalSpeed = 0.14F;
                 globalDegree = 0.076F;
                 globalWeight = 0.2F;
             }
-            /** These swing the legs + tail pieces based on the speed, degree, and weight set above*/
+            // These swing the legs + tail pieces based on the speed, degree, and weight set above
             leg2.rotateAngleX = 1 * limbSwingAmount * globalDegree * MathHelper.cos(limbSwing * globalSpeed) + globalWeight;
             leg4.rotateAngleX = 1 * limbSwingAmount * globalDegree * MathHelper.cos(limbSwing * globalSpeed) + globalWeight;
             leg6.rotateAngleX = 1 * limbSwingAmount * globalDegree * MathHelper.cos(limbSwing * globalSpeed) + globalWeight;
@@ -200,14 +204,16 @@ public class ModelFlyingBison extends ModelBase {
         }
 
         if (bison.isEatingGrass()) {
-            float lower = 3; /** These adjust the body, head, + tail positions to be lower when the bison is eating grass*/
+            float lower = 3;
+            // These adjust the body, head, + tail positions to be lower when the bison is eating grass
             body.rotationPointY = lower + 4.5f;
             upTail.rotationPointY = lower - 2.8f;
             head.rotationPointY = 8f;
-            /** These rotate the head + jaw pieces accordingly*/
+            // These rotate the head + jaw pieces accordingly
             head.rotateAngleX = 24 * degToRad;
             jaw.rotateAngleX = (MathHelper.cos(bison.getEatGrassTime() / 2f) * 15 + 20) * degToRad;
-        } else { /** This resets the jaw's position*/
+        } else {
+            // This resets the jaw's position
             jaw.rotateAngleX = 0f;
         }
 	}
@@ -222,17 +228,18 @@ public class ModelFlyingBison extends ModelBase {
         BlockPos below = bison.getPosition().offset(EnumFacing.DOWN);
         Block belowBlock = bison.world.getBlockState(below).getBlock();
 
-        /** This sets up the bison flop animation for sitting only when they are grounded*/
+        // This sets up the bison flop animation for sitting only when they are grounded
         if (bison.isSitting() && belowBlock != Blocks.AIR) {
-            this.state = 2; /** This is a little helper to check when the bison is on the ground + sitting in order to adjust the saddle*/
-            float lower = 9; /** These move the body, head, tail, + leg pieces lower*/
+            this.state = 2; // Saddle adjustment helper cont.
+            float lower = 9;
+            // These move the body, head, tail, + leg pieces lower
             body.rotationPointY = lower + 4.5f;
             head.rotationPointY = lower + 2.5f;
             upTail.rotationPointY = lower - 2.8f;
             leg1.rotationPointY = leg4.rotationPointY = leg2.rotationPointY = leg5.rotationPointY =
                     leg3.rotationPointY = leg6.rotationPointY = lower + 11.98F;
 
-            /** These rotate each of the legs + tail pieces*/
+            // These rotate each of the legs + tail pieces
             leg1.rotateAngleX = leg4.rotateAngleX = leg2.rotateAngleX = leg5.rotateAngleX =
                     leg3.rotateAngleX = leg6.rotateAngleX = -90 * degToRad;
             leg1.rotateAngleY = -32 * degToRad;
@@ -245,7 +252,7 @@ public class ModelFlyingBison extends ModelBase {
             upTail.rotateAngleX = -40 * degToRad;
             lowTail.rotateAngleX = 16 * degToRad;
         } else {
-            this.state = 1; /** Saddle adjustment helper cont.*/
+            this.state = 1; // Saddle adjustment helper cont.
         }
     }
 
@@ -261,7 +268,7 @@ public class ModelFlyingBison extends ModelBase {
 
         pushMatrix();
         float scale = (float) 2.0 * size;
-        /** This makes sure the bison stays level with the ground despite any scaling*/
+        // This makes sure the bison stays level with the ground despite any scaling
         translate(0f, 1.5f - 1.5f * scale, -0.1f * scale);
         GlStateManager.scale(scale, scale, scale);
 
@@ -277,11 +284,14 @@ public class ModelFlyingBison extends ModelBase {
 
         if (bison.getSaddle() != null) {
             pushMatrix();
-            if (this.state == 2) { /** Adjusts saddle if the bison is sitting + on the ground*/
+            if (this.state == 2) {
+                // Adjusts saddle if the bison is sitting + on the ground
                 GlStateManager.translate(0f, 0.56f, 0f);
-            } else if (bison.isEatingGrass()) { /** Adjusts saddle if the bison is eating grass*/
+            } else if (bison.isEatingGrass()) {
+                // Adjusts saddle if the bison is eating grass
                 GlStateManager.translate(0f, 0.186f, 0f);
-            } /** Otherwise the saddle does not need adjusting*/
+            }
+            // Otherwise the saddle does not need adjusting
             this.saddle.render(entity, f, f1, f2, f3, f4, f5);
             popMatrix();
         }

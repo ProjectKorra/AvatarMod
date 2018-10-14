@@ -35,6 +35,10 @@ import net.minecraft.world.storage.loot.LootTableList;
 
 import java.util.Set;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.toRadians;
+
 /**
  * @author CrowsOfWar
  */
@@ -56,20 +60,39 @@ public class EntityOtterPenguin extends EntityAnimal {
 		Set<Item> temptItems = Sets.newHashSet(Items.FISH);
 
 		this.tasks.addTask(0, new EntityAISwimming(this));
-		this.tasks.addTask(1, new EntityAIPanic(this, 3D));
-		this.tasks.addTask(3, new EntityAIMate(this, 1.0D));
-		this.tasks.addTask(4, new EntityAITempt(this, 1.2D, false, temptItems));
-		this.tasks.addTask(5, new EntityAIFollowParent(this, 1.1D));
-		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 3));
+		this.tasks.addTask(1, new EntityAIPanic(this, 1.3D));
+		this.tasks.addTask(3, new EntityAIMate(this, 1.25D));
+		this.tasks.addTask(4, new EntityAITempt(this, 1.0D, false, temptItems));
+		this.tasks.addTask(5, new EntityAIFollowParent(this, 1.25D));
+		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
+	}
+
+	/**
+	 * Checking speed + setting up this.isSprinting() to use for animation purposes
+	 * @author Mnesikos
+	 */
+	@Override
+	public void updateAITasks() {
+		if (this.getMoveHelper().isUpdating()) {
+			double d0 = this.getMoveHelper().getSpeed();
+
+			if (d0 >= 1.25D) {
+				this.setSprinting(true);
+			} else {
+				this.setSprinting(false);
+			}
+		} else {
+			this.setSprinting(false);
+		}
 	}
 
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(10);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(10.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2D);
 	}
 
 	@Override
@@ -84,17 +107,12 @@ public class EntityOtterPenguin extends EntityAnimal {
 
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-
 		if (!super.processInteract(player, hand) && !world.isRemote) {
-
-			if (!isBreedingItem(player.getHeldItemMainhand())
-					&& !isBreedingItem(player.getHeldItemOffhand())) {
-
+			if (!isBreedingItem(player.getHeldItemMainhand()) && !isBreedingItem(player.getHeldItemOffhand())
+					&& !player.isSneaking() && !this.isChild()) {
 				player.startRiding(this);
 				return true;
-
 			}
-
 		}
 
 		return false;
@@ -108,6 +126,19 @@ public class EntityOtterPenguin extends EntityAnimal {
 	@Override
 	public Entity getControllingPassenger() {
 		return getPassengers().isEmpty() ? null : getPassengers().get(0);
+	}
+
+	/**
+	 * Adjusts the rider's position, math borrowed from EntitySkyBison#updatePassenger
+	 * @author Mnesikos
+	 */
+	@Override
+	public void updatePassenger(Entity passenger) {
+		if (this.isPassenger(passenger)) {
+			double offset = -0.5;
+			double angle = -toRadians(rotationYaw);
+			passenger.setPosition(this.posX + sin(angle) * offset, this.posY + passenger.getYOffset() + 0.2, this.posZ + cos(angle) * offset);
+		}
 	}
 
 	@Override
