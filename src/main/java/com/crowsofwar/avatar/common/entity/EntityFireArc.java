@@ -234,11 +234,10 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 					}
 				}
 			}
-			AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("fire_arc");
-			if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				cleanup();
-				setDead();
-			}
+
+			cleanup();
+			setDead();
+
 
 		}
 		return true;
