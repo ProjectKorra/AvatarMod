@@ -260,12 +260,34 @@ public class ConfigStats {
 
 	);
 
+	@Load
+	public List<String> waterArcBreakableBlockNames = Arrays.asList(
+			"minecraft:stone",
+			"minecraft:sand",
+			"minecraft:sandstone",
+			"minecraft:cobblestone",
+			"minecraft:dirt",
+			"minecraft:gravel",
+			"minecraft:brick_block",
+			"minecraft:mossy_cobblestone",
+			"minecraft:stonebrick",
+			"minecraft:clay",
+			"minecraft:hardened_clay",
+			"minecraft:stained_hardened_clay",
+			"minecraft:coal_ore",
+			"minecraft:iron_ore",
+			"minecraft:red_sandstone",
+			"minecraft:grass",
+			"minecraft:grass_path"
+	);
+
 	public List<Block> plantBendableBlocks;
 	public List<Block> waterBendableBlocks;
 	public List<Block> bendableBlocks;
 	public List<Block> sandBlocks;
 	public List<Block> airBladeBreakableBlocks;
 	public List<Block> iceBendableBlocks;
+	public List<Block> waterArcBreakableBlocks;
 
 	private ConfigStats() {
 	}
@@ -281,6 +303,7 @@ public class ConfigStats {
 		waterBendableBlocks = STATS_CONFIG.loadBlocksList(waterBendableBlockNames);
 		plantBendableBlocks = STATS_CONFIG.loadBlocksList(plantBendableBlockNames);
 		iceBendableBlocks = STATS_CONFIG.loadBlocksList(iceBendableBlockNames);
+		waterArcBreakableBlocks = STATS_CONFIG.loadBlocksList(waterArcBreakableBlockNames);
 	}
 
 	/**
