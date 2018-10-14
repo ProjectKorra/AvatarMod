@@ -232,16 +232,16 @@ public class EntityShockwave extends AvatarEntity {
 						}
 					}
 				}
-				double xSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted / 12.5F * speed) :
-						Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted / 20F * speed);
-				double ySpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted / 15F * speed) :
+				double xSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted * speed) :
+						Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted / 5F * speed);
+				double ySpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted / 2F * speed) :
 						knockbackHeight; // Throws target into the air.
-				double zSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 12.5F * speed) :
-						Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 20F * speed);
-				ySpeed = ySpeed > 0 ? ySpeed : 0.4;
-				target.motionX = xSpeed/20;
-				target.motionY = ySpeed;
-				target.motionZ = zSpeed/20;
+				double zSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted* speed) :
+						Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 5F * speed);
+				ySpeed = ySpeed > 0 ? ySpeed : 0.2;
+				target.motionX = xSpeed;
+				target.motionY = ySpeed * 2;
+				target.motionZ = zSpeed;
 
 				AvatarUtils.afterVelocityAdded(target);
 			}
