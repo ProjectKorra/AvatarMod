@@ -236,15 +236,17 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	@Override
 	protected void collideWithNearbyEntities() {
 
-		List<Entity> collisions = Raytrace.entityRaytrace(world, position(), velocity(), velocity
-				().magnitude() / 20, entity -> entity != getOwner() && entity != this);
+		if (getOwner() != null) {
+			List<Entity> collisions = Raytrace.entityRaytrace(world, position(), getEntityPos(getOwner()).minus(this.position()), this.getDistance(getOwner()),
+					entity -> entity != getOwner() && entity != this);
 
-		for (Entity collided : collisions) {
-			if (canCollideWith(collided)) {
-				onCollideWithEntity(collided);
+			for (Entity collided : collisions) {
+				if (canCollideWith(collided)) {
+					onCollideWithEntity(collided);
+				}
 			}
-		}
 
+		}
 	}
 
 	private void handleWaterElectrocution(EntityLivingBase entity) {
