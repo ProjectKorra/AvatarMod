@@ -16,19 +16,17 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
 
-import java.util.List;
-import java.util.Random;
+import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+
+import java.util.*;
 
 /**
  * @author CrowsOfWar
  */
 public class BisonSummonHandler extends TickHandler {
-	public static TickHandler BISON_SUMMONER = TickHandlerController.fromId(TickHandlerController.BISON_SUMMONER_ID);
 
 	public BisonSummonHandler(int id) {
 		super(id);
@@ -54,11 +52,9 @@ public class BisonSummonHandler extends TickHandler {
 **/
 	}
 
-
 	private boolean trySummonBison(EntityLivingBase player) {
 
-		List<EntitySkyBison> entities = player.world.getEntities(EntitySkyBison.class,
-				bison -> bison.getOwner() == player);
+		List<EntitySkyBison> entities = player.world.getEntities(EntitySkyBison.class, bison -> bison.getOwner() == player);
 
 		if (!entities.isEmpty()) {
 

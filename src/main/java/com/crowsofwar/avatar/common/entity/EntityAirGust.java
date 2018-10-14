@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -57,6 +59,11 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	}
 
 	@Override
+	public BendingStyle getElement() {
+		return new Airbending();
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		ControlPoint first = getControlPoint(0);
@@ -68,7 +75,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 		EntityLivingBase owner = getOwner();
 		if (!entity.world.isRemote && entity != owner && canCollideWith(entity) && owner != null) {
 

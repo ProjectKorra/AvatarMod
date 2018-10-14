@@ -40,9 +40,9 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import org.lwjgl.Sys;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -54,7 +54,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 	public static final DataSerializer<LightningSpearBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
 
-	public static int ID_NOTHING, ID_FALL, ID_PICKUP, ID_PLAYER_CONTROL, ID_THROWN;
+	public static int ID_NOTHING, ID_PLAYER_CONTROL, ID_THROWN;
 
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
@@ -99,12 +99,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 			if (entity.collided || (!entity.world.isRemote && time > 200)) {
 				entity.onCollideWithSolid();
-				entity.setDead();
 
-			}
-
-			if (!entity.isInWater()) {
-				entity.setInvisible(false);
 			}
 
 			World world = entity.world;
@@ -141,16 +136,15 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				motion = motion.times(STATS_CONFIG.lightningSpearSettings.push).withY(0.04);
 				collided.addVelocity(motion.x(), motion.y(), motion.z());
 
-				BendingData data = Bender.get(entity.getOwner()).getData();
+				BendingData data = Objects.requireNonNull(Bender.get(entity.getOwner())).getData();
 				if (!entity.world.isRemote && data != null) {
 					float xp = SKILLS_CONFIG.lightningspearHit;
 					data.getAbilityData("lightning_spear").addXp(xp);
 					if (!data.getAbilityData("lightning_spear").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 						entity.LightningBurst();
-						//entity.world.playSound(null,collided.posX, entity.posY, collided.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 2.0F,
-						//		(1.0F + (entity.world.rand.nextFloat() - entity.world.rand.nextFloat()) * 0.2F));
+						entity.world.playSound(null,collided.posX, entity.posY, collided.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 2.0F,
+								(1.0F + (entity.world.rand.nextFloat() - entity.world.rand.nextFloat()) * 0.2F));
 						entity.removeStatCtrl();
-						entity.setDead();
 
 					}
 					else {
@@ -223,7 +217,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			if (!data.hasStatusControl(StatusControl.THROW_LIGHTNINGSPEAR)) {
 				EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(entity.world, EntityLightningSpear.class, entity.getOwner());
 				if (spear != null) {
-					spear.setDead();
+					data.addStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
 				}
 			}
 			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
@@ -237,6 +231,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				target = Vector.getEyePos(owner).plus(look.times(3));
 			}
 
+			assert target != null;
 			Vector motion = target.minus(entity.position());
 			motion = motion.times(0.5 * 20);
 			entity.setVelocity(motion);

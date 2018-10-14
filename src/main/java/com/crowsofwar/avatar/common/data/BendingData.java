@@ -23,7 +23,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLLog;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -534,7 +533,9 @@ public class BendingData {
 		chi().writeToNBT(writeTo);
 
 		AvatarUtils.writeList(tickHandlers,
-				(nbt, handler) -> nbt.setInteger("Id", handler.id()),
+				(nbt, handler) -> {
+					if (handler != null && nbt != null) nbt.setInteger("Id", handler.id());
+				},
 				writeTo,
 				"TickHandlers");
 
@@ -589,10 +590,8 @@ public class BendingData {
 
 		chi().readFromNBT(readFrom);
 
-		FMLLog.info("tickHandlers = %s", readFrom.getTagList("TickHandlers", 10));
 		AvatarUtils.readList(tickHandlers, //
 				nbt -> {
-					FMLLog.info("Id = %s", nbt.getInteger("Id"));
 					return TickHandlerController.fromId(nbt.getInteger("Id"));
 				}, readFrom, "TickHandlers");
 

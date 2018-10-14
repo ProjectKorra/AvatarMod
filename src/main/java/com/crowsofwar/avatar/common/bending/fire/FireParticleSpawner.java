@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -12,7 +11,6 @@ import net.minecraft.entity.EntityLivingBase;
 
 public class FireParticleSpawner extends TickHandler {
 	private static final ParticleSpawner particles = new NetworkParticleSpawner();
-	public static TickHandler FIRE_PARTICLE_SPAWNER = TickHandlerController.fromId(TickHandlerController.FIRE_PARTICLE_SPAWNER_ID);
 
 	public FireParticleSpawner(int id) {
 		super(id);

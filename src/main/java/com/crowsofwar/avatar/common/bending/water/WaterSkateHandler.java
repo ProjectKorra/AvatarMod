@@ -17,8 +17,11 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -49,7 +52,6 @@ import static net.minecraft.init.Blocks.WATER;
  * @author CrowsOfWar
  */
 public class WaterSkateHandler extends TickHandler {
-	public static TickHandler WATER_SKATE = TickHandlerController.fromId(TickHandlerController.WATER_SKATE_ID);
 
 	private final ParticleSpawner particles;
 
@@ -133,7 +135,7 @@ public class WaterSkateHandler extends TickHandler {
 
 				}**/
 
-				player.setPosition(player.posX, yPos + .2, player.posZ);
+				player.setPosition(player.posX, yPos, player.posZ);
 				Vector currentVelocity = new Vector(player.motionX, player.motionY, player.motionZ);
 				Vector targetVelocity = toRectangular(toRadians(player.rotationYaw), 0).times(targetSpeed);
 
@@ -202,9 +204,8 @@ public class WaterSkateHandler extends TickHandler {
 
 		boolean allowWaterfallSkating = data.getLevel() >= 2;
 		boolean allowGroundSkating = data.isMasterPath(AbilityTreePath.FIRST);
-		boolean onGround = (below.getBlock() != Blocks.AIR);
-		boolean onWaterBendableBlock = below.getBlock() == Blocks.SNOW || below.getBlock() == Blocks.ICE
-				|| below.getBlock() == Blocks.PACKED_ICE || below.getBlock() == Blocks.FROSTED_ICE;
+		boolean onGround = (below.getBlock() != Blocks.AIR) && below.getBlock() != Blocks.LAVA && below.getBlock() != Blocks.FLOWING_LAVA;
+		boolean onWaterBendableBlock = STATS_CONFIG.waterBendableBlocks.contains(below.getBlock());
 		boolean onSnowLayer = playerPos.getBlock() == Blocks.SNOW_LAYER;
 		boolean inWaterBlock = ((below.getBlock() == Blocks.WATER)
 				&& (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating)) || (player.world.isRainingAt(player.getPosition()) && onGround) || onWaterBendableBlock || onSnowLayer;

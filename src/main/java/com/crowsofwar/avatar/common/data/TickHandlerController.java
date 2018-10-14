@@ -2,87 +2,52 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.client.gui.RenderElementTickHandler;
 import com.crowsofwar.avatar.common.bending.air.*;
-import com.crowsofwar.avatar.common.bending.earth.RestoreCooldownHandler;
-import com.crowsofwar.avatar.common.bending.earth.RestoreParticleHandler;
-import com.crowsofwar.avatar.common.bending.earth.SpawnEarthspikesHandler;
+import com.crowsofwar.avatar.common.bending.earth.*;
 import com.crowsofwar.avatar.common.bending.fire.*;
-import com.crowsofwar.avatar.common.bending.lightning.LightningCreateHandler;
-import com.crowsofwar.avatar.common.bending.lightning.LightningRedirectHandler;
+import com.crowsofwar.avatar.common.bending.lightning.*;
 import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.entity.mob.BisonSummonHandler;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.FMLLog;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Mahtaran
  */
 public class TickHandlerController {
-	public static int AIR_PARTICLE_SPAWNER_ID = 0;
-	public static int FIRE_PARTICLE_SPAWNER_ID = 1;
-	public static int FLAMETHROWER_ID = 2;
-	public static int WATER_SKATE_ID = 3;
-	public static int BISON_SUMMONER_ID = 4;
-	public static int SMASH_GROUND_ID = 5;
-	public static int LIGHTNING_CHARGE_ID = 6;
-	public static int WATER_CHARGE_ID = 7;
-	public static int LIGHTNING_REDIRECT_ID = 8;
-	public static int SMASH_GROUND_FIRE_ID = 9;
-	public static int SMASH_GROUND_FIRE_BIG_ID = 10;
-	public static int SMASH_GROUND_WATER_ID = 11;
-	public static int WATER_PARTICLE_SPAWNER_ID = 12;
-	public static int INFERNO_PARTICLE_SPAWNER_ID = 13;
-	public static int SPAWN_EARTHSPIKES_HANDLER_ID = 14;
-	public static int AIRBURST_CHARGE_HANDLER_ID = 15;
-	public static int AIR_STATCTRL_HANDLER_ID = 16;
-	public static int FIRE_STATCTRL_HANDLER_ID = 17;
-	public static int AIR_DODGE_ID = 18;
-	public static int RENDER_ELEMENT_HANDLER_ID = 19;
-	public static int STAFF_GUST_HANDLER_ID = 20;
-	public static int SLIPSTREAM_COOLDOWN_HANDLER_ID = 21;
-	public static int PURIFY_COOLDOWN_HANDLER_ID = 22;
-	public static int PURIFY_PARTICLE_SPAWNER_ID = 23;
-	public static int FIRE_DEVOUR_HANDLER_ID = 24;
-	public static int CLEANSE_COOLDOWN_HANDLER_ID = 25;
-	public static int RESTORE_COOLDOWN_HANDLER_ID = 26;
-	public static int RESTORE_PARTICLE_SPAWNER_ID = 27;
+	// @formatter:off
 	static Map<Integer, TickHandler> allHandlers = new HashMap<>();
-
-	static {
-		new AirParticleSpawner(AIR_PARTICLE_SPAWNER_ID);
-		new FireParticleSpawner(FIRE_PARTICLE_SPAWNER_ID);
-		new FlamethrowerUpdateTick(FLAMETHROWER_ID);
-		new WaterSkateHandler(WATER_SKATE_ID);
-		new BisonSummonHandler(BISON_SUMMONER_ID);
-		new SmashGroundHandler(SMASH_GROUND_ID);
-		new LightningCreateHandler(LIGHTNING_CHARGE_ID);
-		new WaterChargeHandler(WATER_CHARGE_ID);
-		new LightningRedirectHandler(LIGHTNING_REDIRECT_ID);
-		new FireSmashGroundHandler(SMASH_GROUND_FIRE_ID);
-		new FireSmashGroundHandlerBig(SMASH_GROUND_FIRE_BIG_ID);
-		new WaterSmashHandler(SMASH_GROUND_WATER_ID);
-		new WaterParticleSpawner(WATER_PARTICLE_SPAWNER_ID);
-		new InfernoPunchParticleSpawner(INFERNO_PARTICLE_SPAWNER_ID);
-		new SpawnEarthspikesHandler(SPAWN_EARTHSPIKES_HANDLER_ID);
-		new AirBurstHandler(AIRBURST_CHARGE_HANDLER_ID);
-		new AirStatusControlHandler(AIR_STATCTRL_HANDLER_ID);
-		new FireStatusControlHandler(FIRE_STATCTRL_HANDLER_ID);
-		new AirDodgeHandler(AIR_DODGE_ID);
-		new RenderElementTickHandler(RENDER_ELEMENT_HANDLER_ID);
-		new StaffGustCooldown(STAFF_GUST_HANDLER_ID);
-		new SlipstreamCooldownHandler(SLIPSTREAM_COOLDOWN_HANDLER_ID);
-		new PurifyCooldownHandler(PURIFY_COOLDOWN_HANDLER_ID);
-		new PurifyParticleHandler(PURIFY_PARTICLE_SPAWNER_ID);
-		new FireDevourTickHandler(FIRE_DEVOUR_HANDLER_ID);
-		new CleanseCooldownHandler(CLEANSE_COOLDOWN_HANDLER_ID);
-		new RestoreCooldownHandler(RESTORE_COOLDOWN_HANDLER_ID);
-		new RestoreParticleHandler(RESTORE_PARTICLE_SPAWNER_ID);
-	}
-
+	public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner(0);
+	public static TickHandler FIRE_PARTICLE_SPAWNER = new FireParticleSpawner(1);
+	public static TickHandler FLAMETHROWER = new FlamethrowerUpdateTick(2);
+	public static TickHandler WATER_SKATE = new WaterSkateHandler(3);
+	public static TickHandler BISON_SUMMONER = new BisonSummonHandler(4);
+	public static TickHandler SMASH_GROUND = new SmashGroundHandler(5);
+	public static TickHandler LIGHTNING_CHARGE = new LightningCreateHandler(6);
+	public static TickHandler WATER_CHARGE = new WaterChargeHandler(7);
+	public static TickHandler LIGHTNING_REDIRECT = new LightningRedirectHandler(8);
+	public static TickHandler SMASH_GROUND_FIRE = new FireSmashGroundHandler(9);
+	public static TickHandler SMASH_GROUND_FIRE_BIG = new FireSmashGroundHandlerBig(10);
+	public static TickHandler SMASH_GROUND_WATER = new WaterSmashHandler(11);
+	public static TickHandler WATER_PARTICLE_SPAWNER = new WaterParticleSpawner(12);
+	public static TickHandler INFERNO_PARTICLE_SPAWNER = new InfernoPunchParticleSpawner(13);
+	public static TickHandler SPAWN_EARTHSPIKES_HANDLER = new SpawnEarthspikesHandler(14);
+	public static TickHandler AIRBURST_CHARGE_HANDLER = new AirBurstHandler(15);
+	public static TickHandler AIR_STATCTRL_HANDLER = new AirStatusControlHandler(16);
+	public static TickHandler FIRE_STATCTRL_HANDLER = new FireStatusControlHandler(17);
+	//public static TickHandler AIR_DODGE = new AirDodgeHandler(18);
+	public static TickHandler RENDER_ELEMENT_HANDLER = new RenderElementTickHandler(19);
+	public static TickHandler STAFF_GUST_HANDLER = new StaffGustCooldown(20);
+	public static TickHandler SLIPSTREAM_COOLDOWN_HANDLER = new SlipstreamCooldownHandler(21);
+	public static TickHandler PURIFY_COOLDOWN_HANDLER = new PurifyCooldownHandler(22);
+	public static TickHandler PURIFY_PARTICLE_SPAWNER = new PurifyParticleHandler(23);
+	public static TickHandler FIRE_DEVOUR_HANDLER = new FireDevourTickHandler(24);
+	public static TickHandler CLEANSE_COOLDOWN_HANDLER = new CleanseCooldownHandler(25);
+	public static TickHandler RESTORE_COOLDOWN_HANDLER = new RestoreCooldownHandler(26);
+	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler(27);
+	// @formatter:on
+	
 	public static TickHandler fromId(int id) {
-		FMLLog.info("allHandlers = %s", allHandlers);
 		return allHandlers.get(id);
 	}
 

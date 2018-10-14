@@ -169,7 +169,7 @@ public class EntitySandstorm extends AvatarEntity {
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 
 		// Number of blocks that the target "floats" above the ground
 		final double floatingDistance = 2;

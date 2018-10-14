@@ -26,9 +26,9 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.BELOW_CROSSHAIR;
-import static com.crowsofwar.avatar.common.bending.water.WaterSkateHandler.WATER_SKATE;
-import static com.crowsofwar.avatar.common.bending.water.WaterSmashHandler.SMASH_GROUND_WATER;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_JUMP;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.SMASH_GROUND_WATER;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.WATER_SKATE;
 
 /**
  * @author CrowsOfWar

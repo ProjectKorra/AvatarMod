@@ -82,7 +82,7 @@ public class AvatarParticles {
 	}
 
 	public static EnumParticleTypes getParticleElectricity() {
-		return CLIENT_CONFIG.useCustomParticles ? particleElectricity : EnumParticleTypes.CRIT_MAGIC;
+		return CLIENT_CONFIG.useCustomParticles ? particleElectricity : EnumParticleTypes.ENCHANTMENT_TABLE;
 	}
 
 	/**

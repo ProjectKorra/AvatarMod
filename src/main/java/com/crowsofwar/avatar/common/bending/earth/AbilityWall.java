@@ -28,12 +28,12 @@ import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.Objects;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -64,10 +64,11 @@ public class AbilityWall extends Ability {
 
 			int whMin, whMax;
 			Random random = new Random();
-			if (power == 100) {
-				whMin = whMax = 5;
-			} else if (power >= 75) {
+			if (power >= 100) {
 				whMin = 4;
+				whMax = 6;
+			} else if (power >= 75) {
+				whMin = 3;
 				whMax = 5;
 			} else if (power >= 50) {
 				whMin = 3;
@@ -76,14 +77,17 @@ public class AbilityWall extends Ability {
 				whMin = 2;
 				whMax = 4;
 			} else {
-				whMin = 2;
+				whMin = 1;
 				whMax = 3;
+			}
+			if (ctx.getLevel() >= 2) {
+				whMax += 2;
 			}
 
 			abilityData.addXp(SKILLS_CONFIG.wallRaised);
 
 			if (!ctx.isLookingAtBlock()) return;
-			BlockPos lookPos = ctx.getLookPosI().toBlockPos();
+			BlockPos lookPos = Objects.requireNonNull(ctx.getLookPosI()).toBlockPos();
 			EntityWall wall = new EntityWall(world);
 
 			Block lookBlock = world.getBlockState(lookPos).getBlock();
@@ -92,65 +96,66 @@ public class AbilityWall extends Ability {
 			} else if (lookBlock == Blocks.DOUBLE_PLANT) {
 				lookPos = lookPos.down(2);
 			}
+			if (STATS_CONFIG.bendableBlocks.contains(lookBlock) || STATS_CONFIG.plantBendableBlocks.contains(lookBlock)) {
+				wall.setPosition(lookPos.getX() + .5, lookPos.getY(), lookPos.getZ() + .5);
+				wall.setOwner(entity);
+				for (int i = 0; i < 5; i++) {
 
-			wall.setPosition(lookPos.getX() + .5, lookPos.getY(), lookPos.getZ() + .5);
-			wall.setOwner(entity);
-			for (int i = 0; i < 5; i++) {
+					int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
 
-				int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
+					int horizMod = -2 + i;
+					int x = lookPos.getX()
+							+ (cardinal == EnumFacing.NORTH || cardinal == EnumFacing.SOUTH ? horizMod : 0);
+					int y = lookPos.getY() - 4;
+					int z = lookPos.getZ()
+							+ (cardinal == EnumFacing.EAST || cardinal == EnumFacing.WEST ? horizMod : 0);
 
-				int horizMod = -2 + i;
-				int x = lookPos.getX()
-						+ (cardinal == EnumFacing.NORTH || cardinal == EnumFacing.SOUTH ? horizMod : 0);
-				int y = lookPos.getY() - 4;
-				int z = lookPos.getZ()
-						+ (cardinal == EnumFacing.EAST || cardinal == EnumFacing.WEST ? horizMod : 0);
+					EntityWallSegment seg = new EntityWallSegment(world);
+					seg.attachToWall(wall);
+					seg.setPosition(x + .5, y, z + .5);
+					seg.setDirection(cardinal);
+					seg.setOwner(entity);
+					seg.setAbility(this);
 
-				EntityWallSegment seg = new EntityWallSegment(world);
-				seg.attachToWall(wall);
-				seg.setPosition(x + .5, y, z + .5);
-				seg.setDirection(cardinal);
-				seg.setOwner(entity);
-				seg.setAbility(this);
+					boolean foundAir = false, dontBreakMore = false;
+					for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {
+						BlockPos pos = new BlockPos(x, y + j, z);
+						IBlockState state = world.getBlockState(pos);
+						boolean bendable = STATS_CONFIG.bendableBlocks.contains(state.getBlock());
+						if (!bendable || dontBreakMore) {
+							state = Blocks.AIR.getDefaultState();
+							dontBreakMore = true;
+						}
 
-				boolean foundAir = false, dontBreakMore = false;
-				for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {
-					BlockPos pos = new BlockPos(x, y + j, z);
-					IBlockState state = world.getBlockState(pos);
-					boolean bendable = STATS_CONFIG.bendableBlocks.contains(state.getBlock());
-					if (!bendable || dontBreakMore) {
-						state = Blocks.AIR.getDefaultState();
-						dontBreakMore = true;
+						if (!foundAir && state.getBlock() == Blocks.AIR) {
+							seg.setSize(seg.width, 5 - j - 1);
+							seg.setBlocksOffset(-(j + 1));
+							seg.setPosition(seg.position().withY(y + j + 1));
+							foundAir = true;
+						}
+						if (foundAir && state.getBlock() != Blocks.AIR) {
+							// Extend bounding box
+							seg.setSize(seg.width, 5 - j);
+							seg.setBlocksOffset(-j);
+							seg.setPosition(seg.position().withY(y + j));
+						}
+
+						seg.setBlock(j, state);
+						if (bendable && !dontBreakMore) world.setBlockToAir(pos);
+
+						if (j == 5 - wallHeight) {
+							dontBreakMore = true;
+						}
+
 					}
 
-					if (!foundAir && state.getBlock() == Blocks.AIR) {
-						seg.setSize(seg.width, 5 - j - 1);
-						seg.setBlocksOffset(-(j + 1));
-						seg.setPosition(seg.position().withY(y + j + 1));
-						foundAir = true;
-					}
-					if (foundAir && state.getBlock() != Blocks.AIR) {
-						// Extend bounding box
-						seg.setSize(seg.width, 5 - j);
-						seg.setBlocksOffset(-j);
-						seg.setPosition(seg.position().withY(y + j));
-					}
-
-					seg.setBlock(j, state);
-					if (bendable && !dontBreakMore) world.setBlockToAir(pos);
-
-					if (j == 5 - wallHeight) {
-						dontBreakMore = true;
-					}
-
+					world.spawnEntity(seg);
 				}
+				world.spawnEntity(wall);
 
-				world.spawnEntity(seg);
+				ctx.getData().addStatusControl(StatusControl.DROP_WALL);
+
 			}
-			world.spawnEntity(wall);
-
-			ctx.getData().addStatusControl(StatusControl.DROP_WALL);
-
 		}
 	}
 }

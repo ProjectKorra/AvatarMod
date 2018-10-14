@@ -16,25 +16,20 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityShockwave;
 
 /**
  * @author CrowsOfWar
  */
 public class SmashGroundHandler extends TickHandler {
-	public static TickHandler SMASH_GROUND = TickHandlerController.fromId(TickHandlerController.SMASH_GROUND_ID);
-
 	public SmashGroundHandler(int id) {
 		super(id);
 	}
@@ -53,7 +48,6 @@ public class SmashGroundHandler extends TickHandler {
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), getSoundCategory(), 4F, 0.5F);
 
 			}
-
 
 			return true;
 		}
@@ -89,7 +83,7 @@ public class SmashGroundHandler extends TickHandler {
 	}
 
 	protected double getRange() {
-		return 3;
+		return 4;
 	}
 
 	protected EnumParticleTypes getParticle() {

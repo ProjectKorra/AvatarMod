@@ -105,12 +105,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 					Entity collided = collidedList.get(0);
 					if (entity.canCollideWith(collided) && collided != entity.getOwner()) {
 						collision(collided, entity);
-					} else if (collided != entity.getOwner()) {
-						Vector motion = new Vector(collided).minus(new Vector(entity));
-						motion = motion.times(0.3).withY(0.08);
-						collided.addVelocity(motion.x(), motion.y(), motion.z());
 					}
-
 				}
 			}
 
@@ -189,7 +184,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			Vector forward = Vector.toRectangular(yaw, pitch);
 			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
-			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
+			Vector motion = target.minus(Vector.getEntityPos(entity)).times(7);
 			entity.setVelocity(motion);
 
 			if (entity.getAbility() instanceof AbilityFireball) {

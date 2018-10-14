@@ -6,8 +6,6 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-
 public class RestorePowerModifier extends BuffPowerModifier {
 
 	@Override
@@ -27,12 +25,12 @@ public class RestorePowerModifier extends BuffPowerModifier {
 
 	@Override
 	protected Vision[] getVisions() {
-		if (CLIENT_CONFIG.shaderSettings.useRestoreShaders) {
+		//if (CLIENT_CONFIG.shaderSettings.useRestoreShaders) {
 			return new Vision[]{Vision.RESTORE_WEAK, Vision.RESTORE_MEDIUM, Vision.RESTORE_POWERFUL};
-		}
-		else {
+		//}
+		/*else {
 			return null;
-		}
+		}**/
 	}
 
 	@Override

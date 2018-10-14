@@ -16,8 +16,11 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.gorecore.util.Vector;
@@ -35,7 +38,6 @@ import static java.lang.Math.toRadians;
  * @author CrowsOfWar
  */
 public class FlamethrowerUpdateTick extends TickHandler {
-	public static TickHandler FLAMETHROWER = TickHandlerController.fromId(TickHandlerController.FLAMETHROWER_ID);
 
 	public FlamethrowerUpdateTick(int id) {
 		super(id);

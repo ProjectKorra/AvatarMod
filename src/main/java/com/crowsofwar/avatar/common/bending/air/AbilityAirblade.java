@@ -48,7 +48,6 @@ public class AbilityAirblade extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
-		BendingData data = ctx.getData();
 
 		if (!bender.consumeChi(STATS_CONFIG.chiAirblade)) return;
 
@@ -63,7 +62,6 @@ public class AbilityAirblade extends Ability {
 
 		AbilityData abilityData = ctx.getData().getAbilityData(this);
 		float xp = abilityData.getTotalXp();
-
 		float damage = STATS_CONFIG.airbladeSettings.damage;
 		damage *= 1 + xp * .015f;
 		damage *= ctx.getPowerRatingDamageMod();

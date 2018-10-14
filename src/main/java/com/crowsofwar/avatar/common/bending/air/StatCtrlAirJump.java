@@ -17,35 +17,28 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.PowerRatingModifier;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+
+import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.particle.*;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.List;
 
-import static com.crowsofwar.avatar.common.bending.air.AirParticleSpawner.AIR_PARTICLE_SPAWNER;
-import static com.crowsofwar.avatar.common.bending.air.SmashGroundHandler.SMASH_GROUND;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.*;
 
 /**
  * @author CrowsOfWar
@@ -65,13 +58,11 @@ public class StatCtrlAirJump extends StatusControl {
 		World world = ctx.getWorld();
 
 		AbilityData abilityData = data.getAbilityData("air_jump");
-		boolean allowDoubleJump = abilityData.getLevel() == 3
-				&& abilityData.getPath() == AbilityTreePath.FIRST;
+		boolean allowDoubleJump = abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.FIRST;
 
 		// Figure out whether entity is on ground by finding collisions with
 		// ground - if found a collision box, then is not on ground
-		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity,
-				entity.getEntityBoundingBox().grow(0.4, 1, 0.4));
+		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.4, 1, 0.4));
 		boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically;
 
 		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiAirJump))) {
@@ -108,11 +99,11 @@ public class StatCtrlAirJump extends StatusControl {
 
 			if (world instanceof WorldServer) {
 				WorldServer World = (WorldServer) world;
-				World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.getEntityBoundingBox().minY + 0.1, entity.posZ, numberOfParticles, 0, 0, 0, particleSpeed);
+				World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.getEntityBoundingBox().minY + 0.1, entity.posZ,
+									numberOfParticles, 0, 0, 0, particleSpeed);
 			}
 
-			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1),
-					Math.toRadians(entity.rotationYaw), 0);
+			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1), Math.toRadians(entity.rotationYaw), 0);
 
 			Vector velocity = rotations.toRectangular();
 			velocity = velocity.withY(Math.pow(velocity.y(), .1));
@@ -129,8 +120,7 @@ public class StatCtrlAirJump extends StatusControl {
 			}
 
 			ParticleSpawner spawner = new NetworkParticleSpawner();
-			spawner.spawnParticles(entity.world, AvatarParticles.getParticleAir(), 2, 6,
-					new Vector(entity), new Vector(1, 0, 1));
+			spawner.spawnParticles(entity.world, AvatarParticles.getParticleAir(), 2, 6, new Vector(entity), new Vector(1, 0, 1));
 
 			float fallAbsorption = 0;
 			if (lvl == 0) {
@@ -151,8 +141,7 @@ public class StatCtrlAirJump extends StatusControl {
 			}
 			abilityData.addXp(SKILLS_CONFIG.airJump);
 
-			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH,
-					SoundCategory.PLAYERS, 1, .7f);
+			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, SoundCategory.PLAYERS, 1, .7f);
 
 			PowerRatingModifier powerRatingModifier = new AirJumpPowerModifier(powerModifier);
 			powerRatingModifier.setTicks((int) (powerDuration * 20));

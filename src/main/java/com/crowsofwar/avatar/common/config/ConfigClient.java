@@ -57,8 +57,8 @@ public class ConfigClient {
 	@Load
 	private Map<String, Boolean> nameConflicts = new HashMap<>();
 
-	@Load
-	public ShaderSettings shaderSettings = new ShaderSettings();
+//	@Load
+//	public ShaderSettings shaderSettings = new ShaderSettings();
 
 	@Load
 	public ActiveBendingSettings activeBendingSettings = new ActiveBendingSettings();
@@ -116,7 +116,7 @@ public class ConfigClient {
 		ConfigLoader.save(CLIENT_CONFIG, "avatar/cosmetic.yml");
 	}
 
-	public static class ShaderSettings {
+	/*public static class ShaderSettings {
 
 		@Load
 		public boolean useSlipstreamShaders = false;
@@ -129,7 +129,7 @@ public class ConfigClient {
 
 		@Load
 		public boolean usePurifyShaders = true;
-	}
+	}**/
 
 	public static class ActiveBendingSettings {
 
@@ -138,7 +138,7 @@ public class ConfigClient {
 		//For some reason if it's not final it won't work
 		//Determines if element menu should render at all
 
-		@Load
+	/*	@Load
 		public final boolean shouldBendingMenuDisappear = true;
 		//For some reason if it's not final it won't work
 		//Makes the menu disappear after the duration- affects chi as well.
@@ -148,7 +148,7 @@ public class ConfigClient {
 		public final int bendingMenuDuration = 200;
 		//If the menu should disappear, how long it should take before disappearing
 		//currently unused
-
+**/
 
 	}
 
@@ -158,7 +158,7 @@ public class ConfigClient {
 
 		@Load
 		public final boolean shouldChiNumbersRender = true;
-
+/*
 		@Load
 		public final boolean shouldChibarDisappear = true;
 		//Currently unused
@@ -166,6 +166,7 @@ public class ConfigClient {
 		@Load
 		public final int chibarDuration = 200;
 		//Currently unused
+	**/
 	}
 
 }

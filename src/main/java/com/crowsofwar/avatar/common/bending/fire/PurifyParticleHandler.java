@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -17,7 +16,6 @@ import java.util.Random;
 
 
 public class PurifyParticleHandler extends TickHandler {
-	public static TickHandler PURIFY_PARTICLE_SPAWNER = TickHandlerController.fromId(TickHandlerController.PURIFY_PARTICLE_SPAWNER_ID);
 	private final ParticleSpawner particles;
 
 	public PurifyParticleHandler(int id) {

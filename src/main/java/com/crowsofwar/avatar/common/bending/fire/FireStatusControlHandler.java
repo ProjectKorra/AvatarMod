@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
@@ -12,8 +11,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 public class FireStatusControlHandler extends TickHandler {
-
-	public static TickHandler FIRE_STATCTRL_HANDLER = TickHandlerController.fromId(TickHandlerController.FIRE_STATCTRL_HANDLER_ID);
 
 	private int ticks = 0;
 
@@ -27,7 +24,6 @@ public class FireStatusControlHandler extends TickHandler {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		int duration = data.getTickHandlerDuration(this);
-
 
 		EntityFireball ball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
 		if (ball == null && data.hasStatusControl(StatusControl.THROW_FIREBALL)) {

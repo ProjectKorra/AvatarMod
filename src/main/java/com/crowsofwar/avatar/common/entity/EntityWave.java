@@ -152,7 +152,7 @@ public class EntityWave extends AvatarEntity {
 
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 		if (entity instanceof AvatarEntity) {
 			((AvatarEntity) entity).onMajorWaterContact();
 		}

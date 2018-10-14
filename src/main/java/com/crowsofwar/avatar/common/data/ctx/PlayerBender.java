@@ -16,28 +16,25 @@
 */
 package com.crowsofwar.avatar.common.data.ctx;
 
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.ItemStack;
+
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
-import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
-import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
+import com.crowsofwar.avatar.common.analytics.*;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseAbility;
+import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_LIGHTNING_REDIRECT_SUCCESS;
-import static com.crowsofwar.avatar.common.bending.lightning.LightningRedirectHandler.LIGHTNING_REDIRECT;
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.LIGHTNING_REDIRECT;
 
 /**
  * @author CrowsOfWar
@@ -163,12 +160,12 @@ public class PlayerBender extends Bender {
 		return new BenderInfoPlayer(player.getName());
 	}
 
+	@Override
 	public boolean redirectLightning(EntityLightningArc lightningArc) {
 
 		if (lightningArc.isCreatedByRedirection()) {
 			return false;
 		}
-
 
 		EntityLivingBase owner = lightningArc.getOwner();
 		BendingData data = getData();
@@ -176,11 +173,9 @@ public class PlayerBender extends Bender {
 
 		if ((owner instanceof EntityPlayer && !((EntityPlayer) owner).isCreative()) && abilityData.getLevel() == -1) {
 			return false;
-		}
-		else  if ((abilityData.getLevel() == -1 && (owner instanceof EntityBender))) {
+		} else if ((abilityData.getLevel() == -1 && (owner instanceof EntityBender))) {
 			return false;
-		}
-		else if (!data.hasBendingId(Lightningbending.ID)){
+		} else if (!data.hasBendingId(Lightningbending.ID)) {
 			return false;
 		}
 
@@ -197,8 +192,7 @@ public class PlayerBender extends Bender {
 
 			}
 
-			String lightningArcOwner = lightningArc.getOwner() == null ? "lightningbender" :
-					lightningArc.getOwner().getName();
+			String lightningArcOwner = lightningArc.getOwner() == null ? "lightningbender" : lightningArc.getOwner().getName();
 			MSG_LIGHTNING_REDIRECT_SUCCESS.send(player, lightningArcOwner);
 
 			return true;

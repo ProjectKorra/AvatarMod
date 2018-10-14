@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.common.bending.water;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -17,11 +16,9 @@ import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
-import static com.crowsofwar.avatar.common.bending.water.WaterChargeHandler.WATER_CHARGE;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.WATER_CHARGE;
 
 public class WaterParticleSpawner extends TickHandler {
-
-	public static TickHandler WATER_PARTICLE_SPAWNER = TickHandlerController.fromId(TickHandlerController.WATER_PARTICLE_SPAWNER_ID);
 
 	public WaterParticleSpawner(int id) {
 		super(id);
@@ -40,12 +37,10 @@ public class WaterParticleSpawner extends TickHandler {
 		int duration = data.getTickHandlerDuration(this);
 		double radius = ((float) maxDuration - duration) / 10;
 
-
 		if (data.hasTickHandler(WATER_CHARGE) && !world.isRemote) {
 			WorldServer World = (WorldServer) world;
 			for (int i = 0; i < 180; i++) {
-				Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-						i * 2), 0).times(radius).withY(entity.getEyeHeight() / 2);
+				Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i * 2), 0).times(radius).withY(entity.getEyeHeight() / 2);
 				World.spawnParticle(EnumParticleTypes.WATER_SPLASH, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
 						lookpos.z() + entity.posZ, 1, 0, 0, 0, 0.05);
 			}
@@ -68,7 +63,6 @@ public class WaterParticleSpawner extends TickHandler {
 				}
 			}
 			return false;
-
 
 		} else return true;
 	}

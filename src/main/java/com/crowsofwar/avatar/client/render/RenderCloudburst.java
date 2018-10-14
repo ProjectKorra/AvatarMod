@@ -50,10 +50,10 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 		if (entity.ticksExisted % 5 == 0) {
 			World world = entity.world;
 			AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-				world.spawnParticle(EnumParticleTypes.CLOUD, spawnX, spawnY, spawnZ, 0, 0.06, 0);
+			double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+			double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+			double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+			world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, spawnX, spawnY, spawnZ, 0, 0.06, 0);
 		}
 
 		//   if (MinecraftForgeClient.getRenderPass() == 0) {
@@ -72,12 +72,12 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 		//  } else {
 		disableLight(entity.world.getSkylightSubtracted());
 
-			pushMatrix();
-			renderCube(x, y, z, //
+		pushMatrix();
+		renderCube(x, y, z, //
 				8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
 				size, //
 				rotation * .2f, rotation, rotation * -.4f);
-			popMatrix();
+		popMatrix();
 
 		//  }
 		disableBlend();

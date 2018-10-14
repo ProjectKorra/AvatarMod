@@ -2,15 +2,11 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 
 public class WaterSmashHandler extends SmashGroundHandler {
-
-	public static TickHandler SMASH_GROUND_WATER = TickHandlerController.fromId(TickHandlerController.SMASH_GROUND_WATER_ID);
 
 	public WaterSmashHandler(int id) {
 		super(id);
@@ -18,7 +14,7 @@ public class WaterSmashHandler extends SmashGroundHandler {
 
 	@Override
 	protected int getParticleAmount() {
-		return 8;
+		return 10;
 	}
 
 	@Override
@@ -33,12 +29,12 @@ public class WaterSmashHandler extends SmashGroundHandler {
 
 	@Override
 	protected double getParticleSpeed() {
-		return 0.75F;
+		return 3;
 	}
 
 	@Override
 	protected float getDamage() {
-		return 4;
+		return 3.75F;
 	}
 
 	@Override

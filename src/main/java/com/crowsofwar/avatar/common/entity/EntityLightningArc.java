@@ -1,7 +1,9 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -26,6 +28,7 @@ import org.joml.Vector4d;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
@@ -96,6 +99,24 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		damage = 8;
 	}
 
+	private void LightningBurst(double x, double y, double z) {
+		EntityShockwave wave = new EntityShockwave(world);
+		wave.setAbility(new AbilityLightningArc());
+		wave.setOwner(getOwner());
+		wave.setParticleAmount(1);
+		wave.setParticleSpeed(1);
+		wave.setParticle(AvatarParticles.getParticleElectricity());
+		wave.setSpeed(1);
+		wave.setPosition(x, y, z);
+		wave.setDamage(getDamage()/4);
+		wave.setRange(getSizeMultiplier() * 2);
+		wave.setParticleController(20);
+		wave.setSphere(true);
+		wave.setKnockbackHeight(0.3);
+		wave.setPerformanceAmount(10);
+		world.spawnEntity(wave);
+	}
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -157,7 +178,6 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		if (existTooLong || stuckIsDead) {
 			setDead();
 		}
-
 		setSize(0.33f * getSizeMultiplier(), 0.33f * getSizeMultiplier());
 
 	}
@@ -197,9 +217,8 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 		if (stuckTo == null && entity instanceof EntityLivingBase) {
-
 			stuckTo = (EntityLivingBase) entity;
 
 		}
@@ -248,7 +267,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		// Handle lightning redirection
 		if (!wasRedirected && isMainArc() && entity == stuckTo && Bender.isBenderSupported
 				(entity)) {
-			wasSuccessfullyRedirected = Bender.get(entity).redirectLightning(this);
+			wasSuccessfullyRedirected = Objects.requireNonNull(Bender.get(entity)).redirectLightning(this);
 			wasRedirected = true;
 		}
 
@@ -295,6 +314,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 				world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
 			}
 		}
+		LightningBurst(posX, posY, posZ);
 		return false;
 //		return true;
 	}
@@ -405,6 +425,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		public Vector getInterpolatedPosition(float partialTicks) {
 			return getPosition(arc.ticksExisted + partialTicks);
 		}
+
 
 	}
 

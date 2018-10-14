@@ -8,20 +8,20 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
-import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.world.AvatarFireExplosion;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityAreaEffectCloud;
+import net.minecraft.entity.EntityHanging;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -29,7 +29,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -130,72 +129,93 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			if (entity instanceof EntityLivingBase) {
 				if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
 					Bender ctx = Bender.get((EntityLivingBase) entity);
-					if (ctx.getData() != null) {
-						Vector direction = Vector.getLookRectangular(entity);
-						AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
-						float powerModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
-						float damage = STATS_CONFIG.InfernoPunchDamage + (2 * powerModifier);
-						float knockBack = 1 + powerModifier;
-						int fireTime = 5 + (int) (powerModifier * 10);
+					if (ctx != null) {
+						if (ctx.getData() != null) {
+							Vector direction = Vector.getLookRectangular(entity);
+							AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
+							float powerModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
+							float damage = STATS_CONFIG.InfernoPunchDamage + (2 * powerModifier);
+							float knockBack = 1 + powerModifier;
+							int fireTime = 5 + (int) (powerModifier * 10);
 
-						if (abilityData.getLevel() >= 1) {
-							damage = 4 + (2 * powerModifier);
-							knockBack = 1.125F + powerModifier;
-							fireTime = 6;
-						} else if (abilityData.getLevel() >= 2) {
-							damage = 5 + (2 * powerModifier);
-							knockBack = 1.25F + powerModifier;
-							fireTime = 8 + (int) (powerModifier * 10);
-						}
-						if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-							damage = 10 + (2 * powerModifier);
-							knockBack = 1.5F + powerModifier;
-							fireTime = 15 + (int) (powerModifier * 10);
-						}
-						if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-							damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * powerModifier);
-							knockBack = 0.75F + powerModifier;
-							fireTime = 4 + (int) (powerModifier * 10);
-						}
+							if (abilityData.getLevel() >= 1) {
+								damage = 4 + (2 * powerModifier);
+								knockBack = 1.125F + powerModifier;
+								fireTime = 6;
+							}
+							if (abilityData.getLevel() >= 2) {
+								damage = 5 + (2 * powerModifier);
+								knockBack = 1.25F + powerModifier;
+								fireTime = 8 + (int) (powerModifier * 10);
+							}
+							if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+								damage = 7 + (2 * powerModifier);
+								knockBack = 1.5F + powerModifier;
+								fireTime = 15 + (int) (powerModifier * 10);
+							}
+							if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+								damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * powerModifier);
+								knockBack = 0.75F + powerModifier;
+								fireTime = 4 + (int) (powerModifier * 10);
+							}
 
-						if (((EntityLivingBase) entity).isPotionActive(MobEffects.STRENGTH)) {
-							damage += (Objects.requireNonNull(((EntityLivingBase) entity).getActivePotionEffect(MobEffects.STRENGTH)).getAmplifier() + 1) / 2F;
-						}
+							if (((EntityLivingBase) entity).isPotionActive(MobEffects.STRENGTH)) {
+								damage += (Objects.requireNonNull(((EntityLivingBase) entity).getActivePotionEffect(MobEffects.STRENGTH)).getAmplifier() + 1) / 2F;
+							}
 
-						if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
-							if (((EntityLivingBase) entity).getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().startsWith("avatar_"))) {
-								if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-									BlockPos blockPos = target.getPosition();
-									AvatarFireExplosion fireExplosion = new AvatarFireExplosion(target.world, target, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 3F, true, false);
-									fireExplosion.doExplosionA();
+							if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
+								if (((EntityLivingBase) entity).getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().startsWith("avatar_"))) {
+									if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+										EntityShockwave wave = new EntityShockwave(world);
+										wave.setPerformanceAmount(15);
+										wave.setFire(true);
+										wave.setFireTime(15);
+										wave.setSphere(true);
+										wave.setParticle(EnumParticleTypes.FLAME);
+										wave.setParticleSpeed(1.1);
+										//Since particles are spawned with the custom particle system, you need a higher speed than normal. Using
+										//Mincraft's World.spawnParticle, however, would require a much lower speed: ~10x lower
+										wave.setParticleAmount(1);
+										wave.setParticleController(20);
+										//Used for spheres
+										wave.setSpeed(0.8);
+										wave.setParticleAmount(2);
+										wave.setAbility(new AbilityInfernoPunch());
+										wave.setDamage(3);
+										wave.setOwner((EntityLivingBase) entity);
+										wave.setPosition(target.posX, target.getEntityBoundingBox().minY, target.posZ);
+										wave.setRange(4);
+										wave.setKnockbackHeight(0.25);
+										world.spawnEntity(wave);
+									}
 									if (world instanceof WorldServer) {
 										WorldServer World = (WorldServer) target.getEntityWorld();
-										World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY, target.posZ, 200, 0.05, 0.05, 0.05, 0.75);
-										fireExplosion.doExplosionB(true);
+										for (double angle = 0; angle < 360; angle += 15) {
+											Vector pos = AvatarUtils.getOrthogonalVector(Vector.getLookRectangular(entity), angle, 0.2);
+											World.spawnParticle(EnumParticleTypes.FLAME, target.posX + pos.x(), (target.posY + (target.getEyeHeight() / 1.25)) + pos.y(), target.posZ + pos.z(),
+													4 + abilityData.getLevel(), 0.0, 0.0, 0.0, 0.03 + (abilityData.getLevel()/100F));
+										}
+
+
 									}
-								}
-								if (world instanceof WorldServer) {
-									WorldServer World = (WorldServer) target.getEntityWorld();
-									World.spawnParticle(EnumParticleTypes.FLAME, target.posX, target.posY + target.getEyeHeight()/2, target.posZ, 50, 0.05, 0.05, 0.05, 0.05);
 
-								}
+									world.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
+											SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
-								world.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
-										SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
-
-								if (target.canBePushed() && target.canBeCollidedWith()) {
-									target.attackEntityFrom(DamageSource.IN_FIRE, damage);
-									target.setFire(fireTime);
-									target.motionX += direction.x() * knockBack;
-									target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
-									target.motionZ += direction.z() * knockBack;
-									target.isAirBorne = true;
-									abilityData.addXp(4 - abilityData.getLevel());
-									// this line is needed to prevent a bug where players will not be pushed in multiplayer
-									AvatarUtils.afterVelocityAdded(target);
-								}
-								if (!(target instanceof EntityDragon)) {
-									ctx.getData().removeStatusControl(INFERNO_PUNCH);
+									if (target.canBePushed() && target.canBeCollidedWith()) {
+										target.attackEntityFrom(AvatarDamageSource.FIRE, damage);
+										target.setFire(fireTime);
+										target.motionX += direction.x() * knockBack;
+										target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
+										target.motionZ += direction.z() * knockBack;
+										target.isAirBorne = true;
+										abilityData.addXp(4 - abilityData.getLevel());
+										// this line is needed to prevent a bug where players will not be pushed in multiplayer
+										AvatarUtils.afterVelocityAdded(target);
+									}
+									if (!(target instanceof EntityDragon)) {
+										ctx.getData().removeStatusControl(INFERNO_PUNCH);
+									}
 								}
 							}
 						}
@@ -211,7 +231,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			Entity target = event.getEntity();
 			if (entity instanceof EntityPlayer || entity instanceof EntityBender) {
 				BendingData data = BendingData.get(entity);
-				if (data != null) {
 					AbilityData aD = AbilityData.get(entity, "inferno_punch");
 					Bender ctx = Bender.get(entity);
 					if (ctx != null) {
@@ -226,7 +245,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 									damage = 5 + (2 * damageModifier);
 								}
 								if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-									damage = 10 + (2 * damageModifier);
+									damage = 7 + (2 * damageModifier);
 								}
 								if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 									damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * damageModifier);
@@ -240,7 +259,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 					}
 				}
 			}
-		}
 	}
 
 	private boolean canDamageEntity(Entity entity) {

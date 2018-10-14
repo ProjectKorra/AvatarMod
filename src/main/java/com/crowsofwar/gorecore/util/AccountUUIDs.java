@@ -17,22 +17,21 @@
 
 package com.crowsofwar.gorecore.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.UUID;
-import java.util.Map;
-
-import com.google.common.collect.Maps;
-
 import com.crowsofwar.gorecore.GoreCore;
+import com.google.common.collect.Maps;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * <p>
@@ -75,7 +74,7 @@ public final class AccountUUIDs {
 	public static EntityPlayer findEntityFromUUID(World world, UUID playerID) {
 		for (int i = 0; i < world.playerEntities.size(); i++) {
 			UUID accountId = getId(world.playerEntities.get(i).getName());
-			if (accountId.equals(playerID)) {
+			if (accountId != null && accountId.equals(playerID)) {
 				return world.playerEntities.get(i);
 			}
 		}
@@ -95,7 +94,10 @@ public final class AccountUUIDs {
 	 */
 	public static UUID getId(String username) {
 		Map<UUID, String> cache = UsernameCache.getMap();
-		if (!cache.containsValue(username)) return localCache.getOrDefault(username, requestId(username));
+		if (!cache.containsValue(username)) {
+			if (localCache.containsKey(username)) return localCache.get(username);
+			return requestId(username);
+		}
 		for (Map.Entry<UUID, String> entry : UsernameCache.getMap().entrySet()) {
 			if (entry.getValue().equalsIgnoreCase(username)) {
 				return entry.getKey();
@@ -138,7 +140,7 @@ public final class AccountUUIDs {
 			while ((length = inputStream.read(buffer)) != -1) {
 				result.write(buffer, 0, length);
 			}
-			UUID uuid = UUID.fromString(addDashes(JsonUtils.fromString(result.toString(), "id").getAsString()));
+			UUID uuid = UUID.fromString(addDashes(Objects.requireNonNull(JsonUtils.fromString(result.toString(), "id")).getAsString()));
 			localCache.put(username, uuid);
 			return uuid;
 		} catch (Exception e) {

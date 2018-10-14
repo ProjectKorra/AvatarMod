@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
@@ -264,6 +265,16 @@ public abstract class AvatarEntity extends Entity {
 					}
 				}
 			}
+			for (int x = 0; x >= -1; x--) {
+				for (int z = 0; z >= -1; z--) {
+					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
+					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
+						world.setBlockToAir(pos);
+						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
+								SoundCategory.PLAYERS, 1, 1, false);
+					}
+				}
+			}
 		}
 
 
@@ -362,7 +373,7 @@ public abstract class AvatarEntity extends Entity {
 	 * confused with the vanilla {@link #applyEntityCollision(Entity)}, which is
 	 * where another entity is pushing this one.
 	 */
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 	}
 
 	/**
@@ -400,6 +411,12 @@ public abstract class AvatarEntity extends Entity {
 	}
 
 	/**
+	 * Called when a lightning bolt or source of lightning hits the enitty
+	 */
+	public boolean onLightningContact() {
+		return false;
+	}
+	/**
 	 * Called when an airbending entity (such as an air gust) hits the entity. Returns whether
 	 * the entity was destroyed.
 	 */
@@ -420,7 +437,7 @@ public abstract class AvatarEntity extends Entity {
 	 */
 
 	public boolean canDamageEntity(Entity entity) {
-		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != entity) {
+		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == entity) {
 			return false;
 		}
 		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
@@ -536,5 +553,10 @@ public abstract class AvatarEntity extends Entity {
 	// disable stepping sounds
 	@Override
 	protected void playStepSound(BlockPos pos, Block blockIn) {
+	}
+
+	//Used to determine what element the entity is
+	public BendingStyle getElement() {
+		return null;
 	}
 }

@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-import static com.crowsofwar.avatar.common.bending.fire.FireParticleSpawner.FIRE_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.FIRE_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**

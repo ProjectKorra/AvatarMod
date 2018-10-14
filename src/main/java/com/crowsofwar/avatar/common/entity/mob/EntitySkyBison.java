@@ -78,10 +78,7 @@ import net.minecraftforge.common.ForgeChunkManager.Type;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
@@ -152,27 +149,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	 */
 	public EntitySkyBison(World world) {
 		super(world);
-
-		getData().addBendingId(Airbending.ID);
-
-		Random rand = new Random();
-		int level = rand.nextInt(3) + 1;
-
-		if (level <= 1) {
-			getData().getAbilityData("air_bubble").setLevel(0);
-			getData().getAbilityData("air_gust").setLevel(1);
-			getData().getAbilityData("airblade").setLevel(0);
-		}
-		if (level == 2) {
-			getData().getAbilityData("air_bubble").setLevel(1);
-			getData().getAbilityData("air_gust").setLevel(1);
-			getData().getAbilityData("airblade").setLevel(1);
-		}
-		if (level >= 3) {
-			getData().getAbilityData("air_bubble").setLevel(2);
-			getData().getAbilityData("air_gust").setLevel(3);
-			getData().getAbilityData("airblade").setLevel(1);
-		}
 
 
 		moveHelper = new SkyBisonMoveHelper(this);
@@ -247,9 +223,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		this.targetTasks.addTask(2, new EntityAiBisonDefendOwner(this));
 		this.targetTasks.addTask(3, new EntityAiBisonHelpOwnerTarget(this));
 
-		this.tasks.addTask(4, Abilities.get("air_bubble").getAi(this, getBender()));
-		this.tasks.addTask(1, Abilities.get("air_gust").getAi(this, getBender()));
-		this.tasks.addTask(3, Abilities.get("airblade").getAi(this, getBender()));
+		this.tasks.addTask(4, Objects.requireNonNull(Abilities.get("air_bubble")).getAi(this, getBender()));
+		this.tasks.addTask(1, Objects.requireNonNull(Abilities.get("air_gust")).getAi(this, getBender()));
+		this.tasks.addTask(3, Objects.requireNonNull(Abilities.get("airblade")).getAi(this, getBender()));
+
 
 		this.tasks.addTask(2, new EntityAiBisonFollowAttacker(this));
 		this.tasks.addTask(3, new EntityAiBisonSit(this));
@@ -268,6 +245,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Nullable
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty,
 											@Nullable IEntityLivingData livingData) {
+		getData().addBendingId(Airbending.ID);
+		getData().getAbilityData("air_gust").setLevel(0);
+
+
 
 		boolean sterile = false;
 		if (livingData instanceof BisonSpawnData) {
@@ -500,20 +481,20 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		if (index > -1) {
 
-			float sizeOffset = condition.getAdultAge() < 5 ? condition.getAgeDays()/condition.getAdultAge() : 5;
+			float sizeOffset = condition.getAgeDays() < 5 ? condition.getAgeDays()/condition.getAdultAge() : 5;
 			double offset = 0.75;
 			double angle = (index + 0.5) * Math.PI - toRadians(rotationYaw);
-			double yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.25));
+			double yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.35));
 
 			if (passenger == getControllingPassenger() && !this.isSitting()) {
 				angle = -toRadians(passenger.rotationYaw);
 				offset = 1;
-				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.25))  - Math.sin(toRadians(rotationPitch));
+				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.40))  - Math.sin(toRadians(rotationPitch));
 			}
 			if (passenger == getControllingPassenger() && this.isSitting()) {
 				angle = -toRadians(passenger.rotationYaw);
 				offset = 1;
-				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.15))  - Math.sin(toRadians(rotationPitch));
+				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.35))  - Math.sin(toRadians(rotationPitch));
 			}
 
 			passenger.setPosition(posX + sin(angle) * offset, posY + yOffset, posZ + cos(angle) * offset);
@@ -726,6 +707,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 
 		if (player.isSneaking() && getOwner() == player) {
+			if (!isSitting()) {
+				MSG_BISON_SITTING.send(player);
+			}
 			setSitting(!isSitting());
 			madeSitByPlayer = true;
 			return true;
@@ -922,13 +906,25 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	public void onUpdate() {
 		super.onUpdate();
 
+		if (condition.getAgeDays() == 3) {
+				getData().getAbilityData("air_bubble").setLevel(0);
+				getData().getAbilityData("air_gust").setLevel(1);
+				getData().getAbilityData("airblade").setLevel(0);
+		}
+		if (condition.getAgeDays() == 4) {
+				getData().getAbilityData("air_bubble").setLevel(1);
+				getData().getAbilityData("air_gust").setLevel(1);
+				getData().getAbilityData("airblade").setLevel(1);
+		}
+		if (condition.getAgeDays() == 5) {
+				getData().getAbilityData("air_bubble").setLevel(2);
+				getData().getAbilityData("air_gust").setLevel(3);
+				getData().getAbilityData("airblade").setLevel(1);
+		}
+
 		if(this.isSitting() && hasOwner() && (world.getBlockState(getEntityPos(this)
 				.toBlockPos()).getBlock() != Blocks.AIR)) {
 			this.motionX = this.motionY = this.motionZ = 0;
-		}
-
-		if (this.ticksExisted % 20 == 0) {
-			getData().addBendingId(Airbending.ID);
 		}
 
 		// Client-side chest sometimes doesn't have enough slots, since when the
@@ -967,6 +963,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 
 		if (condition.getFoodPoints() == 0 && getOwner() != null) {
+			MSG_BISON_SITTING.send(getOwner());
 			setSitting(true);
 			madeSitByPlayer = false;
 			if (ticksExisted % 40 == 0) {
@@ -1012,6 +1009,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 
 	}
+
+
 
 	// moveWithHeading
 	@Override

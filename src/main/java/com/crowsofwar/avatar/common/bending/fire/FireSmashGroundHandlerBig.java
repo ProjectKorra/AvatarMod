@@ -18,8 +18,9 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
+import net.minecraft.block.Block;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -29,8 +30,6 @@ import net.minecraft.util.SoundEvent;
  * @author CrowsOfWar
  */
 public class FireSmashGroundHandlerBig extends SmashGroundHandler {
-
-	public static TickHandler SMASH_GROUND_FIRE_BIG = TickHandlerController.fromId(TickHandlerController.SMASH_GROUND_FIRE_BIG_ID);
 
 	public FireSmashGroundHandlerBig(int id) {
 		super(id);
@@ -48,7 +47,7 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 
 	@Override
 	protected int getParticleAmount() {
-		return 6;
+		return 8;
 	}
 
 	@Override
@@ -68,7 +67,7 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 
 	@Override
 	protected double getParticleSpeed() {
-		return 0.3F;
+		return 2.25;
 	}
 
 	@Override
@@ -99,5 +98,13 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 	@Override
 	protected int fireTime() {
 		return 15;
+	}
+
+	@Override
+	protected void smashEntity(EntityLivingBase entity) {
+		Block currentBlock = entity.world.getBlockState(entity.getPosition()).getBlock();
+		if (currentBlock == Blocks.AIR) {
+			super.smashEntity(entity);
+		}
 	}
 }

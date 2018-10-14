@@ -16,7 +16,9 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -87,6 +89,11 @@ public class EntityAirBubble extends EntityShield {
 	}
 
 	@Override
+	public BendingStyle getElement() {
+		return new Airbending();
+	}
+
+	@Override
 	public EntityLivingBase getController() {
 		return !isDissipating() ? getOwner() : null;
 	}
@@ -107,9 +114,8 @@ public class EntityAirBubble extends EntityShield {
 		dataManager.set(SYNC_SIZE, size);
 	}
 
-
 	@Override
-	public void setVelocity(double x, double y, double z) {
+	public void setVelocity(Vector velocity) {
 		super.setVelocity(0, 0, 0);
 	}
 
@@ -118,18 +124,18 @@ public class EntityAirBubble extends EntityShield {
 		if (getOwner() != null) {
 			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
 
-			this.posX = getOwner().posX;
-			this.posY = getOwner().getEntityBoundingBox().minY;
-			this.posZ = getOwner().posZ;
-
-			this.motionX = this.motionY = this.motionZ = 0;
-
 		}
 	}
 
 	@Override
 	public boolean canBeCollidedWith() {
 		return true;
+	}
+
+
+	@Override
+	public boolean isPushedByWater() {
+		return false;
 	}
 
 	@Override
@@ -149,8 +155,12 @@ public class EntityAirBubble extends EntityShield {
 			return;
 		}
 
-
-		if (putsOutFires) {
+		if (owner.isDead) {
+			dissipateSmall();
+			removeStatCtrl();
+			return;
+		}
+		if (putsOutFires && ticksExisted % 2 == 0) {
 			setFire(0);
 			for (int x = 0; x <= 1; x++) {
 				for (int z = 0; z <= 1; z++) {
@@ -174,24 +184,16 @@ public class EntityAirBubble extends EntityShield {
 			}
 		}
 
-		if (owner.isDead) {
-			dissipateSmall();
-			removeStatCtrl();
-			return;
-		}
-		for (int i = 0; i < 10; i++) {
-			setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
 
-			this.motionX = this.motionY = this.motionZ = 0;
+		setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
 
-			if (!world.isRemote) {
-				this.posX = owner.posX;
-				this.posY = owner.getEntityBoundingBox().minY;
-				this.posZ = owner.posZ;
-			}
+		this.motionX = this.motionY = this.motionZ = 0;
+		this.posX = owner.posX;
+		this.posY = owner.getEntityBoundingBox().minY;
+		this.posZ = owner.posZ;
+		resetPositionToBB();
+		this.motionX = this.motionY = this.motionZ = 0;
 
-			this.motionX = this.motionY = this.motionZ = 0;
-		}
 
 		if (getOwner() != null) {
 			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
@@ -202,6 +204,16 @@ public class EntityAirBubble extends EntityShield {
 			}
 		}
 
+		AxisAlignedBB box = new AxisAlignedBB(getEntityBoundingBox().minX - (getSize()/10), getEntityBoundingBox().minY, getEntityBoundingBox().minZ - (getSize()/10),
+				getEntityBoundingBox().maxX + (getSize()/10), getEntityBoundingBox().maxY + (getSize()/4), getEntityBoundingBox().maxZ + (getSize()/4));
+		List<Entity> nearby = world.getEntitiesWithinAABB(Entity.class, box);
+		if (!nearby.isEmpty()) {
+			for (Entity collided : nearby) {
+				if (collided != this && collided != getOwner() && collided.canBePushed()) {
+					onCollideWithEntity(collided);
+				}
+			}
+		}
 
 		if (!world.isRemote && owner.isInsideOfMaterial(Material.WATER)) {
 			owner.setAir(Math.min(airLeft, 300));
@@ -209,40 +221,42 @@ public class EntityAirBubble extends EntityShield {
 		}
 
 		Bender ownerBender = Bender.get(getOwner());
-		if (!world.isRemote && !ownerBender.consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
+		if (ownerBender != null) {
+			if (!world.isRemote && !ownerBender.consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
 
-			dissipateSmall();
+				dissipateSmall();
 
-		}
-
-		ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-		boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
-		if (!elytraOk) {
-			ownerBender.sendMessage("avatar.airBubbleElytra");
-			dissipateSmall();
-		}
-
-		if (!isDissipating()) {
-			IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-			if (attribute.getModifier(SLOW_ATTR_ID) == null) {
-				attribute.applyModifier(SLOW_ATTR);
 			}
 
-			if (!owner.isInWater() && !ownerBender.isFlying() && chest.getItem() != Items.ELYTRA) {
+			ItemStack chest = owner.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+			boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
+			if (!elytraOk) {
+				ownerBender.sendMessage("avatar.airBubbleElytra");
+				dissipateSmall();
+			}
 
-				owner.motionY += 0.03;
+			if (!isDissipating()) {
+				IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+				if (attribute.getModifier(SLOW_ATTR_ID) == null) {
+					attribute.applyModifier(SLOW_ATTR);
+				}
 
-				if (doesAllowHovering()) {
+				if (!ownerBender.isFlying() && chest.getItem() != Items.ELYTRA) {
 
-					if (doesAllowHovering() && !owner.isSneaking()) {
-						handleHovering();
-					} else {
-						owner.motionY += 0.03;
+					owner.motionY += 0.03;
+
+					if (doesAllowHovering()) {
+
+						if (doesAllowHovering() && !owner.isSneaking()) {
+							handleHovering();
+						} else {
+							owner.motionY += 0.03;
+						}
 					}
+
 				}
 
 			}
-
 		}
 
 		float size = getSize();
@@ -267,6 +281,11 @@ public class EntityAirBubble extends EntityShield {
 
 	}
 
+	@Override
+	public boolean canBePushed() {
+		return false;
+	}
+
 	/**
 	 * Handles hovering logic to make the owner hover. Preconditions (not in water, owner
 	 * present, etc) are handled by the caller
@@ -283,7 +302,7 @@ public class EntityAirBubble extends EntityShield {
 		// Min/max acceptable hovering distance
 		// Hovering is allowed between these two values
 		// Hover distance doesn't need to be EXACT
-		final double minFloatHeight = 1.5;
+		final double minFloatHeight = 1.2;
 		final double maxFloatHeight = 3;
 
 		EntityLivingBase owner = getOwner();
@@ -327,7 +346,7 @@ public class EntityAirBubble extends EntityShield {
 				owner.motionY += 0.11;
 			}
 			if (distanceFromGround >= minFloatHeight && distanceFromGround < maxFloatHeight) {
-				owner.motionY *= 0.7;
+				owner.motionY *= 0.8;
 			}
 			if (distanceFromGround >= maxFloatHeight) {
 				owner.motionY += 0.07;
@@ -359,26 +378,36 @@ public class EntityAirBubble extends EntityShield {
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
-		if (canCollideWith(entity) && entity != getOwner()) {
+	public void onCollideWithEntity(Entity entity) {
+		if (entity instanceof AvatarEntity) {
+			if (((AvatarEntity) entity).getOwner() != getOwner()) {
+				((AvatarEntity) entity).onAirContact();
+			}
+		}
 
-			double mult = -2;
-			if (isDissipatingLarge()) mult = -4;
-			Vector vel = position().minus(getEntityPos(entity));
-			vel = vel.normalize().times(mult).plusY(0.3f);
+		if (canCollideWith(entity) && entity != getOwner() && getOwner() != null) {
 
-			entity.motionX = vel.x();
-			entity.motionY = vel.y();
-			entity.motionZ = vel.z();
+
+			Vector velocity = getEntityPos(entity).minus(getEntityPos(getOwner()));
+			//Vector that comes from the owner of the air bubble towards the entity being collided with
+			double dist = getOwner().getDistance(entity);
+			double sizeMult = isDissipatingLarge() ? 4 * (getSize() * 2/3) : 2 * (getSize() * 2/3);
+			double mult = (dist - getSize()) * sizeMult > 1 ? (dist - getSize()) * sizeMult : 1 * sizeMult;
+			velocity = velocity.normalize().times(mult).withY(getSize()/4);
+
+			//The velocity is 20 times the motion of the entity, so you wanna divide by 20, unless you wanna make the entities
+			//that have been collided with fly super far way
+			entity.addVelocity(velocity.x()/2, velocity.y(), velocity.z()/2);
 
 			if (entity instanceof AvatarEntity) {
 				AvatarEntity avent = (AvatarEntity) entity;
-				avent.setVelocity(vel);
+				avent.setVelocity(velocity);
 			}
 			entity.isAirBorne = true;
 			AvatarUtils.afterVelocityAdded(entity);
 		}
 	}
+
 
 	@Override
 	public boolean canCollideWith(Entity entity) {

@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -22,7 +21,6 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static java.lang.Math.toRadians;
 
 public class FireDevourTickHandler extends TickHandler {
-	public static TickHandler FIRE_DEVOUR_HANDLER = TickHandlerController.fromId(TickHandlerController.FIRE_DEVOUR_HANDLER_ID);
 
 	private int fireConsumed = 0;
 	private int handlerLength = 20;

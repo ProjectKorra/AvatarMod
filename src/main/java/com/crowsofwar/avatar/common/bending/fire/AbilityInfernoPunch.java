@@ -2,14 +2,16 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
-import static com.crowsofwar.avatar.common.bending.fire.InfernoPunchParticleSpawner.INFERNO_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.bending.fire.StatCtrlInfernoPunch.INFERNO_PUNCH;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.INFERNO_PARTICLE_SPAWNER;
 
 public class AbilityInfernoPunch extends Ability {
 	public AbilityInfernoPunch() {
@@ -25,11 +27,11 @@ public class AbilityInfernoPunch extends Ability {
 
 		float chi = STATS_CONFIG.chiInfernoPunch;
 		if (ctx.getLevel() >= 1) {
-			chi = STATS_CONFIG.chiInfernoPunch * 4/3;
+			chi = STATS_CONFIG.chiInfernoPunch * 4 / 3;
 			//4
 		}
 		if (ctx.getLevel() >= 2) {
-			chi = STATS_CONFIG.chiInfernoPunch * 5/3;
+			chi = STATS_CONFIG.chiInfernoPunch * 5 / 3;
 			//5
 		}
 		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {

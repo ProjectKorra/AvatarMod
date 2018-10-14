@@ -4,7 +4,6 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -17,9 +16,9 @@ import net.minecraft.world.World;
 
 import java.util.function.BiPredicate;
 
-import static com.crowsofwar.avatar.common.bending.water.WaterChargeHandler.WATER_CHARGE;
-import static com.crowsofwar.avatar.common.bending.water.WaterParticleSpawner.WATER_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.WATER_CHARGE;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.WATER_PARTICLE_SPAWNER;
 import static java.lang.Math.toRadians;
 
 public class AbilityWaterCannon extends Ability {
@@ -42,8 +41,8 @@ public class AbilityWaterCannon extends Ability {
 		boolean hasWaterCharge = data.hasTickHandler(WATER_CHARGE);
 		int waterAmount = 2;
 
-		if(ctx.getLevel() >= 2) {
-		   waterAmount = 3;
+		if (ctx.getLevel() >= 2) {
+			waterAmount = 3;
 		}
 
 		if (ctx.getLevel() == 2) {
@@ -59,7 +58,6 @@ public class AbilityWaterCannon extends Ability {
 			//7
 		}
 
-		
 		if (ctx.consumeWater(waterAmount)) {
 			if (bender.consumeChi(chi) && !hasWaterCharge) {
 				ctx.getData().addTickHandler(WATER_CHARGE);
@@ -80,11 +78,11 @@ public class AbilityWaterCannon extends Ability {
 			}
 		} else {
 			bender.sendMessage("avatar.waterCannonFail");
-			}
 		}
+	}
 
 	//Is broken; will investigate later.
-	private Vector getClosestWaterbendableBlock (EntityLivingBase entity, int level) {
+	private Vector getClosestWaterbendableBlock(EntityLivingBase entity, int level) {
 		World world = entity.world;
 
 		Vector eye = Vector.getEyePos(entity);
@@ -101,9 +99,9 @@ public class AbilityWaterCannon extends Ability {
 				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterCannonAngles;
 				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterCannonAngles;
 
-				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> (STATS_CONFIG.waterBendableBlocks.contains(state.getBlock())
-						|| STATS_CONFIG.plantBendableBlocks.contains(state.getBlock())) && state.getBlock() != Blocks.AIR;
-
+				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) ->
+						(STATS_CONFIG.waterBendableBlocks.contains(state.getBlock()) || STATS_CONFIG.plantBendableBlocks
+								.contains(state.getBlock())) && state.getBlock() != Blocks.AIR;
 
 				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
 				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
@@ -153,7 +151,6 @@ public class AbilityWaterCannon extends Ability {
 		return null;
 
 	}
-
 
 }
 

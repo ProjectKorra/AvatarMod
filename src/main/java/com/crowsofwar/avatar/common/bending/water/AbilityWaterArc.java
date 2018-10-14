@@ -33,11 +33,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -119,7 +117,6 @@ public class AbilityWaterArc extends Ability {
 				size = 0.4F;
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-				damageMult = comboNumber >= 3 ? 1.25F : 0.5F;
 				gravity = 9.81F;
 				size = 0.5F;
 			}
@@ -127,7 +124,6 @@ public class AbilityWaterArc extends Ability {
 			if (bender.consumeChi(STATS_CONFIG.chiWaterArc)) {
 
 				removeExisting(ctx);
-				damageMult *= ctx.getPowerRatingDamageMod();
 
 				if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 					EntityWaterArc water = new EntityWaterArc(world);
@@ -153,6 +149,9 @@ public class AbilityWaterArc extends Ability {
 						gravity = -9.81F;
 						size = 0.5F;
 					}
+
+					damageMult = comboNumber >= 3 ? 1.25F : 0.5F;
+					damageMult *= ctx.getPowerRatingDamageMod();
 
 
 					Vector playerEye = Vector.getEyePos(entity);

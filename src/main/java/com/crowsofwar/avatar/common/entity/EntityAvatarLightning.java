@@ -126,7 +126,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 					if (entity instanceof AvatarEntity) {
 						((AvatarEntity) entity).onFireContact();
 					} else if (entity instanceof EntityLivingBase) {
-						handleCollision((EntityLivingBase) entity);
+						handleCollision(entity);
 					}
 
 				}
@@ -135,19 +135,36 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 	}
 
+/*	@SubscribeEvent
+	public static void onLightningStrike(LivingHurtEvent event) {
+		Entity hurt = event.getEntity();
+		Entity source = event.getSource().getTrueSource();
+		DamageSource damage = event.getSource();
+		if (damage == DamageSource.LIGHTNING_BOLT) {
 
-	private void handleCollision(EntityLivingBase collided) {
-		damageEntity(collided);
+			if (source instanceof EntityAvatarLightning) {
+				event.setAmount(0);
+				EntityAvatarLightning lightning = (EntityAvatarLightning) source;
+				lightning.handleCollision(hurt);
+				System.out.println(event.getAmount());
+			}
+		}
+	}**/
+
+	private void handleCollision(Entity collided) {
+		if (spawner.canDamageEntity(collided)) {
+			damageEntity(collided);
+		}
 		collided.setFire(collided.isImmuneToFire() ? 0 : 8);
 	}
 
 
-	private void damageEntity(EntityLivingBase entity) {
+	private void damageEntity(Entity entity) {
 		if (world.isRemote) {
 			return;
 		}
 
-		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, spawner.getOwner());
+		DamageSource damageSource = AvatarDamageSource.LIGHTNING;
 		float damage = STATS_CONFIG.lightningRazeSettings.damage;
 
 		if (spawner.getAbility() instanceof AbilityLightningRaze) {

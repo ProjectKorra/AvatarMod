@@ -99,7 +99,7 @@ public class BattlePerformanceScore {
 	 * Add or subtract a certain amount of score from the bender.
 	 */
 	public void modifyScore(double amount) {
-		setScore(MathHelper.clamp(score + amount, -100, 100));
+		setScore(MathHelper.clamp(score + amount, -500, 500));
 	}
 
 	/**

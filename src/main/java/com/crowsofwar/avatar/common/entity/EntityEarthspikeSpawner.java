@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -60,12 +62,19 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	}
 
 	@Override
+	public boolean onCollideWithSolid() {
+		setDead();
+		return false;
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 
 		if (ticksExisted >= maxTicksAlive) {
 			setDead();
 		}
+
 
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		Block belowBlock = world.getBlockState(below).getBlock();
@@ -79,6 +88,10 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		}
 
 		if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && !unstoppable) {
+			setDead();
+		}
+
+		if (!world.isRemote && belowBlock == Blocks.AIR) {
 			setDead();
 		}
 
@@ -102,7 +115,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		}
 	}
 
-
 	@Override
 	public boolean canCollideWith(Entity entity) {
 		return false;
@@ -114,9 +126,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	}
 
 	@Override
-	public boolean onCollideWithSolid() {
-		setDead();
-		return false;
+	public BendingStyle getElement() {
+		return new Earthbending();
 	}
-
 }
