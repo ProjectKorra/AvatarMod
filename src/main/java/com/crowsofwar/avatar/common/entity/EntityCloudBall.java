@@ -81,6 +81,9 @@ public class EntityCloudBall extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		int ticks = 0;
+		if (getBehavior() == null) {
+			this.setBehavior(new CloudburstBehavior.PlayerControlled());
+		}
 		setBehavior((CloudburstBehavior) getBehavior().onUpdate(this));
 		if (getBehavior() instanceof CloudburstBehavior.Thrown) {
 			ticks++;

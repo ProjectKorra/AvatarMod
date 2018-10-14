@@ -128,6 +128,7 @@ public class EntityBoulder extends AvatarEntity {
 
 	}
 
+
 	@Override
 	public void entityInit() {
 		super.entityInit();
@@ -152,7 +153,9 @@ public class EntityBoulder extends AvatarEntity {
 
 		super.onUpdate();
 
-
+		if (getBehavior() == null) {
+			this.setDead();
+		}
 		setBehavior((BoulderBehavior) getBehavior().onUpdate(this));
 
 		if (Health <= 0) {

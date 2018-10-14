@@ -122,6 +122,9 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		if (getBehavior() == null) {
+			this.setBehavior(new FireArcBehavior.Thrown());
+		}
 		FireArcBehavior newBehavior = (FireArcBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != newBehavior) setBehavior(newBehavior);
 

@@ -100,9 +100,11 @@ public class EntityFireball extends AvatarEntity {
 	public void onUpdate() {
 
 		super.onUpdate();
+		if (getBehavior() == null) {
+			this.setBehavior(new FireballBehavior.Thrown());
+		}
+
 		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
-
-
 		if (ticksExisted % 30 == 0) {
 			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 6, 0.8F);
 		}
