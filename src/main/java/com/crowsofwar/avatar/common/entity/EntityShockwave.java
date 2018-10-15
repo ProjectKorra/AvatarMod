@@ -238,7 +238,7 @@ public class EntityShockwave extends AvatarEntity {
 						knockbackHeight; // Throws target into the air.
 				double zSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted * speed) :
 						Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 5F * speed);
-				ySpeed = ySpeed > 0 ? ySpeed : knockbackHeight;
+				ySpeed = ySpeed > knockbackHeight ? ySpeed : knockbackHeight;
 				target.motionX += xSpeed;
 				target.motionY += ySpeed * 2;
 				target.motionZ += zSpeed;
