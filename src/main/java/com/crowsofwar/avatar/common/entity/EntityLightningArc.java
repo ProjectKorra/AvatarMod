@@ -104,15 +104,14 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		wave.setAbility(new AbilityLightningArc());
 		wave.setOwner(getOwner());
 		wave.setParticleAmount(1);
-		wave.setParticleSpeed(1);
+		wave.setParticleSpeed(1.25);
 		wave.setParticle(AvatarParticles.getParticleElectricity());
-		wave.setSpeed(1);
+		wave.setSpeed(0.8);
 		wave.setPosition(x, y, z);
 		wave.setDamage(getDamage() / 2);
 		wave.setRange(getSizeMultiplier() * 2);
 		wave.setParticleController(20);
 		wave.setSphere(true);
-		wave.setKnockbackHeight(0.3);
 		wave.setPerformanceAmount(10);
 		world.spawnEntity(wave);
 	}
@@ -225,6 +224,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 						SoundCategory.PLAYERS, 1, 1);
 				damageEntity(((EntityLivingBase) entity), 1);
 				LightningBurst(this.posX, this.posY, this.posZ);
+				//Don't use the position of the entity, as that makes them fall through the world
 				entity.noClip = false;
 				this.setDead();
 			}
