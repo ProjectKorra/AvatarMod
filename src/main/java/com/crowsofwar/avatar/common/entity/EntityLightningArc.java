@@ -113,6 +113,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		wave.setParticleController(20);
 		wave.setSphere(true);
 		wave.setPerformanceAmount(10);
+		wave.setKnockbackHeight(0.2);
 		world.spawnEntity(wave);
 	}
 

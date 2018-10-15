@@ -185,7 +185,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 										wave.setOwner((EntityLivingBase) entity);
 										wave.setPosition(target.posX, target.getEntityBoundingBox().minY, target.posZ);
 										wave.setRange(4);
-										wave.setKnockbackHeight(0.25);
+										wave.setKnockbackHeight(0.2);
 										world.spawnEntity(wave);
 									}
 									if (world instanceof WorldServer) {
