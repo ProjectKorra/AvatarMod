@@ -135,8 +135,7 @@ public class EntityAirBubble extends EntityShield {
 
 	@Override
 	public void onUpdate() {
-		//super.onUpdate();
-		//Otherwise the entity glitches out
+		super.onUpdate();
 
 
 		EntityLivingBase owner = getOwner();
@@ -155,39 +154,9 @@ public class EntityAirBubble extends EntityShield {
 			removeStatCtrl();
 			return;
 		}
-		if (putsOutFires && ticksExisted % 2 == 0) {
-			setFire(0);
-			for (int x = 0; x <= 1; x++) {
-				for (int z = 0; z <= 1; z++) {
-					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
-					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
-						world.setBlockToAir(pos);
-						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
-								SoundCategory.PLAYERS, 1, 1, false);
-					}
-				}
-			}
-			for (int x = 0; x >= -1; x--) {
-				for (int z = 0; z >= -1; z--) {
-					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
-					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
-						world.setBlockToAir(pos);
-						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
-								SoundCategory.PLAYERS, 1, 1, false);
-					}
-				}
-			}
-		}
-
 
 		setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
-
-		this.motionX = this.motionY = this.motionZ = 0;
-		this.posX = owner.posX;
-		this.posY = owner.getEntityBoundingBox().minY;
-		this.posZ = owner.posZ;
-		resetPositionToBB();
-		this.motionX = this.motionY = this.motionZ = 0;
+		setVelocity(0, 0, 0);
 
 
 		if (getOwner() != null) {
