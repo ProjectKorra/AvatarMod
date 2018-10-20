@@ -115,11 +115,6 @@ public class EntityAirBubble extends EntityShield {
 	}
 
 	@Override
-	public void setVelocity(Vector velocity) {
-		super.setVelocity(0, 0, 0);
-	}
-
-	@Override
 	public void setPositionAndUpdate(double x, double y, double z) {
 		if (getOwner() != null) {
 			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
