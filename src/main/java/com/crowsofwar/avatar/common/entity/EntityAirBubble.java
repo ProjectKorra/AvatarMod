@@ -185,14 +185,23 @@ public class EntityAirBubble extends EntityShield {
 		}
 
 
-		setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
-
-		this.motionX = this.motionY = this.motionZ = 0;
-		this.posX = owner.posX;
-		this.posY = owner.getEntityBoundingBox().minY;
-		this.posZ = owner.posZ;
-		resetPositionToBB();
-		this.motionX = this.motionY = this.motionZ = 0;
+		Vector pos1 = this.position();
+		Vector pos2 = this.position();
+			setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
+			this.motionX = this.motionY = this.motionZ = 0;
+			if (!world.isRemote) {
+				this.posX = owner.posX;
+				this.posY = owner.getEntityBoundingBox().minY;
+				this.posZ = owner.posZ;
+				this.motionX = this.motionY = this.motionZ = 0;
+				pos2 = this.position();
+			}
+			resetPositionToBB();
+		if (pos1 != pos2) {
+			System.out.println(pos1);
+			System.out.println(pos2);
+			System.out.println(getEntityPos(getOwner()));
+		}
 
 
 		if (getOwner() != null) {
