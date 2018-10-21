@@ -161,7 +161,7 @@ public class EntityShockwave extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 
-		this.setVelocity(Vector.ZERO);
+		this.setVelocity(0, 0, 0);
 		this.motionX = this.motionY = this.motionZ = 0;
 
 		if ((this.ticksExisted * speed) > range) {

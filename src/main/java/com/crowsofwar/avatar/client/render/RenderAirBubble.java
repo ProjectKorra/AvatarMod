@@ -62,8 +62,8 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		GlStateManager.disableLighting();
 
 		float ticks = entity.ticksExisted + partialTicks;
-
 		float sizeMult = 1, alpha = 1;
+
 		if (entity.isDissipatingLarge()) {
 			sizeMult = 1 + entity.getDissipateTime() / 10f;
 			alpha = 1 - entity.getDissipateTime() / 10f;
@@ -107,15 +107,15 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		// @formatter:off
 		// Can't use .mul(size) here because it would mul the w component
 		Vector4f
-		lbf = new Vector4f(-.5f*size, -.5f*size, -.5f*size, 1).mul(mat),
-		rbf = new Vector4f(0.5f*size, -.5f*size, -.5f*size, 1).mul(mat),
-		ltf = new Vector4f(-.5f*size, 0.5f*size, -.5f*size, 1).mul(mat),
-		rtf = new Vector4f(0.5f*size, 0.5f*size, -.5f*size, 1).mul(mat),
-		lbb = new Vector4f(-.5f*size, -.5f*size, 0.5f*size, 1).mul(mat),
-		rbb = new Vector4f(0.5f*size, -.5f*size, 0.5f*size, 1).mul(mat),
-		ltb = new Vector4f(-.5f*size, 0.5f*size, 0.5f*size, 1).mul(mat),
-		rtb = new Vector4f(0.5f*size, 0.5f*size, 0.5f*size, 1).mul(mat);
-		
+				lbf = new Vector4f(-.5f * size, -.5f * size, -.5f * size, 1).mul(mat),
+				rbf = new Vector4f(0.5f * size, -.5f * size, -.5f * size, 1).mul(mat),
+				ltf = new Vector4f(-.5f * size, 0.5f * size, -.5f * size, 1).mul(mat),
+				rtf = new Vector4f(0.5f * size, 0.5f * size, -.5f * size, 1).mul(mat),
+				lbb = new Vector4f(-.5f * size, -.5f * size, 0.5f * size, 1).mul(mat),
+				rbb = new Vector4f(0.5f * size, -.5f * size, 0.5f * size, 1).mul(mat),
+				ltb = new Vector4f(-.5f * size, 0.5f * size, 0.5f * size, 1).mul(mat),
+				rtb = new Vector4f(0.5f * size, 0.5f * size, 0.5f * size, 1).mul(mat);
+
 		// @formatter:on
 
 		drawQuad(2, ltb, lbb, lbf, ltf, u1, v1, u2, v2); // -x

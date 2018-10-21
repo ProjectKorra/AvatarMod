@@ -32,9 +32,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,7 +40,6 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -76,6 +73,7 @@ public class EntityAirBubble extends EntityShield {
 		setSize(2.5f, 2.5f);
 		//setSize(0, 0);
 
+		this.noClip = true;
 		this.airLeft = 600;
 		this.putsOutFires = true;
 	}
@@ -168,8 +166,8 @@ public class EntityAirBubble extends EntityShield {
 			}
 		}
 
-		AxisAlignedBB box = new AxisAlignedBB(getEntityBoundingBox().minX - (getSize()/10), getEntityBoundingBox().minY, getEntityBoundingBox().minZ - (getSize()/10),
-				getEntityBoundingBox().maxX + (getSize()/10), getEntityBoundingBox().maxY + (getSize()/4), getEntityBoundingBox().maxZ + (getSize()/4));
+		AxisAlignedBB box = new AxisAlignedBB(getEntityBoundingBox().minX - (getSize() / 10), getEntityBoundingBox().minY, getEntityBoundingBox().minZ - (getSize() / 10),
+				getEntityBoundingBox().maxX + (getSize() / 10), getEntityBoundingBox().maxY + (getSize() / 4), getEntityBoundingBox().maxZ + (getSize() / 4));
 		List<Entity> nearby = world.getEntitiesWithinAABB(Entity.class, box);
 		if (!nearby.isEmpty()) {
 			for (Entity collided : nearby) {
@@ -355,13 +353,13 @@ public class EntityAirBubble extends EntityShield {
 			Vector velocity = getEntityPos(entity).minus(getEntityPos(getOwner()));
 			//Vector that comes from the owner of the air bubble towards the entity being collided with
 			double dist = getOwner().getDistance(entity);
-			double sizeMult = isDissipatingLarge() ? 4 * (getSize() * 2/3) : 2 * (getSize() * 2/3);
+			double sizeMult = isDissipatingLarge() ? 4 * (getSize() * 2 / 3) : 2 * (getSize() * 2 / 3);
 			double mult = (dist - getSize()) * sizeMult > 1 ? (dist - getSize()) * sizeMult : 1 * sizeMult;
-			velocity = velocity.normalize().times(mult).withY(getSize()/4);
+			velocity = velocity.normalize().times(mult).withY(getSize() / 4);
 
 			//The velocity is 20 times the motion of the entity, so you wanna divide by 20, unless you wanna make the entities
 			//that have been collided with fly super far way
-			entity.addVelocity(velocity.x()/2, velocity.y(), velocity.z()/2);
+			entity.addVelocity(velocity.x() / 2, velocity.y(), velocity.z() / 2);
 
 			if (entity instanceof AvatarEntity) {
 				AvatarEntity avent = (AvatarEntity) entity;
