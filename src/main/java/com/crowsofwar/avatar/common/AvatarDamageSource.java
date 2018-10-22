@@ -31,6 +31,15 @@ import javax.annotation.Nullable;
  */
 public class AvatarDamageSource {
 
+	public static final DamageSource WATER = new DamageSource("avatar_Water");
+	public static final DamageSource FIRE = new DamageSource("avatar_Fire");
+	public static final DamageSource EARTH = new DamageSource("avatar_Earth");
+	public static final DamageSource AIR = new DamageSource("avatar_Air");
+	public static final DamageSource LIGHTNING = new DamageSource("avatar_Lightning");
+	public static final DamageSource COMBUSTION = new DamageSource("avatar_Combustion");
+	public static final DamageSource SAND = new DamageSource("avatar_Sand");
+	public static final DamageSource ICE = new DamageSource("avatar_Ice");
+
 	/**
 	 * Returns whether the given damage was inflicted using an Avatar damage source.
 	 */
@@ -58,7 +67,7 @@ public class AvatarDamageSource {
 	 */
 
 	public static DamageSource causeAirDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_Air", hit, owner);
+		return new EntityDamageSourceIndirect("avatar_AirDamage", hit, owner);
 	}
 
 	/**
@@ -80,8 +89,7 @@ public class AvatarDamageSource {
 	 * @return DamageSource for the fire arc
 	 */
 	public static DamageSource causeFireDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_fireArc", hit, owner).setProjectile()
-				.setFireDamage();
+		return new EntityDamageSourceIndirect("avatar_fireArc", hit, owner).setProjectile();
 	}
 
 	/**
@@ -112,7 +120,7 @@ public class AvatarDamageSource {
 	 */
 	public static DamageSource causeFireballDamage(Entity hit, @Nullable Entity owner) {
 		return new EntityDamageSourceIndirect("avatar_fireball", hit, owner).setProjectile()
-				.setFireDamage().setExplosion();
+				.setExplosion();
 	}
 
 	/**
@@ -142,8 +150,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the flames
 	 */
 	public static DamageSource causeFlamethrowerDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_flamethrower", hit, owner).setProjectile()
-				.setFireDamage();
+		return new EntityDamageSourceIndirect("avatar_flamethrower", hit, owner).setProjectile();
 	}
 
 	/**
@@ -186,16 +193,6 @@ public class AvatarDamageSource {
 	 */
 	public static DamageSource causeWaterCannonDamage(Entity hit, @Nullable Entity owner) {
 		return new EntityDamageSourceIndirect("avatar_waterCannon", hit, owner);
-	}
-
-	/**
-	 * Create a DamageSource for damage caused by a cloudburst.
-	 *
-	 * @param hit   Who was hit by the cloudburst
-	 * @param owner Who created the cloudburst
-	 */
-	public static DamageSource causeCloudburstDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_cloudburst", hit, owner).setProjectile();
 	}
 
 	/**

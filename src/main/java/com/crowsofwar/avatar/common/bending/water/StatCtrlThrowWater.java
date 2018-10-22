@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.common.bending.water;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
@@ -28,10 +27,7 @@ import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 /**
  * @author CrowsOfWar
@@ -53,7 +49,7 @@ public class StatCtrlThrowWater extends StatusControl {
 		int lvl = abilityData.getLevel();
 		double velocity = 14;
 
-		if (lvl == 1){
+		if (lvl == 1) {
 			velocity = 16;
 		}
 		if (lvl == 2) {

@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -26,6 +28,8 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -39,7 +43,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -85,6 +90,8 @@ public class EntityLightningSpear extends AvatarEntity {
 
 	private float degreesPerSecond;
 
+	private ParticleSpawner particleSpawner;
+
 	/**
 	 * @param world
 	 */
@@ -95,7 +102,9 @@ public class EntityLightningSpear extends AvatarEntity {
 		setSize(Size, Size);
 		this.damage = 3F;
 		this.piercing = false;
+		this.setInvisible(false);
 		this.position = this.position().toBlockPos();
+		this.particleSpawner = new NetworkParticleSpawner();
 
 	}
 
@@ -114,7 +123,7 @@ public class EntityLightningSpear extends AvatarEntity {
 		setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
 
 		// Add hook or something
-		if (getOwner()!= null) {
+		if (getOwner() != null) {
 			if (getBehavior() != null && getBehavior() instanceof LightningSpearBehavior.PlayerControlled) {
 				this.rotationYaw = this.getOwner().rotationYaw;
 				this.rotationPitch = this.getOwner().rotationPitch;
@@ -151,8 +160,7 @@ public class EntityLightningSpear extends AvatarEntity {
 			setInvisible(true);
 			setVelocity(Vector.ZERO);
 
-		}
-		else {
+		} else {
 			this.setInvisible(false);
 		}
 		if (inWater && !world.isRemote) {
@@ -169,50 +177,45 @@ public class EntityLightningSpear extends AvatarEntity {
 	}
 
 	public void LightningBurst() {
-		if (world instanceof WorldServer) {
-			if (getOwner() != null) {
-				this.setInvisible(true);
-				WorldServer World = (WorldServer) this.world;
-				World.spawnParticle(AvatarParticles.getParticleElectricity(), posX, posY, posZ, 25, 0, 0, 0, getSize()/20);
-				World.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-				World.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(getSize() * 2, getSize() * 2, getSize() * 2),
-						entity -> entity != getOwner());
+		if (getOwner() != null) {
+			particleSpawner.spawnParticles(world, AvatarParticles.getParticleElectricity(), (int) (getSize() * 25), (int) (getSize() * 30), posX, posY, posZ, getSize() * 1.25, getSize() * 1.25, getSize() * 1.25);
+			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(getSize() * 2, getSize() * 2, getSize() * 2),
+					entity -> entity != getOwner());
 
-				if (!collided.isEmpty()) {
-					for (Entity entity : collided) {
-						if (entity != getOwner() && entity != null && getOwner() != null && entity != this) {
+			if (!collided.isEmpty()) {
+				for (Entity entity : collided) {
+					if (entity != getOwner() && entity != null && getOwner() != null && entity != this && canCollideWith(entity)) {
 
-							damageEntity(entity);
+						damageEntity(entity);
 
-							//Divide the result of the position difference to make entities fly
-							//further the closer they are to the player.
-							Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
-							double distance = Vector.getEntityPos(entity).dist(Vector.getEntityPos(this));
-							double direction = (getSize() * 2- distance) * (getSize()/50 * 5) / (getSize() * 2);
-							velocity = velocity.times(direction).times(-1 + (-1 * (getSize() * 2) / 2)).withY(getSize()/50 / 2);
+						//Divide the result of the position difference to make entities fly
+						//further the closer they are to the player.
+						double dist = (getSize() * 2 - entity.getDistance(entity)) > 1 ? (getSize() * 2 - entity.getDistance(entity)) : 1;
+						Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
+						velocity = velocity.dividedBy(40).times(dist).withY(getSize() / 50);
 
-							double x = (velocity.x());
-							double y = (velocity.y()) > 0 ? velocity.y() : 0.2F;
-							double z = (velocity.z());
+						double x = (velocity.x());
+						double y = (velocity.y()) > 0 ? velocity.y() : 0.2F;
+						double z = (velocity.z());
 
-							if (!entity.world.isRemote) {
-								entity.addVelocity(x, y, z);
+						if (!entity.world.isRemote) {
+							entity.addVelocity(x, y, z);
 
-								if (collided instanceof AvatarEntity) {
-									if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
-										AvatarEntity avent = (AvatarEntity) collided;
-										avent.addVelocity(x, y, z);
-									}
-									entity.isAirBorne = true;
-									AvatarUtils.afterVelocityAdded(entity);
+							if (collided instanceof AvatarEntity) {
+								if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+									AvatarEntity avent = (AvatarEntity) collided;
+									avent.addVelocity(x, y, z);
 								}
+								entity.isAirBorne = true;
+								AvatarUtils.afterVelocityAdded(entity);
 							}
 						}
 					}
 				}
-
 			}
+
 		}
 	}
 
@@ -220,14 +223,13 @@ public class EntityLightningSpear extends AvatarEntity {
 		if (getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 			AbilityData abilityData = data.getAbilityData("lightning_spear");
-			DamageSource ds = AvatarDamageSource.causeCloudburstDamage(entity, getOwner());
 			int lvl = abilityData.getLevel();
-			float damage = getDamage()/3;
+			float damage = getDamage() / 3;
 			if (lvl == 1) {
-				damage = getDamage()/2;
+				damage = getDamage() / 2;
 			}
 			if (lvl == 2) {
-				damage = getDamage()/1.5F;
+				damage = getDamage() / 1.5F;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage = getDamage();
@@ -235,8 +237,8 @@ public class EntityLightningSpear extends AvatarEntity {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				damage = getDamage();
 			}
-			entity.attackEntityFrom(ds, damage);
-			if (entity.attackEntityFrom(ds, damage)) {
+			entity.attackEntityFrom(AvatarDamageSource.LIGHTNING, damage);
+			if (entity.attackEntityFrom(AvatarDamageSource.LIGHTNING, damage)) {
 				abilityData.addXp(SKILLS_CONFIG.cloudburstHit);
 				BattlePerformanceScore.addMediumScore(getOwner());
 
@@ -305,12 +307,12 @@ public class EntityLightningSpear extends AvatarEntity {
 		this.groupAttack = groupAttack;
 	}
 
-	public void setDegreesPerSecond (float degrees) {
-		dataManager.set(SYNC_DEGREES_PER_SECOND, degrees);
-	}
-
 	public float getDegreesPerSecond() {
 		return dataManager.get(SYNC_DEGREES_PER_SECOND);
+	}
+
+	public void setDegreesPerSecond(float degrees) {
+		dataManager.set(SYNC_DEGREES_PER_SECOND, degrees);
 	}
 
 	@Override
@@ -319,7 +321,7 @@ public class EntityLightningSpear extends AvatarEntity {
 		if (!(getBehavior() instanceof LightningSpearBehavior.Thrown)) {
 			return false;
 		}
-
+		setInvisible(false);
 		LightningBurst();
 		setDead();
 		return true;
@@ -341,6 +343,22 @@ public class EntityLightningSpear extends AvatarEntity {
 	}
 
 	@Override
+	public boolean canBePushed() {
+		return false;
+	}
+
+	@Override
+	public boolean onAirContact() {
+		if (getAbility() instanceof AbilityLightningArc && !world.isRemote) {
+			AbilityData aD = AbilityData.get(getOwner(), "lightning_spear");
+			if (!aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				this.setDead();
+			}
+		}
+		return true;
+	}
+
+	@Override
 	public void onCollideWithEntity(Entity entity) {
 		if (getBehavior() instanceof LightningSpearBehavior.Thrown && getBehavior() != null) {
 			if (this.canCollideWith(entity) && entity != getOwner()) {
@@ -350,8 +368,15 @@ public class EntityLightningSpear extends AvatarEntity {
 						LightningBurst();
 						setDead();
 					}
+					LightningBurst();
 				} else {
 					LightningBurst();
+				}
+			}
+			if (entity instanceof AvatarEntity) {
+				if (((AvatarEntity) entity).getElement() instanceof Airbending) {
+					this.onAirContact();
+					((AvatarEntity) entity).onLightningContact();
 				}
 			}
 		}
@@ -364,4 +389,9 @@ public class EntityLightningSpear extends AvatarEntity {
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isInRangeToRenderDist(double distance) {
+		return true;
+	}
 }

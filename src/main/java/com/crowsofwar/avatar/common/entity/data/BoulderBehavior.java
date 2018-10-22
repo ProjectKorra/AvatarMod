@@ -1,14 +1,11 @@
 package com.crowsofwar.avatar.common.entity.data;
+
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityBoulder;
-import com.crowsofwar.avatar.common.entity.EntityCloudBall;
-import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,7 +17,6 @@ import net.minecraft.world.World;
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public abstract class BoulderBehavior extends Behavior<EntityBoulder> {
 
@@ -99,7 +95,7 @@ public abstract class BoulderBehavior extends Behavior<EntityBoulder> {
 		private void collision(EntityLivingBase collided, EntityBoulder entity) {
 			double speed = entity.velocity().magnitude();
 
-			if (collided.attackEntityFrom(AvatarDamageSource.causeCloudburstDamage(collided, entity.getOwner()),
+			if (collided.attackEntityFrom(AvatarDamageSource.EARTH,
 					entity.getDamage())) {
 				BattlePerformanceScore.addMediumScore(entity.getOwner());
 			}

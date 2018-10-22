@@ -37,6 +37,7 @@ import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -137,25 +138,20 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 							BattlePerformanceScore.addMediumScore(entity.getOwner());
 						}
 					}
-
+					entity.onCollideWithEntity(entity);
 					if (!entity.world.isRemote) {
-						BendingData data = Bender.get(entity.getOwner()).getData();
+						BendingData data = Objects.requireNonNull(Bender.get(entity.getOwner())).getData();
 						if (data != null) {
 							data.getAbilityData("fire_arc")
 									.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);
+							AbilityData abilityData = data.getAbilityData("fire_arc");
+							if (abilityData.isMasterPath(AbilityTreePath.SECOND) && entity.getOwner() != null) {
+								data.addStatusControl(StatusControl.THROW_FIRE);
+								return new FireArcBehavior.PlayerControlled();
+							}
 						}
 					}
-					entity.onCollideWithEntity(entity);
 
-				}
-			}
-
-			if (!collidedList.isEmpty() && entity.getOwner() != null) {
-				BendingData data = BendingData.get(entity.getOwner());
-				AbilityData abilityData = data.getAbilityData("fire_arc");
-				if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
-					data.addStatusControl(StatusControl.THROW_FIRE);
-					return new FireArcBehavior.PlayerControlled();
 				}
 			}
 

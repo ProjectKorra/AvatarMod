@@ -148,7 +148,7 @@ public class AbilityWaterBubble extends Ability {
 		}**/
 	}
 
-	private Vector getClosestWaterbendableBlock (EntityLivingBase entity, int level) {
+	private Vector getClosestWaterbendableBlock(EntityLivingBase entity, int level) {
 		World world = entity.world;
 
 		Vector eye = Vector.getEyePos(entity);

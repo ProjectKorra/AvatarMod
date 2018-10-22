@@ -24,9 +24,9 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_CLEANSE_COOLDOWN;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.CLEANSE_COOLDOWN_HANDLER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.CLEANSE_COOLDOWN_HANDLER;
 import static java.lang.Math.toRadians;
 
 public class AbilityCleanse extends Ability {
@@ -85,6 +85,7 @@ public class AbilityCleanse extends Ability {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, duration));
 				entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, 1));
+				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration));
 			}
 
 			// Perform group heal?
@@ -111,8 +112,7 @@ public class AbilityCleanse extends Ability {
 			//noinspection ConstantConditions
 			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
 
-		}
-		else {
+		} else {
 			bender.sendMessage("avatar.cleanseFail");
 		}
 		if (data.hasTickHandler(CLEANSE_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {

@@ -1,16 +1,20 @@
 package com.crowsofwar.avatar.common.bending.water;
 
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.*;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-
-import com.crowsofwar.avatar.common.data.*;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
-import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.UUID;
 
@@ -45,10 +49,10 @@ public class WaterChargeHandler extends TickHandler {
 			durationToFire = 60;
 		}
 
+
 		if (world.isRemote) {
 			return false;
 		}
-
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
@@ -79,18 +83,17 @@ public class WaterChargeHandler extends TickHandler {
 
 			if (abilityData.getLevel() >= 1) {
 				damage = (float) (STATS_CONFIG.waterCannonDamage * 1.25 * bender.getDamageMult(Waterbending.ID));
-				size = 0.5f;
+				size = 0.4f;
 				ticks = 75;
 			}
 			if (abilityData.getLevel() >= 2) {
 				damage = (float) (STATS_CONFIG.waterCannonDamage * 1.5 * bender.getDamageMult(Waterbending.ID));
-				size = 0.75f;
+				size = 0.55f;
 				ticks = 100;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage = (float) (STATS_CONFIG.waterCannonDamage * 2.5 * bender.getDamageMult(Waterbending.ID));
-				size = 1f;
-				ticks = 150;
+				ticks = 125;
 			}
 
 			damage *= bender.getDamageMult(Waterbending.ID);
@@ -116,6 +119,7 @@ public class WaterChargeHandler extends TickHandler {
 		cannon.setSizeMultiplier(size);
 		cannon.setPosition(Vector.getEyePos(entity));
 		cannon.setLifeTime(ticks);
+		cannon.setAbility(new AbilityWaterCannon());
 
 		Vector velocity = Vector.getLookRectangular(entity);
 		velocity = velocity.normalize().times(speed);

@@ -22,7 +22,7 @@ public class AirDodgeHandler extends TickHandler {
 	public AirDodgeHandler(int id) {
 		super(id);
 	}
-
+/*
 	@SubscribeEvent
 	public static void onAPress(InputEvent.KeyInputEvent event) {
 		Minecraft mc = Minecraft.getMinecraft();
@@ -45,13 +45,13 @@ public class AirDodgeHandler extends TickHandler {
 				}
 			}
 		}
-	}
+	}**/
 
 	@Override
 	public boolean tick(BendingContext ctx) {
 		BendingData data = ctx.getData();
 		int duration = data.getTickHandlerDuration(this);
-		if (FMLCommonHandler.instance().getSide().isClient()) MinecraftForge.EVENT_BUS.register(this);
+	//	if (FMLCommonHandler.instance().getSide().isClient()) MinecraftForge.EVENT_BUS.register(this);
 		return duration <= 10;
 
 	}

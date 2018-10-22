@@ -43,7 +43,7 @@ public class ConfigStats {
 			fireArcSettings = new AttackSettings(3, 1),   //
 			waterArcSettings = new AttackSettings(1.5F, 1),
 			boulderSettings = new AttackSettings(0.1F, 0.1),
-			airBurstSettings = new AttackSettings (0.5F, 1),
+			airBurstSettings = new AttackSettings (1F, 1),
 			lightningSpearSettings = new AttackSettings(4F, 2);
 
 	@Load
@@ -142,6 +142,9 @@ public class ConfigStats {
 	public double waterArcSearchRadius = 4, waterArcAngles = 8;
 
 	@Load
+	public boolean useWaterCannonParticles = true;
+
+	@Load
 	public double waterCannonSearchRadius = 3, waterCannonAngles = 8, waterCannonDamage = 1;
 
 	@Load
@@ -210,13 +213,23 @@ public class ConfigStats {
 	);
 
 	@Load
+	public List<String> iceBendableBlockNames = Arrays.asList(
+			"minecraft:snow",
+			"minecraft:snow_layer",
+			"minecraft:ice",
+			"minecraft:packed_ice",
+			"minecraft:frosted_ice"
+	);
+
+	@Load
 	public List<String> plantBendableBlockNames = Arrays.asList(
 			"minecraft:tallgrass",
 			"minecraft:wheat",
 			"minecraft:double_grass",
 			"minecraft:waterlily",
 			"minecraft:red_flower",
-			//For some reason, most of the plants in minecraft are tallgrass, double_grass, or red_flowers. Weird.
+			"minecraft:double_plant",
+			//For some reason, most of the plants in minecraft are tallgrass, double_grass, double_plant, or red_flowers. Weird.
 			"minecraft:leaves",
 			"minecraft:yellow_flower",
 			"minecraft:red_mushroom",
@@ -247,11 +260,34 @@ public class ConfigStats {
 
 	);
 
+	@Load
+	public List<String> waterArcBreakableBlockNames = Arrays.asList(
+			"minecraft:stone",
+			"minecraft:sand",
+			"minecraft:sandstone",
+			"minecraft:cobblestone",
+			"minecraft:dirt",
+			"minecraft:gravel",
+			"minecraft:brick_block",
+			"minecraft:mossy_cobblestone",
+			"minecraft:stonebrick",
+			"minecraft:clay",
+			"minecraft:hardened_clay",
+			"minecraft:stained_hardened_clay",
+			"minecraft:coal_ore",
+			"minecraft:iron_ore",
+			"minecraft:red_sandstone",
+			"minecraft:grass",
+			"minecraft:grass_path"
+	);
+
 	public List<Block> plantBendableBlocks;
 	public List<Block> waterBendableBlocks;
 	public List<Block> bendableBlocks;
 	public List<Block> sandBlocks;
 	public List<Block> airBladeBreakableBlocks;
+	public List<Block> iceBendableBlocks;
+	public List<Block> waterArcBreakableBlocks;
 
 	private ConfigStats() {
 	}
@@ -266,6 +302,8 @@ public class ConfigStats {
 		sandBlocks = STATS_CONFIG.loadBlocksList(sandBlocksNames);
 		waterBendableBlocks = STATS_CONFIG.loadBlocksList(waterBendableBlockNames);
 		plantBendableBlocks = STATS_CONFIG.loadBlocksList(plantBendableBlockNames);
+		iceBendableBlocks = STATS_CONFIG.loadBlocksList(iceBendableBlockNames);
+		waterArcBreakableBlocks = STATS_CONFIG.loadBlocksList(waterArcBreakableBlockNames);
 	}
 
 	/**
@@ -347,7 +385,7 @@ public class ConfigStats {
 	public static class CloudburstSettings {
 
 		@Load
-		public double damage = 1.5;
+		public double damage = 2;
 
 		@Load
 		public double push = 1.5;

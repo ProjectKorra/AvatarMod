@@ -1,17 +1,9 @@
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.bending.air.AbilitySlipstream;
-import com.crowsofwar.avatar.common.bending.earth.AbilityRestore;
-import com.crowsofwar.avatar.common.bending.fire.AbilityPurify;
-import com.crowsofwar.avatar.common.bending.water.AbilityCleanse;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.PowerRatingModifier;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import org.lwjgl.Sys;
-import org.lwjgl.opencl.CL;
-
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
 /**
  * "Buff abilities", abilities which apply temporary bending and other boosts, usually have a
@@ -37,13 +29,13 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 
 	protected abstract String getAbilityName();
 
-	private boolean useSlipstreamShaders = CLIENT_CONFIG.shaderSettings.useSlipstreamShaders;
+	/*private boolean useSlipstreamShaders = CLIENT_CONFIG.shaderSettings.useSlipstreamShaders;
 
 	private boolean useCleanseShaders = CLIENT_CONFIG.shaderSettings.useCleanseShaders;
 
 	private boolean useRestoreShaders = CLIENT_CONFIG.shaderSettings.useRestoreShaders;
 
-	private boolean usePurifyShaders = CLIENT_CONFIG.shaderSettings.usePurifyShaders;
+	private boolean usePurifyShaders = CLIENT_CONFIG.shaderSettings.usePurifyShaders;**/
 
 	private Vision getVision(BendingContext ctx) {
 

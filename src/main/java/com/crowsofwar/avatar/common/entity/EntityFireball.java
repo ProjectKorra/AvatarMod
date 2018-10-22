@@ -46,9 +46,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -59,22 +60,15 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
  */
 public class EntityFireball extends AvatarEntity {
 
-	private static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
-			.createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
-
 	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityFireball.class,
 			DataSerializers.VARINT);
-
+	private static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
+			.createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
 	private AxisAlignedBB expandedHitbox;
 
 	private float damage;
 	private float explosionStrength;
 	private BlockPos position;
-
-	public void setExplosionStrength(float strength) {
-		this.explosionStrength = strength;
-	}
-
 
 	/**
 	 * @param world
@@ -84,6 +78,10 @@ public class EntityFireball extends AvatarEntity {
 		setSize(.8f, .8f);
 		this.explosionStrength = 0.75f;
 		this.position = this.getPosition();
+	}
+
+	public void setExplosionStrength(float strength) {
+		this.explosionStrength = strength;
 	}
 
 	@Override
@@ -102,9 +100,11 @@ public class EntityFireball extends AvatarEntity {
 	public void onUpdate() {
 
 		super.onUpdate();
+		if (getBehavior() == null) {
+			this.setBehavior(new FireballBehavior.Thrown());
+		}
+
 		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
-
-
 		if (ticksExisted % 30 == 0) {
 			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 6, 0.8F);
 		}
@@ -369,4 +369,9 @@ public class EntityFireball extends AvatarEntity {
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isInRangeToRenderDist(double distance) {
+		return true;
+	}
 }

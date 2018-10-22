@@ -56,7 +56,8 @@ public class AbilityEarthspikes extends Ability {
 			chi = STATS_CONFIG.chiEarthspike * 2;
 			//7
 		}
-		double damage = STATS_CONFIG.earthspikeSettings.damage * 2.5;
+		double damage = STATS_CONFIG.earthspikeSettings.damage * 2;
+		//6
 		double size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
 		size += abilityData.getTotalXp() / 400;
 

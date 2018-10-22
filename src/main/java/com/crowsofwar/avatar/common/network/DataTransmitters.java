@@ -147,14 +147,9 @@ public class DataTransmitters {
 		@Override
 		public void write(ByteBuf buf, List<TickHandler> list) {
 			buf.writeInt(list.size());
-			FMLLog.info("TICK_HANDLERS = %s", list);
 			for (TickHandler handler : list) {
 				if (handler != null) {
 					buf.writeInt(handler.id());
-				}
-				if (handler == null) {
-					System.out.println(handler);
-
 				}
 			}
 		}

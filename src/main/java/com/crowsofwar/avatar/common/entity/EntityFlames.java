@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -31,6 +33,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Objects;
@@ -56,6 +60,11 @@ public class EntityFlames extends AvatarEntity {
 	public EntityFlames(World worldIn) {
 		super(worldIn);
 		setSize(0.1f, 0.1f);
+	}
+
+	@Override
+	public BendingStyle getElement() {
+		return new Firebending();
 	}
 
 	public EntityFlames(World world, EntityLivingBase owner) {
@@ -177,6 +186,12 @@ public class EntityFlames extends AvatarEntity {
 
 	public void setDamageMult(double damageMult) {
 		this.damageMult = damageMult;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isInRangeToRenderDist(double distance) {
+		return true;
 	}
 
 }
