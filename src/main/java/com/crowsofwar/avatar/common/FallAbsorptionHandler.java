@@ -16,16 +16,17 @@
 */
 package com.crowsofwar.avatar.common;
 
-import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.MiscData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.data.*;
+
+@Mod.EventBusSubscriber(modid = AvatarInfo.MODID)
 public class FallAbsorptionHandler {
 
 	@SubscribeEvent

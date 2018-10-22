@@ -1,10 +1,12 @@
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.network.PacketRedirector;
+import net.minecraft.client.Minecraft;
+
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+
+import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
+import com.crowsofwar.avatar.common.bending.*;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author CrowsOfWar
@@ -17,7 +19,7 @@ public class PacketCOpenSkillCard extends AvatarPacket<PacketCOpenSkillCard> {
 	}
 
 	public PacketCOpenSkillCard(Ability ability) {
-		this.abilityId = Abilities.all().indexOf(ability);
+		abilityId = Abilities.all().indexOf(ability);
 	}
 
 	@Override
@@ -30,18 +32,25 @@ public class PacketCOpenSkillCard extends AvatarPacket<PacketCOpenSkillCard> {
 		buf.writeInt(abilityId);
 	}
 
-	@Override
-	protected Side getReceivedSide() {
-		return Side.CLIENT;
-	}
-
-	@Override
-	protected Handler<PacketCOpenSkillCard> getPacketHandler() {
-		return PacketRedirector::redirectMessage;
-	}
-
 	public Ability getAbility() {
 		return Abilities.all().get(abilityId);
 	}
 
+	public static class Handler extends AvatarPacketHandler<PacketCOpenSkillCard, IMessage> {
+		/**
+		 * This method will always be called on the main thread. In the case that that's not wanted, create your own {@link IMessageHandler}
+		 *
+		 * @param message The packet that is received
+		 * @param ctx     The context to that packet
+		 * @return An optional packet to reply with, or null
+		 */
+		@Override
+		IMessage avatarOnMessage(PacketCOpenSkillCard message, MessageContext ctx) {
+			Minecraft mc = Minecraft.getMinecraft();
+			if (mc.currentScreen instanceof SkillsGui) {
+				((SkillsGui) mc.currentScreen).openWindow(message.getAbility());
+			}
+			return null;
+		}
+	}
 }

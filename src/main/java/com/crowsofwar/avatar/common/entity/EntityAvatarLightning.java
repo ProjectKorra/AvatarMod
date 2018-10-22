@@ -1,42 +1,37 @@
 package com.crowsofwar.avatar.common.entity;
 
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.*;
+import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.init.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.World;
+
+import net.minecraftforge.fml.common.Mod;
+
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRaze;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import com.crowsofwar.avatar.common.data.*;
 
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+@Mod.EventBusSubscriber(modid = AvatarInfo.MODID)
 public class EntityAvatarLightning extends EntityLightningBolt {
 
-	/**
-	 * Declares which state the lightning bolt is in. Whether it's in the air, hit the ground, etc.
-	 */
-	private int lightningState;
 	/**
 	 * A random long that is used to change the vertex of the lightning rendered in RenderLightningBolt
 	 **/
 	public long boltVertex;
+	/**
+	 * Declares which state the lightning bolt is in. Whether it's in the air, hit the ground, etc.
+	 */
+	private int lightningState;
 	/**
 	 * Determines the time before the EntityLightningBolt is destroyed. It is a random integer decremented over time.
 	 */
@@ -44,27 +39,13 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 	private EntityLightningSpawner spawner;
 
-	void setSpawner(EntityLightningSpawner spawner) {
-		this.spawner = spawner;
-	}
-
-	void setBoltLivingTime(int livingTime) {
-		this.boltLivingTime = livingTime;
-	}
-
-	@Override
-	public void entityInit() {
-		super.entityInit();
-	}
-
 	EntityAvatarLightning(World world, double x, double y, double z) {
 		super(world, x, y, z, false);
-		this.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
-		this.lightningState = 2;
-		this.boltVertex = this.rand.nextLong();
-		this.boltLivingTime = this.rand.nextInt(3) + 1;
+		setLocationAndAngles(x, y, z, 0.0F, 0.0F);
+		lightningState = 2;
+		boltVertex = rand.nextLong();
+		boltLivingTime = rand.nextInt(3) + 1;
 		BlockPos blockpos = new BlockPos(this);
-
 
 		if (!world.isRemote && world.getGameRules().getBoolean("doFireTick") && world.isAreaLoaded(blockpos, 10)) {
 			if (world.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(world, blockpos)) {
@@ -72,7 +53,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 			}
 
 			for (int i = 0; i < 4; ++i) {
-				BlockPos blockpos1 = blockpos.add(this.rand.nextInt(3) - 1, this.rand.nextInt(3) - 1, this.rand.nextInt(3) - 1);
+				BlockPos blockpos1 = blockpos.add(rand.nextInt(3) - 1, rand.nextInt(3) - 1, rand.nextInt(3) - 1);
 
 				if (world.getBlockState(blockpos1).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(world, blockpos1)) {
 					world.setBlockState(blockpos1, Blocks.FIRE.getDefaultState());
@@ -81,6 +62,20 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 		}
 	}
 
+	void setSpawner(EntityLightningSpawner spawner) {
+		this.spawner = spawner;
+	}
+
+	@Override
+	public void entityInit() {
+		super.entityInit();
+	}
+
+	void setBoltLivingTime(int livingTime) {
+		boltLivingTime = livingTime;
+	}
+
+	@Override
 	public SoundCategory getSoundCategory() {
 		return SoundCategory.WEATHER;
 	}
@@ -91,44 +86,46 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	@Override
 	public void onUpdate() {
 
-
-		if (this.lightningState == 2) {
-			this.world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.WEATHER, 10000.0F, 0.8F + this.rand.nextFloat() * 0.2F);
-			this.world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.WEATHER, 2.0F, 0.5F + this.rand.nextFloat() * 0.2F);
+		if (lightningState == 2) {
+			world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.WEATHER, 10000.0F,
+							0.8F + rand.nextFloat() * 0.2F);
+			world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.WEATHER, 2.0F, 0.5F + rand.nextFloat() * 0.2F);
 		}
 
-		--this.lightningState;
+		--lightningState;
 
-		if (this.lightningState < 0) {
-			if (this.boltLivingTime == 0) {
-				this.setDead();
-			} else if (this.lightningState < -this.rand.nextInt(10)) {
-				--this.boltLivingTime;
-				this.lightningState = 1;
+		if (lightningState < 0) {
+			if (boltLivingTime == 0) {
+				setDead();
+			} else if (lightningState < -rand.nextInt(10)) {
+				--boltLivingTime;
+				lightningState = 1;
 
-				if (!this.world.isRemote) {
-					this.boltVertex = this.rand.nextLong();
+				if (!world.isRemote) {
+					boltVertex = rand.nextLong();
 					BlockPos blockpos = new BlockPos(this);
 
-					if (this.world.getGameRules().getBoolean("doFireTick") && this.world.isAreaLoaded(blockpos, 10) && this.world.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(this.world, blockpos)) {
-						this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
+					if (world.getGameRules().getBoolean("doFireTick") && world.isAreaLoaded(blockpos, 10)
+									&& world.getBlockState(blockpos).getMaterial() == Material.AIR && Blocks.FIRE.canPlaceBlockAt(world, blockpos)) {
+						world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
 					}
 				}
 			}
 		}
 
-		if (this.lightningState >= 0) {
-			if (this.world.isRemote) {
-				this.world.setLastLightningBolt(2);
-			} else if (!this.world.isRemote) {
-				List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB
-						(this.posX - 1.50D, this.posY - 1.5D, this.posZ - 1.5D, this.posX + 1.5D, this.posY + 6.0D + 1.5D, this.posZ + 1.5D));
+		if (lightningState >= 0) {
+			if (world.isRemote) {
+				world.setLastLightningBolt(2);
+			} else {
+				List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(this,
+																			   new AxisAlignedBB(posX - 1.50D, posY - 1.5D, posZ - 1.5D, posX + 1.5D,
+																								 posY + 6.0D + 1.5D, posZ + 1.5D));
 
 				for (Entity entity : list) {
 					if (entity instanceof AvatarEntity) {
 						((AvatarEntity) entity).onFireContact();
 					} else if (entity instanceof EntityLivingBase) {
-						handleCollision(entity);
+						handleCollision((EntityLivingBase) entity);
 					}
 
 				}
@@ -159,7 +156,6 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 		}
 		collided.setFire(collided.isImmuneToFire() ? 0 : 8);
 	}
-
 
 	private void damageEntity(Entity entity) {
 		if (world.isRemote) {
@@ -193,7 +189,6 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 		}
 
 	}
-
 
 	/**
 	 * (abstract) Protected helper method to read subclass entity data from NBT.

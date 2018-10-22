@@ -17,12 +17,14 @@
 
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.network.PacketRedirector;
-import com.crowsofwar.gorecore.util.AccountUUIDs;
-import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.relauncher.Side;
+
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.gorecore.util.*;
+import io.netty.buffer.ByteBuf;
 
 import java.util.UUID;
 
@@ -30,7 +32,6 @@ import java.util.UUID;
  * Sent from client to server to request data about a player.
  */
 public class PacketSRequestData extends AvatarPacket<PacketSRequestData> {
-
 	private UUID asking;
 
 	public PacketSRequestData() {
@@ -41,7 +42,7 @@ public class PacketSRequestData extends AvatarPacket<PacketSRequestData> {
 	}
 
 	public PacketSRequestData(EntityPlayer player) {
-		this.asking = AccountUUIDs.getId(player.getName());
+		asking = AccountUUIDs.getId(player.getName());
 	}
 
 	@Override
@@ -54,18 +55,30 @@ public class PacketSRequestData extends AvatarPacket<PacketSRequestData> {
 		GoreCoreByteBufUtil.writeUUID(buf, asking);
 	}
 
-	@Override
-	public Side getReceivedSide() {
-		return Side.SERVER;
-	}
-
 	public UUID getAskedPlayer() {
 		return asking;
 	}
 
-	@Override
-	protected AvatarPacket.Handler<PacketSRequestData> getPacketHandler() {
-		return PacketRedirector::redirectMessage;
-	}
+	public static class Handler extends AvatarPacketHandler<PacketSRequestData, IMessage> {
 
+		/**
+		 * This method will always be called on the main thread. In the case that that's not wanted, create your own {@link IMessageHandler}
+		 *
+		 * @param message The packet that is received
+		 * @param ctx     The context to that packet
+		 * @return An optional packet to reply with, or null
+		 */
+		@Override
+		IMessage avatarOnMessage(PacketSRequestData message, MessageContext ctx) {
+			UUID id = message.getAskedPlayer();
+			EntityPlayer player = AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().player.world, id);
+			if (player == null) {
+				AvatarLog.warnHacking(ctx.getServerHandler().player.getName(),
+									  "Sent request data for a player with account '" + id + "', but that player is not in the world.");
+				return null;
+			}
+			BendingData.get(player).saveAll();
+			return null;
+		}
+	}
 }

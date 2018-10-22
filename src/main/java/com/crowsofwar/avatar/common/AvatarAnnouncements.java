@@ -1,15 +1,13 @@
 package com.crowsofwar.avatar.common;
 
-import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.AvatarLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
+import com.crowsofwar.avatar.*;
+
+import java.io.*;
+import java.net.*;
 import java.util.*;
 
 /**
@@ -18,13 +16,13 @@ import java.util.*;
  *
  * @author CrowsOfWar
  */
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+@Mod.EventBusSubscriber(modid = AvatarInfo.MODID)
 public class AvatarAnnouncements {
 
 	public static final String ANNOUNCEMENT_URL = "https://raw.githubusercontent.com/CrowsOfWar/AvatarMod-Announcements/master/announcements.txt";
 
 	private static List<Announcement> announcements;
-	
+
 	@SubscribeEvent
 	public static void onLogin(PlayerEvent.PlayerLoggedInEvent e) {
 
@@ -66,9 +64,7 @@ public class AvatarAnnouncements {
 			URL u = new URL(ANNOUNCEMENT_URL);
 			URLConnection conn = u.openConnection();
 			conn.setConnectTimeout(3000);
-			BufferedReader in = new BufferedReader(
-					new InputStreamReader(
-							conn.getInputStream()));
+			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
 			String inputLine;
 			while ((inputLine = in.readLine()) != null) {

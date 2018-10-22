@@ -1,19 +1,19 @@
 package com.crowsofwar.avatar.common;
 
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.World;
+
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Sometimes ability executions are blocked due to cooldown, but should still be fired after the
@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author CrowsOfWar
  */
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+@Mod.EventBusSubscriber(modid = AvatarInfo.MODID)
 public class QueuedAbilityExecutionHandler {
 
 	private static final List<QueuedAbilityExecution> abilityExecutions = new ArrayList<>();
@@ -38,21 +38,18 @@ public class QueuedAbilityExecutionHandler {
 			while (iterator.hasNext()) {
 				QueuedAbilityExecution par = iterator.next();
 				par.ticks--;
-				if (par.ticks <= 0 && par.data.getMiscData().getAbilityCooldown() == 0 && par
-						.data.getMiscData().getCanUseAbilities()) {
-					par.ability.execute(new AbilityContext(par.data, par.raytrace, par.ability,
-							par.entity, par.powerRating));
+				if (par.ticks <= 0 && par.data.getMiscData().getAbilityCooldown() == 0 && par.data.getMiscData().getCanUseAbilities()) {
+					par.ability.execute(new AbilityContext(par.data, par.raytrace, par.ability, par.entity, par.powerRating));
 					iterator.remove();
 				}
 			}
 		}
 	}
 
-	public static void queueAbilityExecution(EntityLivingBase entity, BendingData data, Ability
-			ability, Raytrace.Result raytrace, double powerRating) {
+	public static void queueAbilityExecution(EntityLivingBase entity, BendingData data, Ability ability, Raytrace.Result raytrace,
+					double powerRating) {
 
-		abilityExecutions.add(new QueuedAbilityExecution(data.getMiscData().getAbilityCooldown(), entity, data,
-				ability, raytrace, powerRating));
+		abilityExecutions.add(new QueuedAbilityExecution(data.getMiscData().getAbilityCooldown(), entity, data, ability, raytrace, powerRating));
 
 	}
 
@@ -65,8 +62,8 @@ public class QueuedAbilityExecutionHandler {
 		private final double powerRating;
 		private int ticks;
 
-		public QueuedAbilityExecution(int ticks, EntityLivingBase entity, BendingData data,
-									  Ability ability, Raytrace.Result raytrace, double powerRating) {
+		public QueuedAbilityExecution(int ticks, EntityLivingBase entity, BendingData data, Ability ability, Raytrace.Result raytrace,
+						double powerRating) {
 			this.ticks = ticks;
 			this.entity = entity;
 			this.data = data;

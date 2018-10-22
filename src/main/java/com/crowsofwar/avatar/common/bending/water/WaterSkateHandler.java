@@ -16,29 +16,24 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
+import net.minecraft.block.*;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.World;
+
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.particle.*;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import java.util.List;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_JUMP;
-import static com.crowsofwar.avatar.common.bending.StatusControl.SKATING_START;
+import static com.crowsofwar.avatar.common.bending.StatusControl.*;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
@@ -105,7 +100,7 @@ public class WaterSkateHandler extends TickHandler {
 
 		if (!player.world.isRemote && !shouldSkate(player, abilityData)) {
 			return true;
-		} else {
+		} else if (!world.isRemote) {
 
 			float requiredChi = STATS_CONFIG.chiWaterSkateSecond / 20f;
 			requiredChi -= powerRating / 100 * 0.25f;
@@ -141,13 +136,12 @@ public class WaterSkateHandler extends TickHandler {
 				targetVelocity = targetVelocity.times(targetWeight);
 
 				double targetSpeedWeight = 0.2;
-				double speed = currentVelocity.magnitude() * (1 - targetSpeedWeight)
-						+ targetSpeed * targetSpeedWeight;
+				double speed = currentVelocity.magnitude() * (1 - targetSpeedWeight) + targetSpeed * targetSpeedWeight;
 
 				Vector newVelocity = currentVelocity.plus(targetVelocity).normalize().times(speed);
 
-				Vector playerMovement = toRectangular(toRadians(player.rotationYaw - 90),
-						toRadians(player.rotationPitch)).times(player.moveStrafing * 0.02);
+				Vector playerMovement = toRectangular(toRadians(player.rotationYaw - 90), toRadians(player.rotationPitch))
+								.times(player.moveStrafing * 0.02);
 
 				newVelocity = newVelocity.plus(playerMovement);
 
@@ -155,9 +149,9 @@ public class WaterSkateHandler extends TickHandler {
 				player.motionY = 0;
 				player.motionZ = newVelocity.z();
 
-				if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
-					AxisAlignedBB box = new AxisAlignedBB(player.posX - 1.5, player.posY,
-							player.posZ - 1.5, player.posX, player.posY + 1.5, player.posZ + 1.5);
+				if (abilityData.isMasterPath(AbilityTreePath.SECOND) && !world.isRemote) {
+					AxisAlignedBB box = new AxisAlignedBB(player.posX - 1.5, player.posY, player.posZ - 1.5, player.posX, player.posY + 1.5,
+														  player.posZ + 1.5);
 					List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 					for (EntityLivingBase target : nearby) {
 						if (target != player) {
@@ -168,12 +162,10 @@ public class WaterSkateHandler extends TickHandler {
 				}
 
 				if (player.ticksExisted % 5 == 0) {
-					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
-							SoundCategory.PLAYERS, 0.4f, 2f);
+					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH, SoundCategory.PLAYERS, 0.4f, 2f);
 				}
-				particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 50, 60,
-						Vector.getEntityPos(player).plus(0, .1, 0), new Vector(.2, 0.2, .2));
-
+				particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 50, 60, Vector.getEntityPos(player).plus(0, .1, 0),
+										 new Vector(.2, 0.2, .2));
 
 				if (player.ticksExisted % 10 == 0) {
 					abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
@@ -202,19 +194,15 @@ public class WaterSkateHandler extends TickHandler {
 		boolean allowWaterfallSkating = data.getLevel() >= 2;
 		boolean allowGroundSkating = data.isMasterPath(AbilityTreePath.FIRST);
 		boolean onGround = (below.getBlock() != Blocks.AIR);
-		boolean onWaterBendableBlock = below.getBlock() == Blocks.SNOW || below.getBlock() == Blocks.ICE
-				|| below.getBlock() == Blocks.PACKED_ICE || below.getBlock() == Blocks.FROSTED_ICE;
+		boolean onWaterBendableBlock = below.getBlock() == Blocks.SNOW || below.getBlock() == Blocks.ICE || below.getBlock() == Blocks.PACKED_ICE
+						|| below.getBlock() == Blocks.FROSTED_ICE;
 		boolean onSnowLayer = playerPos.getBlock() == Blocks.SNOW_LAYER;
-		boolean inWaterBlock = ((below.getBlock() == Blocks.WATER)
-				&& (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating)) || (player.world.isRainingAt(player.getPosition()) && onGround) || onWaterBendableBlock || onSnowLayer;
-
+		boolean inWaterBlock = ((below.getBlock() == Blocks.WATER) && (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating)) || (
+						player.world.isRainingAt(player.getPosition()) && onGround) || onWaterBendableBlock || onSnowLayer;
 
 		if (allowGroundSkating && onGround) {
-			return (!player.isSneaking() && surface != -1
-					&& surface - player.posY <= 3);
-		} else return !player.isSneaking() && (player.isInWater() || inWaterBlock) && surface != -1
-				&& surface - player.posY <= 3;
-
+			return (!player.isSneaking() && surface != -1 && surface - player.posY <= 3);
+		} else return !player.isSneaking() && (player.isInWater() || inWaterBlock) && surface != -1 && surface - player.posY <= 3;
 
 	}
 

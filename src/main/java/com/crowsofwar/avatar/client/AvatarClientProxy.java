@@ -45,7 +45,6 @@ import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.mob.*;
 import com.crowsofwar.avatar.common.gui.*;
-import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.gorecore.data.*;
@@ -59,9 +58,7 @@ import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerE
 
 @SideOnly(Side.CLIENT)
 public class AvatarClientProxy implements AvatarCommonProxy {
-
 	private Minecraft mc;
-	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;
 	private PlayerDataFetcher<AvatarPlayerData> clientFetcher;
 	private boolean displayedMainMenu;
@@ -73,7 +70,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 
 		displayedMainMenu = false;
 
-		packetHandler = new PacketHandlerClient();
 		AvatarUiRenderer.instance = new AvatarUiRenderer();
 
 		inputHandler = new ClientInput();
@@ -132,11 +128,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	}
 
 	@Override
-	public IPacketHandler getClientPacketHandler() {
-		return packetHandler;
-	}
-
-	@Override
 	public double getPlayerReach() {
 		PlayerControllerMP pc = mc.playerController;
 		double reach = pc.getBlockReachDistance();
@@ -188,8 +179,11 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		return clientFetcher;
 	}
 
+	/**
+	 * @return An IThreadListener
+	 */
 	@Override
-	public IThreadListener getClientThreadListener() {
+	public IThreadListener getThreadListener() {
 		return mc;
 	}
 
@@ -244,7 +238,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@SuppressWarnings("unchecked")
 	private void initAllKeybindings() {
 		try {
-
 			Field field = KeyBinding.class.getDeclaredFields()[0];
 			field.setAccessible(true);
 			allKeybindings = (Map<String, KeyBinding>) field.get(null);

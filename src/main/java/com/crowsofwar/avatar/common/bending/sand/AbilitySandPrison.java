@@ -1,5 +1,12 @@
 package com.crowsofwar.avatar.common.bending.sand;
 
+import net.minecraft.block.Block;
+import net.minecraft.entity.*;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -7,13 +14,6 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntitySandPrison;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -46,8 +46,7 @@ public class AbilitySandPrison extends Ability {
 			Vector start = Vector.getEyePos(entity);
 			Vector direction = Vector.getLookRectangular(entity);
 
-			Predicate<Entity> filter = candidate -> candidate != entity && candidate instanceof
-					EntityLivingBase;
+			Predicate<Entity> filter = candidate -> candidate != entity && candidate instanceof EntityLivingBase;
 			List<Entity> hit = Raytrace.entityRaytrace(world, start, direction, 10, filter);
 
 			if (!hit.isEmpty()) {
@@ -57,8 +56,7 @@ public class AbilitySandPrison extends Ability {
 				EntityLivingBase prisoner = (EntityLivingBase) hit.get(0);
 				if (canImprison(prisoner, allowEarthbendable)) {
 					EntitySandPrison.imprison(prisoner, entity, this);
-					world.playSound(null, prisoner.getPosition(), SoundEvents.BLOCK_SAND_STEP,
-							SoundCategory.PLAYERS, 1, 1);
+					world.playSound(null, prisoner.getPosition(), SoundEvents.BLOCK_SAND_STEP, SoundCategory.PLAYERS, 1, 1);
 
 					ctx.getAbilityData().addXp(SKILLS_CONFIG.sandPrisoned);
 
@@ -88,7 +86,7 @@ public class AbilitySandPrison extends Ability {
 			blocksList = ConfigStats.STATS_CONFIG.sandBlocks;
 		}
 
-		return blocksList.contains(standingOn) || true;
+		return blocksList.contains(standingOn);
 
 	}
 

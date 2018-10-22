@@ -16,9 +16,12 @@
 */
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.network.PacketRedirector;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+
+import com.crowsofwar.avatar.common.data.*;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.Objects;
 
 /**
  * @author CrowsOfWar
@@ -33,14 +36,23 @@ public class PacketSWallJump extends AvatarPacket<PacketSWallJump> {
 	public void avatarToBytes(ByteBuf buf) {
 	}
 
-	@Override
-	protected Side getReceivedSide() {
-		return Side.SERVER;
+	public static class Handler extends AvatarPacketHandler<PacketSWallJump, IMessage> {
+		/**
+		 * This method will always be called on the main thread. In the case that that's not wanted, create your own {@link IMessageHandler}
+		 *
+		 * @param message The packet that is received
+		 * @param ctx     The context to that packet
+		 * @return An optional packet to reply with, or null
+		 */
+		@Override
+		IMessage avatarOnMessage(PacketSWallJump message, MessageContext ctx) {
+			WallJumpManager jumpManager = Objects.requireNonNull(Bender.get(ctx.getServerHandler().player)).getWallJumpManager();
+			if (jumpManager.knowsWallJump()) {
+				if (jumpManager.canWallJump()) {
+					jumpManager.doWallJump(jumpManager.getWallJumpParticleType());
+				}
+			}
+			return null;
+		}
 	}
-
-	@Override
-	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketSWallJump> getPacketHandler() {
-		return PacketRedirector::redirectMessage;
-	}
-
 }
