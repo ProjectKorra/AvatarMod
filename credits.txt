@@ -1,39 +1,106 @@
 AvatarMod2 Credits
-------------------
+---------------------
+Coders:
+- Mahtaran
+- ArcaneDragon
+- CrowsOfWar (Retired, original creator)
 
-Most (80%) Code written by CrowsOfWar- All of the internal API, most abilities.
-Some Code written by FavouriteDragon- Some abilities.
-Some Code written by Mahtaran- Some internal reworking.
+Modelers:
+- DragonLuch
+- Talhanation
+- Airswift101
+- BlueGlaciers
 
-All models animated by CrowsOfWar
-Sky bison armor/saddle item texture by CrowsOfWar
-Ostrich armor textures by CrowsOfWar
-Ability icons by CrowsOfWar: explosive_pillar, sand_prison, lightning_redirect
-Bending backgrounds by CrowsOfWar
-All other ability icons from a5.0 done by Cornelious.
-Skillmenu tabs from Adingo - extracted from image here: bit.ly/2CvwHS8
+Artists:
+- Kisutora
+- Cornelious
+- Hahdrim
+- Alexutzu
+- MrPerryGuy
+- TheBoogeyMan
+---------------------
+Code:
+	CrowsOfWar:
+		- Original developer, most base code
+	Mahtaran:
+		- Mostly internal stability changes.
+	FavouriteDragon:
+		- Mostly additional abilities.
 
-Ostrich horse models & textures by talhanation
- model code cleanup by CrowsOfWar
-Otter penguin models & textures by talhanation
+Models:
+	CrowsOfWar:
+		- Some model code cleanup
+	Talhanation:
+		- Ostrich Horse models
+		- Otter Penguin models
+		- Sand Prison models
+	Captn_Dubz:
+		- Sky Bison model
 
-Sand prison models by talhanation
- model code cleanup by CrowsOfWar
+Animations:
+	CrowsOfWar:
+		- All animations for models
 
-Most radial menu and ability card icons by EduMC
-Airbender/firebender skins by EduMC
-All other ones done by Cornelious
+Textures:
+	CrowsOfWar:
+		- Sky Bison Armour/Saddle Item textures
+		- Ostrich Armour textures
+		- Ability icons:
+			- explosive_pillar
+			- sand_prison
+			- lightning_redirect
+		- Bending backgrounds
+	FavouriteDragon:
+		- Ability icons:
+			- ice_prison
+			- ice_burst
+			- fire_jump
+			- sandstorm
+			- explosion
+			- cleanse
+			- cloudburst
+			- earthspike
+			- lightning_arc
+			- lighting_lightning_spear
+			- lightning_strike
+			- purify
+			- restore
+			- slipstream
+			- water_cannon
+		- Lightning Status Control icon
+	Talhanation:
+		- Ostrich Horse textures
+		- Otter Penguin textures
+		- Sand Prison textures.
+	Adingo:
+		- Skill Menu Tabs (extracted from bit.ly/2CvwHS8)
+	EduMC:
+		- Radial Menu icons
+		- Ability Card icons
+		- Airbender skins
+		- Firebender skins
+	Cornelious:
+		- All other ability icons from 1.5.0-alpha (a5.0)
+		- Redid all FavouriteDragon's Ability icons
+		- All other skins
+	Captn_Dubz:
+		- Sky Bison texture
 
-Ability icons by FavouriteDragon: ice_prison, ice_burst, fire_jump, sandstorm, explosion, cleanse,
-  cloudburst, earthspike, lightning_arc, lighting_lightning_spear, lightning_strike, purify,
-  restore, slipstream, water_cannon
-  All redone by Cornelious
-Lightning status control icon by FavouriteDragon
-
-Sky bison model/texture by Captn_Dubz
-
-Translations by Ferrujado, SporYou, ExterMiner
-Polish translations by Gremter
-Spanish translations by Madwrist (Argentinian Spanish, Spanish, Mexican Spanish, Uruguayan Spanish,
-  Venezuelan Spanish)
-Russian translations by Mo-og
+Translations:
+	Ferrujado:
+		- Unknown
+	SporYou:
+		- Unknown
+	ExtereMiner:
+		- Unknown
+	Gremter:
+		- Polish translations
+	Madwrist:
+		- Spanish translations:
+			- Spanish
+			- Argentinian Spanish
+			- Mexican Spanish
+			- Uruguayan Spanish
+			- Venezuelan Spanish
+	Mo-og:
+		- Russian translations

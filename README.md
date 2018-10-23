@@ -1,18 +1,17 @@
 Avatar Mod 2
 ============
-
-This repository hosts the source code for the [Avatar Mod 2 project](http://av2.io), currently
+This repository hosts the source code for the [Avatar Mod 2 project](http://avatar.amuzil.com), currently
 developed by members of the ProjectKorra team. This project is a modification for Minecraft which
-adds content from [*Avatar: The Last Airbender*](https://en.wikipedia.org/wiki/Avatar:_The_Last_Airbender).
+adds content from [*Avatar: The Last Airbender*](https://en.wikipedia.org/wiki/Avatar:_The_Last_Airbender) and [*The Legend of Korra*](https://en.wikipedia.org/wiki/The_Legend_of_Korra).
 
-The mod already has all four major types of bending; many unique, multipurpose Abilities; and mobs
-and animals from the Avatar world. More information is available at the [wiki](http://projectkorra.wikia.com/wiki/Av2).
+The mod already has all four major types of bending; many unique, multipurpose abilities; and mobs
+and animals from the Avatar world. More information is available at the (incomplete) [wiki](https://projectkorra.wikia.com/wiki/Avatar_Mod_2).
 
 Important: Looking for developers
 --------------------------------
 
-We are currently looking for developers to help existing developers on the mod. More information is available through FavouriteDragon or Mist.
-
+We are currently looking for developers to help existing developers on the mod.  
+For more information, see the contributing section further down this document.  
 Thank you! :)
 
 End Users
@@ -20,9 +19,9 @@ End Users
 
 If you are an end-user planning to play the mod, information is available here:
 
-* [**Official AvatarMod Wiki**](http://projectkorra.wikia.com/wiki/Av2)
+* [Official (Incomplete) AvatarMod Wiki](http://projectkorra.wikia.com/wiki/Av2)
 * [Download/Install](http://projectkorra.wikia.com/wiki/Av2:Install)
-* [MinecraftForums](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2726598)
+* [Minecraft Forum](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2726598)
 * [Community ideas Trello](https://trello.com/b/hVroJUQM/av2-development)
 * [MIT License](https://opensource.org/licenses/MIT)
 
@@ -34,18 +33,18 @@ for other modelers or developers, though pull requests are always welcome.
 
 If you are looking to join the team to create this mod, please contact with any of the following
 ways:
+* FavouriteDragon, the current manager of the Av2 project - reachable via [mail](mailto:ninjadragon008@icloud.com) or [on our Discord server](https://discord.gg/jPVMETb)
+* Mahtaran, the main developer of the Av2 project - reachable via [mail](mailto:mahtaran@amuzil.com) or [on our Discord server](https://discord.gg/jPVMETb)
+* Mist, the creator and owner of the ProjectKorra group - reachable via the (currently broken) application form at [projectkorra.com](http://projectkorra.com/join-the-team/)  
 
-* FavouriteDragon, the current lead developer for the Av2 project - reachable via ninjadragon008@icloud.com
-* Mist, the creator and owner of the ProjectKorra group - apply at [projectkorra.com](http://projectkorra.com/join-the-team/)
+We will get back to you shortly.
 
-We will then contact you with information about getting set up and possible work to complete.
-
-Code setup
+Repository setup
 ----------
 
-If you want to mess around with the code, but not join the team, there is still documentation
-available to everybody at [readthedocs](http://avatarmod-docs.readthedocs.io/en/latest/).
-Instructions on installing the code are [here](http://avatarmod-docs.readthedocs.io/en/latest/setup.html).
+If you want to mess around with the code, but not join the team, there is documentation
+available to everybody at [readthedocs](http://avatarmod-docs.readthedocs.io/en/latest/).  
+Instructions on setting up the repository are [here](http://avatarmod-docs.readthedocs.io/en/latest/setup.html).
 
 Credits
 -------
