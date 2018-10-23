@@ -3,6 +3,7 @@ AvatarMod2 Credits
 Coders:
 - Mahtaran
 - ArcaneDragon
+- Mnesikos
 - CrowsOfWar (Retired, original creator)
 
 Modelers:
@@ -39,7 +40,10 @@ Models:
 
 Animations:
 	CrowsOfWar:
-		- All animations for models
+		- Almost all animations for models
+	Mnesikos:
+		- Sky Bison animations
+		- Otter Penguins animations
 
 Textures:
 	CrowsOfWar:
