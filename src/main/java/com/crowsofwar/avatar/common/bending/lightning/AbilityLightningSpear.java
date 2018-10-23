@@ -16,26 +16,20 @@
 */
 package com.crowsofwar.avatar.common.bending.lightning;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.fire.Firebending;
-import com.crowsofwar.avatar.common.data.AbilityData;
+import net.minecraft.entity.*;
+import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.gorecore.util.Vector.getEyePos;
-import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
+import static com.crowsofwar.gorecore.util.Vector.*;
 
 /**
  * @author CrowsOfWar
@@ -60,7 +54,6 @@ public class AbilityLightningSpear extends Ability {
 
 		if (bender.consumeChi(STATS_CONFIG.chiLightningSpear)) {
 
-
 			float size = 1.2F;
 			float damage = 2F;
 			if (abilityData.getLevel() >= 2) {
@@ -78,7 +71,7 @@ public class AbilityLightningSpear extends Ability {
 			}
 
 			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-				size =  1.2F;
+				size = 1.2F;
 				damage = 6;
 			}
 
@@ -99,7 +92,6 @@ public class AbilityLightningSpear extends Ability {
 				Vector playerPos = getEyePos(entity);
 				target = playerPos.plus(getLookRectangular(entity).times(spear.getSize()));
 			}
-
 
 			spear.setPosition(target);
 			spear.setOwner(entity);

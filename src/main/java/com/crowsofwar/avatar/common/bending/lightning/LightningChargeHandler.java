@@ -1,22 +1,18 @@
 package com.crowsofwar.avatar.common.bending.lightning;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.EntityLightningArc;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.*;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityLightningArc;
+import com.crowsofwar.avatar.common.particle.*;
+import com.crowsofwar.gorecore.util.Vector;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -35,7 +31,7 @@ public abstract class LightningChargeHandler extends TickHandler {
 
 	LightningChargeHandler(int id) {
 		super(id);
-		this.particleSpawner = new NetworkParticleSpawner();
+		particleSpawner = new NetworkParticleSpawner();
 	}
 
 	/**
@@ -66,10 +62,10 @@ public abstract class LightningChargeHandler extends TickHandler {
 
 		if (duration % 3 == 0) {
 			for (int i = 0; i < 8; i++) {
-				Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-						i * 45), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
+				Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i * 45), 0).times(inverseRadius)
+								.withY(entity.getEyeHeight() / 2);
 				particleSpawner.spawnParticles(world, AvatarParticles.getParticleElectricity(), 1, 2, lookpos.x() + entity.posX,
-						lookpos.y() + entity.getEntityBoundingBox().minY, lookpos.z() + entity.posZ, 2, 1.2, 2);
+											   lookpos.y() + entity.getEntityBoundingBox().minY, lookpos.z() + entity.posZ, 2, 1.2, 2);
 			}
 		}
 

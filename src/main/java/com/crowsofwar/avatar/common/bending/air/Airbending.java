@@ -17,11 +17,11 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
-import com.crowsofwar.avatar.common.gui.MenuTheme;
-import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 import net.minecraft.nbt.NBTTagCompound;
+
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.gui.*;
+import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
 
 import java.awt.*;
 import java.util.UUID;
@@ -48,15 +48,13 @@ public class Airbending extends BendingStyle {
 		ThemeColor edge = new ThemeColor(dark, dark);
 		ThemeColor icon = new ThemeColor(iconClr, iconClr);
 		MenuTheme theme = new MenuTheme(background, edge, icon, 0xE8E5DF);
-		this.menu = new BendingMenuInfo(theme, this);
+		menu = new BendingMenuInfo(theme, this);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 
 	}
-
-
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {

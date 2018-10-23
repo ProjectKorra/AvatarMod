@@ -16,30 +16,26 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+
+import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
+import org.joml.*;
 import org.lwjgl.opengl.GL11;
 
-import static net.minecraft.client.renderer.GlStateManager.disableBlend;
-import static net.minecraft.client.renderer.GlStateManager.enableBlend;
+import static net.minecraft.client.renderer.GlStateManager.*;
 
 /**
  * @author CrowsOfWar
  */
 public class RenderAirBubble extends Render<EntityAirBubble> {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/entity/air_bubble.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/entity/air_bubble.png");
 
 	/**
 	 * @param renderManager
@@ -49,8 +45,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 	}
 
 	@Override
-	public void doRender(EntityAirBubble entity, double xx, double yy, double zz, float entityYaw,
-						 float partialTicks) {
+	public void doRender(EntityAirBubble entity, double xx, double yy, double zz, float entityYaw, float partialTicks) {
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 
@@ -95,8 +90,8 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 
 	}
 
-	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,
-							float rotateX, float rotateY, float rotateZ) {
+	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size, float rotateX, float rotateY,
+					float rotateZ) {
 		Matrix4f mat = new Matrix4f();
 		mat.translate(x, y + .4f, z);
 
@@ -126,8 +121,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		drawQuad(2, rtb, rbb, lbb, ltb, u1, v1, u2, v2); // +z
 	}
 
-	private void drawQuad(int normal, Vector4f pos1, Vector4f pos2, Vector4f pos3, Vector4f pos4, double u1,
-						  double v1, double u2, double v2) {
+	private void drawQuad(int normal, Vector4f pos1, Vector4f pos2, Vector4f pos3, Vector4f pos4, double u1, double v1, double u2, double v2) {
 
 		Tessellator t = Tessellator.getInstance();
 		BufferBuilder vb = t.getBuffer();

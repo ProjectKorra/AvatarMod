@@ -1,18 +1,19 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.mob.EntityBender;
+
+@Mod.EventBusSubscriber(modid = AvatarInfo.MODID)
 public class FirePassiveHandler {
 
 	@SubscribeEvent

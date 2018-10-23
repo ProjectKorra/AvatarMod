@@ -16,16 +16,13 @@
 */
 package com.crowsofwar.gorecore.util;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 
 /**
  * <p>
  * Contains utility methods for parsing JSON, using Google's GSON API
  * </p>
- * 
+ *
  * @author Mahtaran
  */
 public final class JsonUtils {
@@ -33,18 +30,16 @@ public final class JsonUtils {
 	 * <p>
 	 * Gets the JsonElement at a certain path.
 	 * </p>
-	 * 
-	 * @param jsonString
-	 *            The JSON String
-	 * @param path
-	 *            The path where to get the element from, with subsections divided by dots (<code>.</code>)
+	 *
+	 * @param jsonString The JSON String
+	 * @param path       The path where to get the element from, with subsections divided by dots (<code>.</code>)
 	 * @return The JsonElement at the path
 	 */
 	public static JsonElement fromString(String jsonString, String path) throws JsonSyntaxException {
 		JsonObject json = new GsonBuilder().create().fromJson(jsonString, JsonObject.class);
 		// Prefixed by two slashes because otherwise it's a special delimiter
-    		String[] segments = path.split("\\.");
-    		for (String segment : segments) {
+		String[] segments = path.split("\\.");
+		for (String segment : segments) {
 			if (json != null) {
 				JsonElement element = json.get(segment);
 				if (!element.isJsonObject()) {

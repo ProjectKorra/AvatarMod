@@ -16,20 +16,15 @@
 */
 package com.crowsofwar.avatar.common.config;
 
+import net.minecraft.entity.*;
+import net.minecraft.item.Item;
+
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
-import com.crowsofwar.gorecore.config.ConfigLoader;
-import com.crowsofwar.gorecore.config.Load;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import scala.actors.threadpool.Arrays;
+import com.crowsofwar.gorecore.config.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author CrowsOfWar
@@ -106,7 +101,6 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_DROP.put("sheep", 0.25);
 		DEFAULT_SCROLL_TYPE.put("sheep", "air");
 
-
 		DEFAULT_SCROLL_DROP.put("mooshroom", 1.0);
 		DEFAULT_SCROLL_TYPE.put("mooshroom", "earth");
 		DEFAULT_SCROLL_DROP.put("cave_spider", 2.5);
@@ -135,36 +129,29 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_DROP.put("witch", 5.0);
 		DEFAULT_SCROLL_DROP.put("enderman", 10.0);
 
-
-
 	}
 
 	@Load
 	public int bisonMinDomestication = 500, bisonMaxDomestication = 800;
 
 	@Load
-	public int bisonRiderTameness = 800, bisonOwnableTameness = 900, bisonLeashTameness = 1000,
-			bisonChestTameness = 1000;
+	public int bisonRiderTameness = 800, bisonOwnableTameness = 900, bisonLeashTameness = 1000, bisonChestTameness = 1000;
 
 	@Load
 	public int bisonGrassFoodBonus = 5, bisonRideOneSecondTameness = 3;
 
 	@Load
 	public float bisonBreedMinMinutes = 60, bisonBreedMaxMinutes = 120;
-
+	@Load
+	public int maxNumberOfBenders = 3;
 	@Load
 	private Map<String, Integer> bisonFoods;
 	private Map<Item, Integer> bisonFoodList;
-
 	@Load
 	private Map<String, Double> scrollDropChance;
 	@Load
 	private Map<String, String> scrollType;
-
-	@Load
-	public int maxNumberOfBenders = 3;
 	//The largest of amount of benders that can spawn in a village
-
 	@Load
 	private Map<String, Integer> scrollTradeItems;
 	private Map<Item, Integer> tradeItems;
@@ -172,9 +159,6 @@ public class ConfigMobs {
 	private Map<Item, Integer> airTradeItems;
 	private Map<String, Integer> fireScrollTradeItems;
 	private Map<Item, Integer> fireTradeItems;
-
-
-
 
 	public static void load() {
 		MOBS_CONFIG.scrollTradeItems = DEFAULT_TRADE_ITEMS;

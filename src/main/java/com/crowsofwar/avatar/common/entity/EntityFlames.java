@@ -17,27 +17,23 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.fire.Firebending;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
-import java.util.Objects;
+import net.minecraftforge.fml.relauncher.*;
+
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
+
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
@@ -62,14 +58,14 @@ public class EntityFlames extends AvatarEntity {
 		setSize(0.1f, 0.1f);
 	}
 
-	@Override
-	public BendingStyle getElement() {
-		return new Firebending();
-	}
-
 	public EntityFlames(World world, EntityLivingBase owner) {
 		this(world);
 		this.owner = owner;
+	}
+
+	@Override
+	public BendingStyle getElement() {
+		return new Firebending();
 	}
 
 	@Override
@@ -102,8 +98,7 @@ public class EntityFlames extends AvatarEntity {
 
 		if (velocity().sqrMagnitude() <= 0.5 * 0.5 || collided) setDead();
 
-		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.3,
-				true);
+		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.3, true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
 			setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.5));
@@ -111,11 +106,9 @@ public class EntityFlames extends AvatarEntity {
 			// Try to light firest
 			if (lightsFires && sideHit != EnumFacing.DOWN && !world.isRemote) {
 
-				BlockPos bouncingOff = getPosition().add(-sideHit.getFrontOffsetX(),
-						-sideHit.getFrontOffsetY(), -sideHit.getFrontOffsetZ());
+				BlockPos bouncingOff = getPosition().add(-sideHit.getFrontOffsetX(), -sideHit.getFrontOffsetY(), -sideHit.getFrontOffsetZ());
 
-				if (sideHit == EnumFacing.UP || world.getBlockState(bouncingOff).getBlock()
-						.isFlammable(world, bouncingOff, sideHit)) {
+				if (sideHit == EnumFacing.UP || world.getBlockState(bouncingOff).getBlock().isFlammable(world, bouncingOff, sideHit)) {
 
 					world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
 
@@ -129,8 +122,8 @@ public class EntityFlames extends AvatarEntity {
 			BendingData data = Bender.get(owner).getData();
 			AbilityData abilityData = data.getAbilityData("flamethrower");
 
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-					entity -> entity != owner && !(entity instanceof EntityFlames));
+			List<Entity> collided = world
+							.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner && !(entity instanceof EntityFlames));
 
 			for (Entity entity : collided) {
 
@@ -145,8 +138,7 @@ public class EntityFlames extends AvatarEntity {
 					additionalDamage = 2 + (abilityData.getTotalXp() - 50) / 25;
 				}
 				additionalDamage *= damageMult;
-				if (entity.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(entity, owner),
-						additionalDamage)) {
+				if (entity.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(entity, owner), additionalDamage)) {
 					BattlePerformanceScore.addSmallScore(owner);
 				}
 

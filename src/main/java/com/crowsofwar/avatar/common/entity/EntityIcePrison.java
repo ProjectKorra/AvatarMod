@@ -16,31 +16,24 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.ice.Icebending;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
-import com.google.common.base.Optional;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.network.datasync.*;
+import net.minecraft.potion.*;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.ice.Icebending;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
+import com.google.common.base.Optional;
+
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -50,13 +43,11 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class EntityIcePrison extends AvatarEntity {
 
 	public static final DataParameter<Optional<UUID>> SYNC_IMPRISONED = EntityDataManager
-			.createKey(EntityIcePrison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+					.createKey(EntityIcePrison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
-	public static final DataParameter<Integer> SYNC_IMPRISONED_TIME = EntityDataManager.createKey
-			(EntityIcePrison.class, DataSerializers.VARINT);
+	public static final DataParameter<Integer> SYNC_IMPRISONED_TIME = EntityDataManager.createKey(EntityIcePrison.class, DataSerializers.VARINT);
 
-	public static final DataParameter<Integer> SYNC_MAX_IMPRISONED_TIME = EntityDataManager
-			.createKey(EntityIcePrison.class, DataSerializers.VARINT);
+	public static final DataParameter<Integer> SYNC_MAX_IMPRISONED_TIME = EntityDataManager.createKey(EntityIcePrison.class, DataSerializers.VARINT);
 
 	private double normalBaseValue;
 	private SyncedEntity<EntityLivingBase> imprisonedAttr;
@@ -88,8 +79,7 @@ public class EntityIcePrison extends AvatarEntity {
 	public static EntityIcePrison getPrison(EntityLivingBase entity) {
 
 		World world = entity.world;
-		List<EntityIcePrison> prisons = world.getEntities(EntityIcePrison.class,
-				prison -> prison.getImprisoned() == entity);
+		List<EntityIcePrison> prisons = world.getEntities(EntityIcePrison.class, prison -> prison.getImprisoned() == entity);
 
 		return prisons.isEmpty() ? null : prisons.get(0);
 
@@ -103,7 +93,7 @@ public class EntityIcePrison extends AvatarEntity {
 		prison.setOwner(owner);
 		prison.copyLocationAndAnglesFrom(entity);
 		prison.setAbility(ab);
-		
+
 		Bender bender = Bender.get(owner);
 		prison.setStats(bender.getData().getAbilityData("ice_prison"), bender.calcPowerRating(Icebending.ID));
 
@@ -143,11 +133,11 @@ public class EntityIcePrison extends AvatarEntity {
 				normalBaseValue = speed.getBaseValue();
 				speed.setBaseValue(0);
 			}
-			imprisoned.posX = this.posX;
-			imprisoned.posY = this.posY;
-			imprisoned.posZ = this.posZ;
+			imprisoned.posX = posX;
+			imprisoned.posY = posY;
+			imprisoned.posZ = posZ;
 			imprisoned.motionX = imprisoned.motionY = imprisoned.motionZ = 0;
-			this.motionX = this.motionY = this.motionZ = 0;
+			motionX = motionY = motionZ = 0;
 		}
 
 		// Countdown imprisonedTime
@@ -177,10 +167,8 @@ public class EntityIcePrison extends AvatarEntity {
 			setDead();
 
 			if (!world.isRemote && imprisoned != null) {
-				world.playSound(null, imprisoned.posX, imprisoned.posY, imprisoned.posZ,
-						SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1, 1);
-				imprisoned.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"),
-						60, 1, false, false));
+				world.playSound(null, imprisoned.posX, imprisoned.posY, imprisoned.posZ, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1, 1);
+				imprisoned.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 60, 1, false, false));
 
 				if (attackOnce || attackRepeat) {
 					attackPrisoner(2f);

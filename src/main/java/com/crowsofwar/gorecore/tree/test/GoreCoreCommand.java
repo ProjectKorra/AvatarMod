@@ -16,27 +16,21 @@
 */
 package com.crowsofwar.gorecore.tree.test;
 
-import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.tree.*;
-import com.crowsofwar.gorecore.util.AccountUUIDs;
-
-import static com.crowsofwar.gorecore.tree.test.GoreCoreChatMessages.*;
 
 /**
- * 
- * 
  * @author CrowsOfWar
  */
 public class GoreCoreCommand extends TreeCommand {
-	
+
 	@Override
 	public String getName() {
 		return "gorecore";
 	}
-	
+
 	@Override
 	protected ICommandNode[] addCommands() {
 		return new ICommandNode[] {};
 	}
-	
+
 }

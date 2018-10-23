@@ -17,32 +17,24 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataSerializer;
-import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.*;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.*;
 
-import java.util.List;
-import java.util.Objects;
+import com.crowsofwar.avatar.common.*;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
+
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -105,12 +97,12 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			World world = entity.world;
 			if (!entity.isDead) {
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX + entity.getSize(), entity.posY + entity.getSize(), entity.posZ + entity.getSize(),
-						entity.posX - entity.getSize(), entity.posY - entity.getSize(), entity.posZ - entity.getSize());
-				List<Entity> collidedList = world.getEntitiesWithinAABB(Entity.class,
-						box);
+													  entity.posX - entity.getSize(), entity.posY - entity.getSize(), entity.posZ - entity.getSize());
+				List<Entity> collidedList = world.getEntitiesWithinAABB(Entity.class, box);
 				if (!collidedList.isEmpty()) {
 					for (Entity collided : collidedList) {
-						if (collided != entity.getOwner() && (entity.canCollideWith(collided) || (collided.canBeCollidedWith() && collided.canBePushed()))) {
+						if (collided != entity.getOwner() && (entity.canCollideWith(collided) || (collided.canBeCollidedWith() && collided
+										.canBePushed()))) {
 							if (collided != entity) {
 								collision(collided, entity, entity.isGroupAttack());
 							}
@@ -123,13 +115,10 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 		}
 
-
-
 		private void collision(Entity collided, EntityLightningSpear entity, boolean triggerGroupAttack) {
 			if (collided.canBeCollidedWith() && collided.canBePushed() && collided != entity.getOwner() && collided != entity) {
 
-				if (collided.attackEntityFrom(AvatarDamageSource.causeLightningDamage(collided, entity.getOwner()),
-						entity.getDamage())) {
+				if (collided.attackEntityFrom(AvatarDamageSource.causeLightningDamage(collided, entity.getOwner()), entity.getDamage())) {
 					BattlePerformanceScore.addMediumScore(entity.getOwner());
 				}
 				Vector motion = entity.velocity().dividedBy(40);
@@ -142,34 +131,32 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 					data.getAbilityData("lightning_spear").addXp(xp);
 					if (!data.getAbilityData("lightning_spear").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 						entity.LightningBurst();
-						entity.world.playSound(null,collided.posX, entity.posY, collided.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 2.0F,
-								(1.0F + (entity.world.rand.nextFloat() - entity.world.rand.nextFloat()) * 0.2F));
+						entity.world.playSound(null, collided.posX, entity.posY, collided.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT,
+											   SoundCategory.BLOCKS, 2.0F,
+											   (1.0F + (entity.world.rand.nextFloat() - entity.world.rand.nextFloat()) * 0.2F));
 						entity.removeStatCtrl();
 
-					}
-					else {
+					} else {
 						if (entity.world instanceof WorldServer) {
 							WorldServer World = (WorldServer) entity.world;
-							World.playSound(null,collided.posX, entity.posY, collided.posZ, SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.BLOCKS, 2.0F,
-									(1.0F + (entity.world.rand.nextFloat() - entity.world.rand.nextFloat()) * 0.2F));
-							World.spawnParticle(AvatarParticles.getParticleElectricity(), collided.posX, entity.posY, collided.posZ, 10, 0, 0, 0, 0.025);
+							World.playSound(null, collided.posX, entity.posY, collided.posZ, SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.BLOCKS,
+											2.0F, (1.0F + (entity.world.rand.nextFloat() - entity.world.rand.nextFloat()) * 0.2F));
+							World.spawnParticle(AvatarParticles.getParticleElectricity(), collided.posX, entity.posY, collided.posZ, 10, 0, 0, 0,
+												0.025);
 						}
 					}
 				}
 			}
-
 
 			if (triggerGroupAttack) {
 
 				// Damage nearby entities in group
 
 				double radius = 2;
-				AxisAlignedBB aabb = new AxisAlignedBB(
-						entity.posX - radius, entity.posY - radius, entity.posZ - radius,
-						entity.posX + radius, entity.posY + radius, entity.posZ + radius);
+				AxisAlignedBB aabb = new AxisAlignedBB(entity.posX - radius, entity.posY - radius, entity.posZ - radius, entity.posX + radius,
+													   entity.posY + radius, entity.posZ + radius);
 
-				List<Entity> targets = entity.world.getEntitiesWithinAABB(
-						Entity.class, aabb);
+				List<Entity> targets = entity.world.getEntitiesWithinAABB(Entity.class, aabb);
 				for (Entity target : targets) {
 					if (target.getDistanceSq(entity) > radius * radius) {
 						continue;
@@ -202,11 +189,12 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 	public static class PlayerControlled extends LightningSpearBehavior {
 
+		float maxSize = 1.6F;
+		float maxDamage = 4;
+
 		public PlayerControlled() {
 		}
 
-		float maxSize = 1.6F;
-		float maxDamage = 4;
 		@Override
 		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
 			EntityLivingBase owner = entity.getOwner();
@@ -226,8 +214,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			if (res.hitSomething()) {
 				target = res.getPosPrecise();
 			} else {
-				Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
-						Math.toRadians(owner.rotationPitch));
+				Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw), Math.toRadians(owner.rotationPitch));
 				target = Vector.getEyePos(owner).plus(look.times(3));
 			}
 
@@ -239,7 +226,6 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			Vector direction = entity.position().minus(Vector.getEyePos(owner)).toSpherical();
 			entity.rotationYaw = (float) Math.toDegrees(direction.y());
 			entity.rotationPitch = (float) Math.toDegrees(direction.x());
-
 
 			float size = entity.getSize();
 			float damage = entity.getDamage();
@@ -269,7 +255,6 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			if (damage < maxDamage && entity.ticksExisted % 4 == 0) {
 				entity.setDamage(damage + 0.005F);
 			}
-
 
 			return this;
 		}

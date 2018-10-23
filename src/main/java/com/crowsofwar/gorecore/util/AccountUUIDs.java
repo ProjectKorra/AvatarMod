@@ -17,21 +17,18 @@
 
 package com.crowsofwar.gorecore.util;
 
-import com.crowsofwar.gorecore.GoreCore;
-import com.google.common.collect.Maps;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+
 import net.minecraftforge.common.UsernameCache;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.crowsofwar.gorecore.GoreCore;
+import com.google.common.collect.Maps;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.regex.*;
 
 /**
  * <p>
@@ -39,7 +36,7 @@ import java.util.regex.Pattern;
  * are the UUIDs on Mojang, and entity UUIDs are the UUIDs gotten from
  * Entity#getUniqueID().
  * </p>
- * 
+ *
  * @author CrowsOfWar
  * @author Mahtaran
  */
@@ -48,27 +45,27 @@ public final class AccountUUIDs {
 	 * Don't try to understand this.
 	 * Ok, so actually it works like this: select first 8 characters, then 4, 4, 4 and finally 12. This is the UUID format.
 	 */
-	private static final Pattern DASHLESS_PATTERN = Pattern.compile("^([A-Fa-f0-9]{8})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{12})$");
-	
+	private static final Pattern DASHLESS_PATTERN = Pattern
+					.compile("^([A-Fa-f0-9]{8})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{12})$");
+
 	/**
 	 * A cache of usernames not in Forge's UsernameCache
 	 */
 	private static final Map<String, UUID> localCache = Maps.newHashMap();
+
 	/**
 	 * <p>
 	 * Finds the player in the world whose account has the given UUID.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * This is different from <code>world.func_152378_a(playerID)</code> in that
 	 * the world's method uses the player's entity ID, while this method uses
 	 * the player's account ID.
 	 * </p>
-	 * 
-	 * @param playerID
-	 *            The UUID of the player to find
-	 * @param world
-	 *            The world to look for the player in
+	 *
+	 * @param playerID The UUID of the player to find
+	 * @param world    The world to look for the player in
 	 * @return The player with that UUID
 	 */
 	public static EntityPlayer findEntityFromUUID(World world, UUID playerID) {
@@ -80,16 +77,15 @@ public final class AccountUUIDs {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * <p>
 	 * Gets the UUID of the player with the given username. If it exists in the
 	 * cache, the UUID will be obtained via the cache; otherwise, a HTTP request
 	 * will be made to obtain the UUID.
 	 * </p>
-	 * 
-	 * @param username
-	 *            The username to get the UUID for
+	 *
+	 * @param username The username to get the UUID for
 	 * @return The UUID result of the getting
 	 */
 	public static UUID getId(String username) {
@@ -102,10 +98,10 @@ public final class AccountUUIDs {
 			if (entry.getValue().equalsIgnoreCase(username)) {
 				return entry.getKey();
 			}
-    		}
+		}
 		return null;
 	}
-	
+
 	/**
 	 * Sends a request to Mojang's API and get the player's UUID. Returns null
 	 * if any error occurred.
@@ -113,26 +109,25 @@ public final class AccountUUIDs {
 	private static UUID requestId(String username) {
 		try {
 			String url = "https://api.mojang.com/users/profiles/minecraft/" + username;
-			
+
 			URL obj = new URL(url);
 			HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-			
+
 			connection.setRequestMethod("GET");
 			connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-			
+
 			int responseCode = connection.getResponseCode();
 			if (responseCode == 204) {
-				GoreCore.LOGGER.warn("Attempted to get a UUID for player " + username
-						+ ", but that account is not registered");
+				GoreCore.LOGGER.warn("Attempted to get a UUID for player " + username + ", but that account is not registered");
 				return null;
 			}
-			
+
 			if (responseCode != 200) {
-				GoreCore.LOGGER.warn("Attempted to get a UUID for player " + username
-						+ ", but the response code was unexpected (" + responseCode + ")");
+				GoreCore.LOGGER.warn(
+								"Attempted to get a UUID for player " + username + ", but the response code was unexpected (" + responseCode + ")");
 				return null;
 			}
-			
+
 			ByteArrayOutputStream result = new ByteArrayOutputStream();
 			byte[] buffer = new byte[1024];
 			int length;
@@ -148,7 +143,7 @@ public final class AccountUUIDs {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Lookup the username based on the account ID. Returns null on errors.
 	 * Warning: is cached
@@ -160,31 +155,30 @@ public final class AccountUUIDs {
 				if (entry.getValue().equals(id)) {
 					return entry.getKey();
 				}
-    			}
+			}
 		} else {
 			try {
 				String idString = id.toString().replaceAll("-", "");
 				String url = "https://api.mojang.com/user/profiles/" + idString + "/names";
-				
+
 				URL obj = new URL(url);
 				HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-				
+
 				connection.setRequestMethod("GET");
 				connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-				
+
 				int responseCode = connection.getResponseCode();
 				if (responseCode == 204) {
-					GoreCore.LOGGER.warn("Attempted to get a username for player " + id
-							+ ", but that account is not registered");
+					GoreCore.LOGGER.warn("Attempted to get a username for player " + id + ", but that account is not registered");
 					return null;
 				}
-				
+
 				if (responseCode != 200) {
-					GoreCore.LOGGER.warn("Attempted to get a username for player " + id
-							+ ", but the response code was unexpected (" + responseCode + ")");
+					GoreCore.LOGGER.warn(
+									"Attempted to get a username for player " + id + ", but the response code was unexpected (" + responseCode + ")");
 					return null;
 				}
-				
+
 				ByteArrayOutputStream result = new ByteArrayOutputStream();
 				byte[] buffer = new byte[1024];
 				int length;
@@ -202,7 +196,7 @@ public final class AccountUUIDs {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Add dashes to a UUID. Method from SquirrelID
 	 *

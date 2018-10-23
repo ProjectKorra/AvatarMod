@@ -1,12 +1,11 @@
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.bending.BuffPowerModifier;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Vision;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+
+import com.crowsofwar.avatar.common.bending.BuffPowerModifier;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
 public class SlipstreamPowerModifier extends BuffPowerModifier {
 
@@ -56,8 +55,7 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 
 	@Override
 	protected Vision[] getVisions() {
-			return new Vision[]{Vision.SLIPSTREAM_WEAK, Vision.SLIPSTREAM_MEDIUM,
-					Vision.SLIPSTREAM_POWERFUL};
+		return new Vision[] { Vision.SLIPSTREAM_WEAK, Vision.SLIPSTREAM_MEDIUM, Vision.SLIPSTREAM_POWERFUL };
 	}
 
 	@Override

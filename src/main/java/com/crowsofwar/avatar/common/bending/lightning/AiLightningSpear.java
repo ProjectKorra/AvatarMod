@@ -1,30 +1,20 @@
 package com.crowsofwar.avatar.common.bending.lightning;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
+import net.minecraft.entity.*;
+
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import static com.crowsofwar.gorecore.util.Vector.*;
 import static java.lang.Math.toDegrees;
 
 public class AiLightningSpear extends BendingAi {
 	private int timeExecuting;
 
-	/**
-	 * @param ability
-	 * @param entity
-	 * @param bender
-	 */
 	protected AiLightningSpear(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		timeExecuting = 0;
@@ -64,8 +54,8 @@ public class AiLightningSpear extends BendingAi {
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSq(target) > 4 * 4
-				&& bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
+		return target != null && entity.getDistanceSq(target) > 4 * 4 && bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG()
+						.nextBoolean();
 	}
 
 	@Override
@@ -77,8 +67,8 @@ public class AiLightningSpear extends BendingAi {
 	public void resetTask() {
 
 		EntityLightningSpear spear = AvatarEntity.lookupEntity(entity.world, EntityLightningSpear.class, //
-				spear1 -> spear1.getBehavior() instanceof LightningSpearBehavior.PlayerControlled
-						&& spear1.getOwner() == entity);
+															   spear1 -> spear1.getBehavior() instanceof LightningSpearBehavior.PlayerControlled
+																			   && spear1.getOwner() == entity);
 
 		if (spear != null) {
 			spear.setDead();

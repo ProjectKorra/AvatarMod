@@ -1,33 +1,20 @@
 package com.crowsofwar.avatar.common.item;
 
-import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.entity.EntityAirGust;
-import com.crowsofwar.avatar.common.entity.EntityAirblade;
-import com.crowsofwar.gorecore.util.Vector;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
+import net.minecraft.item.*;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+
+import com.crowsofwar.avatar.common.bending.air.*;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.collect.*;
 
 import java.util.Random;
 
@@ -49,7 +36,6 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
 	}
 
-
 	@Override
 	public float getAttackDamage() {
 		return 1F;
@@ -59,7 +45,6 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 	public boolean hasEffect(ItemStack stack) {
 		return true;
 	}
-
 
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
@@ -74,7 +59,6 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 		return true;
 
 	}
-
 
 	@Override
 	public EnumRarity getRarity(ItemStack stack) {
@@ -94,8 +78,8 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 			if (!data.hasTickHandler(STAFF_GUST_HANDLER) && !playerIn.world.isRemote) {
 				if (spawnGust) {
 					EntityAirGust gust = new EntityAirGust(playerIn.world);
-					gust.setPosition(Vector.getLookRectangular(playerIn).plus(Vector.getEntityPos(playerIn)).withY(playerIn.getEyeHeight() +
-							playerIn.getEntityBoundingBox().minY));
+					gust.setPosition(Vector.getLookRectangular(playerIn).plus(Vector.getEntityPos(playerIn))
+													 .withY(playerIn.getEyeHeight() + playerIn.getEntityBoundingBox().minY));
 					gust.setAbility(new AbilityAirGust());
 					gust.setOwner(playerIn);
 					gust.setVelocity(Vector.getLookRectangular(playerIn).times(30));
@@ -105,10 +89,11 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 						ItemStack stack = playerIn.getHeldItemOffhand();
 						stack.damageItem(2, playerIn);
 					}
-					return new ActionResult<ItemStack>(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
+					return new ActionResult<>(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
 				} else {
 					EntityAirblade blade = new EntityAirblade(playerIn.world);
-					blade.setPosition(Vector.getLookRectangular(playerIn).plus(Vector.getEntityPos(playerIn)).withY(playerIn.getEyeHeight() + playerIn.getEntityBoundingBox().minY));
+					blade.setPosition(Vector.getLookRectangular(playerIn).plus(Vector.getEntityPos(playerIn))
+													  .withY(playerIn.getEyeHeight() + playerIn.getEntityBoundingBox().minY));
 					blade.setAbility(new AbilityAirblade());
 					blade.setOwner(playerIn);
 					blade.setVelocity(Vector.getLookRectangular(playerIn).times(30));
@@ -119,15 +104,15 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 						ItemStack stack = playerIn.getHeldItemOffhand();
 						stack.damageItem(2, playerIn);
 					}
-					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
+					return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
 				}
 			}
 			if (data.hasTickHandler(STAFF_GUST_HANDLER) && !worldIn.isRemote) {
 				MSG_AIR_STAFF_COOLDOWN.send(playerIn);
 			}
-			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
+			return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
 		}
-		return new ActionResult<ItemStack>(EnumActionResult.FAIL, playerIn.getHeldItem(handIn));
+		return new ActionResult<>(EnumActionResult.FAIL, playerIn.getHeldItem(handIn));
 	}
 
 	@Override
@@ -137,7 +122,8 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 		if (!data.hasTickHandler(STAFF_GUST_HANDLER) && !entityLiving.world.isRemote) {
 			if (spawnGust) {
 				EntityAirGust gust = new EntityAirGust(entityLiving.world);
-				gust.setPosition(Vector.getLookRectangular(entityLiving).plus(Vector.getEntityPos(entityLiving)).withY(entityLiving.getEyeHeight() + entityLiving.getEntityBoundingBox().minY));
+				gust.setPosition(Vector.getLookRectangular(entityLiving).plus(Vector.getEntityPos(entityLiving))
+												 .withY(entityLiving.getEyeHeight() + entityLiving.getEntityBoundingBox().minY));
 				gust.setAbility(new AbilityAirGust());
 				gust.setOwner(entityLiving);
 				gust.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
@@ -149,7 +135,8 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 				return true;
 			} else {
 				EntityAirblade blade = new EntityAirblade(entityLiving.world);
-				blade.setPosition(Vector.getLookRectangular(entityLiving).plus(Vector.getEntityPos(entityLiving)).withY(entityLiving.getEyeHeight() + entityLiving.getEntityBoundingBox().minY));
+				blade.setPosition(Vector.getLookRectangular(entityLiving).plus(Vector.getEntityPos(entityLiving))
+												  .withY(entityLiving.getEyeHeight() + entityLiving.getEntityBoundingBox().minY));
 				blade.setAbility(new AbilityAirblade());
 				blade.setOwner(entityLiving);
 				blade.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
@@ -177,8 +164,8 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 			if (!worldIn.isRemote && worldIn instanceof WorldServer) {
 				WorldServer world = (WorldServer) worldIn;
 				if (entityIn.ticksExisted % 40 == 0) {
-					world.spawnParticle(EnumParticleTypes.CLOUD, entityIn.posX, entityIn.posY + entityIn.getEyeHeight(),
-							entityIn.posZ, 1, 0, 0, 0, 0.04);
+					world.spawnParticle(EnumParticleTypes.CLOUD, entityIn.posX, entityIn.posY + entityIn.getEyeHeight(), entityIn.posZ, 1, 0, 0, 0,
+										0.04);
 					((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.SPEED, 40));
 					((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 40));
 					if ((new Random().nextInt(2) + 1) >= 2) {
@@ -192,8 +179,8 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 				if (!worldIn.isRemote && worldIn instanceof WorldServer) {
 					WorldServer world = (WorldServer) worldIn;
 					if (entityIn.ticksExisted % 40 == 0) {
-						world.spawnParticle(EnumParticleTypes.CLOUD, entityIn.posX, entityIn.posY + entityIn.getEyeHeight(),
-								entityIn.posZ, 1, 0, 0, 0, 0.04);
+						world.spawnParticle(EnumParticleTypes.CLOUD, entityIn.posX, entityIn.posY + entityIn.getEyeHeight(), entityIn.posZ, 1, 0, 0,
+											0, 0.04);
 						((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.SPEED, 40));
 						((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 40));
 						if ((new Random().nextInt(2) + 1) >= 2) {
@@ -221,14 +208,14 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 		}
 	}
 
-
 	@Override
 	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
 		Multimap<String, AttributeModifier> multimap = HashMultimap.create();
 
 		if (equipmentSlot == EntityEquipmentSlot.MAINHAND) {
 			spawnGust = new Random().nextBoolean();
-			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", getAttackDamage(), 0));
+			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(),
+						 new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", getAttackDamage(), 0));
 			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", 0, 0));
 		}
 

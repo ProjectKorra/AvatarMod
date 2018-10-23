@@ -1,13 +1,11 @@
 package com.crowsofwar.avatar.common.analytics;
 
-import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.server.AvatarServerProxy;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.*;
 
-import java.util.Deque;
-import java.util.LinkedList;
+import com.crowsofwar.avatar.*;
+import com.crowsofwar.avatar.server.AvatarServerProxy;
+
+import java.util.*;
 
 /**
  * @author CrowsOfWar

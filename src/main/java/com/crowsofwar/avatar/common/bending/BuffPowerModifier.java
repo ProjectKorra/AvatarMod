@@ -1,8 +1,6 @@
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.PowerRatingModifier;
-import com.crowsofwar.avatar.common.data.Vision;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
 /**
@@ -56,13 +54,10 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 			default:
 				if (getVisions()[2] != null) {
 					return getVisions()[2];
-				}
-				else return getVisions()[0];
+				} else return getVisions()[0];
 		}
 
-
 	}
-
 
 	@Override
 	public boolean onUpdate(BendingContext ctx) {

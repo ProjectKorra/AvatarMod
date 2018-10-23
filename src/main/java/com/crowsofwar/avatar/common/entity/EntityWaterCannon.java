@@ -1,27 +1,20 @@
 package com.crowsofwar.avatar.common.entity;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+
+import net.minecraftforge.fml.relauncher.*;
+
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterCannon;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.particle.*;
+import com.crowsofwar.avatar.common.util.*;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -30,9 +23,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControlPoint> {
 
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey
-			(EntityWaterCannon.class, DataSerializers.FLOAT);
-
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWaterCannon.class, DataSerializers.FLOAT);
 
 	private float damage;
 	private float lifeTime;
@@ -42,10 +33,10 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		super(world);
 		setSize(1.5f * getSizeMultiplier(), 1.5f * getSizeMultiplier());
 		damage = 0.5F;
-		this.putsOutFires = true;
-		this.noClip = false;
-		this.particles = new NetworkParticleSpawner();
-		this.setInvisible(false);
+		putsOutFires = true;
+		noClip = false;
+		particles = new NetworkParticleSpawner();
+		setInvisible(false);
 	}
 
 	public float getDamage() {
@@ -65,7 +56,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	}
 
 	public void setLifeTime(float ticks) {
-		this.lifeTime = ticks;
+		lifeTime = ticks;
 	}
 
 	@Override
@@ -79,19 +70,16 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		return 2;
 	}
 
-
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		if (getOwner() == null) setDead();
 
-		world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
-				SoundCategory.PLAYERS, 1, 2);
-
+		world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.PLAYERS, 1, 2);
 
 		if (getOwner() != null) {
-			if (ticksExisted % 2 == 0 && !this.isDead && STATS_CONFIG.useWaterCannonParticles) {
-				double dist = this.getDistance(getOwner());
+			if (ticksExisted % 2 == 0 && !isDead && STATS_CONFIG.useWaterCannonParticles) {
+				double dist = getDistance(getOwner());
 				int particleController = 20;
 				if (getAbility() instanceof AbilityWaterCannon && !world.isRemote) {
 					AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
@@ -109,28 +97,27 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				}
 				for (double i = 0; i < 1; i += 1 / dist) {
 					Vector startPos = getControlPoint(1).position();
-					Vector distance = this.position().minus(getControlPoint(1).position());
+					Vector distance = position().minus(getControlPoint(1).position());
 					distance = distance.times(i);
 					for (double angle = 0; angle < 360; angle += particleController) {
-						Vector position = AvatarUtils.getOrthogonalVector(this.position().minus(getControlPoint(1).position()), angle, getSizeMultiplier() * 1.4);
-						particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1,
-								position.x() + startPos.x() + distance.x(), position.y() + startPos.y() + distance.y(), position.z() + startPos.z() + distance.z(), 0, 0, 0);
+						Vector position = AvatarUtils
+										.getOrthogonalVector(position().minus(getControlPoint(1).position()), angle, getSizeMultiplier() * 1.4);
+						particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1, position.x() + startPos.x() + distance.x(),
+												 position.y() + startPos.y() + distance.y(), position.z() + startPos.z() + distance.z(), 0, 0, 0);
 
 					}
-					particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1,
-							startPos.x() + distance.x(), startPos.y() + distance.y(), startPos.z() + distance.z(), 0, 0, 0);
+					particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1, startPos.x() + distance.x(), startPos.y() + distance.y(),
+											 startPos.z() + distance.z(), 0, 0, 0);
 				}
 			}
 		}
 
-
 		if (getOwner() != null) {
 			Vector direction = Vector.getLookRectangular(getOwner());
-			this.setVelocity(direction.times(25));
+			setVelocity(direction.times(25));
 		}
 
-
-		if (this.ticksExisted >= lifeTime && !world.isRemote) {
+		if (ticksExisted >= lifeTime && !world.isRemote) {
 			setDead();
 		}
 		if (ticksExisted > 150) {
@@ -140,7 +127,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		if (getOwner() == null) {
 			setDead();
 		}
-
 
 		setSize(1.5F * getSizeMultiplier(), 1.5F * getSizeMultiplier());
 
@@ -154,7 +140,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		//The control point's top gets set to the water cannon; you want the center to be set
 		//to the water cannon.
 
-
 		// Second control point (at back) should stay near the player
 		if (getOwner() != null) {
 			Vector eyePos = Vector.getEyePos(getOwner()).minus(0, 0.3, 0);
@@ -166,8 +151,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
-		if (this.canCollideWith(entity) && getOwner() != entity) {
-
+		if (canCollideWith(entity) && getOwner() != entity) {
 
 			if (!world.isRemote) {
 				int numberOfParticles = (int) (400 * getSizeMultiplier());
@@ -177,8 +161,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			}
 
 			damageEntity(entity);
-			world.playSound(null, getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH,
-					SoundCategory.PLAYERS, 1, 1);
+			world.playSound(null, getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.PLAYERS, 1, 1);
 
 		}
 	}
@@ -197,9 +180,10 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		if (getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 
-
-			double dist = this.getDistance(getOwner());
-			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), this.position().minus(getControlPoint(1).position()), dist, entity -> entity != getOwner());
+			double dist = getDistance(getOwner());
+			List<Entity> collisions = Raytrace
+							.entityRaytrace(world, getControlPoint(1).position(), position().minus(getControlPoint(1).position()), dist,
+											entity -> entity != getOwner());
 
 			if (!collisions.isEmpty()) {
 				for (Entity collided : collisions) {
@@ -207,7 +191,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 						onCollideWithEntity(collided);
 						//Needed because the water cannon will still glitch through the entity
 						if (!(data.getAbilityData("water_cannon").isMasterPath(AbilityData.AbilityTreePath.SECOND))) {
-							this.setPosition(collided.posX, this.posY, collided.posZ);
+							setPosition(collided.posX, posY, collided.posZ);
 						}
 					}
 				}
@@ -221,15 +205,15 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			return;
 		}
 
-		if (this.canDamageEntity(entity)) {
+		if (canDamageEntity(entity)) {
 			DamageSource damageSource = AvatarDamageSource.causeWaterCannonDamage(entity, getOwner());
 			if (entity.attackEntityFrom(damageSource, damage)) {
 
 				BattlePerformanceScore.addSmallScore(getOwner());
 
-				entity.motionX = this.motionX * 2;
-				entity.motionY = this.motionY * 2;
-				entity.motionZ = this.motionZ * 2;
+				entity.motionX = motionX * 2;
+				entity.motionY = motionY * 2;
+				entity.motionZ = motionZ * 2;
 				AvatarUtils.afterVelocityAdded(entity);
 
 				// Add Experience
@@ -246,7 +230,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	@Override
 	public boolean onCollideWithSolid() {
-		this.motionX = this.motionY = this.motionZ = 0;
+		motionX = motionY = motionZ = 0;
 		onMajorWaterContact();
 		return false;
 	}
@@ -254,16 +238,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	protected EntityWaterCannon.CannonControlPoint createControlPoint(float size, int index) {
 		return new EntityWaterCannon.CannonControlPoint(this, index);
-	}
-
-
-	class CannonControlPoint extends ControlPoint {
-
-		private CannonControlPoint(EntityArc arc, int index) {
-			// Make all control points the same size
-			super(arc, index == 1 ? 0.35f : 0.5f, 0, 0, 0);
-		}
-
 	}
 
 	@Override
@@ -275,6 +249,15 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	public boolean isInRangeToRenderDist(double distance) {
 		return true;
+	}
+
+	class CannonControlPoint extends ControlPoint {
+
+		private CannonControlPoint(EntityArc arc, int index) {
+			// Make all control points the same size
+			super(arc, index == 1 ? 0.35f : 0.5f, 0, 0, 0);
+		}
+
 	}
 }
 

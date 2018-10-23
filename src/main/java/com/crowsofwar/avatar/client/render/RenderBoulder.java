@@ -1,19 +1,18 @@
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityBoulder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+
 import net.minecraftforge.client.MinecraftForgeClient;
+
+import com.crowsofwar.avatar.common.entity.EntityBoulder;
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
+import org.joml.*;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
@@ -23,14 +22,13 @@ import static net.minecraft.util.math.MathHelper.cos;
 
 public class RenderBoulder extends Render<EntityBoulder> {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-		"textures/entity/entity_boulder.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/entity/entity_boulder.png");
 	private static final Random random = new Random();
+	Random rand = new Random();
 
 	public RenderBoulder(RenderManager renderManager) {
 		super(renderManager);
 	}
-	Random rand = new Random();
 
 	// @formatter:off
 	@Override
@@ -89,8 +87,8 @@ public class RenderBoulder extends Render<EntityBoulder> {
 	}
 	// @formatter:on
 
-	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,
-							float rotateX, float rotateY, float rotateZ) {
+	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size, float rotateX, float rotateY,
+					float rotateZ) {
 		org.joml.Matrix4f mat = new Matrix4f();
 		mat.translate(x, y + .4f, z);
 
@@ -120,8 +118,7 @@ public class RenderBoulder extends Render<EntityBoulder> {
 		drawQuad(2, rtb, rbb, lbb, ltb, u1, v1, u2, v2); // +z
 	}
 
-	private void drawQuad(int normal, Vector4f pos1, Vector4f pos2, Vector4f pos3, Vector4f pos4, double u1,
-						  double v1, double u2, double v2) {
+	private void drawQuad(int normal, Vector4f pos1, Vector4f pos2, Vector4f pos3, Vector4f pos4, double u1, double v1, double u2, double v2) {
 
 		Tessellator t = Tessellator.getInstance();
 		BufferBuilder vb = t.getBuffer();

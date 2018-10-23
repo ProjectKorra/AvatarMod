@@ -5,8 +5,7 @@ import net.minecraft.world.World;
 
 public class AvatarParticleRestore extends AvatarParticle {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/particles/restore.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/particles/restore.png");
 
 	private static final ParticleFrame[] FRAMES = new ParticleFrame[6];
 
@@ -16,17 +15,8 @@ public class AvatarParticleRestore extends AvatarParticle {
 		}
 	}
 
-	/**
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param velX
-	 * @param velY
-	 * @param velZ
-	 */
-	public AvatarParticleRestore(int particleID, World world, double x, double y, double z, double velX,
-								 double velY, double velZ, int... parameters) {
+	public AvatarParticleRestore(int particleID, World world, double x, double y, double z, double velX, double velY, double velZ,
+					int... parameters) {
 		super(world, x, y, z, velX, velY, velZ);
 
 		particleScale = 4f;

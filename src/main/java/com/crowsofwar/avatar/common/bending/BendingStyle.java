@@ -17,18 +17,14 @@
 
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
-import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
-import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
-import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
+import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.*;
+
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Base class for bending abilities. All bending classes extend this one. They
@@ -55,8 +51,7 @@ public abstract class BendingStyle implements ReadableWritable {
 				BendingStyle bc = BendingStyles.get(id);
 				return bc;
 			} catch (Exception e) {
-				AvatarLog.error(
-						"Could not find bending controller from ID '" + id + "' - please check NBT data");
+				AvatarLog.error("Could not find bending controller from ID '" + id + "' - please check NBT data");
 				e.printStackTrace();
 				return null;
 			}
@@ -65,8 +60,7 @@ public abstract class BendingStyle implements ReadableWritable {
 
 	public static final WriteToNBT<BendingStyle> writer = new WriteToNBT<BendingStyle>() {
 		@Override
-		public void write(NBTTagCompound nbt, BendingStyle object, Object[] methodsExtraData,
-						  Object[] extraData) {
+		public void write(NBTTagCompound nbt, BendingStyle object, Object[] methodsExtraData, Object[] extraData) {
 			nbt.setUniqueId("ControllerID", object.getId());
 		}
 	};
@@ -84,14 +78,6 @@ public abstract class BendingStyle implements ReadableWritable {
 	@Nullable
 	private UUID parentBendingId;
 
-
-	//This is so player-specific custom elements can't be used by other players when using commands.
-	//This also means if you aren't the right player, you can't obtain it.
-	//Ex: Eternal Dragonbending is usable by me (FavouriteDragon) only
-	public boolean canEntityUse() {
-		return true;
-	}
-
 	/**
 	 * Constructor used for main bending styles (i.e. non-specialty), like firebending
 	 */
@@ -106,12 +92,19 @@ public abstract class BendingStyle implements ReadableWritable {
 	 *                        off of, e.g. firebending
 	 */
 	public BendingStyle(UUID parentBendingId) {
-		this.abilities = new ArrayList<>();
+		abilities = new ArrayList<>();
 		this.parentBendingId = parentBendingId;
 	}
 
+	//This is so player-specific custom elements can't be used by other players when using commands.
+	//This also means if you aren't the right player, you can't obtain it.
+	//Ex: Eternal Dragonbending is usable by me (FavouriteDragon) only
+	public boolean canEntityUse() {
+		return true;
+	}
+
 	protected void addAbility(String abilityName) {
-		this.abilities.add(Abilities.get(abilityName));
+		abilities.add(Abilities.get(abilityName));
 	}
 
 	/**
@@ -131,7 +124,7 @@ public abstract class BendingStyle implements ReadableWritable {
 	}
 
 	public List<Ability> getAllAbilities() {
-		return this.abilities;
+		return abilities;
 	}
 
 	public boolean isSpecialtyBending() {

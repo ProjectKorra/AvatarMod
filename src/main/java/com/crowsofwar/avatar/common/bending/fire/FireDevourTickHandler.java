@@ -1,18 +1,17 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.*;
+
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.Objects;
 import java.util.function.BiPredicate;
@@ -57,10 +56,10 @@ public class FireDevourTickHandler extends TickHandler {
 						WorldServer World = (WorldServer) world;
 						for (double k = 1.2; k > 0; k -= 0.2) {
 							for (int h = 0; h < 12; h++) {
-								Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-										h * 30), 0).times(k).withY(entity.getEyeHeight() / 2);
-								World.spawnParticle(EnumParticleTypes.FLAME, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
-										lookpos.z() + entity.posZ, 2, 0, 0, 0, 0.05);
+								Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + h * 30), 0).times(k)
+												.withY(entity.getEyeHeight() / 2);
+								World.spawnParticle(EnumParticleTypes.FLAME, lookpos.x() + entity.posX,
+													lookpos.y() + entity.getEntityBoundingBox().minY, lookpos.z() + entity.posZ, 2, 0, 0, 0, 0.05);
 							}
 						}
 

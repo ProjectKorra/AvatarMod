@@ -1,9 +1,7 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.BuffPowerModifier;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Vision;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
 public class CleansePowerModifier extends BuffPowerModifier {
@@ -29,7 +27,7 @@ public class CleansePowerModifier extends BuffPowerModifier {
 	@Override
 	protected Vision[] getVisions() {
 		//if (CLIENT_CONFIG.shaderSettings.useCleanseShaders) {
-		return new Vision[]{Vision.CLEANSE_WEAK, Vision.CLEANSE_MEDIUM, Vision.CLEANSE_POWERFUL};
+		return new Vision[] { Vision.CLEANSE_WEAK, Vision.CLEANSE_MEDIUM, Vision.CLEANSE_POWERFUL };
 		//}
 		//else return null;
 	}

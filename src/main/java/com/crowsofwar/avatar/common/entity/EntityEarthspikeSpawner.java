@@ -1,27 +1,23 @@
 package com.crowsofwar.avatar.common.entity;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.*;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.config.ConfigStats;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public class EntityEarthspikeSpawner extends AvatarEntity {
 
 	private boolean unstoppable;
 	private double maxTicksAlive;
 
-	/**
-	 * @param world
-	 */
 	public EntityEarthspikeSpawner(World world) {
 		super(world);
 		setSize(1, 1);
@@ -29,17 +25,16 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	}
 
 	public void setUnstoppable(boolean isUnstoppable) {
-		this.unstoppable = isUnstoppable;
-	}
-
-	public void setDuration(double ticks) {
-		this.maxTicksAlive = ticks;
+		unstoppable = isUnstoppable;
 	}
 
 	public double getDuration() {
-		return this.maxTicksAlive;
+		return maxTicksAlive;
 	}
 
+	public void setDuration(double ticks) {
+		maxTicksAlive = ticks;
+	}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -75,13 +70,13 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 			setDead();
 		}
 
-
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
-		Block belowBlock = world.getBlockState(below).getBlock();
+		IBlockState belowState = world.getBlockState(below);
+		Block belowBlock = belowState.getBlock();
 
-		if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
-				world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
-				SoundCategory.PLAYERS, 1, 1, false);
+		if (ticksExisted % 3 == 0)
+			world.playSound(posX, posY, posZ, belowBlock.getSoundType(belowState, world, below, this).getBreakSound(), SoundCategory.PLAYERS, 1, 1,
+							false);
 
 		if (!world.getBlockState(below).isNormalCube()) {
 			setDead();

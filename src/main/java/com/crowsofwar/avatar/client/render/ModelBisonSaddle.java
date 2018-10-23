@@ -18,8 +18,7 @@
 package com.crowsofwar.avatar.client.render;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.model.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
@@ -30,8 +29,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class ModelBisonSaddle extends ModelBase {
 
-	private static final ResourceLocation texture = new ResourceLocation("avatarmod",
-			"textures/mob/flyingbison_saddle.png");
+	private static final ResourceLocation texture = new ResourceLocation("avatarmod", "textures/mob/flyingbison_saddle.png");
 
 	public ModelRenderer saddleBase;
 	public ModelRenderer wall1;
@@ -44,56 +42,56 @@ public class ModelBisonSaddle extends ModelBase {
 	public ModelRenderer wallSide2;
 
 	public ModelBisonSaddle() {
-		this.textureWidth = 112;
-		this.textureHeight = 96;
-		this.wall3 = new ModelRenderer(this, 58, 5);
-		this.wall3.mirror = true;
-		this.wall3.setRotationPoint(0.0F, -0.5F, 11.5F);
-		this.wall3.addBox(-7.5F, -3.0F, -0.5F, 15, 3, 1, 0.0F);
-		this.wallTop = new ModelRenderer(this, 0, 0);
-		this.wallTop.setRotationPoint(0.0F, -3.5F, -11.1F);
-		this.wallTop.addBox(-4.5F, -2.0F, -1.0F, 9, 3, 1, 0.0F);
-		this.setRotateAngle(wallTop, 0.20943951023931953F, 0.0F, 0.0F);
-		this.wallSide2 = new ModelRenderer(this, 0, 4);
-		this.wallSide2.setRotationPoint(4.5F, -2.0F, -0.5F);
-		this.wallSide2.addBox(0.0F, 0.0F, -0.5F, 3, 2, 1, 0.0F);
-		this.setRotateAngle(wallSide2, 0.0F, 0.0F, 0.8726646259971648F);
-		this.cargo = new ModelRenderer(this, 26, 25);
-		this.cargo.setRotationPoint(0.0F, -2.02F, 11.75F);
-		this.cargo.addBox(-5.5F, -2.5F, -2.0F, 11, 5, 4, 0.0F);
-		this.saddleBase = new ModelRenderer(this, 0, 0);
-		this.saddleBase.setRotationPoint(0.0F, -3.5F, 4.0F);
-		this.saddleBase.addBox(-8.5F, -0.5F, -12.0F, 17, 1, 24, 0.0F);
-		this.wallSide1 = new ModelRenderer(this, 0, 4);
-		this.wallSide1.mirror = true;
-		this.wallSide1.setRotationPoint(-4.5F, -2.0F, -0.5F);
-		this.wallSide1.addBox(-3.0F, 0.0F, -0.5F, 3, 2, 1, 0.0F);
-		this.setRotateAngle(wallSide1, 0.0F, 0.0F, -0.8726646259971648F);
-		this.wall2 = new ModelRenderer(this, 0, 25);
-		this.wall2.setRotationPoint(8.0F, -0.5F, 0.0F);
-		this.wall2.addBox(-0.5F, -3.0F, -12.0F, 1, 3, 24, 0.0F);
-		this.wall1 = new ModelRenderer(this, 0, 25);
-		this.wall1.mirror = true;
-		this.wall1.setRotationPoint(-8.0F, -0.5F, 0.0F);
-		this.wall1.addBox(-0.5F, -3.0F, -12.0F, 1, 3, 24, 0.0F);
-		this.wall4 = new ModelRenderer(this, 58, 0);
-		this.wall4.setRotationPoint(0.0F, -0.5F, -11.5F);
-		this.wall4.addBox(-7.5F, -3.0F, -0.5F, 15, 3, 2, 0.0F);
-		this.saddleBase.addChild(this.wall3);
-		this.saddleBase.addChild(this.wallTop);
-		this.wallTop.addChild(this.wallSide2);
-		this.saddleBase.addChild(this.cargo);
-		this.wallTop.addChild(this.wallSide1);
-		this.saddleBase.addChild(this.wall2);
-		this.saddleBase.addChild(this.wall1);
-		this.saddleBase.addChild(this.wall4);
+		textureWidth = 112;
+		textureHeight = 96;
+		wall3 = new ModelRenderer(this, 58, 5);
+		wall3.mirror = true;
+		wall3.setRotationPoint(0.0F, -0.5F, 11.5F);
+		wall3.addBox(-7.5F, -3.0F, -0.5F, 15, 3, 1, 0.0F);
+		wallTop = new ModelRenderer(this, 0, 0);
+		wallTop.setRotationPoint(0.0F, -3.5F, -11.1F);
+		wallTop.addBox(-4.5F, -2.0F, -1.0F, 9, 3, 1, 0.0F);
+		setRotateAngle(wallTop, 0.20943951023931953F, 0.0F, 0.0F);
+		wallSide2 = new ModelRenderer(this, 0, 4);
+		wallSide2.setRotationPoint(4.5F, -2.0F, -0.5F);
+		wallSide2.addBox(0.0F, 0.0F, -0.5F, 3, 2, 1, 0.0F);
+		setRotateAngle(wallSide2, 0.0F, 0.0F, 0.8726646259971648F);
+		cargo = new ModelRenderer(this, 26, 25);
+		cargo.setRotationPoint(0.0F, -2.02F, 11.75F);
+		cargo.addBox(-5.5F, -2.5F, -2.0F, 11, 5, 4, 0.0F);
+		saddleBase = new ModelRenderer(this, 0, 0);
+		saddleBase.setRotationPoint(0.0F, -3.5F, 4.0F);
+		saddleBase.addBox(-8.5F, -0.5F, -12.0F, 17, 1, 24, 0.0F);
+		wallSide1 = new ModelRenderer(this, 0, 4);
+		wallSide1.mirror = true;
+		wallSide1.setRotationPoint(-4.5F, -2.0F, -0.5F);
+		wallSide1.addBox(-3.0F, 0.0F, -0.5F, 3, 2, 1, 0.0F);
+		setRotateAngle(wallSide1, 0.0F, 0.0F, -0.8726646259971648F);
+		wall2 = new ModelRenderer(this, 0, 25);
+		wall2.setRotationPoint(8.0F, -0.5F, 0.0F);
+		wall2.addBox(-0.5F, -3.0F, -12.0F, 1, 3, 24, 0.0F);
+		wall1 = new ModelRenderer(this, 0, 25);
+		wall1.mirror = true;
+		wall1.setRotationPoint(-8.0F, -0.5F, 0.0F);
+		wall1.addBox(-0.5F, -3.0F, -12.0F, 1, 3, 24, 0.0F);
+		wall4 = new ModelRenderer(this, 58, 0);
+		wall4.setRotationPoint(0.0F, -0.5F, -11.5F);
+		wall4.addBox(-7.5F, -3.0F, -0.5F, 15, 3, 2, 0.0F);
+		saddleBase.addChild(wall3);
+		saddleBase.addChild(wallTop);
+		wallTop.addChild(wallSide2);
+		saddleBase.addChild(cargo);
+		wallTop.addChild(wallSide1);
+		saddleBase.addChild(wall2);
+		saddleBase.addChild(wall1);
+		saddleBase.addChild(wall4);
 
 	}
 
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-		this.saddleBase.render(f5);
+		saddleBase.render(f5);
 	}
 
 	/**

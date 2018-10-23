@@ -16,19 +16,15 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.datasync.*;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-import java.util.Arrays;
-import java.util.List;
+import com.crowsofwar.avatar.common.data.*;
+
+import java.util.*;
 
 /**
  * An AvatarEntity that acts as a shield for further attacks. It has a certain amount of health
@@ -39,16 +35,13 @@ import java.util.List;
  */
 public abstract class EntityShield extends AvatarEntity {
 
-	public static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityShield.class,
-			DataSerializers.FLOAT);
-	public static final DataParameter<Float> SYNC_MAX_HEALTH = EntityDataManager
-			.createKey(EntityShield.class, DataSerializers.FLOAT);
+	public static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityShield.class, DataSerializers.FLOAT);
+	public static final DataParameter<Float> SYNC_MAX_HEALTH = EntityDataManager.createKey(EntityShield.class, DataSerializers.FLOAT);
 
 	/**
 	 * Shields do not protect against some types of damage, such as falling.
 	 */
-	public static final List<String> UNPROTECTED_DAMAGE = Arrays.asList("fall", "magic", "poison",
-			"wither", "indirectMagic");
+	public static final List<String> UNPROTECTED_DAMAGE = Arrays.asList("fall", "magic", "poison", "wither", "indirectMagic");
 
 	public EntityShield(World world) {
 		super(world);
@@ -59,7 +52,7 @@ public abstract class EntityShield extends AvatarEntity {
 		super.entityInit();
 		dataManager.register(SYNC_HEALTH, 20f);
 		dataManager.register(SYNC_MAX_HEALTH, 20f);
-		this.putsOutFires = true;
+		putsOutFires = true;
 	}
 
 	@Override

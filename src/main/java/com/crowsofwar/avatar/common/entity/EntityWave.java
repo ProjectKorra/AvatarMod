@@ -17,18 +17,15 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import net.minecraft.entity.*;
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.world.*;
+
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
@@ -37,8 +34,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityWave extends AvatarEntity {
 
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWave.class,
-			DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWave.class, DataSerializers.FLOAT);
 
 	private float damageMult;
 	private boolean createExplosion;
@@ -48,12 +44,12 @@ public class EntityWave extends AvatarEntity {
 
 	public EntityWave(World world) {
 		super(world);
-		this.Size = 2;
+		Size = 2;
 		setSize(Size, Size * 0.75F);
 		damageMult = 1;
-		this.putsOutFires = true;
-		this.initialSpeed = this.velocity();
-		this.groundTime = 0;
+		putsOutFires = true;
+		initialSpeed = velocity();
+		groundTime = 0;
 	}
 
 	@Override
@@ -88,17 +84,16 @@ public class EntityWave extends AvatarEntity {
 	public void onUpdate() {
 
 		super.onUpdate();
-		this.noClip = true;
+		noClip = true;
 
-
-		if (this.velocity() == Vector.ZERO || (this.velocity().magnitude() < (initialSpeed.magnitude() / 100))) {
-			this.setDead();
+		if (velocity() == Vector.ZERO || (velocity().magnitude() < (initialSpeed.magnitude() / 100))) {
+			setDead();
 		}
 
 		setSize(getWaveSize(), getWaveSize() * 0.75F);
 
-		if (!this.inWater) {
-			this.setVelocity(velocity().dividedBy(40));
+		if (!inWater) {
+			setVelocity(velocity().dividedBy(40));
 			groundTime++;
 		}
 
@@ -108,11 +103,11 @@ public class EntityWave extends AvatarEntity {
 		Vector newPos = position().plus(move);
 		setPosition(newPos.x(), newPos.y(), newPos.z());
 
-
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
 			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 300, getWaveSize() / 2.5, getWaveSize() / 5, getWaveSize() / 2.5, 0);
-			World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, posX, posY + (Size * 0.75F), posZ, 1, getWaveSize() / 5, getWaveSize() / 20, getWaveSize() / 5, 0);
+			World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, posX, posY + (Size * 0.75F), posZ, 1, getWaveSize() / 5, getWaveSize() / 20,
+								getWaveSize() / 5, 0);
 			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY + (Size * 0.75F), posZ, 30, getWaveSize() / 5, 0, getWaveSize() / 5, 0);
 
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
@@ -122,9 +117,9 @@ public class EntityWave extends AvatarEntity {
 					motion = motion.withY(Size * 0.75 / 10);
 					entity.addVelocity(motion.x(), motion.y(), motion.z());
 
-					if (this.canDamageEntity(entity)) {
+					if (canDamageEntity(entity)) {
 						if (entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner),
-								STATS_CONFIG.waveSettings.damage * damageMult)) {
+													STATS_CONFIG.waveSettings.damage * damageMult)) {
 
 							AbilityData.get(owner, getAbility().getName()).addXp(SKILLS_CONFIG.waveHit);
 							BattlePerformanceScore.addLargeScore(getOwner());
@@ -141,15 +136,14 @@ public class EntityWave extends AvatarEntity {
 		}
 
 		if (groundTime >= 30) {
-			this.setDead();
+			setDead();
 		}
 
 		if (ticksExisted >= 250) {
-			this.setDead();
+			setDead();
 		}
 
 	}
-
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {

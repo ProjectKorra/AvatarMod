@@ -16,22 +16,21 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import com.crowsofwar.avatar.AvatarMod;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.crowsofwar.avatar.AvatarMod;
+
+import java.util.*;
 
 /**
  * @author CrowsOfWar
  */
-public class
-AvatarItems {
+public class AvatarItems {
 
 	public static List<Item> allItems;
 	public static ItemScroll itemScroll;
@@ -40,8 +39,8 @@ AvatarItems {
 	public static ItemBisonSaddle itemBisonSaddle;
 	public static ItemBisonArmor itemBisonArmor;
 	public static ItemOstrichEquipment itemOstrichEquipment;
-	private static ItemStack stackScroll;
 	public static ItemAirbenderStaff airbenderStaff;
+	private static ItemStack stackScroll;
 	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
 		@Override
 		public ItemStack getTabIconItem() {

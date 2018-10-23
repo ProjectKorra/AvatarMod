@@ -16,35 +16,25 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.data.Behavior;
-import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
-import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import net.minecraftforge.fml.relauncher.*;
+
+import com.crowsofwar.avatar.common.*;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.lightning.*;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.data.*;
+import com.crowsofwar.avatar.common.particle.*;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.List;
 
@@ -57,14 +47,12 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 public class EntityLightningSpear extends AvatarEntity {
 
 	private static final DataParameter<LightningSpearBehavior> SYNC_BEHAVIOR = EntityDataManager
-			.createKey(EntityLightningSpear.class, LightningSpearBehavior.DATA_SERIALIZER);
+					.createKey(EntityLightningSpear.class, LightningSpearBehavior.DATA_SERIALIZER);
 
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityLightningSpear.class,
-			DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityLightningSpear.class, DataSerializers.FLOAT);
 
-	private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityLightningSpear.class,
-			DataSerializers.FLOAT);
-
+	private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager
+					.createKey(EntityLightningSpear.class, DataSerializers.FLOAT);
 
 	private float damage;
 
@@ -97,14 +85,14 @@ public class EntityLightningSpear extends AvatarEntity {
 	 */
 	public EntityLightningSpear(World world) {
 		super(world);
-		this.Size = 0.8F;
-		this.degreesPerSecond = 400;
+		Size = 0.8F;
+		degreesPerSecond = 400;
 		setSize(Size, Size);
-		this.damage = 3F;
-		this.piercing = false;
-		this.setInvisible(false);
-		this.position = this.position().toBlockPos();
-		this.particleSpawner = new NetworkParticleSpawner();
+		damage = 3F;
+		piercing = false;
+		setInvisible(false);
+		position = position().toBlockPos();
+		particleSpawner = new NetworkParticleSpawner();
 
 	}
 
@@ -125,18 +113,16 @@ public class EntityLightningSpear extends AvatarEntity {
 		// Add hook or something
 		if (getOwner() != null) {
 			if (getBehavior() != null && getBehavior() instanceof LightningSpearBehavior.PlayerControlled) {
-				this.rotationYaw = this.getOwner().rotationYaw;
-				this.rotationPitch = this.getOwner().rotationPitch;
+				rotationYaw = getOwner().rotationYaw;
+				rotationPitch = getOwner().rotationPitch;
 			}
 		}
 		if (getBehavior() != null && getBehavior() == controlled) {
-			this.position = this.position().toBlockPos();
+			position = position().toBlockPos();
 		}
 
-
-		this.setSize(getSize() / 2, getSize() / 2);
+		setSize(getSize() / 2, getSize() / 2);
 		//Even though doing size/8 would be better, the entity gets too small, and doesn't render far away enough. Super annoying.
-
 
 		if (getOwner() != null) {
 			EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, getOwner());
@@ -161,12 +147,11 @@ public class EntityLightningSpear extends AvatarEntity {
 			setVelocity(Vector.ZERO);
 
 		} else {
-			this.setInvisible(false);
+			setInvisible(false);
 		}
 		if (inWater && !world.isRemote) {
 			if (floodFill == null) {
-				floodFill = new LightningFloodFill(world, getPosition(), 12,
-						this::handleWaterElectrocution);
+				floodFill = new LightningFloodFill(world, getPosition(), 12, this::handleWaterElectrocution);
 			}
 			if (floodFill.tick()) {
 				// Remove lightning spear when it's finished electrocuting
@@ -178,11 +163,14 @@ public class EntityLightningSpear extends AvatarEntity {
 
 	public void LightningBurst() {
 		if (getOwner() != null) {
-			particleSpawner.spawnParticles(world, AvatarParticles.getParticleElectricity(), (int) (getSize() * 25), (int) (getSize() * 30), posX, posY, posZ, getSize() * 1.25, getSize() * 1.25, getSize() * 1.25);
-			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+			particleSpawner.spawnParticles(world, AvatarParticles.getParticleElectricity(), (int) (getSize() * 25), (int) (getSize() * 30), posX,
+										   posY, posZ, getSize() * 1.25, getSize() * 1.25, getSize() * 1.25);
+			world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 4.0F,
+							(1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
+			world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.BLOCKS, 4.0F,
+							(1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(getSize() * 2, getSize() * 2, getSize() * 2),
-					entity -> entity != getOwner());
+																	 entity -> entity != getOwner());
 
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
@@ -204,7 +192,8 @@ public class EntityLightningSpear extends AvatarEntity {
 							entity.addVelocity(x, y, z);
 
 							if (collided instanceof AvatarEntity) {
-								if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+								if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
+												&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
 									AvatarEntity avent = (AvatarEntity) collided;
 									avent.addVelocity(x, y, z);
 								}
@@ -273,7 +262,6 @@ public class EntityLightningSpear extends AvatarEntity {
 	public EntityLivingBase getController() {
 		return getBehavior() instanceof LightningSpearBehavior.PlayerControlled ? getOwner() : null;
 	}
-
 
 	public float getDamage() {
 		return damage;
@@ -352,7 +340,7 @@ public class EntityLightningSpear extends AvatarEntity {
 		if (getAbility() instanceof AbilityLightningArc && !world.isRemote) {
 			AbilityData aD = AbilityData.get(getOwner(), "lightning_spear");
 			if (!aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				this.setDead();
+				setDead();
 			}
 		}
 		return true;
@@ -361,7 +349,7 @@ public class EntityLightningSpear extends AvatarEntity {
 	@Override
 	public void onCollideWithEntity(Entity entity) {
 		if (getBehavior() instanceof LightningSpearBehavior.Thrown && getBehavior() != null) {
-			if (this.canCollideWith(entity) && entity != getOwner()) {
+			if (canCollideWith(entity) && entity != getOwner()) {
 				if (getAbility() instanceof AbilityLightningSpear && !world.isRemote) {
 					AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
 					if (!aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
@@ -375,7 +363,7 @@ public class EntityLightningSpear extends AvatarEntity {
 			}
 			if (entity instanceof AvatarEntity) {
 				if (((AvatarEntity) entity).getElement() instanceof Airbending) {
-					this.onAirContact();
+					onAirContact();
 					((AvatarEntity) entity).onLightningContact();
 				}
 			}

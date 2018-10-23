@@ -1,14 +1,13 @@
 package com.crowsofwar.avatar.common.bending.combustion;
 
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.World;
+
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityExplosionSpawner;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -31,12 +30,12 @@ public class AbilityExplosivePillar extends Ability {
 			EntityExplosionSpawner spawner = new EntityExplosionSpawner(world);
 			Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 			double mult = ctx.getLevel() >= 1 ? 10 : 8;
-				spawner.setOwner(entity);
-				spawner.setExplosionFrequency(10F);
-				spawner.setExplosionStrength(1F);
-				spawner.setPosition(entity.posX, entity.posY, entity.posZ);
-				spawner.setVelocity(look.times(mult));
-				spawner.maxTicks(ticks);
+			spawner.setOwner(entity);
+			spawner.setExplosionFrequency(10F);
+			spawner.setExplosionStrength(1F);
+			spawner.setPosition(entity.posX, entity.posY, entity.posZ);
+			spawner.setVelocity(look.times(mult));
+			spawner.maxTicks(ticks);
 
 			if (abilityData.getLevel() == 1) {
 				spawner.setOwner(entity);
@@ -71,10 +70,8 @@ public class AbilityExplosivePillar extends Ability {
 
 				for (int i = 0; i < 3; i++) {
 					Vector direction = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-					Vector direction2 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-							60), 0);
-					Vector direction3 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-							320), 0);
+					Vector direction2 = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 60), 0);
+					Vector direction3 = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 320), 0);
 					EntityExplosionSpawner explosionSpawner = new EntityExplosionSpawner(world);
 					if (i == 0) {
 						explosionSpawner.setVelocity(direction.times(mult));

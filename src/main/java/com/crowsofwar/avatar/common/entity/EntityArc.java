@@ -17,30 +17,30 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraftforge.fml.relauncher.*;
+
+import com.crowsofwar.gorecore.util.Vector;
+
+import java.util.*;
 import java.util.function.Consumer;
 
 public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 
+	public double velocityMultiplier;
 	private List<T> points;
 	private int brightness = 15728880;
-	public double velocityMultiplier;
 
 	public EntityArc(World world) {
 		super(world);
 		float size = .2f;
 		setSize(size, size);
-		this.velocityMultiplier = 4;
+		velocityMultiplier = 4;
 
-		this.points = new ArrayList<>();
+		points = new ArrayList<>();
 		for (int i = 0; i < getAmountOfControlPoints(); i++) {
 			points.add(createControlPoint(size, i));
 		}
@@ -67,15 +67,14 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (this.ticksExisted == 1) {
+		if (ticksExisted == 1) {
 			for (T point : points) {
 				point.setPosition(position());
 			}
 		}
-		if (!this.world.isDaytime()) {
+		if (!world.isDaytime()) {
 			brightness = 500;
-		}
-		else brightness = 15728880;
+		} else brightness = 15728880;
 
 		ignoreFrustumCheck = true;
 

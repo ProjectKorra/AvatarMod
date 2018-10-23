@@ -18,8 +18,7 @@
 package com.crowsofwar.avatar.common;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.*;
 
 import javax.annotation.Nullable;
 
@@ -119,8 +118,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the fireball
 	 */
 	public static DamageSource causeFireballDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_fireball", hit, owner).setProjectile()
-				.setExplosion();
+		return new EntityDamageSourceIndirect("avatar_fireball", hit, owner).setProjectile().setExplosion();
 	}
 
 	/**
@@ -179,10 +177,8 @@ public class AvatarDamageSource {
 	 * @param hit        Who was hit by lightning
 	 * @param controller Who redirected the lightning
 	 */
-	public static DamageSource causeRedirectedLightningDamage(Entity hit, @Nullable Entity
-			controller) {
-		return new EntityDamageSourceIndirect("avatar_lightningBendingRedirected", hit, controller)
-				.setDamageBypassesArmor();
+	public static DamageSource causeRedirectedLightningDamage(Entity hit, @Nullable Entity controller) {
+		return new EntityDamageSourceIndirect("avatar_lightningBendingRedirected", hit, controller).setDamageBypassesArmor();
 	}
 
 	/**

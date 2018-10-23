@@ -5,9 +5,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -19,9 +17,6 @@ public class EntityExplosionSpawner extends AvatarEntity {
 	private float explosionStrength;
 	private float frequency;
 
-	/**
-	 * @param world
-	 */
 	public EntityExplosionSpawner(World world) {
 		super(world);
 		setSize(1, 1);
@@ -31,7 +26,7 @@ public class EntityExplosionSpawner extends AvatarEntity {
 	}
 
 	public void maxTicks(float ticks) {
-		this.maxTicksAlive = ticks;
+		maxTicksAlive = ticks;
 	}
 
 	public void setExplosionStrength(float explosionStrength) {
@@ -39,7 +34,7 @@ public class EntityExplosionSpawner extends AvatarEntity {
 	}
 
 	public void setExplosionFrequency(float explosionFrequency) {
-		this.frequency = explosionFrequency;
+		frequency = explosionFrequency;
 	}
 
 	@Override
@@ -62,15 +57,17 @@ public class EntityExplosionSpawner extends AvatarEntity {
 		}
 
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
-		Block belowBlock = world.getBlockState(below).getBlock();
+		IBlockState belowState = world.getBlockState(below);
+		Block belowBlock = belowState.getBlock();
 
-		if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
-				world.getBlockState(below).getBlock().getSoundType().getBreakSound(), SoundCategory.PLAYERS, 1, 1, false);
+		if (ticksExisted % 3 == 0)
+			world.playSound(posX, posY, posZ, belowBlock.getSoundType(belowState, world, below, this).getBreakSound(), SoundCategory.PLAYERS, 1, 1,
+							false);
 
 		float explosionSize = STATS_CONFIG.explosionSettings.explosionSize * explosionStrength;
 		explosionSize += getPowerRating() * 2.0 / 100;
 		if (ticksExisted >= 5 && ticksExisted % frequency == 0) {
-			world.createExplosion(this, this.posX, this.posY, this.posZ, explosionSize, false);
+			world.createExplosion(this, posX, posY, posZ, explosionSize, false);
 		}
 
 		if (!world.getBlockState(below).isNormalCube()) {

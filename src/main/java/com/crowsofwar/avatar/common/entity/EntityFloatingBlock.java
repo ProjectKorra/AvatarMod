@@ -17,36 +17,30 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.data.Behavior;
-import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.crowsofwar.gorecore.util.Vector;
-import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.*;
+
+import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.entity.data.*;
+import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.base.Optional;
 
 import java.util.Random;
 
@@ -57,17 +51,13 @@ public class EntityFloatingBlock extends AvatarEntity {
 
 	public static final Block DEFAULT_BLOCK = Blocks.STONE;
 
-	private static final DataParameter<Integer> SYNC_ENTITY_ID = createKey(EntityFloatingBlock.class,
-			DataSerializers.VARINT);
-	private static final DataParameter<Vector> SYNC_VELOCITY = createKey(EntityFloatingBlock.class,
-			AvatarDataSerializers.SERIALIZER_VECTOR);
-	private static final DataParameter<Float> SYNC_FRICTION = createKey(EntityFloatingBlock.class,
-			DataSerializers.FLOAT);
-	private static final DataParameter<Optional<IBlockState>> SYNC_BLOCK = createKey(
-			EntityFloatingBlock.class, DataSerializers.OPTIONAL_BLOCK_STATE);
+	private static final DataParameter<Integer> SYNC_ENTITY_ID = createKey(EntityFloatingBlock.class, DataSerializers.VARINT);
+	private static final DataParameter<Vector> SYNC_VELOCITY = createKey(EntityFloatingBlock.class, AvatarDataSerializers.SERIALIZER_VECTOR);
+	private static final DataParameter<Float> SYNC_FRICTION = createKey(EntityFloatingBlock.class, DataSerializers.FLOAT);
+	private static final DataParameter<Optional<IBlockState>> SYNC_BLOCK = createKey(EntityFloatingBlock.class, DataSerializers.OPTIONAL_BLOCK_STATE);
 
-	private static final DataParameter<FloatingBlockBehavior> SYNC_BEHAVIOR = createKey(
-			EntityFloatingBlock.class, FloatingBlockBehavior.DATA_SERIALIZER);
+	private static final DataParameter<FloatingBlockBehavior> SYNC_BEHAVIOR = createKey(EntityFloatingBlock.class,
+																						FloatingBlockBehavior.DATA_SERIALIZER);
 
 	private static int nextBlockID = 0;
 
@@ -98,8 +88,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			setID(nextBlockID++);
 		}
-		this.enableItemDrops = true;
-		this.damageMult = 1;
+		enableItemDrops = true;
+		damageMult = 1;
 
 	}
 
@@ -116,8 +106,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	public static EntityFloatingBlock getFromID(World world, int id) {
 		for (int i = 0; i < world.loadedEntityList.size(); i++) {
 			Entity e = world.loadedEntityList.get(i);
-			if (e instanceof EntityFloatingBlock && ((EntityFloatingBlock) e).getID() == id)
-				return (EntityFloatingBlock) e;
+			if (e instanceof EntityFloatingBlock && ((EntityFloatingBlock) e).getID() == id) return (EntityFloatingBlock) e;
 		}
 		return null;
 	}
@@ -138,10 +127,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		setBlockState(
-				Block.getBlockById(nbt.getInteger("BlockId")).getStateFromMeta(nbt.getInteger("Metadata")));
-		setVelocity(new Vector(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble
-				("VelocityZ")));
+		setBlockState(Block.getBlockById(nbt.getInteger("BlockId")).getStateFromMeta(nbt.getInteger("Metadata")));
+		setVelocity(new Vector(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble("VelocityZ")));
 		setFriction(nbt.getFloat("Friction"));
 		setItemDropsEnabled(nbt.getBoolean("DropItems"));
 		setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
@@ -210,7 +197,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	 * Set whether the block should be dropped when it is destroyed.
 	 */
 	public void setItemDropsEnabled(boolean enable) {
-		this.enableItemDrops = enable;
+		enableItemDrops = enable;
 	}
 
 	public float getDamageMult() {
@@ -218,12 +205,11 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 
 	public void setDamageMult(float mult) {
-		this.damageMult = mult;
+		damageMult = mult;
 	}
 
 	private void spawnCrackParticle(double x, double y, double z, double mx, double my, double mz) {
-		world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, x, y, z, mx, my, mz,
-				Block.getStateId(getBlockState()));
+		world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, x, y, z, mx, my, mz, Block.getStateId(getBlockState()));
 	}
 
 	@Override
@@ -244,7 +230,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 
 		}
 
-
 		setVelocity(velocity().times(getFriction()));
 
 		/*prevPosX = posX;
@@ -261,8 +246,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	public boolean onCollideWithSolid() {
 
 		FloatingBlockBehavior behavior = getBehavior();
-		if (!(behavior instanceof FloatingBlockBehavior.Fall || behavior instanceof
-				FloatingBlockBehavior.Thrown)) {
+		if (!(behavior instanceof FloatingBlockBehavior.Fall || behavior instanceof FloatingBlockBehavior.Thrown)) {
 
 			return false;
 
@@ -271,8 +255,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		// Spawn particles
 		Random random = new Random();
 		for (int i = 0; i < 7; i++) {
-			spawnCrackParticle(posX, posY + 0.3, posZ, random.nextGaussian() * 0.1,
-					random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
+			spawnCrackParticle(posX, posY + 0.3, posZ, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
 		}
 		if (getOwner() != null && getAbility() instanceof AbilityPickUpBlock) {
 			AbilityData data = BendingData.get(getOwner()).getAbilityData("pickup_block");
@@ -285,7 +268,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 					world.spawnEntity(ei);
 				}
 			}
-
 
 			if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
 
@@ -330,7 +312,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 
 	public AxisAlignedBB getExpandedHitbox() {
-		return this.expandedHitbox;
+		return expandedHitbox;
 	}
 
 	@Override

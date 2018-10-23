@@ -17,26 +17,18 @@
 
 package com.crowsofwar.avatar.common.data.ctx;
 
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
-import com.crowsofwar.gorecore.util.VectorI;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockCauldron;
+import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGlassBottle;
+import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.*;
 
 import javax.annotation.Nullable;
 
@@ -66,13 +58,12 @@ public class BendingContext {
 	 */
 	public BendingContext(BendingData data, EntityLivingBase entity, Raytrace.Result raytrace) {
 		this.data = data;
-		this.bender = Bender.get(entity);
+		bender = Bender.get(entity);
 		this.raytrace = raytrace;
 		verifyClientRaytrace();
 	}
 
-	public BendingContext(BendingData data, EntityLivingBase entity, Bender bender,
-						  Raytrace.Result raytrace) {
+	public BendingContext(BendingData data, EntityLivingBase entity, Bender bender, Raytrace.Result raytrace) {
 
 		this.data = data;
 		this.bender = bender;
@@ -190,7 +181,6 @@ public class BendingContext {
 			return true;
 		}
 
-
 		VectorI targetPos = getLookPosI();
 		if (targetPos != null) {
 			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
@@ -208,8 +198,7 @@ public class BendingContext {
 				IBlockState ibs = world.getBlockState(targetPos.toBlockPos());
 				int waterLevel = ibs.getValue(BlockCauldron.LEVEL);
 				if (waterLevel > 0) {
-					world.setBlockState(targetPos.toBlockPos(),
-							ibs.withProperty(BlockCauldron.LEVEL, waterLevel - 1));
+					world.setBlockState(targetPos.toBlockPos(), ibs.withProperty(BlockCauldron.LEVEL, waterLevel - 1));
 					return true;
 				}
 			}
@@ -219,8 +208,6 @@ public class BendingContext {
 		return bender.consumeWaterLevel(amount);
 
 	}
-
-
 
 	public boolean consumeSnow(int amount) {
 
@@ -242,14 +229,11 @@ public class BendingContext {
 
 			}
 
-
 		}
 
 		return bender.consumeWaterLevel(amount);
 
 	}
-
-
 
 	public boolean consumePlants(int amount) {
 
@@ -271,7 +255,6 @@ public class BendingContext {
 				return true;
 
 			}
-
 
 		}
 

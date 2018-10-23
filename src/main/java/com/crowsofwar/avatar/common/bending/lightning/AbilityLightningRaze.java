@@ -1,26 +1,22 @@
 package com.crowsofwar.avatar.common.bending.lightning;
 
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.World;
+
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpawner;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.gorecore.util.Vector.getEyePos;
-import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
-
+import static com.crowsofwar.gorecore.util.Vector.*;
 
 public class AbilityLightningRaze extends Ability {
 	public AbilityLightningRaze() {
 		super(Lightningbending.ID, "lightning_raze");
 	}
-
-
 
 	@Override
 	public void execute(AbilityContext ctx) {
@@ -47,9 +43,6 @@ public class AbilityLightningRaze extends Ability {
 		/*0 accuracy is the most accurate; each number represents how far away from the spawn position
 		it will be.**/
 		//Default 1
-
-
-
 
 		if (ctx.getLevel() >= 1) {
 			ticks = STATS_CONFIG.lightningRazeSettings.ticks * 2;
@@ -116,10 +109,9 @@ public class AbilityLightningRaze extends Ability {
 			boltSpawner.setDuration(ticks);
 			boltSpawner.setLightningFrequency(frequency);
 			boltSpawner.setPlayerControl(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
-			boltSpawner.setAmountofBolts(bolts);
+			boltSpawner.setAmountOfBolts(bolts);
 			boltSpawner.setAccuracy(accuracy);
 			world.spawnEntity(boltSpawner);
-
 
 		}
 

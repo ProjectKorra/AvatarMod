@@ -1,12 +1,10 @@
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.UUID;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+
+import java.util.*;
 
 /**
  * Manages the power rating

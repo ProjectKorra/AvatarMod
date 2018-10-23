@@ -1,39 +1,26 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.air.CloudburstPowerModifier;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.data.Behavior;
-import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.entity.*;
+import net.minecraft.entity.projectile.*;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.*;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import net.minecraftforge.fml.relauncher.*;
+
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.bending.air.CloudburstPowerModifier;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.data.*;
+import com.crowsofwar.avatar.common.util.*;
+import com.crowsofwar.gorecore.util.Vector;
+
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.AIR_STATCTRL_HANDLER;
@@ -82,7 +69,7 @@ public class EntityCloudBall extends AvatarEntity {
 		super.onUpdate();
 		int ticks = 0;
 		if (getBehavior() == null) {
-			this.setBehavior(new CloudburstBehavior.PlayerControlled());
+			setBehavior(new CloudburstBehavior.PlayerControlled());
 		}
 		setBehavior((CloudburstBehavior) getBehavior().onUpdate(this));
 		if (getBehavior() instanceof CloudburstBehavior.Thrown) {
@@ -278,9 +265,9 @@ public class EntityCloudBall extends AvatarEntity {
 
 							//Divide the result of the position difference to make entities fly
 							//further the closer they are to the player.
-							double dist = (hitBox - entity.getDistance(entity)) > 1 ? (hitBox- entity.getDistance(entity)) : 1;
+							double dist = (hitBox - entity.getDistance(entity)) > 1 ? (hitBox - entity.getDistance(entity)) : 1;
 							Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
-							velocity = velocity.dividedBy(40).times(dist).withY(hitBox/50);
+							velocity = velocity.dividedBy(40).times(dist).withY(hitBox / 50);
 
 							double x = (velocity.x());
 							double y = (velocity.y()) > 0 ? velocity.y() : 0.3F;

@@ -19,16 +19,13 @@ package com.crowsofwar.avatar.common.network;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.data.*;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.FMLLog;
 
 import java.util.*;
 
-import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.readUUID;
-import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.writeUUID;
+import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.*;
 
 /**
  * DataTransmitters are responsible for reading and writing certain parts of
@@ -39,55 +36,53 @@ import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.writeUUID;
  */
 public class DataTransmitters {
 
-	public static final DataTransmitter<List<UUID>> BENDING_LIST = new
-			DataTransmitter<List<UUID>>() {
+	public static final DataTransmitter<List<UUID>> BENDING_LIST = new DataTransmitter<List<UUID>>() {
 
-				@Override
-				public void write(ByteBuf buf, List<UUID> t) {
-					buf.writeInt(t.size());
-					for (UUID bendingId : t) {
-						writeUUID(buf, bendingId);
-					}
+		@Override
+		public void write(ByteBuf buf, List<UUID> t) {
+			buf.writeInt(t.size());
+			for (UUID bendingId : t) {
+				writeUUID(buf, bendingId);
+			}
+		}
+
+		@Override
+		public List<UUID> read(ByteBuf buf, BendingData data) {
+			int size = buf.readInt();
+			List<UUID> out = new ArrayList<>(size);
+			for (int i = 0; i < size; i++) {
+				out.add(readUUID(buf));
+			}
+			return out;
+		}
+	};
+
+	public static final DataTransmitter<Map<String, AbilityData>> ABILITY_DATA = new DataTransmitter<Map<String, AbilityData>>() {
+
+		@Override
+		public void write(ByteBuf buf, Map<String, AbilityData> t) {
+			Set<Map.Entry<String, AbilityData>> entries = t.entrySet();
+			buf.writeInt(entries.size());
+			for (Map.Entry<String, AbilityData> entry : entries) {
+				entry.getValue().toBytes(buf);
+			}
+		}
+
+		@Override
+		public Map<String, AbilityData> read(ByteBuf buf, BendingData data) {
+			Map<String, AbilityData> out = new HashMap<>();
+			int size = buf.readInt();
+			for (int i = 0; i < size; i++) {
+				AbilityData abilityData = AbilityData.createFromBytes(buf, data);
+				if (abilityData == null) {
+					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid ability ID sent for ability data");
+				} else {
+					out.put(abilityData.getAbilityName(), abilityData);
 				}
-
-				@Override
-				public List<UUID> read(ByteBuf buf, BendingData data) {
-					int size = buf.readInt();
-					List<UUID> out = new ArrayList<>(size);
-					for (int i = 0; i < size; i++) {
-						out.add(readUUID(buf));
-					}
-					return out;
-				}
-			};
-
-	public static final DataTransmitter<Map<String, AbilityData>> ABILITY_DATA = new
-			DataTransmitter<Map<String, AbilityData>>() {
-
-				@Override
-				public void write(ByteBuf buf, Map<String, AbilityData> t) {
-					Set<Map.Entry<String, AbilityData>> entries = t.entrySet();
-					buf.writeInt(entries.size());
-					for (Map.Entry<String, AbilityData> entry : entries) {
-						entry.getValue().toBytes(buf);
-					}
-				}
-
-				@Override
-				public Map<String, AbilityData> read(ByteBuf buf, BendingData data) {
-					Map<String, AbilityData> out = new HashMap<>();
-					int size = buf.readInt();
-					for (int i = 0; i < size; i++) {
-						AbilityData abilityData = AbilityData.createFromBytes(buf, data);
-						if (abilityData == null) {
-							AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid ability ID sent for ability data");
-						} else {
-							out.put(abilityData.getAbilityName(), abilityData);
-						}
-					}
-					return out;
-				}
-			};
+			}
+			return out;
+		}
+	};
 
 	public static final DataTransmitter<List<StatusControl>> STATUS_CONTROLS = new DataTransmitter<List<StatusControl>>() {
 
@@ -105,10 +100,8 @@ public class DataTransmitters {
 			List<StatusControl> out = new ArrayList<>();
 			for (int i = 0; i < size; i++) {
 				StatusControl sc = StatusControl.lookup(buf.readInt());
-				if (sc == null)
-					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid status control id");
-				else
-					out.add(sc);
+				if (sc == null) AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid status control id");
+				else out.add(sc);
 			}
 			return out;
 		}
@@ -161,10 +154,8 @@ public class DataTransmitters {
 			for (int i = 0; i < size; i++) {
 				if (!buf.isReadable(4)) break;
 				TickHandler list = TickHandlerController.fromId(buf.readInt());
-				if (list == null)
-					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid tick handler id");
-				else
-					out.add(list);
+				if (list == null) AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid tick handler id");
+				else out.add(list);
 			}
 			return out;
 		}

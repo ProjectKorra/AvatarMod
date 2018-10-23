@@ -17,14 +17,12 @@
 
 package com.crowsofwar.gorecore.util;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
+
+import io.netty.buffer.ByteBuf;
 
 import static java.lang.Math.*;
 
@@ -47,7 +45,7 @@ public class Vector {
 	public static final Vector NORTH = new Vector(0, 0, -1);
 	public static final Vector SOUTH = new Vector(0, 0, 1);
 
-	public static final Vector[] DIRECTION_VECTORS = {UP, DOWN, EAST, WEST, NORTH, SOUTH};
+	public static final Vector[] DIRECTION_VECTORS = { UP, DOWN, EAST, WEST, NORTH, SOUTH };
 
 	private final double x, y, z;
 	private double cachedMagnitude;
@@ -70,7 +68,7 @@ public class Vector {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.cachedMagnitude = -1;
+		cachedMagnitude = -1;
 	}
 
 	/**
@@ -115,371 +113,6 @@ public class Vector {
 
 	public Vector(EnumFacing facing) {
 		this(facing.getDirectionVec());
-	}
-
-	/**
-	 * Get the x-coordinate of this vector.
-	 */
-	public double x() {
-		return x;
-	}
-
-	/**
-	 * Get the y-coordinate of this vector.
-	 */
-	public double y() {
-		return y;
-	}
-
-	/**
-	 * Get the z-coordinate of this vector.
-	 */
-	public double z() {
-		return z;
-	}
-
-	/**
-	 * Returns a new vector with the same coordinates as this one, but with the specified
-	 * x-coordinate.
-	 */
-	public Vector withX(double x) {
-		return new Vector(x, this.y, this.z);
-	}
-
-	/**
-	 * Returns a new vector with the same coordinates as this one, but with the specified
-	 * y-coordinate.
-	 */
-	public Vector withY(double y) {
-		return new Vector(this.x, y, this.z);
-	}
-
-	/**
-	 * Returns a new vector with the same coordinates as this one, but with the specified
-	 * z-coordinate.
-	 */
-	public Vector withZ(double z) {
-		return new Vector(this.x, this.y, z);
-	}
-
-	/**
-	 * Creates a new vector from the sum of this vector and the given vector.
-	 *
-	 * @param vec Vector for sum
-	 */
-	public Vector plus(Vector vec) {
-		return plus(vec.x(), vec.y(), vec.z());
-	}
-
-	/**
-	 * Creates a new vector from the sub of this vector and the vector defined
-	 * by (x, y, z).
-	 *
-	 * @param x X-coordinate of other vector
-	 * @param y Y-coordinate of other vector
-	 * @param z Z-coordinate of other vector
-	 */
-	public Vector plus(double x, double y, double z) {
-		return new Vector(this.x + x, this.y + y, this.z + z);
-	}
-
-	public Vector plusX(double x) {
-		return plus(x, 0, 0);
-	}
-
-	public Vector plusY(double y) {
-		return plus(0, y, 0);
-	}
-
-	public Vector plusZ(double z) {
-		return plus(0, 0, z);
-	}
-
-	/**
-	 * Creates a new vector from this vector minus the given vector.
-	 *
-	 * @param vec Other vector
-	 */
-	public Vector minus(Vector vec) {
-		return minus(vec.x(), vec.y(), vec.z());
-	}
-
-	/**
-	 * Creates a new vector from this vector minus the vector defined by
-	 * (x,y,z).
-	 *
-	 * @param x X-coordinate to subtract
-	 * @param y Y-coordinate to subtract
-	 * @param z Z-coordinate to subtract
-	 */
-	public Vector minus(double x, double y, double z) {
-		return new Vector(this.x - x, this.y - y, this.z - z);
-	}
-
-	public Vector minusX(double x) {
-		return minus(x, 0, 0);
-	}
-
-	public Vector minusY(double y) {
-		return minus(0, y, 0);
-	}
-
-	public Vector minusZ(double z) {
-		return minus(0, 0, z);
-	}
-
-	/**
-	 * Creates a new vector from this vector times the scalar.
-	 *
-	 * @param scalar The scalar to multiply the new vector by
-	 */
-	public Vector times(double scalar) {
-		return new Vector(x * scalar, y * scalar, z * scalar);
-	}
-
-	/**
-	 * Creates a new vector based on this vector divided by the other vector.
-	 *
-	 * @param scalar The scalar to divide the new vector by
-	 */
-	public Vector dividedBy(double scalar) {
-		return new Vector(x / scalar, y / scalar, z / scalar);
-	}
-
-	/**
-	 * Get the length of this vector.
-	 * <p>
-	 * The result is cached since square-root is a performance-heavy operation.
-	 */
-	public double magnitude() {
-		if (cachedMagnitude == -1) {
-			cachedMagnitude = Math.sqrt(sqrMagnitude());
-		}
-		return cachedMagnitude;
-	}
-
-	/**
-	 * Get the square magnitude of this vector.
-	 */
-	public double sqrMagnitude() {
-		return x() * x() + y() * y() + z() * z();
-	}
-
-	/**
-	 * Normalizes this vector so that it has a length of 1.
-	 *
-	 * @return this
-	 */
-	public Vector normalize() {
-		return this.dividedBy(magnitude());
-	}
-
-	/**
-	 * Checks whether the vector is normalized - you should NOT use <code>vec.sqrMagnitude()
-	 * == 1</code> because there may be small mathematical errors that makes magnitude 0.001 off
-	 */
-	public boolean isNormalized() {
-		double length = sqrMagnitude();
-		return Math.abs(length - 1) <= 0.001;
-	}
-
-	/**
-	 * Get the square distance from the given vector.
-	 *
-	 * @param vec The other vector
-	 */
-	public double sqrDist(Vector vec) {
-		return sqrDist(vec.x(), vec.y(), vec.z());
-	}
-
-	/**
-	 * Get the square distance from the vector defined by (x, y, z).
-	 *
-	 * @param x The x-position of the other vector
-	 * @param y The y-position of the other vector
-	 * @param z The z-position of the other vector
-	 */
-	public double sqrDist(double x, double y, double z) {
-		return (this.x() - x) * (this.x() - x) + (this.y() - y) * (this.y() - y)
-				+ (this.z() - z) * (this.z() - z);
-	}
-
-	/**
-	 * Get the distance from the given vector.
-	 *
-	 * @param vec The other vector
-	 */
-	public double dist(Vector vec) {
-		return Math.sqrt(sqrDist(vec));
-	}
-
-	/**
-	 * Get the distance from the vector defined by (x, y, z).
-	 *
-	 * @param x The x-position of the other vector
-	 * @param y The y-position of the other vector
-	 * @param z The z-position of the other vector
-	 */
-	public double dist(double x, double y, double z) {
-		return Math.sqrt(sqrDist(x, y, z));
-	}
-
-	/**
-	 * Get the dot product with the given vector.
-	 *
-	 * @param vec The other vector
-	 */
-	public double dot(Vector vec) {
-		return dot(vec.x(), vec.y(), vec.z());
-	}
-
-	/**
-	 * Get the dot product with the vector defined by (x, y, z).
-	 *
-	 * @param x X-coordinate of the other vector
-	 * @param y Y-coordinate of the other vector
-	 * @param z Z-coordinate of the other vector
-	 */
-	public double dot(double x, double y, double z) {
-		return this.x() * x + this.y() * y + this.z() * z;
-	}
-
-	/**
-	 * Returns the cross product of the given vector. This creates a new vector.
-	 *
-	 * @param vec The vector to cross with
-	 */
-	public Vector cross(Vector vec) {
-		return cross(vec.x(), vec.y(), vec.z());
-	}
-
-	/**
-	 * Returns the cross product with the vector defined by (x, y, z). This
-	 * creates a new vector.
-	 *
-	 * @param x X-coordinate of other vector
-	 * @param y Y-coordinate of other vector
-	 * @param z Z-coordinate of other vector
-	 */
-	public Vector cross(double x, double y, double z) {
-		return new Vector(this.y() * z - this.z() * y, this.z() * x - this.x() * z,
-				this.x() * y - this.y() * x);
-	}
-
-	/**
-	 * Returns the angle between the other vector, in radians. (result is ranged
-	 * 0-PI).
-	 *
-	 * @param vec Other vector
-	 */
-	public double angle(Vector vec) {
-		double dot = dot(vec);
-		return Math.acos(dot / (this.magnitude() * vec.magnitude()));
-	}
-
-	/**
-	 * Returns this vector reflected across the given normal. Does not modify
-	 * this vector or the normal.
-	 *
-	 * @param normal Must be normalized
-	 */
-	public Vector reflect(Vector normal) {
-		if (!normal.isNormalized()) {
-			throw new IllegalArgumentException("Normal vector must be normalized");
-		}
-		return this.minus(normal.times(2).times(this.dot(normal)));
-	}
-
-	/**
-	 * <strong>Assuming</strong> this vector represents spherical coordinates
-	 * (in radians), returns a unit vector in Cartesian space which has the
-	 * rotations of this vector.
-	 * <p>
-	 * Does not modify this vector.
-	 *
-	 * @see #toRectangular(Vector)
-	 */
-	public Vector toRectangular() {
-		return Vector.toRectangular(this);
-	}
-
-	/**
-	 * <strong>Assuming</strong> this vector represents rectangular coordinates,
-	 * returns the rotations (in radians) for this vector.
-	 * <p>
-	 * Does not modify this vector.
-	 */
-	public Vector toSpherical() {
-		return Vector.getRotationTo(Vector.ZERO, this);
-	}
-
-	/**
-	 * Returns a minecraft vector with the same coordinates as this vector.
-	 */
-	public Vec3d toMinecraft() {
-		return new Vec3d(x(), y(), z());
-	}
-
-	/**
-	 * Returns an integer vector of this vector by rounding each component.
-	 */
-	public VectorI round() {
-		return new VectorI((int) Math.round(x()), (int) Math.round(y()), (int) Math.round(z()));
-	}
-
-	/**
-	 * Returns an integer vector of this vector by casting each component to an
-	 * integer.
-	 */
-	public VectorI cast() {
-		return new VectorI((int) x(), (int) y(), (int) z());
-	}
-
-	/**
-	 * Returns a BlockPos with the same coordinates as this vector.
-	 */
-	public BlockPos toBlockPos() {
-		return cast().toBlockPos();
-	}
-
-	public Vec3i toMinecraftInteger() {
-		return new Vec3i(x(), y(), z());
-	}
-
-	/**
-	 * Writes this vector to the packet byte buffer.
-	 *
-	 * @param buf Buffer to write to
-	 */
-	public void toBytes(ByteBuf buf) {
-		buf.writeDouble(x());
-		buf.writeDouble(y());
-		buf.writeDouble(z());
-	}
-
-	/**
-	 * Writes this vector directly to the NBT provided.
-	 */
-	public void writeToNbt(NBTTagCompound nbt) {
-		nbt.setDouble("x", x());
-		nbt.setDouble("y", y());
-		nbt.setDouble("z", z());
-	}
-
-	@Override
-	public String toString() {
-		return "(" + x() + ", " + y() + ", " + z() + ")";
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) return false;
-		if (obj instanceof Vector) {
-			Vector vec = (Vector) obj;
-			return this.x() == vec.x() && this.y() == vec.y() && this.z() == vec.z();
-		} else {
-			return false;
-		}
 	}
 
 	/**
@@ -617,6 +250,369 @@ public class Vector {
 
 	public static Vector readFromNbt(NBTTagCompound nbt) {
 		return new Vector(nbt.getDouble("x"), nbt.getDouble("y"), nbt.getDouble("z"));
+	}
+
+	/**
+	 * Get the x-coordinate of this vector.
+	 */
+	public double x() {
+		return x;
+	}
+
+	/**
+	 * Get the y-coordinate of this vector.
+	 */
+	public double y() {
+		return y;
+	}
+
+	/**
+	 * Get the z-coordinate of this vector.
+	 */
+	public double z() {
+		return z;
+	}
+
+	/**
+	 * Returns a new vector with the same coordinates as this one, but with the specified
+	 * x-coordinate.
+	 */
+	public Vector withX(double x) {
+		return new Vector(x, y, z);
+	}
+
+	/**
+	 * Returns a new vector with the same coordinates as this one, but with the specified
+	 * y-coordinate.
+	 */
+	public Vector withY(double y) {
+		return new Vector(x, y, z);
+	}
+
+	/**
+	 * Returns a new vector with the same coordinates as this one, but with the specified
+	 * z-coordinate.
+	 */
+	public Vector withZ(double z) {
+		return new Vector(x, y, z);
+	}
+
+	/**
+	 * Creates a new vector from the sum of this vector and the given vector.
+	 *
+	 * @param vec Vector for sum
+	 */
+	public Vector plus(Vector vec) {
+		return plus(vec.x(), vec.y(), vec.z());
+	}
+
+	/**
+	 * Creates a new vector from the sub of this vector and the vector defined
+	 * by (x, y, z).
+	 *
+	 * @param x X-coordinate of other vector
+	 * @param y Y-coordinate of other vector
+	 * @param z Z-coordinate of other vector
+	 */
+	public Vector plus(double x, double y, double z) {
+		return new Vector(this.x + x, this.y + y, this.z + z);
+	}
+
+	public Vector plusX(double x) {
+		return plus(x, 0, 0);
+	}
+
+	public Vector plusY(double y) {
+		return plus(0, y, 0);
+	}
+
+	public Vector plusZ(double z) {
+		return plus(0, 0, z);
+	}
+
+	/**
+	 * Creates a new vector from this vector minus the given vector.
+	 *
+	 * @param vec Other vector
+	 */
+	public Vector minus(Vector vec) {
+		return minus(vec.x(), vec.y(), vec.z());
+	}
+
+	/**
+	 * Creates a new vector from this vector minus the vector defined by
+	 * (x,y,z).
+	 *
+	 * @param x X-coordinate to subtract
+	 * @param y Y-coordinate to subtract
+	 * @param z Z-coordinate to subtract
+	 */
+	public Vector minus(double x, double y, double z) {
+		return new Vector(this.x - x, this.y - y, this.z - z);
+	}
+
+	public Vector minusX(double x) {
+		return minus(x, 0, 0);
+	}
+
+	public Vector minusY(double y) {
+		return minus(0, y, 0);
+	}
+
+	public Vector minusZ(double z) {
+		return minus(0, 0, z);
+	}
+
+	/**
+	 * Creates a new vector from this vector times the scalar.
+	 *
+	 * @param scalar The scalar to multiply the new vector by
+	 */
+	public Vector times(double scalar) {
+		return new Vector(x * scalar, y * scalar, z * scalar);
+	}
+
+	/**
+	 * Creates a new vector based on this vector divided by the other vector.
+	 *
+	 * @param scalar The scalar to divide the new vector by
+	 */
+	public Vector dividedBy(double scalar) {
+		return new Vector(x / scalar, y / scalar, z / scalar);
+	}
+
+	/**
+	 * Get the length of this vector.
+	 * <p>
+	 * The result is cached since square-root is a performance-heavy operation.
+	 */
+	public double magnitude() {
+		if (cachedMagnitude == -1) {
+			cachedMagnitude = Math.sqrt(sqrMagnitude());
+		}
+		return cachedMagnitude;
+	}
+
+	/**
+	 * Get the square magnitude of this vector.
+	 */
+	public double sqrMagnitude() {
+		return x() * x() + y() * y() + z() * z();
+	}
+
+	/**
+	 * Normalizes this vector so that it has a length of 1.
+	 *
+	 * @return this
+	 */
+	public Vector normalize() {
+		return dividedBy(magnitude());
+	}
+
+	/**
+	 * Checks whether the vector is normalized - you should NOT use <code>vec.sqrMagnitude()
+	 * == 1</code> because there may be small mathematical errors that makes magnitude 0.001 off
+	 */
+	public boolean isNormalized() {
+		double length = sqrMagnitude();
+		return Math.abs(length - 1) <= 0.001;
+	}
+
+	/**
+	 * Get the square distance from the given vector.
+	 *
+	 * @param vec The other vector
+	 */
+	public double sqrDist(Vector vec) {
+		return sqrDist(vec.x(), vec.y(), vec.z());
+	}
+
+	/**
+	 * Get the square distance from the vector defined by (x, y, z).
+	 *
+	 * @param x The x-position of the other vector
+	 * @param y The y-position of the other vector
+	 * @param z The z-position of the other vector
+	 */
+	public double sqrDist(double x, double y, double z) {
+		return (x() - x) * (x() - x) + (y() - y) * (y() - y) + (z() - z) * (z() - z);
+	}
+
+	/**
+	 * Get the distance from the given vector.
+	 *
+	 * @param vec The other vector
+	 */
+	public double dist(Vector vec) {
+		return Math.sqrt(sqrDist(vec));
+	}
+
+	/**
+	 * Get the distance from the vector defined by (x, y, z).
+	 *
+	 * @param x The x-position of the other vector
+	 * @param y The y-position of the other vector
+	 * @param z The z-position of the other vector
+	 */
+	public double dist(double x, double y, double z) {
+		return Math.sqrt(sqrDist(x, y, z));
+	}
+
+	/**
+	 * Get the dot product with the given vector.
+	 *
+	 * @param vec The other vector
+	 */
+	public double dot(Vector vec) {
+		return dot(vec.x(), vec.y(), vec.z());
+	}
+
+	/**
+	 * Get the dot product with the vector defined by (x, y, z).
+	 *
+	 * @param x X-coordinate of the other vector
+	 * @param y Y-coordinate of the other vector
+	 * @param z Z-coordinate of the other vector
+	 */
+	public double dot(double x, double y, double z) {
+		return x() * x + y() * y + z() * z;
+	}
+
+	/**
+	 * Returns the cross product of the given vector. This creates a new vector.
+	 *
+	 * @param vec The vector to cross with
+	 */
+	public Vector cross(Vector vec) {
+		return cross(vec.x(), vec.y(), vec.z());
+	}
+
+	/**
+	 * Returns the cross product with the vector defined by (x, y, z). This
+	 * creates a new vector.
+	 *
+	 * @param x X-coordinate of other vector
+	 * @param y Y-coordinate of other vector
+	 * @param z Z-coordinate of other vector
+	 */
+	public Vector cross(double x, double y, double z) {
+		return new Vector(y() * z - z() * y, z() * x - x() * z, x() * y - y() * x);
+	}
+
+	/**
+	 * Returns the angle between the other vector, in radians. (result is ranged
+	 * 0-PI).
+	 *
+	 * @param vec Other vector
+	 */
+	public double angle(Vector vec) {
+		double dot = dot(vec);
+		return Math.acos(dot / (magnitude() * vec.magnitude()));
+	}
+
+	/**
+	 * Returns this vector reflected across the given normal. Does not modify
+	 * this vector or the normal.
+	 *
+	 * @param normal Must be normalized
+	 */
+	public Vector reflect(Vector normal) {
+		if (!normal.isNormalized()) {
+			throw new IllegalArgumentException("Normal vector must be normalized");
+		}
+		return minus(normal.times(2).times(dot(normal)));
+	}
+
+	/**
+	 * <strong>Assuming</strong> this vector represents spherical coordinates
+	 * (in radians), returns a unit vector in Cartesian space which has the
+	 * rotations of this vector.
+	 * <p>
+	 * Does not modify this vector.
+	 *
+	 * @see #toRectangular(Vector)
+	 */
+	public Vector toRectangular() {
+		return Vector.toRectangular(this);
+	}
+
+	/**
+	 * <strong>Assuming</strong> this vector represents rectangular coordinates,
+	 * returns the rotations (in radians) for this vector.
+	 * <p>
+	 * Does not modify this vector.
+	 */
+	public Vector toSpherical() {
+		return Vector.getRotationTo(Vector.ZERO, this);
+	}
+
+	/**
+	 * Returns a minecraft vector with the same coordinates as this vector.
+	 */
+	public Vec3d toMinecraft() {
+		return new Vec3d(x(), y(), z());
+	}
+
+	/**
+	 * Returns an integer vector of this vector by rounding each component.
+	 */
+	public VectorI round() {
+		return new VectorI((int) Math.round(x()), (int) Math.round(y()), (int) Math.round(z()));
+	}
+
+	/**
+	 * Returns an integer vector of this vector by casting each component to an
+	 * integer.
+	 */
+	public VectorI cast() {
+		return new VectorI((int) x(), (int) y(), (int) z());
+	}
+
+	/**
+	 * Returns a BlockPos with the same coordinates as this vector.
+	 */
+	public BlockPos toBlockPos() {
+		return cast().toBlockPos();
+	}
+
+	public Vec3i toMinecraftInteger() {
+		return new Vec3i(x(), y(), z());
+	}
+
+	/**
+	 * Writes this vector to the packet byte buffer.
+	 *
+	 * @param buf Buffer to write to
+	 */
+	public void toBytes(ByteBuf buf) {
+		buf.writeDouble(x());
+		buf.writeDouble(y());
+		buf.writeDouble(z());
+	}
+
+	/**
+	 * Writes this vector directly to the NBT provided.
+	 */
+	public void writeToNbt(NBTTagCompound nbt) {
+		nbt.setDouble("x", x());
+		nbt.setDouble("y", y());
+		nbt.setDouble("z", z());
+	}
+
+	@Override
+	public String toString() {
+		return "(" + x() + ", " + y() + ", " + z() + ")";
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		if (obj instanceof Vector) {
+			Vector vec = (Vector) obj;
+			return x() == vec.x() && y() == vec.y() && z() == vec.z();
+		} else {
+			return false;
+		}
 	}
 
 }

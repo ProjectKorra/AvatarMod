@@ -17,15 +17,14 @@
 
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.gorecore.data.PlayerData;
-import com.crowsofwar.gorecore.data.WorldDataPlayers;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.data.WorldDataPlayers;
+
+import java.util.*;
 
 public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 
@@ -48,8 +47,7 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 
 	public static AvatarWorldData getDataFromWorld(World world) {
 		if (world.isRemote) {
-			throw new IllegalStateException("AvatarWorldData is designed to be used only on " +
-					"server side");
+			throw new IllegalStateException("AvatarWorldData is designed to be used only on " + "server side");
 		}
 
 		return getDataForWorld(AvatarWorldData.class, WORLD_DATA_KEY, world, false);
@@ -67,10 +65,8 @@ public class AvatarWorldData extends WorldDataPlayers<AvatarPlayerData> {
 
 		AvatarUtils.readList(scheduledDestroyBlocks, compound -> {
 
-			BlockPos pos = new BlockPos(compound.getInteger("x"), compound.getInteger("y"),
-					compound.getInteger("z"));
-			return new ScheduledDestroyBlock(this, pos, compound.getInteger("Ticks"),
-					compound.getBoolean("Drop"), compound.getInteger("Fortune"));
+			BlockPos pos = new BlockPos(compound.getInteger("x"), compound.getInteger("y"), compound.getInteger("z"));
+			return new ScheduledDestroyBlock(this, pos, compound.getInteger("Ticks"), compound.getBoolean("Drop"), compound.getInteger("Fortune"));
 
 		}, nbt, "DestroyBlocks");
 

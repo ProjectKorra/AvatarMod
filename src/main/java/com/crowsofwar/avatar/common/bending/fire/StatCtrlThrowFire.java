@@ -17,17 +17,15 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import net.minecraft.entity.EntityLivingBase;
+
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityFireArc;
+import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLivingBase;
 
 /**
  * @author CrowsOfWar
@@ -46,9 +44,8 @@ public class StatCtrlThrowFire extends StatusControl {
 		Bender bender = ctx.getBender();
 
 		EntityFireArc fire = AvatarEntity.lookupEntity(ctx.getWorld(), EntityFireArc.class, //
-				arc -> arc.getBehavior() instanceof FireArcBehavior.PlayerControlled
-						&& arc.getOwner() == ctx.getBenderEntity());
-
+													   arc -> arc.getBehavior() instanceof FireArcBehavior.PlayerControlled && arc.getOwner() == ctx
+																	   .getBenderEntity());
 
 		if (fire != null) {
 
@@ -59,8 +56,7 @@ public class StatCtrlThrowFire extends StatusControl {
 			velocity += powerRating / 30;
 
 			fire.setBehavior(new FireArcBehavior.Thrown());
-			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
-					Math.toRadians(entity.rotationPitch));
+			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch));
 			force = force.times(velocity);
 			fire.setVelocity(force);
 

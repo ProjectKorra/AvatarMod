@@ -16,30 +16,21 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.fire.Firebending;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
-import com.crowsofwar.gorecore.format.FormattedMessage;
-import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.World;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
 import net.minecraft.world.storage.loot.LootTableList;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+import com.crowsofwar.gorecore.format.FormattedMessage;
+
 import javax.annotation.Nullable;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_NEED_FIRE_TRADE_ITEM;
 import static com.crowsofwar.avatar.common.bending.fire.StatCtrlInfernoPunch.INFERNO_PUNCH;
@@ -50,18 +41,17 @@ import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
  */
 public class EntityFirebender extends EntityHumanBender {
 
-	private static final ResourceLocation LOOT_TABLE = LootTableList
-			.register(new ResourceLocation("avatarmod", "firebender"));
+	private static final ResourceLocation LOOT_TABLE = LootTableList.register(new ResourceLocation("avatarmod", "firebender"));
 
 	private int scrollsLeft;
 	private int level = 0;
+
 	/**
 	 * @param world
 	 */
 	public EntityFirebender(World world) {
 		super(world);
 		getData().addBendingId(Firebending.ID);
-
 
 	}
 
@@ -70,24 +60,23 @@ public class EntityFirebender extends EntityHumanBender {
 		return MSG_NEED_FIRE_TRADE_ITEM;
 	}
 
-
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2);
+		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40);
+		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2);
 	}
 
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
-		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
-		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_arc", this, getBender())));
+		tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
+		tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
+		tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_arc", this, getBender())));
 		//this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("inferno_punch", this, getBender())));
 		if (getData().hasStatusControl(INFERNO_PUNCH)) {
-			this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.35, true));
+			tasks.addTask(1, new EntityAIAttackMelee(this, 1.35, true));
 		}
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.3, true));
+		tasks.addTask(4, new EntityAIAttackMelee(this, 1.3, true));
 	}
 
 	@Override

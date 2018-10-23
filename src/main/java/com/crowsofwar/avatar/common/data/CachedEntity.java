@@ -17,16 +17,16 @@
 
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.gorecore.util.AccountUUIDs;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import com.crowsofwar.gorecore.util.AccountUUIDs;
+import io.netty.buffer.ByteBuf;
+
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Represents an entity which is stored by its UUID but also cached for
@@ -40,7 +40,7 @@ public class CachedEntity<T extends Entity> {
 	private UUID entityId;
 
 	public CachedEntity(@Nullable UUID id) {
-		this.entityId = id;
+		entityId = id;
 	}
 
 	private static UUID getId(Entity entity) {
@@ -104,8 +104,7 @@ public class CachedEntity<T extends Entity> {
 	 * @return whether cache is invalid; if true the cached entity is null
 	 */
 	private boolean isCacheInvalid() {
-		return cachedEntity == null || cachedEntity.isDead || cachedEntity.getUniqueID() !=
-				entityId;
+		return cachedEntity == null || cachedEntity.isDead || cachedEntity.getUniqueID() != entityId;
 	}
 
 }

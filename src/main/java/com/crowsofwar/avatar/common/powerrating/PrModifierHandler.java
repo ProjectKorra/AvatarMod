@@ -1,19 +1,15 @@
 package com.crowsofwar.avatar.common.powerrating;
 
-import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.bending.air.StaffPowerModifier;
-import com.crowsofwar.avatar.common.bending.earth.Earthbending;
-import com.crowsofwar.avatar.common.bending.earth.EarthbendingJingModifier;
+import net.minecraft.item.*;
+
+import com.crowsofwar.avatar.common.bending.air.*;
+import com.crowsofwar.avatar.common.bending.earth.*;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.PowerRatingManager;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.item.ItemAirbenderStaff;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
 import java.util.UUID;
 
@@ -24,8 +20,7 @@ public class PrModifierHandler {
 
 	public static void addPowerRatingModifiers(Bender bender) {
 
-		BendingContext ctx = new BendingContext(bender.getData(), bender.getEntity(),
-				new Raytrace.Result());
+		BendingContext ctx = new BendingContext(bender.getData(), bender.getEntity(), new Raytrace.Result());
 
 		if (bender.getEntity().ticksExisted % 10 != 0) {
 			return;

@@ -17,42 +17,30 @@
 
 package com.crowsofwar.avatar.client.gui;
 
-import com.crowsofwar.avatar.client.AvatarShaderUtils;
-import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.Vision;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityAirBubble;
-import com.crowsofwar.avatar.common.entity.EntityIcePrison;
-import com.crowsofwar.avatar.common.entity.EntityIceShield;
-import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.*;
+
+import com.crowsofwar.avatar.client.AvatarShaderUtils;
+import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
@@ -127,8 +115,7 @@ public class AvatarUiRenderer extends Gui {
 
 	private void renderRadialMenu(ScaledResolution resolution) {
 		int mouseX = Mouse.getX() * resolution.getScaledWidth() / mc.displayWidth;
-		int mouseY = resolution.getScaledHeight()
-				- (Mouse.getY() * resolution.getScaledHeight() / mc.displayHeight);
+		int mouseY = resolution.getScaledHeight() - (Mouse.getY() * resolution.getScaledHeight() / mc.displayHeight);
 
 		// For some reason, not including this will cause weirdness in 3rd
 		// person
@@ -156,8 +143,7 @@ public class AvatarUiRenderer extends Gui {
 				fadingSegment = null;
 			} else {
 				float scale = (float) (1 + Math.sqrt(timeSinceStart / 10000f));
-				fadingSegment.draw(true, resolution,
-						(1 - timeSinceStart / timeToFade) * CLIENT_CONFIG.radialMenuAlpha, scale);
+				fadingSegment.draw(true, resolution, (1 - timeSinceStart / timeToFade) * CLIENT_CONFIG.radialMenuAlpha, scale);
 			}
 		}
 	}
@@ -178,8 +164,8 @@ public class AvatarUiRenderer extends Gui {
 			GlStateManager.enableBlend();
 			GlStateManager.pushMatrix();
 			GlStateManager.scale(scale, scale, scale);
-			drawTexturedModalRect((int) ((centerX - xOffset) / scale), (int) ((centerY - yOffset) / scale),
-					statusControl.getTextureU(), statusControl.getTextureV(), 16, 16);
+			drawTexturedModalRect((int) ((centerX - xOffset) / scale), (int) ((centerY - yOffset) / scale), statusControl.getTextureU(),
+								  statusControl.getTextureV(), 16, 16);
 			GlStateManager.popMatrix();
 		}
 	}
@@ -226,7 +212,7 @@ public class AvatarUiRenderer extends Gui {
 			drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
 
 			drawString(mc.fontRenderer, ((int) total) + "/" + ((int) max) + "," + ((int) available), 0, -20,
-					0xffffff | ((int) (CLIENT_CONFIG.chiBarAlpha * 255) << 24));
+					   0xffffff | ((int) (CLIENT_CONFIG.chiBarAlpha * 255) << 24));
 
 			popMatrix();
 
@@ -276,7 +262,6 @@ public class AvatarUiRenderer extends Gui {
 				GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha);
 				drawBendingIcon(0, 0, data.getActiveBending(), 50.0, 50.0);
 
-
 				List<BendingStyle> allBending = data.getAllBending();
 				allBending.sort(Comparator.comparing(BendingStyle::getName));
 
@@ -315,17 +300,16 @@ public class AvatarUiRenderer extends Gui {
 		}
 	}
 
-
 	private void drawBendingIcon(int xOff, int yOff, BendingStyle controller, double width, double height) {
-			refreshDimensions();
-			int x = screenWidth() / scaleFactor() - 85 + xOff;
-			int y = screenHeight() / scaleFactor() - 60 + yOff;
-			mc.renderEngine.bindTexture(AvatarUiTextures.getBendingIconTexture(controller.getId()));
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(x, y, 0);
-			GlStateManager.scale(width / 256F, height / 256F, 1);
-			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-			GlStateManager.popMatrix();
+		refreshDimensions();
+		int x = screenWidth() / scaleFactor() - 85 + xOff;
+		int y = screenHeight() / scaleFactor() - 60 + yOff;
+		mc.renderEngine.bindTexture(AvatarUiTextures.getBendingIconTexture(controller.getId()));
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, 0);
+		GlStateManager.scale(width / 256F, height / 256F, 1);
+		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+		GlStateManager.popMatrix();
 	}
 
 	private void renderAirBubbleHealth(ScaledResolution res) {
@@ -334,8 +318,7 @@ public class AvatarUiRenderer extends Gui {
 		BendingData data = BendingData.get(player);
 
 		if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
-			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class,
-					player);
+			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, player);
 			if (bubble != null) {
 				renderShieldHealth(res, bubble.getHealth(), bubble.getMaxHealth(), 0);
 			}
@@ -348,16 +331,14 @@ public class AvatarUiRenderer extends Gui {
 		BendingData data = BendingData.get(player);
 
 		if (data.hasStatusControl(StatusControl.SHIELD_SHATTER)) {
-			EntityIceShield shield = AvatarEntity.lookupControlledEntity(world, EntityIceShield
-					.class, player);
+			EntityIceShield shield = AvatarEntity.lookupControlledEntity(world, EntityIceShield.class, player);
 			if (shield != null) {
 				renderShieldHealth(res, shield.getHealth(), shield.getMaxHealth(), 9);
 			}
 		}
 	}
 
-	private void renderShieldHealth(ScaledResolution res, float health, float maxHealth, int
-			textureV) {
+	private void renderShieldHealth(ScaledResolution res, float health, float maxHealth, int textureV) {
 
 		mc.renderEngine.bindTexture(AvatarUiTextures.shieldHealth);
 		GlStateManager.color(1, 1, 1, 1);

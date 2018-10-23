@@ -16,22 +16,19 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.EntityFlames;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityFlames;
+import com.crowsofwar.gorecore.util.Vector;
+
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.gorecore.util.Vector.getEyePos;
-import static com.crowsofwar.gorecore.util.Vector.getVelocity;
+import static com.crowsofwar.gorecore.util.Vector.*;
 import static java.lang.Math.toRadians;
 
 /**
@@ -118,8 +115,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				flames.setDamageMult(bender.getDamageMult(Firebending.ID));
 				world.spawnEntity(flames);
 
-				world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
-						SoundCategory.PLAYERS, 0.2f, 0.8f);
+				world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 0.2f, 0.8f);
 
 			} else {
 				// not enough chi

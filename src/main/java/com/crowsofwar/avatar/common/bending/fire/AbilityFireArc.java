@@ -17,22 +17,17 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import net.minecraft.entity.*;
+import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityFireArc;
+import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -56,9 +51,7 @@ public class AbilityFireArc extends Ability {
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
 
-
 		if (bender.consumeChi(STATS_CONFIG.chiFireArc)) {
-
 
 			Vector lookPos;
 			if (ctx.isLookingAtBlock()) {
@@ -70,13 +63,11 @@ public class AbilityFireArc extends Ability {
 
 			removeExisting(ctx);
 
-
-
 			float damageMult = ctx.getLevel() >= 2 ? 2 : 1;
 			damageMult *= ctx.getPowerRatingDamageMod();
 
-			List<Entity> fireArc = Raytrace.entityRaytrace(world, Vector.getEntityPos(entity).withY(entity.getEyeHeight()), Vector.getLookRectangular(entity).times(10), 3,
-					entity1 -> entity1 != entity);
+			List<Entity> fireArc = Raytrace.entityRaytrace(world, Vector.getEntityPos(entity).withY(entity.getEyeHeight()),
+														   Vector.getLookRectangular(entity).times(10), 3, entity1 -> entity1 != entity);
 
 			if (fireArc.isEmpty()) {
 				if (ctx.getLevel() >= 2) {
@@ -118,8 +109,7 @@ public class AbilityFireArc extends Ability {
 	 */
 	private void removeExisting(AbilityContext ctx) {
 
-		EntityFireArc fire = AvatarEntity.lookupControlledEntity(ctx.getWorld(), EntityFireArc
-				.class, ctx.getBenderEntity());
+		EntityFireArc fire = AvatarEntity.lookupControlledEntity(ctx.getWorld(), EntityFireArc.class, ctx.getBenderEntity());
 
 		if (fire != null) {
 			fire.setBehavior(new FireArcBehavior.Thrown());

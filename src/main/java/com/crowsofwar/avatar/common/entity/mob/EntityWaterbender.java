@@ -16,24 +16,21 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BenderEntityComponent;
-import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
+
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
 
 /**
  * @author CrowsOfWar
  */
 public class EntityWaterbender extends EntityHumanBender {
 
-	public static final ResourceLocation LOOT_TABLE = LootTableList
-			.register(new ResourceLocation("avatarmod", "waterbender"));
+	public static final ResourceLocation LOOT_TABLE = LootTableList.register(new ResourceLocation("avatarmod", "waterbender"));
 
 	public EntityWaterbender(World world) {
 		super(world);
@@ -46,9 +43,9 @@ public class EntityWaterbender extends EntityHumanBender {
 
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(1, Abilities.get("wave").getAi(this, getBender()));
+		tasks.addTask(1, Abilities.get("wave").getAi(this, getBender()));
 		// this.tasks.addTask(2, ABILITY_WATER_ARC.getAi(this, this));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
+		tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 	}
 
 	@Override

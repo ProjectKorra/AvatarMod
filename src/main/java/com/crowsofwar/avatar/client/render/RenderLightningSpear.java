@@ -16,19 +16,19 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
+
+import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
 
 /**
  * @author CrowsOfWar
  */
 public class RenderLightningSpear extends RenderModel<EntityLightningSpear> {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/entity/lightning_spear.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/entity/lightning_spear.png");
 
 	/**
 	 * @param renderManager
@@ -45,7 +45,7 @@ public class RenderLightningSpear extends RenderModel<EntityLightningSpear> {
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
 		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
-		GlStateManager.scale(entity.getSize()/2, entity.getSize()/2, entity.getSize()/2);
+		GlStateManager.scale(entity.getSize() / 2, entity.getSize() / 2, entity.getSize() / 2);
 		GlStateManager.translate(0, entity.getSize() / 4, 0);
 		GlStateManager.rotate((float) (entity.ticksExisted / 20.0 * entity.getDegreesPerSecond()), 0, 0, 1);
 

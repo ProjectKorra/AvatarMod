@@ -16,15 +16,13 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+
+import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.particle.*;
+import com.crowsofwar.gorecore.util.Vector;
 
 /**
  * @author CrowsOfWar
@@ -43,8 +41,7 @@ public class AirParticleSpawner extends TickHandler {
 
 		Vector pos = Vector.getEntityPos(target).plus(0, 1.3, 0);
 
-		particles.spawnParticles(target.world, AvatarParticles.getParticleAir(), 1, 1, pos,
-				new Vector(0.7, 0.2, 0.7));
+		particles.spawnParticles(target.world, AvatarParticles.getParticleAir(), 1, 1, pos, new Vector(0.7, 0.2, 0.7));
 
 		return target.isInWater() || target.onGround || bender.isFlying();
 

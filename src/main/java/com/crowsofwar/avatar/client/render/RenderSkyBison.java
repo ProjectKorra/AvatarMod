@@ -16,19 +16,18 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
-import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 
 /**
  * @author CrowsOfWar
  */
 public class RenderSkyBison extends RenderLiving<EntitySkyBison> {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/mob/flyingbison.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/mob/flyingbison.png");
 
 	/**
 	 * @param rm (RenderManager)
@@ -44,8 +43,7 @@ public class RenderSkyBison extends RenderLiving<EntitySkyBison> {
 	}
 
 	@Override
-	public void doRenderShadowAndFire(Entity entity, double x, double y, double z, float yaw,
-									  float partialTicks) {
+	public void doRenderShadowAndFire(Entity entity, double x, double y, double z, float yaw, float partialTicks) {
 
 		EntitySkyBison bison = (EntitySkyBison) entity;
 		shadowSize = 2.5f * bison.getCondition().getSizeMultiplier();

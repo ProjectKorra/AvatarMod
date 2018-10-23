@@ -1,20 +1,18 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_RESTORE_COOLDOWN;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.RESTORE_COOLDOWN_HANDLER;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.RESTORE_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.*;
 
 public class AbilityRestore extends Ability {
 	public AbilityRestore() {

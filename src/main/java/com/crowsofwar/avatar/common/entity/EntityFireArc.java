@@ -17,40 +17,26 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import net.minecraft.entity.*;
+import net.minecraft.init.*;
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.*;
+
+import net.minecraftforge.fml.relauncher.*;
+
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireArc;
-import com.crowsofwar.avatar.common.bending.fire.Firebending;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.bending.fire.*;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
-import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.particle.*;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -58,10 +44,9 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 
 	private static final DataParameter<FireArcBehavior> SYNC_BEHAVIOR = EntityDataManager
-			.createKey(EntityFireArc.class, FireArcBehavior.DATA_SERIALIZER);
+					.createKey(EntityFireArc.class, FireArcBehavior.DATA_SERIALIZER);
 
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager
-			.createKey(EntityFireArc.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityFireArc.class, DataSerializers.FLOAT);
 	private final ParticleSpawner particles;
 	private float damageMult;
 	private boolean createBigFire;
@@ -69,21 +54,20 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	private float Size;
 	private BlockPos position;
 
-
 	public EntityFireArc(World world) {
 		super(world);
-		this.Size = 0.4F;
-		this.damageMult = 1;
-		this.Gravity = 9.82F;
-		this.particles = new ClientParticleSpawner();
+		Size = 0.4F;
+		damageMult = 1;
+		Gravity = 9.82F;
+		particles = new ClientParticleSpawner();
 	}
 
 	public float getGravity() {
-		return this.Gravity;
+		return Gravity;
 	}
 
 	public void setGravity(float gravity) {
-		this.Gravity = gravity;
+		Gravity = gravity;
 	}
 
 	public void setStartingPosition(BlockPos position) {
@@ -101,8 +85,8 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	@Override
 	protected void updateCpBehavior() {
 		super.updateCpBehavior();
-		getControlPoint(0).setPosition(this.position());
-		getLeader().setPosition(this.position().plusY(getSize() / 4));
+		getControlPoint(0).setPosition(position());
+		getLeader().setPosition(position().plusY(getSize() / 4));
 	}
 
 	@Override
@@ -123,15 +107,15 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	public void onUpdate() {
 		super.onUpdate();
 		if (getBehavior() == null) {
-			this.setBehavior(new FireArcBehavior.Thrown());
+			setBehavior(new FireArcBehavior.Thrown());
 		}
 		FireArcBehavior newBehavior = (FireArcBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != newBehavior) setBehavior(newBehavior);
 
 		if (getBehavior() != null && getBehavior() instanceof FireArcBehavior.PlayerControlled) {
-			this.velocityMultiplier = 4;
-			this.position = this.getPosition();
-		} else this.velocityMultiplier = 8;
+			velocityMultiplier = 4;
+			position = getPosition();
+		} else velocityMultiplier = 8;
 
 		if (getOwner() != null) {
 			EntityFireArc arc = AvatarEntity.lookupControlledEntity(world, EntityFireArc.class, getOwner());
@@ -147,7 +131,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		setSize(getSize() / 2, getSize() / 2);
 
 		if (getOwner() == null) {
-			this.setDead();
+			setDead();
 			cleanup();
 		}
 	}
@@ -187,7 +171,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
-		if (entity instanceof AvatarEntity && this.getBehavior() instanceof FireArcBehavior.Thrown) {
+		if (entity instanceof AvatarEntity && getBehavior() instanceof FireArcBehavior.Thrown) {
 			((AvatarEntity) entity).onFireContact();
 		}
 		if (getBehavior() != null && getBehavior() instanceof FireArcBehavior.Thrown) {
@@ -202,10 +186,9 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 				AbilityData data = AbilityData.get(getOwner(), "fire_arc");
 				if (!data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 					cleanup();
-					this.setDead();
+					setDead();
 				}
 			}
-
 
 		}
 	}
@@ -238,7 +221,6 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 			cleanup();
 			setDead();
 
-
 		}
 		return true;
 	}
@@ -248,7 +230,6 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	public void Firesplosion() {
 		if (!world.isRemote && world instanceof WorldServer) {
 
-
 			float speed = 0.05F;
 			float hitBox = 0.5F;
 			int numberOfParticles = 250;
@@ -256,30 +237,29 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 			if (getAbility() instanceof AbilityFireArc) {
 				AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("fire_arc");
 				int lvl = abilityData.getLevel();
-				this.damageMult = lvl >= 2 ? 2 : 0.5F;
+				damageMult = lvl >= 2 ? 2 : 0.5F;
 				//If the player's water arc level is level III or greater the aoe will do 2+ damage.
 				hitBox = lvl <= 0 ? 0.5F : 0.5f * (lvl + 1);
 				speed = lvl <= 0 ? 0.05F : 0.075F;
 				numberOfParticles = lvl <= 0 ? 250 : 250 + 100 * lvl;
-			} else this.damageMult = 0.5f;
-
+			} else damageMult = 0.5f;
 
 			//if (CLIENT_CONFIG.useCustomParticles) {
 			 	/*particles.spawnParticles(world, AvatarParticles.getParticleFlames(), 100, 200, Vector.getEntityPos(this),
 						new Vector(speed * 50, speed * 50, speed * 10));**/
 			//}
 			//else {
-			WorldServer World = (WorldServer) this.world;
+			WorldServer World = (WorldServer) world;
 			World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, numberOfParticles, 0.2, 0.1, 0.2, speed);
 			//}
-			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+			world.playSound(null, posX, posY, posZ, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 4.0F,
+							(1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(1, 1, 1),
-					entity -> entity != getOwner());
+			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(1, 1, 1), entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
 					if (entity != getOwner() && entity != null && getOwner() != null && canCollideWith(entity)) {
-						double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
+						double distanceTravelled = entity.getDistance(position.getX(), position.getY(), position.getZ());
 
 						Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
 						double distance = Vector.getEntityPos(entity).dist(Vector.getEntityPos(this));
@@ -307,7 +287,6 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		}
 
 	}
-
 
 	public void damageEntity(Entity entity) {
 		if (canDamageEntity(entity)) {

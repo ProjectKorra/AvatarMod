@@ -1,23 +1,19 @@
 package com.crowsofwar.avatar.common.entity.data;
 
+import net.minecraft.entity.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.datasync.*;
+import net.minecraft.world.World;
+
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.air.AbilityCloudBurst;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.entity.EntityCloudBall;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataSerializer;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.world.World;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -77,12 +73,11 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 
 			World world = entity.world;
 			if (!entity.isDead) {
-				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
-						entity.getExpandedHitbox());
+				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity, entity.getExpandedHitbox());
 				if (!collidedList.isEmpty()) {
 					for (Entity collided : collidedList) {
 						if (entity.canCollideWith(collided) && collided != entity.getOwner() && collided != entity) {
-							collision( collided, entity);
+							collision(collided, entity);
 
 						}
 					}
@@ -96,10 +91,8 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 
 		private void collision(Entity collided, EntityCloudBall entity) {
 
-			if (collided.canBeCollidedWith() && entity.canCollideWith(collided) && !entity.world
-			.isRemote) {
-				if (collided.attackEntityFrom(AvatarDamageSource.causeAirDamage(collided, entity.getOwner()),
-						entity.getDamage())) {
+			if (collided.canBeCollidedWith() && entity.canCollideWith(collided) && !entity.world.isRemote) {
+				if (collided.attackEntityFrom(AvatarDamageSource.causeAirDamage(collided, entity.getOwner()), entity.getDamage())) {
 					BattlePerformanceScore.addMediumScore(entity.getOwner());
 				}
 

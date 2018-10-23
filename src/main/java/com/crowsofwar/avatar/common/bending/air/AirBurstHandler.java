@@ -1,40 +1,30 @@
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.*;
+import net.minecraft.entity.item.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AirBurstHandler extends TickHandler {
-	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
-			("f82d325c-9828-11e8-9eb6-529269fb1459");
+	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString("f82d325c-9828-11e8-9eb6-529269fb1459");
 
 	public AirBurstHandler(int id) {
 		super(id);
@@ -73,7 +63,6 @@ public class AirBurstHandler extends TickHandler {
 								damage = 2.5f + powerRating;
 							}
 							event.setAmount(damage);
-
 
 						}
 					}
@@ -160,20 +149,20 @@ public class AirBurstHandler extends TickHandler {
 			//gets smaller
 			suction -= (float) duration / 400;
 
-
 			if (world instanceof WorldServer) {
 				WorldServer World = (WorldServer) world;
 				for (int i = 0; i < 12; i++) {
-					Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-							i * 30), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
+					Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i * 30), 0).times(inverseRadius)
+									.withY(entity.getEyeHeight() / 2);
 					World.spawnParticle(EnumParticleTypes.CLOUD, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
-							lookpos.z() + entity.posZ, 1, 0, 0, 0, 0.005);
+										lookpos.z() + entity.posZ, 1, 0, 0, 0, 0.005);
 				}
 
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius, entity.posY - radius, entity.posZ - radius);
+				AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius,
+													  entity.posY - radius, entity.posZ - radius);
 				List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box, entity1 -> entity1 != entity);
 				if (!collided.isEmpty()) {
 					for (Entity e : collided) {
@@ -203,11 +192,10 @@ public class AirBurstHandler extends TickHandler {
 				shockwave.setSpeed(knockBack / 4);
 				world.spawnEntity(shockwave);
 
-
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
-				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-						SoundCategory.BLOCKS, 1, 0.5F);
+				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 1,
+								0.5F);
 				return true;
 			}
 
@@ -217,13 +205,11 @@ public class AirBurstHandler extends TickHandler {
 
 	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
 
-		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes
-				.MOVEMENT_SPEED);
+		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 
 		moveSpeed.removeModifier(MOVEMENT_MODIFIER_ID);
 
-		moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID,
-				"Airburst charge modifier", multiplier - 1, 1));
+		moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID, "Airburst charge modifier", multiplier - 1, 1));
 
 	}
 
@@ -239,7 +225,8 @@ public class AirBurstHandler extends TickHandler {
 			collided.addVelocity(x, y, z);
 
 			if (collided instanceof AvatarEntity) {
-				if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+				if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison)
+								&& !(collided instanceof EntitySandPrison)) {
 					AvatarEntity avent = (AvatarEntity) collided;
 					avent.addVelocity(x, y, z);
 				}
@@ -248,15 +235,14 @@ public class AirBurstHandler extends TickHandler {
 			}
 		}
 
-
 	}
 
 	private boolean canDamageEntity(Entity entity) {
 		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == entity) {
 			return false;
 		}
-		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
-				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud) {
+		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem || entity instanceof EntityArmorStand
+						|| entity instanceof EntityAreaEffectCloud) {
 			return false;
 		} else return entity.canBeCollidedWith() && entity.canBePushed();
 	}

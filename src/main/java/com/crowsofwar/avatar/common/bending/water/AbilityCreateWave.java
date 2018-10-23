@@ -17,20 +17,18 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.*;
+import net.minecraft.init.Blocks;
+import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWave;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
-import com.crowsofwar.gorecore.util.VectorI;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
-import net.minecraft.world.World;
+import com.crowsofwar.gorecore.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -47,9 +45,8 @@ public class AbilityCreateWave extends Ability {
 		World world = ctx.getWorld();
 
 		Vector look = Vector.getLookRectangular(entity);
-		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1)
-				, look, 4 + ctx.getLevel(), (pos, blockState) -> blockState.getBlock() == Blocks
-						.WATER);
+		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1), look, 4 + ctx.getLevel(),
+															(pos, blockState) -> blockState.getBlock() == Blocks.WATER);
 		/*Raytrace.Result extraResult = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1), look,
 				4 + ctx.getLevel(), (blockPos, iBlockState) -> iBlockState.getBlock() == Blocks.SNOW || iBlockState.getBlock() == Blocks.FLOWING_WATER
 						|| iBlockState.getBlock() == Blocks.ICE);**/

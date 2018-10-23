@@ -17,16 +17,16 @@
 
 package com.crowsofwar.avatar.common.data;
 
+import net.minecraft.entity.EntityTracker;
+import net.minecraft.entity.player.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.WorldServer;
+
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.network.packets.PacketCPlayerData;
 import com.crowsofwar.gorecore.data.*;
-import net.minecraft.entity.EntityTracker;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.FMLLog;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import java.util.*;
 
@@ -63,8 +63,7 @@ public class AvatarPlayerData extends PlayerData {
 	}
 
 	public static void initFetcher(PlayerDataFetcher<AvatarPlayerData> clientFetcher) {
-		fetcher = new PlayerDataFetcherSided<>(clientFetcher,
-				new PlayerDataFetcherServer<>(AvatarWorldData::getDataFromWorld));
+		fetcher = new PlayerDataFetcherSided<>(clientFetcher, new PlayerDataFetcherServer<>(AvatarWorldData::getDataFromWorld));
 	}
 
 	public static PlayerDataFetcher<AvatarPlayerData> fetcher() {
@@ -96,7 +95,7 @@ public class AvatarPlayerData extends PlayerData {
 	private void sendPacket() {
 
 		PacketCPlayerData packet = new PacketCPlayerData(bendingData, playerID, changed);
-		EntityPlayer player = this.getPlayerEntity();
+		EntityPlayer player = getPlayerEntity();
 		if (player != null && !player.world.isRemote) {
 
 			// Enforce limits for chi-only packets

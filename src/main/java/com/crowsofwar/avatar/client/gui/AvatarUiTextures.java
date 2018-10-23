@@ -17,44 +17,31 @@
 
 package com.crowsofwar.avatar.client.gui;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
 import net.minecraft.util.ResourceLocation;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import com.crowsofwar.avatar.common.bending.*;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import javax.imageio.ImageIO;
+import java.awt.image.*;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * @author CrowsOfWar
  */
 public class AvatarUiTextures {
 
-	public static final ResourceLocation skillsGui = new ResourceLocation("avatarmod",
-			"textures/gui/skillmenu.png");
-	public static final ResourceLocation getBending = new ResourceLocation("avatarmod",
-			"textures/gui/getbending.png");
-	public static final ResourceLocation shieldHealth = new ResourceLocation("avatarmod",
-			"textures/gui/shield_health.png");
-	public static final ResourceLocation STATUS_CONTROL_ICONS = new ResourceLocation("avatarmod",
-			"textures/gui/status_controls.png");
+	public static final ResourceLocation skillsGui = new ResourceLocation("avatarmod", "textures/gui/skillmenu.png");
+	public static final ResourceLocation getBending = new ResourceLocation("avatarmod", "textures/gui/getbending.png");
+	public static final ResourceLocation shieldHealth = new ResourceLocation("avatarmod", "textures/gui/shield_health.png");
+	public static final ResourceLocation STATUS_CONTROL_ICONS = new ResourceLocation("avatarmod", "textures/gui/status_controls.png");
 	public static final ResourceLocation CHI_BAR = new ResourceLocation("avatarmod", "textures/gui/chi.png");
 	public static final ResourceLocation ICE = new ResourceLocation("minecraft", "textures/blocks/ice.png");
 	public static final ResourceLocation[] BLOCK_BREAK = getBlockBreakTextures();
 	public static final ResourceLocation WHITE = new ResourceLocation("avatarmod", "textures/gui/white.png");
-	static final ResourceLocation radialMenu = new ResourceLocation("avatarmod",
-			"textures/radial/default_segment.png");
+	static final ResourceLocation radialMenu = new ResourceLocation("avatarmod", "textures/radial/default_segment.png");
 	static final ResourceLocation icons = new ResourceLocation("avatarmod", "textures/gui/ability_icons.png");
-	static final ResourceLocation blurredIcons = new ResourceLocation("avatarmod",
-			"textures/gui/blurred_icons.png");
+	static final ResourceLocation blurredIcons = new ResourceLocation("avatarmod", "textures/gui/blurred_icons.png");
 	private static final Map<Ability, ResourceLocation> abilityTextures = new HashMap<>();
 	private static final Map<BendingStyle, ResourceLocation> radialTextures = new HashMap<>();
 	private static final Map<Ability, ResourceLocation> abilityCards = new HashMap<>();
@@ -76,7 +63,7 @@ public class AvatarUiTextures {
 		return getCachedImage(abilityTextures, ability, "textures/radial/icon_" + ability.getName() + ".png");
 	}
 
-	public static ResourceLocation getBendingRadialTexture (BendingStyle element) {
+	public static ResourceLocation getBendingRadialTexture(BendingStyle element) {
 		return getCachedImage(radialTextures, element, "textures/radial/" + element.getName() + "_segment.png");
 	}
 
@@ -85,8 +72,7 @@ public class AvatarUiTextures {
 	}
 
 	public static ResourceLocation getPlainCardTexture(Ability ability) {
-		return getCachedImage(abilityCardsPlain, ability,
-				"textures/gui/skillmenu/" + ability.getName() + "_plain.png");
+		return getCachedImage(abilityCardsPlain, ability, "textures/gui/skillmenu/" + ability.getName() + "_plain.png");
 	}
 
 	public static ResourceLocation getBendingIconTexture(UUID bendingId) {

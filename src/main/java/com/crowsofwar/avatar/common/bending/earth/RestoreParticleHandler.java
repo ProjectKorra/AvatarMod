@@ -1,18 +1,14 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.*;
+
+import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.particle.*;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.Random;
 
@@ -44,11 +40,11 @@ public class RestoreParticleHandler extends TickHandler {
 				r = random == 1 ? r : r * -1;
 				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 9) + (r * 2)), 0).times(0.5).withY(0);
 				if (!CLIENT_CONFIG.useCustomParticles) {
-					World.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, location.x() + entity.posX, location.y() + entity.getEntityBoundingBox().minY + (r * 2),
-							location.z() + entity.posZ, 1, 0, 0, 0, 10D);
+					World.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, location.x() + entity.posX,
+										location.y() + entity.getEntityBoundingBox().minY + (r * 2), location.z() + entity.posZ, 1, 0, 0, 0, 10D);
 				} else {
 					particles.spawnParticles(world, AvatarParticles.getParticleRestore(), 1, 2, location.plus(Vector.getEntityPos(entity)),
-							new Vector(0.2, 0.65, 0.2));
+											 new Vector(0.2, 0.65, 0.2));
 				}
 			}
 		}

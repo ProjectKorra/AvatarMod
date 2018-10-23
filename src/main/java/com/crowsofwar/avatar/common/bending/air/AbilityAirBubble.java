@@ -16,23 +16,19 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.EntityAirBubble;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.EntityAirBubble;
+
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
-import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.*;
 
 /**
  * @author CrowsOfWar
@@ -61,7 +57,7 @@ public class AbilityAirBubble extends Ability {
 
 			if (!bender.consumeChi(STATS_CONFIG.chiAirBubble)) return;
 
-			float powerRating = (float) bender.calcPowerRating(Airbending.ID)/100;
+			float powerRating = (float) bender.calcPowerRating(Airbending.ID) / 100;
 
 			float size = 1.5f + powerRating;
 			float health = 12 + powerRating;

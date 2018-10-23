@@ -1,27 +1,21 @@
 package com.crowsofwar.avatar.common.bending.water;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.*;
+import net.minecraft.init.*;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.*;
+import net.minecraft.world.World;
+
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.function.BiPredicate;
-import java.util.function.Consumer;
+import java.util.function.*;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_CLEANSE_COOLDOWN;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -59,8 +53,8 @@ public class AbilityCleanse extends Ability {
 
 		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel() * 3);
 
-		if ((bender.consumeChi(chi) && targetPos != null && !data.hasTickHandler(CLEANSE_COOLDOWN_HANDLER)) || (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative())
-				|| (ctx.consumeWater(4) && !data.hasTickHandler(CLEANSE_COOLDOWN_HANDLER))) {
+		if ((bender.consumeChi(chi) && targetPos != null && !data.hasTickHandler(CLEANSE_COOLDOWN_HANDLER)) || (entity instanceof EntityPlayerMP
+						&& ((EntityPlayerMP) entity).isCreative()) || (ctx.consumeWater(4) && !data.hasTickHandler(CLEANSE_COOLDOWN_HANDLER))) {
 
 			// Duration: 5-10s
 			int duration = abilityData.getLevel() < 2 ? 100 : 200;
@@ -92,13 +86,11 @@ public class AbilityCleanse extends Ability {
 
 			if (abilityData.getLevel() >= 1) {
 
-				int groupLevel = abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)
-						? 1 : 0;
+				int groupLevel = abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST) ? 1 : 0;
 				int groupDuration = abilityData.getLevel() == 3 ? 100 : 60;
 				int groupRadius = abilityData.getLevel() >= 2 ? 6 : 4;
 
-				PotionEffect groupEffect = new PotionEffect(MobEffects.REGENERATION, groupDuration,
-						groupLevel);
+				PotionEffect groupEffect = new PotionEffect(MobEffects.REGENERATION, groupDuration, groupLevel);
 				applyGroupEffect(ctx, groupRadius, player -> player.addPotionEffect(groupEffect));
 				applyGroupEffect(ctx, groupRadius, this::addChiBonus);
 
@@ -129,9 +121,8 @@ public class AbilityCleanse extends Ability {
 
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
-		AxisAlignedBB aabb = new AxisAlignedBB(
-				entity.posX - radius, entity.posY - radius, entity.posZ - radius,
-				entity.posX + radius, entity.posY + radius, entity.posZ + radius);
+		AxisAlignedBB aabb = new AxisAlignedBB(entity.posX - radius, entity.posY - radius, entity.posZ - radius, entity.posX + radius,
+											   entity.posY + radius, entity.posZ + radius);
 
 		List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, aabb);
 
@@ -164,7 +155,6 @@ public class AbilityCleanse extends Ability {
 
 	}
 
-
 	private Vector getClosestWaterBlock(EntityLivingBase entity, int level) {
 		World world = entity.world;
 
@@ -183,8 +173,8 @@ public class AbilityCleanse extends Ability {
 				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.cleanseAngles;
 
 				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> state.getBlock() == Blocks.WATER
-						|| state.getBlock() == Blocks.FLOWING_WATER || state.getBlock() == Blocks.ICE || state.getBlock() == Blocks.SNOW_LAYER
-						|| state.getBlock() == Blocks.SNOW;
+								|| state.getBlock() == Blocks.FLOWING_WATER || state.getBlock() == Blocks.ICE || state.getBlock() == Blocks.SNOW_LAYER
+								|| state.getBlock() == Blocks.SNOW;
 
 				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
 				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
@@ -199,7 +189,6 @@ public class AbilityCleanse extends Ability {
 		return null;
 
 	}
-
 
 }
 

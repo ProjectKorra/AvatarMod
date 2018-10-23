@@ -16,31 +16,23 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.sand.Sandbending;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
-import com.google.common.base.Optional;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.network.datasync.*;
+import net.minecraft.potion.*;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
-import java.util.List;
-import java.util.UUID;
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.bending.sand.Sandbending;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
+import com.google.common.base.Optional;
+
+import java.util.*;
 
 /**
  * @author CrowsOfWar
@@ -48,13 +40,11 @@ import java.util.UUID;
 public class EntitySandPrison extends AvatarEntity {
 
 	public static final DataParameter<Optional<UUID>> SYNC_IMPRISONED = EntityDataManager
-			.createKey(EntitySandPrison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+					.createKey(EntitySandPrison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
-	public static final DataParameter<Integer> SYNC_IMPRISONED_TIME = EntityDataManager.createKey
-			(EntitySandPrison.class, DataSerializers.VARINT);
+	public static final DataParameter<Integer> SYNC_IMPRISONED_TIME = EntityDataManager.createKey(EntitySandPrison.class, DataSerializers.VARINT);
 
-	public static final DataParameter<Integer> SYNC_MAX_IMPRISONED_TIME = EntityDataManager
-			.createKey(EntitySandPrison.class, DataSerializers.VARINT);
+	public static final DataParameter<Integer> SYNC_MAX_IMPRISONED_TIME = EntityDataManager.createKey(EntitySandPrison.class, DataSerializers.VARINT);
 
 	private double normalBaseValue;
 	private SyncedEntity<EntityLivingBase> imprisonedAttr;
@@ -86,8 +76,7 @@ public class EntitySandPrison extends AvatarEntity {
 	public static EntitySandPrison getPrison(EntityLivingBase entity) {
 
 		World world = entity.world;
-		List<EntitySandPrison> prisons = world.getEntities(EntitySandPrison.class,
-				prison -> prison.getImprisoned() == entity);
+		List<EntitySandPrison> prisons = world.getEntities(EntitySandPrison.class, prison -> prison.getImprisoned() == entity);
 
 		return prisons.isEmpty() ? null : prisons.get(0);
 
@@ -99,7 +88,7 @@ public class EntitySandPrison extends AvatarEntity {
 		prison.setImprisoned(entity);
 		prison.copyLocationAndAnglesFrom(entity);
 		prison.setAbility(ab);
-		
+
 		double powerRating = Bender.get(owner).calcPowerRating(Sandbending.ID);
 		prison.setStats(AbilityData.get(owner, "sand_prison"), powerRating);
 
@@ -146,11 +135,11 @@ public class EntitySandPrison extends AvatarEntity {
 				normalBaseValue = speed.getBaseValue();
 				speed.setBaseValue(0);
 			}
-			imprisoned.posX = this.posX;
-			imprisoned.posY = this.posY;
-			imprisoned.posZ = this.posZ;
+			imprisoned.posX = posX;
+			imprisoned.posY = posY;
+			imprisoned.posZ = posZ;
 			imprisoned.motionX = imprisoned.motionY = imprisoned.motionZ = 0;
-			this.motionX = this.motionY = this.motionZ = 0;
+			motionX = motionY = motionZ = 0;
 		}
 
 		if (!world.isRemote) {
@@ -161,8 +150,7 @@ public class EntitySandPrison extends AvatarEntity {
 			setDead();
 
 			if (!world.isRemote && imprisoned != null) {
-				world.playSound(null, imprisoned.getPosition(),
-						SoundEvents.BLOCK_SAND_BREAK, SoundCategory.PLAYERS, 1, 1);
+				world.playSound(null, imprisoned.getPosition(), SoundEvents.BLOCK_SAND_BREAK, SoundCategory.PLAYERS, 1, 1);
 
 				if (damageEntity) {
 					DamageSource ds = AvatarDamageSource.causeSandPrisonDamage(imprisoned, getOwner());

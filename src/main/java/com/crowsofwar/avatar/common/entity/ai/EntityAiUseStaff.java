@@ -1,23 +1,19 @@
 package com.crowsofwar.avatar.common.entity.ai;
 
-import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.util.math.AxisAlignedBB;
 
-import java.util.List;
+import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
 
 public class EntityAiUseStaff extends EntityAIBase {
 
 	private final EntityHumanBender bender;
 	private int timeExecuting;
 
-
 	public EntityAiUseStaff(EntityHumanBender bender) {
 		this.bender = bender;
 		setMutexBits(1);
-		this.timeExecuting = 0;
+		timeExecuting = 0;
 	}
 
 	@Override

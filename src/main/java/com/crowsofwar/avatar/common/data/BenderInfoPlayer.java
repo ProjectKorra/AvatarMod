@@ -1,10 +1,10 @@
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.gorecore.util.AccountUUIDs;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
+
+import javax.annotation.*;
 import java.util.UUID;
 
 /**

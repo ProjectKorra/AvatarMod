@@ -17,26 +17,20 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
-import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
-import com.crowsofwar.gorecore.util.Vector;
-import com.crowsofwar.gorecore.util.VectorI;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.init.*;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
+import com.crowsofwar.gorecore.util.*;
 
 import java.util.Random;
 
@@ -51,7 +45,7 @@ public class AbilityPickUpBlock extends Ability {
 
 	public AbilityPickUpBlock() {
 		super(Earthbending.ID, "pickup_block");
-		this.random = new Random();
+		random = new Random();
 		requireRaytrace(-1, true);
 	}
 
@@ -68,10 +62,9 @@ public class AbilityPickUpBlock extends Ability {
 		//Bender bender = ctx.getBender();
 		//World world = ctx.getWorld();
 
-		EntityFloatingBlock currentBlock = AvatarEntity.lookupEntity(ctx.getWorld(),
-				EntityFloatingBlock.class,
-				fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
-						&& fb.getOwner() == ctx.getBenderEntity());
+		EntityFloatingBlock currentBlock = AvatarEntity.lookupEntity(ctx.getWorld(), EntityFloatingBlock.class,
+																	 fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
+																					 && fb.getOwner() == ctx.getBenderEntity());
 
 		if (currentBlock != null) {
 			currentBlock.drop();
@@ -133,8 +126,7 @@ public class AbilityPickUpBlock extends Ability {
 
 				SoundType sound = block.getSoundType();
 				if (sound != null) {
-					world.playSound(null, floating.getPosition(), sound.getBreakSound(),
-							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+					world.playSound(null, floating.getPosition(), sound.getBreakSound(), SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 				}
 
 				data.addStatusControl(StatusControl.PLACE_BLOCK);
@@ -143,8 +135,8 @@ public class AbilityPickUpBlock extends Ability {
 			}
 
 		} else {
-			world.playSound(null, entity.getPosition(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.PLAYERS,
-					1, (float) (random.nextGaussian() / 0.25 + 0.375));
+			world.playSound(null, entity.getPosition(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.PLAYERS, 1,
+							(float) (random.nextGaussian() / 0.25 + 0.375));
 		}
 
 	}

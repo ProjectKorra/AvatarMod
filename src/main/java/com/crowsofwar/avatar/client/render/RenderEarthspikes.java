@@ -16,22 +16,21 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityEarthspike;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+
+import com.crowsofwar.avatar.common.entity.EntityEarthspike;
 
 /**
  * @author CrowsOfWar
  */
 public class RenderEarthspikes extends RenderModel<EntityEarthspike> {
-
 
 	public static ResourceLocation TEXTURE;
 
@@ -42,34 +41,27 @@ public class RenderEarthspikes extends RenderModel<EntityEarthspike> {
 	 */
 	public RenderEarthspikes(RenderManager renderManager) {
 		super(renderManager, new ModelEarthspikes());
-		this.model = new ModelEarthspikes();
+		model = new ModelEarthspikes();
 	}
 
 	@Override
-	public void doRender(EntityEarthspike entity, double x, double y, double z, float entityYaw,
-						 float partialTicks) {
-
+	public void doRender(EntityEarthspike entity, double x, double y, double z, float entityYaw, float partialTicks) {
 
 		BlockPos below = entity.getPosition().offset(EnumFacing.DOWN);
 		Block belowBlock = entity.world.getBlockState(below).getBlock();
 		if (belowBlock == Blocks.GRASS) {
 			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike" + ".png");
-		}
-		else if (belowBlock == Blocks.DIRT) {
+		} else if (belowBlock == Blocks.DIRT) {
 			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_dirt" + ".png");
-		}
-	else 	if (belowBlock == Blocks.SAND) {
+		} else if (belowBlock == Blocks.SAND) {
 			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_sand" + ".png");
-		}
-		else if (belowBlock == Blocks.SANDSTONE) {
+		} else if (belowBlock == Blocks.SANDSTONE) {
 			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_sandstone" + ".png");
-		}
-		else if (belowBlock == Blocks.STONE) {
+		} else if (belowBlock == Blocks.STONE) {
 			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_stone" + ".png");
 		} else {
 			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_stone" + ".png");
 		}
-
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 		GlStateManager.enableBlend();
@@ -79,7 +71,6 @@ public class RenderEarthspikes extends RenderModel<EntityEarthspike> {
 
 		GlStateManager.rotate(180, 1, 0, 0);
 		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
-
 
 		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
 		GlStateManager.popMatrix();

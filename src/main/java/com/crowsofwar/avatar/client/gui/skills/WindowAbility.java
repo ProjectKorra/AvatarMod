@@ -16,27 +16,25 @@
 */
 package com.crowsofwar.avatar.client.gui.skills;
 
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
-import com.crowsofwar.avatar.client.uitools.*;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
-import com.crowsofwar.gorecore.format.FormattedMessage;
-import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
+import com.crowsofwar.avatar.client.uitools.*;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
+import com.crowsofwar.gorecore.format.*;
 import org.lwjgl.input.Mouse;
 
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getPlainCardTexture;
-import static com.crowsofwar.avatar.client.uitools.Measurement.fromPercent;
-import static com.crowsofwar.avatar.client.uitools.Measurement.fromPixels;
+import static com.crowsofwar.avatar.client.uitools.Measurement.*;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 
 /**
@@ -44,10 +42,9 @@ import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
  */
 public class WindowAbility {
 
-	private static final FormattedMessage MSG_UNLOCK_TEXT = FormattedMessage
-			.newChatMessage("avatar.ui.unlockDesc", "bending");
+	private static final FormattedMessage MSG_UNLOCK_TEXT = FormattedMessage.newChatMessage("avatar.ui.unlockDesc", "bending");
 	private static final FormattedMessage MSG_UNLOCK_SPECIAL_TEXT = FormattedMessage
-			.newChatMessage("avatar.ui.unlockDesc", "bendingMain", "bendingSpecialty");
+					.newChatMessage("avatar.ui.unlockDesc", "bendingMain", "bendingSpecialty");
 
 	private final Minecraft mc;
 
@@ -65,10 +62,10 @@ public class WindowAbility {
 	private ComponentCustomButton unlockButton;
 
 	public WindowAbility(Ability ability, SkillsGui gui) {
-		this.mc = Minecraft.getMinecraft();
+		mc = Minecraft.getMinecraft();
 		this.ability = ability;
 		this.gui = gui;
-		this.handler = new UiComponentHandler();
+		handler = new UiComponentHandler();
 
 		frame = new Frame();
 		frame.setDimensions(fromPercent(80, 80));
@@ -98,8 +95,7 @@ public class WindowAbility {
 		icon.setZLevel(3);
 		handler.add(icon);
 
-		description = new ComponentLongText(I18n.format("avatar.ability." + ability.getName() + ".desc"),
-				fromPercent(frameLeft, 100, 0));
+		description = new ComponentLongText(I18n.format("avatar.ability." + ability.getName() + ".desc"), fromPercent(frameLeft, 100, 0));
 		description.setFrame(frameLeft);
 		description.setPosition(StartingPosition.custom(0, 0.2f, 0, 0));
 		description.setZLevel(4);
@@ -134,8 +130,7 @@ public class WindowAbility {
 		treeView.setZLevel(4);
 		handler.add(treeView);
 
-		button = new ComponentCustomButton(AvatarUiTextures.skillsGui, 112, 0, 18, 18,
-				() -> gui.useScroll(ability));
+		button = new ComponentCustomButton(AvatarUiTextures.skillsGui, 112, 0, 18, 18, () -> gui.useScroll(ability));
 		button.setFrame(frameRight);
 		button.setPosition(StartingPosition.TOP_LEFT);
 		// button.setOffset(fromPixels(gui.getScrollSlot().width() * 1.5f, 0));
@@ -163,11 +158,10 @@ public class WindowAbility {
 		UUID parentBending = BendingStyles.get(ability.getBendingId()).getParentBendingId();
 		if (parentBending != null) {
 			String specialtyName = BendingStyles.get(parentBending).getName();
-			text = FormattedMessageProcessor.formatText(MSG_UNLOCK_SPECIAL_TEXT,
-					I18n.format("avatar.ui.unlockDescSpecialty"), bendingName, specialtyName);
+			text = FormattedMessageProcessor
+							.formatText(MSG_UNLOCK_SPECIAL_TEXT, I18n.format("avatar.ui.unlockDescSpecialty"), bendingName, specialtyName);
 		} else {
-			text = FormattedMessageProcessor.formatText(MSG_UNLOCK_TEXT,
-					I18n.format("avatar.ui.unlockDesc"), bendingName);
+			text = FormattedMessageProcessor.formatText(MSG_UNLOCK_TEXT, I18n.format("avatar.ui.unlockDesc"), bendingName);
 		}
 
 		unlockText = new ComponentLongText(text, frameRight.getDimensions());
@@ -177,15 +171,13 @@ public class WindowAbility {
 		handler.add(unlockText);
 
 		unlockButton = new ComponentCustomButton(AvatarUiTextures.skillsGui, 196, 100, 20, 20,
-				() -> AvatarMod.network.sendToServer(new PacketSUseScroll(ability)));
+												 () -> AvatarMod.network.sendToServer(new PacketSUseScroll(ability)));
 		unlockButton.setFrame(frameRight);
-		unlockButton.setOffset(fromPixels(unlockTitle.getFrame(), slot1.width() + 20,
-				unlockTitle.height() + unlockText.height() + 20));
+		unlockButton.setOffset(fromPixels(unlockTitle.getFrame(), slot1.width() + 20, unlockTitle.height() + unlockText.height() + 20));
 		unlockButton.setZLevel(4);
 		handler.add(unlockButton);
 
-		backButton = new ComponentCustomButton(AvatarUiTextures.skillsGui, 0, 240, 16, 16,
-				() -> gui.closeWindow());
+		backButton = new ComponentCustomButton(AvatarUiTextures.skillsGui, 0, 240, 16, 16, () -> gui.closeWindow());
 		backButton.setZLevel(999);
 		handler.add(backButton);
 
@@ -193,8 +185,7 @@ public class WindowAbility {
 
 	public void draw(float partialTicks) {
 
-		button.setEnabled(
-				gui.inventorySlots.getSlot(0).getHasStack() || gui.inventorySlots.getSlot(1).getHasStack());
+		button.setEnabled(gui.inventorySlots.getSlot(0).getHasStack() || gui.inventorySlots.getSlot(1).getHasStack());
 
 		int width = screenWidth() / scaleFactor();
 		int height = screenHeight() / scaleFactor();
@@ -214,8 +205,7 @@ public class WindowAbility {
 			unlockButton.setEnabled(gui.inventorySlots.getSlot(0).getHasStack());
 			slot1.setVisible(true);
 			slot1.setFrame(unlockTitle.getFrame());
-			slot1.setOffset(
-					fromPixels(unlockTitle.getFrame(), 0, unlockTitle.height() + unlockText.height() + 20));
+			slot1.setOffset(fromPixels(unlockTitle.getFrame(), 0, unlockTitle.height() + unlockText.height() + 20));
 			slot2.setVisible(false);
 		} else {
 			slot1.setFrame(Frame.SCREEN);
@@ -228,15 +218,13 @@ public class WindowAbility {
 	public boolean isMouseHover(float mouseX, float mouseY) {
 		Measurement min = frame.getCoordsMin();
 		Measurement max = frame.getCoordsMax();
-		return mouseX > min.xInPixels() && mouseY > min.yInPixels() && mouseX < max.xInPixels()
-				&& mouseY < max.yInPixels();
+		return mouseX > min.xInPixels() && mouseY > min.yInPixels() && mouseX < max.xInPixels() && mouseY < max.yInPixels();
 	}
 
 	public boolean isInventoryMouseHover(float mouseX, float mouseY) {
 		Measurement min = invBg.coordinates();
 		Measurement max = min.plus(fromPixels(invBg.width(), invBg.height()));
-		return mouseX > min.xInPixels() && mouseY > min.yInPixels() && mouseX < max.xInPixels()
-				&& mouseY < max.yInPixels();
+		return mouseX > min.xInPixels() && mouseY > min.yInPixels() && mouseX < max.xInPixels() && mouseY < max.yInPixels();
 	}
 
 	public void mouseClicked(float x, float y, int button) {

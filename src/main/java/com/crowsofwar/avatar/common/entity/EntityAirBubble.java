@@ -16,36 +16,27 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.*;
+import net.minecraft.entity.item.*;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.datasync.*;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
-import java.util.List;
-import java.util.UUID;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.util.Vector;
+
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -56,15 +47,11 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
  */
 public class EntityAirBubble extends EntityShield {
 
-	public static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
-			.createKey(EntityAirBubble.class, DataSerializers.VARINT);
-	public static final DataParameter<Boolean> SYNC_HOVERING = EntityDataManager
-			.createKey(EntityAirBubble.class, DataSerializers.BOOLEAN);
-	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirBubble.class,
-			DataSerializers.FLOAT);
+	public static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager.createKey(EntityAirBubble.class, DataSerializers.VARINT);
+	public static final DataParameter<Boolean> SYNC_HOVERING = EntityDataManager.createKey(EntityAirBubble.class, DataSerializers.BOOLEAN);
+	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirBubble.class, DataSerializers.FLOAT);
 	public static final UUID SLOW_ATTR_ID = UUID.fromString("40354c68-6e88-4415-8a6b-e3ddc56d6f50");
-	public static final AttributeModifier SLOW_ATTR = new AttributeModifier(SLOW_ATTR_ID,
-			"airbubble_slowness", -.3, 2);
+	public static final AttributeModifier SLOW_ATTR = new AttributeModifier(SLOW_ATTR_ID, "airbubble_slowness", -.3, 2);
 
 	private int airLeft;
 
@@ -73,9 +60,9 @@ public class EntityAirBubble extends EntityShield {
 		setSize(2.5f, 2.5f);
 		//setSize(0, 0);
 
-		this.noClip = true;
-		this.airLeft = 600;
-		this.putsOutFires = true;
+		noClip = true;
+		airLeft = 600;
+		putsOutFires = true;
 	}
 
 	@Override
@@ -125,7 +112,6 @@ public class EntityAirBubble extends EntityShield {
 		return true;
 	}
 
-
 	@Override
 	public boolean isPushedByWater() {
 		return false;
@@ -135,11 +121,10 @@ public class EntityAirBubble extends EntityShield {
 	public void onUpdate() {
 		super.onUpdate();
 
-
 		EntityLivingBase owner = getOwner();
 
 		if (owner == null && !isDissipating()) {
-			this.setDead();
+			setDead();
 			removeStatCtrl();
 		}
 
@@ -156,7 +141,6 @@ public class EntityAirBubble extends EntityShield {
 		setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
 		setVelocity(0, 0, 0);
 
-
 		if (getOwner() != null) {
 			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
@@ -166,8 +150,9 @@ public class EntityAirBubble extends EntityShield {
 			}
 		}
 
-		AxisAlignedBB box = new AxisAlignedBB(getEntityBoundingBox().minX - (getSize() / 10), getEntityBoundingBox().minY, getEntityBoundingBox().minZ - (getSize() / 10),
-				getEntityBoundingBox().maxX + (getSize() / 10), getEntityBoundingBox().maxY + (getSize() / 4), getEntityBoundingBox().maxZ + (getSize() / 4));
+		AxisAlignedBB box = new AxisAlignedBB(getEntityBoundingBox().minX - (getSize() / 10), getEntityBoundingBox().minY,
+											  getEntityBoundingBox().minZ - (getSize() / 10), getEntityBoundingBox().maxX + (getSize() / 10),
+											  getEntityBoundingBox().maxY + (getSize() / 4), getEntityBoundingBox().maxZ + (getSize() / 4));
 		List<Entity> nearby = world.getEntitiesWithinAABB(Entity.class, box);
 		if (!nearby.isEmpty()) {
 			for (Entity collided : nearby) {
@@ -264,8 +249,8 @@ public class EntityAirBubble extends EntityShield {
 		// Min/max acceptable hovering distance
 		// Hovering is allowed between these two values
 		// Hover distance doesn't need to be EXACT
-		final double minFloatHeight = 1.2;
-		final double maxFloatHeight = 3;
+		double minFloatHeight = 1.2;
+		double maxFloatHeight = 3;
 
 		EntityLivingBase owner = getOwner();
 
@@ -333,7 +318,6 @@ public class EntityAirBubble extends EntityShield {
 		return true;
 	}
 
-
 	@Override
 	public boolean canPush() {
 		return false;
@@ -348,7 +332,6 @@ public class EntityAirBubble extends EntityShield {
 		}
 
 		if (canCollideWith(entity) && entity != getOwner() && getOwner() != null) {
-
 
 			Vector velocity = getEntityPos(entity).minus(getEntityPos(getOwner()));
 			//Vector that comes from the owner of the air bubble towards the entity being collided with
@@ -369,7 +352,6 @@ public class EntityAirBubble extends EntityShield {
 			AvatarUtils.afterVelocityAdded(entity);
 		}
 	}
-
 
 	@Override
 	public boolean canCollideWith(Entity entity) {
@@ -395,7 +377,6 @@ public class EntityAirBubble extends EntityShield {
 		nbt.setFloat("Size", getSize());
 		nbt.setInteger("AirLeft", airLeft);
 	}
-
 
 	@Override
 	protected float getChiDamageCost() {
@@ -458,8 +439,7 @@ public class EntityAirBubble extends EntityShield {
 			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
 			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
 
-			IAttributeInstance attribute = getOwner()
-					.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+			IAttributeInstance attribute = getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 			if (attribute.getModifier(SLOW_ATTR_ID) != null) {
 				attribute.removeModifier(SLOW_ATTR);
 			}

@@ -17,16 +17,14 @@
 
 package com.crowsofwar.avatar.common.config;
 
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarLog.WarningType;
-import com.crowsofwar.gorecore.config.ConfigLoader;
-import com.crowsofwar.gorecore.config.Load;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarLog.WarningType;
+import com.crowsofwar.gorecore.config.*;
+
+import java.util.*;
 
 /**
  * @author CrowsOfWar
@@ -36,15 +34,13 @@ public class ConfigStats {
 	public static final ConfigStats STATS_CONFIG = new ConfigStats();
 
 	@Load
-	public AttackSettings floatingBlockSettings = new AttackSettings(2f, 1),
-			ravineSettings = new AttackSettings(3.5F, 0.25), //
-			waveSettings = new AttackSettings(0.25F, 4), //
-			airbladeSettings = new AttackSettings(3, .03), //
-			fireArcSettings = new AttackSettings(3, 1),   //
-			waterArcSettings = new AttackSettings(1.5F, 1),
-			boulderSettings = new AttackSettings(0.1F, 0.1),
-			airBurstSettings = new AttackSettings (1F, 1),
-			lightningSpearSettings = new AttackSettings(4F, 2);
+	public AttackSettings floatingBlockSettings = new AttackSettings(2f, 1), ravineSettings = new AttackSettings(3.5F, 0.25), //
+					waveSettings = new AttackSettings(0.25F, 4), //
+					airbladeSettings = new AttackSettings(3, .03), //
+					fireArcSettings = new AttackSettings(3, 1),   //
+					waterArcSettings = new AttackSettings(1.5F, 1), boulderSettings = new AttackSettings(0.1F,
+																										 0.1), airBurstSettings = new AttackSettings(
+					1F, 1), lightningSpearSettings = new AttackSettings(4F, 2);
 
 	@Load
 	public double wallWaitTime = 10, wallWaitTime2 = 60, wallMomentum = 10;
@@ -111,9 +107,7 @@ public class ConfigStats {
 			chiWaterSkateSecond = 1.5f,
 			chiWallOneSecond = 0.125f,
 			chiPrison = 5,
-			chiSandPrison = 3,
-			chiLightning = 6,
-			chiLightningSpear = 4,
+			chiSandPrison = 3, chiLightning = 6, chiLightningSpear = 4,
 			chiLightningRaze = 5,
 			chiIceShieldCreate = 4,
 			chiIceShieldProtect = 0.15f,
@@ -172,114 +166,48 @@ public class ConfigStats {
 	public boolean allowMultiAirbendingWalljump = false;
 
 	@Load
-	public List<String> sandBlocksNames = Arrays.asList(
-			"minecraft:sand",
-			"minecraft:gravel");
+	public List<String> sandBlocksNames = Arrays.asList("minecraft:sand", "minecraft:gravel");
 	@Load
-	public List<String> bendableBlocksNames = Arrays.asList(
-			"minecraft:stone",
-			"minecraft:sand",
-			"minecraft:sandstone",
-			"minecraft:cobblestone",
-			"minecraft:dirt",
-			"minecraft:gravel",
-			"minecraft:brick_block",
-			"minecraft:mossy_cobblestone",
-			"minecraft:stonebrick",
-			"minecraft:stone_slab",
-			"minecraft:clay",
-			"minecraft:hardened_clay",
-			"minecraft:stained_hardened_clay",
-			"minecraft:coal_ore",
-			"minecraft:iron_ore",
-			"minecraft:emerald_ore",
-			"minecraft:gold_ore",
-			"minecraft:lapis_ore",
-			"minecraft:redstone_ore",
-			"minecraft:red_sandstone",
-			"minecraft:grass",
-			"minecraft:grass_path"
-	);
+	public List<String> bendableBlocksNames = Arrays
+					.asList("minecraft:stone", "minecraft:sand", "minecraft:sandstone", "minecraft:cobblestone", "minecraft:dirt", "minecraft:gravel",
+							"minecraft:brick_block", "minecraft:mossy_cobblestone", "minecraft:stonebrick", "minecraft:stone_slab", "minecraft:clay",
+							"minecraft:hardened_clay", "minecraft:stained_hardened_clay", "minecraft:coal_ore", "minecraft:iron_ore",
+							"minecraft:emerald_ore", "minecraft:gold_ore", "minecraft:lapis_ore", "minecraft:redstone_ore", "minecraft:red_sandstone",
+							"minecraft:grass", "minecraft:grass_path");
 
 	@Load
-	public List<String> waterBendableBlockNames = Arrays.asList(
-			"minecraft:snow",
-			"minecraft:snow_layer",
-			"minecraft:ice",
-			"minecraft:packed_ice",
-			"minecraft:frosted_ice",
-			"minecraft:water",
-			"minecraft:flowing_water"
-	);
+	public List<String> waterBendableBlockNames = Arrays
+					.asList("minecraft:snow", "minecraft:snow_layer", "minecraft:ice", "minecraft:packed_ice", "minecraft:frosted_ice",
+							"minecraft:water", "minecraft:flowing_water");
 
 	@Load
-	public List<String> iceBendableBlockNames = Arrays.asList(
-			"minecraft:snow",
-			"minecraft:snow_layer",
-			"minecraft:ice",
-			"minecraft:packed_ice",
-			"minecraft:frosted_ice"
-	);
+	public List<String> iceBendableBlockNames = Arrays
+					.asList("minecraft:snow", "minecraft:snow_layer", "minecraft:ice", "minecraft:packed_ice", "minecraft:frosted_ice");
 
 	@Load
-	public List<String> plantBendableBlockNames = Arrays.asList(
-			"minecraft:tallgrass",
-			"minecraft:wheat",
-			"minecraft:double_grass",
-			"minecraft:waterlily",
-			"minecraft:red_flower",
-			"minecraft:double_plant",
-			//For some reason, most of the plants in minecraft are tallgrass, double_grass, double_plant, or red_flowers. Weird.
-			"minecraft:leaves",
-			"minecraft:yellow_flower",
-			"minecraft:red_mushroom",
-			"minecraft:brown_mushroom",
-			"minecraft:vine"
+	public List<String> plantBendableBlockNames = Arrays
+					.asList("minecraft:tallgrass", "minecraft:wheat", "minecraft:double_grass", "minecraft:waterlily", "minecraft:red_flower",
+							"minecraft:double_plant",
+							//For some reason, most of the plants in minecraft are tallgrass, double_grass, double_plant, or red_flowers. Weird.
+							"minecraft:leaves", "minecraft:yellow_flower", "minecraft:red_mushroom", "minecraft:brown_mushroom", "minecraft:vine"
 
-	);
+					);
 
 	@Load
-	public List<String> airBladeBreakableBlockNames = Arrays.asList(
-			"minecraft:stone",
-			"minecraft:sand",
-			"minecraft:sandstone",
-			"minecraft:cobblestone",
-			"minecraft:dirt",
-			"minecraft:gravel",
-			"minecraft:brick_block",
-			"minecraft:mossy_cobblestone",
-			"minecraft:stonebrick",
-			"minecraft:clay",
-			"minecraft:hardened_clay",
-			"minecraft:stained_hardened_clay",
-			"minecraft:coal_ore",
-			"minecraft:iron_ore",
-			"minecraft:red_sandstone",
-			"minecraft:grass",
-			"minecraft:grass_path"
+	public List<String> airBladeBreakableBlockNames = Arrays
+					.asList("minecraft:stone", "minecraft:sand", "minecraft:sandstone", "minecraft:cobblestone", "minecraft:dirt", "minecraft:gravel",
+							"minecraft:brick_block", "minecraft:mossy_cobblestone", "minecraft:stonebrick", "minecraft:clay",
+							"minecraft:hardened_clay", "minecraft:stained_hardened_clay", "minecraft:coal_ore", "minecraft:iron_ore",
+							"minecraft:red_sandstone", "minecraft:grass", "minecraft:grass_path"
 
-	);
+					);
 
 	@Load
-	public List<String> waterArcBreakableBlockNames = Arrays.asList(
-			"minecraft:stone",
-			"minecraft:sand",
-			"minecraft:sandstone",
-			"minecraft:cobblestone",
-			"minecraft:dirt",
-			"minecraft:gravel",
-			"minecraft:brick_block",
-			"minecraft:mossy_cobblestone",
-			"minecraft:stonebrick",
-			"minecraft:clay",
-			"minecraft:hardened_clay",
-			"minecraft:stained_hardened_clay",
-			"minecraft:coal_ore",
-			"minecraft:iron_ore",
-			"minecraft:red_sandstone",
-			"minecraft:grass",
-			"minecraft:grass_path"
-	);
+	public List<String> waterArcBreakableBlockNames = Arrays
+					.asList("minecraft:stone", "minecraft:sand", "minecraft:sandstone", "minecraft:cobblestone", "minecraft:dirt", "minecraft:gravel",
+							"minecraft:brick_block", "minecraft:mossy_cobblestone", "minecraft:stonebrick", "minecraft:clay",
+							"minecraft:hardened_clay", "minecraft:stained_hardened_clay", "minecraft:coal_ore", "minecraft:iron_ore",
+							"minecraft:red_sandstone", "minecraft:grass", "minecraft:grass_path");
 
 	public List<Block> plantBendableBlocks;
 	public List<Block> waterBendableBlocks;
@@ -315,8 +243,7 @@ public class ConfigStats {
 		for (String blockName : blocksNames) {
 			Block b = Block.REGISTRY.getObject(new ResourceLocation(blockName));
 			if (b == null) {
-				AvatarLog.warn(WarningType.CONFIGURATION,
-						"Invalid blocks entry: " + blockName + "; this block does not exist");
+				AvatarLog.warn(WarningType.CONFIGURATION, "Invalid blocks entry: " + blockName + "; this block does not exist");
 			} else {
 				blocks.add(b);
 			}
@@ -435,8 +362,6 @@ public class ConfigStats {
 		@Load
 		public double speed = 5;
 		//Speed of the spawner
-
-
 
 	}
 

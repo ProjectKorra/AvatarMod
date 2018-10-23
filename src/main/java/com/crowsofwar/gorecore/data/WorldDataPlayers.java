@@ -17,50 +17,47 @@
 
 package com.crowsofwar.gorecore.data;
 
-import java.util.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+
+import net.minecraftforge.fml.common.FMLLog;
 
 import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.*;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.FMLLog;
+import java.util.*;
 
 /**
  * A world data class which comes equipped with the ability to save and load
  * player data.
- * 
- * @param T
- *            The type of your player data
- * 
+ *
+ * @param <T> The type of your player data
  * @author CrowsOfWar
  */
 public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
-	
+
 	private Map<UUID, PlayerData> players;
-	
+
 	public WorldDataPlayers(String key) {
 		super(key);
-		this.players = new HashMap<UUID, PlayerData>();
+		players = new HashMap<>();
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		this.players = GoreCoreNBTUtil.readMapFromNBT(nbt, PlayerData.MAP_USER, "PlayerData", new Object[] {},
-				new Object[] { playerDataClass(), this });
+		players = GoreCoreNBTUtil.readMapFromNBT(nbt, PlayerData.MAP_USER, "PlayerData", new Object[] {}, new Object[] { playerDataClass(), this });
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		GoreCoreNBTUtil.writeMapToNBT(nbt, players, PlayerData.MAP_USER, "PlayerData");
 		return nbt;
 	}
-	
+
 	/**
 	 * Gets the player data for that player, creating it if necessary.
-	 * 
-	 * @param player
-	 *            The UUID of the player to get data for
+	 *
+	 * @param player The UUID of the player to get data for
 	 * @return Player data for that player
 	 */
 	public T getPlayerData(UUID player) {
@@ -73,17 +70,17 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 			data.setPlayerEntity(AccountUUIDs.findEntityFromUUID(getWorld(), player));
 			saveChanges();
 		}
-		Objects.requireNonNull(data, String.format("Couldn't create data for player \"%s\" and world \"%s\"!", player, getWorld().provider.getDimensionType().getName()));
+		Objects.requireNonNull(data, String.format("Couldn't create data for player \"%s\" and world \"%s\"!", player,
+												   getWorld().provider.getDimensionType().getName()));
 		return data;
-		
+
 	}
-	
+
 	/**
 	 * Gets the player data for the player. If the player data has not been
 	 * created, then this will return null.
-	 * 
-	 * @param player
-	 *            The UUID of the player to get data for
+	 *
+	 * @param player The UUID of the player to get data for
 	 * @return Player data for the player, or null if it does not exist
 	 */
 	public T getPlayerDataWithoutCreate(UUID player) {
@@ -93,25 +90,23 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 		}
 		return data;
 	}
-	
+
 	public abstract Class<T> playerDataClass();
-	
+
 	private T createNewPlayerData(UUID player) {
 		try {
-			
+
 			EntityPlayer playerEntity = AccountUUIDs.findEntityFromUUID(getWorld(), player);
-			if (playerEntity == null)
-				GoreCore.LOGGER.warn("WARNING: playerEntity was null while creating new player data");
-			PlayerData data = playerDataClass()
-					.getConstructor(DataSaver.class, UUID.class, EntityPlayer.class)
-					.newInstance(this, player, playerEntity);
+			if (playerEntity == null) GoreCore.LOGGER.warn("WARNING: playerEntity was null while creating new player data");
+			PlayerData data = playerDataClass().getConstructor(DataSaver.class, UUID.class, EntityPlayer.class)
+							.newInstance(this, player, playerEntity);
 			return (T) data;
-			
+
 		} catch (Exception e) {
 			FMLLog.warning("GoreCore> Found an error when trying to make new player data!");
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
+
 }

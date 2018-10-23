@@ -17,8 +17,7 @@
 
 package com.crowsofwar.avatar.common.config;
 
-import com.crowsofwar.gorecore.config.ConfigLoader;
-import com.crowsofwar.gorecore.config.Load;
+import com.crowsofwar.gorecore.config.*;
 
 /**
  * @author CrowsOfWar

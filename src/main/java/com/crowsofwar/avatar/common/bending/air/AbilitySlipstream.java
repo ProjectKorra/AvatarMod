@@ -1,21 +1,20 @@
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SLIPSTREAM_COOLDOWN;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.SLIPSTREAM_COOLDOWN_HANDLER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.SLIPSTREAM_COOLDOWN_HANDLER;
 
 public class AbilitySlipstream extends Ability {
 
@@ -77,7 +76,6 @@ public class AbilitySlipstream extends Ability {
 			data.addTickHandler(SLIPSTREAM_COOLDOWN_HANDLER);
 
 		}
-
 
 	}
 

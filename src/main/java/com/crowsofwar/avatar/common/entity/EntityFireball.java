@@ -16,38 +16,24 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import net.minecraft.entity.*;
+import net.minecraft.init.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+
+import net.minecraftforge.fml.relauncher.*;
+
 import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
-import com.crowsofwar.avatar.common.bending.fire.Firebending;
-import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.bending.fire.*;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.data.Behavior;
-import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
+import com.crowsofwar.avatar.common.entity.data.*;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -60,10 +46,9 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
  */
 public class EntityFireball extends AvatarEntity {
 
-	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityFireball.class,
-			DataSerializers.VARINT);
+	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityFireball.class, DataSerializers.VARINT);
 	private static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
-			.createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
+					.createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
 	private AxisAlignedBB expandedHitbox;
 
 	private float damage;
@@ -76,12 +61,12 @@ public class EntityFireball extends AvatarEntity {
 	public EntityFireball(World world) {
 		super(world);
 		setSize(.8f, .8f);
-		this.explosionStrength = 0.75f;
-		this.position = this.getPosition();
+		explosionStrength = 0.75f;
+		position = getPosition();
 	}
 
 	public void setExplosionStrength(float strength) {
-		this.explosionStrength = strength;
+		explosionStrength = strength;
 	}
 
 	@Override
@@ -101,7 +86,7 @@ public class EntityFireball extends AvatarEntity {
 
 		super.onUpdate();
 		if (getBehavior() == null) {
-			this.setBehavior(new FireballBehavior.Thrown());
+			setBehavior(new FireballBehavior.Thrown());
 		}
 
 		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
@@ -121,16 +106,16 @@ public class EntityFireball extends AvatarEntity {
 			if (ball == null && bD.hasStatusControl(StatusControl.THROW_FIREBALL)) {
 				bD.removeStatusControl(StatusControl.THROW_FIREBALL);
 			}
-			if (ball != null && ball.getBehavior() instanceof FireballBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_FIREBALL))) {
+			if (ball != null && ball.getBehavior() instanceof FireballBehavior.PlayerControlled && !(bD
+							.hasStatusControl(StatusControl.THROW_FIREBALL))) {
 				bD.addStatusControl(StatusControl.THROW_FIREBALL);
 			}
 			if (getBehavior() != null && getBehavior() instanceof FireballBehavior.PlayerControlled) {
-				this.position = this.getPosition();
+				position = getPosition();
 			}
 
 		}
 	}
-
 
 	@Override
 	public boolean onMajorWaterContact() {
@@ -195,7 +180,6 @@ public class EntityFireball extends AvatarEntity {
 	@Override
 	public boolean onCollideWithSolid() {
 
-
 		if (getBehavior() instanceof FireballBehavior.Thrown) {
 			float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
 
@@ -205,8 +189,7 @@ public class EntityFireball extends AvatarEntity {
 
 			if (getOwner() != null && !world.isRemote) {
 				if (getAbility() instanceof AbilityFireball) {
-					AbilityData abilityData = BendingData.get(getOwner())
-							.getAbilityData("fireball");
+					AbilityData abilityData = BendingData.get(getOwner()).getAbilityData("fireball");
 					if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 						destroyObsidian = true;
 					}
@@ -224,7 +207,6 @@ public class EntityFireball extends AvatarEntity {
 					}
 				}
 			}
-
 
 			setDead();
 			removeStatCtrl();
@@ -253,9 +235,8 @@ public class EntityFireball extends AvatarEntity {
 		return 150;
 	}
 
-
 	public AxisAlignedBB getExpandedHitbox() {
-		return this.expandedHitbox;
+		return expandedHitbox;
 	}
 
 	@Override
@@ -301,13 +282,14 @@ public class EntityFireball extends AvatarEntity {
 					hitBox = size + 4;
 				}
 
-				this.setInvisible(true);
-				WorldServer World = (WorldServer) this.world;
+				setInvisible(true);
+				WorldServer World = (WorldServer) world;
 				World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, getSize() * 15, 0, 0, 0, getSize() / 200F);
 				World.spawnParticle(EnumParticleTypes.LAVA, posX, posY, posZ, 50, 0, 0, 0, speed);
-				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+				world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.BLOCKS, 4.0F,
+								(1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(hitBox, hitBox, hitBox),
-						entity -> entity != getOwner());
+																		 entity -> entity != getOwner());
 
 				if (!collided.isEmpty()) {
 					for (Entity entity : collided) {
@@ -317,7 +299,7 @@ public class EntityFireball extends AvatarEntity {
 								damageEntity(entity);
 
 								double mult = abilityData.getLevel() >= 2 ? -2 : -1;
-								double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
+								double distanceTravelled = entity.getDistance(position.getX(), position.getY(), position.getZ());
 
 								Vector vel = position().minus(getEntityPos(entity));
 								vel = vel.normalize().times(mult).plusY(0.15f);

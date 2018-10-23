@@ -18,10 +18,10 @@
 package com.crowsofwar.avatar.common;
 
 import net.minecraft.util.EnumParticleTypes;
+
 import net.minecraftforge.common.util.EnumHelper;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
@@ -46,12 +46,10 @@ public class AvatarParticles {
 
 	private static EnumParticleTypes addParticle(String particleName) {
 
-		EnumParticleTypes particle = EnumHelper.addEnum(EnumParticleTypes.class,
-				"AVATAR_" + particleName.toUpperCase(),
-				new Class<?>[]{String.class, int.class, boolean.class},
-				"avatar" + particleName.substring(0, 1).toUpperCase()
-						+ particleName.substring(1).toLowerCase(),
-				nextParticleId(), true);
+		EnumParticleTypes particle = EnumHelper.addEnum(EnumParticleTypes.class, "AVATAR_" + particleName.toUpperCase(),
+														new Class<?>[] { String.class, int.class, boolean.class },
+														"avatar" + particleName.substring(0, 1).toUpperCase() + particleName.substring(1)
+																		.toLowerCase(), nextParticleId(), true);
 
 		lookup.put(particle.getParticleID(), particle);
 		return particle;

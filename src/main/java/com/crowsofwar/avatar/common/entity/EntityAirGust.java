@@ -17,16 +17,14 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.gorecore.util.Vector;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
@@ -41,7 +39,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		super(world);
 		setSize(1.5f, 1.5f);
 		putsOutFires = true;
-		this.noClip = true;
+		noClip = true;
 	}
 
 	@Override
@@ -68,8 +66,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		super.onUpdate();
 		ControlPoint first = getControlPoint(0);
 		ControlPoint second = getControlPoint(1);
-		if (first.position().sqrDist(second.position()) >= getControlPointMaxDistanceSq()
-				|| ticksExisted > 80) {
+		if (first.position().sqrDist(second.position()) >= getControlPointMaxDistanceSq() || ticksExisted > 80) {
 			setDead();
 		}
 	}

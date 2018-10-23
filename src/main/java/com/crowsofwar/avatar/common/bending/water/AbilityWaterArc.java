@@ -17,25 +17,20 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityWaterArc;
-import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
+import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -49,12 +44,12 @@ import static java.lang.Math.toRadians;
  */
 public class AbilityWaterArc extends Ability {
 
+	public int comboNumber;
+
 	public AbilityWaterArc() {
 		super(Waterbending.ID, "water_arc");
 		requireRaytrace(-1, true);
 	}
-
-	public int comboNumber;
 
 	@Override
 	public void execute(AbilityContext ctx) {
@@ -64,8 +59,9 @@ public class AbilityWaterArc extends Ability {
 
 		Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel() * 2);
 
-		List<Entity> waterArc = Raytrace.entityRaytrace(world, Vector.getEntityPos(entity).withY(entity.getEyeHeight()), Vector.getLookRectangular(entity).times(10), 3,
-				entity1 -> entity1 != entity);
+		List<Entity> waterArc = Raytrace
+						.entityRaytrace(world, Vector.getEntityPos(entity).withY(entity.getEyeHeight()), Vector.getLookRectangular(entity).times(10),
+										3, entity1 -> entity1 != entity);
 
 		if (waterArc.isEmpty()) {
 			if (ctx.getLevel() >= 2) {
@@ -94,7 +90,6 @@ public class AbilityWaterArc extends Ability {
 			if (targetPos != null && (entity instanceof EntityPlayer && !((EntityPlayer) entity).isCreative())) {
 				world.setBlockToAir(targetPos.toBlockPos());
 			}
-
 
 			float damageMult = 1F;
 			float gravity = 8;
@@ -153,12 +148,10 @@ public class AbilityWaterArc extends Ability {
 					damageMult = comboNumber >= 3 ? 1.25F : 0.5F;
 					damageMult *= ctx.getPowerRatingDamageMod();
 
-
 					Vector playerEye = Vector.getEyePos(entity);
 					Vector look = playerEye.plus(getLookRectangular(entity).times(1.5));
 					Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch));
 					force = force.times(15 + comboNumber);
-
 
 					water.setOwner(entity);
 					water.setPosition(look);
@@ -208,8 +201,8 @@ public class AbilityWaterArc extends Ability {
 				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterArcAngles;
 
 				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> state.getBlock() == Blocks.WATER
-						|| state.getBlock() == Blocks.FLOWING_WATER || state.getBlock() == Blocks.ICE || state.getBlock() == Blocks.SNOW_LAYER
-						|| state.getBlock() == Blocks.SNOW;
+								|| state.getBlock() == Blocks.FLOWING_WATER || state.getBlock() == Blocks.ICE || state.getBlock() == Blocks.SNOW_LAYER
+								|| state.getBlock() == Blocks.SNOW;
 
 				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
 				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
@@ -224,7 +217,6 @@ public class AbilityWaterArc extends Ability {
 		return null;
 
 	}
-
 
 	//For bending snow and ice; is a separate method so that when passives are active it's easy to differentiate
 	//For some reason this doesn't work; will use alternate method for now
@@ -245,8 +237,9 @@ public class AbilityWaterArc extends Ability {
 				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterArcAngles;
 				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterArcAngles;
 
-				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> (STATS_CONFIG.waterBendableBlocks.contains(state.getBlock())
-						|| STATS_CONFIG.plantBendableBlocks.contains(state.getBlock())) && state.getBlock() != Blocks.AIR;
+				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) ->
+								(STATS_CONFIG.waterBendableBlocks.contains(state.getBlock()) || STATS_CONFIG.plantBendableBlocks
+												.contains(state.getBlock())) && state.getBlock() != Blocks.AIR;
 
 				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
 				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
@@ -262,14 +255,12 @@ public class AbilityWaterArc extends Ability {
 
 	}
 
-
 	/**
 	 * Kills already existing water arc if there is one
 	 */
 	private void removeExisting(AbilityContext ctx) {
 
-		EntityWaterArc water = AvatarEntity.lookupControlledEntity(ctx.getWorld(), EntityWaterArc
-				.class, ctx.getBenderEntity());
+		EntityWaterArc water = AvatarEntity.lookupControlledEntity(ctx.getWorld(), EntityWaterArc.class, ctx.getBenderEntity());
 
 		if (water != null) {
 			water.setBehavior(new WaterArcBehavior.Thrown());

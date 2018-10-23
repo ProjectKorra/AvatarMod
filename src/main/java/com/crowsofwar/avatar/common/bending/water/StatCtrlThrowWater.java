@@ -17,17 +17,16 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityWaterArc;
-import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
+import com.crowsofwar.gorecore.util.Vector;
 
 /**
  * @author CrowsOfWar
@@ -60,14 +59,12 @@ public class StatCtrlThrowWater extends StatusControl {
 		}
 
 		EntityWaterArc arc = AvatarEntity.lookupEntity(ctx.getWorld(), EntityWaterArc.class, //
-				water -> water.getBehavior() instanceof WaterArcBehavior.PlayerControlled
-						&& water.getOwner() == ctx.getBenderEntity());
-
+													   water -> water.getBehavior() instanceof WaterArcBehavior.PlayerControlled
+																	   && water.getOwner() == ctx.getBenderEntity());
 
 		if (arc != null) {
 
-			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
-					Math.toRadians(entity.rotationPitch));
+			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch));
 			force = force.times(velocity);
 			arc.addVelocity(arc.velocity().dividedBy(-1));
 			arc.addVelocity(force);

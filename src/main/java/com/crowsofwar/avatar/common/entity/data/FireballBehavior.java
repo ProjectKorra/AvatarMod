@@ -17,23 +17,19 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityFireball;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataSerializer;
-import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.*;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.EntityFireball;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.List;
 
@@ -99,8 +95,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 
 			World world = entity.world;
 			if (!entity.isDead) {
-				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
-						entity.getExpandedHitbox());
+				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity, entity.getExpandedHitbox());
 				if (!collidedList.isEmpty()) {
 					Entity collided = collidedList.get(0);
 					if (entity.canCollideWith(collided) && collided != entity.getOwner()) {
@@ -119,8 +114,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			if (entity.canDamageEntity(collided)) {
 				collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
 
-				if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
-						entity.getDamage())) {
+				if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()), entity.getDamage())) {
 					BattlePerformanceScore.addMediumScore(entity.getOwner());
 				}
 			}

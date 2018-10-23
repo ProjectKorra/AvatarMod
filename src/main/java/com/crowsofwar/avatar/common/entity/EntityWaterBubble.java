@@ -17,22 +17,18 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.data.Behavior;
-import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
-import net.minecraft.block.BlockFarmland;
-import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.datasync.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.data.*;
 
 import java.util.Objects;
 
@@ -42,7 +38,7 @@ import java.util.Objects;
 public class EntityWaterBubble extends AvatarEntity {
 
 	private static final DataParameter<WaterBubbleBehavior> SYNC_BEHAVIOR = EntityDataManager
-			.createKey(EntityWaterBubble.class, WaterBubbleBehavior.DATA_SERIALIZER);
+					.createKey(EntityWaterBubble.class, WaterBubbleBehavior.DATA_SERIALIZER);
 
 	/**
 	 * Whether the water bubble will get a water source upon landing. Only
@@ -56,7 +52,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	public EntityWaterBubble(World world) {
 		super(world);
 		setSize(.8f, .8f);
-		this.putsOutFires = true;
+		putsOutFires = true;
 	}
 
 	@Override
@@ -80,8 +76,7 @@ public class EntityWaterBubble extends AvatarEntity {
 			IBlockState downState = world.getBlockState(down);
 			if (downState.getBlock() == Blocks.FARMLAND) {
 				int moisture = downState.getValue(BlockFarmland.MOISTURE);
-				if (moisture < 7) world.setBlockState(down,
-						Blocks.FARMLAND.getDefaultState().withProperty(BlockFarmland.MOISTURE, moisture + 1));
+				if (moisture < 7) world.setBlockState(down, Blocks.FARMLAND.getDefaultState().withProperty(BlockFarmland.MOISTURE, moisture + 1));
 			}
 		}
 
@@ -108,8 +103,8 @@ public class EntityWaterBubble extends AvatarEntity {
 				}
 			}
 		}
-		if (this.getOwner() == null) {
-			this.setDead();
+		if (getOwner() == null) {
+			setDead();
 		}
 
 	}

@@ -17,19 +17,17 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
+import net.minecraft.entity.*;
+import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
-import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
+import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.*;
 
 /**
  * @author CrowsOfWar
@@ -49,14 +47,14 @@ public class AbilityAirGust extends Ability {
 
 		if (!bender.consumeChi(STATS_CONFIG.chiAirGust)) return;
 
-		Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
-				Math.toRadians(entity.rotationPitch));
+		Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch));
 		Vector pos = Vector.getEyePos(entity);
 		if (bender.consumeChi(STATS_CONFIG.chiAirGust)) {
 
 			EntityAirGust gust = new EntityAirGust(world);
 			gust.setVelocity(look.times(25));
-			gust.setPosition(Vector.getLookRectangular(entity).plus(Vector.getEntityPos(entity).withY(entity.getEyeHeight() + entity.getEntityBoundingBox().minY)));
+			gust.setPosition(Vector.getLookRectangular(entity)
+											 .plus(Vector.getEntityPos(entity).withY(entity.getEyeHeight() + entity.getEntityBoundingBox().minY)));
 			gust.setOwner(entity);
 			gust.setDestroyProjectiles(ctx.isMasterLevel(FIRST));
 			gust.setAirGrab(ctx.isMasterLevel(SECOND));

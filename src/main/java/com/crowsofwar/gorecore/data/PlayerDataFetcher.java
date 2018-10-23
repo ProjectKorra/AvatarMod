@@ -17,66 +17,55 @@
 
 package com.crowsofwar.gorecore.data;
 
-import java.util.UUID;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
+import java.util.UUID;
 
 /**
  * Responsible for retrieving player data from an arbitrary storing mechanism.
  * Implementations will generally return the player data upon success and null
  * upon failure.
- * 
- * @param <T>
- *            Type of player data
- * 
+ *
+ * @param <T> Type of player data
  * @author CrowsOfWar
  */
 public interface PlayerDataFetcher<T extends PlayerData> {
-	
+
 	/**
 	 * Retrieves player data from that world and with the given Minecraft
 	 * Account UUID.
-	 * 
-	 * @param world
-	 *            World to fetch from
-	 * @param accountId
-	 *            UUID of the player
-	 * 
+	 *
+	 * @param world     World to fetch from
+	 * @param accountId UUID of the player
 	 * @see AccountUUIDs
 	 */
 	T fetch(World world, UUID accountId);
-	
+
 	/**
 	 * Retrieves player data from that world and with the given player name.
 	 * Internally looks up the account UUID of the player.
-	 * 
-	 * @param world
-	 *            World to fetch from
-	 * @param playerName
-	 *            UUID of the player
+	 *
+	 * @param world      World to fetch from
+	 * @param playerName UUID of the player
 	 */
 	default T fetch(World world, String playerName) {
 		if (world == null) throw new IllegalArgumentException("Cannot get player-data with null World");
-		if (playerName == null)
-			throw new IllegalArgumentException("Cannot get player-data with null player name");
+		if (playerName == null) throw new IllegalArgumentException("Cannot get player-data with null player name");
 		return fetch(world, AccountUUIDs.getId(playerName));
 	}
-	
+
 	/**
 	 * Retrieves player data from that world and with the given player entity.
 	 * Internally looks up the account UUID of the player.
-	 * 
-	 * @param world
-	 *            World to fetch from
-	 * @param playerName
-	 *            UUID of the player
+	 *
+	 * @param player Player
 	 */
 	default T fetch(EntityPlayer player) {
 		if (player == null) throw new IllegalArgumentException("Cannot get Player-Data for null player");
 		return fetch(player.world, player.getName());
 	}
-	
+
 }

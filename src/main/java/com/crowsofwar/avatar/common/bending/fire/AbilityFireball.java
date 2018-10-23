@@ -16,23 +16,19 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import net.minecraft.entity.*;
+import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.gorecore.util.Vector.getEyePos;
-import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
+import static com.crowsofwar.gorecore.util.Vector.*;
 
 /**
  * @author CrowsOfWar
@@ -51,7 +47,6 @@ public class AbilityFireball extends Ability {
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
-
 
 		if (bender.consumeChi(STATS_CONFIG.chiFireball) && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
 
@@ -84,8 +79,6 @@ public class AbilityFireball extends Ability {
 				size = 30;
 			}
 
-
-
 			EntityFireball fireball = new EntityFireball(world);
 			fireball.setPosition(target);
 			fireball.setOwner(entity);
@@ -97,13 +90,12 @@ public class AbilityFireball extends Ability {
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(20);
 
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-				explosionStrength = fireball.getSize()/20 + 0.75F;
+				explosionStrength = fireball.getSize() / 20 + 0.75F;
 			}
 
 			fireball.setExplosionStrength(explosionStrength);
 			data.addStatusControl(StatusControl.THROW_FIREBALL);
 			world.spawnEntity(fireball);
-
 
 		}
 

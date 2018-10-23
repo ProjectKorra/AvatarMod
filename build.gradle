@@ -73,6 +73,8 @@ minecraft {
 	replace '@name@', config.name
 }
 
+import org.apache.tools.ant.filters.ReplaceTokens
+
 processResources {
 	// this will ensure that this task is redone when the versions change.
 	inputs.property "version", project.version

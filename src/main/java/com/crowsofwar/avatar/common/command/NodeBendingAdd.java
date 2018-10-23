@@ -17,11 +17,12 @@
 
 package com.crowsofwar.avatar.common.command;
 
+import net.minecraft.command.ICommandSender;
+import net.minecraft.world.World;
+
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.tree.*;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -35,9 +36,9 @@ public class NodeBendingAdd extends NodeFunctional {
 	public NodeBendingAdd() {
 		super("add", true);
 
-		this.argPlayerName = addArgument(new ArgumentPlayerName("player"));
-		this.argBendingController = addArgument(new ArgumentOptions<>(
-				AvatarCommand.CONVERTER_BENDING, "bending", AvatarCommand.CONTROLLER_BENDING_OPTIONS));
+		argPlayerName = addArgument(new ArgumentPlayerName("player"));
+		argBendingController = addArgument(
+						new ArgumentOptions<>(AvatarCommand.CONVERTER_BENDING, "bending", AvatarCommand.CONTROLLER_BENDING_OPTIONS));
 
 	}
 

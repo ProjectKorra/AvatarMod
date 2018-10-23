@@ -17,22 +17,20 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
-import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
+import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.function.BiPredicate;
 
@@ -66,14 +64,14 @@ public class AbilityWaterBubble extends Ability {
 		if (ctx.isLookingAtBlock()) {
 			BlockPos lookPos = ctx.getLookPosI().toBlockPos();
 			IBlockState lookingAtBlock = world.getBlockState(lookPos);
-			if (STATS_CONFIG.waterBendableBlocks.contains(lookingAtBlock.getBlock())
-					|| STATS_CONFIG.plantBendableBlocks.contains(lookingAtBlock.getBlock())) {
+			if (STATS_CONFIG.waterBendableBlocks.contains(lookingAtBlock.getBlock()) || STATS_CONFIG.plantBendableBlocks
+							.contains(lookingAtBlock.getBlock())) {
 
 				if (bender.consumeChi(STATS_CONFIG.chiWaterBubble)) {
 
 					EntityWaterBubble existing = AvatarEntity.lookupEntity(world, EntityWaterBubble.class, //
-							bub -> bub.getBehavior() instanceof WaterBubbleBehavior.PlayerControlled
-									&& bub.getOwner() == entity);
+																		   bub -> bub.getBehavior() instanceof WaterBubbleBehavior.PlayerControlled
+																						   && bub.getOwner() == entity);
 
 					if (existing != null) {
 						existing.setBehavior(new WaterBubbleBehavior.Drop());
@@ -165,9 +163,9 @@ public class AbilityWaterBubble extends Ability {
 				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterBubbleAngles;
 				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterBubbleAngles;
 
-				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> (STATS_CONFIG.waterBendableBlocks.contains(state.getBlock())
-						|| STATS_CONFIG.plantBendableBlocks.contains(state.getBlock())) && state.getBlock() != Blocks.AIR;
-
+				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) ->
+								(STATS_CONFIG.waterBendableBlocks.contains(state.getBlock()) || STATS_CONFIG.plantBendableBlocks
+												.contains(state.getBlock())) && state.getBlock() != Blocks.AIR;
 
 				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
 				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);

@@ -17,9 +17,9 @@
 
 package com.crowsofwar.avatar.common;
 
-import com.crowsofwar.gorecore.format.FormattedMessage;
-import com.crowsofwar.gorecore.format.MessageConfiguration;
 import net.minecraft.util.text.TextFormatting;
+
+import com.crowsofwar.gorecore.format.*;
 
 import static com.crowsofwar.gorecore.format.FormattedMessage.newChatMessage;
 

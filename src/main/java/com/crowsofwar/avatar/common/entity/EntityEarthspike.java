@@ -17,25 +17,20 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.*;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.World;
+
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.earth.AbilityEarthspikes;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import com.crowsofwar.avatar.common.data.*;
 
 import java.util.List;
 
@@ -47,8 +42,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class EntityEarthspike extends AvatarEntity {
 
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager
-			.createKey(EntityEarthspike.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityEarthspike.class, DataSerializers.FLOAT);
 
 	private double damage;
 	private float Size;
@@ -56,23 +50,23 @@ public class EntityEarthspike extends AvatarEntity {
 
 	public EntityEarthspike(World world) {
 		super(world);
-		this.Size = 1;
+		Size = 1;
 		setSize(Size, Size);
-		this.damage = STATS_CONFIG.earthspikeSettings.damage;
-		this.noClip = true;
-		this.lifetime = 30;
+		damage = STATS_CONFIG.earthspikeSettings.damage;
+		noClip = true;
+		lifetime = 30;
 	}
 
 	public void setDamage(double damage) {
 		this.damage = damage;
 	}
 
-	public void setSize(float size) {
-		dataManager.set(SYNC_SIZE, size);
-	}
-
 	public float getSize() {
 		return dataManager.get(SYNC_SIZE);
+	}
+
+	public void setSize(float size) {
+		dataManager.set(SYNC_SIZE, size);
 	}
 
 	public void setLifetime(double lifetime) {
@@ -99,12 +93,12 @@ public class EntityEarthspike extends AvatarEntity {
 	public void onEntityUpdate() {
 		//Add width and height stuff
 
-		this.motionX = 0;
-		this.motionY = 0;
-		this.motionZ = 0;
+		motionX = 0;
+		motionY = 0;
+		motionZ = 0;
 
 		if (ticksExisted >= lifetime) {
-			this.setDead();
+			setDead();
 		}
 
 		setSize(getSize(), getSize());
@@ -119,11 +113,9 @@ public class EntityEarthspike extends AvatarEntity {
 					setDead();
 				}
 			}
+		} else if (belowBlock == Blocks.AIR) {
+			setDead();
 		}
-		else if (belowBlock == Blocks.AIR) {
-			setDead();;
-		}
-
 
 		// Push collided entities back
 		if (!world.isRemote) {
@@ -141,7 +133,8 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
-		if (!world.isRemote && entity != getOwner() && !(entity instanceof EntityEarthspike) && !(entity instanceof EntityEarthspikeSpawner) && canCollideWith(entity)) {
+		if (!world.isRemote && entity != getOwner() && !(entity instanceof EntityEarthspike) && !(entity instanceof EntityEarthspikeSpawner)
+						&& canCollideWith(entity)) {
 			pushEntity(entity);
 			if (attackEntity(entity)) {
 				if (getOwner() != null) {
@@ -169,8 +162,8 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	private void pushEntity(Entity entity) {
-		entity.motionX += this.motionX / 4;
+		entity.motionX += motionX / 4;
 		entity.motionY += (STATS_CONFIG.earthspikeSettings.push / 6) + (damage / 100);
-		entity.motionZ += this.motionZ / 4;
+		entity.motionZ += motionZ / 4;
 	}
 }

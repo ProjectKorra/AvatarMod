@@ -16,14 +16,10 @@
 */
 package com.crowsofwar.avatar.common.config;
 
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.gorecore.config.ConfigLoader;
-import com.crowsofwar.gorecore.config.Load;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.gorecore.config.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author CrowsOfWar
@@ -31,40 +27,32 @@ import java.util.Set;
 public class ConfigClient {
 
 	public static ConfigClient CLIENT_CONFIG = new ConfigClient();
-
-	@Load
-	public float radialMenuAlpha = 0.75f;
-
-	@Load
-	public float chiBarAlpha = 0.5f;
-
-	@Load
-	public float bendingCycleAlpha = 1f;
-
 	@Load
 	public final boolean displayGetBendingMessage = true;
+	@Load
+	public float radialMenuAlpha = 0.75f;
+	@Load
+	public float chiBarAlpha = 0.5f;
+	@Load
+	public float bendingCycleAlpha = 1f;
 	//For some reason if it's not final it won't work
 	//Controls whether or not to show the get bending message
 	//when you press the use bending key
-
-
 	@Load
 	public boolean useCustomParticles = true;
 	public Map<Ability, Integer> keymappings = new HashMap<>();
 	public Map<Ability, Boolean> conflicts = new HashMap<>();
 	@Load
+	public ActiveBendingSettings activeBendingSettings = new ActiveBendingSettings();
+	@Load
+	public ChiBarSettings chiBarSettings = new ChiBarSettings();
+
+	//	@Load
+	//	public ShaderSettings shaderSettings = new ShaderSettings();
+	@Load
 	private Map<String, Integer> nameKeymappings = new HashMap<>();
 	@Load
 	private Map<String, Boolean> nameConflicts = new HashMap<>();
-
-//	@Load
-//	public ShaderSettings shaderSettings = new ShaderSettings();
-
-	@Load
-	public ActiveBendingSettings activeBendingSettings = new ActiveBendingSettings();
-
-	@Load
-	public ChiBarSettings chiBarSettings = new ChiBarSettings();
 
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");

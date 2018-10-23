@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -9,18 +8,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import com.crowsofwar.gorecore.util.Vector;
 
 public class EntityLightningSpawner extends AvatarEntity {
 	private int maxTicksAlive;
 	private float lightningFrequency;
 	private boolean playerControl;
-	private float amountofBolts;
+	private float amountOfBolts;
 	private float boltAccuracy;
 	private double Speed;
-
-	/**
-	 * @param world
-	 */
 
 	public EntityLightningSpawner(World world) {
 		super(world);
@@ -29,29 +25,28 @@ public class EntityLightningSpawner extends AvatarEntity {
 	}
 
 	public void setSpeed(double speed) {
-		this.Speed = speed;
+		Speed = speed;
 	}
 
 	public void setDuration(int ticks) {
-		this.maxTicksAlive = ticks;
+		maxTicksAlive = ticks;
 	}
 
 	public void setLightningFrequency(float ticks) {
-		this.lightningFrequency = ticks;
+		lightningFrequency = ticks;
 	}
 
 	public void setPlayerControl(boolean shouldControl) {
-		this.playerControl = shouldControl;
+		playerControl = shouldControl;
 	}
 
-	public void setAmountofBolts(float amount) {
-		this.amountofBolts = amount;
+	public void setAmountOfBolts(float amount) {
+		amountOfBolts = amount;
 	}
 
 	public void setAccuracy(float accuracy) {
-		this.boltAccuracy = accuracy;
+		boltAccuracy = accuracy;
 	}
-
 
 	@Override
 	protected void entityInit() {
@@ -72,13 +67,12 @@ public class EntityLightningSpawner extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (this.getOwner() != null) {
+		if (getOwner() != null) {
 
-
-			if (playerControl && !this.isDead && this.getOwner() != null && !world.isRemote) {
-				this.rotationYaw = getOwner().rotationYaw;
-				Vector direction = Vector.toRectangular(Math.toRadians(this.rotationYaw), 0);
-				this.setVelocity(direction.times(Speed));
+			if (playerControl && !isDead && getOwner() != null && !world.isRemote) {
+				rotationYaw = getOwner().rotationYaw;
+				Vector direction = Vector.toRectangular(Math.toRadians(rotationYaw), 0);
+				setVelocity(direction.times(Speed));
 			}
 			if (!world.isRemote && ticksExisted >= maxTicksAlive) {
 				setDead();
@@ -87,18 +81,15 @@ public class EntityLightningSpawner extends AvatarEntity {
 			float Pos = rand.nextFloat() * (boltAccuracy);
 			//Does a number from 0 to 1 multiplied by the accuracy
 
-
-
-			if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
-				for (int i = 0; i < amountofBolts; i++) {
+			if (ticksExisted % lightningFrequency == 0 && !world.isRemote) {
+				for (int i = 0; i < amountOfBolts; i++) {
 					int random = rand.nextInt(2) + 1;
-					BlockPos blockPos = this.getPosition();
+					BlockPos blockPos = getPosition();
 					float x = random == 1 ? Pos : -Pos;
 					int y = blockPos.getY();
 					float z = random == 1 ? Pos : -Pos;
 
-					EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + x, y,
-							blockPos.getZ() + z);
+					EntityAvatarLightning bolt = new EntityAvatarLightning(world, blockPos.getX() + x, y, blockPos.getZ() + z);
 					bolt.setBoltLivingTime(rand.nextInt(3) + 1);
 					//Damage is calculated in the lightning bolt's class.
 					bolt.setSpawner(this);
@@ -112,7 +103,6 @@ public class EntityLightningSpawner extends AvatarEntity {
 		if (!world.getBlockState(below).isNormalCube()) {
 			setDead();
 		}
-
 
 		// Destroy if in a block
 		IBlockState inBlock = world.getBlockState(getPosition());
@@ -134,7 +124,6 @@ public class EntityLightningSpawner extends AvatarEntity {
 		}
 	}
 
-
 	@Override
 	public boolean canCollideWith(Entity entity) {
 		return false;
@@ -149,7 +138,6 @@ public class EntityLightningSpawner extends AvatarEntity {
 	public boolean onCollideWithSolid() {
 		return false;
 	}
-
 
 }
 

@@ -17,14 +17,6 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.EntityWall;
-import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,8 +25,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.Objects;
-import java.util.Random;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.*;
+
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -104,11 +100,9 @@ public class AbilityWall extends Ability {
 					int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
 
 					int horizMod = -2 + i;
-					int x = lookPos.getX()
-							+ (cardinal == EnumFacing.NORTH || cardinal == EnumFacing.SOUTH ? horizMod : 0);
+					int x = lookPos.getX() + (cardinal == EnumFacing.NORTH || cardinal == EnumFacing.SOUTH ? horizMod : 0);
 					int y = lookPos.getY() - 4;
-					int z = lookPos.getZ()
-							+ (cardinal == EnumFacing.EAST || cardinal == EnumFacing.WEST ? horizMod : 0);
+					int z = lookPos.getZ() + (cardinal == EnumFacing.EAST || cardinal == EnumFacing.WEST ? horizMod : 0);
 
 					EntityWallSegment seg = new EntityWallSegment(world);
 					seg.attachToWall(wall);

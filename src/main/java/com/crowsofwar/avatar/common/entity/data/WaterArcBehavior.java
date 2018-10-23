@@ -17,25 +17,19 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
-import com.crowsofwar.avatar.common.config.ConfigSkills;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityWaterArc;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataSerializer;
-import net.minecraft.network.datasync.DataSerializers;
-import org.lwjgl.Sys;
+import net.minecraft.network.datasync.*;
+
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
+import com.crowsofwar.avatar.common.config.ConfigSkills;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.List;
 
@@ -74,8 +68,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			if (res.hitSomething()) {
 				target = res.getPosPrecise();
 			} else {
-				Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
-						Math.toRadians(owner.rotationPitch));
+				Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw), Math.toRadians(owner.rotationPitch));
 				target = Vector.getEyePos(owner).plus(look.times(3));
 			}
 
@@ -121,7 +114,6 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		@Override
 		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
 			ticks++;
-
 
 			boolean waterSpear = false;
 			BendingData data = null;
@@ -184,16 +176,17 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 			entity.addVelocity(Vector.DOWN.times(entity.getGravity() / 90));
 
-
-			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
-					EntityLivingBase.class, entity.getEntityBoundingBox().grow(0.5, 0.5, 0.5),
-					collided -> collided != entity.getOwner());
+			List<EntityLivingBase> collidedList = entity.getEntityWorld()
+							.getEntitiesWithinAABB(EntityLivingBase.class, entity.getEntityBoundingBox().grow(0.5, 0.5, 0.5),
+												   collided -> collided != entity.getOwner());
 
 			for (EntityLivingBase collided : collidedList) {
 				if (collided == entity.getOwner()) return this;
 				if (entity.canCollideWith(collided)) {
 					double x = entity.motionX / 2 * STATS_CONFIG.waterArcSettings.push;
-					double y = entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push > 0.75 ? 0.75 : entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push;
+					double y = entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push > 0.75 ?
+									0.75 :
+									entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push;
 					double z = entity.motionZ / 2 * STATS_CONFIG.waterArcSettings.push;
 					collided.addVelocity(x, y, z);
 					if (entity.canDamageEntity(collided)) {
@@ -214,7 +207,6 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 				}
 			}
-
 
 			return this;
 		}

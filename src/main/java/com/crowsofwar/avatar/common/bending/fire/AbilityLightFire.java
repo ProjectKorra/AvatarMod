@@ -17,22 +17,18 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.gorecore.util.Vector;
-import com.crowsofwar.gorecore.util.VectorI;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import com.crowsofwar.avatar.common.particle.*;
+import com.crowsofwar.gorecore.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -60,7 +56,7 @@ public class AbilityLightFire extends Ability {
 	public void execute(AbilityContext ctx) {
 
 		World world = ctx.getWorld();
-	//	EntityLivingBase entity = ctx.getBenderEntity();
+		//	EntityLivingBase entity = ctx.getBenderEntity();
 
 		VectorI looking = ctx.getLookPosI();
 		EnumFacing side = ctx.getLookSide();
@@ -110,22 +106,17 @@ public class AbilityLightFire extends Ability {
 		}
 	}
 
-	private boolean spawnFire(World world, BlockPos blockPos, AbilityContext ctx, boolean useChi,
-							  double chance) {
+	private boolean spawnFire(World world, BlockPos blockPos, AbilityContext ctx, boolean useChi, double chance) {
 		EntityLivingBase entity = ctx.getBenderEntity();
-
 
 		if (world.isRainingAt(blockPos)) {
 
-			particles.spawnParticles(world, EnumParticleTypes.CLOUD, 3, 7, ctx.getLookPos(),
-					new Vector(0.5f, 0.75f, 0.5f));
-			world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
-					SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.PLAYERS,
-					0.4f + (float) Math.random() * 0.2f, 0.9f + (float) Math.random() * 0.2f);
+			particles.spawnParticles(world, EnumParticleTypes.CLOUD, 3, 7, ctx.getLookPos(), new Vector(0.5f, 0.75f, 0.5f));
+			world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+							SoundCategory.PLAYERS, 0.4f + (float) Math.random() * 0.2f, 0.9f + (float) Math.random() * 0.2f);
 
 		} else {
-			if (world.getBlockState(blockPos).getBlock() == Blocks.AIR
-					&& Blocks.FIRE.canPlaceBlockAt(world, blockPos)) {
+			if (world.getBlockState(blockPos).getBlock() == Blocks.AIR && Blocks.FIRE.canPlaceBlockAt(world, blockPos)) {
 
 				if (!useChi || ctx.getBender().consumeChi(STATS_CONFIG.chiLightFire)) {
 
@@ -134,9 +125,8 @@ public class AbilityLightFire extends Ability {
 					if (random < chance || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
 
 						world.setBlockState(blockPos, Blocks.FIRE.getDefaultState());
-						world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
-								SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.PLAYERS,
-								0.7f + (float) Math.random() * 0.3f, 0.9f + (float) Math.random() * 0.2f);
+						world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.ITEM_FLINTANDSTEEL_USE,
+										SoundCategory.PLAYERS, 0.7f + (float) Math.random() * 0.3f, 0.9f + (float) Math.random() * 0.2f);
 
 						return true;
 

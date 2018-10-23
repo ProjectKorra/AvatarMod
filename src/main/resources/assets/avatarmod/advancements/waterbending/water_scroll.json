@@ -1,31 +1,31 @@
 {
   "display": {
-    "title": "Cracking the Iceberg",
-    "description": "Gain a waterbending scroll!",
-    "icon": {
-      "item": "avatarmod:scroll",
-      "data": 3
-    },
-    "background": "avatarmod:textures/advancements/background/water.png",
-    "frame": "goal"
+	"title": "Cracking the Iceberg",
+	"description": "Gain a waterbending scroll!",
+	"icon": {
+	  "item": "avatarmod:scroll",
+	  "data": 3
+	},
+	"background": "avatarmod:textures/advancements/background/water.png",
+	"frame": "goal"
   },
   "rewards": {
-    "experience": 250,
-    "recipes": [
-      "avatarmod:water_pouch"
-    ]
+	"experience": 250,
+	"recipes": [
+	  "avatarmod:water_pouch"
+	]
   },
   "criteria": {
-    "gained_water_scroll": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "item": "avatarmod:scroll",
-            "data": 3
-          }
-        ]
-      }
-    }
+	"gained_water_scroll": {
+	  "trigger": "minecraft:inventory_changed",
+	  "conditions": {
+		"items": [
+		  {
+			"item": "avatarmod:scroll",
+			"data": 3
+		  }
+		]
+	  }
+	}
   }
 }
