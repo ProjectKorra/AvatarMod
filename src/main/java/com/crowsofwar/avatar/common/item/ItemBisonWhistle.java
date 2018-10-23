@@ -16,30 +16,27 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import com.crowsofwar.avatar.common.TransferConfirmHandler;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
-import com.crowsofwar.gorecore.util.AccountUUIDs;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
+import com.crowsofwar.avatar.common.TransferConfirmHandler;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
+
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.BISON_SUMMONER;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
-import static net.minecraft.util.EnumActionResult.PASS;
-import static net.minecraft.util.EnumActionResult.SUCCESS;
+import static net.minecraft.util.EnumActionResult.*;
 
 /**
  * ItemBow
@@ -143,7 +140,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 
 						BendingData data = BendingData.get(entity);
 						data.getMiscData().setPetSummonCooldown((int) (seconds * 20));
-						data.addTickHandler(TickHandler.BISON_SUMMONER);
+						data.addTickHandler(BISON_SUMMONER);
 
 						MSG_BISON_WHISTLE_SUMMON.send(entity, (int) seconds);
 					} else {

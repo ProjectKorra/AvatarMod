@@ -16,8 +16,11 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -28,27 +31,23 @@ import net.minecraft.util.SoundEvent;
  */
 public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 
-	@Override
-	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {
-		super.smashEntity(target, entity);
-		target.setFire(4);
-		entity.world.playSound(null, target.posX, target.posY, target.posZ,
-				SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 1, 1);
+	public FireSmashGroundHandlerBig(int id) {
+		super(id);
 	}
 
 	@Override
 	protected double getRange() {
-		return 4;
+		return 5;
 	}
 
 	@Override
 	protected double getSpeed() {
-		return 8;
+		return 6;
 	}
 
 	@Override
-	protected int getNumberOfParticles() {
-		return 10;
+	protected int getParticleAmount() {
+		return 8;
 	}
 
 	@Override
@@ -67,8 +66,8 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 	}
 
 	@Override
-	protected float getParticleSpeed() {
-		return 0.175F;
+	protected double getParticleSpeed() {
+		return 2.25;
 	}
 
 	@Override
@@ -78,7 +77,34 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 
 	@Override
 	protected float getKnockbackHeight() {
-		return 0.75F;
+		return 0.15F;
 	}
 
+	@Override
+	protected Ability getAbility() {
+		return new AbilityFireJump();
+	}
+
+	@Override
+	protected boolean isFire() {
+		return true;
+	}
+
+	@Override
+	protected int getPerformanceAmount() {
+		return 15;
+	}
+
+	@Override
+	protected int fireTime() {
+		return 15;
+	}
+
+	@Override
+	protected void smashEntity(EntityLivingBase entity) {
+		Block currentBlock = entity.world.getBlockState(entity.getPosition()).getBlock();
+		if (currentBlock == Blocks.AIR) {
+			super.smashEntity(entity);
+		}
+	}
 }

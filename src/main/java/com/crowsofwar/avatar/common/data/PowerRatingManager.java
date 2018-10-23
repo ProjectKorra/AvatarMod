@@ -39,7 +39,7 @@ public class PowerRatingManager {
 		for (PowerRatingModifier modifier : modifiers) {
 			result += modifier.get(ctx);
 		}
-		return MathHelper.clamp(result, -100, 100);
+		return MathHelper.clamp(result, -1000, 1000);
 	}
 
 	public void addModifier(PowerRatingModifier modifier, BendingContext ctx) {

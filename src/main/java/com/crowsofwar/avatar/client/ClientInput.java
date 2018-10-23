@@ -17,33 +17,27 @@
 
 package com.crowsofwar.avatar.client;
 
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarMod;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextComponentString;
+
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.*;
+import net.minecraftforge.fml.relauncher.*;
+
+import com.crowsofwar.avatar.*;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.controls.IControlsHandler;
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.controls.*;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.avatar.common.util.Raytrace.Result;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
+import org.lwjgl.input.*;
 
 import java.util.*;
 
@@ -66,8 +60,8 @@ public class ClientInput implements IControlsHandler {
 	private final boolean[] wasAbilityDown;
 	private GameSettings gameSettings;
 	private Map<String, KeyBinding> keybindings;
-	private boolean mouseLeft, mouseRight, mouseMiddle, space;
-	private boolean wasLeft, wasRight, wasMiddle, wasSpace;
+	private boolean mouseLeft, mouseRight, mouseMiddle;
+	private boolean wasLeft, wasRight, wasMiddle;
 	private boolean press;
 
 	public ClientInput() {
@@ -84,7 +78,7 @@ public class ClientInput implements IControlsHandler {
 		addKeybinding("Skills", Keyboard.KEY_K, "main");
 		addKeybinding("TransferBison", Keyboard.KEY_O, "main");
 
-		this.wasAbilityDown = new boolean[Abilities.all().size()];
+		wasAbilityDown = new boolean[Abilities.all().size()];
 
 	}
 
@@ -105,8 +99,6 @@ public class ClientInput implements IControlsHandler {
 		if (control == CONTROL_LEFT_CLICK_DOWN) return mouseLeft && !wasLeft;
 		if (control == CONTROL_RIGHT_CLICK_DOWN) return mouseRight && !wasRight;
 		if (control == CONTROL_MIDDLE_CLICK_DOWN) return mouseMiddle && !wasMiddle;
-		if (control == CONTROL_SPACE) return space;
-		if (control == CONTROL_SPACE_DOWN) return space && !wasSpace;
 		if (control == CONTROL_LEFT_CLICK_UP) return !mouseLeft && wasLeft;
 		if (control == CONTROL_RIGHT_CLICK_UP) return !mouseRight && wasRight;
 		if (control == CONTROL_MIDDLE_CLICK_UP) return !mouseMiddle && wasMiddle;
@@ -125,8 +117,6 @@ public class ClientInput implements IControlsHandler {
 		if (control == CONTROL_LEFT_CLICK_DOWN) return mouseLeft;
 		if (control == CONTROL_RIGHT_CLICK_DOWN) return mouseRight;
 		if (control == CONTROL_MIDDLE_CLICK_DOWN) return mouseMiddle;
-		if (control == CONTROL_SPACE) return space;
-		if (control == CONTROL_SPACE_DOWN) return space;
 		if (control == CONTROL_LEFT_CLICK_UP) return !mouseLeft;
 		if (control == CONTROL_RIGHT_CLICK_UP) return !mouseRight;
 		if (control == CONTROL_MIDDLE_CLICK_UP) return !mouseMiddle;
@@ -179,7 +169,7 @@ public class ClientInput implements IControlsHandler {
 		Integer key = CLIENT_CONFIG.keymappings.get(ability);
 		if (key != null) {
 			if (key < 0 && Mouse.isButtonDown(key + 100)) return true;
-			if (key >= 0 && Keyboard.isKeyDown(key)) return true;
+			return key >= 0 && Keyboard.isKeyDown(key);
 		}
 		return false;
 	}
@@ -195,11 +185,12 @@ public class ClientInput implements IControlsHandler {
 				AvatarUiRenderer.openBendingGui(data.getActiveBendingId());
 			} else {
 
-				String message = I18n.format(MSG_DONT_HAVE_BENDING.getTranslateKey());
-				message = FormattedMessageProcessor.formatText(MSG_DONT_HAVE_BENDING, message,
-						mc.player.getName());
-				mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(message));
+				if (CLIENT_CONFIG.displayGetBendingMessage) {
+					String message = I18n.format(MSG_DONT_HAVE_BENDING.getTranslateKey());
+					message = FormattedMessageProcessor.formatText(MSG_DONT_HAVE_BENDING, message, mc.player.getName());
+					mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(message));
 
+				}
 			}
 
 		}
@@ -207,7 +198,6 @@ public class ClientInput implements IControlsHandler {
 	}
 
 	private void tryCycleBending() {
-		BendingData data = BendingData.get(mc.player);
 		if (AvatarControl.KEY_BENDING_CYCLE_LEFT.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
 			AvatarMod.network.sendToServer(new PacketSCycleBending(false));
 		}
@@ -221,7 +211,6 @@ public class ClientInput implements IControlsHandler {
 		wasLeft = mouseLeft;
 		wasRight = mouseRight;
 		wasMiddle = mouseMiddle;
-		wasSpace = space;
 
 		if (mc.inGameHasFocus) {
 			mouseLeft = Mouse.isButtonDown(0);
@@ -231,31 +220,21 @@ public class ClientInput implements IControlsHandler {
 			mouseLeft = mouseRight = mouseMiddle = false;
 		}
 
-		space = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-
 		EntityPlayer player = mc.player;
 
 		if (player != null && player.world != null) {
 			// Send any input to the server
 			BendingData data = BendingData.get(player);
 
-			if (data != null) {
-
-				if (mc.inGameHasFocus) {
-					Collection<AvatarControl> pressed = getAllPressed();
-					Collection<StatusControl> statusControls = data.getAllStatusControls();
-
-					Iterator<StatusControl> sci = statusControls.iterator();
-					while (sci.hasNext()) {
-						StatusControl sc = sci.next();
-						if (pressed.contains(sc.getSubscribedControl())) {
-							Raytrace.Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
-
-							AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
-						}
+			if (mc.inGameHasFocus) {
+				Collection<AvatarControl> pressed = getAllPressed();
+				Collection<StatusControl> statusControls = data.getAllStatusControls();
+				for (StatusControl sc : statusControls) {
+					if (pressed.contains(sc.getSubscribedControl())) {
+						Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
+						AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
 					}
 				}
-
 			}
 
 			List<Ability> allAbilities = Abilities.all();
@@ -263,12 +242,10 @@ public class ClientInput implements IControlsHandler {
 				Ability ability = allAbilities.get(i);
 				boolean down = isAbilityPressed(ability);
 
-				if (!CLIENT_CONFIG.conflicts.containsKey(ability))
-					CLIENT_CONFIG.conflicts.put(ability, false);
+				if (!CLIENT_CONFIG.conflicts.containsKey(ability)) CLIENT_CONFIG.conflicts.put(ability, false);
 				boolean conflict = CLIENT_CONFIG.conflicts.get(ability);
 
-				if (!conflict && mc.inGameHasFocus && mc.currentScreen == null && down
-						&& !wasAbilityDown[i]) {
+				if (!conflict && mc.inGameHasFocus && mc.currentScreen == null && down && !wasAbilityDown[i]) {
 					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player, ability.getRaytrace());
 					AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace));
 				}

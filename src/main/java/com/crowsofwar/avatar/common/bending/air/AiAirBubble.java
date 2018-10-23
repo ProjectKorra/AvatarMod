@@ -16,12 +16,11 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import net.minecraft.entity.EntityLiving;
+
+import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.entity.*;
 
 import java.util.Random;
 
@@ -32,14 +31,9 @@ public class AiAirBubble extends BendingAi {
 
 	private final Random random;
 
-	/**
-	 * @param ability
-	 * @param entity
-	 * @param bender
-	 */
 	protected AiAirBubble(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
-		this.random = new Random();
+		random = new Random();
 	}
 
 	@Override
@@ -49,15 +43,23 @@ public class AiAirBubble extends BendingAi {
 
 	@Override
 	protected boolean shouldExec() {
+		boolean underAttack = entity.getCombatTracker().getCombatDuration() <= 100;
+		boolean already = AvatarEntity.lookupEntity(entity.world, EntityAirBubble.class, bubble -> bubble.getOwner() == entity) != null;
+		boolean lowHealth = entity.getHealth() / entity.getMaxHealth() <= 0.25f;
 
-		boolean underAttack = entity.getCombatTracker().getCombatDuration() <= 200;
-		boolean already = AvatarEntity.lookupEntity(entity.world, EntityAirBubble.class,
-				bubble -> bubble.getOwner() == entity) != null;
-		boolean lowHealth = entity.getHealth() / entity.getMaxHealth() <= 0.25f || entity.getHealth() < 10;
+		if (timeExecuting > 200) {
+			execStatusControl(StatusControl.BUBBLE_EXPAND);
+			return false;
 
-		// 2% chance to get air bubble every tick
-		return !already && underAttack && lowHealth && random.nextDouble() <= 0.02;
+		}
+		// 50% chance to get air bubble every tick
+		return !already && (underAttack && lowHealth && random.nextDouble() <= 0.5);
 
+	}
+
+	@Override
+	public void updateTask() {
+		timeExecuting++;
 	}
 
 }

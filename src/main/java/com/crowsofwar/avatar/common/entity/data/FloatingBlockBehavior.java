@@ -199,7 +199,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 
 			if (collided.attackEntityFrom(
 					AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
-					(float) (speed / 15 * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()))) {
+					(float) (speed / 30 * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()))) {
 				BattlePerformanceScore.addMediumScore(entity.getOwner());
 			}
 

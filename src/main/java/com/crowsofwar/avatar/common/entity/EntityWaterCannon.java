@@ -2,14 +2,15 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.water.AbilityWaterCannon;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -17,13 +18,15 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControlPoint> {
 
@@ -33,6 +36,17 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	private float damage;
 	private float lifeTime;
+	private ParticleSpawner particles;
+
+	public EntityWaterCannon(World world) {
+		super(world);
+		setSize(1.5f * getSizeMultiplier(), 1.5f * getSizeMultiplier());
+		damage = 0.5F;
+		this.putsOutFires = true;
+		this.noClip = false;
+		this.particles = new NetworkParticleSpawner();
+		this.setInvisible(false);
+	}
 
 	public float getDamage() {
 		return damage;
@@ -54,13 +68,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		this.lifeTime = ticks;
 	}
 
-	public EntityWaterCannon(World world) {
-		super(world);
-		setSize(1.5f * getSizeMultiplier(), 1.5f * getSizeMultiplier());
-		damage = 0.5F;
-		this.putsOutFires = true;
-	}
-
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -76,30 +83,58 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		if (getOwner() == null) setDead();
 
 		world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 				SoundCategory.PLAYERS, 1, 2);
-		int numberOfParticles = (int) (500 * getSizeMultiplier());
 
-		if (!world.isRemote && this.collided) {
-			WorldServer World = (WorldServer) world;
-			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, numberOfParticles, 0, 0, 0, 0.05 + getSizeMultiplier() / 10);
+
+		if (getOwner() != null) {
+			if (ticksExisted % 2 == 0 && !this.isDead && STATS_CONFIG.useWaterCannonParticles) {
+				double dist = this.getDistance(getOwner());
+				int particleController = 20;
+				if (getAbility() instanceof AbilityWaterCannon && !world.isRemote) {
+					AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
+					particleController = 23;
+					if (data.getLevel() == 1) {
+						particleController = 20;
+					}
+					if (data.getLevel() >= 2) {
+						particleController = 17;
+					}
+
+					if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+						particleController = 120;
+					}
+				}
+				for (double i = 0; i < 1; i += 1 / dist) {
+					Vector startPos = getControlPoint(1).position();
+					Vector distance = this.position().minus(getControlPoint(1).position());
+					distance = distance.times(i);
+					for (double angle = 0; angle < 360; angle += particleController) {
+						Vector position = AvatarUtils.getOrthogonalVector(this.position().minus(getControlPoint(1).position()), angle, getSizeMultiplier() * 1.4);
+						particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1,
+								position.x() + startPos.x() + distance.x(), position.y() + startPos.y() + distance.y(), position.z() + startPos.z() + distance.z(), 0, 0, 0);
+
+					}
+					particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1,
+							startPos.x() + distance.x(), startPos.y() + distance.y(), startPos.z() + distance.z(), 0, 0, 0);
+				}
+			}
 		}
+
 
 		if (getOwner() != null) {
 			Vector direction = Vector.getLookRectangular(getOwner());
-			this.setVelocity(direction.times(20));
-			double x = getOwner().posX - posX;
-			double y = getOwner().posY - posY;
-			double z = getOwner().posZ - posZ;
-			this.rotationYaw = (float) (MathHelper.atan2(x, z) * (180 / Math.PI));
-			this.rotationPitch = (float) (MathHelper.atan2(y, MathHelper.sqrt(x * x + z * z)) * (180 / Math.PI));
+			this.setVelocity(direction.times(25));
 		}
 
 
 		if (this.ticksExisted >= lifeTime && !world.isRemote) {
 			setDead();
-
+		}
+		if (ticksExisted > 150) {
+			setDead();
 		}
 
 		if (getOwner() == null) {
@@ -130,12 +165,12 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 		if (this.canCollideWith(entity) && getOwner() != entity) {
 
 
 			if (!world.isRemote) {
-				int numberOfParticles = (int) (500 * getSizeMultiplier());
+				int numberOfParticles = (int) (400 * getSizeMultiplier());
 				WorldServer World = (WorldServer) world;
 				World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, numberOfParticles, 0, 0, 0, 0.05 + getSizeMultiplier() / 10);
 				//Change based on size
@@ -162,22 +197,17 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		if (getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 
-			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), velocity(), velocity
-					().magnitude() / 20, entity -> entity != getOwner() && entity != this);
-			/*Original raytrace- but, it's pretty glitchy. Basically, look at an entity, and the water cannon will teleport.
-			That's why you have to use this complex vector maths to get the water cannon to face the player.**/
-			/*double dist = this.getDistanceToEntity(getOwner());
-			Vec3d direction = Vec3d.fromPitchYaw(rotationPitch, rotationYaw);
 
-			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(0).position(),Vector.getLookRectangular(this), dist, entity -> entity != getOwner());
-			**/
+			double dist = this.getDistance(getOwner());
+			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), this.position().minus(getControlPoint(1).position()), dist, entity -> entity != getOwner());
+
 			if (!collisions.isEmpty()) {
 				for (Entity collided : collisions) {
 					if (canCollideWith(collided) && collided != getOwner()) {
 						onCollideWithEntity(collided);
 						//Needed because the water cannon will still glitch through the entity
 						if (!(data.getAbilityData("water_cannon").isMasterPath(AbilityData.AbilityTreePath.SECOND))) {
-							this.setPosition(collided.posX, collided.posY + (collided.getEyeHeight() / 2), collided.posZ);
+							this.setPosition(collided.posX, this.posY, collided.posZ);
 						}
 					}
 				}
@@ -227,13 +257,24 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	}
 
 
-	public class CannonControlPoint extends ControlPoint {
+	class CannonControlPoint extends ControlPoint {
 
-		public CannonControlPoint(EntityArc arc, int index) {
+		private CannonControlPoint(EntityArc arc, int index) {
 			// Make all control points the same size
-			super(arc, index == 1 ? 0.5f : 0.5f, 0, 0, 0);
+			super(arc, index == 1 ? 0.35f : 0.5f, 0, 0, 0);
 		}
 
+	}
+
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return true;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isInRangeToRenderDist(double distance) {
+		return true;
 	}
 }
 

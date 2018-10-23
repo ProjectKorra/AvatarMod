@@ -10,6 +10,10 @@ import javax.annotation.Nullable;
  */
 public class LightningCreateHandler extends LightningChargeHandler {
 
+	public LightningCreateHandler(int id) {
+		super(id);
+	}
+
 	@Override
 	@Nullable
 	protected AbilityData getLightningData(BendingContext ctx) {

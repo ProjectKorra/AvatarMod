@@ -116,7 +116,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 		if (lightningState >= 0) {
 			if (world.isRemote) {
 				world.setLastLightningBolt(2);
-			} else if (!world.isRemote) {
+			} else {
 				List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(this,
 																			   new AxisAlignedBB(posX - 1.50D, posY - 1.5D, posZ - 1.5D, posX + 1.5D,
 																								 posY + 6.0D + 1.5D, posZ + 1.5D));
@@ -134,12 +134,30 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 
 	}
 
-	private void handleCollision(EntityLivingBase collided) {
-		damageEntity(collided);
+/*	@SubscribeEvent
+	public static void onLightningStrike(LivingHurtEvent event) {
+		Entity hurt = event.getEntity();
+		Entity source = event.getSource().getTrueSource();
+		DamageSource damage = event.getSource();
+		if (damage == DamageSource.LIGHTNING_BOLT) {
+
+			if (source instanceof EntityAvatarLightning) {
+				event.setAmount(0);
+				EntityAvatarLightning lightning = (EntityAvatarLightning) source;
+				lightning.handleCollision(hurt);
+				System.out.println(event.getAmount());
+			}
+		}
+	}**/
+
+	private void handleCollision(Entity collided) {
+		if (spawner.canDamageEntity(collided)) {
+			damageEntity(collided);
+		}
 		collided.setFire(collided.isImmuneToFire() ? 0 : 8);
 	}
 
-	private void damageEntity(EntityLivingBase entity) {
+	private void damageEntity(Entity entity) {
 		if (world.isRemote) {
 			return;
 		}

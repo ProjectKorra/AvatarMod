@@ -31,7 +31,7 @@ public class RenderSkyBison extends RenderLiving<EntitySkyBison> {
 			"textures/mob/flyingbison.png");
 
 	/**
-	 * @param rendermanager
+	 * @param rm (RenderManager)
 	 */
 	public RenderSkyBison(RenderManager rm) {
 		super(rm, new ModelFlyingBison(), 0);
@@ -52,5 +52,4 @@ public class RenderSkyBison extends RenderLiving<EntitySkyBison> {
 		super.doRenderShadowAndFire(entity, x, y, z, yaw, partialTicks);
 
 	}
-
 }

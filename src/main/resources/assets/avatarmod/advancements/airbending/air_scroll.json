@@ -1,0 +1,31 @@
+{
+  "display": {
+    "title": "Awakening in the Iceberg",
+    "description": "Gain an airbending scroll!",
+    "icon": {
+      "item": "avatarmod:scroll",
+      "data": 4
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "goal"
+  },
+  "rewards": {
+    "experience": 50,
+    "recipes": [
+      "avatarmod:airbender_staff"
+    ]
+  },
+  "criteria": {
+    "gained_air_scroll": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "avatarmod:scroll",
+            "data": 4
+          }
+        ]
+      }
+    }
+  }
+}

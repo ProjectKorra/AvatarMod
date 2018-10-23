@@ -36,32 +36,7 @@ public class GoreCoreCommand extends TreeCommand {
 	
 	@Override
 	protected ICommandNode[] addCommands() {
-		
-		NodeFunctional reloadId = new NodeBuilder("fixid")//
-				.addArgument(new ArgumentPlayerName("player"))//
-				.addArgumentDirect("confirm", ITypeConverter.CONVERTER_STRING, "")//
-				.build(popper -> {
-					
-					String username = popper.get();
-					String confirm = popper.get();
-					
-					if (!confirm.equals("destroy-data")) {
-						MSG_FIXID_CONFIRM.send(popper.from(), username);
-						MSG_FIXID_CONFIRM2.send(popper.from(), username);
-						return;
-					}
-					
-					FormattedMessage msg;
-					if (AccountUUIDs.getId(username).isTemporary()) {
-						msg = AccountUUIDs.tryFixId(username) ? MSG_FIXID_SUCCESS : MSG_FIXID_FAILURE;
-					} else {
-						msg = MSG_FIXID_ONLINE;
-					}
-					msg.send(popper.from(), username);
-					
-				});
-		
-		return new ICommandNode[] { reloadId };
+		return new ICommandNode[] {};
 	}
 	
 }

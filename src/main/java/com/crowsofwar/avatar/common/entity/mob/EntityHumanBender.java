@@ -18,8 +18,10 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
+import com.crowsofwar.avatar.common.entity.ai.EntityAiBenderAttackZombie;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiGiveScroll;
 import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,6 +30,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -43,7 +46,10 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_HUMANBENDER_NO_SCROLLS;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_NEED_TRADE_ITEM;
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -55,13 +61,22 @@ public abstract class EntityHumanBender extends EntityBender {
 
 	private EntityAiGiveScroll aiGiveScroll;
 	private int scrollsLeft;
+	private boolean hasAttemptedTrade;
 
 	/**
 	 * @param world
 	 */
 	public EntityHumanBender(World world) {
 		super(world);
-		scrollsLeft = rand.nextInt(3) + 1;
+		scrollsLeft = getScrollsLeft();
+		this.hasAttemptedTrade = false;
+
+
+	}
+
+	@Override
+	public boolean getAlwaysRenderNameTagForRender() {
+		return true;
 	}
 
 	@Override
@@ -83,19 +98,13 @@ public abstract class EntityHumanBender extends EntityBender {
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 
-		// this.targetTasks.addTask(2,
-		// new EntityAINearestAttackableTarget(this, EntityPlayer.class, true,
-		// false));
-		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, EntityHumanBender.class));
-
-		addBendingTasks();
-
+		this.tasks.addTask(4, new EntityAiBenderAttackZombie(this));
+		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
 		this.tasks.addTask(4, aiGiveScroll = new EntityAiGiveScroll(this, getScrollType()));
+		addBendingTasks();
 		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
-
-		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[0]));
 
 	}
 
@@ -117,10 +126,30 @@ public abstract class EntityHumanBender extends EntityBender {
 
 	protected abstract ScrollType getScrollType();
 
+	protected boolean isTradeItem(Item item) {
+		return MOBS_CONFIG.isTradeItem(item);
+	}
+
+	protected int getTradeAmount(Item item) {
+		return MOBS_CONFIG.getTradeItemAmount(item);
+	}
+
 	protected abstract int getNumSkins();
+
+	protected int getLevel() {
+		return 1;
+	}
+
+	protected int getScrollsLeft() {
+		return  rand.nextInt(3) + 1;
+	}
 
 	public int getSkin() {
 		return dataManager.get(SYNC_SKIN);
+	}
+
+	protected FormattedMessage getTradeFailMessage() {
+		return MSG_NEED_TRADE_ITEM;
 	}
 
 	public void setSkin(int skin) {
@@ -203,18 +232,24 @@ public abstract class EntityHumanBender extends EntityBender {
 
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
+		hasAttemptedTrade = false;
 
 		ItemStack stack = player.getHeldItem(hand);
-		if (stack.getItem() == Items.DIAMOND && !world.isRemote) {
+		/*int amount = stack.getCount();
+		int tradeAmount = getTradeAmount(stack.getItem());**/
+
+		if (this.isTradeItem(stack.getItem()) && !world.isRemote/* && amount >= tradeAmount**/) {
 
 			if (scrollsLeft > 0) {
 				if (aiGiveScroll.giveScrollTo(player)) {
-					// Take diamond
+					// Take item
 					scrollsLeft--;
 					if (!player.capabilities.isCreativeMode) {
 						stack.shrink(1);
 					}
+
 				}
+				hasAttemptedTrade = true;
 			} else {
 				MSG_HUMANBENDER_NO_SCROLLS.send(player);
 				AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onNpcNoScrolls());
@@ -223,9 +258,14 @@ public abstract class EntityHumanBender extends EntityBender {
 			return true;
 
 		}
+		else if (!(this.isTradeItem(stack.getItem())) && !world.isRemote && !hasAttemptedTrade){
+			getTradeFailMessage().send(player);
+			hasAttemptedTrade = true;
+			return true;
+		}
 
-		return false;
+
+		return true;
 
 	}
-
 }

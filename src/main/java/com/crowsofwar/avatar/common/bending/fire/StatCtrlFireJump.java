@@ -9,12 +9,12 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAreaEffectCloud;
 import net.minecraft.entity.EntityHanging;
@@ -23,6 +23,7 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumParticleTypes;
@@ -35,7 +36,7 @@ import net.minecraft.world.WorldServer;
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandler.FIRE_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.*;
 
 public class StatCtrlFireJump extends StatusControl {
 	public StatCtrlFireJump() {
@@ -51,19 +52,17 @@ public class StatCtrlFireJump extends StatusControl {
 		World world = ctx.getWorld();
 
 		AbilityData abilityData = data.getAbilityData("fire_jump");
-		boolean allowDoubleJump = abilityData.getLevel() == 3
-				&& abilityData.getPath() == AbilityData.AbilityTreePath.SECOND;
+		boolean allowDoubleJump = abilityData.getLevel() == 3 && abilityData.getPath() == AbilityData.AbilityTreePath.SECOND;
 
 		// Figure out whether entity is on ground by finding collisions with
 		// ground - if found a collision box, then is not on ground
-		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity,
-				entity.getEntityBoundingBox().grow(0.2, 1, 0.2));
+		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.2, 1, 0.2));
 		boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically;
 
 		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiFireJump))) {
 
 			int lvl = abilityData.getLevel();
-			double jumpMultiplier = 0.2;
+			double jumpMultiplier = 0.4;
 			float fallAbsorption = 3;
 			double range = 2;
 			double speed = 1;
@@ -71,7 +70,7 @@ public class StatCtrlFireJump extends StatusControl {
 			int numberOfParticles = 5;
 			double particleSpeed = 0.1;
 			if (lvl >= 1) {
-				jumpMultiplier = 0.3;
+				jumpMultiplier = 0.5;
 				fallAbsorption = 4;
 				range = 2.5;
 				damage = 1.5F;
@@ -80,7 +79,7 @@ public class StatCtrlFireJump extends StatusControl {
 				particleSpeed = 0.125;
 			}
 			if (lvl >= 2) {
-				jumpMultiplier = 0.4;
+				jumpMultiplier = 0.65;
 				fallAbsorption = 5;
 				speed = 2;
 				range = 3;
@@ -89,7 +88,7 @@ public class StatCtrlFireJump extends StatusControl {
 				particleSpeed = 0.15;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				jumpMultiplier = 0.6;
+				jumpMultiplier = 0.8;
 				fallAbsorption = 8;
 				speed = 4;
 				range = 5;
@@ -100,7 +99,7 @@ public class StatCtrlFireJump extends StatusControl {
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				jumpMultiplier = 0.3;
+				jumpMultiplier = 0.4;
 				fallAbsorption = 15;
 				speed = 2.5;
 				range = 3;
@@ -108,17 +107,16 @@ public class StatCtrlFireJump extends StatusControl {
 			}
 
 			if (abilityData.getLevel() == 2 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE);
+				data.addTickHandler(SMASH_GROUND_FIRE);
 			} else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				data.addTickHandler(TickHandler.SMASH_GROUND_FIRE_BIG);
+				data.addTickHandler(SMASH_GROUND_FIRE_BIG);
 			}
 
 			// Calculate direction to jump -- in the direction the player is currently already going
 
 			// For some reason, velocity is 0 here when player is walking, so must instead
 			// calculate using delta position
-			Vector deltaPos = new Vector(entity.posX - entity.lastTickPosX, 0, entity.posZ -
-					entity.lastTickPosZ);
+			Vector deltaPos = new Vector(entity.posX - entity.lastTickPosX, 0, entity.posZ - entity.lastTickPosZ);
 			double currentYaw = Vector.getRotationTo(Vector.ZERO, deltaPos).y();
 
 			// Just go forwards if not moving right now
@@ -153,20 +151,20 @@ public class StatCtrlFireJump extends StatusControl {
 				((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 			}
 
-			damageNearbyEntities(ctx, range, speed, damage, numberOfParticles, particleSpeed);
+			Block currentBlock = world.getBlockState(entity.getPosition()).getBlock();
+			if (currentBlock == Blocks.AIR) {
+				damageNearbyEntities(ctx, range, speed, damage, numberOfParticles, particleSpeed);
+			}
 
 			ParticleSpawner spawner = new NetworkParticleSpawner();
-			spawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 15, 20,
-					new Vector(entity), new Vector(1, 0, 1));
+			spawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 15, 20, new Vector(entity), new Vector(1, 0, 1));
 
 			data.addTickHandler(FIRE_PARTICLE_SPAWNER);
 			data.getMiscData().setFallAbsorption(fallAbsorption);
 
-
 			abilityData.addXp(ConfigSkills.SKILLS_CONFIG.fireJump);
 
-			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_SHOOT,
-					SoundCategory.PLAYERS, 1, .7f);
+			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1, .7f);
 
 			return true;
 
@@ -181,9 +179,8 @@ public class StatCtrlFireJump extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 
 		World world = entity.world;
-		AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.getEntityBoundingBox().minY,
-				entity.posZ - range, entity.posX + range, entity.posY + entity.getEyeHeight(), entity.posZ + range);
-
+		AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.getEntityBoundingBox().minY, entity.posZ - range, entity.posX + range,
+											  entity.posY + entity.getEyeHeight(), entity.posZ + range);
 
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
@@ -191,14 +188,12 @@ public class StatCtrlFireJump extends StatusControl {
 				for (int j = 0; j < 90; j++) {
 					Vector lookPos;
 					if (i >= 1) {
-						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-								j * 4), 0).times(i);
+						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + j * 4), 0).times(i);
 					} else {
-						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-								j * 4), 0);
+						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + j * 4), 0);
 					}
 					World.spawnParticle(EnumParticleTypes.FLAME, lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
-							lookPos.z() + entity.posZ, numberOfParticles, 0, 0, 0, particleSpeed / 4);
+										lookPos.z() + entity.posZ, numberOfParticles, 0, 0, 0, particleSpeed / 4);
 				}
 				i += range / 10;
 			}
@@ -229,8 +224,8 @@ public class StatCtrlFireJump extends StatusControl {
 		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != entity) {
 			return false;
 		}
-		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
-				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud) {
+		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem || entity instanceof EntityArmorStand
+						|| entity instanceof EntityAreaEffectCloud) {
 			return false;
 		} else return entity.canBeCollidedWith() && entity.canBePushed();
 	}

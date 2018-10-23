@@ -95,7 +95,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 				entity.onCollideWithSolid();
 			}
 
-			entity.addVelocity(Vector.DOWN.times(1 / 40));
+			entity.addVelocity(Vector.DOWN.times(1F / 40));
 
 			World world = entity.world;
 			if (!entity.isDead) {
@@ -104,13 +104,8 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 				if (!collidedList.isEmpty()) {
 					Entity collided = collidedList.get(0);
 					if (entity.canCollideWith(collided) && collided != entity.getOwner()) {
-						collision((EntityLivingBase) collided, entity);
-					} else if (collided != entity.getOwner()) {
-						Vector motion = new Vector(collided).minus(new Vector(entity));
-						motion = motion.times(0.3).withY(0.08);
-						collided.addVelocity(motion.x(), motion.y(), motion.z());
+						collision(collided, entity);
 					}
-
 				}
 			}
 
@@ -118,35 +113,39 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 
 		}
 
-		private void collision(EntityLivingBase collided, EntityFireball entity) {
+		private void collision(Entity collided, EntityFireball entity) {
 			double speed = entity.velocity().magnitude();
 
-			collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
+			if (entity.canDamageEntity(collided)) {
+				collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
 
-			if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
-					entity.getDamage())) {
-				BattlePerformanceScore.addMediumScore(entity.getOwner());
+				if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
+						entity.getDamage())) {
+					BattlePerformanceScore.addMediumScore(entity.getOwner());
+				}
 			}
+			if (entity.canCollideWith(collided) && collided.canBeCollidedWith()) {
 
-			Vector motion = entity.velocity().dividedBy(20);
-			motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.08);
-			collided.addVelocity(motion.x(), motion.y(), motion.z());
+				Vector motion = entity.velocity().dividedBy(20);
+				motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.08);
+				collided.addVelocity(motion.x(), motion.y(), motion.z());
 
-			BendingData data = Bender.get(entity.getOwner()).getData();
-			if (!collided.world.isRemote && data != null) {
-				float xp = SKILLS_CONFIG.fireballHit;
-				if (entity.getAbility() != null) {
-					data.getAbilityData(entity.getAbility().getName()).addXp(xp);
+				BendingData data = Bender.get(entity.getOwner()).getData();
+				if (!collided.world.isRemote && data != null) {
+					float xp = SKILLS_CONFIG.fireballHit;
+					if (entity.getAbility() != null) {
+						data.getAbilityData(entity.getAbility().getName()).addXp(xp);
+					}
+
+				}
+
+				// Remove the fireball & spawn particles
+				if (!entity.world.isRemote) {
+					entity.onCollideWithSolid();
+					entity.setDead();
 				}
 
 			}
-
-			// Remove the fireball & spawn particles
-			if (!entity.world.isRemote) {
-				entity.onCollideWithSolid();
-				entity.setDead();
-			}
-
 		}
 
 		@Override
@@ -185,7 +184,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			Vector forward = Vector.toRectangular(yaw, pitch);
 			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2).plus(eye);
-			Vector motion = target.minus(Vector.getEntityPos(entity)).times(5);
+			Vector motion = target.minus(Vector.getEntityPos(entity)).times(7);
 			entity.setVelocity(motion);
 
 			if (entity.getAbility() instanceof AbilityFireball) {

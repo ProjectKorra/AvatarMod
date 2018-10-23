@@ -43,7 +43,6 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 		return keys;
 	}
 
-
 	@Override
 	public double getPlayerReach() {
 		return 0;
@@ -67,11 +66,6 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	@Override
 	public IThreadListener getThreadListener() {
 		return FMLCommonHandler.instance().getMinecraftServerInstance();
-	}
-
-	@Override
-	public IThreadListener getClientThreadListener() {
-		return null;
 	}
 
 	@Override

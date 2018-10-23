@@ -117,7 +117,6 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 	public static class Thrown extends WaterArcBehavior {
 
 		float ticks = 0;
-		float startGravity;
 
 		@Override
 		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
@@ -140,36 +139,32 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			if (lvl <= 0) {
 				//Level I or in Creative Mode
-				startGravity = STATS_CONFIG.waterArcTicks;
 				if (ticks >= STATS_CONFIG.waterArcTicks) {
-					//Default is 40
+					//Default is 120
 					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (lvl == 1) {
 				//Level II.
-				startGravity = STATS_CONFIG.waterArcTicks * (5 / 4);
 				if (ticks >= STATS_CONFIG.waterArcTicks * (5 / 4)) {
-					//50
+					//150
 					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (lvl == 2) {
 				//Level III
-				startGravity = STATS_CONFIG.waterArcTicks * (6 / 4);
 				if (ticks >= STATS_CONFIG.waterArcTicks * (6 / 4)) {
-					//60
+					//180
 					entity.Splash();
 					entity.setDead();
 				}
 			}
 			if (waterSpear) {
 				//Level 4 Path Two
-				startGravity = STATS_CONFIG.waterArcTicks * (3);
 				if (ticks >= STATS_CONFIG.waterArcTicks * (3)) {
-					//120 ticks
+					//360 ticks
 					entity.Splash();
 					entity.setDead();
 				}
@@ -178,9 +173,8 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			if (abilityData != null) {
 				if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 					//Level 4 Path One
-					startGravity = STATS_CONFIG.waterArcTicks * (5 / 4);
 					if (ticks >= STATS_CONFIG.waterArcTicks * (5 / 4)) {
-						//50
+						//150
 						entity.Splash();
 						entity.setDead();
 					}
@@ -188,39 +182,37 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				}
 			}
 
-			if (startGravity / ticks <= 2) {
-				entity.addVelocity(Vector.DOWN.times(entity.getGravity() / 30));
-			}
+			entity.addVelocity(Vector.DOWN.times(entity.getGravity() / 90));
 
 
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
-					EntityLivingBase.class, entity.getEntityBoundingBox().grow(0.9, 0.9, 0.9),
+					EntityLivingBase.class, entity.getEntityBoundingBox().grow(0.5, 0.5, 0.5),
 					collided -> collided != entity.getOwner());
 
 			for (EntityLivingBase collided : collidedList) {
 				if (collided == entity.getOwner()) return this;
-				double x = entity.motionX / 2 * STATS_CONFIG.waterArcSettings.push;
-				double y = entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push > 0.75 ? 0.75 : entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push;
-				double z = entity.motionZ / 2 * STATS_CONFIG.waterArcSettings.push;
-				collided.addVelocity(x, y, z);
-				entity.damageEntity(collided);
-
-				if (!entity.world.isRemote && data != null) {
-
-					abilityData.addXp(ConfigSkills.SKILLS_CONFIG.waterHit);
-
-					if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
-						entity.setBehavior(new PlayerControlled());
-						data.addStatusControl(StatusControl.THROW_WATER);
+				if (entity.canCollideWith(collided)) {
+					double x = entity.motionX / 2 * STATS_CONFIG.waterArcSettings.push;
+					double y = entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push > 0.75 ? 0.75 : entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push;
+					double z = entity.motionZ / 2 * STATS_CONFIG.waterArcSettings.push;
+					collided.addVelocity(x, y, z);
+					if (entity.canDamageEntity(collided)) {
+						entity.damageEntity(collided);
 					}
-					if (!waterSpear) {
-						entity.Splash();
-						entity.setDead();
-						entity.cleanup();
+
+					if (!entity.world.isRemote && data != null) {
+
+						abilityData.addXp(ConfigSkills.SKILLS_CONFIG.waterHit);
+
+						if (!waterSpear) {
+							entity.Splash();
+							entity.setDead();
+							entity.cleanup();
+						}
+
 					}
 
 				}
-
 			}
 
 

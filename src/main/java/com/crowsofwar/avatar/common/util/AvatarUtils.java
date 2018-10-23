@@ -18,7 +18,7 @@
 package com.crowsofwar.avatar.common.util;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -29,6 +29,7 @@ import net.minecraft.util.IThreadListener;
 import net.minecraft.world.WorldServer;
 
 import com.crowsofwar.avatar.*;
+import com.crowsofwar.gorecore.util.Vector;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -53,8 +54,7 @@ public class AvatarUtils {
 		return null;
 	}
 
-	public static <T extends Entity> Comparator<T> getSortByDistanceComparator
-			(Function<T, Float> distanceSupplier) {
+	public static <T extends Entity> Comparator<T> getSortByDistanceComparator(Function<T, Float> distanceSupplier) {
 
 		return (e1, e2) -> {
 			float d1 = distanceSupplier.apply(e1);
@@ -81,6 +81,65 @@ public class AvatarUtils {
 	}
 
 	/**
+	 * Returns the location of the player's right side
+	 *
+	 * @param entity
+	 * @param distance
+	 * @return
+	 */
+
+	public static Vector getRightSide(EntityLivingBase entity, double distance) {
+		float angle = entity.rotationYaw / 60;
+		return Vector.getEntityPos(entity).minus(new Vector(Math.cos(angle), -entity.getEyeHeight(), Math.sin(angle)).normalize().times(distance));
+	}
+
+	/**
+	 * Returns the location of the player's left side
+	 *
+	 * @param entity
+	 * @param distance
+	 * @return
+	 */
+
+	public static Vector getLeftSide(EntityLivingBase entity, double distance) {
+		float angle = entity.rotationYaw / 60;
+		return Vector.getEntityPos(entity).plus(new Vector(Math.cos(angle), -entity.getEyeHeight(), Math.sin(angle)).normalize().times(distance));
+	}
+
+	/**
+	 * @param axis
+	 * @param degrees
+	 * @param length
+	 * @return
+	 */
+
+	public static Vector getOrthogonalVector(Vector axis, double degrees, double length) {
+		Vector ortho = new Vector(axis.y(), -axis.x(), 0);
+		ortho = ortho.normalize();
+		ortho = ortho.times(length);
+
+		return rotateVectorAroundVector(axis, ortho, degrees);
+	}
+
+	/**
+	 * @param axis
+	 * @param rotator
+	 * @param degrees
+	 * @return
+	 */
+
+	public static Vector rotateVectorAroundVector(Vector axis, Vector rotator, double degrees) {
+		double angle = Math.toRadians(degrees);
+		Vector rotation = axis;
+		Vector rotate = rotator;
+		rotation = rotation.normalize();
+
+		Vector thirdaxis = rotation.cross(rotate).normalize().times(rotate.magnitude());
+
+		return rotate.times(Math.cos(angle)).plus(thirdaxis.times(Math.sin(angle)));
+	}
+
+	/**
 	 * Ensures that the angle is in the range of 0-360.
 	 */
 	public static float normalizeAngle(float angle) {
@@ -100,8 +159,7 @@ public class AvatarUtils {
 	 * @param nbt          NBT compound to load the list from
 	 * @param listName     The name of the list tag
 	 */
-	public static <T> void readList(Collection<T> list, Function<NBTTagCompound, T> itemProvider,
-									NBTTagCompound nbt, String listName) {
+	public static <T> void readList(Collection<T> list, Function<NBTTagCompound, T> itemProvider, NBTTagCompound nbt, String listName) {
 
 		list.clear();
 
@@ -112,8 +170,7 @@ public class AvatarUtils {
 			if (read != null) {
 				list.add(read);
 			} else {
-				AvatarLog.warn(INVALID_SAVE,
-						"Invalid list " + listName + ", contains unknown value: " + item);
+				AvatarLog.warn(INVALID_SAVE, "Invalid list " + listName + ", contains unknown value: " + item);
 			}
 		}
 
@@ -128,8 +185,7 @@ public class AvatarUtils {
 	 * @param nbt      NBT compound to write list to
 	 * @param listName The name of the list tag
 	 */
-	public static <T> void writeList(Collection<T> list, BiConsumer<NBTTagCompound, T> writer,
-									 NBTTagCompound nbt, String listName) {
+	public static <T> void writeList(Collection<T> list, BiConsumer<NBTTagCompound, T> writer, NBTTagCompound nbt, String listName) {
 
 		NBTTagList listTag = new NBTTagList();
 
@@ -157,8 +213,8 @@ public class AvatarUtils {
 	 * @param nbt           NBT to read from
 	 * @param mapName       Name to store it as
 	 */
-	public static <K, V> void readMap(Map<K, V> map, Function<NBTTagCompound, K> keyProvider,
-									  Function<NBTTagCompound, V> valueProvider, NBTTagCompound nbt, String mapName) {
+	public static <K, V> void readMap(Map<K, V> map, Function<NBTTagCompound, K> keyProvider, Function<NBTTagCompound, V> valueProvider,
+					NBTTagCompound nbt, String mapName) {
 
 		map.clear();
 
@@ -174,15 +230,13 @@ public class AvatarUtils {
 				AvatarLog.error("MapError: Issue reading map " + mapName + "'s key for item " + i);
 				AvatarLog.error("MapError: Item compound- " + item);
 				AvatarLog.error("MapError: Key compound- " + item.getCompoundTag("Key"));
-				throw new DiskException("readMap- Cannot have null key for map (see log for " +
-						"details)");
+				throw new DiskException("readMap- Cannot have null key for map (see log for " + "details)");
 			}
 			if (value == null) {
 				AvatarLog.error("MapError: Issue reading map " + mapName + "'s value for item" + i);
 				AvatarLog.error("MapError: Item compound- " + item);
 				AvatarLog.error("MapError: Value compound- " + item.getCompoundTag("Value"));
-				throw new DiskException("readMap- Cannot have null value for map (see log for " +
-						"details)");
+				throw new DiskException("readMap- Cannot have null value for map (see log for " + "details)");
 			}
 
 			map.put(key, value);
@@ -199,18 +253,16 @@ public class AvatarUtils {
 	 * @param nbt         NBT to read from
 	 * @param mapName     Name to store map as
 	 */
-	public static <K, V> void writeMap(Map<K, V> map, BiConsumer<NBTTagCompound, K> keyWriter,
-									   BiConsumer<NBTTagCompound, V> valueWriter, NBTTagCompound nbt, String mapName) {
+	public static <K, V> void writeMap(Map<K, V> map, BiConsumer<NBTTagCompound, K> keyWriter, BiConsumer<NBTTagCompound, V> valueWriter,
+					NBTTagCompound nbt, String mapName) {
 
 		NBTTagList listTag = new NBTTagList();
 		Set<Map.Entry<K, V>> entries = map.entrySet();
 
 		for (Map.Entry<K, V> entry : entries) {
 
-			if (entry.getKey() == null)
-				throw new DiskException("writeMap- does not permit null keys in map " + map);
-			if (entry.getValue() == null)
-				throw new DiskException("writeMap- does not permit null values in map " + map);
+			if (entry.getKey() == null) throw new DiskException("writeMap- does not permit null keys in map " + map);
+			if (entry.getValue() == null) throw new DiskException("writeMap- does not permit null values in map " + map);
 
 			NBTTagCompound item = new NBTTagCompound();
 			NBTTagCompound keyNbt = new NBTTagCompound();

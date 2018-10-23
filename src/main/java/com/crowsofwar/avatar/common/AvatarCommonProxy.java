@@ -17,15 +17,15 @@
 
 package com.crowsofwar.avatar.common;
 
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.controls.IControlsHandler;
-import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.gui.AvatarGui;
-import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.World;
+
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.controls.*;
+import com.crowsofwar.avatar.common.data.AvatarPlayerData;
+import com.crowsofwar.avatar.common.gui.AvatarGui;
+import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 
 /**
  * Allows calling of side-specific code by using a common base class and
@@ -47,7 +47,6 @@ public interface AvatarCommonProxy {
 
 	public IControlsHandler getKeyHandler();
 
-
 	/**
 	 * Get client player's reach. Returns 0 on server.
 	 */
@@ -66,13 +65,6 @@ public interface AvatarCommonProxy {
 	 * @return An IThreadListener
 	 */
 	IThreadListener getThreadListener();
-
-	/**
-	 * Get client-side IThreadListener, null on server
-	 *
-	 * @return
-	 */
-	IThreadListener getClientThreadListener();
 
 	/**
 	 * Get amount of particles. 0 = All, 1 = decreased, 2 = minimal

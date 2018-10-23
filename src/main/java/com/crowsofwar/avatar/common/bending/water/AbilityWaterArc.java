@@ -29,15 +29,15 @@ import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.List;
 import java.util.function.BiPredicate;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -64,6 +64,28 @@ public class AbilityWaterArc extends Ability {
 
 		Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel() * 2);
 
+		List<Entity> waterArc = Raytrace.entityRaytrace(world, Vector.getEntityPos(entity).withY(entity.getEyeHeight()), Vector.getLookRectangular(entity).times(10), 3,
+				entity1 -> entity1 != entity);
+
+		if (waterArc.isEmpty()) {
+			if (ctx.getLevel() >= 2) {
+				for (Entity a : waterArc) {
+					if (a instanceof AvatarEntity) {
+						if (((AvatarEntity) a).getOwner() != entity) {
+							if (a instanceof EntityWaterArc) {
+								((EntityWaterArc) a).setOwner(entity);
+								((EntityWaterArc) a).setBehavior(new WaterArcBehavior.PlayerControlled());
+								((EntityWaterArc) a).setAbility(this);
+								((EntityWaterArc) a).setStartingPosition(entity.getPosition());
+								((EntityWaterArc) a).setSize(0.5F);
+								((EntityWaterArc) a).setGravity(9.82F);
+								((EntityWaterArc) a).setPosition(Vector.getLookRectangular(entity).times(1.5F));
+							}
+						}
+					}
+				}
+			}
+		}
 		if (targetPos != null || ctx.consumeWater(1) || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
 
 			if (targetPos == null) {
@@ -73,28 +95,28 @@ public class AbilityWaterArc extends Ability {
 				world.setBlockToAir(targetPos.toBlockPos());
 			}
 
+
 			float damageMult = 1F;
 			float gravity = 8;
-			float size = 0.5F;
+			float size = 0.4F;
 			//The water arc number in the combo.
 
 			if (ctx.getLevel() == 1) {
 				damageMult = 1.25F;
 				gravity = 7.5F;
-				size = 0.75F;
+				size = 0.5F;
 			}
 			if (ctx.getLevel() == 2) {
 				damageMult = 1.5F;
 				gravity = 7;
-				size = 1F;
+				size = 0.6F;
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				damageMult = 3F;
 				gravity = 3;
-				size = 1.25F;
+				size = 0.4F;
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-				damageMult = comboNumber >= 3 ? 1 : 2;
 				gravity = 9.81F;
 				size = 0.5F;
 			}
@@ -102,7 +124,6 @@ public class AbilityWaterArc extends Ability {
 			if (bender.consumeChi(STATS_CONFIG.chiWaterArc)) {
 
 				removeExisting(ctx);
-				damageMult *= ctx.getPowerRatingDamageMod();
 
 				if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 					EntityWaterArc water = new EntityWaterArc(world);
@@ -111,27 +132,33 @@ public class AbilityWaterArc extends Ability {
 						comboNumber = 1;
 					}
 
+					if (comboNumber <= 1) {
+						size = 0.5F;
+					}
+
 					if (comboNumber == 3) {
 						//Massive Singular water arc; kinda like airgust
-						size = 1.5F;
+						size = 1F;
 						gravity = 2;
 						comboNumber = 1;
-					}
-					else {
+					} else {
 						comboNumber++;
 					}
 
 					if (comboNumber == 2) {
 						gravity = -9.81F;
-						size = 1F;
+						size = 0.5F;
 					}
 
-					System.out.println(comboNumber);
+					damageMult = comboNumber >= 3 ? 1.25F : 0.5F;
+					damageMult *= ctx.getPowerRatingDamageMod();
+
 
 					Vector playerEye = Vector.getEyePos(entity);
 					Vector look = playerEye.plus(getLookRectangular(entity).times(1.5));
 					Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch));
 					force = force.times(15 + comboNumber);
+
 
 					water.setOwner(entity);
 					water.setPosition(look);

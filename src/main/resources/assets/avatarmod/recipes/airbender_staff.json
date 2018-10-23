@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " s ",
+    "sls",
+    " s "
+  ],
+  "key": {
+    "l": {
+      "item": "minecraft:stick"
+    },
+    "s": {
+      "item": "avatarmod:scroll",
+      "data": 4
+    }
+  },
+  "result": {
+    "item": "avatarmod:airbender_staff"
+  }
+}

@@ -12,9 +12,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -25,8 +23,10 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_CLEANSE_COOLDOWN;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.CLEANSE_COOLDOWN_HANDLER;
 import static java.lang.Math.toRadians;
 
 public class AbilityCleanse extends Ability {
@@ -59,8 +59,8 @@ public class AbilityCleanse extends Ability {
 
 		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel() * 3);
 
-		if ((bender.consumeChi(chi) && targetPos != null) || (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative())
-				|| ctx.consumeWater(4)) {
+		if ((bender.consumeChi(chi) && targetPos != null && !data.hasTickHandler(CLEANSE_COOLDOWN_HANDLER)) || (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative())
+				|| (ctx.consumeWater(4) && !data.hasTickHandler(CLEANSE_COOLDOWN_HANDLER))) {
 
 			// Duration: 5-10s
 			int duration = abilityData.getLevel() < 2 ? 100 : 200;
@@ -85,6 +85,7 @@ public class AbilityCleanse extends Ability {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, duration));
 				entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, 1));
+				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration));
 			}
 
 			// Perform group heal?
@@ -111,9 +112,11 @@ public class AbilityCleanse extends Ability {
 			//noinspection ConstantConditions
 			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
 
-		}
-		else {
+		} else {
 			bender.sendMessage("avatar.cleanseFail");
+		}
+		if (data.hasTickHandler(CLEANSE_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
+			MSG_CLEANSE_COOLDOWN.send(entity);
 		}
 
 	}

@@ -56,8 +56,11 @@ public class AiFireArc extends BendingAi {
 
 	@Override
 	protected void startExec() {
+		BendingData data = bender.getData();
 		velocityYaw = 0;
 		velocityPitch = 0;
+		execAbility();
+		data.getMiscData().setAbilityCooldown(80);
 	}
 
 	@Override
@@ -88,16 +91,9 @@ public class AiFireArc extends BendingAi {
 			entity.rotationPitch = targetPitch;
 		}
 
-		if (timeExecuting == 20) {
-			BendingData data = bender.getData();
-			data.chi().setMaxChi(10);
-			data.chi().setTotalChi(10);
-			data.chi().setAvailableChi(10);
-			execAbility();
-			data.getMiscData().setAbilityCooldown(80);
-		}
 
-		if (timeExecuting >= 80) {
+
+		if (timeExecuting >= 20) {
 			BendingData data = bender.getData();
 			execStatusControl(StatusControl.THROW_FIRE);
 			timeExecuting = 0;

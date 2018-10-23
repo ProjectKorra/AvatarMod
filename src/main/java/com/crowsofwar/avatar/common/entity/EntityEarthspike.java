@@ -19,24 +19,19 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.config.ConfigStats;
+import com.crowsofwar.avatar.common.bending.earth.AbilityEarthspikes;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityHanging;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -57,16 +52,12 @@ public class EntityEarthspike extends AvatarEntity {
 
 	private double damage;
 	private float Size;
-	private int attacked;
 	private double lifetime;
 
 	public EntityEarthspike(World world) {
 		super(world);
 		this.Size = 1;
 		setSize(Size, Size);
-		//DO NOT CALL THIS ONUPDATE; THE EARTHSPIKE WILL HAVE SIZE VARIATION DEPENDING ON HOW
-		// LONG THE SPAWNER HAS EXISTED.
-		this.attacked = 0;
 		this.damage = STATS_CONFIG.earthspikeSettings.damage;
 		this.noClip = true;
 		this.lifetime = 30;
@@ -106,8 +97,8 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	public void onEntityUpdate() {
+		//Add width and height stuff
 
-		super.onEntityUpdate();
 		this.motionX = 0;
 		this.motionY = 0;
 		this.motionZ = 0;
@@ -116,17 +107,27 @@ public class EntityEarthspike extends AvatarEntity {
 			this.setDead();
 		}
 
+		setSize(getSize(), getSize());
+
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		Block belowBlock = world.getBlockState(below).getBlock();
-
-		if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock)) {
-			setDead();
+		damage = damage * belowBlock.getBlockHardness(world.getBlockState(below), world, below);
+		if (getAbility() instanceof AbilityEarthspikes) {
+			AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
+			if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				if (!world.isRemote && (!STATS_CONFIG.bendableBlocks.contains(belowBlock) || belowBlock == Blocks.AIR)) {
+					setDead();
+				}
+			}
+		}
+		else if (belowBlock == Blocks.AIR) {
+			setDead();;
 		}
 
 
 		// Push collided entities back
 		if (!world.isRemote) {
-			AxisAlignedBB box = new AxisAlignedBB(posX - Size, posY - Size, posZ - Size, posX + Size, posY + Size, posZ + Size);
+			AxisAlignedBB box = new AxisAlignedBB(posX + getSize(), posY + getSize(), posZ + getSize(), posX - getSize(), posY, posZ - getSize());
 			List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box);
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
@@ -139,20 +140,19 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 		if (!world.isRemote && entity != getOwner() && !(entity instanceof EntityEarthspike) && !(entity instanceof EntityEarthspikeSpawner) && canCollideWith(entity)) {
 			pushEntity(entity);
 			if (attackEntity(entity)) {
-				attacked++;
 				if (getOwner() != null) {
-					BattlePerformanceScore.addMediumScore(getOwner());
+					BattlePerformanceScore.addScore(getOwner(), 15);
 				}
 
 			}
 			if (getOwner() != null && getAbility() != null) {
 				BendingData data = BendingData.get(getOwner());
 				if (data != null) {
-					data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.earthspikeHit * attacked);
+					data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.earthspikeHit);
 				}
 			}
 		}
@@ -160,7 +160,7 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	private boolean attackEntity(Entity entity) {
-		if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb) && canCollideWith(entity)) {
+		if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb) && canCollideWith(entity) && canDamageEntity(entity)) {
 			DamageSource ds = AvatarDamageSource.causeEarthspikeDamage(entity, getOwner());
 			float damage = (float) this.damage;
 			return entity.attackEntityFrom(ds, damage);
@@ -169,8 +169,8 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	private void pushEntity(Entity entity) {
-		entity.motionX = this.motionX / 4;
-		entity.motionY = STATS_CONFIG.earthspikeSettings.push/1.5 + damage/20;
-		entity.motionZ = this.motionZ / 4;
+		entity.motionX += this.motionX / 4;
+		entity.motionY += (STATS_CONFIG.earthspikeSettings.push / 6) + (damage / 100);
+		entity.motionZ += this.motionZ / 4;
 	}
 }

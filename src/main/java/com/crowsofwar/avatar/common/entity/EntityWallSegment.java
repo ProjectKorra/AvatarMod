@@ -25,21 +25,19 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -177,6 +175,11 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	}
 
 	@Override
+	public boolean canBePushed() {
+		return false;
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		ignoreFrustumCheck = true;
@@ -243,7 +246,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 
 		// Note... only called server-side
 		double amt = 0.05;
@@ -274,9 +277,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		entity.motionY = 0.01;
 
 		entity.isAirBorne = true;
-		if (entity instanceof EntityPlayerMP) {
-			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
-		}
+		AvatarUtils.afterVelocityAdded(entity);
 		if (entity instanceof AvatarEntity) {
 			Vector velocity = ((AvatarEntity) entity).velocity();
 			if (ns) {
@@ -326,6 +327,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		return notWall && !friendlyProjectile;
 
 	}
+
+
 
 
 }

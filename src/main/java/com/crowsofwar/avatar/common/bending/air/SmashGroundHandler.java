@@ -16,74 +16,38 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
-import java.util.List;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityShockwave;
 
 /**
  * @author CrowsOfWar
  */
 public class SmashGroundHandler extends TickHandler {
+	public SmashGroundHandler(int id) {
+		super(id);
+	}
 
 	@Override
 	public boolean tick(BendingContext ctx) {
 
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
+		World world = ctx.getWorld();
 
 		if (entity.isInWater() || entity.onGround || bender.isFlying()) {
 
 			if (entity.onGround) {
+				smashEntity(entity);
+				world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), getSoundCategory(), 4F, 0.5F);
 
-				double range = getRange();
-
-				World world = entity.world;
-				AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.getEntityBoundingBox().minY,
-						entity.posZ - range, entity.posX + range, entity.posY + entity.getEyeHeight(), entity.posZ + range);
-
-
-				if (!world.isRemote) {
-					WorldServer World = (WorldServer) world;
-					for (double i = 0; i < range; ) {
-						for (int j = 0; j < 90; j++) {
-							Vector lookPos;
-							if (i >= 1) {
-								lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-										j * 4), 0).times(i);
-							} else {
-								lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-										j * 4), 0);
-							}
-							World.spawnParticle(getParticle(), lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
-									lookPos.z() + entity.posZ, getNumberOfParticles(), 0, 0, 0, getParticleSpeed() / 4);
-						}
-						i = i + range / 10;
-					}
-				}
-				entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), getSoundCategory(), 4F, 0.5F);
-
-
-				List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
-				for (EntityLivingBase target : nearby) {
-					if (target != entity) {
-						smashEntity(target, entity);
-					}
-				}
 			}
-
 
 			return true;
 		}
@@ -91,35 +55,59 @@ public class SmashGroundHandler extends TickHandler {
 		return false;
 	}
 
-	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {
-		if (target.attackEntityFrom(AvatarDamageSource.causeSmashDamage(target, entity), getDamage())) {
-			BattlePerformanceScore.addLargeScore(entity);
-		}
+	protected void smashEntity(EntityLivingBase entity) {
+		World world = entity.world;
+		EntityShockwave shockwave = new EntityShockwave(world);
+		shockwave.setDamage(getDamage());
+		shockwave.setOwner(entity);
+		shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
+		shockwave.setKnockbackHeight(getKnockbackHeight());
+		shockwave.setSpeed(getSpeed() / 5);
+		shockwave.setRange(getRange());
+		shockwave.setParticle(getParticle());
+		shockwave.setParticleAmount(getParticleAmount());
+		shockwave.setParticleSpeed(getParticleSpeed());
+		shockwave.setFireTime(fireTime());
+		shockwave.setFire(isFire());
+		shockwave.setAbility(getAbility());
+		shockwave.setPerformanceAmount(getPerformanceAmount());
+		world.spawnEntity(shockwave);
+	}
 
-		Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
-		double distance = Vector.getEntityPos(target).dist(Vector.getEntityPos(entity));
-		double direction = (getRange() - distance) * (getSpeed() / 2) / getRange();
-		velocity = velocity.times(direction).withY(getKnockbackHeight() / 4);
-		target.addVelocity(velocity.x(), velocity.y(), velocity.z());
+	protected boolean isFire() {
+		return false;
+	}
+
+	protected int fireTime() {
+		return 0;
 	}
 
 	protected double getRange() {
-		return 3;
-	}
-
-	/**
-	 * The speed applied to hit entities, in m/s
-	 */
-	protected double getSpeed() {
-		return 5;
-	}
-
-	protected float getKnockbackHeight() {
-		return 0.75F;
+		return 4;
 	}
 
 	protected EnumParticleTypes getParticle() {
-		return EnumParticleTypes.CLOUD;
+		return EnumParticleTypes.EXPLOSION_NORMAL;
+	}
+
+	protected int getParticleAmount() {
+		return 2;
+	}
+
+	protected Ability getAbility() {
+		return new AbilityAirJump();
+	}
+
+	protected double getParticleSpeed() {
+		return 0.1F;
+	}
+
+	protected double getSpeed() {
+		return 4;
+	}
+
+	protected float getKnockbackHeight() {
+		return 0.1F;
 	}
 
 	protected SoundEvent getSound() {
@@ -130,16 +118,12 @@ public class SmashGroundHandler extends TickHandler {
 		return SoundCategory.BLOCKS;
 	}
 
-	protected int getNumberOfParticles() {
-		return 2;
-	}
-
-	protected float getParticleSpeed() {
-		return 0.1F;
+	protected int getPerformanceAmount() {
+		return 10;
 	}
 
 	protected float getDamage() {
-		return 3;
+		return 2.5F;
 	}
 
 }

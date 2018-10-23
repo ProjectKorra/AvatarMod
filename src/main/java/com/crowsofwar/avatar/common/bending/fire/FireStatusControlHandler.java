@@ -7,20 +7,23 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 public class FireStatusControlHandler extends TickHandler {
 
 	private int ticks = 0;
+
+	public FireStatusControlHandler(int id) {
+		super(id);
+	}
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		int duration = data.getTickHandlerDuration(this);
-
 
 		EntityFireball ball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
 		if (ball == null && data.hasStatusControl(StatusControl.THROW_FIREBALL)) {

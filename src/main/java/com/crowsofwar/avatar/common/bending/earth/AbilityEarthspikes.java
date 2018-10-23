@@ -1,21 +1,17 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.EntityEarthspike;
-import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.*;
+
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.gorecore.util.Vector;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.SPAWN_EARTHSPIKES_HANDLER;
 
 public class AbilityEarthspikes extends Ability {
 
@@ -60,6 +56,17 @@ public class AbilityEarthspikes extends Ability {
 			chi = STATS_CONFIG.chiEarthspike * 2;
 			//7
 		}
+		double damage = STATS_CONFIG.earthspikeSettings.damage * 2;
+		//6
+		double size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
+		size += abilityData.getTotalXp() / 400;
+
+		damage += abilityData.getTotalXp() / 400;
+		damage *= ctx.getPowerRatingDamageMod();
+
+		ticks += abilityData.getTotalXp() / 400;
+		speed += abilityData.getTotalXp() / 400;
+		chi -= abilityData.getTotalXp() / 400;
 
 		if (bender.consumeChi(chi)) {
 
@@ -79,12 +86,11 @@ public class AbilityEarthspikes extends Ability {
 			} else {
 				if (entity.onGround) {
 					for (int i = 0; i < 8; i++) {
-						Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-								i * 45), 0).withY(0);
+						Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i * 45), 0).times(1.4).withY(0);
 						EntityEarthspike earthspike = new EntityEarthspike(world);
 						earthspike.setPosition(direction1.x() + entity.posX, entity.posY, direction1.z() + entity.posZ);
-						earthspike.setDamage(STATS_CONFIG.earthspikeSettings.damage * 3);
-						earthspike.setSize(STATS_CONFIG.earthspikeSettings.size * 1.25F);
+						earthspike.setDamage(damage);
+						earthspike.setSize((float) size);
 						earthspike.setOwner(entity);
 						earthspike.setAbility(this);
 						world.spawnEntity(earthspike);
@@ -104,8 +110,10 @@ public class AbilityEarthspikes extends Ability {
 					}
 				}
 			}
-			data.addTickHandler(TickHandler.SPAWN_EARTHSPIKES_HANDLER);
-
+			if (data.hasTickHandler(SPAWN_EARTHSPIKES_HANDLER)) {
+				data.removeTickHandler(SPAWN_EARTHSPIKES_HANDLER);
+			}
+			data.addTickHandler(SPAWN_EARTHSPIKES_HANDLER);
 
 		}
 	}

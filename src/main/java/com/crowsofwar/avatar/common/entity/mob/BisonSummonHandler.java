@@ -16,61 +16,64 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
 
-import java.util.List;
-import java.util.Random;
+import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+
+import java.util.*;
 
 /**
  * @author CrowsOfWar
  */
 public class BisonSummonHandler extends TickHandler {
 
+	public BisonSummonHandler(int id) {
+		super(id);
+	}
+
 	@Override
 	public boolean tick(BendingContext ctx) {
 
 		if (ctx.getWorld().isRemote) return false;
 
-		BendingData data = ctx.getData();
+		//BendingData data = ctx.getData();
 
-		int cooldown = data.getMiscData().getPetSummonCooldown();
-		if (cooldown <= 0) {
+		//int cooldown = data.getMiscData().getPetSummonCooldown();
+		//if (cooldown <= 0) {
 
-			trySummonBison(ctx.getBenderEntity());
-			return true;
+		trySummonBison(ctx.getBenderEntity());
+		return true;
 
-		} else {
+		/*} else {
 
 			data.getMiscData().setPetSummonCooldown(cooldown - 1);
 			return false;
-
-		}
-
+**/
 	}
 
 	private boolean trySummonBison(EntityLivingBase player) {
 
-		List<EntitySkyBison> entities = player.world.getEntities(EntitySkyBison.class,
-				bison -> bison.getOwner() == player);
+		List<EntitySkyBison> entities = player.world.getEntities(EntitySkyBison.class, bison -> bison.getOwner() == player);
 
 		if (!entities.isEmpty()) {
-			EntitySkyBison bison = entities.get(0);
-			Random random = new Random();
 
-			// Find suitable location near player
-			for (int i = 0; i < 5; i++) {
+			for (EntitySkyBison bison : entities) {
+				Random random = new Random();
 
-				double x = player.posX + (random.nextDouble() * 2 - 1) * 15;
-				double y = player.posY + (random.nextDouble() * 2 - 1) * 5;
-				double z = player.posZ + (random.nextDouble() * 2 - 1) * 15;
+				// Find suitable location near player
+				for (int i = 0; i < 5; i++) {
 
-				if (bison.attemptTeleport(x, y, z)) {
-					return true;
+					double x = player.posX + (random.nextDouble() * 2 - 1) * 15;
+					double y = player.posY + (random.nextDouble() * 2 - 1) * 5;
+					double z = player.posZ + (random.nextDouble() * 2 - 1) * 15;
+
+					bison.attemptTeleport(x, y, z);
+					if (bison.attemptTeleport(x, y, z)) {
+						return true;
+					}
+
 				}
-
 			}
 		}
 

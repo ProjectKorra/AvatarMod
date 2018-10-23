@@ -84,6 +84,14 @@ public abstract class BendingStyle implements ReadableWritable {
 	@Nullable
 	private UUID parentBendingId;
 
+
+	//This is so player-specific custom elements can't be used by other players when using commands.
+	//This also means if you aren't the right player, you can't obtain it.
+	//Ex: Eternal Dragonbending is usable by me (FavouriteDragon) only
+	public boolean canEntityUse() {
+		return true;
+	}
+
 	/**
 	 * Constructor used for main bending styles (i.e. non-specialty), like firebending
 	 */

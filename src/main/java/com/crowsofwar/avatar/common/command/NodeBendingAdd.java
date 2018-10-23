@@ -56,16 +56,18 @@ public class NodeBendingAdd extends NodeFunctional {
 		for (BendingStyle controller : controllers) {
 			BendingData data = BendingData.get(world, playerName);
 
-			if (data == null) {
-				MSG_PLAYER_DATA_NO_DATA.send(sender, playerName);
-			} else {
-				if (data.hasBendingId(controller.getId())) {
-					MSG_BENDING_ADD_ALREADY_HAS.send(sender, playerName, controller.getName());
+			if (controller.canEntityUse()) {
+				if (data == null) {
+					MSG_PLAYER_DATA_NO_DATA.send(sender, playerName);
 				} else {
-					data.addBending(controller);
-					MSG_BENDING_ADD_SUCCESS.send(sender, playerName, controller.getName());
-				}
+					if (data.hasBendingId(controller.getId())) {
+						MSG_BENDING_ADD_ALREADY_HAS.send(sender, playerName, controller.getName());
+					} else {
+						data.addBending(controller);
+						MSG_BENDING_ADD_SUCCESS.send(sender, playerName, controller.getName());
+					}
 
+				}
 			}
 		}
 

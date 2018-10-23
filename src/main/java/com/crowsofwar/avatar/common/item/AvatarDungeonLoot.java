@@ -55,7 +55,7 @@ public class AvatarDungeonLoot {
 					new LootItem(AvatarItems.itemScroll, 5).withMetadata(1), //
 					new LootItem(AvatarItems.itemScroll, 5).withMetadata(2), //
 					new LootItem(AvatarItems.itemScroll, 5).withMetadata(3), //
-					new LootItem(AvatarItems.itemScroll, 5).withMetadata(4));
+					new LootItem(AvatarItems.itemScroll, 5).withMetadata(4), new LootItem(AvatarItems.itemScroll, 10).withMetadata(5));
 			addLoot(e, 65, //
 					new LootItem(AvatarItems.itemOstrichEquipment, 10).withMetadata(0),
 					new LootItem(AvatarItems.itemOstrichEquipment, 10).withMetadata(1),
@@ -119,7 +119,6 @@ public class AvatarDungeonLoot {
 			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 20).withMetadata(1)); //Earth
 
 		}
-
 	}
 
 	private static boolean isLootTable(LootTableLoadEvent e, ResourceLocation... names) {
@@ -132,7 +131,6 @@ public class AvatarDungeonLoot {
 	}
 
 	private static void addLoot(LootTableLoadEvent e, int emptyWeight, LootItem... items) {
-
 		String lootPoolName = "custom_avatar_loot_pools";
 		int j = 2;
 		while (e.getTable().getPool(lootPoolName) != null) {

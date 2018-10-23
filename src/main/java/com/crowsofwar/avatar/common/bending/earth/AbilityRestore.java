@@ -7,10 +7,12 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_RESTORE_COOLDOWN;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.RESTORE_COOLDOWN_HANDLER;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.RESTORE_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -44,12 +46,16 @@ public class AbilityRestore extends Ability {
 			chi = STATS_CONFIG.chiBuffLvl4;
 		}
 
-		if (bender.consumeChi(chi)) {
+		if (data.hasTickHandler(RESTORE_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
+			MSG_RESTORE_COOLDOWN.send(entity);
+		}
+
+		if (bender.consumeChi(chi) && !data.hasTickHandler(RESTORE_COOLDOWN_HANDLER)) {
 
 			abilityData.addXp(SKILLS_CONFIG.buffUsed);
 
-			// 3s + 2.5s per level
-			int duration = 60 + 50 * abilityData.getLevel();
+			// 3s + 1.5s per level
+			int duration = ctx.getLevel() > 0 ? 60 + 30 * ctx.getLevel() : 60;
 			int effectLevel = 0;
 			int slownessLevel = abilityData.getLevel() >= 2 ? 1 : 2;
 			int regenLevel = abilityData.getLevel() >= 2 ? 1 : 0;
@@ -64,13 +70,13 @@ public class AbilityRestore extends Ability {
 			entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, duration, slownessLevel));
 
 			if (abilityData.getLevel() >= 1) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, regenLevel));
+				entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, duration, regenLevel));
 			}
 			if (abilityData.getLevel() >= 2) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration, effectLevel));
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, duration));
+				entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH));
 				entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, duration));
 			}
 
@@ -82,34 +88,11 @@ public class AbilityRestore extends Ability {
 			// Ignore warning; we know manager != null if they have the bending style
 			//noinspection ConstantConditions
 			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
+			data.addTickHandler(RESTORE_PARTICLE_SPAWNER);
+			data.addTickHandler(RESTORE_COOLDOWN_HANDLER);
 
 		}
 
-	}
-
-	@Override
-	public int getCooldown(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-
-		int coolDown = 200;
-
-		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-			coolDown = 0;
-		}
-
-		if (ctx.getLevel() == 1) {
-			coolDown = 180;
-		}
-		if (ctx.getLevel() == 2) {
-			coolDown = 160;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 140;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 135;
-		}
-		return coolDown;
 	}
 }
 

@@ -39,7 +39,14 @@ public class ConfigClient {
 	public float chiBarAlpha = 0.5f;
 
 	@Load
-	public float bendingCycleAlpha = 0.5f;
+	public float bendingCycleAlpha = 1f;
+
+	@Load
+	public final boolean displayGetBendingMessage = true;
+	//For some reason if it's not final it won't work
+	//Controls whether or not to show the get bending message
+	//when you press the use bending key
+
 
 	@Load
 	public boolean useCustomParticles = true;
@@ -49,6 +56,15 @@ public class ConfigClient {
 	private Map<String, Integer> nameKeymappings = new HashMap<>();
 	@Load
 	private Map<String, Boolean> nameConflicts = new HashMap<>();
+
+//	@Load
+//	public ShaderSettings shaderSettings = new ShaderSettings();
+
+	@Load
+	public ActiveBendingSettings activeBendingSettings = new ActiveBendingSettings();
+
+	@Load
+	public ChiBarSettings chiBarSettings = new ChiBarSettings();
 
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
@@ -98,6 +114,59 @@ public class ConfigClient {
 		}
 
 		ConfigLoader.save(CLIENT_CONFIG, "avatar/cosmetic.yml");
+	}
+
+	/*public static class ShaderSettings {
+
+		@Load
+		public boolean useSlipstreamShaders = false;
+
+		@Load
+		public boolean useCleanseShaders = true;
+
+		@Load
+		public boolean useRestoreShaders = true;
+
+		@Load
+		public boolean usePurifyShaders = true;
+	}**/
+
+	public static class ActiveBendingSettings {
+
+		@Load
+		public final boolean shouldBendingMenuRender = true;
+		//For some reason if it's not final it won't work
+		//Determines if element menu should render at all
+
+	/*	@Load
+		public final boolean shouldBendingMenuDisappear = true;
+		//For some reason if it's not final it won't work
+		//Makes the menu disappear after the duration- affects chi as well.
+		//Currently unused
+
+		@Load
+		public final int bendingMenuDuration = 200;
+		//If the menu should disappear, how long it should take before disappearing
+		//currently unused
+**/
+
+	}
+
+	public static class ChiBarSettings {
+		@Load
+		public final boolean shouldChibarRender = true;
+
+		@Load
+		public final boolean shouldChiNumbersRender = true;
+/*
+		@Load
+		public final boolean shouldChibarDisappear = true;
+		//Currently unused
+
+		@Load
+		public final int chibarDuration = 200;
+		//Currently unused
+	**/
 	}
 
 }

@@ -20,17 +20,14 @@ package com.crowsofwar.avatar.common.bending.water;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 /**
  * @author CrowsOfWar
@@ -50,25 +47,24 @@ public class StatCtrlThrowWater extends StatusControl {
 		AbilityData abilityData = data.getAbilityData("water_arc");
 
 		int lvl = abilityData.getLevel();
-		double velocity = 16;
+		double velocity = 14;
 
-		if (lvl == 1){
-			velocity = 20;
+		if (lvl == 1) {
+			velocity = 16;
 		}
 		if (lvl == 2) {
-			velocity = 22;
+			velocity = 18;
 		}
 		if (lvl == 3) {
-			velocity = 30;
+			velocity = 22;
 		}
 
-		AxisAlignedBB boundingBox = new AxisAlignedBB(entity.posX - 5, entity.posY - 5, entity.posZ - 5,
-				entity.posX + 5, entity.posY + 5, entity.posZ + 5);
-		List<EntityWaterArc> existing = world.getEntitiesWithinAABB(EntityWaterArc.class, boundingBox,
-				arc -> arc.getOwner() == entity
-						&& arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled);
+		EntityWaterArc arc = AvatarEntity.lookupEntity(ctx.getWorld(), EntityWaterArc.class, //
+				water -> water.getBehavior() instanceof WaterArcBehavior.PlayerControlled
+						&& water.getOwner() == ctx.getBenderEntity());
 
-		for (EntityWaterArc arc : existing) {
+
+		if (arc != null) {
 
 			Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
 					Math.toRadians(entity.rotationPitch));

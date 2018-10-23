@@ -16,13 +16,9 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
-import javafx.scene.effect.Glow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
@@ -32,8 +28,6 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.client.MinecraftForgeClient;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
@@ -76,7 +70,6 @@ public class RenderFireball extends Render<EntityFireball> {
 
 		enableBlend();
 
-		entity.getBrightnessForRender();
 		if (entity.ticksExisted % 3 == 0) {
 			World world = entity.world;
 			AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
@@ -92,7 +85,7 @@ public class RenderFireball extends Render<EntityFireball> {
 		renderCube(x, y, z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
 				.5f, //
-				0, ticks / 25f, 0);
+				ticks / 25F, ticks / 25f, ticks / 25F);
 
 		int i = 15728880;
 		int j = i % 65536;
@@ -102,7 +95,6 @@ public class RenderFireball extends Render<EntityFireball> {
 		//  } else {
 
 		pushMatrix();
-		disableLighting();
 		renderCube(x, y, z, //
 				8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
 				size, //
@@ -110,6 +102,7 @@ public class RenderFireball extends Render<EntityFireball> {
 		popMatrix();
 
 		//  }
+		enableLighting();
 		disableBlend();
 
 	}

@@ -20,7 +20,6 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -28,6 +27,8 @@ import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.BELOW_CROSSHAIR;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_JUMP;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.SMASH_GROUND_WATER;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.WATER_SKATE;
 
 /**
  * @author CrowsOfWar
@@ -42,8 +43,8 @@ public class StatCtrlSkateJump extends StatusControl {
 	public boolean execute(BendingContext ctx) {
 		BendingData data = ctx.getData();
 		EntityLivingBase entity = ctx.getBenderEntity();
-		if (data.hasTickHandler(TickHandler.WATER_SKATE)) {
-			data.removeTickHandler(TickHandler.WATER_SKATE);
+		if (data.hasTickHandler(WATER_SKATE)) {
+			data.removeTickHandler(WATER_SKATE);
 			data.getMiscData().setCanUseAbilities(true);
 
 			Vector velocity = Vector.getLookRectangular(entity).times(1.5);
@@ -56,7 +57,7 @@ public class StatCtrlSkateJump extends StatusControl {
 
 			AbilityData abilityData = data.getAbilityData("water_skate");
 			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
-				data.addTickHandler(TickHandler.SMASH_GROUND_WATER);
+				data.addTickHandler(SMASH_GROUND_WATER);
 			}
 
 		}

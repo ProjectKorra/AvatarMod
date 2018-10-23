@@ -53,6 +53,7 @@ import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 
 import static com.crowsofwar.avatar.AvatarInfo.*;
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
@@ -202,10 +203,10 @@ public class AvatarMod {
 		registerEntity(EntityFireball.class, "Fireball");
 		registerEntity(EntityAirblade.class, "Airblade");
 		registerEntity(EntityAirBubble.class, "AirBubble");
-		registerEntity(EntityFirebender.class, "Firebender", 0xffffff, 0xffffff);
-		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xffffff);
-		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0xffffff);
-		registerEntity(EntityOtterPenguin.class, "OtterPenguin", 0xffffff, 0xffffff);
+		registerEntity(EntityFirebender.class, "Firebender", 0xB0171F, 0xFFFF00);
+		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xDDA0DD);
+		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0x8B5A00);
+		registerEntity(EntityOtterPenguin.class, "OtterPenguin", 0xffffff, 0x104E8B);
 		registerEntity(AvatarEntityItem.class, "Item");
 		registerEntity(EntityIceShield.class, "iceshield");
 		registerEntity(EntityIceShard.class, "iceshard");
@@ -221,18 +222,20 @@ public class AvatarMod {
 		registerEntity(EntitySandstorm.class, "Sandstorm");
 		registerEntity(EntityExplosionSpawner.class, "ExplosionSpawner");
 		registerEntity(EntityBoulder.class, "Boulder");
-		registerEntity(EntityLightningSpawner.class, "LightningSpawnerr");
+		registerEntity(EntityLightningSpawner.class, "LightningSpawner");
+		registerEntity(EntityShockwave.class, "Shockwave");
 
-		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 3, 6, EnumCreatureType.CREATURE, //
-								EXTREME_HILLS, MUTATED_SAVANNA);
-		EntityRegistry.addSpawn(EntityOtterPenguin.class, 4, 5, 9, EnumCreatureType.CREATURE, //
-								COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
-		EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 3, 6, EnumCreatureType.CREATURE, //
-								DESERT, DESERT_HILLS, SAVANNA, SAVANNA_PLATEAU, PLAINS);
+		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 1, 3, EnumCreatureType.CREATURE, SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS,
+								TAIGA_HILLS, ICE_MOUNTAINS, REDWOOD_TAIGA_HILLS, MUTATED_EXTREME_HILLS, MUTATED_EXTREME_HILLS_WITH_TREES,
+								EXTREME_HILLS_WITH_TREES, EXTREME_HILLS_EDGE);
+		EntityRegistry.addSpawn(EntityOtterPenguin.class, 10, 3, 6, EnumCreatureType.CREATURE, COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS,
+								MUTATED_ICE_FLATS);
+		EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 1, 3, EnumCreatureType.CREATURE, DESERT, DESERT_HILLS, SAVANNA, SAVANNA_PLATEAU, PLAINS);
 
-		// Second loading required since other mods blocks might not be
-		// registered
+		// Second loading required since other mod's blocks and items might not be registered
 		STATS_CONFIG.loadBlocks();
+		MOBS_CONFIG.loadLists();
+		ConfigMobs.load();
 
 		proxy.init();
 

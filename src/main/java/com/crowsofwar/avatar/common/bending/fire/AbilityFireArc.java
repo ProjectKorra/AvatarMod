@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -28,11 +27,14 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -68,8 +70,31 @@ public class AbilityFireArc extends Ability {
 
 			removeExisting(ctx);
 
+
+
 			float damageMult = ctx.getLevel() >= 2 ? 2 : 1;
 			damageMult *= ctx.getPowerRatingDamageMod();
+
+			List<Entity> fireArc = Raytrace.entityRaytrace(world, Vector.getEntityPos(entity).withY(entity.getEyeHeight()), Vector.getLookRectangular(entity).times(10), 3,
+					entity1 -> entity1 != entity);
+
+			if (fireArc.isEmpty()) {
+				if (ctx.getLevel() >= 2) {
+					for (Entity a : fireArc) {
+						if (a instanceof AvatarEntity) {
+							if (((AvatarEntity) a).getOwner() != entity) {
+								if (a instanceof EntityFireArc) {
+									((EntityFireArc) a).setOwner(entity);
+									((EntityFireArc) a).setBehavior(new FireArcBehavior.PlayerControlled());
+									((EntityFireArc) a).setAbility(this);
+									((EntityFireArc) a).setPosition(Vector.getLookRectangular(entity).times(1.5F));
+									((EntityFireArc) a).setDamageMult(damageMult);
+								}
+							}
+						}
+					}
+				}
+			}
 
 			EntityFireArc fire = new EntityFireArc(world);
 			if (lookPos != null) {

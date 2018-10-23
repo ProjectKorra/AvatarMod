@@ -36,6 +36,8 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
+import java.io.File;
+
 @Mod(modid = GoreCore.MOD_ID, name = GoreCore.MOD_NAME, version = GoreCore.MOD_VERSION)
 public class GoreCore {
 	
@@ -57,15 +59,16 @@ public class GoreCore {
 		config = new GoreCoreModConfig(event);
 		ConverterRegistry.addDefaultConverters();
 		
-		AccountUUIDs.readCache();
+		File oldFile = GoreCore.proxy.getUUIDCacheFile();
+		if (oldFile.exists()) {
+			// We don't need a cache anymore
+			oldFile.delete();
+		}
 		GoreCoreChatMessages.register();
 		
 		proxy.sideSpecifics();
 		
 		ChatSender.load();
-		
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> AccountUUIDs.saveCache()));
-		
 	}
 	
 	@EventHandler

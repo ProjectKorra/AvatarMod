@@ -1,21 +1,19 @@
 package com.crowsofwar.avatar.common.bending.water;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 
 public class WaterSmashHandler extends SmashGroundHandler {
-	@Override
-	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {
-		super.smashEntity(target, entity);
 
+	public WaterSmashHandler(int id) {
+		super(id);
 	}
 
 	@Override
-	protected int getNumberOfParticles() {
+	protected int getParticleAmount() {
 		return 10;
 	}
 
@@ -30,22 +28,27 @@ public class WaterSmashHandler extends SmashGroundHandler {
 	}
 
 	@Override
-	protected float getParticleSpeed() {
-		return 0.2F;
+	protected double getParticleSpeed() {
+		return 3;
 	}
 
 	@Override
 	protected float getDamage() {
-		return 4;
+		return 3.75F;
 	}
 
 	@Override
 	protected float getKnockbackHeight() {
-		return 0.5F;
+		return 0.1F;
 	}
 
 	@Override
 	protected double getSpeed() {
 		return 6;
+	}
+
+	@Override
+	protected Ability getAbility() {
+		return new AbilityWaterSkate();
 	}
 }

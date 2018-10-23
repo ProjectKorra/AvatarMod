@@ -37,6 +37,13 @@ public class BattlePerformanceScore {
 		this.score = score;
 	}
 
+	public static void addScore(EntityLivingBase entity, int amount) {
+		BendingData bendingData = BendingData.get(entity);
+		if (bendingData != null) {
+			bendingData.getPerformance().modifyScore(amount);
+		}
+	}
+
 	public static void addSmallScore(EntityLivingBase entity) {
 		BendingData bendingData = BendingData.get(entity);
 		if (bendingData != null) {
@@ -92,7 +99,7 @@ public class BattlePerformanceScore {
 	 * Add or subtract a certain amount of score from the bender.
 	 */
 	public void modifyScore(double amount) {
-		setScore(MathHelper.clamp(score + amount, -100, 100));
+		setScore(MathHelper.clamp(score + amount, -500, 500));
 	}
 
 	/**

@@ -39,9 +39,12 @@ import static java.lang.Math.toRadians;
  */
 public class FlamethrowerUpdateTick extends TickHandler {
 
+	public FlamethrowerUpdateTick(int id) {
+		super(id);
+	}
+
 	@Override
 	public boolean tick(BendingContext ctx) {
-
 		BendingData data = ctx.getData();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();

@@ -29,27 +29,48 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 
 	protected abstract String getAbilityName();
 
+	/*private boolean useSlipstreamShaders = CLIENT_CONFIG.shaderSettings.useSlipstreamShaders;
+
+	private boolean useCleanseShaders = CLIENT_CONFIG.shaderSettings.useCleanseShaders;
+
+	private boolean useRestoreShaders = CLIENT_CONFIG.shaderSettings.useRestoreShaders;
+
+	private boolean usePurifyShaders = CLIENT_CONFIG.shaderSettings.usePurifyShaders;**/
+
 	private Vision getVision(BendingContext ctx) {
 
 		AbilityData abilityData = ctx.getData().getAbilityData(getAbilityName());
+
 		switch (abilityData.getLevel()) {
 			case -1:
 			case 0:
 			case 1:
-				return getVisions()[0];
+				if (getVisions()[0] != null) {
+					return getVisions()[0];
+				}
 			case 2:
-				return getVisions()[1];
+				if (getVisions()[1] != null) {
+					return getVisions()[1];
+				}
 			case 3:
 			default:
-				return getVisions()[2];
+				if (getVisions()[2] != null) {
+					return getVisions()[2];
+				}
+				else return getVisions()[0];
 		}
 
+
 	}
+
 
 	@Override
 	public boolean onUpdate(BendingContext ctx) {
 		if (ctx.getData().getVision() == null) {
-			ctx.getData().setVision(getVision(ctx));
+			if (getVision(ctx) != null && getVisions()[0] != null && getVisions()[1] != null && getVisions()[2] != null) {
+				ctx.getData().setVision(getVision(ctx));
+			}
+
 		}
 		return super.onUpdate(ctx);
 	}
@@ -58,10 +79,12 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 	public void onRemoval(BendingContext ctx) {
 		Vision[] visions = getVisions();
 		Vision vision = ctx.getData().getVision();
-		if (vision == visions[0] || vision == visions[1] || vision == visions[2]) {
-			ctx.getData().setVision(null);
+		if (vision != null && visions != null) {
+			if (vision == visions[0] || vision == visions[1] || vision == visions[2]) {
+				ctx.getData().setVision(null);
+			}
+			super.onRemoval(ctx);
 		}
-		super.onRemoval(ctx);
 	}
 
 }

@@ -97,7 +97,7 @@ public class Vector {
 	 * @param entity The entity to use
 	 */
 	public Vector(Entity entity) {
-		this(entity.posX, entity.posY, entity.posZ);
+		this(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
 	}
 
 	/**

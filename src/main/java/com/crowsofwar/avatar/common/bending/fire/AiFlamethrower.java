@@ -20,14 +20,13 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
+import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAMETHROWER;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
@@ -43,7 +42,17 @@ public class AiFlamethrower extends BendingAi {
 	}
 
 	@Override
+	public void resetTask() {
+		super.resetTask();
+		bender.getData().removeStatusControl(StatusControl.START_FLAMETHROW);
+		bender.getData().removeTickHandler(FLAMETHROWER);
+		bender.getData().addStatusControl(StatusControl.STOP_FLAMETHROW);
+	}
+
+	@Override
 	public boolean shouldContinueExecuting() {
+
+
 
 		if (entity.getAttackTarget() == null) return false;
 
@@ -60,13 +69,15 @@ public class AiFlamethrower extends BendingAi {
 
 		}
 
-		if (timeExecuting > 20) {
+		if (timeExecuting > 20 && timeExecuting < 60) {
 			BendingContext ctx = new BendingContext(bender.getData(), entity, bender, new Raytrace.Result());
-			TickHandler.FLAMETHROWER.tick(ctx);
+			FLAMETHROWER.tick(ctx);
 		}
-		if (timeExecuting >= 80) {
-			BendingData data = bender.getData();
+		if (timeExecuting >= 60) {
+			bender.getData().removeStatusControl(StatusControl.START_FLAMETHROW);
+			bender.getData().removeTickHandler(FLAMETHROWER);
 			execStatusControl(StatusControl.STOP_FLAMETHROW);
+
 			return false;
 		}
 

@@ -77,7 +77,7 @@ public class AnimalCondition {
 			distance = lastDistance;
 		}
 		float diff = distance - lastDistance;
-		addHunger(diff * 0.1f);
+		addHunger(diff * 0.05f);
 
 		lastDistance = distance;
 
@@ -211,7 +211,8 @@ public class AnimalCondition {
 	}
 
 	public float getSizeMultiplier() {
-		return isAdult() ? 1 : 0.1f + getAgeDays() / getAdultAge() * 0.9f;
+		float adultSize = getAgeDays() < 5 ? getAgeDays() / getAdultAge() : 1.666777f;
+		return isAdult() ? adultSize : 0.1f + getAgeDays() / getAdultAge() * 0.9f;
 	}
 
 	public boolean isAdult() {

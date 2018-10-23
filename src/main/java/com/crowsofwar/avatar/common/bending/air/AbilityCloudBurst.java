@@ -12,8 +12,6 @@ import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -37,7 +35,7 @@ public class AbilityCloudBurst extends Ability {
 
 		if (data.hasStatusControl(StatusControl.THROW_CLOUDBURST)) return;
 
-		float chi  = STATS_CONFIG.chiCloudburst;
+		float chi = STATS_CONFIG.chiCloudburst;
 		//2.5F
 
 		if (ctx.getLevel() == 1) {
@@ -67,36 +65,36 @@ public class AbilityCloudBurst extends Ability {
 			}
 
 			double damage = STATS_CONFIG.cloudburstSettings.damage;
-			//1.5
+			//2
 			EntityCloudBall cloudball = new EntityCloudBall(world);
 
-			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 				cloudball.setSize(20);
 				damage = STATS_CONFIG.cloudburstSettings.damage * 4;
-				//6
+				//8
 				cloudball.canchiSmash(true);
 			}
-			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				damage = STATS_CONFIG.cloudburstSettings.damage * 2;
-				//3
+				//4
 				cloudball.canAbsorb(true);
 			}
 			if (ctx.getLevel() == 1) {
 				damage = STATS_CONFIG.cloudburstSettings.damage * 1.5;
-				//2.25
+				//3
 			}
 
 			if (ctx.getLevel() == 2) {
 				damage = STATS_CONFIG.cloudburstSettings.damage * 2.25;
-				//3.375
+				//4.5
 			}
 
 			damage *= ctx.getPowerRatingDamageMod();
+			damage += ctx.getAbilityData().getTotalXp() / 800;
 
 
 			cloudball.setPosition(target);
 			cloudball.setOwner(entity);
-			cloudball.setStartingPosition(entity.getPosition());
 			cloudball.setBehavior(new CloudburstBehavior.PlayerControlled());
 			cloudball.setDamage((float) damage);
 			cloudball.setAbility(this);

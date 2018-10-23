@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.client.render;
 import com.crowsofwar.avatar.common.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.EntityWave;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -32,7 +31,6 @@ public class RenderWave extends RenderModel<EntityWave> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/entity/wave.png");
-	private ModelBase model;
 
 	/**
 	 * @param renderManager
@@ -40,7 +38,6 @@ public class RenderWave extends RenderModel<EntityWave> {
 	public RenderWave(RenderManager renderManager) {
 
 		super(renderManager, new ModelWave());
-		this.model = new ModelWave();
 	}
 
 	@Override

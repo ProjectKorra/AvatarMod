@@ -53,6 +53,7 @@ public class BendingData {
 	private MiscData miscData;
 	private Map<UUID, PowerRatingManager> powerRatingManagers;
 	private Vision vision;
+
 	/**
 	 * Create a new BendingData
 	 *
@@ -499,7 +500,7 @@ public class BendingData {
 	}
 
 	public void setMiscData(MiscData md) {
-		this.miscData = md;
+		miscData = md;
 	}
 
 	public void writeToNbt(NBTTagCompound writeTo) {
@@ -532,7 +533,9 @@ public class BendingData {
 		chi().writeToNBT(writeTo);
 
 		AvatarUtils.writeList(tickHandlers,
-				(nbt, handler) -> nbt.setInteger("Id", handler.id()),
+				(nbt, handler) -> {
+					if (handler != null && nbt != null) nbt.setInteger("Id", handler.id());
+				},
 				writeTo,
 				"TickHandlers");
 
@@ -588,8 +591,9 @@ public class BendingData {
 		chi().readFromNBT(readFrom);
 
 		AvatarUtils.readList(tickHandlers, //
-				nbt -> TickHandler.fromId(nbt.getInteger("Id")), //
-				readFrom, "TickHandlers");
+				nbt -> {
+					return TickHandlerController.fromId(nbt.getInteger("Id"));
+				}, readFrom, "TickHandlers");
 
 		for (TickHandler tickHandler : tickHandlers) {
 			tickHandlerDuration.putIfAbsent(tickHandler, 0);

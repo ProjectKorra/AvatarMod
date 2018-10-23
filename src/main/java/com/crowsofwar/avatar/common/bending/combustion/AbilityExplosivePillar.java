@@ -30,17 +30,14 @@ public class AbilityExplosivePillar extends Ability {
 		if (bender.consumeChi(chi)) {
 			EntityExplosionSpawner spawner = new EntityExplosionSpawner(world);
 			Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-			double mult = ctx.getLevel() >= 0.5 ? 7 : 4;
-			if (abilityData.getLevel() <= 0) {
+			double mult = ctx.getLevel() >= 1 ? 10 : 8;
 				spawner.setOwner(entity);
 				spawner.setExplosionFrequency(10F);
 				spawner.setExplosionStrength(1F);
 				spawner.setPosition(entity.posX, entity.posY, entity.posZ);
 				spawner.setVelocity(look.times(mult));
 				spawner.maxTicks(ticks);
-				data.getAbilityData("explosive_pillar").addXp(xp);
 
-			}
 			if (abilityData.getLevel() == 1) {
 				spawner.setOwner(entity);
 				spawner.setExplosionFrequency(8F);
@@ -69,6 +66,7 @@ public class AbilityExplosivePillar extends Ability {
 				spawner.setVelocity(look.times(mult));
 				spawner.maxTicks(ticks * 2.5F);
 			}
+			data.getAbilityData("explosive_pillar").addXp(xp);
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 
 				for (int i = 0; i < 3; i++) {

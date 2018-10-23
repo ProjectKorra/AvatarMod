@@ -50,7 +50,6 @@ import java.util.Random;
 import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> {
 
@@ -77,12 +76,12 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	public EntityWaterArc(World world) {
 		super(world);
+		this.Size = 0.4F;
 		setSize(Size, Size);
 		this.lastPlayedSplash = -1;
 		this.damageMult = 1;
 		this.putsOutFires = true;
-		this.Size = 0.4F;
-		this.Gravity = 9.81F;
+		this.Gravity = 9.82F;
 
 	}
 
@@ -99,7 +98,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	public void setSize(float size) {
-		dataManager.set(SYNC_SIZE, Size);
+		dataManager.set(SYNC_SIZE, size);
 	}
 
 	public float getSize() {
@@ -114,9 +113,10 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.Gravity = gravity;
 	}
 
-	public void setStartingPosition (BlockPos position) {
+	public void setStartingPosition(BlockPos position) {
 		this.position = position;
 	}
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -124,6 +124,12 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		dataManager.register(SYNC_SIZE, Size);
 	}
 
+	@Override
+	protected void updateCpBehavior() {
+		super.updateCpBehavior();
+		getControlPoint(0).setPosition(this.position());
+		getLeader().setPosition(this.position().plusY(getSize()/8));
+	}
 
 	public void damageEntity(Entity entity) {
 		if (canDamageEntity(entity)) {
@@ -144,40 +150,54 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	public void Splash() {
 		if (world instanceof WorldServer) {
+
+			float speed = 0.025F;
+			float hitBox = 0.5F;
+			int numberOfParticles = 500;
+
+			if (getAbility() instanceof AbilityWaterArc) {
+				AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("water_arc");
+				int lvl = abilityData.getLevel();
+				this.damageMult = lvl >= 2 ? 2 : 0.5F;
+				//If the player's water arc level is level III or greater the aoe will do 2+ damage.
+				hitBox = lvl <= 0 ? 0.5F : 0.5f * (lvl + 1);
+				speed = lvl <= 0 ? 0.025F : 0.025F * (lvl + 1);
+				numberOfParticles = lvl <= 0 ? 500 : 500 + 100 * lvl;
+			} else this.damageMult = 0.5f;
+
+
 			WorldServer World = (WorldServer) this.world;
-			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 500, 0.2, 0.1, 0.2, 0.03);
+			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, numberOfParticles, 0.2, 0.1, 0.2, speed);
 			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(1, 1, 1),
 					entity -> entity != getOwner());
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
-					if (getAbility() instanceof AbilityWaterArc) {
-						AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("water_arc");
-						int lvl = abilityData.getLevel();
-						this.damageMult = lvl >= 2 ? 2 : 0.5F;
-						//If the player's water arc level is level III or greater the aoe will do 2+ damage.
+					if (entity != getOwner() && entity != null && getOwner() != null) {
+
+
+						Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
+						double distance = Vector.getEntityPos(entity).dist(Vector.getEntityPos(this));
+						double direction = (hitBox - distance) * (speed * 5) / hitBox;
+						velocity = velocity.times(direction).times(-1 + (-1 * hitBox / 2)).withY(speed / 2);
+
+						double x = (velocity.x());
+						double y = (velocity.y()) > 0 ? velocity.y() : 0.25F;
+						double z = (velocity.z());
+						entity.addVelocity(x, y, z);
+						if (canDamageEntity(entity)) {
+							damageEntity(entity);
+						}
+						BattlePerformanceScore.addSmallScore(getOwner());
+
+						if (entity instanceof AvatarEntity) {
+							AvatarEntity avent = (AvatarEntity) entity;
+							avent.addVelocity(x, y, z);
+						}
+						entity.isAirBorne = true;
+						AvatarUtils.afterVelocityAdded(entity);
 					}
-					else this.damageMult = 0.5f;
-
-
-					double mult = -0.5;
-					double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
-
-					Vector vel = position().minus(getEntityPos(entity));
-					vel = vel.normalize().times(mult).plusY(0.15f);
-
-					entity.motionX = vel.x() * (BendingData.get(getOwner()).getAbilityData("water_arc").getLevel() + 1) + 0.1/distanceTravelled;
-					entity.motionY = vel.y() * (BendingData.get(getOwner()).getAbilityData("water_arc").getLevel() + 1) > 0 ? vel.y() * (BendingData.get(getOwner()).getAbilityData("water_arc").getLevel() + 1) + 0.1/distanceTravelled : 0.15F + 0.1/distanceTravelled;
-					entity.motionZ = vel.z() * (BendingData.get(getOwner()).getAbilityData("water_arc").getLevel() + 1) + 0.1/distanceTravelled;;
-					damageEntity(entity);
-					BattlePerformanceScore.addMediumScore(getOwner());
-
-					if (entity instanceof AvatarEntity) {
-						AvatarEntity avent = (AvatarEntity) entity;
-						avent.setVelocity(vel);
-					}
-					entity.isAirBorne = true;
-					AvatarUtils.afterVelocityAdded(entity);
 				}
 			}
 
@@ -187,7 +207,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	@Override
 	public boolean onCollideWithSolid() {
-		if (isSpear) {
+		if (isSpear && getBehavior() != null && getBehavior() instanceof WaterArcBehavior.Thrown) {
 			breakCollidingBlocks();
 			Splash();
 			setDead();
@@ -202,12 +222,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			cleanup();
 
 
-
 			if (world.isRemote) {
 				Random random = new Random();
 
-				double xVel = 0, yVel = 0, zVel = 0;
-				double offX = 0, offY = 0, offZ = 0;
+				double xVel, yVel, zVel;
+				double offX, offY, offZ;
 
 				if (collidedVertically) {
 
@@ -251,14 +270,9 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 		if (entity instanceof AvatarEntity && getBehavior() instanceof WaterArcBehavior.Thrown && ((AvatarEntity) entity).getOwner() != getOwner()) {
 			((AvatarEntity) entity).onMinorWaterContact();
-		}
-		if (!isSpear && getBehavior() instanceof WaterArcBehavior.Thrown) {
-			Splash();
-			this.setDead();
-			cleanup();
 		}
 
 
@@ -288,6 +302,23 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		if (getOwner() == null) {
 			this.setDead();
 		}
+		setSize(getSize()/2, getSize()/2);
+
+		if (getBehavior() != null && getBehavior() instanceof WaterArcBehavior.PlayerControlled) {
+			this.velocityMultiplier = 4;
+			this.setStartingPosition(this.getPosition());
+		}
+
+		if (getAbility() instanceof AbilityWaterArc && !world.isRemote && getOwner() != null) {
+			if (getBehavior() != null && getBehavior() instanceof WaterArcBehavior.Thrown) {
+				AbilityData aD = AbilityData.get(getOwner(), "water_arc");
+				int lvl = aD.getLevel();
+				this.velocityMultiplier = lvl >= 1 ? 8 + (2 * lvl) : 8;
+			}
+		} else if (getBehavior() != null && getBehavior() instanceof WaterArcBehavior.Thrown) {
+			this.velocityMultiplier = 8;
+		}
+
 
 		if (getOwner() != null) {
 			EntityWaterArc arc = AvatarEntity.lookupControlledEntity(world, EntityWaterArc.class, getOwner());
@@ -332,14 +363,16 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	public void cleanup() {
 		if (getOwner() != null) {
-			BendingData data = Bender.get(getOwner()).getData();
-			data.removeStatusControl(THROW_WATER);
+			BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
+			if (data != null) {
+				data.removeStatusControl(THROW_WATER);
+			}
 		}
 	}
 
 	public static class WaterControlPoint extends ControlPoint {
 
-		public WaterControlPoint(EntityArc arc, float size, double x, double y, double z) {
+		private WaterControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);
 		}
 
@@ -369,7 +402,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	 * Assuming the waterarc can break blocks, tries to break the block.
 	 */
 	private void tryBreakBlock(IBlockState state, BlockPos pos) {
-		if (state.getBlock() == Blocks.AIR) {
+		if (state.getBlock() == Blocks.AIR || !STATS_CONFIG.waterArcBreakableBlocks.contains(state.getBlock())) {
 			return;
 		}
 

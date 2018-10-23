@@ -45,11 +45,9 @@ public class StatCtrlThrowCloudBall extends StatusControl {
 		EntityCloudBall cloudBall = AvatarEntity.lookupControlledEntity(world, EntityCloudBall.class, entity);
 
 		if (cloudBall != null) {
-			cloudBall.addVelocity(cloudBall.velocity().dividedBy(-1));
-			cloudBall.addVelocity(Vector.getLookRectangular(entity).times(speed).times(2));
-			//Necessary so that you can't increase speed by moving your mouse really fast; additionally,
-			//using setVelocity sometimes makes the cloudburst go invisible. Weird.
 			cloudBall.setBehavior(new CloudburstBehavior.Thrown());
+			cloudBall.setVelocity(Vector.getLookRectangular(entity).times(speed).times(2));
+			//ctx.getData().addTickHandler(AIR_STATCTRL_HANDLER);
 		}
 
 		return true;

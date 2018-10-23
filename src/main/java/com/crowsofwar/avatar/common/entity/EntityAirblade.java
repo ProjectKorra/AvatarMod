@@ -18,6 +18,8 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -63,6 +65,16 @@ public class EntityAirblade extends AvatarEntity {
 	}
 
 	@Override
+	public BendingStyle getElement() {
+		return new Airbending();
+	}
+
+	@Override
+	public boolean canCollideWith(Entity entity) {
+		return super.canCollideWith(entity) && entity != getOwner();
+	}
+
+	@Override
 	public void onUpdate() {
 
 		super.onUpdate();
@@ -74,12 +86,16 @@ public class EntityAirblade extends AvatarEntity {
 		if (!world.isRemote && velocity().sqrMagnitude() <= .9) {
 			setDead();
 		}
+
+		if (this.ticksExisted > 200) {
+			this.setDead();
+		}
 		if (!world.isRemote && inWater) {
 			setDead();
 		}
 
 		if (!world.isRemote && chopBlocksThreshold >= 0 && this.collidedHorizontally) {
-				breakCollidingBlocks();
+			breakCollidingBlocks();
 
 		}
 
@@ -102,51 +118,55 @@ public class EntityAirblade extends AvatarEntity {
 	}
 
 	private void handleCollision(EntityLivingBase collided) {
-
-		DamageSource source = AvatarDamageSource.causeAirbladeDamage(collided, getOwner());
-		if (pierceArmor) {
-			source.setDamageBypassesArmor();
-		}
-		boolean successfulHit = collided.attackEntityFrom(source, damage);
-
 		Vector motion = velocity();
 		motion = motion.times(STATS_CONFIG.airbladeSettings.push).withY(0.08);
 		collided.addVelocity(motion.x(), motion.y(), motion.z());
 
-		if (getOwner() != null) {
-			BendingData data = getOwnerBender().getData();
-			data.getAbilityData("airblade").addXp(SKILLS_CONFIG.airbladeHit);
-		}
+		if (canDamageEntity(collided)) {
 
-		if (successfulHit) {
-			BattlePerformanceScore.addMediumScore(getOwner());
-		}
 
-		if (chainAttack) {
-			if (successfulHit) {
-
-				AxisAlignedBB aabb = getEntityBoundingBox().grow(10);
-				Predicate<EntityLivingBase> notFriendly =//
-						entity -> entity != collided && entity != getOwner();
-
-				List<EntityLivingBase> nextTargets = world.getEntitiesWithinAABB
-						(EntityLivingBase.class, aabb, notFriendly);
-
-				nextTargets.sort(AvatarUtils.getSortByDistanceComparator
-						(this::getDistance));
-
-				if (!nextTargets.isEmpty()) {
-					EntityLivingBase nextTarget = nextTargets.get(0);
-					Vector direction = Vector.getEntityPos(nextTarget).minus(this.position());
-					setVelocity(direction.normalize().times(velocity().magnitude() *
-							0.5));
-				}
-
+			DamageSource source = AvatarDamageSource.causeAirbladeDamage(collided, getOwner());
+			if (pierceArmor) {
+				source.setDamageBypassesArmor();
 			}
-		} else if (!world.isRemote) {
-			setDead();
-		}
 
+			boolean successfulHit = collided.attackEntityFrom(source, damage);
+
+			if (getOwner() != null) {
+				BendingData data = getOwnerBender().getData();
+				data.getAbilityData("airblade").addXp(SKILLS_CONFIG.airbladeHit);
+			}
+
+			if (successfulHit) {
+				BattlePerformanceScore.addMediumScore(getOwner());
+			}
+
+			if (chainAttack) {
+				if (successfulHit) {
+
+					AxisAlignedBB aabb = getEntityBoundingBox().grow(10);
+					Predicate<EntityLivingBase> notFriendly =//
+							entity -> entity != collided && entity != getOwner();
+
+					List<EntityLivingBase> nextTargets = world.getEntitiesWithinAABB
+							(EntityLivingBase.class, aabb, notFriendly);
+
+					nextTargets.sort(AvatarUtils.getSortByDistanceComparator
+							(this::getDistance));
+
+					if (!nextTargets.isEmpty()) {
+						EntityLivingBase nextTarget = nextTargets.get(0);
+						Vector direction = Vector.getEntityPos(nextTarget).minus(this.position());
+						setVelocity(direction.normalize().times(velocity().magnitude() *
+								0.5));
+					}
+
+				}
+			} else if (!world.isRemote) {
+				setDead();
+			}
+
+		}
 	}
 
 	/**
@@ -191,10 +211,6 @@ public class EntityAirblade extends AvatarEntity {
 		}
 	}
 
-	@Override
-	public void setDead() {
-		super.setDead();
-	}
 
 	public Bender getOwnerBender() {
 		return Bender.get(getOwner());

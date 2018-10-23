@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -31,8 +33,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
@@ -57,6 +62,11 @@ public class EntityFlames extends AvatarEntity {
 		setSize(0.1f, 0.1f);
 	}
 
+	@Override
+	public BendingStyle getElement() {
+		return new Firebending();
+	}
+
 	public EntityFlames(World world, EntityLivingBase owner) {
 		this(world);
 		this.owner = owner;
@@ -76,7 +86,7 @@ public class EntityFlames extends AvatarEntity {
 	}
 
 	@Override
-	protected void onCollideWithEntity(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 		if (entity instanceof AvatarEntity) {
 			((AvatarEntity) entity).onFireContact();
 		}
@@ -96,7 +106,7 @@ public class EntityFlames extends AvatarEntity {
 				true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
-			setVelocity(velocity().reflect(new Vector(sideHit)).times(0.5));
+			setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.5));
 
 			// Try to light firest
 			if (lightsFires && sideHit != EnumFacing.DOWN && !world.isRemote) {
@@ -124,7 +134,7 @@ public class EntityFlames extends AvatarEntity {
 
 			for (Entity entity : collided) {
 
-				entity.setFire((int) (3 * 1 + abilityData.getTotalXp() / 100f));
+				entity.setFire((int) (3F * 1 + abilityData.getTotalXp() / 100f));
 
 				// Add extra damage
 				// Adding 0 since even though this doesn't affect health, will
@@ -176,6 +186,12 @@ public class EntityFlames extends AvatarEntity {
 
 	public void setDamageMult(double damageMult) {
 		this.damageMult = damageMult;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isInRangeToRenderDist(double distance) {
+		return true;
 	}
 
 }

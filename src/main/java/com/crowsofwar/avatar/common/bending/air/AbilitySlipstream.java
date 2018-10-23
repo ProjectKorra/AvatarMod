@@ -7,10 +7,13 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
+import java.util.Objects;
+
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SLIPSTREAM_COOLDOWN;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.SLIPSTREAM_COOLDOWN_HANDLER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -42,11 +45,15 @@ public class AbilitySlipstream extends Ability {
 			chi = STATS_CONFIG.chiBuffLvl4;
 		}
 
-		if (bender.consumeChi(chi)) {
+		if (data.hasTickHandler(SLIPSTREAM_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
+			MSG_SLIPSTREAM_COOLDOWN.send(entity);
+		}
+
+		if (bender.consumeChi(chi) && !data.hasTickHandler(SLIPSTREAM_COOLDOWN_HANDLER)) {
 			float xp = SKILLS_CONFIG.buffUsed;
 
 			// 4s base + 1s per level
-			int duration = 80 + 20 * abilityData.getLevel();
+			int duration = abilityData.getLevel() > 0 ? 80 + 20 * abilityData.getLevel() : 80;
 
 			int effectLevel = abilityData.getLevel() >= 2 ? 1 : 0;
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
@@ -66,35 +73,14 @@ public class AbilitySlipstream extends Ability {
 
 			SlipstreamPowerModifier modifier = new SlipstreamPowerModifier();
 			modifier.setTicks(duration);
-			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
+			Objects.requireNonNull(data.getPowerRatingManager(getBendingId())).addModifier(modifier, ctx);
+			data.addTickHandler(SLIPSTREAM_COOLDOWN_HANDLER);
 
 		}
+
 
 	}
 
-	@Override
-	public int getCooldown(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-		int coolDown = 160;
-
-		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-			coolDown = 0;
-		}
-
-		if (ctx.getLevel() == 1) {
-			coolDown = 140;
-		}
-		if (ctx.getLevel() == 2) {
-			coolDown = 120;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 100;
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 100;
-		}
-		return coolDown;
-	}
 }
 
 

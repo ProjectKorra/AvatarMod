@@ -16,12 +16,13 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
-
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 
 /**
@@ -29,26 +30,8 @@ import net.minecraft.util.SoundEvent;
  */
 public class FireSmashGroundHandler extends SmashGroundHandler {
 
-	@Override
-	protected void smashEntity(EntityLivingBase target, EntityLivingBase entity) {
-		super.smashEntity(target, entity);
-		entity.world.playSound(null, target.posX, target.posY, target.posZ,
-				SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 1, 1);
-	}
-
-	@Override
-	protected double getRange() {
-		return 2;
-	}
-
-	@Override
-	protected SoundEvent getSound() {
-		return SoundEvents.ITEM_FIRECHARGE_USE;
-	}
-
-	@Override
-	protected int getNumberOfParticles() {
-		return 10;
+	public FireSmashGroundHandler(int id) {
+		super(id);
 	}
 
 	@Override
@@ -57,17 +40,60 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 	}
 
 	@Override
-	protected float getParticleSpeed() {
-		return 0.1F;
+	protected int getParticleAmount() {
+		return 4;
+	}
+
+	@Override
+	protected int getPerformanceAmount() {
+		return 7;
+	}
+
+	@Override
+	protected double getRange() {
+		return 3;
+	}
+
+	@Override
+	protected double getParticleSpeed() {
+		return 1.5;
+	}
+
+	@Override
+	protected SoundEvent getSound() {
+		return SoundEvents.ITEM_FIRECHARGE_USE;
 	}
 
 	@Override
 	protected float getKnockbackHeight() {
-		return 0.25F;
+		return 0.075F;
 	}
 
 	@Override
 	protected double getSpeed() {
-		return 2;
+		return 3.5;
+	}
+
+	@Override
+	protected Ability getAbility() {
+		return new AbilityFireJump();
+	}
+
+	@Override
+	protected boolean isFire() {
+		return true;
+	}
+
+	@Override
+	protected int fireTime() {
+		return 5;
+	}
+
+	@Override
+	protected void smashEntity(EntityLivingBase entity) {
+		Block currentBlock = entity.world.getBlockState(entity.getPosition()).getBlock();
+		if (currentBlock == Blocks.AIR) {
+			super.smashEntity(entity);
+		}
 	}
 }

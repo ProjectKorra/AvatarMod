@@ -57,15 +57,17 @@ public class NodeBendingRemove extends NodeFunctional {
 
 		for (BendingStyle controller : controllers) {
 			BendingData data = BendingData.get(world, playerName);
-			if (data == null) {
-				MSG_PLAYER_DATA_NO_DATA.send(sender, playerName);
-			} else {
-
-				if (data.hasBending(controller)) {
-					data.removeBending(controller);
-					MSG_BENDING_REMOVE_SUCCESS.send(sender, playerName, controller.getName());
+			if (controller.canEntityUse()) {
+				if (data == null) {
+					MSG_PLAYER_DATA_NO_DATA.send(sender, playerName);
 				} else {
-					MSG_BENDING_REMOVE_DOESNT_HAVE.send(sender, playerName, controller.getName());
+
+					if (data.hasBending(controller)) {
+						data.removeBending(controller);
+						MSG_BENDING_REMOVE_SUCCESS.send(sender, playerName, controller.getName());
+					} else {
+						MSG_BENDING_REMOVE_DOESNT_HAVE.send(sender, playerName, controller.getName());
+					}
 				}
 			}
 		}

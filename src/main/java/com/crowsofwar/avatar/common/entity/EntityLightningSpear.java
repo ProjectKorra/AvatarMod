@@ -17,13 +17,20 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
+import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -34,12 +41,15 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.Explosion;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -49,10 +59,12 @@ public class EntityLightningSpear extends AvatarEntity {
 	private static final DataParameter<LightningSpearBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityLightningSpear.class, LightningSpearBehavior.DATA_SERIALIZER);
 
-	private static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityLightningSpear.class,
-			DataSerializers.VARINT);
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityLightningSpear.class,
+			DataSerializers.FLOAT);
 
-	private AxisAlignedBB expandedHitbox;
+	private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityLightningSpear.class,
+			DataSerializers.FLOAT);
+
 
 	private float damage;
 
@@ -72,19 +84,36 @@ public class EntityLightningSpear extends AvatarEntity {
 	 */
 	private LightningFloodFill floodFill;
 
+	private BlockPos position;
+
+	private float Size;
+
+	private float degreesPerSecond;
+
+	private ParticleSpawner particleSpawner;
+
 	/**
 	 * @param world
 	 */
 	public EntityLightningSpear(World world) {
 		super(world);
-		setSize(.8f, .8f);
+		this.Size = 0.8F;
+		this.degreesPerSecond = 400;
+		setSize(Size, Size);
+		this.damage = 3F;
+		this.piercing = false;
+		this.setInvisible(false);
+		this.position = this.position().toBlockPos();
+		this.particleSpawner = new NetworkParticleSpawner();
+
 	}
 
 	@Override
 	public void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new LightningSpearBehavior.Idle());
-		dataManager.register(SYNC_SIZE, 30);
+		dataManager.register(SYNC_SIZE, Size);
+		dataManager.register(SYNC_DEGREES_PER_SECOND, degreesPerSecond);
 	}
 
 	@Override
@@ -94,26 +123,29 @@ public class EntityLightningSpear extends AvatarEntity {
 		setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
 
 		// Add hook or something
-		if (getOwner()!= null) {
-			if (this.getBehavior() == controlled) {
+		if (getOwner() != null) {
+			if (getBehavior() != null && getBehavior() instanceof LightningSpearBehavior.PlayerControlled) {
 				this.rotationYaw = this.getOwner().rotationYaw;
 				this.rotationPitch = this.getOwner().rotationPitch;
 			}
 		}
-
-		if (getOwner() == null) {
-			setDead();
-			removeStatCtrl();
+		if (getBehavior() != null && getBehavior() == controlled) {
+			this.position = this.position().toBlockPos();
 		}
+
+
+		this.setSize(getSize() / 2, getSize() / 2);
+		//Even though doing size/8 would be better, the entity gets too small, and doesn't render far away enough. Super annoying.
+
 
 		if (getOwner() != null) {
 			EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (spear == null && bD.hasStatusControl(StatusControl.THROW_LIGHTNINGSPEAR)) {
-				bD.removeStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
+			if (spear == null && bD.hasStatusControl(THROW_LIGHTNINGSPEAR)) {
+				bD.removeStatusControl(THROW_LIGHTNINGSPEAR);
 			}
-			if (spear != null && spear.getBehavior() instanceof LightningSpearBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_LIGHTNINGSPEAR))) {
-				bD.addStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
+			if (spear != null && spear.getBehavior() == controlled && !(bD.hasStatusControl(THROW_LIGHTNINGSPEAR))) {
+				bD.addStatusControl(THROW_LIGHTNINGSPEAR);
 			}
 
 		}
@@ -128,6 +160,8 @@ public class EntityLightningSpear extends AvatarEntity {
 			setInvisible(true);
 			setVelocity(Vector.ZERO);
 
+		} else {
+			this.setInvisible(false);
 		}
 		if (inWater && !world.isRemote) {
 			if (floodFill == null) {
@@ -140,6 +174,76 @@ public class EntityLightningSpear extends AvatarEntity {
 			}
 		}
 
+	}
+
+	public void LightningBurst() {
+		if (getOwner() != null) {
+			particleSpawner.spawnParticles(world, AvatarParticles.getParticleElectricity(), (int) (getSize() * 25), (int) (getSize() * 30), posX, posY, posZ, getSize() * 1.25, getSize() * 1.25, getSize() * 1.25);
+			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(getSize() * 2, getSize() * 2, getSize() * 2),
+					entity -> entity != getOwner());
+
+			if (!collided.isEmpty()) {
+				for (Entity entity : collided) {
+					if (entity != getOwner() && entity != null && getOwner() != null && entity != this && canCollideWith(entity)) {
+
+						damageEntity(entity);
+
+						//Divide the result of the position difference to make entities fly
+						//further the closer they are to the player.
+						double dist = (getSize() * 2 - entity.getDistance(entity)) > 1 ? (getSize() * 2 - entity.getDistance(entity)) : 1;
+						Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
+						velocity = velocity.dividedBy(40).times(dist).withY(getSize() / 50);
+
+						double x = (velocity.x());
+						double y = (velocity.y()) > 0 ? velocity.y() : 0.2F;
+						double z = (velocity.z());
+
+						if (!entity.world.isRemote) {
+							entity.addVelocity(x, y, z);
+
+							if (collided instanceof AvatarEntity) {
+								if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+									AvatarEntity avent = (AvatarEntity) collided;
+									avent.addVelocity(x, y, z);
+								}
+								entity.isAirBorne = true;
+								AvatarUtils.afterVelocityAdded(entity);
+							}
+						}
+					}
+				}
+			}
+
+		}
+	}
+
+	public void damageEntity(Entity entity) {
+		if (getOwner() != null) {
+			BendingData data = BendingData.get(getOwner());
+			AbilityData abilityData = data.getAbilityData("lightning_spear");
+			int lvl = abilityData.getLevel();
+			float damage = getDamage() / 3;
+			if (lvl == 1) {
+				damage = getDamage() / 2;
+			}
+			if (lvl == 2) {
+				damage = getDamage() / 1.5F;
+			}
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				damage = getDamage();
+			}
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				damage = getDamage();
+			}
+			entity.attackEntityFrom(AvatarDamageSource.LIGHTNING, damage);
+			if (entity.attackEntityFrom(AvatarDamageSource.LIGHTNING, damage)) {
+				abilityData.addXp(SKILLS_CONFIG.cloudburstHit);
+				BattlePerformanceScore.addMediumScore(getOwner());
+
+			}
+		}
 	}
 
 	/**
@@ -170,6 +274,7 @@ public class EntityLightningSpear extends AvatarEntity {
 		return getBehavior() instanceof LightningSpearBehavior.PlayerControlled ? getOwner() : null;
 	}
 
+
 	public float getDamage() {
 		return damage;
 	}
@@ -178,11 +283,11 @@ public class EntityLightningSpear extends AvatarEntity {
 		this.damage = damage;
 	}
 
-	public int getSize() {
+	public float getSize() {
 		return dataManager.get(SYNC_SIZE);
 	}
 
-	public void setSize(int size) {
+	public void setSize(float size) {
 		dataManager.set(SYNC_SIZE, size);
 	}
 
@@ -202,28 +307,22 @@ public class EntityLightningSpear extends AvatarEntity {
 		this.groupAttack = groupAttack;
 	}
 
+	public float getDegreesPerSecond() {
+		return dataManager.get(SYNC_DEGREES_PER_SECOND);
+	}
+
+	public void setDegreesPerSecond(float degrees) {
+		dataManager.set(SYNC_DEGREES_PER_SECOND, degrees);
+	}
+
 	@Override
 	public boolean onCollideWithSolid() {
 
 		if (!(getBehavior() instanceof LightningSpearBehavior.Thrown)) {
 			return false;
 		}
-
-		float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
-
-
-		Explosion explosion = new Explosion(world, this, posX, posY, posZ, explosionSize,
-				!world.isRemote, STATS_CONFIG.fireballSettings.damageBlocks);
-		if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
-
-			explosion.doExplosionA();
-			explosion.doExplosionB(true);
-
-		}
-
-		world.playSound(posX, posY, posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory
-				.PLAYERS, 1, 1, false);
-
+		setInvisible(false);
+		LightningBurst();
 		setDead();
 		return true;
 
@@ -243,26 +342,56 @@ public class EntityLightningSpear extends AvatarEntity {
 		nbt.setInteger("Behavior", getBehavior().getId());
 	}
 
-	public AxisAlignedBB getExpandedHitbox() {
-		return this.expandedHitbox;
+	@Override
+	public boolean canBePushed() {
+		return false;
 	}
 
 	@Override
-	public void setEntityBoundingBox(AxisAlignedBB bb) {
-		super.setEntityBoundingBox(bb);
-		expandedHitbox = bb.grow(0.35, 0.35, 0.35);
+	public boolean onAirContact() {
+		if (getAbility() instanceof AbilityLightningArc && !world.isRemote) {
+			AbilityData aD = AbilityData.get(getOwner(), "lightning_spear");
+			if (!aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				this.setDead();
+			}
+		}
+		return true;
 	}
 
 	@Override
-	public boolean shouldRenderInPass(int pass) {
-		return pass == 1;
-	}
-
-	private void removeStatCtrl() {
-		if (getOwner() != null) {
-			BendingData data = Bender.get(getOwner()).getData();
-			data.removeStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
+	public void onCollideWithEntity(Entity entity) {
+		if (getBehavior() instanceof LightningSpearBehavior.Thrown && getBehavior() != null) {
+			if (this.canCollideWith(entity) && entity != getOwner()) {
+				if (getAbility() instanceof AbilityLightningSpear && !world.isRemote) {
+					AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
+					if (!aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+						LightningBurst();
+						setDead();
+					}
+					LightningBurst();
+				} else {
+					LightningBurst();
+				}
+			}
+			if (entity instanceof AvatarEntity) {
+				if (((AvatarEntity) entity).getElement() instanceof Airbending) {
+					this.onAirContact();
+					((AvatarEntity) entity).onLightningContact();
+				}
+			}
 		}
 	}
 
+	public void removeStatCtrl() {
+		if (getOwner() != null) {
+			BendingData data = Bender.get(getOwner()).getData();
+			data.removeStatusControl(THROW_LIGHTNINGSPEAR);
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isInRangeToRenderDist(double distance) {
+		return true;
+	}
 }

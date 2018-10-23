@@ -24,7 +24,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.*;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.*;
-import com.crowsofwar.gorecore.util.AccountUUIDs.AccountId;
 import io.netty.buffer.ByteBuf;
 
 import java.util.UUID;
@@ -43,8 +42,7 @@ public class PacketSRequestData extends AvatarPacket<PacketSRequestData> {
 	}
 
 	public PacketSRequestData(EntityPlayer player) {
-		AccountId result = AccountUUIDs.getId(player.getName());
-		asking = result.getUUID();
+		asking = AccountUUIDs.getId(player.getName());
 	}
 
 	@Override

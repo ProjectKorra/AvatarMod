@@ -21,20 +21,20 @@ public class EarthbendingPerformanceBonus {
 
 		if (e.phase == TickEvent.Phase.START && e.side == Side.SERVER) {
 
-			EntityPlayer player = e.player;
-			BendingData data = BendingData.get(player);
+				EntityPlayer player = e.player;
+				BendingData data = BendingData.get(player);
 
-			BattlePerformanceScore performance = data.getPerformance();
-			double score = performance.getScore();
+				BattlePerformanceScore performance = data.getPerformance();
+				double score = performance.getScore();
 
-			if (score >= 80) {
-				player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 30, 0));
-				performance.modifyScore(-20);
-			}
-			if (score >= 100) {
-				player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 60, 1));
-				performance.modifyScore(-60);
-			}
+				if (score >= 80) {
+					player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 30, 0));
+					performance.modifyScore(-20);
+				}
+				if (score >= 100) {
+					player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 60, 1));
+					performance.modifyScore(-60);
+				}
 
 		}
 

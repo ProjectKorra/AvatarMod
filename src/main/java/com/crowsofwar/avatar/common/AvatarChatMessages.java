@@ -36,38 +36,30 @@ public class AvatarChatMessages {
 	public static final FormattedMessage MSG_BENDING_LIST_NONBENDER = newChatMessage(CFG, "avatar.cmd.bending.list.nonbender", "player");
 	public static final FormattedMessage MSG_BENDING_LIST_ITEM = newChatMessage(CFG, "avatar.cmd.bending.list.item", "bending");
 	public static final FormattedMessage MSG_BENDING_LIST_TOP = newChatMessage(CFG, "avatar.cmd.bending.list.top", "player", "amount");
-	
+
 	public static final FormattedMessage MSG_BENDING_ADD_ALREADY_HAS = newChatMessage(CFG, "avatar.cmd.bending.add.alreadyHas", "player",
 			"bending");
 	public static final FormattedMessage MSG_BENDING_ADD_SUCCESS = newChatMessage(CFG, "avatar.cmd.bending.add.success", "player", "bending");
-	
+
 	public static final FormattedMessage MSG_BENDING_REMOVE_DOESNT_HAVE = newChatMessage(CFG, "avatar.cmd.bending.remove.doesntHave", "player",
 			"bending");
 	public static final FormattedMessage MSG_BENDING_REMOVE_SUCCESS = newChatMessage(CFG, "avatar.cmd.bending.remove.success", "player",
 			"bending");
-	
-	public static final FormattedMessage MSG_EARTHBENDING = newChatMessage(CFG, "avatar.earthbending");
-	public static final FormattedMessage MSG_FIREBENDING = newChatMessage(CFG, "avatar.firebending");
-	public static final FormattedMessage MSG_WATERBENDING = newChatMessage(CFG, "avatar.waterbending");
-	
+
 	public static final FormattedMessage MSG_CONFIG_EXCEPTION_1 = newChatMessage(CFG, "avatar.cmd.cfg.exception1");
 	public static final FormattedMessage MSG_CONFIG_EXCEPTION_2 = newChatMessage(CFG, "avatar.cmd.cfg.exception2", "details");
 	public static final FormattedMessage MSG_CONFIG_SUCCESS = newChatMessage(CFG, "avatar.cmd.cfg.successful");
-	
+
 	public static final FormattedMessage MSG_ABILITY_SET_RANGE = newChatMessage(CFG, "avatar.cmd.ability.set.range");
 	public static final FormattedMessage MSG_ABILITY_SET_SUCCESS = newChatMessage(CFG, "avatar.cmd.ability.set.success", "player", "ability", "amount");
-	
+
 	public static final FormattedMessage MSG_ABILITY_GET = newChatMessage(CFG, "avatar.cmd.ability.get", "player", "ability", "amount");
-	
+
 	public static final FormattedMessage MSG_XPSET_SUCCESS = newChatMessage(CFG, "avatar.cmd.xpset", "player", "ability", "spec");
-	
-	public static final FormattedMessage MSG_PROGRESS_POINT_ADDED = newChatMessage(CFG, "avatar.cmd.pp.add", "player", "pps", "bending");
-	public static final FormattedMessage MSG_PROGRESS_POINT_GET = newChatMessage(CFG, "avatar.cmd.pp.get", "player", "pps", "bending");
-	public static final FormattedMessage MSG_PROGRESS_POINT_SET = newChatMessage(CFG, "avatar.cmd.pp.set", "player", "pps", "bending");
-	public static final FormattedMessage MSG_PROGRESS_POINT_SET_RANGE = newChatMessage(CFG, "avatar.cmd.pp.set.range");
-	
+
+
 	public static final FormattedMessage MSG_DONT_HAVE_BENDING = newChatMessage(CFG, "avatar.donthavebending", "username");
-	
+
 	public static final FormattedMessage MSG_BISON_WHISTLE_SUMMON = newChatMessage(CFG, "avatar.bisonWhistle.summon", "time");
 	public static final FormattedMessage MSG_BISON_WHISTLE_ASSIGN = newChatMessage(CFG, "avatar.bisonWhistle.assign", "bison");
 	public static final FormattedMessage MSG_BISON_WHISTLE_NOSUMMON = newChatMessage(CFG, "avatar.bisonWhistle.notAssigned");
@@ -75,6 +67,8 @@ public class AvatarChatMessages {
 	public static final FormattedMessage MSG_BISON_WHISTLE_NOTOWNED = newChatMessage(CFG, "avatar.bisonWhistle.notOwned");
 	public static final FormattedMessage MSG_BISON_WHISTLE_UNTAMED = newChatMessage(CFG, "avatar.bisonWhistle.untamed");
 	public static final FormattedMessage MSG_BISON_WHISTLE_NEARBY = newChatMessage(CFG, "avatar.bisonWhistle.nearby");
+	public static final FormattedMessage MSG_BISON_NO_FOOD = newChatMessage(CFG, "avatar.bisonNoFood");
+	public static final FormattedMessage MSG_BISON_SITTING = newChatMessage(CFG, "avatar.bisonSitting");
 
 	public static final FormattedMessage MSG_BISON_WHISTLE_FOLLOW_ON = newChatMessage(CFG, "avatar.bisonWhistle.followOn");
 	public static final FormattedMessage MSG_BISON_WHISTLE_FOLLOW_OFF = newChatMessage(CFG, "avatar.bisonWhistle.followOff");
@@ -88,8 +82,25 @@ public class AvatarChatMessages {
 	public static final FormattedMessage MSG_BISON_TRANSFER_OLD_IGNORE = newChatMessage(CFG, "avatar.bisonWhistle.transferAway.ignore", "newOwner");
 	public static final FormattedMessage MSG_BISON_TRANSFER_NEW_IGNORE = newChatMessage(CFG, "avatar.bisonWhistle.transferTo.ignore", "oldOwner");
 	public static final FormattedMessage MSG_BISON_TRANSFER_OFFLINE = newChatMessage(CFG, "avatar.bisonWhistle.transferOffline", "owner");
-	
+
 	public static final FormattedMessage MSG_HUMANBENDER_NO_SCROLLS = newChatMessage(CFG, "avatar.outOfScrolls");
+
+	public static final FormattedMessage MSG_NEED_TRADE_ITEM = newChatMessage(CFG, "avatar.needTradeItem");
+
+	public static final FormattedMessage MSG_NEED_AIR_TRADE_ITEM = newChatMessage(CFG, "avatar.needAirTradeItem");
+
+	public static final FormattedMessage MSG_NEED_FIRE_TRADE_ITEM = newChatMessage(CFG, "avatar.needFireTradeItem");
+
+	public static final FormattedMessage MSG_AIR_STAFF_COOLDOWN = newChatMessage(CFG, "avatar.staffCooldown");
+
+	public static final FormattedMessage MSG_SLIPSTREAM_COOLDOWN = newChatMessage(CFG, "avatar.slipstreamCooldown");
+
+	public static final FormattedMessage MSG_CLEANSE_COOLDOWN = newChatMessage(CFG, "avatar.cleanseCooldown");
+
+	public static final FormattedMessage MSG_PURIFY_COOLDOWN = newChatMessage(CFG, "avatar.purifyCooldown");
+
+	public static final FormattedMessage MSG_RESTORE_COOLDOWN = newChatMessage(CFG, "avatar.restoreCooldown");
+
 
 	public static final FormattedMessage MSG_SKATING_BENDING_DISABLED = newChatMessage(CFG,
 			"avatar.skatingBendingDisabled");
@@ -116,6 +127,7 @@ public class AvatarChatMessages {
 	/**
 	 * Call the static initializers
 	 */
-	public static void loadAll() {}
-	
+	public static void loadAll() {
+	}
+
 }

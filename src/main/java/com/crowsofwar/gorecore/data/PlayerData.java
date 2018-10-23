@@ -91,6 +91,11 @@ public abstract class PlayerData implements GoreCoreNBTInterfaces.ReadableWritab
 		construct(dataSaver, playerID, playerEntity);
 	}
 	
+	@Override
+	public String toString() {
+		return "PlayerData(playerId = " + playerID + ", dataSaver = " + dataSaver + ")";
+	}
+	
 	/**
 	 * Called from constructor to initialize data. Override to change
 	 * constructor.
