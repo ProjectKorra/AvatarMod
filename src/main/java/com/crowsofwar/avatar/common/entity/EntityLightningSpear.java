@@ -41,12 +41,12 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -90,8 +90,11 @@ public class EntityLightningSpear extends AvatarEntity {
 
 	private ParticleSpawner particleSpawner;
 
+	private Vector velocity;
+	//Prevents it from bouncing off of entities (for some reason canBePushed doesn't seem to work)
+
 	/**
-	 * @param world
+	 * @param world The world it spawns in
 	 */
 	public EntityLightningSpear(World world) {
 		super(world);
@@ -101,9 +104,15 @@ public class EntityLightningSpear extends AvatarEntity {
 		this.damage = 3F;
 		this.piercing = false;
 		this.setInvisible(false);
+		this.velocity = Vector.ZERO;
 		this.particleSpawner = new NetworkParticleSpawner();
 
 	}
+
+	public void setTravellingVelocity(Vector velocity) {
+		this.velocity = velocity;
+	}
+	//So lightning spear doesn't bounce off of entities (if piercing)
 
 	@Override
 	public void entityInit() {
@@ -166,7 +175,9 @@ public class EntityLightningSpear extends AvatarEntity {
 			setVelocity(Vector.ZERO);
 
 		} else {
-			this.setInvisible(false);
+			if (getBehavior() != null && getBehavior() instanceof LightningSpearBehavior.Thrown) {
+				this.setVelocity(velocity);
+			}
 		}
 		if (inWater && !world.isRemote) {
 			if (floodFill == null) {
@@ -390,7 +401,7 @@ public class EntityLightningSpear extends AvatarEntity {
 
 	public void removeStatCtrl() {
 		if (getOwner() != null) {
-			BendingData data = Bender.get(getOwner()).getData();
+			BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
 			data.removeStatusControl(THROW_LIGHTNINGSPEAR);
 		}
 	}
