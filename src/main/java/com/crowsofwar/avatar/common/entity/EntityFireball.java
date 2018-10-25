@@ -104,6 +104,16 @@ public class EntityFireball extends AvatarEntity {
 			this.setBehavior(new FireballBehavior.Thrown());
 		}
 
+		Vector clientPos = this.position();
+		if (world.isRemote) {
+			clientPos = this.position();
+		}
+		if (!world.isRemote) {
+			if (this.position() != clientPos) {
+				this.setPosition(clientPos);
+			}
+		}
+		//For some reason the server position is inaccurate- setting it to the client side position massively reduces positioning glitchiness
 		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
 		if (ticksExisted % 30 == 0) {
 			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 6, 0.8F);

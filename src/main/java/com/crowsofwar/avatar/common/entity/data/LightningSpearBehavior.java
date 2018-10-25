@@ -103,7 +103,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			}
 
 			World world = entity.world;
-			if (!entity.isDead) {
+			if (!entity.isDead && !world.isRemote) {
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX + entity.getSize(), entity.posY + entity.getSize(), entity.posZ + entity.getSize(),
 						entity.posX - entity.getSize(), entity.posY - entity.getSize(), entity.posZ - entity.getSize());
 				List<Entity> collidedList = world.getEntitiesWithinAABB(Entity.class,

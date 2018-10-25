@@ -250,8 +250,8 @@ public abstract class AvatarEntity extends Entity {
 
 	@Override
 	public void onUpdate() {
-
 		super.onUpdate();
+
 		collideWithNearbyEntities();
 		if (putsOutFires && ticksExisted % 2 == 0) {
 			setFire(0);

@@ -80,6 +80,16 @@ public class EntityCloudBall extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		Vector clientPos = this.position();
+		if (world.isRemote) {
+			clientPos = this.position();
+		}
+		if (!world.isRemote) {
+			if (this.position() != clientPos) {
+				this.setPosition(clientPos);
+			}
+		}
+		//For some reason the server position is inaccurate- setting it to the client side position massively reduces positioning glitchiness
 		int ticks = 0;
 		if (getBehavior() == null) {
 			this.setBehavior(new CloudburstBehavior.PlayerControlled());

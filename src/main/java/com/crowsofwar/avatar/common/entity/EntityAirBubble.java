@@ -115,8 +115,13 @@ public class EntityAirBubble extends EntityShield {
 	@Override
 	public void setPositionAndUpdate(double x, double y, double z) {
 		if (getOwner() != null) {
-			super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
-
+			x = getOwner().posX;
+			y = getOwner().getEntityBoundingBox().minY;
+			z = getOwner().posZ;
+			super.setPositionAndUpdate(x, y, z);
+		}
+		else {
+			super.setPositionAndUpdate(x, y, z);
 		}
 	}
 
@@ -154,7 +159,17 @@ public class EntityAirBubble extends EntityShield {
 		}
 
 		setPosition(owner.posX, owner.getEntityBoundingBox().minY, owner.posZ);
-		setVelocity(0, 0, 0);
+		Vector clientPos = this.position();
+		if (world.isRemote) {
+			clientPos = this.position();
+		}
+		if (!world.isRemote) {
+			if (this.position() != clientPos) {
+				this.setPosition(clientPos);
+			}
+		}
+		//For some reason the server position is inaccurate- setting it to the client side position massively reduces positioning glitchiness
+		this.motionX = this.motionY = this.motionZ = 0;
 
 
 		if (getOwner() != null) {

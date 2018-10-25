@@ -84,8 +84,6 @@ public class EntityLightningSpear extends AvatarEntity {
 	 */
 	private LightningFloodFill floodFill;
 
-	private BlockPos position;
-
 	private float Size;
 
 	private float degreesPerSecond;
@@ -103,7 +101,6 @@ public class EntityLightningSpear extends AvatarEntity {
 		this.damage = 3F;
 		this.piercing = false;
 		this.setInvisible(false);
-		this.position = this.position().toBlockPos();
 		this.particleSpawner = new NetworkParticleSpawner();
 
 	}
@@ -122,15 +119,23 @@ public class EntityLightningSpear extends AvatarEntity {
 		LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
 		setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
 
+		Vector clientPos = this.position();
+		if (world.isRemote) {
+			clientPos = this.position();
+		}
+		if (!world.isRemote) {
+			if (this.position() != clientPos) {
+				this.setPosition(clientPos);
+			}
+		}
+		//For some reason the server position is inaccurate- setting it to the client side position massively reduces positioning glitchiness
+
 		// Add hook or something
 		if (getOwner() != null) {
 			if (getBehavior() != null && getBehavior() instanceof LightningSpearBehavior.PlayerControlled) {
 				this.rotationYaw = this.getOwner().rotationYaw;
 				this.rotationPitch = this.getOwner().rotationPitch;
 			}
-		}
-		if (getBehavior() != null && getBehavior() == controlled) {
-			this.position = this.position().toBlockPos();
 		}
 
 
@@ -347,6 +352,7 @@ public class EntityLightningSpear extends AvatarEntity {
 		return false;
 	}
 
+
 	@Override
 	public boolean onAirContact() {
 		if (getAbility() instanceof AbilityLightningArc && !world.isRemote) {
@@ -360,7 +366,7 @@ public class EntityLightningSpear extends AvatarEntity {
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
-		if (getBehavior() instanceof LightningSpearBehavior.Thrown && getBehavior() != null) {
+		if (getBehavior() instanceof LightningSpearBehavior.Thrown && getBehavior() != null && !world.isRemote) {
 			if (this.canCollideWith(entity) && entity != getOwner()) {
 				if (getAbility() instanceof AbilityLightningSpear && !world.isRemote) {
 					AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
