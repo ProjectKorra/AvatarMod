@@ -18,9 +18,7 @@
 package com.crowsofwar.avatar.common.util;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -65,65 +63,6 @@ public class AvatarUtils {
 			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityTeleport(entity));
 			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 		}
-	}
-
-	/**
-	 * Returns the location of the player's right side
-	 * @param entity
-	 * @param distance
-	 * @return
-	 */
-
-	public static Vector getRightSide(EntityLivingBase entity, double distance) {
-		final float angle = entity.rotationYaw / 60;
-		return Vector.getEntityPos(entity).minus(new Vector(Math.cos(angle), -entity.getEyeHeight(), Math.sin(angle)).normalize().times(distance));
-	}
-
-	/**
-	 * Returns the location of the player's left side
-	 * @param entity
-	 * @param distance
-	 * @return
-	 */
-
-	public static Vector getLeftSide(EntityLivingBase entity, double distance) {
-		final float angle = entity.rotationYaw / 60;
-		return Vector.getEntityPos(entity).plus(new Vector(Math.cos(angle), -entity.getEyeHeight(), Math.sin(angle)).normalize().times(distance));
-	}
-
-	/**
-	 *
-	 * @param axis
-	 * @param degrees
-	 * @param length
-	 * @return
-	 */
-
-	public static Vector getOrthogonalVector(final Vector axis, final double degrees, final double length) {
-		Vector ortho = new Vector(axis.y(), -axis.x(), 0);
-		ortho = ortho.normalize();
-		ortho = ortho.times(length);
-
-		return rotateVectorAroundVector(axis, ortho, degrees);
-	}
-
-	/**
-	 *
-	 * @param axis
-	 * @param rotator
-	 * @param degrees
-	 * @return
-	 */
-
-	public static Vector rotateVectorAroundVector(final Vector axis, final Vector rotator, final double degrees) {
-		final double angle = Math.toRadians(degrees);
-		Vector rotation = axis;
-		final Vector rotate = rotator;
-		rotation = rotation.normalize();
-
-		final Vector thirdaxis = rotation.cross(rotate).normalize().times(rotate.magnitude());
-
-		return rotate.times(Math.cos(angle)).plus(thirdaxis.times(Math.sin(angle)));
 	}
 
 

@@ -19,12 +19,18 @@ package com.crowsofwar.gorecore.util;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+
+import javax.vecmath.AxisAngle4d;
+import javax.vecmath.Matrix3f;
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 
 import static java.lang.Math.*;
 
@@ -115,6 +121,241 @@ public class Vector {
 
 	public Vector(EnumFacing facing) {
 		this(facing.getDirectionVec());
+	}
+
+	/**
+	 * Returns the location of the player's right side
+	 *
+	 * @param entity
+	 * @param distance
+	 * @return
+	 */
+
+	public static Vector getRightSide(EntityLivingBase entity, double distance) {
+		final float angle = entity.rotationYaw / 60;
+		return Vector.getEntityPos(entity).minus(new Vector(Math.cos(angle), -entity.getEyeHeight(), Math.sin(angle)).normalize().times(distance));
+	}
+
+	/**
+	 * Returns the location of the player's left side
+	 *
+	 * @param entity
+	 * @param distance
+	 * @return
+	 */
+
+	public static Vector getLeftSide(EntityLivingBase entity, double distance) {
+		final float angle = entity.rotationYaw / 60;
+		return Vector.getEntityPos(entity).plus(new Vector(Math.cos(angle), -entity.getEyeHeight(), Math.sin(angle)).normalize().times(distance));
+	}
+
+	/**
+	 * @param axis
+	 * @param degrees
+	 * @param length
+	 * @return
+	 */
+
+	public static Vector getOrthogonalVector(final Vector axis, final double degrees, final double length) {
+		Vector ortho = new Vector(axis.y(), -axis.x(), 0);
+		ortho = ortho.normalize();
+		ortho = ortho.times(length);
+
+		return rotateVectorAroundVector(axis, ortho, degrees);
+	}
+
+	public static Vector getHelixVector(float distance, float rotationFactor, Vector axis, Vector eyePosition) {
+		Matrix4f rotation = withTranslation(rotationMatrix(new Vector(0, 1, 0), axis), eyePosition);
+		return rotate(rotation, MathHelper.sin(rotationFactor * (float) Math.PI * distance), distance,
+				MathHelper.cos(rotationFactor * (float) Math.PI * distance));
+	}
+
+	/**
+	 * @param axis
+	 * @param rotator
+	 * @param degrees
+	 * @return
+	 */
+
+	public static Vector rotateVectorAroundVector(final Vector axis, final Vector rotator, final double degrees) {
+		final double angle = Math.toRadians(degrees);
+		Vector rotation = axis;
+		final Vector rotate = rotator;
+		rotation = rotation.normalize();
+
+		final Vector thirdaxis = rotation.cross(rotate).normalize().times(rotate.magnitude());
+
+		return rotate.times(Math.cos(angle)).plus(thirdaxis.times(Math.sin(angle)));
+	}
+
+	private static double dot(Vector a, Vector b) {
+		return a.x * b.x + a.y * b.y + a.z * b.z;
+	}
+
+	private static double angle(Vector a, Vector b) {
+		return Math.acos(dot(a, b) / (a.toMinecraft().lengthVector() * b.toMinecraft().lengthVector()));
+	}
+
+	private static Matrix3f rotationMatrix(Vector from, Vector to) {
+		Matrix3f mat = new Matrix3f();
+		if (from.toMinecraft() == to.toMinecraft().scale(-1)) {
+			mat.negate();
+			return mat;
+		}
+
+		double dotAngle = angle(from, to);
+		Vec3d axis = from.toMinecraft().crossProduct(to.toMinecraft());
+		mat.set(new AxisAngle4d(axis.x, axis.y, axis.z, dotAngle));
+
+		return mat;
+	}
+
+	private static Matrix4f withTranslation(Matrix3f linear, Vector translation) {
+		return new Matrix4f(linear, new Vector3f((float) translation.x, (float) translation.y, (float) translation.z), 1);
+	}
+
+	private static Vector rotate(Matrix4f m, double x, double y, double z) {
+		double newX = m.m00 * x + m.m01 * y + m.m02 * z + m.m03;
+		double newY = m.m10 * x + m.m11 * y + m.m12 * z + m.m13;
+		double newZ = m.m20 * x + m.m21 * y + m.m22 * z + m.m23;
+		return new Vector(newX, newY, newZ);
+	}
+
+	/**
+	 * Reflects the vector across the given normal. Returns a new vector.
+	 *
+	 * @see #reflect(Vector)
+	 */
+	public static Vector reflect(Vector vec, Vector normal) {
+		return vec.reflect(normal);
+	}
+
+	/**
+	 * Returns the euler angles from position 1 to position 2.
+	 * <p>
+	 * The returned vector has Y for yaw, and X for pitch. Measurements are in
+	 * radians.
+	 *
+	 * @param pos1 Where we are
+	 * @param pos2 Where to look at
+	 */
+	public static Vector getRotationTo(Vector pos1, Vector pos2) {
+		Vector diff = pos2.minus(pos1).normalize();
+		double x = diff.x();
+		double y = diff.y();
+		double z = diff.z();
+		double d0 = x;
+		double d1 = y;
+		double d2 = z;
+		double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
+		double rotY = Math.atan2(d2, d0) - Math.PI / 2;
+		double rotX = -Math.atan2(d1, d3);
+		double rotZ = 0;
+		return new Vector(rotX, rotY, rotZ);
+	}
+
+	/**
+	 * Gets the position of the entity
+	 */
+	public static Vector getEntityPos(Entity entity) {
+		return new Vector(entity);
+	}
+
+	/**
+	 * Gets the position of the entity, but adjusted so ypos is the eyepos
+	 */
+	public static Vector getEyePos(Entity entity) {
+		return getEntityPos(entity).plus(0, entity.getEyeHeight(), 0);
+	}
+
+	/**
+	 * Get velocity of the entity in m/s.
+	 */
+	public static Vector getVelocity(Entity entity) {
+		return new Vector(entity.motionX * 20, entity.motionY * 20, entity.motionZ * 20);
+	}
+
+	/**
+	 * Get the pitch to lob a projectile in radians. Example: pitch to target
+	 * can be used in {@link #toRectangular(double, double)}
+	 *
+	 * @param v Force of the projectile, going FORWARDS
+	 * @param g Gravity constant
+	 * @param x Horizontal distance to target
+	 * @param y Vertical distance to target
+	 */
+	public static double getProjectileAngle(double v, double g, double x, double y) {
+		return -Math.atan2((v * v + Math.sqrt(v * v * v * v - g * (g * x * x + 2 * y * v * v))), g * x);
+	}
+
+	/**
+	 * Create a rectangular vector from the entity's rotations. This can be used
+	 * to determine the coordinates the entity is looking at (without raytrace).
+	 *
+	 * @param entity The entity to use
+	 */
+	public static Vector getLookRectangular(Entity entity) {
+		return toRectangular(toRadians(entity.rotationYaw), toRadians(entity.rotationPitch));
+	}
+
+	/**
+	 * Create a rotation vector from the entity's rotations. This is a euler and
+	 * is in radians.
+	 *
+	 * @see #getEuler(double, double)
+	 */
+	public static Vector getLookRotations(Entity entity) {
+		return getEuler(toRadians(entity.rotationYaw), toRadians(entity.rotationPitch));
+	}
+
+	/**
+	 * Gets a vector representing rotations for the given yaw/pitch. Parameters
+	 * should be in radians.
+	 */
+	public static Vector getEuler(double yaw, double pitch) {
+		return new Vector(pitch, yaw, 0);
+	}
+
+	/**
+	 * Converts a rotation vector into a rectangular (Cartesian) vector. Euler
+	 * must be in radians.
+	 *
+	 * @see #toRectangular(double, double)
+	 * @see #getEuler(double, double)
+	 */
+	public static Vector toRectangular(Vector euler) {
+		return new Vector(-sin(euler.y()) * cos(euler.x()), -sin(euler.x()), cos(euler.y()) * cos(euler.x()));
+	}
+
+	/**
+	 * Converts the given rotations into a rectangular (Cartesian) vector.
+	 * Parameters must be in radians.
+	 *
+	 * @see #toRectangular(Vector)
+	 */
+	public static Vector toRectangular(double yaw, double pitch) {
+		return new Vector(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
+	}
+
+	/**
+	 * Creates a new vector from the packet information in the byte buffer.
+	 * Vectors should be encoded using the non-static {@link #toBytes(ByteBuf)
+	 * toBytes}.
+	 *
+	 * @param buf Buffer to read from
+	 * @see #toBytes(ByteBuf)
+	 */
+	public static Vector fromBytes(ByteBuf buf) {
+		return new Vector(buf.readDouble(), buf.readDouble(), buf.readDouble());
+	}
+
+	/**
+	 * Creates a new vector from the x,y,z information in NBT. Reads directly
+	 * off the NBT compound provided.
+	 */
+
+	public static Vector readFromNbt(NBTTagCompound nbt) {
+		return new Vector(nbt.getDouble("x"), nbt.getDouble("y"), nbt.getDouble("z"));
 	}
 
 	/**
@@ -480,143 +721,6 @@ public class Vector {
 		} else {
 			return false;
 		}
-	}
-
-	/**
-	 * Reflects the vector across the given normal. Returns a new vector.
-	 *
-	 * @see #reflect(Vector)
-	 */
-	public static Vector reflect(Vector vec, Vector normal) {
-		return vec.reflect(normal);
-	}
-
-	/**
-	 * Returns the euler angles from position 1 to position 2.
-	 * <p>
-	 * The returned vector has Y for yaw, and X for pitch. Measurements are in
-	 * radians.
-	 *
-	 * @param pos1 Where we are
-	 * @param pos2 Where to look at
-	 */
-	public static Vector getRotationTo(Vector pos1, Vector pos2) {
-		Vector diff = pos2.minus(pos1).normalize();
-		double x = diff.x();
-		double y = diff.y();
-		double z = diff.z();
-		double d0 = x;
-		double d1 = y;
-		double d2 = z;
-		double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
-		double rotY = Math.atan2(d2, d0) - Math.PI / 2;
-		double rotX = -Math.atan2(d1, d3);
-		double rotZ = 0;
-		return new Vector(rotX, rotY, rotZ);
-	}
-
-	/**
-	 * Gets the position of the entity
-	 */
-	public static Vector getEntityPos(Entity entity) {
-		return new Vector(entity);
-	}
-
-	/**
-	 * Gets the position of the entity, but adjusted so ypos is the eyepos
-	 */
-	public static Vector getEyePos(Entity entity) {
-		return getEntityPos(entity).plus(0, entity.getEyeHeight(), 0);
-	}
-
-	/**
-	 * Get velocity of the entity in m/s.
-	 */
-	public static Vector getVelocity(Entity entity) {
-		return new Vector(entity.motionX * 20, entity.motionY * 20, entity.motionZ * 20);
-	}
-
-	/**
-	 * Get the pitch to lob a projectile in radians. Example: pitch to target
-	 * can be used in {@link #toRectangular(double, double)}
-	 *
-	 * @param v Force of the projectile, going FORWARDS
-	 * @param g Gravity constant
-	 * @param x Horizontal distance to target
-	 * @param y Vertical distance to target
-	 */
-	public static double getProjectileAngle(double v, double g, double x, double y) {
-		return -Math.atan2((v * v + Math.sqrt(v * v * v * v - g * (g * x * x + 2 * y * v * v))), g * x);
-	}
-
-	/**
-	 * Create a rectangular vector from the entity's rotations. This can be used
-	 * to determine the coordinates the entity is looking at (without raytrace).
-	 *
-	 * @param entity The entity to use
-	 */
-	public static Vector getLookRectangular(Entity entity) {
-		return toRectangular(toRadians(entity.rotationYaw), toRadians(entity.rotationPitch));
-	}
-
-	/**
-	 * Create a rotation vector from the entity's rotations. This is a euler and
-	 * is in radians.
-	 *
-	 * @see #getEuler(double, double)
-	 */
-	public static Vector getLookRotations(Entity entity) {
-		return getEuler(toRadians(entity.rotationYaw), toRadians(entity.rotationPitch));
-	}
-
-	/**
-	 * Gets a vector representing rotations for the given yaw/pitch. Parameters
-	 * should be in radians.
-	 */
-	public static Vector getEuler(double yaw, double pitch) {
-		return new Vector(pitch, yaw, 0);
-	}
-
-	/**
-	 * Converts a rotation vector into a rectangular (Cartesian) vector. Euler
-	 * must be in radians.
-	 *
-	 * @see #toRectangular(double, double)
-	 * @see #getEuler(double, double)
-	 */
-	public static Vector toRectangular(Vector euler) {
-		return new Vector(-sin(euler.y()) * cos(euler.x()), -sin(euler.x()), cos(euler.y()) * cos(euler.x()));
-	}
-
-	/**
-	 * Converts the given rotations into a rectangular (Cartesian) vector.
-	 * Parameters must be in radians.
-	 *
-	 * @see #toRectangular(Vector)
-	 */
-	public static Vector toRectangular(double yaw, double pitch) {
-		return new Vector(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
-	}
-
-	/**
-	 * Creates a new vector from the packet information in the byte buffer.
-	 * Vectors should be encoded using the non-static {@link #toBytes(ByteBuf)
-	 * toBytes}.
-	 *
-	 * @param buf Buffer to read from
-	 * @see #toBytes(ByteBuf)
-	 */
-	public static Vector fromBytes(ByteBuf buf) {
-		return new Vector(buf.readDouble(), buf.readDouble(), buf.readDouble());
-	}
-
-	/**
-	 * Creates a new vector from the x,y,z information in NBT. Reads directly
-	 * off the NBT compound provided.
-	 */
-
-	public static Vector readFromNbt(NBTTagCompound nbt) {
-		return new Vector(nbt.getDouble("x"), nbt.getDouble("y"), nbt.getDouble("z"));
 	}
 
 }
