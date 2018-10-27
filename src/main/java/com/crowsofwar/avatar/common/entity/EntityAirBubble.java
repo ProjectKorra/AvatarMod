@@ -161,6 +161,7 @@ public class EntityAirBubble extends EntityShield {
 		if (!world.isRemote) {
 			setPosition(getEntityPos(owner));
 		}
+
 		this.motionX = this.motionY = this.motionZ = 0;
 
 
