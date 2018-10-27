@@ -112,7 +112,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 					Vector distance = this.position().minus(getControlPoint(1).position());
 					distance = distance.times(i);
 					for (double angle = 0; angle < 360; angle += particleController) {
-						Vector position = AvatarUtils.getOrthogonalVector(this.position().minus(getControlPoint(1).position()), angle, getSizeMultiplier() * 1.4);
+						Vector position = Vector.getOrthogonalVector(this.position().minus(getControlPoint(1).position()), angle, getSizeMultiplier() * 1.4);
 						particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1,
 								position.x() + startPos.x() + distance.x(), position.y() + startPos.y() + distance.y(), position.z() + startPos.z() + distance.z(), 0, 0, 0);
 

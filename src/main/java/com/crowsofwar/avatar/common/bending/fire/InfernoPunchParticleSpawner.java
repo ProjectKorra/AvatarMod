@@ -4,7 +4,6 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -44,11 +43,11 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 		if (data.hasStatusControl(INFERNO_PUNCH) && !world.isRemote) {
 			WorldServer World = (WorldServer) world;
 
-			Vector pos = AvatarUtils.getRightSide(entity, 0.55).plus(0, 0.8, 0);
+			Vector pos = Vector.getRightSide(entity, 0.55).plus(0, 0.8, 0);
 			Vector direction = Vector.getLookRectangular(entity);
 
 			if (entity instanceof EntityPlayer && entity.getPrimaryHand() == EnumHandSide.LEFT) {
-				pos = AvatarUtils.getLeftSide(entity, 0.55).plus(0, 1.8, 0);
+				pos = Vector.getLeftSide(entity, 0.55).plus(0, 1.8, 0);
 			}
 			Vector hand = pos.plus(direction.times(0.6));
 			World.spawnParticle(EnumParticleTypes.FLAME, hand.x(), hand.y(), hand.z(), particleCount, 0, 0, 0, 0.015);
