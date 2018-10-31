@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -67,8 +66,8 @@ public abstract class EntityShield extends AvatarEntity {
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		assert getOwner() != null;
-		setPosition(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+		//assert getOwner() != null;
+		//setPosition(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
 	}
 
 	@Override

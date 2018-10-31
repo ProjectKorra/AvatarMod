@@ -265,7 +265,7 @@ public class Vector {
 	 * Gets the position of the entity
 	 */
 	public static Vector getEntityPos(Entity entity) {
-		return new Vector(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
+		return new Vector(entity);
 	}
 
 	/**
