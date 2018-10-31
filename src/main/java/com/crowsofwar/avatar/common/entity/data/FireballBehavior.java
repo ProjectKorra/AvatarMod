@@ -19,13 +19,12 @@ package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -36,6 +35,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -98,7 +98,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			entity.addVelocity(Vector.DOWN.times(1F / 40));
 
 			World world = entity.world;
-			if (!entity.isDead) {
+			if (!entity.isDead && !world.isRemote) {
 				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
 						entity.getExpandedHitbox());
 				if (!collidedList.isEmpty()) {
@@ -142,8 +142,8 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 				// Remove the fireball & spawn particles
 				if (!entity.world.isRemote) {
 					entity.onCollideWithSolid();
-					entity.setDead();
 				}
+				entity.setDead();
 
 			}
 		}
@@ -177,14 +177,21 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 
 			if (owner == null) return this;
 
-			BendingData data = Bender.get(owner).getData();
+			BendingData data = Objects.requireNonNull(Bender.get(owner)).getData();
 
-			double yaw = Math.toRadians(owner.rotationYaw);
-			double pitch = Math.toRadians(owner.rotationPitch);
-			Vector forward = Vector.toRectangular(yaw, pitch);
-			Vector eye = Vector.getEyePos(owner);
-			Vector target = forward.times(2).plus(eye);
-			Vector motion = target.minus(Vector.getEntityPos(entity)).times(7);
+			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
+
+			Vector target;
+			if (res.hitSomething()) {
+				target = res.getPosPrecise();
+			} else {
+				Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
+						Math.toRadians(owner.rotationPitch));
+				target = Vector.getEyePos(owner).plus(look.times(3));
+			}
+
+			Vector motion = Objects.requireNonNull(target).minus(entity.position());
+			motion = motion.times(0.5 * 20);
 			entity.setVelocity(motion);
 
 			if (entity.getAbility() instanceof AbilityFireball) {
@@ -195,7 +202,6 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 					}
 				}
 			}
-
 			return this;
 		}
 

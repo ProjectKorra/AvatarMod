@@ -70,13 +70,13 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 
 			if (entity.collided || (!entity.world.isRemote && time > 200)) {
 				entity.cloudBurst();
-				entity.onCollideWithSolid();
+				entity.setDead();
 			}
 
 			entity.addVelocity(0, -1F / 120, 0);
 
 			World world = entity.world;
-			if (!entity.isDead) {
+			if (!entity.isDead && !entity.world.isRemote) {
 				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
 						entity.getExpandedHitbox());
 				if (!collidedList.isEmpty()) {
@@ -147,24 +147,22 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 			EntityLivingBase owner = entity.getOwner();
 
 			if (owner == null) return this;
+				BendingData data = Objects.requireNonNull(Bender.get(owner)).getData();
 
-			BendingData data = Objects.requireNonNull(Bender.get(owner)).getData();
+				Vector forward = Vector.getLookRectangular(owner);
+				Vector eye = Vector.getEyePos(owner).minusY(0.5);
+				Vector target = forward.times(1.5).plus(eye);
+				Vector motion = target.minus(Vector.getEntityPos(entity)).times(6);
+				entity.setVelocity(motion);
 
-			Vector forward = Vector.getLookRectangular(owner);
-			Vector eye = Vector.getEyePos(owner).minusY(0.5);
-			Vector target = forward.times(1.5).plus(eye);
-			Vector motion = target.minus(Vector.getEntityPos(entity)).times(6);
-			entity.setVelocity(motion);
-
-			if (entity.getAbility() instanceof AbilityCloudBurst && !entity.world.isRemote) {
-				if (data.getAbilityData("cloudburst").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-					int size = entity.getSize();
-					if (size < 60 && entity.ticksExisted % 4 == 0) {
-						entity.setSize(size + 1);
+				if (entity.getAbility() instanceof AbilityCloudBurst && !entity.world.isRemote) {
+					if (data.getAbilityData("cloudburst").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+						int size = entity.getSize();
+						if (size < 60 && entity.ticksExisted % 4 == 0) {
+							entity.setSize(size + 1);
+						}
 					}
 				}
-			}
-
 			return this;
 		}
 

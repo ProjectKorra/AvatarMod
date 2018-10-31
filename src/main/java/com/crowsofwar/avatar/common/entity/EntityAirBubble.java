@@ -87,6 +87,13 @@ public class EntityAirBubble extends EntityShield {
 	}
 
 	@Override
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		assert getOwner() != null;
+		setPosition(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+	}
+
+	@Override
 	public BendingStyle getElement() {
 		return new Airbending();
 	}
@@ -119,8 +126,7 @@ public class EntityAirBubble extends EntityShield {
 			y = getOwner().getEntityBoundingBox().minY;
 			z = getOwner().posZ;
 			super.setPositionAndUpdate(x, y, z);
-		}
-		else {
+		} else {
 			super.setPositionAndUpdate(x, y, z);
 		}
 	}
@@ -140,9 +146,7 @@ public class EntityAirBubble extends EntityShield {
 	public void onUpdate() {
 		super.onUpdate();
 
-
 		EntityLivingBase owner = getOwner();
-
 		if (owner == null && !isDissipating()) {
 			this.setDead();
 			removeStatCtrl();
@@ -158,12 +162,9 @@ public class EntityAirBubble extends EntityShield {
 			return;
 		}
 
-		if (!world.isRemote) {
-			setPosition(getEntityPos(owner));
-		}
 
+		setPosition(getEntityPos(getOwner()));
 		this.motionX = this.motionY = this.motionZ = 0;
-
 
 		if (getOwner() != null) {
 			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());

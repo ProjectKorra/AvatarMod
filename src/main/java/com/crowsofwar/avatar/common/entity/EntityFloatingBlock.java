@@ -48,6 +48,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Objects;
 import java.util.Random;
 
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
@@ -140,12 +141,12 @@ public class EntityFloatingBlock extends AvatarEntity {
 		super.readEntityFromNBT(nbt);
 		setBlockState(
 				Block.getBlockById(nbt.getInteger("BlockId")).getStateFromMeta(nbt.getInteger("Metadata")));
-		setVelocity(new Vector(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble
-				("VelocityZ")));
+		//setVelocity(new Vector(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble
+		//		("VelocityZ")));
 		setFriction(nbt.getFloat("Friction"));
 		setItemDropsEnabled(nbt.getBoolean("DropItems"));
-		setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
-		getBehavior().load(nbt.getCompoundTag("BehaviorData"));
+		//setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
+		//getBehavior().load(nbt.getCompoundTag("BehaviorData"));
 		damageMult = nbt.getFloat("DamageMultiplier");
 	}
 
@@ -154,13 +155,13 @@ public class EntityFloatingBlock extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("BlockId", Block.getIdFromBlock(getBlock()));
 		nbt.setInteger("Metadata", getBlock().getMetaFromState(getBlockState()));
-		nbt.setDouble("VelocityX", velocity().x());
-		nbt.setDouble("VelocityY", velocity().y());
-		nbt.setDouble("VelocityZ", velocity().z());
+		//nbt.setDouble("VelocityX", velocity().x());
+		//nbt.setDouble("VelocityY", velocity().y());
+		//nbt.setDouble("VelocityZ", velocity().z());
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
-		nbt.setInteger("Behavior", getBehavior().getId());
-		getBehavior().save(nestedCompound(nbt, "BehaviorData"));
+	//	nbt.setInteger("Behavior", getBehavior().getId());
+		//getBehavior().save(nestedCompound(nbt, "BehaviorData"));
 		nbt.setFloat("DamageMultiplier", damageMult);
 	}
 
@@ -230,29 +231,28 @@ public class EntityFloatingBlock extends AvatarEntity {
 	public void onUpdate() {
 
 		super.onUpdate();
-
 		extinguish();
 
 		if (ticksExisted == 1) {
-
 			for (int i = 0; i < 10; i++) {
 				double spawnX = posX + (rand.nextDouble() - 0.5);
 				double spawnY = posY - 0;
 				double spawnZ = posZ + (rand.nextDouble() - 0.5);
 				spawnCrackParticle(spawnX, spawnY, spawnZ, 0, -0.1, 0);
 			}
-
 		}
 
 
-		setVelocity(velocity().times(getFriction()));
+		if (!world.isRemote && getBehavior() != null && getBehavior() instanceof FloatingBlockBehavior.Thrown) {
+			setVelocity(velocity().times(getFriction()));
+		}
 
 		/*prevPosX = posX;
 		prevPosY = posY;
 		prevPosZ = posZ;**/
 		//Uhhh what's this for? It just seems to induce glichtiness...
 
-		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) getBehavior().onUpdate(this);
+		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) Objects.requireNonNull(getBehavior()).onUpdate(this);
 		if (nextBehavior != getBehavior()) setBehavior(nextBehavior);
 
 	}

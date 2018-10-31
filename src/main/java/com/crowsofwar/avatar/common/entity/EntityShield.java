@@ -29,6 +29,7 @@ import net.minecraft.world.World;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * An AvatarEntity that acts as a shield for further attacks. It has a certain amount of health
@@ -103,7 +104,7 @@ public abstract class EntityShield extends AvatarEntity {
 
 	@Override
 	public void setPositionAndUpdate(double x, double y, double z) {
-		super.setPositionAndUpdate(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+		super.setPositionAndUpdate(Objects.requireNonNull(getOwner()).posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
 	}
 
 	@Override

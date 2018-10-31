@@ -20,8 +20,6 @@ package com.crowsofwar.avatar.common.entity.data;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -41,6 +39,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -169,7 +168,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 
 			}
 
-			entity.addVelocity(Vector.DOWN.times(9.81 / 20));
+			entity.addVelocity(Vector.DOWN.times(9.81 / 30));
 
 			World world = entity.world;
 			if (!entity.isDead) {
@@ -199,7 +198,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 
 			if (collided.attackEntityFrom(
 					AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
-					(float) (speed / 30 * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()))) {
+					(float) (speed / 15 * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()))) {
 				BattlePerformanceScore.addMediumScore(entity.getOwner());
 			}
 
@@ -317,15 +316,10 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			}
 
 			Vector motion = target.minus(entity.position());
-			motion = motion.times(1.5);
+			motion = motion.times(0.5 * 20);
 			entity.setVelocity(motion);
 
 
-			// Ensure that owner always has stat ctrl active
-			if (entity.ticksExisted % 10 == 0) {
-				BendingData.get(owner).addStatusControl(StatusControl.THROW_BLOCK);
-				BendingData.get(owner).addStatusControl(StatusControl.PLACE_BLOCK);
-			}
 			return this;
 
 		}

@@ -164,10 +164,17 @@ public class Vector {
 		return rotateVectorAroundVector(axis, ortho, degrees);
 	}
 
-	public static Vector getHelixVector(float distance, float rotationFactor, Vector axis, Vector eyePosition) {
-		Matrix4f rotation = withTranslation(rotationMatrix(new Vector(0, 1, 0), axis), eyePosition);
-		return rotate(rotation, MathHelper.sin(rotationFactor * (float) Math.PI * distance), distance,
-				MathHelper.cos(rotationFactor * (float) Math.PI * distance));
+	/**
+	 *
+	 * @param distance How big the helix is.
+	 * @param axis The axis along which the helix spawns.
+	 * @param startPosition The starting point of the helix
+	 * @return The vector that is returned
+	 */
+	public static Vector getHelixVector(float distance, Vector axis, Vector startPosition) {
+		Matrix4f rotation = withTranslation(rotationMatrix(new Vector(0, 1, 0), axis), startPosition);
+		return rotate(rotation, MathHelper.sin(2 * (float) Math.PI * distance), distance,
+				MathHelper.cos(2 * (float) Math.PI * distance));
 	}
 
 	/**
