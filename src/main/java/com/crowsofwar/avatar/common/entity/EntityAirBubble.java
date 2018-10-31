@@ -90,7 +90,7 @@ public class EntityAirBubble extends EntityShield {
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		assert getOwner() != null;
-		setPosition(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+		setPosition(getEntityPos(getOwner()));
 	}
 
 	@Override
@@ -162,8 +162,7 @@ public class EntityAirBubble extends EntityShield {
 			return;
 		}
 
-
-		setPosition(getEntityPos(getOwner()));
+		setPosition(Vector.getEntityPos(owner));
 		this.motionX = this.motionY = this.motionZ = 0;
 
 		if (getOwner() != null) {
