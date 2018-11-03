@@ -26,7 +26,6 @@ import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.ai.*;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
@@ -78,7 +77,10 @@ import net.minecraftforge.common.ForgeChunkManager.Type;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
@@ -132,7 +134,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private final AnimalCondition condition;
 	private Vector originalPos;
 	private boolean madeSitByPlayer = false;
-		/**
+	/**
 	 * Note: Is null clientside.
 	 */
 	private EntityAiBisonEatGrass aiEatGrass;
@@ -247,7 +249,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 											@Nullable IEntityLivingData livingData) {
 		getData().addBendingId(Airbending.ID);
 		getData().getAbilityData("air_gust").setLevel(0);
-
 
 
 		boolean sterile = false;
@@ -481,7 +482,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		if (index > -1) {
 
-			float sizeOffset = condition.getAgeDays() < 5 ? condition.getAgeDays()/condition.getAdultAge() : 5;
+			float sizeOffset = condition.getAgeDays() < 5 ? condition.getAgeDays() / condition.getAdultAge() : 5;
 			double offset = 0.75;
 			double angle = (index + 0.5) * Math.PI - toRadians(rotationYaw);
 			double yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.35));
@@ -489,12 +490,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			if (passenger == getControllingPassenger() && !this.isSitting()) {
 				angle = -toRadians(passenger.rotationYaw);
 				offset = 1;
-				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.40))  - Math.sin(toRadians(rotationPitch));
+				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.40)) - Math.sin(toRadians(rotationPitch));
 			}
 			if (passenger == getControllingPassenger() && this.isSitting()) {
 				angle = -toRadians(passenger.rotationYaw);
 				offset = 1;
-				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.35))  - Math.sin(toRadians(rotationPitch));
+				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.35)) - Math.sin(toRadians(rotationPitch));
 			}
 
 			passenger.setPosition(posX + sin(angle) * offset, posY + yOffset, posZ + cos(angle) * offset);
@@ -593,7 +594,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			if (!world.isRemote) {
 
 				// This would never trigger normally since bison whistle doesn't have durability
-
 				CriteriaTriggers.ITEM_DURABILITY_CHANGED.trigger((EntityPlayerMP) player, new
 						ItemStack(AvatarItems.itemBisonWhistle), 0);
 
@@ -907,22 +907,22 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		super.onUpdate();
 
 		if (condition.getAgeDays() == 3) {
-				getData().getAbilityData("air_bubble").setLevel(0);
-				getData().getAbilityData("air_gust").setLevel(1);
-				getData().getAbilityData("airblade").setLevel(0);
+			getData().getAbilityData("air_bubble").setLevel(0);
+			getData().getAbilityData("air_gust").setLevel(1);
+			getData().getAbilityData("airblade").setLevel(0);
 		}
 		if (condition.getAgeDays() == 4) {
-				getData().getAbilityData("air_bubble").setLevel(1);
-				getData().getAbilityData("air_gust").setLevel(1);
-				getData().getAbilityData("airblade").setLevel(1);
+			getData().getAbilityData("air_bubble").setLevel(1);
+			getData().getAbilityData("air_gust").setLevel(1);
+			getData().getAbilityData("airblade").setLevel(1);
 		}
 		if (condition.getAgeDays() == 5) {
-				getData().getAbilityData("air_bubble").setLevel(2);
-				getData().getAbilityData("air_gust").setLevel(3);
-				getData().getAbilityData("airblade").setLevel(1);
+			getData().getAbilityData("air_bubble").setLevel(2);
+			getData().getAbilityData("air_gust").setLevel(3);
+			getData().getAbilityData("airblade").setLevel(1);
 		}
 
-		if(this.isSitting() && hasOwner() && (world.getBlockState(getEntityPos(this)
+		if (this.isSitting() && hasOwner() && (world.getBlockState(getEntityPos(this)
 				.toBlockPos()).getBlock() != Blocks.AIR)) {
 			this.motionX = this.motionY = this.motionZ = 0;
 		}
@@ -1009,7 +1009,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 
 	}
-
 
 
 	// moveWithHeading

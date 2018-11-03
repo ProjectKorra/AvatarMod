@@ -49,14 +49,16 @@ public class EntityWaterBubble extends AvatarEntity {
 	 * set on server-side.
 	 */
 	private boolean sourceBlock;
+	private float Width;
+	private float Height;
 
-	/**
-	 * @param world
-	 */
+
 	public EntityWaterBubble(World world) {
 		super(world);
 		setSize(.8f, .8f);
 		this.putsOutFires = true;
+		this.Width = 1;
+		this.Height = 1;
 	}
 
 	@Override
@@ -68,6 +70,8 @@ public class EntityWaterBubble extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+
+		setSize(Width, Height);
 
 		setVelocity(velocity().times(0.9));
 

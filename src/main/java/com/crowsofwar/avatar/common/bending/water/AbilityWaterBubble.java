@@ -84,6 +84,7 @@ public class AbilityWaterBubble extends Ability {
 					Vector pos = ctx.getLookPos();
 
 					EntityWaterBubble bubble = new EntityWaterBubble(world);
+					assert pos != null;
 					bubble.setPosition(pos.x(), pos.y(), pos.z());
 					bubble.setBehavior(new WaterBubbleBehavior.PlayerControlled());
 					bubble.setOwner(entity);
