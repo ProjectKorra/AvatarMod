@@ -709,7 +709,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		if (player.isSneaking() && getOwner() == player) {
 			if (!isSitting()) {
-				MSG_BISON_SITTING.send(player);
+				 Bender b = Bender.get(getOwner());
+				 if (b != null && !world.isRemote) {
+				 	b.sendMessage("avatar.bisonSitting");
+				 }
 			}
 			setSitting(!isSitting());
 			madeSitByPlayer = true;
@@ -766,9 +769,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		world.playSound(null, getPosition(), STONE.getSoundType().getBreakSound(), NEUTRAL, 1, 1);
 		if (condition.getFoodPoints() == 0 && getOwner() != null) {
 			Bender b = Bender.get(getOwner());
-			if (b != null) {
+			if (b != null && !world.isRemote) {
 				b.sendMessage("avatar.bisonNoFood");
-				b.sendMessage("avatar.bisonSitting");
 			}
 		}
 	}
