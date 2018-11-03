@@ -4,7 +4,6 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -19,7 +18,7 @@ public class EntityLightningSpawner extends AvatarEntity {
 	private double Speed;
 
 	/**
-	 * @param world
+	 * @param world The world that the entity is spawned in
 	 */
 
 	public EntityLightningSpawner(World world) {
@@ -52,23 +51,6 @@ public class EntityLightningSpawner extends AvatarEntity {
 		this.boltAccuracy = accuracy;
 	}
 
-
-	@Override
-	protected void entityInit() {
-		super.entityInit();
-	}
-
-	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		super.readEntityFromNBT(nbt);
-		setDead();
-	}
-
-	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		super.writeEntityToNBT(nbt);
-	}
-
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
@@ -86,7 +68,6 @@ public class EntityLightningSpawner extends AvatarEntity {
 
 			float Pos = rand.nextFloat() * (boltAccuracy);
 			//Does a number from 0 to 1 multiplied by the accuracy
-
 
 
 			if (this.ticksExisted % lightningFrequency == 0 && !world.isRemote) {
