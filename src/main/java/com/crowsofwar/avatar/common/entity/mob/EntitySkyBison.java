@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.ai.*;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
 import com.crowsofwar.avatar.common.entity.data.BisonSpawnData;
@@ -763,6 +764,13 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 	private void onLand() {
 		world.playSound(null, getPosition(), STONE.getSoundType().getBreakSound(), NEUTRAL, 1, 1);
+		if (condition.getFoodPoints() == 0 && getOwner() != null) {
+			Bender b = Bender.get(getOwner());
+			if (b != null) {
+				b.sendMessage("avatar.bisonNoFood");
+				b.sendMessage("avatar.bisonSitting");
+			}
+		}
 	}
 
 	@Override
@@ -963,12 +971,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		}
 
 		if (condition.getFoodPoints() == 0 && getOwner() != null) {
-			MSG_BISON_SITTING.send(getOwner());
 			setSitting(true);
 			madeSitByPlayer = false;
-			if (ticksExisted % 40 == 0) {
-				MSG_BISON_NO_FOOD.send(getOwner());
-			}
 		} else if (!hasOwner()) {
 			setSitting(false);
 		}
