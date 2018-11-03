@@ -112,17 +112,21 @@ public class EntityEarthspike extends AvatarEntity {
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		Block belowBlock = world.getBlockState(below).getBlock();
 		damage = damage * belowBlock.getBlockHardness(world.getBlockState(below), world, below);
-		if (getAbility() instanceof AbilityEarthspikes) {
-			AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
+		if (getAbility() instanceof AbilityEarthspikes && getOwner() != null) {
+			AbilityData aD = AbilityData.get(getOwner(), "earthspike");
 			if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				if (!world.isRemote && (!STATS_CONFIG.bendableBlocks.contains(belowBlock) || belowBlock == Blocks.AIR)) {
 					setDead();
 				}
 			}
+			else if (belowBlock == Blocks.AIR) {
+				setDead();;
+			}
 		}
-		else if (belowBlock == Blocks.AIR) {
-			setDead();;
+		else if (!world.isRemote && (!STATS_CONFIG.bendableBlocks.contains(belowBlock) || belowBlock == Blocks.AIR)) {
+			setDead();
 		}
+
 
 
 		// Push collided entities back
