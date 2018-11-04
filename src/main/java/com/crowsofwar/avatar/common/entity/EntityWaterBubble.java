@@ -30,6 +30,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -43,35 +44,56 @@ public class EntityWaterBubble extends AvatarEntity {
 
 	private static final DataParameter<WaterBubbleBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterBubble.class, WaterBubbleBehavior.DATA_SERIALIZER);
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
 
 	/**
 	 * Whether the water bubble will get a water source upon landing. Only
 	 * set on server-side.
 	 */
 	private boolean sourceBlock;
-	private float Width;
-	private float Height;
 
+	public void setSize(float size) {
+		dataManager.set(SYNC_SIZE, size);
+	}
+	public void setHealth(float health) {
+		dataManager.set(SYNC_HEALTH, health);
+	}
+	public void setDegreesPerSecond(float degrees) {
+		dataManager.set(SYNC_DEGREES_PER_SECOND, degrees);
+	}
+
+	public float getSize() {
+		return dataManager.get(SYNC_SIZE);
+	}
+	public float getHealth() {
+		return dataManager.get(SYNC_HEALTH);
+	}
+	public float getDegreesPerSecond() {
+		return dataManager.get(SYNC_DEGREES_PER_SECOND);
+	}
 
 	public EntityWaterBubble(World world) {
 		super(world);
 		setSize(.8f, .8f);
 		this.putsOutFires = true;
-		this.Width = 1;
-		this.Height = 1;
 	}
 
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new WaterBubbleBehavior.Drop());
+		dataManager.register(SYNC_SIZE, 1F);
+		dataManager.register(SYNC_HEALTH, 3F);
+		dataManager.register(SYNC_DEGREES_PER_SECOND, 0F);
 	}
 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
 
-		setSize(Width, Height);
+		setSize(getSize());
 
 		setVelocity(velocity().times(0.9));
 
