@@ -95,7 +95,9 @@ public class EntityWaterBubble extends AvatarEntity {
 
 		setSize(getSize());
 
-		setVelocity(velocity().times(0.9));
+		if (getBehavior() != null && getBehavior() instanceof WaterBubbleBehavior.Lobbed) {
+			setVelocity(velocity().times(0.9));
+		}
 
 		WaterBubbleBehavior currentBehavior = getBehavior();
 		WaterBubbleBehavior nextBehavior = (WaterBubbleBehavior) currentBehavior.onUpdate(this);
