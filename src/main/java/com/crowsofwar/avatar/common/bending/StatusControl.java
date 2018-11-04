@@ -30,7 +30,7 @@ import com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpea
 import com.crowsofwar.avatar.common.bending.sand.StatCtrlSandstormRedirect;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlSkateJump;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlSkateStart;
-import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowBubble;
+import com.crowsofwar.avatar.common.bending.water.StatCtrlLobBubble;
 import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowWater;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -65,7 +65,7 @@ public abstract class StatusControl {
 			START_FLAMETHROW = new StatCtrlSetFlamethrowing(true),
 			STOP_FLAMETHROW = new StatCtrlSetFlamethrowing(false),
 			THROW_FIRE = new StatCtrlThrowFire(),
-			THROW_BUBBLE = new StatCtrlThrowBubble(),
+			THROW_BUBBLE = new StatCtrlLobBubble(),
 			SKATING_JUMP = new StatCtrlSkateJump(),
 			SKATING_START = new StatCtrlSkateStart(),
 			THROW_FIREBALL = new StatCtrlThrowFireball(),

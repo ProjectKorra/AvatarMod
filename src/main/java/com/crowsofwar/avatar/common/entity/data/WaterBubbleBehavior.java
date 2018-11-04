@@ -45,7 +45,8 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
 		registerBehavior(Drop.class);
 		registerBehavior(PlayerControlled.class);
-		registerBehavior(Thrown.class);
+		registerBehavior(Lobbed.class);
+		//When you use the water bubble like a bucket
 	}
 
 	public static class Drop extends WaterBubbleBehavior {
@@ -123,8 +124,8 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 
 	}
 
-	public static class Thrown extends WaterBubbleBehavior {
-
+	public static class Lobbed extends WaterBubbleBehavior {
+		//For when you use the water bubble like a bucket
 		@Override
 		public Behavior onUpdate(EntityWaterBubble entity) {
 			entity.addVelocity(Vector.DOWN.times(0.8));
