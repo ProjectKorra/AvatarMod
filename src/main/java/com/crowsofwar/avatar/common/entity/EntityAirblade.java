@@ -108,7 +108,7 @@ public class EntityAirblade extends AvatarEntity {
 					if (collided instanceof AvatarEntity) {
 						((AvatarEntity) collided).onAirContact();
 					} else if (canCollideWith(collided)) {
-						handleCollision((EntityLivingBase) collided);
+						handleCollision(collided);
 					}
 
 				}
@@ -117,7 +117,7 @@ public class EntityAirblade extends AvatarEntity {
 
 	}
 
-	private void handleCollision(EntityLivingBase collided) {
+	private void handleCollision(Entity collided) {
 		Vector motion = velocity();
 		motion = motion.times(STATS_CONFIG.airbladeSettings.push).withY(0.08);
 		collided.addVelocity(motion.x(), motion.y(), motion.z());

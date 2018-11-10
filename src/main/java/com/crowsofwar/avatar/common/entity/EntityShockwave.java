@@ -212,7 +212,7 @@ public class EntityShockwave extends AvatarEntity {
 		targets.remove(getOwner());
 
 		for (Entity target : targets) {
-			if (target != getOwner() && this.canCollideWith(target) && target != this && !(target instanceof EntityItem) && !world.isRemote) {
+			if (target != getOwner() && this.canCollideWith(target) && target != this && !world.isRemote) {
 
 				if (this.canDamageEntity(target)) {
 					if (target.attackEntityFrom(AvatarDamageSource.causeShockwaveDamage(target, getOwner()), damage)) {
