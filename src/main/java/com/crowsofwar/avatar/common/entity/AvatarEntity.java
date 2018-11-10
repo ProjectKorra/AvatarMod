@@ -30,6 +30,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.init.Blocks;
@@ -351,7 +352,7 @@ public abstract class AvatarEntity extends Entity {
 			return true;
 		}
 		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem
-				|| entity instanceof EntityAreaEffectCloud) {
+				|| entity instanceof EntityAreaEffectCloud || entity instanceof EntityEnderCrystal) {
 			return false;
 		}
 		if (entity == getOwner()) {
