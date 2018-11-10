@@ -47,6 +47,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
 	private static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
 	private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_MAX_SIZE = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
 
 	/**
 	 * Whether the water bubble will get a water source upon landing. Only
@@ -57,6 +58,9 @@ public class EntityWaterBubble extends AvatarEntity {
 	public void setSize(float size) {
 		dataManager.set(SYNC_SIZE, size);
 	}
+	public void setMaxSize(float maxSize) {
+		dataManager.set(SYNC_MAX_SIZE, maxSize);
+	}
 	public void setHealth(float health) {
 		dataManager.set(SYNC_HEALTH, health);
 	}
@@ -66,6 +70,9 @@ public class EntityWaterBubble extends AvatarEntity {
 
 	public float getSize() {
 		return dataManager.get(SYNC_SIZE);
+	}
+	public float getMaxSize() {
+		return dataManager.get(SYNC_MAX_SIZE);
 	}
 	public float getHealth() {
 		return dataManager.get(SYNC_HEALTH);
@@ -85,6 +92,7 @@ public class EntityWaterBubble extends AvatarEntity {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new WaterBubbleBehavior.Drop());
 		dataManager.register(SYNC_SIZE, 1F);
+		dataManager.register(SYNC_MAX_SIZE, 1.5F);
 		dataManager.register(SYNC_HEALTH, 3F);
 		dataManager.register(SYNC_DEGREES_PER_SECOND, 0F);
 	}
