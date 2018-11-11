@@ -26,11 +26,13 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -59,42 +61,42 @@ public class EntityWaterBubble extends AvatarEntity {
 	 */
 	private boolean sourceBlock;
 
-	public void setSize(float size) {
-		dataManager.set(SYNC_SIZE, size);
-	}
-
-	public void setMaxSize(float maxSize) {
-		dataManager.set(SYNC_MAX_SIZE, maxSize);
-	}
-
-	public void setHealth(float health) {
-		dataManager.set(SYNC_HEALTH, health);
-	}
-
-	public void setDegreesPerSecond(float degrees) {
-		dataManager.set(SYNC_DEGREES_PER_SECOND, degrees);
+	public EntityWaterBubble(World world) {
+		super(world);
+		setSize(.8f, .8f);
+		this.putsOutFires = true;
 	}
 
 	public float getSize() {
 		return dataManager.get(SYNC_SIZE);
 	}
 
+	public void setSize(float size) {
+		dataManager.set(SYNC_SIZE, size);
+	}
+
 	public float getMaxSize() {
 		return dataManager.get(SYNC_MAX_SIZE);
+	}
+
+	public void setMaxSize(float maxSize) {
+		dataManager.set(SYNC_MAX_SIZE, maxSize);
 	}
 
 	public float getHealth() {
 		return dataManager.get(SYNC_HEALTH);
 	}
 
+	public void setHealth(float health) {
+		dataManager.set(SYNC_HEALTH, health);
+	}
+
 	public float getDegreesPerSecond() {
 		return dataManager.get(SYNC_DEGREES_PER_SECOND);
 	}
 
-	public EntityWaterBubble(World world) {
-		super(world);
-		setSize(.8f, .8f);
-		this.putsOutFires = true;
+	public void setDegreesPerSecond(float degrees) {
+		dataManager.set(SYNC_DEGREES_PER_SECOND, degrees);
 	}
 
 	@Override
@@ -167,7 +169,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	public void onCollideWithEntity(Entity entity) {
 		if (entity instanceof AvatarEntity) {
 			((AvatarEntity) entity).onMajorWaterContact();
-			if (((AvatarEntity) entity).getAbility() != null && ((AvatarEntity) entity).getOwner() != null) {
+			if (((AvatarEntity) entity).getAbility() != null && ((AvatarEntity) entity).getOwner() != null && getBehavior() != null && getBehavior() instanceof WaterBubbleBehavior.PlayerControlled) {
 				float damage = AbilityData.get(((AvatarEntity) entity).getOwner(), ((AvatarEntity) entity).getAbility().getName()).getLevel();
 				if (((AvatarEntity) entity).getElement() instanceof Firebending) {
 					damage *= 0.5;
@@ -178,7 +180,16 @@ public class EntityWaterBubble extends AvatarEntity {
 				if (((AvatarEntity) entity).getElement() instanceof Waterbending) {
 					damage *= 0.75;
 				}
+				((AvatarEntity) entity).onCollideWithSolid();
 				this.setHealth(getHealth() - damage);
+			}
+		}
+		if (getBehavior() instanceof WaterBubbleBehavior.PlayerControlled) {
+			if (entity instanceof EntityArrow) {
+				float damage = (float) ((EntityArrow) entity).getDamage();
+				Vector vel = Vector.getVelocity(entity).times(-1);
+				entity.addVelocity(vel.x(), 0, vel.z());
+				setHealth(getHealth() - damage);
 			}
 		}
 	}
