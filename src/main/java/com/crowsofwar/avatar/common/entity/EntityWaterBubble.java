@@ -113,7 +113,7 @@ public class EntityWaterBubble extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
-		setSize(getSize());
+		setSize(getSize(), getSize());
 
 		if (getBehavior() != null && getBehavior() instanceof WaterBubbleBehavior.Lobbed) {
 			setVelocity(velocity().times(0.9));
@@ -155,7 +155,7 @@ public class EntityWaterBubble extends AvatarEntity {
 			if (getOwner() != null) {
 				BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
 				if (data != null) {
-					data.removeStatusControl(StatusControl.THROW_BUBBLE);
+					data.removeStatusControl(StatusControl.LOB_BUBBLE);
 				}
 			}
 		}

@@ -55,15 +55,18 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		GlStateManager.color(colorEnhancement, colorEnhancement, colorEnhancement, 0.6f);
 
 		Matrix4f mat = new Matrix4f();
-		mat.translate((float) x - 0.5f, (float) y, (float) z - 0.5f);
+		mat.translate((float) x - 0.5f, (float) y * bubble.getSize(), (float) z - 0.5f);
 
 		// (0 Left)/(1 Right), (0 Bottom)/(1 Top), (0 Front)/(1 Back)
+		//Vector4f mid = new Vector4f((float) x, (float) y + .5f, (float) z, 1);
 
-		Vector4f mid = new Vector4f((float) x, (float) y + .5f, (float) z, 1);
+		mat.rotate(ticks / 25f, 1, 0, 0);
+		mat.rotate(ticks / 25f, 0, 1, 0);
+		mat.rotate(ticks / 25f, 0, 0, 1);
 
 		// @formatter:off
 		Vector4f
-		lbf = new Vector4f(0, 0, 0, 1).mul(mat),
+		lbf = new Vector4f(0, 0, 0, 1 * bubble.getSize()).mul(mat),
 		rbf = new Vector4f(1, 0, 0, 1).mul(mat),
 		ltf = new Vector4f(0, 1, 0, 1).mul(mat),
 		rtf = new Vector4f(1, 1, 0, 1).mul(mat),

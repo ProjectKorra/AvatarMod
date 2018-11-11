@@ -28,10 +28,7 @@ import com.crowsofwar.avatar.common.bending.fire.*;
 import com.crowsofwar.avatar.common.bending.ice.StatCtrlShieldShatter;
 import com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear;
 import com.crowsofwar.avatar.common.bending.sand.StatCtrlSandstormRedirect;
-import com.crowsofwar.avatar.common.bending.water.StatCtrlSkateJump;
-import com.crowsofwar.avatar.common.bending.water.StatCtrlSkateStart;
-import com.crowsofwar.avatar.common.bending.water.StatCtrlLobBubble;
-import com.crowsofwar.avatar.common.bending.water.StatCtrlThrowWater;
+import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -58,25 +55,26 @@ public abstract class StatusControl {
 	// @formatter:off
 	public static final StatusControl
 			AIR_JUMP = new StatCtrlAirJump(),
-			FIRE_JUMP = new StatCtrlFireJump(),
-			PLACE_BLOCK = new StatCtrlPlaceBlock(),
-			THROW_BLOCK = new StatCtrlThrowBlock(),
-			THROW_WATER = new StatCtrlThrowWater(),
-			START_FLAMETHROW = new StatCtrlSetFlamethrowing(true),
-			STOP_FLAMETHROW = new StatCtrlSetFlamethrowing(false),
-			THROW_FIRE = new StatCtrlThrowFire(),
-			THROW_BUBBLE = new StatCtrlLobBubble(),
-			SKATING_JUMP = new StatCtrlSkateJump(),
-			SKATING_START = new StatCtrlSkateStart(),
-			THROW_FIREBALL = new StatCtrlThrowFireball(),
-			THROW_CLOUDBURST = new StatCtrlThrowCloudBall(),
-			THROW_LIGHTNINGSPEAR = new StatCtrlThrowLightningSpear(),
 			BUBBLE_EXPAND = new StatCtrlBubbleExpand(),
 			BUBBLE_CONTRACT = new StatCtrlBubbleContract(),
-			SHIELD_SHATTER = new StatCtrlShieldShatter(),
+			CHARGE_BUBBLE = new StatCtrlChargeBubble(),
 			DROP_WALL = new StatCtrlDropWall(),
+			FIRE_JUMP = new StatCtrlFireJump(),
+			INFERNO_PUNCH = new StatCtrlInfernoPunch(),
+			LOB_BUBBLE = new StatCtrlLobBubble(),
+			PLACE_BLOCK = new StatCtrlPlaceBlock(),
 			SANDSTORM_REDIRECT = new StatCtrlSandstormRedirect(),
-			INFERNO_PUNCH = new StatCtrlInfernoPunch();
+			SHIELD_SHATTER = new StatCtrlShieldShatter(),
+			SKATING_JUMP = new StatCtrlSkateJump(),
+			SKATING_START = new StatCtrlSkateStart(),
+			START_FLAMETHROW = new StatCtrlSetFlamethrowing(true),
+			STOP_FLAMETHROW = new StatCtrlSetFlamethrowing(false),
+			THROW_BLOCK = new StatCtrlThrowBlock(),
+			THROW_CLOUDBURST = new StatCtrlThrowCloudBall(),
+			THROW_FIRE = new StatCtrlThrowFire(),
+			THROW_FIREBALL = new StatCtrlThrowFireball(),
+			THROW_LIGHTNINGSPEAR = new StatCtrlThrowLightningSpear(),
+			THROW_WATER = new StatCtrlThrowWater();
 	// @formatter:on
 
 	private static int nextId = 0;

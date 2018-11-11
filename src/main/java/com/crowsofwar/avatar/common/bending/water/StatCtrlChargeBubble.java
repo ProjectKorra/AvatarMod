@@ -3,14 +3,27 @@ package com.crowsofwar.avatar.common.bending.water;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.World;
 
 public class StatCtrlChargeBubble extends StatusControl {
-	public StatCtrlChargeBubble(int texture, AvatarControl subscribeTo, CrosshairPosition position) {
+	public StatCtrlChargeBubble() {
 		super(20, AvatarControl.CONTROL_SHIFT, CrosshairPosition.ABOVE_CROSSHAIR);
 	}
 
 	@Override
 	public boolean execute(BendingContext ctx) {
-		return false;
+		EntityLivingBase entity = ctx.getBenderEntity();
+		World world = ctx.getWorld();
+		EntityWaterBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityWaterBubble.class, entity);
+		if (bubble != null) {
+			bubble.setSize(bubble.getSize() + 0.01F);
+			bubble.setDegreesPerSecond(bubble.getDegreesPerSecond() + 1);
+			bubble.setHealth(bubble.getHealth() + 0.02F);
+			return bubble.getSize() > bubble.getMaxSize();
+		}
+		else return true;
 	}
 }
