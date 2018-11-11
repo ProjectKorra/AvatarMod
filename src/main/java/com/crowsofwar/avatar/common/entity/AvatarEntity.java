@@ -28,11 +28,11 @@ import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.*;
-import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -65,10 +65,12 @@ public abstract class AvatarEntity extends Entity {
 	private static final DataParameter<Optional<UUID>> SYNC_OWNER = EntityDataManager.createKey
 			(AvatarEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
+
 	protected boolean putsOutFires;
 	protected boolean flammable;
 	private double powerRating;
 	private Ability ability;
+	private BendingStyle element;
 
 	private SyncedEntity<EntityLivingBase> ownerRef;
 
@@ -81,6 +83,7 @@ public abstract class AvatarEntity extends Entity {
 		this.ownerRef = new SyncedEntity<>(this, SYNC_OWNER);
 		this.putsOutFires = false;
 		this.flammable = false;
+		this.element = null;
 	}
 
 	/**
@@ -545,8 +548,13 @@ public abstract class AvatarEntity extends Entity {
 	protected void playStepSound(BlockPos pos, Block blockIn) {
 	}
 
+	public void setElement(BendingStyle element) {
+		this.element = element;
+	}
+
 	//Used to determine what element the entity is
 	public BendingStyle getElement() {
-		return null;
+		return element;
 	}
+
 }

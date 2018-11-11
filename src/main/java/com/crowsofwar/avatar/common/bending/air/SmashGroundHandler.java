@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.*;
@@ -64,6 +65,7 @@ public class SmashGroundHandler extends TickHandler {
 		shockwave.setKnockbackHeight(getKnockbackHeight());
 		shockwave.setSpeed(getSpeed() / 5);
 		shockwave.setRange(getRange());
+		shockwave.setElement(getElement());
 		shockwave.setParticle(getParticle());
 		shockwave.setParticleAmount(getParticleAmount());
 		shockwave.setParticleSpeed(getParticleSpeed());
@@ -126,5 +128,8 @@ public class SmashGroundHandler extends TickHandler {
 		return 2.5F;
 	}
 
+	protected BendingStyle getElement() {
+		return new Airbending();
+	}
 }
 

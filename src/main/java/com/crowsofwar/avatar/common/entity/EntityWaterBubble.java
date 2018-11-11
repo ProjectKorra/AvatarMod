@@ -18,6 +18,10 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
+import com.crowsofwar.avatar.common.bending.water.Waterbending;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
@@ -106,6 +110,9 @@ public class EntityWaterBubble extends AvatarEntity {
 		if (getBehavior() != null && getBehavior() instanceof WaterBubbleBehavior.Lobbed) {
 			setVelocity(velocity().times(0.9));
 		}
+		if (getHealth() == 0) {
+			this.setDead();
+		}
 
 		WaterBubbleBehavior currentBehavior = getBehavior();
 		WaterBubbleBehavior nextBehavior = (WaterBubbleBehavior) currentBehavior.onUpdate(this);
@@ -154,6 +161,19 @@ public class EntityWaterBubble extends AvatarEntity {
 	public void onCollideWithEntity(Entity entity) {
 		if (entity instanceof AvatarEntity) {
 			((AvatarEntity) entity).onMajorWaterContact();
+			if (((AvatarEntity) entity).getAbility() != null && ((AvatarEntity) entity).getOwner() != null) {
+				float damage = AbilityData.get(((AvatarEntity) entity).getOwner(), ((AvatarEntity) entity).getAbility().getName()).getLevel();
+				if (((AvatarEntity) entity).getElement() instanceof Firebending) {
+					damage *= 0.5;
+				}
+				if (((AvatarEntity) entity).getElement() instanceof Lightningbending) {
+					damage *= 2;
+				}
+				if (((AvatarEntity) entity).getElement() instanceof Waterbending) {
+					damage *= 0.75;
+				}
+				this.setHealth(getHealth() - damage);
+			}
 		}
 	}
 

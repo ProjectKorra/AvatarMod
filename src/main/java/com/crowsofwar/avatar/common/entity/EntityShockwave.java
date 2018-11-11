@@ -213,38 +213,40 @@ public class EntityShockwave extends AvatarEntity {
 
 			targets.remove(getOwner());
 
-			for (Entity target : targets) {
-				if (this.canCollideWith(target) && target != this) {
+			if (!targets.isEmpty()) {
+				for (Entity target : targets) {
+					if (this.canCollideWith(target) && target != this) {
 
-					if (this.canDamageEntity(target) && !world.isRemote) {
-						if (target.attackEntityFrom(AvatarDamageSource.causeShockwaveDamage(target, getOwner()), damage)) {
-							int amount = performanceAmount > SCORE_MOD_SMALL ? performanceAmount : (int) SCORE_MOD_SMALL;
-							amount = amount > SCORE_MOD_MEDIUM ? (int) SCORE_MOD_MEDIUM : performanceAmount;
-							BattlePerformanceScore.addScore(getOwner(), amount);
-							target.setFire(isFire ? fireTime : 0);
-							if (getAbility() != null && getAbility() instanceof AbilityAirBurst) {
-								AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
-								aD.addXp(SKILLS_CONFIG.airBurstHit - aD.getLevel());
-								if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST) && target instanceof EntityLivingBase) {
-									((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
-									((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
-									((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
+						if (this.canDamageEntity(target) && !world.isRemote) {
+							if (target.attackEntityFrom(AvatarDamageSource.causeShockwaveDamage(target, getOwner()), damage)) {
+								int amount = performanceAmount > SCORE_MOD_SMALL ? performanceAmount : (int) SCORE_MOD_SMALL;
+								amount = amount > SCORE_MOD_MEDIUM ? (int) SCORE_MOD_MEDIUM : performanceAmount;
+								BattlePerformanceScore.addScore(getOwner(), amount);
+								target.setFire(isFire ? fireTime : 0);
+								if (getAbility() != null && getAbility() instanceof AbilityAirBurst) {
+									AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
+									aD.addXp(SKILLS_CONFIG.airBurstHit - aD.getLevel());
+									if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST) && target instanceof EntityLivingBase) {
+										((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
+										((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
+										((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
+									}
 								}
 							}
 						}
-					}
-					double xSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted * speed) :
-							Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted / 5F * speed);
-					double ySpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted / 2F * speed) :
-							knockbackHeight; // Throws target into the air.
-					double zSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted * speed) :
-							Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 5F * speed);
-					ySpeed = ySpeed > knockbackHeight ? ySpeed : knockbackHeight;
-					target.motionX += xSpeed;
-					target.motionY += ySpeed * 2;
-					target.motionZ += zSpeed;
+						double xSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted * speed) :
+								Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted / 5F * speed);
+						double ySpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted / 2F * speed) :
+								knockbackHeight; // Throws target into the air.
+						double zSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted * speed) :
+								Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 5F * speed);
+						ySpeed = ySpeed > knockbackHeight ? ySpeed : knockbackHeight;
+						target.motionX += xSpeed;
+						target.motionY += ySpeed * 2;
+						target.motionZ += zSpeed;
 
-					AvatarUtils.afterVelocityAdded(target);
+						AvatarUtils.afterVelocityAdded(target);
+					}
 				}
 			}
 		}

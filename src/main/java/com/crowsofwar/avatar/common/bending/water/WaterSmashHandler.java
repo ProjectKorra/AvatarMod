@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
@@ -50,5 +51,10 @@ public class WaterSmashHandler extends SmashGroundHandler {
 	@Override
 	protected Ability getAbility() {
 		return new AbilityWaterSkate();
+	}
+
+	@Override
+	protected BendingStyle getElement() {
+		return new Waterbending();
 	}
 }

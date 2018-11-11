@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
+import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -112,6 +113,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		wave.setRange(getSizeMultiplier() * 2);
 		wave.setParticleController(20);
 		wave.setSphere(true);
+		wave.setElement(new Lightningbending());
 		wave.setPerformanceAmount(10);
 		wave.setKnockbackHeight(0.2);
 		world.spawnEntity(wave);
