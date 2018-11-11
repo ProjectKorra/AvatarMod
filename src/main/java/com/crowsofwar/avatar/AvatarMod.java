@@ -20,8 +20,6 @@ package com.crowsofwar.avatar;
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRaze;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
 import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosion;
@@ -32,10 +30,7 @@ import com.crowsofwar.avatar.common.bending.fire.*;
 import com.crowsofwar.avatar.common.bending.ice.AbilityIceBurst;
 import com.crowsofwar.avatar.common.bending.ice.AbilityIcePrison;
 import com.crowsofwar.avatar.common.bending.ice.Icebending;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRedirect;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
-import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
+import com.crowsofwar.avatar.common.bending.lightning.*;
 import com.crowsofwar.avatar.common.bending.sand.AbilitySandPrison;
 import com.crowsofwar.avatar.common.bending.sand.AbilitySandstorm;
 import com.crowsofwar.avatar.common.bending.sand.Sandbending;
@@ -193,9 +188,8 @@ public class AvatarMod {
 		WallBehavior.register();
 		FireballBehavior.register();
 		CloudburstBehavior.register();
-		AvatarChatMessages.loadAll();
 		LightningSpearBehavior.register();
-		BoulderBehavior.register();
+		AvatarChatMessages.loadAll();
 
 		EarthbendingEvents.register();
 
@@ -224,7 +218,7 @@ public class AvatarMod {
 		registerEntity(EntityAirblade.class, "Airblade");
 		registerEntity(EntityAirBubble.class, "AirBubble");
 		registerEntity(EntityFirebender.class, "Firebender", 0xB0171F, 0xFFFF00);
-		registerEntity(EntityAirbender.class, "Airbender", 0xffffff,0xDDA0DD);
+		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xDDA0DD);
 		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0x8B5A00);
 		registerEntity(EntityOtterPenguin.class, "OtterPenguin", 0xffffff, 0x104E8B);
 		registerEntity(AvatarEntityItem.class, "Item");
@@ -241,7 +235,6 @@ public class AvatarMod {
 		registerEntity(EntityWaterCannon.class, "WaterCannon");
 		registerEntity(EntitySandstorm.class, "Sandstorm");
 		registerEntity(EntityExplosionSpawner.class, "ExplosionSpawner");
-		registerEntity(EntityBoulder.class, "Boulder");
 		registerEntity(EntityLightningSpawner.class, "LightningSpawner");
 		registerEntity(EntityShockwave.class, "Shockwave");
 

@@ -4,23 +4,17 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.EntityBoulder;
-import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
-import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
-import com.crowsofwar.avatar.common.entity.data.BoulderBehavior;
-import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 public class AbilityBoulderRing extends Ability {
 
-	public AbilityBoulderRing(){
-		super (Earthbending.ID, "boulder_ring");
+	public AbilityBoulderRing() {
+		super(Earthbending.ID, "boulder_ring");
 		requireRaytrace(2.5, false);
 	}
 
@@ -71,15 +65,15 @@ public class AbilityBoulderRing extends Ability {
 
 		if (bender.consumeChi(chi)) {
 
-				//for (int i = 0; i < 3; i++) {
+			//for (int i = 0; i < 3; i++) {
 
-					Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-							360/boulders), entity.rotationPitch);
-					//Vector velocity = direction1.times(speed);
-					Vector playerPos = getEyePos(entity);
-					Vector target = playerPos.plus(getLookRectangular(entity).times(2.5));
+			Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
+					360F / boulders), entity.rotationPitch);
+			//Vector velocity = direction1.times(speed);
+			Vector playerPos = getEyePos(entity);
+			Vector target = playerPos.plus(getLookRectangular(entity).times(2.5));
 
-					EntityBoulder boulder = new EntityBoulder(world);
+				/*	EntityBoulder boulder = new EntityBoulder(world);
 					boulder.setSpeed((float) speed);
 					boulder.setTicksAlive(ticks);
 					boulder.setOwner(entity);
@@ -92,11 +86,11 @@ public class AbilityBoulderRing extends Ability {
 					boulder.setKnockBack(0.1F);
 					boulder.setBehavior(new BoulderBehavior.PlayerControlled());
 					boulder.setAbility(this);
-					world.spawnEntity(boulder);
+					world.spawnEntity(boulder);**/
 
-				//}
-			}
-
+			//}
 		}
+
 	}
+}
 
