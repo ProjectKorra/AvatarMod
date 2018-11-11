@@ -201,7 +201,7 @@ public abstract class AvatarEntity extends Entity {
 		setPosition(position.x(), position.y(), position.z());
 	}
 
-	public void setPosition (Vec3d position) {
+	public void setPosition(Vec3d position) {
 		setPosition(position.x, position.y, position.z);
 	}
 
@@ -352,9 +352,7 @@ public abstract class AvatarEntity extends Entity {
 		}
 		if (entity == getOwner()) {
 			return false;
-		}
-
-		else return entity instanceof AvatarEntity || (entity.canBePushed() && entity.canBeCollidedWith()) ;
+		} else return entity instanceof AvatarEntity || (entity.canBePushed() && entity.canBeCollidedWith());
 	}
 
 	@Override
@@ -413,6 +411,7 @@ public abstract class AvatarEntity extends Entity {
 	public boolean onLightningContact() {
 		return false;
 	}
+
 	/**
 	 * Called when an airbending entity (such as an air gust) hits the entity. Returns whether
 	 * the entity was destroyed.
@@ -429,10 +428,9 @@ public abstract class AvatarEntity extends Entity {
 	}
 
 	/**
-	 *Returns whether the entity the avatar entity collided with can be damaged- useful for preventing crashes.
+	 * Returns whether the entity the avatar entity collided with can be damaged- useful for preventing crashes.
 	 * Ex: You can collide with an armour stand, but you can't damage it.
 	 */
-
 
 
 	public boolean canDamageEntity(Entity entity) {

@@ -43,7 +43,7 @@ public class EntityCloudBall extends AvatarEntity {
 	 * @param world
 	 */
 	public static final DataParameter<CloudburstBehavior> SYNC_BEHAVIOR = EntityDataManager
-					.createKey(EntityCloudBall.class, CloudburstBehavior.DATA_SERIALIZER);
+			.createKey(EntityCloudBall.class, CloudburstBehavior.DATA_SERIALIZER);
 
 	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityCloudBall.class, DataSerializers.VARINT);
 
@@ -95,7 +95,7 @@ public class EntityCloudBall extends AvatarEntity {
 
 		if (ticksExisted % 2 == 0) {
 			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, (0.05F),
-							(1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
+					(1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 		}
 
 		// Add hook or something
@@ -111,7 +111,7 @@ public class EntityCloudBall extends AvatarEntity {
 				bD.removeStatusControl(StatusControl.THROW_CLOUDBURST);
 			}
 			if (ball != null && ball.getBehavior() instanceof CloudburstBehavior.PlayerControlled && !(bD
-							.hasStatusControl(StatusControl.THROW_CLOUDBURST))) {
+					.hasStatusControl(StatusControl.THROW_CLOUDBURST))) {
 				bD.addStatusControl(StatusControl.THROW_CLOUDBURST);
 			}
 
@@ -260,9 +260,9 @@ public class EntityCloudBall extends AvatarEntity {
 				WorldServer World = (WorldServer) world;
 				World.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, 50, 0, 0, 0, speed);
 				world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 4.0F,
-								(1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
+						(1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(hitBox, hitBox, hitBox),
-																		 entity -> entity != getOwner());
+						entity -> entity != getOwner());
 
 				if (!collided.isEmpty()) {
 					for (Entity entity : collided) {
@@ -272,9 +272,9 @@ public class EntityCloudBall extends AvatarEntity {
 
 							//Divide the result of the position difference to make entities fly
 							//further the closer they are to the player.
-							double dist = (hitBox - entity.getDistance(entity)) > 1 ? (hitBox- entity.getDistance(entity)) : 1;
+							double dist = (hitBox - entity.getDistance(entity)) > 1 ? (hitBox - entity.getDistance(entity)) : 1;
 							Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
-							velocity = velocity.dividedBy(40).times(dist).withY(hitBox/50);
+							velocity = velocity.dividedBy(40).times(dist).withY(hitBox / 50);
 
 							double x = (velocity.x());
 							double y = (velocity.y()) > 0 ? velocity.y() : 0.3F;
@@ -285,7 +285,7 @@ public class EntityCloudBall extends AvatarEntity {
 
 								if (collided instanceof AvatarEntity) {
 									if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
-													&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+											&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
 										AvatarEntity avent = (AvatarEntity) collided;
 										avent.addVelocity(x, y, z);
 									}

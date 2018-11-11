@@ -21,7 +21,6 @@ import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
@@ -51,7 +50,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Objects;
 import java.util.Random;
 
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
 public class EntityFloatingBlock extends AvatarEntity {
@@ -160,7 +158,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		//nbt.setDouble("VelocityZ", velocity().z());
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
-	//	nbt.setInteger("Behavior", getBehavior().getId());
+		//	nbt.setInteger("Behavior", getBehavior().getId());
 		//getBehavior().save(nestedCompound(nbt, "BehaviorData"));
 		nbt.setFloat("DamageMultiplier", damageMult);
 	}

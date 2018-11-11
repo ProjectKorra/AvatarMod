@@ -62,12 +62,15 @@ public class EntityWaterBubble extends AvatarEntity {
 	public void setSize(float size) {
 		dataManager.set(SYNC_SIZE, size);
 	}
+
 	public void setMaxSize(float maxSize) {
 		dataManager.set(SYNC_MAX_SIZE, maxSize);
 	}
+
 	public void setHealth(float health) {
 		dataManager.set(SYNC_HEALTH, health);
 	}
+
 	public void setDegreesPerSecond(float degrees) {
 		dataManager.set(SYNC_DEGREES_PER_SECOND, degrees);
 	}
@@ -75,12 +78,15 @@ public class EntityWaterBubble extends AvatarEntity {
 	public float getSize() {
 		return dataManager.get(SYNC_SIZE);
 	}
+
 	public float getMaxSize() {
 		return dataManager.get(SYNC_MAX_SIZE);
 	}
+
 	public float getHealth() {
 		return dataManager.get(SYNC_HEALTH);
 	}
+
 	public float getDegreesPerSecond() {
 		return dataManager.get(SYNC_DEGREES_PER_SECOND);
 	}

@@ -329,6 +329,4 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	}
 
 
-
-
 }

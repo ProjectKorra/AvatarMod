@@ -118,15 +118,13 @@ public class EntityEarthspike extends AvatarEntity {
 				if (!world.isRemote && (!STATS_CONFIG.bendableBlocks.contains(belowBlock) || belowBlock == Blocks.AIR)) {
 					setDead();
 				}
+			} else if (belowBlock == Blocks.AIR) {
+				setDead();
+				;
 			}
-			else if (belowBlock == Blocks.AIR) {
-				setDead();;
-			}
-		}
-		else if (!world.isRemote && (!STATS_CONFIG.bendableBlocks.contains(belowBlock) || belowBlock == Blocks.AIR)) {
+		} else if (!world.isRemote && (!STATS_CONFIG.bendableBlocks.contains(belowBlock) || belowBlock == Blocks.AIR)) {
 			setDead();
 		}
-
 
 
 		// Push collided entities back

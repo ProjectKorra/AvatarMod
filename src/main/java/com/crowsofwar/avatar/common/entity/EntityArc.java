@@ -74,8 +74,7 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 		}
 		if (!this.world.isDaytime()) {
 			brightness = 500;
-		}
-		else brightness = 15728880;
+		} else brightness = 15728880;
 
 		ignoreFrustumCheck = true;
 

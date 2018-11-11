@@ -128,7 +128,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	protected void updateCpBehavior() {
 		super.updateCpBehavior();
 		getControlPoint(0).setPosition(this.position());
-		getLeader().setPosition(this.position().plusY(getSize()/8));
+		getLeader().setPosition(this.position().plusY(getSize() / 8));
 	}
 
 	public void damageEntity(Entity entity) {
@@ -302,7 +302,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		if (getOwner() == null) {
 			this.setDead();
 		}
-		setSize(getSize()/2, getSize()/2);
+		setSize(getSize() / 2, getSize() / 2);
 
 		if (getBehavior() != null && getBehavior() instanceof WaterArcBehavior.PlayerControlled) {
 			this.velocityMultiplier = 4;

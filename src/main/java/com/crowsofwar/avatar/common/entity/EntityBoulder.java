@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 public class EntityBoulder extends AvatarEntity {
 
 
-	public static final DataParameter<Integer> SYNC_BOULDERS_LEFT= EntityDataManager.createKey(
+	public static final DataParameter<Integer> SYNC_BOULDERS_LEFT = EntityDataManager.createKey(
 			EntityBoulder.class, DataSerializers.VARINT);
 
 	public static final DataParameter<BoulderBehavior> SYNC_BEHAVIOR = EntityDataManager
@@ -50,11 +50,11 @@ public class EntityBoulder extends AvatarEntity {
 	private int bouldersLeft;
 	//How far away the entity is from the player.
 
-	public void setHealth (float health) {
+	public void setHealth(float health) {
 		this.Health = health;
 	}
 
-	public void setTicksAlive (float ticks) {
+	public void setTicksAlive(float ticks) {
 		this.ticksAlive = ticks;
 	}
 
@@ -62,31 +62,31 @@ public class EntityBoulder extends AvatarEntity {
 		this.Radius = radius;
 	}**/
 
-	public void setDamage (float damage) {
+	public void setDamage(float damage) {
 		dataManager.set(SYNC_DAMAGE, damage);
 	}
 
-	public void setSpeed (float speed) {
+	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
 
-	public void setKnockBack (float knockBack){
+	public void setKnockBack(float knockBack) {
 		dataManager.set(SYNC_KNOCKBACK, knockBack);
 	}
 
-	public void setSize (float size) {
+	public void setSize(float size) {
 		dataManager.set(SYNC_SIZE, (int) size);
 	}
 
-	public void setBouldersLeft (int boulders) {
+	public void setBouldersLeft(int boulders) {
 		dataManager.set(SYNC_BOULDERS_LEFT, boulders);
 	}
 
-	public int getBouldersLeft(){
+	public int getBouldersLeft() {
 		return dataManager.get(SYNC_BOULDERS_LEFT);
 	}
 
-	public float getSpeed(){
+	public float getSpeed() {
 		return this.speed;
 	}
 
@@ -102,10 +102,9 @@ public class EntityBoulder extends AvatarEntity {
 		return dataManager.get(SYNC_SIZE);
 	}
 
-	public float getKnockBack(){
+	public float getKnockBack() {
 		return dataManager.get(SYNC_KNOCKBACK);
 	}
-
 
 
 	public BoulderBehavior getBehavior() {
@@ -121,7 +120,7 @@ public class EntityBoulder extends AvatarEntity {
 	/**
 	 * @param world
 	 */
-	public EntityBoulder (World world) {
+	public EntityBoulder(World world) {
 		super(world);
 		setSize(0.8f, 0.8f);
 		Damage = 0.1F;
@@ -140,12 +139,10 @@ public class EntityBoulder extends AvatarEntity {
 	}
 
 
-
 	@Override
 	public EntityLivingBase getController() {
 		return getBehavior() instanceof BoulderBehavior.PlayerControlled ? getOwner() : null;
 	}
-
 
 
 	@Override
@@ -202,11 +199,9 @@ public class EntityBoulder extends AvatarEntity {
 	}
 
 
-
-
 	@Override
 	public boolean onCollideWithSolid() {
-		this.Health --;
+		this.Health--;
 		return true;
 
 	}
@@ -226,15 +221,15 @@ public class EntityBoulder extends AvatarEntity {
 			if (attackEntity(entity)) {
 				if (getOwner() != null) {
 					BendingData data = BendingData.get(getOwner());
-					data.getAbilityData("boulder_ring").addXp(3 - data.getAbilityData("boulder_ring").getLevel()/3);
+					data.getAbilityData("boulder_ring").addXp(3 - data.getAbilityData("boulder_ring").getLevel() / 3);
 					BattlePerformanceScore.addSmallScore(getOwner());
 				}
 
 			}
-			if (entity instanceof EntityArrow){
+			if (entity instanceof EntityArrow) {
 				this.Health -= 1;
 			}
-			if (entity instanceof AvatarEntity && ((AvatarEntity) entity).isProjectile()){
+			if (entity instanceof AvatarEntity && ((AvatarEntity) entity).isProjectile()) {
 				entity.setDead();
 				this.Health -= 1;
 			}

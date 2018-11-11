@@ -103,7 +103,7 @@ public class EntityIcePrison extends AvatarEntity {
 		prison.setOwner(owner);
 		prison.copyLocationAndAnglesFrom(entity);
 		prison.setAbility(ab);
-		
+
 		Bender bender = Bender.get(owner);
 		prison.setStats(bender.getData().getAbilityData("ice_prison"), bender.calcPowerRating(Icebending.ID));
 

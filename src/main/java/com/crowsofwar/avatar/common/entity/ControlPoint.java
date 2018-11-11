@@ -175,6 +175,7 @@ public class ControlPoint {
 
 	/**
 	 * Get the interpolated position between two ticks.
+	 *
 	 * @param partialTicks The percentage through this tick, from 0..1
 	 */
 	public Vector getInterpolatedPosition(float partialTicks) {

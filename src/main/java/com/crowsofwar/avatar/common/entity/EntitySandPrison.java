@@ -99,7 +99,7 @@ public class EntitySandPrison extends AvatarEntity {
 		prison.setImprisoned(entity);
 		prison.copyLocationAndAnglesFrom(entity);
 		prison.setAbility(ab);
-		
+
 		double powerRating = Bender.get(owner).calcPowerRating(Sandbending.ID);
 		prison.setStats(AbilityData.get(owner, "sand_prison"), powerRating);
 
