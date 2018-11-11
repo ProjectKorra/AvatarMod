@@ -30,6 +30,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.init.Blocks;
@@ -349,7 +350,8 @@ public abstract class AvatarEntity extends Entity {
 		if (entity == getOwner()) {
 			return false;
 		}
-		else return entity instanceof AvatarEntity || (entity.canBePushed() && entity.canBeCollidedWith() && entity.canBeAttackedWithItem()) ;
+
+		else return entity instanceof AvatarEntity || (entity.canBePushed() && entity.canBeCollidedWith()) ;
 	}
 
 	@Override
@@ -431,13 +433,7 @@ public abstract class AvatarEntity extends Entity {
 
 
 	public boolean canDamageEntity(Entity entity) {
-		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == entity) {
-			return false;
-		}
-	/*	if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
-				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud) {
-			return false;
-		}**/ else return entity.canBeCollidedWith() && entity.canBePushed() && canCollideWith(entity);
+		return canCollideWith(entity) || entity instanceof EntityEnderCrystal;
 	}
 
 	/**

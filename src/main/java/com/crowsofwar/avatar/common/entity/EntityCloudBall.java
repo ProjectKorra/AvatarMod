@@ -174,26 +174,21 @@ public class EntityCloudBall extends AvatarEntity {
 	}
 
 	@Override
-	public boolean canCollideWith(Entity entity) {
+	public void onCollideWithEntity(Entity entity) {
 		if (getOwner() != null) {
-
 			if (absorbtion) {
 				if (entity instanceof AvatarEntity) {
 					((AvatarEntity) entity).isProjectile();
 					entity.setDead();
 					damage += 3F;
-					return false;
 				}
-
 				if (entity instanceof EntityArrow) {
 					entity.setDead();
 					damage += 2F;
-					return false;
 				}
 				if (entity instanceof EntityThrowable) {
 					entity.setDead();
 					damage += 1F;
-					return false;
 				}
 			}
 			if (chismash) {
@@ -204,7 +199,7 @@ public class EntityCloudBall extends AvatarEntity {
 							CloudburstPowerModifier cloudModifier = new CloudburstPowerModifier();
 							cloudModifier.setTicks(100);
 							Objects.requireNonNull(data.getPowerRatingManager(uuid))
-											.addModifier(cloudModifier, new BendingContext(data, (EntityLivingBase) entity, new Raytrace.Result()));
+									.addModifier(cloudModifier, new BendingContext(data, (EntityLivingBase) entity, new Raytrace.Result()));
 						}
 
 					}
@@ -215,8 +210,7 @@ public class EntityCloudBall extends AvatarEntity {
 		if (getBehavior() instanceof CloudburstBehavior.Thrown) {
 			cloudBurst();
 		}
-		return super.canCollideWith(entity);
-
+		super.onCollideWithEntity(entity);
 	}
 
 	/**

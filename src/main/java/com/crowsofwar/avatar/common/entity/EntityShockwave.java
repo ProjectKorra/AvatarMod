@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
@@ -203,46 +204,48 @@ public class EntityShockwave extends AvatarEntity {
 			}
 		}
 
-		AxisAlignedBB box = new AxisAlignedBB(posX + (ticksExisted * speed), posY + 1.5, posZ + (ticksExisted * speed),
-				posX - (ticksExisted * speed), posY - 1.5, posZ - (ticksExisted * speed));
+		if (!world.isRemote) {
+			AxisAlignedBB box = new AxisAlignedBB(posX + (ticksExisted * speed), posY + 1.5, posZ + (ticksExisted * speed),
+					posX - (ticksExisted * speed), posY - 1.5, posZ - (ticksExisted * speed));
 
-		List<Entity> targets = world.getEntitiesWithinAABB(
-				Entity.class, box);
+			List<Entity> targets = world.getEntitiesWithinAABB(
+					Entity.class, box);
 
-		targets.remove(getOwner());
+			targets.remove(getOwner());
 
-		for (Entity target : targets) {
-			if (target != getOwner() && this.canCollideWith(target) && target != this && !world.isRemote) {
+			for (Entity target : targets) {
+				if (this.canCollideWith(target) && target != this) {
 
-				if (this.canDamageEntity(target)) {
-					if (target.attackEntityFrom(AvatarDamageSource.causeShockwaveDamage(target, getOwner()), damage)) {
-						int amount = performanceAmount > SCORE_MOD_SMALL ? performanceAmount : (int) SCORE_MOD_SMALL;
-						amount = amount > SCORE_MOD_MEDIUM ? (int) SCORE_MOD_MEDIUM : performanceAmount;
-						BattlePerformanceScore.addScore(getOwner(), amount);
-						target.setFire(isFire ? fireTime : 0);
-						if (getAbility() != null && !world.isRemote && getAbility() instanceof AbilityAirBurst) {
-							AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
-							aD.addXp(SKILLS_CONFIG.airBurstHit - aD.getLevel());
-							if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST) && target instanceof EntityLivingBase) {
-								((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
-								((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
-								((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
+					if (this.canDamageEntity(target) && !world.isRemote) {
+						if (target.attackEntityFrom(AvatarDamageSource.causeShockwaveDamage(target, getOwner()), damage)) {
+							int amount = performanceAmount > SCORE_MOD_SMALL ? performanceAmount : (int) SCORE_MOD_SMALL;
+							amount = amount > SCORE_MOD_MEDIUM ? (int) SCORE_MOD_MEDIUM : performanceAmount;
+							BattlePerformanceScore.addScore(getOwner(), amount);
+							target.setFire(isFire ? fireTime : 0);
+							if (getAbility() != null && getAbility() instanceof AbilityAirBurst) {
+								AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
+								aD.addXp(SKILLS_CONFIG.airBurstHit - aD.getLevel());
+								if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST) && target instanceof EntityLivingBase) {
+									((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
+									((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
+									((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
+								}
 							}
 						}
 					}
-				}
-				double xSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted * speed) :
-						Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted / 5F * speed);
-				double ySpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted / 2F * speed) :
-						knockbackHeight; // Throws target into the air.
-				double zSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted * speed) :
-						Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 5F * speed);
-				ySpeed = ySpeed > knockbackHeight ? ySpeed : knockbackHeight;
-				target.motionX += xSpeed;
-				target.motionY += ySpeed * 2;
-				target.motionZ += zSpeed;
+					double xSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted * speed) :
+							Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted / 5F * speed);
+					double ySpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted / 2F * speed) :
+							knockbackHeight; // Throws target into the air.
+					double zSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted * speed) :
+							Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 5F * speed);
+					ySpeed = ySpeed > knockbackHeight ? ySpeed : knockbackHeight;
+					target.motionX += xSpeed;
+					target.motionY += ySpeed * 2;
+					target.motionZ += zSpeed;
 
-				AvatarUtils.afterVelocityAdded(target);
+					AvatarUtils.afterVelocityAdded(target);
+				}
 			}
 		}
 	}
