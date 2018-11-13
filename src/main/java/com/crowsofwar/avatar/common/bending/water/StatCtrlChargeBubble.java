@@ -23,7 +23,6 @@ public class StatCtrlChargeBubble extends StatusControl {
 			bubble.setDegreesPerSecond(bubble.getDegreesPerSecond() + 1);
 			bubble.setHealth(bubble.getHealth() + 0.02F);
 			return bubble.getSize() > bubble.getMaxSize();
-		}
-		else return true;
+		} else return true;
 	}
 }

@@ -66,29 +66,29 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 
 		// @formatter:off
 		Vector4f
-		lbf = new Vector4f(0, 0, 0, 1).mul(mat),
-		rbf = new Vector4f(1, 0, 0, 1).mul(mat),
-		ltf = new Vector4f(0, 1, 0, 1).mul(mat),
-		rtf = new Vector4f(1, 1, 0, 1).mul(mat),
-		lbb = new Vector4f(0, 0, 1, 1).mul(mat),
-		rbb = new Vector4f(1, 0, 1, 1).mul(mat),
-		ltb = new Vector4f(0, 1, 1, 1).mul(mat),
-		rtb = new Vector4f(1, 1, 1, 1).mul(mat);
-		
+				lbf = new Vector4f(0, 0, 0, 1).mul(mat),
+				rbf = new Vector4f(1, 0, 0, 1).mul(mat),
+				ltf = new Vector4f(0, 1, 0, 1).mul(mat),
+				rtf = new Vector4f(1, 1, 0, 1).mul(mat),
+				lbb = new Vector4f(0, 0, 1, 1).mul(mat),
+				rbb = new Vector4f(1, 0, 1, 1).mul(mat),
+				ltb = new Vector4f(0, 1, 1, 1).mul(mat),
+				rtb = new Vector4f(1, 1, 1, 1).mul(mat);
+
 		float t1 = ticks * (float) Math.PI / 10f;
 		float t2 = t1 + (float) Math.PI / 2f;
 		float amt = .05f;
-		
-		lbf.add(cos(t1)*amt, sin(t2)*amt, cos(t2)*amt, 0);
-		rbf.add(sin(t1)*amt, cos(t2)*amt, sin(t2)*amt, 0);
-		lbb.add(sin(t2)*amt, cos(t2)*amt, cos(t2)*amt, 0);
-		rbb.add(cos(t2)*amt, cos(t1)*amt, cos(t1)*amt, 0);
-		
-		ltf.add(cos(t2)*amt, cos(t1)*amt, sin(t1)*amt, 0);
-		rtf.add(sin(t2)*amt, sin(t1)*amt, cos(t1)*amt, 0);
-		ltb.add(sin(t1)*amt, sin(t2)*amt, cos(t1)*amt, 0);
-		rtb.add(cos(t1)*amt, cos(t2)*amt, sin(t1)*amt, 0);
-		
+
+		lbf.add(cos(t1) * amt, sin(t2) * amt, cos(t2) * amt, 0);
+		rbf.add(sin(t1) * amt, cos(t2) * amt, sin(t2) * amt, 0);
+		lbb.add(sin(t2) * amt, cos(t2) * amt, cos(t2) * amt, 0);
+		rbb.add(cos(t2) * amt, cos(t1) * amt, cos(t1) * amt, 0);
+
+		ltf.add(cos(t2) * amt, cos(t1) * amt, sin(t1) * amt, 0);
+		rtf.add(sin(t2) * amt, sin(t1) * amt, cos(t1) * amt, 0);
+		ltb.add(sin(t1) * amt, sin(t2) * amt, cos(t1) * amt, 0);
+		rtb.add(cos(t1) * amt, cos(t2) * amt, sin(t1) * amt, 0);
+
 		// @formatter:on
 
 		float existed = ticks / 4f;
@@ -106,37 +106,7 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		GlStateManager.disableBlend();
 
 	}
-	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,
-							float rotateX, float rotateY, float rotateZ) {
-		Matrix4f mat = new Matrix4f();
-		mat.translate(x, y + .4f, z);
-
-		mat.rotate(rotateX, 1, 0, 0);
-		mat.rotate(rotateY, 0, 1, 0);
-		mat.rotate(rotateZ, 0, 0, 1);
-
-		// @formatter:off
-		// Can't use .mul(size) here because it would mul the w component
-		Vector4f
-				lbf = new Vector4f(-.5f * size, -.5f * size, -.5f * size, 1).mul(mat),
-				rbf = new Vector4f(0.5f * size, -.5f * size, -.5f * size, 1).mul(mat),
-				ltf = new Vector4f(-.5f * size, 0.5f * size, -.5f * size, 1).mul(mat),
-				rtf = new Vector4f(0.5f * size, 0.5f * size, -.5f * size, 1).mul(mat),
-				lbb = new Vector4f(-.5f * size, -.5f * size, 0.5f * size, 1).mul(mat),
-				rbb = new Vector4f(0.5f * size, -.5f * size, 0.5f * size, 1).mul(mat),
-				ltb = new Vector4f(-.5f * size, 0.5f * size, 0.5f * size, 1).mul(mat),
-				rtb = new Vector4f(0.5f * size, 0.5f * size, 0.5f * size, 1).mul(mat);
-
-		// @formatter:on
-
-		drawQuad(2, ltb, lbb, lbf, ltf, u1, v1, u2, v2); // -x
-		drawQuad(2, rtb, rbb, rbf, rtf, u1, v1, u2, v2); // +x
-		drawQuad(2, rbb, rbf, lbf, lbb, u1, v1, u2, v2); // -y
-		drawQuad(2, rtb, rtf, ltf, ltb, u1, v1, u2, v2); // +y
-		drawQuad(2, rtf, rbf, lbf, ltf, u1, v1, u2, v2); // -z
-		drawQuad(2, rtb, rbb, lbb, ltb, u1, v1, u2, v2); // +z
-	}
-
+	
 	@Override
 	protected ResourceLocation getEntityTexture(EntityWaterBubble entity) {
 		return null;
