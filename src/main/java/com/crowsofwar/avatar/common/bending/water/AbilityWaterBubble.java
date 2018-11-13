@@ -100,7 +100,7 @@ public class AbilityWaterBubble extends Ability {
 					world.spawnEntity(bubble);
 
 					data.addStatusControl(StatusControl.LOB_BUBBLE);
-					data.addStatusControl(StatusControl.CHARGE_BUBBLE);
+					//data.addStatusControl(StatusControl.CHARGE_BUBBLE);
 					data.getAbilityData(this).addXp(SKILLS_CONFIG.createBubble);
 
 					if (!ctx.isMasterLevel(AbilityTreePath.SECOND)) {

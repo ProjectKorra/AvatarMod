@@ -60,13 +60,13 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		// (0 Left)/(1 Right), (0 Bottom)/(1 Top), (0 Front)/(1 Back)
 		//Vector4f mid = new Vector4f((float) x, (float) y + .5f, (float) z, 1);
 
-		mat.rotate(ticks / 25f, 1, 0, 0);
-		mat.rotate(ticks / 25f, 0, 1, 0);
-		mat.rotate(ticks / 25f, 0, 0, 1);
+		//mat.rotate(ticks / 25f * bubble.getDegreesPerSecond(), 1, 0, 0);
+		//mat.rotate(ticks / 25f * bubble.getDegreesPerSecond(), 0, 1, 0);
+		//mat.rotate(ticks / 25f * bubble.getDegreesPerSecond(), 0, 0, 1);
 
 		// @formatter:off
 		Vector4f
-		lbf = new Vector4f(0, 0, 0, 1 * bubble.getSize()).mul(mat),
+		lbf = new Vector4f(0, 0, 0, 1).mul(mat),
 		rbf = new Vector4f(1, 0, 0, 1).mul(mat),
 		ltf = new Vector4f(0, 1, 0, 1).mul(mat),
 		rtf = new Vector4f(1, 1, 0, 1).mul(mat),
@@ -92,7 +92,7 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		// @formatter:on
 
 		float existed = ticks / 4f;
-		int anim = (int) ((int) existed % 16);
+		int anim = ((int) existed % 16);
 		float v1 = anim / 16f, v2 = v1 + 1f / 16;
 
 		drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2); // -x
@@ -105,6 +105,36 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.disableBlend();
 
+	}
+	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,
+							float rotateX, float rotateY, float rotateZ) {
+		Matrix4f mat = new Matrix4f();
+		mat.translate(x, y + .4f, z);
+
+		mat.rotate(rotateX, 1, 0, 0);
+		mat.rotate(rotateY, 0, 1, 0);
+		mat.rotate(rotateZ, 0, 0, 1);
+
+		// @formatter:off
+		// Can't use .mul(size) here because it would mul the w component
+		Vector4f
+				lbf = new Vector4f(-.5f * size, -.5f * size, -.5f * size, 1).mul(mat),
+				rbf = new Vector4f(0.5f * size, -.5f * size, -.5f * size, 1).mul(mat),
+				ltf = new Vector4f(-.5f * size, 0.5f * size, -.5f * size, 1).mul(mat),
+				rtf = new Vector4f(0.5f * size, 0.5f * size, -.5f * size, 1).mul(mat),
+				lbb = new Vector4f(-.5f * size, -.5f * size, 0.5f * size, 1).mul(mat),
+				rbb = new Vector4f(0.5f * size, -.5f * size, 0.5f * size, 1).mul(mat),
+				ltb = new Vector4f(-.5f * size, 0.5f * size, 0.5f * size, 1).mul(mat),
+				rtb = new Vector4f(0.5f * size, 0.5f * size, 0.5f * size, 1).mul(mat);
+
+		// @formatter:on
+
+		drawQuad(2, ltb, lbb, lbf, ltf, u1, v1, u2, v2); // -x
+		drawQuad(2, rtb, rbb, rbf, rtf, u1, v1, u2, v2); // +x
+		drawQuad(2, rbb, rbf, lbf, lbb, u1, v1, u2, v2); // -y
+		drawQuad(2, rtb, rtf, ltf, ltb, u1, v1, u2, v2); // +y
+		drawQuad(2, rtf, rbf, lbf, ltf, u1, v1, u2, v2); // -z
+		drawQuad(2, rtb, rbb, lbb, ltb, u1, v1, u2, v2); // +z
 	}
 
 	@Override
