@@ -352,7 +352,7 @@ public abstract class AvatarEntity extends Entity {
 		}
 		if (entity == getOwner()) {
 			return false;
-		} else return entity instanceof AvatarEntity || (entity.canBePushed() && entity.canBeCollidedWith());
+		} else return entity instanceof AvatarEntity || (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase;
 	}
 
 	@Override
