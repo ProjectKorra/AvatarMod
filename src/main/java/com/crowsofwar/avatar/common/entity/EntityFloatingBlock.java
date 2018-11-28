@@ -17,10 +17,12 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.gorecore.util.Vector;
@@ -50,6 +52,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Objects;
 import java.util.Random;
 
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
 public class EntityFloatingBlock extends AvatarEntity {
@@ -143,8 +146,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 		//		("VelocityZ")));
 		setFriction(nbt.getFloat("Friction"));
 		setItemDropsEnabled(nbt.getBoolean("DropItems"));
-		//setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
-		//getBehavior().load(nbt.getCompoundTag("BehaviorData"));
+		setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
+		getBehavior().load(nbt.getCompoundTag("BehaviorData"));
 		damageMult = nbt.getFloat("DamageMultiplier");
 	}
 
@@ -158,8 +161,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 		//nbt.setDouble("VelocityZ", velocity().z());
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
-		//	nbt.setInteger("Behavior", getBehavior().getId());
-		//getBehavior().save(nestedCompound(nbt, "BehaviorData"));
+		nbt.setInteger("Behavior", getBehavior().getId());
+		getBehavior().save(nestedCompound(nbt, "BehaviorData"));
 		nbt.setFloat("DamageMultiplier", damageMult);
 	}
 
@@ -241,8 +244,22 @@ public class EntityFloatingBlock extends AvatarEntity {
 		}
 
 
-		if (!world.isRemote && getBehavior() != null && getBehavior() instanceof FloatingBlockBehavior.Thrown) {
+		if (getBehavior() != null && getBehavior() instanceof FloatingBlockBehavior.Thrown) {
 			setVelocity(velocity().times(getFriction()));
+		}
+
+		if (getOwner() != null) {
+			EntityFloatingBlock block = AvatarEntity.lookupControlledEntity(world, EntityFloatingBlock.class, getOwner());
+			BendingData bD = BendingData.get(getOwner());
+			if (block == null && bD.hasStatusControl(StatusControl.THROW_BLOCK)) {
+				bD.removeStatusControl(StatusControl.THROW_BLOCK);
+				bD.removeStatusControl(StatusControl.PLACE_BLOCK);
+			}
+			if (block != null && block.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_BLOCK))) {
+				bD.addStatusControl(StatusControl.THROW_BLOCK);
+				bD.addStatusControl(StatusControl.PLACE_BLOCK);
+			}
+
 		}
 
 		/*prevPosX = posX;
