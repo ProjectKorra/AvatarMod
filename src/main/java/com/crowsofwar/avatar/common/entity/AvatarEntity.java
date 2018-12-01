@@ -299,6 +299,12 @@ public abstract class AvatarEntity extends Entity {
 			onFireContact();
 		}
 
+		//Breaks cobwebs
+		IBlockState inBlock = world.getBlockState(getPosition());
+		if (inBlock.getBlock() == Blocks.WEB && !inBlock.isFullBlock()) {
+			breakBlock(getPosition());
+		}
+
 		Vector v = velocity().dividedBy(20);
 		move(MoverType.SELF, v.x(), v.y(), v.z());
 
