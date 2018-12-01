@@ -74,9 +74,7 @@ public class AbilityPickUpBlock extends Ability {
 						&& fb.getOwner() == ctx.getBenderEntity());
 
 		if (currentBlock != null) {
-			currentBlock.drop();
-			data.removeStatusControl(StatusControl.THROW_BLOCK);
-			data.removeStatusControl(StatusControl.PLACE_BLOCK);
+			return;
 		} else {
 			VectorI target = ctx.getLookPosI();
 			if (target != null) {

@@ -304,7 +304,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 
 			if (owner == null) return this;
 
-			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
+			/*Raytrace.Result res = Raytrace.getTargetBlock(owner, 2, false);
 
 			Vector target;
 			if (res.hitSomething()) {
@@ -312,15 +312,17 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			} else {
 				Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
 						Math.toRadians(owner.rotationPitch));
-				target = Vector.getEyePos(owner).plus(look.times(3));
+				target = Vector.getEyePos(owner).plus(look.times(2));
 			}
 
 			Vector position = entity.position();
-			if (!entity.world.isRemote) {
-				position = new Vector(entity.posX, entity.posY, entity.posZ);
-			}
 			Vector motion = target.minus(position);
 			motion = motion.times(0.5 * 20);
+			entity.setVelocity(motion);**/
+			Vector forward = Vector.getLookRectangular(owner);
+			Vector eye = Vector.getEyePos(owner);
+			Vector target = forward.times(2).plus(eye);
+			Vector motion = target.minus(Vector.getEntityPos(entity)).times(6);
 			entity.setVelocity(motion);
 
 

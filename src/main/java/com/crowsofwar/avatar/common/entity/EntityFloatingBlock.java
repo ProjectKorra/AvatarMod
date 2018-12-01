@@ -250,7 +250,7 @@ public class EntityFloatingBlock extends AvatarEntity {
 		if (getOwner() != null) {
 			EntityFloatingBlock block = AvatarEntity.lookupControlledEntity(world, EntityFloatingBlock.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (block == null && bD.hasStatusControl(StatusControl.THROW_BLOCK)) {
+			if (block == null && (bD.hasStatusControl(StatusControl.THROW_BLOCK) || bD.hasStatusControl(StatusControl.PLACE_BLOCK))) {
 				bD.removeStatusControl(StatusControl.THROW_BLOCK);
 				bD.removeStatusControl(StatusControl.PLACE_BLOCK);
 			}
