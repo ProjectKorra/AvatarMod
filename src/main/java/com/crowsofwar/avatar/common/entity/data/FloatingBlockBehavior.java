@@ -24,7 +24,6 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -39,7 +38,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -304,27 +302,11 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 
 			if (owner == null) return this;
 
-			/*Raytrace.Result res = Raytrace.getTargetBlock(owner, 2, false);
-
-			Vector target;
-			if (res.hitSomething()) {
-				target = res.getPosPrecise();
-			} else {
-				Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
-						Math.toRadians(owner.rotationPitch));
-				target = Vector.getEyePos(owner).plus(look.times(2));
-			}
-
-			Vector position = entity.position();
-			Vector motion = target.minus(position);
-			motion = motion.times(0.5 * 20);
-			entity.setVelocity(motion);**/
 			Vector forward = Vector.getLookRectangular(owner);
 			Vector eye = Vector.getEyePos(owner);
-			Vector target = forward.times(2).plus(eye);
+			Vector target = forward.times(2.5).plus(eye);
 			Vector motion = target.minus(Vector.getEntityPos(entity)).times(6);
 			entity.setVelocity(motion);
-
 
 			return this;
 
