@@ -32,14 +32,13 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		this.unstoppable = isUnstoppable;
 	}
 
-	public void setDuration(double ticks) {
-		this.maxTicksAlive = ticks;
-	}
-
 	public double getDuration() {
 		return this.maxTicksAlive;
 	}
 
+	public void setDuration(double ticks) {
+		this.maxTicksAlive = ticks;
+	}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {

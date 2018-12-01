@@ -256,16 +256,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		return new EntityWaterCannon.CannonControlPoint(this, index);
 	}
 
-
-	class CannonControlPoint extends ControlPoint {
-
-		private CannonControlPoint(EntityArc arc, int index) {
-			// Make all control points the same size
-			super(arc, index == 1 ? 0.35f : 0.5f, 0, 0, 0);
-		}
-
-	}
-
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return true;
@@ -275,6 +265,15 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	public boolean isInRangeToRenderDist(double distance) {
 		return true;
+	}
+
+	class CannonControlPoint extends ControlPoint {
+
+		private CannonControlPoint(EntityArc arc, int index) {
+			// Make all control points the same size
+			super(arc, index == 1 ? 0.35f : 0.5f, 0, 0, 0);
+		}
+
 	}
 }
 

@@ -30,9 +30,9 @@ import java.util.function.Consumer;
 
 public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 
+	public double velocityMultiplier;
 	private List<T> points;
 	private int brightness = 15728880;
-	public double velocityMultiplier;
 
 	public EntityArc(World world) {
 		super(world);

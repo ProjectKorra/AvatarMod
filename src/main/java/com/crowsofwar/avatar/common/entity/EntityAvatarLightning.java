@@ -28,32 +28,19 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 public class EntityAvatarLightning extends EntityLightningBolt {
 
 	/**
-	 * Declares which state the lightning bolt is in. Whether it's in the air, hit the ground, etc.
-	 */
-	private int lightningState;
-	/**
 	 * A random long that is used to change the vertex of the lightning rendered in RenderLightningBolt
 	 **/
 	public long boltVertex;
+	/**
+	 * Declares which state the lightning bolt is in. Whether it's in the air, hit the ground, etc.
+	 */
+	private int lightningState;
 	/**
 	 * Determines the time before the EntityLightningBolt is destroyed. It is a random integer decremented over time.
 	 */
 	private int boltLivingTime;
 
 	private EntityLightningSpawner spawner;
-
-	void setSpawner(EntityLightningSpawner spawner) {
-		this.spawner = spawner;
-	}
-
-	void setBoltLivingTime(int livingTime) {
-		this.boltLivingTime = livingTime;
-	}
-
-	@Override
-	public void entityInit() {
-		super.entityInit();
-	}
 
 	EntityAvatarLightning(World world, double x, double y, double z) {
 		super(world, x, y, z, false);
@@ -77,6 +64,19 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 				}
 			}
 		}
+	}
+
+	void setSpawner(EntityLightningSpawner spawner) {
+		this.spawner = spawner;
+	}
+
+	void setBoltLivingTime(int livingTime) {
+		this.boltLivingTime = livingTime;
+	}
+
+	@Override
+	public void entityInit() {
+		super.entityInit();
 	}
 
 	public SoundCategory getSoundCategory() {

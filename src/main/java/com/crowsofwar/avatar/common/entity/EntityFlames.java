@@ -62,14 +62,14 @@ public class EntityFlames extends AvatarEntity {
 		setSize(0.1f, 0.1f);
 	}
 
-	@Override
-	public BendingStyle getElement() {
-		return new Firebending();
-	}
-
 	public EntityFlames(World world, EntityLivingBase owner) {
 		this(world);
 		this.owner = owner;
+	}
+
+	@Override
+	public BendingStyle getElement() {
+		return new Firebending();
 	}
 
 	@Override

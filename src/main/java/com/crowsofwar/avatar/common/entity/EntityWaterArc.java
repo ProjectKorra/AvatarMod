@@ -97,12 +97,12 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.isSpear = isSpear;
 	}
 
-	public void setSize(float size) {
-		dataManager.set(SYNC_SIZE, size);
-	}
-
 	public float getSize() {
 		return dataManager.get(SYNC_SIZE);
+	}
+
+	public void setSize(float size) {
+		dataManager.set(SYNC_SIZE, size);
 	}
 
 	public float getGravity() {
@@ -370,14 +370,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		}
 	}
 
-	public static class WaterControlPoint extends ControlPoint {
-
-		private WaterControlPoint(EntityArc arc, float size, double x, double y, double z) {
-			super(arc, size, x, y, z);
-		}
-
-	}
-
 	private void breakCollidingBlocks() {
 		// Hitbox expansion (in each direction) to destroy blocks before the
 		// waterarc collides with them
@@ -411,6 +403,14 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			breakBlock(pos);
 			setVelocity(velocity().times(0.75));
 		}
+	}
+
+	public static class WaterControlPoint extends ControlPoint {
+
+		private WaterControlPoint(EntityArc arc, float size, double x, double y, double z) {
+			super(arc, size, x, y, z);
+		}
+
 	}
 
 

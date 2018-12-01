@@ -57,6 +57,8 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		Matrix4f mat = new Matrix4f();
 		mat.translate((float) x - 0.5f, (float) y * bubble.getSize(), (float) z - 0.5f);
 
+		//TODO: Add rotations, size scaling, and wobbling (only wobble when degrees per second is 0)
+
 		// (0 Left)/(1 Right), (0 Bottom)/(1 Top), (0 Front)/(1 Back)
 		//Vector4f mid = new Vector4f((float) x, (float) y + .5f, (float) z, 1);
 
@@ -106,7 +108,7 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		GlStateManager.disableBlend();
 
 	}
-	
+
 	@Override
 	protected ResourceLocation getEntityTexture(EntityWaterBubble entity) {
 		return null;

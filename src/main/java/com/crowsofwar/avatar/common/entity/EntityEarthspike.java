@@ -67,12 +67,12 @@ public class EntityEarthspike extends AvatarEntity {
 		this.damage = damage;
 	}
 
-	public void setSize(float size) {
-		dataManager.set(SYNC_SIZE, size);
-	}
-
 	public float getSize() {
 		return dataManager.get(SYNC_SIZE);
+	}
+
+	public void setSize(float size) {
+		dataManager.set(SYNC_SIZE, size);
 	}
 
 	public void setLifetime(double lifetime) {

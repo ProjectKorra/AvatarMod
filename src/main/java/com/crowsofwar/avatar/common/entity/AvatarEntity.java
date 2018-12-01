@@ -221,12 +221,12 @@ public abstract class AvatarEntity extends Entity {
 		this.powerRating = powerRating;
 	}
 
-	public void setAbility(Ability ability) {
-		this.ability = ability;
-	}
-
 	public Ability getAbility() {
 		return ability;
+	}
+
+	public void setAbility(Ability ability) {
+		this.ability = ability;
 	}
 
 	@Override
@@ -352,7 +352,8 @@ public abstract class AvatarEntity extends Entity {
 		}
 		if (entity == getOwner()) {
 			return false;
-		} else return entity instanceof AvatarEntity || (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase;
+		} else
+			return entity instanceof AvatarEntity || (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase;
 	}
 
 	@Override
@@ -546,13 +547,13 @@ public abstract class AvatarEntity extends Entity {
 	protected void playStepSound(BlockPos pos, Block blockIn) {
 	}
 
-	public void setElement(BendingStyle element) {
-		this.element = element;
-	}
-
 	//Used to determine what element the entity is
 	public BendingStyle getElement() {
 		return element;
+	}
+
+	public void setElement(BendingStyle element) {
+		this.element = element;
 	}
 
 }
