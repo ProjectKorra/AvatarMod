@@ -53,24 +53,24 @@ public class AirBurstHandler extends TickHandler {
 						if (ctx.getData() != null) {
 							AbilityData aD = AbilityData.get(attacker, "air_burst");
 							float powerRating = (float) (ctx.calcPowerRating(Airbending.ID) / 100);
-							float damage = 0.5F + powerRating;
+							float damage = STATS_CONFIG.airBurstSettings.damage + powerRating;
 							if (aD.getLevel() == 1) {
-								damage = 0.75F + powerRating;
+								damage = STATS_CONFIG.airBurstSettings.damage * 1.5F + powerRating;
 							}
 
 							if (aD.getLevel() >= 2) {
-								damage = 1 + powerRating;
+								damage = STATS_CONFIG.airBurstSettings.damage * 2 + powerRating;
 							}
 
 							if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 								//Piercing Winds
-								damage = 5 + powerRating;
+								damage = STATS_CONFIG.airBurstSettings.damage * 4 + powerRating;
 							}
 
 							if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 								//Maximum Pressure
 								//Pulls enemies in then blasts them out
-								damage = 2.5f + powerRating;
+								damage = STATS_CONFIG.airBurstSettings.damage * 2.5F + powerRating;
 							}
 							event.setAmount(damage);
 
@@ -98,7 +98,7 @@ public class AirBurstHandler extends TickHandler {
 			float powerRating = (float) (bender.calcPowerRating(Airbending.ID) / 100);
 			int duration = data.getTickHandlerDuration(this);
 			double damage = STATS_CONFIG.airBurstSettings.damage + powerRating;
-			//1
+			//Default 2
 			float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40F);
 			double knockBack = STATS_CONFIG.AirBurstSettings.knockback + powerRating;
 			//Default 2 + Power rating
@@ -112,7 +112,7 @@ public class AirBurstHandler extends TickHandler {
 
 			if (abilityData.getLevel() == 1) {
 				damage = (STATS_CONFIG.airBurstSettings.damage * 1.5) + powerRating;
-				//1.5
+				//3
 				knockBack = 3 + powerRating;
 				radius = (STATS_CONFIG.AirBurstSettings.radius * 4 / 3) + powerRating;
 				//4
@@ -124,7 +124,7 @@ public class AirBurstHandler extends TickHandler {
 
 			if (abilityData.getLevel() >= 2) {
 				damage = (STATS_CONFIG.airBurstSettings.damage * 2) + powerRating;
-				//2
+				//4
 				knockBack = 5 + powerRating;
 				radius = (STATS_CONFIG.AirBurstSettings.radius * 5 / 3) + powerRating;
 				//5
@@ -136,8 +136,8 @@ public class AirBurstHandler extends TickHandler {
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				//Piercing Winds
-				damage = (STATS_CONFIG.airBurstSettings.damage * 6) + powerRating;
-				//Default: 6
+				damage = (STATS_CONFIG.airBurstSettings.damage * 4) + powerRating;
+				//Default: 8
 				//Blinds enemies
 
 			}
@@ -146,7 +146,7 @@ public class AirBurstHandler extends TickHandler {
 				//Maximum Pressure
 				//Pulls enemies in then blasts them out
 				damage = (STATS_CONFIG.airBurstSettings.damage * 3) + powerRating;
-				//Default: 3
+				//Default: 6
 				radius = (STATS_CONFIG.AirBurstSettings.radius * 7 / 3) + powerRating;
 				//7
 				upwardKnockback = STATS_CONFIG.airBurstSettings.push / 2.5F;

@@ -39,11 +39,11 @@ public class ConfigStats {
 	public AttackSettings floatingBlockSettings = new AttackSettings(2f, 1),
 			ravineSettings = new AttackSettings(3.5F, 0.25), //
 			waveSettings = new AttackSettings(0.25F, 4), //
-			airbladeSettings = new AttackSettings(3, .03), //
-			fireArcSettings = new AttackSettings(3, 1),   //
-			waterArcSettings = new AttackSettings(1.5F, 1),
+			airbladeSettings = new AttackSettings(4, .03), //
+			fireArcSettings = new AttackSettings(3.5F, 1),   //
+			waterArcSettings = new AttackSettings(3, 1),
 			boulderSettings = new AttackSettings(0.1F, 0.1),
-			airBurstSettings = new AttackSettings (1F, 1),
+			airBurstSettings = new AttackSettings (2F, 1),
 			lightningSpearSettings = new AttackSettings(4F, 2);
 
 	@Load
@@ -385,7 +385,7 @@ public class ConfigStats {
 	public static class CloudburstSettings {
 
 		@Load
-		public double damage = 2;
+		public double damage = 3;
 
 		@Load
 		public double push = 1.5;

@@ -315,7 +315,11 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				target = Vector.getEyePos(owner).plus(look.times(3));
 			}
 
-			Vector motion = target.minus(entity.position());
+			Vector position = entity.position();
+			if (!entity.world.isRemote) {
+				position = new Vector(entity.posX, entity.posY, entity.posZ);
+			}
+			Vector motion = target.minus(position);
 			motion = motion.times(0.5 * 20);
 			entity.setVelocity(motion);
 

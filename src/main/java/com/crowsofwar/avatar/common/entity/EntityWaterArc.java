@@ -155,7 +155,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			float hitBox = 0.5F;
 			int numberOfParticles = 500;
 
-			if (getAbility() instanceof AbilityWaterArc) {
+			if (getAbility() instanceof AbilityWaterArc && !world.isRemote) {
 				AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("water_arc");
 				int lvl = abilityData.getLevel();
 				this.damageMult = lvl >= 2 ? 2 : 0.5F;

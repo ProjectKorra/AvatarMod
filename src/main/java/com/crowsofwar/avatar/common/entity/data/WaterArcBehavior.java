@@ -197,6 +197,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 					double z = entity.motionZ / 2 * STATS_CONFIG.waterArcSettings.push;
 					collided.addVelocity(x, y, z);
 					if (entity.canDamageEntity(collided)) {
+						entity.setDamageMult(1);
 						entity.damageEntity(collided);
 					}
 

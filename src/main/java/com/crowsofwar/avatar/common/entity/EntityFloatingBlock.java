@@ -243,7 +243,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 			}
 		}
 
-
 		if (getBehavior() != null && getBehavior() instanceof FloatingBlockBehavior.Thrown) {
 			setVelocity(velocity().times(getFriction()));
 		}
