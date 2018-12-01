@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.bending.earth.AbilityEarthspikes;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -124,6 +125,16 @@ public class EntityEarthspike extends AvatarEntity {
 			}
 		} else if (!world.isRemote && (!STATS_CONFIG.bendableBlocks.contains(belowBlock) || belowBlock == Blocks.AIR)) {
 			setDead();
+		}
+		// Destroy non-solid blocks in the Earthspike
+		IBlockState inBlock = world.getBlockState(getPosition());
+		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
+			if (inBlock.getBlockHardness(world, getPosition()) == 0) {
+				breakBlock(getPosition());
+			} else {
+				setDead();
+			}
+
 		}
 
 

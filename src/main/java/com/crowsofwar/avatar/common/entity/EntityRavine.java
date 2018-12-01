@@ -141,17 +141,11 @@ public class EntityRavine extends AvatarEntity {
 		}
 
 		// Destroy non-solid blocks in the ravine
-		BlockPos inPos = getPosition();
 		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
-
 			if (inBlock.getBlockHardness(world, getPosition()) == 0) {
-
 				breakBlock(getPosition());
-
 			} else {
-
 				setDead();
-
 			}
 
 		}

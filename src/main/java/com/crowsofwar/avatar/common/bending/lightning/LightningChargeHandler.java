@@ -80,7 +80,7 @@ public abstract class LightningChargeHandler extends TickHandler {
 				return true;
 			}
 
-			double speed = abilityData.getLevel() >= 1 ? 20 : 30;
+			double speed = abilityData.getLevel() >= 1 ? 30 : 40;
 			float damage = abilityData.getLevel() >= 2 ? 8 : 6;
 			float size = 1;
 			float[] turbulenceValues = { 0.6f, 1.2f };
