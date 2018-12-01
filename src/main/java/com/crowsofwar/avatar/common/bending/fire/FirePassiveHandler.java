@@ -12,6 +12,8 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class FirePassiveHandler {
 
@@ -28,7 +30,9 @@ public class FirePassiveHandler {
 							if (entity.ticksExisted % 400 == 0) {
 								if (entity.world.isDaytime()) {
 									if (b.calcPowerRating(Firebending.ID) >= 35) {
-										entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 400, -1));
+										if (STATS_CONFIG.passiveSettings.fireResistance) {
+											entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 400, -1));
+										}
 									}
 								}
 							}

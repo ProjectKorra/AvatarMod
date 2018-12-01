@@ -11,6 +11,8 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class FallDamageHandler {
@@ -23,9 +25,11 @@ public class FallDamageHandler {
 			if (bender != null) {
 				BendingData ctx = BendingData.get(entity);
 				if (ctx.hasBendingId(Airbending.ID)) {
-					if (event.getSource() == DamageSource.FALL) {
-						event.setAmount(0);
-						event.setCanceled(true);
+					if (STATS_CONFIG.passiveSettings.noFallDamageAir) {
+						if (event.getSource() == DamageSource.FALL) {
+							event.setAmount(0);
+							event.setCanceled(true);
+						}
 					}
 				}
 			}

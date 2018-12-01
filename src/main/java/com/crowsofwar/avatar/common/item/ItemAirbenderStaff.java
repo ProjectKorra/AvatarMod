@@ -196,9 +196,6 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 								entityIn.posZ, 1, 0, 0, 0, 0.04);
 						((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.SPEED, 40));
 						((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 40));
-						if ((new Random().nextInt(2) + 1) >= 2) {
-							((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 20));
-						}
 					}
 				}
 			}

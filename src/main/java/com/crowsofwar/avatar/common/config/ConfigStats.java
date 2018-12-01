@@ -74,6 +74,8 @@ public class ConfigStats {
 	@Load
 	public AirBurstSettings AirBurstSettings = new AirBurstSettings();
 
+	@Load
+	public PassiveSettings passiveSettings = new PassiveSettings();
 	// @formatter:off
 	@Load
 	public float chiAirblade = 1f,
@@ -455,6 +457,21 @@ public class ConfigStats {
 
 		@Load
 		public double push = 1;
+
+	}
+
+	public static class PassiveSettings {
+		@Load
+		public final boolean waterBreathing = true;
+
+		@Load
+		public final boolean hasteInWater = true;
+
+		@Load
+		public final boolean fireResistance = true;
+
+		@Load
+		public final boolean noFallDamageAir = true;
 
 	}
 
