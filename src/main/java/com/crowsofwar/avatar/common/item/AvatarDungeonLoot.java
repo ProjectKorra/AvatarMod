@@ -110,7 +110,7 @@ public class AvatarDungeonLoot {
 		}
 
 		if (isLootTable(e, CHESTS_NETHER_BRIDGE)) {
-			addLoot(e, 20, new LootItem(AvatarItems.itemScroll, 80).withMetadata(8)); // combustion
+			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 40).withMetadata(8)); // combustion
 		}
 		if (isLootTable(e, CHESTS_DESERT_PYRAMID)) {
 			addLoot(e, 70, new LootItem(AvatarItems.itemScroll, 30).withMetadata(7)); // sand
@@ -120,13 +120,13 @@ public class AvatarDungeonLoot {
 			addLoot(e, 60, new LootItem(AvatarItems.itemScroll, 40).withMetadata(6));
 		}
 		if (isLootTable(e, CHESTS_STRONGHOLD_LIBRARY)) {
-			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 100).withMetadata(5)); // lightning
+			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 20).withMetadata(5)); // lightning
 		}
 		if (isLootTable(e, CHESTS_WOODLAND_MANSION)) {
 			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 100).withMetadata(1)); // Earth
 		}
 		if (isLootTable(e, CHESTS_DESERT_PYRAMID)) {
-			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 80).withMetadata(7)); //Sand
+			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 60).withMetadata(7)); //Sand
 			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 20).withMetadata(1)); //Earth
 
 		}

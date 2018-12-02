@@ -123,7 +123,7 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_DROP.put("creeper", 0.5);
 		DEFAULT_SCROLL_TYPE.put("creeper", "lightning");
 
-		DEFAULT_SCROLL_DROP.put("creeper", 1.0);
+		DEFAULT_SCROLL_DROP.put("creeper", 0.75);
 		DEFAULT_SCROLL_TYPE.put("creeper", "combustion");
 
 		DEFAULT_SCROLL_DROP.put("husk", 3.0);
