@@ -1,5 +1,6 @@
 # eclipse
 bin
+eclipse
 *.launch
 .settings
 .metadata
@@ -18,6 +19,8 @@ classes
 build
 .gradle
 
+# visual studio
+.vs
+
 # other
-eclipse
 run
