@@ -47,19 +47,22 @@ h1 {
 #features {
   overflow-x: hidden; }
 
-#features p, #vision p, #download p {
+#features p, #overview p, #download p, #plans p {
   font-size: 2em;
   font-family: Source Sans Pro;
   font-weight: normal; }
   @media (max-width: 768px) {
-    #features p, #vision p, #download p {
-      font-size: 3vw; } }
+    #features p, #overview p, #download p, #plans p {
+        font-size: 3vw;
+    } }
 
-#features h1, #vision h1 {
-  font-size: 4em; }
+#features h1, #overview h1, #plans h1 {
+    font-size: 4em;
+}
   @media (max-width: 768px) {
-    #features h1, #vision h1 {
-      font-size: 6vw; } }
+    #features h1, #overview h1, #plans h1 {
+        font-size: 6vw;
+    } }
 
 #features .row {
   margin-top: 50px;

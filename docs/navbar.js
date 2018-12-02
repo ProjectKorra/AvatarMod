@@ -18,7 +18,7 @@ setClassPresent = function($el, cls, present) {
 };
 checkNav = function() {
     $nav = $("nav");
-    if ($(window).scrollTop() < $("#vision").offset().top - 100) {
+    if ($(window).scrollTop() < $("#overview").offset().top - 100) {
         if ($nav.hasClass("not-top")) $nav.removeClass("not-top");
     } else {
         if (!$nav.hasClass("not-top")) $nav.addClass("not-top");
