@@ -47,12 +47,12 @@ h1 {
 #features {
   overflow-x: hidden; }
 
-#features p, #overview p, #download p, #plans p {
+#features p, #overview p, #download p, #plans p, #servers p {
   font-size: 2em;
   font-family: Source Sans Pro;
   font-weight: normal; }
   @media (max-width: 768px) {
-    #features p, #overview p, #download p, #plans p {
+    #features p, #overview p, #download p, #plans p, #servers p {
         font-size: 3vw;
     } }
 
