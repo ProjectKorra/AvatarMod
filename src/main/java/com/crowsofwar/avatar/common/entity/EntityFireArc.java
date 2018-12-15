@@ -67,7 +67,6 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	private boolean createBigFire;
 	private float Gravity;
 	private float Size;
-	private BlockPos position;
 
 
 	public EntityFireArc(World world) {
@@ -76,18 +75,6 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		this.damageMult = 1;
 		this.Gravity = 9.82F;
 		this.particles = new ClientParticleSpawner();
-	}
-
-	public float getGravity() {
-		return this.Gravity;
-	}
-
-	public void setGravity(float gravity) {
-		this.Gravity = gravity;
-	}
-
-	public void setStartingPosition(BlockPos position) {
-		this.position = position;
 	}
 
 	public float getSize() {
@@ -130,7 +117,6 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 
 		if (getBehavior() != null && getBehavior() instanceof FireArcBehavior.PlayerControlled) {
 			this.velocityMultiplier = 4;
-			this.position = this.getPosition();
 		} else this.velocityMultiplier = 8;
 
 		if (getOwner() != null) {
@@ -224,7 +210,9 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 			int y = (int) Math.floor(posY);
 			int z = (int) Math.floor(posZ);
 			BlockPos pos = new BlockPos(x, y, z);
-			world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+			if (world.isAirBlock(pos)) {
+				world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+			}
 
 			if (createBigFire) {
 				for (EnumFacing dir : EnumFacing.HORIZONTALS) {
@@ -279,28 +267,32 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
 					if (entity != getOwner() && entity != null && getOwner() != null && canCollideWith(entity)) {
-						double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
-
-						Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
-						double distance = Vector.getEntityPos(entity).dist(Vector.getEntityPos(this));
-						double direction = (hitBox - distance) * (speed * 5) / hitBox;
-						velocity = velocity.times(direction).times(-1 + (-1 * hitBox / 2)).withY(speed / 2);
-
-						double x = (velocity.x()) + distanceTravelled / 50;
-						double y = (velocity.y()) > 0 ? velocity.y() + distanceTravelled / 100 : 0.3F + distanceTravelled / 100;
-						double z = (velocity.z()) + distanceTravelled / 50;
-						entity.addVelocity(x, y, z);
+						//Divide the result of the position difference to make entities fly
+						//further the closer they are to the player.
 						if (canDamageEntity(entity)) {
 							damageEntity(entity);
 						}
-						BattlePerformanceScore.addSmallScore(getOwner());
+						double dist = (hitBox - entity.getDistance(entity)) > 1 ? (hitBox - entity.getDistance(entity)) : 1;
+						Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
+						velocity = velocity.dividedBy(40).times(dist).withY(hitBox / 50);
 
-						if (entity instanceof AvatarEntity) {
-							AvatarEntity avent = (AvatarEntity) entity;
-							avent.addVelocity(x, y, z);
+						double x = (velocity.x());
+						double y = (velocity.y()) > 0 ? velocity.y() : 0.3F;
+						double z = (velocity.z());
+
+						if (!entity.world.isRemote) {
+							entity.addVelocity(x, y, z);
+
+							if (collided instanceof AvatarEntity) {
+								if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
+										&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+									AvatarEntity avent = (AvatarEntity) collided;
+									avent.addVelocity(x, y, z);
+								}
+								entity.isAirBorne = true;
+								AvatarUtils.afterVelocityAdded(entity);
+							}
 						}
-						entity.isAirBorne = true;
-						AvatarUtils.afterVelocityAdded(entity);
 					}
 				}
 			}

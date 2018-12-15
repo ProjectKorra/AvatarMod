@@ -267,9 +267,7 @@ public class EntityCloudBall extends AvatarEntity {
 				if (!collided.isEmpty()) {
 					for (Entity entity : collided) {
 						if (entity != getOwner() && entity != null && getOwner() != null) {
-
 							damageEntity(entity);
-
 							//Divide the result of the position difference to make entities fly
 							//further the closer they are to the player.
 							double dist = (hitBox - entity.getDistance(entity)) > 1 ? (hitBox - entity.getDistance(entity)) : 1;
