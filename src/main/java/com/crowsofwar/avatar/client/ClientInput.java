@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.client;
 
+import com.crowsofwar.avatar.common.data.Bender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.*;
@@ -224,34 +225,36 @@ public class ClientInput implements IControlsHandler {
 
 		if (player != null && player.world != null) {
 			// Send any input to the server
-			BendingData data = BendingData.get(player);
+			if (Objects.requireNonNull(Bender.get(player)).getInfo().getId() != null) {
+				BendingData data = BendingData.get(player);
 
-			if (mc.inGameHasFocus) {
-				Collection<AvatarControl> pressed = getAllPressed();
-				Collection<StatusControl> statusControls = data.getAllStatusControls();
-				for (StatusControl sc : statusControls) {
-					if (pressed.contains(sc.getSubscribedControl())) {
-						Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
-						AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
+				if (mc.inGameHasFocus) {
+					Collection<AvatarControl> pressed = getAllPressed();
+					Collection<StatusControl> statusControls = data.getAllStatusControls();
+					for (StatusControl sc : statusControls) {
+						if (pressed.contains(sc.getSubscribedControl())) {
+							Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
+							AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
+						}
 					}
 				}
-			}
 
-			List<Ability> allAbilities = Abilities.all();
-			for (int i = 0; i < allAbilities.size(); i++) {
-				Ability ability = allAbilities.get(i);
-				boolean down = isAbilityPressed(ability);
+				List<Ability> allAbilities = Abilities.all();
+				for (int i = 0; i < allAbilities.size(); i++) {
+					Ability ability = allAbilities.get(i);
+					boolean down = isAbilityPressed(ability);
 
-				if (!CLIENT_CONFIG.conflicts.containsKey(ability)) CLIENT_CONFIG.conflicts.put(ability, false);
-				boolean conflict = CLIENT_CONFIG.conflicts.get(ability);
+					if (!CLIENT_CONFIG.conflicts.containsKey(ability)) CLIENT_CONFIG.conflicts.put(ability, false);
+					boolean conflict = CLIENT_CONFIG.conflicts.get(ability);
 
-				if (!conflict && mc.inGameHasFocus && mc.currentScreen == null && down && !wasAbilityDown[i]) {
-					Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player, ability.getRaytrace());
-					AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace));
+					if (!conflict && mc.inGameHasFocus && mc.currentScreen == null && down && !wasAbilityDown[i]) {
+						Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player, ability.getRaytrace());
+						AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace));
+					}
+					wasAbilityDown[i] = down;
 				}
-				wasAbilityDown[i] = down;
-			}
 
+			}
 		}
 
 	}
