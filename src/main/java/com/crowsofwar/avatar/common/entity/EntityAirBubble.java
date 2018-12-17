@@ -93,6 +93,7 @@ public class EntityAirBubble extends EntityShield {
 		setPosition(getEntityPos(getOwner()));
 	}
 
+
 	@Override
 	public BendingStyle getElement() {
 		return new Airbending();
@@ -382,6 +383,8 @@ public class EntityAirBubble extends EntityShield {
 	@Override
 	public boolean canCollideWith(Entity entity) {
 		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
+			return false;
+		} else if (entity.getPassengers().contains(getOwner())) {
 			return false;
 		} else return entity != getOwner() && !(entity instanceof EntityXPOrb) && !(entity instanceof EntityItem);
 	}

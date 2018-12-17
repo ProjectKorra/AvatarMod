@@ -49,12 +49,12 @@ import static java.lang.Math.toRadians;
  */
 public class AbilityWaterArc extends Ability {
 
+	public int comboNumber;
+
 	public AbilityWaterArc() {
 		super(Waterbending.ID, "water_arc");
 		requireRaytrace(-1, true);
 	}
-
-	public int comboNumber;
 
 	@Override
 	public void execute(AbilityContext ctx) {
@@ -76,7 +76,6 @@ public class AbilityWaterArc extends Ability {
 								((EntityWaterArc) a).setOwner(entity);
 								((EntityWaterArc) a).setBehavior(new WaterArcBehavior.PlayerControlled());
 								((EntityWaterArc) a).setAbility(this);
-								((EntityWaterArc) a).setStartingPosition(entity.getPosition());
 								((EntityWaterArc) a).setSize(0.5F);
 								((EntityWaterArc) a).setGravity(9.82F);
 								((EntityWaterArc) a).setPosition(Vector.getLookRectangular(entity).times(1.5F));
@@ -164,7 +163,6 @@ public class AbilityWaterArc extends Ability {
 					water.setPosition(look);
 					water.setSize(size);
 					water.setDamageMult(damageMult);
-					water.setStartingPosition(entity.getPosition());
 					water.setVelocity(force);
 					water.setGravity(gravity);
 					water.setBehavior(new WaterArcBehavior.Thrown());
@@ -177,7 +175,6 @@ public class AbilityWaterArc extends Ability {
 					water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
 					water.setDamageMult(damageMult);
 					water.setSize(size);
-					water.setStartingPosition(entity.getPosition());
 					water.setBehavior(new WaterArcBehavior.PlayerControlled());
 					water.isSpear(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
 					water.setGravity(gravity);

@@ -355,14 +355,7 @@ public abstract class AvatarEntity extends Entity {
 	public boolean canCollideWith(Entity entity) {
 		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
 			return false;
-		}
-		else if(entity.getPassengers().contains(getOwner())) {
-			return false;
-		}
-		else if (entity.getTeam() == getOwner().getTeam()) {
-			return false;
-		}
-		else if (entity == getOwner()) {
+		} else if (entity == getOwner()) {
 			return false;
 		} else
 			return entity instanceof AvatarEntity || (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase;

@@ -72,7 +72,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	private float Gravity;
 
-	private BlockPos position;
 
 	public EntityWaterArc(World world) {
 		super(world);
@@ -82,7 +81,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.damageMult = 1;
 		this.putsOutFires = true;
 		this.Gravity = 9.82F;
-
 	}
 
 	public float getDamageMult() {
@@ -113,9 +111,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.Gravity = gravity;
 	}
 
-	public void setStartingPosition(BlockPos position) {
-		this.position = position;
-	}
 
 	@Override
 	protected void entityInit() {
@@ -132,17 +127,19 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	public void damageEntity(Entity entity) {
-		if (canDamageEntity(entity)) {
-			DamageSource ds = AvatarDamageSource.causeWaterDamage(entity, getOwner());
-			float damage = STATS_CONFIG.waterArcSettings.damage * damageMult;
-			//entity.attackEntityFrom(ds, damage);
-			if (entity.attackEntityFrom(ds, damage)) {
-				if (getOwner() != null && !world.isRemote && getAbility() != null) {
-					BendingData data1 = BendingData.get(getOwner());
-					AbilityData abilityData1 = data1.getAbilityData(getAbility().getName());
-					abilityData1.addXp(SKILLS_CONFIG.waterHit);
-					BattlePerformanceScore.addMediumScore(getOwner());
+		if (!world.isRemote) {
+			if (canDamageEntity(entity)) {
+				DamageSource ds = AvatarDamageSource.causeWaterDamage(entity, getOwner());
+				float damage = STATS_CONFIG.waterArcSettings.damage * damageMult;
+				entity.attackEntityFrom(ds, damage);
+				if (entity.attackEntityFrom(ds, damage)) {
+					if (getOwner() != null && !world.isRemote && getAbility() != null) {
+						BendingData data1 = BendingData.get(getOwner());
+						AbilityData abilityData1 = data1.getAbilityData(getAbility().getName());
+						abilityData1.addXp(SKILLS_CONFIG.waterHit);
+						BattlePerformanceScore.addMediumScore(getOwner());
 
+					}
 				}
 			}
 		}
@@ -172,7 +169,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(1, 1, 1),
 					entity -> entity != getOwner());
-			if (!collided.isEmpty()) {
+			if (!collided.isEmpty() && !world.isRemote) {
 				for (Entity entity : collided) {
 					if (entity != getOwner() && entity != null && getOwner() != null) {
 
@@ -306,7 +303,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 		if (getBehavior() != null && getBehavior() instanceof WaterArcBehavior.PlayerControlled) {
 			this.velocityMultiplier = 4;
-			this.setStartingPosition(this.getPosition());
 		}
 
 		if (getAbility() instanceof AbilityWaterArc && !world.isRemote && getOwner() != null) {

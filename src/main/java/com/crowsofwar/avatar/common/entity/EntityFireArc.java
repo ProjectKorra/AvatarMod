@@ -50,7 +50,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -234,77 +233,77 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	//Creates a FIRESPLOSION where it lands
 	//Sorry for caps that was just fun to write :P
 	public void Firesplosion() {
-		if (!world.isRemote && world instanceof WorldServer) {
-
-
-			float speed = 0.05F;
+		if (world instanceof WorldServer) {
+			float speed = 0.03F;
 			float hitBox = 0.5F;
-			int numberOfParticles = 250;
+			int numberOfParticles = 150;
+			if (getOwner() != null) {
+				BendingData data = BendingData.get(getOwner());
+				AbilityData abilityData = data.getAbilityData("fire_arc");
+				if (abilityData.getLevel() == 1) {
+					speed = 0.05F;
+					hitBox = 1.5F;
+					numberOfParticles = 300;
+				}
+				if (abilityData.getLevel() >= 2) {
+					speed = 0.075F;
+					hitBox = 2.5F;
+					numberOfParticles = 450;
+				}
 
-			if (getAbility() instanceof AbilityFireArc) {
-				AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("fire_arc");
-				int lvl = abilityData.getLevel();
-				this.damageMult = lvl >= 2 ? 2 : 0.5F;
-				//If the player's water arc level is level III or greater the aoe will do 2+ damage.
-				hitBox = lvl <= 0 ? 0.5F : 0.5f * (lvl + 1);
-				speed = lvl <= 0 ? 0.05F : 0.075F;
-				numberOfParticles = lvl <= 0 ? 250 : 250 + 100 * lvl;
-			} else this.damageMult = 0.5f;
 
-
-			//if (CLIENT_CONFIG.useCustomParticles) {
+				//if (CLIENT_CONFIG.useCustomParticles) {
 			 	/*particles.spawnParticles(world, AvatarParticles.getParticleFlames(), 100, 200, Vector.getEntityPos(this),
 						new Vector(speed * 50, speed * 50, speed * 10));**/
-			//}
-			//else {
-			WorldServer World = (WorldServer) this.world;
-			World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, numberOfParticles, 0.2, 0.1, 0.2, speed);
-			//}
-			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+				//}
+				//else {
+				WorldServer World = (WorldServer) this.world;
+				World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, numberOfParticles, 0.2, 0.1, 0.2, speed);
+				//}
+				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(1, 1, 1),
-					entity -> entity != getOwner());
-			if (!collided.isEmpty()) {
-				for (Entity entity : collided) {
-					if (entity != getOwner() && entity != null && getOwner() != null && canCollideWith(entity)) {
-						//Divide the result of the position difference to make entities fly
-						//further the closer they are to the player.
-						if (canDamageEntity(entity)) {
+				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(1, 1, 1),
+						entity -> entity != getOwner());
+				if (!collided.isEmpty() && !world.isRemote) {
+					for (Entity entity : collided) {
+						if (entity != getOwner() && entity != null && getOwner() != null && canCollideWith(entity)) {
+							//Divide the result of the position difference to make entities fly
+							//further the closer they are to the player.
 							damageEntity(entity);
-						}
-						double dist = (hitBox - entity.getDistance(entity)) > 1 ? (hitBox - entity.getDistance(entity)) : 1;
-						Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
-						velocity = velocity.dividedBy(40).times(dist).withY(hitBox / 50);
+							double dist = (hitBox - entity.getDistance(entity)) > 1 ? (hitBox - entity.getDistance(entity)) : 1;
+							Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
+							velocity = velocity.dividedBy(40).times(dist).withY(hitBox / 50);
 
-						double x = (velocity.x());
-						double y = (velocity.y()) > 0 ? velocity.y() : 0.3F;
-						double z = (velocity.z());
+							double x = (velocity.x());
+							double y = (velocity.y()) > 0 ? velocity.y() : 0.3F;
+							double z = (velocity.z());
 
-						if (!entity.world.isRemote) {
-							entity.addVelocity(x, y, z);
+							if (!entity.world.isRemote) {
+								entity.addVelocity(x, y, z);
 
-							if (collided instanceof AvatarEntity) {
-								if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
-										&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
-									AvatarEntity avent = (AvatarEntity) collided;
-									avent.addVelocity(x, y, z);
+								if (collided instanceof AvatarEntity) {
+									if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
+											&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+										AvatarEntity avent = (AvatarEntity) collided;
+										avent.addVelocity(x, y, z);
+									}
+									entity.isAirBorne = true;
+									AvatarUtils.afterVelocityAdded(entity);
 								}
-								entity.isAirBorne = true;
-								AvatarUtils.afterVelocityAdded(entity);
 							}
 						}
 					}
 				}
 			}
 		}
-
 	}
 
 
 	public void damageEntity(Entity entity) {
-		if (canDamageEntity(entity)) {
+		if (canDamageEntity(entity) && !world.isRemote) {
 			DamageSource ds = AvatarDamageSource.causeFireDamage(entity, getOwner());
 			float damage = STATS_CONFIG.fireArcSettings.damage * damageMult;
+			entity.attackEntityFrom(ds, damage);
 			if (entity.attackEntityFrom(ds, damage)) {
 				if (getOwner() != null && !world.isRemote && getAbility() != null) {
 					BendingData data1 = BendingData.get(getOwner());
