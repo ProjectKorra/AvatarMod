@@ -135,6 +135,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			ticks++;
 
 			boolean drop = ticks >= STATS_CONFIG.wallWaitTime * 20;
+			if (entity.getOwner() == null) entity.setDead();
 
 			BendingData data = BendingData.get(entity.getOwner());
 			AbilityData abilityData = data.getAbilityData("wall");

@@ -268,11 +268,13 @@ public abstract class Bender {
 			Chi chi = data.chi();
 
 			if (CHI_CONFIG.lowChiDebuffs) {
-				if (chi.getTotalChi() <= chi.getMaxChi() / 15) {
-					entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 5));
-				}
-				if (chi.getTotalChi() <= chi.getMaxChi() / 10) {
-					entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 5));
+				if (chi.getMaxChi() > 0) {
+					if (chi.getTotalChi() <= chi.getMaxChi() / 15) {
+						entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 5));
+					}
+					if (chi.getTotalChi() <= chi.getMaxChi() / 10) {
+						entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 5));
+					}
 				}
 
 			}

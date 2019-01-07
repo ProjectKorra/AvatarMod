@@ -291,16 +291,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 		if (getOwner() != null && getAbility() instanceof AbilityPickUpBlock) {
 			AbilityData data = BendingData.get(getOwner()).getAbilityData("pickup_block");
 
-			if (!world.isRemote && areItemDropsEnabled()) {
-				NonNullList<ItemStack> drops = NonNullList.create();
-				getBlock().getDrops(drops, world, new BlockPos(this), getBlockState(), 0);
-				for (ItemStack is : drops) {
-					EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
-					world.spawnEntity(ei);
-				}
-			}
-
-
 			if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
 
 				Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);
@@ -310,6 +300,22 @@ public class EntityFloatingBlock extends AvatarEntity {
 				}
 
 			}
+			if (!data.isMasterPath(AbilityTreePath.FIRST)) {
+				setDead();
+			}
+			if (!world.isRemote && areItemDropsEnabled()) {
+				NonNullList<ItemStack> drops = NonNullList.create();
+				getBlock().getDrops(drops, world, new BlockPos(this), getBlockState(), 0);
+				int i = 0;
+				for (ItemStack is : drops) {
+					if (i < 1) {
+						EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
+						world.spawnEntity(ei);
+					}
+					i++;
+				}
+			}
+
 		}
 
 		return true;

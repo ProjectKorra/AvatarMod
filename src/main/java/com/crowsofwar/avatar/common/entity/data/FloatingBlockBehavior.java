@@ -154,7 +154,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 
 			if (entity.collided) {
 				if (!entity.world.isRemote) entity.setDead();
-				entity.onCollideWithSolid();
+				//entity.onCollideWithSolid();
 
 				World world = entity.world;
 				Block block = entity.getBlockState().getBlock();
@@ -217,8 +217,10 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 
 			// Remove the floating block & spawn particles
 			entity.onCollideWithSolid();
+
 			// boomerang upgrade handling
 			if (!entity.world.isRemote) {
+
 				if (data.getAbilityData("pickup_block")
 						.isMasterPath(AbilityTreePath.FIRST)) {
 
