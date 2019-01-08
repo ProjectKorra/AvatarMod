@@ -135,20 +135,21 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			ticks++;
 
 			boolean drop = ticks >= STATS_CONFIG.wallWaitTime * 20;
-			if (entity.getOwner() == null) entity.setDead();
+			if (entity.getOwner() != null) {
 
-			BendingData data = BendingData.get(entity.getOwner());
-			AbilityData abilityData = data.getAbilityData("wall");
-			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
+				BendingData data = BendingData.get(entity.getOwner());
+				AbilityData abilityData = data.getAbilityData("wall");
+				if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
 
-				drop = entity.getOwner().isDead || ticks >= STATS_CONFIG.wallWaitTime2 * 20;
+					drop = entity.getOwner().isDead || ticks >= STATS_CONFIG.wallWaitTime2 * 20;
 
-				Bender ownerBender = Bender.get(entity.getOwner());
-				if (!entity.world.isRemote && !ownerBender.consumeChi(STATS_CONFIG
-						.chiWallOneSecond / 20)) {
-					drop = true;
+					Bender ownerBender = Bender.get(entity.getOwner());
+					if (!entity.world.isRemote && !ownerBender.consumeChi(STATS_CONFIG
+							.chiWallOneSecond / 20)) {
+						drop = true;
+					}
+
 				}
-
 			}
 
 			return drop ? new Drop() : this;
