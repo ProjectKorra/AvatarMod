@@ -33,6 +33,7 @@ public class EntityShockwave extends AvatarEntity {
 	private int particleAmount;
 	//The amount of particles to be spawned
 	private double particleSpeed;
+	//The amount of performance to be added on a hit
 	private int performanceAmount;
 	//The amount of battleperformance added per hit
 	private double range;
