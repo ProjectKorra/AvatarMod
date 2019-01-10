@@ -47,9 +47,9 @@ public class EntityShockwave extends AvatarEntity {
 	private boolean isSphere;
 	//Whether or not to use a sphere of particles instead of a circular ring
 	private NetworkParticleSpawner particles;
-
-	private double particleController;
 	//Used for spherical shockwaves
+	private double particleController;
+
 
 	public EntityShockwave(World world) {
 		super(world);
