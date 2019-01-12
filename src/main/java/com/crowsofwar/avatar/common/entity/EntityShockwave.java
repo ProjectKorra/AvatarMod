@@ -176,8 +176,8 @@ public class EntityShockwave extends AvatarEntity {
 				double x = posX + (ticksExisted * getSpeed()) * Math.sin(angle);
 				double y = posY + 0.5;
 				double z = posZ + (ticksExisted * getSpeed()) * Math.cos(angle);
-				particles.spawnParticles(world, getParticle(), getParticleAmount() / 2, getParticleAmount(), x, y, z, getParticleSpeed(),
-						getParticleSpeed(), getParticleSpeed());
+				Vector speed = new Vector((ticksExisted * getSpeed()) * Math.sin(angle) * (getParticleSpeed() * 10), getParticleSpeed() / 2, (ticksExisted * getSpeed()) * Math.cos(angle) * (getParticleSpeed() * 10));
+				particles.spawnParticles(world, getParticle(), getParticleAmount() / 2, getParticleAmount(), new Vector(x, y, z), speed);
 			}
 
 			if (isSphere) {
