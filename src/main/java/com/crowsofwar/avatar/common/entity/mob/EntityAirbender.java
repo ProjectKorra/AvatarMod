@@ -195,6 +195,7 @@ public class EntityAirbender extends EntityHumanBender {
 			scrollsLeft = 1;
 		}
 		setLevel(level);
+		scrollsLeft = getLevel();
 		return super.onInitialSpawn(difficulty, livingdata);
 	}
 
@@ -219,9 +220,9 @@ public class EntityAirbender extends EntityHumanBender {
 
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		/*if (!world.isRemote) {
-			System.out.println(level);
-		}**/
+		if (!world.isRemote) {
+			System.out.println(scrollsLeft);
+		}
 		return super.processInteract(player, hand);
 	}
 }

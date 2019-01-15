@@ -77,7 +77,7 @@ public class EntityAiGiveScroll extends EntityAIBase {
 		System.out.println("Thonk");
 
 		ticksExecuting++;
-		if (ticksExecuting >= 20) {
+		if (ticksExecuting >= 10) {
 			System.out.println("Huh");
 
 			World world = entity.world;
