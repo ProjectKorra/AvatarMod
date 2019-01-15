@@ -240,6 +240,7 @@ public abstract class EntityHumanBender extends EntityBender {
 
 			if (scrollsLeft > 0) {
 				if (aiGiveScroll.giveScrollTo(player)) {
+					System.out.println("Trade started");
 					// Take item
 					scrollsLeft--;
 					if (!player.capabilities.isCreativeMode) {

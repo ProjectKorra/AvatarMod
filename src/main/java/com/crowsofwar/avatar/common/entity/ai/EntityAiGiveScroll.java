@@ -74,9 +74,11 @@ public class EntityAiGiveScroll extends EntityAIBase {
 
 		entity.getLookHelper().setLookPosition(target.posX, target.posY + target.getEyeHeight(), target.posZ,
 				entity.getHorizontalFaceSpeed(), entity.getVerticalFaceSpeed());
+		System.out.println("Thonk");
 
 		ticksExecuting++;
-		if (ticksExecuting >= 50) {
+		if (ticksExecuting >= 20) {
+			System.out.println("Huh");
 
 			World world = entity.world;
 
