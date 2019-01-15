@@ -136,9 +136,7 @@ public abstract class EntityHumanBender extends EntityBender {
 
 	protected abstract int getNumSkins();
 
-	protected int getLevel() {
-		return 1;
-	}
+	//TODO: Make a DataParameter for getLevel
 
 	protected int getScrollsLeft() {
 		return  rand.nextInt(3) + 1;

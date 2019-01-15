@@ -39,6 +39,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -63,7 +66,7 @@ public class EntityAirbender extends EntityHumanBender {
 
 	public static final ResourceLocation LOOT_TABLE = LootTableList
 			.register(new ResourceLocation("avatarmod", "airbender"));
-
+	private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityAirbender.class, DataSerializers.VARINT);
 	private int scrollsLeft;
 	private int level = 0;
 
@@ -76,6 +79,14 @@ public class EntityAirbender extends EntityHumanBender {
 
 	}
 
+	public void setLevel(int level) {
+		dataManager.set(LEVEL, level);
+	}
+
+	public int getLevel() {
+		return dataManager.get(LEVEL);
+	}
+
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
@@ -84,14 +95,10 @@ public class EntityAirbender extends EntityHumanBender {
 	}
 
 	@Override
-	protected int getLevel() {
-		return level;
-	}
-
-	@Override
 	protected void entityInit() {
 		super.entityInit();
 		getData().addBendingId(Airbending.ID);
+		dataManager.register(LEVEL, 1);
 
 	}
 
@@ -187,6 +194,7 @@ public class EntityAirbender extends EntityHumanBender {
 		if (scrollsLeft == 0) {
 			scrollsLeft = 1;
 		}
+		setLevel(level);
 		return super.onInitialSpawn(difficulty, livingdata);
 	}
 
@@ -201,11 +209,11 @@ public class EntityAirbender extends EntityHumanBender {
 
 	@Override
 	public ITextComponent getDisplayName() {
-		/*TextComponentString textcomponentstring = new TextComponentString("Level "+ level + " " + ScorePlayerTeam.formatPlayerName(this.getTeam(), this.getName()));
+		TextComponentString textcomponentstring = new TextComponentString("Level "+ getLevel() + " " + ScorePlayerTeam.formatPlayerName(this.getTeam(), this.getName()));
 		textcomponentstring.getStyle().setHoverEvent(this.getHoverEvent());
 		textcomponentstring.getStyle().setInsertion(this.getCachedUniqueIdString());
-		return textcomponentstring;**/
-		return super.getDisplayName();
+		return textcomponentstring;
+		//return super.getDisplayName();
 	}
 
 
