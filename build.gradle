@@ -1,102 +1,255 @@
 // For those who want the bleeding edge
 buildscript {
-    repositories {
-        jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
+	repositories {
+		mavenCentral()
+		jcenter()
+		maven {
+			url = "https://plugins.gradle.org/m2/"
+		}
+		maven {
+			name = "forge"
+			url = "http://files.minecraftforge.net/maven/"
+		}
+		maven {
+			name = "sonatype"
+			url = "https://oss.sonatype.org/content/repositories/snapshots/"
+		}
+		maven {
+			name = "amuzil"
+			url = "http://repo.amuzil.com/repository/public/"
+		}
 
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.4"
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"
-    }
-}
-plugins {
-    id "org.sonarqube" version "2.6.2"
-}
-
-apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'com.github.johnrengelman.shadow'
-
-// Needs this for IntelliJ to recognize assets folder
-idea {
-    module {
-        inheritOutputDirs = true
-    }
+	}
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+		classpath "com.github.jengelman.gradle.plugins:shadow:4.0.3"
+		classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7"
+	}
 }
 
-ext.configFile = file('build.properties')
-ext.config = parseConfig(configFile)
+apply plugin: "java"
+apply plugin: "idea"
+apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "org.sonarqube"
+apply plugin: "maven-publish"
 
-group = "com.crowsofwar.avatarmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "avatarmod"
+ext.config = parseConfig(file("build.properties"))
+ext.dependenciesConfig = parseConfig(file("dependencies.properties"))
+ext.secrets = parseConfig(file("secrets.properties"))
 
+version = config.version
+group = config.group
+archivesBaseName = config.archivesBaseName
+
+// Need this here so Eclipse tasks generates correctly
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
+compileJava {
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+// This makes IDEA recognize the assets folder
+idea {
+	module {
+		inheritOutputDirs = true
+	}
+}
+
+repositories {
+	maven {
+		name = "amuzil"
+		url = "http://repo.amuzil.com/repository/public/"
+	}
+}
+
+configurations {
+	shadow
+	compile.extendsFrom provided
+	provided.extendsFrom shadow
+}
+
+task useDeobfDependencies {
+	dependenciesConfig.obfuscated = false
+}
+
+tasks.runClient.dependsOn tasks.useDeobfDependencies
+tasks.runServer.dependsOn tasks.useDeobfDependencies
 
 dependencies {
-    //todo:Update dependencies
-    compile files("libs/joml/joml-1.8.1.jar")
-    compile files("libs/yaml/snakeyaml-1.16.jar");
+	provided fileTree(dir: dependenciesConfig.libraries + (dependenciesConfig.obfuscated ? "" : "Deobf"), include: ["*.jar"])
+
+	// Forge Mods
+	if (dependenciesConfig.obfuscated) {
+	} else {
+	}
+
+	// Other Stuff
+	shadow "org.joml:joml:1.9.12"
+	shadow "org.yaml:snakeyaml:1.23"
 }
 
 minecraft {
-    version = config.forge
-    mappings = config.mappings
-    
-    runDir = "run"
-    
-    replaceIn 'src/main/java/com/crowsofwar/avatar/AvatarInfo.java'
-    replace '@VERSION@', project.version
+	version = config.forge
+	mappings = config.mappings
+
+	runDir = "run"
+
+	replaceIn "src/main/java/com/crowsofwar/avatar/AvatarInfo.java"
+	replace "@version@", config.version
+	replace "@modid@", config.modid
+	replace "@mcversion@", project.minecraft.version
+	replace "@name@", config.name
 }
 
-processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+jar {
+	manifest {
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
-
-jar.classifier = "thin"
-shadowJar.classifier = ""
-
-reobf { shadowJar { mappingType = "SEARGE" } }
-tasks.reobfShadowJar.mustRunAfter shadowJar
-
-task sourceZip(type: Zip, dependsOn: 'classes') {
-  classifier "src"
-  from projectDir
-  include "src/**/*"
-
-  destinationDir(new File(buildDir, "/libs"))
+	}
+	from("./") {
+		include "*.md"
+	}
 }
 
 shadowJar {
-  configurations = [project.configurations.compile]
+	// Overwrite the default file
+	classifier = null
+	configurations = [project.configurations.shadow]
+
+	from(sourceSets.main.allJava) {
+		include "*"
+	}
+	from("./") {
+		include "*.md"
+	}
+
+	relocate "org.joml", "com.crowsofwar.avatar.joml"
+	relocate "org.yaml.snakeyaml", "com.crowsofwar.avatar.snakeyaml"
 }
 
-def parseConfig(File config) {
-    config.withReader {
-        def prop = new Properties()
-        prop.load(it)
-        return (new ConfigSlurper().parse(prop))
-    }
+reobf {
+	shadowJar {
+		mappingType = "SEARGE"
+	}
+}
+tasks.reobfShadowJar.mustRunAfter shadowJar
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	classifier = 'javadoc'
+	from javadoc.destinationDir
+}
+
+artifacts {
+	archives sourcesJar
+	// TODO Fix
+	// archives javadocJar
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+processResources {
+	// This will ensure that this task is redone when the versions change
+	inputs.property "version", project.version
+	inputs.property "mcversion", project.minecraft.version
+
+	// Replace stuff in mcmod.info, nothing else
+	from(sourceSets.main.resources.srcDirs) {
+		include "mcmod.info"
+		filter ReplaceTokens, tokens: [version: config.version, mcversion: project.minecraft.version, modid: config.modid, name: config.name]
+	}
+
+	// Copy everything else
+	from(sourceSets.main.resources.srcDirs) {
+		exclude "mcmod.info"
+	}
+}
+
+static def parseConfig(File config) {
+	config.withReader {
+		def prop = new Properties()
+		prop.load(it)
+		return (new ConfigSlurper().parse(prop))
+	}
+}
+
+def startBuildMessage = "Starting build...\n\nName: ${project.name}\nVersion: ${project.version}"
+def finishBuildMessage = "Successfully finished building ${project.name} version ${project.version}\n\nYour build is located in:\nbuild/libs"
+def fancyBorder = ""
+
+task buildInformation {
+	doFirst {
+		def lines = startBuildMessage.readLines();
+		lines.addAll(finishBuildMessage.readLines())
+		def maxLength = 0
+		for (String line : lines)
+			maxLength = Math.max(line.length(), maxLength)
+		if (maxLength % 2 != 0) maxLength++
+		for (def i = 0; i < maxLength; i++) {
+			fancyBorder += i % 2 == 0 ? "=" : "--"
+		}
+	}
+}
+
+task startBuild {
+	doFirst {
+		println """
+${fancyBorder}
+
+${startBuildMessage}
+
+${fancyBorder}
+"""
+	}
+}
+
+task finishBuild {
+	doLast {
+		println """
+${fancyBorder}
+
+${finishBuildMessage}
+
+${fancyBorder}
+"""
+	}
+}
+
+task cleanBuild(dependsOn: ["buildInformation", "startBuild", "clean", "build", "finishBuild"]) {
+	group "build"
+	tasks.startBuild.mustRunAfter tasks.buildInformation
+	tasks.clean.mustRunAfter tasks.startBuild
+	tasks.build.mustRunAfter tasks.clean
+	tasks.finishBuild.mustRunAfter tasks.build
+}
+
+publishing {
+	publications {
+		shadowPublication(MavenPublication) {
+			project.shadow.component(it)
+			afterEvaluate {
+				artifact sourcesJar
+				// TODO artifact javadocJar
+			}
+		}
+	}
+	repositories {
+		maven {
+			url = "http://repo.amuzil.com/repository/public/"
+			credentials {
+				username = secrets.repo.username
+				password = secrets.repo.password
+			}
+		}
+	}
+}
+
+task release(dependsOn: ["cleanBuild", "publish"]) {
+	group "build"
+	tasks.publish.mustRunAfter cleanBuild
 }
