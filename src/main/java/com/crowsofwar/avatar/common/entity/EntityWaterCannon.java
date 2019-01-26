@@ -27,6 +27,7 @@ import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControlPoint> {
 
@@ -120,12 +121,13 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 					particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1,
 							startPos.x() + distance.x(), startPos.y() + distance.y(), startPos.z() + distance.z(), 0, 0, 0);
 				}
+
 			}
 		}
 
 
 		if (getOwner() != null) {
-			Vector direction = Vector.getLookRectangular(getOwner());
+			Vector direction = getLookRectangular(getOwner());
 			this.setVelocity(direction.times(25));
 		}
 

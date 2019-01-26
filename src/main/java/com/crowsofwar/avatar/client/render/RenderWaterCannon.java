@@ -4,11 +4,15 @@ import com.crowsofwar.avatar.common.entity.ControlPoint;
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+
+import static com.crowsofwar.gorecore.util.Vector.getEyePos;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 public class RenderWaterCannon extends RenderArc {
 	private static final ResourceLocation TEXTURE = new ResourceLocation("minecraft",
@@ -26,7 +30,33 @@ public class RenderWaterCannon extends RenderArc {
 		EntityWaterCannon cannon = (EntityWaterCannon) entity;
 		renderArc(cannon, partialTicks, 3f, 3f * cannon.getSizeMultiplier());
 
+		//TODO: Find a way to be able to spawn the helix from the player to the water cannon- right now it's directly spawning where I'm looking
+		/*World world = entity.world;
+		Vector position = getEyePos(cannon.getOwner()).minusY(0.3);
+		double radius = 1.5f * cannon.getSizeMultiplier();
+		if (cannon.getOwner() != null) {
+			double pitch = Math.toDegrees(cannon.posX - cannon.getOwner().posX);
+			double yaw = Math.toDegrees(cannon.posY - cannon.getOwner().posY);
+			double dist = cannon.getDistance(cannon.getOwner());
+			int maxAngle = 180 + (6 * (int) dist * (int) cannon.getSizeMultiplier());
+			for (int angle = 0; angle < maxAngle; angle++) {
+				double angle2 = world.rand.nextDouble() * Math.PI * 2;
+				double x = radius * cos(angle);
+				double y = angle / (maxAngle / dist);
+				double z = radius * sin(angle);
+				double speed = world.rand.nextDouble() * 2 + 1;
+				double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
+				angle2 += omega;
+				Vector pos = new Vector(x, y, z);
+				pos = Vector.rotateAroundAxisX(pos, pitch + 90);
+				pos = Vector.rotateAroundAxisY(pos, yaw);
+				world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, pos.x() + position.x(), pos.y() + position.y(),
+						pos.z() + position.z(), 0.05 * radius * omega * Math.cos(angle2), 0.1, 0.05 * radius * omega * Math.sin(angle2));                //	World.spawnParticle(particle, pos.x() + position.x() + direction.x(), pos.y() + position.y() + direction.y(),
+			}
+		}**/
+
 	}
+
 
 	@Override
 	protected void renderArc(EntityArc<?> arc, float partialTicks, float alpha, float scale) {

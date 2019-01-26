@@ -165,9 +165,8 @@ public class Vector {
 	}
 
 	/**
-	 *
-	 * @param distance How big the helix is.
-	 * @param axis The axis along which the helix spawns.
+	 * @param distance      How big the helix is.
+	 * @param axis          The axis along which the helix spawns.
 	 * @param startPosition The starting point of the helix
 	 * @return The vector that is returned
 	 */
@@ -313,6 +312,37 @@ public class Vector {
 	 */
 	public static Vector getLookRotations(Entity entity) {
 		return getEuler(toRadians(entity.rotationYaw), toRadians(entity.rotationPitch));
+	}
+
+	public static Vector rotateAroundAxisX(Vector v, double angle) {
+		angle = Math.toRadians(angle);
+		double y, z, cos, sin;
+		cos = Math.cos(angle);
+		sin = Math.sin(angle);
+		y = v.y() * cos - v.z() * sin;
+		z = v.y() * sin + v.z() * cos;
+		return new Vector(v.x(), y, z);
+	}
+
+	public static Vector rotateAroundAxisY(Vector v, double angle) {
+		angle = -angle;
+		angle = Math.toRadians(angle);
+		double x, z, cos, sin;
+		cos = Math.cos(angle);
+		sin = Math.sin(angle);
+		x = v.x() * cos + v.z() * sin;
+		z = v.x() * -sin + v.z() * cos;
+		return new Vector(x, v.y(), z);
+	}
+
+	public static Vector rotateAroundAxisZ(Vector v, double angle) {
+		angle = Math.toRadians(angle);
+		double x, y, cos, sin;
+		cos = Math.cos(angle);
+		sin = Math.sin(angle);
+		x = v.x() * cos - v.y() * sin;
+		y = v.x() * sin + v.y() * cos;
+		return new Vector(x, y, v.z());
 	}
 
 	/**

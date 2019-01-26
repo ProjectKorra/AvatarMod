@@ -18,7 +18,9 @@
 package com.crowsofwar.avatar.common.util;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -26,6 +28,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.world.World;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -35,6 +39,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import static com.crowsofwar.avatar.AvatarLog.WarningType.INVALID_SAVE;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 public class AvatarUtils {
 
@@ -53,6 +59,39 @@ public class AvatarUtils {
 		};
 
 	}
+
+	/**
+	 * Spawns a directional helix that has rotating particles.
+	 *
+	 * @param world         World the vortex spawns in.
+	 * @param entity        Entity that's spawning the vortex.
+	 * @param direction     The direction that the vortex is spawning in.
+	 * @param maxAngle      The amount of particles/the maximum angle that the circle ticks to. 240 would mean there are 240 particles spiraling away.
+	 * @param vortexLength  How long the vortex is. This is initially used at the height, before rotating the vortex.
+	 * @param radius        The radius of the helix.
+	 *                      otherwise you can get some funky effects. Ex: maxAngle/1.5 would give you a max radius of 1.5 blocks.
+	 *                      Note: It might only be a diamater of 1.5 blocks- if so, uhhh... My bad.
+	 * @param particle      The enum particle type.
+	 * @param position      The starting/reference position of the helix. Used along with the direction position to determine the actual starting position.
+	 * @param particleSpeed How fast the particles are moving and in what direction.
+	 */
+	public static void spawnDirectionalHelix(World world, EntityLivingBase entity, Vector direction, int maxAngle, double vortexLength, double radius, EnumParticleTypes particle, Vector position,
+											 double particleSpeed) {
+		for (int angle = 0; angle < maxAngle; angle++) {
+			double x = radius * cos(angle);
+			double y = angle / (maxAngle / vortexLength);
+			double z = radius * sin(angle);
+			Vector pos = new Vector(x, y, z);
+			if (entity != null) {
+				pos = Vector.rotateAroundAxisX(pos, entity.rotationPitch + 90);
+				pos = Vector.rotateAroundAxisY(pos, entity.rotationYaw);
+				world.spawnParticle(particle, pos.x() + position.x() + direction.x(), pos.y() + position.y() + direction.y(),
+						pos.z() + position.z() + direction.z(), particleSpeed, particleSpeed, particleSpeed);                //	World.spawnParticle(particle, pos.x() + position.x() + direction.x(), pos.y() + position.y() + direction.y(),
+				//			pos.z() + position.z() + direction.z(), particleSpeed, 1, 0, 0, 0, particleSpeed);
+			}
+		}
+	}
+
 
 	/**
 	 * Solves the issue where players on singleplayer/LAN will sometimes not
