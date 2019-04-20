@@ -42,7 +42,7 @@ public class IceActionCanceller {
 		}
 
 		//noinspection SimplifiableIfStatement
-		if (Bender.isBenderSupported(entity)) {
+		if (Bender.isBenderSupported(entity) && entity.getUniqueID() != null) {
 			return BendingData.get(entity).hasStatusControl(StatusControl.SHIELD_SHATTER);
 		}
 
