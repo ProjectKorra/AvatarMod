@@ -82,10 +82,9 @@ public class BendingData {
 		if (Bender.get(entity).getInfo().getId() == null) throw new IllegalArgumentException("Can't get data for an entity without an UUID");
 		if (entity instanceof EntityPlayer) {
 			return AvatarPlayerData.fetcher().fetch((EntityPlayer) entity).getData();
-		} else if (entity.getUniqueID() != null){
+		} else {
 			return Bender.get(entity).getData();
 		}
-		else return null;
 	}
 
 	@Nullable
