@@ -199,7 +199,7 @@ public class Vector {
 	}
 
 	private static double angle(Vector a, Vector b) {
-		return Math.acos(dot(a, b) / (a.toMinecraft().lengthVector() * b.toMinecraft().lengthVector()));
+		return Math.acos(dot(a, b) / (a.toMinecraft().length() * b.toMinecraft().length()));
 	}
 
 	private static Matrix3f rotationMatrix(Vector from, Vector to) {

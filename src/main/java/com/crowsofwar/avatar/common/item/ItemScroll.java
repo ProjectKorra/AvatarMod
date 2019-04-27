@@ -60,7 +60,7 @@ import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SPECIALTY_SCRO
 public class ItemScroll extends Item implements AvatarItem {
 
 	public ItemScroll() {
-		setUnlocalizedName("scroll");
+		setTranslationKey("scroll");
 		setMaxStackSize(1);
 		setCreativeTab(AvatarItems.tabItems);
 		setMaxDamage(0);
@@ -153,9 +153,9 @@ public class ItemScroll extends Item implements AvatarItem {
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
+	public String getTranslationKey(ItemStack stack) {
 		int metadata = stack.getMetadata() >= ScrollType.values().length ? 0 : stack.getMetadata();
-		return super.getUnlocalizedName(stack) + "." + ScrollType.get(metadata).displayName();
+		return super.getTranslationKey(stack) + "." + ScrollType.get(metadata).displayName();
 	}
 
 	@Override

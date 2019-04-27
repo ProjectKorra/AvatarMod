@@ -111,8 +111,8 @@ public class EntityFlames extends AvatarEntity {
 			// Try to light firest
 			if (lightsFires && sideHit != EnumFacing.DOWN && !world.isRemote) {
 
-				BlockPos bouncingOff = getPosition().add(-sideHit.getFrontOffsetX(),
-						-sideHit.getFrontOffsetY(), -sideHit.getFrontOffsetZ());
+				BlockPos bouncingOff = getPosition().add(-sideHit.getXOffset(),
+						-sideHit.getXOffset(), -sideHit.getZOffset());
 
 				if (sideHit == EnumFacing.UP || world.getBlockState(bouncingOff).getBlock()
 						.isFlammable(world, bouncingOff, sideHit)) {

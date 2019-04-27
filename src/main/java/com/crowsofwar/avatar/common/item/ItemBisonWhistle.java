@@ -48,7 +48,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 	public ItemBisonWhistle() {
 		setCreativeTab(AvatarItems.tabItems);
 		setMaxStackSize(1);
-		setUnlocalizedName("bison_whistle");
+		setTranslationKey("bison_whistle");
 	}
 
 	// Logic for assigning bison whistle is in the bison class

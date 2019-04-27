@@ -51,7 +51,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 
 	public ItemWaterPouch() {
 		setCreativeTab(AvatarItems.tabItems);
-		setUnlocalizedName("water_pouch");
+		setTranslationKey("water_pouch");
 		setMaxStackSize(1);
 		setMaxDamage(0);
 		setHasSubtypes(false);

@@ -30,8 +30,7 @@ import java.util.List;
 /**
  * @author CrowsOfWar
  */
-public class
-AvatarItems {
+public class AvatarItems {
 
 	public static List<Item> allItems;
 	public static ItemScroll itemScroll;
@@ -44,7 +43,7 @@ AvatarItems {
 	public static ItemAirbenderStaff airbenderStaff;
 	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
 		@Override
-		public ItemStack getTabIconItem() {
+		public ItemStack createIcon() {
 			return stackScroll;
 		}
 	};
@@ -68,8 +67,8 @@ AvatarItems {
 	}
 
 	private static void addItem(Item item) {
-		item.setRegistryName("avatarmod", item.getUnlocalizedName().substring(5));
-		item.setUnlocalizedName("avatarmod:" + item.getUnlocalizedName().substring(5));
+		item.setRegistryName("avatarmod", item.getTranslationKey().substring(5));
+		item.setTranslationKey("avatarmod:" + item.getTranslationKey().substring(5));
 		allItems.add(item);
 	}
 

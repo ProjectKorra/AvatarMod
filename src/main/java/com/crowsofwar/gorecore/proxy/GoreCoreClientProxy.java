@@ -29,12 +29,12 @@ public class GoreCoreClientProxy extends GoreCoreCommonProxy {
 	
 	@Override
 	protected File createUUIDCacheFile() {
-		return new File(Minecraft.getMinecraft().mcDataDir, "GoreCore_ClientUUIDCache.txt");
+		return new File(Minecraft.getMinecraft().gameDir, "GoreCore_ClientUUIDCache.txt");
 	}
 	
 	@Override
 	protected File createMinecraftDir() {
-		return new File(Minecraft.getMinecraft().mcDataDir, ".");
+		return new File(Minecraft.getMinecraft().gameDir, ".");
 	}
 	
 	@Override

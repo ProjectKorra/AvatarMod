@@ -14,10 +14,10 @@ buildscript {
 			name = "sonatype"
 			url = "https://oss.sonatype.org/content/repositories/snapshots/"
 		}
-		//maven {
-		//	name = "amuzil"
-		//	url = "http://repo.amuzil.com/repository/public/"
-		//}
+		maven {
+			name = "amuzil"
+			url = "http://repo.amuzil.com/repository/public/"
+		}
 
 	}
 	dependencies {
@@ -58,10 +58,10 @@ idea {
 }
 
 repositories {
-	//maven {
-	//	name = "amuzil"
-	//	url = "http://repo.amuzil.com/repository/public/"
-	//}
+	maven {
+		name = "amuzil"
+		url = "http://repo.amuzil.com/repository/public/"
+	}
 }
 
 configurations {

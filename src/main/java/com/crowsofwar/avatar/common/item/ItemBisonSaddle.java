@@ -27,7 +27,7 @@ import net.minecraft.util.NonNullList;
 public class ItemBisonSaddle extends Item implements AvatarItem {
 
 	public ItemBisonSaddle() {
-		setUnlocalizedName("bison_saddle");
+		setTranslationKey("bison_saddle");
 		setMaxStackSize(1);
 		setCreativeTab(AvatarItems.tabItems);
 		setMaxDamage(0);
@@ -47,10 +47,10 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
+	public String getTranslationKey(ItemStack stack) {
 		SaddleTier tier = SaddleTier.get(stack.getMetadata());
 		String tierName = tier == null ? "null" : tier.name().toLowerCase();
-		return super.getUnlocalizedName(stack) + "." + tierName;
+		return super.getTranslationKey(stack) + "." + tierName;
 	}
 
 	@Override
