@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
@@ -26,6 +28,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -38,8 +41,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Objects;
-
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -55,7 +56,7 @@ public class EntityFlames extends AvatarEntity {
 	private double damageMult;
 
 	/**
-	 * @param worldIn
+	 *
 	 */
 	public EntityFlames(World worldIn) {
 		super(worldIn);
@@ -103,7 +104,7 @@ public class EntityFlames extends AvatarEntity {
 		if (velocity().sqrMagnitude() <= 0.5 * 0.5 || collided) setDead();
 
 		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.3,
-				true);
+		                                             true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
 			setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.5));
@@ -111,11 +112,12 @@ public class EntityFlames extends AvatarEntity {
 			// Try to light firest
 			if (lightsFires && sideHit != EnumFacing.DOWN && !world.isRemote) {
 
-				BlockPos bouncingOff = getPosition().add(-sideHit.getFrontOffsetX(),
-						-sideHit.getFrontOffsetY(), -sideHit.getFrontOffsetZ());
+				BlockPos bouncingOff = getPosition().add(-sideHit.getXOffset(),
+				                                         -sideHit.getYOffset(),
+				                                         -sideHit.getZOffset());
 
 				if (sideHit == EnumFacing.UP || world.getBlockState(bouncingOff).getBlock()
-						.isFlammable(world, bouncingOff, sideHit)) {
+								.isFlammable(world, bouncingOff, sideHit)) {
 
 					world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
 
@@ -130,7 +132,8 @@ public class EntityFlames extends AvatarEntity {
 			AbilityData abilityData = data.getAbilityData("flamethrower");
 
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-					entity -> entity != owner && !(entity instanceof EntityFlames));
+			                                                         entity -> entity != owner
+			                                                                   && !(entity instanceof EntityFlames));
 
 			for (Entity entity : collided) {
 
@@ -145,8 +148,9 @@ public class EntityFlames extends AvatarEntity {
 					additionalDamage = 2 + (abilityData.getTotalXp() - 50) / 25;
 				}
 				additionalDamage *= damageMult;
-				if (entity.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(entity, owner),
-						additionalDamage)) {
+				if (entity.attackEntityFrom(
+								AvatarDamageSource.causeFlamethrowerDamage(entity, owner),
+								additionalDamage)) {
 					BattlePerformanceScore.addSmallScore(owner);
 				}
 

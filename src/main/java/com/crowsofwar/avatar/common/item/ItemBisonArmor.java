@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 public class ItemBisonArmor extends Item implements AvatarItem {
 
 	public ItemBisonArmor() {
-		setUnlocalizedName("bison_armor");
+		setTranslationKey("bison_armor");
 		setMaxStackSize(1);
 		setCreativeTab(AvatarItems.tabItems);
 		setMaxDamage(0);
@@ -49,10 +49,10 @@ public class ItemBisonArmor extends Item implements AvatarItem {
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
+	public String getTranslationKey(ItemStack stack) {
 		ArmorTier tier = ArmorTier.get(stack.getMetadata());
 		String tierName = tier == null ? "null" : tier.name().toLowerCase();
-		return super.getUnlocalizedName(stack) + "." + tierName;
+		return super.getTranslationKey(stack) + "." + tierName;
 	}
 
 	@Override

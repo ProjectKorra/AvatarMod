@@ -17,7 +17,10 @@
 
 package com.crowsofwar.gorecore.util;
 
+import static java.lang.Math.*;
+
 import io.netty.buffer.ByteBuf;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,8 +34,6 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
-
-import static java.lang.Math.*;
 
 /**
  * An immutable 3-dimensional vector using doubles.
@@ -53,7 +54,7 @@ public class Vector {
 	public static final Vector NORTH = new Vector(0, 0, -1);
 	public static final Vector SOUTH = new Vector(0, 0, 1);
 
-	public static final Vector[] DIRECTION_VECTORS = {UP, DOWN, EAST, WEST, NORTH, SOUTH};
+	public static final Vector[] DIRECTION_VECTORS = { UP, DOWN, EAST, WEST, NORTH, SOUTH };
 
 	private final double x, y, z;
 	private double cachedMagnitude;
@@ -76,7 +77,7 @@ public class Vector {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.cachedMagnitude = -1;
+		cachedMagnitude = -1;
 	}
 
 	/**
@@ -125,38 +126,32 @@ public class Vector {
 
 	/**
 	 * Returns the location of the player's right side
-	 *
-	 * @param entity
-	 * @param distance
-	 * @return
 	 */
 
 	public static Vector getRightSide(EntityLivingBase entity, double distance) {
-		final float angle = entity.rotationYaw / 60;
-		return Vector.getEntityPos(entity).minus(new Vector(Math.cos(angle), -entity.getEyeHeight(), Math.sin(angle)).normalize().times(distance));
+		float angle = entity.rotationYaw / 60;
+		return Vector.getEntityPos(entity)
+						.minus(new Vector(Math.cos(angle), -entity.getEyeHeight(), Math.sin(angle))
+										       .normalize().times(distance));
 	}
 
 	/**
 	 * Returns the location of the player's left side
-	 *
-	 * @param entity
-	 * @param distance
-	 * @return
 	 */
 
 	public static Vector getLeftSide(EntityLivingBase entity, double distance) {
-		final float angle = entity.rotationYaw / 60;
-		return Vector.getEntityPos(entity).plus(new Vector(Math.cos(angle), -entity.getEyeHeight(), Math.sin(angle)).normalize().times(distance));
+		float angle = entity.rotationYaw / 60;
+		return Vector.getEntityPos(entity)
+						.plus(new Vector(Math.cos(angle), -entity.getEyeHeight(), Math.sin(angle))
+										      .normalize().times(distance));
 	}
 
 	/**
-	 * @param axis
-	 * @param degrees
-	 * @param length
-	 * @return
+	 *
 	 */
 
-	public static Vector getOrthogonalVector(final Vector axis, final double degrees, final double length) {
+	public static Vector getOrthogonalVector(Vector axis, double degrees,
+	                                         double length) {
 		Vector ortho = new Vector(axis.y(), -axis.x(), 0);
 		ortho = ortho.normalize();
 		ortho = ortho.times(length);
@@ -165,31 +160,30 @@ public class Vector {
 	}
 
 	/**
-	 * @param distance      How big the helix is.
-	 * @param axis          The axis along which the helix spawns.
+	 * @param distance How big the helix is.
+	 * @param axis The axis along which the helix spawns.
 	 * @param startPosition The starting point of the helix
 	 * @return The vector that is returned
 	 */
 	public static Vector getHelixVector(float distance, Vector axis, Vector startPosition) {
-		Matrix4f rotation = withTranslation(rotationMatrix(new Vector(0, 1, 0), axis), startPosition);
+		Matrix4f rotation = withTranslation(rotationMatrix(new Vector(0, 1, 0), axis),
+		                                    startPosition);
 		return rotate(rotation, MathHelper.sin(2 * (float) Math.PI * distance), distance,
-				MathHelper.cos(2 * (float) Math.PI * distance));
+		              MathHelper.cos(2 * (float) Math.PI * distance));
 	}
 
 	/**
-	 * @param axis
-	 * @param rotator
-	 * @param degrees
-	 * @return
+	 *
 	 */
 
-	public static Vector rotateVectorAroundVector(final Vector axis, final Vector rotator, final double degrees) {
-		final double angle = Math.toRadians(degrees);
+	public static Vector rotateVectorAroundVector(Vector axis, Vector rotator,
+	                                              double degrees) {
+		double angle = Math.toRadians(degrees);
 		Vector rotation = axis;
-		final Vector rotate = rotator;
+		Vector rotate = rotator;
 		rotation = rotation.normalize();
 
-		final Vector thirdaxis = rotation.cross(rotate).normalize().times(rotate.magnitude());
+		Vector thirdaxis = rotation.cross(rotate).normalize().times(rotate.magnitude());
 
 		return rotate.times(Math.cos(angle)).plus(thirdaxis.times(Math.sin(angle)));
 	}
@@ -199,7 +193,7 @@ public class Vector {
 	}
 
 	private static double angle(Vector a, Vector b) {
-		return Math.acos(dot(a, b) / (a.toMinecraft().lengthVector() * b.toMinecraft().lengthVector()));
+		return Math.acos(dot(a, b) / (a.toMinecraft().length() * b.toMinecraft().length()));
 	}
 
 	private static Matrix3f rotationMatrix(Vector from, Vector to) {
@@ -217,7 +211,8 @@ public class Vector {
 	}
 
 	private static Matrix4f withTranslation(Matrix3f linear, Vector translation) {
-		return new Matrix4f(linear, new Vector3f((float) translation.x, (float) translation.y, (float) translation.z), 1);
+		return new Matrix4f(linear, new Vector3f((float) translation.x, (float) translation.y,
+		                                         (float) translation.z), 1);
 	}
 
 	private static Vector rotate(Matrix4f m, double x, double y, double z) {
@@ -239,8 +234,7 @@ public class Vector {
 	/**
 	 * Returns the euler angles from position 1 to position 2.
 	 * <p>
-	 * The returned vector has Y for yaw, and X for pitch. Measurements are in
-	 * radians.
+	 * The returned vector has Y for yaw, and X for pitch. Measurements are in radians.
 	 *
 	 * @param pos1 Where we are
 	 * @param pos2 Where to look at
@@ -282,8 +276,8 @@ public class Vector {
 	}
 
 	/**
-	 * Get the pitch to lob a projectile in radians. Example: pitch to target
-	 * can be used in {@link #toRectangular(double, double)}
+	 * Get the pitch to lob a projectile in radians. Example: pitch to target can be used in {@link
+	 * #toRectangular(double, double)}
 	 *
 	 * @param v Force of the projectile, going FORWARDS
 	 * @param g Gravity constant
@@ -291,12 +285,13 @@ public class Vector {
 	 * @param y Vertical distance to target
 	 */
 	public static double getProjectileAngle(double v, double g, double x, double y) {
-		return -Math.atan2((v * v + Math.sqrt(v * v * v * v - g * (g * x * x + 2 * y * v * v))), g * x);
+		return -Math.atan2((v * v + Math.sqrt(v * v * v * v - g * (g * x * x + 2 * y * v * v))),
+		                   g * x);
 	}
 
 	/**
-	 * Create a rectangular vector from the entity's rotations. This can be used
-	 * to determine the coordinates the entity is looking at (without raytrace).
+	 * Create a rectangular vector from the entity's rotations. This can be used to determine the
+	 * coordinates the entity is looking at (without raytrace).
 	 *
 	 * @param entity The entity to use
 	 */
@@ -305,8 +300,7 @@ public class Vector {
 	}
 
 	/**
-	 * Create a rotation vector from the entity's rotations. This is a euler and
-	 * is in radians.
+	 * Create a rotation vector from the entity's rotations. This is a euler and is in radians.
 	 *
 	 * @see #getEuler(double, double)
 	 */
@@ -346,27 +340,27 @@ public class Vector {
 	}
 
 	/**
-	 * Gets a vector representing rotations for the given yaw/pitch. Parameters
-	 * should be in radians.
+	 * Gets a vector representing rotations for the given yaw/pitch. Parameters should be in
+	 * radians.
 	 */
 	public static Vector getEuler(double yaw, double pitch) {
 		return new Vector(pitch, yaw, 0);
 	}
 
 	/**
-	 * Converts a rotation vector into a rectangular (Cartesian) vector. Euler
-	 * must be in radians.
+	 * Converts a rotation vector into a rectangular (Cartesian) vector. Euler must be in radians.
 	 *
 	 * @see #toRectangular(double, double)
 	 * @see #getEuler(double, double)
 	 */
 	public static Vector toRectangular(Vector euler) {
-		return new Vector(-sin(euler.y()) * cos(euler.x()), -sin(euler.x()), cos(euler.y()) * cos(euler.x()));
+		return new Vector(-sin(euler.y()) * cos(euler.x()), -sin(euler.x()),
+		                  cos(euler.y()) * cos(euler.x()));
 	}
 
 	/**
-	 * Converts the given rotations into a rectangular (Cartesian) vector.
-	 * Parameters must be in radians.
+	 * Converts the given rotations into a rectangular (Cartesian) vector. Parameters must be in
+	 * radians.
 	 *
 	 * @see #toRectangular(Vector)
 	 */
@@ -375,9 +369,8 @@ public class Vector {
 	}
 
 	/**
-	 * Creates a new vector from the packet information in the byte buffer.
-	 * Vectors should be encoded using the non-static {@link #toBytes(ByteBuf)
-	 * toBytes}.
+	 * Creates a new vector from the packet information in the byte buffer. Vectors should be
+	 * encoded using the non-static {@link #toBytes(ByteBuf) toBytes}.
 	 *
 	 * @param buf Buffer to read from
 	 * @see #toBytes(ByteBuf)
@@ -387,8 +380,8 @@ public class Vector {
 	}
 
 	/**
-	 * Creates a new vector from the x,y,z information in NBT. Reads directly
-	 * off the NBT compound provided.
+	 * Creates a new vector from the x,y,z information in NBT. Reads directly off the NBT compound
+	 * provided.
 	 */
 
 	public static Vector readFromNbt(NBTTagCompound nbt) {
@@ -421,7 +414,7 @@ public class Vector {
 	 * x-coordinate.
 	 */
 	public Vector withX(double x) {
-		return new Vector(x, this.y, this.z);
+		return new Vector(x, y, z);
 	}
 
 	/**
@@ -429,7 +422,7 @@ public class Vector {
 	 * y-coordinate.
 	 */
 	public Vector withY(double y) {
-		return new Vector(this.x, y, this.z);
+		return new Vector(x, y, z);
 	}
 
 	/**
@@ -437,7 +430,7 @@ public class Vector {
 	 * z-coordinate.
 	 */
 	public Vector withZ(double z) {
-		return new Vector(this.x, this.y, z);
+		return new Vector(x, y, z);
 	}
 
 	/**
@@ -450,8 +443,7 @@ public class Vector {
 	}
 
 	/**
-	 * Creates a new vector from the sub of this vector and the vector defined
-	 * by (x, y, z).
+	 * Creates a new vector from the sub of this vector and the vector defined by (x, y, z).
 	 *
 	 * @param x X-coordinate of other vector
 	 * @param y Y-coordinate of other vector
@@ -483,8 +475,7 @@ public class Vector {
 	}
 
 	/**
-	 * Creates a new vector from this vector minus the vector defined by
-	 * (x,y,z).
+	 * Creates a new vector from this vector minus the vector defined by (x,y,z).
 	 *
 	 * @param x X-coordinate to subtract
 	 * @param y Y-coordinate to subtract
@@ -549,12 +540,12 @@ public class Vector {
 	 * @return this
 	 */
 	public Vector normalize() {
-		return this.dividedBy(magnitude());
+		return dividedBy(magnitude());
 	}
 
 	/**
-	 * Checks whether the vector is normalized - you should NOT use <code>vec.sqrMagnitude()
-	 * == 1</code> because there may be small mathematical errors that makes magnitude 0.001 off
+	 * Checks whether the vector is normalized - you should NOT use <code>vec.sqrMagnitude() ==
+	 * 1</code> because there may be small mathematical errors that makes magnitude 0.001 off
 	 */
 	public boolean isNormalized() {
 		double length = sqrMagnitude();
@@ -578,8 +569,8 @@ public class Vector {
 	 * @param z The z-position of the other vector
 	 */
 	public double sqrDist(double x, double y, double z) {
-		return (this.x() - x) * (this.x() - x) + (this.y() - y) * (this.y() - y)
-				+ (this.z() - z) * (this.z() - z);
+		return (x() - x) * (x() - x) + (y() - y) * (y() - y)
+		       + (z() - z) * (z() - z);
 	}
 
 	/**
@@ -619,7 +610,7 @@ public class Vector {
 	 * @param z Z-coordinate of the other vector
 	 */
 	public double dot(double x, double y, double z) {
-		return this.x() * x + this.y() * y + this.z() * z;
+		return x() * x + y() * y + z() * z;
 	}
 
 	/**
@@ -632,32 +623,30 @@ public class Vector {
 	}
 
 	/**
-	 * Returns the cross product with the vector defined by (x, y, z). This
-	 * creates a new vector.
+	 * Returns the cross product with the vector defined by (x, y, z). This creates a new vector.
 	 *
 	 * @param x X-coordinate of other vector
 	 * @param y Y-coordinate of other vector
 	 * @param z Z-coordinate of other vector
 	 */
 	public Vector cross(double x, double y, double z) {
-		return new Vector(this.y() * z - this.z() * y, this.z() * x - this.x() * z,
-				this.x() * y - this.y() * x);
+		return new Vector(y() * z - z() * y, z() * x - x() * z,
+		                  x() * y - y() * x);
 	}
 
 	/**
-	 * Returns the angle between the other vector, in radians. (result is ranged
-	 * 0-PI).
+	 * Returns the angle between the other vector, in radians. (result is ranged 0-PI).
 	 *
 	 * @param vec Other vector
 	 */
 	public double angle(Vector vec) {
 		double dot = dot(vec);
-		return Math.acos(dot / (this.magnitude() * vec.magnitude()));
+		return Math.acos(dot / (magnitude() * vec.magnitude()));
 	}
 
 	/**
-	 * Returns this vector reflected across the given normal. Does not modify
-	 * this vector or the normal.
+	 * Returns this vector reflected across the given normal. Does not modify this vector or the
+	 * normal.
 	 *
 	 * @param normal Must be normalized
 	 */
@@ -665,13 +654,13 @@ public class Vector {
 		if (!normal.isNormalized()) {
 			throw new IllegalArgumentException("Normal vector must be normalized");
 		}
-		return this.minus(normal.times(2).times(this.dot(normal)));
+		return minus(normal.times(2).times(dot(normal)));
 	}
 
 	/**
 	 * <strong>Assuming</strong> this vector represents spherical coordinates
-	 * (in radians), returns a unit vector in Cartesian space which has the
-	 * rotations of this vector.
+	 * (in radians), returns a unit vector in Cartesian space which has the rotations of this
+	 * vector.
 	 * <p>
 	 * Does not modify this vector.
 	 *
@@ -706,8 +695,7 @@ public class Vector {
 	}
 
 	/**
-	 * Returns an integer vector of this vector by casting each component to an
-	 * integer.
+	 * Returns an integer vector of this vector by casting each component to an integer.
 	 */
 	public VectorI cast() {
 		return new VectorI((int) x(), (int) y(), (int) z());
@@ -754,7 +742,7 @@ public class Vector {
 		if (obj == null) return false;
 		if (obj instanceof Vector) {
 			Vector vec = (Vector) obj;
-			return this.x() == vec.x() && this.y() == vec.y() && this.z() == vec.z();
+			return x() == vec.x() && y() == vec.y() && z() == vec.z();
 		} else {
 			return false;
 		}

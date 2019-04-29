@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 public class ItemOstrichEquipment extends Item implements AvatarItem {
 
 	public ItemOstrichEquipment() {
-		setUnlocalizedName("ostrich_equip");
+		setTranslationKey("ostrich_equip");
 		setMaxStackSize(1);
 		setCreativeTab(AvatarItems.tabItems);
 		setMaxDamage(0);
@@ -33,8 +33,9 @@ public class ItemOstrichEquipment extends Item implements AvatarItem {
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
-		return super.getUnlocalizedName(stack) + "." + EquipmentTier.getTierName(stack.getMetadata());
+	public String getTranslationKey(ItemStack stack) {
+		return super.getTranslationKey(stack) + "." + EquipmentTier
+						.getTierName(stack.getMetadata());
 	}
 
 	@Override

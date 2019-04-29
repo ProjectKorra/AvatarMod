@@ -26,52 +26,53 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.io.File;
 
 public class GoreCoreClientProxy extends GoreCoreCommonProxy {
-	
+
 	@Override
 	protected File createUUIDCacheFile() {
-		return new File(Minecraft.getMinecraft().mcDataDir, "GoreCore_ClientUUIDCache.txt");
+		return new File(Minecraft.getMinecraft().gameDir, "GoreCore_ClientUUIDCache.txt");
 	}
-	
+
 	@Override
 	protected File createMinecraftDir() {
-		return new File(Minecraft.getMinecraft().mcDataDir, ".");
+		return new File(Minecraft.getMinecraft().gameDir, ".");
 	}
-	
+
 	@Override
 	public boolean isPlayerWalking(EntityPlayer player) {
 		if (player == Minecraft.getMinecraft().player) {
 			GameSettings gs = Minecraft.getMinecraft().gameSettings;
-			return gs.keyBindForward.isKeyDown() || gs.keyBindBack.isKeyDown() || gs.keyBindLeft.isKeyDown()
-					|| gs.keyBindRight.isKeyDown();
+			return gs.keyBindForward.isKeyDown() || gs.keyBindBack.isKeyDown() || gs.keyBindLeft
+							.isKeyDown()
+			       || gs.keyBindRight.isKeyDown();
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public void sideSpecifics() {}
-	
+
 	@Override
 	public String translate(String key, Object... args) {
 		return I18n.format(key, args);
 	}
-	
+
 	@Override
 	public EntityPlayer getClientSidePlayer() {
 		return Minecraft.getMinecraft().player;
 	}
-	
+
 	@Override
 	public String getKeybindingDisplayName(String name) {
-		
+
 		KeyBinding[] allKeybindings = Minecraft.getMinecraft().gameSettings.keyBindings;
 		for (KeyBinding kb : allKeybindings) {
 			if (kb.getKeyDescription().equals(name)) {
 				return kb.getDisplayName();
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 }

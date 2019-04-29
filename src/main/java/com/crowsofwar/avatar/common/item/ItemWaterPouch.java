@@ -1,5 +1,4 @@
-
-/* 
+/*
   This file is part of AvatarMod.
     
   AvatarMod is free software: you can redistribute it and/or modify
@@ -51,7 +50,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 
 	public ItemWaterPouch() {
 		setCreativeTab(AvatarItems.tabItems);
-		setUnlocalizedName("water_pouch");
+		setTranslationKey("water_pouch");
 		setMaxStackSize(1);
 		setMaxDamage(0);
 		setHasSubtypes(false);
@@ -69,7 +68,8 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World world, List<String> tooltips, ITooltipFlag advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> tooltips,
+	                           ITooltipFlag advanced) {
 		int meta = stack.getMetadata();
 		tooltips.add(I18n.format("avatar.tooltip.water_pouch" + (meta == 0 ? ".empty" : ""), meta));
 	}
@@ -82,9 +82,10 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 			}
 		}
 	}
-	
+
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player,
+	                                                EnumHand hand) {
 		ItemStack itemstack = player.getHeldItem(hand);
 		boolean isFull = itemstack.getMetadata() == 5;
 		if (isFull) {
@@ -92,14 +93,16 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 			return new ActionResult(EnumActionResult.PASS, itemstack);
 		}
 		// Last boolean is useLiquids, which obviously should be true
-		RayTraceResult raytraceresult = this.rayTrace(world, player, true);
+		RayTraceResult raytraceresult = rayTrace(world, player, true);
 		if (raytraceresult == null || raytraceresult.typeOfHit != RayTraceResult.Type.BLOCK) {
 			// We're not looking at a block
 			return new ActionResult(EnumActionResult.PASS, itemstack);
 		} else {
 			BlockPos blockpos = raytraceresult.getBlockPos();
 			// We're not allowed to edit the block
-			if (!world.isBlockModifiable(player, blockpos) || !player.canPlayerEdit(blockpos.offset(raytraceresult.sideHit), raytraceresult.sideHit, itemstack)) {
+			if (!world.isBlockModifiable(player, blockpos) || !player
+							.canPlayerEdit(blockpos.offset(raytraceresult.sideHit),
+							               raytraceresult.sideHit, itemstack)) {
 				return new ActionResult(EnumActionResult.PASS, itemstack);
 			}
 			IBlockState state = world.getBlockState(blockpos);
@@ -109,12 +112,14 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				int canBeFilled = state.getValue(BlockCauldron.LEVEL).intValue();
 				int toBeFilled = 5 - itemstack.getItemDamage();
 				int willBeFilled = Math.min(canBeFilled, toBeFilled);
-				((BlockCauldron) state.getBlock()).setWaterLevel(world, blockpos, state, canBeFilled - willBeFilled);
+				((BlockCauldron) state.getBlock())
+								.setWaterLevel(world, blockpos, state, canBeFilled - willBeFilled);
 				player.addStat(StatList.CAULDRON_USED);
 				player.addStat(StatList.getObjectUseStats(this));
 				// TODO: Custom sound?
 				player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
-				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, willBeFilled));
+				return new ActionResult<>(EnumActionResult.SUCCESS,
+				                          fillPouch(itemstack, player, willBeFilled));
 			} else if (material == Material.WATER) {
 				// Get how full the block is
 				int level = state.getValue(BlockLiquid.LEVEL).intValue();
@@ -142,7 +147,8 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				player.addStat(StatList.getObjectUseStats(this));
 				// TODO: Custom sound?
 				player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
-				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, fillPouch(itemstack, player, willBeFilled));
+				return new ActionResult<>(EnumActionResult.SUCCESS,
+				                          fillPouch(itemstack, player, willBeFilled));
 			} else {
 				return new ActionResult(EnumActionResult.PASS, itemstack);
 			}
@@ -150,13 +156,13 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 	}
 
 	private ItemStack fillPouch(ItemStack emptyPouches, EntityPlayer player, int levels) {
-		if (player.capabilities.isCreativeMode)	{
+		if (player.capabilities.isCreativeMode) {
 			return emptyPouches;
 		} else {
 			int newLevel = Math.max(5, emptyPouches.getItemDamage() + levels);
-			final ItemStack filledPouch = new ItemStack(emptyPouches.getItem(), 1, newLevel);
+			ItemStack filledPouch = new ItemStack(emptyPouches.getItem(), 1, newLevel);
 			emptyPouches.shrink(1);
-			if (emptyPouches.isEmpty())	{
+			if (emptyPouches.isEmpty()) {
 				return filledPouch;
 			} else {
 				if (!player.inventory.addItemStackToInventory(filledPouch)) {

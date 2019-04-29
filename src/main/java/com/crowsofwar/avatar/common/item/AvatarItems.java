@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarMod;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -44,7 +45,7 @@ AvatarItems {
 	public static ItemAirbenderStaff airbenderStaff;
 	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
 		@Override
-		public ItemStack getTabIconItem() {
+		public ItemStack createIcon() {
 			return stackScroll;
 		}
 	};
@@ -68,8 +69,8 @@ AvatarItems {
 	}
 
 	private static void addItem(Item item) {
-		item.setRegistryName("avatarmod", item.getUnlocalizedName().substring(5));
-		item.setUnlocalizedName("avatarmod:" + item.getUnlocalizedName().substring(5));
+		item.setRegistryName("avatarmod", item.getTranslationKey().substring(5));
+		item.setTranslationKey("avatarmod:" + item.getTranslationKey().substring(5));
 		allItems.add(item);
 	}
 
