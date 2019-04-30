@@ -17,6 +17,8 @@
 
 package com.crowsofwar.gorecore.format;
 
+import com.crowsofwar.gorecore.GoreCore;
+
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.text.ITextComponent;
@@ -25,19 +27,19 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 
 public class FormattedMessage {
-	
+
 	private final String translateKey;
 	private final String[] translateArgs;
 	private final MessageConfiguration config;
-	
+
 	private FormattedMessage(MessageConfiguration config, String translateKey, String... translateArgs) {
 		this.translateKey = translateKey;
 		this.translateArgs = translateArgs;
 		this.config = config;
 	}
-	
+
 	public ITextComponent getChatMessage(boolean plaintext, Object... formatValues) {
-		
+
 		if (plaintext) {
 			@SuppressWarnings("deprecation")
 			String unformatted = I18n.translateToLocal(translateKey);
@@ -46,29 +48,33 @@ public class FormattedMessage {
 		} else {
 			return new TextComponentTranslation(translateKey, formatValues);
 		}
-		
+
 	}
-	
+
 	public void send(ICommandSender sender, Object... formatValues) {
-		sender.sendMessage(getChatMessage(!(sender instanceof Entity), formatValues));
+		//!(sender instanceof Entity) does not work when Sponge is installed...
+		if (GoreCore.spongeCompat) 
+			sender.sendMessage(getChatMessage(true, formatValues));
+		else
+			sender.sendMessage(getChatMessage(!(sender instanceof Entity), formatValues));
 	}
-	
+
 	public String getTranslateKey() {
 		return translateKey;
 	}
-	
+
 	public String[] getTranslationArgs() {
 		return translateArgs;
 	}
-	
+
 	public MultiMessage chain() {
 		return new MultiMessage().add(this);
 	}
-	
+
 	public MessageConfiguration getConfig() {
 		return config;
 	}
-	
+
 	/**
 	 * Creates a new chat message with the given translation key and formatting
 	 * names.
@@ -80,10 +86,10 @@ public class FormattedMessage {
 	public static FormattedMessage newChatMessage(String translateKey, String... translateArgs) {
 		return newChatMessage(MessageConfiguration.DEFAULT, translateKey, translateArgs);
 	}
-	
+
 	/**
-	 * Creates a new chat message with the given translation key, formatting
-	 * names, and configurations.
+	 * Creates a new chat message with the given translation key, formatting names,
+	 * and configurations.
 	 * 
 	 * @param config
 	 * @param translateKey
@@ -96,5 +102,5 @@ public class FormattedMessage {
 		ChatSender.translateKeyToChatMessage.put(translateKey, cm);
 		return cm;
 	}
-	
+
 }
