@@ -17,8 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
@@ -28,7 +26,6 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -41,6 +38,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Objects;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 /**
  * @author CrowsOfWar

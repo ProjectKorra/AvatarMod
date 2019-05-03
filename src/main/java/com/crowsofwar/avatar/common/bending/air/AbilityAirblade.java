@@ -30,7 +30,6 @@ import net.minecraft.world.World;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
-import static java.lang.Math.abs;
 
 /**
  * @author CrowsOfWar

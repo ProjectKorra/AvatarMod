@@ -25,8 +25,8 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.AIR_JUMP;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.AIR_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.AIR_PARTICLE_SPAWNER;
 
 /**
  * @author CrowsOfWar
