@@ -98,10 +98,10 @@ public class WaterChargeHandler extends TickHandler {
 
 			damage *= bender.getDamageMult(Waterbending.ID);
 			fireCannon(world, entity, damage, speed, size, ticks);
+			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.PLAYERS, 1, 2);
 
 			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
-			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.PLAYERS, 1, 2);
 
 			return true;
 		}

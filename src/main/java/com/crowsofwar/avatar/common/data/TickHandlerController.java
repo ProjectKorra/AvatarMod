@@ -45,6 +45,7 @@ public class TickHandlerController {
 	public static TickHandler CLEANSE_COOLDOWN_HANDLER = new CleanseCooldownHandler(25);
 	public static TickHandler RESTORE_COOLDOWN_HANDLER = new RestoreCooldownHandler(26);
 	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler(27);
+	public static TickHandler WATER_SHOOT_HANDLER = new WaterShootHandler(28);
 	// @formatter:on
 	
 	public static TickHandler fromId(int id) {
