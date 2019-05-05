@@ -39,11 +39,13 @@ public class WaterParticleSpawner extends TickHandler {
 
 		if (data.hasTickHandler(WATER_CHARGE) && !world.isRemote) {
 			WorldServer World = (WorldServer) world;
-			for (int i = 0; i < 180; i++) {
-				double rScale = (radius / 180) * i;
-				Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i * 2), 0).times(rScale).withY(entity.getEyeHeight() / 2);
-				World.spawnParticle(EnumParticleTypes.WATER_SPLASH, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
-						lookpos.z() + entity.posZ, 1, 0, 0, 0, 0.05);
+			for (int j = 1; j < 4; j++) {
+				for (int i = 0; i < 90; i++) {
+					double rScale = (radius / 90) * i;
+					Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + j * (i * 4)), 0).times(rScale).withY(entity.getEyeHeight() / 2);
+					World.spawnParticle(EnumParticleTypes.WATER_SPLASH, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
+							lookpos.z() + entity.posZ, 1, 0, 0, 0, 0.05);
+				}
 			}
 			AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + entity.getEyeHeight() / 2 + radius / 4, entity.posZ + radius,
 					entity.posX - radius, entity.posY + entity.getEyeHeight() / 2 - radius / 4, entity.posZ - radius);
