@@ -52,8 +52,8 @@ public class EntityWall extends AvatarEntity {
 	}
 
 	/**
-	 * All the segments in this wall. MUST be fixed-length, as the data
-	 * parameters must be same for both sides.
+	 * All the segments in this wall. MUST be fixed-length, as the data parameters
+	 * must be same for both sides.
 	 */
 	private final SyncedEntity<EntityWallSegment>[] segments;
 
@@ -84,8 +84,8 @@ public class EntityWall extends AvatarEntity {
 
 	@Override
 	public void onUpdate() {
-		//super.onUpdate();
-		//Helps reduce glitchiness
+		// super.onUpdate();
+		// Helps reduce glitchiness
 
 		if (this.getOwner() == null) {
 			this.setDead();
@@ -158,6 +158,16 @@ public class EntityWall extends AvatarEntity {
 		return true;
 	}
 
+	/*
+	 * Changes how the wall should drop its blocks. false -> dropBlocks(), true ->
+	 * placeBlocks(). dropBlocks() is the default
+	 */
+	public void setDropTypePlace(boolean input) {
+		dropTypePlace = input;
+	}
+
+	private boolean dropTypePlace = false;
+
 	@Override
 	public void setDead() {
 		for (SyncedEntity<EntityWallSegment> ref : segments) {
@@ -166,7 +176,12 @@ public class EntityWall extends AvatarEntity {
 			if (entity != null) {
 				// Avoid setDead() as that will call wall.setDead()
 				entity.isDead = true;
-				entity.dropBlocks();
+
+				if (dropTypePlace) {
+					entity.placeBlocks();
+				} else {
+					entity.dropBlocks();
+				}
 			}
 		}
 		super.setDead();
