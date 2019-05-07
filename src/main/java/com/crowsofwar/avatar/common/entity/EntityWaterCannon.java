@@ -19,11 +19,14 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.HashSet;
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -39,6 +42,10 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	private float damage;
 	private float lifeTime;
 	private ParticleSpawner particles;
+	private double maxRange;
+	private double range;
+	private Vec3d knockBack;
+	private HashSet<Entity> excluded;
 
 	public EntityWaterCannon(World world) {
 		super(world);
@@ -48,6 +55,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		this.noClip = false;
 		this.particles = new NetworkParticleSpawner();
 		this.setInvisible(false);
+		this.range = 0;
+		excluded = new HashSet<>();
 	}
 
 	public float getDamage() {
@@ -70,10 +79,19 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		this.lifeTime = ticks;
 	}
 
+	public void setMaxRange(float range) {
+		this.maxRange = range;
+	}
+
+	public void setKnockBack(Vec3d knockBack) {
+		this.knockBack = knockBack;
+	}
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_SIZE, 1f);
+		range = 0;
 	}
 
 	@Override
@@ -92,6 +110,26 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 
 		if (getOwner() != null) {
+			if (getAbility() instanceof AbilityWaterCannon &&
+					!AbilityData.get(getOwner(), "water_cannon").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				Vector startPos = getControlPoint(1).position();
+				Vec3d endPos = (startPos.withY(startPos.y())).toMinecraft().add(getOwner().getLookVec().scale(range));
+				range += range < maxRange ? 4F / 20 : 0;
+				RayTraceResult result = Raytrace.standardEntityRayTrace(world, getOwner(), this, startPos.toMinecraft(), endPos, 1.5F * getSizeMultiplier(), false,
+						excluded);
+				if (result != null) {
+					posX = result.hitVec.x;
+					posY = result.hitVec.y;
+					posZ = result.hitVec.z;
+					range = getOwner().getDistance(result.hitVec.x, result.hitVec.y, result.hitVec.z);
+					Raytrace.handlePiercingBeamCollision(world, getOwner(), startPos.toMinecraft(), result.hitVec, 1.5F * getSizeMultiplier(),
+							this, AvatarDamageSource.WATER, damage, knockBack, false, 0, 1.5F * getSizeMultiplier());
+				} else {
+					posX = endPos.x;
+					posY = endPos.y;
+					posZ = endPos.z;
+				}
+			}
 			if (ticksExisted % 2 == 0 && !this.isDead && STATS_CONFIG.waterCannonSettings.useWaterCannonParticles) {
 				double dist = this.getDistance(getOwner());
 				int particleController = 20;
@@ -128,8 +166,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 
 		if (getOwner() != null) {
-			Vector direction = getLookRectangular(getOwner());
-			this.setVelocity(direction.times(25));
+			if (getAbility() instanceof AbilityWaterCannon &&
+					AbilityData.get(getOwner(), "water_cannon").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				Vector direction = getLookRectangular(getOwner());
+				this.setVelocity(direction.times(25));
+			}
 		}
 
 

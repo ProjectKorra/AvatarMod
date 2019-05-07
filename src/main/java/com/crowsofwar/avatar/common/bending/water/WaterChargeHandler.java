@@ -14,12 +14,12 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.WATER_SHOOT_HANDLER;
 
 public class WaterChargeHandler extends TickHandler {
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
@@ -41,6 +41,8 @@ public class WaterChargeHandler extends TickHandler {
 		int duration = data.getTickHandlerDuration(this);
 		double speed = abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND) ? 40 : 0;
 		float damage;
+		float maxRange = abilityData.getLevel() >= 1 ? 40 : 60;
+		Vec3d knockback = entity.getLookVec().scale(maxRange / 10).scale(STATS_CONFIG.waterCannonSettings.waterCannonKnockbackMult);
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		float size;
 		//Multiply by 1.5 to get water cannon size
@@ -61,12 +63,13 @@ public class WaterChargeHandler extends TickHandler {
 			size = 0.1F;
 			ticks = 50;
 			damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * 0.5 * bender.getDamageMult(Waterbending.ID));
+			knockback.scale(damage);
 
 			// Fire once every 10 ticks, until we get to 100 ticks
 			// So at fire at 60, 70, 80, 90, 100
 			if (duration >= 40 && duration % 10 == 0) {
 
-				fireCannon(world, entity, damage, speed, size, ticks);
+				fireCannon(world, entity, damage, speed, size, ticks, maxRange, knockback);
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.PLAYERS, 1, 2);
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
@@ -98,10 +101,9 @@ public class WaterChargeHandler extends TickHandler {
 			}
 
 			damage *= bender.getDamageMult(Waterbending.ID);
-			fireCannon(world, entity, damage, speed, size, ticks);
+			knockback.scale(damage);
+			fireCannon(world, entity, damage, speed, size, ticks, maxRange, knockback);
 			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.PLAYERS, 1, 2);
-
-			ctx.getData().addTickHandler(WATER_SHOOT_HANDLER);
 			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
 
@@ -112,7 +114,7 @@ public class WaterChargeHandler extends TickHandler {
 
 	}
 
-	private void fireCannon(World world, EntityLivingBase entity, float damage, double speed, float size, float ticks) {
+	private void fireCannon(World world, EntityLivingBase entity, float damage, double speed, float size, float ticks, float maxRange, Vec3d knockBack) {
 
 		EntityWaterCannon cannon = new EntityWaterCannon(world);
 
@@ -121,6 +123,8 @@ public class WaterChargeHandler extends TickHandler {
 		cannon.setSizeMultiplier(size);
 		cannon.setPosition(Vector.getEyePos(entity));
 		cannon.setLifeTime(ticks);
+		cannon.setKnockBack(knockBack);
+		cannon.setMaxRange(maxRange);
 		cannon.setAbility(new AbilityWaterCannon());
 
 		Vector velocity = Vector.getLookRectangular(entity);
