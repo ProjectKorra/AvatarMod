@@ -65,6 +65,8 @@ public class AbilityWall extends Ability {
 			// power by up to 25 points
 			float power = abilityData.getTotalXp() + (float) ctx.getPowerRating() / 100 * 25;
 
+			int reach = Math.round(SKILLS_CONFIG.wallReach);
+
 			int whMin, whMax;
 			Random random = new Random();
 			if (power >= 100) {
@@ -90,7 +92,7 @@ public class AbilityWall extends Ability {
 			abilityData.addXp(SKILLS_CONFIG.wallRaised);
 
 			// Down 1 block so that we actually get a block...
-			BlockPos lookPos = entity.getPosition().down().offset(cardinal, 2);
+			BlockPos lookPos = entity.getPosition().down().offset(cardinal, reach);
 			EntityWall wall = new EntityWall(world);
 
 			Block lookBlock = world.getBlockState(lookPos).getBlock();
@@ -100,9 +102,10 @@ public class AbilityWall extends Ability {
 				lookPos = lookPos.down(2);
 			}
 
-			// Allow bending even if the block is lower than the bender by 1-2 blocks
+			// Allow bending even if the block is lower than the bender by 1-2 (by default)
+			// blocks
 			if (lookBlock == Blocks.AIR) {
-				for (int i = 0; i <= 2; i++) {
+				for (int i = 0; i <= reach; i++) {
 					lookPos = lookPos.down();
 					if (world.getBlockState(lookPos).getBlock() != Blocks.AIR)
 						break;
