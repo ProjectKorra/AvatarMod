@@ -25,7 +25,6 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWall;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
-import com.crowsofwar.avatar.common.util.Raytrace;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -35,7 +34,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.Objects;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -107,7 +105,8 @@ public class AbilityWall extends Ability {
 			if (lookBlock == Blocks.AIR) {
 				for (int i = 0; i <= reach; i++) {
 					lookPos = lookPos.down();
-					if (world.getBlockState(lookPos).getBlock() != Blocks.AIR)
+					lookBlock = world.getBlockState(lookPos).getBlock();
+					if (lookBlock != Blocks.AIR)
 						break;
 				}
 			}

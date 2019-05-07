@@ -162,11 +162,11 @@ public class EntityWall extends AvatarEntity {
 	 * Changes how the wall should drop its blocks. false -> dropBlocks(), true ->
 	 * placeBlocks(). dropBlocks() is the default
 	 */
-	public void setDropTypePlace(Boolean input) {
+	public void setDropTypePlace(boolean input) {
 		dropTypePlace = input;
 	}
 
-	boolean dropTypePlace = false;
+	private boolean dropTypePlace = false;
 
 	@Override
 	public void setDead() {
