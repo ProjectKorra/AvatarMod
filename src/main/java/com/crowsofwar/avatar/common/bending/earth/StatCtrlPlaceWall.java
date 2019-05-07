@@ -18,7 +18,7 @@ import java.util.List;
 public class StatCtrlPlaceWall extends StatusControl {
 
 	public StatCtrlPlaceWall() {
-		super(2, AvatarControl.CONTROL_RIGHT_CLICK, CrosshairPosition.ABOVE_CROSSHAIR);
+		super(21, AvatarControl.CONTROL_RIGHT_CLICK, CrosshairPosition.RIGHT_OF_CROSSHAIR);
 	}
 
 	@Override
