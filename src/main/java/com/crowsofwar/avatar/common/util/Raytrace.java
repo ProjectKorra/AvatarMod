@@ -26,14 +26,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -213,6 +216,146 @@ public class Raytrace {
 
 		return hit;
 
+	}
+
+	//Vanilla raytrace method, will be cleaned up in the rewrite
+	/**
+	 * Method for ray tracing entities (the useless default method doesn't work, despite EnumHitType having an ENTITY
+	 * field...) You can also use this for seeking.
+	 *
+	 * @param world                  The world the raytrace is in.
+	 * @param x                      startX
+	 * @param y                      startY
+	 * @param z                      startZ
+	 * @param tx                     endX
+	 * @param ty                     endY
+	 * @param tz                     endZ
+	 * @param borderSize             extra area to examine around line for entities
+	 * @param excluded               any excluded entities (the player, spell entities, previously hit entities, etc)
+	 * @param raytraceNonSolidBlocks This controls whether or not the raytrace goes through non-solid blocks, such as grass, fences, trapdoors, cobwebs, e.t.c.
+	 * @return a RayTraceResult of either the block hit (no entity hit), the entity hit (hit an entity), or null for
+	 * nothing hit
+	 */
+	@Nullable
+	public static RayTraceResult tracePath(World world, float x, float y, float z, float tx, float ty, float tz,
+										   float borderSize, HashSet<Entity> excluded, boolean collideablesOnly, boolean raytraceNonSolidBlocks) {
+		Vec3d startVec = new Vec3d(x, y, z);
+		Vec3d endVec = new Vec3d(tx, ty, tz);
+		float minX = x < tx ? x : tx;
+		float minY = y < ty ? y : ty;
+		float minZ = z < tz ? z : tz;
+		float maxX = x > tx ? x : tx;
+		float maxY = y > ty ? y : ty;
+		float maxZ = z > tz ? z : tz;
+		AxisAlignedBB bb = new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ).grow(borderSize, borderSize,
+				borderSize);
+		List<Entity> allEntities = world.getEntitiesWithinAABBExcludingEntity(null, bb);
+		RayTraceResult blockHit = world.rayTraceBlocks(startVec, endVec);
+		if (blockHit != null && !world.getBlockState(blockHit.getBlockPos()).isFullBlock() && !raytraceNonSolidBlocks) {
+			blockHit = null;
+		}
+		startVec = new Vec3d(x, y, z);
+		endVec = new Vec3d(tx, ty, tz);
+		float maxDistance = (float) endVec.distanceTo(startVec);
+		if (blockHit != null) {
+			maxDistance = (float) blockHit.hitVec.distanceTo(startVec);
+		}
+		Entity closestHitEntity = null;
+		float closestHit = maxDistance;
+		float currentHit;
+		AxisAlignedBB entityBb;// = ent.getBoundingBox();
+		RayTraceResult intercept;
+		for (Entity ent : allEntities) {
+			if ((ent.canBeCollidedWith() || !collideablesOnly)
+					&& (excluded == null || !excluded.contains(ent))) {
+				float entBorder = ent.getCollisionBorderSize();
+				entityBb = ent.getEntityBoundingBox();
+				entityBb = entityBb.grow(entBorder, entBorder, entBorder);
+				if (borderSize != 0) entityBb = entityBb.grow(borderSize, borderSize, borderSize);
+				intercept = entityBb.calculateIntercept(startVec, endVec);
+				if (intercept != null) {
+					currentHit = (float) intercept.hitVec.distanceTo(startVec);
+					if (currentHit < closestHit || currentHit == 0) {
+						closestHit = currentHit;
+						closestHitEntity = ent;
+					}
+				}
+			}
+		}
+		if (closestHitEntity != null) {
+			blockHit = new RayTraceResult(closestHitEntity);
+		}
+		return blockHit;
+	}
+
+	@Nullable
+	public static RayTraceResult standardEntityRayTrace(World world, Entity entity, Entity spellEntity, Vec3d startPos, Vec3d endPos, float borderSize, boolean transparentBlocks, HashSet<Entity> excluded) {
+		excluded.add(entity);
+		if (spellEntity != null) {
+			excluded.add(spellEntity);
+		}
+		return tracePath(world, (float) startPos.x,
+				(float) startPos.y, (float) startPos.z,
+				(float) endPos.x, (float) endPos.y, (float) endPos.z,
+				borderSize, excluded, false, transparentBlocks);
+	}
+
+	/**
+	 *
+	 * @param world        The world the raytrace is in.
+	 * @param bender       The bender of the spell. This is so mobs don't attack each other when you use raytraces from mobs.
+	 *                     All damage is done by the bender.
+	 * @param startPos     Where the raytrace starts.
+	 * @param endPos       Where the raytrace ends.
+	 * @param borderSize   The width of the raytrace.
+	 * @param abilityEntity  The entity that's using this method, if applicable. If this method is directly used in a spell, just make this null.
+	 * @param damageSource The damage source.
+	 * @param damage       The amount of damage.
+	 * @param knockBack    The amount of knockback.
+	 * @param setFire      Whether to set an enemy on fire.
+	 * @param fireTime     How long to set an enemy on fire.
+	 */
+
+	public static void handlePiercingBeamCollision(World world, EntityLivingBase bender, Vec3d startPos, Vec3d endPos, float borderSize, Entity abilityEntity, DamageSource damageSource,
+												   float damage, Vec3d knockBack, boolean setFire, int fireTime, float radius) {
+		HashSet<Entity> excluded = new HashSet<>();
+		RayTraceResult result = standardEntityRayTrace(world, bender, abilityEntity, startPos, endPos, borderSize, false, excluded);
+		if (result != null && result.entityHit instanceof EntityLivingBase) {
+			EntityLivingBase hit = (EntityLivingBase) result.entityHit;
+			if (setFire) {
+				hit.setFire(fireTime);
+			}
+			hit.attackEntityFrom(damageSource, damage);
+			hit.motionX += knockBack.x;
+			hit.motionY += knockBack.y;
+			hit.motionZ += knockBack.z;
+			AvatarUtils.afterVelocityAdded(hit);
+			Vec3d pos = result.hitVec;
+			AxisAlignedBB hitBox = new AxisAlignedBB(pos.x + radius, pos.y + radius, pos.z + radius, pos.x - radius, pos.y - radius, pos.z - radius);
+			List<Entity> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, hitBox);
+			excluded.add(hit);
+			nearby.remove(excluded);
+			//This is so it doesn't count the entity that was hit by the raytrace and mess up the chain
+			if (!nearby.isEmpty()) {
+				for (Entity e : nearby) {
+					if (e != bender && e != hit && !excluded.contains(e) && e.getTeam() != bender.getTeam()) {
+						if (setFire) {
+							e.setFire(fireTime);
+						}
+						e.attackEntityFrom(damageSource, damage);
+						e.motionX += knockBack.x;
+						e.motionY += knockBack.y;
+						e.motionZ += knockBack.z;
+						AvatarUtils.afterVelocityAdded(e);
+						excluded.add(e);
+					}
+				}
+			} else {
+				handlePiercingBeamCollision(world, bender, pos, endPos, borderSize, abilityEntity, damageSource, damage, knockBack, setFire, fireTime, radius);
+
+			}
+
+		}
 	}
 
 	public static class Result {

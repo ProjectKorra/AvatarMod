@@ -17,9 +17,19 @@
 
 package com.crowsofwar.avatar.common;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityElderGuardian;
+import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraft.entity.monster.EntityEndermite;
+import net.minecraft.entity.monster.EntityGuardian;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nullable;
 
@@ -29,6 +39,7 @@ import javax.annotation.Nullable;
  *
  * @author CrowsOfWar
  */
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarDamageSource {
 
 	public static final DamageSource WATER = new DamageSource("avatar_Water");
@@ -238,5 +249,23 @@ public class AvatarDamageSource {
 	public static DamageSource causeShockwaveDamage(Entity hit, @Nullable Entity owner) {
 		return new EntityDamageSourceIndirect("avatar_shockWave", hit, owner).setExplosion();
 	}
+
+	@SubscribeEvent
+	public static void onElementalDamage(LivingHurtEvent event) {
+		DamageSource source = event.getSource();
+		Entity hit = event.getEntity();
+		if (source == AvatarDamageSource.WATER) {
+			if (hit instanceof EntityLivingBase) {
+				hit.setFire(0);
+				if (hit instanceof EntityEnderman || hit instanceof EntityEndermite) {
+					event.setAmount(event.getAmount() * 1.25F);
+				}
+				if (hit instanceof EntityGuardian) {
+					event.setAmount(event.getAmount() * 0.75F);
+				}
+			}
+		}
+	}
+
 
 }

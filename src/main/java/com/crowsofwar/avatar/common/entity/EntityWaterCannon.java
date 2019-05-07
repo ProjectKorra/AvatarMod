@@ -11,6 +11,7 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -149,6 +150,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	}
 
 	@Override
+	public EntityLivingBase getController() {
+		return getOwner();
+	}
+
+	@Override
 	protected void updateCpBehavior() {
 
 		// First control point (at front) should just follow water cannon
@@ -254,7 +260,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	}
 
 	@Override
-	protected EntityWaterCannon.CannonControlPoint createControlPoint(float size, int index) {
+	public EntityWaterCannon.CannonControlPoint createControlPoint(float size, int index) {
 		return new EntityWaterCannon.CannonControlPoint(this, index);
 	}
 
