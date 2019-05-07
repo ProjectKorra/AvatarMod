@@ -25,6 +25,8 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWall;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
+import com.crowsofwar.avatar.common.util.Raytrace;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -59,7 +61,8 @@ public class AbilityWall extends Ability {
 			BendingData data = ctx.getData();
 
 			AbilityData abilityData = data.getAbilityData(this);
-			// This "power" variable is the player's experience, but power rating can boost power by up to 25 points
+			// This "power" variable is the player's experience, but power rating can boost
+			// power by up to 25 points
 			float power = abilityData.getTotalXp() + (float) ctx.getPowerRating() / 100 * 25;
 
 			int whMin, whMax;
@@ -86,8 +89,8 @@ public class AbilityWall extends Ability {
 
 			abilityData.addXp(SKILLS_CONFIG.wallRaised);
 
-			if (!ctx.isLookingAtBlock()) return;
-			BlockPos lookPos = Objects.requireNonNull(ctx.getLookPosI()).toBlockPos();
+			// Down 1 block so that we actually get a block...
+			BlockPos lookPos = entity.getPosition().down().offset(cardinal, 2);
 			EntityWall wall = new EntityWall(world);
 
 			Block lookBlock = world.getBlockState(lookPos).getBlock();
@@ -96,7 +99,18 @@ public class AbilityWall extends Ability {
 			} else if (lookBlock == Blocks.DOUBLE_PLANT) {
 				lookPos = lookPos.down(2);
 			}
-			if (STATS_CONFIG.bendableBlocks.contains(lookBlock) || STATS_CONFIG.plantBendableBlocks.contains(lookBlock)) {
+
+			// Allow bending even if the block is lower than the bender by 1-2 blocks
+			if (lookBlock == Blocks.AIR) {
+				for (int i = 0; i <= 2; i++) {
+					lookPos = lookPos.down();
+					if (world.getBlockState(lookPos).getBlock() != Blocks.AIR)
+						break;
+				}
+			}
+
+			if (STATS_CONFIG.bendableBlocks.contains(lookBlock)
+					|| STATS_CONFIG.plantBendableBlocks.contains(lookBlock)) {
 				wall.setPosition(lookPos.getX() + .5, lookPos.getY(), lookPos.getZ() + .5);
 				wall.setOwner(entity);
 				for (int i = 0; i < 5; i++) {
@@ -141,7 +155,8 @@ public class AbilityWall extends Ability {
 						}
 
 						seg.setBlock(j, state);
-						if (bendable && !dontBreakMore) world.setBlockToAir(pos);
+						if (bendable && !dontBreakMore)
+							world.setBlockToAir(pos);
 
 						if (j == 5 - wallHeight) {
 							dontBreakMore = true;
