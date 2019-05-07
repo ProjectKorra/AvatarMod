@@ -203,12 +203,12 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	@Override
 	protected double getControlPointMaxDistanceSq() {
-		return 1;
+		return 0.5;
 	}
 
 	@Override
 	protected double getControlPointTeleportDistanceSq() {
-		return 3;
+		return 2;
 	}
 
 	@Override
@@ -224,7 +224,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		if (getOwner() != null) {
 			Vector eyePos = Vector.getEyePos(getOwner()).minus(0, 0.3, 0);
 			Vector directionToEnd = position().minus(eyePos).normalize();
-			getControlPoint(59).setPosition(eyePos.plus(directionToEnd.times(0.5)));
+			getControlPoint(59).setPosition(eyePos.plus(directionToEnd.times(0.1)));
 		}
 
 	}
@@ -336,7 +336,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 		private CannonControlPoint(EntityArc arc, int index) {
 			// Make all control points the same size
-			super(arc, index == 0 ? 0.5f : 0.5F - (0.25F / 60f), 0, 0, 0);
+			super(arc, index == 0 ? 0.5f : 0.5F - (0.25F / index), 0, 0, 0);
 		}
 
 	}
