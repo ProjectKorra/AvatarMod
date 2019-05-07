@@ -75,6 +75,9 @@ public class ConfigStats {
 	public AirBurstSettings AirBurstSettings = new AirBurstSettings();
 
 	@Load
+	public WaterCannonSettings waterCannonSettings = new WaterCannonSettings();
+
+	@Load
 	public PassiveSettings passiveSettings = new PassiveSettings();
 	// @formatter:off
 	@Load
@@ -142,12 +145,6 @@ public class ConfigStats {
 
 	@Load
 	public double waterArcSearchRadius = 4, waterArcAngles = 8;
-
-	@Load
-	public boolean useWaterCannonParticles = true;
-
-	@Load
-	public double waterCannonSearchRadius = 3, waterCannonAngles = 8, waterCannonDamage = 1;
 
 	@Load
 	public double waterBubbleSearchRadius = 5, waterBubbleAngles = 8;
@@ -408,6 +405,24 @@ public class ConfigStats {
 		@Load
 		public double push = 0.5;
 
+	}
+
+	public static class WaterCannonSettings {
+
+		@Load
+		public boolean useWaterCannonParticles = true;
+
+		@Load
+		public double waterCannonSearchRadius = 3;
+
+		@Load
+		public double waterCannonAngles = 8;
+
+		@Load
+		public double waterCannonDamage = 1;
+
+		@Load
+		public double waterCannonKnockbackMult = 1;
 	}
 
 	public static class LightningRazeSettings {

@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.WATER_SHOOT_HANDLER;
 
 public class WaterChargeHandler extends TickHandler {
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
@@ -38,7 +39,7 @@ public class WaterChargeHandler extends TickHandler {
 
 		double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
 		int duration = data.getTickHandlerDuration(this);
-		double speed = abilityData.getLevel() >= 1 ? 20 : 30;
+		double speed = abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND) ? 40 : 0;
 		float damage;
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		float size;
@@ -59,7 +60,7 @@ public class WaterChargeHandler extends TickHandler {
 
 			size = 0.1F;
 			ticks = 50;
-			damage = (float) (STATS_CONFIG.waterCannonDamage * 0.5 * bender.getDamageMult(Waterbending.ID));
+			damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * 0.5 * bender.getDamageMult(Waterbending.ID));
 
 			// Fire once every 10 ticks, until we get to 100 ticks
 			// So at fire at 60, 70, 80, 90, 100
@@ -77,22 +78,22 @@ public class WaterChargeHandler extends TickHandler {
 
 			speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			speed += powerRating / 15;
-			damage = (float) (STATS_CONFIG.waterCannonDamage * bender.getDamageMult(Waterbending.ID));
+			damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * bender.getDamageMult(Waterbending.ID));
 			//Default damage is 1
 			size = 0.25F;
 
 			if (abilityData.getLevel() >= 1) {
-				damage = (float) (STATS_CONFIG.waterCannonDamage * 1.25 * bender.getDamageMult(Waterbending.ID));
+				damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * 1.25 * bender.getDamageMult(Waterbending.ID));
 				size = 0.4f;
 				ticks = 75;
 			}
 			if (abilityData.getLevel() >= 2) {
-				damage = (float) (STATS_CONFIG.waterCannonDamage * 1.5 * bender.getDamageMult(Waterbending.ID));
+				damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * 1.5 * bender.getDamageMult(Waterbending.ID));
 				size = 0.55f;
 				ticks = 100;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				damage = (float) (STATS_CONFIG.waterCannonDamage * 2.5 * bender.getDamageMult(Waterbending.ID));
+				damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * 2.5 * bender.getDamageMult(Waterbending.ID));
 				ticks = 125;
 			}
 
@@ -100,6 +101,7 @@ public class WaterChargeHandler extends TickHandler {
 			fireCannon(world, entity, damage, speed, size, ticks);
 			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.PLAYERS, 1, 2);
 
+			ctx.getData().addTickHandler(WATER_SHOOT_HANDLER);
 			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 
 

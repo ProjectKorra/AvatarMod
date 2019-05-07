@@ -92,7 +92,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 
 		if (getOwner() != null) {
-			if (ticksExisted % 2 == 0 && !this.isDead && STATS_CONFIG.useWaterCannonParticles) {
+			if (ticksExisted % 2 == 0 && !this.isDead && STATS_CONFIG.waterCannonSettings.useWaterCannonParticles) {
 				double dist = this.getDistance(getOwner());
 				int particleController = 20;
 				if (getAbility() instanceof AbilityWaterCannon && !world.isRemote) {

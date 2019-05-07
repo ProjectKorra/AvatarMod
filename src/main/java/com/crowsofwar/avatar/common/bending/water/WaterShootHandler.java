@@ -23,6 +23,8 @@ import net.minecraft.world.World;
 import java.util.HashSet;
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
 public class WaterShootHandler extends TickHandler {
 
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString("6fdbbf2b-b7a8-4332-bd1f-6344687724bf");
@@ -42,8 +44,9 @@ public class WaterShootHandler extends TickHandler {
 		double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
 		int duration = data.getTickHandlerDuration(this);
 		double range = abilityData.getLevel() >= 1 ? 40 : 60;
-		float damage = 1;
-		Vec3d knockback;
+		float damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * bender.getDamageMult(Waterbending.ID));
+		Vec3d knockback = entity.getLookVec().scale(range / 10).scale(STATS_CONFIG.waterCannonSettings.waterCannonKnockbackMult);
+		HashSet<Entity> excluded = new HashSet<>();
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		//Multiply by 1.5 to get water cannon size
 		float maxDuration = 50;
@@ -55,29 +58,32 @@ public class WaterShootHandler extends TickHandler {
 
 		if (abilityData.getLevel() >= 1) {
 			maxDuration = 75;
+			damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * 1.25 * bender.getDamageMult(Waterbending.ID));
 		}
 		if (abilityData.getLevel() >= 2) {
+			damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * 1.5 * bender.getDamageMult(Waterbending.ID));
 			maxDuration = 100;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			maxDuration = 125;
+			damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * 2.5 * bender.getDamageMult(Waterbending.ID));
 		}
+		knockback.scale(damage);
 
 		EntityWaterCannon cannon = AvatarEntity.lookupControlledEntity(world, EntityWaterCannon.class, entity);
 		if (cannon != null) {
-			HashSet<Entity> excluded = new HashSet<Entity>();
-			excluded.add(cannon);
-			excluded.add(entity);
 			Vector eyePos = Vector.getEyePos(entity).minus(0, 0.3, 0);
 			Vector directionToEnd = cannon.position().minus(eyePos).normalize();
 			Vector startPos = (eyePos.plus(directionToEnd.times(0.5)));
 			Vec3d endPos = (startPos.withY(startPos.y())).toMinecraft().add(entity.getLookVec().scale(range));
-			RayTraceResult result = Raytrace.handlePiercingBeamCollision(world, entity, startPos.toMinecraft(), endPos, 1.5F * cannon.getSizeMultiplier(),
+			RayTraceResult result = Raytrace.standardEntityRayTrace(world, entity, cannon, startPos.toMinecraft(), endPos, 1.5F * cannon.getSizeMultiplier(), false,
+					excluded);
+			assert result != null;
+			cannon.posX = result.hitVec.x;
+			cannon.posY = result.hitVec.y;
+			cannon.posZ = result.hitVec.z;
+			Raytrace.handlePiercingBeamCollision(world, entity, startPos.toMinecraft(), result.hitVec, 1.5F * cannon.getSizeMultiplier(),
 					cannon, AvatarDamageSource.WATER, damage, knockback, false, 0, 1.5F * cannon.getSizeMultiplier());
-			if (result != null) {
-				if (result.entityHit != null && result.hitVec.distanceTo(entity.getPositionVector()) < range)
-				cannon.posX = result.hitVec.x;
-			}
 		}
 		return (duration >= maxDuration) && cannon != null;
 	}
