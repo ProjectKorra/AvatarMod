@@ -177,10 +177,11 @@ public class EntityWall extends AvatarEntity {
 				// Avoid setDead() as that will call wall.setDead()
 				entity.isDead = true;
 
-				if (dropTypePlace)
+				if (dropTypePlace) {
 					entity.placeBlocks();
-				else
+				} else {
 					entity.dropBlocks();
+				}
 			}
 		}
 		super.setDead();
