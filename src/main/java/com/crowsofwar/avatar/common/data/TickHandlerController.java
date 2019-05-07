@@ -2,23 +2,21 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.client.gui.RenderElementTickHandler;
 import com.crowsofwar.avatar.common.bending.air.*;
-import com.crowsofwar.avatar.common.bending.earth.RestoreCooldownHandler;
-import com.crowsofwar.avatar.common.bending.earth.RestoreParticleHandler;
-import com.crowsofwar.avatar.common.bending.earth.SpawnEarthspikesHandler;
+import com.crowsofwar.avatar.common.bending.earth.*;
 import com.crowsofwar.avatar.common.bending.fire.*;
-import com.crowsofwar.avatar.common.bending.lightning.LightningCreateHandler;
-import com.crowsofwar.avatar.common.bending.lightning.LightningRedirectHandler;
+import com.crowsofwar.avatar.common.bending.lightning.*;
 import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.entity.mob.BisonSummonHandler;
 import io.netty.buffer.ByteBuf;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Mahtaran
  */
 public class TickHandlerController {
+	// @formatter:off
+	static Map<Integer, TickHandler> allHandlers = new HashMap<>();
 	public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner(0);
 	public static TickHandler FIRE_PARTICLE_SPAWNER = new FireParticleSpawner(1);
 	public static TickHandler FLAMETHROWER = new FlamethrowerUpdateTick(2);
@@ -47,8 +45,6 @@ public class TickHandlerController {
 	public static TickHandler CLEANSE_COOLDOWN_HANDLER = new CleanseCooldownHandler(25);
 	public static TickHandler RESTORE_COOLDOWN_HANDLER = new RestoreCooldownHandler(26);
 	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler(27);
-	// @formatter:off
-	static Map<Integer, TickHandler> allHandlers = new HashMap<>();
 	// @formatter:on
 
 	public static TickHandler fromId(int id) {

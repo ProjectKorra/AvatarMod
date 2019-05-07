@@ -125,9 +125,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 					Raytrace.handlePiercingBeamCollision(world, getOwner(), startPos.toMinecraft(), result.hitVec, 1.5F * getSizeMultiplier(),
 							this, AvatarDamageSource.WATER, damage, knockBack, false, 0, 1.5F * getSizeMultiplier());
 				} else {
-					posX = endPos.x;
-					posY = endPos.y;
-					posZ = endPos.z;
+					Vec3d speed = endPos.subtract(startPos.toMinecraft());
+					this.setVelocity(speed.x, speed.y, speed.z);
 				}
 			}
 			if (ticksExisted % 2 == 0 && !this.isDead && STATS_CONFIG.waterCannonSettings.useWaterCannonParticles) {
