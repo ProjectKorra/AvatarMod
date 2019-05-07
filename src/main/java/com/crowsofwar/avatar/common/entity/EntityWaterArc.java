@@ -72,6 +72,8 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	private float Gravity;
 
+	private float velocityMultiplier;
+
 
 	public EntityWaterArc(World world) {
 		super(world);
@@ -409,5 +411,8 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	}
 
-
+	@Override
+	protected double getVelocityMultiplier() {
+		return velocityMultiplier;
+	}
 }

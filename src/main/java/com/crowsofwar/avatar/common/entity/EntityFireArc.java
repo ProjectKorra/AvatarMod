@@ -66,6 +66,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 	private boolean createBigFire;
 	private float Gravity;
 	private float Size;
+	private float velocityMultiplier;
 
 
 	public EntityFireArc(World world) {
@@ -364,4 +365,8 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 
 	}
 
+	@Override
+	protected double getVelocityMultiplier() {
+		return velocityMultiplier;
+	}
 }

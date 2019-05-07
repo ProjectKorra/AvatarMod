@@ -30,7 +30,6 @@ import java.util.function.Consumer;
 
 public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 
-	public double velocityMultiplier;
 	private List<T> points;
 	private int brightness = 15728880;
 
@@ -38,7 +37,6 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 		super(world);
 		float size = .2f;
 		setSize(size, size);
-		this.velocityMultiplier = 4;
 
 		this.points = new ArrayList<>();
 		for (int i = 0; i < getAmountOfControlPoints(); i++) {
@@ -107,23 +105,22 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 			Vector leadPos = leader.position();
 			double sqrDist = p.position().sqrDist(leadPos);
 
-			if (sqrDist > getControlPointTeleportDistanceSq()) {
+			if (sqrDist > getControlPointTeleportDistanceSq() && getControlPointTeleportDistanceSq() != -1) {
 
 				Vector toFollowerDir = p.position().minus(leader.position()).normalize();
 
 				double idealDist = Math.sqrt(getControlPointTeleportDistanceSq());
-				if (idealDist > 1) idealDist -= 1; // Make sure there is some
-				// room
+				if (idealDist > 1) idealDist -= 1; // Make sure there is some room
 
 				Vector revisedOffset = leader.position().plus(toFollowerDir.times(idealDist));
 				p.setPosition(revisedOffset);
 				leader.setPosition(revisedOffset);
 				p.setVelocity(Vector.ZERO);
 
-			} else if (sqrDist > getControlPointMaxDistanceSq()) {
+			} else if (sqrDist > getControlPointMaxDistanceSq() && getControlPointMaxDistanceSq() != -1) {
 
 				Vector diff = leader.position().minus(p.position());
-				diff = diff.normalize().times(velocityMultiplier);
+				diff = diff.normalize().times(getVelocityMultiplier());
 				p.setVelocity(p.velocity().plus(diff));
 
 			}
@@ -211,6 +208,7 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 	/**
 	 * Returns the maximum distance between control points, squared. Any control
 	 * points beyond this distance will follow their leader to get closer.
+	 * Set to -1 for it to be infinite.
 	 */
 	protected double getControlPointMaxDistanceSq() {
 		return 1;
@@ -220,9 +218,14 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 	 * Returns the distance between control points to be teleported to their
 	 * leader, squared. If any control point is more than this distance from its
 	 * leader, then it is teleported to the leader.
+	 * Set to -1 for it never to teleport.
 	 */
 	protected double getControlPointTeleportDistanceSq() {
 		return 16;
+	}
+
+	protected double getVelocityMultiplier() {
+		return 4;
 	}
 
 }
