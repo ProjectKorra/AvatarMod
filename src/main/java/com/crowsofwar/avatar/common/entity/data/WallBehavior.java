@@ -77,11 +77,17 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 
 	public static class Place extends WallBehavior {
 
+		private int ticks = 0;
+
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
-			entity.setVelocity(Vector.ZERO);
-			entity.getWall().setDropTypePlace(true);
-			entity.setDead();
+			ticks++;
+			//Prevents some glitches
+			if (ticks == 2) {
+				entity.setVelocity(Vector.ZERO);
+				entity.getWall().setDropTypePlace(true);
+				entity.getWall().setDead();
+			}
 			return this;
 		}
 
@@ -181,7 +187,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 
 				}
 			}
-
+			
 			return drop ? new Drop() : this;
 		}
 
