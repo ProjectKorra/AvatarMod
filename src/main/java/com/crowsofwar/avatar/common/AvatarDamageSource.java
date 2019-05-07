@@ -19,12 +19,12 @@ package com.crowsofwar.avatar.common;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityElderGuardian;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.monster.EntityEndermite;
-import net.minecraft.entity.monster.EntityGuardian;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.monster.*;
+import net.minecraft.entity.passive.EntityWaterMob;
+import net.minecraft.init.MobEffects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -32,6 +32,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * Contains static methods used to acquire custom DamageSources for various
@@ -252,15 +253,62 @@ public class AvatarDamageSource {
 
 	@SubscribeEvent
 	public static void onElementalDamage(LivingHurtEvent event) {
+		//TODO: Config for all this stuff; definitely in the rewrite
 		DamageSource source = event.getSource();
 		Entity hit = event.getEntity();
-		if (source == AvatarDamageSource.WATER) {
-			if (hit instanceof EntityLivingBase) {
+		if (hit instanceof EntityLivingBase) {
+			if (hit instanceof EntityDragon && AvatarDamageSource.isAvatarDamageSource(source)) {
+				event.setCanceled(false);
+				event.setAmount(event.getAmount());
+			}
+
+			if (source == AvatarDamageSource.WATER) {
 				hit.setFire(0);
 				if (hit instanceof EntityEnderman || hit instanceof EntityEndermite) {
 					event.setAmount(event.getAmount() * 1.25F);
 				}
-				if (hit instanceof EntityGuardian) {
+				if (hit instanceof EntityGuardian || hit instanceof EntityWaterMob) {
+					event.setAmount(event.getAmount() * 0.75F);
+				}
+			}
+
+			if (source == AvatarDamageSource.FIRE) {
+				if (hit.isImmuneToFire()) {
+					event.setAmount(event.getAmount() * 0.25F);
+				}
+				if (((EntityLivingBase) hit).isPotionActive(MobEffects.FIRE_RESISTANCE)) {
+					event.setAmount(event.getAmount() * (0.75F / (Objects.requireNonNull(((EntityLivingBase) hit).getActivePotionEffect(MobEffects.FIRE_RESISTANCE)).getAmplifier() + 1)));
+				}
+			}
+
+			if (source == AvatarDamageSource.AIR) {
+				if (hit instanceof EntityFlying) {
+					event.setAmount(event.getAmount() * 1.25F);
+				}
+			}
+
+			if (source == AvatarDamageSource.LIGHTNING) {
+				if (hit instanceof EntityWaterMob) {
+					event.setAmount(event.getAmount() * 1.5F);
+				}
+				//TODO: Make creepers charged upon being hit with lightning
+			}
+
+			if (source == AvatarDamageSource.COMBUSTION) {
+				if (hit instanceof EntityCreeper) {
+					event.setAmount(event.getAmount() * 0.5F);
+					//TODO: Make creepers explode upon receiving combustion damage
+				}
+			}
+
+			if (source == AvatarDamageSource.SAND) {
+				if (hit instanceof EntityHusk) {
+					event.setAmount(event.getAmount() * 0.75F);
+				}
+			}
+
+			if (source == AvatarDamageSource.ICE) {
+				if (hit instanceof EntityStray) {
 					event.setAmount(event.getAmount() * 0.75F);
 				}
 			}
