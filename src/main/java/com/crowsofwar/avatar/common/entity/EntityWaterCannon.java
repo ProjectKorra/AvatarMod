@@ -95,7 +95,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	@Override
 	public int getAmountOfControlPoints() {
-		return 2;
+		return 5;
 	}
 
 
@@ -110,41 +110,61 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 		if (getOwner() != null) {
 			if (getAbility() instanceof AbilityWaterCannon) {
-				Vec3d startPos = getControlPoint(1).position().toMinecraft();
+				Vec3d startPos = getControlPoint(4).position().toMinecraft();
 				Vec3d distance = getOwner().getLookVec().scale(range);
 				Vec3d endPos = startPos.add(distance);
 				range += range < maxRange ? maxRange / lifeTime : 0;
-				if (!AbilityData.get(getOwner(),"water_cannon").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+
+				if (!AbilityData.get(getOwner(), "water_cannon").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 					RayTraceResult result = Raytrace.standardEntityRayTrace(world, getOwner(), this, startPos, endPos, 1.5F * getSizeMultiplier(), false,
 							excluded);
 					if (result != null) {
-						posX = result.hitVec.x;
-						posY = result.hitVec.y;
-						posZ = result.hitVec.z;
+						if (result.entityHit != null) {
+							posX = result.hitVec.x;
+							posY = result.entityHit.posY + result.entityHit.getEyeHeight() / 2;
+							posZ = result.hitVec.z;
+						} else {
+							posX = result.hitVec.x;
+							posY = result.hitVec.y;
+							posZ = result.hitVec.z;
+						}
 						range = getOwner().getDistance(result.hitVec.x, result.hitVec.y, result.hitVec.z);
 
 					} else {
 						Vec3d speed = endPos.subtract(startPos);
-						if (world.isRemote) {
+						if (!world.isRemote) {
+							this.motionX = speed.x / 20;
+							this.motionY = speed.y / 20;
+							this.motionZ = speed.z / 20;
+						} else {
 							this.setVelocity(speed.x, speed.y, speed.z);
+						}
+					}
+				} else {
+					Vec3d speed = endPos.subtract(startPos);
+					if (!world.isRemote) {
+						if (onCollideWithSolid()) {
+							this.motionX = this.motionY = this.motionZ = 0;
+							setVelocity(Vector.ZERO);
 						} else {
 							this.motionX = speed.x / 20;
 							this.motionY = speed.y / 20;
 							this.motionZ = speed.z / 20;
 						}
-					}
-				} else {
-					Vec3d speed = endPos.subtract(startPos);
-					if (world.isRemote) {
-						this.setVelocity(speed.x, speed.y, speed.z);
+
 					} else {
-						this.motionX = speed.x / 20;
-						this.motionY = speed.y / 20;
-						this.motionZ = speed.z / 20;
+						if (onCollideWithSolid()) {
+							this.motionX = this.motionY = this.motionZ = 0;
+							setVelocity(Vector.ZERO);
+						} else {
+							this.setVelocity(speed.x, speed.y, speed.z);
+						}
 					}
+
 				}
 			}
-			if (ticksExisted % 2 == 0 && !this.isDead && STATS_CONFIG.waterCannonSettings.useWaterCannonParticles) {
+
+			if (ticksExisted % 4 == 0 && !this.isDead && STATS_CONFIG.waterCannonSettings.useWaterCannonParticles) {
 				double dist = this.getDistance(getOwner());
 				int particleController = 20;
 				if (getAbility() instanceof AbilityWaterCannon && !world.isRemote) {
@@ -162,11 +182,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 					}
 				}
 				for (double i = 0; i < 1; i += 1 / dist) {
-					Vector startPos = getControlPoint(1).position();
-					Vector distance = this.position().minus(getControlPoint(1).position());
+					Vector startPos = getControlPoint(4).position();
+					Vector distance = this.position().minus(getControlPoint(4).position());
 					distance = distance.times(i);
 					for (double angle = 0; angle < 360; angle += particleController) {
-						Vector position = Vector.getOrthogonalVector(this.position().minus(getControlPoint(1).position()), angle, getSizeMultiplier() * 1.4);
+						Vector position = Vector.getOrthogonalVector(this.position().minus(getControlPoint(4).position()), angle, getSizeMultiplier() * 1.4);
 						particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1,
 								position.x() + startPos.x() + distance.x(), position.y() + startPos.y() + distance.y(), position.z() + startPos.z() + distance.z(), 0, 0, 0);
 
@@ -177,6 +197,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 			}
 		}
+
 
 
 		if (this.ticksExisted >= lifeTime && !world.isRemote) {
@@ -202,19 +223,20 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	@Override
 	protected double getControlPointMaxDistanceSq() {
-		return -1;
+		return 0.05;
 	}
 
 	@Override
 	protected double getControlPointTeleportDistanceSq() {
-		return -1;
+		return 0.15;
 	}
 
 	@Override
 	protected void updateCpBehavior() {
 
+		super.updateCpBehavior();
 		// First control point (at front) should just follow water cannon
-		getControlPoint(0).setPosition(Vector.getEntityPos(this).plusY(getSizeMultiplier()));
+		//getControlPoint(0).setPosition(Vector.getEntityPos(this).plusY(getSizeMultiplier()));
 		//The control point's top gets set to the water cannon; you want the center to be set
 		//to the water cannon.
 
@@ -223,7 +245,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		if (getOwner() != null) {
 			Vector eyePos = Vector.getEyePos(getOwner()).minus(0, 0.3, 0);
 			Vector directionToEnd = position().minus(eyePos).normalize();
-			getControlPoint(1).setPosition(eyePos.plus(directionToEnd.times(0.1)));
+			getControlPoint(4).setPosition(eyePos.plus(directionToEnd.times(0.05)));
 		}
 
 	}
@@ -256,14 +278,13 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	 */
 	@Override
 	protected void collideWithNearbyEntities() {
-		//Gonna try something crazy.
 
 		if (getOwner() != null) {
 			BendingData data = BendingData.get(getOwner());
 
 
 			double dist = this.getDistance(getOwner());
-			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(1).position(), this.position().minus(getControlPoint(1).position()), dist, entity -> entity != getOwner());
+			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(4).position(), this.position().minus(getControlPoint(4).position()), dist, entity -> entity != getOwner());
 
 			if (!collisions.isEmpty()) {
 				for (Entity collided : collisions) {
@@ -310,8 +331,16 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 	@Override
 	public boolean onCollideWithSolid() {
-		this.motionX = this.motionY = this.motionZ = 0;
-		onMajorWaterContact();
+		if (getOwner() != null && !world.isRemote) {
+			Raytrace.Result result = Raytrace.getTargetBlock(getOwner(), maxRange);
+			if (result.getPosPrecise() != null && result.getPosPrecise() == position()) {
+				setPosition(result.getPosPrecise());
+				posX = result.getPosPrecise().x();
+				posY = result.getPosPrecise().y();
+				posZ = result.getPosPrecise().z();
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -331,18 +360,23 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		return true;
 	}
 
-	class CannonControlPoint extends ControlPoint {
-
-		private CannonControlPoint(EntityArc arc, int index) {
-			// Make all control points the same size
-			super(arc, index == 0 ? 0.5f : 0.35F, 0, 0, 0);
-		}
-
+	@Override
+	public boolean canBePushed() {
+		return false;
 	}
 
 	@Override
 	protected double getVelocityMultiplier() {
-		return 8;
+		return 14;
+	}
+
+	class CannonControlPoint extends ControlPoint {
+
+		private CannonControlPoint(EntityArc arc, int index) {
+			// Make all control points the same size
+			super(arc, index == 0 ? 0.5f : 0.5F - 0.15F * (index / 10F), 0, 0, 0);
+		}
+
 	}
 }
 

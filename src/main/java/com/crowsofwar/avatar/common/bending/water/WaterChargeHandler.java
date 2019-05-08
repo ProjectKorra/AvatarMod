@@ -42,7 +42,7 @@ public class WaterChargeHandler extends TickHandler {
 		double speed = abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND) ? 40 : 0;
 		float damage;
 		float maxRange = abilityData.getLevel() >= 1 ? 40 : 60;
-		Vec3d knockback = entity.getLookVec().scale(maxRange / 10).scale(STATS_CONFIG.waterCannonSettings.waterCannonKnockbackMult);
+		Vec3d knockback = entity.getLookVec().scale(maxRange / 50).scale(STATS_CONFIG.waterCannonSettings.waterCannonKnockbackMult);
 		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
 		float size;
 		//Multiply by 1.5 to get water cannon size
