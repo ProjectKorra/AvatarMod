@@ -57,8 +57,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 
 	public static final int SEGMENT_HEIGHT = 5;
 
-	private static final DataParameter<Optional<UUID>> SYNC_WALL = EntityDataManager
-			.createKey(EntityWallSegment.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+	private static final DataParameter<Optional<UUID>> SYNC_WALL = EntityDataManager.createKey(EntityWallSegment.class,
+			DataSerializers.OPTIONAL_UNIQUE_ID);
 	private static final DataParameter<WallBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWallSegment.class, WallBehavior.SERIALIZER);
 
@@ -105,8 +105,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	}
 
 	/**
-	 * Allows this segment to reference the wall, and allows the wall to
-	 * reference this segment.
+	 * Allows this segment to reference the wall, and allows the wall to reference
+	 * this segment.
 	 */
 	public void attachToWall(EntityWall wall) {
 		wallReference.setEntity(wall);
@@ -160,7 +160,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	public void setDead() {
 		super.setDead();
-		if (getWall() != null) getWall().setDead();
+		if (getWall() != null)
+			getWall().setDead();
 	}
 
 	/**
@@ -171,6 +172,18 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			IBlockState state = getBlock(i);
 			if (state.getBlock() != Blocks.AIR)
 				world.setBlockState(new BlockPos(this).up(i + getBlocksOffset()), state);
+		}
+	}
+
+	/**
+	 * Places any blocks contained by this segment. Required since dropBlocks()
+	 * places them one block lower than their "true" position
+	 */
+	public void placeBlocks() {
+		for (int i = 0; i < SEGMENT_HEIGHT; i++) {
+			IBlockState state = getBlock(i);
+			if (state.getBlock() != Blocks.AIR)
+				world.setBlockState(new BlockPos(this).up(i + getBlocksOffset() + 1), state);
 		}
 	}
 
@@ -191,7 +204,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		setVelocity(velocity().withX(0).withZ(0));
 
 		WallBehavior next = (WallBehavior) getBehavior().onUpdate(this);
-		if (getBehavior() != next) setBehavior(next);
+		if (getBehavior() != next)
+			setBehavior(next);
 	}
 
 	@Override
@@ -216,7 +230,6 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		super.writeEntityToNBT(nbt);
 		wallReference.writeToNbt(nestedCompound(nbt, "Parent"));
 	}
-
 
 	@Override
 	public boolean isInRangeToRenderDist(double distance) {
@@ -243,7 +256,6 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	public boolean canPush() {
 		return false;
 	}
-
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
@@ -303,8 +315,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			}
 
 		}
-		//this.setVelocity(Vector.ZERO);
-		//For some reason the wall is affected by explosions and whatnot
+		// this.setVelocity(Vector.ZERO);
+		// For some reason the wall is affected by explosions and whatnot
 
 	}
 
@@ -327,6 +339,5 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		return notWall && !friendlyProjectile;
 
 	}
-
 
 }

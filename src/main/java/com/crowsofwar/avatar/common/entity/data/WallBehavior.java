@@ -40,6 +40,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 	public static void register() {
 		DataSerializers.registerSerializer(SERIALIZER);
 		registerBehavior(Drop.class);
+		registerBehavior(Place.class);
 		registerBehavior(Rising.class);
 		registerBehavior(Waiting.class);
 	}
@@ -52,6 +53,40 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			if (entity.onGround) {
 				entity.dropBlocks();
 				entity.setDead();
+			}
+			return this;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+		}
+
+	}
+
+	public static class Place extends WallBehavior {
+
+		private int ticks = 0;
+
+		@Override
+		public Behavior onUpdate(EntityWallSegment entity) {
+			ticks++;
+			//Prevents some glitches
+			if (ticks == 2) {
+				entity.setVelocity(Vector.ZERO);
+				entity.getWall().setDropTypePlace(true);
+				entity.getWall().setDead();
 			}
 			return this;
 		}
@@ -91,7 +126,8 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 				int maxHeight = 0;
 				for (int i = 0; i < 5; i++) {
 					EntityWallSegment seg = entity.getWall().getSegment(i);
-					if (seg.height > maxHeight) maxHeight = (int) seg.height;
+					if (seg.height > maxHeight)
+						maxHeight = (int) seg.height;
 				}
 
 				entity.motionY = STATS_CONFIG.wallMomentum / 5 * maxHeight / 20;
@@ -102,7 +138,8 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 
 			// For some reason, the same entity instance is on server/client,
 			// but has different world reference when this is called...?
-			if (!entity.world.isRemote) ticks++;
+			if (!entity.world.isRemote)
+				ticks++;
 
 			return ticks > 5 && entity.velocity().y() <= 0.2 ? new Waiting() : this;
 		}
@@ -144,14 +181,13 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 					drop = entity.getOwner().isDead || ticks >= STATS_CONFIG.wallWaitTime2 * 20;
 
 					Bender ownerBender = Bender.get(entity.getOwner());
-					if (!entity.world.isRemote && !ownerBender.consumeChi(STATS_CONFIG
-							.chiWallOneSecond / 20)) {
+					if (!entity.world.isRemote && !ownerBender.consumeChi(STATS_CONFIG.chiWallOneSecond / 20)) {
 						drop = true;
 					}
 
 				}
 			}
-
+			
 			return drop ? new Drop() : this;
 		}
 

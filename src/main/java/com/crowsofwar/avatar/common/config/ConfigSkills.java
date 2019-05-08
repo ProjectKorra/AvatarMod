@@ -49,6 +49,7 @@ public class ConfigSkills {
 		miningBreakOre = 5f,
 		waterSkateOneSecond = 1.5f,
 		wallRaised = 1f,
+		wallReach = 2,
 		wallBlockedAttack = 3f,
 		airbubbleProtect = 6f,
 		litFire = 20,
