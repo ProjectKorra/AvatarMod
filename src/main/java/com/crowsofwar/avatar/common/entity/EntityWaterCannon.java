@@ -122,8 +122,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 						posY = result.hitVec.y;
 						posZ = result.hitVec.z;
 						range = getOwner().getDistance(result.hitVec.x, result.hitVec.y, result.hitVec.z);
-						Raytrace.handlePiercingBeamCollision(world, getOwner(), startPos, result.hitVec, 1.5F * getSizeMultiplier(),
-								this, AvatarDamageSource.WATER, damage, knockBack, false, 0, 1.5F * getSizeMultiplier());
+
 					} else {
 						Vec3d speed = endPos.subtract(startPos);
 						if (world.isRemote) {
@@ -292,9 +291,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 				BattlePerformanceScore.addSmallScore(getOwner());
 
-				entity.motionX = this.motionX * 2;
-				entity.motionY = this.motionY * 2;
-				entity.motionZ = this.motionZ * 2;
+				entity.motionX = knockBack.x;
+				entity.motionY = knockBack.y;
+				entity.motionZ = knockBack.z;
 				AvatarUtils.afterVelocityAdded(entity);
 
 				// Add Experience
