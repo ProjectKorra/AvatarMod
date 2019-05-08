@@ -38,6 +38,8 @@ public class StatCtrlDropWall extends StatusControl {
 			seg.setBehavior(new WallBehavior.Drop());
 		}
 
+		ctx.getData().removeStatusControl(StatusControl.PLACE_WALL);
+
 		return true;
 	}
 
