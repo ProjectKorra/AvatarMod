@@ -89,8 +89,37 @@ public class AbilityWall extends Ability {
 
 			abilityData.addXp(SKILLS_CONFIG.wallRaised);
 
+			// The range should increase the higher the level is.
+			switch (abilityData.getLevel()) {
+			case 0:
+				break;
+			case 1:
+				reach += 1;
+				break;
+			case 2:
+				reach += 2;
+				break;
+			case 3:
+				reach += 3;
+				break;
+			}
+
+			// Used so that the wall can be more precisely placed if needed, useful when
+			// used for building. However, during a fight, it will still spawn even if not
+			// directly looking at the ground. However this won't override the maximum reach
+			// distance.
+			BlockPos lookPos;
 			// Down 1 block so that we actually get a block...
-			BlockPos lookPos = entity.getPosition().down().offset(cardinal, reach);
+			BlockPos entityPos = entity.getPosition().down();
+			if (ctx.isLookingAtBlock()) {
+				lookPos = ctx.getLookPosI().toBlockPos();
+				if (lookPos.distanceSq(entityPos) > reach) {
+					lookPos = entityPos.offset(cardinal, reach);
+				}
+			} else {
+				lookPos = entityPos.offset(cardinal, reach);
+			}
+
 			EntityWall wall = new EntityWall(world);
 
 			Block lookBlock = world.getBlockState(lookPos).getBlock();
