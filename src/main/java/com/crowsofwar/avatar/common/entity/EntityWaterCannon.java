@@ -12,6 +12,9 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -28,6 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -45,6 +49,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	private double range;
 	private Vec3d knockBack;
 	private HashSet<Entity> excluded;
+	private UUID movementModifierId;
 
 	public EntityWaterCannon(World world) {
 		super(world);
@@ -86,6 +91,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		this.knockBack = knockBack;
 	}
 
+	public void setMovementModifierId(UUID id) {
+		this.movementModifierId = id;
+	}
+
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -102,7 +112,10 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (getOwner() == null) setDead();
+		if (ticksExisted == 2) {
+			assert getOwner() != null;
+			applyMovementModifier(getOwner(), 0.4F);
+		}
 
 		world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 				SoundCategory.PLAYERS, 1, 2);
@@ -241,7 +254,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		//to the water cannon.
 
 
-		// Second control point (at back) should stay near the player
+		// Last control point (at back) should stay near the player
 		if (getOwner() != null) {
 			Vector eyePos = Vector.getEyePos(getOwner()).minus(0, 0.3, 0);
 			Vector directionToEnd = position().minus(eyePos).normalize();
@@ -376,6 +389,23 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 			// Make all control points the same size
 			super(arc, index == 0 ? 0.5f : 0.5F - 0.15F * (index / 10F), 0, 0, 0);
 		}
+
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
+		assert getOwner() != null;
+		getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(movementModifierId);
+	}
+
+	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
+
+		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+
+		moveSpeed.removeModifier(movementModifierId);
+
+		moveSpeed.applyModifier(new AttributeModifier(movementModifierId, "Water shoot modifier", multiplier - 1, 1));
 
 	}
 }

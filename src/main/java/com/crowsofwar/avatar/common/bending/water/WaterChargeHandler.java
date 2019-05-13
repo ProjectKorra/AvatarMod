@@ -126,6 +126,7 @@ public class WaterChargeHandler extends TickHandler {
 		cannon.setKnockBack(knockBack);
 		cannon.setMaxRange(maxRange);
 		cannon.setAbility(new AbilityWaterCannon());
+		cannon.setMovementModifierId(UUID.fromString("827d2734-ead1-4853-9942-6cd8c5da5414"));
 
 		Vector velocity = Vector.getLookRectangular(entity);
 		velocity = velocity.normalize().times(speed);
