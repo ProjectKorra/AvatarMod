@@ -212,7 +212,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 
 
-
 		if (this.ticksExisted >= lifeTime && !world.isRemote) {
 			setDead();
 		}
@@ -383,15 +382,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		return 14;
 	}
 
-	class CannonControlPoint extends ControlPoint {
-
-		private CannonControlPoint(EntityArc arc, int index) {
-			// Make all control points the same size
-			super(arc, index == 0 ? 0.5f : 0.5F - 0.15F * (index / 10F), 0, 0, 0);
-		}
-
-	}
-
 	@Override
 	public void setDead() {
 		super.setDead();
@@ -406,6 +396,15 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		moveSpeed.removeModifier(movementModifierId);
 
 		moveSpeed.applyModifier(new AttributeModifier(movementModifierId, "Water shoot modifier", multiplier - 1, 1));
+
+	}
+
+	class CannonControlPoint extends ControlPoint {
+
+		private CannonControlPoint(EntityArc arc, int index) {
+			// Make all control points the same size
+			super(arc, index == 0 ? 0.5f : 0.5F - 0.15F * (index / 10F), 0, 0, 0);
+		}
 
 	}
 }

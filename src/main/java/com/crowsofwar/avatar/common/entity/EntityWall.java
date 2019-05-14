@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.gorecore.util.Vector;
@@ -61,6 +60,7 @@ public class EntityWall extends AvatarEntity {
 	private final SyncedEntity<EntityWallSegment>[] segments;
 
 	private int nextSegment = 0;
+	private boolean dropTypePlace = false;
 
 	/**
 	 * @param world
@@ -80,8 +80,8 @@ public class EntityWall extends AvatarEntity {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_DIRECTION, NORTH.ordinal());
-		for (int i = 0; i < SYNC_SEGMENTS.length; i++) {
-			dataManager.register(SYNC_SEGMENTS[i], Optional.absent());
+		for (DataParameter<Optional<UUID>> syncSegment : SYNC_SEGMENTS) {
+			dataManager.register(syncSegment, Optional.absent());
 		}
 	}
 
@@ -165,11 +165,9 @@ public class EntityWall extends AvatarEntity {
 	 * Changes how the wall should drop its blocks. false -> dropBlocks(), true ->
 	 * placeBlocks(). dropBlocks() is the default
 	 */
-	public void setDropTypePlace(boolean input) {
-		dropTypePlace = input;
+	public void setDropTypePlace(boolean place) {
+		dropTypePlace = place;
 	}
-
-	private boolean dropTypePlace = false;
 
 	@Override
 	public void setDead() {
