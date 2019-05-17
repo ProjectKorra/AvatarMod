@@ -70,7 +70,7 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
 
 		//  } else {
-		int light = entity.world.getSkylightSubtracted() > 8 ? 8 : entity.world.getSkylightSubtracted();
+		int light = entity.world.getSkylightSubtracted() > 7 ? 7 : entity.world.getSkylightSubtracted();
 		disableLight(light);
 
 		pushMatrix();
