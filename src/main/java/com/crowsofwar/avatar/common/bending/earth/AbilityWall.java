@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWall;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
@@ -35,6 +36,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Random;
+import java.util.Map.Entry;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -104,105 +106,198 @@ public class AbilityWall extends Ability {
 				break;
 			}
 
-			// Used so that the wall can be more precisely placed if needed, useful when
-			// used for building. However, during a fight, it will still spawn even if not
-			// directly looking at the ground. However this won't override the maximum reach
-			// distance.
-			BlockPos lookPos;
-			// Down 1 block so that we actually get a block...
-			BlockPos entityPos = entity.getPosition().down();
-			if (ctx.isLookingAtBlock()) {
-				lookPos = ctx.getLookPosI().toBlockPos();
-				if (lookPos.distanceSq(entityPos) > reach) {
+			boolean wallCreated = false;
+			if (abilityData.getPath() == AbilityTreePath.MAIN) {
+
+				// Used so that the wall can be more precisely placed if needed, useful when
+				// used for building. However, during a fight, it will still spawn even if not
+				// directly looking at the ground. However this won't override the maximum reach
+				// distance.
+				BlockPos lookPos;
+				// Down 1 block so that we actually get a block...
+				BlockPos entityPos = entity.getPosition().down();
+				if (ctx.isLookingAtBlock()) {
+					lookPos = ctx.getLookPosI().toBlockPos();
+					if (lookPos.distanceSq(entityPos) > reach) {
+						lookPos = entityPos.offset(cardinal, reach);
+					}
+				} else {
 					lookPos = entityPos.offset(cardinal, reach);
 				}
-			} else {
-				lookPos = entityPos.offset(cardinal, reach);
-			}
 
-			EntityWall wall = new EntityWall(world);
-
-			Block lookBlock = world.getBlockState(lookPos).getBlock();
-			if (lookBlock == Blocks.TALLGRASS) {
-				lookPos = lookPos.down();
-			} else if (lookBlock == Blocks.DOUBLE_PLANT) {
-				lookPos = lookPos.down(2);
-			}
-
-			// Allow bending even if the block is lower than the bender by 1-2 (by default)
-			// blocks
-			if (lookBlock == Blocks.AIR) {
-				for (int i = 0; i <= reach; i++) {
+				Block lookBlock = world.getBlockState(lookPos).getBlock();
+				if (lookBlock == Blocks.TALLGRASS) {
 					lookPos = lookPos.down();
-					lookBlock = world.getBlockState(lookPos).getBlock();
-					if (lookBlock != Blocks.AIR)
-						break;
+				} else if (lookBlock == Blocks.DOUBLE_PLANT) {
+					lookPos = lookPos.down(2);
 				}
+
+				// Allow bending even if the block is lower than the bender by 1-2 (by default)
+				// blocks
+				if (lookBlock == Blocks.AIR) {
+					for (int i = 0; i <= reach; i++) {
+						lookPos = lookPos.down();
+						lookBlock = world.getBlockState(lookPos).getBlock();
+						if (lookBlock != Blocks.AIR)
+							break;
+					}
+				}
+
+				wallCreated = createWall(world, lookPos, lookBlock, cardinal, entity, whMin, whMax, 0, 0, random);
+
+			} else if (abilityData.getPath() == AbilityTreePath.SECOND) {
+				BlockPos wallPos = entity.getPosition().down();
+				Block wallBlock = world.getBlockState(wallPos).getBlock();
+				boolean createWall = true;
+
+				System.out.println(abilityData.getPath().toString());
+
+				// Allow bending even if the block is lower than the bender by 1-2 (by default)
+				// blocks
+				if (wallBlock == Blocks.AIR) {
+					for (int i = 0; i <= reach; i++) {
+						wallPos = wallPos.down();
+						wallBlock = world.getBlockState(wallPos).getBlock();
+						if (wallBlock != Blocks.AIR)
+							break;
+					}
+				}
+
+				// Last safety check
+				if (wallBlock != Blocks.AIR) {
+					wallCreated = createSurroundingWalls(world, wallPos, wallBlock, entity, whMin, whMax, 0, 0, random);
+				}
+			} else if (abilityData.getPath() == AbilityTreePath.FIRST) {
+
+				// Used so that the wall can be more precisely placed if needed, useful when
+				// used for building. However, during a fight, it will still spawn even if not
+				// directly looking at the ground. However this won't override the maximum reach
+				// distance.
+				BlockPos lookPos;
+				// Down 1 block so that we actually get a block...
+				BlockPos entityPos = entity.getPosition().down();
+				if (ctx.isLookingAtBlock()) {
+					lookPos = ctx.getLookPosI().toBlockPos();
+					if (lookPos.distanceSq(entityPos) > reach) {
+						lookPos = entityPos.offset(cardinal, reach);
+					}
+				} else {
+					lookPos = entityPos.offset(cardinal, reach);
+				}
+
+				Block lookBlock = world.getBlockState(lookPos).getBlock();
+				if (lookBlock == Blocks.TALLGRASS) {
+					lookPos = lookPos.down();
+				} else if (lookBlock == Blocks.DOUBLE_PLANT) {
+					lookPos = lookPos.down(2);
+				}
+
+				// Allow bending even if the block is lower than the bender by 1-2 (by default)
+				// blocks
+				if (lookBlock == Blocks.AIR) {
+					for (int i = 0; i <= reach; i++) {
+						lookPos = lookPos.down();
+						lookBlock = world.getBlockState(lookPos).getBlock();
+						if (lookBlock != Blocks.AIR)
+							break;
+					}
+				}
+
+				wallCreated = createWall(world, lookPos, lookBlock, cardinal, entity, whMin, whMax, 0, 0, random);
+				// TODO actually make a big wall
 			}
 
-			if (STATS_CONFIG.bendableBlocks.contains(lookBlock)
-					|| STATS_CONFIG.plantBendableBlocks.contains(lookBlock)) {
-				wall.setPosition(lookPos.getX() + .5, lookPos.getY(), lookPos.getZ() + .5);
-				wall.setOwner(entity);
-				for (int i = 0; i < 5; i++) {
-
-					int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
-
-					int horizMod = -2 + i;
-					int x = lookPos.getX()
-							+ (cardinal == EnumFacing.NORTH || cardinal == EnumFacing.SOUTH ? horizMod : 0);
-					int y = lookPos.getY() - 4;
-					int z = lookPos.getZ()
-							+ (cardinal == EnumFacing.EAST || cardinal == EnumFacing.WEST ? horizMod : 0);
-
-					EntityWallSegment seg = new EntityWallSegment(world);
-					seg.attachToWall(wall);
-					seg.setPosition(x + .5, y, z + .5);
-					seg.setDirection(cardinal);
-					seg.setOwner(entity);
-					seg.setAbility(this);
-
-					boolean foundAir = false, dontBreakMore = false;
-					for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {
-						BlockPos pos = new BlockPos(x, y + j, z);
-						IBlockState state = world.getBlockState(pos);
-						boolean bendable = STATS_CONFIG.bendableBlocks.contains(state.getBlock());
-						if (!bendable || dontBreakMore) {
-							state = Blocks.AIR.getDefaultState();
-							dontBreakMore = true;
-						}
-
-						if (!foundAir && state.getBlock() == Blocks.AIR) {
-							seg.setSize(seg.width, 5 - j - 1);
-							seg.setBlocksOffset(-(j + 1));
-							seg.setPosition(seg.position().withY(y + j + 1));
-							foundAir = true;
-						}
-						if (foundAir && state.getBlock() != Blocks.AIR) {
-							// Extend bounding box
-							seg.setSize(seg.width, 5 - j);
-							seg.setBlocksOffset(-j);
-							seg.setPosition(seg.position().withY(y + j));
-						}
-
-						seg.setBlock(j, state);
-						if (bendable && !dontBreakMore)
-							world.setBlockToAir(pos);
-
-						if (j == 5 - wallHeight) {
-							dontBreakMore = true;
-						}
-
-					}
-
-					world.spawnEntity(seg);
-				}
-				world.spawnEntity(wall);
-
+			if (wallCreated) {
 				ctx.getData().addStatusControl(StatusControl.DROP_WALL);
 				ctx.getData().addStatusControl(StatusControl.PLACE_WALL);
-
 			}
 		}
+	}
+
+	/*
+	 * Spawn 4 walls around the bender
+	 */
+	private boolean createSurroundingWalls(World world, BlockPos lookPos, Block lookBlock, EntityLivingBase entity,
+			int whMin, int whMax, int height, int width, Random random) {
+		boolean wall0Created = false, wall1Created = false, wall2Created = false, wall3Created = false;
+
+		wall0Created = createWall(world, lookPos.offset(EnumFacing.EAST, 3), lookBlock, EnumFacing.EAST, entity, whMin,
+				whMax, 0, 0, random);
+		wall1Created = createWall(world, lookPos.offset(EnumFacing.NORTH, 3), lookBlock, EnumFacing.NORTH, entity,
+				whMin, whMax, 0, 0, random);
+		wall2Created = createWall(world, lookPos.offset(EnumFacing.SOUTH, 3), lookBlock, EnumFacing.SOUTH, entity,
+				whMin, whMax, 0, 0, random);
+		wall3Created = createWall(world, lookPos.offset(EnumFacing.WEST, 3), lookBlock, EnumFacing.WEST, entity, whMin,
+				whMax, 0, 0, random);
+
+		return wall0Created || wall1Created || wall2Created || wall3Created;
+	}
+
+	/*
+	 * Spawn a wall with provided settings
+	 */
+	private boolean createWall(World world, BlockPos wallPos, Block wallBlock, EnumFacing direction,
+			EntityLivingBase entity, int whMin, int whMax, int height, int width, Random random) {
+		EntityWall wall = new EntityWall(world);
+		if (STATS_CONFIG.bendableBlocks.contains(wallBlock) || STATS_CONFIG.plantBendableBlocks.contains(wallBlock)) {
+			wall.setPosition(wallPos.getX() + .5, wallPos.getY(), wallPos.getZ() + .5);
+			wall.setOwner(entity);
+			for (int i = 0; i < 5; i++) {
+
+				int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
+
+				int horizMod = -2 + i;
+				int x = wallPos.getX()
+						+ (direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH ? horizMod : 0);
+				int y = wallPos.getY() - 4;
+				int z = wallPos.getZ() + (direction == EnumFacing.EAST || direction == EnumFacing.WEST ? horizMod : 0);
+
+				EntityWallSegment seg = new EntityWallSegment(world);
+				seg.attachToWall(wall);
+				seg.setPosition(x + .5, y, z + .5);
+				seg.setDirection(direction);
+				seg.setOwner(entity);
+				seg.setAbility(this);
+
+				boolean foundAir = false, dontBreakMore = false;
+				for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {
+					BlockPos pos = new BlockPos(x, y + j, z);
+					IBlockState state = world.getBlockState(pos);
+					boolean bendable = STATS_CONFIG.bendableBlocks.contains(state.getBlock());
+					if (!bendable || dontBreakMore) {
+						state = Blocks.AIR.getDefaultState();
+						dontBreakMore = true;
+					}
+
+					if (!foundAir && state.getBlock() == Blocks.AIR) {
+						seg.setSize(seg.width, 5 - j - 1);
+						seg.setBlocksOffset(-(j + 1));
+						seg.setPosition(seg.position().withY(y + j + 1));
+						foundAir = true;
+					}
+					if (foundAir && state.getBlock() != Blocks.AIR) {
+						// Extend bounding box
+						seg.setSize(seg.width, 5 - j);
+						seg.setBlocksOffset(-j);
+						seg.setPosition(seg.position().withY(y + j));
+					}
+
+					seg.setBlock(j, state);
+					if (bendable && !dontBreakMore)
+						world.setBlockToAir(pos);
+
+					if (j == 5 - wallHeight) {
+						dontBreakMore = true;
+					}
+
+				}
+
+				world.spawnEntity(seg);
+			}
+			world.spawnEntity(wall);
+
+			return true;
+		}
+		return false;
 	}
 }
