@@ -66,7 +66,7 @@ public class AbilityAirblade extends Ability {
 
 		EntityAirblade airblade = new EntityAirblade(world);
 		airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
-		airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 30 : 20));
+		airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 40 : 30));
 		airblade.setDamage(damage);
 		airblade.setOwner(entity);
 		airblade.setAbility(this);
