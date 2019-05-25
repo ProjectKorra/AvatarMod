@@ -758,7 +758,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 	private void onLiftoff() {
 		if (!isEatingGrass()) {
-			getBender().executeAbility(Abilities.get("air_jump"));
+			getBender().executeAbility(Abilities.get("air_jump"), false);
 			StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, getBender(), new
 					Raytrace.Result()));
 			getData().removeStatusControl(StatusControl.AIR_JUMP);
