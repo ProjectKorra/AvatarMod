@@ -89,7 +89,7 @@ public abstract class BendingAi extends EntityAIBase {
 	 * Executes the ability's main code (the part used for players)
 	 */
 	protected void execAbility() {
-		bender.executeAbility(ability, false);
+		bender.executeAbility(ability);
 	}
 
 	/**
