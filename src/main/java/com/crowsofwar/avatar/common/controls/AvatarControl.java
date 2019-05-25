@@ -40,7 +40,6 @@ public class AvatarControl {
 		KEY_BENDING_CYCLE_LEFT,
 		KEY_BENDING_CYCLE_RIGHT,
 		KEY_SKILLS,
-		KEY_SWITCH,
 		KEY_TRANSFER_BISON,
 		CONTROL_LEFT_CLICK,
 		CONTROL_RIGHT_CLICK,
@@ -72,7 +71,6 @@ public class AvatarControl {
 		KEY_BENDING_CYCLE_LEFT = new AvatarControl("avatar.BendingCycleLeft", true);
 		KEY_BENDING_CYCLE_RIGHT = new AvatarControl("avatar.BendingCycleRight", true);
 		KEY_SKILLS = new AvatarControl("avatar.Skills", true);
-		KEY_SWITCH = new AvatarControl("avatar.Switch", true);
 		KEY_TRANSFER_BISON = new AvatarControl("avatar.TransferBison", true);
 		CONTROL_LEFT_CLICK = new AvatarControl("LeftClick", false);
 		CONTROL_RIGHT_CLICK = new AvatarControl("RightClick", false);

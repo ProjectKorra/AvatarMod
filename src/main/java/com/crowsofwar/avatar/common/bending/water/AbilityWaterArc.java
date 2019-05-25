@@ -110,12 +110,12 @@ public class AbilityWaterArc extends Ability {
 				gravity = 7;
 				size = 0.6F;
 			}
-			if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				damageMult = 3F;
 				gravity = 3;
 				size = 0.4F;
 			}
-			if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 				gravity = 9.81F;
 				size = 0.5F;
 			}
@@ -124,7 +124,7 @@ public class AbilityWaterArc extends Ability {
 
 				removeExisting(ctx);
 
-				if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+				if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 					EntityWaterArc water = new EntityWaterArc(world);
 
 					if (comboNumber == 0) {
@@ -176,7 +176,7 @@ public class AbilityWaterArc extends Ability {
 					water.setDamageMult(damageMult);
 					water.setSize(size);
 					water.setBehavior(new WaterArcBehavior.PlayerControlled());
-					water.isSpear(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND));
+					water.isSpear(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
 					water.setGravity(gravity);
 					water.setAbility(this);
 					world.spawnEntity(water);
