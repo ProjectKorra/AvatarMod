@@ -77,6 +77,7 @@ public class ClientInput implements IControlsHandler {
 		addKeybinding("BendingCycleLeft", Keyboard.KEY_Z, "main");
 		addKeybinding("BendingCycleRight", Keyboard.KEY_V, "main");
 		addKeybinding("Skills", Keyboard.KEY_K, "main");
+		addKeybinding("Switch", Keyboard.KEY_R, "main");
 		addKeybinding("TransferBison", Keyboard.KEY_O, "main");
 
 		wasAbilityDown = new boolean[Abilities.all().size()];
@@ -239,6 +240,8 @@ public class ClientInput implements IControlsHandler {
 					}
 				}
 
+				boolean isSwitchPathKeyDown = AvatarControl.KEY_SWITCH.isDown();
+
 				List<Ability> allAbilities = Abilities.all();
 				for (int i = 0; i < allAbilities.size(); i++) {
 					Ability ability = allAbilities.get(i);
@@ -249,7 +252,7 @@ public class ClientInput implements IControlsHandler {
 
 					if (!conflict && mc.inGameHasFocus && mc.currentScreen == null && down && !wasAbilityDown[i]) {
 						Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player, ability.getRaytrace());
-						AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace));
+						AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, isSwitchPathKeyDown));
 					}
 					wasAbilityDown[i] = down;
 				}

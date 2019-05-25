@@ -227,8 +227,9 @@ public class RadialMenu extends Gui {
 			for (int i = 0; i < segments.length; i++) {
 				if (controls[i] == null) continue;
 				if (segments[i].isMouseHover(mouseX, mouseY, resolution)) {
-
-					bender.executeAbility(controls[i]);
+					boolean isSwitchPathKeyDown = AvatarControl.KEY_SWITCH.isDown();
+					
+					bender.executeAbility(controls[i], isSwitchPathKeyDown);
 					AvatarUiRenderer.fade(segments[i]);
 					playClickSound(0.8f);
 					break;

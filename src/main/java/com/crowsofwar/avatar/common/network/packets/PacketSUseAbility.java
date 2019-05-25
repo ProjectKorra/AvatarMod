@@ -36,13 +36,15 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 
 	private Ability ability;
 	private Raytrace.Result raytrace;
+	private boolean switchPath;
 
 	public PacketSUseAbility() {
 	}
 
-	public PacketSUseAbility(Ability ability, Raytrace.Result raytrace) {
+	public PacketSUseAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath) {
 		this.ability = ability;
 		this.raytrace = raytrace;
+		this.switchPath = switchPath;
 	}
 
 	@Override
@@ -52,12 +54,14 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 			throw new NullPointerException("Server sent invalid ability over network: ID " + ability);
 		}
 		raytrace = Raytrace.Result.fromBytes(buf);
+		switchPath = buf.readBoolean();
 	}
 
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
 		GoreCoreByteBufUtil.writeString(buf, ability.getName());
 		raytrace.toBytes(buf);
+		buf.writeBoolean(switchPath);
 	}
 
 	@Override
@@ -67,6 +71,10 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 
 	public Ability getAbility() {
 		return ability;
+	}
+
+	public boolean getSwitchpath(){
+		return switchPath;
 	}
 
 	public Raytrace.Result getRaytrace() {

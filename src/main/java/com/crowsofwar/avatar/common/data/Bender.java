@@ -178,11 +178,11 @@ public abstract class Bender {
 	 * In certain conditions, other action might be taken; e.g. on client, send a packet to the
 	 * server to execute the ability.
 	 */
-	public void executeAbility(Ability ability) {
+	public void executeAbility(Ability ability, boolean switchPath) {
 
 		Raytrace.Result raytrace = Raytrace.getTargetBlock(getEntity(),
 				ability.getRaytrace());
-		executeAbility(ability, raytrace);
+		executeAbility(ability, raytrace, switchPath);
 
 	}
 
@@ -192,7 +192,7 @@ public abstract class Bender {
 	 *
 	 * @see #executeAbility(Ability)
 	 */
-	public void executeAbility(Ability ability, Raytrace.Result raytrace) {
+	public void executeAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath) {
 		if (!getWorld().isRemote) {
 			// Server-side : Execute the ability
 
@@ -207,7 +207,7 @@ public abstract class Bender {
 					if (data.getMiscData().getCanUseAbilities()) {
 
 						AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
-								entity, powerRating);
+								entity, powerRating, switchPath);
 
 						ability.execute(abilityCtx);
 						data.getMiscData().setAbilityCooldown(ability.getCooldown(abilityCtx));
@@ -219,7 +219,7 @@ public abstract class Bender {
 
 				} else {
 					QueuedAbilityExecutionHandler.queueAbilityExecution(entity, data, ability,
-							raytrace, powerRating);
+							raytrace, powerRating, switchPath);
 				}
 			} else {
 				sendMessage("avatar.abilityLocked");
