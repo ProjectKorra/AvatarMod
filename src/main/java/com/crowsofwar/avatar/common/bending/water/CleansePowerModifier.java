@@ -14,12 +14,12 @@ public class CleansePowerModifier extends BuffPowerModifier {
 		BendingData data = ctx.getData();
 		AbilityData abilityData = data.getAbilityData("cleanse");
 
-		double modifier = 15;
+		double modifier = 50;
 		if (abilityData.getLevel() >= 2) {
-			modifier = 25;
+			modifier = 70;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			modifier = 40;
+			modifier = 100;
 		}
 
 		return modifier;
