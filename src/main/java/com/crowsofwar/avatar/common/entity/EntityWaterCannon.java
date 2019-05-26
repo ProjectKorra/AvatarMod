@@ -385,8 +385,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	public void setDead() {
 		super.setDead();
-		assert getOwner() != null;
-		getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(movementModifierId);
+		if (getOwner() != null) {
+			getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(movementModifierId);
+		}
 	}
 
 	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {

@@ -97,7 +97,7 @@ public class SpawnEarthspikesHandler extends TickHandler {
 					earthspike.posZ = entity.posZ;
 					earthspike.setAbility(new AbilityEarthspikes());
 					earthspike.setDamage(damage);
-					earthspike.setSize(size);
+					earthspike.setSize(size + frequency / 3);
 					earthspike.setLifetime(entity.getDuration());
 					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);

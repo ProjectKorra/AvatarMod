@@ -220,7 +220,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
-		if (getAbility() instanceof AbilityLightningArc && !world.isRemote) {
+		if (getAbility() instanceof AbilityLightningArc && !world.isRemote && getOwner() != null) {
 			AbilityData aD = AbilityData.get(getOwner(), "lightning_arc");
 			if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND) && entity instanceof EntityLivingBase) {
 				world.playSound(null, getPosition(), SoundEvents.ENTITY_LIGHTNING_THUNDER,
@@ -273,7 +273,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	private void damageEntity(EntityLivingBase entity, float damageModifier) {
 
-		if (world.isRemote) {
+		if (world.isRemote || getOwner() == null) {
 			return;
 		}
 		if (!isMainArc()) {
