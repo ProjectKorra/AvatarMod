@@ -59,6 +59,7 @@ public class EntityCloudBall extends AvatarEntity {
 	public EntityCloudBall(World world) {
 		super(world);
 		setSize(0.8f, 0.8f);
+		this.putsOutFires = true;
 
 	}
 

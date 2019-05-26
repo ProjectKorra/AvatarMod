@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockButton;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -382,6 +383,13 @@ public abstract class AvatarEntity extends Entity {
 	 * destroyed.
 	 */
 	public boolean onCollideWithSolid() {
+		if (activatesButton()) {
+			if (this.world.getBlockState(getPosition()).getBlock() == Blocks.WOODEN_BUTTON || this.world.getBlockState(getPosition()).getBlock() == Blocks.STONE_BUTTON) {
+				BlockButton button = (BlockButton) this.world.getBlockState(getPosition()).getBlock();
+				//if (button.)
+			}
+		}
+
 		return false;
 	}
 
@@ -461,6 +469,9 @@ public abstract class AvatarEntity extends Entity {
 		return false;
 	}
 
+	public boolean activatesButton() {
+		return false;
+	}
 	/**
 	 * Break the block at the given position, playing sound/particles, and
 	 * dropping item

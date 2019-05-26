@@ -125,7 +125,7 @@ public class SmashGroundHandler extends TickHandler {
 	}
 
 	protected float getDamage() {
-		return 2.5F;
+		return 6F;
 	}
 
 	protected BendingStyle getElement() {
