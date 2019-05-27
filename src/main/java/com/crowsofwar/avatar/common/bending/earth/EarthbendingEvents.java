@@ -61,7 +61,7 @@ public class EarthbendingEvents {
 	@SubscribeEvent
 	public void worldUpdate(WorldTickEvent e) {
 		World world = e.world;
-		if (!world.isRemote && e.phase == TickEvent.Phase.START && world.provider.getDimension() == 0) {
+		if (!world.isRemote && e.phase == TickEvent.Phase.START) {
 
 			AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
 			Iterator<ScheduledDestroyBlock> iterator = wd.getScheduledDestroyBlocks().iterator();
