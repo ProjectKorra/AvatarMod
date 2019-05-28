@@ -42,13 +42,13 @@ public class AbilityEarthspikes extends Ability {
 			chi = STATS_CONFIG.chiEarthspike + 2F;
 			// 5.5
 		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			ticks = 30;
 			speed = 14;
 			chi = STATS_CONFIG.chiEarthspike * 2.5F;
 			// 8.75
 		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			ticks = 60;
 			speed = 22;
 			chi = STATS_CONFIG.chiEarthspike * 2;
@@ -68,7 +68,7 @@ public class AbilityEarthspikes extends Ability {
 
 		if (bender.consumeChi(chi)) {
 
-			if (!ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+			if (!ctx.isDynamicMasterLevel(AbilityTreePath.FIRST)) {
 				Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 				EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
 				earthspike.setOwner(entity);
@@ -79,7 +79,8 @@ public class AbilityEarthspikes extends Ability {
 				earthspike.setSize(size);
 				earthspike.setDuration(ticks);
 				earthspike.setAbility(this);
-				earthspike.setUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
+				earthspike.setUnstoppable(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND));
+				earthspike.setPath(ctx.getDynamicPath());
 				world.spawnEntity(earthspike);
 			} else if (entity.onGround) {
 				EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
@@ -90,7 +91,7 @@ public class AbilityEarthspikes extends Ability {
 				earthspike.setSize(size);
 				earthspike.setDuration(ticks);
 				earthspike.setAbility(this);
-				earthspike.setUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
+				earthspike.setPath(ctx.getDynamicPath());
 				world.spawnEntity(earthspike);
 			}
 		}

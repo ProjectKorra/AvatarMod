@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.config.ConfigStats;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.entity.data.EarthspikesBehavior;
 import com.google.common.base.Optional;
 
@@ -29,6 +30,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	private SpikesType type;
 	private double spikeSize;
 	private double spikeDamage;
+	private AbilityTreePath path;
 
 	/**
 	 * @param world
@@ -40,6 +42,14 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
 	public void setType(SpikesType isType) {
 		this.type = isType;
+	}
+
+	public void setPath(AbilityTreePath path) {
+		this.path = path;
+	}
+
+	public AbilityTreePath getPath() {
+		return path;
 	}
 
 	public SpikesType getType() {

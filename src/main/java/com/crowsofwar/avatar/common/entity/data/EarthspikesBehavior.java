@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.bending.earth.AbilityEarthspikes;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.entity.EntityEarthspike;
 import com.crowsofwar.avatar.common.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.gorecore.util.Vector;
@@ -73,6 +74,7 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 			World world = entity.getEntityWorld();
 			EntityLivingBase owner = entity.getOwner();
 			AbilityData abilityData = AbilityData.get(owner, "earthspike");
+			AbilityTreePath path = entity.getPath();
 
 			if (entity.getType() == EntityEarthspikeSpawner.SpikesType.LINE) {
 
@@ -99,7 +101,7 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 
 				}
 
-				if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				if (path == AbilityData.AbilityTreePath.SECOND) {
 					// Flash Fissure
 					frequency = STATS_CONFIG.earthspikeSettings.frequency * 0.5F;
 					// 2
@@ -232,24 +234,11 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 
 			}
 
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				// Flash Fissure
-				frequency = STATS_CONFIG.earthspikeSettings.frequency * 0.5F;
-				// 2
-				damage = STATS_CONFIG.earthspikeSettings.damage * 2.25;
-				// 7.5
-				size = STATS_CONFIG.earthspikeSettings.size * 1.75F;
-				// 2
-			}
-
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				// Octopus Fissure
-				damage = STATS_CONFIG.earthspikeSettings.damage * 2.5;
-				// 6
-				size = STATS_CONFIG.earthspikeSettings.size * 1.5F;
-				// 1.75
-
-			}
+			// Octopus Fissure
+			damage = STATS_CONFIG.earthspikeSettings.damage * 2.5;
+			// 6
+			size = STATS_CONFIG.earthspikeSettings.size * 1.5F;
+			// 1.75
 
 			// For some reason using *= or += seems to glitch out everything- that's why I'm
 			// using tedious equations.
