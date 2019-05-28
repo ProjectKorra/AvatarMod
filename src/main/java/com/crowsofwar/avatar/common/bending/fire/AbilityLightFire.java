@@ -74,7 +74,7 @@ public class AbilityLightFire extends Ability {
 				double chance = 20 * ctx.getLevel() + 40;
 				chance += ctx.getPowerRating() / 10;
 
-				if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+				if (ctx.isDynamicMasterLevel(AbilityTreePath.FIRST)) {
 
 					int yaw = (int) floor((ctx.getBenderEntity().rotationYaw * 8 / 360) + 0.5) & 7;
 					int x = 0, z = 0;
@@ -90,7 +90,7 @@ public class AbilityLightFire extends Ability {
 						ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
 					}
 
-				} else if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+				} else if (ctx.isDynamicMasterLevel(AbilityTreePath.SECOND)) {
 
 					if (spawnFire(world, blockPos, ctx, true, chance)) {
 						spawnFire(world, blockPos.add(1, 0, 0), ctx, false, 100);
