@@ -97,9 +97,14 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 		public Behavior onUpdate(EntityEarthspikeSpawner entity) {
 			ticks++;
 
+			// Do not run on the client side
+			if (entity.getEntityWorld().isRemote) {
+				return this;
+			}
+
 			World world = entity.getEntityWorld();
 			EntityLivingBase owner = entity.getOwner();
-			AbilityData abilityData = AbilityData.get(owner, "earthspike");
+			AbilityData abilityData = AbilityData.get(owner, entity.getAbility().getName());
 			float frequency = STATS_CONFIG.earthspikeSettings.frequency;
 			double damage = STATS_CONFIG.earthspikeSettings.damage;
 			float size = STATS_CONFIG.earthspikeSettings.size * 0.75F;
@@ -147,7 +152,7 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 					earthspike.posX = entity.posX;
 					earthspike.posY = entity.posY;
 					earthspike.posZ = entity.posZ;
-					earthspike.setAbility(new AbilityEarthspikes());
+					earthspike.setAbility(abilityData.getAbility());
 					earthspike.setDamage(damage);
 					earthspike.setSize(size + ticks / (30f / size));
 					earthspike.setLifetime(duration);
@@ -196,9 +201,14 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 		public Behavior onUpdate(EntityEarthspikeSpawner entity) {
 			ticks++;
 
+			// Do not run on the client side
+			if (entity.getEntityWorld().isRemote) {
+				return this;
+			}
+
 			World world = entity.getEntityWorld();
 			EntityLivingBase owner = entity.getOwner();
-			AbilityData abilityData = AbilityData.get(owner, "earthspike");
+			AbilityData abilityData = AbilityData.get(owner, entity.getAbility().getName());
 			float frequency = STATS_CONFIG.earthspikeSettings.frequency;
 			double damage = STATS_CONFIG.earthspikeSettings.damage;
 			float size = STATS_CONFIG.earthspikeSettings.size * 0.75F;
