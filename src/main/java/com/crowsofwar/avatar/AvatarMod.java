@@ -181,16 +181,9 @@ public class AvatarMod {
 		FMLCommonHandler.instance().bus().register(new AvatarPlayerTick());
 
 		AvatarDataSerializers.register();
-		FloatingBlockBehavior.register();
-		WaterArcBehavior.register();
-		FireArcBehavior.register();
-		WaterBubbleBehavior.register();
-		WallBehavior.register();
-		EarthspikesBehavior.register();
-		FireballBehavior.register();
-		CloudburstBehavior.register();
-		LightningSpearBehavior.register();
 		AvatarChatMessages.loadAll();
+
+		Behavior.registerBehaviours();
 
 		EarthbendingEvents.register();
 
