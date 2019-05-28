@@ -128,7 +128,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		Bender bender = Bender.get(player);
 		if (bender != null) {
 
-			bender.executeAbility(packet.getAbility(), packet.getRaytrace());
+			bender.executeAbility(packet.getAbility(), packet.getRaytrace(), packet.getSwitchpath());
 
 			// Send analytics
 			String abilityName = packet.getAbility().getName();
