@@ -31,7 +31,6 @@ public class TickHandlerController {
 	public static TickHandler SMASH_GROUND_WATER = new WaterSmashHandler(11);
 	public static TickHandler WATER_PARTICLE_SPAWNER = new WaterParticleSpawner(12);
 	public static TickHandler INFERNO_PARTICLE_SPAWNER = new InfernoPunchParticleSpawner(13);
-	public static TickHandler SPAWN_EARTHSPIKES_HANDLER = new SpawnEarthspikesHandler(14);
 	public static TickHandler AIRBURST_CHARGE_HANDLER = new AirBurstHandler(15);
 	public static TickHandler AIR_STATCTRL_HANDLER = new AirStatusControlHandler(16);
 	public static TickHandler FIRE_STATCTRL_HANDLER = new FireStatusControlHandler(17);

@@ -186,6 +186,7 @@ public class AvatarMod {
 		FireArcBehavior.register();
 		WaterBubbleBehavior.register();
 		WallBehavior.register();
+		EarthspikesBehavior.register();
 		FireballBehavior.register();
 		CloudburstBehavior.register();
 		LightningSpearBehavior.register();

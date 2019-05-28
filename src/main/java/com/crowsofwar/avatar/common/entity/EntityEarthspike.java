@@ -48,8 +48,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class EntityEarthspike extends AvatarEntity {
 
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager
-			.createKey(EntityEarthspike.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityEarthspike.class,
+			DataSerializers.FLOAT);
 
 	private double damage;
 	private float Size;
@@ -97,8 +97,13 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+	}
+
+	@Override
 	public void onEntityUpdate() {
-		//Add width and height stuff
+		// Add width and height stuff
 
 		this.motionX = 0;
 		this.motionY = 0;
@@ -110,18 +115,17 @@ public class EntityEarthspike extends AvatarEntity {
 
 		setSize(getSize(), getSize());
 
-		BlockPos below = getPosition().offset(EnumFacing.DOWN);
+		BlockPos below = getPosition().down();
 		Block belowBlock = world.getBlockState(below).getBlock();
+
 		damage = damage * belowBlock.getBlockHardness(world.getBlockState(below), world, below);
 		if (getAbility() instanceof AbilityEarthspikes && getOwner() != null) {
 			AbilityData aD = AbilityData.get(getOwner(), "earthspike");
 			if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				if (!world.isRemote && (!STATS_CONFIG.bendableBlocks.contains(belowBlock) || belowBlock == Blocks.AIR)) {
+				if (!world.isRemote
+						&& (!STATS_CONFIG.bendableBlocks.contains(belowBlock) || belowBlock == Blocks.AIR)) {
 					setDead();
 				}
-			} else if (belowBlock == Blocks.AIR) {
-				setDead();
-				;
 			}
 		} else if (!world.isRemote && (!STATS_CONFIG.bendableBlocks.contains(belowBlock) || belowBlock == Blocks.AIR)) {
 			setDead();
@@ -137,10 +141,10 @@ public class EntityEarthspike extends AvatarEntity {
 
 		}
 
-
 		// Push collided entities back
 		if (!world.isRemote) {
-			AxisAlignedBB box = new AxisAlignedBB(posX + getSize(), posY + getSize(), posZ + getSize(), posX - getSize(), posY, posZ - getSize());
+			AxisAlignedBB box = new AxisAlignedBB(posX + getSize(), posY + getSize(), posZ + getSize(),
+					posX - getSize(), posY, posZ - getSize());
 			List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box);
 			if (!collided.isEmpty()) {
 				for (Entity entity : collided) {
@@ -154,7 +158,8 @@ public class EntityEarthspike extends AvatarEntity {
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
-		if (!world.isRemote && entity != getOwner() && !(entity instanceof EntityEarthspike) && !(entity instanceof EntityEarthspikeSpawner) && canCollideWith(entity)) {
+		if (!world.isRemote && entity != getOwner() && !(entity instanceof EntityEarthspike)
+				&& !(entity instanceof EntityEarthspikeSpawner) && canCollideWith(entity)) {
 			pushEntity(entity);
 			if (attackEntity(entity)) {
 				if (getOwner() != null) {
@@ -173,12 +178,14 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	private boolean attackEntity(Entity entity) {
-		if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb) && canCollideWith(entity) && canDamageEntity(entity)) {
+		if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb) && canCollideWith(entity)
+				&& canDamageEntity(entity)) {
 			DamageSource ds = AvatarDamageSource.causeEarthspikeDamage(entity, getOwner());
 			float damage = (float) this.damage;
 			return entity.attackEntityFrom(ds, damage);
-			//Modify damage based on power rating!
-		} else return false;
+			// Modify damage based on power rating!
+		} else
+			return false;
 	}
 
 	private void pushEntity(Entity entity) {
