@@ -80,7 +80,6 @@ public class AbilityEarthspikes extends Ability {
 				earthspike.setDuration(ticks);
 				earthspike.setAbility(this);
 				earthspike.setUnstoppable(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND));
-				earthspike.setPath(ctx.getDynamicPath());
 				world.spawnEntity(earthspike);
 			} else if (entity.onGround) {
 				EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
@@ -91,7 +90,6 @@ public class AbilityEarthspikes extends Ability {
 				earthspike.setSize(size);
 				earthspike.setDuration(ticks);
 				earthspike.setAbility(this);
-				earthspike.setPath(ctx.getDynamicPath());
 				world.spawnEntity(earthspike);
 			}
 		}

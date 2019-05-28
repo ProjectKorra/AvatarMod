@@ -48,7 +48,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import java.util.UUID;
 
 /**
- * @author CrowsOfWar
+ * @author Aang23
  */
 public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawner> {
 
@@ -56,13 +56,39 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 
 	public static void register() {
 		DataSerializers.registerSerializer(SERIALIZER);
-		registerBehavior(Spawn.class);
-		registerBehavior(ProcessOctopus.class);
+		registerBehavior(Line.class);
+		registerBehavior(Octopus.class);
+		registerBehavior(Init.class);
 	}
 
 	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString("78723aa8-8d42-11e8-9eb6-529269fb1459");
 
-	public static class Spawn extends EarthspikesBehavior {
+	public static class Init extends EarthspikesBehavior {
+
+		@Override
+		public Behavior onUpdate(EntityEarthspikeSpawner entity) {
+			return entity.getType() == EntityEarthspikeSpawner.SpikesType.LINE ? new Line() : new Octopus();
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+		}
+
+	}
+
+	public static class Line extends EarthspikesBehavior {
 
 		int ticks = 0;
 		boolean spawned = false;
@@ -74,79 +100,127 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 			World world = entity.getEntityWorld();
 			EntityLivingBase owner = entity.getOwner();
 			AbilityData abilityData = AbilityData.get(owner, "earthspike");
-			AbilityTreePath path = entity.getPath();
+			float frequency = STATS_CONFIG.earthspikeSettings.frequency;
+			double damage = STATS_CONFIG.earthspikeSettings.damage;
+			float size = STATS_CONFIG.earthspikeSettings.size * 0.75F;
+			float xpModifier = abilityData.getTotalXp() / 400;
 
-			if (entity.getType() == EntityEarthspikeSpawner.SpikesType.LINE) {
+			switch (abilityData.getLevel()) {
+			case 1:
+				damage = STATS_CONFIG.earthspikeSettings.damage * 1.33;
+				// 4
+				size = STATS_CONFIG.earthspikeSettings.size * 1F;
+				// 1.25
+				break;
+			case 2:
+				frequency = STATS_CONFIG.earthspikeSettings.frequency * 0.75F;
+				// 3
+				damage = STATS_CONFIG.earthspikeSettings.damage * 1.66;
+				// 5
+				size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
+				// 1.5
+				break;
+			case 3:
+				// Flash Fissure
+				frequency = STATS_CONFIG.earthspikeSettings.frequency * 0.5F;
+				// 2
+				damage = STATS_CONFIG.earthspikeSettings.damage * 2.25;
+				// 7.5
+				size = STATS_CONFIG.earthspikeSettings.size * 1.75F;
+				// 2
+			}
 
-				float frequency = STATS_CONFIG.earthspikeSettings.frequency;
-				double damage = STATS_CONFIG.earthspikeSettings.damage;
-				float size = STATS_CONFIG.earthspikeSettings.size * 0.75F;
-				double duration = 40;// entity.getDuration();
-				float xpModifier = abilityData.getTotalXp() / 400;
+			// For some reason using *= or += seems to glitch out everything- that's why I'm
+			// using tedious equations.
 
-				if (abilityData.getLevel() == 1) {
-					damage = STATS_CONFIG.earthspikeSettings.damage * 1.33;
-					// 4
-					size = STATS_CONFIG.earthspikeSettings.size * 1F;
-					// 1.25
-				}
+			size += ticks / 45F;
+			size += xpModifier;
 
-				if (abilityData.getLevel() == 2) {
-					frequency = STATS_CONFIG.earthspikeSettings.frequency * 0.75F;
-					// 3
-					damage = STATS_CONFIG.earthspikeSettings.damage * 1.66;
-					// 5
-					size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
-					// 1.5
+			damage += xpModifier;
+			damage *= Bender.get(owner).getDamageMult(Earthbending.ID);
 
-				}
+			if (entity != null) {
+				if (ticks % frequency == 0 && ticks > frequency / 3) {
+					// For some reason getting the duration too early made everything glitch out
+					double duration = entity.getDuration();
+					EntityEarthspike earthspike = new EntityEarthspike(world);
+					earthspike.posX = entity.posX;
+					earthspike.posY = entity.posY;
+					earthspike.posZ = entity.posZ;
+					earthspike.setAbility(new AbilityEarthspikes());
+					earthspike.setDamage(damage);
+					earthspike.setSize(size + ticks / (30f / size));
+					earthspike.setLifetime(duration);
+					earthspike.setOwner(owner);
+					world.spawnEntity(earthspike);
 
-				if (path == AbilityData.AbilityTreePath.SECOND) {
-					// Flash Fissure
-					frequency = STATS_CONFIG.earthspikeSettings.frequency * 0.5F;
-					// 2
-					damage = STATS_CONFIG.earthspikeSettings.damage * 2.25;
-					// 7.5
-					size = STATS_CONFIG.earthspikeSettings.size * 1.75F;
-					// 2
-				}
-
-				// For some reason using *= or += seems to glitch out everything- that's why I'm
-				// using tedious equations.
-
-				size += ticks / 45F;
-				size += xpModifier;
-
-				damage += xpModifier;
-				damage *= Bender.get(owner).getDamageMult(Earthbending.ID);
-
-				if (entity != null) {
-					if (ticks % frequency == 0 && ticks > frequency / 3) {
-						EntityEarthspike earthspike = new EntityEarthspike(world);
-						earthspike.posX = entity.posX;
-						earthspike.posY = entity.posY;
-						earthspike.posZ = entity.posZ;
-						earthspike.setAbility(new AbilityEarthspikes());
-						earthspike.setDamage(damage);
-						earthspike.setSize(size);
-						earthspike.setLifetime(duration);
-						earthspike.setOwner(owner);
-						world.spawnEntity(earthspike);
-
-						BlockPos below = earthspike.getPosition().offset(EnumFacing.DOWN);
-						Block belowBlock = world.getBlockState(below).getBlock();
-						world.playSound(null, earthspike.posX, earthspike.posY, earthspike.posZ,
-								belowBlock.getSoundType().getBreakSound(), SoundCategory.BLOCKS, 1, 1);
-						if (!world.isRemote) {
-							WorldServer World = (WorldServer) world;
-							World.spawnParticle(EnumParticleTypes.CRIT, earthspike.posX, earthspike.posY,
-									earthspike.posZ, 100, 0, 0, 0, 0.5);
-						}
+					BlockPos below = earthspike.getPosition().offset(EnumFacing.DOWN);
+					Block belowBlock = world.getBlockState(below).getBlock();
+					world.playSound(null, earthspike.posX, earthspike.posY, earthspike.posZ,
+							belowBlock.getSoundType().getBreakSound(), SoundCategory.BLOCKS, 1, 1);
+					if (!world.isRemote) {
+						WorldServer World = (WorldServer) world;
+						World.spawnParticle(EnumParticleTypes.CRIT, earthspike.posX, earthspike.posY, earthspike.posZ,
+								100, 0, 0, 0, 0.5);
 					}
 				}
-			} else if (!spawned && entity.getType() == EntityEarthspikeSpawner.SpikesType.OCTOPUS) {
-				double damage = entity.getDamage();
-				double size = entity.getSize();
+			}
+
+			return this;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+		}
+
+	}
+
+	public static class Octopus extends EarthspikesBehavior {
+
+		int ticks = 0;
+		boolean spawned = false;
+
+		@Override
+		public Behavior onUpdate(EntityEarthspikeSpawner entity) {
+			ticks++;
+
+			World world = entity.getEntityWorld();
+			EntityLivingBase owner = entity.getOwner();
+			AbilityData abilityData = AbilityData.get(owner, "earthspike");
+			float frequency = STATS_CONFIG.earthspikeSettings.frequency;
+			double damage = STATS_CONFIG.earthspikeSettings.damage;
+			float size = STATS_CONFIG.earthspikeSettings.size * 0.75F;
+			float xpModifier = abilityData.getTotalXp() / 400;
+			float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(ticks / 40f);
+
+			// Octopus Fissure
+			damage = STATS_CONFIG.earthspikeSettings.damage * 2.5;
+			// 6
+			size = STATS_CONFIG.earthspikeSettings.size * 1.5F;
+			// 1.75
+
+			// For some reason using *= or += seems to glitch out everything- that's why I'm
+			// using tedious equations.
+
+			size += ticks / 45F;
+			size += xpModifier;
+
+			damage += xpModifier;
+			damage *= Bender.get(owner).getDamageMult(Earthbending.ID);
+
+			if (!spawned) {
 
 				for (int i = 0; i < 8; i++) {
 					Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i * 45), 0).times(1.4)
@@ -173,81 +247,8 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 
 				}
 				spawned = true;
+				return this;
 			}
-
-			return spawned ? new ProcessOctopus() : this;
-		}
-
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-		}
-
-		@Override
-		public void toBytes(PacketBuffer buf) {
-		}
-
-		@Override
-		public void load(NBTTagCompound nbt) {
-		}
-
-		@Override
-		public void save(NBTTagCompound nbt) {
-		}
-
-	}
-
-	public static class ProcessOctopus extends EarthspikesBehavior {
-
-		int ticks = 0;
-		boolean spawned = false;
-
-		@Override
-		public Behavior onUpdate(EntityEarthspikeSpawner entity) {
-			ticks++;
-
-			System.out.println(ticks);
-
-			World world = entity.getEntityWorld();
-			EntityLivingBase owner = entity.getOwner();
-			AbilityData abilityData = AbilityData.get(owner, "earthspike");
-			float frequency = STATS_CONFIG.earthspikeSettings.frequency;
-			double damage = STATS_CONFIG.earthspikeSettings.damage;
-			float size = STATS_CONFIG.earthspikeSettings.size * 0.75F;
-			// double duration = entity.getDuration();
-			float xpModifier = abilityData.getTotalXp() / 400;
-			float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(ticks / 40f);
-
-			if (abilityData.getLevel() == 1) {
-				damage = STATS_CONFIG.earthspikeSettings.damage * 1.33;
-				// 4
-				size = STATS_CONFIG.earthspikeSettings.size * 1F;
-				// 1.25
-			}
-
-			if (abilityData.getLevel() == 2) {
-				frequency = STATS_CONFIG.earthspikeSettings.frequency * 0.75F;
-				// 3
-				damage = STATS_CONFIG.earthspikeSettings.damage * 1.66;
-				// 5
-				size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
-				// 1.5
-
-			}
-
-			// Octopus Fissure
-			damage = STATS_CONFIG.earthspikeSettings.damage * 2.5;
-			// 6
-			size = STATS_CONFIG.earthspikeSettings.size * 1.5F;
-			// 1.75
-
-			// For some reason using *= or += seems to glitch out everything- that's why I'm
-			// using tedious equations.
-
-			size += ticks / 45F;
-			size += xpModifier;
-
-			damage += xpModifier;
-			damage *= Bender.get(owner).getDamageMult(Earthbending.ID);
 
 			applyMovementModifier(owner, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 			if (ticks % 15 == 0 && owner.onGround) {

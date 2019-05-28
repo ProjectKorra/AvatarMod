@@ -30,7 +30,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	private SpikesType type;
 	private double spikeSize;
 	private double spikeDamage;
-	private AbilityTreePath path;
 
 	/**
 	 * @param world
@@ -42,14 +41,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
 	public void setType(SpikesType isType) {
 		this.type = isType;
-	}
-
-	public void setPath(AbilityTreePath path) {
-		this.path = path;
-	}
-
-	public AbilityTreePath getPath() {
-		return path;
 	}
 
 	public SpikesType getType() {
@@ -120,7 +111,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	@Override
 	public void entityInit() {
 		super.entityInit();
-		dataManager.register(SPIKES_BEHAVIOR, new EarthspikesBehavior.Spawn());
+		dataManager.register(SPIKES_BEHAVIOR, new EarthspikesBehavior.Init());
 	}
 
 	public EarthspikesBehavior getBehavior() {
