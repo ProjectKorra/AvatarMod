@@ -57,8 +57,8 @@ public class ConfigClient {
 	@Load
 	private Map<String, Boolean> nameConflicts = new HashMap<>();
 
-//	@Load
-//	public ShaderSettings shaderSettings = new ShaderSettings();
+	@Load
+	public ShaderSettings shaderSettings = new ShaderSettings();
 
 	@Load
 	public ActiveBendingSettings activeBendingSettings = new ActiveBendingSettings();
@@ -116,20 +116,20 @@ public class ConfigClient {
 		ConfigLoader.save(CLIENT_CONFIG, "avatar/cosmetic.yml");
 	}
 
-	/*public static class ShaderSettings {
+	public static class ShaderSettings {
 
 		@Load
 		public boolean useSlipstreamShaders = false;
 
 		@Load
-		public boolean useCleanseShaders = true;
+		public boolean useCleanseShaders = false;
 
 		@Load
-		public boolean useRestoreShaders = true;
+		public boolean useRestoreShaders = false;
 
 		@Load
-		public boolean usePurifyShaders = true;
-	}**/
+		public boolean usePurifyShaders = false;
+	}
 
 	public static class ActiveBendingSettings {
 
