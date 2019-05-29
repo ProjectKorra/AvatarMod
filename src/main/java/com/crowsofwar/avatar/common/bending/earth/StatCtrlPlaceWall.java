@@ -33,16 +33,22 @@ public class StatCtrlPlaceWall extends StatusControl {
 		// Wall has no owner so we go for segments
 		EntityWallSegment wallSegment = AvatarEntity.lookupOwnedEntity(world, EntityWallSegment.class, entity);
 
-		List<EntityWallSegment> segments = world.getEntities(EntityWallSegment.class, seg -> seg.getOwner() == entity);
+		if (wallSegment.getBehavior().getClass() == WallBehavior.Waiting.class) {
 
-		for (EntityWallSegment seg : segments) {
-			if (seg.getBehavior().getClass().equals(WallBehavior.Waiting.class))
-				seg.setBehavior(new WallBehavior.Place());
+			List<EntityWallSegment> segments = world.getEntities(EntityWallSegment.class,
+					seg -> seg.getOwner() == entity);
+
+			for (EntityWallSegment seg : segments) {
+				if (seg.getBehavior().getClass().equals(WallBehavior.Waiting.class))
+					seg.setBehavior(new WallBehavior.Place());
+			}
+
+			ctx.getData().removeStatusControl(StatusControl.DROP_WALL);
+
+			return true;
+		} else {
+			return false;
 		}
-
-		ctx.getData().removeStatusControl(StatusControl.DROP_WALL);
-		
-		return true;
 	}
 
 }

@@ -44,6 +44,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -256,6 +257,25 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	public boolean canPush() {
 		return false;
+	}
+
+	@Override
+	public void onCollideWithPlayer(EntityPlayer entityIn) {
+		// Prevents some insane glitches...
+		List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(this, getCollisionBox(this));
+
+		if (entities.size() > 0) {
+			for (Entity en : entities) {
+				if (en instanceof EntityPlayer) {
+					if (getBehavior().getClass() == WallBehavior.Rising.class) {
+						en.addVelocity(en.motionX, 0.25D, en.motionZ);
+					} else {
+						en.setPosition(en.prevPosX, en.prevPosY, en.prevPosZ);
+						en.applyEntityCollision(this);
+					}
+				}
+			}
+		}
 	}
 
 	@Override
