@@ -194,6 +194,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 
 	@Override
 	public void onUpdate() {
+
 		super.onUpdate();
 		ignoreFrustumCheck = true;
 
@@ -317,7 +318,6 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		}
 		// this.setVelocity(Vector.ZERO);
 		// For some reason the wall is affected by explosions and whatnot
-
 	}
 
 	@Override

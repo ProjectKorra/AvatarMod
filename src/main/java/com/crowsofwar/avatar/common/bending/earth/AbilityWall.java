@@ -36,7 +36,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Random;
-import java.util.Map.Entry;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -143,7 +142,7 @@ public class AbilityWall extends Ability {
 					}
 				}
 
-				wallCreated = createWall(world, lookPos, lookBlock, cardinal, entity, whMin, whMax, 0, 0, random);
+				wallCreated = createWall(world, lookPos, lookBlock, cardinal, entity, whMin, whMax, 0, 5, random);
 
 			} else if (abilityData.getPath() == AbilityTreePath.SECOND) {
 				BlockPos wallPos = entity.getPosition().down();
@@ -165,7 +164,7 @@ public class AbilityWall extends Ability {
 
 				// Last safety check
 				if (wallBlock != Blocks.AIR) {
-					wallCreated = createSurroundingWalls(world, wallPos, wallBlock, entity, whMin, whMax, 0, 0, random);
+					wallCreated = createSurroundingWalls(world, wallPos, wallBlock, entity, whMin, whMax, random);
 				}
 			} else if (abilityData.getPath() == AbilityTreePath.FIRST) {
 
@@ -203,8 +202,9 @@ public class AbilityWall extends Ability {
 					}
 				}
 
-				wallCreated = createWall(world, lookPos, lookBlock, cardinal, entity, whMin, whMax, 0, 0, random);
-				// TODO actually make a big wall
+				// The offset is used to re-center the wall
+				wallCreated = createWall(world, lookPos.offset(cardinal.rotateY(), -1), lookBlock, cardinal, entity,
+						whMin, whMax, 0, 7, random);
 			}
 
 			if (wallCreated) {
@@ -218,17 +218,17 @@ public class AbilityWall extends Ability {
 	 * Spawn 4 walls around the bender
 	 */
 	private boolean createSurroundingWalls(World world, BlockPos lookPos, Block lookBlock, EntityLivingBase entity,
-			int whMin, int whMax, int height, int width, Random random) {
+			int whMin, int whMax, Random random) {
 		boolean wall0Created = false, wall1Created = false, wall2Created = false, wall3Created = false;
 
 		wall0Created = createWall(world, lookPos.offset(EnumFacing.EAST, 3), lookBlock, EnumFacing.EAST, entity, whMin,
-				whMax, 0, 0, random);
+				whMax, 0, 5, random);
 		wall1Created = createWall(world, lookPos.offset(EnumFacing.NORTH, 3), lookBlock, EnumFacing.NORTH, entity,
-				whMin, whMax, 0, 0, random);
+				whMin, whMax, 0, 5, random);
 		wall2Created = createWall(world, lookPos.offset(EnumFacing.SOUTH, 3), lookBlock, EnumFacing.SOUTH, entity,
-				whMin, whMax, 0, 0, random);
+				whMin, whMax, 0, 5, random);
 		wall3Created = createWall(world, lookPos.offset(EnumFacing.WEST, 3), lookBlock, EnumFacing.WEST, entity, whMin,
-				whMax, 0, 0, random);
+				whMax, 0, 5, random);
 
 		return wall0Created || wall1Created || wall2Created || wall3Created;
 	}
@@ -242,7 +242,7 @@ public class AbilityWall extends Ability {
 		if (STATS_CONFIG.bendableBlocks.contains(wallBlock) || STATS_CONFIG.plantBendableBlocks.contains(wallBlock)) {
 			wall.setPosition(wallPos.getX() + .5, wallPos.getY(), wallPos.getZ() + .5);
 			wall.setOwner(entity);
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < width; i++) {
 
 				int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
 
