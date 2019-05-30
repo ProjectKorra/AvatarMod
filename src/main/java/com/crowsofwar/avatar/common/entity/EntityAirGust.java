@@ -28,6 +28,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import java.util.Objects;
+
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
 
@@ -39,7 +41,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 
 	public EntityAirGust(World world) {
 		super(world);
-		setSize(1.5f, 1.5f);
+		setSize(0.5f, 0.5f);
 		putsOutFires = true;
 		this.noClip = true;
 	}
@@ -68,10 +70,12 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		super.onUpdate();
 		ControlPoint first = getControlPoint(0);
 		ControlPoint second = getControlPoint(1);
-		if (first.position().sqrDist(second.position()) >= getControlPointMaxDistanceSq()
-				|| ticksExisted > 80) {
+		if (first.position().sqrDist(second.position()) >= 400
+				|| ticksExisted > 120) {
 			setDead();
 		}
+		float expansionRate = 1f / 60;
+		setSize(this.width += expansionRate, this.height += expansionRate);
 	}
 
 	@Override
@@ -85,7 +89,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 				if (!avatarEntity.canPush()) return;
 			}
 
-			BendingData data = Bender.get(owner).getData();
+			BendingData data = Objects.requireNonNull(Bender.get(owner)).getData();
 			float xp = 0;
 			if (data != null) {
 				AbilityData abilityData = data.getAbilityData("air_gust");
@@ -116,13 +120,13 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	@Override
 	protected void updateCpBehavior() {
 		super.updateCpBehavior();
-		getControlPoint(0).setPosition(Vector.getEntityPos(this).plusY(0.75));
+		getControlPoint(0).setPosition(Vector.getEntityPos(this).plusY(this.height / 2));
 		//So the middle of the airgust has the hitbox
 	}
 
 	@Override
 	protected AirGustControlPoint createControlPoint(float size, int index) {
-		return new AirGustControlPoint(this, 0.5f, 0, 0, 0);
+		return new AirGustControlPoint(this, 0.2f, 0, 0, 0);
 	}
 
 	@Override
@@ -132,7 +136,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 
 	@Override
 	protected double getControlPointMaxDistanceSq() {
-		return 400; // 20
+		return 8; // 20
 	}
 
 	@Override
@@ -175,4 +179,8 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 
 	}
 
+	@Override
+	protected double getVelocityMultiplier() {
+		return 8;
+	}
 }

@@ -19,13 +19,18 @@ package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.ControlPoint;
 import com.crowsofwar.avatar.common.entity.EntityArc;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 import java.util.Random;
+
+import static net.minecraft.client.renderer.GlStateManager.disableLight;
+import static net.minecraft.client.renderer.GlStateManager.disableLighting;
 
 public class RenderAirGust extends RenderArc {
 
@@ -42,6 +47,14 @@ public class RenderAirGust extends RenderArc {
 	}
 
 	@Override
+	public void doRender(Entity entity, double xx, double yy, double zz, float p_76986_8_, float partialTicks) {
+		disableLighting();
+		GlStateManager.color(1, 1, 1, 1);
+		EntityArc arc = (EntityArc) entity;
+		renderArc(arc, partialTicks, 1, 1);
+	}
+
+	@Override
 	protected void onDrawSegment(EntityArc arc, ControlPoint first, ControlPoint second) {
 
 		World world = arc.world;
@@ -50,6 +63,7 @@ public class RenderAirGust extends RenderArc {
 		double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 		double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 		world.spawnParticle(EnumParticleTypes.CLOUD, spawnX, spawnY, spawnZ, 0, 0, 0);
+		disableLight(7);
 
 	}
 
@@ -57,5 +71,4 @@ public class RenderAirGust extends RenderArc {
 	protected ResourceLocation getTexture() {
 		return TEXTURE;
 	}
-
 }

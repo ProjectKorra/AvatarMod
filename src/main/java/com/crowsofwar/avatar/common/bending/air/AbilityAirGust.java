@@ -55,8 +55,8 @@ public class AbilityAirGust extends Ability {
 		if (bender.consumeChi(STATS_CONFIG.chiAirGust)) {
 
 			EntityAirGust gust = new EntityAirGust(world);
-			gust.setVelocity(look.times(25));
-			gust.setPosition(Vector.getLookRectangular(entity).plus(Vector.getEntityPos(entity).withY(entity.getEyeHeight() + entity.getEntityBoundingBox().minY)));
+			gust.setVelocity(look.times(40));
+			gust.setPosition(Vector.getLookRectangular(entity).times(2).plus(pos).minusY(0.5));
 			gust.setOwner(entity);
 			gust.setDestroyProjectiles(ctx.isMasterLevel(FIRST));
 			gust.setAirGrab(ctx.isMasterLevel(SECOND));
