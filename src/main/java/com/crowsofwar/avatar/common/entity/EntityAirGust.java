@@ -26,6 +26,9 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
 import java.util.Objects;
@@ -35,15 +38,30 @@ import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
 
 public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> {
 
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirGust.class, DataSerializers.FLOAT);
 	public static final Vector ZERO = new Vector(0, 0, 0);
 
 	private boolean airGrab, destroyProjectiles;
 
 	public EntityAirGust(World world) {
 		super(world);
-		setSize(0.5f, 0.5f);
+		setSize(1f, 1f);
 		putsOutFires = true;
 		this.noClip = true;
+	}
+
+	public void setSize(float size) {
+		dataManager.set(SYNC_SIZE, size);
+	}
+
+	public float getSize() {
+		return dataManager.get(SYNC_SIZE);
+	}
+
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_SIZE, 1F);
 	}
 
 	@Override
@@ -75,7 +93,8 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 			setDead();
 		}
 		float expansionRate = 1f / 60;
-		setSize(this.width += expansionRate, this.height += expansionRate);
+		setSize(getSize() + expansionRate);
+		setSize(getSize(), getSize());
 	}
 
 	@Override

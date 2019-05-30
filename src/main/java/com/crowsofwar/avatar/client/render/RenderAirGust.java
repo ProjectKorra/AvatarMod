@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.ControlPoint;
+import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -50,8 +51,8 @@ public class RenderAirGust extends RenderArc {
 	public void doRender(Entity entity, double xx, double yy, double zz, float p_76986_8_, float partialTicks) {
 		disableLighting();
 		GlStateManager.color(1, 1, 1, 1);
-		EntityArc arc = (EntityArc) entity;
-		renderArc(arc, partialTicks, 1, 1);
+		EntityAirGust gust = (EntityAirGust) entity;
+		renderArc(gust, partialTicks, 3f, gust.getSize());
 	}
 
 	@Override
