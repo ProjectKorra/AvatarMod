@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
@@ -34,6 +35,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -41,10 +43,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -384,9 +383,17 @@ public abstract class AvatarEntity extends Entity {
 	 */
 	public boolean onCollideWithSolid() {
 		if (activatesButton()) {
-			if (this.world.getBlockState(getPosition()).getBlock() == Blocks.WOODEN_BUTTON || this.world.getBlockState(getPosition()).getBlock() == Blocks.STONE_BUTTON) {
-				BlockButton button = (BlockButton) this.world.getBlockState(getPosition()).getBlock();
-				//if (button.)
+			IBlockState state = world.getBlockState(getPosition());
+			if (state.getBlock() == Blocks.WOODEN_BUTTON || state.getBlock() == Blocks.STONE_BUTTON) {
+				if (getOwner() != null && getOwner() instanceof EntityPlayer) {
+					BlockButton button = (BlockButton) state.getBlock();
+					Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity(), 3, true);
+					if (raytrace.getPosPrecise() != null) {
+						button.onBlockActivated(world, getPosition(), state, null, null, raytrace.getSide(),
+								(float) raytrace.getPosPrecise().x(), (float) raytrace.getPosPrecise().y(), (float) raytrace.getPosPrecise().z());
+					}
+
+				}
 			}
 		}
 

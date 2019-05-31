@@ -21,15 +21,18 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -43,6 +46,13 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
 public class AvatarUtils {
+
+	private static final DataParameter<Boolean> POWERED;
+	private static final DataParameter<Boolean> IGNITED;
+	static {
+		IGNITED = ReflectionHelper.getPrivateValue(EntityCreeper.class, null, "IGNITED");
+		POWERED = ReflectionHelper.getPrivateValue(EntityCreeper.class, null, "POWERED", "field_184714_b");
+	}
 
 	public static <T extends Entity> Comparator<T> getSortByDistanceComparator
 			(Function<T, Float> distanceSupplier) {
@@ -60,6 +70,13 @@ public class AvatarUtils {
 
 	}
 
+	public static void chargeCreeper(EntityCreeper creeper) {
+		creeper.getDataManager().set(POWERED, true);
+	}
+
+	public static void igniteCreeper(EntityCreeper creeper) {
+		creeper.getDataManager().set(IGNITED, true);
+	}
 	/**
 	 * Spawns a directional helix that has rotating particles.
 	 *

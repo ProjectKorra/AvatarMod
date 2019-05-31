@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,6 +26,7 @@ import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.init.MobEffects;
+import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -291,13 +293,16 @@ public class AvatarDamageSource {
 				if (hit instanceof EntityWaterMob) {
 					event.setAmount(event.getAmount() * 1.5F);
 				}
-				//TODO: Make creepers charged upon being hit with lightning
+				if (hit instanceof EntityCreeper) {
+					AvatarUtils.chargeCreeper((EntityCreeper) hit);
+				}
+
 			}
 
 			if (source == AvatarDamageSource.COMBUSTION) {
 				if (hit instanceof EntityCreeper) {
 					event.setAmount(event.getAmount() * 0.5F);
-					//TODO: Make creepers explode upon receiving combustion damage
+					AvatarUtils.igniteCreeper((EntityCreeper) hit);
 				}
 			}
 

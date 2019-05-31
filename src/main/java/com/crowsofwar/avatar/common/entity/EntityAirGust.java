@@ -192,6 +192,11 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	}
 
 	@Override
+	public boolean activatesButton() {
+		return true;
+	}
+
+	@Override
 	protected double getVelocityMultiplier() {
 		return 8;
 	}
