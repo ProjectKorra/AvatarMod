@@ -93,7 +93,7 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 
 	protected void updateCpBehavior() {
 
-		getLeader().setPosition(position());
+		getLeader().setPosition(position().plusY(height / 2));
 		getLeader().setVelocity(velocity());
 
 		// Move control points to follow leader

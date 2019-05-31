@@ -211,7 +211,6 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	protected void updateCpBehavior() {
 		if (getOwner() != null) {
 			for (LightningControlPoint controlPoint : getControlPoints()) {
-
 				controlPoint.setPosition(controlPoint.getPosition
 						(ticksExisted));
 			}

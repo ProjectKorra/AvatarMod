@@ -137,13 +137,6 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	}
 
 	@Override
-	protected void updateCpBehavior() {
-		super.updateCpBehavior();
-		getControlPoint(0).setPosition(Vector.getEntityPos(this).plusY(this.height / 2));
-		//So the middle of the airgust has the hitbox
-	}
-
-	@Override
 	protected AirGustControlPoint createControlPoint(float size, int index) {
 		return new AirGustControlPoint(this, 0.2f, 0, 0, 0);
 	}
@@ -191,7 +184,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		public void onUpdate() {
 			super.onUpdate();
 			if (arc.getControlPoint(0) == this) {
-				float expansionRate = 1f / 20;
+				float expansionRate = 1f / 60;
 				size += expansionRate;
 			}
 		}

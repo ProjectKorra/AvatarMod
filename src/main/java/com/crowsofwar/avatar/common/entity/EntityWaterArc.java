@@ -124,8 +124,8 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	@Override
 	protected void updateCpBehavior() {
 		super.updateCpBehavior();
-		getControlPoint(0).setPosition(this.position());
-		getLeader().setPosition(this.position().plusY(getSize() / 8));
+	//	getControlPoint(0).setPosition(this.position());
+	//	getLeader().setPosition(this.position().plusY(getSize() / 8));
 	}
 
 	public void damageEntity(Entity entity) {
@@ -273,7 +273,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		if (entity instanceof AvatarEntity && getBehavior() instanceof WaterArcBehavior.Thrown && ((AvatarEntity) entity).getOwner() != getOwner()) {
 			((AvatarEntity) entity).onMinorWaterContact();
 		}
-
 
 	}
 
