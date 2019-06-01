@@ -72,6 +72,7 @@ public abstract class AvatarEntity extends Entity {
 	private double powerRating;
 	private Ability ability;
 	private BendingStyle element;
+	protected boolean pushStoneButton, pushTrapDoor, pushDoor;
 
 	private SyncedEntity<EntityLivingBase> ownerRef;
 
@@ -283,13 +284,20 @@ public abstract class AvatarEntity extends Entity {
 		}
 
 
-		if (pushButton()) {
-			AvatarUtils.pushButton(this);
+		if (pushButton(pushStoneButton)) {
+			AvatarUtils.pushButton(this, pushStoneButton);
 		}
 		if (pushLever()) {
 			AvatarUtils.pushLever(this);
 		}
 
+		if (pushTrapdoor(pushTrapDoor)) {
+			AvatarUtils.pushTrapDoor(this, pushTrapDoor);
+		}
+
+		if (pushDoor(pushDoor)) {
+			AvatarUtils.pushDoor(this, pushDoor);
+		}
 		if (getOwner() == null) {
 			this.setDead();
 		}
@@ -469,11 +477,19 @@ public abstract class AvatarEntity extends Entity {
 		return false;
 	}
 
-	public boolean pushButton() {
+	public boolean pushButton(boolean pushStone) {
 		return false;
 	}
 
 	public boolean pushLever() {
+		return false;
+	}
+
+	public boolean pushTrapdoor(boolean pushIron) {
+		return false;
+	}
+
+	public boolean pushDoor(boolean pushIron) {
 		return false;
 	}
 

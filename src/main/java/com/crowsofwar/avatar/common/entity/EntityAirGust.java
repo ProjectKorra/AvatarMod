@@ -31,6 +31,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -40,13 +41,16 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 
 	public static final Vector ZERO = new Vector(0, 0, 0);
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirGust.class, DataSerializers.FLOAT);
-	private boolean airGrab, destroyProjectiles;
+	private boolean airGrab, destroyProjectiles, pushStone, pushIronTrapDoor, pushIronDoor;
 
 	public EntityAirGust(World world) {
 		super(world);
 		setSize(1f, 1f);
 		putsOutFires = true;
 		this.noClip = true;
+		this.pushStoneButton = pushStone;
+		this.pushDoor = pushIronDoor;
+		this.pushTrapDoor = pushIronTrapDoor;
 	}
 
 	public float getSize() {
@@ -63,11 +67,16 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		dataManager.register(SYNC_SIZE, 1F);
 	}
 
+
+
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		airGrab = nbt.getBoolean("AirGrab");
 		destroyProjectiles = nbt.getBoolean("DestroyProjectiles");
+		pushStone = nbt.getBoolean("PushStone");
+		pushIronDoor = nbt.getBoolean("PushStone");
+		pushIronTrapDoor = nbt.getBoolean("PushStone");
 	}
 
 	@Override
@@ -75,6 +84,10 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		super.writeEntityToNBT(nbt);
 		nbt.setBoolean("AirGrab", airGrab);
 		nbt.setBoolean("DestroyProjectiles", destroyProjectiles);
+		nbt.setBoolean("PushStone", pushStone);
+		nbt.setBoolean("PushIronDoor", pushIronDoor);
+		nbt.setBoolean("PushIronTrap", pushIronTrapDoor);
+
 	}
 
 	@Override
@@ -90,6 +103,14 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		if (first.position().sqrDist(second.position()) >= 400
 				|| ticksExisted > 120) {
 			setDead();
+		}
+		List<Entity> hit = world.getEntitiesWithinAABB(Entity.class, getEntityBoundingBox().grow(1.5));
+		if (!hit.isEmpty()) {
+			for (Entity e : hit) {
+				if (canCollideWith(e)) {
+					onCollideWithEntity(e);
+				}
+			}
 		}
 		float expansionRate = 1f / 60;
 		setSize(getSize() + expansionRate);
@@ -116,7 +137,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 			}
 
 			Vector velocity = velocity().times(0.15).times(1 + xp / 200.0);
-			velocity = velocity.withY(airGrab ? -1 : 1).times(airGrab ? -0.8 : 1);
+			velocity = velocity.withY(airGrab ? -1 : 1).times(airGrab ? -0.2 : 1);
 
 			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 			afterVelocityAdded(entity);
@@ -128,6 +149,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 
 		}
 	}
+
 
 	@Override
 	public boolean onCollideWithSolid() {
@@ -147,7 +169,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 
 	@Override
 	protected double getControlPointMaxDistanceSq() {
-		return 8; // 20
+		return 12; // 20
 	}
 
 	@Override
@@ -173,8 +195,20 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		this.destroyProjectiles = destroyProjectiles;
 	}
 
+	public void setPushStone(boolean pushStone) {
+		this.pushStone = pushStone;
+	}
+
+	public void setPushIronDoor(boolean pushIronDoor) {
+		this.pushIronDoor = pushIronDoor;
+	}
+
+	public void setPushIronTrapDoor(boolean pushIronTrapDoor) {
+		this.pushIronTrapDoor = pushIronTrapDoor;
+	}
+
 	@Override
-	public boolean pushButton() {
+	public boolean pushButton(boolean pushStone) {
 		return true;
 	}
 
@@ -184,8 +218,18 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	}
 
 	@Override
+	public boolean pushDoor(boolean pushIron) {
+		return true;
+	}
+
+	@Override
+	public boolean pushTrapdoor(boolean pushIron) {
+		return true;
+	}
+
+	@Override
 	protected double getVelocityMultiplier() {
-		return 6;
+		return 5;
 	}
 
 	public static class AirGustControlPoint extends ControlPoint {
@@ -198,7 +242,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		public void onUpdate() {
 			super.onUpdate();
 			if (arc.getControlPoint(0) == this) {
-				float expansionRate = 1f / 60;
+				float expansionRate = 1f / 80;
 				size += expansionRate;
 			}
 		}

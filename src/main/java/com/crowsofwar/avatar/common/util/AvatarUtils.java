@@ -20,7 +20,9 @@ package com.crowsofwar.avatar.common.util;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockButton;
+import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockLever;
+import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -82,9 +84,16 @@ public class AvatarUtils {
 		creeper.getDataManager().set(IGNITED, true);
 	}
 
-	public static void pushButton(Entity entity) {
+	public static void pushButton(Entity entity, boolean pushStone) {
 		IBlockState state = entity.world.getBlockState(entity.getPosition());
-		if (state.getBlock() == Blocks.WOODEN_BUTTON) {
+		if (pushStone) {
+			if (state.getBlock() instanceof BlockButton) {
+				BlockButton button = (BlockButton) state.getBlock();
+				button.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
+						(float) entity.posY, (float) entity.posZ);
+			}
+		}
+		else if (state.getBlock() == Blocks.WOODEN_BUTTON) {
 			BlockButton button = (BlockButton) state.getBlock();
 			button.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
 					(float) entity.posY, (float) entity.posZ);
@@ -98,6 +107,32 @@ public class AvatarUtils {
 					(float) entity.posY, (float) entity.posZ);
 		}
 	}
+
+	public static void pushTrapDoor(Entity entity, boolean pushIron) {
+		IBlockState state = entity.world.getBlockState(entity.getPosition());
+		if (state.getBlock() == Blocks.TRAPDOOR) {
+			BlockTrapDoor trap = (BlockTrapDoor) state.getBlock();
+			trap.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
+					(float) entity.posY, (float) entity.posZ);
+		}
+		/*if (pushIron) {
+			if (state.getBlock() == Blocks.TRAPDOOR || state.getBlock() == Blocks.IRON_TRAPDOOR) {
+				BlockTrapDoor trap = (BlockTrapDoor) state.getBlock();
+				trap.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
+						(float) entity.posY, (float) entity.posZ);
+			}
+		}**/
+	}
+
+	public static void pushDoor(Entity entity, boolean pushIron) {
+		IBlockState state = entity.world.getBlockState(entity.getPosition());
+		if (state.getBlock() instanceof BlockDoor && state.getBlock() != Blocks.IRON_DOOR) {
+			BlockDoor door = (BlockDoor) state.getBlock();
+			door.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
+					(float) entity.posY, (float) entity.posZ);
+		}
+	}
+
  	/**
 	 * Spawns a directional helix that has rotating particles.
 	 *
