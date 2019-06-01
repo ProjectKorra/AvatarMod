@@ -19,10 +19,7 @@ package com.crowsofwar.avatar.common.util;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.BlockButton;
-import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockLever;
-import net.minecraft.block.BlockTrapDoor;
+import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -141,6 +138,15 @@ public class AvatarUtils {
 			state = iblockstate.cycleProperty(BlockDoor.OPEN);
 			entity.world.setBlockState(blockpos, state, 10);
 			entity.world.markBlockRangeForRenderUpdate(blockpos, entity.getPosition());
+		}
+	}
+
+	public static void pushGate(Entity entity) {
+		IBlockState state = entity.world.getBlockState(entity.getPosition());
+		if (state.getBlock() instanceof BlockFenceGate) {
+			BlockFenceGate gate = (BlockFenceGate) state.getBlock();
+			gate.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
+					(float) entity.posY, (float) entity.posZ);
 		}
 	}
 

@@ -298,6 +298,10 @@ public abstract class AvatarEntity extends Entity {
 		if (pushDoor(pushDoor)) {
 			AvatarUtils.pushDoor(this, pushDoor);
 		}
+
+		if (pushGate()) {
+			AvatarUtils.pushGate(this);
+		}
 		if (getOwner() == null) {
 			this.setDead();
 		}
@@ -490,6 +494,10 @@ public abstract class AvatarEntity extends Entity {
 	}
 
 	public boolean pushDoor(boolean pushIron) {
+		return false;
+	}
+
+	public boolean pushGate() {
 		return false;
 	}
 

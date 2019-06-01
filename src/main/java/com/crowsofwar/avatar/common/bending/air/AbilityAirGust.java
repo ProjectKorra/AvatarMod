@@ -72,6 +72,9 @@ public class AbilityAirGust extends Ability {
 			gust.setPosition(Vector.getLookRectangular(entity).times(.25).plus(pos).minusY(0.5));
 			gust.setOwner(entity);
 			gust.setSize(size);
+			gust.setPushStone(ctx.getLevel() >= 1);
+			gust.setPushIronDoor(ctx.getLevel() >= 2);
+			gust.setPushIronTrapDoor(ctx.getLevel() >= 2);
 			gust.setDestroyProjectiles(ctx.isMasterLevel(FIRST));
 			gust.setAirGrab(ctx.isMasterLevel(SECOND));
 			gust.setAbility(this);
