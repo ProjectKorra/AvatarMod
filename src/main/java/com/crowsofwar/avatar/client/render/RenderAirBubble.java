@@ -40,9 +40,6 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/entity/air_bubble.png");
 
-	/**
-	 * @param renderManager
-	 */
 	public RenderAirBubble(RenderManager renderManager) {
 		super(renderManager);
 	}
@@ -92,7 +89,6 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		}
 
 		disableBlend();
-		GlStateManager.enableLighting();
 
 	}
 

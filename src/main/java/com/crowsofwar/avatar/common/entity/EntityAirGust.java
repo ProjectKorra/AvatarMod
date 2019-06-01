@@ -103,7 +103,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 				|| ticksExisted > 120) {
 			setDead();
 		}
-		List<Entity> hit = world.getEntitiesWithinAABB(Entity.class, getEntityBoundingBox().grow(1.5));
+		List<Entity> hit = world.getEntitiesWithinAABB(Entity.class, getEntityBoundingBox().grow(1.1));
 		if (!hit.isEmpty()) {
 			for (Entity e : hit) {
 				if (canCollideWith(e)) {
@@ -111,7 +111,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 				}
 			}
 		}
-		float expansionRate = 1f / 60;
+		float expansionRate = 1f / 80;
 		setSize(getSize() + expansionRate);
 		setSize(getSize(), getSize());
 	}
@@ -148,7 +148,6 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 
 		}
 	}
-
 
 	@Override
 	public boolean onCollideWithSolid() {
@@ -246,7 +245,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		public void onUpdate() {
 			super.onUpdate();
 			if (arc.getControlPoint(0) == this) {
-				float expansionRate = 1f / 60;
+				float expansionRate = 1f / 80;
 				size += expansionRate;
 			}
 		}

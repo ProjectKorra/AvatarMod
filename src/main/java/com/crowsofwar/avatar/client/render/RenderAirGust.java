@@ -30,7 +30,6 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-import static net.minecraft.client.renderer.GlStateManager.disableLight;
 import static net.minecraft.client.renderer.GlStateManager.disableLighting;
 
 public class RenderAirGust extends RenderArc {
@@ -40,9 +39,6 @@ public class RenderAirGust extends RenderArc {
 
 	private static final Random random = new Random();
 
-	/**
-	 * @param renderManager
-	 */
 	public RenderAirGust(RenderManager renderManager) {
 		super(renderManager);
 	}
@@ -63,8 +59,7 @@ public class RenderAirGust extends RenderArc {
 		double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
 		double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 		double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-		world.spawnParticle(EnumParticleTypes.CLOUD, spawnX, spawnY, spawnZ, 0, 0, 0);
-		disableLight(7);
+		world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, spawnX, spawnY, spawnZ, 0, 0, 0);
 
 	}
 
