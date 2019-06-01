@@ -74,9 +74,6 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		super.readEntityFromNBT(nbt);
 		airGrab = nbt.getBoolean("AirGrab");
 		destroyProjectiles = nbt.getBoolean("DestroyProjectiles");
-		pushStone = nbt.getBoolean("PushStone");
-		pushIronDoor = nbt.getBoolean("PushStone");
-		pushIronTrapDoor = nbt.getBoolean("PushStone");
 	}
 
 	@Override
@@ -84,9 +81,6 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		super.writeEntityToNBT(nbt);
 		nbt.setBoolean("AirGrab", airGrab);
 		nbt.setBoolean("DestroyProjectiles", destroyProjectiles);
-		nbt.setBoolean("PushStone", pushStone);
-		nbt.setBoolean("PushIronDoor", pushIronDoor);
-		nbt.setBoolean("PushIronTrap", pushIronTrapDoor);
 
 	}
 
@@ -98,6 +92,11 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		if (ticksExisted <= 2) {
+			this.pushStoneButton = pushStone;
+			this.pushDoor = pushIronDoor;
+			this.pushTrapDoor = pushIronTrapDoor;
+		}
 		ControlPoint first = getControlPoint(0);
 		ControlPoint second = getControlPoint(1);
 		if (first.position().sqrDist(second.position()) >= 400
@@ -247,7 +246,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		public void onUpdate() {
 			super.onUpdate();
 			if (arc.getControlPoint(0) == this) {
-				float expansionRate = 1f / 100;
+				float expansionRate = 1f / 60;
 				size += expansionRate;
 			}
 		}
