@@ -37,6 +37,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -55,6 +56,7 @@ public class AvatarUtils {
 
 	private static final DataParameter<Boolean> POWERED;
 	private static final DataParameter<Boolean> IGNITED;
+
 	static {
 		IGNITED = ReflectionHelper.getPrivateValue(EntityCreeper.class, null, "IGNITED");
 		POWERED = ReflectionHelper.getPrivateValue(EntityCreeper.class, null, "POWERED", "field_184714_b");
@@ -92,13 +94,13 @@ public class AvatarUtils {
 				button.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
 						(float) entity.posY, (float) entity.posZ);
 			}
-		}
-		else if (state.getBlock() == Blocks.WOODEN_BUTTON) {
+		} else if (state.getBlock() == Blocks.WOODEN_BUTTON) {
 			BlockButton button = (BlockButton) state.getBlock();
 			button.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
 					(float) entity.posY, (float) entity.posZ);
 		}
 	}
+
 	public static void pushLever(Entity entity) {
 		IBlockState state = entity.world.getBlockState(entity.getPosition());
 		if (state.getBlock() == Blocks.LEVER) {
@@ -115,13 +117,15 @@ public class AvatarUtils {
 			trap.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
 					(float) entity.posY, (float) entity.posZ);
 		}
-		/*if (pushIron) {
+		if (pushIron) {
 			if (state.getBlock() == Blocks.TRAPDOOR || state.getBlock() == Blocks.IRON_TRAPDOOR) {
 				BlockTrapDoor trap = (BlockTrapDoor) state.getBlock();
-				trap.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
-						(float) entity.posY, (float) entity.posZ);
+				state = state.cycleProperty(BlockTrapDoor.OPEN);
+				entity.world.setBlockState(entity.getPosition(), state, 2);
+				entity.world.markBlockRangeForRenderUpdate(entity.getPosition(), entity.getPosition());
+				entity.world.scheduleUpdate(entity.getPosition(), trap, trap.tickRate(entity.world));
 			}
-		}**/
+		}
 	}
 
 	public static void pushDoor(Entity entity, boolean pushIron) {
@@ -131,9 +135,16 @@ public class AvatarUtils {
 			door.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
 					(float) entity.posY, (float) entity.posZ);
 		}
+		if (pushIron) {
+			BlockPos blockpos = state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER ? entity.getPosition() : entity.getPosition().down();
+			IBlockState iblockstate = entity.getPosition().equals(blockpos) ? state : entity.world.getBlockState(blockpos);
+			state = iblockstate.cycleProperty(BlockDoor.OPEN);
+			entity.world.setBlockState(blockpos, state, 10);
+			entity.world.markBlockRangeForRenderUpdate(blockpos, entity.getPosition());
+		}
 	}
 
- 	/**
+	/**
 	 * Spawns a directional helix that has rotating particles.
 	 *
 	 * @param world         World the vortex spawns in.

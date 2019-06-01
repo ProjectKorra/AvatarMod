@@ -169,7 +169,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 
 	@Override
 	protected double getControlPointMaxDistanceSq() {
-		return 12; // 20
+		return 8; // 20
 	}
 
 	@Override
@@ -229,7 +229,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 
 	@Override
 	protected double getVelocityMultiplier() {
-		return 5;
+		return 8;
 	}
 
 	public static class AirGustControlPoint extends ControlPoint {
@@ -242,7 +242,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		public void onUpdate() {
 			super.onUpdate();
 			if (arc.getControlPoint(0) == this) {
-				float expansionRate = 1f / 80;
+				float expansionRate = 1f / 100;
 				size += expansionRate;
 			}
 		}
