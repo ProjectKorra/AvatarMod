@@ -13,10 +13,6 @@ import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockFenceGate;
-import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -186,15 +182,8 @@ public class EntityCloudBall extends AvatarEntity {
 		}
 
 		if (getBehavior() instanceof CloudburstBehavior.Thrown) {
-			Block block = world.getBlockState(getPosition()).getBlock();
-			if (!(block instanceof BlockDoor) && !(block instanceof BlockFenceGate) && !(block instanceof BlockTrapDoor) && !chismash) {
-				cloudBurst();
-				setDead();
-			}
-			else if (chismash) {
-				cloudBurst();
-				setDead();
-			}
+			cloudBurst();
+			setDead();
 		}
 		return true;
 

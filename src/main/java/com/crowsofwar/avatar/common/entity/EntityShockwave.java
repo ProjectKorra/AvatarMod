@@ -4,14 +4,15 @@ import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
@@ -23,49 +24,54 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 public class EntityShockwave extends AvatarEntity {
 
-	public EnumParticleTypes particle;
-	//The range of the shockwave/how far it'll go before dissipating
-	public double speed;
-	//The amount entities will be knocked back
-	public float damage;
+	private static final DataParameter<String> SYNC_PARTICLE = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.STRING);
+	//Name of the particles to be spawned.
+	private static final DataParameter<Float> SYNC_PARTICLE_SPEED = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.FLOAT);
 	//Speed of the particles
-	//Particles to be spawned.
-	private int particleAmount;
+	private static final DataParameter<Integer> SYNC_PARTICLE_AMOUNT = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.VARINT);
 	//The amount of particles to be spawned
-	private double particleSpeed;
-	//The amount of performance to be added on a hit
-	private int performanceAmount;
-	//The amount of battleperformance added per hit
-	private double range;
+	private static final DataParameter<Float> SYNC_PARTICLE_CONTROLLER = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.FLOAT);
+	//Used for spherical shockwaves
+	private static final DataParameter<Float> SYNC_SPEED = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.FLOAT);
 	//The speed of the shockwave and how fast entities will be knocked back
-	private double knockbackHeight;
+	private static final DataParameter<Boolean> SYNC_IS_SPHERE = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.BOOLEAN);
+	//Whether or not to use a sphere of particles instead of a circular ring
+	private static final DataParameter<Float> SYNC_RANGE = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.FLOAT);
+	//The range of the shockwave/how far it'll go before dissipating
+
+	public float damage;
 	//The amount of damage the shockwave will do
+	private int performanceAmount;
+	//The amount of performance added per hit
+	private double knockbackHeight;
+	//The amount entities will be knocked back
 	private boolean isFire;
 	//Whether or not to set the target entities on fire
 	private int fireTime;
 	//How long to set the target entity on fire
-	private boolean isSphere;
-	//Whether or not to use a sphere of particles instead of a circular ring
-	private NetworkParticleSpawner particles;
-	//Used for spherical shockwaves
-	private double particleController;
 
 
 	public EntityShockwave(World world) {
 		super(world);
 		this.damage = 1;
-		this.particle = EnumParticleTypes.EXPLOSION_NORMAL;
-		this.particleSpeed = 0;
-		this.particleAmount = 10;
-		this.range = 4;
 		this.performanceAmount = 10;
 		this.knockbackHeight = 0.2;
-		this.speed = 0.8;
 		this.isFire = false;
 		this.fireTime = 0;
-		this.particleAmount = 0;
 		this.setSize(1, 1);
-		this.particles = new NetworkParticleSpawner();
+	}
+
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_PARTICLE, "cloud");
+		dataManager.register(SYNC_PARTICLE_SPEED, 0.1F);
+		dataManager.register(SYNC_PARTICLE_AMOUNT, 100);
+		dataManager.register(SYNC_PARTICLE_CONTROLLER, 40F);
+		dataManager.register(SYNC_SPEED, 0.8F);
+		dataManager.register(SYNC_IS_SPHERE, false);
+		dataManager.register(SYNC_RANGE, 4F);
+
 	}
 
 	public void setFire(boolean fire) {
@@ -80,48 +86,52 @@ public class EntityShockwave extends AvatarEntity {
 		this.performanceAmount = amount;
 	}
 
-	public void setParticleController(double amount) {
-		this.particleController = amount;
+	public float getParticleController() {
+		return dataManager.get(SYNC_PARTICLE_CONTROLLER);
 	}
 
-	public EnumParticleTypes getParticle() {
-		return particle;
+	public void setParticleController(float amount) {
+		dataManager.set(SYNC_PARTICLE_CONTROLLER, amount);
 	}
 
-	public void setParticle(EnumParticleTypes particle) {
-		this.particle = particle;
+	public String getParticleName() {
+		return dataManager.get(SYNC_PARTICLE);
+	}
+
+	public void setParticleName(String particle) {
+		dataManager.set(SYNC_PARTICLE, particle);
 	}
 
 	public int getParticleAmount() {
-		return particleAmount;
+		return dataManager.get(SYNC_PARTICLE_AMOUNT);
 	}
 
 	public void setParticleAmount(int amount) {
-		this.particleAmount = amount;
+		dataManager.set(SYNC_PARTICLE_AMOUNT, amount);
 	}
 
 	public double getParticleSpeed() {
-		return particleSpeed;
+		return dataManager.get(SYNC_PARTICLE_SPEED);
 	}
 
-	public void setParticleSpeed(double speed) {
-		this.particleSpeed = speed;
+	public void setParticleSpeed(float speed) {
+		dataManager.set(SYNC_PARTICLE_SPEED, speed);
 	}
 
 	public double getRange() {
-		return range;
+		return dataManager.get(SYNC_RANGE);
 	}
 
-	public void setRange(double range) {
-		this.range = range;
+	public void setRange(float range) {
+		dataManager.set(SYNC_RANGE, range);
 	}
 
 	public double getSpeed() {
-		return speed;
+		return dataManager.get(SYNC_SPEED);
 	}
 
-	public void setSpeed(double speed) {
-		this.speed = speed;
+	public void setSpeed(float speed) {
+		dataManager.set(SYNC_SPEED, speed);
 	}
 
 	public double getKnockbackHeight() {
@@ -141,11 +151,11 @@ public class EntityShockwave extends AvatarEntity {
 	}
 
 	public boolean getSphere() {
-		return isSphere;
+		return dataManager.get(SYNC_IS_SPHERE);
 	}
 
 	public void setSphere(boolean sphere) {
-		this.isSphere = sphere;
+		dataManager.set(SYNC_IS_SPHERE, sphere);
 	}
 
 	@Override
@@ -163,7 +173,7 @@ public class EntityShockwave extends AvatarEntity {
 
 		this.motionX = this.motionY = this.motionZ = 0;
 
-		if ((this.ticksExisted * speed) > range) {
+		if ((this.ticksExisted * getSpeed()) > getRange()) {
 			this.setDead();
 		}
 		if (ticksExisted > 140) {
@@ -171,7 +181,7 @@ public class EntityShockwave extends AvatarEntity {
 		}
 
 		if (!world.isRemote) {
-
+/*
 			for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (getRange() * 10 * 1.5)) {
 				double x = posX + (ticksExisted * getSpeed()) * Math.sin(angle);
 				double y = posY + 0.5;
@@ -200,12 +210,12 @@ public class EntityShockwave extends AvatarEntity {
 						}
 					}//Creates a sphere. Courtesy of Project Korra's Air Burst!
 				}
-			}
+			}**/
 		}
 
 		if (!world.isRemote) {
-			AxisAlignedBB box = new AxisAlignedBB(posX + (ticksExisted * speed), posY + 1.5, posZ + (ticksExisted * speed),
-					posX - (ticksExisted * speed), posY - 1.5, posZ - (ticksExisted * speed));
+			AxisAlignedBB box = new AxisAlignedBB(posX + (ticksExisted * getSpeed()), posY + 1.5, posZ + (ticksExisted * getSpeed()),
+					posX - (ticksExisted * getSpeed()), posY - 1.5, posZ - (ticksExisted * getSpeed()));
 
 			List<Entity> targets = world.getEntitiesWithinAABB(
 					Entity.class, box);
@@ -233,12 +243,12 @@ public class EntityShockwave extends AvatarEntity {
 								}
 							}
 						}
-						double xSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted * speed) :
-								Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted / 5F * speed);
-						double ySpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted / 2F * speed) :
+						double xSpeed = getSphere() ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted * getSpeed()) :
+								Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted / 5F * getSpeed());
+						double ySpeed = getSphere() ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted / 2F * getSpeed()) :
 								knockbackHeight; // Throws target into the air.
-						double zSpeed = isSphere ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted * speed) :
-								Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 5F * speed);
+						double zSpeed = getSphere() ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted * getSpeed()) :
+								Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 5F * getSpeed());
 						ySpeed = ySpeed > knockbackHeight ? ySpeed : knockbackHeight;
 						target.motionX += xSpeed;
 						target.motionY += ySpeed * 2;

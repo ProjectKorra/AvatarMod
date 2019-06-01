@@ -192,7 +192,7 @@ public class AirBurstHandler extends TickHandler {
 				EntityShockwave shockwave = new EntityShockwave(world);
 				shockwave.setOwner(entity);
 				shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
-				shockwave.setParticle(EnumParticleTypes.EXPLOSION_NORMAL);
+				shockwave.setParticleName("explosion");
 				shockwave.setElement(new Airbending());
 				shockwave.setParticleSpeed(0.08F);
 				shockwave.setKnockbackHeight(upwardKnockback);
@@ -203,7 +203,7 @@ public class AirBurstHandler extends TickHandler {
 				shockwave.setParticleAmount(2);
 				shockwave.setSphere(true);
 				shockwave.setAbility(new AbilityAirBurst());
-				shockwave.setSpeed(knockBack / 4);
+				shockwave.setSpeed((float) knockBack / 4);
 				world.spawnEntity(shockwave);
 
 
