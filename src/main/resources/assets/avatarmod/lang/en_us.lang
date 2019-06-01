@@ -285,8 +285,8 @@ avatar.ability.cleanse.lvl4_2=§9§l§oFocus ;; Deal much more damage in combat 
 avatar.ability.air_gust=§f§lAir Gust
 avatar.ability.air_gust.desc=Generate a strong gust of air to push enemies back, allowing you to focus on another problem.
 avatar.ability.air_gust.lvl1=I've got 99 problems and you ain't one!
-avatar.ability.air_gust.lvl2=Half the cooldown
-avatar.ability.air_gust.lvl3=Stronger push
+avatar.ability.air_gust.lvl2=Larger, and you can now push stone buttons!
+avatar.ability.air_gust.lvl3=Stronger push, larger, you can now push iron doors and trapdoors!
 avatar.ability.air_gust.lvl4_1=§f§l§oExtinguish ;; Destroys weaker projectiles
 avatar.ability.air_gust.lvl4_2=§f§l§oVacuum ;; Sucks enemies TOWARDS you
 
@@ -316,9 +316,9 @@ avatar.ability.air_bubble.lvl4_2=§f§l§oUndercurrent ;; Limited hovering, disa
 
 avatar.ability.cloudburst=§f§lCloudburst
 avatar.ability.cloudburst.desc=Create a whirling ball of air which can be thrown at enemies; creates a mini burst of air where it lands.
-avatar.ability.cloudburst.lvl1=That was a big burp
-avatar.ability.cloudburst.lvl2=Faster speed when thrown, larger explosion of air
-avatar.ability.cloudburst.lvl3=Much more damage, bigger air explosion
+avatar.ability.cloudburst.lvl1=That was a big burp!
+avatar.ability.cloudburst.lvl2=Faster speed when thrown, larger explosion of air, you can now push stone buttons!
+avatar.ability.cloudburst.lvl3=Much more damage, bigger air explosion, you can now push iron trapdoors and doors!
 avatar.ability.cloudburst.lvl4_1=§f§l§oChi §f§l§oSmash ;; Temporarily applies severe debuffs to targets' bending power
 avatar.ability.cloudburst.lvl4_2=§f§l§oAbsorption ;; Cloudburst can absorb incoming projectiles, which increases its damage
 

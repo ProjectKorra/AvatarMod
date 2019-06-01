@@ -72,12 +72,12 @@ public class AbilityCloudBurst extends Ability {
 				cloudball.setSize(20);
 				damage = STATS_CONFIG.cloudburstSettings.damage * 4;
 				//8
-				cloudball.canchiSmash(true);
+				cloudball.setChiSmash(true);
 			}
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				damage = STATS_CONFIG.cloudburstSettings.damage * 2;
 				//4
-				cloudball.canAbsorb(true);
+				cloudball.setAbsorb(true);
 			}
 			if (ctx.getLevel() == 1) {
 				damage = STATS_CONFIG.cloudburstSettings.damage * 1.5;
@@ -93,8 +93,13 @@ public class AbilityCloudBurst extends Ability {
 			damage += ctx.getAbilityData().getTotalXp() / 800;
 
 
-			cloudball.setPosition(target);
+			if (target != null) {
+				cloudball.setPosition(target);
+			}
 			cloudball.setOwner(entity);
+			cloudball.setPushStoneButton(ctx.getLevel() >= 1);
+			cloudball.setPushIronTrapDoor(ctx.getLevel() >= 2);
+			cloudball.setPushIronDoor(ctx.getLevel() >= 2);
 			cloudball.setBehavior(new CloudburstBehavior.PlayerControlled());
 			cloudball.setDamage((float) damage);
 			cloudball.setAbility(this);

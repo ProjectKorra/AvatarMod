@@ -39,36 +39,46 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.AIR_STATCTRL_HANDLER;
 
 public class EntityCloudBall extends AvatarEntity {
-	/**
-	 * @param world
-	 */
-	public static final DataParameter<CloudburstBehavior> SYNC_BEHAVIOR = EntityDataManager
-			.createKey(EntityCloudBall.class, CloudburstBehavior.DATA_SERIALIZER);
 
 	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityCloudBall.class, DataSerializers.VARINT);
-
+	private static final DataParameter<CloudburstBehavior> SYNC_BEHAVIOR = EntityDataManager
+			.createKey(EntityCloudBall.class, CloudburstBehavior.DATA_SERIALIZER);
 	private AxisAlignedBB expandedHitbox;
 
 	private float damage;
-	private boolean absorbtion;
-	private boolean chismash;
+	private boolean absorbtion, chismash, pushStone, pushIronTrapDoor, pushIronDoor;
 
 	/**
-	 * @param world
+	 * @param world The world the cloudburst is spawned in.
 	 */
 	public EntityCloudBall(World world) {
 		super(world);
 		setSize(0.8f, 0.8f);
 		this.putsOutFires = true;
+		this.pushStoneButton = pushStone;
+		this.pushDoor = pushIronDoor;
+		this.pushTrapDoor = pushIronTrapDoor;
 
 	}
 
-	public void canAbsorb(boolean canAbsorb) {
+	public void setAbsorb(boolean canAbsorb) {
 		absorbtion = canAbsorb;
 	}
 
-	public void canchiSmash(boolean canchiSmash) {
+	public void setChiSmash(boolean canchiSmash) {
 		chismash = canchiSmash;
+	}
+
+	public void setPushStoneButton(boolean pushStone) {
+		this.pushStone = pushStone;
+	}
+
+	public void setPushIronDoor(boolean pushDoor) {
+		this.pushIronDoor = pushDoor;
+	}
+
+	public void setPushIronTrapDoor(boolean trapDoor) {
+		this.pushIronTrapDoor = trapDoor;
 	}
 
 	@Override
@@ -81,6 +91,11 @@ public class EntityCloudBall extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		if (ticksExisted <= 2) {
+			this.pushStoneButton = pushStone;
+			this.pushDoor = pushIronDoor;
+			this.pushTrapDoor = pushIronTrapDoor;
+		}
 		int ticks = 0;
 		if (getBehavior() == null) {
 			this.setBehavior(new CloudburstBehavior.PlayerControlled());
@@ -342,13 +357,38 @@ public class EntityCloudBall extends AvatarEntity {
 
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
-			BendingData data = Bender.get(getOwner()).getData();
+			BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
 			data.removeStatusControl(StatusControl.THROW_CLOUDBURST);
 		}
 	}
 
 	@Override
 	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public boolean pushButton(boolean pushStone) {
+		return true;
+	}
+
+	@Override
+	public boolean pushLever() {
+		return true;
+	}
+
+	@Override
+	public boolean pushTrapdoor(boolean pushIron) {
+		return true;
+	}
+
+	@Override
+	public boolean pushDoor(boolean pushIron) {
+		return true;
+	}
+
+	@Override
+	public boolean pushGate() {
 		return true;
 	}
 
