@@ -38,9 +38,8 @@ import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
 
 public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> {
 
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirGust.class, DataSerializers.FLOAT);
 	public static final Vector ZERO = new Vector(0, 0, 0);
-
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirGust.class, DataSerializers.FLOAT);
 	private boolean airGrab, destroyProjectiles;
 
 	public EntityAirGust(World world) {
@@ -50,12 +49,12 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		this.noClip = true;
 	}
 
-	public void setSize(float size) {
-		dataManager.set(SYNC_SIZE, size);
-	}
-
 	public float getSize() {
 		return dataManager.get(SYNC_SIZE);
+	}
+
+	public void setSize(float size) {
+		dataManager.set(SYNC_SIZE, size);
 	}
 
 	@Override
@@ -174,6 +173,21 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		this.destroyProjectiles = destroyProjectiles;
 	}
 
+	@Override
+	public boolean pushButton() {
+		return true;
+	}
+
+	@Override
+	public boolean pushLever() {
+		return true;
+	}
+
+	@Override
+	protected double getVelocityMultiplier() {
+		return 6;
+	}
+
 	public static class AirGustControlPoint extends ControlPoint {
 
 		public AirGustControlPoint(EntityArc arc, float size, double x, double y, double z) {
@@ -189,15 +203,5 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 			}
 		}
 
-	}
-
-	@Override
-	public boolean activatesButton() {
-		return true;
-	}
-
-	@Override
-	protected double getVelocityMultiplier() {
-		return 8;
 	}
 }

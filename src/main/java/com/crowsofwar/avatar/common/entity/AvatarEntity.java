@@ -24,18 +24,16 @@ import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockButton;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -43,7 +41,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -282,6 +283,13 @@ public abstract class AvatarEntity extends Entity {
 		}
 
 
+		if (pushButton()) {
+			AvatarUtils.pushButton(this);
+		}
+		if (pushLever()) {
+			AvatarUtils.pushLever(this);
+		}
+
 		if (getOwner() == null) {
 			this.setDead();
 		}
@@ -382,21 +390,6 @@ public abstract class AvatarEntity extends Entity {
 	 * destroyed.
 	 */
 	public boolean onCollideWithSolid() {
-		if (activatesButton()) {
-			IBlockState state = world.getBlockState(getPosition());
-			if (state.getBlock() == Blocks.WOODEN_BUTTON || state.getBlock() == Blocks.STONE_BUTTON) {
-				if (getOwner() != null && getOwner() instanceof EntityPlayer) {
-					BlockButton button = (BlockButton) state.getBlock();
-					Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity(), 3, true);
-					if (raytrace.getPosPrecise() != null) {
-						button.onBlockActivated(world, getPosition(), state, null, null, raytrace.getSide(),
-								(float) raytrace.getPosPrecise().x(), (float) raytrace.getPosPrecise().y(), (float) raytrace.getPosPrecise().z());
-					}
-
-				}
-			}
-		}
-
 		return false;
 	}
 
@@ -476,9 +469,14 @@ public abstract class AvatarEntity extends Entity {
 		return false;
 	}
 
-	public boolean activatesButton() {
+	public boolean pushButton() {
 		return false;
 	}
+
+	public boolean pushLever() {
+		return false;
+	}
+
 	/**
 	 * Break the block at the given position, playing sound/particles, and
 	 * dropping item

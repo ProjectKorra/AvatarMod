@@ -19,10 +19,14 @@ package com.crowsofwar.avatar.common.util;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.BlockButton;
+import net.minecraft.block.BlockLever;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -77,7 +81,24 @@ public class AvatarUtils {
 	public static void igniteCreeper(EntityCreeper creeper) {
 		creeper.getDataManager().set(IGNITED, true);
 	}
-	/**
+
+	public static void pushButton(Entity entity) {
+		IBlockState state = entity.world.getBlockState(entity.getPosition());
+		if (state.getBlock() == Blocks.WOODEN_BUTTON) {
+			BlockButton button = (BlockButton) state.getBlock();
+			button.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
+					(float) entity.posY, (float) entity.posZ);
+		}
+	}
+	public static void pushLever(Entity entity) {
+		IBlockState state = entity.world.getBlockState(entity.getPosition());
+		if (state.getBlock() == Blocks.LEVER) {
+			BlockLever lever = (BlockLever) state.getBlock();
+			lever.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
+					(float) entity.posY, (float) entity.posZ);
+		}
+	}
+ 	/**
 	 * Spawns a directional helix that has rotating particles.
 	 *
 	 * @param world         World the vortex spawns in.
