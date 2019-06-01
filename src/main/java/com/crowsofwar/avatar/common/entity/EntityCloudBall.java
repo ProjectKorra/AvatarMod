@@ -272,7 +272,6 @@ public class EntityCloudBall extends AvatarEntity {
 					hitBox = 4;
 				}
 
-				setInvisible(true);
 				WorldServer World = (WorldServer) world;
 				World.spawnParticle(EnumParticleTypes.CLOUD, posX, posY, posZ, 50, 0, 0, 0, speed);
 				world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 4.0F,
@@ -334,7 +333,6 @@ public class EntityCloudBall extends AvatarEntity {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				damage = getDamage();
 			}
-			entity.attackEntityFrom(ds, damage);
 			if (entity.attackEntityFrom(ds, damage)) {
 				abilityData.addXp(SKILLS_CONFIG.cloudburstHit);
 				BattlePerformanceScore.addMediumScore(getOwner());

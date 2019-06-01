@@ -164,7 +164,6 @@ public class AvatarUtils {
 					player = (EntityPlayer) ((AvatarEntity) entity).getOwner();
 				}
 			}
-			BlockFenceGate gate = (BlockFenceGate) state.getBlock();
 			if (state.getValue(BlockFenceGate.OPEN)) {
 				state = state.withProperty(BlockFenceGate.OPEN, false);
 				entity.world.setBlockState(entity.getPosition(), state, 10);
