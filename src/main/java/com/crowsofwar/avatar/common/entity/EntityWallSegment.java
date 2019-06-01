@@ -135,9 +135,10 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		if (behavior instanceof WallBehavior.Drop) {
 			if (getOwner() != null) {
 				BendingData.get(getOwner()).removeStatusControl(StatusControl.DROP_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControl.PLACE_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControl.SHOOT_WALL);
 			}
 		}
-
 	}
 
 	public void setDirection(EnumFacing dir) {

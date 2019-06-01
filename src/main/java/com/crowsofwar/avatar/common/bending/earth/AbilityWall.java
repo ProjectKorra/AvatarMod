@@ -210,6 +210,7 @@ public class AbilityWall extends Ability {
 			if (wallCreated) {
 				ctx.getData().addStatusControl(StatusControl.DROP_WALL);
 				ctx.getData().addStatusControl(StatusControl.PLACE_WALL);
+				ctx.getData().addStatusControl(StatusControl.SHOOT_WALL);
 			}
 		}
 	}
