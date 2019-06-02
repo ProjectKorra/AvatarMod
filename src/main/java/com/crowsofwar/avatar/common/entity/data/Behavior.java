@@ -109,7 +109,7 @@ public abstract class Behavior<E extends Entity> {
 	 * Called every update tick.
 	 *
 	 * @return Next Behavior. Return <code>this</code> to continue the Behavior.
-	 *         May Never return null.
+	 *         May never return null.
 	 */
 	public abstract Behavior onUpdate(E entity);
 
