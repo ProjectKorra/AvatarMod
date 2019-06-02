@@ -68,7 +68,7 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 
 	@Override
 	protected double getParticleSpeed() {
-		return 0.225;
+		return 0.1125;
 	}
 
 	@Override

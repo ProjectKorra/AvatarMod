@@ -25,7 +25,7 @@ public class WaterSmashHandler extends SmashGroundHandler {
 
 	@Override
 	protected EnumParticleTypes getParticle() {
-		return EnumParticleTypes.WATER_BUBBLE;
+		return EnumParticleTypes.WATER_WAKE;
 	}
 
 	@Override

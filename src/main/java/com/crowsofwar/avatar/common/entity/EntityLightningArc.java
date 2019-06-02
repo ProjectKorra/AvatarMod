@@ -105,13 +105,13 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		wave.setAbility(new AbilityLightningArc());
 		wave.setOwner(getOwner());
 		wave.setParticleAmount(1);
-		wave.setParticleSpeed(0.0625F);
+		wave.setParticleSpeed((getSizeMultiplier() * 0.33F) / 5);
 		wave.setParticleName(AvatarParticles.getParticleElectricity().getParticleName());
 		wave.setSpeed(0.8F);
 		wave.setPosition(x, y, z);
 		wave.setDamage(getDamage() / 2);
 		wave.setRange(getSizeMultiplier() * 2);
-		wave.setParticleController(30);
+		wave.setParticleController(20 - (getSizeMultiplier() * 10));
 		wave.setSphere(true);
 		wave.setElement(new Lightningbending());
 		wave.setPerformanceAmount(10);
