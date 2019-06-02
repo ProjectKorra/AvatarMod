@@ -68,6 +68,8 @@ public class AbilityAirblade extends Ability {
 		airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
 		airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 40 : 30));
 		airblade.setDamage(damage);
+		airblade.rotationPitch = entity.rotationPitch;
+		airblade.rotationYaw = entity.rotationYaw;
 		airblade.setOwner(entity);
 		airblade.setAbility(this);
 		airblade.setPierceArmor(abilityData.isMasterPath(SECOND));

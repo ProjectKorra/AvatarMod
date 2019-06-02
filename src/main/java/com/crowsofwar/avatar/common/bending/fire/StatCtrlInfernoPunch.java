@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -105,10 +106,10 @@ public class StatCtrlInfernoPunch extends StatusControl {
 										wave.setPerformanceAmount(15);
 										wave.setFireTime(15);
 										wave.setSphere(true);
-										wave.setParticleName(EnumParticleTypes.FLAME.getParticleName());
-										wave.setParticleSpeed(0.11F);
+										wave.setParticleName(AvatarParticles.getParticleBigFlame().getParticleName());
+										wave.setParticleSpeed(0.10F);
 										wave.setParticleAmount(1);
-										wave.setParticleController(10);
+										wave.setParticleController(25);
 										//Used for spheres
 										wave.setSpeed(0.8F);
 										wave.setParticleAmount(2);

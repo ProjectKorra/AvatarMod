@@ -27,10 +27,7 @@ import com.crowsofwar.avatar.client.gui.GuiBisonChest;
 import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
 import com.crowsofwar.avatar.client.gui.skills.GetBendingGui;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
-import com.crowsofwar.avatar.client.particles.AvatarParticleAir;
-import com.crowsofwar.avatar.client.particles.AvatarParticleElectricity;
-import com.crowsofwar.avatar.client.particles.AvatarParticleFlames;
-import com.crowsofwar.avatar.client.particles.AvatarParticleRestore;
+import com.crowsofwar.avatar.client.particles.*;
 import com.crowsofwar.avatar.client.render.*;
 import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
@@ -111,7 +108,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityWaterBubble.class, RenderWaterBubble::new);
 		registerEntityRenderingHandler(EntityWallSegment.class, RenderWallSegment::new);
 		registerEntityRenderingHandler(EntityFireball.class, RenderFireball::new);
-		registerEntityRenderingHandler(EntityAirblade.class, RenderAirblade::new);
+		registerEntityRenderingHandler(EntityAirblade.class, RenderAirBlade1::new);
 		registerEntityRenderingHandler(EntityAirBubble.class, RenderAirBubble::new);
 		registerEntityRenderingHandler(EntitySkyBison.class, RenderSkyBison::new);
 		registerEntityRenderingHandler(EntityOtterPenguin.class, RenderOtterPenguin::new);
@@ -166,6 +163,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			pm.registerParticle(AvatarParticles.getParticleAir().getParticleID(), AvatarParticleAir::new);
 			pm.registerParticle(AvatarParticles.getParticleRestore().getParticleID(), AvatarParticleRestore::new);
 			pm.registerParticle(AvatarParticles.getParticleElectricity().getParticleID(), AvatarParticleElectricity::new);
+			pm.registerParticle(AvatarParticles.getParticleBigFlame().getParticleID(), AvatarParticleBigFlame::new);
 		}
 
 	}

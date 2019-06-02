@@ -30,6 +30,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -57,10 +60,11 @@ public class EntityAirblade extends AvatarEntity {
 	private float chopBlocksThreshold;
 	private boolean chainAttack;
 	private boolean pierceArmor;
+	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirblade.class, DataSerializers.FLOAT);
 
 	public EntityAirblade(World world) {
 		super(world);
-		setSize(1.5f, .2f);
+		setSize(0.2f, 1.5f);
 		this.chopBlocksThreshold = -1;
 	}
 
