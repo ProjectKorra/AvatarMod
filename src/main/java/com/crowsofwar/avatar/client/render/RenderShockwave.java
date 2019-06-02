@@ -27,7 +27,7 @@ public class RenderShockwave extends Render<EntityShockwave> {
 			double velY;
 			double velZ;
 			Vector speed = new Vector((entity.ticksExisted * entity.getSpeed()) * Math.sin(angle) * (entity. getParticleSpeed() * 10),
-					entity. getParticleSpeed() / 2, (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle) * (entity.getParticleSpeed() * 10));
+					entity.getParticleSpeed() / 2, (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle) * (entity.getParticleSpeed() * 10));
 			entity.world.spawnParticle(EnumParticleTypes.getByName(entity.getParticleName()), x2, y2, z2, speed.x(), speed.y(), speed.z());
 		}
 
@@ -43,11 +43,12 @@ public class RenderShockwave extends Render<EntityShockwave> {
 						x1 = entity.ticksExisted * entity.getSpeed() * Math.cos(rphi) * Math.sin(rtheta);
 						y1 = entity.ticksExisted * entity.getSpeed() * Math.sin(rphi) * Math.sin(rtheta);
 						z1 = entity.ticksExisted * entity.getSpeed() * Math.cos(rtheta);
-						/*xVel = ticksExisted * getSpeed() * Math.cos(rphi) * Math.sin(rtheta);
-						yVel = ticksExisted * getSpeed() * Math.sin(rphi) * Math.sin(rtheta);
-						zVel = ticksExisted * getSpeed() * Math.cos(rtheta);**/
+						xVel = x1 * entity.getParticleSpeed() * 10;
+						yVel = y1 * entity.getParticleSpeed() * 10;
+						zVel = z1 * entity.getParticleSpeed() * 10;
 
-						entity.world.spawnParticle(EnumParticleTypes.getByName(entity.getParticleName()), x1, y1, z1, 0, 0, 0);
+						entity.world.spawnParticle(EnumParticleTypes.getByName(entity.getParticleName()), x1 + entity.posX,
+								y1 + entity.posY, z1 + entity.posZ, xVel, yVel, zVel);
 
 					}
 				}//Creates a sphere. Courtesy of Project Korra's Air Burst!
