@@ -153,13 +153,13 @@ public class StatCtrlAirJump extends StatusControl {
 			wave.setDamage(0);
 			wave.setFireTime(0);
 			wave.setRange(lvl > 0 ? 3 + lvl : 3);
-			wave.setSpeed(lvl > 0 ? 0.6F + lvl / 10F: 0.6f);
-			wave.setKnockbackHeight(lvl > 0 ? 0.2F + lvl /  20F : 0.2F);
+			wave.setSpeed(lvl > 0 ? 0.5F + lvl / 20F: 0.5f);
+			wave.setKnockbackHeight(lvl > 0 ? 0.1F + lvl /  20F : 0.1F);
 			wave.setParticleName(EnumParticleTypes.EXPLOSION_NORMAL.getParticleName());
 			wave.setPerformanceAmount(2);
 			wave.setAbility(new AbilityAirJump());
 			wave.setElement(new Airbending());
-			wave.setParticleSpeed(lvl > 0 ? 0.1F + lvl / 10F : 0.1F);
+			wave.setParticleSpeed(lvl > 0 ? 0.025F + lvl / 40F : 0.025F);
 			wave.setPosition(entity.getPositionVector());
 			wave.setOwner(entity);
 			world.spawnEntity(wave);
