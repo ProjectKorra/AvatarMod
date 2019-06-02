@@ -109,7 +109,7 @@ avatar.ability.earth_wall.lvl1=Invoquez un petit mur
 avatar.ability.earth_wall.lvl2=Créez un plus large mur, et plus loin
 avatar.ability.earth_wall.lvl3=Lancez des parties du mur
 avatar.ability.earth_wall.lvl4_1=Créez un très gros mur et lancez des bouts de celui-ci
-avatar.ability.earth_wall.lvl4_2=Entourez-vous de murs
+avatar.ability.earth_wall.lvl4_2=Entourez-vous de murs, et repoussez vos ennemis avec 
 
 avatar.ability.mine_blocks=Miner des Blocs
 avatar.ability.mine_blocks.desc=Detruisez rapidement des blocs pour miner des tunnels

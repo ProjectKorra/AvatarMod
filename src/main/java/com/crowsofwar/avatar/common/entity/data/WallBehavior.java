@@ -23,12 +23,17 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 import com.crowsofwar.gorecore.util.Vector;
+
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.EnumFacing;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+
+import java.util.List;
 
 /**
  * @author CrowsOfWar
@@ -43,6 +48,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		registerBehavior(Place.class);
 		registerBehavior(Rising.class);
 		registerBehavior(Waiting.class);
+		registerBehavior(Push.class);
 	}
 
 	public static class Drop extends WallBehavior {
@@ -82,7 +88,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
 			ticks++;
-			//Prevents some glitches
+			// Prevents some glitches
 			if (ticks == 2) {
 				entity.setVelocity(Vector.ZERO);
 				entity.getWall().setDropTypePlace(true);
@@ -171,24 +177,95 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			entity.setVelocity(Vector.ZERO);
 			ticks++;
 
-			boolean drop = ticks >= STATS_CONFIG.wallWaitTime * 20;
-			if (entity.getOwner() != null) {
+			return ticks >= STATS_CONFIG.wallWaitTime * 20 ? new Drop() : this;
+		}
 
-				BendingData data = BendingData.get(entity.getOwner());
-				AbilityData abilityData = data.getAbilityData("wall");
-				if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+		}
 
-					drop = entity.getOwner().isDead || ticks >= STATS_CONFIG.wallWaitTime2 * 20;
+		@Override
+		public void toBytes(PacketBuffer buf) {
+		}
 
-					Bender ownerBender = Bender.get(entity.getOwner());
-					if (!entity.world.isRemote && !ownerBender.consumeChi(STATS_CONFIG.chiWallOneSecond / 20)) {
-						drop = true;
-					}
+		@Override
+		public void load(NBTTagCompound nbt) {
+		}
 
+		@Override
+		public void save(NBTTagCompound nbt) {
+		}
+
+	}
+
+	public static class Push extends WallBehavior {
+
+		private int ticks = 0;
+		private double lastApplied;
+
+		@Override
+		public Behavior onUpdate(EntityWallSegment entity) {
+			ticks++;
+
+			// Get in which direction the wall should be pushed
+			EnumFacing cardinalToPush = entity.getDirection();
+
+			// Safety check
+			if (cardinalToPush == null) {
+				return this;
+			}
+
+			entity.setRestrictToVertical(false);
+
+			if (ticks == 1) {
+				// We want the wall to move... So it needs to be a little higher
+				entity.motionY = 0.1;
+
+				int pushDistance = 4;
+				double velocity = STATS_CONFIG.wallMomentum / 5 * pushDistance / 20;
+				lastApplied = velocity;
+				applyMotionToEntityInDirection(entity, cardinalToPush, velocity);
+
+				// Consume Chi.
+				BendingData.get(entity.getOwner()).chi().consumeChi(STATS_CONFIG.chiPushWall);
+			} else {
+				// Prevent it from moving on the Y axis
+				entity.motionY = 0;
+
+				double velocity = lastApplied * 0.9;
+				applyMotionToEntityInDirection(entity, cardinalToPush, velocity);
+				lastApplied = velocity;
+			}
+
+			// Push entities that touches the wall
+			List<Entity> collidingEntities = entity.getEntityWorld().getEntitiesWithinAABBExcludingEntity(entity, entity.getCollisionBox(entity));
+
+			if(collidingEntities.size() > 0){
+				for(Entity current : collidingEntities){
+					applyMotionToEntityInDirection(current, cardinalToPush, 0.4);
 				}
 			}
-			
-			return drop ? new Drop() : this;
+
+			return ticks > 50 ? new Drop() : this;
+		}
+
+		private void applyMotionToEntityInDirection(Entity entity, EnumFacing cardinal, double velocity) {
+			switch (cardinal) {
+				case NORTH:
+					entity.motionZ = -velocity;
+					break;
+				case EAST:
+					entity.motionX = velocity;
+					break;
+				case SOUTH:
+					entity.motionZ = velocity;
+					break;
+				case WEST:
+					entity.motionX = -velocity;
+					break;
+				default:
+					break;
+			}
 		}
 
 		@Override

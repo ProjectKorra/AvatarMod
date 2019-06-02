@@ -65,6 +65,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 
 	private static final DataParameter<Optional<IBlockState>>[] SYNC_BLOCKS_DATA;
 
+	private boolean restrictToVertical;
+
 	static {
 		SYNC_BLOCKS_DATA = new DataParameter[SEGMENT_HEIGHT];
 		for (int i = 0; i < SEGMENT_HEIGHT; i++) {
@@ -85,6 +87,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		this.wallReference = new SyncedEntity<>(this, SYNC_WALL);
 		this.wallReference.preventNullSaving();
 		this.setSize(.9f, 5);
+		this.restrictToVertical = true;
 	}
 
 	@Override
@@ -103,6 +106,10 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	public boolean isShield() {
 		return true;
+	}
+
+	public void setRestrictToVertical(boolean value) {
+		this.restrictToVertical = value;
 	}
 
 	/**
@@ -137,12 +144,17 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 				BendingData.get(getOwner()).removeStatusControl(StatusControl.DROP_WALL);
 				BendingData.get(getOwner()).removeStatusControl(StatusControl.PLACE_WALL);
 				BendingData.get(getOwner()).removeStatusControl(StatusControl.SHOOT_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControl.PUSH_WALL);
 			}
 		}
 	}
 
 	public void setDirection(EnumFacing dir) {
 		this.direction = dir;
+	}
+
+	public EnumFacing getDirection() {
+		return direction;
 	}
 
 	public int getBlocksOffset() {
@@ -204,7 +216,9 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			this.setDead();
 		}
 		// restrict to only vertical movement
-		setVelocity(velocity().withX(0).withZ(0));
+		if (restrictToVertical) {
+			setVelocity(velocity().withX(0).withZ(0));
+		}
 
 		WallBehavior next = (WallBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != next)

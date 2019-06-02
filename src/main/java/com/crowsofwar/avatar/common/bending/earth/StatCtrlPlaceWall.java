@@ -44,6 +44,7 @@ public class StatCtrlPlaceWall extends StatusControl {
 			}
 
 			ctx.getData().removeStatusControl(StatusControl.DROP_WALL);
+			ctx.getData().removeStatusControl(StatusControl.PUSH_WALL);
 
 			return true;
 		} else {

@@ -149,8 +149,6 @@ public class AbilityWall extends Ability {
 				Block wallBlock = world.getBlockState(wallPos).getBlock();
 				boolean createWall = true;
 
-				System.out.println(abilityData.getPath().toString());
-
 				// Allow bending even if the block is lower than the bender by 1-2 (by default)
 				// blocks
 				if (wallBlock == Blocks.AIR) {
@@ -212,6 +210,8 @@ public class AbilityWall extends Ability {
 				ctx.getData().addStatusControl(StatusControl.PLACE_WALL);
 				if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 					ctx.getData().addStatusControl(StatusControl.SHOOT_WALL);
+				} else if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+					ctx.getData().addStatusControl(StatusControl.PUSH_WALL);
 				}
 			}
 		}

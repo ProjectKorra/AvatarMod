@@ -47,7 +47,7 @@ public class ConfigStats {
 			lightningSpearSettings = new AttackSettings(4F, 2);
 
 	@Load
-	public double wallWaitTime = 10, wallWaitTime2 = 60, wallMomentum = 10;
+	public double wallWaitTime = 10, wallMomentum = 10;
 
 	@Load
 	public int wallJumpDelay = 10;
@@ -98,6 +98,7 @@ public class ConfigStats {
 			chiRavine = 1.5f,
 			chiRavineLvl4_1 = 2.25f,
 			chiWall = 2.5f,
+			chiPushWall = 3f,
 			chiPickUpBlock = 1.25f,
 			chiMining = 2f,
 			chiMiningMaster = 0.5f,
