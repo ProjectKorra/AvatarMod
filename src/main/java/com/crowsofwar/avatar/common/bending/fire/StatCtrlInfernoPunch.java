@@ -107,7 +107,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 										wave.setFireTime(15);
 										wave.setSphere(true);
 										wave.setParticleName(AvatarParticles.getParticleBigFlame().getParticleName());
-										wave.setParticleSpeed(0.10F);
+										wave.setParticleSpeed(0.12F);
 										wave.setParticleAmount(1);
 										wave.setParticleController(35);
 										//Used for spheres
