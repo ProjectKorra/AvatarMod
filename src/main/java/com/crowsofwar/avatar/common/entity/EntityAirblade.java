@@ -60,12 +60,25 @@ public class EntityAirblade extends AvatarEntity {
 	private float chopBlocksThreshold;
 	private boolean chainAttack;
 	private boolean pierceArmor;
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirblade.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_SIZE_MULT = EntityDataManager.createKey(EntityAirblade.class, DataSerializers.FLOAT);
 
 	public EntityAirblade(World world) {
 		super(world);
 		setSize(0.2f, 1.5f);
 		this.chopBlocksThreshold = -1;
+	}
+
+	public float getSizeMult() {
+		return dataManager.get(SYNC_SIZE_MULT);
+	}
+
+	public void setSizeMult(float sizeMult) {
+		dataManager.set(SYNC_SIZE_MULT, sizeMult);
+	}
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_SIZE_MULT, 1.0F);
 	}
 
 	@Override
@@ -82,10 +95,11 @@ public class EntityAirblade extends AvatarEntity {
 	public void onUpdate() {
 
 		super.onUpdate();
+		setSize(getSizeMult() * width, getSizeMult() * height);
 
-		this.motionX = this.motionX * 0.99;
-		this.motionY = this.motionY * 0.99;
-		this.motionZ = this.motionZ * 0.99;
+		this.motionX = this.motionX * 0.98;
+		this.motionY = this.motionY * 0.98;
+		this.motionZ = this.motionZ * 0.98;
 
 		if (!world.isRemote && velocity().sqrMagnitude() <= .9) {
 			setDead();
