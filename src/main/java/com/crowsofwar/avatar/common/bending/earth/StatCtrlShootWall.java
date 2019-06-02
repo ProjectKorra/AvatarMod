@@ -18,6 +18,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -89,6 +90,7 @@ public class StatCtrlShootWall extends StatusControl {
 		float yaw = (float) Math.toRadians(entity.rotationYaw);
 		float pitch = (float) Math.toRadians(entity.rotationPitch);
 		Vector lookDir = Vector.toRectangular(yaw, pitch);
+		EnumFacing cardinal = entity.getHorizontalFacing();
 
 		// Get which contained block should be used from the segment
 		Pair<Block, Integer> toUseBlockData = getBlockToUseFromSegment(segment);
@@ -109,7 +111,7 @@ public class StatCtrlShootWall extends StatusControl {
 		floating.setAbility(Abilities.get("wall"));
 		floating.setOwner(entity);
 		floating.setEntityInvulnerable(true);
-		floating.setPosition(segment.getPositionVector().add(0, usedNum - 1, 0));
+		floating.setPosition(new Vector(segment.getPosition().offset(cardinal, 2).add(0, usedNum - 1, 0)));
 
 		world.spawnEntity(floating);
 
