@@ -105,13 +105,13 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		wave.setAbility(new AbilityLightningArc());
 		wave.setOwner(getOwner());
 		wave.setParticleAmount(1);
-		wave.setParticleSpeed(1.25F);
+		wave.setParticleSpeed(0.125F);
 		wave.setParticleName(AvatarParticles.getParticleElectricity().getParticleName());
 		wave.setSpeed(0.8F);
 		wave.setPosition(x, y, z);
 		wave.setDamage(getDamage() / 2);
 		wave.setRange(getSizeMultiplier() * 2);
-		wave.setParticleController(20);
+		wave.setParticleController(40);
 		wave.setSphere(true);
 		wave.setElement(new Lightningbending());
 		wave.setPerformanceAmount(10);
@@ -157,7 +157,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			rotationYaw = (float) Math.toDegrees(newRotations.y());
 			rotationPitch = (float) Math.toDegrees(newRotations.x());
 		}
-		if (stuckTo != null) {
+		if (stuckTo != null && getOwner() != null) {
 			setPosition(Vector.getEyePos(stuckTo));
 			setVelocity(Vector.ZERO);
 			if (!wasSuccessfullyRedirected) {

@@ -44,7 +44,6 @@ public class AirBurstHandler extends TickHandler {
 	public static void onDragonHurt(LivingHurtEvent event) {
 		if (event.getSource().getTrueSource() instanceof EntityLivingBase) {
 			EntityLivingBase attacker = (EntityLivingBase) event.getSource().getTrueSource();
-			Entity target = event.getEntity();
 			DamageSource source = event.getSource();
 			if (source.getDamageType().equals("avatar_Air")) {
 				if (attacker instanceof EntityPlayer || attacker instanceof EntityBender) {
@@ -74,7 +73,6 @@ public class AirBurstHandler extends TickHandler {
 									damage = STATS_CONFIG.airBurstSettings.damage * 2.5F + powerRating;
 								}
 								event.setAmount(damage);
-
 
 							}
 						}

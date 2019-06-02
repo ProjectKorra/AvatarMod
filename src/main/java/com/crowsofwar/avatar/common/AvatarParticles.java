@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common;
 
+import com.google.common.collect.Maps;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.common.util.EnumHelper;
 
@@ -34,9 +35,11 @@ public class AvatarParticles {
 
 	private static EnumParticleTypes particleFlames, particleAir, particleRestore, particleElectricity;
 	private static Map<Integer, EnumParticleTypes> lookup;
+	private static Map<String, EnumParticleTypes> name;
 
 	public static void register() {
 		lookup = new HashMap<>();
+		name = new HashMap<>();
 		particleFlames = addParticle("flames");
 		particleAir = addParticle("air");
 		particleRestore = addParticle("restore");
@@ -54,6 +57,7 @@ public class AvatarParticles {
 				nextParticleId(), true);
 
 		lookup.put(particle.getParticleID(), particle);
+		name.put(particle.getParticleName(), particle);
 		return particle;
 
 	}
@@ -67,6 +71,10 @@ public class AvatarParticles {
 			}
 		}
 		return maxId + 1;
+	}
+
+	public static EnumParticleTypes getParticleFromName(String particleName) {
+		return name.get(particleName);
 	}
 
 	public static EnumParticleTypes getParticleFlames() {
