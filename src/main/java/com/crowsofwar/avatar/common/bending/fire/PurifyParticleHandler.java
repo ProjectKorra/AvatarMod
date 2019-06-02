@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
@@ -36,11 +37,10 @@ public class PurifyParticleHandler extends TickHandler {
 		double r = rand.nextDouble();
 		if (!world.isRemote) {
 			for (int i = 0; i < 18; i++) {
-				WorldServer World = (WorldServer) world;
 				int random = rand.nextInt(2) + 1;
 				r = random == 1 ? r : r * -1;
 				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 20) + (r * 2)), 0).times(0.5).withY(entity.getEyeHeight() - 0.7);
-				particles.spawnParticles(world, EnumParticleTypes.FLAME, 1, 1, location.plus(Vector.getEntityPos(entity)),
+				particles.spawnParticles(world, AvatarParticles.getParticleFire(), 1, 1, location.plus(Vector.getEntityPos(entity)),
 						new Vector(0.6, 1.8, 0.6));
 			}
 		}
