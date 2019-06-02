@@ -149,7 +149,7 @@ avatar.ability.wall.desc=Raise a protective barrier in front of yourself. It can
 avatar.ability.wall.lvl1=Summon a small wall
 avatar.ability.wall.lvl2=Create a larger wall, further
 avatar.ability.wall.lvl3=Shoot parts of the wall
-avatar.ability.wall.lvl4_1=Create a massive wall
+avatar.ability.wall.lvl4_1=Create a massive wall, and shoot pieces of it
 avatar.ability.wall.lvl4_2=Surround yourself by walls
 
 avatar.ability.mine_blocks=§2§lMine §2§lBlocks
