@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -124,7 +125,7 @@ public class StatCtrlAirJump extends StatusControl {
 			spawner.spawnParticles(entity.world, AvatarParticles.getParticleAir(), 2, 6, new Vector(entity), new Vector(1, 0, 1));
 
 			float fallAbsorption = 0;
-			if (lvl == 0) {
+			if (lvl <= 0) {
 				fallAbsorption = 8;
 			} else if (lvl == 1) {
 				fallAbsorption = 13;
@@ -148,6 +149,21 @@ public class StatCtrlAirJump extends StatusControl {
 			powerRatingModifier.setTicks((int) (powerDuration * 20));
 			//noinspection ConstantConditions
 			data.getPowerRatingManager(Airbending.ID).addModifier(powerRatingModifier, ctx);
+			EntityShockwave wave = new EntityShockwave(world);
+			wave.setDamage(0);
+			wave.setFireTime(0);
+			wave.setRange(lvl > 0 ? 3 + lvl : 3);
+			wave.setSpeed(lvl > 0 ? 0.6F + lvl / 10F: 0.6f);
+			wave.setKnockbackHeight(lvl > 0 ? 0.2F + lvl /  20F : 0.2F);
+			wave.setParticleName(EnumParticleTypes.EXPLOSION_NORMAL.getParticleName());
+			wave.setPerformanceAmount(2);
+			wave.setAbility(new AbilityAirJump());
+			wave.setElement(new Airbending());
+			wave.setParticleSpeed(lvl > 0 ? 0.1F + lvl / 10F : 0.1F);
+			wave.setPosition(entity.getPositionVector());
+			wave.setOwner(entity);
+			world.spawnEntity(wave);
+
 
 			return true;
 

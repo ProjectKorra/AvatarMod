@@ -87,11 +87,6 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 	}
 
 	@Override
-	protected boolean isFire() {
-		return true;
-	}
-
-	@Override
 	protected int getPerformanceAmount() {
 		return 15;
 	}
@@ -109,7 +104,7 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 	@Override
 	protected void smashEntity(EntityLivingBase entity) {
 		Block currentBlock = entity.world.getBlockState(entity.getPosition()).getBlock();
-		if (currentBlock == Blocks.AIR) {
+		if (currentBlock != Blocks.WATER && currentBlock != Blocks.FLOWING_WATER) {
 			super.smashEntity(entity);
 		}
 	}

@@ -45,8 +45,6 @@ public class EntityShockwave extends AvatarEntity {
 	//The amount of performance added per hit
 	private double knockbackHeight;
 	//The amount entities will be knocked back
-	private boolean isFire;
-	//Whether or not to set the target entities on fire
 	private int fireTime;
 	//How long to set the target entity on fire
 
@@ -56,7 +54,6 @@ public class EntityShockwave extends AvatarEntity {
 		this.damage = 1;
 		this.performanceAmount = 10;
 		this.knockbackHeight = 0.2;
-		this.isFire = false;
 		this.fireTime = 0;
 		this.setSize(1, 1);
 	}
@@ -72,10 +69,6 @@ public class EntityShockwave extends AvatarEntity {
 		dataManager.register(SYNC_IS_SPHERE, false);
 		dataManager.register(SYNC_RANGE, 4F);
 
-	}
-
-	public void setFire(boolean fire) {
-		this.isFire = fire;
 	}
 
 	public void setFireTime(int time) {
@@ -231,7 +224,7 @@ public class EntityShockwave extends AvatarEntity {
 								int amount = performanceAmount > SCORE_MOD_SMALL ? performanceAmount : (int) SCORE_MOD_SMALL;
 								amount = amount > SCORE_MOD_MEDIUM ? (int) SCORE_MOD_MEDIUM : performanceAmount;
 								BattlePerformanceScore.addScore(getOwner(), amount);
-								target.setFire(isFire ? fireTime : 0);
+								target.setFire(fireTime);
 								if (getAbility() != null && getAbility() instanceof AbilityAirBurst) {
 									AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
 									aD.addXp(SKILLS_CONFIG.airBurstHit - aD.getLevel());
