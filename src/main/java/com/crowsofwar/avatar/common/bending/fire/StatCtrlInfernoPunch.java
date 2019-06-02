@@ -103,7 +103,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 									if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 										EntityShockwave wave = new EntityShockwave(world);
 										wave.setPerformanceAmount(15);
-										wave.setFire(true);
 										wave.setFireTime(15);
 										wave.setSphere(true);
 										wave.setParticleName(EnumParticleTypes.FLAME.getParticleName());
