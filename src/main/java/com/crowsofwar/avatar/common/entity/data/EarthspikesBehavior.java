@@ -98,9 +98,7 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 			ticks++;
 
 			// Do not run on the client side
-			if (entity.getEntityWorld().isRemote) {
-				return this;
-			}
+			if (entity.getEntityWorld().isRemote) return this;
 
 			World world = entity.getEntityWorld();
 			EntityLivingBase owner = entity.getOwner();
@@ -202,14 +200,11 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 			ticks++;
 
 			// Do not run on the client side
-			if (entity.getEntityWorld().isRemote) {
-				return this;
-			}
+			if (entity.getEntityWorld().isRemote) return this;
 
 			World world = entity.getEntityWorld();
 			EntityLivingBase owner = entity.getOwner();
 			AbilityData abilityData = AbilityData.get(owner, entity.getAbility().getName());
-			float frequency = STATS_CONFIG.earthspikeSettings.frequency;
 			double damage = STATS_CONFIG.earthspikeSettings.damage;
 			float size = STATS_CONFIG.earthspikeSettings.size * 0.75F;
 			float xpModifier = abilityData.getTotalXp() / 400;
@@ -221,17 +216,11 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 			size = STATS_CONFIG.earthspikeSettings.size * 1.5F;
 			// 1.75
 
-			// For some reason using *= or += seems to glitch out everything- that's why I'm
-			// using tedious equations.
+			size = (size + ticks / 45F) + xpModifier;
 
-			size += ticks / 45F;
-			size += xpModifier;
-
-			damage += xpModifier;
-			damage *= Bender.get(owner).getDamageMult(Earthbending.ID);
+			damage = (damage + xpModifier) * Bender.get(owner).getDamageMult(Earthbending.ID);
 
 			if (!spawned) {
-
 				for (int i = 0; i < 8; i++) {
 					Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i * 45), 0).times(1.4)
 							.withY(0);

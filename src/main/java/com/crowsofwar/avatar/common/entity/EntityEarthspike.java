@@ -97,11 +97,6 @@ public class EntityEarthspike extends AvatarEntity {
 	}
 
 	@Override
-	public void setDead() {
-		super.setDead();
-	}
-
-	@Override
 	public void onEntityUpdate() {
 		// Add width and height stuff
 
@@ -184,8 +179,7 @@ public class EntityEarthspike extends AvatarEntity {
 			float damage = (float) this.damage;
 			return entity.attackEntityFrom(ds, damage);
 			// Modify damage based on power rating!
-		} else
-			return false;
+		} else return false;
 	}
 
 	private void pushEntity(Entity entity) {

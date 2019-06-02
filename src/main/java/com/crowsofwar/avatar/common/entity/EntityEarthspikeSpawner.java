@@ -133,8 +133,8 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		Block belowBlock = world.getBlockState(below).getBlock();
 
-		if (ticksExisted % 3 == 0)
-			world.playSound(posX, posY, posZ, world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
+		if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ, 
+					world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
 					SoundCategory.PLAYERS, 1, 1, false);
 
 		if (!world.getBlockState(below).isNormalCube()) {
@@ -164,9 +164,7 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 			}
 		}
 
-		EarthspikesBehavior next = (EarthspikesBehavior) getBehavior().onUpdate(this);
-		if (getBehavior() != next)
-			setBehavior(next);
+		setBehavior((EarthspikesBehavior) getBehavior().onUpdate(this));
 	}
 
 	@Override

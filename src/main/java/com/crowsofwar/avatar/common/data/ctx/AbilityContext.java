@@ -65,20 +65,18 @@ public class AbilityContext extends BendingContext {
 	 * Same as getPath(), but accounts for a dynamic change
 	 */
 	public AbilityTreePath getDynamicPath() {
-		AbilityTreePath dynPath;
 		AbilityTreePath currentPath = getPath();
 		if (switchPath) {
 			if (currentPath == AbilityTreePath.FIRST) {
-				dynPath = AbilityTreePath.SECOND;
+				return AbilityTreePath.SECOND;
 			} else if (currentPath == AbilityTreePath.SECOND) {
-				dynPath = AbilityTreePath.FIRST;
+				return AbilityTreePath.FIRST;
 			} else {
-				dynPath = AbilityTreePath.MAIN;
+				return AbilityTreePath.MAIN;
 			}
 		} else {
-			dynPath = currentPath;
+			return currentPath;
 		}
-		return dynPath;
 	}
 
 	/**

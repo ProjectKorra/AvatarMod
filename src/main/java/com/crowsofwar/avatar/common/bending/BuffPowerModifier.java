@@ -18,8 +18,8 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 
 	/**
 	 * As the player levels up, buff abilities typically apply more "powerful"
-	 * looking vision s, in which the visual effects/distortions are the same, but
-	 * of higher intensity. Returns the different Vision s to be applied when the
+	 * looking vision shaders, in which the visual effects/distortions are the same, but
+	 * of higher intensity. Returns the different Vision shaders to be applied when the
 	 * player is at different ability levels.
 	 * <p>
 	 * This should return a 3-element array, with the first element being the weak
@@ -31,46 +31,46 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 
 	protected abstract String getAbilityName();
 
-	private boolean useSlipstreams = ConfigClient.CLIENT_CONFIG.shaderSettings.useSlipstreamShaders;
+	private boolean useSlipstreamShaders = ConfigClient.CLIENT_CONFIG.shaderSettings.useSlipstreamShaders;
 
-	private boolean useCleanses = ConfigClient.CLIENT_CONFIG.shaderSettings.useCleanseShaders;
+	private boolean useCleanseShaders = ConfigClient.CLIENT_CONFIG.shaderSettings.useCleanseShaders;
 
-	private boolean useRestores = ConfigClient.CLIENT_CONFIG.shaderSettings.useRestoreShaders;
+	private boolean useRestoreShaders = ConfigClient.CLIENT_CONFIG.shaderSettings.useRestoreShaders;
 
-	private boolean usePurifys = ConfigClient.CLIENT_CONFIG.shaderSettings.usePurifyShaders;
+	private boolean usePurifyShaders = ConfigClient.CLIENT_CONFIG.shaderSettings.usePurifyShaders;
 
 	private Vision getVision(BendingContext ctx) {
 
 		AbilityData abilityData = ctx.getData().getAbilityData(getAbilityName());
 
 		// Handle disabling
-		if (!useSlipstreams && abilityData.getAbility() == Abilities.get("slipstream")) {
+		if (!useSlipstreamShaders && abilityData.getAbility() == Abilities.get("slipstream")) {
 			return null;
-		} else if (!useCleanses && abilityData.getAbility() == Abilities.get("cleanse")) {
+		} else if (!useCleanseShaders && abilityData.getAbility() == Abilities.get("cleanse")) {
 			return null;
-		} else if (!useRestores && abilityData.getAbility() == Abilities.get("restore")) {
+		} else if (!useRestoreShaders && abilityData.getAbility() == Abilities.get("restore")) {
 			return null;
-		} else if (!usePurifys && abilityData.getAbility() == Abilities.get("purify")) {
+		} else if (!usePurifyShaders && abilityData.getAbility() == Abilities.get("purify")) {
 			return null;
 		}
 
 		switch (abilityData.getLevel()) {
-		case -1:
-		case 0:
-		case 1:
-			if (getVisions()[0] != null) {
-				return getVisions()[0];
-			}
-		case 2:
-			if (getVisions()[1] != null) {
-				return getVisions()[1];
-			}
-		case 3:
-		default:
-			if (getVisions()[2] != null) {
-				return getVisions()[2];
-			} else
-				return getVisions()[0];
+			case -1:
+			case 0:
+			case 1:
+				if (getVisions()[0] != null) {
+					return getVisions()[0];
+				}
+			case 2:
+				if (getVisions()[1] != null) {
+					return getVisions()[1];
+				}
+			case 3:
+			default:
+				if (getVisions()[2] != null) {
+					return getVisions()[2];
+				} else
+					return getVisions()[0];
 		}
 
 	}
