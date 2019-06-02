@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
@@ -53,7 +54,7 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 
 	@Override
 	protected EnumParticleTypes getParticle() {
-		return EnumParticleTypes.FLAME;
+		return AvatarParticles.getParticleBigFlame();
 	}
 
 	@Override

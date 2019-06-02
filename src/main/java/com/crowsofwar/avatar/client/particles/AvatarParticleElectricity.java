@@ -26,7 +26,7 @@ public class AvatarParticleElectricity extends AvatarParticle {
 	 * @param velZ
 	 */
 	public AvatarParticleElectricity(int particleID, World world, double x, double y, double z, double velX,
-								 double velY, double velZ, int... parameters) {
+									 double velY, double velZ, int... parameters) {
 		super(world, x, y, z, velX, velY, velZ);
 
 		particleScale = 4f;
