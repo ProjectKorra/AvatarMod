@@ -31,19 +31,22 @@ public class AbilityContext extends BendingContext {
 
 	private final Ability ability;
 	private final double powerRating;
+	private final boolean switchPath;
 
-	public AbilityContext(BendingData data, Result raytrace, Ability ability, EntityLivingBase
-			entity, double powerRating) {
+	public AbilityContext(BendingData data, Result raytrace, Ability ability, EntityLivingBase entity,
+			double powerRating, boolean switchPath) {
 		super(data, entity, raytrace);
 		this.ability = ability;
 		this.powerRating = powerRating;
+		this.switchPath = switchPath;
 	}
 
-	public AbilityContext(BendingData data, EntityLivingBase entity, Bender bender, Result raytrace,
-						  Ability ability, double powerRating) {
+	public AbilityContext(BendingData data, EntityLivingBase entity, Bender bender, Result raytrace, Ability ability,
+			double powerRating, boolean switchPath) {
 		super(data, entity, bender, raytrace);
 		this.ability = ability;
 		this.powerRating = powerRating;
+		this.switchPath = switchPath;
 	}
 
 	public AbilityData getAbilityData() {
@@ -58,11 +61,36 @@ public class AbilityContext extends BendingContext {
 		return getAbilityData().getPath();
 	}
 
+	/*
+	 * Same as getPath(), but accounts for a dynamic change
+	 */
+	public AbilityTreePath getDynamicPath() {
+		AbilityTreePath currentPath = getPath();
+		if (switchPath) {
+			if (currentPath == AbilityTreePath.FIRST) {
+				return AbilityTreePath.SECOND;
+			} else if (currentPath == AbilityTreePath.SECOND) {
+				return AbilityTreePath.FIRST;
+			} else {
+				return AbilityTreePath.MAIN;
+			}
+		} else {
+			return currentPath;
+		}
+	}
+
 	/**
 	 * Returns true if ability is on level 4 and has selected that path.
 	 */
 	public boolean isMasterLevel(AbilityTreePath path) {
 		return getLevel() == 3 && getPath() == path;
+	}
+
+	/**
+	 * Same as isMasterLevel(), but accounts for a dynamic change
+	 */
+	public boolean isDynamicMasterLevel(AbilityTreePath path) {
+		return getLevel() == 3 && getDynamicPath() == path;
 	}
 
 	/**
@@ -73,7 +101,8 @@ public class AbilityContext extends BendingContext {
 	}
 
 	/**
-	 * Gets the power rating, but in the range 0.25 to 2.0 for convenience in damage calculations.
+	 * Gets the power rating, but in the range 0.25 to 2.0 for convenience in damage
+	 * calculations.
 	 * <ul>
 	 * <li>-100 power rating gives 0.25; damage would be 1/4 of normal</li>
 	 * <li>0 power rating gives 1; damage would be the same as normal</li>

@@ -145,13 +145,13 @@ public class PlayerBender extends Bender {
 	}
 
 	@Override
-	public void executeAbility(Ability ability, Raytrace.Result raytrace) {
+	public void executeAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath) {
 		if (getWorld().isRemote) {
 
-			AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace));
+			AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath));
 
 		} else {
-			super.executeAbility(ability, raytrace);
+			super.executeAbility(ability, raytrace, switchPath);
 		}
 	}
 

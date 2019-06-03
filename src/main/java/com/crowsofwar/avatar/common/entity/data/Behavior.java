@@ -57,6 +57,19 @@ public abstract class Behavior<E extends Entity> {
 	public Behavior() {
 	}
 
+	// Static method called from preInit
+	public static void registerBehaviours() {
+		FloatingBlockBehavior.register();
+		WaterArcBehavior.register();
+		FireArcBehavior.register();
+		WaterBubbleBehavior.register();
+		WallBehavior.register();
+		EarthspikesBehavior.register();
+		FireballBehavior.register();
+		CloudburstBehavior.register();
+		LightningSpearBehavior.register();
+	}
+
 	protected static int registerBehavior(Class<? extends Behavior> behaviorClass) {
 		if (behaviorIdToClass == null) {
 			behaviorIdToClass = new HashMap<>();
@@ -70,8 +83,8 @@ public abstract class Behavior<E extends Entity> {
 	}
 
 	/**
-	 * Looks up the behavior class by the given Id, then instantiates an
-	 * instance with reflection.
+	 * Looks up the behavior class by the given Id, then instantiates an instance
+	 * with reflection.
 	 */
 	public static Behavior lookup(int id, Entity entity) {
 		try {
@@ -96,7 +109,7 @@ public abstract class Behavior<E extends Entity> {
 	 * Called every update tick.
 	 *
 	 * @return Next Behavior. Return <code>this</code> to continue the Behavior.
-	 * Never return null.
+	 *         May never return null.
 	 */
 	public abstract Behavior onUpdate(E entity);
 
@@ -108,8 +121,7 @@ public abstract class Behavior<E extends Entity> {
 
 	public abstract void save(NBTTagCompound nbt);
 
-	public static class BehaviorSerializer<B extends Behavior<? extends Entity>>
-			implements DataSerializer<B> {
+	public static class BehaviorSerializer<B extends Behavior<? extends Entity>> implements DataSerializer<B> {
 
 		// FIXME research- why doesn't read/write get called every time that
 		// behavior changes???

@@ -1,17 +1,16 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.*;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.gorecore.util.Vector;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.SPAWN_EARTHSPIKES_HANDLER;
 
 public class AbilityEarthspikes extends Ability {
 
@@ -26,38 +25,37 @@ public class AbilityEarthspikes extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		Bender bender = ctx.getBender();
-		BendingData data = ctx.getData();
 
 		float ticks = 20;
 		double speed = 10;
 		float chi = STATS_CONFIG.chiEarthspike;
-		//3.5 (by default)
+		// 3.5 (by default)
 
 		if (ctx.getLevel() >= 1) {
 			ticks = 40;
 			speed = 13;
 			chi = STATS_CONFIG.chiEarthspike + 0.5F;
-			//4
+			// 4
 		}
 		if (ctx.getLevel() >= 2) {
 			speed = 16;
 			chi = STATS_CONFIG.chiEarthspike + 2F;
-			//5.5
+			// 5.5
 		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			ticks = 30;
 			speed = 14;
 			chi = STATS_CONFIG.chiEarthspike * 2.5F;
-			//8.75
+			// 8.75
 		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			ticks = 60;
 			speed = 22;
 			chi = STATS_CONFIG.chiEarthspike * 2;
-			//7
+			// 7
 		}
 		double damage = STATS_CONFIG.earthspikeSettings.damage * 2;
-		//6
+		// 6
 		double size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
 		size += abilityData.getTotalXp() / 400;
 
@@ -70,51 +68,30 @@ public class AbilityEarthspikes extends Ability {
 
 		if (bender.consumeChi(chi)) {
 
-			if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-
+			if (!ctx.isDynamicMasterLevel(AbilityTreePath.FIRST)) {
 				Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-
 				EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
 				earthspike.setOwner(entity);
 				earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
 				earthspike.setVelocity(look.times(speed));
+				earthspike.setDamage(damage);
+				earthspike.setType(EntityEarthspikeSpawner.SpikesType.LINE);
+				earthspike.setSize(size);
 				earthspike.setDuration(ticks);
 				earthspike.setAbility(this);
-				earthspike.setUnstoppable(ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND));
+				earthspike.setUnstoppable(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND));
 				world.spawnEntity(earthspike);
-
-			} else {
-				if (entity.onGround) {
-					for (int i = 0; i < 8; i++) {
-						Vector direction1 = Vector.toRectangular(Math.toRadians(entity.rotationYaw + i * 45), 0).times(1.4).withY(0);
-						EntityEarthspike earthspike = new EntityEarthspike(world);
-						earthspike.setPosition(direction1.x() + entity.posX, entity.posY, direction1.z() + entity.posZ);
-						earthspike.setDamage(damage);
-						earthspike.setSize((float) size);
-						earthspike.setOwner(entity);
-						earthspike.setAbility(this);
-						world.spawnEntity(earthspike);
-						//Ring of instantaneous earthspikes.
-						if (!world.isRemote) {
-							WorldServer World = (WorldServer) world;
-							for (int degree = 0; degree < 360; degree++) {
-								double radians = Math.toRadians(degree);
-								double x = Math.cos(radians) / 2 + earthspike.posX;
-								double y = earthspike.posY;
-								double z = Math.sin(radians) / 2 + earthspike.posZ;
-								World.spawnParticle(EnumParticleTypes.CRIT, x, y, z, 1, 0, 0, 0, 0.5);
-
-							}
-						}
-
-					}
-				}
+			} else if (entity.onGround) {
+				EntityEarthspikeSpawner earthspike = new EntityEarthspikeSpawner(world);
+				earthspike.setOwner(entity);
+				earthspike.setPosition(entity.posX, entity.posY, entity.posZ);
+				earthspike.setDamage(damage);
+				earthspike.setType(EntityEarthspikeSpawner.SpikesType.OCTOPUS);
+				earthspike.setSize(size);
+				earthspike.setDuration(ticks);
+				earthspike.setAbility(this);
+				world.spawnEntity(earthspike);
 			}
-			if (data.hasTickHandler(SPAWN_EARTHSPIKES_HANDLER)) {
-				data.removeTickHandler(SPAWN_EARTHSPIKES_HANDLER);
-			}
-			data.addTickHandler(SPAWN_EARTHSPIKES_HANDLER);
-
 		}
 	}
 }

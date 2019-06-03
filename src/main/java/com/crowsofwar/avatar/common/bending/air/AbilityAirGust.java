@@ -64,7 +64,7 @@ public class AbilityAirGust extends Ability {
 				speed = 60;
 				size = 1.5F;
 			}
-			if (ctx.isMasterLevel(FIRST)) {
+			if (ctx.isDynamicMasterLevel(FIRST)) {
 				size = 2.0F;
 			}
 			EntityAirGust gust = new EntityAirGust(world);
@@ -75,8 +75,10 @@ public class AbilityAirGust extends Ability {
 			gust.setPushStone(ctx.getLevel() >= 1);
 			gust.setPushIronDoor(ctx.getLevel() >= 2);
 			gust.setPushIronTrapDoor(ctx.getLevel() >= 2);
-			gust.setDestroyProjectiles(ctx.isMasterLevel(FIRST));
-			gust.setAirGrab(ctx.isMasterLevel(SECOND));
+			gust.setDestroyProjectiles(ctx.isDynamicMasterLevel(FIRST));
+			gust.setAirGrab(ctx.isDynamicMasterLevel(SECOND));
+			gust.setDestroyProjectiles(ctx.isDynamicMasterLevel(FIRST));
+			gust.setAirGrab(ctx.isDynamicMasterLevel(SECOND));
 			gust.setAbility(this);
 
 			world.spawnEntity(gust);
