@@ -145,6 +145,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 				BendingData.get(getOwner()).removeStatusControl(StatusControl.PLACE_WALL);
 				BendingData.get(getOwner()).removeStatusControl(StatusControl.SHOOT_WALL);
 				BendingData.get(getOwner()).removeStatusControl(StatusControl.PUSH_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControl.PULL_WALL);
 			}
 		}
 	}

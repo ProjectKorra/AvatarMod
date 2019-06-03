@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.common.bending.air.StatCtrlThrowCloudBall;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlDropWall;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlPlaceBlock;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlPlaceWall;
+import com.crowsofwar.avatar.common.bending.earth.StatCtrlPullWall;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlPushWall;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlShootWall;
 import com.crowsofwar.avatar.common.bending.earth.StatCtrlThrowBlock;
@@ -65,6 +66,7 @@ public abstract class StatusControl {
 			PLACE_WALL = new StatCtrlPlaceWall(),
 			SHOOT_WALL = new StatCtrlShootWall(),
 			PUSH_WALL = new StatCtrlPushWall(),
+			PULL_WALL = new StatCtrlPullWall(),
 			FIRE_JUMP = new StatCtrlFireJump(),
 			INFERNO_PUNCH = new StatCtrlInfernoPunch(),
 			LOB_BUBBLE = new StatCtrlLobBubble(),

@@ -35,10 +35,10 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 /**
  * @author Aang23
  */
-public class StatCtrlPushWall extends StatusControl {
+public class StatCtrlPullWall extends StatusControl {
 
-	public StatCtrlPushWall() {
-		super(11, AvatarControl.CONTROL_LEFT_CLICK_DOWN, CrosshairPosition.LEFT_OF_CROSSHAIR);
+	public StatCtrlPullWall() {
+		super(12, AvatarControl.CONTROL_LEFT_CLICK_DOWN, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class StatCtrlPushWall extends StatusControl {
 
 			for (EntityWallSegment seg : segments) {
 				if (seg.getBehavior().getClass().equals(WallBehavior.Waiting.class))
-					seg.setBehavior(new WallBehavior.Push());
+					seg.setBehavior(new WallBehavior.Pull());
 			}
 
 			return true;

@@ -40,6 +40,7 @@ public class StatCtrlDropWall extends StatusControl {
 
 		ctx.getData().removeStatusControl(StatusControl.PLACE_WALL);
 		ctx.getData().removeStatusControl(StatusControl.PUSH_WALL);
+		ctx.getData().removeStatusControl(StatusControl.PULL_WALL);
 
 		return true;
 	}

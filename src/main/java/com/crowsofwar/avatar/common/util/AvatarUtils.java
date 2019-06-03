@@ -28,6 +28,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
@@ -389,6 +390,28 @@ public class AvatarUtils {
 			blockHit = new RayTraceResult(closestHitEntity);
 		}
 		return blockHit;
+	}
+
+	/** 
+	 * Applies a velocity that an entity in the provided cardinal. Does not support UP & DOWN
+	*/
+	public static void applyMotionToEntityInDirection(Entity entity, EnumFacing cardinal, double velocity) {
+		switch (cardinal) {
+			case NORTH:
+				entity.motionZ = -velocity;
+				break;
+			case EAST:
+				entity.motionX = velocity;
+				break;
+			case SOUTH:
+				entity.motionZ = velocity;
+				break;
+			case WEST:
+				entity.motionX = -velocity;
+				break;
+			default:
+				break;
+		}
 	}
 
 }

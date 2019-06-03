@@ -98,7 +98,7 @@ public class ConfigStats {
 			chiRavine = 1.5f,
 			chiRavineLvl4_1 = 2.25f,
 			chiWall = 2.5f,
-			chiPushWall = 3f,
+			chiPushWall = 4f,
 			chiPickUpBlock = 1.25f,
 			chiMining = 2f,
 			chiMiningMaster = 0.5f,

@@ -17,11 +17,13 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 
 import net.minecraft.entity.Entity;
@@ -49,6 +51,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		registerBehavior(Rising.class);
 		registerBehavior(Waiting.class);
 		registerBehavior(Push.class);
+		registerBehavior(Pull.class);
 	}
 
 	public static class Drop extends WallBehavior {
@@ -224,7 +227,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 				int pushDistance = 4;
 				double velocity = STATS_CONFIG.wallMomentum / 5 * pushDistance / 20;
 				lastApplied = velocity;
-				applyMotionToEntityInDirection(entity, cardinalToPush, velocity);
+				AvatarUtils.applyMotionToEntityInDirection(entity, cardinalToPush, velocity);
 
 				// Consume Chi.
 				BendingData.get(entity.getOwner()).chi().consumeChi(STATS_CONFIG.chiPushWall);
@@ -233,39 +236,94 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 				entity.motionY = 0;
 
 				double velocity = lastApplied * 0.9;
-				applyMotionToEntityInDirection(entity, cardinalToPush, velocity);
+				AvatarUtils.applyMotionToEntityInDirection(entity, cardinalToPush, velocity);
 				lastApplied = velocity;
 			}
 
 			// Push entities that touches the wall
-			List<Entity> collidingEntities = entity.getEntityWorld().getEntitiesWithinAABBExcludingEntity(entity, entity.getCollisionBox(entity));
+			List<Entity> collidingEntities = entity.getEntityWorld().getEntitiesWithinAABBExcludingEntity(entity,
+					entity.getCollisionBox(entity));
 
-			if(collidingEntities.size() > 0){
-				for(Entity current : collidingEntities){
-					applyMotionToEntityInDirection(current, cardinalToPush, 0.4);
+			if (collidingEntities.size() > 0) {
+				for (Entity current : collidingEntities) {
+					AvatarUtils.applyMotionToEntityInDirection(current, cardinalToPush, 0.4);
 				}
 			}
 
-			return ticks > 50 ? new Drop() : this;
+			boolean done = ticks > 50;
+
+			if(done){
+				BendingData.get(entity.getOwner()).addStatusControl(StatusControl.PULL_WALL);
+			}
+
+			return done ? new Waiting() : this;
 		}
 
-		private void applyMotionToEntityInDirection(Entity entity, EnumFacing cardinal, double velocity) {
-			switch (cardinal) {
-				case NORTH:
-					entity.motionZ = -velocity;
-					break;
-				case EAST:
-					entity.motionX = velocity;
-					break;
-				case SOUTH:
-					entity.motionZ = velocity;
-					break;
-				case WEST:
-					entity.motionX = -velocity;
-					break;
-				default:
-					break;
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+		}
+
+	}
+
+	public static class Pull extends WallBehavior {
+
+		private int ticks = 0;
+		private double lastApplied;
+
+		@Override
+		public Behavior onUpdate(EntityWallSegment entity) {
+			ticks++;
+
+			// Get in which direction the wall should be pulled. Needs to be reversed later by -velocity
+			EnumFacing cardinalToPush = entity.getDirection();
+
+			// Safety check
+			if (cardinalToPush == null) {
+				return this;
 			}
+
+			entity.setRestrictToVertical(false);
+
+			if (ticks == 1) {
+				int pushDistance = 4;
+				double velocity = STATS_CONFIG.wallMomentum / 5 * pushDistance / 20;
+				lastApplied = velocity;
+				AvatarUtils.applyMotionToEntityInDirection(entity, cardinalToPush, -velocity);
+
+				// Consume Chi.
+				BendingData.get(entity.getOwner()).chi().consumeChi(STATS_CONFIG.chiPushWall * 2);
+			} else {
+				// Prevent it from moving on the Y axis
+				entity.motionY = 0;
+
+				double velocity = lastApplied * 0.9;
+				AvatarUtils.applyMotionToEntityInDirection(entity, cardinalToPush, -velocity);
+				lastApplied = velocity;
+			}
+
+			// Push entities that touches the wall
+			List<Entity> collidingEntities = entity.getEntityWorld().getEntitiesWithinAABBExcludingEntity(entity,
+					entity.getCollisionBox(entity));
+
+			if (collidingEntities.size() > 0) {
+				for (Entity current : collidingEntities) {
+					AvatarUtils.applyMotionToEntityInDirection(current, cardinalToPush, -0.4);
+				}
+			}
+
+			return ticks > 50 ? new Waiting() : this;
 		}
 
 		@Override
