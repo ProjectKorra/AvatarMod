@@ -67,6 +67,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 
 	private boolean restrictToVertical;
 
+	private Vector initialPos;
+
 	static {
 		SYNC_BLOCKS_DATA = new DataParameter[SEGMENT_HEIGHT];
 		for (int i = 0; i < SEGMENT_HEIGHT; i++) {
@@ -110,6 +112,14 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 
 	public void setRestrictToVertical(boolean value) {
 		this.restrictToVertical = value;
+	}
+
+	public void setInitialPos(Vector pos) {
+		initialPos = pos;
+	}
+
+	public Vector getInitialPos() {
+		return initialPos;
 	}
 
 	/**

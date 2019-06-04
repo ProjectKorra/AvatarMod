@@ -221,6 +221,9 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			entity.setRestrictToVertical(false);
 
 			if (ticks == 1) {
+				// Save the position so that pulling can work
+				entity.setInitialPos(new Vector(entity.getPositionVector()));
+
 				// We want the wall to move... So it needs to be a little higher
 				entity.motionY = 0.1;
 
@@ -252,7 +255,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 
 			boolean done = ticks > 50;
 
-			if(done){
+			if (done) {
 				BendingData.get(entity.getOwner()).addStatusControl(StatusControl.PULL_WALL);
 			}
 
@@ -286,7 +289,8 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		public Behavior onUpdate(EntityWallSegment entity) {
 			ticks++;
 
-			// Get in which direction the wall should be pulled. Needs to be reversed later by -velocity
+			// Get in which direction the wall should be pulled. Needs to be reversed later
+			// by -velocity
 			EnumFacing cardinalToPush = entity.getDirection();
 
 			// Safety check
@@ -297,7 +301,10 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			entity.setRestrictToVertical(false);
 
 			if (ticks == 1) {
-				int pushDistance = 4;
+				// Done so that we know how far it is from where it spawned... 
+				double pushDistance = new Vector(entity.getPositionVector()).withY(0)
+						.dist(entity.getInitialPos().withY(0));
+				
 				double velocity = STATS_CONFIG.wallMomentum / 5 * pushDistance / 20;
 				lastApplied = velocity;
 				AvatarUtils.applyMotionToEntityInDirection(entity, cardinalToPush, -velocity);
@@ -323,7 +330,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 				}
 			}
 
-			return ticks > 50 ? new Waiting() : this;
+			return ticks > 100 ? new Waiting() : this;
 		}
 
 		@Override
