@@ -78,14 +78,10 @@ public class StatCtrlShootWall extends StatusControl {
 				wall = (EntityWall) result.entityHit;
 				segment = wall.getSegment(n);
 			}
-		} else {
-			return false;
-		}
+		} else return false;
 
 		// Safety check
-		if (segment == null) {
-			return false;
-		}
+		if (segment == null) return false;
 
 		float yaw = (float) Math.toRadians(entity.rotationYaw);
 		float pitch = (float) Math.toRadians(entity.rotationPitch);
@@ -98,9 +94,7 @@ public class StatCtrlShootWall extends StatusControl {
 		int usedNum = toUseBlockData.second();
 
 		// Safety check
-		if (block == Blocks.AIR) {
-			return false;
-		}
+		if (block == Blocks.AIR) return false;
 
 		EntityFloatingBlock floating = new EntityFloatingBlock(world);
 

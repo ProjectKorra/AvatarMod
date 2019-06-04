@@ -55,11 +55,11 @@ public class StatCtrlPullWall extends StatusControl {
 		if (wallSegment.getBehavior().getClass() == WallBehavior.Waiting.class) {
 
 			List<EntityWallSegment> segments = world.getEntities(EntityWallSegment.class,
-					seg -> seg.getOwner() == entity);
+					segment -> segment.getOwner() == entity);
 
-			for (EntityWallSegment seg : segments) {
-				if (seg.getBehavior().getClass().equals(WallBehavior.Waiting.class))
-					seg.setBehavior(new WallBehavior.Pull());
+			for (EntityWallSegment segment : segments) {
+				if (segment.getBehavior().getClass().equals(WallBehavior.Waiting.class))
+					segment.setBehavior(new WallBehavior.Pull());
 			}
 
 			return true;

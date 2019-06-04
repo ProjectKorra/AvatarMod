@@ -91,59 +91,11 @@ public class AbilityWall extends Ability {
 			abilityData.addXp(SKILLS_CONFIG.wallRaised);
 
 			// The range should increase the higher the level is.
-			switch (abilityData.getLevel()) {
-			case 0:
-				break;
-			case 1:
-				reach += 1;
-				break;
-			case 2:
-				reach += 2;
-				break;
-			case 3:
-				reach += 3;
-				break;
-			}
+			reach += abilityData.getLevel();
 
 			boolean wallCreated = false;
 			if (abilityData.getPath() == AbilityTreePath.MAIN) {
-
-				// Used so that the wall can be more precisely placed if needed, useful when
-				// used for building. However, during a fight, it will still spawn even if not
-				// directly looking at the ground. However this won't override the maximum reach
-				// distance.
-				BlockPos lookPos;
-				// Down 1 block so that we actually get a block...
-				BlockPos entityPos = entity.getPosition().down();
-				if (ctx.isLookingAtBlock()) {
-					lookPos = ctx.getLookPosI().toBlockPos();
-					if (lookPos.distanceSq(entityPos) > reach) {
-						lookPos = entityPos.offset(cardinal, reach);
-					}
-				} else {
-					lookPos = entityPos.offset(cardinal, reach);
-				}
-
-				Block lookBlock = world.getBlockState(lookPos).getBlock();
-				if (lookBlock == Blocks.TALLGRASS) {
-					lookPos = lookPos.down();
-				} else if (lookBlock == Blocks.DOUBLE_PLANT) {
-					lookPos = lookPos.down(2);
-				}
-
-				// Allow bending even if the block is lower than the bender by 1-2 (by default)
-				// blocks
-				if (lookBlock == Blocks.AIR) {
-					for (int i = 0; i <= reach; i++) {
-						lookPos = lookPos.down();
-						lookBlock = world.getBlockState(lookPos).getBlock();
-						if (lookBlock != Blocks.AIR)
-							break;
-					}
-				}
-
-				wallCreated = createWall(world, lookPos, lookBlock, cardinal, entity, whMin, whMax, 0, 5, random);
-
+				wallCreated = createLinearWall(ctx, world, reach, cardinal, entity, whMin, whMax, 5, random);
 			} else if (abilityData.getPath() == AbilityTreePath.SECOND) {
 				BlockPos wallPos = entity.getPosition().down();
 				Block wallBlock = world.getBlockState(wallPos).getBlock();
@@ -165,44 +117,7 @@ public class AbilityWall extends Ability {
 					wallCreated = createSurroundingWalls(world, wallPos, wallBlock, entity, whMin, whMax, random);
 				}
 			} else if (abilityData.getPath() == AbilityTreePath.FIRST) {
-
-				// Used so that the wall can be more precisely placed if needed, useful when
-				// used for building. However, during a fight, it will still spawn even if not
-				// directly looking at the ground. However this won't override the maximum reach
-				// distance.
-				BlockPos lookPos;
-				// Down 1 block so that we actually get a block...
-				BlockPos entityPos = entity.getPosition().down();
-				if (ctx.isLookingAtBlock()) {
-					lookPos = ctx.getLookPosI().toBlockPos();
-					if (lookPos.distanceSq(entityPos) > reach) {
-						lookPos = entityPos.offset(cardinal, reach);
-					}
-				} else {
-					lookPos = entityPos.offset(cardinal, reach);
-				}
-
-				Block lookBlock = world.getBlockState(lookPos).getBlock();
-				if (lookBlock == Blocks.TALLGRASS) {
-					lookPos = lookPos.down();
-				} else if (lookBlock == Blocks.DOUBLE_PLANT) {
-					lookPos = lookPos.down(2);
-				}
-
-				// Allow bending even if the block is lower than the bender by 1-2 (by default)
-				// blocks
-				if (lookBlock == Blocks.AIR) {
-					for (int i = 0; i <= reach; i++) {
-						lookPos = lookPos.down();
-						lookBlock = world.getBlockState(lookPos).getBlock();
-						if (lookBlock != Blocks.AIR)
-							break;
-					}
-				}
-
-				// The offset is used to re-center the wall
-				wallCreated = createWall(world, lookPos.offset(cardinal.rotateY(), -1), lookBlock, cardinal, entity,
-						whMin, whMax, 0, 7, random);
+				wallCreated = createLinearWall(ctx, world, reach, cardinal, entity, whMin, whMax, 7, random);
 			}
 
 			if (wallCreated) {
@@ -215,6 +130,47 @@ public class AbilityWall extends Ability {
 				}
 			}
 		}
+	}
+
+	private boolean createLinearWall(AbilityContext ctx, World world, int reach, EnumFacing cardinal,
+			EntityLivingBase entity, int whMin, int whMax, int lenght, Random random) {
+		// Used so that the wall can be more precisely placed if needed, useful when
+		// used for building. However, during a fight, it will still spawn even if not
+		// directly looking at the ground. However this won't override the maximum reach
+		// distance.
+		BlockPos lookPos;
+		// Down 1 block so that we actually get a block...
+		BlockPos entityPos = entity.getPosition().down();
+		if (ctx.isLookingAtBlock()) {
+			lookPos = ctx.getLookPosI().toBlockPos();
+			if (lookPos.distanceSq(entityPos) > reach) {
+				lookPos = entityPos.offset(cardinal, reach);
+			}
+		} else {
+			lookPos = entityPos.offset(cardinal, reach);
+		}
+
+		Block lookBlock = world.getBlockState(lookPos).getBlock();
+		if (lookBlock == Blocks.TALLGRASS) {
+			lookPos = lookPos.down();
+		} else if (lookBlock == Blocks.DOUBLE_PLANT) {
+			lookPos = lookPos.down(2);
+		}
+
+		// Allow bending even if the block is lower than the bender by 1-2 (by default)
+		// blocks
+		if (lookBlock == Blocks.AIR) {
+			for (int i = 0; i <= reach; i++) {
+				lookPos = lookPos.down();
+				lookBlock = world.getBlockState(lookPos).getBlock();
+				if (lookBlock != Blocks.AIR)
+					break;
+			}
+		}
+
+		// The offset is used to re-center the wall
+		return createWall(world, lookPos.offset(cardinal.rotateY(), -1), lookBlock, cardinal, entity, whMin, whMax, 0,
+				lenght, random);
 	}
 
 	/*

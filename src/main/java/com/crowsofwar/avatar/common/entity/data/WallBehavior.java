@@ -64,11 +64,13 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			int nbOnGround = 0;
 			for (int i = 0; i < 7; i++) {
 				EntityWallSegment current = entity.getWall().getSegment(i);
-				if (!current.onGround) nbOnGround++;
+				if (current != null) {
+					if (!current.onGround) nbOnGround++;
+				}
 			}
 
 			// Drop them if they are
-			if(nbOnGround == 0){
+			if (nbOnGround == 0) {
 				entity.dropBlocks();
 				entity.setDead();
 			}
@@ -135,9 +137,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
 
-			if (entity.getWall() == null) {
-				return this;
-			}
+			if (entity.getWall() == null) return this;
 
 			// not 0 since client missed 0th tick
 			if (ticks == 1) {
@@ -157,8 +157,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 
 			// For some reason, the same entity instance is on server/client,
 			// but has different world reference when this is called...?
-			if (!entity.world.isRemote)
-				ticks++;
+			if (!entity.world.isRemote) ticks++;
 
 			return ticks > 5 && entity.velocity().y() <= 0.2 ? new Waiting() : this;
 		}
@@ -224,9 +223,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			EnumFacing cardinalToPush = entity.getDirection();
 
 			// Safety check
-			if (cardinalToPush == null) {
-				return this;
-			}
+			if (cardinalToPush == null) return this;
 
 			entity.setRestrictToVertical(false);
 
@@ -304,9 +301,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			EnumFacing cardinalToPush = entity.getDirection();
 
 			// Safety check
-			if (cardinalToPush == null) {
-				return this;
-			}
+			if (cardinalToPush == null) return this;
 
 			entity.setRestrictToVertical(false);
 

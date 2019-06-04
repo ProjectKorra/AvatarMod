@@ -291,13 +291,13 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(this, getCollisionBox(this));
 
 		if (entities.size() > 0) {
-			for (Entity en : entities) {
-				if (en instanceof EntityPlayer) {
+			for (Entity entity : entities) {
+				if (entity instanceof EntityPlayer) {
 					if (getBehavior().getClass() == WallBehavior.Rising.class) {
-						en.addVelocity(en.motionX, 0.25D, en.motionZ);
+						entity.addVelocity(entity.motionX, 0.25D, entity.motionZ);
 					} else {
-						en.setPosition(en.prevPosX, en.prevPosY, en.prevPosZ);
-						en.applyEntityCollision(this);
+						entity.setPosition(entity.prevPosX, entity.prevPosY, entity.prevPosZ);
+						entity.applyEntityCollision(this);
 					}
 				}
 			}
