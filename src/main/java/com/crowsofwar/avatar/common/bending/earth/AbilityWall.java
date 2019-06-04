@@ -91,7 +91,7 @@ public class AbilityWall extends Ability {
 			abilityData.addXp(SKILLS_CONFIG.wallRaised);
 
 			// The range should increase the higher the level is.
-			reach += abilityData.getLevel();
+			reach = abilityData.getLevel () <= 0 ? reach : reach + abilityData.getLevel();
 
 			boolean wallCreated = false;
 			if (abilityData.getPath() == AbilityTreePath.MAIN) {
