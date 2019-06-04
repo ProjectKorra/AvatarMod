@@ -112,7 +112,7 @@ public class EntityWall extends AvatarEntity {
 		}
 
 		// Now sync all wall segment speeds
-		// Also sync all segment pos to the lowest height
+		// But only if they aren't blocked
 		for (SyncedEntity<EntityWallSegment> ref : segments) {
 			EntityWallSegment seg = ref.getEntity();
 			if (seg != null) {
@@ -120,8 +120,9 @@ public class EntityWall extends AvatarEntity {
 				Vector vel = seg.velocity();
 				Vector pos = seg.position();
 
-				seg.setVelocity(vel.withY(slowest));
-				seg.setPosition(pos.withY(lowest - seg.height));
+				if (slowest > 0.1) {
+					seg.setVelocity(vel.withY(slowest));
+				}
 
 			}
 		}

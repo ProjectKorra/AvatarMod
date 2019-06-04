@@ -59,10 +59,20 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
 			entity.addVelocity(Vector.DOWN.times(7.0 / 20));
-			if (entity.onGround) {
+
+			// Check everything is on the ground
+			int nbOnGround = 0;
+			for (int i = 0; i < 7; i++) {
+				EntityWallSegment current = entity.getWall().getSegment(i);
+				if (!current.onGround) nbOnGround++;
+			}
+
+			// Drop them if they are
+			if(nbOnGround == 0){
 				entity.dropBlocks();
 				entity.setDead();
 			}
+
 			return this;
 		}
 
@@ -301,10 +311,10 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			entity.setRestrictToVertical(false);
 
 			if (ticks == 1) {
-				// Done so that we know how far it is from where it spawned... 
+				// Done so that we know how far it is from where it spawned...
 				double pushDistance = new Vector(entity.getPositionVector()).withY(0)
 						.dist(entity.getInitialPos().withY(0));
-				
+
 				double velocity = STATS_CONFIG.wallMomentum / 5 * pushDistance / 20;
 				lastApplied = velocity;
 				AvatarUtils.applyMotionToEntityInDirection(entity, cardinalToPush, -velocity);
