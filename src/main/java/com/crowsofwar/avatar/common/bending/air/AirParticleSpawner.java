@@ -44,7 +44,7 @@ public class AirParticleSpawner extends TickHandler {
 
 		Vector pos = Vector.getEntityPos(target).plus(0, -0.05, 0);
 
-		particles.spawnParticles(target.world, EnumParticleTypes.CLOUD, 1, 1, pos,
+		particles.spawnParticles(target.world, EnumParticleTypes.EXPLOSION_NORMAL, 1, 4, pos,
 				new Vector(0.7, 0.2, 0.7));
 
 		return target.isInWater() || target.onGround || bender.isFlying();
