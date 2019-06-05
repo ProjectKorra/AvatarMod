@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
+import com.crowsofwar.avatar.common.event.BendingEvent;
 import com.crowsofwar.avatar.common.network.packets.PacketCPowerRating;
 import com.crowsofwar.avatar.common.powerrating.PrModifierHandler;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -36,6 +37,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -198,7 +200,7 @@ public abstract class Bender {
 
 			BendingData data = getData();
 			EntityLivingBase entity = getEntity();
-			if (canUseAbility(ability)) {
+			if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new BendingEvent(entity, ability))) {
 
 				double powerRating = calcPowerRating(ability.getBendingId());
 
