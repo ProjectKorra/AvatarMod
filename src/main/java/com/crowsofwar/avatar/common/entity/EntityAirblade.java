@@ -48,24 +48,25 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class EntityAirblade extends AvatarEntity {
 
+	private static final DataParameter<Float> SYNC_SIZE_MULT = EntityDataManager.createKey(EntityAirblade.class, DataSerializers.FLOAT);
 	private float damage;
-
 	/**
 	 * Hardness threshold to chop blocks. For example, setting to 1.5 will allow
 	 * the airblade to chop stone.
 	 * <p>
 	 * Note: Threshold of 0 means that the airblade can chop grass and similar
-	 * blocks. Set to > 0 to avoid chopping blocks at all.
+	 * blocks. Set to < 0 to avoid chopping blocks at all.
 	 */
 	private float chopBlocksThreshold;
 	private boolean chainAttack;
 	private boolean pierceArmor;
-	private static final DataParameter<Float> SYNC_SIZE_MULT = EntityDataManager.createKey(EntityAirblade.class, DataSerializers.FLOAT);
+	private Vector initialVelocity;
 
 	public EntityAirblade(World world) {
 		super(world);
 		setSize(0.2f, 1.5f);
 		this.chopBlocksThreshold = -1;
+		this.initialVelocity = velocity();
 	}
 
 	public float getSizeMult() {
@@ -75,6 +76,11 @@ public class EntityAirblade extends AvatarEntity {
 	public void setSizeMult(float sizeMult) {
 		dataManager.set(SYNC_SIZE_MULT, sizeMult);
 	}
+
+	public void setIntialVelocity(Vector vel) {
+		this.initialVelocity = vel;
+	}
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -95,7 +101,7 @@ public class EntityAirblade extends AvatarEntity {
 	public void onUpdate() {
 
 		super.onUpdate();
-		setSize(getSizeMult() * width, getSizeMult() * height);
+		setSize(getSizeMult() * 0.2F, getSizeMult() * 1.5F);
 
 		this.motionX = this.motionX * 0.98;
 		this.motionY = this.motionY * 0.98;
@@ -114,7 +120,7 @@ public class EntityAirblade extends AvatarEntity {
 
 		if (!world.isRemote && chopBlocksThreshold >= 0 && this.collided) {
 			breakCollidingBlocks();
-
+			setVelocity(initialVelocity.times(velocity().sqrMagnitude()));
 		}
 
 		if (!isDead && !world.isRemote) {
@@ -210,6 +216,7 @@ public class EntityAirblade extends AvatarEntity {
 			}
 		}
 	}
+
 
 	/**
 	 * Assuming the airblade can break blocks, tries to break the block.
