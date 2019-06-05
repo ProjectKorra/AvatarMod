@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.EnumParticleTypes;
 
 /**
  * @author CrowsOfWar
@@ -41,9 +42,9 @@ public class AirParticleSpawner extends TickHandler {
 		EntityLivingBase target = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 
-		Vector pos = Vector.getEntityPos(target).plus(0, 1.3, 0);
+		Vector pos = Vector.getEntityPos(target).plus(0, -0.05, 0);
 
-		particles.spawnParticles(target.world, AvatarParticles.getParticleAir(), 1, 1, pos,
+		particles.spawnParticles(target.world, EnumParticleTypes.CLOUD, 1, 1, pos,
 				new Vector(0.7, 0.2, 0.7));
 
 		return target.isInWater() || target.onGround || bender.isFlying();

@@ -112,7 +112,7 @@ public class EntityAirblade extends AvatarEntity {
 			setDead();
 		}
 
-		if (!world.isRemote && chopBlocksThreshold >= 0 && this.collidedHorizontally) {
+		if (!world.isRemote && chopBlocksThreshold >= 0 && this.collided) {
 			breakCollidingBlocks();
 
 		}
@@ -218,7 +218,7 @@ public class EntityAirblade extends AvatarEntity {
 		if (state.getBlock() == Blocks.AIR || !STATS_CONFIG.airBladeBreakableBlocks.contains(state.getBlock())) {
 			return;
 		}
-		if (!this.collidedHorizontally) {
+		if (!this.collided) {
 			return;
 		}
 

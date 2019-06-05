@@ -60,14 +60,34 @@ public class AbilityAirblade extends Ability {
 
 		AbilityData abilityData = ctx.getData().getAbilityData(this);
 		float xp = abilityData.getTotalXp();
+		float sizeMult = 1.0F;
 		float damage = STATS_CONFIG.airbladeSettings.damage;
 		damage *= 1 + xp * .015f;
 		damage *= ctx.getPowerRatingDamageMod();
 
+		switch (ctx.getLevel()) {
+			case -1 :
+				break;
+			case 0 :
+				break;
+			case 1 :
+				sizeMult = 1.25F;
+				break;
+			case  2 :
+				sizeMult = 1.5F;
+				break;
+			case 3 :
+				sizeMult = 2f;
+				break;
+		}
+		if (ctx.isMasterLevel(SECOND)) {
+			sizeMult = 4.0F;
+		}
 		EntityAirblade airblade = new EntityAirblade(world);
 		airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
 		airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 40 : 30));
 		airblade.setDamage(damage);
+		airblade.setSizeMult(sizeMult);
 		airblade.rotationPitch = entity.rotationPitch;
 		airblade.rotationYaw = entity.rotationYaw;
 		airblade.setOwner(entity);

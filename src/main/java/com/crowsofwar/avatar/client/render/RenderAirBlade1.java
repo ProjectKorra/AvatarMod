@@ -25,9 +25,9 @@ public class RenderAirBlade1 extends RenderModel<EntityAirblade> {
 		GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
 		GlStateManager.rotate(180, 1, 0, 0);
 		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
-	//	GlStateManager.scale(entity.getSize()/2, entity.getSize()/2, entity.getSize()/2);
 	//	GlStateManager.translate(0, entity.getSize() / 4, 0);
 		GlStateManager.rotate(90, 0, 0, 1);
+		GlStateManager.scale(entity.getSizeMult(), entity.getSizeMult(), entity.getSizeMult());
 	}
 
 	@Nullable

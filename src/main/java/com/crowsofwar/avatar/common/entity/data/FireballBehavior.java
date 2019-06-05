@@ -191,7 +191,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			}
 
 			Vector motion = Objects.requireNonNull(target).minus(entity.position());
-			motion = motion.times(0.5 * 20);
+			motion = motion.times(5);
 			entity.setVelocity(motion);
 
 			if (entity.getAbility() instanceof AbilityFireball) {
