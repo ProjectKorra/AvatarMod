@@ -64,9 +64,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			int nbOnGround = 0;
 			for (int i = 0; i < 7; i++) {
 				EntityWallSegment current = entity.getWall().getSegment(i);
-				if (current != null) {
-					if (!current.onGround) nbOnGround++;
-				}
+				if (current != null && !current.onGround) nbOnGround++;
 			}
 
 			// Drop them if they are
