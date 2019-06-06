@@ -44,6 +44,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -63,6 +64,10 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			.createKey(EntityWallSegment.class, WallBehavior.SERIALIZER);
 
 	private static final DataParameter<Optional<IBlockState>>[] SYNC_BLOCKS_DATA;
+
+	private boolean restrictToVertical;
+
+	private Vector initialPos;
 
 	static {
 		SYNC_BLOCKS_DATA = new DataParameter[SEGMENT_HEIGHT];
@@ -84,6 +89,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		this.wallReference = new SyncedEntity<>(this, SYNC_WALL);
 		this.wallReference.preventNullSaving();
 		this.setSize(.9f, 5);
+		this.restrictToVertical = true;
 	}
 
 	@Override
@@ -102,6 +108,18 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	public boolean isShield() {
 		return true;
+	}
+
+	public void setRestrictToVertical(boolean value) {
+		this.restrictToVertical = value;
+	}
+
+	public void setInitialPos(Vector pos) {
+		initialPos = pos;
+	}
+
+	public Vector getInitialPos() {
+		return initialPos;
 	}
 
 	/**
@@ -134,13 +152,20 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		if (behavior instanceof WallBehavior.Drop) {
 			if (getOwner() != null) {
 				BendingData.get(getOwner()).removeStatusControl(StatusControl.DROP_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControl.PLACE_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControl.SHOOT_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControl.PUSH_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControl.PULL_WALL);
 			}
 		}
-
 	}
 
 	public void setDirection(EnumFacing dir) {
 		this.direction = dir;
+	}
+
+	public EnumFacing getDirection() {
+		return direction;
 	}
 
 	public int getBlocksOffset() {
@@ -194,6 +219,7 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 
 	@Override
 	public void onUpdate() {
+
 		super.onUpdate();
 		ignoreFrustumCheck = true;
 
@@ -201,7 +227,9 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 			this.setDead();
 		}
 		// restrict to only vertical movement
-		setVelocity(velocity().withX(0).withZ(0));
+		if (restrictToVertical) {
+			setVelocity(velocity().withX(0).withZ(0));
+		}
 
 		WallBehavior next = (WallBehavior) getBehavior().onUpdate(this);
 		if (getBehavior() != next)
@@ -255,6 +283,25 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	public boolean canPush() {
 		return false;
+	}
+
+	@Override
+	public void onCollideWithPlayer(EntityPlayer entityIn) {
+		// Prevents some insane glitches...
+		List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(this, getCollisionBox(this));
+
+		if (entities.size() > 0) {
+			for (Entity entity : entities) {
+				if (entity instanceof EntityPlayer) {
+					if (getBehavior().getClass() == WallBehavior.Rising.class) {
+						entity.addVelocity(entity.motionX, 0.25D, entity.motionZ);
+					} else {
+						entity.setPosition(entity.prevPosX, entity.prevPosY, entity.prevPosZ);
+						entity.applyEntityCollision(this);
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -317,7 +364,6 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		}
 		// this.setVelocity(Vector.ZERO);
 		// For some reason the wall is affected by explosions and whatnot
-
 	}
 
 	@Override
