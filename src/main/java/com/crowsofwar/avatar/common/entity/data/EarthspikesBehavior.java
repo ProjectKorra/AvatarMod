@@ -45,6 +45,7 @@ import net.minecraft.world.WorldServer;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -105,14 +106,14 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 			AbilityData abilityData = AbilityData.get(owner, entity.getAbility().getName());
 			float frequency = STATS_CONFIG.earthspikeSettings.frequency;
 			double damage = STATS_CONFIG.earthspikeSettings.damage;
-			float size = STATS_CONFIG.earthspikeSettings.size * 0.75F;
+			float size = STATS_CONFIG.earthspikeSettings.size * 0.25F;
 			float xpModifier = abilityData.getTotalXp() / 400;
 
 			switch (abilityData.getLevel()) {
 			case 1:
 				damage = STATS_CONFIG.earthspikeSettings.damage * 1.33;
 				// 4
-				size = STATS_CONFIG.earthspikeSettings.size * 1F;
+				size = STATS_CONFIG.earthspikeSettings.size * 0.5F;
 				// 1.25
 				break;
 			case 2:
@@ -120,7 +121,7 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 				// 3
 				damage = STATS_CONFIG.earthspikeSettings.damage * 1.66;
 				// 5
-				size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
+				size = STATS_CONFIG.earthspikeSettings.size * 0.75F;
 				// 1.5
 				break;
 			case 3:
@@ -129,7 +130,7 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 				// 2
 				damage = STATS_CONFIG.earthspikeSettings.damage * 2.25;
 				// 7.5
-				size = STATS_CONFIG.earthspikeSettings.size * 1.75F;
+				size = STATS_CONFIG.earthspikeSettings.size * 1F;
 				// 2
 			}
 
@@ -140,7 +141,7 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 			size += xpModifier;
 
 			damage += xpModifier;
-			damage *= Bender.get(owner).getDamageMult(Earthbending.ID);
+			damage *= Objects.requireNonNull(Bender.get(owner)).getDamageMult(Earthbending.ID);
 
 			if (entity != null) {
 				if (ticks % frequency == 0 && ticks > frequency / 3) {
@@ -213,8 +214,8 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 			// Octopus Fissure
 			damage = STATS_CONFIG.earthspikeSettings.damage * 2.5;
 			// 6
-			size = STATS_CONFIG.earthspikeSettings.size * 1.5F;
-			// 1.75
+			size = STATS_CONFIG.earthspikeSettings.size * 1.25F;
+			// 1.25
 
 			size = (size + ticks / 45F) + xpModifier;
 

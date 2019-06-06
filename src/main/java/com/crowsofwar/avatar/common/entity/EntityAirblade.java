@@ -19,7 +19,9 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -67,6 +69,7 @@ public class EntityAirblade extends AvatarEntity {
 		setSize(0.2f, 1.5f);
 		this.chopBlocksThreshold = -1;
 		this.initialVelocity = velocity();
+		this.noClip = true;
 	}
 
 	public float getSizeMult() {
@@ -107,7 +110,17 @@ public class EntityAirblade extends AvatarEntity {
 		this.motionY = this.motionY * 0.98;
 		this.motionZ = this.motionZ * 0.98;
 
-		if (!world.isRemote && velocity().sqrMagnitude() <= .9) {
+		if (!world.isRemote && getOwner() != null && getAbility() instanceof AbilityAirblade) {
+			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
+			if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				if (velocity().sqrMagnitude() <= 0.5) {
+					setDead();
+				}
+
+			} else if (velocity().sqrMagnitude() <= 0.9) {
+				setDead();
+			}
+		} else if (!world.isRemote && velocity().sqrMagnitude() <= .9) {
 			setDead();
 		}
 
@@ -118,9 +131,8 @@ public class EntityAirblade extends AvatarEntity {
 			setDead();
 		}
 
-		if (!world.isRemote && chopBlocksThreshold >= 0 && this.collided) {
+		if (!world.isRemote && chopBlocksThreshold >= 0) {
 			breakCollidingBlocks();
-			setVelocity(initialVelocity.times(velocity().sqrMagnitude()));
 		}
 
 		if (!isDead && !world.isRemote) {
@@ -200,19 +212,21 @@ public class EntityAirblade extends AvatarEntity {
 	private void breakCollidingBlocks() {
 		// Hitbox expansion (in each direction) to destroy blocks before the
 		// airblade collides with them
-		double expansion = 0.1;
+		double expansion = getSizeMult() / 5;
 		AxisAlignedBB hitbox = getEntityBoundingBox().grow(expansion, expansion, expansion);
 
-		for (int ix = 0; ix <= 1; ix++) {
-			for (int iz = 0; iz <= 1; iz++) {
+		for (int iy = 0; iy <= getSizeMult() * 1.5F; iy++) {
+			for (int ix = 0; ix <= 1; ix++) {
+				for (int iz = 0; iz <= 1; iz++) {
 
-				double x = ix == 0 ? hitbox.minX : hitbox.maxX;
-				double y = hitbox.minY;
-				double z = iz == 0 ? hitbox.minZ : hitbox.maxZ;
-				BlockPos pos = new BlockPos(x, y, z);
+					double x = ix == 0 ? hitbox.minX : hitbox.maxX;
+					double y = iy == 0 ? hitbox.minY : hitbox.maxY;
+					double z = iz == 0 ? hitbox.minZ : hitbox.maxZ;
+					BlockPos pos = new BlockPos(x, y, z);
 
-				tryBreakBlock(world.getBlockState(pos), pos);
+					tryBreakBlock(world.getBlockState(pos), pos);
 
+				}
 			}
 		}
 	}
@@ -223,9 +237,6 @@ public class EntityAirblade extends AvatarEntity {
 	 */
 	private void tryBreakBlock(IBlockState state, BlockPos pos) {
 		if (state.getBlock() == Blocks.AIR || !STATS_CONFIG.airBladeBreakableBlocks.contains(state.getBlock())) {
-			return;
-		}
-		if (!this.collided) {
 			return;
 		}
 

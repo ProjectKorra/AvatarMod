@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -28,7 +26,7 @@ public class RenderAirBlade1 extends RenderModel<EntityAirblade> {
 		GlStateManager.rotate(180, 1, 0, 0);
 		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
 		GlStateManager.rotate(90, 0, 0, 1);
-		GlStateManager.translate(-entity.getSizeMult() * 0.8,  -entity.getSizeMult() * 0.625, 0);
+		GlStateManager.translate(-entity.getSizeMult() * 0.7, -entity.getSizeMult() * 0.625, 0);
 		GlStateManager.scale(entity.getSizeMult(), entity.getSizeMult(), entity.getSizeMult());
 	}
 
