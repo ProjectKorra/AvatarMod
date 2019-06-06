@@ -212,9 +212,8 @@ public class EntityAirblade extends AvatarEntity {
 	private void breakCollidingBlocks() {
 		// Hitbox expansion (in each direction) to destroy blocks before the
 		// airblade collides with them
-		double expansion = getSizeMult() / 5;
+		double expansion = getSizeMult() / 10;
 		AxisAlignedBB hitbox = getEntityBoundingBox().grow(expansion, expansion, expansion);
-
 		for (int iy = 0; iy <= getSizeMult() * 1.5F; iy++) {
 			for (int ix = 0; ix <= 1; ix++) {
 				for (int iz = 0; iz <= 1; iz++) {
@@ -243,7 +242,7 @@ public class EntityAirblade extends AvatarEntity {
 		float hardness = state.getBlockHardness(world, pos);
 		if (hardness <= chopBlocksThreshold) {
 			breakBlock(pos);
-			setVelocity(velocity().times(0.5));
+			setVelocity(velocity().times(0.95));
 		}
 	}
 
