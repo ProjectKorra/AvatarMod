@@ -67,46 +67,68 @@ public class AbilityAirblade extends Ability {
 
 		switch (ctx.getLevel()) {
 			case -1 :
-				break;
 			case 0 :
 				break;
 			case 1 :
+				damage += 1F;
 				sizeMult = 1.25F;
 				break;
-			case  2 :
+			case 2 :
+				damage += 2f;
 				sizeMult = 1.5F;
-				break;
-			case 3 :
-				sizeMult = 2f;
 				break;
 		}
 		if (ctx.isMasterLevel(SECOND)) {
 			sizeMult = 4.0F;
+			damage += 2.5F;
 		}
-		EntityAirblade airblade = new EntityAirblade(world);
-		airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
-		airblade.setAbility(new AbilityAirblade());
-		airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 40 : 30));
-		airblade.setIntialVelocity(look.times(ctx.getLevel() >= 1 ? 40 : 30));
-		airblade.setDamage(damage);
-		airblade.setSizeMult(sizeMult);
-		airblade.rotationPitch = entity.rotationPitch;
-		airblade.rotationYaw = entity.rotationYaw;
-		airblade.setOwner(entity);
-		airblade.setAbility(this);
-		airblade.setPierceArmor(abilityData.isMasterPath(SECOND));
-		airblade.setChainAttack(abilityData.isMasterPath(FIRST));
+		if (ctx.isMasterLevel(FIRST)) {
+			damage += 4F;
+			sizeMult = 1.25F;
+		}
 
 		float chopBlocks = -1;
 		if (abilityData.getLevel() >= 1) {
 			chopBlocks = 0;
 		}
-		if (abilityData.isMasterPath(SECOND)) {
-			chopBlocks = 2;
+		if (ctx.isMasterLevel(SECOND)) {
+			chopBlocks = 4;
 		}
-		airblade.setChopBlocksThreshold(chopBlocks);
 
-		world.spawnEntity(airblade);
+		if (ctx.isMasterLevel(FIRST)) {
+			for (int i = 0; i < 5; i++){
+				Vector direction = Vector.toRectangular(Math.toRadians(entity.rotationYaw - 80 + i * 40), entity.rotationPitch);
+				EntityAirblade airblade = new EntityAirblade(world);
+				airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
+				airblade.setAbility(new AbilityAirblade());
+				airblade.setVelocity(direction.times(50));
+				airblade.setDamage(damage);
+				airblade.setSizeMult(sizeMult);
+				airblade.rotationPitch = entity.rotationPitch;
+				airblade.rotationYaw = entity.rotationYaw;
+				airblade.setOwner(entity);
+				airblade.setAbility(this);
+				airblade.setPierceArmor(true);
+				airblade.setPierceArmor(false);
+				airblade.setChopBlocksThreshold(chopBlocks);
+				world.spawnEntity(airblade);
+			}
+		}
+		else {
+			EntityAirblade airblade = new EntityAirblade(world);
+			airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
+			airblade.setAbility(new AbilityAirblade());
+			airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 40 : 30));
+			airblade.setDamage(damage);
+			airblade.setSizeMult(sizeMult);
+			airblade.rotationPitch = entity.rotationPitch;
+			airblade.rotationYaw = entity.rotationYaw;
+			airblade.setOwner(entity);
+			airblade.setAbility(this);
+			airblade.setPierceArmor(false);
+			airblade.setChopBlocksThreshold(chopBlocks);
+			world.spawnEntity(airblade);
+		}
 
 	}
 

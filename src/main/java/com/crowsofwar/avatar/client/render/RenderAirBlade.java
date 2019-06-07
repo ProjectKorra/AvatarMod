@@ -4,15 +4,16 @@ import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 
-public class RenderAirBlade1 extends RenderModel<EntityAirblade> {
+public class RenderAirBlade extends RenderModel<EntityAirblade> {
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
 			"textures/entity/air-blade.png");
 
-	public RenderAirBlade1(RenderManager renderManager) {
+	public RenderAirBlade(RenderManager renderManager) {
 		super(renderManager, new ModelAirBlade());
 		setGlowing();
 	}
@@ -28,6 +29,13 @@ public class RenderAirBlade1 extends RenderModel<EntityAirblade> {
 		GlStateManager.rotate(90, 0, 0, 1);
 		GlStateManager.translate(-entity.getSizeMult() * 0.7, -entity.getSizeMult() * 0.625, 0);
 		GlStateManager.scale(entity.getSizeMult(), entity.getSizeMult(), entity.getSizeMult());
+	}
+
+	@Override
+	public void doRender(EntityAirblade entity, double x, double y, double z, float entityYaw, float partialTicks) {
+		super.doRender(entity, x, y, z, entityYaw, partialTicks);
+		entity.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.posY + 0.75 * entity.getSizeMult(), entity.posZ,
+				entity.world.rand.nextDouble() / 20,entity.world.rand.nextDouble() / 20, entity.world.rand.nextDouble() / 20);
 	}
 
 	@Nullable

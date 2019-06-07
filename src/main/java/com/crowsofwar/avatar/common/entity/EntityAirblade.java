@@ -24,12 +24,9 @@ import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import com.google.common.base.Predicate;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -60,15 +57,12 @@ public class EntityAirblade extends AvatarEntity {
 	 * blocks. Set to < 0 to avoid chopping blocks at all.
 	 */
 	private float chopBlocksThreshold;
-	private boolean chainAttack;
 	private boolean pierceArmor;
-	private Vector initialVelocity;
 
 	public EntityAirblade(World world) {
 		super(world);
 		setSize(0.2f, 1.5f);
 		this.chopBlocksThreshold = -1;
-		this.initialVelocity = velocity();
 		this.noClip = true;
 	}
 
@@ -80,9 +74,6 @@ public class EntityAirblade extends AvatarEntity {
 		dataManager.set(SYNC_SIZE_MULT, sizeMult);
 	}
 
-	public void setIntialVelocity(Vector vel) {
-		this.initialVelocity = vel;
-	}
 
 	@Override
 	protected void entityInit() {
@@ -158,9 +149,9 @@ public class EntityAirblade extends AvatarEntity {
 		motion = motion.times(STATS_CONFIG.airbladeSettings.push).withY(0.08);
 		collided.addVelocity(motion.x(), motion.y(), motion.z());
 
-		if (canDamageEntity(collided)) {
+		if (canDamageEntity(collided) && getOwner() != null) {
 
-
+			BendingData data = getOwnerBender().getData();
 			DamageSource source = AvatarDamageSource.causeAirbladeDamage(collided, getOwner());
 			if (pierceArmor) {
 				source.setDamageBypassesArmor();
@@ -168,37 +159,11 @@ public class EntityAirblade extends AvatarEntity {
 
 			boolean successfulHit = collided.attackEntityFrom(source, damage);
 
-			if (getOwner() != null) {
-				BendingData data = getOwnerBender().getData();
-				data.getAbilityData("airblade").addXp(SKILLS_CONFIG.airbladeHit);
-			}
-
 			if (successfulHit) {
 				BattlePerformanceScore.addMediumScore(getOwner());
+				data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.airbladeHit);
 			}
-
-			if (chainAttack) {
-				if (successfulHit) {
-
-					AxisAlignedBB aabb = getEntityBoundingBox().grow(10);
-					Predicate<EntityLivingBase> notFriendly =//
-							entity -> entity != collided && entity != getOwner();
-
-					List<EntityLivingBase> nextTargets = world.getEntitiesWithinAABB
-							(EntityLivingBase.class, aabb, notFriendly);
-
-					nextTargets.sort(AvatarUtils.getSortByDistanceComparator
-							(this::getDistance));
-
-					if (!nextTargets.isEmpty()) {
-						EntityLivingBase nextTarget = nextTargets.get(0);
-						Vector direction = Vector.getEntityPos(nextTarget).minus(this.position());
-						setVelocity(direction.normalize().times(velocity().magnitude() *
-								0.5));
-					}
-
-				}
-			} else if (!world.isRemote) {
+			if (!(getAbility() instanceof AbilityAirblade) || data.getAbilityData("airblade").getLevel() < 3) {
 				setDead();
 			}
 
@@ -271,21 +236,12 @@ public class EntityAirblade extends AvatarEntity {
 		this.pierceArmor = piercing;
 	}
 
-	public boolean isChainAttack() {
-		return chainAttack;
-	}
-
-	public void setChainAttack(boolean chainAttack) {
-		this.chainAttack = chainAttack;
-	}
-
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		damage = nbt.getFloat("Damage");
 		chopBlocksThreshold = nbt.getFloat("ChopBlocksThreshold");
 		pierceArmor = nbt.getBoolean("Piercing");
-		chainAttack = nbt.getBoolean("ChainAttack");
 	}
 
 	@Override
@@ -294,7 +250,6 @@ public class EntityAirblade extends AvatarEntity {
 		nbt.setFloat("Damage", damage);
 		nbt.setFloat("ChopBlocksThreshold", chopBlocksThreshold);
 		nbt.setBoolean("Piercing", pierceArmor);
-		nbt.setBoolean("ChainAttack", chainAttack);
 	}
 
 	@Override

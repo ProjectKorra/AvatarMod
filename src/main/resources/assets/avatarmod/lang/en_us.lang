@@ -304,8 +304,8 @@ avatar.ability.airblade.desc=A spinning disc of air powerful enough to cut flesh
 avatar.ability.airblade.lvl1=Slice n' Dice!
 avatar.ability.airblade.lvl2=Higher speeds and damage
 avatar.ability.airblade.lvl3=Can now cut blocks
-avatar.ability.airblade.lvl4_1=§f§l§oChainblade ;; Bounces through multiple enemies
-avatar.ability.airblade.lvl4_2=§f§l§oArmor §f§l§opiercer ;; Cuts through armor and stone
+avatar.ability.airblade.lvl4_1=§f§l§oDragon §f§l§oClaw ;; Shoot 5 smaller, ultra-fast airblades that pierces enemies!
+avatar.ability.airblade.lvl4_2=§f§l§oCyclone §f§l§oCleave ;; Super massive, destroys most blocks.
 
 avatar.ability.air_bubble=§f§lAir Bubble
 avatar.ability.air_bubble.desc=Create a bubble of air around you to protect yourself from incoming attacks. However, it takes lots of chi to maintain.
