@@ -9,6 +9,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityItemFrame;
+import net.minecraft.entity.item.EntityPainting;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -125,7 +129,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 				for (Entity entity : list) {
 					if (entity instanceof AvatarEntity) {
 						((AvatarEntity) entity).onFireContact();
-					} else if (entity instanceof EntityLivingBase) {
+					} else if (entity instanceof EntityLivingBase || !(entity instanceof EntityItem) || !(entity instanceof EntityItemFrame) || !(entity instanceof EntityPainting) || !(entity instanceof EntityXPOrb)) {
 						handleCollision(entity);
 					}
 
@@ -152,17 +156,13 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	}**/
 
 	private void handleCollision(Entity collided) {
-		if (spawner.canDamageEntity(collided)) {
-			damageEntity(collided);
-		}
-		collided.setFire(collided.isImmuneToFire() ? 0 : 8);
+		damageEntity(collided);
+		collided.setFire(8);
 	}
 
 
 	private void damageEntity(Entity entity) {
-		if (world.isRemote) {
-			return;
-		}
+		if (world.isRemote) return;
 
 		DamageSource damageSource = AvatarDamageSource.LIGHTNING;
 		float damage = STATS_CONFIG.lightningRazeSettings.damage;

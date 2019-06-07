@@ -35,17 +35,25 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+
+import javax.annotation.Nullable;
 
 import static com.crowsofwar.avatar.AvatarLog.WarningType.INVALID_SAVE;
 import static java.lang.Math.cos;
@@ -424,6 +432,101 @@ public class AvatarUtils {
 			super(message);
 		}
 
+	}
+
+	/**
+	 * Method for ray tracing entities (the useless default method doesn't work,
+	 * despite EnumHitType having an ENTITY field...) You can also use this for
+	 * seeking.
+	 *
+	 * @param world                  The world the raytrace is in.
+	 * @param x                      startX
+	 * @param y                      startY
+	 * @param z                      startZ
+	 * @param tx                     endX
+	 * @param ty                     endY
+	 * @param tz                     endZ
+	 * @param borderSize             extra area to examine around line for entities
+	 * @param excluded               any excluded entities (the player, spell
+	 *                               entities, previously hit entities, etc)
+	 * @param raytraceNonSolidBlocks This controls whether or not the raytrace goes
+	 *                               through non-solid blocks, such as grass,
+	 *                               fences, trapdoors, cobwebs, e.t.c.
+	 * @return a RayTraceResult of either the block hit (no entity hit), the entity
+	 *         hit (hit an entity), or null for nothing hit
+	 */
+	@Nullable
+	public static RayTraceResult tracePath(World world, float x, float y, float z, float tx, float ty, float tz,
+			float borderSize, HashSet<Entity> excluded, boolean collideablesOnly, boolean raytraceNonSolidBlocks) {
+		Vec3d startVec = new Vec3d(x, y, z);
+		Vec3d endVec = new Vec3d(tx, ty, tz);
+		float minX = x < tx ? x : tx;
+		float minY = y < ty ? y : ty;
+		float minZ = z < tz ? z : tz;
+		float maxX = x > tx ? x : tx;
+		float maxY = y > ty ? y : ty;
+		float maxZ = z > tz ? z : tz;
+		AxisAlignedBB bb = new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ).grow(borderSize, borderSize,
+				borderSize);
+		List<Entity> allEntities = world.getEntitiesWithinAABBExcludingEntity(null, bb);
+		RayTraceResult blockHit = world.rayTraceBlocks(startVec, endVec);
+		if (blockHit != null && !world.getBlockState(blockHit.getBlockPos()).isFullBlock() && !raytraceNonSolidBlocks) {
+			blockHit = null;
+		}
+		startVec = new Vec3d(x, y, z);
+		endVec = new Vec3d(tx, ty, tz);
+		float maxDistance = (float) endVec.distanceTo(startVec);
+		if (blockHit != null) {
+			maxDistance = (float) blockHit.hitVec.distanceTo(startVec);
+		}
+		Entity closestHitEntity = null;
+		float closestHit = maxDistance;
+		float currentHit;
+		AxisAlignedBB entityBb;// = ent.getBoundingBox();
+		RayTraceResult intercept;
+		for (Entity ent : allEntities) {
+			if ((ent.canBeCollidedWith() || !collideablesOnly) && (excluded == null || !excluded.contains(ent))) {
+				float entBorder = ent.getCollisionBorderSize();
+				entityBb = ent.getEntityBoundingBox();
+				entityBb = entityBb.grow(entBorder, entBorder, entBorder);
+				if (borderSize != 0)
+					entityBb = entityBb.grow(borderSize, borderSize, borderSize);
+				intercept = entityBb.calculateIntercept(startVec, endVec);
+				if (intercept != null) {
+					currentHit = (float) intercept.hitVec.distanceTo(startVec);
+					if (currentHit < closestHit || currentHit == 0) {
+						closestHit = currentHit;
+						closestHitEntity = ent;
+					}
+				}
+			}
+		}
+		if (closestHitEntity != null) {
+			blockHit = new RayTraceResult(closestHitEntity);
+		}
+		return blockHit;
+	}
+
+	/** 
+	 * Applies a velocity that an entity in the provided cardinal. Does not support UP & DOWN
+	*/
+	public static void applyMotionToEntityInDirection(Entity entity, EnumFacing cardinal, double velocity) {
+		switch (cardinal) {
+			case NORTH:
+				entity.motionZ = -velocity;
+				break;
+			case EAST:
+				entity.motionX = velocity;
+				break;
+			case SOUTH:
+				entity.motionZ = velocity;
+				break;
+			case WEST:
+				entity.motionX = -velocity;
+				break;
+			default:
+				break;
+		}
 	}
 
 }

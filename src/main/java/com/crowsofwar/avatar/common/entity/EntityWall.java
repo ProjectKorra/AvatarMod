@@ -47,7 +47,7 @@ public class EntityWall extends AvatarEntity {
 	private static final DataParameter<Optional<UUID>>[] SYNC_SEGMENTS;
 
 	static {
-		SYNC_SEGMENTS = new DataParameter[5];
+		SYNC_SEGMENTS = new DataParameter[7];
 		for (int i = 0; i < SYNC_SEGMENTS.length; i++) {
 			SYNC_SEGMENTS[i] = EntityDataManager.createKey(EntityWall.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 		}
@@ -68,7 +68,7 @@ public class EntityWall extends AvatarEntity {
 	@SuppressWarnings("unchecked")
 	public EntityWall(World world) {
 		super(world);
-		this.segments = new SyncedEntity[5];
+		this.segments = new SyncedEntity[7];
 		for (int i = 0; i < segments.length; i++) {
 			segments[i] = new SyncedEntity(this, SYNC_SEGMENTS[i]);
 			segments[i].preventNullSaving();
@@ -115,7 +115,7 @@ public class EntityWall extends AvatarEntity {
 		}
 
 		// Now sync all wall segment speeds
-		// Also sync all segment pos to the lowest height
+		// But only if they aren't blocked
 		for (SyncedEntity<EntityWallSegment> ref : segments) {
 			EntityWallSegment seg = ref.getEntity();
 			if (seg != null) {
@@ -123,8 +123,9 @@ public class EntityWall extends AvatarEntity {
 				Vector vel = seg.velocity();
 				Vector pos = seg.position();
 
-				seg.setVelocity(vel.withY(slowest));
-				seg.setPosition(pos.withY(lowest - seg.height));
+				if (slowest > 0.1) {
+					seg.setVelocity(vel.withY(slowest));
+				}
 
 			}
 		}

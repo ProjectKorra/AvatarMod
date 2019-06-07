@@ -148,10 +148,10 @@ avatar.ability.ravine.lvl4_2=§2§l§oShaking §2§l§oearth ;; Chance to knock 
 avatar.ability.wall=§2§lWall
 avatar.ability.wall.desc=Raise a protective barrier in front of yourself. It can block incoming projectiles and mobs.
 avatar.ability.wall.lvl1=Summon a small wall
-avatar.ability.wall.lvl2=Create a larger wall
-avatar.ability.wall.lvl3=Create a larger wall
-avatar.ability.wall.lvl4_1=Shoot projectiles through the wall
-avatar.ability.wall.lvl4_2=Wall stays up for longer, but uses up chi
+avatar.ability.wall.lvl2=Create a larger wall, further away
+avatar.ability.wall.lvl3=Shoot parts of the wall
+avatar.ability.wall.lvl4_1=Create a massive wall, and shoot pieces of it
+avatar.ability.wall.lvl4_2=Surround yourself by walls, and push your enemies away with them
 
 avatar.ability.mine_blocks=§2§lMine §2§lBlocks
 avatar.ability.mine_blocks.desc=Quickly destroy blocks to mine out tunnels
