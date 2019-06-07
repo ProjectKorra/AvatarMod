@@ -97,7 +97,8 @@ public class AbilityAirblade extends Ability {
 
 		if (ctx.isMasterLevel(FIRST)) {
 			for (int i = 0; i < 5; i++){
-				Vector direction = Vector.toRectangular(Math.toRadians(entity.rotationYaw - 80 + i * 40), entity.rotationPitch);
+				float yaw = entity.rotationYaw - 80 + i * 40;
+				Vector direction = Vector.toRectangular(Math.toRadians(yaw), entity.rotationPitch);
 				EntityAirblade airblade = new EntityAirblade(world);
 				airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
 				airblade.setAbility(new AbilityAirblade());
@@ -105,7 +106,7 @@ public class AbilityAirblade extends Ability {
 				airblade.setDamage(damage);
 				airblade.setSizeMult(sizeMult);
 				airblade.rotationPitch = entity.rotationPitch;
-				airblade.rotationYaw = entity.rotationYaw;
+				airblade.rotationYaw = yaw;
 				airblade.setOwner(entity);
 				airblade.setAbility(this);
 				airblade.setPierceArmor(true);

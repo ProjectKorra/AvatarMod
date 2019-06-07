@@ -373,12 +373,10 @@ public abstract class AvatarEntity extends Entity {
 	 * pushes the entities away.
 	 */
 	public boolean canCollideWith(Entity entity) {
-		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
-			return false;
-		} else if (entity == getOwner()) {
+		if (entity == getOwner()) {
 			return false;
 		} else
-			return entity instanceof AvatarEntity || (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase;
+			return entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != getOwner()|| (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase;
 	}
 
 	@Override

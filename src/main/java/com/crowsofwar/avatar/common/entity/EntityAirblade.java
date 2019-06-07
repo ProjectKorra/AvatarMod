@@ -88,7 +88,7 @@ public class EntityAirblade extends AvatarEntity {
 
 	@Override
 	public boolean canCollideWith(Entity entity) {
-		return super.canCollideWith(entity) && entity != getOwner();
+		return super.canCollideWith(entity) && !(entity instanceof EntityAirblade);
 	}
 
 	@Override
@@ -251,6 +251,7 @@ public class EntityAirblade extends AvatarEntity {
 		nbt.setFloat("ChopBlocksThreshold", chopBlocksThreshold);
 		nbt.setBoolean("Piercing", pierceArmor);
 	}
+
 
 	@Override
 	public boolean isProjectile() {
