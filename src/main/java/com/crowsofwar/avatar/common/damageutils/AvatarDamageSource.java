@@ -26,6 +26,7 @@ import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
@@ -318,11 +319,17 @@ public class AvatarDamageSource {
 				if (hit instanceof EntityHusk) {
 					event.setAmount(event.getAmount() * 0.75F);
 				}
+				if (hit.world.rand.nextInt(3) + 1 == 2) {
+					((EntityLivingBase) hit).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS,5, 0, false, false));
+				}
 			}
 
 			if (source == AvatarDamageSource.ICE) {
 				if (hit instanceof EntityStray) {
 					event.setAmount(event.getAmount() * 0.75F);
+				}
+				if (hit.world.rand.nextInt(3) + 1 == 2) {
+					((EntityLivingBase) hit).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS,5, 0, false, false));
 				}
 			}
 		}

@@ -152,7 +152,7 @@ public class EntityAirblade extends AvatarEntity {
 		if (canDamageEntity(collided) && getOwner() != null) {
 
 			BendingData data = getOwnerBender().getData();
-			DamageSource source = AvatarDamageSource.causeAirbladeDamage(collided, getOwner());
+			DamageSource source = AvatarDamageSource.causeIndirectBendingDamage(getOwner(), this, AvatarDamageSource.AIR);
 			if (pierceArmor) {
 				source.setDamageBypassesArmor();
 			}

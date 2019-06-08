@@ -197,17 +197,13 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 			if (!worldIn.isRemote && worldIn instanceof WorldServer) {
 				WorldServer world = (WorldServer) worldIn;
 				if (entityIn.ticksExisted % 40 == 0) {
-					world.spawnParticle(EnumParticleTypes.CLOUD, entityIn.posX,
+					world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entityIn.posX,
 					                    entityIn.posY + entityIn.getEyeHeight(),
 					                    entityIn.posZ, 1, 0, 0, 0, 0.04);
 					((EntityLivingBase) entityIn)
-									.addPotionEffect(new PotionEffect(MobEffects.SPEED, 40));
+									.addPotionEffect(new PotionEffect(MobEffects.SPEED, 40, 0, false, false));
 					((EntityLivingBase) entityIn)
-									.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 40));
-					if ((new Random().nextInt(2) + 1) >= 2) {
-						((EntityLivingBase) entityIn).addPotionEffect(
-										new PotionEffect(MobEffects.INVISIBILITY, 20));
-					}
+									.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 40, 0, false, false));
 				}
 			}
 		}
@@ -216,13 +212,13 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 				if (!worldIn.isRemote && worldIn instanceof WorldServer) {
 					WorldServer world = (WorldServer) worldIn;
 					if (entityIn.ticksExisted % 40 == 0) {
-						world.spawnParticle(EnumParticleTypes.CLOUD, entityIn.posX,
+						world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entityIn.posX,
 						                    entityIn.posY + entityIn.getEyeHeight(),
 						                    entityIn.posZ, 1, 0, 0, 0, 0.04);
 						((EntityLivingBase) entityIn)
-										.addPotionEffect(new PotionEffect(MobEffects.SPEED, 40));
+										.addPotionEffect(new PotionEffect(MobEffects.SPEED, 40, 0, false, false));
 						((EntityLivingBase) entityIn).addPotionEffect(
-										new PotionEffect(MobEffects.JUMP_BOOST, 40));
+										new PotionEffect(MobEffects.JUMP_BOOST, 40, 0, false, false));
 					}
 				}
 			}

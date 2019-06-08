@@ -60,15 +60,15 @@ public class AbilitySlipstream extends Ability {
 				effectLevel = 2;
 			}
 
-			entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, effectLevel));
+			entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, effectLevel, false, false));
 			data.getAbilityData("slipstream").addXp(xp);
 
 			if (abilityData.getLevel() >= 1) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, duration, effectLevel));
+				entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, duration, effectLevel, false, false));
 			}
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration));
+				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration, effectLevel, false, false));
 			}
 
 			SlipstreamPowerModifier modifier = new SlipstreamPowerModifier();

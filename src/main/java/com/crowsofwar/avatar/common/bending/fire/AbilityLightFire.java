@@ -103,7 +103,7 @@ public class AbilityLightFire extends Ability {
 						spawnFire(world, blockPos.add(0, 0, -1), ctx, false, 100);
 						ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
 					}
-					EntityShockwave wave = new EntityShockwave(world);
+					/*EntityShockwave wave = new EntityShockwave(world);
 					wave.setOwner(entity);
 					wave.setPosition(entity.getPositionVector().add(0, 1.0, 0));
 					wave.setFireTime(10);
@@ -116,7 +116,7 @@ public class AbilityLightFire extends Ability {
 					wave.setKnockbackHeight(0.2);
 					wave.setParticleSpeed(1F);
 					wave.setParticleAmount(1);
-					world.spawnEntity(wave);
+					world.spawnEntity(wave);**/
 
 
 				} else {
