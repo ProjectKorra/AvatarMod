@@ -177,7 +177,7 @@ public class EntityAirblade extends AvatarEntity {
 	private void breakCollidingBlocks() {
 		// Hitbox expansion (in each direction) to destroy blocks before the
 		// airblade collides with them
-		double expansion = getSizeMult() / 10;
+		double expansion = getSizeMult() / 20;
 		AxisAlignedBB hitbox = getEntityBoundingBox().grow(expansion, expansion, expansion);
 		for (int iy = 0; iy <= getSizeMult() * 1.5F; iy++) {
 			for (int ix = 0; ix <= 1; ix++) {

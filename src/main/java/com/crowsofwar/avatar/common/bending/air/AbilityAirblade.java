@@ -70,21 +70,21 @@ public class AbilityAirblade extends Ability {
 			case 0 :
 				break;
 			case 1 :
-				damage += 1F;
+				damage += 0.5F;
 				sizeMult = 1.25F;
 				break;
 			case 2 :
-				damage += 2f;
+				damage += 1f;
 				sizeMult = 1.5F;
 				break;
 		}
 		if (ctx.isMasterLevel(SECOND)) {
 			sizeMult = 4.0F;
-			damage += 2.5F;
+			damage += 2F;
 		}
 		if (ctx.isMasterLevel(FIRST)) {
-			damage += 4F;
-			sizeMult = 1.25F;
+			damage += 2.5F;
+			sizeMult = 1.5F;
 		}
 
 		float chopBlocks = -1;
@@ -97,8 +97,12 @@ public class AbilityAirblade extends Ability {
 
 		if (ctx.isMasterLevel(FIRST)) {
 			for (int i = 0; i < 5; i++){
-				float yaw = entity.rotationYaw - 80 + i * 40;
-				Vector direction = Vector.toRectangular(Math.toRadians(yaw), entity.rotationPitch);
+				float yaw = entity.rotationYaw - 30 +  i * 15;
+				/*if (i >= 3) {
+					yaw = entity.rotationYaw + 160 + i * 20;
+				}**/
+				//Results in a full loop, negative stuff results in weird shenanigans
+				Vector direction = Vector.toRectangular(Math.toRadians(yaw), Math.toRadians(entity.rotationPitch));
 				EntityAirblade airblade = new EntityAirblade(world);
 				airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
 				airblade.setAbility(new AbilityAirblade());
