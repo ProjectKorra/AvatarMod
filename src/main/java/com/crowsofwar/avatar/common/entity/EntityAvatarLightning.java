@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRaze;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -129,7 +129,8 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 				for (Entity entity : list) {
 					if (entity instanceof AvatarEntity) {
 						((AvatarEntity) entity).onFireContact();
-					} else if (entity instanceof EntityLivingBase || !(entity instanceof EntityItem) || !(entity instanceof EntityItemFrame) || !(entity instanceof EntityPainting) || !(entity instanceof EntityXPOrb)) {
+					} else if ((!(entity instanceof EntityItem) && !(entity instanceof EntityItemFrame) &&
+							!(entity instanceof EntityPainting) && !(entity instanceof EntityXPOrb))) {
 						handleCollision(entity);
 					}
 
@@ -138,22 +139,6 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 		}
 
 	}
-
-/*	@SubscribeEvent
-	public static void onLightningStrike(LivingHurtEvent event) {
-		Entity hurt = event.getEntity();
-		Entity source = event.getSource().getTrueSource();
-		DamageSource damage = event.getSource();
-		if (damage == DamageSource.LIGHTNING_BOLT) {
-
-			if (source instanceof EntityAvatarLightning) {
-				event.setAmount(0);
-				EntityAvatarLightning lightning = (EntityAvatarLightning) source;
-				lightning.handleCollision(hurt);
-				System.out.println(event.getAmount());
-			}
-		}
-	}**/
 
 	private void handleCollision(Entity collided) {
 		damageEntity(collided);
@@ -164,7 +149,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	private void damageEntity(Entity entity) {
 		if (world.isRemote) return;
 
-		DamageSource damageSource = AvatarDamageSource.LIGHTNING;
+		DamageSource damageSource = AvatarDamageSource.causeIndirectBendingDamage(spawner.getOwner(), this, AvatarDamageSource.LIGHTNING);
 		float damage = STATS_CONFIG.lightningRazeSettings.damage;
 
 		if (spawner.getAbility() instanceof AbilityLightningRaze) {

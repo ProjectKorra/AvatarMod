@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.*;
@@ -70,6 +71,7 @@ public class SmashGroundHandler extends TickHandler {
 		shockwave.setParticleAmount(getParticleAmount());
 		shockwave.setParticleSpeed((float) getParticleSpeed());
 		shockwave.setFireTime(fireTime());
+		shockwave.setDamageSource(getDamageSource());
 		shockwave.setAbility(getAbility());
 		shockwave.setPerformanceAmount(getPerformanceAmount());
 		world.spawnEntity(shockwave);
@@ -121,6 +123,10 @@ public class SmashGroundHandler extends TickHandler {
 
 	protected float getDamage() {
 		return 6F;
+	}
+
+	protected DamageSource getDamageSource() {
+		return AvatarDamageSource.AIR;
 	}
 
 	protected BendingStyle getElement() {

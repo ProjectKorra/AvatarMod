@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
@@ -108,6 +108,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		wave.setParticleSpeed((getSizeMultiplier() * 0.33F) / 5);
 		wave.setParticleName(AvatarParticles.getParticleElectricity().getParticleName());
 		wave.setSpeed(0.8F);
+		wave.setDamageSource(AvatarDamageSource.LIGHTNING);
 		wave.setPosition(x, y, z);
 		wave.setDamage(getDamage() / 2);
 		wave.setRange(getSizeMultiplier() * 2);

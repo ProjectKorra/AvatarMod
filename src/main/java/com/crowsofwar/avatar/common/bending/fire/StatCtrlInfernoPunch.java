@@ -1,9 +1,9 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.AvatarDamageSource;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -112,6 +112,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 										wave.setParticleController(35);
 										//Used for spheres
 										wave.setSpeed(0.8F);
+										wave.setDamageSource(AvatarDamageSource.FIRE);
 										wave.setParticleAmount(2);
 										wave.setAbility(new AbilityInfernoPunch());
 										wave.setDamage(3);
@@ -136,7 +137,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 											SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
 									if (target.canBePushed() && target.canBeCollidedWith()) {
-										target.attackEntityFrom(AvatarDamageSource.FIRE, damage);
+										DamageSource fire = AvatarDamageSource.causeDirectBendingDamage(entity, AvatarDamageSource.FIRE);
+										target.attackEntityFrom(fire, damage);
 										target.setFire(fireTime);
 										target.motionX += direction.x() * knockBack;
 										target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;

@@ -17,9 +17,13 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.client.particles.AvatarParticle;
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
@@ -60,7 +64,7 @@ public class AbilityLightFire extends Ability {
 	public void execute(AbilityContext ctx) {
 
 		World world = ctx.getWorld();
-	//	EntityLivingBase entity = ctx.getBenderEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
 
 		VectorI looking = ctx.getLookPosI();
 		EnumFacing side = ctx.getLookSide();
@@ -99,6 +103,21 @@ public class AbilityLightFire extends Ability {
 						spawnFire(world, blockPos.add(0, 0, -1), ctx, false, 100);
 						ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
 					}
+					EntityShockwave wave = new EntityShockwave(world);
+					wave.setOwner(entity);
+					wave.setPosition(entity.getPositionVector().add(0, 1.0, 0));
+					wave.setFireTime(10);
+					wave.setElement(new Firebending());
+					wave.setAbility(this);
+					wave.setParticleName(AvatarParticles.getParticleFire().getParticleName());
+					wave.setDamage(5F);
+					wave.setPerformanceAmount(15);
+					wave.setSpeed(0.4F);
+					wave.setKnockbackHeight(0.2);
+					wave.setParticleSpeed(1F);
+					wave.setParticleAmount(1);
+					world.spawnEntity(wave);
+
 
 				} else {
 					if (spawnFire(world, blockPos, ctx, true, chance)) {

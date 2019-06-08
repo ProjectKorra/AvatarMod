@@ -15,7 +15,7 @@
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.crowsofwar.avatar.common;
+package com.crowsofwar.avatar.common.damageutils;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -26,8 +26,8 @@ import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.init.MobEffects;
-import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -61,6 +61,14 @@ public class AvatarDamageSource {
 		return source.getDamageType().startsWith("avatar_");
 	}
 
+	public static DamageSource causeIndirectBendingDamage(Entity owner,  @Nullable Entity abilityEntity, DamageSource source) {
+		return new EntityDamageSourceIndirect(source.toString(), owner, abilityEntity);
+	}
+
+	public static DamageSource causeDirectBendingDamage(Entity owner, DamageSource source) {
+		return new EntityDamageSource(source.toString(), owner);
+	}
+	//These methods are just wrong. Why??? Crows is using the hit entity in PLACE OF THE TRUE DAMAGE SOURCE ENTITY.
 	/**
 	 * Create a DamageSource for damage caused by a floating block.
 	 *
@@ -252,7 +260,7 @@ public class AvatarDamageSource {
 	public static DamageSource causeShockwaveDamage(Entity hit, @Nullable Entity owner) {
 		return new EntityDamageSourceIndirect("avatar_shockWave", hit, owner).setExplosion();
 	}
-
+ //I'm sorry but all of those methods are wrong except for causeBendingDamage. What is crows doing?????
 	@SubscribeEvent
 	public static void onElementalDamage(LivingHurtEvent event) {
 		//TODO: Config for all this stuff; definitely in the rewrite

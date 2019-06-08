@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -193,6 +194,7 @@ public class AirBurstHandler extends TickHandler {
 				shockwave.setParticleName(EnumParticleTypes.EXPLOSION_NORMAL.getParticleName());
 				shockwave.setElement(new Airbending());
 				shockwave.setParticleSpeed(0.08F);
+				shockwave.setDamageSource(AvatarDamageSource.AIR);
 				shockwave.setKnockbackHeight(upwardKnockback);
 				shockwave.setDamage((float) damage);
 				shockwave.setRange(radius);

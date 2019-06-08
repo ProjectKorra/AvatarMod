@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarDamageSource;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -13,6 +13,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
@@ -47,6 +48,7 @@ public class EntityShockwave extends AvatarEntity {
 	//The amount entities will be knocked back
 	private int fireTime;
 	//How long to set the target entity on fire
+	private DamageSource source;
 
 
 	public EntityShockwave(World world) {
@@ -151,6 +153,10 @@ public class EntityShockwave extends AvatarEntity {
 		dataManager.set(SYNC_IS_SPHERE, sphere);
 	}
 
+	public void setDamageSource(DamageSource source) {
+		this.source = source;
+	}
+
 	@Override
 	public boolean canBeCollidedWith() {
 		return false;
@@ -174,39 +180,6 @@ public class EntityShockwave extends AvatarEntity {
 		}
 
 		if (!world.isRemote) {
-/*
-			for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (getRange() * 10 * 1.5)) {
-				double x = posX + (ticksExisted * getSpeed()) * Math.sin(angle);
-				double y = posY + 0.5;
-				double z = posZ + (ticksExisted * getSpeed()) * Math.cos(angle);
-				Vector speed = new Vector((ticksExisted * getSpeed()) * Math.sin(angle) * (getParticleSpeed() * 10), getParticleSpeed() / 2, (ticksExisted * getSpeed()) * Math.cos(angle) * (getParticleSpeed() * 10));
-				particles.spawnParticles(world, getParticle(), getParticleAmount() / 2, getParticleAmount(), new Vector(x, y, z), speed);
-			}
-
-			if (isSphere) {
-				double x, y, z;
-				if (ticksExisted % 2 == 0) {
-					for (double theta = 0; theta <= 180; theta += 1) {
-						double dphi = particleController / Math.sin(Math.toRadians(theta));
-
-						for (double phi = 0; phi < 360; phi += dphi) {
-							double rphi = Math.toRadians(phi);
-							double rtheta = Math.toRadians(theta);
-
-							x = ticksExisted * getSpeed() * Math.cos(rphi) * Math.sin(rtheta);
-							y = ticksExisted * getSpeed() * Math.sin(rphi) * Math.sin(rtheta);
-							z = ticksExisted * getSpeed() * Math.cos(rtheta);
-
-							particles.spawnParticles(world, getParticle(), getParticleAmount() / 2, getParticleAmount(), x + posX, y + posY,
-									z + posZ, getParticleSpeed(), getParticleSpeed(), getParticleSpeed());
-
-						}
-					}//Creates a sphere. Courtesy of Project Korra's Air Burst!
-				}
-			}**/
-		}
-
-		if (!world.isRemote) {
 			AxisAlignedBB box = new AxisAlignedBB(posX + (ticksExisted * getSpeed()), posY + 1.5, posZ + (ticksExisted * getSpeed()),
 					posX - (ticksExisted * getSpeed()), posY - 1.5, posZ - (ticksExisted * getSpeed()));
 
@@ -220,7 +193,7 @@ public class EntityShockwave extends AvatarEntity {
 					if (this.canCollideWith(target) && target != this) {
 
 						if (this.canDamageEntity(target) && !world.isRemote) {
-							if (target.attackEntityFrom(AvatarDamageSource.causeShockwaveDamage(target, getOwner()), damage)) {
+							if (target.attackEntityFrom(AvatarDamageSource.causeIndirectBendingDamage(getOwner(), this, source), damage)) {
 								int amount = performanceAmount > SCORE_MOD_SMALL ? performanceAmount : (int) SCORE_MOD_SMALL;
 								amount = amount > SCORE_MOD_MEDIUM ? (int) SCORE_MOD_MEDIUM : performanceAmount;
 								BattlePerformanceScore.addScore(getOwner(), amount);

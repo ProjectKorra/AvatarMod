@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import net.minecraft.entity.Entity;
