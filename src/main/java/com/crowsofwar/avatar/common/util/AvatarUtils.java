@@ -37,23 +37,17 @@ import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import javax.annotation.Nullable;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-
-import javax.annotation.Nullable;
 
 import static com.crowsofwar.avatar.AvatarLog.WarningType.INVALID_SAVE;
 import static java.lang.Math.cos;
@@ -62,10 +56,8 @@ import static java.lang.Math.sin;
 public class AvatarUtils {
 
 	private static final DataParameter<Boolean> POWERED;
-	private static final DataParameter<Boolean> IGNITED;
 
 	static {
-		IGNITED = ReflectionHelper.getPrivateValue(EntityCreeper.class, null, "IGNITED");
 		POWERED = ReflectionHelper.getPrivateValue(EntityCreeper.class, null, "POWERED", "field_184714_b");
 	}
 
@@ -90,7 +82,7 @@ public class AvatarUtils {
 	}
 
 	public static void igniteCreeper(EntityCreeper creeper) {
-		creeper.getDataManager().set(IGNITED, true);
+		creeper.ignite();
 	}
 
 	public static void pushButton(Entity entity, boolean pushStone) {
@@ -422,19 +414,6 @@ public class AvatarUtils {
 	}
 
 	/**
-	 * An exception thrown by reading/writing methods for NBT
-	 *
-	 * @author CrowsOfWar
-	 */
-	public static class DiskException extends RuntimeException {
-
-		private DiskException(String message) {
-			super(message);
-		}
-
-	}
-
-	/**
 	 * Method for ray tracing entities (the useless default method doesn't work,
 	 * despite EnumHitType having an ENTITY field...) You can also use this for
 	 * seeking.
@@ -453,11 +432,11 @@ public class AvatarUtils {
 	 *                               through non-solid blocks, such as grass,
 	 *                               fences, trapdoors, cobwebs, e.t.c.
 	 * @return a RayTraceResult of either the block hit (no entity hit), the entity
-	 *         hit (hit an entity), or null for nothing hit
+	 * hit (hit an entity), or null for nothing hit
 	 */
 	@Nullable
 	public static RayTraceResult tracePath(World world, float x, float y, float z, float tx, float ty, float tz,
-			float borderSize, HashSet<Entity> excluded, boolean collideablesOnly, boolean raytraceNonSolidBlocks) {
+										   float borderSize, HashSet<Entity> excluded, boolean collideablesOnly, boolean raytraceNonSolidBlocks) {
 		Vec3d startVec = new Vec3d(x, y, z);
 		Vec3d endVec = new Vec3d(tx, ty, tz);
 		float minX = x < tx ? x : tx;
@@ -507,9 +486,9 @@ public class AvatarUtils {
 		return blockHit;
 	}
 
-	/** 
+	/**
 	 * Applies a velocity that an entity in the provided cardinal. Does not support UP & DOWN
-	*/
+	 */
 	public static void applyMotionToEntityInDirection(Entity entity, EnumFacing cardinal, double velocity) {
 		switch (cardinal) {
 			case NORTH:
@@ -527,6 +506,19 @@ public class AvatarUtils {
 			default:
 				break;
 		}
+	}
+
+	/**
+	 * An exception thrown by reading/writing methods for NBT
+	 *
+	 * @author CrowsOfWar
+	 */
+	public static class DiskException extends RuntimeException {
+
+		private DiskException(String message) {
+			super(message);
+		}
+
 	}
 
 }
