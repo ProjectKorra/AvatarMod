@@ -7,7 +7,7 @@ import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
@@ -57,29 +57,32 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 
 		}
 		if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			if (chi.getTotalChi() > 0 && chi.getAvailableChi() > 0) {
-				if (entity.world.getBlockState(entity.getPosition()).getBlock() == Blocks.AIR) {
-					entity.setNoGravity(true);
-				}
-				else {
-					entity.setNoGravity(false);
-				}
-				if (entity.ticksExisted % 5 == 0) {
+			if (chi.getTotalChi() > 0 && chi.getAvailableChi() > 0 || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
+				//	Block block = entity.world.getBlockState(entity.getPosition()).getBlock();
+				entity.motionY = 0;
+				entity.setNoGravity(true);
+				if (entity.ticksExisted % 5 == 0 && !(entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
 					chi.setAvailableChi(chi.getAvailableChi() - 1);
+					if (chi.getAvailableChi() == 0)
+						entity.setNoGravity(false);
 				}
+			} else {
+				entity.setNoGravity(false);
 			}
 		}
-
-
-
-
 		return super.onUpdate(ctx);
 	}
 
 	@Override
+	public void onRemoval(BendingContext ctx) {
+		ctx.getBenderEntity().setNoGravity(false);
+		super.onRemoval(ctx);
+	}
+
+	@Override
 	protected Vision[] getVisions() {
-			return new Vision[]{Vision.SLIPSTREAM_WEAK, Vision.SLIPSTREAM_MEDIUM,
-					Vision.SLIPSTREAM_POWERFUL};
+		return new Vision[]{Vision.SLIPSTREAM_WEAK, Vision.SLIPSTREAM_MEDIUM,
+				Vision.SLIPSTREAM_POWERFUL};
 	}
 
 	@Override

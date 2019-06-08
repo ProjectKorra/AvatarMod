@@ -42,7 +42,7 @@ public class AbilitySlipstream extends Ability {
 		} else if (abilityData.getLevel() == 2) {
 			chi = STATS_CONFIG.chiBuffLvl3;
 		} else if (abilityData.getLevel() == 3) {
-			chi = STATS_CONFIG.chiBuffLvl4;
+			chi = STATS_CONFIG.chiBuffLvl4 * 1.5F;
 		}
 
 		if (data.hasTickHandler(SLIPSTREAM_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
