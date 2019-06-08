@@ -61,7 +61,7 @@ public class AbilityAirBubble extends Ability {
 
 			if (!bender.consumeChi(STATS_CONFIG.chiAirBubble)) return;
 
-			float powerRating = (float) bender.calcPowerRating(Airbending.ID)/100;
+			float powerRating = (float) bender.calcPowerRating(Airbending.ID) / 100;
 
 			float size = 1.5f + powerRating;
 			float health = 12 + powerRating;

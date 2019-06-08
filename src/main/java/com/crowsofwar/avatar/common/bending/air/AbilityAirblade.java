@@ -66,14 +66,14 @@ public class AbilityAirblade extends Ability {
 		damage *= ctx.getPowerRatingDamageMod();
 
 		switch (ctx.getLevel()) {
-			case -1 :
-			case 0 :
+			case -1:
+			case 0:
 				break;
-			case 1 :
+			case 1:
 				damage += 0.5F;
 				sizeMult = 1.25F;
 				break;
-			case 2 :
+			case 2:
 				damage += 1f;
 				sizeMult = 1.5F;
 				break;
@@ -96,8 +96,8 @@ public class AbilityAirblade extends Ability {
 		}
 
 		if (ctx.isMasterLevel(FIRST)) {
-			for (int i = 0; i < 5; i++){
-				float yaw = entity.rotationYaw - 30 +  i * 15;
+			for (int i = 0; i < 5; i++) {
+				float yaw = entity.rotationYaw - 30 + i * 15;
 				/*if (i >= 3) {
 					yaw = entity.rotationYaw + 160 + i * 20;
 				}**/
@@ -118,8 +118,7 @@ public class AbilityAirblade extends Ability {
 				airblade.setChopBlocksThreshold(chopBlocks);
 				world.spawnEntity(airblade);
 			}
-		}
-		else {
+		} else {
 			EntityAirblade airblade = new EntityAirblade(world);
 			airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
 			airblade.setAbility(new AbilityAirblade());

@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -15,6 +15,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -45,10 +46,13 @@ public class EntityShockwave extends AvatarEntity {
 	private int performanceAmount;
 	//The amount of performance added per hit
 	private double knockbackHeight;
-	//The amount entities will be knocked back
+	//The minimum height entities will be knocked back. Set to 0 for no effect.
 	private int fireTime;
 	//How long to set the target entity on fire
 	private DamageSource source;
+
+	private Vec3d knockbackMult;
+	//Individual values for how to scale the knockback
 
 
 	public EntityShockwave(World world) {
@@ -57,6 +61,8 @@ public class EntityShockwave extends AvatarEntity {
 		this.performanceAmount = 10;
 		this.knockbackHeight = 0.2;
 		this.fireTime = 0;
+		this.source = AvatarDamageSource.AIR;
+		this.knockbackMult = new Vec3d(1, 2, 1);
 		this.setSize(1, 1);
 	}
 
@@ -137,6 +143,10 @@ public class EntityShockwave extends AvatarEntity {
 		this.knockbackHeight = height;
 	}
 
+	public void setKnockbackMult(Vec3d mult) {
+		this.knockbackMult = mult;
+	}
+
 	public double getDamage() {
 		return damage;
 	}
@@ -211,13 +221,17 @@ public class EntityShockwave extends AvatarEntity {
 						}
 						double xSpeed = getSphere() ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted * getSpeed()) :
 								Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted / 5F * getSpeed());
-						double ySpeed = getSphere() ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted / 2F * getSpeed()) :
-								knockbackHeight; // Throws target into the air.
+						double ySpeed = Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted / 2F * getSpeed()); // Throws target into the air.
 						double zSpeed = getSphere() ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted * getSpeed()) :
 								Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 5F * getSpeed());
-						ySpeed = ySpeed > knockbackHeight ? ySpeed : knockbackHeight;
+						if (knockbackHeight != 0) {
+							ySpeed = ySpeed > knockbackHeight ? ySpeed : knockbackHeight;
+						}
+						xSpeed *= knockbackMult.x;
+						ySpeed *= knockbackMult.y;
+						zSpeed *= knockbackMult.z;
 						target.motionX += xSpeed;
-						target.motionY += ySpeed * 2;
+						target.motionY += ySpeed;
 						target.motionZ += zSpeed;
 
 						AvatarUtils.afterVelocityAdded(target);

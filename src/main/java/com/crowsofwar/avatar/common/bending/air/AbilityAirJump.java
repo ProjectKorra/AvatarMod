@@ -63,5 +63,4 @@ public class AbilityAirJump extends Ability {
 	}
 
 
-
 }

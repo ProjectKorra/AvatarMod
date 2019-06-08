@@ -126,14 +126,23 @@ public class StatCtrlAirJump extends StatusControl {
 			spawner.spawnParticles(entity.world, AvatarParticles.getParticleAir(), 2, 6, new Vector(entity), new Vector(1, 0, 1));
 
 			float fallAbsorption = 0;
+			float xVel = 0, yVel = 0, zVel = 0;
 			if (lvl <= 0) {
 				fallAbsorption = 8;
+				xVel = zVel = 0.4F;
+				yVel = 1F;
 			} else if (lvl == 1) {
 				fallAbsorption = 13;
+				xVel = zVel = 0.6F;
+				yVel = 1.4F;
 			} else if (lvl == 2) {
 				fallAbsorption = 16;
+				xVel = zVel = 0.8F;
+				yVel = 1.8F;
 			} else if (lvl == 3) {
 				fallAbsorption = 19;
+				xVel = zVel = 1F;
+				yVel = 2.0F;
 			}
 
 			data.getMiscData().setFallAbsorption(fallAbsorption);
@@ -164,6 +173,7 @@ public class StatCtrlAirJump extends StatusControl {
 			wave.setParticleSpeed(lvl > 0 ? 0.025F + lvl / 40F : 0.025F);
 			wave.setPosition(entity.getPositionVector());
 			wave.setOwner(entity);
+			wave.setKnockbackMult(new Vec3d(xVel, yVel, zVel));
 			world.spawnEntity(wave);
 
 
