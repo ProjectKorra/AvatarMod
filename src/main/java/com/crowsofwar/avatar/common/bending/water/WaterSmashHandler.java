@@ -3,7 +3,9 @@ package com.crowsofwar.avatar.common.bending.water;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 
@@ -46,6 +48,11 @@ public class WaterSmashHandler extends SmashGroundHandler {
 	@Override
 	protected double getSpeed() {
 		return 6;
+	}
+
+	@Override
+	protected DamageSource getDamageSource() {
+		return AvatarDamageSource.WATER;
 	}
 
 	@Override

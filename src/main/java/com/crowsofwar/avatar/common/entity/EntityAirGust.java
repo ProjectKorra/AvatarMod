@@ -25,7 +25,6 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -43,14 +42,12 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	public static final Vector ZERO = new Vector(0, 0, 0);
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirGust.class, DataSerializers.FLOAT);
 	private boolean airGrab, destroyProjectiles, pushStone, pushIronTrapDoor, pushIronDoor;
-	private int timer;
 
 	public EntityAirGust(World world) {
 		super(world);
 		setSize(1f, 1f);
 		putsOutFires = true;
 		this.noClip = true;
-		this.timer = 0;
 		this.pushStoneButton = pushStone;
 		this.pushDoor = pushIronDoor;
 		this.pushTrapDoor = pushIronTrapDoor;
@@ -69,7 +66,6 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		super.entityInit();
 		dataManager.register(SYNC_SIZE, 1F);
 	}
-
 
 
 	@Override
@@ -113,12 +109,6 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 					onCollideWithEntity(e);
 				}
 			}
-		}
-		if (world.getBlockState(getPosition()).isFullBlock()) {
-			timer++;
-		}
-		if (timer >= 10) {
-			this.setDead();
 		}
 		float expansionRate = 1f / 80;
 		setSize(getSize() + expansionRate);

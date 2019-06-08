@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -157,6 +158,7 @@ public class StatCtrlAirJump extends StatusControl {
 			wave.setKnockbackHeight(lvl > 0 ? 0.1F + lvl /  20F : 0.1F);
 			wave.setParticleName(EnumParticleTypes.EXPLOSION_NORMAL.getParticleName());
 			wave.setPerformanceAmount(2);
+			wave.setDamageSource(AvatarDamageSource.AIR);
 			wave.setAbility(new AbilityAirJump());
 			wave.setElement(new Airbending());
 			wave.setParticleSpeed(lvl > 0 ? 0.025F + lvl / 40F : 0.025F);

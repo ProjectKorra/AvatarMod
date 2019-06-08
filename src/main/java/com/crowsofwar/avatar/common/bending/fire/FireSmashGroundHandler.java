@@ -20,10 +20,12 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 
@@ -59,6 +61,11 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 	@Override
 	protected double getParticleSpeed() {
 		return 0.1125;
+	}
+
+	@Override
+	protected DamageSource getDamageSource() {
+		return AvatarDamageSource.FIRE;
 	}
 
 	@Override
