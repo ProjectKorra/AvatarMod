@@ -112,7 +112,7 @@ public class FireEventListener{
 												SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
 										if (target.canBePushed() && target.canBeCollidedWith()) {
-											DamageSource fire = AvatarDamageSource.FIRE;
+											DamageSource fire = AvatarDamageSource.causeFireDamage(target, entity);
 											//Creating a new damage source with the attacker as the source results in an infinite loop
 											target.attackEntityFrom(fire, damage);
 											target.setFire(fireTime);
@@ -124,10 +124,8 @@ public class FireEventListener{
 											// this line is needed to prevent a bug where players will not be pushed in multiplayer
 											AvatarUtils.afterVelocityAdded(target);
 										}
-										if (!(target instanceof EntityDragon)) {
-                                            ctx.getData().removeStatusControl(INFERNO_PUNCH_FIRST);
-                                            ctx.getData().removeStatusControl(INFERNO_PUNCH_MAIN);
-										}
+                                        ctx.getData().removeStatusControl(INFERNO_PUNCH_FIRST);
+                                        ctx.getData().removeStatusControl(INFERNO_PUNCH_MAIN);
 									}
 								}
 							}
