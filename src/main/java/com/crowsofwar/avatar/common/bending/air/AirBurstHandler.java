@@ -41,48 +41,6 @@ public class AirBurstHandler extends TickHandler {
 		super(id);
 	}
 
-	@SubscribeEvent
-	public static void onDragonHurt(LivingHurtEvent event) {
-		if (event.getSource().getTrueSource() instanceof EntityLivingBase) {
-			EntityLivingBase attacker = (EntityLivingBase) event.getSource().getTrueSource();
-			DamageSource source = event.getSource();
-			if (source.getDamageType().equals("avatar_Air")) {
-				if (attacker instanceof EntityPlayer || attacker instanceof EntityBender) {
-					Bender ctx = Bender.get(attacker);
-					if (ctx != null) {
-						if (ctx.getInfo().getId() != null) {
-							if (ctx.getData() != null) {
-								AbilityData aD = AbilityData.get(attacker, "air_burst");
-								float powerRating = (float) (ctx.calcPowerRating(Airbending.ID) / 100);
-								float damage = STATS_CONFIG.airBurstSettings.damage + powerRating;
-								if (aD.getLevel() == 1) {
-									damage = STATS_CONFIG.airBurstSettings.damage * 1.5F + powerRating;
-								}
-
-								if (aD.getLevel() >= 2) {
-									damage = STATS_CONFIG.airBurstSettings.damage * 2 + powerRating;
-								}
-
-								if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-									//Piercing Winds
-									damage = STATS_CONFIG.airBurstSettings.damage * 3 + powerRating;
-								}
-
-								if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-									//Maximum Pressure
-									//Pulls enemies in then blasts them out
-									damage = STATS_CONFIG.airBurstSettings.damage * 2.5F + powerRating;
-								}
-								event.setAmount(damage);
-
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
 	@Override
 	public boolean tick(BendingContext ctx) {
 		AbilityData abilityData = null;
