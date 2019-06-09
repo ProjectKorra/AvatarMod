@@ -149,7 +149,7 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	private void damageEntity(Entity entity) {
 		if (world.isRemote) return;
 
-		DamageSource damageSource = AvatarDamageSource.causeIndirectBendingDamage(spawner.getOwner(), this, AvatarDamageSource.LIGHTNING);
+		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, spawner.getOwner());
 		float damage = STATS_CONFIG.lightningRazeSettings.damage;
 
 		if (spawner.getAbility() instanceof AbilityLightningRaze) {
