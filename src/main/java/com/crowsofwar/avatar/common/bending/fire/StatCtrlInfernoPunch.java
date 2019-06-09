@@ -93,11 +93,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 								knockBack = 1.5F + powerModifier;
 								fireTime = 15 + (int) (powerModifier * 10);
 							}
-							if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-								damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * powerModifier);
-								knockBack = 0.75F + powerModifier;
-								fireTime = 4 + (int) (powerModifier * 10);
-							}
 
 							if (((EntityLivingBase) entity).isPotionActive(MobEffects.STRENGTH)) {
 								damage += (Objects.requireNonNull(((EntityLivingBase) entity).getActivePotionEffect(MobEffects.STRENGTH)).getAmplifier() + 1) / 2F;
@@ -105,56 +100,56 @@ public class StatCtrlInfernoPunch extends StatusControl {
 
 							if (ctx.getData().hasStatusControl(INFERNO_PUNCH)) {
 								if (((EntityLivingBase) entity).getHeldItemMainhand() == ItemStack.EMPTY && !(source.getDamageType().startsWith("avatar_"))) {
-									if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-										EntityShockwave wave = new EntityShockwave(world);
-										wave.setPerformanceAmount(15);
-										wave.setFireTime(15);
-										wave.setSphere(true);
-										wave.setParticleName(AvatarParticles.getParticleBigFlame().getParticleName());
-										wave.setParticleSpeed(0.12F);
-										wave.setParticleAmount(1);
-										wave.setParticleController(35);
-										//Used for spheres
-										wave.setSpeed(0.8F);
-										wave.setDamageSource(AvatarDamageSource.FIRE);
-										wave.setParticleAmount(2);
-										wave.setAbility(new AbilityInfernoPunch());
-										wave.setDamage(3);
-										wave.setOwner((EntityLivingBase) entity);
-										wave.setPosition(target.posX, target.getEntityBoundingBox().minY, target.posZ);
-										wave.setRange(4);
-										wave.setKnockbackHeight(0.2);
-										world.spawnEntity(wave);
-									}
-									if (world instanceof WorldServer) {
-										WorldServer World = (WorldServer) target.getEntityWorld();
-										for (double angle = 0; angle < 360; angle += 15) {
-											Vector pos = Vector.getOrthogonalVector(Vector.getLookRectangular(entity), angle, 0.2);
-											World.spawnParticle(EnumParticleTypes.FLAME, target.posX + pos.x(), (target.posY + (target.getEyeHeight() / 1.25)) + pos.y(), target.posZ + pos.z(),
-													4 + abilityData.getLevel(), 0.0, 0.0, 0.0, 0.03 + (abilityData.getLevel() / 100F));
+									if (!abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+										if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+											EntityShockwave wave = new EntityShockwave(world);
+											wave.setPerformanceAmount(15);
+											wave.setFireTime(15);
+											wave.setSphere(true);
+											wave.setParticleName(AvatarParticles.getParticleBigFlame().getParticleName());
+											wave.setParticleSpeed(0.12F);
+											wave.setParticleAmount(1);
+											wave.setParticleController(35);
+											//Used for spheres
+											wave.setSpeed(0.8F);
+											wave.setDamageSource(AvatarDamageSource.FIRE);
+											wave.setParticleAmount(2);
+											wave.setAbility(new AbilityInfernoPunch());
+											wave.setDamage(3);
+											wave.setOwner((EntityLivingBase) entity);
+											wave.setPosition(target.posX, target.getEntityBoundingBox().minY, target.posZ);
+											wave.setRange(4);
+											wave.setKnockbackHeight(0.2);
+											world.spawnEntity(wave);
+										}
+										if (world instanceof WorldServer) {
+											WorldServer World = (WorldServer) target.getEntityWorld();
+											for (double angle = 0; angle < 360; angle += 15) {
+												Vector pos = Vector.getOrthogonalVector(Vector.getLookRectangular(entity), angle, 0.2);
+												World.spawnParticle(EnumParticleTypes.FLAME, target.posX + pos.x(), (target.posY + (target.getEyeHeight() / 1.25)) + pos.y(), target.posZ + pos.z(),
+														4 + abilityData.getLevel(), 0.0, 0.0, 0.0, 0.03 + (abilityData.getLevel() / 100F));
+											}
 										}
 
+										world.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
+												SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
-									}
-
-									world.playSound(null, target.posX, target.posY, target.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
-											SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
-
-									if (target.canBePushed() && target.canBeCollidedWith()) {
-										DamageSource fire = AvatarDamageSource.FIRE;
-										//Creating a new damage source with the attacker as the source results in an infinite loop
-										target.attackEntityFrom(fire, damage);
-										target.setFire(fireTime);
-										target.motionX += direction.x() * knockBack;
-										target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
-										target.motionZ += direction.z() * knockBack;
-										target.isAirBorne = true;
-										abilityData.addXp(4 - abilityData.getLevel());
-										// this line is needed to prevent a bug where players will not be pushed in multiplayer
-										AvatarUtils.afterVelocityAdded(target);
-									}
-									if (!(target instanceof EntityDragon)) {
-										ctx.getData().removeStatusControl(INFERNO_PUNCH);
+										if (target.canBePushed() && target.canBeCollidedWith()) {
+											DamageSource fire = AvatarDamageSource.FIRE;
+											//Creating a new damage source with the attacker as the source results in an infinite loop
+											target.attackEntityFrom(fire, damage);
+											target.setFire(fireTime);
+											target.motionX += direction.x() * knockBack;
+											target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
+											target.motionZ += direction.z() * knockBack;
+											target.isAirBorne = true;
+											abilityData.addXp(4 - abilityData.getLevel());
+											// this line is needed to prevent a bug where players will not be pushed in multiplayer
+											AvatarUtils.afterVelocityAdded(target);
+										}
+										if (!(target instanceof EntityDragon)) {
+											ctx.getData().removeStatusControl(INFERNO_PUNCH);
+										}
 									}
 								}
 							}
@@ -221,7 +216,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			int fireTime = 4;
 			Vector direction = Vector.getLookRectangular(entity);
 			RayTraceResult result = AvatarUtils.standardEntityRayTrace(world, entity, null, Vector.getEyePos(entity).toMinecraft(),
-					entity.getLookVec().scale(10).add(entity.getPositionVector()), 0.75F, false, excluded);
+					entity.getLookVec().scale(8).add(entity.getPositionVector()), 0.25F, false, excluded);
 			if (result != null) {
 				if (result.entityHit != null) {
 					Entity e = result.entityHit;
@@ -243,6 +238,17 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						}
 						world.playSound(null, e.posX, e.posY, e.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
 								SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
+
+						e.attackEntityFrom(AvatarDamageSource.causeFireDamage(e, entity), damage + (timesPunched / 2F));
+						e.setFire(fireTime);
+						e.motionX += direction.x() * knockBack;
+						e.motionY += direction.y() * knockBack >= 0 ? (direction.y() * (knockBack / 8)) : knockBack / 8;
+						e.motionZ += direction.z() * knockBack;
+						e.isAirBorne = true;
+						// this line is needed to prevent a bug where players will not be pushed in multiplayer
+						AvatarUtils.afterVelocityAdded(e);
+						timesPunched++;
+						ctx.getData().addTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN);
 						AxisAlignedBB box = new AxisAlignedBB(e.posX + 2, e.posY + 2, e.posZ + 2, e.posX - 2, e.posY - 2, e.posZ - 2);
 						List<Entity> nearby = world.getEntitiesWithinAABB(Entity.class, box);
 						if (!nearby.isEmpty()) {
@@ -265,21 +271,10 @@ public class StatCtrlInfernoPunch extends StatusControl {
 								}
 							}
 						}
-
-						e.attackEntityFrom(AvatarDamageSource.causeFireDamage(e, entity), damage + (timesPunched / 2F));
-						e.setFire(fireTime);
-						e.motionX += direction.x() * knockBack;
-						e.motionY += direction.y() * knockBack >= 0 ? (direction.y() * (knockBack / 8)) : knockBack / 8;
-						e.motionZ += direction.z() * knockBack;
-						e.isAirBorne = true;
-						// this line is needed to prevent a bug where players will not be pushed in multiplayer
-						AvatarUtils.afterVelocityAdded(e);
-						timesPunched++;
-						ctx.getData().addTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN);
 					}
 				}
 			}
-			return timesPunched >= 2 && !ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN);
+			return result != null && result.entityHit != null && timesPunched >= 2 && !ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN);
 
 		}
 		return false;
