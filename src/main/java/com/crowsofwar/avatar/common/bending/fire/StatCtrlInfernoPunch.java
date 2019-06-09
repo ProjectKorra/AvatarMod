@@ -208,7 +208,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		Bender bender = ctx.getBender();
 		AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
 		HashSet<Entity> excluded = new HashSet<>();
-
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND) && !ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN)) {
 			float damageModifier = (float) (bender.calcPowerRating(Firebending.ID) / 100);
 			float damage = STATS_CONFIG.InfernoPunchDamage * 1.5F + (damageModifier);
@@ -272,10 +271,10 @@ public class StatCtrlInfernoPunch extends StatusControl {
 							}
 						}
 					}
-					return timesPunched > 2 && !ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN);
+
 				}
 			}
-
+			return timesPunched > 2 && !ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN);
 
 		}
 		return false;
