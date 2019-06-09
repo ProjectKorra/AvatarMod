@@ -53,7 +53,7 @@ public class AbilityPurify extends Ability {
 			// 3s base + 2s per level
 			int duration = abilityData.getLevel() > 0 ? 60 + 40 * abilityData.getLevel() : 60;
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				duration = 200;
+				duration = 400;
 			}
 
 			int effectLevel = abilityData.getLevel() >= 2 ? 1 : 0;

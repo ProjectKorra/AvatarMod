@@ -223,8 +223,8 @@ avatar.ability.purify.desc=Temporarily boost your firebending powers for a short
 avatar.ability.purify.lvl1=FEEL THE BURRRRNNNNN
 avatar.ability.purify.lvl2=Stronger buff to firebending and speed buff
 avatar.ability.purify.lvl3=Stronger potion effects and don't burn every time
-avatar.ability.purify.lvl4_1=§c§l§oFire §c§l§otolerance ;; Much longer duration, health boost effect
-avatar.ability.purify.lvl4_2=§c§l§oInferno ;; Much more powerful effects
+avatar.ability.purify.lvl4_1=§c§l§oFire §c§l§otolerance ;; Much longer duration, health boost effect, don't get set on fire!
+avatar.ability.purify.lvl4_2=§c§l§oInferno ;; Much more powerful effects, incinerate surrounding projectiles!
 
 avatar.ability.inferno_punch=§c§lInferno Punch
 avatar.ability.inferno_punch.desc=Smash your enemies with a fist encased in raw fire!

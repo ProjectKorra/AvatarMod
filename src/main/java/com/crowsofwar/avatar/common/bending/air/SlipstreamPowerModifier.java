@@ -58,7 +58,6 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 		}
 		if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			if (chi.getTotalChi() > 0 && chi.getAvailableChi() > 0 || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
-				//	Block block = entity.world.getBlockState(entity.getPosition()).getBlock();
 				entity.motionY = 0;
 				entity.setNoGravity(true);
 				if (entity.ticksExisted % 5 == 0 && !(entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {

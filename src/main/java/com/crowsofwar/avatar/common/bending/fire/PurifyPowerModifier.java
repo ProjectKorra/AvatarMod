@@ -5,6 +5,15 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.util.math.AxisAlignedBB;
+
+import java.util.List;
 
 public class PurifyPowerModifier extends BuffPowerModifier {
 
@@ -31,19 +40,40 @@ public class PurifyPowerModifier extends BuffPowerModifier {
 	@Override
 	public boolean onUpdate(BendingContext ctx) {
 
+		EntityLivingBase entity = ctx.getBenderEntity();
+		AbilityData abilityData = AbilityData.get(entity, "purify");
+
 		// Intermittently light on fire
-		if (ctx.getBenderEntity().ticksExisted % 20 == 0) {
-
-			AbilityData abilityData = AbilityData.get(ctx.getBenderEntity(), "purify");
-
+		if (entity.ticksExisted % 20 == 0) {
 			double chance = 0.3;
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				chance = 0.6;
 			}
 
 			// 30% chance per second to be lit on fire
-			if (Math.random() < chance) {
-				ctx.getBenderEntity().setFire(2);
+			if (Math.random() < chance && !abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				entity.setFire(2);
+			}
+		}
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			AxisAlignedBB box = new AxisAlignedBB(entity.posX - 2, entity.posY, entity.posZ - 2, entity.posX + 2, entity.posY + 3, entity.posZ + 2);
+			List<Entity> targets = entity.world.getEntitiesWithinAABB(Entity.class, box);
+			if (!entity.world.isRemote) {
+				if (!targets.isEmpty()) {
+					for (Entity e : targets) {
+						if (e != entity || (e instanceof AvatarEntity && ((AvatarEntity) e).getOwner() != e)) {
+							e.setFire(5);
+							if (e instanceof EntityThrowable || e instanceof EntityItem) {
+								e.setFire(1);
+								e.setDead();
+							}
+							if (e instanceof EntityArrow) {
+								e.setFire(1);
+								e.setDead();
+							}
+						}
+					}
+				}
 			}
 		}
 
