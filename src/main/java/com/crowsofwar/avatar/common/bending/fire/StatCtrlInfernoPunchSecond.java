@@ -80,13 +80,13 @@ public class StatCtrlInfernoPunchSecond extends StatusControl {
 							double dist = entity.getDistance(e);
 							for (double j = 0; j < 1; j += 1 / dist) {
 								Vector startPos = Vector.getEyePos(entity).minusY(0.25);
-								Vector distance = Vector.getEyePos(e).minusY(0.4).minus(startPos);
+								Vector distance = new Vector(result.hitVec.x, result.hitVec.y, result.hitVec.z).minus(startPos);
 								distance = distance.times(j);
 								particleSpawner.spawnParticles(world, EnumParticleTypes.FLAME, 4, 8,
 										startPos.x() + distance.x(), startPos.y() + distance.y(), startPos.z() + distance.z(), 0, 0, 0);
 							}
 							//Spawns particles as if a fireball has slammed into the enemy
-							World.spawnParticle(EnumParticleTypes.FLAME, e.posX, e.posY + e.getEyeHeight(), e.posZ, 50, 0.05, 0.05, 0.05, 0.075);
+							World.spawnParticle(EnumParticleTypes.FLAME, result.hitVec.x, result.hitVec.y, result.hitVec.z, 35, 0.05, 0.05, 0.05, 0.075);
 
 						}
 						world.playSound(null, e.posX, e.posY, e.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
