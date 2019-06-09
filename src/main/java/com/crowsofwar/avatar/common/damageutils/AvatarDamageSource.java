@@ -229,7 +229,7 @@ public class AvatarDamageSource {
 	 * @return DamageSource for the floating block
 	 */
 	public static DamageSource causeFloatingBlockDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar__Earth_ earthbendBlock", hit, owner).setProjectile();
+		return new EntityDamageSourceIndirect("avatar_Earth", hit, owner).setProjectile();
 	}
 
 	/**
@@ -277,7 +277,7 @@ public class AvatarDamageSource {
 	 * @param owner The lightning bender
 	 */
 	public static DamageSource causeLightningDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_Lightning_lightningBending", hit, owner).setDamageBypassesArmor();
+		return new EntityDamageSourceIndirect("avatar_Lightning", hit, owner).setDamageBypassesArmor();
 	}
 
 	/**
@@ -288,7 +288,7 @@ public class AvatarDamageSource {
 	 */
 	public static DamageSource causeRedirectedLightningDamage(Entity hit, @Nullable Entity
 			controller) {
-		return new EntityDamageSourceIndirect("avatar_Lightning_lightningBendingRedirected", hit, controller)
+		return new EntityDamageSourceIndirect("avatar_Lightning_redirected", hit, controller)
 				.setDamageBypassesArmor();
 	}
 
