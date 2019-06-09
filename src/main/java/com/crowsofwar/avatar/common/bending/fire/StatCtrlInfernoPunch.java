@@ -211,7 +211,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND) && !ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN)) {
 			float damageModifier = (float) (bender.calcPowerRating(Firebending.ID) / 100);
-			float damage = STATS_CONFIG.InfernoPunchDamage * 1.5F + (2 * damageModifier);
+			float damage = STATS_CONFIG.InfernoPunchDamage * 1.5F + (damageModifier);
 			float knockBack = 0.75F;
 			int fireTime = 4;
 			Vector direction = Vector.getLookRectangular(entity);

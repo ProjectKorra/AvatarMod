@@ -11,6 +11,6 @@ public class InfernoPunchCooldownHandler extends TickHandler {
 
 	@Override
 	public boolean tick(BendingContext ctx) {
-		return ctx.getData().getTickHandlerDuration(this) >= 7;
+		return ctx.getData().getTickHandlerDuration(this) >= 5;
 	}
 }
