@@ -274,7 +274,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 					}
 				}
 			}
-			return result != null && result.entityHit != null && timesPunched >= 2 && !ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN);
+			return result != null && result.entityHit != null && timesPunched > 2 && !ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN);
 
 		}
 		return false;
