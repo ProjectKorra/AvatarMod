@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
@@ -49,10 +50,12 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_C
 
 public class StatCtrlInfernoPunch extends StatusControl {
 	private ParticleSpawner particleSpawner;
+	private int timesPunched;
 
-	public StatCtrlInfernoPunch() {
+	public StatCtrlInfernoPunch(int timesPunched) {
 		super(18, CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
 		particleSpawner = new NetworkParticleSpawner();
+		this.timesPunched = timesPunched;
 	}
 
 	@SubscribeEvent
@@ -61,7 +64,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		Entity target = event.getEntity();
 		DamageSource source = event.getSource();
 		World world = target.getEntityWorld();
-		if (entity instanceof EntityLivingBase) {
+		if (entity instanceof EntityLivingBase && !AvatarDamageSource.isAvatarDamageSource(source)) {
 			if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
 				Bender ctx = Bender.get((EntityLivingBase) entity);
 				if (ctx != null) {
@@ -137,7 +140,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 											SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
 									if (target.canBePushed() && target.canBeCollidedWith()) {
-										DamageSource fire = AvatarDamageSource.causeDirectBendingDamage(entity, AvatarDamageSource.FIRE);
+										DamageSource fire = AvatarDamageSource.FIRE;
+										//Creating a new damage source with the attacker as the source results in an infinite loop
 										target.attackEntityFrom(fire, damage);
 										target.setFire(fireTime);
 										target.motionX += direction.x() * knockBack;
@@ -207,9 +211,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		World world = ctx.getWorld();
 		Bender bender = ctx.getBender();
 		AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
-		int i = 0;
 
-		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND) && !ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN)) {
 			float damageModifier = (float) (bender.calcPowerRating(Firebending.ID) / 100);
 			float damage = STATS_CONFIG.InfernoPunchDamage * 1.5F + (2 * damageModifier);
 			float knockBack = 0.75F;
@@ -240,27 +243,27 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						List<Entity> nearby = world.getEntitiesWithinAABB(Entity.class, box);
 						if (!nearby.isEmpty()) {
 							for (Entity living : nearby) {
-								if (living != entity && canDamageEntity(living)) {
+								if (living != entity && canDamageEntity(living) && e != living) {
 									if (world instanceof WorldServer) {
 										WorldServer World = (WorldServer) e.getEntityWorld();
 										World.spawnParticle(EnumParticleTypes.FLAME, living.posX, living.posY + living.getEyeHeight(), living.posZ, 50, 0.05, 0.05, 0.05, 0.01);
 
 									}
-									living.attackEntityFrom(AvatarDamageSource.causeFireDamage(living, entity), damage - (i / 2F));
-									living.setFire(fireTime - (i / 2));
-									living.motionX += direction.x() * (knockBack - (i / 2F));
+									living.attackEntityFrom(AvatarDamageSource.causeFireDamage(living, entity), damage - (timesPunched / 2F));
+									living.setFire(fireTime - (timesPunched / 2));
+									living.motionX += direction.x() * (knockBack - (timesPunched / 2F));
 									living.motionY += direction.y() * knockBack >= 0 ? (direction.y() * (knockBack / 10)) : knockBack / 10;
-									living.motionZ += direction.x() * (knockBack - (i / 2F));
+									living.motionZ += direction.x() * (knockBack - (timesPunched / 2F));
 									living.isAirBorne = true;
 									// this line is needed to prevent a bug where players will not be pushed in multiplayer
 									AvatarUtils.afterVelocityAdded(e);
-									i++;
+									timesPunched++;
 
 								}
 							}
 						}
 
-						e.attackEntityFrom(AvatarDamageSource.causeFireDamage(e, entity), damage - (i / 2F));
+						e.attackEntityFrom(AvatarDamageSource.causeFireDamage(e, entity), damage - (timesPunched / 2F));
 						e.setFire(fireTime);
 						e.motionX += direction.x() * knockBack;
 						e.motionY += direction.y() * knockBack >= 0 ? (direction.y() * (knockBack / 8)) : knockBack / 8;
@@ -268,11 +271,11 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						e.isAirBorne = true;
 						// this line is needed to prevent a bug where players will not be pushed in multiplayer
 						AvatarUtils.afterVelocityAdded(e);
-						i++;
+						timesPunched++;
 
 					}
 				}
-				return true;
+				return timesPunched >= 2;
 			}
 
 		}

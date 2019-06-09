@@ -29,6 +29,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -84,14 +85,6 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	}
 
 	@Override
-	public void setDead() {
-		super.setDead();
-		if (!world.isRemote) {
-			Thread.dumpStack();
-		}
-	}
-
-	@Override
 	public BendingStyle getElement() {
 		return new Airbending();
 	}
@@ -114,7 +107,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		if (!world.isRemote) {
 			if (!hit.isEmpty()) {
 				for (Entity e : hit) {
-					if (canCollideWith(e) && e != getOwner()) {
+					if (canCollideWith(e) && e != getOwner() && e != this) {
 						onCollideWithEntity(e);
 					}
 				}
@@ -145,7 +138,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 			}
 
 			Vector velocity = velocity().times(0.15).times(1 + xp / 200.0);
-			velocity = velocity.withY(airGrab ? -1 : 1).times(airGrab ? -0.2 : 0.4);
+			velocity = velocity.withY(airGrab ? -1 : 1).times(airGrab ? -0.6 : 0.6);
 
 			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 			afterVelocityAdded(entity);
