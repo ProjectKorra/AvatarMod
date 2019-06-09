@@ -15,7 +15,6 @@ import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAreaEffectCloud;
@@ -41,12 +40,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
@@ -55,7 +49,7 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_C
 
 public class StatCtrlInfernoPunch extends StatusControl {
 	private ParticleSpawner particleSpawner;
-	private Map<String,Integer> timesPunched = new HashMap<String,Integer>();
+	private Map<String, Integer> timesPunched = new HashMap<String, Integer>();
 
 	public StatCtrlInfernoPunch() {
 		super(18, CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
@@ -213,20 +207,20 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		World world = ctx.getWorld();
 		Bender bender = ctx.getBender();
 		AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
-		String uuid = bender.getInfo().getId().toString();
+		String uuid = Objects.requireNonNull(bender.getInfo().getId()).toString();
 
-		if(!timesPunched.containsKey(uuid)) timesPunched.put(uuid, 0);
+		if (!timesPunched.containsKey(uuid)) timesPunched.put(uuid, 0);
 
 		int timesPunchedInt = timesPunched.get(uuid);
 		HashSet<Entity> excluded = new HashSet<>();
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND) && !ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN)) {
 			float damageModifier = (float) (bender.calcPowerRating(Firebending.ID) / 100);
-			float damage = STATS_CONFIG.InfernoPunchDamage * 1.5F + (damageModifier);
+			float damage = STATS_CONFIG.InfernoPunchDamage * 1.25F + damageModifier;
 			float knockBack = 0.75F;
 			int fireTime = 4;
 			Vector direction = Vector.getLookRectangular(entity);
 			RayTraceResult result = AvatarUtils.standardEntityRayTrace(world, entity, null, Vector.getEyePos(entity).toMinecraft(),
-					entity.getLookVec().scale(8).add(entity.getPositionVector()), 0.25F, false, excluded);
+					entity.getLookVec().scale(10).add(entity.getPositionVector()), 0.25F, false, excluded);
 			if (result != null) {
 				if (result.entityHit != null) {
 					Entity e = result.entityHit;
@@ -287,7 +281,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 				}
 			}
 			boolean isDone = timesPunchedInt > 2;
-			if(isDone) timesPunched.replace(uuid, 0);
+			if (isDone) timesPunched.replace(uuid, 0);
 			return isDone;
 
 		}
