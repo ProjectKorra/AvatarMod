@@ -1,22 +1,17 @@
 package com.crowsofwar.avatar.common.entity;
 
-import java.util.UUID;
-
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.config.ConfigStats;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.entity.data.EarthspikesBehavior;
-import com.google.common.base.Optional;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
@@ -25,6 +20,8 @@ import net.minecraft.world.World;
 
 public class EntityEarthspikeSpawner extends AvatarEntity {
 
+	private static final DataParameter<EarthspikesBehavior> SPIKES_BEHAVIOR = EntityDataManager
+			.createKey(EntityEarthspikeSpawner.class, EarthspikesBehavior.SERIALIZER);
 	private boolean unstoppable;
 	private double maxTicksAlive;
 	private SpikesType type;
@@ -39,20 +36,20 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		setSize(1, 1);
 	}
 
-	public void setType(SpikesType isType) {
-		this.type = isType;
-	}
-
 	public SpikesType getType() {
 		return type;
 	}
 
-	public void setUnstoppable(boolean isUnstoppable) {
-		this.unstoppable = isUnstoppable;
+	public void setType(SpikesType isType) {
+		this.type = isType;
 	}
 
 	public boolean getUnstoppable() {
 		return unstoppable;
+	}
+
+	public void setUnstoppable(boolean isUnstoppable) {
+		this.unstoppable = isUnstoppable;
 	}
 
 	public double getDuration() {
@@ -105,9 +102,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		return false;
 	}
 
-	private static final DataParameter<EarthspikesBehavior> SPIKES_BEHAVIOR = EntityDataManager
-			.createKey(EntityEarthspikeSpawner.class, EarthspikesBehavior.SERIALIZER);
-
 	@Override
 	public void entityInit() {
 		super.entityInit();
@@ -133,9 +127,9 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
 		Block belowBlock = world.getBlockState(below).getBlock();
 
-		if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ, 
-					world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
-					SoundCategory.PLAYERS, 1, 1, false);
+		if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
+				world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
+				SoundCategory.PLAYERS, 1, 1, false);
 
 		if (!world.getBlockState(below).isNormalCube()) {
 			setDead();
@@ -168,6 +162,14 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+		if (getOwner() != null) {
+			getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(EarthspikesBehavior.MOVEMENT_MODIFIER_ID);
+		}
+	}
+
+	@Override
 	public boolean canCollideWith(Entity entity) {
 		return false;
 	}
@@ -185,5 +187,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	// Allows setting the spikes type
 	public enum SpikesType {
 		LINE, OCTOPUS
-	};
+	}
+
 }

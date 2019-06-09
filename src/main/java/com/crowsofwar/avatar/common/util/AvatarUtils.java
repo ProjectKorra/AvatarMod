@@ -413,6 +413,19 @@ public class AvatarUtils {
 
 	}
 
+
+	@Nullable
+	public static RayTraceResult standardEntityRayTrace(World world, Entity entity, Entity abilityEntity, Vec3d startPos, Vec3d endPos, float borderSize, boolean transparentBlocks, HashSet<Entity> excluded) {
+		excluded.add(entity);
+		if (abilityEntity != null) {
+			excluded.add(abilityEntity);
+		}
+		return tracePath(world, (float) startPos.x,
+				(float) startPos.y, (float) startPos.z,
+				(float) endPos.x, (float) endPos.y, (float) endPos.z,
+				borderSize, excluded, false, transparentBlocks);
+	}
+
 	/**
 	 * Method for ray tracing entities (the useless default method doesn't work,
 	 * despite EnumHitType having an ENTITY field...) You can also use this for

@@ -68,7 +68,7 @@ public abstract class StatusControl {
 			PUSH_WALL = new StatCtrlPushWall(),
 			PULL_WALL = new StatCtrlPullWall(),
 			FIRE_JUMP = new StatCtrlFireJump(),
-			INFERNO_PUNCH = new StatCtrlInfernoPunch(0),
+			INFERNO_PUNCH = new StatCtrlInfernoPunch(),
 			LOB_BUBBLE = new StatCtrlLobBubble(),
 			PLACE_BLOCK = new StatCtrlPlaceBlock(),
 			SANDSTORM_REDIRECT = new StatCtrlSandstormRedirect(),

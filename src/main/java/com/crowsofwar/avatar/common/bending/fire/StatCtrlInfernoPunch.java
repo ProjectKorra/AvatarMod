@@ -15,7 +15,6 @@ import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAreaEffectCloud;
@@ -33,6 +32,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -40,6 +40,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,10 +53,10 @@ public class StatCtrlInfernoPunch extends StatusControl {
 	private ParticleSpawner particleSpawner;
 	private int timesPunched;
 
-	public StatCtrlInfernoPunch(int timesPunched) {
+	public StatCtrlInfernoPunch() {
 		super(18, CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
 		particleSpawner = new NetworkParticleSpawner();
-		this.timesPunched = timesPunched;
+		this.timesPunched = 0;
 	}
 
 	@SubscribeEvent
@@ -211,6 +212,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		World world = ctx.getWorld();
 		Bender bender = ctx.getBender();
 		AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
+		HashSet<Entity> excluded = new HashSet<>();
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND) && !ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN)) {
 			float damageModifier = (float) (bender.calcPowerRating(Firebending.ID) / 100);
@@ -218,9 +220,11 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			float knockBack = 0.75F;
 			int fireTime = 4;
 			Vector direction = Vector.getLookRectangular(entity);
-			List<Entity> hit = Raytrace.entityRaytrace(world, Vector.getEyePos(entity), Vector.getLookRectangular(entity).times(1.5), 8, entity1 -> entity1 != entity);
-			if (!hit.isEmpty()) {
-				for (Entity e : hit) {
+			RayTraceResult result = AvatarUtils.standardEntityRayTrace(world, entity, null, Vector.getEyePos(entity).toMinecraft(),
+					entity.getLookVec().scale(10).add(entity.getPositionVector()), 0.75F, false, excluded);
+			if (result != null) {
+				if (result.entityHit != null) {
+					Entity e = result.entityHit;
 					if (e != entity && canDamageEntity(e) && entity.getHeldItemMainhand() == ItemStack.EMPTY) {
 						if (world instanceof WorldServer) {
 							WorldServer World = (WorldServer) e.getEntityWorld();
@@ -249,21 +253,20 @@ public class StatCtrlInfernoPunch extends StatusControl {
 										World.spawnParticle(EnumParticleTypes.FLAME, living.posX, living.posY + living.getEyeHeight(), living.posZ, 50, 0.05, 0.05, 0.05, 0.01);
 
 									}
-									living.attackEntityFrom(AvatarDamageSource.causeFireDamage(living, entity), damage - (timesPunched / 2F));
-									living.setFire(fireTime - (timesPunched / 2));
-									living.motionX += direction.x() * (knockBack - (timesPunched / 2F));
+									living.attackEntityFrom(AvatarDamageSource.causeFireDamage(living, entity), damage + (timesPunched / 2F));
+									living.setFire(fireTime + (timesPunched / 2));
+									living.motionX += direction.x() * (knockBack + (timesPunched / 2F));
 									living.motionY += direction.y() * knockBack >= 0 ? (direction.y() * (knockBack / 10)) : knockBack / 10;
-									living.motionZ += direction.x() * (knockBack - (timesPunched / 2F));
+									living.motionZ += direction.x() * (knockBack + (timesPunched / 2F));
 									living.isAirBorne = true;
 									// this line is needed to prevent a bug where players will not be pushed in multiplayer
-									AvatarUtils.afterVelocityAdded(e);
-									timesPunched++;
+									AvatarUtils.afterVelocityAdded(living);
 
 								}
 							}
 						}
 
-						e.attackEntityFrom(AvatarDamageSource.causeFireDamage(e, entity), damage - (timesPunched / 2F));
+						e.attackEntityFrom(AvatarDamageSource.causeFireDamage(e, entity), damage + (timesPunched / 2F));
 						e.setFire(fireTime);
 						e.motionX += direction.x() * knockBack;
 						e.motionY += direction.y() * knockBack >= 0 ? (direction.y() * (knockBack / 8)) : knockBack / 8;
@@ -272,11 +275,11 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						// this line is needed to prevent a bug where players will not be pushed in multiplayer
 						AvatarUtils.afterVelocityAdded(e);
 						timesPunched++;
-
+						ctx.getData().addTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN);
 					}
 				}
-				return timesPunched >= 2;
 			}
+			return timesPunched >= 2 && !ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN);
 
 		}
 		return false;
