@@ -40,8 +40,11 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -51,12 +54,12 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_C
 
 public class StatCtrlInfernoPunch extends StatusControl {
 	private ParticleSpawner particleSpawner;
-	private int timesPunched;
+	private Map<String,Integer> timesPunched = new HashMap<String,Integer>();
 
 	public StatCtrlInfernoPunch() {
 		super(18, CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
 		particleSpawner = new NetworkParticleSpawner();
-		this.timesPunched = 0;
+		//this.timesPunched = 0;
 	}
 
 	@SubscribeEvent
@@ -207,6 +210,11 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		World world = ctx.getWorld();
 		Bender bender = ctx.getBender();
 		AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
+		String uuid = bender.getInfo().getId().toString();
+
+		if(!timesPunched.containsKey(uuid)) timesPunched.put(uuid, 0);
+
+		int timesPunchedInt = timesPunched.get(uuid);
 		HashSet<Entity> excluded = new HashSet<>();
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND) && !ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN)) {
 			float damageModifier = (float) (bender.calcPowerRating(Firebending.ID) / 100);
@@ -238,7 +246,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						world.playSound(null, e.posX, e.posY, e.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
 								SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
-						e.attackEntityFrom(AvatarDamageSource.causeFireDamage(e, entity), damage + (timesPunched / 2F));
+						e.attackEntityFrom(AvatarDamageSource.causeFireDamage(e, entity), damage + (timesPunchedInt / 2F));
 						e.setFire(fireTime);
 						e.motionX += direction.x() * knockBack;
 						e.motionY += direction.y() * knockBack >= 0 ? (direction.y() * (knockBack / 8)) : knockBack / 8;
@@ -246,7 +254,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 						e.isAirBorne = true;
 						// this line is needed to prevent a bug where players will not be pushed in multiplayer
 						AvatarUtils.afterVelocityAdded(e);
-						timesPunched++;
+						timesPunchedInt++;
+						timesPunched.replace(uuid, timesPunchedInt);
 						ctx.getData().addTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN);
 						AxisAlignedBB box = new AxisAlignedBB(e.posX + 2, e.posY + 2, e.posZ + 2, e.posX - 2, e.posY - 2, e.posZ - 2);
 						List<Entity> nearby = world.getEntitiesWithinAABB(Entity.class, box);
@@ -258,11 +267,11 @@ public class StatCtrlInfernoPunch extends StatusControl {
 										World.spawnParticle(EnumParticleTypes.FLAME, living.posX, living.posY + living.getEyeHeight(), living.posZ, 50, 0.05, 0.05, 0.05, 0.01);
 
 									}
-									living.attackEntityFrom(AvatarDamageSource.causeFireDamage(living, entity), damage + (timesPunched / 2F));
-									living.setFire(fireTime + (timesPunched / 2));
-									living.motionX += direction.x() * (knockBack + (timesPunched / 2F));
+									living.attackEntityFrom(AvatarDamageSource.causeFireDamage(living, entity), damage + (timesPunchedInt / 2F));
+									living.setFire(fireTime + (timesPunchedInt / 2));
+									living.motionX += direction.x() * (knockBack + (timesPunchedInt / 2F));
 									living.motionY += direction.y() * knockBack >= 0 ? (direction.y() * (knockBack / 10)) : knockBack / 10;
-									living.motionZ += direction.x() * (knockBack + (timesPunched / 2F));
+									living.motionZ += direction.x() * (knockBack + (timesPunchedInt / 2F));
 									living.isAirBorne = true;
 									// this line is needed to prevent a bug where players will not be pushed in multiplayer
 									AvatarUtils.afterVelocityAdded(living);
@@ -274,8 +283,8 @@ public class StatCtrlInfernoPunch extends StatusControl {
 
 				}
 			}
-			boolean isDone = timesPunched > 2;
-			if(isDone) timesPunched = 0;
+			boolean isDone = timesPunchedInt > 2;
+			if(isDone) timesPunched.replace(uuid, 0);
 			return isDone;
 
 		}
