@@ -274,7 +274,9 @@ public class StatCtrlInfernoPunch extends StatusControl {
 
 				}
 			}
-			return timesPunched > 2 && !ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN);
+			boolean isDone = timesPunched > 2;
+			if(isDone) timesPunched = 0;
+			return isDone;
 
 		}
 		return false;
