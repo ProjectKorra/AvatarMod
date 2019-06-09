@@ -203,7 +203,7 @@ public class StatCtrlFireJump extends StatusControl {
 		for (EntityLivingBase target : nearby) {
 			if (target != entity && target.canBeCollidedWith() && target.canBePushed()) {
 				if (canDamageEntity(target)) {
-					target.attackEntityFrom(AvatarDamageSource.causeSmashDamage(target, entity), damage);
+					target.attackEntityFrom(AvatarDamageSource.causeShockwaveDamage(target, entity, AvatarDamageSource.FIRE), damage);
 				}
 				BattlePerformanceScore.addMediumScore(entity);
 

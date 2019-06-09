@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -88,7 +89,7 @@ public class EntityAirblade extends AvatarEntity {
 
 	@Override
 	public boolean canCollideWith(Entity entity) {
-		return super.canCollideWith(entity) && !(entity instanceof EntityAirblade);
+		return super.canCollideWith(entity) && !(entity instanceof EntityAirblade) || entity instanceof EntityLivingBase;
 	}
 
 	@Override
@@ -152,7 +153,7 @@ public class EntityAirblade extends AvatarEntity {
 		if (canDamageEntity(collided) && getOwner() != null) {
 
 			BendingData data = getOwnerBender().getData();
-			DamageSource source = AvatarDamageSource.causeIndirectBendingDamage(getOwner(), this, AvatarDamageSource.AIR);
+			DamageSource source = AvatarDamageSource.causeAirbladeDamage(collided, getOwner());
 			if (pierceArmor) {
 				source.setDamageBypassesArmor();
 			}

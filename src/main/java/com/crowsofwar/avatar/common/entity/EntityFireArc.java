@@ -17,13 +17,13 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireArc;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -157,6 +157,12 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		cleanup();
 		setDead();
 		return true;
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
+		cleanup();
 	}
 
 	public void cleanup() {
@@ -357,16 +363,16 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		return true;
 	}
 
+	@Override
+	protected double getVelocityMultiplier() {
+		return velocityMultiplier;
+	}
+
 	public static class FireControlPoint extends ControlPoint {
 
 		public FireControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);
 		}
 
-	}
-
-	@Override
-	protected double getVelocityMultiplier() {
-		return velocityMultiplier;
 	}
 }

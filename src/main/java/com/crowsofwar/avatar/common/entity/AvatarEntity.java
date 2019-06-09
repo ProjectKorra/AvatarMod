@@ -375,7 +375,11 @@ public abstract class AvatarEntity extends Entity {
 	public boolean canCollideWith(Entity entity) {
 		if (entity == getOwner()) {
 			return false;
-		} else
+		}
+		else if (entity instanceof EntityEnderCrystal) {
+			return true;
+		}
+		else
 			return entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != getOwner()|| (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase;
 	}
 
