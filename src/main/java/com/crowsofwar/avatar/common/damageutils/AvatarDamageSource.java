@@ -117,7 +117,7 @@ public class AvatarDamageSource {
 	 */
 
 	public static DamageSource causeAirDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect(AIR.getDamageType(), hit, owner).setProjectile();
+		return new EntityDamageSourceIndirect(AIR.getDamageType(), hit, owner);
 	}
 
 	/**
