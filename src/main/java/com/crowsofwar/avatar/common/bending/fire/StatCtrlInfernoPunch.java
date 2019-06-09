@@ -15,6 +15,7 @@ import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAreaEffectCloud;
@@ -169,31 +170,33 @@ public class StatCtrlInfernoPunch extends StatusControl {
 			EntityLivingBase entity = (EntityLivingBase) event.getSource().getTrueSource();
 			Entity target = event.getEntity();
 			if (entity instanceof EntityPlayer || entity instanceof EntityBender) {
-				Bender ctx = Bender.get(entity);
-				if (ctx != null) {
-					if (ctx.getInfo().getId() != null) {
-						if (ctx.getData() != null) {
-							float damageModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
-							float damage = STATS_CONFIG.InfernoPunchDamage + (2 * damageModifier);
-							BendingData data = BendingData.get(entity);
-							AbilityData aD = AbilityData.get(entity, "inferno_punch");
-							if (data.hasStatusControl(INFERNO_PUNCH) && !(event.getSource().getDamageType().equals("avatar_groundSmash")) &&
-									!(event.getSource().getDamageType().equals("avatar_Air"))) {
-								if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
-									if (aD.getLevel() >= 1) {
-										damage = 4 + (2 * damageModifier);
-									} else if (aD.getLevel() >= 2) {
-										damage = 5 + (2 * damageModifier);
-									}
-									if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-										damage = 7 + (2 * damageModifier);
-									}
-									if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-										damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * damageModifier);
-									}
-									if (target instanceof EntityDragon) {
-										event.setAmount(damage);
-										data.removeStatusControl(INFERNO_PUNCH);
+				if (entity.getUniqueID() != null) {
+					Bender ctx = Bender.get(entity);
+					if (ctx != null) {
+						if (ctx.getInfo().getId() != null) {
+							if (ctx.getData() != null) {
+								float damageModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
+								float damage = STATS_CONFIG.InfernoPunchDamage + (2 * damageModifier);
+								BendingData data = BendingData.get(entity);
+								AbilityData aD = AbilityData.get(entity, "inferno_punch");
+								if (data.hasStatusControl(INFERNO_PUNCH) && !(event.getSource().getDamageType().equals("avatar_groundSmash")) &&
+										!(event.getSource().getDamageType().equals("avatar_Air"))) {
+									if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
+										if (aD.getLevel() >= 1) {
+											damage = 4 + (2 * damageModifier);
+										} else if (aD.getLevel() >= 2) {
+											damage = 5 + (2 * damageModifier);
+										}
+										if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+											damage = 7 + (2 * damageModifier);
+										}
+										if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+											damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * damageModifier);
+										}
+										if (target instanceof EntityDragon) {
+											event.setAmount(damage);
+											data.removeStatusControl(INFERNO_PUNCH);
+										}
 									}
 								}
 							}
