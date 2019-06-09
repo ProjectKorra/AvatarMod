@@ -253,9 +253,9 @@ public class EntityLightningSpear extends AvatarEntity {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				damage = getDamage();
 			}
-			entity.attackEntityFrom(AvatarDamageSource.LIGHTNING, damage);
-			if (entity.attackEntityFrom(AvatarDamageSource.LIGHTNING, damage)) {
-				abilityData.addXp(SKILLS_CONFIG.cloudburstHit);
+			boolean attack = entity.attackEntityFrom(AvatarDamageSource.causeLightningSpearDamage(entity, getOwner()), damage);
+			if (attack) {
+				abilityData.addXp(SKILLS_CONFIG.lightningspearHit);
 				BattlePerformanceScore.addMediumScore(getOwner());
 
 			}

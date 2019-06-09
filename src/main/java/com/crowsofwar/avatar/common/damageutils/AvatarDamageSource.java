@@ -117,7 +117,7 @@ public class AvatarDamageSource {
 	 */
 
 	public static DamageSource causeAirDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect(AIR.getDamageType(), hit, owner);
+		return new EntityDamageSourceIndirect(AIR.getDamageType(), hit, owner).setProjectile();
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class AvatarDamageSource {
 	 * @return DamageSource for the fire
 	 */
 	public static DamageSource causeFireDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect(AvatarDamageSource.FIRE.getDamageType(), hit, owner).setProjectile();
+		return new EntityDamageSourceIndirect(AvatarDamageSource.FIRE.getDamageType(), hit, owner);
 	}
 
 	/**
@@ -219,7 +219,28 @@ public class AvatarDamageSource {
 		return new EntityDamageSourceIndirect("avatar_Fire_flamethrower", hit, owner).setProjectile();
 	}
 
+	/**
+	 * Create a DamageSource for damage caused by punching an enemy with fire..
+	 *
+	 * @param hit   Who was hit by the punch
+	 * @param owner Who punched
+	 */
+	public static DamageSource causeInfernoPunchDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_Fire_infernoPunch", hit, owner);
+	}
+
 	//EARTH
+
+	/**
+	 * Create a DamageSource for generic earth damage.
+	 *
+	 * @param hit   Who was hit by the damage
+	 * @param owner Who caused the damage
+	 * @return DamageSource for the damage
+	 */
+	public static DamageSource causeEarthDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect(AvatarDamageSource.EARTH.getDamageType(), hit, owner);
+	}
 
 	/**
 	 * Create a DamageSource for damage caused by a floating block.
@@ -229,7 +250,7 @@ public class AvatarDamageSource {
 	 * @return DamageSource for the floating block
 	 */
 	public static DamageSource causeFloatingBlockDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_Earth", hit, owner).setProjectile();
+		return new EntityDamageSourceIndirect("avatar_Earth_floatingBlock", hit, owner).setProjectile();
 	}
 
 	/**
@@ -266,6 +287,17 @@ public class AvatarDamageSource {
 		return new EntityDamageSourceIndirect(element.getDamageType() + "_shockwave", hit, owner);
 	}
 
+	/**
+	 * Create a DamageSource for damage caused by a burst of an element
+	 *
+	 * @param hit   Who was hit by the shockwave
+	 * @param owner Who released the shockwave
+	 * @param element The element of the shockwave.
+	 */
+	public static DamageSource causeSphericalShockwaveDamage(Entity hit, @Nullable Entity owner, DamageSource element) {
+		return new EntityDamageSourceIndirect(element.getDamageType() + "_sphere_shockwave", hit, owner);
+	}
+
 
 
 	//LIGHTNING
@@ -290,6 +322,18 @@ public class AvatarDamageSource {
 			controller) {
 		return new EntityDamageSourceIndirect("avatar_Lightning_redirected", hit, controller)
 				.setDamageBypassesArmor();
+	}
+
+	/**
+	 * Create a DamageSource for damage caused by a lightning spear.
+	 *
+	 * @param hit        Who was hit by the spear
+	 * @param controller Who threw the spear
+	 */
+	public static DamageSource causeLightningSpearDamage(Entity hit, @Nullable Entity
+			controller) {
+		return new EntityDamageSourceIndirect("avatar_Lightning_lightningSpear", hit, controller)
+				.setDamageBypassesArmor().setProjectile();
 	}
 
 	//ICE
@@ -345,6 +389,9 @@ public class AvatarDamageSource {
 			if (hit instanceof EntityDragon && AvatarDamageSource.isAvatarDamageSource(source)) {
 				event.setCanceled(false);
 				event.setAmount(event.getAmount());
+			}
+			if (AvatarDamageSource.isAvatarDamageSource(source)) {
+				source.setMagicDamage();
 			}
 
 			if (AvatarDamageSource.isWaterDamage(source)) {

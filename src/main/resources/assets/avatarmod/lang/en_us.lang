@@ -469,10 +469,10 @@ death.attack.avatar_Water_waterCannon=%1$s couldn't handle the pressure of %2$s'
 
 death.attack.avatar_Air=%1$s was blasted away with %2$s's §f§lairbending!
 death.attack.avatar_Air_airblade=%1$s was §f§lsliced by %2$s !
-death.attack.avatar_Air_shockWave=%2$s was blasted away by %1$s's shockwave!
+death.attack.avatar_Air_shockWave=%2$s was blown away by %1$s's shockwave!
 
 death.attack.avatar_Earth=%1$s was crushed with %2$s's §2§learthbending!
-death.attack.avatar_Earth_earthbendBlock=%2$s §2§lsmashed %1$s with a §2§lblock!
+death.attack.avatar_Earth_floatingBlock=%2$s §2§lsmashed %1$s with a §2§lblock!
 death.attack.avatar_Earth_ravine=%2$s §2§lcrushed %1$s in a §2§lravine!
 death.attack.avatar_Earth_earthspikes=%2$s §2§lstabbed %1$s with §2§learthspikes!
 
@@ -497,6 +497,15 @@ death.attack.avatar_Lightning_shockWave=%2$s was blasted away by %1$s's shockwav
 death.attack.avatar_Sand_shockWave=%2$s was blasted away by %1$s's shockwave!
 death.attack.avatar_Combustion_shockWave=%2$s was blasted away by %1$s's shockwave!
 death.attack.avatar_Ice_shockWave=%2$s was blasted away by %1$s's shockwave!
+
+death.attack.avatar_Fire_sphere_shockWave=%2$s was §c§lconflagrated by %1$s's fire burst!
+death.attack.avatar_Air_sphere_shockWave=%2$s was blown away by %1$s's shockwave!
+death.attack.avatar_Water_sphere_shockWave=%2$s was blasted away by %1$s's shockwave!
+death.attack.avatar_Earth_sphere_shockWave=%2$s was blasted away by %1$s's shockwave!
+death.attack.avatar_Lightning_sphere_shockWave=%2$s was vaporised by %1$s's lightning burst!
+death.attack.avatar_Sand_sphere_shockWave=%2$s was blasted away by %1$s's shockwave!
+death.attack.avatar_Combustion_sphere_shockWave=%2$s was blasted away by %1$s's shockwave!
+death.attack.avatar_Ice_sphere_shockWave=%2$s was blasted away by %1$s's shockwave!
 
 
 

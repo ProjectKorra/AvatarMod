@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
-import java.util.Objects;
-
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
@@ -12,10 +10,8 @@ import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
@@ -29,12 +25,14 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.Objects;
+
 import static com.crowsofwar.avatar.common.bending.StatusControl.*;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
-public class FireEventListener{
-    @SubscribeEvent
+public class FireEventListener {
+	@SubscribeEvent
 	public static void onInfernoPunch(LivingAttackEvent event) {
 		Entity entity = event.getSource().getTrueSource();
 		Entity target = event.getEntity();
@@ -47,26 +45,26 @@ public class FireEventListener{
 					if (ctx.getInfo().getId() != null) {
 						if (ctx.getData() != null) {
 							Vector direction = Vector.getLookRectangular(entity);
-                            AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
-                            BendingData data = BendingData.get((EntityLivingBase) entity);
-                            boolean hasInfernoPunch = data.hasStatusControl(INFERNO_PUNCH_MAIN) || data.hasStatusControl(INFERNO_PUNCH_FIRST);
+							AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
+							BendingData data = BendingData.get((EntityLivingBase) entity);
+							boolean hasInfernoPunch = data.hasStatusControl(INFERNO_PUNCH_MAIN) || data.hasStatusControl(INFERNO_PUNCH_FIRST);
 							float powerModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
 							float damage = STATS_CONFIG.InfernoPunchDamage + (2 * powerModifier);
 							float knockBack = 1 + powerModifier;
 							int fireTime = 5 + (int) (powerModifier * 10);
 
 							if (abilityData.getLevel() >= 1) {
-								damage = 4 + (2 * powerModifier);
+								damage = STATS_CONFIG.InfernoPunchDamage * 4 / 3 + (2 * powerModifier);
 								knockBack = 1.125F + powerModifier;
 								fireTime = 6;
 							}
 							if (abilityData.getLevel() >= 2) {
-								damage = 5 + (2 * powerModifier);
+								damage = STATS_CONFIG.InfernoPunchDamage * 5 / 3 + (2 * powerModifier);
 								knockBack = 1.25F + powerModifier;
 								fireTime = 8 + (int) (powerModifier * 10);
 							}
 							if (data.hasStatusControl(INFERNO_PUNCH_FIRST)) {
-								damage = 7 + (2 * powerModifier);
+								damage = STATS_CONFIG.InfernoPunchDamage * 7 / 3 + (2 * powerModifier);
 								knockBack = 1.5F + powerModifier;
 								fireTime = 15 + (int) (powerModifier * 10);
 							}
@@ -112,7 +110,7 @@ public class FireEventListener{
 												SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
 										if (target.canBePushed() && target.canBeCollidedWith()) {
-											DamageSource fire = AvatarDamageSource.causeFireDamage(target, entity);
+											DamageSource fire = AvatarDamageSource.causeInfernoPunchDamage(target, entity);
 											//Creating a new damage source with the attacker as the source results in an infinite loop
 											target.attackEntityFrom(fire, damage);
 											target.setFire(fireTime);
@@ -124,8 +122,8 @@ public class FireEventListener{
 											// this line is needed to prevent a bug where players will not be pushed in multiplayer
 											AvatarUtils.afterVelocityAdded(target);
 										}
-                                        ctx.getData().removeStatusControl(INFERNO_PUNCH_FIRST);
-                                        ctx.getData().removeStatusControl(INFERNO_PUNCH_MAIN);
+										ctx.getData().removeStatusControl(INFERNO_PUNCH_FIRST);
+										ctx.getData().removeStatusControl(INFERNO_PUNCH_MAIN);
 									}
 								}
 							}

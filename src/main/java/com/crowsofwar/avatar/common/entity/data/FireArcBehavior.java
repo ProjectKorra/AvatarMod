@@ -124,34 +124,36 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 					Entity.class, entity.getEntityBoundingBox().grow(0.5, 0.5, 0.5),
 					collided -> collided != entity.getOwner());
 
-			for (Entity collided : collidedList) {
-				if (collided == entity.getOwner()) return this;
-				if (entity.canCollideWith(collided) && collided != entity) {
+			if (!collidedList.isEmpty()) {
+				for (Entity collided : collidedList) {
+					if (collided == entity.getOwner()) return this;
+					if (entity.canCollideWith(collided) && collided != entity) {
 
-					double push = STATS_CONFIG.fireArcSettings.push;
-					collided.addVelocity(entity.motionX * push, 0.4 * push, entity.motionZ * push);
-					collided.setFire(3);
+						double push = STATS_CONFIG.fireArcSettings.push;
+						collided.addVelocity(entity.motionX * push, 0.4 * push, entity.motionZ * push);
+						collided.setFire(3);
 
-					if (entity.canDamageEntity(collided) || collided instanceof EntityPlayer) {
-						if (collided.attackEntityFrom(AvatarDamageSource.causeFireArcDamage(collided, entity.getOwner()),
-								STATS_CONFIG.fireArcSettings.damage * entity.getDamageMult())) {
-							BattlePerformanceScore.addMediumScore(entity.getOwner());
-						}
-					}
-					entity.onCollideWithEntity(entity);
-					if (!entity.world.isRemote) {
-						BendingData data = Objects.requireNonNull(Bender.get(entity.getOwner())).getData();
-						if (data != null) {
-							data.getAbilityData("fire_arc")
-									.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);
-							AbilityData abilityData = data.getAbilityData("fire_arc");
-							if (abilityData.isMasterPath(AbilityTreePath.SECOND) && entity.getOwner() != null) {
-								data.addStatusControl(StatusControl.THROW_FIRE);
-								return new FireArcBehavior.PlayerControlled();
+						if (entity.canDamageEntity(collided) || collided instanceof EntityPlayer) {
+							if (collided.attackEntityFrom(AvatarDamageSource.causeFireArcDamage(collided, entity.getOwner()),
+									STATS_CONFIG.fireArcSettings.damage * entity.getDamageMult())) {
+								BattlePerformanceScore.addMediumScore(entity.getOwner());
 							}
 						}
-					}
+						if (!entity.world.isRemote) {
+							BendingData data = Objects.requireNonNull(Bender.get(entity.getOwner())).getData();
+							if (data != null) {
+								data.getAbilityData("fire_arc")
+										.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);
+								AbilityData abilityData = data.getAbilityData("fire_arc");
+								if (abilityData.isMasterPath(AbilityTreePath.SECOND) && entity.getOwner() != null) {
+									data.addStatusControl(StatusControl.THROW_FIRE);
+									return new FireArcBehavior.PlayerControlled();
+								}
+							}
+						}
+						entity.onCollideWithEntity(entity);
 
+					}
 				}
 			}
 
