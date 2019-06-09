@@ -84,6 +84,14 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+		if (!world.isRemote) {
+			Thread.dumpStack();
+		}
+	}
+
+	@Override
 	public BendingStyle getElement() {
 		return new Airbending();
 	}
@@ -102,11 +110,13 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 				|| ticksExisted > 120) {
 			setDead();
 		}
-		List<Entity> hit = world.getEntitiesWithinAABB(Entity.class, getEntityBoundingBox().grow(1.1));
-		if (!hit.isEmpty()) {
-			for (Entity e : hit) {
-				if (canCollideWith(e)) {
-					onCollideWithEntity(e);
+		List<Entity> hit = world.getEntitiesWithinAABB(Entity.class, getEntityBoundingBox().grow(0.3));
+		if (!world.isRemote) {
+			if (!hit.isEmpty()) {
+				for (Entity e : hit) {
+					if (canCollideWith(e) && e != getOwner()) {
+						onCollideWithEntity(e);
+					}
 				}
 			}
 		}
@@ -135,7 +145,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 			}
 
 			Vector velocity = velocity().times(0.15).times(1 + xp / 200.0);
-			velocity = velocity.withY(airGrab ? -1 : 1).times(airGrab ? -0.2 : 1);
+			velocity = velocity.withY(airGrab ? -1 : 1).times(airGrab ? -0.2 : 0.4);
 
 			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 			afterVelocityAdded(entity);
