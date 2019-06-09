@@ -64,7 +64,7 @@ public class StatCtrlInfernoPunchSecond extends StatusControl {
 		HashSet<Entity> excluded = new HashSet<>();
 		if (!ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN)) {
 			float damageModifier = (float) (bender.calcPowerRating(Firebending.ID) / 100);
-			float damage = STATS_CONFIG.InfernoPunchDamage * 1.25F + damageModifier;
+			float damage = STATS_CONFIG.InfernoPunchDamage * 1.5F + damageModifier;
 			float knockBack = 0.75F;
 			int fireTime = 4;
 			Vector direction = Vector.getLookRectangular(entity);
@@ -145,6 +145,6 @@ public class StatCtrlInfernoPunchSecond extends StatusControl {
 		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
 				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud) {
 			return false;
-		} else return entity.canBeCollidedWith() && entity.canBePushed();
+		} else return entity.canBeCollidedWith() && entity.canBePushed() || entity instanceof EntityLivingBase;
 	}
 }

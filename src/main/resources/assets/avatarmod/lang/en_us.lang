@@ -499,13 +499,13 @@ death.attack.avatar_Combustion_shockWave=%2$s was blasted away by %1$s's shockwa
 death.attack.avatar_Ice_shockWave=%2$s was blasted away by %1$s's shockwave!
 
 death.attack.avatar_Fire_sphere_shockWave=%2$s was §c§lconflagrated by %1$s's fire burst!
-death.attack.avatar_Air_sphere_shockWave=%2$s was blown away by %1$s's shockwave!
+death.attack.avatar_Air_sphere_shockWave=%2$s was blown away by %1$s's air burst!
 death.attack.avatar_Water_sphere_shockWave=%2$s was blasted away by %1$s's shockwave!
-death.attack.avatar_Earth_sphere_shockWave=%2$s was blasted away by %1$s's shockwave!
+death.attack.avatar_Earth_sphere_shockWave=%2$s was crushed by %1$s's tectonic explosion!
 death.attack.avatar_Lightning_sphere_shockWave=%2$s was vaporised by %1$s's lightning burst!
 death.attack.avatar_Sand_sphere_shockWave=%2$s was blasted away by %1$s's shockwave!
-death.attack.avatar_Combustion_sphere_shockWave=%2$s was blasted away by %1$s's shockwave!
-death.attack.avatar_Ice_sphere_shockWave=%2$s was blasted away by %1$s's shockwave!
+death.attack.avatar_Combustion_sphere_shockWave=%2$s was annihilated by %1$s's explosion!
+death.attack.avatar_Ice_sphere_shockWave=%2$s was shattered by %1$s's ice burst!
 
 
 
