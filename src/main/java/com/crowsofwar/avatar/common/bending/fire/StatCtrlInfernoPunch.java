@@ -133,7 +133,7 @@ public class StatCtrlInfernoPunch extends StatusControl {
 												SoundCategory.HOSTILE, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
 										if (target.canBePushed() && target.canBeCollidedWith()) {
-											DamageSource fire = AvatarDamageSource.FIRE;
+											DamageSource fire = AvatarDamageSource.causeFireDamage(target, entity);
 											//Creating a new damage source with the attacker as the source results in an infinite loop
 											target.attackEntityFrom(fire, damage);
 											target.setFire(fireTime);
@@ -173,23 +173,24 @@ public class StatCtrlInfernoPunch extends StatusControl {
 								float damage = STATS_CONFIG.InfernoPunchDamage + (2 * damageModifier);
 								BendingData data = BendingData.get(entity);
 								AbilityData aD = AbilityData.get(entity, "inferno_punch");
-								if (data.hasStatusControl(INFERNO_PUNCH) && !(event.getSource().getDamageType().equals("avatar_groundSmash")) &&
-										!(event.getSource().getDamageType().equals("avatar_Air"))) {
+								if (data.hasStatusControl(INFERNO_PUNCH) && (event.getSource().getDamageType().equals("avatar_Fire"))) {
 									if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
-										if (aD.getLevel() >= 1) {
+										if (aD.getLevel() == 1) {
 											damage = 4 + (2 * damageModifier);
-										} else if (aD.getLevel() >= 2) {
+										} else if (aD.getLevel() == 2) {
 											damage = 5 + (2 * damageModifier);
 										}
 										if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 											damage = 7 + (2 * damageModifier);
 										}
-										if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-											damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * damageModifier);
-										}
-										if (target instanceof EntityDragon) {
+										//if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+										//	damage = STATS_CONFIG.InfernoPunchDamage * 1.333F + (2 * damageModifier);
+										//}
+										if (target instanceof EntityDragon && !aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 											event.setAmount(damage);
-											data.removeStatusControl(INFERNO_PUNCH);
+											if (!aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+												data.removeStatusControl(INFERNO_PUNCH);
+											}
 										}
 									}
 								}
@@ -296,6 +297,6 @@ public class StatCtrlInfernoPunch extends StatusControl {
 		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
 				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud) {
 			return false;
-		} else return entity.canBeCollidedWith() && entity.canBePushed();
+		} else return entity.canBeCollidedWith() && entity.canBePushed() || entity instanceof EntityLivingBase;
 	}
 }

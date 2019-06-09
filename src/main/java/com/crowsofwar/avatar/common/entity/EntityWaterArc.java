@@ -131,7 +131,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	public void damageEntity(Entity entity) {
 		if (!world.isRemote) {
 			if (canDamageEntity(entity)) {
-				DamageSource ds = AvatarDamageSource.causeWaterDamage(entity, getOwner());
+				DamageSource ds = AvatarDamageSource.causeWaterArcDamage(entity, getOwner());
 				float damage = STATS_CONFIG.waterArcSettings.damage * damageMult;
 				entity.attackEntityFrom(ds, damage);
 				if (entity.attackEntityFrom(ds, damage)) {

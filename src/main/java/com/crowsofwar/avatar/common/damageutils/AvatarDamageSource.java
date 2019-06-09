@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.damageutils;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.client.AvatarItemRenderRegister;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityFlying;
@@ -28,7 +29,6 @@ import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -62,14 +62,50 @@ public class AvatarDamageSource {
 		return source.getDamageType().startsWith("avatar_");
 	}
 
-	public static DamageSource causeIndirectBendingDamage(Entity owner,  @Nullable Entity abilityEntity, DamageSource source) {
+	public static boolean isAirDamage(DamageSource source) {
+		return source.getDamageType().startsWith("avatar_Air");
+	}
+
+	public static boolean isEarthDamage(DamageSource source) {
+		return source.getDamageType().startsWith("avatar_Earth");
+	}
+
+	public static boolean isWaterDamage(DamageSource source) {
+		return source.getDamageType().startsWith("avatar_Water");
+	}
+
+	public static boolean isFireDamage(DamageSource source) {
+		return source.getDamageType().startsWith("avatar_Fire");
+	}
+
+	public static boolean isLightningDamage(DamageSource source) {
+		return source.getDamageType().startsWith("avatar_Lightning");
+	}
+
+	public static boolean isCombustionDamage(DamageSource source) {
+		return source.getDamageType().startsWith("avatar_Combustion");
+	}
+
+	public static boolean isIceDamage(DamageSource source) {
+		return source.getDamageType().startsWith("avatar_Ice");
+	}
+
+	public static boolean isSandDamage(DamageSource source) {
+		return source.getDamageType().startsWith("avatar_Sand");
+	}
+
+
+	//For some reason, using these methods doesn't hurt the ender dragon, even though it's technically the correct usage.
+	//Weird.
+	/*public static DamageSource causeIndirectBendingDamage(Entity owner,  @Nullable Entity abilityEntity, DamageSource source) {
 		return new EntityDamageSourceIndirect(source.toString(), owner, abilityEntity);
 	}
 
 	public static DamageSource causeDirectBendingDamage(Entity owner, DamageSource source) {
 		return new EntityDamageSource(source.toString(), owner);
 	}
-	//These methods are just wrong. Why??? Crows is using the hit entity in PLACE OF THE TRUE DAMAGE SOURCE ENTITY.
+	**/
+
 	/**
 	 * Create a DamageSource for damage caused by a floating block.
 	 *
@@ -78,7 +114,7 @@ public class AvatarDamageSource {
 	 * @return DamageSource for the floating block
 	 */
 	public static DamageSource causeFloatingBlockDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_earthbendBlock", hit, owner).setProjectile();
+		return new EntityDamageSourceIndirect("avatar__Earth_ earthbendBlock", hit, owner).setProjectile();
 	}
 
 	/**
@@ -90,31 +126,52 @@ public class AvatarDamageSource {
 	 */
 
 	public static DamageSource causeAirDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_AirDamage", hit, owner);
+		return new EntityDamageSourceIndirect(AIR.getDamageType(), hit, owner);
 	}
 
 	/**
-	 * Create a DamageSource for damage caused by a water arc.
+	 * Create a DamageSource for generic water damage.
+	 *
+	 * @param hit   Who was hit by the water
+	 * @param owner Who created the water
+	 * @return DamageSource for the water
+	 */
+	public static DamageSource causeWaterDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect(AvatarDamageSource.WATER.getDamageType(), hit, owner);
+	}
+
+	/**
+	 * Create a DamageSource for water arc.
 	 *
 	 * @param hit   Who was hit by the water arc
 	 * @param owner Who created the water arc
 	 * @return DamageSource for the water arc
 	 */
-	public static DamageSource causeWaterDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_waterArc", hit, owner).setProjectile();
+	public static DamageSource causeWaterArcDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_Water_waterArc", hit, owner).setProjectile();
 	}
 
 	/**
-	 * Create a DamageSource for damage caused by a fire arc.
+	 * Create a DamageSource for damage generic fire damage.
+	 *
+	 * @param hit   Who was hit by the fire
+	 * @param owner Who created the fire
+	 * @return DamageSource for the fire
+	 */
+	public static DamageSource causeFireDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect(AvatarDamageSource.FIRE.getDamageType(), hit, owner).setProjectile();
+	}
+
+	/**
+	 * Create a DamageSource for damage from a fire arc.
 	 *
 	 * @param hit   Who was hit by the fire arc
 	 * @param owner Who created the fire arc
 	 * @return DamageSource for the fire arc
 	 */
-	public static DamageSource causeFireDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_fireArc", hit, owner).setProjectile();
+	public static DamageSource causeFireArcDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_Fire_fireArc", hit, owner).setProjectile();
 	}
-
 	/**
 	 * Create a DamageSource for damage caused by a ravine.
 	 *
@@ -122,7 +179,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the ravine
 	 */
 	public static DamageSource causeRavineDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_ravine", hit, owner);
+		return new EntityDamageSourceIndirect("avatar_Earth_ravine", hit, owner);
 	}
 
 	/**
@@ -132,7 +189,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the wave
 	 */
 	public static DamageSource causeWaveDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_wave", hit, owner).setProjectile();
+		return new EntityDamageSourceIndirect("avatar_Water_wave", hit, owner).setProjectile();
 	}
 
 	/**
@@ -142,7 +199,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the fireball
 	 */
 	public static DamageSource causeFireballDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_fireball", hit, owner).setProjectile()
+		return new EntityDamageSourceIndirect("avatar_Fire_fireball", hit, owner).setProjectile()
 				.setExplosion();
 	}
 
@@ -153,7 +210,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the earthspike
 	 */
 	public static DamageSource causeEarthspikeDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_earthspike", hit, owner);
+		return new EntityDamageSourceIndirect("avatar_Earth_earthspike", hit, owner);
 	}
 
 	/**
@@ -163,7 +220,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the airblade
 	 */
 	public static DamageSource causeAirbladeDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_airblade", hit, owner).setProjectile();
+		return new EntityDamageSourceIndirect("avatar_Air_airblade", hit, owner).setProjectile();
 	}
 
 	/**
@@ -173,7 +230,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the flames
 	 */
 	public static DamageSource causeFlamethrowerDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_flamethrower", hit, owner).setProjectile();
+		return new EntityDamageSourceIndirect("avatar_Fire_flamethrower", hit, owner).setProjectile();
 	}
 
 	/**
@@ -193,7 +250,7 @@ public class AvatarDamageSource {
 	 * @param owner The lightning bender
 	 */
 	public static DamageSource causeLightningDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_lightningBending", hit, owner).setDamageBypassesArmor();
+		return new EntityDamageSourceIndirect("avatar_Lightning_lightningBending", hit, owner).setDamageBypassesArmor();
 	}
 
 	/**
@@ -204,7 +261,7 @@ public class AvatarDamageSource {
 	 */
 	public static DamageSource causeRedirectedLightningDamage(Entity hit, @Nullable Entity
 			controller) {
-		return new EntityDamageSourceIndirect("avatar_lightningBendingRedirected", hit, controller)
+		return new EntityDamageSourceIndirect("avatar_Lightning_lightningBendingRedirected", hit, controller)
 				.setDamageBypassesArmor();
 	}
 
@@ -215,7 +272,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the water cannon
 	 */
 	public static DamageSource causeWaterCannonDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_waterCannon", hit, owner);
+		return new EntityDamageSourceIndirect("avatar_Water_waterCannon", hit, owner);
 	}
 
 	/**
@@ -225,7 +282,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the ice prison
 	 */
 	public static DamageSource causeIcePrisonDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_icePrison", hit, owner).setDamageBypassesArmor();
+		return new EntityDamageSourceIndirect("avatar_Ice_icePrison", hit, owner).setDamageBypassesArmor();
 	}
 
 	/**
@@ -235,7 +292,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the ice shard
 	 */
 	public static DamageSource causeIceShardDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_iceShard", hit, owner).setDamageBypassesArmor().setProjectile();
+		return new EntityDamageSourceIndirect("avatar_Ice_iceShard", hit, owner).setDamageBypassesArmor().setProjectile();
 	}
 
 	/**
@@ -245,7 +302,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the sand prison
 	 */
 	public static DamageSource causeSandPrisonDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_sandPrison", hit, owner);
+		return new EntityDamageSourceIndirect("avatar_Sand_sandPrison", hit, owner);
 	}
 
 	/**
@@ -255,13 +312,9 @@ public class AvatarDamageSource {
 	 * @param owner Who created the sandstorm
 	 */
 	public static DamageSource causeSandstormDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_sandstorm", hit, owner);
+		return new EntityDamageSourceIndirect("avatar_Sand_sandstorm", hit, owner);
 	}
 
-	public static DamageSource causeShockwaveDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_shockWave", hit, owner).setExplosion();
-	}
- //I'm sorry but all of those methods are wrong except for causeBendingDamage. What is crows doing?????
 	@SubscribeEvent
 	public static void onElementalDamage(LivingHurtEvent event) {
 		//TODO: Config for all this stuff; definitely in the rewrite
@@ -273,7 +326,7 @@ public class AvatarDamageSource {
 				event.setAmount(event.getAmount());
 			}
 
-			if (source == AvatarDamageSource.WATER) {
+			if (AvatarDamageSource.isWaterDamage(source)) {
 				hit.setFire(0);
 				if (hit instanceof EntityEnderman || hit instanceof EntityEndermite) {
 					event.setAmount(event.getAmount() * 1.25F);
@@ -320,7 +373,7 @@ public class AvatarDamageSource {
 					event.setAmount(event.getAmount() * 0.75F);
 				}
 				if (hit.world.rand.nextInt(3) + 1 == 2) {
-					((EntityLivingBase) hit).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS,5, 0, false, false));
+					((EntityLivingBase) hit).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 5, 0, false, false));
 				}
 			}
 
@@ -329,7 +382,7 @@ public class AvatarDamageSource {
 					event.setAmount(event.getAmount() * 0.75F);
 				}
 				if (hit.world.rand.nextInt(3) + 1 == 2) {
-					((EntityLivingBase) hit).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS,5, 0, false, false));
+					((EntityLivingBase) hit).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 5, 0, false, false));
 				}
 			}
 		}

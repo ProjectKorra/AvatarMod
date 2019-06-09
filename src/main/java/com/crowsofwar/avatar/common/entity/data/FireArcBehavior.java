@@ -126,14 +126,14 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 
 			for (Entity collided : collidedList) {
 				if (collided == entity.getOwner()) return this;
-				if (entity.canCollideWith(collided)) {
+				if (entity.canCollideWith(collided) && collided != entity) {
 
 					double push = STATS_CONFIG.fireArcSettings.push;
 					collided.addVelocity(entity.motionX * push, 0.4 * push, entity.motionZ * push);
 					collided.setFire(3);
 
 					if (entity.canDamageEntity(collided) || collided instanceof EntityPlayer) {
-						if (collided.attackEntityFrom(AvatarDamageSource.causeFireDamage(collided, entity.getOwner()),
+						if (collided.attackEntityFrom(AvatarDamageSource.causeFireArcDamage(collided, entity.getOwner()),
 								STATS_CONFIG.fireArcSettings.damage * entity.getDamageMult())) {
 							BattlePerformanceScore.addMediumScore(entity.getOwner());
 						}
