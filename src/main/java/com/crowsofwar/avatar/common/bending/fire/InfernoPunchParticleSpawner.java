@@ -13,7 +13,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-import static com.crowsofwar.avatar.common.bending.fire.StatCtrlInfernoPunch.INFERNO_PUNCH;
+import static com.crowsofwar.avatar.common.bending.StatusControl.*;
 
 public class InfernoPunchParticleSpawner extends TickHandler {
 
@@ -41,7 +41,7 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			particleCount = 4;
 		}
-		if (data.hasStatusControl(INFERNO_PUNCH) && !world.isRemote) {
+		if ((data.hasStatusControl(INFERNO_PUNCH_MAIN) || data.hasStatusControl(INFERNO_PUNCH_FIRST) || data.hasStatusControl(INFERNO_PUNCH_SECOND)) && !world.isRemote) {
 			WorldServer World = (WorldServer) world;
 
 			Vector pos = Vector.getRightSide(entity, 0.55).plus(0, 0.8, 0);
