@@ -71,7 +71,7 @@ public class EntityShockwave extends AvatarEntity {
 		super.entityInit();
 		dataManager.register(SYNC_PARTICLE, "cloud");
 		dataManager.register(SYNC_PARTICLE_SPEED, 0.1F);
-		dataManager.register(SYNC_PARTICLE_AMOUNT, 100);
+		dataManager.register(SYNC_PARTICLE_AMOUNT, 1);
 		dataManager.register(SYNC_PARTICLE_CONTROLLER, 40F);
 		dataManager.register(SYNC_SPEED, 0.8F);
 		dataManager.register(SYNC_IS_SPHERE, false);

@@ -72,7 +72,7 @@ public class AirBurstHandler extends TickHandler {
 			if (abilityData.getLevel() == 1) {
 				damage = (STATS_CONFIG.airBurstSettings.damage * 1.5) + powerRating;
 				//7.5
-				knockBack = STATS_CONFIG.AirBurstSettings.knockback * 1.5 + powerRating;
+				knockBack = STATS_CONFIG.AirBurstSettings.knockback * 1.25 + powerRating;
 				radius = (STATS_CONFIG.AirBurstSettings.radius * 4 / 3) + powerRating;
 				//4
 				durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire * 0.75F;
@@ -84,7 +84,7 @@ public class AirBurstHandler extends TickHandler {
 			if (abilityData.getLevel() >= 2) {
 				damage = (STATS_CONFIG.airBurstSettings.damage * 2) + powerRating;
 				//10
-				knockBack = 5 + powerRating;
+				knockBack = STATS_CONFIG.AirBurstSettings.knockback * 2 + powerRating;
 				radius = (STATS_CONFIG.AirBurstSettings.radius * 5 / 3) + powerRating;
 				//5
 				durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire * 0.5F;
@@ -145,7 +145,7 @@ public class AirBurstHandler extends TickHandler {
 
 			if (duration >= durationToFire) {
 
-				int particleController = abilityData.getLevel() >= 1 ? 37 - (5 * abilityData.getLevel()) : 37;
+				int particleController = abilityData.getLevel() > 0 ? 44 - (7 * abilityData.getLevel()) : 44;
 				EntityShockwave shockwave = new EntityShockwave(world);
 				shockwave.setOwner(entity);
 				shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
@@ -155,6 +155,7 @@ public class AirBurstHandler extends TickHandler {
 				shockwave.setDamageSource(AvatarDamageSource.AIR);
 				shockwave.setKnockbackHeight(upwardKnockback);
 				shockwave.setDamage((float) damage);
+				shockwave.setParticleAmount(1);
 				shockwave.setRange(radius);
 				shockwave.setPerformanceAmount(performanceAmount);
 				shockwave.setParticleController(particleController);

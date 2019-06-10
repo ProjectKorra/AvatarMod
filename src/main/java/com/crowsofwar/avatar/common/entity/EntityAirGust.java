@@ -23,13 +23,15 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -43,6 +45,8 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	public static final Vector ZERO = new Vector(0, 0, 0);
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirGust.class, DataSerializers.FLOAT);
 	private boolean airGrab, destroyProjectiles, pushStone, pushIronTrapDoor, pushIronDoor;
+	private int ticks;
+	//used to kill the air gust when it's in blocks
 
 	public EntityAirGust(World world) {
 		super(world);
@@ -112,6 +116,14 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 					}
 				}
 			}
+		}
+
+		IBlockState state = world.getBlockState(getPosition());
+		if (state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()) {
+			ticks++;
+		}
+		if (ticks >= 3) {
+			this.setDead();
 		}
 		float expansionRate = 1f / 80;
 		setSize(getSize() + expansionRate);

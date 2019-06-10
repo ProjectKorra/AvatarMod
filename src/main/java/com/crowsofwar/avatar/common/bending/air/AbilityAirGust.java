@@ -54,14 +54,14 @@ public class AbilityAirGust extends Ability {
 		Vector pos = Vector.getEyePos(entity);
 		if (bender.consumeChi(STATS_CONFIG.chiAirGust)) {
 
-			float speed = 45;
+			float speed = 35;
 			float size = 1.0F;
 			if (ctx.getLevel() == 1) {
-				speed = 55;
+				speed = 45;
 				size = 1.25F;
 			}
 			if (ctx.getLevel() >= 2) {
-				speed = 60;
+				speed = 50;
 				size = 1.5F;
 			}
 			if (ctx.isDynamicMasterLevel(FIRST)) {

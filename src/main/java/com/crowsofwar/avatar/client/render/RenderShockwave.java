@@ -27,7 +27,7 @@ public class RenderShockwave extends Render<EntityShockwave> {
 		else {
 			particle = AvatarParticles.getParticleFromName(entity.getParticleName());
 		}
-		for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.getRange() * 10 * 1.5)) {
+		for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.getRange() * 15 / entity.getParticleAmount())) {
 			double x2 = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
 			double y2 = entity.posY + 0.5;
 			double z2 = entity.posZ + (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle);
