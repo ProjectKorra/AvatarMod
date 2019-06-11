@@ -39,7 +39,7 @@ public class ConfigClient {
 	public float chiBarAlpha = 0.5f;
 
 	@Load
-	public float bendingCycleAlpha = 1f;
+	public final float bendingCycleAlpha = 0.75f;
 
 	@Load
 	public final boolean displayGetBendingMessage = true;

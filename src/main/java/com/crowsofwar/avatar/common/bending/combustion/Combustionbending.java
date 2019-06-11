@@ -42,6 +42,11 @@ public class Combustionbending extends BendingStyle {
 	}
 
 	@Override
+	public double getTextColour() {
+		return 0xFAAA5A;
+	}
+
+	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}

@@ -56,7 +56,10 @@ public class Airbending extends BendingStyle {
 
 	}
 
-
+	@Override
+	public double getTextColour() {
+		return 0xE8E5DF;
+	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {

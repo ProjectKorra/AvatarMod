@@ -24,7 +24,6 @@ import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
@@ -38,7 +37,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.GuiIngameForge;
@@ -208,7 +206,7 @@ public class AvatarUiRenderer extends Gui {
 
 			pushMatrix();
 
-			translate(3, resolution.getScaledHeight() - height - 3, 0);
+			translate(resolution.getScaledWidth() - 115, resolution.getScaledHeight() - height - 3, 0);
 			scale(scale, scale, 1);
 
 			// Background of chi bar
@@ -224,17 +222,17 @@ public class AvatarUiRenderer extends Gui {
 
 			// Unavailable chi
 			drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
-
-			drawString(mc.fontRenderer, ((int) total) + "/" + ((int) max) + "," + ((int) available), 0, -20,
-					0xffffff | ((int) (CLIENT_CONFIG.chiBarAlpha * 255) << 24));
-
+			if (CLIENT_CONFIG.chiBarSettings.shouldChiNumbersRender) {
+				drawString(mc.fontRenderer, ((int) total) + "/" + ((int) max) + ", " + ((int) available), 25, 10,
+						0xffd700 | ((int) (CLIENT_CONFIG.chiBarAlpha * 255) << 24));
+			}
 			popMatrix();
 
 		}
 	}
 
 	private void renderChiMsg(ScaledResolution res) {
-		if (CLIENT_CONFIG.chiBarSettings.shouldChiNumbersRender) {
+
 			if (errorMsgFade != -1) {
 
 				float seconds = (System.currentTimeMillis() - errorMsgFade) / 1000f;
@@ -254,8 +252,6 @@ public class AvatarUiRenderer extends Gui {
 
 				if (seconds >= 2) errorMsgFade = -1;
 
-			}
-
 		}
 	}
 
@@ -274,7 +270,7 @@ public class AvatarUiRenderer extends Gui {
 				//float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
 				//		((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER)) / 200 : CLIENT_CONFIG.bendingCycleAlpha;
 				GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha);
-				drawBendingIcon(0, 0, data.getActiveBending(), 50.0, 50.0);
+				drawBendingIcon(0, -30, data.getActiveBending(), 50.0, 50.0);
 
 
 				List<BendingStyle> allBending = data.getAllBending();
@@ -287,7 +283,7 @@ public class AvatarUiRenderer extends Gui {
 				if (allBending.size() > 1) {
 					GlStateManager.pushMatrix();
 					GlStateManager.translate(0, 0, -1);
-					drawBendingIcon(50, 25, allBending.get(indexNext), 35.0, 35.0);
+					drawBendingIcon(50, 5, allBending.get(indexNext), 35.0, 35.0);
 					//float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
 					//		((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER)) / 200 : CLIENT_CONFIG.bendingCycleAlpha;
 					GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha * 0.5f);
@@ -302,7 +298,7 @@ public class AvatarUiRenderer extends Gui {
 				if (allBending.size() > 2) {
 					GlStateManager.pushMatrix();
 					GlStateManager.translate(0, 0, -1);
-					drawBendingIcon(-35, 25, allBending.get(indexPrevious), 35.0, 35.0);
+					drawBendingIcon(-35, 5, allBending.get(indexPrevious), 35.0, 35.0);
 					//float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
 					//		((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER)) / 200 : CLIENT_CONFIG.bendingCycleAlpha;
 					GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha * 0.5f);
@@ -317,15 +313,15 @@ public class AvatarUiRenderer extends Gui {
 
 
 	private void drawBendingIcon(int xOff, int yOff, BendingStyle controller, double width, double height) {
-			refreshDimensions();
-			int x = screenWidth() / scaleFactor() - 85 + xOff;
-			int y = screenHeight() / scaleFactor() - 60 + yOff;
-			mc.renderEngine.bindTexture(AvatarUiTextures.getBendingIconTexture(controller.getId()));
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(x, y, 0);
-			GlStateManager.scale(width / 256F, height / 256F, 1);
-			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-			GlStateManager.popMatrix();
+		refreshDimensions();
+		int x = screenWidth() / scaleFactor() - 85 + xOff;
+		int y = screenHeight() / scaleFactor() - 60 + yOff;
+		mc.renderEngine.bindTexture(AvatarUiTextures.getBendingIconTexture(controller.getId()));
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, 0);
+		GlStateManager.scale(width / 256F, height / 256F, 1);
+		drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+		GlStateManager.popMatrix();
 	}
 
 	private void renderAirBubbleHealth(ScaledResolution res) {
