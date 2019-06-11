@@ -223,7 +223,7 @@ public class AvatarUiRenderer extends Gui {
 			// Unavailable chi
 			drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
 			if (CLIENT_CONFIG.chiBarSettings.shouldChiNumbersRender) {
-				drawString(mc.fontRenderer, ((int) total) + "/" + ((int) max) + ", " + ((int) available), 25, 10,
+				drawString(mc.fontRenderer, ((int) total) + "/" + ((int) max) + ", " + ((int) available), 25, -10,
 						data.getActiveBending().getTextColour() | ((int) (CLIENT_CONFIG.chiBarAlpha * 255) << 24));
 			}
 			popMatrix();

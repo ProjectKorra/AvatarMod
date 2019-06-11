@@ -124,7 +124,9 @@ public abstract class BendingStyle implements ReadableWritable {
 	 */
 	public abstract String getName();
 
-	public abstract int getTextColour();
+	public int getTextColour() {
+		return 0xffffff;
+	}
 
 	public abstract UUID getId();
 

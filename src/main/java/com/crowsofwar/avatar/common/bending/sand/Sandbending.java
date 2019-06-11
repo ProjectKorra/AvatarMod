@@ -35,6 +35,11 @@ public class Sandbending extends BendingStyle {
 	}
 
 	@Override
+	public int getTextColour() {
+		return 0xB09B7F;
+	}
+
+	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return radialMenu;
 	}
