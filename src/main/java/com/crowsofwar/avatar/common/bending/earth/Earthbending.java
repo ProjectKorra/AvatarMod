@@ -52,7 +52,7 @@ public class Earthbending extends BendingStyle {
 
 	@Override
 	public int getTextColour() {
-		return 0xB09B7F;
+		return 0x663300;
 	}
 
 	@Override

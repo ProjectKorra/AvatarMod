@@ -51,7 +51,7 @@ public class Icebending extends BendingStyle {
 
 	@Override
 	public int getTextColour() {
-		return 0xFFEBC2;
+		return 0xCCFFFF;
 	}
 
 	@Override

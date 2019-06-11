@@ -64,7 +64,7 @@ public class Firebending extends BendingStyle {
 
 	@Override
 	public int getTextColour() {
-		return 0xFAAA5A;
+		return 0xFF0000;
 	}
 
 	@Override

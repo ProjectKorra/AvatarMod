@@ -53,7 +53,7 @@ public class Lightningbending extends BendingStyle {
 
 	@Override
 	public int getTextColour() {
-		return 0xFFEBC2;
+		return 0x00FFFF;
 	}
 
 	@Override

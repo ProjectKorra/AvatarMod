@@ -60,7 +60,7 @@ public class Waterbending extends BendingStyle {
 
 	@Override
 	public int getTextColour() {
-		return 0x57E8F2;
+		return 0x0066CC;
 	}
 
 	@Override
