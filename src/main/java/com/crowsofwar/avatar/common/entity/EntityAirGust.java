@@ -171,7 +171,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 
 	@Override
 	protected AirGustControlPoint createControlPoint(float size, int index) {
-		return new AirGustControlPoint(this, 0.2f, 0, 0, 0);
+		return new AirGustControlPoint(this, 0.4f, 0, 0, 0);
 	}
 
 	@Override

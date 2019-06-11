@@ -59,7 +59,7 @@ public class EntityShockwave extends AvatarEntity {
 		super(world);
 		this.damage = 1;
 		this.performanceAmount = 10;
-		this.knockbackHeight = 0.2;
+		this.knockbackHeight = 0;
 		this.fireTime = 0;
 		this.source = AvatarDamageSource.AIR;
 		this.knockbackMult = new Vec3d(1, 2, 1);
@@ -73,7 +73,7 @@ public class EntityShockwave extends AvatarEntity {
 		dataManager.register(SYNC_PARTICLE_SPEED, 0.1F);
 		dataManager.register(SYNC_PARTICLE_AMOUNT, 1);
 		dataManager.register(SYNC_PARTICLE_CONTROLLER, 40F);
-		dataManager.register(SYNC_SPEED, 0.8F);
+		dataManager.register(SYNC_SPEED, 0.8F);;
 		dataManager.register(SYNC_IS_SPHERE, false);
 		dataManager.register(SYNC_RANGE, 4F);
 

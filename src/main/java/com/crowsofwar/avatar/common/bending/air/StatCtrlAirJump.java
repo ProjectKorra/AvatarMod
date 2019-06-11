@@ -162,9 +162,9 @@ public class StatCtrlAirJump extends StatusControl {
 			EntityShockwave wave = new EntityShockwave(world);
 			wave.setDamage(0);
 			wave.setFireTime(0);
-			wave.setRange(lvl > 0 ? 2.25F + lvl / 2F: 2.25F);
-			wave.setSpeed(lvl > 0 ? 0.5F + lvl / 20F: 0.5f);
-			wave.setKnockbackHeight(lvl > 0 ? 0.1F + lvl /  20F : 0.1F);
+			wave.setRange(lvl > 0 ? 2.25F + lvl / 4F: 2.25F);
+			wave.setSpeed(lvl > 0 ? 0.5F + lvl / 30F: 0.5f);
+			wave.setKnockbackHeight(lvl > 0 ? 0.0125F + lvl /  80F : 0.0125F);
 			wave.setParticleName(EnumParticleTypes.EXPLOSION_NORMAL.getParticleName());
 			wave.setPerformanceAmount(10);
 			wave.setKnockbackMult(new Vec3d(0.5, 0.2, 0.5));

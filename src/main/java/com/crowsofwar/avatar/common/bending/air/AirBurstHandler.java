@@ -7,7 +7,6 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.*;
-import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.*;
@@ -16,17 +15,13 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
 import java.util.UUID;
@@ -106,8 +101,8 @@ public class AirBurstHandler extends TickHandler {
 				//Pulls enemies in then blasts them out
 				damage = (STATS_CONFIG.airBurstSettings.damage * 2.5) + powerRating;
 				//Default: 12.5
-				radius = (STATS_CONFIG.AirBurstSettings.radius * 7 / 3) + powerRating;
-				//7
+				radius = (STATS_CONFIG.AirBurstSettings.radius * 6 / 3) + powerRating;
+				//6
 				upwardKnockback = STATS_CONFIG.airBurstSettings.push / 2.5F;
 				durationToFire = STATS_CONFIG.AirBurstSettings.durationToFire * 0.75F;
 				//30

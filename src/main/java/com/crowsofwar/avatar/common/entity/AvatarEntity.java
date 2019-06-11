@@ -34,6 +34,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -374,6 +375,12 @@ public abstract class AvatarEntity extends Entity {
 	 */
 	public boolean canCollideWith(Entity entity) {
 		if (entity == getOwner()) {
+			return false;
+		}
+		else if (entity instanceof EntityLivingBase && entity.getControllingPassenger() == getOwner()) {
+			return false;
+		}
+		else if (getOwner() != null && getOwner().getTeam() != null && entity.getTeam() == getOwner().getTeam()) {
 			return false;
 		}
 		else if (entity instanceof EntityEnderCrystal) {

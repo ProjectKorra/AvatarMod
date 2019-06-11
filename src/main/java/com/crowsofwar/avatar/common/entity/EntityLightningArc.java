@@ -105,18 +105,18 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		wave.setAbility(new AbilityLightningArc());
 		wave.setOwner(getOwner());
 		wave.setParticleAmount(1);
-		wave.setParticleSpeed((getSizeMultiplier() * 0.33F) / 5);
+		wave.setParticleSpeed((getSizeMultiplier() / 4) / 5);
 		wave.setParticleName(AvatarParticles.getParticleElectricity().getParticleName());
-		wave.setSpeed(0.8F);
+		wave.setSpeed(0.6F + getSizeMultiplier() / 10);
 		wave.setDamageSource(AvatarDamageSource.LIGHTNING);
 		wave.setPosition(x, y, z);
 		wave.setDamage(getDamage() / 2);
-		wave.setRange(getSizeMultiplier() * 2);
+		wave.setRange(getSizeMultiplier());
 		wave.setParticleController(40 - (getSizeMultiplier() * 10));
 		wave.setSphere(true);
 		wave.setElement(new Lightningbending());
 		wave.setPerformanceAmount(10);
-		wave.setKnockbackHeight(0.2);
+		wave.setKnockbackHeight(0.02);
 		world.spawnEntity(wave);
 	}
 
