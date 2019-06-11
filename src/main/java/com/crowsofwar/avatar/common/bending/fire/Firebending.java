@@ -63,6 +63,11 @@ public class Firebending extends BendingStyle {
 	}
 
 	@Override
+	public int getTextColour() {
+		return 0xFAAA5A;
+	}
+
+	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}

@@ -59,6 +59,11 @@ public class Waterbending extends BendingStyle {
 	}
 
 	@Override
+	public int getTextColour() {
+		return 0x57E8F2;
+	}
+
+	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}

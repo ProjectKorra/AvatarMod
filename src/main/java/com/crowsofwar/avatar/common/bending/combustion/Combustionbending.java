@@ -42,7 +42,7 @@ public class Combustionbending extends BendingStyle {
 	}
 
 	@Override
-	public double getTextColour() {
+	public int getTextColour() {
 		return 0xFAAA5A;
 	}
 

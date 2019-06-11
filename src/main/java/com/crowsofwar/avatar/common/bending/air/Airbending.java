@@ -57,7 +57,7 @@ public class Airbending extends BendingStyle {
 	}
 
 	@Override
-	public double getTextColour() {
+	public int getTextColour() {
 		return 0xE8E5DF;
 	}
 

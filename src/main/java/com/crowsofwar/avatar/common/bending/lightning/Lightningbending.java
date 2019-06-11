@@ -52,6 +52,11 @@ public class Lightningbending extends BendingStyle {
 	}
 
 	@Override
+	public int getTextColour() {
+		return 0xFFEBC2;
+	}
+
+	@Override
 	public BendingMenuInfo getRadialMenu() {
 		return menu;
 	}
