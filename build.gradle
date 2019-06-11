@@ -62,6 +62,10 @@ repositories {
 		name = "amuzil"
 		url = "http://repo.amuzil.com/repository/public/"
 	}
+	maven {
+		name = "altillimity"
+		url = "http://www.altillimity.com/nexus/content/groups/maven/"
+	}
 }
 
 configurations {
@@ -79,6 +83,7 @@ tasks.runServer.dependsOn tasks.useDeobfDependencies
 
 dependencies {
 	provided fileTree(dir: dependenciesConfig.libraries + (dependenciesConfig.obfuscated ? "" : "Deobf"), include: ["*.jar"])
+	compile "elucent.albedo:albedo:1.1.0-3"
 
 	// Forge Mods
 	if (dependenciesConfig.obfuscated) {
@@ -102,6 +107,8 @@ minecraft {
 	replace "@mcversion@", project.minecraft.version
 	replace "@name@", config.name
 }
+
+minecraft.coreMod = "elucent.albedo.asm.FMLPlugin"
 
 jar {
 	manifest {
