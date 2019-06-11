@@ -198,39 +198,39 @@ public class AvatarMod {
 
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
-		registerEntity(EntityFloatingBlock.class, "FloatingBlock");
-		registerEntity(EntityFireArc.class, "FireArc");
-		registerEntity(EntityWaterArc.class, "WaterArc");
-		registerEntity(EntityAirGust.class, "AirGust");
-		registerEntity(EntityRavine.class, "Ravine");
-		registerEntity(EntityFlames.class, "Flames");
-		registerEntity(EntityWave.class, "Wave");
-		registerEntity(EntityWaterBubble.class, "WaterBubble");
-		registerEntity(EntityWall.class, "Wall");
-		registerEntity(EntityWallSegment.class, "WallSegment");
-		registerEntity(EntityFireball.class, "Fireball");
-		registerEntity(EntityAirblade.class, "Airblade");
-		registerEntity(EntityAirBubble.class, "AirBubble");
+		registerEntity(EntityFloatingBlock.class, "FloatingBlock", 128, 100000000, true);
+		registerEntity(EntityFireArc.class, "FireArc", 128, 3, true);
+		registerEntity(EntityWaterArc.class, "WaterArc",128, 3, true);
+		registerEntity(EntityAirGust.class, "AirGust", 128, 3, true);
+		registerEntity(EntityRavine.class, "Ravine", 128, 3, true);
+		registerEntity(EntityFlames.class, "Flames", 128, 3, true);
+		registerEntity(EntityWave.class, "Wave", 128, 3, true);
+		registerEntity(EntityWaterBubble.class, "WaterBubble", 128, 3, true);
+		registerEntity(EntityWall.class, "Wall", 128, 3, true);
+		registerEntity(EntityWallSegment.class, "WallSegment", 128, 3, true);
+		registerEntity(EntityFireball.class, "Fireball", 128, 3, true);
+		registerEntity(EntityAirblade.class, "Airblade", 128, 3, true);
+		registerEntity(EntityAirBubble.class, "AirBubble", 128, 3, false);
 		registerEntity(EntityFirebender.class, "Firebender", 0xB0171F, 0xFFFF00);
 		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xDDA0DD);
 		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0x8B5A00);
 		registerEntity(EntityOtterPenguin.class, "OtterPenguin", 0xffffff, 0x104E8B);
-		registerEntity(AvatarEntityItem.class, "Item");
-		registerEntity(EntityIceShield.class, "iceshield");
-		registerEntity(EntityIceShard.class, "iceshard");
-		registerEntity(EntityIcePrison.class, "iceprison");
+		registerEntity(AvatarEntityItem.class, "Item", 128, 3, true);
+		registerEntity(EntityIceShield.class, "iceshield", 128, 3, true);
+		registerEntity(EntityIceShard.class, "iceshard", 128, 3, true);
+		registerEntity(EntityIcePrison.class, "iceprison", 128, 3, true);
 		registerEntity(EntityOstrichHorse.class, "OstrichHorse", 0x5c5b46, 0x0f1108);
-		registerEntity(EntitySandPrison.class, "sandprison");
-		registerEntity(EntityLightningArc.class, "Lightning_arc");
-		registerEntity(EntityCloudBall.class, "Cloudburst");
-		registerEntity(EntityEarthspike.class, "Earthspike");
-		registerEntity(EntityLightningSpear.class, "Lightning_Spear");
-		registerEntity(EntityEarthspikeSpawner.class, "EarthspikeSpawner");
-		registerEntity(EntityWaterCannon.class, "WaterCannon");
-		registerEntity(EntitySandstorm.class, "Sandstorm");
-		registerEntity(EntityExplosionSpawner.class, "ExplosionSpawner");
-		registerEntity(EntityLightningSpawner.class, "LightningSpawner");
-		registerEntity(EntityShockwave.class, "Shockwave");
+		registerEntity(EntitySandPrison.class, "sandprison", 128, 3, true);
+		registerEntity(EntityLightningArc.class, "Lightning_arc", 128, 3, true);
+		registerEntity(EntityCloudBall.class, "Cloudburst", 128, 3, true);
+		registerEntity(EntityEarthspike.class, "Earthspike", 128, 3, false);
+		registerEntity(EntityLightningSpear.class, "Lightning_Spear", 128, 3, true);
+		registerEntity(EntityEarthspikeSpawner.class, "EarthspikeSpawner", 128, 3, true);
+		registerEntity(EntityWaterCannon.class, "WaterCannon", 128, 3, true);
+		registerEntity(EntitySandstorm.class, "Sandstorm", 128, 3, true);
+		registerEntity(EntityExplosionSpawner.class, "ExplosionSpawner", 128, 3, true);
+		registerEntity(EntityLightningSpawner.class, "LightningSpawner",128, 3, true);
+		registerEntity(EntityShockwave.class, "Shockwave", 128, 3, false);
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 1, 3, EnumCreatureType.CREATURE, //
 				SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, TAIGA_HILLS, ICE_MOUNTAINS, REDWOOD_TAIGA_HILLS, MUTATED_EXTREME_HILLS,
@@ -264,13 +264,13 @@ public class AvatarMod {
 		network.registerMessage(packet, packet, nextMessageID++, side);
 	}
 
-	private void registerEntity(Class<? extends Entity> entity, String name) {
+	private void registerEntity(Class<? extends Entity> entity, String name, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates) {
 		EntityRegistry.registerModEntity(new ResourceLocation("avatarmod", name), entity, name,
-				nextEntityID++, this, 128, 3, true);
+				nextEntityID++, this, trackingRange, updateFrequency, sendsVelocityUpdates);
 	}
 
 	private void registerEntity(Class<? extends Entity> entity, String name, int primary, int secondary) {
-		registerEntity(entity, name);
+		registerEntity(entity, name, 128, 3, true);
 		registerEgg(new ResourceLocation("avatarmod", name), primary, secondary);
 	}
 
