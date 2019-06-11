@@ -388,6 +388,7 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 	}
 
 	@Override
+	@Optional.Method(modid = "albedo")
 	public void gatherLights(GatherLightsEvent arg0, Entity arg1) {
 
 	}
