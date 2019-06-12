@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
 
 import elucent.albedo.event.GatherLightsEvent;
@@ -25,6 +26,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
 public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 
+    private static final DataParameter<LightOrbBehavior> SYNC_BEHAVIOR = EntityDataManager
+            .createKey(EntityLightOrb.class, LightOrbBehavior.DATA_SERIALIZER);
     private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityLightOrb.class,
             DataSerializers.FLOAT);
     private static final DataParameter<Integer> SYNC_RADIUS = EntityDataManager.createKey(EntityLightOrb.class,
@@ -48,6 +51,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
     @Override
     protected void entityInit() {
         super.entityInit();
+        dataManager.register(SYNC_BEHAVIOR, new LightOrbBehavior.Idle());
         dataManager.register(SYNC_SIZE, 2F);
         dataManager.register(SYNC_RADIUS, 20);
         dataManager.register(SYNC_IS_SPHERE, true);
@@ -55,6 +59,14 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
         dataManager.register(SYNC_COLOR_G, 1F);
         dataManager.register(SYNC_COLOR_B, 1F);
         dataManager.register(SYNC_COLOR_A, 1F);
+    }
+
+    public LightOrbBehavior getBehavior() {
+        return dataManager.get(SYNC_BEHAVIOR);
+    }
+
+    public void setBehavior(LightOrbBehavior behavior) {
+        dataManager.set(SYNC_BEHAVIOR, behavior);
     }
 
     public boolean isSphere() {
@@ -104,6 +116,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
     @Override
     public void onUpdate() {
         super.onUpdate();
+        setBehavior((LightOrbBehavior) getBehavior().onUpdate(this));
     }
 
     @Override
