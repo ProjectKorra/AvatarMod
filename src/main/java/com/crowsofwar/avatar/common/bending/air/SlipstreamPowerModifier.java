@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -58,8 +59,11 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 		}
 		if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			if (chi.getTotalChi() > 0 && chi.getAvailableChi() > 0 || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
-				entity.motionY = 0;
-				entity.setNoGravity(true);
+				entity.motionY = entity.motionY < 0 ? entity.motionY * 0.25 : entity.motionY;
+				entity.setNoGravity(entity.world.getBlockState(entity.getPosition().down()).getBlock() instanceof BlockLiquid);
+			//	if (entity.motionY > 0) {
+			//		entity.setNoGravity(false);
+			//	}
 				if (entity.ticksExisted % 5 == 0 && !(entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
 					chi.setAvailableChi(chi.getAvailableChi() - 1);
 					if (chi.getAvailableChi() == 0)

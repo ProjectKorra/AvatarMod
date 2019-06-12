@@ -68,7 +68,7 @@ public class StatCtrlShootWall extends StatusControl {
 
 		// Process the result. The used segment is choosed randomly. Exit if that's not
 		// an entity
-		if (result.typeOfHit.equals(RayTraceResult.Type.ENTITY)) {
+		if (result != null && result.typeOfHit.equals(RayTraceResult.Type.ENTITY)) {
 			EntityWall wall;
 			int n = new Random().nextInt(7);
 			if (result.entityHit instanceof EntityWallSegment) {

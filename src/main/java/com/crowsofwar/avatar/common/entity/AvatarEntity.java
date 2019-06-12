@@ -264,21 +264,25 @@ public abstract class AvatarEntity extends Entity {
 			setFire(0);
 			for (int x = 0; x <= 1; x++) {
 				for (int z = 0; z <= 1; z++) {
-					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
-					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
-						world.setBlockToAir(pos);
-						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
-								SoundCategory.PLAYERS, 1, 1, false);
+					for (int y = 0; y <= 1; y++) {
+						BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+						if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
+							world.setBlockToAir(pos);
+							world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
+									SoundCategory.PLAYERS, 1, 1, false);
+						}
 					}
 				}
 			}
 			for (int x = 0; x >= -1; x--) {
 				for (int z = 0; z >= -1; z--) {
-					BlockPos pos = new BlockPos(posX + x * width, posY, posZ + z * width);
-					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
-						world.setBlockToAir(pos);
-						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
-								SoundCategory.PLAYERS, 1, 1, false);
+					for (int y = 0; y >= -1; y--) {
+						BlockPos pos = new BlockPos(posX + x * width, posY - y * height, posZ + z * width);
+						if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
+							world.setBlockToAir(pos);
+							world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
+									SoundCategory.PLAYERS, 1, 1, false);
+						}
 					}
 				}
 			}

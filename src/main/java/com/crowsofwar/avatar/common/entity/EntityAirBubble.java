@@ -281,7 +281,7 @@ public class EntityAirBubble extends EntityShield {
 		// Find whether there are blocks under the owner
 		// Done by making a hitbox around the owner's feet and checking if there are blocks
 		// colliding with that hitbox
-
+		assert owner != null;
 		double x = owner.posX;
 		double y = owner.posY;
 		double z = owner.posZ;

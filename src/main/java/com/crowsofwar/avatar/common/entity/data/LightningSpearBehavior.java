@@ -126,7 +126,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 
 		private void collision(Entity collided, EntityLightningSpear entity, boolean triggerGroupAttack) {
-			if (collided.canBeCollidedWith() && collided.canBePushed() && collided != entity.getOwner() && collided != entity) {
+			if (entity.canCollideWith(collided) && collided.canBeCollidedWith() && collided.canBePushed() && collided != entity.getOwner() && collided != entity) {
 
 				if (collided.attackEntityFrom(AvatarDamageSource.causeLightningDamage(collided, entity.getOwner()),
 						entity.getDamage())) {
