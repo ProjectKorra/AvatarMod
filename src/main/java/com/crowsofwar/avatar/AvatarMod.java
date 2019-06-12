@@ -216,7 +216,7 @@ public class AvatarMod {
 		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xDDA0DD);
 		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0x8B5A00);
 		registerEntity(EntityOtterPenguin.class, "OtterPenguin", 0xffffff, 0x104E8B);
-		registerEntity(AvatarEntityItem.class, "Item", 128, 1000, true);
+		registerEntity(AvatarEntityItem.class, "Item", 128, 3, true);
 		registerEntity(EntityIceShield.class, "iceshield", 128, 1000, true);
 		registerEntity(EntityIceShard.class, "iceshard", 128, 1000, true);
 		registerEntity(EntityIcePrison.class, "iceprison", 128, 1000, true);
@@ -225,10 +225,10 @@ public class AvatarMod {
 		registerEntity(EntityLightningArc.class, "Lightning_arc", 128, 1000, true);
 		registerEntity(EntityCloudBall.class, "Cloudburst", 128, 1000, true);
 		registerEntity(EntityEarthspike.class, "Earthspike", 128, 1000, false);
-		registerEntity(EntityLightningSpear.class, "Lightning_Spear", 128, 1000, true);
+		registerEntity(EntityLightningSpear.class, "Lightning_Spear", 128, 1, true);
 		registerEntity(EntityEarthspikeSpawner.class, "EarthspikeSpawner", 128, 1000, true);
-		registerEntity(EntityWaterCannon.class, "WaterCannon", 128, 2, true);
-		registerEntity(EntitySandstorm.class, "Sandstorm", 128, 3, true);
+		registerEntity(EntityWaterCannon.class, "WaterCannon", 128, 1, true);
+		registerEntity(EntitySandstorm.class, "Sandstorm", 128, 4, true);
 		registerEntity(EntityExplosionSpawner.class, "ExplosionSpawner", 128, 1000, true);
 		registerEntity(EntityLightningSpawner.class, "LightningSpawner", 128, 1000, true);
 		registerEntity(EntityShockwave.class, "Shockwave", 128, 1000, false);
