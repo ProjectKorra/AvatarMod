@@ -384,7 +384,7 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 	@Override
 	@Optional.Method(modid = "albedo")
 	public Light provideLight() {
-		return Light.builder().pos(this).color(2F, 1F, 0F).radius(8).build();
+		return Light.builder().pos(this).color(2F, 1F, 0F).radius(10).build();
 	}
 
 	@Override

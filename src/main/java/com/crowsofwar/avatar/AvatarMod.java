@@ -175,6 +175,7 @@ public class AvatarMod {
 		registerPacket(PacketSCycleBending.class, Side.SERVER);
 		registerPacket(PacketCPowerRating.class, Side.CLIENT);
 		registerPacket(PacketCOpenSkillCard.class, Side.CLIENT);
+		registerPacket(PacketCSyncEntityNBT.class, Side.CLIENT);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 
@@ -224,13 +225,14 @@ public class AvatarMod {
 		registerEntity(EntityLightningArc.class, "Lightning_arc", 128, 3, true);
 		registerEntity(EntityCloudBall.class, "Cloudburst", 128, 3, true);
 		registerEntity(EntityEarthspike.class, "Earthspike", 128, 3, false);
-		registerEntity(EntityLightningSpear.class, "Lightning_Spear", 128, 3, true);
+		registerEntity(EntityLightningSpear.class, "Lightning_Spear", 128, 1, true);
 		registerEntity(EntityEarthspikeSpawner.class, "EarthspikeSpawner", 128, 3, true);
 		registerEntity(EntityWaterCannon.class, "WaterCannon", 128, 3, true);
 		registerEntity(EntitySandstorm.class, "Sandstorm", 128, 3, true);
 		registerEntity(EntityExplosionSpawner.class, "ExplosionSpawner", 128, 3, true);
 		registerEntity(EntityLightningSpawner.class, "LightningSpawner",128, 3, true);
 		registerEntity(EntityShockwave.class, "Shockwave", 128, 3, false);
+		registerEntity(EntityLightOrb.class, "LightOrb", 128, 3, false);
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 1, 3, EnumCreatureType.CREATURE, //
 				SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, TAIGA_HILLS, ICE_MOUNTAINS, REDWOOD_TAIGA_HILLS, MUTATED_EXTREME_HILLS,

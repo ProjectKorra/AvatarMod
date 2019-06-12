@@ -27,6 +27,8 @@ import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketCOpenSkillCard;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPowerRating;
+import com.crowsofwar.avatar.common.network.packets.PacketCSyncEntityNBT;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -55,6 +57,9 @@ public class PacketHandlerClient implements IPacketHandler {
 		if (packet instanceof PacketCParticles)
 			return handlePacketParticles((PacketCParticles) packet, ctx);
 
+		if (packet instanceof PacketCSyncEntityNBT)
+			return handleClientEntityNbtSync((PacketCSyncEntityNBT) packet, ctx);
+
 		if (packet instanceof PacketCErrorMessage)
 			return handlePacketNotEnoughChi((PacketCErrorMessage) packet, ctx);
 
@@ -72,6 +77,11 @@ public class PacketHandlerClient implements IPacketHandler {
 	@Override
 	public Side getSide() {
 		return Side.CLIENT;
+	}
+
+	private IMessage handleClientEntityNbtSync(PacketCSyncEntityNBT packet, MessageContext ctx){
+			mc.world.getEntityByID(packet.entityId).readFromNBT(packet.data);
+            return null;
 	}
 
 	private IMessage handlePacketParticles(PacketCParticles packet, MessageContext ctx) {

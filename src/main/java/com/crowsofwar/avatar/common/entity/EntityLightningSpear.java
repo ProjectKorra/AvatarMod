@@ -36,6 +36,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import elucent.albedo.event.GatherLightsEvent;
 import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
+import elucent.albedo.lighting.LightManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -419,14 +420,19 @@ public class EntityLightningSpear extends AvatarEntity implements ILightProvider
 	}
 
 	@Override
+	public int getBrightnessForRender() {
+		return 15728880;
+	}
+
+	@Override
 	@Optional.Method(modid = "albedo")
 	public Light provideLight() {
-		return Light.builder().pos(this).color(0.2F, 3F, 3F).radius(8).build();
+		return Light.builder().pos(this).color(1F, 3F, 3F).radius(15).build();
 	}
 
 	@Override
 	@Optional.Method(modid = "albedo")
 	public void gatherLights(GatherLightsEvent arg0, Entity arg1) {
-
+		
 	}
 }

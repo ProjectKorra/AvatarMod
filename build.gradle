@@ -66,6 +66,10 @@ repositories {
 		name = "altillimity"
 		url = "http://www.altillimity.com/nexus/content/groups/maven/"
 	}
+	maven {
+		name = "codechickenlib"
+		url = "http://chickenbones.net/maven/"
+	}
 }
 
 configurations {
@@ -84,6 +88,7 @@ tasks.runServer.dependsOn tasks.useDeobfDependencies
 dependencies {
 	provided fileTree(dir: dependenciesConfig.libraries + (dependenciesConfig.obfuscated ? "" : "Deobf"), include: ["*.jar"])
 	compile "elucent.albedo:albedo:1.1.0-3"
+	compile "codechicken:CodeChickenLib:1.12.2-3.2.2.353:universal"
 
 	// Forge Mods
 	if (dependenciesConfig.obfuscated) {
