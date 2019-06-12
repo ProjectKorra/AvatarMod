@@ -40,7 +40,7 @@ import com.crowsofwar.avatar.common.config.*;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.*;
-import com.crowsofwar.avatar.common.entity.data.*;
+import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.mob.*;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarItems;
@@ -198,39 +198,39 @@ public class AvatarMod {
 
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
-		registerEntity(EntityFloatingBlock.class, "FloatingBlock", 128, 100000000, true);
-		registerEntity(EntityFireArc.class, "FireArc", 128, 3, true);
-		registerEntity(EntityWaterArc.class, "WaterArc",128, 3, true);
-		registerEntity(EntityAirGust.class, "AirGust", 128, 3, true);
-		registerEntity(EntityRavine.class, "Ravine", 128, 3, true);
-		registerEntity(EntityFlames.class, "Flames", 128, 3, true);
-		registerEntity(EntityWave.class, "Wave", 128, 3, true);
-		registerEntity(EntityWaterBubble.class, "WaterBubble", 128, 3, true);
+		registerEntity(EntityFloatingBlock.class, "FloatingBlock", 128, 1000, true);
+		registerEntity(EntityFireArc.class, "FireArc", 128, 1000, true);
+		registerEntity(EntityWaterArc.class, "WaterArc", 128, 1000, true);
+		registerEntity(EntityAirGust.class, "AirGust", 128, 1000, true);
+		registerEntity(EntityRavine.class, "Ravine", 128, 1000, true);
+		registerEntity(EntityFlames.class, "Flames", 128, 1000, true);
+		registerEntity(EntityWave.class, "Wave", 128, 1000, true);
+		registerEntity(EntityWaterBubble.class, "WaterBubble", 128, 1000, true);
 		registerEntity(EntityWall.class, "Wall", 128, 3, true);
 		registerEntity(EntityWallSegment.class, "WallSegment", 128, 3, true);
-		registerEntity(EntityFireball.class, "Fireball", 128, 3, true);
-		registerEntity(EntityAirblade.class, "Airblade", 128, 3, true);
-		registerEntity(EntityAirBubble.class, "AirBubble", 128, 3, false);
+		registerEntity(EntityFireball.class, "Fireball", 128, 1000, true);
+		registerEntity(EntityAirblade.class, "Airblade", 128, 1000, true);
+		registerEntity(EntityAirBubble.class, "AirBubble", 128, 1000, false);
 		registerEntity(EntityFirebender.class, "Firebender", 0xB0171F, 0xFFFF00);
 		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xDDA0DD);
 		registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0x8B5A00);
 		registerEntity(EntityOtterPenguin.class, "OtterPenguin", 0xffffff, 0x104E8B);
-		registerEntity(AvatarEntityItem.class, "Item", 128, 3, true);
-		registerEntity(EntityIceShield.class, "iceshield", 128, 3, true);
-		registerEntity(EntityIceShard.class, "iceshard", 128, 3, true);
-		registerEntity(EntityIcePrison.class, "iceprison", 128, 3, true);
+		registerEntity(AvatarEntityItem.class, "Item", 128, 1000, true);
+		registerEntity(EntityIceShield.class, "iceshield", 128, 1000, true);
+		registerEntity(EntityIceShard.class, "iceshard", 128, 1000, true);
+		registerEntity(EntityIcePrison.class, "iceprison", 128, 1000, true);
 		registerEntity(EntityOstrichHorse.class, "OstrichHorse", 0x5c5b46, 0x0f1108);
-		registerEntity(EntitySandPrison.class, "sandprison", 128, 3, true);
-		registerEntity(EntityLightningArc.class, "Lightning_arc", 128, 3, true);
-		registerEntity(EntityCloudBall.class, "Cloudburst", 128, 3, true);
-		registerEntity(EntityEarthspike.class, "Earthspike", 128, 3, false);
-		registerEntity(EntityLightningSpear.class, "Lightning_Spear", 128, 3, true);
-		registerEntity(EntityEarthspikeSpawner.class, "EarthspikeSpawner", 128, 3, true);
-		registerEntity(EntityWaterCannon.class, "WaterCannon", 128, 3, true);
+		registerEntity(EntitySandPrison.class, "sandprison", 128, 1000, true);
+		registerEntity(EntityLightningArc.class, "Lightning_arc", 128, 1000, true);
+		registerEntity(EntityCloudBall.class, "Cloudburst", 128, 1000, true);
+		registerEntity(EntityEarthspike.class, "Earthspike", 128, 1000, false);
+		registerEntity(EntityLightningSpear.class, "Lightning_Spear", 128, 1000, true);
+		registerEntity(EntityEarthspikeSpawner.class, "EarthspikeSpawner", 128, 1000, true);
+		registerEntity(EntityWaterCannon.class, "WaterCannon", 128, 2, true);
 		registerEntity(EntitySandstorm.class, "Sandstorm", 128, 3, true);
-		registerEntity(EntityExplosionSpawner.class, "ExplosionSpawner", 128, 3, true);
-		registerEntity(EntityLightningSpawner.class, "LightningSpawner",128, 3, true);
-		registerEntity(EntityShockwave.class, "Shockwave", 128, 3, false);
+		registerEntity(EntityExplosionSpawner.class, "ExplosionSpawner", 128, 1000, true);
+		registerEntity(EntityLightningSpawner.class, "LightningSpawner", 128, 1000, true);
+		registerEntity(EntityShockwave.class, "Shockwave", 128, 1000, false);
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 1, 3, EnumCreatureType.CREATURE, //
 				SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, TAIGA_HILLS, ICE_MOUNTAINS, REDWOOD_TAIGA_HILLS, MUTATED_EXTREME_HILLS,

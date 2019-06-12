@@ -33,6 +33,7 @@ import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
+import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 /**
  * @author CrowsOfWar
@@ -131,7 +132,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	@Override
 	public int getAmountOfControlPoints() {
-		return 6;
+		return 12;
 	}
 
 	@Override
@@ -164,7 +165,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 			if (!wasSuccessfullyRedirected) {
 				damageEntity(stuckTo, 0.333f);
 			}
-			getControlPoint(5).setPosition(Vector.getLookRectangular(getOwner()).times(2).plus(Vector.getEntityPos(getOwner())));
+			getControlPoint(11).setPosition(Vector.getLookRectangular(getOwner()).times(2).plus(Vector.getEntityPos(getOwner())));
 			getControlPoint(0).setPosition(Vector.getEntityPos(stuckTo));
 		}
 

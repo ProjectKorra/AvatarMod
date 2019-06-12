@@ -90,8 +90,6 @@ public class EntityLightningSpear extends AvatarEntity {
 
 	private ParticleSpawner particleSpawner;
 
-	private Vector velocity;
-	//Prevents it from bouncing off of entities (for some reason canBePushed doesn't seem to work)
 
 	/**
 	 * @param world The world it spawns in
@@ -104,14 +102,10 @@ public class EntityLightningSpear extends AvatarEntity {
 		this.damage = 3F;
 		this.piercing = false;
 		this.setInvisible(false);
-		this.velocity = Vector.ZERO;
 		this.particleSpawner = new NetworkParticleSpawner();
 
 	}
 
-	public void setTravellingVelocity(Vector velocity) {
-		this.velocity = velocity;
-	}
 	//So lightning spear doesn't bounce off of entities (if piercing)
 
 	@Override
@@ -128,7 +122,7 @@ public class EntityLightningSpear extends AvatarEntity {
 		LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
 		setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
 
-		Vector clientPos = this.position();
+		/*Vector clientPos = this.position();
 		if (world.isRemote) {
 			clientPos = this.position();
 		}
@@ -136,7 +130,7 @@ public class EntityLightningSpear extends AvatarEntity {
 			if (this.position() != clientPos) {
 				this.setPosition(clientPos);
 			}
-		}
+		}**/
 		//For some reason the server position is inaccurate- setting it to the client side position massively reduces positioning glitchiness
 
 		// Add hook or something
@@ -158,7 +152,7 @@ public class EntityLightningSpear extends AvatarEntity {
 			if (spear == null && bD.hasStatusControl(THROW_LIGHTNINGSPEAR)) {
 				bD.removeStatusControl(THROW_LIGHTNINGSPEAR);
 			}
-			if (spear != null && spear.getBehavior() == controlled && !(bD.hasStatusControl(THROW_LIGHTNINGSPEAR))) {
+			if (spear != null && spear.getBehavior().equals(controlled) && !(bD.hasStatusControl(THROW_LIGHTNINGSPEAR))) {
 				bD.addStatusControl(THROW_LIGHTNINGSPEAR);
 			}
 
@@ -174,10 +168,6 @@ public class EntityLightningSpear extends AvatarEntity {
 			setInvisible(true);
 			setVelocity(Vector.ZERO);
 
-		} else {
-			if (getBehavior() != null && getBehavior() instanceof LightningSpearBehavior.Thrown) {
-				this.setVelocity(velocity);
-			}
 		}
 		if (inWater && !world.isRemote) {
 			if (floodFill == null) {
@@ -360,7 +350,7 @@ public class EntityLightningSpear extends AvatarEntity {
 
 	@Override
 	public boolean canBePushed() {
-		return false;
+		return piercing;
 	}
 
 

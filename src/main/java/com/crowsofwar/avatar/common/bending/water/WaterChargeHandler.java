@@ -22,7 +22,7 @@ import java.util.UUID;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class WaterChargeHandler extends TickHandler {
-	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
+	public static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
 
 	public WaterChargeHandler(int id) {
 		super(id);
@@ -126,7 +126,6 @@ public class WaterChargeHandler extends TickHandler {
 		cannon.setKnockBack(knockBack);
 		cannon.setMaxRange(maxRange);
 		cannon.setAbility(new AbilityWaterCannon());
-		cannon.setMovementModifierId(UUID.fromString("827d2734-ead1-4853-9942-6cd8c5da5414"));
 
 		Vector velocity = Vector.getLookRectangular(entity);
 		velocity = velocity.normalize().times(speed);

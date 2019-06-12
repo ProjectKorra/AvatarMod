@@ -56,7 +56,7 @@ public class AbilityAirblade extends Ability {
 		float pitch = (float) Math.toRadians(pitchDeg);**/
 
 		Vector look = Vector.getLookRectangular(entity);
-		Vector spawnAt = Vector.getEyePos(entity).plus(look).minusY(0.2);
+		Vector spawnAt = Vector.getEyePos(entity).plus(look).minusY(0.6);
 
 		AbilityData abilityData = ctx.getData().getAbilityData(this);
 		float xp = abilityData.getTotalXp();

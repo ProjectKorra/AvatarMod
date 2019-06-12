@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.water.WaterChargeHandler;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterCannon;
@@ -48,8 +49,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	private double maxRange;
 	private double range;
 	private Vec3d knockBack;
-	private HashSet<Entity> excluded;
-	private UUID movementModifierId;
 
 	public EntityWaterCannon(World world) {
 		super(world);
@@ -60,7 +59,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		this.particles = new NetworkParticleSpawner();
 		this.setInvisible(false);
 		this.range = 0;
-		excluded = new HashSet<>();
 	}
 
 	public float getDamage() {
@@ -91,9 +89,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		this.knockBack = knockBack;
 	}
 
-	public void setMovementModifierId(UUID id) {
-		this.movementModifierId = id;
-	}
 
 
 	@Override
@@ -112,10 +107,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (ticksExisted == 2) {
-			assert getOwner() != null;
-			applyMovementModifier(getOwner(), 0.4F);
-		}
 
 		world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
 				SoundCategory.PLAYERS, 1, 2);
@@ -128,7 +119,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				Vec3d endPos = startPos.add(distance);
 				range += range < maxRange ? maxRange / lifeTime : 0;
 
-				if (!AbilityData.get(getOwner(), "water_cannon").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				/*if (!AbilityData.get(getOwner(), "water_cannon").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 					RayTraceResult result = Raytrace.standardEntityRayTrace(world, getOwner(), this, startPos, endPos, 1.5F * getSizeMultiplier(), false,
 							excluded);
 					if (result != null) {
@@ -153,9 +144,9 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 							this.setVelocity(speed.x, speed.y, speed.z);
 						}
 					}
-				} else {
+				}**/ //else {
 					Vec3d speed = endPos.subtract(startPos);
-					if (!world.isRemote) {
+					/*if (!world.isRemote) {
 						if (onCollideWithSolid()) {
 							this.motionX = this.motionY = this.motionZ = 0;
 							setVelocity(Vector.ZERO);
@@ -165,16 +156,20 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 							this.motionZ = speed.z / 20;
 						}
 
-					} else {
+					}**/ //else {
+				if (!world.isRemote) {
 						if (onCollideWithSolid()) {
 							this.motionX = this.motionY = this.motionZ = 0;
 							setVelocity(Vector.ZERO);
 						} else {
-							this.setVelocity(speed.x, speed.y, speed.z);
+								this.motionX = speed.x / 20;
+								this.motionY = speed.y / 20;
+								this.motionZ = speed.z / 20;
+							}
 						}
-					}
+					//}
 
-				}
+				//}
 			}
 
 			if (ticksExisted % 4 == 0 && !this.isDead && STATS_CONFIG.waterCannonSettings.useWaterCannonParticles) {
@@ -227,6 +222,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		setSize(1.5F * getSizeMultiplier(), 1.5F * getSizeMultiplier());
 
 	}
+
+
 
 	@Override
 	public EntityLivingBase getController() {
@@ -345,11 +342,12 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	public boolean onCollideWithSolid() {
 		if (getOwner() != null && !world.isRemote) {
 			Raytrace.Result result = Raytrace.getTargetBlock(getOwner(), maxRange);
-			if (result.getPosPrecise() != null && result.getPosPrecise() == position()) {
+			if (result.getPos() != null && result.getPosPrecise() != null && result.getPos().toBlockPos() == getPosition()) {
 				setPosition(result.getPosPrecise());
 				posX = result.getPosPrecise().x();
 				posY = result.getPosPrecise().y();
 				posZ = result.getPosPrecise().z();
+				this.motionX = this.motionY = this.motionZ = 0;
 				return true;
 			}
 		}
@@ -386,18 +384,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 	public void setDead() {
 		super.setDead();
 		if (getOwner() != null) {
-			getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(movementModifierId);
+			AttributeModifier modifier = getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(WaterChargeHandler.MOVEMENT_MODIFIER_ID);
+			if (modifier != null) {
+				getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(modifier);
+			}
 		}
-	}
-
-	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
-
-		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-
-		moveSpeed.removeModifier(movementModifierId);
-
-		moveSpeed.applyModifier(new AttributeModifier(movementModifierId, "Water shoot modifier", multiplier - 1, 1));
-
 	}
 
 	class CannonControlPoint extends ControlPoint {
