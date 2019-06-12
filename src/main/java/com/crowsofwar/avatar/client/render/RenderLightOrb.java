@@ -37,7 +37,7 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
         CCRenderState ccrs = CCRenderState.instance();
         TextureUtils.changeTexture(halo);
 
-        GlStateManager.color(ent.colorR, ent.colorG, ent.colorB, ent.colorA);
+        GlStateManager.color(ent.getColorR(), ent.getColorG(), ent.getColorB(), ent.getColorA());
 
         double scale = ent.getOrbSize();
 

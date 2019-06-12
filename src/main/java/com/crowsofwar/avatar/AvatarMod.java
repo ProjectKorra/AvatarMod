@@ -175,7 +175,6 @@ public class AvatarMod {
 		registerPacket(PacketSCycleBending.class, Side.SERVER);
 		registerPacket(PacketCPowerRating.class, Side.CLIENT);
 		registerPacket(PacketCOpenSkillCard.class, Side.CLIENT);
-		registerPacket(PacketCSyncEntityNBT.class, Side.CLIENT);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 

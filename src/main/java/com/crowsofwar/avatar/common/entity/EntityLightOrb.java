@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.network.packets.PacketCSyncEntityNBT;
+import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
 
 import elucent.albedo.event.GatherLightsEvent;
 import elucent.albedo.lighting.ILightProvider;
@@ -9,6 +9,10 @@ import elucent.albedo.lighting.Light;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializer;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Optional;
@@ -21,23 +25,43 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
 public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 
-    private double size = 2;
-    private int radius = 20;
-    public float colorR = 1F, colorG = 1F, colorB = 1F, colorA = 1F;
+    private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityLightOrb.class,
+            DataSerializers.FLOAT);
+    private static final DataParameter<Integer> SYNC_RADIUS = EntityDataManager.createKey(EntityLightOrb.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Float> SYNC_COLOR_R = EntityDataManager.createKey(EntityLightOrb.class,
+            DataSerializers.FLOAT);
+    private static final DataParameter<Float> SYNC_COLOR_G = EntityDataManager.createKey(EntityLightOrb.class,
+            DataSerializers.FLOAT);
+    private static final DataParameter<Float> SYNC_COLOR_B = EntityDataManager.createKey(EntityLightOrb.class,
+            DataSerializers.FLOAT);
+    private static final DataParameter<Float> SYNC_COLOR_A = EntityDataManager.createKey(EntityLightOrb.class,
+            DataSerializers.FLOAT);
 
     public EntityLightOrb(World world) {
         super(world);
         setSize(0.1F, 0.1F);
     }
 
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        dataManager.register(SYNC_SIZE, 2F);
+        dataManager.register(SYNC_RADIUS, 20);
+        dataManager.register(SYNC_COLOR_R, 1F);
+        dataManager.register(SYNC_COLOR_G, 1F);
+        dataManager.register(SYNC_COLOR_B, 1F);
+        dataManager.register(SYNC_COLOR_A, 1F);
+    }
+
     /**
      * Sets the Orb's color. RGBA format
      */
     public void setColor(float r, float g, float b, float a) {
-        colorR = r;
-        colorG = g;
-        colorB = b;
-        colorA = a;
+        dataManager.set(SYNC_COLOR_R, r);
+        dataManager.set(SYNC_COLOR_G, g);
+        dataManager.set(SYNC_COLOR_B, b);
+        dataManager.set(SYNC_COLOR_A, a);
     }
 
     /**
@@ -46,7 +70,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
      * @param radius
      */
     public void setLightRadius(int radius) {
-        this.radius = radius;
+        dataManager.set(SYNC_RADIUS, radius);
     }
 
     /**
@@ -54,29 +78,21 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
      * 
      * @param size
      */
-    public void setOrbSize(double size) {
-        this.size = size;
+    public void setOrbSize(float size) {
+        dataManager.set(SYNC_SIZE, size);
     }
 
     public int getLightRadius() {
-        return radius;
+        return dataManager.get(SYNC_RADIUS);
     }
 
-    public double getOrbSize() {
-        return size;
+    public float getOrbSize() {
+        return dataManager.get(SYNC_SIZE);
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (!world.isRemote)
-            sendUpdateToClients();
-    }
-
-    private void sendUpdateToClients() {
-        EntityTracker et = ((WorldServer) this.world).getEntityTracker();
-        et.sendToTracking(this,
-                AvatarMod.network.getPacketFrom(new PacketCSyncEntityNBT(this.getEntityId(), this.serializeNBT())));
     }
 
     @Override
@@ -91,14 +107,9 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
     }
 
     @Override
-    protected void entityInit() {
-        super.entityInit();
-    }
-
-    @Override
     @Optional.Method(modid = "albedo")
     public Light provideLight() {
-        return Light.builder().pos(this).color(colorR, colorG, colorB).radius(radius).build();
+        return Light.builder().pos(this).color(getColorR(), getColorG(), getColorB()).radius(getLightRadius()).build();
     }
 
     @Override
@@ -110,22 +121,54 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
     @Override
     protected void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
-        size = nbt.getDouble("OrbSize");
-        radius = nbt.getInteger("OrbRadius");
-        colorR = nbt.getFloat("OrbColorR");
-        colorG = nbt.getFloat("OrbColorG");
-        colorB = nbt.getFloat("OrbColorB");
-        colorA = nbt.getFloat("OrbColorA");
+        setOrbSize(nbt.getFloat("OrbSize"));
+        setLightRadius(nbt.getInteger("OrbRadius"));
+        setColorR(nbt.getFloat("OrbColorR"));
+        setColorG(nbt.getFloat("OrbColorG"));
+        setColorB(nbt.getFloat("OrbColorB"));
+        setColorA(nbt.getFloat("OrbColorA"));
     }
 
     @Override
     protected void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
-        nbt.setDouble("OrbSize", size);
-        nbt.setInteger("OrbRadius", radius);
-        nbt.setFloat("OrbColorR", colorR);
-        nbt.setFloat("OrbColorG", colorG);
-        nbt.setFloat("OrbColorB", colorB);
-        nbt.setFloat("OrbColorA", colorA);
+        nbt.setFloat("OrbSize", getOrbSize());
+        nbt.setInteger("OrbRadius", getLightRadius());
+        nbt.setFloat("OrbColorR", getColorR());
+        nbt.setFloat("OrbColorG", getColorG());
+        nbt.setFloat("OrbColorB", getColorB());
+        nbt.setFloat("OrbColorA", getColorA());
+    }
+
+    public float getColorR() {
+        return dataManager.get(SYNC_COLOR_R);
+    }
+
+    public float getColorG() {
+        return dataManager.get(SYNC_COLOR_G);
+    }
+
+    public float getColorB() {
+        return dataManager.get(SYNC_COLOR_B);
+    }
+
+    public float getColorA() {
+        return dataManager.get(SYNC_COLOR_A);
+    }
+
+    public void setColorR(float value) {
+        dataManager.set(SYNC_COLOR_R, value);
+    }
+
+    public void setColorG(float value) {
+        dataManager.set(SYNC_COLOR_G, value);
+    }
+
+    public void setColorB(float value) {
+        dataManager.set(SYNC_COLOR_B, value);
+    }
+
+    public void setColorA(float value) {
+        dataManager.set(SYNC_COLOR_A, value);
     }
 }

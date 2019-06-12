@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
+import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
@@ -104,7 +105,14 @@ public class AbilityFireball extends Ability {
 			data.addStatusControl(StatusControl.THROW_FIREBALL);
 			world.spawnEntity(fireball);
 
-
+			EntityLightOrb orb = new EntityLightOrb(world);
+			orb.setAbility(this);
+			orb.setOwner(entity);
+			orb.setColor(1F,0F,0F,1F);
+			orb.setPosition(target);
+			orb.setLightRadius(10);
+			orb.setOrbSize(2F);
+			world.spawnEntity(orb);
 		}
 
 	}
