@@ -249,7 +249,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 
 			double dist = this.getDistance(getOwner());
-			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(getAmountOfControlPoints() - 1).position(), this.position().minus(getControlPoint(4).position()), dist, entity -> entity != getOwner());
+			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(getAmountOfControlPoints() - 1).position(), this.position().minus(getControlPoint(getAmountOfControlPoints() - 1).position()), dist, entity -> entity != getOwner());
 
 			if (!collisions.isEmpty()) {
 				for (Entity collided : collisions) {
