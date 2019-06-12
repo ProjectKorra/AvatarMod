@@ -164,13 +164,13 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 
 	@Override
 	public void setDead() {
-		super.setDead();
 		if (getOwner() != null) {
 			AttributeModifier modifier = getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(EarthspikesBehavior.MOVEMENT_MODIFIER_ID);
 			if (modifier != null && getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(modifier)) {
 				getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(EarthspikesBehavior.MOVEMENT_MODIFIER_ID);
 			}
 		}
+		super.setDead();
 	}
 
 	@Override
