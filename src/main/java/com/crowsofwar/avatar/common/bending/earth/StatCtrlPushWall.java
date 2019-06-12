@@ -62,6 +62,8 @@ public class StatCtrlPushWall extends StatusControl {
 					segment.setBehavior(new WallBehavior.Push());
 			}
 
+			ctx.getData().removeStatusControl(StatusControl.PLACE_WALL);
+
 			return true;
 		} else {
 			return false;
