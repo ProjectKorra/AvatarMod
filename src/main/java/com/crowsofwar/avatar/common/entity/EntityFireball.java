@@ -234,6 +234,12 @@ public class EntityFireball extends AvatarEntity {
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+		removeStatCtrl();
+	}
+
+	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		setDamage(nbt.getFloat("Damage"));

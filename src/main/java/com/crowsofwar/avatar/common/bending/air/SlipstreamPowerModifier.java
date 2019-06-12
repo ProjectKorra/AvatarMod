@@ -7,14 +7,14 @@ import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
 public class SlipstreamPowerModifier extends BuffPowerModifier {
-
-	private int ticks = 0;
 	@Override
 	public double get(BendingContext ctx) {
 
@@ -33,7 +33,6 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 	@Override
 	public boolean onUpdate(BendingContext ctx) {
 
-		ticks++;
 		AbilityData data = ctx.getData().getAbilityData("slipstream");
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData bD = ctx.getData();
@@ -60,18 +59,9 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 
 		}
 		if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			double motion = 0;
-			if (ticks <= 2) {
-				 motion = entity.motionY;
-			}
 			if (chi.getTotalChi() > 0 && chi.getAvailableChi() > 0 || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
-				if (entity.motionY < 0) {
-					entity.motionY = -0.00000001F;
-				}
-				entity.setNoGravity(entity.world.getBlockState(entity.getPosition().down()).getBlock() instanceof BlockLiquid);
-			//	if (entity.motionY > 0) {
-			//		entity.setNoGravity(false);
-			//	}
+				IBlockState state = entity.world.getBlockState(entity.getPosition().down());
+				entity.setNoGravity((state.getBlock() instanceof BlockLiquid || state.getBlock() == Blocks.AIR) && entity.motionY <= 0);
 				if (entity.ticksExisted % 5 == 0 && !(entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
 					chi.setAvailableChi(chi.getAvailableChi() - 1);
 					if (chi.getAvailableChi() == 0)
@@ -87,7 +77,6 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 	@Override
 	public void onRemoval(BendingContext ctx) {
 		ctx.getBenderEntity().setNoGravity(false);
-		ticks = 0;
 		super.onRemoval(ctx);
 	}
 
