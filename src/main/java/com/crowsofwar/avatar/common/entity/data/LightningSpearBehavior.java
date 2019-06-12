@@ -228,7 +228,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			} else {
 				Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
 						Math.toRadians(owner.rotationPitch));
-				target = Vector.getEyePos(owner).plus(look.times(3));
+				target = Vector.getEyePos(owner).plus(look.times(1 + entity.getSize()));
 			}
 
 			assert target != null;
