@@ -353,6 +353,11 @@ public class EntityLightningSpear extends AvatarEntity {
 		return piercing;
 	}
 
+	@Override
+	public void setDead() {
+		super.setDead();
+		removeStatCtrl();
+	}
 
 	@Override
 	public boolean onAirContact() {
