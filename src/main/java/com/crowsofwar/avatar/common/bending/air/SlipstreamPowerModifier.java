@@ -14,6 +14,7 @@ import net.minecraft.potion.PotionEffect;
 
 public class SlipstreamPowerModifier extends BuffPowerModifier {
 
+	private int ticks = 0;
 	@Override
 	public double get(BendingContext ctx) {
 
@@ -32,6 +33,7 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 	@Override
 	public boolean onUpdate(BendingContext ctx) {
 
+		ticks++;
 		AbilityData data = ctx.getData().getAbilityData("slipstream");
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData bD = ctx.getData();
@@ -58,8 +60,14 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 
 		}
 		if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+			double motion = 0;
+			if (ticks <= 2) {
+				 motion = entity.motionY;
+			}
 			if (chi.getTotalChi() > 0 && chi.getAvailableChi() > 0 || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
-				entity.motionY = entity.motionY < 0 ? entity.motionY * 0.25 : entity.motionY;
+				if (entity.motionY < 0) {
+					entity.motionY = -0.00000001F;
+				}
 				entity.setNoGravity(entity.world.getBlockState(entity.getPosition().down()).getBlock() instanceof BlockLiquid);
 			//	if (entity.motionY > 0) {
 			//		entity.setNoGravity(false);
@@ -79,6 +87,7 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 	@Override
 	public void onRemoval(BendingContext ctx) {
 		ctx.getBenderEntity().setNoGravity(false);
+		ticks = 0;
 		super.onRemoval(ctx);
 	}
 
