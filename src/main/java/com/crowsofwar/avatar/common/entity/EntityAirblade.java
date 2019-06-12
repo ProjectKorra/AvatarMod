@@ -159,7 +159,7 @@ public class EntityAirblade extends AvatarEntity {
 
 			boolean successfulHit = collided.attackEntityFrom(source, damage);
 
-			if (successfulHit) {
+			if (successfulHit && getAbility() != null) {
 				BattlePerformanceScore.addMediumScore(getOwner());
 				data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.airbladeHit);
 			}
