@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 
 public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 
-	private List<T> points;
+	public List<T> points;
 	private int brightness = 15728880;
 
 	public EntityArc(World world) {
