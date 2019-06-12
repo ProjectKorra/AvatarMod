@@ -375,4 +375,18 @@ public class EntityFloatingBlock extends AvatarEntity {
 		return true;
 	}
 
+	@Override
+	public void setDead() {
+		super.setDead();
+		removeStatCtrl();
+	}
+
+	 private void removeStatCtrl() {
+		if (getOwner() != null) {
+			BendingData bD = BendingData.get(getOwner());
+			bD.removeStatusControl(StatusControl.THROW_BLOCK);
+			bD.removeStatusControl(StatusControl.PLACE_BLOCK);
+		}
+
+	}
 }

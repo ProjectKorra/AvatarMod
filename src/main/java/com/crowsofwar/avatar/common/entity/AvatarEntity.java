@@ -381,6 +381,9 @@ public abstract class AvatarEntity extends Entity {
 		if (entity == getOwner()) {
 			return false;
 		}
+		else if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
+			return false;
+		}
 		else if (entity instanceof EntityLivingBase && entity.getControllingPassenger() == getOwner()) {
 			return false;
 		}
@@ -391,7 +394,7 @@ public abstract class AvatarEntity extends Entity {
 			return true;
 		}
 		else
-			return entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != getOwner()|| (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase;
+			return (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase;
 	}
 
 	@Override

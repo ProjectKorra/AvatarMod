@@ -160,7 +160,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 				Block block = entity.getBlockState().getBlock();
 				SoundType sound = block.getSoundType();
 				if (sound != null) {
-					entity.world.playSound(null, entity.getPosition(), sound.getBreakSound(),
+					world.playSound(null, entity.getPosition(), sound.getBreakSound(),
 							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 				}
 
@@ -191,56 +191,59 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		}
 
 		private FloatingBlockBehavior collision(EntityLivingBase collided, EntityFloatingBlock entity) {
-			// Add damage
-			double speed = entity.velocity().magnitude();
+			if (entity.canCollideWith(collided)) {
+				// Add damage
+				double speed = entity.velocity().magnitude();
 
-			if (collided.attackEntityFrom(
-					AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
-					(float) (speed / 15 * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()))) {
-				BattlePerformanceScore.addMediumScore(entity.getOwner());
-			}
-
-			// Push entity
-			collided.motionX = entity.motionX / 2 * STATS_CONFIG.floatingBlockSettings.push;
-			collided.motionY = entity.motionY > 0 ? STATS_CONFIG.floatingBlockSettings.push / 4 + entity.motionY / 2 : STATS_CONFIG.floatingBlockSettings.push / 3.5;
-			collided.motionZ = entity.motionZ / 2 * STATS_CONFIG.floatingBlockSettings.push;
-
-			// Add XP
-			BendingData data = Bender.get(entity.getOwner()).getData();
-			if (!collided.world.isRemote && data != null) {
-				float xp = SKILLS_CONFIG.blockThrowHit;
-				if (collided.getHealth() <= 0) {
-					xp = SKILLS_CONFIG.blockKill;
+				if (collided.attackEntityFrom(
+						AvatarDamageSource.causeFloatingBlockDamage(collided, entity.getOwner()),
+						(float) (speed / 15 * STATS_CONFIG.floatingBlockSettings.damage * entity.getDamageMult()))) {
+					BattlePerformanceScore.addMediumScore(entity.getOwner());
 				}
-				data.getAbilityData("pickup_block").addXp(xp);
-			}
 
-			// Remove the floating block & spawn particles
-			entity.onCollideWithSolid();
+				// Push entity
+				collided.motionX = entity.motionX / 2 * STATS_CONFIG.floatingBlockSettings.push;
+				collided.motionY = entity.motionY > 0 ? STATS_CONFIG.floatingBlockSettings.push / 4 + entity.motionY / 2 : STATS_CONFIG.floatingBlockSettings.push / 3.5;
+				collided.motionZ = entity.motionZ / 2 * STATS_CONFIG.floatingBlockSettings.push;
 
-			// boomerang upgrade handling
-			if (!entity.world.isRemote) {
-
-				if (data.getAbilityData("pickup_block")
-						.isMasterPath(AbilityTreePath.FIRST)) {
-
-					Bender bender = Bender.get(entity.getOwner());
-					if (bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
-						data.addStatusControl(StatusControl.THROW_BLOCK);
-						data.addStatusControl(StatusControl.PLACE_BLOCK);
-
-						// the entity was already setDead from onCollideWithSolid, we need to mark it alive again
-						entity.isDead = false;
-
-						return new FloatingBlockBehavior.PlayerControlled();
+				// Add XP
+				BendingData data = Bender.get(entity.getOwner()).getData();
+				if (!collided.world.isRemote && data != null) {
+					float xp = SKILLS_CONFIG.blockThrowHit;
+					if (collided.getHealth() <= 0) {
+						xp = SKILLS_CONFIG.blockKill;
 					}
+					data.getAbilityData("pickup_block").addXp(xp);
+				}
 
+				// Remove the floating block & spawn particles
+				entity.onCollideWithSolid();
+
+				// boomerang upgrade handling
+				if (!entity.world.isRemote) {
+
+					if (data.getAbilityData("pickup_block")
+							.isMasterPath(AbilityTreePath.FIRST)) {
+
+						Bender bender = Bender.get(entity.getOwner());
+						if (bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
+							data.addStatusControl(StatusControl.THROW_BLOCK);
+							data.addStatusControl(StatusControl.PLACE_BLOCK);
+
+							// the entity was already setDead from onCollideWithSolid, we need to mark it alive again
+							entity.isDead = false;
+
+							return new FloatingBlockBehavior.PlayerControlled();
+						}
+
+					}
 				}
 			}
 
 			return this;
 
 		}
+
 
 		@Override
 		public void fromBytes(PacketBuffer buf) {

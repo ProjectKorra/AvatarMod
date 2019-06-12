@@ -50,6 +50,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -277,7 +278,7 @@ public class EntityFireball extends AvatarEntity {
 
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
-			BendingData data = Bender.get(getOwner()).getData();
+			BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
 			if (data != null) {
 				data.removeStatusControl(StatusControl.THROW_FIREBALL);
 			}
