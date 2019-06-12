@@ -23,13 +23,18 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
 
     private CCModel model;
 
+    private CCModel cubeModel, sphereModel;
+
     public RenderLightOrb(RenderManager manager) {
         super(manager);
-        model = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/hemisphere.obj")).get("model");
+        cubeModel = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/cube.obj")).get("model");
+        sphereModel = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/hemisphere.obj")).get("model");
     }
 
     @Override
     public void doRender(EntityLightOrb ent, double x, double y, double z, float entityYaw, float partialTicks) {
+
+        model = ent.isSphere() ? sphereModel : cubeModel;
 
         Minecraft mc = Minecraft.getMinecraft();
         Tessellator tess = Tessellator.getInstance();
@@ -50,10 +55,11 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
         double xzlen = Math.sqrt(dx * dx + dz * dz);
         double len = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-        double yang = Math.atan2(xzlen, dy) * MathHelper.todeg;
-        double xang = Math.atan2(dx, dz) * MathHelper.todeg;
+        double yang = ent.isSphere() ? Math.atan2(xzlen, dy) * MathHelper.todeg : ent.rotationYaw;
+        double xang = ent.isSphere() ? Math.atan2(dx, dz) * MathHelper.todeg : ent.rotationPitch;
 
-        if(len > 16) halocoord = 0;
+        if (len > 16 || !ent.isSphere())
+            halocoord = 0;
 
         GlStateManager.disableLighting();
         mc.entityRenderer.disableLightmap();
@@ -91,7 +97,7 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
             GlStateManager.scale(scale, scale, scale);
 
             GlStateManager.disableCull();
-            ccrs.startDrawing(0x07, DefaultVertexFormats.POSITION_TEX_NORMAL);
+            ccrs.startDrawing(ent.isSphere() ? 0x07 : 0x06, DefaultVertexFormats.POSITION_TEX_NORMAL);
             model.render(ccrs);
             ccrs.draw();
             GlStateManager.enableCull();

@@ -29,6 +29,8 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
             DataSerializers.FLOAT);
     private static final DataParameter<Integer> SYNC_RADIUS = EntityDataManager.createKey(EntityLightOrb.class,
             DataSerializers.VARINT);
+    private static final DataParameter<Boolean> SYNC_IS_SPHERE = EntityDataManager.createKey(EntityLightOrb.class,
+            DataSerializers.BOOLEAN);
     private static final DataParameter<Float> SYNC_COLOR_R = EntityDataManager.createKey(EntityLightOrb.class,
             DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_COLOR_G = EntityDataManager.createKey(EntityLightOrb.class,
@@ -48,10 +50,19 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
         super.entityInit();
         dataManager.register(SYNC_SIZE, 2F);
         dataManager.register(SYNC_RADIUS, 20);
+        dataManager.register(SYNC_IS_SPHERE, true);
         dataManager.register(SYNC_COLOR_R, 1F);
         dataManager.register(SYNC_COLOR_G, 1F);
         dataManager.register(SYNC_COLOR_B, 1F);
         dataManager.register(SYNC_COLOR_A, 1F);
+    }
+
+    public boolean isSphere() {
+        return dataManager.get(SYNC_IS_SPHERE);
+    }
+
+    public void setIsSphere(boolean value) {
+        dataManager.set(SYNC_IS_SPHERE, value);
     }
 
     /**
@@ -123,6 +134,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
         super.readEntityFromNBT(nbt);
         setOrbSize(nbt.getFloat("OrbSize"));
         setLightRadius(nbt.getInteger("OrbRadius"));
+        setIsSphere(nbt.getBoolean("OrbSphere"));
         setColorR(nbt.getFloat("OrbColorR"));
         setColorG(nbt.getFloat("OrbColorG"));
         setColorB(nbt.getFloat("OrbColorB"));
@@ -134,6 +146,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
         super.writeEntityToNBT(nbt);
         nbt.setFloat("OrbSize", getOrbSize());
         nbt.setInteger("OrbRadius", getLightRadius());
+        nbt.setBoolean("OrbSphere", isSphere());
         nbt.setFloat("OrbColorR", getColorR());
         nbt.setFloat("OrbColorG", getColorG());
         nbt.setFloat("OrbColorB", getColorB());

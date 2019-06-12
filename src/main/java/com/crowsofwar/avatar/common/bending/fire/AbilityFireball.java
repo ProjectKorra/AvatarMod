@@ -105,14 +105,6 @@ public class AbilityFireball extends Ability {
 			data.addStatusControl(StatusControl.THROW_FIREBALL);
 			world.spawnEntity(fireball);
 
-			EntityLightOrb orb = new EntityLightOrb(world);
-			orb.setAbility(this);
-			orb.setOwner(entity);
-			orb.setColor(1F,0F,0F,1F);
-			orb.setPosition(target);
-			orb.setLightRadius(10);
-			orb.setOrbSize(2F);
-			world.spawnEntity(orb);
 		}
 
 	}
