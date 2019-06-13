@@ -97,7 +97,7 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
             GlStateManager.scale(scale, scale, scale);
 
             GlStateManager.disableCull();
-            ccrs.startDrawing(ent.isSphere() ? 0x07 : 0x06, DefaultVertexFormats.POSITION_TEX_NORMAL);
+            ccrs.startDrawing(ent.isSphere() ? 0x07 : 0x05, DefaultVertexFormats.POSITION_TEX_NORMAL);
             model.render(ccrs);
             ccrs.draw();
             GlStateManager.enableCull();
