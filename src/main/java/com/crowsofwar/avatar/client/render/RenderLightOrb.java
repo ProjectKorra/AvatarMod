@@ -21,25 +21,24 @@ import net.minecraft.util.ResourceLocation;
  */
 public class RenderLightOrb extends Render<EntityLightOrb> {
 
-    private static ResourceLocation fill_def = new ResourceLocation("avatarmod", "textures/entity/sphere.png");
+    private static ResourceLocation fill_default = new ResourceLocation("avatarmod", "textures/entity/sphere.png");
     private static ResourceLocation halo = new ResourceLocation("avatarmod", "textures/entity/spherehalo.png");
     private ResourceLocation fill;
 
     private CCModel model;
 
-    private static CCModel cubeModel, sphereModel;
+    private static CCModel cubeModel = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/cube.obj")).get("model"); 
+    private static CCModel sphereModel = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/hemisphere.obj")).get("model");
 
     public RenderLightOrb(RenderManager manager) {
         super(manager);
-        cubeModel = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/cube.obj")).get("model");
-        sphereModel = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/hemisphere.obj")).get("model");
     }
 
     @Override
     public void doRender(EntityLightOrb entity, double x, double y, double z, float entityYaw, float partialTicks) {
 
         model = entity.isSphere() ? sphereModel : cubeModel;
-        fill = entity.shouldUseCustomTexture() ? new ResourceLocation(entity.getTexture()) : fill_def;
+        fill = entity.shouldUseCustomTexture() ? new ResourceLocation(entity.getTexture()) : fill_default;
 
         Minecraft minecraft = Minecraft.getMinecraft();
         Tessellator tessellator = Tessellator.getInstance();
