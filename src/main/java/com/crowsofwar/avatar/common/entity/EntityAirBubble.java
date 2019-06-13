@@ -173,6 +173,10 @@ public class EntityAirBubble extends EntityShield {
 				bD.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
 				bD.removeStatusControl(StatusControl.BUBBLE_EXPAND);
 			}
+			if (bubble != null && !(bD.hasStatusControl(StatusControl.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControl.BUBBLE_EXPAND))) {
+				bD.addStatusControl(StatusControl.BUBBLE_CONTRACT);
+				bD.addStatusControl(StatusControl.BUBBLE_EXPAND);
+			}
 		}
 
 		AxisAlignedBB box = new AxisAlignedBB(getEntityBoundingBox().minX - (getSize() / 10), getEntityBoundingBox().minY, getEntityBoundingBox().minZ - (getSize() / 10),

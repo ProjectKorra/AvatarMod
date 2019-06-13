@@ -1,9 +1,11 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.SandstormMovementHandler;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -58,6 +60,12 @@ public class EntitySandstorm extends AvatarEntity {
 		movementHandler = new SandstormMovementHandler(this);
 		vulnerableToAirbending = true;
 		stepHeight = 1;
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
+		removeStatCtrl();
 	}
 
 	@Override
@@ -362,6 +370,15 @@ public class EntitySandstorm extends AvatarEntity {
 		nbt.setBoolean("VulnerableToAirbending", isVulnerableToAirbending());
 		nbt.setFloat("VelocityMultiplier", getVelocityMultiplier());
 		nbt.setFloat("Strength", getStrength());
+	}
+
+	private void removeStatCtrl() {
+		if (getOwner() != null) {
+			BendingData bD = BendingData.get(getOwner());
+			if (bD.hasStatusControl(StatusControl.SANDSTORM_REDIRECT)) {
+				bD.removeStatusControl(StatusControl.SANDSTORM_REDIRECT);
+			}
+		}
 	}
 
 }
