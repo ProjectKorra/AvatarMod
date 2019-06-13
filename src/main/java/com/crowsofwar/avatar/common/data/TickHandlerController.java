@@ -45,6 +45,7 @@ public class TickHandlerController {
 	public static TickHandler RESTORE_COOLDOWN_HANDLER = new RestoreCooldownHandler(26);
 	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler(27);
 	public static TickHandler INFERNO_PUNCH_COOLDOWN = new InfernoPunchCooldownHandler(28);
+	public static TickHandler SLIPSTREAM_WALK_HANDLER = new SlipstreamAirWalkHandler(29);
 	// @formatter:on
 
 	public static TickHandler fromId(int id) {

@@ -39,8 +39,6 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 
 		AbilityData data = ctx.getData().getAbilityData("slipstream");
 		EntityLivingBase entity = ctx.getBenderEntity();
-		BendingData bD = ctx.getData();
-		Chi chi = bD.chi();
 
 		if (data.getLevel() >= 2) {
 
@@ -57,39 +55,10 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 				// 40% chance per second for invisibility
 				if (Math.random() < invisibilityChance) {
 					PotionEffect effect = new PotionEffect(MobEffects.INVISIBILITY, invisiblityDuration, 0, false, false);
-					ctx.getBenderEntity().addPotionEffect(effect);
+					entity.addPotionEffect(effect);
 				}
 			}
 
-		}
-		if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			if (chi.getTotalChi() > 0 && chi.getAvailableChi() > 0 || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
-			//	Vec3d pos = entity.getLookVec();
-				BlockPos pos1 = entity.getPosition().down();
-				//BlockPos pos2 = entity.getPosition().down().add(pos.x, 0, pos.z);
-				//BlockPos pos3 = entity.getPosition().down().add(-pos.x, 0, -pos.z);
-				IBlockState state = entity.world.getBlockState(pos1);
-				//IBlockState state2 = entity.world.getBlockState(pos2);
-				//IBlockState state3 = entity.world.getBlockState(pos3);
-				/*if (state3.getBlock() == Blocks.BARRIER) {
-					entity.world.setBlockToAir(pos3);
-					entity.world.getBlockState(pos1).getBlock().
-				}
-				if (state.getBlock() == Blocks.AIR) {
-					entity.world.setBlockState(pos1, Blocks.BARRIER.getDefaultState());
-				}
-				if (state2.getBlock() == Blocks.AIR) {
-					entity.world.setBlockState(pos2,  Blocks.BARRIER.getDefaultState());
-				}**/
-				entity.setNoGravity(state.getBlock() instanceof BlockLiquid);
-				if (entity.ticksExisted % 5 == 0 && !(entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
-					chi.setAvailableChi(chi.getAvailableChi() - 1);
-					if (chi.getAvailableChi() == 0)
-						entity.setNoGravity(false);
-				}
-			} else {
-				entity.setNoGravity(false);
-			}
 		}
 		return super.onUpdate(ctx);
 	}

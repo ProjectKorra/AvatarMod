@@ -16,6 +16,7 @@ import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SLIPSTREAM_COO
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.SLIPSTREAM_COOLDOWN_HANDLER;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.SLIPSTREAM_WALK_HANDLER;
 
 public class AbilitySlipstream extends Ability {
 
@@ -58,6 +59,7 @@ public class AbilitySlipstream extends Ability {
 			int effectLevel = abilityData.getLevel() >= 2 ? 1 : 0;
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				effectLevel = 2;
+				data.addTickHandler(SLIPSTREAM_WALK_HANDLER);
 			}
 
 			entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, effectLevel, false, false));
