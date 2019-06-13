@@ -171,6 +171,7 @@ public class EntityCloudBall extends AvatarEntity {
 			BendingData data = BendingData.get(getOwner());
 			data.addTickHandler(AIR_STATCTRL_HANDLER);
 		}
+		removeStatCtrl();
 	}
 
 	@Override

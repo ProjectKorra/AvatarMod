@@ -129,7 +129,7 @@ public class EntityAirblade extends AvatarEntity {
 
 		if (!isDead && !world.isRemote) {
 			List<Entity> collidedList = world.getEntitiesWithinAABB(Entity.class,
-					getEntityBoundingBox().grow(0.25F));
+					getEntityBoundingBox().grow(0.35F));
 			if (!collidedList.isEmpty()) {
 				for (Entity collided : collidedList) {
 					if (collided instanceof AvatarEntity) {
