@@ -39,27 +39,27 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
         Minecraft minecraft = Minecraft.getMinecraft();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
-        CCRenderState ccrs = CCRenderState.instance();
+        CCRenderState ccrenderstate = CCRenderState.instance();
         TextureUtils.changeTexture(halo);
 
         GlStateManager.color(entity.getColorR(), entity.getColorG(), entity.getColorB(), entity.getColorA());
 
         double scale = entity.getOrbSize();
 
-        double halocoord = 0.58 * scale;
+        double haloCoord = 0.58 * scale;
 
         double dx = entity.posX - renderManager.viewerPosX;
         double dy = entity.posY - renderManager.viewerPosY;
         double dz = entity.posZ - renderManager.viewerPosZ;
 
-        double xzlen = Math.sqrt(dx * dx + dz * dz);
-        double len = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        double lenghtXZ = Math.sqrt(dx * dx + dz * dz);
+        double lenght = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-        double yang = entity.isSphere() ? Math.atan2(xzlen, dy) * MathHelper.todeg : entity.rotationYaw;
-        double xang = entity.isSphere() ? Math.atan2(dx, dz) * MathHelper.todeg : entity.rotationPitch;
+        double angleY = entity.isSphere() ? Math.atan2(lenghtXZ, dy) * MathHelper.todeg : entity.rotationYaw;
+        double angleX = entity.isSphere() ? Math.atan2(dx, dz) * MathHelper.todeg : entity.rotationPitch;
 
-        if (len > 16 || !entity.isSphere())
-            halocoord = 0;
+        if (lenght > 16 || !entity.isSphere())
+            haloCoord = 0;
 
         GlStateManager.disableLighting();
         minecraft.entityRenderer.disableLightmap();
@@ -68,8 +68,8 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
         {
             GlStateManager.translate(x, y, z);
 
-            GlStateManager.rotate((float) xang, 0, 1, 0);
-            GlStateManager.rotate((float) (yang + 90), 1, 0, 0);
+            GlStateManager.rotate((float) angleX, 0, 1, 0);
+            GlStateManager.rotate((float) (angleY + 90), 1, 0, 0);
 
             GlStateManager.pushMatrix();
             {
@@ -80,10 +80,10 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
                 GlStateManager.depthMask(false);
 
                 buffer.begin(0x07, DefaultVertexFormats.POSITION_TEX);
-                buffer.pos(-halocoord, 0.0, -halocoord).tex(0.0, 0.0).endVertex();
-                buffer.pos(-halocoord, 0.0, halocoord).tex(0.0, 1.0).endVertex();
-                buffer.pos(halocoord, 0.0, halocoord).tex(1.0, 1.0).endVertex();
-                buffer.pos(halocoord, 0.0, -halocoord).tex(1.0, 0.0).endVertex();
+                buffer.pos(-haloCoord, 0.0, -haloCoord).tex(0.0, 0.0).endVertex();
+                buffer.pos(-haloCoord, 0.0, haloCoord).tex(0.0, 1.0).endVertex();
+                buffer.pos(haloCoord, 0.0, haloCoord).tex(1.0, 1.0).endVertex();
+                buffer.pos(haloCoord, 0.0, -haloCoord).tex(1.0, 0.0).endVertex();
                 tessellator.draw();
 
                 GlStateManager.depthMask(true);
@@ -97,9 +97,9 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
             GlStateManager.scale(scale, scale, scale);
 
             GlStateManager.disableCull();
-            ccrs.startDrawing(entity.isSphere() ? 0x07 : 0x05, DefaultVertexFormats.POSITION_TEX_NORMAL);
-            model.render(ccrs);
-            ccrs.draw();
+            ccrenderstate.startDrawing(entity.isSphere() ? 0x07 : 0x05, DefaultVertexFormats.POSITION_TEX_NORMAL);
+            model.render(ccrenderstate);
+            ccrenderstate.draw();
             GlStateManager.enableCull();
 
         }

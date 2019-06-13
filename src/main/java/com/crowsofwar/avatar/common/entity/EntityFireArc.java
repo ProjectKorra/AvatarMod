@@ -390,7 +390,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 
 	@Override
 	@Optional.Method(modid = "albedo")
-	public void gatherLights(GatherLightsEvent arg0, Entity arg1) {
+	public void gatherLights(GatherLightsEvent event, Entity entity) {
 
 	}
 }
