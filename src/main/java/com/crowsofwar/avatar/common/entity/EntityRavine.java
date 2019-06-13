@@ -204,6 +204,7 @@ public class EntityRavine extends AvatarEntity {
 		if (!(entity instanceof EntityItem && entity.ticksExisted <= 10) && canDamageEntity(entity)) {
 
 			Vector push = velocity().withY(1).times(STATS_CONFIG.ravineSettings.push);
+			push = push.times(0.4);
 			entity.addVelocity(push.x(), push.y(), push.z());
 			AvatarUtils.afterVelocityAdded(entity);
 

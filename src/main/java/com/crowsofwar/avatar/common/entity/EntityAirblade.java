@@ -147,6 +147,7 @@ public class EntityAirblade extends AvatarEntity {
 	private void handleCollision(Entity collided) {
 		Vector motion = velocity();
 		motion = motion.times(STATS_CONFIG.airbladeSettings.push).withY(0.08);
+		motion = motion.times(0.5);
 		collided.addVelocity(motion.x(), motion.y(), motion.z());
 
 		if (canDamageEntity(collided) && getOwner() != null) {

@@ -35,6 +35,9 @@ public class SlipstreamAirWalkHandler extends TickHandler {
 			if (hasChi || isCreative) {
 				Vec3d targetVel = entity.getLookVec().add(new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
 				Vec3d currentVel = new Vec3d(entity.motionX, entity.motionY, entity.motionZ);
+				if (entity.motionY > 0) {
+					entity.motionY -= 0.1;
+				}
 				entity.setNoGravity((targetVel.y <= 0 || currentVel.y <= 0) && entity.motionY <= 0);
 				if (entity.getActivePotionEffect(MobEffects.INVISIBILITY) == null)
 					p.spawnParticles(world, EnumParticleTypes.EXPLOSION_NORMAL, 1, 2, entity.posX, entity.getEntityBoundingBox().minY - 0.05, entity.posZ,

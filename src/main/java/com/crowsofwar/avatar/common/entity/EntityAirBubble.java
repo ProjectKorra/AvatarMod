@@ -194,7 +194,6 @@ public class EntityAirBubble extends EntityShield {
 		Bender ownerBender = Bender.get(getOwner());
 		if (ownerBender != null) {
 			if (!world.isRemote && !ownerBender.consumeChi(STATS_CONFIG.chiAirBubbleOneSecond / 20f)) {
-
 				dissipateSmall();
 
 			}
@@ -212,16 +211,18 @@ public class EntityAirBubble extends EntityShield {
 					attribute.applyModifier(SLOW_ATTR);
 				}
 
-				if (!ownerBender.isFlying() && chest.getItem() != Items.ELYTRA) {
+				if (!ownerBender.isFlying()) {
 
-					owner.motionY += 0.03;
+					if (owner.motionY < 0) {
+						owner.motionY += 0.05;
+					}
 
 					if (doesAllowHovering()) {
 
 						if (doesAllowHovering() && !owner.isSneaking()) {
 							handleHovering();
 						} else {
-							owner.motionY += 0.03;
+							owner.motionY += 0.05;
 						}
 					}
 
