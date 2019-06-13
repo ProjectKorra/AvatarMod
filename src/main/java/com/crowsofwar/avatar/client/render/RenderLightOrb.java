@@ -32,37 +32,37 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
     }
 
     @Override
-    public void doRender(EntityLightOrb ent, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void doRender(EntityLightOrb entity, double x, double y, double z, float entityYaw, float partialTicks) {
 
-        model = ent.isSphere() ? sphereModel : cubeModel;
+        model = entity.isSphere() ? sphereModel : cubeModel;
 
-        Minecraft mc = Minecraft.getMinecraft();
-        Tessellator tess = Tessellator.getInstance();
-        BufferBuilder buffer = tess.getBuffer();
+        Minecraft minecraft = Minecraft.getMinecraft();
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
         CCRenderState ccrs = CCRenderState.instance();
         TextureUtils.changeTexture(halo);
 
-        GlStateManager.color(ent.getColorR(), ent.getColorG(), ent.getColorB(), ent.getColorA());
+        GlStateManager.color(entity.getColorR(), entity.getColorG(), entity.getColorB(), entity.getColorA());
 
-        double scale = ent.getOrbSize();
+        double scale = entity.getOrbSize();
 
         double halocoord = 0.58 * scale;
 
-        double dx = ent.posX - renderManager.viewerPosX;
-        double dy = ent.posY - renderManager.viewerPosY;
-        double dz = ent.posZ - renderManager.viewerPosZ;
+        double dx = entity.posX - renderManager.viewerPosX;
+        double dy = entity.posY - renderManager.viewerPosY;
+        double dz = entity.posZ - renderManager.viewerPosZ;
 
         double xzlen = Math.sqrt(dx * dx + dz * dz);
         double len = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-        double yang = ent.isSphere() ? Math.atan2(xzlen, dy) * MathHelper.todeg : ent.rotationYaw;
-        double xang = ent.isSphere() ? Math.atan2(dx, dz) * MathHelper.todeg : ent.rotationPitch;
+        double yang = entity.isSphere() ? Math.atan2(xzlen, dy) * MathHelper.todeg : entity.rotationYaw;
+        double xang = entity.isSphere() ? Math.atan2(dx, dz) * MathHelper.todeg : entity.rotationPitch;
 
-        if (len > 16 || !ent.isSphere())
+        if (len > 16 || !entity.isSphere())
             halocoord = 0;
 
         GlStateManager.disableLighting();
-        mc.entityRenderer.disableLightmap();
+        minecraft.entityRenderer.disableLightmap();
 
         GlStateManager.pushMatrix();
         {
@@ -84,7 +84,7 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
                 buffer.pos(-halocoord, 0.0, halocoord).tex(0.0, 1.0).endVertex();
                 buffer.pos(halocoord, 0.0, halocoord).tex(1.0, 1.0).endVertex();
                 buffer.pos(halocoord, 0.0, -halocoord).tex(1.0, 0.0).endVertex();
-                tess.draw();
+                tessellator.draw();
 
                 GlStateManager.depthMask(true);
                 GlStateManager.disableBlend();
@@ -97,7 +97,7 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
             GlStateManager.scale(scale, scale, scale);
 
             GlStateManager.disableCull();
-            ccrs.startDrawing(ent.isSphere() ? 0x07 : 0x05, DefaultVertexFormats.POSITION_TEX_NORMAL);
+            ccrs.startDrawing(entity.isSphere() ? 0x07 : 0x05, DefaultVertexFormats.POSITION_TEX_NORMAL);
             model.render(ccrs);
             ccrs.draw();
             GlStateManager.enableCull();
@@ -105,14 +105,14 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
         }
         GlStateManager.popMatrix();
 
-        mc.entityRenderer.enableLightmap();
+        minecraft.entityRenderer.enableLightmap();
         GlStateManager.enableLighting();
 
         GlStateManager.color(1, 1, 1, 1);
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityLightOrb ent) {
+    protected ResourceLocation getEntityTexture(EntityLightOrb entity) {
         return fill;
     }
 }

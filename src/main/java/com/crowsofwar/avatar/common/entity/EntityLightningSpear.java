@@ -432,7 +432,7 @@ public class EntityLightningSpear extends AvatarEntity implements ILightProvider
 
 	@Override
 	@Optional.Method(modid = "albedo")
-	public void gatherLights(GatherLightsEvent arg0, Entity arg1) {
+	public void gatherLights(GatherLightsEvent event, Entity entity) {
 		
 	}
 }

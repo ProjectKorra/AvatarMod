@@ -106,14 +106,14 @@ minecraft {
 
 	runDir = "run"
 
+	minecraft.coreMod = "elucent.albedo.asm.FMLPlugin"
+
 	replaceIn "src/main/java/com/crowsofwar/avatar/AvatarInfo.java"
 	replace "@version@", config.version
 	replace "@modid@", config.modid
 	replace "@mcversion@", project.minecraft.version
 	replace "@name@", config.name
 }
-
-minecraft.coreMod = "elucent.albedo.asm.FMLPlugin"
 
 jar {
 	manifest {
