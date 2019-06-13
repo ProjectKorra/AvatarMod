@@ -17,36 +17,49 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.PowerRatingModifier;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.*;
-import net.minecraft.world.*;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.*;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.particle.*;
-import com.crowsofwar.gorecore.util.Vector;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.*;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.AIR_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.SMASH_GROUND;
 
 /**
  * @author CrowsOfWar
  */
 public class StatCtrlAirJump extends StatusControl {
+
+	private Map<String, Integer> timesJumped = new HashMap<String, Integer>();
 
 	public StatCtrlAirJump() {
 		super(0, AvatarControl.CONTROL_JUMP, CrosshairPosition.BELOW_CROSSHAIR);
@@ -60,9 +73,15 @@ public class StatCtrlAirJump extends StatusControl {
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
 
-		AbilityData abilityData = data.getAbilityData("air_jump");
-		boolean allowDoubleJump = abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.FIRST;
+		String uuid = Objects.requireNonNull(bender.getInfo().getId()).toString();
 
+		if (!timesJumped.containsKey(uuid)) timesJumped.put(uuid, 0);
+
+		AbilityData abilityData = data.getAbilityData("air_jump");
+		boolean allowDoubleJump = abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.FIRST && timesJumped.get(uuid) < 2;
+
+
+		int jumps = timesJumped.get(uuid);
 		// Figure out whether entity is on ground by finding collisions with
 		// ground - if found a collision box, then is not on ground
 		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.4, 1, 0.4));
@@ -103,7 +122,7 @@ public class StatCtrlAirJump extends StatusControl {
 			if (world instanceof WorldServer) {
 				WorldServer World = (WorldServer) world;
 				World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.getEntityBoundingBox().minY + 0.1, entity.posZ,
-									numberOfParticles, 0, 0, 0, particleSpeed);
+						numberOfParticles, 0, 0, 0, particleSpeed);
 			}
 
 			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1), Math.toRadians(entity.rotationYaw), 0);
@@ -162,9 +181,9 @@ public class StatCtrlAirJump extends StatusControl {
 			EntityShockwave wave = new EntityShockwave(world);
 			wave.setDamage(0);
 			wave.setFireTime(0);
-			wave.setRange(lvl > 0 ? 2.25F + lvl / 4F: 2.25F);
-			wave.setSpeed(lvl > 0 ? 0.5F + lvl / 30F: 0.5f);
-			wave.setKnockbackHeight(lvl > 0 ? 0.0125F + lvl /  80F : 0.0125F);
+			wave.setRange(lvl > 0 ? 2.25F + lvl / 4F : 2.25F);
+			wave.setSpeed(lvl > 0 ? 0.5F + lvl / 30F : 0.5f);
+			wave.setKnockbackHeight(lvl > 0 ? 0.0125F + lvl / 80F : 0.0125F);
 			wave.setParticleName(EnumParticleTypes.EXPLOSION_NORMAL.getParticleName());
 			wave.setPerformanceAmount(10);
 			wave.setKnockbackMult(new Vec3d(0.5, 0.2, 0.5));
@@ -178,7 +197,11 @@ public class StatCtrlAirJump extends StatusControl {
 			wave.setKnockbackMult(new Vec3d(xVel, yVel, zVel));
 			world.spawnEntity(wave);
 
-
+			jumps++;
+			timesJumped.replace(uuid, jumps);
+			//If you return when it's greater than 1, it resets, and you can double jump infinitely.
+			boolean isDone = jumps > 2;
+			if (isDone) timesJumped.replace(uuid, 0);
 			return true;
 
 		}
