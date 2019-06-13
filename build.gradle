@@ -106,7 +106,7 @@ minecraft {
 
 	runDir = "run"
 
-	minecraft.coreMod = "elucent.albedo.asm.FMLPlugin"
+	coreMod = "elucent.albedo.asm.FMLPlugin"
 
 	replaceIn "src/main/java/com/crowsofwar/avatar/AvatarInfo.java"
 	replace "@version@", config.version

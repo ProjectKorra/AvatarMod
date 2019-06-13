@@ -49,11 +49,11 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 		}
 
 		@Override
-		public void fromBytes(PacketBuffer buf) {
+		public void fromBytes(PacketBuffer buffer) {
 		}
 
 		@Override
-		public void toBytes(PacketBuffer buf) {
+		public void toBytes(PacketBuffer buffer) {
 		}
 
 		@Override
