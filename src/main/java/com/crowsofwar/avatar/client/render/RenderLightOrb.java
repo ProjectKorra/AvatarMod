@@ -16,14 +16,18 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * @author Aang23
+ */
 public class RenderLightOrb extends Render<EntityLightOrb> {
 
-    private ResourceLocation fill = new ResourceLocation("avatarmod", "textures/entity/sphere.png");
-    private ResourceLocation halo = new ResourceLocation("avatarmod", "textures/entity/spherehalo.png");
+    private static ResourceLocation fill_def = new ResourceLocation("avatarmod", "textures/entity/sphere.png");
+    private static ResourceLocation halo = new ResourceLocation("avatarmod", "textures/entity/spherehalo.png");
+    private ResourceLocation fill;
 
     private CCModel model;
 
-    private CCModel cubeModel, sphereModel;
+    private static CCModel cubeModel, sphereModel;
 
     public RenderLightOrb(RenderManager manager) {
         super(manager);
@@ -35,6 +39,7 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
     public void doRender(EntityLightOrb entity, double x, double y, double z, float entityYaw, float partialTicks) {
 
         model = entity.isSphere() ? sphereModel : cubeModel;
+        fill = entity.shouldUseCustomTexture() ? new ResourceLocation(entity.getTexture()) : fill_def;
 
         Minecraft minecraft = Minecraft.getMinecraft();
         Tessellator tessellator = Tessellator.getInstance();
@@ -42,7 +47,11 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
         CCRenderState ccrenderstate = CCRenderState.instance();
         TextureUtils.changeTexture(halo);
 
-        GlStateManager.color(entity.getColorR(), entity.getColorG(), entity.getColorB(), entity.getColorA());
+        if (entity.shouldUseCustomTexture()) {
+            GlStateManager.color(1F, 1F, 1F, entity.getColorA());
+        } else {
+            GlStateManager.color(entity.getColorR(), entity.getColorG(), entity.getColorB(), entity.getColorA());
+        }
 
         double scale = entity.getOrbSize();
 
@@ -55,11 +64,10 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
         double lenghtXZ = Math.sqrt(dx * dx + dz * dz);
         double lenght = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-        double angleY = entity.isSphere() ? Math.atan2(lenghtXZ, dy) * MathHelper.todeg : entity.rotationYaw;
-        double angleX = entity.isSphere() ? Math.atan2(dx, dz) * MathHelper.todeg : entity.rotationPitch;
+        double angleY = entity.isColorSphere() ? Math.atan2(lenghtXZ, dy) * MathHelper.todeg : entity.rotationYaw;
+        double angleX = entity.isColorSphere() ? Math.atan2(dx, dz) * MathHelper.todeg : entity.rotationPitch;
 
-        if (lenght > 16 || !entity.isSphere())
-            haloCoord = 0;
+        if (lenght > 16 || !entity.isColorSphere()) haloCoord = 0;
 
         GlStateManager.disableLighting();
         minecraft.entityRenderer.disableLightmap();
@@ -97,9 +105,19 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
             GlStateManager.scale(scale, scale, scale);
 
             GlStateManager.disableCull();
+            if (!entity.shouldUseCustomTexture()) GlStateManager.color(entity.getColorR(), entity.getColorG(), entity.getColorB(), entity.getColorA());
             ccrenderstate.startDrawing(entity.isSphere() ? 0x07 : 0x05, DefaultVertexFormats.POSITION_TEX_NORMAL);
             model.render(ccrenderstate);
             ccrenderstate.draw();
+
+            if (entity.isTextureSphere()) {
+                GlStateManager.rotate(180, 1, 1, 0);
+                if (!entity.shouldUseCustomTexture()) GlStateManager.color(entity.getColorR(), entity.getColorG(), entity.getColorB(), entity.getColorA());
+                ccrenderstate.startDrawing(entity.isSphere() ? 0x07 : 0x05, DefaultVertexFormats.POSITION_TEX_NORMAL);
+                model.render(ccrenderstate);
+                ccrenderstate.draw();
+            }
+
             GlStateManager.enableCull();
 
         }

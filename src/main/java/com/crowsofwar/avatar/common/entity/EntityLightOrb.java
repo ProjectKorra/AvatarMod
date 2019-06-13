@@ -1,21 +1,16 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
-import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
 
 import elucent.albedo.event.GatherLightsEvent;
 import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityTracker;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -28,12 +23,14 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 
     private static final DataParameter<LightOrbBehavior> SYNC_BEHAVIOR = EntityDataManager
             .createKey(EntityLightOrb.class, LightOrbBehavior.DATA_SERIALIZER);
+    private static final DataParameter<String> SYNC_TEXTURE = EntityDataManager.createKey(EntityLightOrb.class,
+            DataSerializers.STRING);
+    private static final DataParameter<Integer> SYNC_TYPE = EntityDataManager.createKey(EntityLightOrb.class,
+            DataSerializers.VARINT);
     private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityLightOrb.class,
             DataSerializers.FLOAT);
     private static final DataParameter<Integer> SYNC_RADIUS = EntityDataManager.createKey(EntityLightOrb.class,
             DataSerializers.VARINT);
-    private static final DataParameter<Boolean> SYNC_IS_SPHERE = EntityDataManager.createKey(EntityLightOrb.class,
-            DataSerializers.BOOLEAN);
     private static final DataParameter<Float> SYNC_COLOR_R = EntityDataManager.createKey(EntityLightOrb.class,
             DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_COLOR_G = EntityDataManager.createKey(EntityLightOrb.class,
@@ -52,9 +49,10 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
     protected void entityInit() {
         super.entityInit();
         dataManager.register(SYNC_BEHAVIOR, new LightOrbBehavior.Idle());
+        dataManager.register(SYNC_TEXTURE, "avatarmod:textures/entity/sphere.png");
+        dataManager.register(SYNC_TYPE, EnumType.COLOR_SPHERE.ordinal());
         dataManager.register(SYNC_SIZE, 2F);
         dataManager.register(SYNC_RADIUS, 20);
-        dataManager.register(SYNC_IS_SPHERE, true);
         dataManager.register(SYNC_COLOR_R, 1F);
         dataManager.register(SYNC_COLOR_G, 1F);
         dataManager.register(SYNC_COLOR_B, 1F);
@@ -69,12 +67,20 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
         dataManager.set(SYNC_BEHAVIOR, behavior);
     }
 
-    public boolean isSphere() {
-        return dataManager.get(SYNC_IS_SPHERE);
+    public String getTexture() {
+        return dataManager.get(SYNC_TEXTURE);
     }
 
-    public void setIsSphere(boolean value) {
-        dataManager.set(SYNC_IS_SPHERE, value);
+    public void setTexture(String texture) {
+        dataManager.set(SYNC_TEXTURE, texture);
+    }
+
+    public EnumType getType() {
+        return EnumType.values()[dataManager.get(SYNC_TYPE)];
+    }
+
+    public void setType(EnumType type) {
+        dataManager.set(SYNC_TYPE, type.ordinal());
     }
 
     /**
@@ -145,9 +151,10 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
     @Override
     protected void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
+        setTexture(nbt.getString("OrbTexture"));
+        setType(EnumType.values()[nbt.getInteger("OrbType")]);
         setOrbSize(nbt.getFloat("OrbSize"));
         setLightRadius(nbt.getInteger("OrbRadius"));
-        setIsSphere(nbt.getBoolean("OrbSphere"));
         setColorR(nbt.getFloat("OrbColorR"));
         setColorG(nbt.getFloat("OrbColorG"));
         setColorB(nbt.getFloat("OrbColorB"));
@@ -157,9 +164,10 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
     @Override
     protected void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
+        nbt.setString("OrbTexture", getTexture());
+        nbt.setInteger("OrbType", getType().ordinal());
         nbt.setFloat("OrbSize", getOrbSize());
         nbt.setInteger("OrbRadius", getLightRadius());
-        nbt.setBoolean("OrbSphere", isSphere());
         nbt.setFloat("OrbColorR", getColorR());
         nbt.setFloat("OrbColorG", getColorG());
         nbt.setFloat("OrbColorB", getColorB());
@@ -196,5 +204,25 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 
     public void setColorA(float value) {
         dataManager.set(SYNC_COLOR_A, value);
+    }
+
+    public boolean shouldUseCustomTexture() {
+        return getType() == EnumType.TEXTURE_CUBE || getType() == EnumType.TEXTURE_SPHERE;
+    }
+
+    public boolean isColorSphere() {
+        return getType() == EnumType.COLOR_SPHERE;
+    }
+
+    public boolean isTextureSphere() {
+        return getType() == EnumType.TEXTURE_SPHERE;
+    }
+
+    public boolean isSphere() {
+        return isTextureSphere() || isColorSphere();
+    }
+
+    public enum EnumType {
+        COLOR_SPHERE, COLOR_CUBE, TEXTURE_SPHERE, TEXTURE_CUBE
     }
 }
