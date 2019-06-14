@@ -209,24 +209,21 @@ public class EntityAirBubble extends EntityShield {
 				dissipateSmall();
 			}
 
-			if (!isDissipating()) {
+			AvatarEntity a = AvatarEntity.lookupControlledEntity(world, EntityIceShield.class, owner);
+			if (!isDissipating() && a == null) {
 				IAttributeInstance attribute = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 				if (attribute.getModifier(SLOW_ATTR_ID) == null) {
 					attribute.applyModifier(SLOW_ATTR);
 				}
 
-				if (!ownerBender.isFlying()) {
-
-					if (owner.motionY < 0) {
-						owner.motionY += 0.05;
-					}
+				if (!ownerBender.isFlying() && !getOwner().hasNoGravity()) {
+						owner.motionY += 0.03;
 
 					if (doesAllowHovering()) {
-
 						if (doesAllowHovering() && !owner.isSneaking()) {
 							handleHovering();
-						} else {
-							owner.motionY += 0.05;
+						} else if (!owner.isSneaking()){
+							owner.motionY += 0.03;
 						}
 					}
 

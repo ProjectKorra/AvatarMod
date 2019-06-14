@@ -27,16 +27,17 @@ public class RenderShockwave extends Render<EntityShockwave> {
 			particle = AvatarParticles.getParticleFromName(entity.getParticleName());
 		}
 		if (entity.ticksExisted <= 2) {
-			for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.getRange() * 15 / entity.getParticleAmount())) {
-				double x2 = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
-				double y2 = entity.posY + 0.5;
-				double z2 = entity.posZ + (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle);
-				Vector speed = new Vector((entity.ticksExisted * entity.getSpeed()) * Math.sin(angle) * (entity.getParticleSpeed() * 10),
-						entity.getParticleSpeed() / 2, (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle) * (entity.getParticleSpeed() * 10));
-				assert particle != null;
-				entity.world.spawnParticle(particle, x2, y2, z2, speed.x(), speed.y(), speed.z());
+			if (!entity.getSphere()) {
+				for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.getRange() * 15 / entity.getParticleAmount())) {
+					double x2 = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
+					double y2 = entity.posY + 0.5;
+					double z2 = entity.posZ + (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle);
+					Vector speed = new Vector((entity.ticksExisted * entity.getSpeed()) * Math.sin(angle) * (entity.getParticleSpeed() * 10),
+							entity.getParticleSpeed() / 2, (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle) * (entity.getParticleSpeed() * 10));
+					assert particle != null;
+					entity.world.spawnParticle(particle, x2, y2, z2, speed.x(), speed.y(), speed.z());
+				}
 			}
-
 			if (entity.getSphere()) {
 				double x1, y1, z1, xVel, yVel, zVel;
 				for (double theta = 0; theta <= 180; theta += 1) {
