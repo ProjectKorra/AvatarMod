@@ -29,6 +29,8 @@ import com.crowsofwar.gorecore.tree.TreeCommand;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.Arrays;
 import java.util.List;
@@ -91,7 +93,13 @@ public class AvatarCommand extends TreeCommand {
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] arguments) throws CommandException {
-		super.execute(server, sender, arguments);
-		AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onAvatarCommand());
+		if(sender.canUseCommand(2, "avatarmod.command.avatar")) {
+			super.execute(server, sender, arguments);
+			AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onAvatarCommand());
+		} else {
+			TextComponentTranslation messagePermission = new TextComponentTranslation("commands.generic.permission", new Object[0]);
+      messagePermission.getStyle().setColor(TextFormatting.RED);
+      sender.sendMessage(messagePermission);
+		}
 	}
 }
