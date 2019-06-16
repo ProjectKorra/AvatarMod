@@ -216,12 +216,8 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 					data.getAbilityData("pickup_block").addXp(xp);
 				}
 
-				// Remove the floating block & spawn particles
-				entity.onCollideWithSolid();
-
 				// boomerang upgrade handling
 				if (!entity.world.isRemote) {
-
 					if (data.getAbilityData("pickup_block")
 							.isMasterPath(AbilityTreePath.FIRST)) {
 
@@ -229,11 +225,13 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 						if (bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
 							data.addStatusControl(StatusControl.THROW_BLOCK);
 							data.addStatusControl(StatusControl.PLACE_BLOCK);
-
-							// the entity was already setDead from onCollideWithSolid, we need to mark it alive again
 							entity.isDead = false;
 
 							return new FloatingBlockBehavior.PlayerControlled();
+						}
+						else {
+							// Remove the floating block & spawn particles
+							entity.onCollideWithSolid();
 						}
 
 					}
