@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -59,12 +60,15 @@ public class EntityAirblade extends AvatarEntity {
 	 */
 	private float chopBlocksThreshold;
 	private boolean pierceArmor;
+	//Used for killing the airblade when in a block
+	private int ticks;
 
 	public EntityAirblade(World world) {
 		super(world);
 		setSize(0.2f, 1.5f);
 		this.chopBlocksThreshold = -1;
 		this.noClip = true;
+		this.ticks = 0;
 	}
 
 	public float getSizeMult() {
@@ -125,6 +129,14 @@ public class EntityAirblade extends AvatarEntity {
 
 		if (!world.isRemote && chopBlocksThreshold >= 0) {
 			breakCollidingBlocks();
+		}
+
+		IBlockState state = world.getBlockState(getPosition());
+		if (state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()) {
+			ticks++;
+		}
+		if (ticks >= 2) {
+			this.setDead();
 		}
 
 		if (!isDead && !world.isRemote) {

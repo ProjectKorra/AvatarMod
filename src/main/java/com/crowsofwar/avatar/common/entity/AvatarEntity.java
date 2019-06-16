@@ -288,25 +288,57 @@ public abstract class AvatarEntity extends Entity {
 			}
 		}
 
+		for (int x = 0; x <= 1; x++) {
+			for (int z = 0; z <= 1; z++) {
+				for (int y = 0; y <= 1; y++) {
+					BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+					if (pushButton(pushStoneButton)) {
+						AvatarUtils.pushButton(world, pushStoneButton, pos);
+					}
+					if (pushLever()) {
+						AvatarUtils.pushLever(world, pos);
+					}
 
-		if (pushButton(pushStoneButton)) {
-			AvatarUtils.pushButton(this, pushStoneButton);
+					if (pushTrapdoor(pushTrapDoor)) {
+						AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos);
+					}
+
+					if (pushDoor(pushDoor)) {
+						AvatarUtils.pushDoor(this, pushDoor, pos);
+					}
+
+					if (pushGate()) {
+						AvatarUtils.pushGate(this, pos);
+					}
+				}
+			}
 		}
-		if (pushLever()) {
-			AvatarUtils.pushLever(this);
+		for (int x = 0; x >= -1; x--) {
+			for (int z = 0; z >= -1; z--) {
+				for (int y = 0; y >= -1; y--) {
+					BlockPos pos = new BlockPos(posX + x * width, posY - y * height, posZ + z * width);
+					if (pushButton(pushStoneButton)) {
+						AvatarUtils.pushButton(world, pushStoneButton, pos);
+					}
+					if (pushLever()) {
+						AvatarUtils.pushLever(world, pos);
+					}
+
+					if (pushTrapdoor(pushTrapDoor)) {
+						AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos);
+					}
+
+					if (pushDoor(pushDoor)) {
+						AvatarUtils.pushDoor(this, pushDoor, pos);
+					}
+
+					if (pushGate()) {
+						AvatarUtils.pushGate(this, pos);
+					}
+				}
+			}
 		}
 
-		if (pushTrapdoor(pushTrapDoor)) {
-			AvatarUtils.pushTrapDoor(this, pushTrapDoor);
-		}
-
-		if (pushDoor(pushDoor)) {
-			AvatarUtils.pushDoor(this, pushDoor);
-		}
-
-		if (pushGate()) {
-			AvatarUtils.pushGate(this);
-		}
 		if (getOwner() == null) {
 			this.setDead();
 		}

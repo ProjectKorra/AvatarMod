@@ -122,7 +122,7 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		if (state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()) {
 			ticks++;
 		}
-		if (ticks >= 3) {
+		if (ticks >= 2) {
 			this.setDead();
 		}
 		float expansionRate = 1f / 80;

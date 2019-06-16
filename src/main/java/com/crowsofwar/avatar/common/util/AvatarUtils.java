@@ -85,50 +85,51 @@ public class AvatarUtils {
 		creeper.ignite();
 	}
 
-	public static void pushButton(Entity entity, boolean pushStone) {
-		IBlockState state = entity.world.getBlockState(entity.getPosition());
+	//Methods for pushing stuff.
+	public static void pushButton(World world, boolean pushStone, BlockPos pos) {
+		IBlockState state = world.getBlockState(pos);
 		if (pushStone) {
 			if (state.getBlock() instanceof BlockButton) {
 				BlockButton button = (BlockButton) state.getBlock();
-				button.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
-						(float) entity.posY, (float) entity.posZ);
+				button.onBlockActivated(world, pos, state, null, null, null, (float) pos.getX(),
+						(float) pos.getY(), (float) pos.getZ());
 			}
 		} else if (state.getBlock() == Blocks.WOODEN_BUTTON) {
 			BlockButton button = (BlockButton) state.getBlock();
-			button.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
-					(float) entity.posY, (float) entity.posZ);
+			button.onBlockActivated(world, pos, state, null, null, null, (float) pos.getX(),
+					(float) pos.getY(), (float) pos.getZ());
 		}
 	}
 
-	public static void pushLever(Entity entity) {
-		IBlockState state = entity.world.getBlockState(entity.getPosition());
+	public static void pushLever(World world, BlockPos pos) {
+		IBlockState state = world.getBlockState(pos);
 		if (state.getBlock() == Blocks.LEVER) {
 			BlockLever lever = (BlockLever) state.getBlock();
-			lever.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
-					(float) entity.posY, (float) entity.posZ);
+			lever.onBlockActivated(world, pos, state, null, null, null, (float) pos.getX(),
+					(float) pos.getY(), (float) pos.getZ());
 		}
 	}
 
-	public static void pushTrapDoor(Entity entity, boolean pushIron) {
-		IBlockState state = entity.world.getBlockState(entity.getPosition());
+	public static void pushTrapDoor(World world, boolean pushIron, BlockPos pos) {
+		IBlockState state = world.getBlockState(pos);
 		if (state.getBlock() == Blocks.TRAPDOOR) {
 			BlockTrapDoor trap = (BlockTrapDoor) state.getBlock();
-			trap.onBlockActivated(entity.world, entity.getPosition(), state, null, null, null, (float) entity.posX,
-					(float) entity.posY, (float) entity.posZ);
+			trap.onBlockActivated(world, pos, state, null, null, null, (float) pos.getX(),
+					(float) pos.getY(), (float) pos.getZ());
 		}
 		if (pushIron) {
 			if (state.getBlock() == Blocks.TRAPDOOR || state.getBlock() == Blocks.IRON_TRAPDOOR) {
 				BlockTrapDoor trap = (BlockTrapDoor) state.getBlock();
 				state = state.cycleProperty(BlockTrapDoor.OPEN);
-				entity.world.setBlockState(entity.getPosition(), state, 2);
-				entity.world.markBlockRangeForRenderUpdate(entity.getPosition(), entity.getPosition());
-				entity.world.scheduleUpdate(entity.getPosition(), trap, trap.tickRate(entity.world));
+				world.setBlockState(pos, state, 2);
+				world.markBlockRangeForRenderUpdate(pos, pos.add(0, 1, 0));
+				world.scheduleUpdate(pos, trap, trap.tickRate(world));
 			}
 		}
 	}
 
-	public static void pushDoor(Entity entity, boolean pushIron) {
-		IBlockState state = entity.world.getBlockState(entity.getPosition());
+	public static void pushDoor(Entity entity, boolean pushIron, BlockPos pos) {
+		IBlockState state = entity.world.getBlockState(pos);
 		EntityPlayer player = null;
 		if (entity instanceof AvatarEntity) {
 			if (((AvatarEntity) entity).getOwner() != null && ((AvatarEntity) entity).getOwner() instanceof EntityPlayer) {
@@ -137,26 +138,26 @@ public class AvatarUtils {
 		}
 		if (state.getBlock() instanceof BlockDoor && state.getBlock() != Blocks.IRON_DOOR) {
 			BlockDoor door = (BlockDoor) state.getBlock();
-			door.onBlockActivated(entity.world, entity.getPosition(), state, player, null, null, (float) entity.posX,
-					(float) entity.posY, (float) entity.posZ);
+			door.onBlockActivated(entity.world, pos, state, player, null, null, (float) pos.getX(),
+					(float) pos.getY(), (float) pos.getZ());
 		}
 		if (pushIron) {
 			if (state.getBlock() instanceof BlockDoor) {
 				BlockDoor door = (BlockDoor) state.getBlock();
-				BlockPos blockpos = state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER ? entity.getPosition() : entity.getPosition().down();
-				IBlockState iblockstate = entity.getPosition().equals(blockpos) ? state : entity.world.getBlockState(blockpos);
+				BlockPos blockpos = state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER ? pos : pos.down();
+				IBlockState iblockstate = pos.equals(blockpos) ? state : entity.world.getBlockState(blockpos);
 				state = iblockstate.cycleProperty(BlockDoor.OPEN);
 				int open = door == Blocks.IRON_DOOR ? 1005 : 1006;
 				int closed = door == Blocks.IRON_DOOR ? 1011 : 1012;
 				entity.world.setBlockState(blockpos, state, 10);
-				entity.world.markBlockRangeForRenderUpdate(blockpos, entity.getPosition());
-				entity.world.playEvent(player, state.getValue(BlockDoor.OPEN) ? open : closed, entity.getPosition(), 0);
+				entity.world.markBlockRangeForRenderUpdate(blockpos, pos);
+				entity.world.playEvent(player, state.getValue(BlockDoor.OPEN) ? open : closed, pos, 0);
 			}
 		}
 	}
 
-	public static void pushGate(Entity entity) {
-		IBlockState state = entity.world.getBlockState(entity.getPosition());
+	public static void pushGate(Entity entity, BlockPos pos) {
+		IBlockState state = entity.world.getBlockState(pos);
 		EntityPlayer player = null;
 		if (state.getBlock() instanceof BlockFenceGate) {
 			if (entity instanceof AvatarEntity) {
@@ -166,12 +167,12 @@ public class AvatarUtils {
 			}
 			if (state.getValue(BlockFenceGate.OPEN)) {
 				state = state.withProperty(BlockFenceGate.OPEN, false);
-				entity.world.setBlockState(entity.getPosition(), state, 10);
+				entity.world.setBlockState(pos, state, 10);
 			} else {
 				state = state.withProperty(BlockFenceGate.OPEN, true);
-				entity.world.setBlockState(entity.getPosition(), state, 10);
+				entity.world.setBlockState(pos, state, 10);
 			}
-			entity.world.playEvent(player, (Boolean) state.getValue(BlockFenceGate.OPEN) ? 1008 : 1014, entity.getPosition(), 0);
+			entity.world.playEvent(player, (Boolean) state.getValue(BlockFenceGate.OPEN) ? 1008 : 1014, pos, 0);
 		}
 	}
 
