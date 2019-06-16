@@ -108,7 +108,7 @@ avatar.ability.earth_wall=Mur
 avatar.ability.earth_wall.desc=Elevez une barrière protective en face de vous. Il peut bloquer les projectiles et mobs.
 avatar.ability.earth_wall.lvl1=Invoquez un petit mur
 avatar.ability.earth_wall.lvl2=Créez un plus large mur, et plus loin
-avatar.ability.earth_wall.lvl3=Lancez des parties du mur
+avatar.ability.earth_wall.lvl3=Créez un mur encore plus large et plus loin
 avatar.ability.earth_wall.lvl4_1=Créez un très gros mur et lancez des bouts de celui-ci
 avatar.ability.earth_wall.lvl4_2=Entourez-vous de murs, et repoussez vos ennemis avec 
 
