@@ -119,6 +119,8 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 									                  .withY(playerIn.getEyeHeight() + playerIn
 													                  .getEntityBoundingBox().minY));
 					blade.setAbility(new AbilityAirblade());
+					blade.rotationYaw = playerIn.rotationYaw;
+					blade.rotationPitch = playerIn.rotationPitch;
 					blade.setOwner(playerIn);
 					blade.setVelocity(Vector.getLookRectangular(playerIn).times(30));
 					blade.setDamage(2);
