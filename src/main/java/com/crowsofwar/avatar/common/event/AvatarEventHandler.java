@@ -4,18 +4,27 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public abstract class AvatarEventHandler {
+
 	@SubscribeEvent
-	public void onLivingHurtEvent(LivingHurtEvent event) {
+	public static void onLivingHurtEvent(LivingHurtEvent event) {
 		if (event.getSource() == DamageSource.LIGHTNING_BOLT || event.getSource() == AvatarDamageSource.LIGHTNING) {
 			if (event.getEntity() instanceof AvatarEntity) {
 				((AvatarEntity) event.getEntity()).onLightningContact();
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void abilityUnlockEvent(AbilityLevelEvent event) {
+		if (event.getOldLevel() == 0) {
+			MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(event.getEntityLiving(), event.getAbility()));
 		}
 	}
 }

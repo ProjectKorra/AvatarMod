@@ -1,24 +1,16 @@
 package com.crowsofwar.avatar.common.event;
 
-import com.crowsofwar.avatar.common.bending.Ability;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.event.entity.living.LivingEvent;
 
-import net.minecraft.entity.Entity;
-import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
+public class BendingEvent extends LivingEvent {
 
-/**
- * @author Aang23
- */
-@Cancelable
-public class BendingEvent extends EntityEvent {
-    private Ability ability;
+	public BendingEvent(EntityLivingBase entity) {
+		super(entity);
+	}
 
-    public BendingEvent(Entity entity, Ability ability) {
-        super(entity);
-        this.ability = ability;
-    }
-
-    public Ability getAbility() {
-        return ability;
-    }
+	@Override
+	public boolean isCancelable() {
+		return true;
+	}
 }

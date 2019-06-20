@@ -27,7 +27,7 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.EntityLightningArc;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
-import com.crowsofwar.avatar.common.event.BendingEvent;
+import com.crowsofwar.avatar.common.event.AbilityUseEvent;
 import com.crowsofwar.avatar.common.network.packets.PacketCPowerRating;
 import com.crowsofwar.avatar.common.powerrating.PrModifierHandler;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -192,7 +192,7 @@ public abstract class Bender {
 	 * Same as regular {@link #executeAbility(Ability)}, but allows a provided raytrace, instead
 	 * of performing another on the fly.
 	 *
-	 * @see #executeAbility(Ability)
+	 * @see #executeAbility(Ability, Raytrace.Result, boolean) (Ability)
 	 */
 	public void executeAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath) {
 		if (!getWorld().isRemote) {
@@ -200,7 +200,7 @@ public abstract class Bender {
 
 			BendingData data = getData();
 			EntityLivingBase entity = getEntity();
-			if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new BendingEvent(entity, ability))) {
+			if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability))) {
 				double powerRating = calcPowerRating(ability.getBendingId());
 
 				if (data.getMiscData().getAbilityCooldown() == 0) {

@@ -142,6 +142,15 @@ public abstract class BendingStyle implements ReadableWritable {
 		return parentBendingId != null;
 	}
 
+	//Returns a bending style based on a given UUID.
+	@Nullable
+	public BendingStyle getBending(String UUID) {
+		if (this.getId().toString().equals(UUID)) {
+			return this;
+		}
+		else return null;
+	}
+
 	/**
 	 * If this bending style is a specialty bending (e.g. lightningbending), then this points to the
 	 * ID of its main/"parent" bending style (e.g. firebending). If the bending style is already a

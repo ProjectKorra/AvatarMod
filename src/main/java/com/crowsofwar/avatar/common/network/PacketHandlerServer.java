@@ -34,6 +34,8 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.WallJumpManager;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.avatar.common.event.AbilityLevelEvent;
+import com.crowsofwar.avatar.common.event.ElementUnlockEvent;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
@@ -53,6 +55,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
@@ -271,17 +274,20 @@ public class PacketHandlerServer implements IPacketHandler {
 						// Try to use this scroll
 						ScrollType type = ScrollType.get(stack.getMetadata());
 						if (type.accepts(packet.getAbility().getBendingId())) {
+							if (!MinecraftForge.EVENT_BUS.post(new AbilityLevelEvent(player, abilityData.getAbility(), abilityData.getLevel() + 1,
+									abilityData.getLevel() + 2))) {
 
-							activeSlot.putStack(ItemStack.EMPTY);
-							abilityData.addLevel();
-							abilityData.setXp(0);
+								activeSlot.putStack(ItemStack.EMPTY);
+								abilityData.addLevel();
+								abilityData.setXp(0);
 
-							// Send analytics
-							String name = abilityData.getAbilityName();
-							String desc = abilityData.getLevelDesc();
-							AnalyticEvent e = AnalyticEvents.getAbilityUpgradeEvent(name, desc);
-							AvatarAnalytics.INSTANCE.pushEvent(e);
+								// Send analytics
+								String name = abilityData.getAbilityName();
+								String desc = abilityData.getLevelDesc();
+								AnalyticEvent e = AnalyticEvents.getAbilityUpgradeEvent(name, desc);
+								AvatarAnalytics.INSTANCE.pushEvent(e);
 
+							}
 						}
 
 					}
@@ -333,23 +339,24 @@ public class PacketHandlerServer implements IPacketHandler {
 
 			UUID bending = packet.getUnlockType();
 			if (eligible.contains(bending)) {
-
 				if (data.getAllBending().isEmpty()) {
-					data.addBendingId(bending);
+					if (!MinecraftForge.EVENT_BUS.post(new ElementUnlockEvent(player, BendingStyles.get(bending)))) {
+						data.addBendingId(bending);
 
-					// Unlock first ability
-					//noinspection ConstantConditions - can safely assume bending is present if
-					// the ID is in use to unlock it
-					Ability ability = BendingStyles.get(bending).getAllAbilities().get(0);
-					data.getAbilityData(ability).unlockAbility();
+						// Unlock first ability
+						//noinspection ConstantConditions - can safely assume bending is present if
+						// the ID is in use to unlock it
+						Ability ability = Objects.requireNonNull(BendingStyles.get(bending)).getAllAbilities().get(0);
+						data.getAbilityData(ability).unlockAbility();
 
-					for (int i = 0; i < ((ContainerGetBending) container).getSize(); i++) {
-						container.getSlot(i).putStack(ItemStack.EMPTY);
+						for (int i = 0; i < ((ContainerGetBending) container).getSize(); i++) {
+							container.getSlot(i).putStack(ItemStack.EMPTY);
+						}
+
+						int guiId = AvatarGuiHandler.getGuiId(bending);
+						player.openGui(AvatarMod.instance, guiId, player.world, 0, 0, 0);
+
 					}
-
-					int guiId = AvatarGuiHandler.getGuiId(bending);
-					player.openGui(AvatarMod.instance, guiId, player.world, 0, 0, 0);
-
 				}
 
 			}
