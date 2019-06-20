@@ -35,6 +35,7 @@ import com.crowsofwar.avatar.common.data.WallJumpManager;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.event.AbilityLevelEvent;
+import com.crowsofwar.avatar.common.event.AbilityUnlockEvent;
 import com.crowsofwar.avatar.common.event.ElementUnlockEvent;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.ContainerGetBending;
@@ -274,8 +275,8 @@ public class PacketHandlerServer implements IPacketHandler {
 						// Try to use this scroll
 						ScrollType type = ScrollType.get(stack.getMetadata());
 						if (type.accepts(packet.getAbility().getBendingId())) {
-							if (!MinecraftForge.EVENT_BUS.post(new AbilityLevelEvent(player, abilityData.getAbility(), abilityData.getLevel() + 1,
-									abilityData.getLevel() + 2))) {
+							if (abilityData.getLevel() < 0 && !MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(player, abilityData.getAbility()))
+									|| !MinecraftForge.EVENT_BUS.post(new AbilityLevelEvent(player, abilityData.getAbility(), abilityData.getLevel() + 1, abilityData.getLevel() + 2))) {
 
 								activeSlot.putStack(ItemStack.EMPTY);
 								abilityData.addLevel();
@@ -347,7 +348,8 @@ public class PacketHandlerServer implements IPacketHandler {
 						//noinspection ConstantConditions - can safely assume bending is present if
 						// the ID is in use to unlock it
 						Ability ability = Objects.requireNonNull(BendingStyles.get(bending)).getAllAbilities().get(0);
-						data.getAbilityData(ability).unlockAbility();
+						if (!MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(player, ability)))
+							data.getAbilityData(ability).unlockAbility();
 
 						for (int i = 0; i < ((ContainerGetBending) container).getSize(); i++) {
 							container.getSlot(i).putStack(ItemStack.EMPTY);

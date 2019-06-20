@@ -8,6 +8,8 @@ public class AbilityLevelEvent extends BendingEvent {
 	private int newLevel;
 	private int oldLevel;
 
+	//Creative/locked is 0. Level 1 is 1, Level 2 is 2, e.t.c
+
 	public AbilityLevelEvent(EntityLivingBase entity, Ability ability, int oldLevel, int newLevel) {
 		super(entity);
 		this.ability = ability;
