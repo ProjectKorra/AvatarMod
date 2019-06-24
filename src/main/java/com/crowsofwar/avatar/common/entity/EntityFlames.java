@@ -26,6 +26,10 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
+
+import elucent.albedo.event.GatherLightsEvent;
+import elucent.albedo.lighting.ILightProvider;
+import elucent.albedo.lighting.Light;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -35,6 +39,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +49,8 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 /**
  * @author CrowsOfWar
  */
-public class EntityFlames extends AvatarEntity {
+@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
+public class EntityFlames extends AvatarEntity implements ILightProvider {
 
 	/**
 	 * The owner, null client side
@@ -197,4 +203,15 @@ public class EntityFlames extends AvatarEntity {
 		return true;
 	}
 
+	@Override
+	@Optional.Method(modid = "albedo")
+	public Light provideLight() {
+		return Light.builder().pos(this).color(2F, 1F, 0F).radius(8).build();
+	}
+
+	@Override
+	@Optional.Method(modid = "albedo")
+	public void gatherLights(GatherLightsEvent event, Entity entity) {
+
+	}
 }

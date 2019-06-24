@@ -32,6 +32,10 @@ import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+
+import elucent.albedo.event.GatherLightsEvent;
+import elucent.albedo.lighting.ILightProvider;
+import elucent.albedo.lighting.Light;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -48,13 +52,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
+@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
+public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> implements ILightProvider {
 
 	private static final DataParameter<FireArcBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityFireArc.class, FireArcBehavior.DATA_SERIALIZER);
@@ -373,6 +379,18 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> {
 		public FireControlPoint(EntityArc arc, float size, double x, double y, double z) {
 			super(arc, size, x, y, z);
 		}
+
+	}
+
+	@Override
+	@Optional.Method(modid = "albedo")
+	public Light provideLight() {
+		return Light.builder().pos(this).color(2F, 1F, 0F).radius(8).build();
+	}
+
+	@Override
+	@Optional.Method(modid = "albedo")
+	public void gatherLights(GatherLightsEvent event, Entity entity) {
 
 	}
 }

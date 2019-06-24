@@ -32,6 +32,11 @@ import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+
+import elucent.albedo.event.GatherLightsEvent;
+import elucent.albedo.lighting.ILightProvider;
+import elucent.albedo.lighting.Light;
+import elucent.albedo.lighting.LightManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -44,6 +49,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 import java.util.Objects;
@@ -54,7 +60,8 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 /**
  * @author CrowsOfWar
  */
-public class EntityLightningSpear extends AvatarEntity {
+@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
+public class EntityLightningSpear extends AvatarEntity implements ILightProvider {
 
 	private static final DataParameter<LightningSpearBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityLightningSpear.class, LightningSpearBehavior.DATA_SERIALIZER);
@@ -405,5 +412,22 @@ public class EntityLightningSpear extends AvatarEntity {
 	@Override
 	public boolean isInRangeToRenderDist(double distance) {
 		return true;
+	}
+
+	@Override
+	public int getBrightnessForRender() {
+		return 15728880;
+	}
+
+	@Override
+	@Optional.Method(modid = "albedo")
+	public Light provideLight() {
+		return Light.builder().pos(this).color(1F, 3F, 3F).radius(15).build();
+	}
+
+	@Override
+	@Optional.Method(modid = "albedo")
+	public void gatherLights(GatherLightsEvent event, Entity entity) {
+		
 	}
 }

@@ -30,6 +30,10 @@ import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+
+import elucent.albedo.event.GatherLightsEvent;
+import elucent.albedo.lighting.ILightProvider;
+import elucent.albedo.lighting.Light;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -48,6 +52,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 import java.util.Objects;
@@ -59,7 +64,8 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 /**
  * @author CrowsOfWar
  */
-public class EntityFireball extends AvatarEntity {
+@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
+public class EntityFireball extends AvatarEntity implements ILightProvider {
 
 	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityFireball.class,
 			DataSerializers.VARINT);
@@ -121,7 +127,8 @@ public class EntityFireball extends AvatarEntity {
 			if (ball == null && bD.hasStatusControl(StatusControl.THROW_FIREBALL)) {
 				bD.removeStatusControl(StatusControl.THROW_FIREBALL);
 			}
-			if (ball != null && ball.getBehavior() instanceof FireballBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_FIREBALL))) {
+			if (ball != null && ball.getBehavior() instanceof FireballBehavior.PlayerControlled
+					&& !(bD.hasStatusControl(StatusControl.THROW_FIREBALL))) {
 				bD.addStatusControl(StatusControl.THROW_FIREBALL);
 			}
 			if (getBehavior() != null && getBehavior() instanceof FireballBehavior.PlayerControlled) {
@@ -130,7 +137,6 @@ public class EntityFireball extends AvatarEntity {
 
 		}
 	}
-
 
 	@Override
 	public boolean onMajorWaterContact() {
@@ -195,7 +201,6 @@ public class EntityFireball extends AvatarEntity {
 	@Override
 	public boolean onCollideWithSolid() {
 
-
 		if (getBehavior() instanceof FireballBehavior.Thrown) {
 			float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
 
@@ -205,8 +210,7 @@ public class EntityFireball extends AvatarEntity {
 
 			if (getOwner() != null && !world.isRemote) {
 				if (getAbility() instanceof AbilityFireball) {
-					AbilityData abilityData = BendingData.get(getOwner())
-							.getAbilityData("fireball");
+					AbilityData abilityData = BendingData.get(getOwner()).getAbilityData("fireball");
 					if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 						destroyObsidian = true;
 					}
@@ -224,7 +228,6 @@ public class EntityFireball extends AvatarEntity {
 					}
 				}
 			}
-
 
 			setDead();
 			removeStatCtrl();
@@ -259,7 +262,6 @@ public class EntityFireball extends AvatarEntity {
 		return 150;
 	}
 
-
 	public AxisAlignedBB getExpandedHitbox() {
 		return this.expandedHitbox;
 	}
@@ -274,7 +276,7 @@ public class EntityFireball extends AvatarEntity {
 	public boolean shouldRenderInPass(int pass) {
 		return true;
 	}
-	//Mostly fixes a glitch where the entity turns invisible
+	// Mostly fixes a glitch where the entity turns invisible
 
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
@@ -309,11 +311,14 @@ public class EntityFireball extends AvatarEntity {
 
 				this.setInvisible(true);
 				WorldServer World = (WorldServer) this.world;
-				World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, getSize() * 15, 0, 0, 0, getSize() / 200F);
+				World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, getSize() * 15, 0, 0, 0,
+						getSize() / 200F);
 				World.spawnParticle(EnumParticleTypes.LAVA, posX, posY, posZ, 50, 0, 0, 0, speed);
-				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(hitBox, hitBox, hitBox),
-						entity -> entity != getOwner());
+				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
+						SoundCategory.BLOCKS, 4.0F,
+						(1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
+				List<Entity> collided = world.getEntitiesInAABBexcluding(this,
+						getEntityBoundingBox().grow(hitBox, hitBox, hitBox), entity -> entity != getOwner());
 
 				if (!collided.isEmpty()) {
 					for (Entity entity : collided) {
@@ -323,13 +328,15 @@ public class EntityFireball extends AvatarEntity {
 								damageEntity(entity);
 
 								double mult = abilityData.getLevel() >= 2 ? -2 : -1;
-								double distanceTravelled = entity.getDistance(this.position.getX(), this.position.getY(), this.position.getZ());
+								double distanceTravelled = entity.getDistance(this.position.getX(),
+										this.position.getY(), this.position.getZ());
 
 								Vector vel = position().minus(getEntityPos(entity));
 								vel = vel.normalize().times(mult).plusY(0.15f);
 
 								entity.motionX = vel.x() + 0.1 / distanceTravelled;
-								entity.motionY = vel.y() > 0 ? vel.y() + 0.1 / distanceTravelled : 0.3F + 0.1 / distanceTravelled;
+								entity.motionY = vel.y() > 0 ? vel.y() + 0.1 / distanceTravelled
+										: 0.3F + 0.1 / distanceTravelled;
 								entity.motionZ = vel.z() + 0.1 / distanceTravelled;
 
 								if (entity instanceof AvatarEntity) {
@@ -379,5 +386,17 @@ public class EntityFireball extends AvatarEntity {
 	@Override
 	public boolean isInRangeToRenderDist(double distance) {
 		return true;
+	}
+
+	@Override
+	@Optional.Method(modid = "albedo")
+	public Light provideLight() {
+		return Light.builder().pos(this).color(2F, 1F, 0F).radius(10).build();
+	}
+
+	@Override
+	@Optional.Method(modid = "albedo")
+	public void gatherLights(GatherLightsEvent event, Entity entity) {
+
 	}
 }
