@@ -20,7 +20,12 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.event.AbilityLevelEvent;
+import com.crowsofwar.avatar.common.event.AbilityUnlockEvent;
 import com.crowsofwar.gorecore.tree.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.List;
 
@@ -60,6 +65,7 @@ public class NodeXpSet extends NodeFunctional {
 
 		BendingData data = BendingData.get(call.getFrom().getEntityWorld(), playerName);
 		AbilityData abilityData = data.getAbilityData(ability);
+		EntityPlayer player = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUsername(playerName);
 
 		int level;
 		AbilityTreePath path = AbilityTreePath.MAIN;
@@ -78,15 +84,19 @@ public class NodeXpSet extends NodeFunctional {
 			}
 
 		}
+		if (level < 0 && !MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(player, ability)) ||
+				!MinecraftForge.EVENT_BUS.post(new AbilityLevelEvent(player, ability, abilityData.getLevel() + 1, level + 1))) {
 
-		abilityData.setLevel(level);
-		abilityData.setXp(xp);
-		abilityData.setPath(path);
+			abilityData.setLevel(level);
+			abilityData.setXp(xp);
+			abilityData.setPath(path);
 
-		MSG_XPSET_SUCCESS.send(call.getFrom(), playerName, ability.getName(), specification);
+			MSG_XPSET_SUCCESS.send(call.getFrom(), playerName, ability.getName(), specification);
 
+		}
 		return null;
 
 	}
+
 
 }

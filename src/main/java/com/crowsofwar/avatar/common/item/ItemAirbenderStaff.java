@@ -10,6 +10,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
+import com.crowsofwar.avatar.common.event.StaffUseEvent;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -32,6 +33,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Random;
 
@@ -95,41 +97,45 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 			boolean isCreative = playerIn.isCreative();
 			BendingData data = BendingData.get(playerIn);
 			if (!data.hasTickHandler(STAFF_GUST_HANDLER) && !playerIn.world.isRemote) {
-				if (spawnGust) {
-					EntityAirGust gust = new EntityAirGust(playerIn.world);
-					gust.setPosition(Vector.getLookRectangular(playerIn)
-									                 .plus(Vector.getEntityPos(playerIn))
-									                 .withY(playerIn.getEyeHeight() +
-									                        playerIn.getEntityBoundingBox().minY));
-					gust.setAbility(new AbilityAirGust());
-					gust.setOwner(playerIn);
-					gust.setVelocity(Vector.getLookRectangular(playerIn).times(30));
-					playerIn.world.spawnEntity(gust);
-					if (!isCreative) {
-						data.addTickHandler(STAFF_GUST_HANDLER);
-						ItemStack stack = playerIn.getHeldItemOffhand();
-						stack.damageItem(2, playerIn);
+				if (!MinecraftForge.EVENT_BUS.post(new StaffUseEvent(playerIn, spawnGust))) {
+					if (spawnGust) {
+						EntityAirGust gust = new EntityAirGust(playerIn.world);
+						gust.setPosition(Vector.getLookRectangular(playerIn)
+								.plus(Vector.getEntityPos(playerIn))
+								.withY(playerIn.getEyeHeight() +
+										playerIn.getEntityBoundingBox().minY));
+						gust.setAbility(new AbilityAirGust());
+						gust.setOwner(playerIn);
+						gust.setVelocity(Vector.getLookRectangular(playerIn).times(30));
+						playerIn.world.spawnEntity(gust);
+						if (!isCreative) {
+							data.addTickHandler(STAFF_GUST_HANDLER);
+							ItemStack stack = playerIn.getHeldItemOffhand();
+							stack.damageItem(2, playerIn);
+						}
+						return new ActionResult<>(EnumActionResult.PASS,
+								playerIn.getHeldItem(handIn));
+					} else {
+						EntityAirblade blade = new EntityAirblade(playerIn.world);
+						blade.setPosition(Vector.getLookRectangular(playerIn)
+								.plus(Vector.getEntityPos(playerIn))
+								.withY(playerIn.getEyeHeight() + playerIn
+										.getEntityBoundingBox().minY));
+						blade.setAbility(new AbilityAirblade());
+						blade.rotationYaw = playerIn.rotationYaw;
+						blade.rotationPitch = playerIn.rotationPitch;
+						blade.setOwner(playerIn);
+						blade.setVelocity(Vector.getLookRectangular(playerIn).times(30));
+						blade.setDamage(2);
+						playerIn.world.spawnEntity(blade);
+						if (!isCreative) {
+							data.addTickHandler(STAFF_GUST_HANDLER);
+							ItemStack stack = playerIn.getHeldItemOffhand();
+							stack.damageItem(2, playerIn);
+						}
+						return new ActionResult<>(EnumActionResult.SUCCESS,
+								playerIn.getHeldItem(handIn));
 					}
-					return new ActionResult<>(EnumActionResult.PASS,
-					                          playerIn.getHeldItem(handIn));
-				} else {
-					EntityAirblade blade = new EntityAirblade(playerIn.world);
-					blade.setPosition(Vector.getLookRectangular(playerIn)
-									                  .plus(Vector.getEntityPos(playerIn))
-									                  .withY(playerIn.getEyeHeight() + playerIn
-													                  .getEntityBoundingBox().minY));
-					blade.setAbility(new AbilityAirblade());
-					blade.setOwner(playerIn);
-					blade.setVelocity(Vector.getLookRectangular(playerIn).times(30));
-					blade.setDamage(2);
-					playerIn.world.spawnEntity(blade);
-					if (!isCreative) {
-						data.addTickHandler(STAFF_GUST_HANDLER);
-						ItemStack stack = playerIn.getHeldItemOffhand();
-						stack.damageItem(2, playerIn);
-					}
-					return new ActionResult<>(EnumActionResult.SUCCESS,
-					                          playerIn.getHeldItem(handIn));
 				}
 			}
 			if (data.hasTickHandler(STAFF_GUST_HANDLER) && !worldIn.isRemote) {
@@ -147,39 +153,43 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 						.isCreative();
 		BendingData data = BendingData.get(entityLiving);
 		if (!data.hasTickHandler(STAFF_GUST_HANDLER) && !entityLiving.world.isRemote) {
-			if (spawnGust) {
-				EntityAirGust gust = new EntityAirGust(entityLiving.world);
-				gust.setPosition(Vector.getLookRectangular(entityLiving)
-								                 .plus(Vector.getEntityPos(entityLiving))
-								                 .withY(entityLiving.getEyeHeight() + entityLiving
-												                 .getEntityBoundingBox().minY));
-				gust.setAbility(new AbilityAirGust());
-				gust.setOwner(entityLiving);
-				gust.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
-				entityLiving.world.spawnEntity(gust);
-				if (!isCreative) {
-					data.addTickHandler(STAFF_GUST_HANDLER);
-					stack.damageItem(2, entityLiving);
+			if (!MinecraftForge.EVENT_BUS.post(new StaffUseEvent(entityLiving, spawnGust))) {
+				if (spawnGust) {
+					EntityAirGust gust = new EntityAirGust(entityLiving.world);
+					gust.setPosition(Vector.getLookRectangular(entityLiving)
+							.plus(Vector.getEntityPos(entityLiving))
+							.withY(entityLiving.getEyeHeight() + entityLiving
+									.getEntityBoundingBox().minY));
+					gust.setAbility(new AbilityAirGust());
+					gust.setOwner(entityLiving);
+					gust.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
+					entityLiving.world.spawnEntity(gust);
+					if (!isCreative) {
+						data.addTickHandler(STAFF_GUST_HANDLER);
+						stack.damageItem(2, entityLiving);
+					}
+					return true;
+				} else {
+					EntityAirblade blade = new EntityAirblade(entityLiving.world);
+					blade.setPosition(Vector.getLookRectangular(entityLiving)
+							.plus(Vector.getEntityPos(entityLiving))
+							.withY(entityLiving.getEyeHeight() + entityLiving
+									.getEntityBoundingBox().minY));
+					blade.setAbility(new AbilityAirblade());
+					blade.setOwner(entityLiving);
+					blade.rotationYaw = entityLiving.rotationYaw;
+					blade.rotationPitch = entityLiving.rotationPitch;
+					blade.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
+					blade.setDamage(2);
+					entityLiving.world.spawnEntity(blade);
+					if (!isCreative) {
+						data.addTickHandler(STAFF_GUST_HANDLER);
+						stack.damageItem(2, entityLiving);
+					}
+					return true;
 				}
-				return true;
-			} else {
-				EntityAirblade blade = new EntityAirblade(entityLiving.world);
-				blade.setPosition(Vector.getLookRectangular(entityLiving)
-								                  .plus(Vector.getEntityPos(entityLiving))
-								                  .withY(entityLiving.getEyeHeight() + entityLiving
-												                  .getEntityBoundingBox().minY));
-				blade.setAbility(new AbilityAirblade());
-				blade.setOwner(entityLiving);
-				blade.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
-				blade.setDamage(2);
-				entityLiving.world.spawnEntity(blade);
-				if (!isCreative) {
-					data.addTickHandler(STAFF_GUST_HANDLER);
-					stack.damageItem(2, entityLiving);
-				}
-				return true;
-			}
 
+			}
 		}
 		if (data.hasTickHandler(STAFF_GUST_HANDLER) && entityLiving instanceof EntityPlayer
 		    && !entityLiving.world.isRemote) {
