@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.command;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.event.ElementUnlockEvent;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.tree.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
@@ -57,7 +58,7 @@ public class NodeBendingAdd extends NodeFunctional {
 		String playerName = args.get(argPlayerName);
 
 		List<BendingStyle> controllers = args.get(argBendingController);
-		EntityPlayer player = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUsername(playerName);
+		EntityPlayer player = AvatarUtils.getPlayerFromUsername(playerName);
 
 		for (BendingStyle controller : controllers) {
 			BendingData data = BendingData.get(world, playerName);

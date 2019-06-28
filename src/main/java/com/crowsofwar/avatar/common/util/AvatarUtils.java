@@ -42,6 +42,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import javax.annotation.Nullable;
@@ -172,7 +173,7 @@ public class AvatarUtils {
 				state = state.withProperty(BlockFenceGate.OPEN, true);
 				entity.world.setBlockState(pos, state, 10);
 			}
-			entity.world.playEvent(player, (Boolean) state.getValue(BlockFenceGate.OPEN) ? 1008 : 1014, pos, 0);
+			entity.world.playEvent(player, state.getValue(BlockFenceGate.OPEN) ? 1008 : 1014, pos, 0);
 		}
 	}
 
@@ -523,19 +524,6 @@ public class AvatarUtils {
 	}
 
 	/**
-	 * An exception thrown by reading/writing methods for NBT
-	 *
-	 * @author CrowsOfWar
-	 */
-	public static class DiskException extends RuntimeException {
-
-		private DiskException(String message) {
-			super(message);
-		}
-
-	}
-
-	/**
 	 *
 	 */
 	public static void setRotationFromPosition(Entity toChange, Entity lookingAt) {
@@ -544,11 +532,15 @@ public class AvatarUtils {
 		double angle = Math.atan2(dz, dx) * 180 / Math.PI;
 		double pitch = Math.atan2((toChange.posY + toChange.getEyeHeight()) - (lookingAt.posY + (lookingAt.height / 2.0F)), Math.sqrt(dx * dx + dz * dz)) * 180 / Math.PI;
 		double distance = toChange.getDistance(lookingAt);
-		float rYaw = (float)(angle - toChange.rotationYaw);
-		while (rYaw > 180) { rYaw -= 360; }
-		while (rYaw < -180) { rYaw += 360; }
+		float rYaw = (float) (angle - toChange.rotationYaw);
+		while (rYaw > 180) {
+			rYaw -= 360;
+		}
+		while (rYaw < -180) {
+			rYaw += 360;
+		}
 		rYaw += 90F;
-		float rPitch = (float) pitch - (float)(10.0F / Math.sqrt(distance)) + (float)(distance * Math.PI / 90);
+		float rPitch = (float) pitch - (float) (10.0F / Math.sqrt(distance)) + (float) (distance * Math.PI / 90);
 		toChange.turn(rYaw, -(rPitch - toChange.rotationPitch));
 	}
 
@@ -561,11 +553,40 @@ public class AvatarUtils {
 		double angle = Math.atan2(dz, dx) * 180 / Math.PI;
 		double pitch = Math.atan2((toChange.posY + toChange.getEyeHeight()) - (lookingAt.y), Math.sqrt(dx * dx + dz * dz)) * 180 / Math.PI;
 		double distance = toChange.getDistance(lookingAt.x, lookingAt.y, lookingAt.z);
-		float rYaw = (float)(angle - toChange.rotationYaw);
-		while (rYaw > 180) { rYaw -= 360; }
-		while (rYaw < -180) { rYaw += 360; }
+		float rYaw = (float) (angle - toChange.rotationYaw);
+		while (rYaw > 180) {
+			rYaw -= 360;
+		}
+		while (rYaw < -180) {
+			rYaw += 360;
+		}
 		rYaw += 90F;
-		float rPitch = (float) pitch - (float)(10.0F / Math.sqrt(distance)) + (float)(distance * Math.PI / 90);
+		float rPitch = (float) pitch - (float) (10.0F / Math.sqrt(distance)) + (float) (distance * Math.PI / 90);
 		toChange.turn(rYaw, -(rPitch - toChange.rotationPitch));
+	}
+
+	public static Entity getEntityFromStringID(String UUID) {
+		return FMLCommonHandler.instance().getMinecraftServerInstance().getEntityFromUuid(java.util.UUID.fromString(UUID));
+	}
+
+	public static EntityPlayer getPlayerFromStringID(String UUID) {
+		return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(java.util.UUID.fromString(UUID));
+	}
+
+	public static EntityPlayer getPlayerFromUsername(String username) {
+		return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUsername(username);
+	}
+
+	/**
+	 * An exception thrown by reading/writing methods for NBT
+	 *
+	 * @author CrowsOfWar
+	 */
+	public static class DiskException extends RuntimeException {
+
+		private DiskException(String message) {
+			super(message);
+		}
+
 	}
 }
