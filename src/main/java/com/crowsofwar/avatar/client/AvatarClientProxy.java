@@ -127,8 +127,16 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityExplosionSpawner.class, RenderNothing::new);
 		registerEntityRenderingHandler(EntityLightningSpawner.class, RenderLightningSpawner::new);
 		registerEntityRenderingHandler(EntityAvatarLightning.class, RenderAvatarLightning::new);
-		registerEntityRenderingHandler(EntityShockwave.class, RenderShockwave::new);
-		registerEntityRenderingHandler(EntityLightOrb.class, RenderLightOrb::new);
+
+		// Renderers dependent on CodeChickenLib. 
+		// Do not render if it isn't installed, however, still keep the entity so that it acts as a light source 
+		if(AvatarMod.codeChickenLibCompat) {
+			registerEntityRenderingHandler(EntityShockwave.class, RenderShockwave::new);
+			registerEntityRenderingHandler(EntityLightOrb.class, RenderLightOrb::new);
+		} else {
+			registerEntityRenderingHandler(EntityShockwave.class, RenderNothing::new);
+			registerEntityRenderingHandler(EntityLightOrb.class, RenderNothing::new);
+		}
 
 		registerEntityRenderingHandler(EntityAirbender.class, rm -> new RenderHumanBender(rm, "airbender", 7));
 		registerEntityRenderingHandler(EntityFirebender.class, rm -> new RenderHumanBender(rm, "firebender", 1));

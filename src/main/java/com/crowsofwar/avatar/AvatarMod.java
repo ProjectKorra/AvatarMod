@@ -52,6 +52,7 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -82,6 +83,8 @@ public class AvatarMod {
 	public static AvatarMod instance;
 
 	public static SimpleNetworkWrapper network;
+
+	public static boolean codeChickenLibCompat;
 
 	private int nextMessageID = 1;
 	private int nextEntityID = 1;
@@ -139,6 +142,8 @@ public class AvatarMod {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
+
+		codeChickenLibCompat = Loader.isModLoaded("codechickenlib");
 
 		AvatarLog.log = e.getModLog();
 
