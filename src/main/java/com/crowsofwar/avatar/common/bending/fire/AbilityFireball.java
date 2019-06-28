@@ -109,8 +109,9 @@ public class AbilityFireball extends Ability {
 			orb.setLightRadius(15);
 			orb.setEmittingEntity(fireball.getUniqueID().toString());
 			orb.setBehavior(new LightOrbBehavior.FollowEntity());
-			orb.setType(EntityLightOrb.EnumType.COLOR_SPHERE);
-			//orb.setTexture("avatarmod:textures/entity/fire_test.png");
+			orb.setType(EntityLightOrb.EnumType.TEXTURE_SPHERE);
+			orb.setTexture("avatarmod:textures/entity/fireball/frame_%number%.png");
+			orb.setTextureFrameCount(24);
 			world.spawnEntity(orb);
 
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {

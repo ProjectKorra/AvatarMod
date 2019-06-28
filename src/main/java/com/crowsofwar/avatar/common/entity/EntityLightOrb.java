@@ -26,6 +26,8 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
             .createKey(EntityLightOrb.class, LightOrbBehavior.DATA_SERIALIZER);
     private static final DataParameter<String> SYNC_TEXTURE = EntityDataManager.createKey(EntityLightOrb.class,
             DataSerializers.STRING);
+    private static final DataParameter<Integer> SYNC_ANIMATED_TEXTURE_FRAMES_COUNT = EntityDataManager.createKey(EntityLightOrb.class,
+            DataSerializers.VARINT);
     private static final DataParameter<Integer> SYNC_TYPE = EntityDataManager.createKey(EntityLightOrb.class,
             DataSerializers.VARINT);
     private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityLightOrb.class,
@@ -53,6 +55,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
         super.entityInit();
         dataManager.register(SYNC_BEHAVIOR, new LightOrbBehavior.Idle());
         dataManager.register(SYNC_TEXTURE, "avatarmod:textures/entity/sphere.png");
+        dataManager.register(SYNC_ANIMATED_TEXTURE_FRAMES_COUNT, 0);
         dataManager.register(SYNC_TYPE, EnumType.COLOR_SPHERE.ordinal());
         dataManager.register(SYNC_SIZE, 2F);
         dataManager.register(SYNC_RADIUS, 20);
@@ -75,8 +78,27 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
         return dataManager.get(SYNC_TEXTURE);
     }
 
+    public String getTrueTexture() {
+        if(getTextureFrameCount() > 0) return getTexture().replace("%number%", String.valueOf(ticks));
+        else return dataManager.get(SYNC_TEXTURE);
+    }
+
     public void setTexture(String texture) {
         dataManager.set(SYNC_TEXTURE, texture);
+    }
+
+    public int getTextureFrameCount() {
+        return dataManager.get(SYNC_ANIMATED_TEXTURE_FRAMES_COUNT);
+    }
+
+    /**
+     * Using 0 uses a normal texture. if animated, 
+     * put %number% where you want the frame number to change
+     * 
+     * @param value
+     */
+    public void setTextureFrameCount(int value) {
+        dataManager.set(SYNC_ANIMATED_TEXTURE_FRAMES_COUNT, value);
     }
 
     public EnumType getType() {
@@ -131,10 +153,16 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
         return dataManager.get(SYNC_SIZE);
     }
 
+    int ticks = 0;
     @Override
     public void onUpdate() {
         super.onUpdate();
         setBehavior((LightOrbBehavior) getBehavior().onUpdate(this));
+
+        if(world.isRemote && getTextureFrameCount() > 0) {
+            ticks++;
+            if(ticks == getTextureFrameCount()) ticks = 1;
+        }
     }
 
     @Override
@@ -165,6 +193,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
         super.readEntityFromNBT(nbt);
         setTexture(nbt.getString("OrbTexture"));
         setType(EnumType.values()[nbt.getInteger("OrbType")]);
+        setTextureFrameCount(nbt.getInteger("FrameCount"));
         setOrbSize(nbt.getFloat("OrbSize"));
         setLightRadius(nbt.getInteger("OrbRadius"));
         setColorR(nbt.getFloat("OrbColorR"));
@@ -178,6 +207,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
         super.writeEntityToNBT(nbt);
         nbt.setString("OrbTexture", getTexture());
         nbt.setInteger("OrbType", getType().ordinal());
+        nbt.setInteger("FrameCount", getTextureFrameCount());
         nbt.setFloat("OrbSize", getOrbSize());
         nbt.setInteger("OrbRadius", getLightRadius());
         nbt.setFloat("OrbColorR", getColorR());
@@ -235,6 +265,6 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
     }
 
     public enum EnumType {
-        COLOR_SPHERE, COLOR_CUBE, TEXTURE_SPHERE, TEXTURE_CUBE
+        COLOR_SPHERE, COLOR_CUBE, TEXTURE_SPHERE, TEXTURE_CUBE, NOTHING
     }
 }

@@ -37,8 +37,10 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
     @Override
     public void doRender(EntityLightOrb entity, double x, double y, double z, float entityYaw, float partialTicks) {
 
+        if(entity.getType() == EntityLightOrb.EnumType.NOTHING) return;
+
         model = entity.isSphere() ? sphereModel : cubeModel;
-        fill = entity.shouldUseCustomTexture() ? new ResourceLocation(entity.getTexture()) : fill_default;
+        fill = entity.shouldUseCustomTexture() ? new ResourceLocation(entity.getTrueTexture()) : fill_default;
 
         Minecraft minecraft = Minecraft.getMinecraft();
         Tessellator tessellator = Tessellator.getInstance();
