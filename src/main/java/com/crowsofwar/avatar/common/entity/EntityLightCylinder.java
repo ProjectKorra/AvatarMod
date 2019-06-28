@@ -48,7 +48,6 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
     public EntityLightCylinder(World world) {
         super(world);
         setSize(0.1F, 0.1F);
-        // TODO sync rotation
     }
 
     @Override
@@ -65,11 +64,6 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
         dataManager.register(SYNC_COLOR_A, 1F);
         dataManager.register(SYNC_YAW, 0F);
         dataManager.register(SYNC_PITCH, 0F);
-    }
-
-    @Override
-    public void onUpdate() {
-        super.onUpdate();
     }
 
     @Override
@@ -93,7 +87,7 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
                         .color(getColorR(), getColorG(), getColorB()).radius(getLightRadius()).build());
             }
         }
-        return Light.builder().pos(this).color(getColorR(), getColorG(), getColorB()).radius(10).build();
+        return Light.builder().pos(this).color(getColorR(), getColorG(), getColorB()).radius(getLightRadius()).build();
     }
 
     @Override

@@ -1,35 +1,19 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityLightCylinder;
-
-import org.lwjgl.opengl.GL11;
+import com.crowsofwar.gorecore.util.Vector;
 
 import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.OBJParser;
 import codechicken.lib.texture.TextureUtils;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexBuffer;
-import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -37,7 +21,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RenderLightCylinder extends Render<EntityLightCylinder> {
     public RenderLightCylinder(RenderManager renderManager) {
         super(renderManager);
-        // TODO Auto-generated constructor stub
     }
 
     private static CCModel model = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/cylinder.obj"))
@@ -50,7 +33,7 @@ public class RenderLightCylinder extends Render<EntityLightCylinder> {
 
         TEXTURE = new ResourceLocation(entity.getTexture());
 
-        Minecraft minecraft = Minecraft.getMinecraft();
+        EntityRenderer entityRenderer = Minecraft.getMinecraft().entityRenderer;
         CCRenderState ccrenderstate = CCRenderState.instance();
         TextureUtils.changeTexture(TEXTURE);
 
@@ -62,7 +45,7 @@ public class RenderLightCylinder extends Render<EntityLightCylinder> {
         GlStateManager.pushMatrix();
         {
             GlStateManager.disableLighting();
-            minecraft.entityRenderer.disableLightmap();
+            entityRenderer.disableLightmap();
             GlStateManager.disableCull();
             GlStateManager.color(1F, 1F, 1F, 0.2F);
             for (int i = 0; i < entity.getCylinderLenght(); i++) {
@@ -83,7 +66,7 @@ public class RenderLightCylinder extends Render<EntityLightCylinder> {
 
             }
             GlStateManager.enableCull();
-            minecraft.entityRenderer.enableLightmap();
+            entityRenderer.enableLightmap();
             GlStateManager.enableLighting();
         }
         GlStateManager.popMatrix();
