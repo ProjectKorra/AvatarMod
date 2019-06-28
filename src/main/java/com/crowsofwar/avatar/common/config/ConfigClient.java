@@ -66,6 +66,9 @@ public class ConfigClient {
 	@Load
 	public ChiBarSettings chiBarSettings = new ChiBarSettings();
 
+	@Load
+	public FireballRenderSettings fireballRenderSettings = new FireballRenderSettings();
+
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
 
@@ -167,6 +170,11 @@ public class ConfigClient {
 		public final int chibarDuration = 200;
 		//Currently unused
 	**/
+	}
+
+	public static class FireballRenderSettings {
+		@Load
+		public final boolean isSphere = true;
 	}
 
 }
