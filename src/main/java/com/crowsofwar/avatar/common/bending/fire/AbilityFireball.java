@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
+import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -87,6 +88,8 @@ public class AbilityFireball extends Ability {
 
 
 
+			assert target != null;
+
 			EntityFireball fireball = new EntityFireball(world);
 			fireball.setPosition(target);
 			fireball.setOwner(entity);
@@ -97,8 +100,21 @@ public class AbilityFireball extends Ability {
 			fireball.setAbility(this);
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(20);
 
+			EntityLightOrb orb = new EntityLightOrb(world);
+			orb.setOwner(entity);
+			orb.setAbility(this);
+			orb.setPosition(target);
+			orb.setOrbSize(size / 10);
+			orb.setColor(1F, 1F, 0F, 1F);
+			orb.setLightRadius(5);
+			orb.setEmittingEntity(fireball);
+			orb.setBehavior(new LightOrbBehavior.FollowEntity());
+			orb.setType(EntityLightOrb.EnumType.COLOR_SPHERE);
+			//orb.setTexture("avatarmod:textures/entity/fire_test.png");
+			world.spawnEntity(orb);
+
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-				explosionStrength = fireball.getSize()/20 + 0.75F;
+				explosionStrength = fireball.getSize() / 20F + 0.75F;
 			}
 
 			fireball.setExplosionStrength(explosionStrength);

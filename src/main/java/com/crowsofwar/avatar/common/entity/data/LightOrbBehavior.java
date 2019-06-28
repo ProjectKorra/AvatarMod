@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -39,6 +40,7 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
 		registerBehavior(Idle.class);
+		registerBehavior(FollowEntity.class);
 	}
 
 	public static class Idle extends LightOrbBehavior {
@@ -70,7 +72,16 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 
 		@Override
 		public Behavior onUpdate(EntityLightOrb entity) {
-			return null;
+			if (entity.getEmittingEntity() != null) {
+				entity.posX = entity.getEmittingEntity().posX;
+				entity.posY = entity.getEmittingEntity().posY + entity.height;
+				entity.posZ = entity.getEmittingEntity().posZ;
+				if (entity.getEmittingEntity() instanceof AvatarEntity) {
+					entity.setVelocity(((AvatarEntity) entity.getEmittingEntity()).velocity());
+				}
+			}
+			else entity.setDead();
+			return this;
 		}
 
 		@Override

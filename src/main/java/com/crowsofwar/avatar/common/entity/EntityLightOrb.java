@@ -39,10 +39,12 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
             DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_COLOR_A = EntityDataManager.createKey(EntityLightOrb.class,
             DataSerializers.FLOAT);
+    private Entity emittingEntity;
 
     public EntityLightOrb(World world) {
         super(world);
         setSize(0.1F, 0.1F);
+        this.emittingEntity = null;
     }
 
     @Override
@@ -81,6 +83,14 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 
     public void setType(EnumType type) {
         dataManager.set(SYNC_TYPE, type.ordinal());
+    }
+
+    public Entity getEmittingEntity() {
+        return emittingEntity;
+    }
+
+    public void setEmittingEntity(Entity entity) {
+        this.emittingEntity = entity;
     }
 
     /**
