@@ -80,7 +80,7 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 			Entity emitter = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityFromUuid(UUID.fromString(entity.getEmittingEntity()));
 			if (emitter != null) {
 				entity.posX = emitter.posX;
-				entity.posY = emitter.posY + entity.height;
+				entity.posY = emitter.posY + entity.height * 2;
 				entity.posZ = emitter.posZ;
 				if (emitter instanceof AvatarEntity) {
 					entity.setVelocity((((AvatarEntity) emitter).velocity()));
