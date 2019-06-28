@@ -136,7 +136,7 @@ public class EntityLightningSpear extends AvatarEntity implements ILightProvider
 		}
 
 
-		this.setSize(getSize() / 4, getSize() / 4);
+		this.setSize(getSize() / 3, getSize() / 3);
 
 
 		if (getOwner() != null) {

@@ -230,7 +230,7 @@ public class AvatarMod {
 		registerEntity(EntityLightningArc.class, "Lightning_arc", 128, 1000, true);
 		registerEntity(EntityCloudBall.class, "Cloudburst", 128, 1000, true);
 		registerEntity(EntityEarthspike.class, "Earthspike", 128, 1000, false);
-		registerEntity(EntityLightningSpear.class, "Lightning_Spear", 128, 1, true);
+		registerEntity(EntityLightningSpear.class, "Lightning_Spear", 128, 1000, true);
 		registerEntity(EntityEarthspikeSpawner.class, "EarthspikeSpawner", 128, 1000, true);
 		registerEntity(EntityWaterCannon.class, "WaterCannon", 128, 1, true);
 		registerEntity(EntitySandstorm.class, "Sandstorm", 128, 4, true);
