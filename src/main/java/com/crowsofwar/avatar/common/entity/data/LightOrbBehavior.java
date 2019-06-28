@@ -80,7 +80,9 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 					entity.setVelocity(((AvatarEntity) entity.getEmittingEntity()).velocity());
 				}
 			}
-			else entity.setDead();
+			else if (entity.ticksExisted > 1) {
+				entity.setDead();
+			}
 			return this;
 		}
 
