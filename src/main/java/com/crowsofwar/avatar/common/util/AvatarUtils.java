@@ -37,13 +37,12 @@ import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -562,7 +561,8 @@ public class AvatarUtils {
 		}
 		rYaw += 90F;
 		float rPitch = (float) pitch - (float) (10.0F / Math.sqrt(distance)) + (float) (distance * Math.PI / 90);
-		toChange.turn(rYaw, -(rPitch - toChange.rotationPitch));
+		turnEntity(toChange, rYaw, -(rPitch - toChange.rotationPitch), 1.25F);
+		//toChange.turn(rYaw, -(rPitch - toChange.rotationPitch));
 	}
 
 	public static Entity getEntityFromStringID(String UUID) {
@@ -575,6 +575,20 @@ public class AvatarUtils {
 
 	public static EntityPlayer getPlayerFromUsername(String username) {
 		return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUsername(username);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void turnEntity(Entity entity, float yaw, float pitch, float turnSpeed) {
+		float f = entity.rotationPitch;
+		float f1 = entity.rotationYaw;
+		entity.rotationYaw = (float) ((double) entity.rotationYaw + (double) yaw * 0.15D);
+		entity.rotationPitch = (float) ((double) entity.rotationPitch - (double) pitch * 0.15D);
+		entity.rotationPitch = MathHelper.clamp(entity.rotationPitch, -90.0F, 90.0F);
+		entity.prevRotationPitch += entity.rotationPitch * turnSpeed - f;
+		entity.prevRotationYaw += entity.rotationYaw * turnSpeed - f1;
+		if (entity.getRidingEntity() != null) {
+			entity.getRidingEntity().applyOrientationToEntity(entity);
+		}
 	}
 
 	/**
