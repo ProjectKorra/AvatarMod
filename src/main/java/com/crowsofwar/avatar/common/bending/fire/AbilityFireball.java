@@ -107,7 +107,7 @@ public class AbilityFireball extends Ability {
 			orb.setOrbSize(size / 10);
 			orb.setColor(1F, 1F, 0F, 1F);
 			orb.setLightRadius(5);
-			orb.setEmittingEntity(fireball);
+			orb.setEmittingEntity(fireball.getUniqueID().toString());
 			orb.setBehavior(new LightOrbBehavior.FollowEntity());
 			orb.setType(EntityLightOrb.EnumType.COLOR_SPHERE);
 			//orb.setTexture("avatarmod:textures/entity/fire_test.png");

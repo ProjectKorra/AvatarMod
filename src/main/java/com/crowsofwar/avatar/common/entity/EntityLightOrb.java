@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
@@ -39,7 +40,8 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
             DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_COLOR_A = EntityDataManager.createKey(EntityLightOrb.class,
             DataSerializers.FLOAT);
-    private Entity emittingEntity;
+    private static final DataParameter<String> SYNC_EMITTING_ENTITY = EntityDataManager.createKey(EntityLightOrb.class,
+            DataSerializers.STRING);
 
     public EntityLightOrb(World world) {
         super(world);
@@ -58,6 +60,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
         dataManager.register(SYNC_COLOR_G, 1F);
         dataManager.register(SYNC_COLOR_B, 1F);
         dataManager.register(SYNC_COLOR_A, 1F);
+        dataManager.register(SYNC_EMITTING_ENTITY, "06256730-5d15-4e0f-b49b-997644ac6f59");
     }
 
     public LightOrbBehavior getBehavior() {
@@ -84,12 +87,12 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
         dataManager.set(SYNC_TYPE, type.ordinal());
     }
 
-    public Entity getEmittingEntity() {
-        return emittingEntity;
+    public String getEmittingEntity() {
+        return dataManager.get(SYNC_EMITTING_ENTITY);
     }
 
-    public void setEmittingEntity(Entity entity) {
-        this.emittingEntity = entity;
+    public void setEmittingEntity(String entityID) {
+        dataManager.set(SYNC_EMITTING_ENTITY, entityID);
     }
 
     /**

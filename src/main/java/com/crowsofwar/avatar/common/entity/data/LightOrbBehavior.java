@@ -20,10 +20,15 @@ package com.crowsofwar.avatar.common.entity.data;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+
+import java.util.UUID;
 
 /**
  * @author Aang23
@@ -72,12 +77,13 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 
 		@Override
 		public Behavior onUpdate(EntityLightOrb entity) {
-			if (entity.getEmittingEntity() != null) {
-				entity.posX = entity.getEmittingEntity().posX;
-				entity.posY = entity.getEmittingEntity().posY + entity.height;
-				entity.posZ = entity.getEmittingEntity().posZ;
-				if (entity.getEmittingEntity() instanceof AvatarEntity) {
-					entity.setVelocity(((AvatarEntity) entity.getEmittingEntity()).velocity());
+			Entity emitter = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityFromUuid(UUID.fromString(entity.getEmittingEntity()));
+			if (emitter != null) {
+				entity.posX = emitter.posX;
+				entity.posY = emitter.posY + entity.height;
+				entity.posZ = emitter.posZ;
+				if (emitter instanceof AvatarEntity) {
+					entity.setVelocity((((AvatarEntity) emitter).velocity()));
 				}
 			}
 			else if (entity.ticksExisted > 1) {
