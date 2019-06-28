@@ -16,12 +16,12 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -32,11 +32,9 @@ import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-
 import elucent.albedo.event.GatherLightsEvent;
 import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
-import elucent.albedo.lighting.LightManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -47,9 +45,9 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 import java.util.Objects;
@@ -129,17 +127,6 @@ public class EntityLightningSpear extends AvatarEntity implements ILightProvider
 		LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
 		setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
 
-		/*Vector clientPos = this.position();
-		if (world.isRemote) {
-			clientPos = this.position();
-		}
-		if (!world.isRemote) {
-			if (this.position() != clientPos) {
-				this.setPosition(clientPos);
-			}
-		}**/
-		//For some reason the server position is inaccurate- setting it to the client side position massively reduces positioning glitchiness
-
 		// Add hook or something
 		if (getOwner() != null) {
 			if (getBehavior() != null && getBehavior() instanceof LightningSpearBehavior.PlayerControlled) {
@@ -149,8 +136,7 @@ public class EntityLightningSpear extends AvatarEntity implements ILightProvider
 		}
 
 
-		this.setSize(getSize() / 2, getSize() / 2);
-		//Even though doing size/8 would be better, the entity gets too small, and doesn't render far away enough. Super annoying.
+		this.setSize(getSize() / 4, getSize() / 4);
 
 
 		if (getOwner() != null) {
@@ -422,12 +408,12 @@ public class EntityLightningSpear extends AvatarEntity implements ILightProvider
 	@Override
 	@Optional.Method(modid = "albedo")
 	public Light provideLight() {
-		return Light.builder().pos(this).color(1F, 3F, 3F).radius(15).build();
+		return Light.builder().pos(this).color(1F, 2F, 3F).radius(8 + getSize()).build();
 	}
 
 	@Override
 	@Optional.Method(modid = "albedo")
 	public void gatherLights(GatherLightsEvent event, Entity entity) {
-		
+
 	}
 }

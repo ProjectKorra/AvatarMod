@@ -120,6 +120,18 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 			setDead();
 			removeStatCtrl();
 		}
+		if (getOwner() != null && getAbility() != null) {
+			EntityLightOrb orb = new EntityLightOrb(world);
+			orb.setOwner(getOwner());
+			orb.setAbility(getAbility());
+			orb.setPosition(getPositionVector());
+			orb.setOrbSize(0.5F);
+			orb.setColor(1F, 1F, 0F, 1F);
+			orb.setLightRadius(5);
+			orb.setType(EntityLightOrb.EnumType.TEXTURE_SPHERE);
+			orb.setTexture("avatarmod:textures/entity/fire_test.png");
+			world.spawnEntity(orb);
+		}
 
 		if (getOwner() != null) {
 			EntityFireball ball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());

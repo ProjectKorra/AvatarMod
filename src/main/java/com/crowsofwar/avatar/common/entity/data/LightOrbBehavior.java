@@ -66,4 +66,32 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 
 	}
 
+	public static class FollowEntity extends LightOrbBehavior {
+
+		@Override
+		public Behavior onUpdate(EntityLightOrb entity) {
+			return null;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
+	}
+
 }

@@ -13,6 +13,9 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
+import elucent.albedo.event.GatherLightsEvent;
+import elucent.albedo.lighting.ILightProvider;
+import elucent.albedo.lighting.Light;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -38,7 +41,7 @@ import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 /**
  * @author CrowsOfWar
  */
-public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningControlPoint> {
+public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningControlPoint> implements ILightProvider {
 
 	private static final DataParameter<Vector> SYNC_ENDPOS = EntityDataManager.createKey
 			(EntityLightningArc.class, AvatarDataSerializers.SERIALIZER_VECTOR);
@@ -395,6 +398,16 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	public void setCreatedByRedirection(boolean createdByRedirection) {
 		this.createdByRedirection = createdByRedirection;
+	}
+
+	@Override
+	public void gatherLights(GatherLightsEvent gatherLightsEvent, Entity entity) {
+
+	}
+
+	@Override
+	public Light provideLight() {
+		return Light.builder().pos(this).color(1F, 2F, 3F).radius(15).build();
 	}
 
 	public class LightningControlPoint extends ControlPoint {

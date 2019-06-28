@@ -5,6 +5,9 @@ import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRaze;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
+import elucent.albedo.event.GatherLightsEvent;
+import elucent.albedo.lighting.ILightProvider;
+import elucent.albedo.lighting.Light;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -29,7 +32,7 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
-public class EntityAvatarLightning extends EntityLightningBolt {
+public class EntityAvatarLightning extends EntityLightningBolt implements ILightProvider {
 
 	/**
 	 * A random long that is used to change the vertex of the lightning rendered in RenderLightningBolt
@@ -192,5 +195,15 @@ public class EntityAvatarLightning extends EntityLightningBolt {
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
+	}
+
+	@Override
+	public void gatherLights(GatherLightsEvent gatherLightsEvent, Entity entity) {
+
+	}
+
+	@Override
+	public Light provideLight() {
+		return Light.builder().pos(this).color(1F, 2F, 3F).radius(15).build();
 	}
 }

@@ -535,4 +535,37 @@ public class AvatarUtils {
 
 	}
 
+	/**
+	 *
+	 */
+	public static void setRotationFromPosition(Entity toChange, Entity lookingAt) {
+		double dx = toChange.posX - lookingAt.posX;
+		double dz = toChange.posZ - lookingAt.posZ;
+		double angle = Math.atan2(dz, dx) * 180 / Math.PI;
+		double pitch = Math.atan2((toChange.posY + toChange.getEyeHeight()) - (lookingAt.posY + (lookingAt.height / 2.0F)), Math.sqrt(dx * dx + dz * dz)) * 180 / Math.PI;
+		double distance = toChange.getDistance(lookingAt);
+		float rYaw = (float)(angle - toChange.rotationYaw);
+		while (rYaw > 180) { rYaw -= 360; }
+		while (rYaw < -180) { rYaw += 360; }
+		rYaw += 90F;
+		float rPitch = (float) pitch - (float)(10.0F / Math.sqrt(distance)) + (float)(distance * Math.PI / 90);
+		toChange.turn(rYaw, -(rPitch - toChange.rotationPitch));
+	}
+
+	/**
+	 *
+	 */
+	public static void setRotationFromPosition(Entity toChange, Vec3d lookingAt) {
+		double dx = toChange.posX - lookingAt.x;
+		double dz = toChange.posZ - lookingAt.z;
+		double angle = Math.atan2(dz, dx) * 180 / Math.PI;
+		double pitch = Math.atan2((toChange.posY + toChange.getEyeHeight()) - (lookingAt.y), Math.sqrt(dx * dx + dz * dz)) * 180 / Math.PI;
+		double distance = toChange.getDistance(lookingAt.x, lookingAt.y, lookingAt.z);
+		float rYaw = (float)(angle - toChange.rotationYaw);
+		while (rYaw > 180) { rYaw -= 360; }
+		while (rYaw < -180) { rYaw += 360; }
+		rYaw += 90F;
+		float rPitch = (float) pitch - (float)(10.0F / Math.sqrt(distance)) + (float)(distance * Math.PI / 90);
+		toChange.turn(rYaw, -(rPitch - toChange.rotationPitch));
+	}
 }

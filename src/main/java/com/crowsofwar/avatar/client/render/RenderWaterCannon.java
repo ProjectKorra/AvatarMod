@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.client.render;
 import com.crowsofwar.avatar.common.entity.ControlPoint;
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
@@ -30,15 +31,17 @@ public class RenderWaterCannon extends RenderArc {
 		EntityWaterCannon cannon = (EntityWaterCannon) entity;
 		renderArc(cannon, partialTicks, 3f, 3f * cannon.getSizeMultiplier());
 
-		//TODO: Find a way to be able to spawn the helix from the player to the water cannon- right now it's directly spawning where I'm looking
-		/*World world = entity.world;
-		Vector position = getEyePos(cannon.getOwner()).minusY(0.3);
+		World world = entity.world;
+		Vector position = cannon.position().plusY(cannon.height / 2);
 		double radius = 1.5f * cannon.getSizeMultiplier();
 		if (cannon.getOwner() != null) {
-			double pitch = Math.toDegrees(cannon.posX - cannon.getOwner().posX);
-			double yaw = Math.toDegrees(cannon.posY - cannon.getOwner().posY);
+			Vector eyePos = getEyePos(cannon.getOwner()).minusY(0.3);
+			Vector directionToEnd = cannon.position().minus(eyePos).normalize();
+			AvatarUtils.setRotationFromPosition(cannon, eyePos.plus(directionToEnd.times(0.075)).toMinecraft());
+			double pitch = cannon.rotationPitch;
+			double yaw = cannon.rotationYaw;
 			double dist = cannon.getDistance(cannon.getOwner());
-			int maxAngle = 180 + (6 * (int) dist * (int) cannon.getSizeMultiplier());
+			int maxAngle = 120 + (6 * (int) dist * (int) cannon.getSizeMultiplier());
 			for (int angle = 0; angle < maxAngle; angle++) {
 				double angle2 = world.rand.nextDouble() * Math.PI * 2;
 				double x = radius * cos(angle);
@@ -53,7 +56,7 @@ public class RenderWaterCannon extends RenderArc {
 				world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, pos.x() + position.x(), pos.y() + position.y(),
 						pos.z() + position.z(), 0.05 * radius * omega * Math.cos(angle2), 0.1, 0.05 * radius * omega * Math.sin(angle2));                //	World.spawnParticle(particle, pos.x() + position.x() + direction.x(), pos.y() + position.y() + direction.y(),
 			}
-		}**/
+		}
 
 	}
 
