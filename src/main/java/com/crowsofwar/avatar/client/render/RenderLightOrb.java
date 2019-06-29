@@ -107,14 +107,14 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
 
             GlStateManager.disableCull();
             if (!entity.shouldUseCustomTexture()) GlStateManager.color(entity.getColorR(), entity.getColorG(), entity.getColorB(), entity.getColorA());
-            ccrenderstate.startDrawing(entity.isSphere() ? 0x07 : 0x05, DefaultVertexFormats.POSITION_TEX_NORMAL);
+            ccrenderstate.startDrawing(entity.isSphere() ? 0x04 : 0x05, DefaultVertexFormats.POSITION_TEX_NORMAL);
             model.render(ccrenderstate);
             ccrenderstate.draw();
 
             if (entity.isTextureSphere()) {
                 GlStateManager.rotate(180, 1, 1, 0);
                 if (!entity.shouldUseCustomTexture()) GlStateManager.color(entity.getColorR(), entity.getColorG(), entity.getColorB(), entity.getColorA());
-                ccrenderstate.startDrawing(entity.isSphere() ? 0x07 : 0x05, DefaultVertexFormats.POSITION_TEX_NORMAL);
+                ccrenderstate.startDrawing(entity.isSphere() ? 0x04 : 0x05, DefaultVertexFormats.POSITION_TEX_NORMAL);
                 model.render(ccrenderstate);
                 ccrenderstate.draw();
             }
