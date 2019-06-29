@@ -17,23 +17,20 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import com.crowsofwar.avatar.common.bending.fire.AbilityInfernoPunch;
+import com.crowsofwar.avatar.common.bending.fire.InfernoPunchParticleSpawner;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
-
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-
-import java.util.UUID;
 
 /**
  * @author Aang23
- * 
+ * <p>
  * Any needed light behavior should be here (for EntityLightOrb!)
  */
 public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
@@ -47,6 +44,9 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
 		registerBehavior(Idle.class);
 		registerBehavior(FollowEntity.class);
+		registerBehavior(ShiftColourRandomly.class);
+		registerBehavior(ShiftColour.class);
+		registerBehavior(AbilityInfernoPunch.InfernoPunchLightOrb.class);
 	}
 
 	public static class Idle extends LightOrbBehavior {
@@ -86,11 +86,66 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 				if (emitter instanceof AvatarEntity) {
 					entity.setVelocity((((AvatarEntity) emitter).velocity()));
 				}
-			}
-			else if (entity.ticksExisted > 1) {
+			} else if (entity.ticksExisted > 1) {
 				entity.setDead();
 			}
 			return this;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
+	}
+
+	public static class ShiftColourRandomly extends LightOrbBehavior {
+
+		@Override
+		public Behavior onUpdate(EntityLightOrb entity) {
+			return null;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
+	}
+
+	public static class ShiftColour extends LightOrbBehavior {
+
+		@Override
+		public Behavior onUpdate(EntityLightOrb entity) {
+			return null;
 		}
 
 		@Override

@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
@@ -29,10 +28,12 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 		AbilityData abilityData = AbilityData.get(entity, "inferno_punch");
 
 		int particleCount = 1;
-		if (abilityData.getLevel() == 1) {
+		int level = abilityData.getLevel();
+		if (level == 1) {
 			particleCount = 2;
+
 		}
-		if (abilityData.getLevel() == 2) {
+		if (level == 2) {
 			particleCount = 3;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
@@ -56,4 +57,5 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 			return false;
 		} else return true;
 	}
+
 }
