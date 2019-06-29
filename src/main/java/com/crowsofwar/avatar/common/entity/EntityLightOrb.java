@@ -47,6 +47,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 	private static final DataParameter<Float> SYNC_COLOUR_INTERVAL = EntityDataManager.createKey(EntityLightOrb.class,
 			DataSerializers.FLOAT);
 	int ticks = 0;
+	private int lifeTime = -1;
 
 	public EntityLightOrb(World world) {
 		super(world);
@@ -139,6 +140,11 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 		dataManager.set(SYNC_COLOUR_INTERVAL, interval);
 	}
 
+	//Set to -1 for it not to have a lifetime (for stuff like fireball, where it should exist as long as the fireball exists
+	public void setLifeTime(int ticks) {
+		this.lifeTime = ticks;
+	}
+
 	/**
 	 * Sets the Orb's color. RGBA format
 	 */
@@ -183,6 +189,9 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 		if (world.isRemote && getTextureFrameCount() > 0) {
 			ticks++;
 			if (ticks == getTextureFrameCount()) ticks = 1;
+		}
+		if (ticksExisted > lifeTime && lifeTime != -1) {
+			setDead();
 		}
 	}
 
