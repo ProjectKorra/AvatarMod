@@ -186,6 +186,7 @@ public class AvatarMod {
 		FMLCommonHandler.instance().bus().register(new AvatarPlayerTick());
 
 		AvatarDataSerializers.register();
+
 		AvatarChatMessages.loadAll();
 
 		Behavior.registerBehaviours();
