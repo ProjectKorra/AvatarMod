@@ -25,16 +25,21 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
+import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
+
+import java.util.Random;
 
 /**
  * @author CrowsOfWar
@@ -108,7 +113,7 @@ public class AbilityFireball extends Ability {
 			orb.setColor(1F, 0.5F, 0F, 1F);
 			orb.setLightRadius(15);
 			orb.setEmittingEntity(fireball.getUniqueID().toString());
-			orb.setBehavior(new LightOrbBehavior.FollowEntity());
+			orb.setBehavior(new FireballLightOrbBehavior());
 			orb.setType(EntityLightOrb.EnumType.TEXTURE_SPHERE);
 			orb.setTexture("avatarmod:textures/entity/fireball/frame_%number%.png");
 			orb.setTextureFrameCount(30);
@@ -129,5 +134,36 @@ public class AbilityFireball extends Ability {
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiFireball(this, entity, bender);
+	}
+
+	public static class FireballLightOrbBehavior extends LightOrbBehavior.FollowEntity {
+
+		@Override
+		public Behavior onUpdate(EntityLightOrb entity) {
+			super.onUpdate(entity);
+			entity.rotationPitch += 15;
+			entity.rotationYaw += 15;
+			return this;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
 	}
 }
