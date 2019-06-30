@@ -48,7 +48,7 @@ public class RenderLightCylinder extends Render<EntityLightCylinder> {
             entityRenderer.disableLightmap();
             GlStateManager.disableCull();
             GlStateManager.color(1F, 1F, 1F, 0.2F);
-            for (int i = 0; i < entity.getCylinderLenght(); i++) {
+            for (int i = 0; i < entity.getCylinderLength(); i++) {
                 GlStateManager.pushMatrix();
                 {
                     Vector end = new Vector(x, y, z).plus(new Vector(entity.getLookVec()).times(i * (scale * 2)));

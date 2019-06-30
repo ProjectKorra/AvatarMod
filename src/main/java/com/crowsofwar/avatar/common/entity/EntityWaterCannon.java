@@ -108,6 +108,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
 
 		if (getOwner() != null) {
+			EntityLightCylinder cylinder = new EntityLightCylinder(world);
+			cylinder.setCylinderLength((int) position().dist(getControlPoint(0).position()));
 			if (getAbility() instanceof AbilityWaterCannon) {
 				Vec3d startPos = getControlPoint(getAmountOfControlPoints() - 1).position().toMinecraft();
 				Vec3d distance = getOwner().getLookVec().scale(range);

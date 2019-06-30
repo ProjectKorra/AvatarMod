@@ -80,8 +80,8 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
     @Override
     @Optional.Method(modid = "albedo")
     public Light provideLight() {
-        for (int i = 0; i < getCylinderLenght(); i++) {
-            if (i % (getCylinderLenght() / getLightAmount()) == 0) {
+        for (int i = 0; i < getCylinderLength(); i++) {
+            if (i % (getCylinderLength() / getLightAmount()) == 0) {
                 Vector end = new Vector(posX, posY, posZ).plus(new Vector(this.getLookVec()).times(i * (0.3 * 2)));
                 LightManager.lights.add(Light.builder().pos(end.toBlockPos())
                         .color(getColorR(), getColorG(), getColorB()).radius(getLightRadius()).build());
@@ -103,7 +103,7 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
         setLightAmount(nbt.getInteger("CylAmount"));
         setCylinderSize(nbt.getFloat("CylSize"));
         setLightRadius(nbt.getInteger("CylRadius"));
-        setCylinderLenght(nbt.getInteger("CylLength"));
+        setCylinderLength(nbt.getInteger("CylLength"));
         setColorR(nbt.getFloat("CylColorR"));
         setColorG(nbt.getFloat("CylColorG"));
         setColorB(nbt.getFloat("CylColorB"));
@@ -119,7 +119,7 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
         nbt.setInteger("CylAmount", getLightAmount());
         nbt.setFloat("CylSize", getCylinderSize());
         nbt.setInteger("CylRadius", getLightRadius());
-        nbt.setInteger("CylLength", getCylinderLenght());
+        nbt.setInteger("CylLength", getCylinderLength());
         nbt.setFloat("CylColorR", getColorR());
         nbt.setFloat("CylColorG", getColorG());
         nbt.setFloat("CylColorB", getColorB());
@@ -128,11 +128,11 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
         nbt.setFloat("CylPitch", getCylinderPitch());
     }
 
-    public void setCylinderLenght(int length) {
+    public void setCylinderLength(int length) {
         dataManager.set(SYNC_LENGHT, length);
     }
 
-    public int getCylinderLenght() {
+    public int getCylinderLength() {
         return dataManager.get(SYNC_LENGHT);
     }
 
