@@ -133,9 +133,11 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		if(AvatarMod.codeChickenLibCompat) {
 			registerEntityRenderingHandler(EntityShockwave.class, RenderShockwave::new);
 			registerEntityRenderingHandler(EntityLightOrb.class, RenderLightOrb::new);
+			registerEntityRenderingHandler(EntityLightCylinder.class, RenderLightCylinder::new);
 		} else {
 			registerEntityRenderingHandler(EntityShockwave.class, RenderNothing::new);
 			registerEntityRenderingHandler(EntityLightOrb.class, RenderNothing::new);
+			registerEntityRenderingHandler(EntityLightCylinder.class, RenderNothing::new);
 		}
 
 		registerEntityRenderingHandler(EntityAirbender.class, rm -> new RenderHumanBender(rm, "airbender", 7));
