@@ -30,7 +30,7 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
             .createKey(EntityLightCylinder.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> SYNC_RADIUS = EntityDataManager.createKey(EntityLightCylinder.class,
             DataSerializers.VARINT);
-    private static final DataParameter<Integer> SYNC_LENGHT = EntityDataManager.createKey(EntityLightCylinder.class,
+    private static final DataParameter<Integer> SYNC_LENGTH = EntityDataManager.createKey(EntityLightCylinder.class,
             DataSerializers.VARINT);
     private static final DataParameter<Float> SYNC_COLOR_R = EntityDataManager.createKey(EntityLightCylinder.class,
             DataSerializers.FLOAT);
@@ -57,7 +57,7 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
         dataManager.register(SYNC_SIZE, 1F);
         dataManager.register(SYNC_LIGHT_AMOUNT, 3);
         dataManager.register(SYNC_RADIUS, 10);
-        dataManager.register(SYNC_LENGHT, 4);
+        dataManager.register(SYNC_LENGTH, 4);
         dataManager.register(SYNC_COLOR_R, 1F);
         dataManager.register(SYNC_COLOR_G, 1F);
         dataManager.register(SYNC_COLOR_B, 1F);
@@ -129,11 +129,11 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
     }
 
     public void setCylinderLength(int length) {
-        dataManager.set(SYNC_LENGHT, length);
+        dataManager.set(SYNC_LENGTH, length);
     }
 
     public int getCylinderLength() {
-        return dataManager.get(SYNC_LENGHT);
+        return dataManager.get(SYNC_LENGTH);
     }
 
     public void setCylinderSize(float size) {
