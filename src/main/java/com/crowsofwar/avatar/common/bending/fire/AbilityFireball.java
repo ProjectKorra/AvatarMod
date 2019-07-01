@@ -148,7 +148,7 @@ public class AbilityFireball extends Ability {
 			super.onUpdate(entity);
 			Entity emitter = AvatarUtils.getEntityFromStringID(entity.getEmittingEntity());
 			if (emitter instanceof EntityFireball) {
-				entity.setOrbSize(((EntityFireball) emitter).getSize());
+				entity.setOrbSize(((EntityFireball) emitter).getSize() / 10);
 			}
 			return this;
 		}

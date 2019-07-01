@@ -30,10 +30,10 @@ public class WaterPassives {
 						if (ctx.hasBendingId(Waterbending.ID)) {
 							if (entity.isInWater()) {
 								if (STATS_CONFIG.passiveSettings.waterBreathing) {
-									entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 10));
+									entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 10,0, false, false));
 								}
 								if (STATS_CONFIG.passiveSettings.hasteInWater) {
-									entity.addPotionEffect(new PotionEffect(MobEffects.HASTE, 10, 1));
+									entity.addPotionEffect(new PotionEffect(MobEffects.HASTE, 10, 0, false, false));
 								}
 								//entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 10, 0));
 								//OP right now; will be implemented later with the skill tree

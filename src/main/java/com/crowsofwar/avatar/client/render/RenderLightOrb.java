@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 
 import codechicken.lib.math.MathHelper;
@@ -121,6 +122,13 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
 
             GlStateManager.enableCull();
 
+        }
+        if (entity.getAbility() instanceof AbilityFireball) {
+            float ticks = entity.ticksExisted + partialTicks;
+            float rotation = ticks / 3f;
+            GlStateManager.rotate(rotation, 1, 0, 0);
+            GlStateManager.rotate(rotation, 0, 1, 0);
+            GlStateManager.rotate(rotation, 0, 0, 1);
         }
         GlStateManager.popMatrix();
 
