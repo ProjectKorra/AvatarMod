@@ -35,6 +35,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
@@ -105,6 +106,7 @@ public class AbilityFireball extends Ability {
 			fireball.setAbility(this);
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(20);
 
+
 			EntityLightOrb orb = new EntityLightOrb(world);
 			orb.setOwner(entity);
 			orb.setAbility(this);
@@ -114,7 +116,7 @@ public class AbilityFireball extends Ability {
 			orb.setLightRadius(15);
 			orb.setEmittingEntity(fireball.getUniqueID().toString());
 			orb.setBehavior(new FireballLightOrbBehavior());
-			orb.setType(EntityLightOrb.EnumType.TEXTURE_CUBE);
+			orb.setType(CLIENT_CONFIG.fireballRenderSettings.isSphere ? EntityLightOrb.EnumType.TEXTURE_SPHERE : EntityLightOrb.EnumType.TEXTURE_CUBE);
 			orb.setTexture("avatarmod:textures/entity/fireball/frame_%number%.png");
 			orb.setTextureFrameCount(30);
 			world.spawnEntity(orb);
