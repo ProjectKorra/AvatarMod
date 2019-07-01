@@ -134,8 +134,10 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 			if (getBehavior() != null && getBehavior() instanceof FireballBehavior.PlayerControlled) {
 				this.position = this.getPosition();
 			}
-
 		}
+		//I'm using 0.03125, because that results in a size of 0.5F when rendering, as the default size for the fireball is actually 16.
+		//This is due to weird rendering shenanigans
+		setSize(getSize() * 0.03125F, getSize() * 0.03125F);
 	}
 
 	@Override

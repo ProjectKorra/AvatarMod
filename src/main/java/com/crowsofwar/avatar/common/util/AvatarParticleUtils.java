@@ -80,7 +80,7 @@ public class AvatarParticleUtils {
 	 * @param maxAngle      The amount of particles/the maximum angle that the circle ticks to. 240 would mean there are 240 particles spiraling away.
 	 * @param vortexLength  How long the vortex is. This is initially used at the height, before rotating the vortex.
 	 * @param radiusScale   The maximum radius and how much the radius increases by. Always use your value for the maxAngle here-
-	 *                      otherwise you can get some funky effects. Ex: maxAngle/1.5 would give you a max radius of 1.5 blocks.
+	 *                      otherwise you can get some funky effects. Ex: maxAngle / 1.5 would give you a max radius of 1.5 times your adius.
 	 *                      Note: It might only be a diamater of 1.5 blocks- if so, uhhh... My bad.
 	 * @param particle      The wizardry particle type. I had to create two methods- for for normal particles, one for wizardry ones.
 	 * @param position      The starting/reference position of the vortex. Used along with the direction position to determine the actual starting position.

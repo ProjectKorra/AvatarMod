@@ -1,6 +1,8 @@
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
+import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 
 import codechicken.lib.math.MathHelper;
@@ -8,6 +10,7 @@ import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.OBJParser;
 import codechicken.lib.texture.TextureUtils;
+import com.crowsofwar.avatar.common.util.AvatarParticleUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -15,7 +18,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 /**
  * @author Aang23
@@ -28,7 +35,7 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
 
     private CCModel model;
 
-    private static CCModel cubeModel = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/cube.obj")).get("model"); 
+    private static CCModel cubeModel = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/cube.obj")).get("model");
     private static CCModel sphereModel = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/hemisphere.obj")).get("model");
 
     public RenderLightOrb(RenderManager manager) {
@@ -122,10 +129,27 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
                 model.render(ccrenderstate);
                 ccrenderstate.draw();
             }
-            if (entity.getAbility() instanceof AbilityFireball) {
+            if (entity.getAbility() instanceof AbilityFireball && entity.getEmittingEntity() != null && entity.getEmittingEntity() instanceof
+                    EntityFireball) {
                 GlStateManager.rotate(rotation * 0.2F, 1, 0, 0);
                 GlStateManager.rotate(rotation, 0, 1, 0);
                 GlStateManager.rotate(rotation * -0.2F, 0, 0, 1);
+                if (entity.ticksExisted % 3 == 0) {
+                    World world = entity.world;
+                    AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+                    double spawnX = boundingBox.minX + world.rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+                    double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+                    double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+                    world.spawnParticle(EnumParticleTypes.FLAME, spawnX, spawnY, spawnZ, 0, 0, 0);
+                    //I'm using 0.03125, because that results in a size of 0.5F when rendering, as the default size for the fireball is actually 16.
+                    //This is due to weird rendering shenanigans
+                    int radius = 60 * (int) (((EntityFireball) entity.getEmittingEntity()).getSize() / 0.03125);
+                    AvatarParticleUtils.spawnSpinningDirectionalVortex(world, entity.getOwner(), Vec3d.ZERO, radius,
+                            3, 0.001, radius * (((EntityFireball) entity.getEmittingEntity()).getSize() * 0.03125),
+                            AvatarParticles.getParticleFlames(), entity.getPositionVector(),
+                            new Vec3d(0.1, 0.05, 0.01).scale(((EntityFireball) entity.getEmittingEntity()).getSize() * 0.03125),
+                            new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
+                }
             }
 
 

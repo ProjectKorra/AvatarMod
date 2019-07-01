@@ -16,21 +16,20 @@
 */
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
+import com.crowsofwar.avatar.common.util.AvatarParticleUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
-import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
@@ -57,7 +56,6 @@ public class RenderFireball extends Render<EntityFireball> {
 						 float partialTicks) {
 
 
-
 		float x = (float) xx, y = (float) yy, z = (float) zz;
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
@@ -78,6 +76,13 @@ public class RenderFireball extends Render<EntityFireball> {
 			double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 			double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 			world.spawnParticle(EnumParticleTypes.FLAME, spawnX, spawnY, spawnZ, 0, 0, 0);
+			//I'm using 0.03125, because that results in a size of 0.5F when rendering, as the default size for the fireball is actually 16.
+			//This is due to weird rendering shenanigans
+			int radius = 60 * (int) (entity.getSize() / 0.03125);
+			AvatarParticleUtils.spawnSpinningDirectionalVortex(world, entity.getOwner(), Vec3d.ZERO, radius,
+					3, 0.001, radius * (entity.getSize() * 0.03125), AvatarParticles.getParticleFlames(),
+					entity.getPositionVector(), new Vec3d(0.1, 0.05, 0.01).scale(entity.getSize() * 0.03125),
+					new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
 		}
 
 		//   if (MinecraftForgeClient.getRenderPass() == 0) {
