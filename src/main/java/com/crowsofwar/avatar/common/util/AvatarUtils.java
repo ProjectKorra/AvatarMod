@@ -35,6 +35,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.*;
@@ -426,6 +427,66 @@ public class AvatarUtils {
 				(float) endPos.x, (float) endPos.y, (float) endPos.z,
 				borderSize, excluded, false, transparentBlocks);
 	}
+
+	/**
+	 * This method is like the other method, it just uses vanilla damage sources.
+	 *
+	 * @param world        The world the raytrace is in.
+	 * @param caster       The caster of the spell. This is so mobs don't attack each other when you use raytraces from mobs.
+	 *                     All damage is done by the caster.
+	 * @param startPos     Where the raytrace starts.
+	 * @param endPos       Where the raytrace ends.
+	 * @param borderSize   The width of the raytrace.
+	 * @param spellEntity  The entity that's using this method, if applicable. If this method is directly used in a spell, just make this null.
+	 * @param damageSource The damage source.
+	 * @param damage       The amount of damage.
+	 * @param knockBack    The amount of knockback.
+	 * @param setFire      Whether to set an enemy on fire.
+	 * @param fireTime     How long to set an enemy on fire.
+	 */
+
+	public static void handlePiercingBeamCollision(World world, EntityLivingBase caster, Vec3d startPos, Vec3d endPos, float borderSize, Entity spellEntity, DamageSource damageSource,
+												   float damage, Vec3d knockBack, boolean setFire, int fireTime, float radius) {
+		HashSet<Entity> excluded = new HashSet<>();
+		RayTraceResult result = standardEntityRayTrace(world, caster, spellEntity, startPos, endPos, borderSize, false, excluded);
+		if (result != null && result.entityHit instanceof EntityLivingBase) {
+			EntityLivingBase hit = (EntityLivingBase) result.entityHit;
+			if (setFire) {
+				hit.setFire(fireTime);
+			}
+			hit.attackEntityFrom(damageSource, damage);
+			hit.motionX += knockBack.x;
+			hit.motionY += knockBack.y;
+			hit.motionZ += knockBack.z;
+			afterVelocityAdded(hit);
+			Vec3d pos = result.hitVec;
+			AxisAlignedBB hitBox = new AxisAlignedBB(pos.x + radius, pos.y + radius, pos.z + radius, pos.x - radius, pos.y - radius, pos.z - radius);
+			List<Entity> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, hitBox);
+			excluded.add(hit);
+			nearby.remove(hit);
+			//This is so it doesn't count the entity that was hit by the raytrace and mess up the chain
+			if (!nearby.isEmpty()) {
+				for (Entity e : nearby) {
+					if (e != caster && e != hit && !excluded.contains(e) && e.getTeam() != caster.getTeam()) {
+						if (setFire) {
+							e.setFire(fireTime);
+						}
+						e.attackEntityFrom(damageSource, damage);
+						e.motionX += knockBack.x;
+						e.motionY += knockBack.y;
+						e.motionZ += knockBack.z;
+						afterVelocityAdded(e);
+						excluded.add(e);
+					}
+				}
+			} else {
+				handlePiercingBeamCollision(world, caster, pos, endPos, borderSize, spellEntity, damageSource, damage, knockBack, setFire, fireTime, radius);
+
+			}
+
+		}
+	}
+
 
 	/**
 	 * Method for ray tracing entities (the useless default method doesn't work,
