@@ -23,6 +23,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -77,9 +78,20 @@ public class BendingData {
 	}
 
 	// static methods
+
+	//Wrapper method for getting bending data for an entity. Ensures there's no weird crashes
+	@Nullable
+	public static BendingData getFromEntity(@Nonnull EntityLivingBase entity) {
+		if (entity instanceof FakePlayer) {
+			return null;
+		}
+		else return get(entity);
+	}
+
 	@Nonnull
 	public static BendingData get(@Nonnull EntityLivingBase entity) {
-		if (Bender.get(entity).getInfo().getId() == null) throw new IllegalArgumentException("Can't get data for an entity without an UUID");
+		if (Bender.get(entity).getInfo().getId() == null)
+			throw new IllegalArgumentException("Can't get data for an entity without an UUID");
 		if (entity instanceof EntityPlayer) {
 			return AvatarPlayerData.fetcher().fetch((EntityPlayer) entity).getData();
 		} else {
@@ -430,9 +442,7 @@ public class BendingData {
 		if (hasBendingId(bendingId)) {
 			return powerRatingManagers.computeIfAbsent(bendingId, PowerRatingManager::new);
 		} else {
-			if (powerRatingManagers.containsKey(bendingId)) {
-				powerRatingManagers.remove(bendingId);
-			}
+			powerRatingManagers.remove(bendingId);
 			return null;
 		}
 	}
