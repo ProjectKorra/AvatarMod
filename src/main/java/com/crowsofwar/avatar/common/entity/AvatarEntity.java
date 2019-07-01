@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -229,11 +230,11 @@ public abstract class AvatarEntity extends Entity {
 	}
 
 	public Ability getAbility() {
-		return dataManager.get(SYNC_ABILITY);
+		return Abilities.get(dataManager.get(SYNC_ABILITY));
 	}
 
 	public void setAbility(Ability ability) {
-		this.ability = ability;
+		dataManager.set(SYNC_ABILITY, ability.getName());
 	}
 
 	@Override

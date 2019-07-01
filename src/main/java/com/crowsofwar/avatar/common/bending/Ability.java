@@ -41,7 +41,6 @@ public abstract class Ability {
 		this.name = name;
 		this.raytrace = new Raytrace.Info();
 	}
-	
 
 	protected BendingStyle controller() {
 		return BendingStyles.get(type);
