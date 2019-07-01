@@ -114,7 +114,7 @@ public class AbilityFireball extends Ability {
 			orb.setLightRadius(15);
 			orb.setEmittingEntity(fireball.getUniqueID().toString());
 			orb.setBehavior(new FireballLightOrbBehavior());
-			orb.setType(EntityLightOrb.EnumType.TEXTURE_SPHERE);
+			orb.setType(EntityLightOrb.EnumType.TEXTURE_CUBE);
 			orb.setTexture("avatarmod:textures/entity/fireball/frame_%number%.png");
 			orb.setTextureFrameCount(30);
 			world.spawnEntity(orb);

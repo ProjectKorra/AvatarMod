@@ -30,8 +30,8 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
             .createKey(EntityLightCylinder.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> SYNC_RADIUS = EntityDataManager.createKey(EntityLightCylinder.class,
             DataSerializers.VARINT);
-    private static final DataParameter<Integer> SYNC_LENGTH = EntityDataManager.createKey(EntityLightCylinder.class,
-            DataSerializers.VARINT);
+    private static final DataParameter<Float> SYNC_LENGTH = EntityDataManager.createKey(EntityLightCylinder.class,
+            DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_COLOR_R = EntityDataManager.createKey(EntityLightCylinder.class,
             DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_COLOR_G = EntityDataManager.createKey(EntityLightCylinder.class,
@@ -57,7 +57,7 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
         dataManager.register(SYNC_SIZE, 1F);
         dataManager.register(SYNC_LIGHT_AMOUNT, 3);
         dataManager.register(SYNC_RADIUS, 10);
-        dataManager.register(SYNC_LENGTH, 4);
+        dataManager.register(SYNC_LENGTH, 4F);
         dataManager.register(SYNC_COLOR_R, 1F);
         dataManager.register(SYNC_COLOR_G, 1F);
         dataManager.register(SYNC_COLOR_B, 1F);
@@ -103,7 +103,7 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
         setLightAmount(nbt.getInteger("CylAmount"));
         setCylinderSize(nbt.getFloat("CylSize"));
         setLightRadius(nbt.getInteger("CylRadius"));
-        setCylinderLength(nbt.getInteger("CylLength"));
+        setCylinderLength(nbt.getFloat("CylLength"));
         setColorR(nbt.getFloat("CylColorR"));
         setColorG(nbt.getFloat("CylColorG"));
         setColorB(nbt.getFloat("CylColorB"));
@@ -119,7 +119,7 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
         nbt.setInteger("CylAmount", getLightAmount());
         nbt.setFloat("CylSize", getCylinderSize());
         nbt.setInteger("CylRadius", getLightRadius());
-        nbt.setInteger("CylLength", getCylinderLength());
+        nbt.setFloat("CylLength", getCylinderLength());
         nbt.setFloat("CylColorR", getColorR());
         nbt.setFloat("CylColorG", getColorG());
         nbt.setFloat("CylColorB", getColorB());
@@ -128,11 +128,11 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
         nbt.setFloat("CylPitch", getCylinderPitch());
     }
 
-    public void setCylinderLength(int length) {
+    public void setCylinderLength(float length) {
         dataManager.set(SYNC_LENGTH, length);
     }
 
-    public int getCylinderLength() {
+    public float getCylinderLength() {
         return dataManager.get(SYNC_LENGTH);
     }
 

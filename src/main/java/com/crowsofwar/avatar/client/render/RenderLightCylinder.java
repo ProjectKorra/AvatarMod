@@ -47,8 +47,10 @@ public class RenderLightCylinder extends Render<EntityLightCylinder> {
             GlStateManager.disableLighting();
             entityRenderer.disableLightmap();
             GlStateManager.disableCull();
-            GlStateManager.color(1F, 1F, 1F, 0.2F);
-            for (int i = 0; i < entity.getCylinderLength(); i++) {
+            GlStateManager.color(1F, 1F, 1F, entity.getColorA());
+            int lenght = (int) entity.getCylinderLength();
+            double lastLenght = entity.getCylinderLength() - lenght;
+            for (int i = 0; i < lenght; i++) {
                 GlStateManager.pushMatrix();
                 {
                     Vector end = new Vector(x, y, z).plus(new Vector(entity.getLookVec()).times(i * (scale * 2)));
@@ -56,7 +58,7 @@ public class RenderLightCylinder extends Render<EntityLightCylinder> {
                     GlStateManager.translate(end.x(), end.y(), end.z());
                     GlStateManager.rotate((float) (entity.rotationYaw - entity.rotationYaw * 2), 0, 1, 0);
                     GlStateManager.rotate((float) (entity.rotationPitch + 90), 1, 0, 0);
-                    GlStateManager.scale(scale, scale, scale);
+                    GlStateManager.scale(scale, lenght == i + 1 ? scale * lastLenght : scale, scale);
 
                     ccrenderstate.startDrawing(0x05, DefaultVertexFormats.POSITION_TEX_NORMAL);
                     model.render(ccrenderstate);

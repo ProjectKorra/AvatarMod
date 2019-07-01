@@ -46,7 +46,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 			DataSerializers.FLOAT);
 	private static final DataParameter<Float> SYNC_COLOUR_INTERVAL = EntityDataManager.createKey(EntityLightOrb.class,
 			DataSerializers.FLOAT);
-	int ticks = 0;
+	int ticks = 1;
 	private int lifeTime = -1;
 
 	public EntityLightOrb(World world) {
