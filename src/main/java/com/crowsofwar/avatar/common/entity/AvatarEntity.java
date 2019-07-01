@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
@@ -67,11 +68,13 @@ public abstract class AvatarEntity extends Entity {
 	private static final DataParameter<Optional<UUID>> SYNC_OWNER = EntityDataManager.createKey
 			(AvatarEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
+	private static final DataParameter<String> SYNC_ABILITY = EntityDataManager.createKey(AvatarEntity.class,
+			DataSerializers.STRING);
+
 
 	protected boolean putsOutFires;
 	protected boolean flammable;
 	private double powerRating;
-	private Ability ability;
 	private BendingStyle element;
 	protected boolean pushStoneButton, pushTrapDoor, pushDoor;
 
@@ -133,6 +136,7 @@ public abstract class AvatarEntity extends Entity {
 		dataManager.register(SYNC_ID,
 				world.isRemote ? -1 : AvatarWorldData.getDataFromWorld(world).nextEntityId());
 		dataManager.register(SYNC_OWNER, Optional.absent());
+		dataManager.register(SYNC_ABILITY, "earth_control");
 	}
 
 	/**
@@ -225,7 +229,7 @@ public abstract class AvatarEntity extends Entity {
 	}
 
 	public Ability getAbility() {
-		return ability;
+		return dataManager.get(SYNC_ABILITY);
 	}
 
 	public void setAbility(Ability ability) {

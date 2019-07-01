@@ -23,12 +23,15 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -143,8 +146,10 @@ public class AbilityFireball extends Ability {
 		@Override
 		public Behavior onUpdate(EntityLightOrb entity) {
 			super.onUpdate(entity);
-			entity.rotationPitch += 15;
-			entity.rotationYaw += 15;
+			Entity emitter = AvatarUtils.getEntityFromStringID(entity.getEmittingEntity());
+			if (emitter instanceof EntityFireball) {
+				entity.setOrbSize(((EntityFireball) emitter).getSize());
+			}
 			return this;
 		}
 

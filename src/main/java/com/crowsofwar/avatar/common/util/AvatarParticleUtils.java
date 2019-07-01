@@ -203,7 +203,7 @@ public class AvatarParticleUtils {
 					z + position.z, (particleSpeed.x * radius * omega * cos(angle2)) + entitySpeed.x, particleSpeed.y + entitySpeed.y, (particleSpeed.z * radius * omega * sin(angle2)) + entitySpeed.z);
 		}
 	}
-	
+
 
 	public static Vec3d getVectorForRotation(float pitch, float yaw) {
 		float f = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
