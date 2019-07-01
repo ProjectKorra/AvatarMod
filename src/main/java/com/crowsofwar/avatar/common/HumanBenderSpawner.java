@@ -46,6 +46,7 @@ import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class HumanBenderSpawner {
 
+	//Doesn't work, dunno why
 /*	@SubscribeEvent
 	public static void modifyVillageSpawner(InitMapGenEvent e) {
 
@@ -75,7 +76,7 @@ public class HumanBenderSpawner {
 			Random rand = new Random();
 			boolean bender = rand.nextBoolean();
 			//Will be changed when more benders are added
-			if (size < MOBS_CONFIG.maxNumberOfBenders && villagerSize >= 5) {
+			if (size < MOBS_CONFIG.maxNumberOfBenders && villagerSize >= 6) {
 				EntityHumanBender b = bender ? new EntityAirbender(world) : new EntityFirebender(world);
 				b.copyLocationAndAnglesFrom(e);
 				world.spawnEntity(b);

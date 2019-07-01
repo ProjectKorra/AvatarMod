@@ -23,10 +23,13 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityIcePrison;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.Objects;
 
 /**
  * Cancels any actions done when a player is in an ice prison or ice shield
@@ -42,8 +45,10 @@ public class IceActionCanceller {
 		}
 
 		//noinspection SimplifiableIfStatement
-		if (Bender.isBenderSupported(entity) && entity.getUniqueID() != null && entity.getPersistentID() != null) {
-			return BendingData.get(entity).hasStatusControl(StatusControl.SHIELD_SHATTER);
+		if (Bender.isBenderSupported(entity)) {
+			if (BendingData.getFromEntity(entity) != null) {
+				return Objects.requireNonNull(BendingData.getFromEntity(entity)).hasStatusControl(StatusControl.SHIELD_SHATTER);
+			}
 		}
 
 		return false;
