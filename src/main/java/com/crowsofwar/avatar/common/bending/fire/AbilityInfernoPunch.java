@@ -10,7 +10,6 @@ import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -90,7 +89,7 @@ public class AbilityInfernoPunch extends Ability {
 			orb.setOrbSize(orbSize / 5);
 			orb.setColor(1F, 0.5F, 0F, 1F);
 			orb.setLightRadius(lightRadius);
-			orb.setEmittingEntity(entity.getUniqueID().toString());
+			orb.setEmittingEntity(entity);
 			orb.setBehavior(new InfernoPunchLightOrb());
 			orb.setType(EntityLightOrb.EnumType.TEXTURE_SPHERE);
 			orb.setTexture("avatarmod:textures/entity/fireball/frame_%number%.png");
@@ -108,7 +107,7 @@ public class AbilityInfernoPunch extends Ability {
 
 		@Override
 		public Behavior onUpdate(EntityLightOrb entity) {
-			Entity emitter = AvatarUtils.getEntityFromStringID(entity.getEmittingEntity());
+			Entity emitter = entity.getEmittingEntity();
 			if (emitter != null) {
 				if (emitter instanceof EntityBender || emitter instanceof EntityPlayer) {
 					BendingData b = BendingData.get((EntityLivingBase) emitter);

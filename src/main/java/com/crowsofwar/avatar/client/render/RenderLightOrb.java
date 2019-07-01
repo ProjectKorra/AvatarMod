@@ -63,6 +63,9 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
         double dy = entity.posY - renderManager.viewerPosY;
         double dz = entity.posZ - renderManager.viewerPosZ;
 
+        float ticks = entity.ticksExisted + partialTicks;
+        float rotation = ticks / 100f;
+
         double lenghtXZ = Math.sqrt(dx * dx + dz * dz);
         double lenght = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
@@ -119,16 +122,15 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
                 model.render(ccrenderstate);
                 ccrenderstate.draw();
             }
+            if (entity.getAbility() instanceof AbilityFireball) {
+                GlStateManager.rotate(rotation * 0.2F, 1, 0, 0);
+                GlStateManager.rotate(rotation, 0, 1, 0);
+                GlStateManager.rotate(rotation * -0.2F, 0, 0, 1);
+            }
+
 
             GlStateManager.enableCull();
 
-        }
-        if (entity.getAbility() instanceof AbilityFireball) {
-            float ticks = entity.ticksExisted + partialTicks;
-            float rotation = ticks / 3f;
-            GlStateManager.rotate(rotation, 1, 0, 0);
-            GlStateManager.rotate(rotation, 0, 1, 0);
-            GlStateManager.rotate(rotation, 0, 0, 1);
         }
         GlStateManager.popMatrix();
 
@@ -137,6 +139,7 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
 
         GlStateManager.color(1, 1, 1, 1);
     }
+
 
     @Override
     protected ResourceLocation getEntityTexture(EntityLightOrb entity) {
