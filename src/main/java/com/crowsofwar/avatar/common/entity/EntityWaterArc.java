@@ -148,13 +148,13 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	public void Splash() {
-		if (world instanceof WorldServer) {
+		if (world instanceof WorldServer && getOwner() != null) {
 
 			float speed = 0.025F;
 			float hitBox = 0.5F;
 			int numberOfParticles = 500;
 
-			if (getAbility() instanceof AbilityWaterArc && !world.isRemote) {
+			if (getAbility() instanceof AbilityWaterArc) {
 				AbilityData abilityData = BendingData.get(Objects.requireNonNull(getOwner())).getAbilityData("water_arc");
 				int lvl = abilityData.getLevel();
 				this.damageMult = lvl >= 2 ? 2 : 0.5F;
