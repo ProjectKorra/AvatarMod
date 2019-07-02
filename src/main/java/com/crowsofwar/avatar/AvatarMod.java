@@ -143,7 +143,7 @@ public class AvatarMod {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 
-		codeChickenLibCompat = false && Loader.isModLoaded("codechickenlib");
+		codeChickenLibCompat = Loader.isModLoaded("codechickenlib");
 
 		AvatarLog.log = e.getModLog();
 
