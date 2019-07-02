@@ -124,8 +124,7 @@ public class AbilityFireball extends Ability {
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
 				explosionStrength = fireball.getSize() / 20F + 0.75F;
 			}
-
-			fireball.setExplosionStrength(explosionStrength);
+			
 			data.addStatusControl(StatusControl.THROW_FIREBALL);
 			world.spawnEntity(fireball);
 
