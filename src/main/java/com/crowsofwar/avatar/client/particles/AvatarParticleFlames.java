@@ -28,7 +28,7 @@ public class AvatarParticleFlames extends AvatarParticle {
 
 	static {
 		for (int i = 0; i < FRAMES.length; i++) {
-			FRAMES[i] = new ParticleFrame(32 * i, 0, 32, 32);
+			FRAMES[i] = new ParticleFrame(34 * i, 7, 32, 34);
 		}
 	}
 
