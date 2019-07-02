@@ -64,4 +64,9 @@ public class AvatarParticleFlames extends AvatarParticle {
 		return FRAMES;
 	}
 
+	@Override
+	public int getBrightnessForRender(float partialTick) {
+		return 15728880;
+	}
+
 }
