@@ -21,7 +21,6 @@ import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.bending.fire.AbilityInfernoPunch;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -79,7 +78,7 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 
 		@Override
 		public Behavior onUpdate(EntityLightOrb entity) {
-			Entity emitter = AvatarUtils.getEntityFromStringID(entity.getEmittingEntity());
+			Entity emitter = entity.getEmittingEntity();
 			if (emitter != null) {
 				entity.posX = emitter.posX;
 				entity.posY = emitter.posY + entity.height * 2;

@@ -29,18 +29,19 @@ import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
 
+import java.util.Objects;
+
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
-
-import java.util.Random;
 
 /**
  * @author CrowsOfWar
@@ -93,7 +94,6 @@ public class AbilityFireball extends Ability {
 			}
 
 
-
 			assert target != null;
 
 			EntityFireball fireball = new EntityFireball(world);
@@ -111,10 +111,10 @@ public class AbilityFireball extends Ability {
 			orb.setOwner(entity);
 			orb.setAbility(this);
 			orb.setPosition(target);
-			orb.setOrbSize(size / 10);
+			orb.setOrbSize(size * 0.03125F);
 			orb.setColor(1F, 0.5F, 0F, 1F);
 			orb.setLightRadius(15);
-			orb.setEmittingEntity(fireball.getUniqueID().toString());
+			orb.setEmittingEntity(fireball);
 			orb.setBehavior(new FireballLightOrbBehavior());
 			orb.setType(CLIENT_CONFIG.fireballRenderSettings.isSphere ? EntityLightOrb.EnumType.TEXTURE_SPHERE : EntityLightOrb.EnumType.TEXTURE_CUBE);
 			orb.setTexture("avatarmod:textures/entity/fireball/frame_%number%.png");
@@ -143,8 +143,15 @@ public class AbilityFireball extends Ability {
 		@Override
 		public Behavior onUpdate(EntityLightOrb entity) {
 			super.onUpdate(entity);
-			if(entity.getEntityWorld().isRemote)
-			entity.setLightRadius(15 + (int)(Math.random() * 5));
+
+			if(entity.getEntityWorld().isRemote) entity.setLightRadius(15 + (int)(Math.random() * 5));
+			
+			Entity emitter = entity.getEmittingEntity();
+			if (emitter instanceof EntityFireball && ((EntityFireball) emitter).getOwner() != null) {
+				entity.setOrbSize(((EntityFireball) emitter).getSize() * 0.03125F);
+				entity.rotationPitch = Objects.requireNonNull(((EntityFireball) emitter).getOwner()).rotationPitch;
+				entity.rotationYaw = Objects.requireNonNull(((EntityFireball) emitter).getOwner()).rotationYaw;
+			}
 			return this;
 		}
 

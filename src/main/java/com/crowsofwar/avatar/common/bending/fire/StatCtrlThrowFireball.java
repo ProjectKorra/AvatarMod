@@ -54,6 +54,8 @@ public class StatCtrlThrowFireball extends StatusControl {
 			AbilityData abilityData = ctx.getData().getAbilityData("fireball");
 			double speedMult = abilityData.getLevel() >= 2 ? 32.5 : 27.5;
 			fireball.setBehavior(new FireballBehavior.Thrown());
+			fireball.rotationPitch = entity.rotationPitch;
+			fireball.rotationYaw = entity.rotationYaw;
 			fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
 
 		}

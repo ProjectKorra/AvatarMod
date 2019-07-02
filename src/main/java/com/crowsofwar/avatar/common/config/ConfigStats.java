@@ -478,16 +478,16 @@ public class ConfigStats {
 
 	public static class PassiveSettings {
 		@Load
-		public final boolean waterBreathing = true;
+		public boolean waterBreathing = true;
 
 		@Load
-		public final boolean hasteInWater = true;
+		public boolean hasteInWater = true;
 
 		@Load
-		public final boolean fireResistance = true;
+		public boolean fireResistance = true;
 
 		@Load
-		public final boolean noFallDamageAir = true;
+		public boolean noFallDamageAir = true;
 
 	}
 

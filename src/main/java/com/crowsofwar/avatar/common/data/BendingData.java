@@ -80,6 +80,7 @@ public class BendingData {
 	// static methods
 
 	//Wrapper method for getting bending data for an entity. Ensures there's no weird crashes
+	//TODO: Fully implement this everywhere
 	@Nullable
 	public static BendingData getFromEntity(@Nonnull EntityLivingBase entity) {
 		if (entity instanceof FakePlayer) {
