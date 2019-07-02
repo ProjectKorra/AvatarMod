@@ -112,15 +112,15 @@ public class RenderFireball extends Render<EntityFireball> {
 		//   if (MinecraftForgeClient.getRenderPass() == 0) {
 		disableLighting();
 
-		renderCube(x, y, z, //
-				0, 8 / 256.0, 0, 8 / 256.0, //
-				.5f, //
-				ticks / 25F, ticks / 25f, ticks / 25F);
-
 		int i = 15728880;
 		int j = i % 65536;
 		int k = i / 65536;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+
+		renderCube(x, y, z, //
+				0, 8 / 256.0, 0, 8 / 256.0, //
+				.5f, //
+				ticks / 25F, ticks / 25f, ticks / 25F);
 
 		//  } else {
 
