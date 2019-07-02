@@ -5,10 +5,10 @@ import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.OBJParser;
 import codechicken.lib.texture.TextureUtils;
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -19,12 +19,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import static com.crowsofwar.avatar.common.util.AvatarParticleUtils.rotateAroundAxisX;
-import static com.crowsofwar.avatar.common.util.AvatarParticleUtils.rotateAroundAxisY;
-import static java.lang.Math.sin;
 
 /**
  * @author Aang23
@@ -121,7 +116,15 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
             if(entity.getAbility() instanceof AbilityFireball && entity.getEmittingEntity() != null && entity.getEmittingEntity() instanceof EntityFireball) {
                 GlStateManager.rotate(rotation * 0.2F, 1, 0, 0);
                 GlStateManager.rotate(rotation, 0, 1, 0);
-                GlStateManager.rotate(rotation * -0.2F, 0, 0, 1);
+                GlStateManager.rotate(rotation * 0.2F, 0, 0, 1);
+                World world = entity.world;
+                AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+                for (int i = 0; i < 5; i++) {
+                    double spawnX = boundingBox.minX + AvatarUtils.getRandomNumberInRange(1, 10) / 10F * (boundingBox.maxX - boundingBox.minX);
+                    double spawnY = boundingBox.minY + AvatarUtils.getRandomNumberInRange(1, 10) / 10F * (boundingBox.maxY - boundingBox.minY);
+                    double spawnZ = boundingBox.minZ + AvatarUtils.getRandomNumberInRange(1, 10) / 10F * (boundingBox.maxZ - boundingBox.minZ);
+                    world.spawnParticle(EnumParticleTypes.FLAME, spawnX, spawnY, spawnZ, 0, 0, 0);
+                }
             }
 
             GlStateManager.disableCull();

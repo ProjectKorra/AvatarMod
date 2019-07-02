@@ -652,6 +652,11 @@ public class AvatarUtils {
 		}
 	}
 
+	public static int getRandomNumberInRange(int min, int max) {
+		Random r = new Random();
+		return r.nextInt((max - min) + 1) + min;
+	}
+
 	/**
 	 * An exception thrown by reading/writing methods for NBT
 	 *
