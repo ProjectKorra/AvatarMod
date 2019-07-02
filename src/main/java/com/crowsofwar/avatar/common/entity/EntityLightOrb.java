@@ -98,6 +98,10 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 		return dataManager.get(SYNC_ANIMATED_TEXTURE_FRAMES_COUNT);
 	}
 
+	public int getCurrentTextureNumber() {
+		return ticks;
+	}
+
 	/**
 	 * Using 0 uses a normal texture. if animated,
 	 * put %number% where you want the frame number to change

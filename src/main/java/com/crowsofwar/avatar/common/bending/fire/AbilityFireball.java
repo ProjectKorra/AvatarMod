@@ -143,8 +143,8 @@ public class AbilityFireball extends Ability {
 		@Override
 		public Behavior onUpdate(EntityLightOrb entity) {
 			super.onUpdate(entity);
-			entity.rotationPitch += 15;
-			entity.rotationYaw += 15;
+			if(entity.getEntityWorld().isRemote)
+			entity.setLightRadius(15 + (int)(Math.random() * 5));
 			return this;
 		}
 
