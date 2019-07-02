@@ -55,7 +55,6 @@ public abstract class AvatarParticle extends Particle {
 	public AvatarParticle(World world, double x, double y, double z, double velX, double velY, double velZ) {
 
 		super(world, x, y, z, velX, velY, velZ);
-
 		this.additiveBlending = false;
 
 	}
