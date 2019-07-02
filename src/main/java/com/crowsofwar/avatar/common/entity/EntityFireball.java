@@ -74,7 +74,6 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 	private AxisAlignedBB expandedHitbox;
 
 	private float damage;
-	private float explosionStrength;
 	private BlockPos position;
 
 	/**
@@ -83,12 +82,7 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 	public EntityFireball(World world) {
 		super(world);
 		setSize(.8f, .8f);
-		this.explosionStrength = 0.75f;
 		this.position = this.getPosition();
-	}
-
-	public void setExplosionStrength(float strength) {
-		this.explosionStrength = strength;
 	}
 
 	@Override
