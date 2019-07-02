@@ -58,6 +58,10 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
+
+			if(entity == null) return this;
+			if(entity.getWall() == null) return this;
+
 			entity.addVelocity(Vector.DOWN.times(7.0 / 20));
 
 			// Check everything is on the ground
@@ -100,6 +104,10 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
+
+			if(entity == null) return this;
+			if(entity.getWall() == null) return this;
+
 			ticks++;
 			// Prevents some glitches
 			if (ticks == 2) {
@@ -135,7 +143,8 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
 
-			if (entity.getWall() == null) return this;
+			if(entity == null) return this;
+			if(entity.getWall() == null) return this;
 
 			// not 0 since client missed 0th tick
 			if (ticks == 1) {
@@ -184,6 +193,10 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
+
+			if(entity == null) return this;
+			if(entity.getWall() == null) return this;
+
 			entity.setVelocity(Vector.ZERO);
 			ticks++;
 
@@ -215,6 +228,10 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
+
+			if(entity == null) return this;
+			if(entity.getWall() == null) return this;
+
 			ticks++;
 
 			// Get in which direction the wall should be pushed
@@ -292,6 +309,10 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
+
+			if(entity == null) return this;
+			if(entity.getWall() == null) return this;
+			
 			ticks++;
 
 			// Get in which direction the wall should be pulled. Needs to be reversed later
