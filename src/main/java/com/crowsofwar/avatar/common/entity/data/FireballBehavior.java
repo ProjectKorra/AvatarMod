@@ -17,8 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -38,7 +36,6 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Objects;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -115,19 +112,20 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 		}
 
 		private void collision(Entity collided, EntityFireball entity) {
-			double speed = entity.velocity().magnitude();
 
 			if (entity.canDamageEntity(collided)) {
 				collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
 
-				if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
+				//For some reason damage and velocity called here doesn't work
+
+				/*if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
 						entity.getDamage())) {
 					BattlePerformanceScore.addMediumScore(entity.getOwner());
-				}
+				}**/
 			}
 			if (entity.canCollideWith(collided) && collided.canBeCollidedWith()) {
 
-				Vector motion = entity.velocity();
+				Vector motion = entity.velocity().dividedBy(20);
 				motion = motion.times(motion.magnitude());
 				//Default size is 16, 16 * 0.03125 is 0.5F, which is the size the fireball is at level 1.
 				motion = motion.times(entity.getSize() * 0.03125F);
@@ -137,14 +135,14 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 				collided.motionZ += motion.z();
 				AvatarUtils.afterVelocityAdded(collided);
 
-				BendingData data = Bender.get(entity.getOwner()).getData();
+				/*BendingData data = Bender.get(entity.getOwner()).getData();
 				if (!collided.world.isRemote && data != null) {
 					float xp = SKILLS_CONFIG.fireballHit;
 					if (entity.getAbility() != null) {
 						data.getAbilityData(entity.getAbility().getName()).addXp(xp);
 					}
 
-				}
+				}**/
 
 				// Remove the fireball & spawn particles
 				if (!entity.world.isRemote) {
@@ -208,6 +206,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 					int size = entity.getSize();
 					if (size < 60 && entity.ticksExisted % 4 == 0) {
 						entity.setSize(size + 1);
+						entity.setDamage(1 / (20 * 0.03125F) * entity.getDamage());
 					}
 				}
 			}

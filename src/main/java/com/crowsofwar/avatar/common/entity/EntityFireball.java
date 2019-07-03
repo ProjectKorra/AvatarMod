@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -304,9 +305,9 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 
 				this.setInvisible(true);
 				WorldServer World = (WorldServer) this.world;
-				World.spawnParticle(EnumParticleTypes.FLAME, posX, posY, posZ, getSize() * 15, 0, 0, 0,
+				World.spawnParticle(AvatarParticles.getParticleFlames(), posX, posY, posZ, getSize() * 3, 0, 0, 0,
 						getSize() / 200F);
-				World.spawnParticle(EnumParticleTypes.LAVA, posX, posY, posZ, 50, 0, 0, 0, speed);
+				World.spawnParticle(EnumParticleTypes.LAVA, posX, posY, posZ, getSize() * 3, 0, 0, 0, speed);
 				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
 						SoundCategory.BLOCKS, 4.0F,
 						(1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
@@ -323,15 +324,17 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 								//further the closer they are to the player.
 								double dist = (hitBox - entity.getDistance(entity)) > 1 ? (hitBox - entity.getDistance(entity)) : 1;
 								Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
-								velocity = velocity.dividedBy(50).times(dist).withY(hitBox / 50);
-								velocity = velocity.times(speed);
+								velocity = velocity.dividedBy(60).times(dist).withY(hitBox / 50);
+								velocity = velocity.times(ExplosionSize);
 
 								double x = (velocity.x());
 								double y = (velocity.y()) > 0 ? velocity.y() : 0.25F;
 								double z = (velocity.z());
 
 								if (!entity.world.isRemote) {
-									entity.addVelocity(x, y, z);
+									entity.motionX += velocity.x();
+									entity.motionY += velocity.y();
+									entity.motionZ += velocity.z();
 
 									if (collided instanceof AvatarEntity) {
 										if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
@@ -359,19 +362,6 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 				abilityData = AbilityData.get(getOwner(), getAbility().getName());
 				DamageSource ds = AvatarDamageSource.causeFireballDamage(entity, getOwner());
 				int lvl = abilityData.getLevel();
-				float damage = 1.5F;
-				if (lvl == 1) {
-					damage = 2.5F;
-				}
-				if (lvl == 2) {
-					damage = 3;
-				}
-				if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-					damage = 3.5F;
-				}
-				if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-					damage = 3.5F;
-				}
 				if (entity.attackEntityFrom(ds, damage)) {
 					abilityData.addXp(SKILLS_CONFIG.fireballHit);
 					BattlePerformanceScore.addMediumScore(getOwner());

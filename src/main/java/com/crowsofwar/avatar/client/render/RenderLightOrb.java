@@ -115,11 +115,11 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
 
             if(entity.getAbility() instanceof AbilityFireball && entity.getEmittingEntity() != null && entity.getEmittingEntity() instanceof EntityFireball) {
                 int amount = entity.getType() == EntityLightOrb.EnumType.TEXTURE_SPHERE ? 1 : 2;
+                GlStateManager.rotate(rotation * 0.2F, 1, 0, 0);
+                GlStateManager.rotate(rotation, 0, 1, 0);
+                GlStateManager.rotate(rotation * 0.2F, 0, 0, 1);
                 for (int i = 0; i < amount; i++) {
                     EntityFireball fireball = (EntityFireball) entity.getEmittingEntity();
-                    GlStateManager.rotate(rotation * 0.2F, 1, 0, 0);
-                    GlStateManager.rotate(rotation, 0, 1, 0);
-                    GlStateManager.rotate(rotation * 0.2F, 0, 0, 1);
                     World world = entity.world;
                     AxisAlignedBB boundingBox = fireball.getEntityBoundingBox();
                     double spawnX = boundingBox.minX + AvatarUtils.getRandomNumberInRange(1, 10) / 10F * (boundingBox.maxX - boundingBox.minX);
