@@ -107,7 +107,7 @@ public class AbilityFireball extends Ability {
 			EntityLightOrb orb = new EntityLightOrb(world);
 			orb.setOwner(entity);
 			orb.setAbility(this);
-			orb.setColourShiftRange(0.2F);
+			//orb.setColourShiftRange(0.2F);
 			orb.setPosition(target);
 			orb.setOrbSize(size * 0.03125F);
 			orb.setColor(1F, 0.5F, 0F, 1F);
@@ -145,7 +145,7 @@ public class AbilityFireball extends Ability {
 				entity.rotationPitch = Objects.requireNonNull(((EntityFireball) emitter).getOwner()).rotationPitch;
 				entity.rotationYaw = Objects.requireNonNull(((EntityFireball) emitter).getOwner()).rotationYaw;
 			}
-			if (entity.getColourShiftRange() != 0) {
+			/*if (entity.getColourShiftRange() != 0) {
 				float range = entity.getColourShiftRange();
 				float r = entity.getInitialColourR();
 				float g = entity.getInitialColourG();
@@ -158,7 +158,7 @@ public class AbilityFireball extends Ability {
 				float blue = b + amount > b + range ? b - range : r + range;
 				float alpha = a + amount > a + range ? a - range : a + range;
 				entity.setColor(red, green, blue, alpha);
-			}
+			}**/
 			return this;
 		}
 
