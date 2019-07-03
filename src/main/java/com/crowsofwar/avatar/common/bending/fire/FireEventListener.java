@@ -17,7 +17,6 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -101,7 +100,7 @@ public class FireEventListener {
 											WorldServer World = (WorldServer) target.getEntityWorld();
 											for (double angle = 0; angle < 360; angle += 15) {
 												Vector pos = Vector.getOrthogonalVector(Vector.getLookRectangular(entity), angle, 0.2);
-												World.spawnParticle(EnumParticleTypes.FLAME, target.posX + pos.x(), (target.posY + (target.getEyeHeight() / 1.25)) + pos.y(), target.posZ + pos.z(),
+												World.spawnParticle(AvatarParticles.getParticleFlames(), target.posX + pos.x(), (target.posY + (target.getEyeHeight() / 1.25)) + pos.y(), target.posZ + pos.z(),
 														4 + abilityData.getLevel(), 0.0, 0.0, 0.0, 0.03 + (abilityData.getLevel() / 100F));
 											}
 										}

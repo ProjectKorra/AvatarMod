@@ -489,6 +489,9 @@ public class ConfigStats {
 		@Load
 		public boolean noFallDamageAir = true;
 
+		@Load
+		public boolean knockbackResistanceEarth = true;
+
 	}
 
 }

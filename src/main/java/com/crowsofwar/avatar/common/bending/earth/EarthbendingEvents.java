@@ -17,7 +17,9 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ScheduledDestroyBlock;
+import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,6 +27,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -82,6 +86,23 @@ public class EarthbendingEvents {
 
 			}
 
+		}
+	}
+
+	@SubscribeEvent
+	public void knockbackEvent(LivingKnockBackEvent event) {
+		if (event.getEntityLiving() instanceof EntityPlayer || event.getEntityLiving() instanceof EntityBender) {
+			if (!(event.getEntityLiving() instanceof FakePlayer)) {
+				Bender b = Bender.get(event.getEntityLiving());
+				if (b != null) {
+					if (b.getData() != null && b.getData().hasBendingId(Earthbending.ID)) {
+						float powerrating = (float) b.calcPowerRating(Earthbending.ID) / 100;
+						if (STATS_CONFIG.passiveSettings.knockbackResistanceEarth) {
+							event.setStrength(event.getStrength() * (0.8F - powerrating));
+						}
+					}
+				}
+			}
 		}
 	}
 
