@@ -46,6 +46,8 @@ public class ClientParticleSpawner implements ParticleSpawner {
 
 	}
 
+	//Spawns particles with a randomised velocity based on the velocity given. The velocity given here only acts as a magnitude, rather
+	//than a direction.
 	@Override
 	public void spawnParticles(World world, EnumParticleTypes particle, int minimum, int maximum, double x,
 							   double y, double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ,

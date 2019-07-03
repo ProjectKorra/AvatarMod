@@ -197,6 +197,11 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 		this.damageMult = damageMult;
 	}
 
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean isInRangeToRenderDist(double distance) {
