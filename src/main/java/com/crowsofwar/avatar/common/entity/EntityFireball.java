@@ -305,8 +305,8 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 
 				this.setInvisible(true);
 				WorldServer World = (WorldServer) this.world;
-				World.spawnParticle(AvatarParticles.getParticleFlames(), posX, posY, posZ, getSize() * 3, 0, 0, 0,
-						getSize() / 200F);
+				World.spawnParticle(AvatarParticles.getParticleFlames(), posX, posY, posZ, getSize() * 5, 0, 0, 0,
+						getSize() / 10F);
 				World.spawnParticle(EnumParticleTypes.LAVA, posX, posY, posZ, getSize() * 3, 0, 0, 0, speed);
 				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
 						SoundCategory.BLOCKS, 4.0F,
