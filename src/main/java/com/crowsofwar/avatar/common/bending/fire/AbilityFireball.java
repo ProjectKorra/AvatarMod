@@ -28,7 +28,6 @@ import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -108,7 +107,7 @@ public class AbilityFireball extends Ability {
 			orb.setOwner(entity);
 			orb.setAbility(this);
 			//orb.setColourShiftRange(0.2F);
-			orb.setPosition(target);
+			orb.setPosition(target.plusY(fireball.height * 2));
 			orb.setOrbSize(size * 0.03125F);
 			orb.setColor(1F, 0.5F, 0F, 1F);
 			orb.setLightRadius(15);
@@ -132,16 +131,18 @@ public class AbilityFireball extends Ability {
 		return new AiFireball(this, entity, bender);
 	}
 
-	public static class FireballLightOrbBehavior extends LightOrbBehavior.FollowEntity {
+	public static class FireballLightOrbBehavior extends LightOrbBehavior {
 
 		@Override
 		public Behavior onUpdate(EntityLightOrb entity) {
-			super.onUpdate(entity);
-
 			if(entity.getEntityWorld().isRemote) entity.setLightRadius(15 + (int)(Math.random() * 5));
 			Entity emitter = entity.getEmittingEntity();
 			if (emitter instanceof EntityFireball && ((EntityFireball) emitter).getOwner() != null) {
 				entity.setOrbSize(((EntityFireball) emitter).getSize() * 0.03125F);
+				entity.motionX = emitter.motionX;
+				entity.motionY = emitter.motionY;
+				entity.motionZ = emitter.motionZ;
+				entity.setPosition(emitter.getPositionVector().add(0, entity.height * 2, 0));
 				entity.rotationPitch = Objects.requireNonNull(((EntityFireball) emitter).getOwner()).rotationPitch;
 				entity.rotationYaw = Objects.requireNonNull(((EntityFireball) emitter).getOwner()).rotationYaw;
 			}
