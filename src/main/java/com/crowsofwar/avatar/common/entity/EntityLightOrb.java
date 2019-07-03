@@ -198,6 +198,9 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 		if (ticksExisted > lifeTime && lifeTime != -1) {
 			setDead();
 		}
+		if (getBehavior() instanceof LightOrbBehavior.FollowEntity && getEmittingEntity() == null) {
+			setDead();
+		}
 	}
 
 	@Override

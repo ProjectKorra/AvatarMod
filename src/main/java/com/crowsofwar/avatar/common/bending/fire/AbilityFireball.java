@@ -73,23 +73,19 @@ public class AbilityFireball extends Ability {
 			}
 
 			float damage = STATS_CONFIG.fireballSettings.damage;
-			float explosionStrength = 0.75f;
 			int size = 16;
 			damage *= ctx.getLevel() >= 2 ? 1.75f : 1f;
 			damage *= ctx.getPowerRatingDamageMod();
 
 			if (ctx.getLevel() == 1) {
-				explosionStrength = 1;
 				size = 18;
 			}
 
 			if (ctx.getLevel() == 2) {
-				explosionStrength = 1.25F;
 				size = 20;
 			}
 
 			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-				explosionStrength = 2;
 				size = 30;
 			}
 
@@ -121,10 +117,7 @@ public class AbilityFireball extends Ability {
 			orb.setTextureFrameCount(30);
 			world.spawnEntity(orb);
 
-			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-				explosionStrength = fireball.getSize() / 20F + 0.75F;
-			}
-			
+
 			data.addStatusControl(StatusControl.THROW_FIREBALL);
 			world.spawnEntity(fireball);
 
@@ -144,7 +137,6 @@ public class AbilityFireball extends Ability {
 			super.onUpdate(entity);
 
 			if(entity.getEntityWorld().isRemote) entity.setLightRadius(15 + (int)(Math.random() * 5));
-			
 			Entity emitter = entity.getEmittingEntity();
 			if (emitter instanceof EntityFireball && ((EntityFireball) emitter).getOwner() != null) {
 				entity.setOrbSize(((EntityFireball) emitter).getSize() * 0.03125F);
