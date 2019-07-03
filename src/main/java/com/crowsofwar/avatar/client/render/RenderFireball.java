@@ -72,7 +72,7 @@ public class RenderFireball extends Render<EntityFireball> {
 		double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 		double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 		world.spawnParticle(AvatarParticles.getParticleFlames(), spawnX, spawnY, spawnZ, 0, 0, 0);
-			
+
 
 		//   if (MinecraftForgeClient.getRenderPass() == 0) {
 		disableLighting();
