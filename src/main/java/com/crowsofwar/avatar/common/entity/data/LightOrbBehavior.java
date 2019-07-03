@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.bending.fire.AbilityInfernoPunch;
+import com.crowsofwar.avatar.common.bending.fire.AbilityPurify;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import net.minecraft.entity.Entity;
@@ -47,6 +48,7 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 		registerBehavior(ShiftColour.class);
 		registerBehavior(AbilityInfernoPunch.InfernoPunchLightOrb.class);
 		registerBehavior(AbilityFireball.FireballLightOrbBehavior.class);
+		registerBehavior(AbilityPurify.ImmolateBehaviour.class);
 	}
 
 	public static class Idle extends LightOrbBehavior {

@@ -9,9 +9,7 @@ import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import java.util.Random;
 
@@ -36,12 +34,12 @@ public class PurifyParticleHandler extends TickHandler {
 		Random rand = new Random();
 		double r = rand.nextDouble();
 		if (!world.isRemote) {
-			for (int i = 0; i < 18; i++) {
+			for (int i = 0; i < 12; i++) {
 				int random = rand.nextInt(2) + 1;
 				r = random == 1 ? r : r * -1;
-				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 20) + (r * 2)), 0).times(0.5).withY(entity.getEyeHeight() - 0.7);
-				particles.spawnParticles(world, AvatarParticles.getParticleFire(), 1, 1, location.plus(Vector.getEntityPos(entity)),
-						new Vector(0.6, 1.8, 0.6));
+				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (r * 2)), 0).times(0.5).withY(entity.getEyeHeight() - 0.7);
+				particles.spawnParticles(world, AvatarParticles.getParticleFlames(), 1, 1, location.plus(Vector.getEntityPos(entity)),
+						new Vector(0.4, 2.5, 0.4));
 			}
 		}
 		return duration >= immolateDuration;
