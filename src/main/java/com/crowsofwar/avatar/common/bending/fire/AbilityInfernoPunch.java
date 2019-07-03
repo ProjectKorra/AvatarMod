@@ -101,25 +101,25 @@ public class AbilityInfernoPunch extends Ability {
 							|| b.hasStatusControl(INFERNO_PUNCH_SECOND);
 					if (hasStatCtrl) {
 						entity.setPosition(emitter.getPositionVector().add(0, emitter.height / 2, 0));
-						int lightRadius = 5;
+						int lightRadius = 4;
 						//Stops constant spam and calculations
 						if (entity.ticksExisted == 1) {
 							AbilityData aD = AbilityData.get((EntityLivingBase) emitter, "inferno_punch");
 							int level = aD.getLevel();
 							if (level >= 1) {
-								lightRadius = 7;
+								lightRadius = 6;
 							}
 							if (level >= 2) {
-								lightRadius = 10;
+								lightRadius = 8;
 							}
 							if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-								lightRadius = 9;
-							}
-							if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 								lightRadius = 12;
 							}
+							if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+								lightRadius = 7;
+							}
 						}
-						if (entity.getEntityWorld().isRemote) entity.setLightRadius(lightRadius + (int) (Math.random() * 5));
+						if (entity.getEntityWorld().isRemote) entity.setLightRadius(lightRadius + (int) (Math.random() * 4));
 					} else entity.setDead();
 				}
 			}
