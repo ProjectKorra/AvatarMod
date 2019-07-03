@@ -22,10 +22,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -33,9 +31,6 @@ import org.joml.Vector4f;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.client.render.RenderUtils.drawQuad;
-import static com.crowsofwar.avatar.common.util.AvatarParticleUtils.rotateAroundAxisX;
-import static com.crowsofwar.avatar.common.util.AvatarParticleUtils.rotateAroundAxisY;
-import static java.lang.Math.sin;
 import static net.minecraft.client.renderer.GlStateManager.*;
 import static net.minecraft.util.math.MathHelper.cos;
 
@@ -71,43 +66,13 @@ public class RenderFireball extends Render<EntityFireball> {
 
 		enableBlend();
 
-		if (entity.ticksExisted % 3 == 0) {
-			World world = entity.world;
-			AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-			double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-			double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-			double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-			world.spawnParticle(EnumParticleTypes.FLAME, spawnX, spawnY, spawnZ, 0, 0, 0);
-			//I'm using 0.03125, because that results in a size of 0.5F when rendering, as the default size for the fireball is actually 16.
-			//This is due to weird rendering shenanigans
-			int particles = 30 * (int) (entity.getSize() * 0.03125);
-			for (int angle = 0; angle < particles; angle++) {
-				Vec3d direction = Vec3d.ZERO;
-				Vec3d position = entity.getPositionVector();
-				Vec3d entitySpeed = new Vec3d(entity.motionX, entity.motionY, entity.motionZ);
-				Vec3d particleSpeed = new Vec3d(0.1, 0.05, 0.1).scale(entity.getSize() * 0.03125);
-				double angle2 = world.rand.nextDouble() * Math.PI * 2;
-				double radius = (angle / (particles / (entity.getSize() * 0.03125F)));
-				double x1 = radius * Math.cos(angle);
-				double y1 = angle / (particles / (1 + entity.getSize() * 0.03125));
-				double z1 = radius * sin(angle);
-				double speed = world.rand.nextDouble() * 2 + 1;
-				double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
-				angle2 += omega;
-				Vec3d pos = new Vec3d(x1, y1, z1);
-				Vec3d pVel = new Vec3d(particleSpeed.x * radius * omega * Math.cos(angle2), particleSpeed.y, particleSpeed.z * radius * omega * sin(angle2));
-				pVel = rotateAroundAxisX(pVel, entity.rotationPitch - 90);
-				pVel = rotateAroundAxisY(pVel, entity.rotationYaw);
-				pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
-				pos = rotateAroundAxisY(pos, entity.rotationYaw);
-				world.spawnParticle(AvatarParticles.getParticleFlames(), true, pos.x + position.x + direction.x, pos.y + position.y + direction.y,
-						pos.z + position.z + direction.z, pVel.x + entitySpeed.x, pVel.y + entitySpeed.y, pVel.z + entitySpeed.z);
-			}
-			/*AvatarParticleUtils.spawnSpinningDirectionalVortex(world, entity.getOwner(), Vec3d.ZERO, particles,
-					3, 0.001, particles / (entity.getSize() * 0.03125), AvatarParticles.getParticleFlames(),
-					entity.getPositionVector(), new Vec3d(0.1, 0.05, 0.01).scale(entity.getSize() * 0.03125),
-					new Vec3d(entity.motionX, entity.motionY, entity.motionZ));**/
-		}
+		World world = entity.world;
+		AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+		double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+		double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+		double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+		world.spawnParticle(AvatarParticles.getParticleFlames(), spawnX, spawnY, spawnZ, 0, 0, 0);
+			
 
 		//   if (MinecraftForgeClient.getRenderPass() == 0) {
 		disableLighting();

@@ -154,6 +154,7 @@ public class AbilityFireball extends Ability {
 				float amount = AvatarUtils.getRandomNumberInRange(-(int) (1 / entity.getColourShiftInterval()),
 						(int) (1 / entity.getColourShiftInterval())) * entity.getColourShiftInterval();
 				float red = r + amount > r + range ? r - range : r + range;
+				red = r - amount < r - range ? r + range : r - range;
 				float green = g + amount > g + range ? g - range : g + range;
 				float blue = b + amount > b + range ? b - range : r + range;
 				float alpha = a + amount > a + range ? a - range : a + range;
