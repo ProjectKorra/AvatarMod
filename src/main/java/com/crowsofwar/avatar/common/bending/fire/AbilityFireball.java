@@ -139,18 +139,19 @@ public class AbilityFireball extends Ability {
 			Entity emitter = entity.getEmittingEntity();
 			if (emitter == null)
 				entity.setDead();
-			assert emitter instanceof EntityFireball;
-			if (((EntityFireball) emitter).getOwner() == null)
-				entity.setDead();
-			if (((EntityFireball) emitter).getOwner() != null) {
-				entity.setOrbSize(((EntityFireball) emitter).getSize() * 0.03125F);
-				entity.motionX = emitter.motionX;
-				entity.motionY = emitter.motionY;
-				entity.motionZ = emitter.motionZ;
-				entity.setPosition(emitter.getPositionVector().add(0, entity.height * 2, 0));
-				entity.rotationPitch = Objects.requireNonNull(((EntityFireball) emitter).getOwner()).rotationPitch;
-				entity.rotationYaw = Objects.requireNonNull(((EntityFireball) emitter).getOwner()).rotationYaw;
-			}
+			if (emitter != null) {
+				assert emitter instanceof EntityFireball;
+				if (((EntityFireball) emitter).getOwner() == null)
+					entity.setDead();
+				if (((EntityFireball) emitter).getOwner() != null) {
+					entity.setOrbSize(((EntityFireball) emitter).getSize() * 0.03125F);
+					entity.motionX = emitter.motionX;
+					entity.motionY = emitter.motionY;
+					entity.motionZ = emitter.motionZ;
+					entity.setPosition(emitter.getPositionVector().add(0, entity.height * 2, 0));
+					entity.rotationPitch = Objects.requireNonNull(((EntityFireball) emitter).getOwner()).rotationPitch;
+					entity.rotationYaw = Objects.requireNonNull(((EntityFireball) emitter).getOwner()).rotationYaw;
+				}
 			/*if (entity.getColourShiftRange() != 0) {
 				float range = entity.getColourShiftRange();
 				float r = entity.getInitialColourR();
@@ -166,6 +167,7 @@ public class AbilityFireball extends Ability {
 				float alpha = a + amount > a + range ? a - range : a + range;
 				entity.setColor(red, green, blue, alpha);
 			}**/
+			}
 			return this;
 		}
 
