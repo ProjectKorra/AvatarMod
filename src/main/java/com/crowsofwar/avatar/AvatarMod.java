@@ -94,7 +94,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityAirJump());
 		Abilities.register(new AbilityPickUpBlock());
 		Abilities.register(new AbilityRavine());
-		Abilities.register(new AbilityLightFire());
+		Abilities.register(new AbilityFireShot());
 		Abilities.register(new AbilityFireArc());
 		Abilities.register(new AbilityFlamethrower());
 		Abilities.register(new AbilityWaterArc());

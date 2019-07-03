@@ -144,8 +144,6 @@ public class AbilityFireball extends Ability {
 					entity.motionY = emitter.motionY;
 					entity.motionZ = emitter.motionZ;
 					entity.setPosition(emitter.getPositionVector().add(0, entity.height, 0));
-					entity.rotationPitch = emitter.rotationPitch;
-					entity.rotationYaw = emitter.rotationYaw;
 			/*if (entity.getColourShiftRange() != 0) {
 				float range = entity.getColourShiftRange();
 				float r = entity.getInitialColourR();

@@ -34,7 +34,7 @@ public class Firebending extends BendingStyle {
 
 	public Firebending() {
 
-		addAbility("light_fire");
+		addAbility("fire_shot");
 		addAbility("fire_arc");
 		addAbility("flamethrower");
 		addAbility("fireball");
