@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.World;
 
 public class FireParticleSpawner extends TickHandler {
 	private static final ParticleSpawner particles = new NetworkParticleSpawner();
@@ -20,11 +21,12 @@ public class FireParticleSpawner extends TickHandler {
 	public boolean tick(BendingContext ctx) {
 		EntityLivingBase target = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
+		World world = ctx.getWorld();
 
 		Vector pos = Vector.getEntityPos(target).minusY(0.05);
 
-		particles.spawnParticles(target.world, AvatarParticles.getParticleFlames(), 8, 20, pos,
-				new Vector(0.7, 0.2, 0.7));
+		particles.spawnParticles(world, world.rand.nextBoolean() ? AvatarParticles.getParticleFlames() : AvatarParticles.getParticleFire(),
+				4, 16, pos, new Vector(0.7, 0.2, 0.7));
 
 		return target.isInWater() || target.onGround || bender.isFlying();
 
