@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -126,9 +127,15 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			}
 			if (entity.canCollideWith(collided) && collided.canBeCollidedWith()) {
 
-				Vector motion = entity.velocity().dividedBy(20);
-				motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.08);
-				collided.addVelocity(motion.x(), motion.y(), motion.z());
+				Vector motion = entity.velocity();
+				motion = motion.times(motion.magnitude());
+				//Default size is 16, 16 * 0.03125 is 0.5F, which is the size the fireball is at level 1.
+				motion = motion.times(entity.getSize() * 0.03125F);
+				motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.1);
+				collided.motionX += motion.x();
+				collided.motionY += motion.y();
+				collided.motionZ += motion.z();
+				AvatarUtils.afterVelocityAdded(collided);
 
 				BendingData data = Bender.get(entity.getOwner()).getData();
 				if (!collided.world.isRemote && data != null) {

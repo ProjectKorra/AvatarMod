@@ -114,16 +114,19 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
             GlStateManager.scale(scale, scale, scale);
 
             if(entity.getAbility() instanceof AbilityFireball && entity.getEmittingEntity() != null && entity.getEmittingEntity() instanceof EntityFireball) {
-                EntityFireball fireball = (EntityFireball) entity.getEmittingEntity();
-                GlStateManager.rotate(rotation * 0.2F, 1, 0, 0);
-                GlStateManager.rotate(rotation, 0, 1, 0);
-                GlStateManager.rotate(rotation * 0.2F, 0, 0, 1);
-                World world = entity.world;
-                AxisAlignedBB boundingBox = fireball.getEntityBoundingBox();
-                double spawnX = boundingBox.minX + AvatarUtils.getRandomNumberInRange(1, 10) / 10F * (boundingBox.maxX - boundingBox.minX);
-                double spawnY = boundingBox.minY + AvatarUtils.getRandomNumberInRange(1, 10) / 10F * (boundingBox.maxY - boundingBox.minY);
-                double spawnZ = boundingBox.minZ + AvatarUtils.getRandomNumberInRange(1, 10) / 10F * (boundingBox.maxZ - boundingBox.minZ);
-                world.spawnParticle(AvatarParticles.getParticleFlames(), spawnX, spawnY, spawnZ, 0, 0, 0);
+                int amount = entity.getType() == EntityLightOrb.EnumType.TEXTURE_SPHERE ? 1 : 2;
+                for (int i = 0; i < amount; i++) {
+                    EntityFireball fireball = (EntityFireball) entity.getEmittingEntity();
+                    GlStateManager.rotate(rotation * 0.2F, 1, 0, 0);
+                    GlStateManager.rotate(rotation, 0, 1, 0);
+                    GlStateManager.rotate(rotation * 0.2F, 0, 0, 1);
+                    World world = entity.world;
+                    AxisAlignedBB boundingBox = fireball.getEntityBoundingBox();
+                    double spawnX = boundingBox.minX + AvatarUtils.getRandomNumberInRange(1, 10) / 10F * (boundingBox.maxX - boundingBox.minX);
+                    double spawnY = boundingBox.minY + AvatarUtils.getRandomNumberInRange(1, 10) / 10F * (boundingBox.maxY - boundingBox.minY);
+                    double spawnZ = boundingBox.minZ + AvatarUtils.getRandomNumberInRange(1, 10) / 10F * (boundingBox.maxZ - boundingBox.minZ);
+                    world.spawnParticle(AvatarParticles.getParticleFlames(), spawnX, spawnY, spawnZ, 0, 0, 0);
+                }
             }
 
             GlStateManager.disableCull();
@@ -141,51 +144,6 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
             }
 
             GlStateManager.enableCull();
-
-            if (entity.getAbility() instanceof AbilityFireball && entity.getEmittingEntity() != null && entity.getEmittingEntity() instanceof
-            EntityFireball) {
-        
-        /*if (entity.ticksExisted % 3 == 0) {
-            World world = entity.world;
-            AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-            double spawnX = boundingBox.minX + world.rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-            double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-            double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-            world.spawnParticle(EnumParticleTypes.FLAME, spawnX, spawnY, spawnZ, 0, 0, 0);
-            //I'm using 0.03125, because that results in a size of 0.5F when rendering, as the default size for the fireball is actually 16.
-            //This is due to weird rendering shenanigans
-            EntityFireball fireball = (EntityFireball) entity.getEmittingEntity();
-            int particles = 30 * (int) (fireball.getSize() / 0.03125);
-            for (int angle = 0; angle < particles; angle++) {
-                    Vec3d direction = Vec3d.ZERO;
-                    Vec3d position = entity.getPositionVector();
-                    Vec3d entitySpeed = new Vec3d(entity.motionX, entity.motionY, entity.motionZ);
-                    Vec3d particleSpeed = new Vec3d(0.1, 0.05, 0.1).scale(fireball.getSize() * 0.03125);
-                    double angle2 = world.rand.nextDouble() * Math.PI * 2;
-                    double radius = (angle / (particles / (fireball.getSize() * 0.03125F)));
-                    double x1 = radius * Math.cos(angle);
-                    double y1 = angle / (particles / (1 + fireball.getSize() * 0.03125));
-                    double z1 = radius * sin(angle);
-                    double speed = world.rand.nextDouble() * 2 + 1;
-                    double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
-                    angle2 += omega;
-                    Vec3d pos = new Vec3d(x1, y1, z1);
-                    Vec3d pVel = new Vec3d(particleSpeed.x * radius * omega * Math.cos(angle2), particleSpeed.y, particleSpeed.z * radius * omega * sin(angle2));
-                    pVel = rotateAroundAxisX(pVel, entity.rotationPitch - 90);
-                    pVel = rotateAroundAxisY(pVel, entity.rotationYaw);
-                    pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
-                    pos = rotateAroundAxisY(pos, entity.rotationYaw);
-                    world.spawnParticle(AvatarParticles.getParticleFlames(), true, pos.x + position.x + direction.x, pos.y + position.y + direction.y,
-                            pos.z + position.z + direction.z, pVel.x + entitySpeed.x, pVel.y + entitySpeed.y, pVel.z + entitySpeed.z);
-            }
-
-             AvatarParticleUtils.spawnSpinningDirectionalVortex(world, entity.getOwner(), Vec3d.ZERO, radius,
-                    3, 0.001, radius * (((EntityFireball) entity.getEmittingEntity()).getSize() * 0.03125),
-                    AvatarParticles.getParticleFlames(), entity.getPositionVector(),
-                    new Vec3d(0.1, 0.05, 0.01).scale(((EntityFireball) entity.getEmittingEntity()).getSize() * 0.03125),
-                    new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
-        }*/
-            }
 
         }
         GlStateManager.popMatrix();

@@ -366,7 +366,7 @@ public class ConfigStats {
 	public static class FireballSettings {
 
 		@Load
-		public float damage = 2.5F;
+		public float damage = 4F;
 
 		@Load
 		public int fireTime = 6;
@@ -378,7 +378,7 @@ public class ConfigStats {
 		public boolean damageBlocks = false;
 
 		@Load
-		public double push = 0.75;
+		public double push = 1.25;
 
 	}
 
