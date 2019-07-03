@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -10,14 +11,12 @@ import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.EnumHandSide;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.*;
@@ -40,43 +39,31 @@ public class AbilityInfernoPunch extends Ability {
 			return;
 
 		float chi = STATS_CONFIG.chiInfernoPunch;
-		float orbSize = 0.1F;
 		int lightRadius = 4;
 		if (ctx.getLevel() == 1) {
 			chi = STATS_CONFIG.chiInfernoPunch * 4 / 3;
 			//4
-			orbSize += 0.05F;
 			lightRadius += 2;
 
 		}
 		if (ctx.getLevel() == 2) {
 			chi = STATS_CONFIG.chiInfernoPunch * 5 / 3;
 			//5
-			orbSize += 0.1F;
 			lightRadius += 4;
 
 		}
 		if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 			chi = STATS_CONFIG.chiLargeInfernoPunch * 2F;
 			//6
-			orbSize += 0.2F;
 			lightRadius += 8;
 
 		}
 		if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
 			chi = STATS_CONFIG.chiSmallInfernoPunch * 2F;
 			//6
-			orbSize += 0.1F;
 			lightRadius += 3;
 
 		}
-
-		Vector pos = Vector.getRightSide(entity, 0.55).plus(0, 1.1, 0);
-		Vector direction = Vector.getLookRectangular(entity);
-		if (entity instanceof EntityPlayer && entity.getPrimaryHand() == EnumHandSide.LEFT) {
-			pos = Vector.getLeftSide(entity, 0.55).plus(0, 1.4, 0);
-		}
-		Vector hand = pos.plus(direction.times(0.3));
 
 		if (bender.consumeChi(chi)) {
 			if (ctx.isDynamicMasterLevel(AbilityTreePath.FIRST)) data.addStatusControl(INFERNO_PUNCH_FIRST);
@@ -86,16 +73,14 @@ public class AbilityInfernoPunch extends Ability {
 			EntityLightOrb orb = new EntityLightOrb(world);
 			orb.setOwner(entity);
 			orb.setAbility(new AbilityInfernoPunch());
-			orb.setPosition(hand);
-			orb.setOrbSize(orbSize / 5);
-			orb.setColor(1F, 0.5F, 0F, 1F);
+			orb.setPosition(entity.getPositionVector().add(0, entity.height / 2, 0));
+			orb.setOrbSize(0.005F);
+			orb.setColor(1F, 0.5F, 0F, 3F);
 			orb.setLightRadius(lightRadius);
 			orb.setEmittingEntity(entity);
 			orb.setBehavior(new InfernoPunchLightOrb());
-			orb.setType(EntityLightOrb.EnumType.TEXTURE_SPHERE);
-			orb.setTexture("avatarmod:textures/entity/fireball/frame_%number%.png");
-			orb.setTextureFrameCount(24);
-			//world.spawnEntity(orb);
+			orb.setType(EntityLightOrb.EnumType.COLOR_SPHERE);
+			world.spawnEntity(orb);
 		}
 	}
 
@@ -115,17 +100,26 @@ public class AbilityInfernoPunch extends Ability {
 					boolean hasStatCtrl = b.hasStatusControl(INFERNO_PUNCH_MAIN) || b.hasStatusControl(INFERNO_PUNCH_FIRST)
 							|| b.hasStatusControl(INFERNO_PUNCH_SECOND);
 					if (hasStatCtrl) {
-						Vector pos = Vector.getRightSide((EntityLivingBase) emitter, 0.3).plus(0, 1.3, 0);
-						Vector direction = Vector.getLookRectangular(emitter);
-
-						if (emitter instanceof EntityPlayer && ((EntityLivingBase) emitter).getPrimaryHand() == EnumHandSide.LEFT) {
-							pos = Vector.getLeftSide((EntityLivingBase) emitter, 0.55).plus(0, 1.4, 0);
+						entity.setPosition(emitter.getPositionVector().add(0, emitter.height / 2, 0));
+						int lightRadius = 5;
+						//Stops constant spam and calculations
+						if (entity.ticksExisted == 1) {
+							AbilityData aD = AbilityData.get((EntityLivingBase) emitter, "inferno_punch");
+							int level = aD.getLevel();
+							if (level >= 1) {
+								lightRadius = 7;
+							}
+							if (level >= 2) {
+								lightRadius = 10;
+							}
+							if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+								lightRadius = 9;
+							}
+							if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+								lightRadius = 12;
+							}
 						}
-						Vector hand = pos.plus(direction.times(0.2));
-						Vector motion = hand.minus(entity.position());
-						motion = motion.times(15);
-						entity.setVelocity(motion);
-
+						if (entity.getEntityWorld().isRemote) entity.setLightRadius(lightRadius + (int) (Math.random() * 5));
 					} else entity.setDead();
 				}
 			}
