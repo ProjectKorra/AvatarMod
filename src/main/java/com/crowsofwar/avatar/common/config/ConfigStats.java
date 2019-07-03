@@ -40,7 +40,7 @@ public class ConfigStats {
 			ravineSettings = new AttackSettings(3.5F, 0.25), //
 			waveSettings = new AttackSettings(0.25F, 4), //
 			airbladeSettings = new AttackSettings(5, .03), //
-			fireArcSettings = new AttackSettings(3.5F, 1),   //
+			fireArcSettings = new AttackSettings(2.75F, 1),   //
 			waterArcSettings = new AttackSettings(3, 1),
 			boulderSettings = new AttackSettings(0.1F, 0.1),
 			airBurstSettings = new AttackSettings (5F, 1),
@@ -366,7 +366,7 @@ public class ConfigStats {
 	public static class FireballSettings {
 
 		@Load
-		public float damage = 4F;
+		public float damage = 5F;
 
 		@Load
 		public int fireTime = 6;
