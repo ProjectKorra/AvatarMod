@@ -36,8 +36,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
 
-import java.util.Objects;
-
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
@@ -141,17 +139,13 @@ public class AbilityFireball extends Ability {
 				entity.setDead();
 			if (emitter != null) {
 				assert emitter instanceof EntityFireball;
-				if (((EntityFireball) emitter).getOwner() == null)
-					entity.setDead();
-				if (((EntityFireball) emitter).getOwner() != null) {
 					entity.setOrbSize(((EntityFireball) emitter).getSize() * 0.03125F);
 					entity.motionX = emitter.motionX;
 					entity.motionY = emitter.motionY;
 					entity.motionZ = emitter.motionZ;
-					entity.setPosition(emitter.getPositionVector().add(0, entity.height * 2, 0));
-					entity.rotationPitch = Objects.requireNonNull(((EntityFireball) emitter).getOwner()).rotationPitch;
-					entity.rotationYaw = Objects.requireNonNull(((EntityFireball) emitter).getOwner()).rotationYaw;
-				}
+					entity.setPosition(emitter.getPositionVector().add(0, entity.height, 0));
+					entity.rotationPitch = emitter.rotationPitch;
+					entity.rotationYaw = emitter.rotationYaw;
 			/*if (entity.getColourShiftRange() != 0) {
 				float range = entity.getColourShiftRange();
 				float r = entity.getInitialColourR();

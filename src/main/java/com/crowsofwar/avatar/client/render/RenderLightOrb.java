@@ -83,7 +83,7 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
 
         GlStateManager.pushMatrix();
         {
-            GlStateManager.translate(x, y - entity.getOrbSize() / 2.7D, z);
+            GlStateManager.translate(x, y + entity.getOrbSize() / 2.7D, z);
 
             GlStateManager.rotate((float) angleX, 0, 1, 0);
             GlStateManager.rotate((float) (angleY + 90), 1, 0, 0);

@@ -193,6 +193,8 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			Vector motion = Objects.requireNonNull(target).minus(entity.position());
 			motion = motion.times(5);
 			entity.setVelocity(motion);
+			entity.rotationYaw = owner.rotationYaw;
+			entity.rotationPitch = owner.rotationPitch;
 
 			if (entity.getAbility() instanceof AbilityFireball) {
 				if (data.getAbilityData("fireball").isMasterPath(AbilityTreePath.SECOND)) {

@@ -114,8 +114,8 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 			EnumFacing sideHit = raytrace.getSide();
 			setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.5));
 
-			// Try to light firest
-			if (lightsFires && sideHit != EnumFacing.DOWN && !world.isRemote) {
+			// Try to light fires
+			if (sideHit != EnumFacing.DOWN && !world.isRemote) {
 
 				BlockPos bouncingOff = getPosition().add(-sideHit.getXOffset(),
 				                                         -sideHit.getYOffset(),
@@ -134,7 +134,7 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 
 		if (!world.isRemote) {
 			BendingData data = Bender.get(owner).getData();
-			AbilityData abilityData = data.getAbilityData("flamethrower");
+			AbilityData abilityData = data.getAbilityData(getAbility());
 
 			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
 			                                                         entity -> entity != owner
