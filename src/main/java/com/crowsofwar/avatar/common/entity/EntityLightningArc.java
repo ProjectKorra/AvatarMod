@@ -1,10 +1,10 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
 import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -36,7 +36,6 @@ import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 /**
  * @author CrowsOfWar
@@ -110,7 +109,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		wave.setOwner(getOwner());
 		wave.setParticleAmount(1);
 		wave.setParticleSpeed((getSizeMultiplier() / 4) / 5);
-		wave.setParticleName(AvatarParticles.getParticleElectricity().getParticleName());
+		wave.setParticle(AvatarParticles.getParticleElectricity());
 		wave.setSpeed(0.6F + getSizeMultiplier() / 10);
 		wave.setDamageSource(AvatarDamageSource.LIGHTNING);
 		wave.setPosition(x, y, z);

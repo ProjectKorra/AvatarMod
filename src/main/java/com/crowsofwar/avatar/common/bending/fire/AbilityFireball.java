@@ -137,7 +137,12 @@ public class AbilityFireball extends Ability {
 		public Behavior onUpdate(EntityLightOrb entity) {
 			if(entity.getEntityWorld().isRemote) entity.setLightRadius(15 + (int)(Math.random() * 5));
 			Entity emitter = entity.getEmittingEntity();
-			if (emitter instanceof EntityFireball && ((EntityFireball) emitter).getOwner() != null) {
+			if (emitter == null)
+				entity.setDead();
+			assert emitter instanceof EntityFireball;
+			if (((EntityFireball) emitter).getOwner() == null)
+				entity.setDead();
+			if (((EntityFireball) emitter).getOwner() != null) {
 				entity.setOrbSize(((EntityFireball) emitter).getSize() * 0.03125F);
 				entity.motionX = emitter.motionX;
 				entity.motionY = emitter.motionY;

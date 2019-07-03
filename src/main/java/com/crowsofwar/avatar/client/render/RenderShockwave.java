@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.client.renderer.entity.Render;
@@ -20,13 +19,8 @@ public class RenderShockwave extends Render<EntityShockwave> {
 	@Override
 	public void doRender(EntityShockwave entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
-		EnumParticleTypes particle;
-		if (EnumParticleTypes.getByName(entity.getParticleName()) != null) {
-			particle = EnumParticleTypes.getByName(entity.getParticleName());
-		} else {
-			particle = AvatarParticles.getParticleFromName(entity.getParticleName());
-		}
-		if (entity.ticksExisted <= 2) {
+		EnumParticleTypes particle = entity.getParticle();
+		if (entity.ticksExisted <= 4) {
 			if (!entity.getSphere()) {
 				for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.getRange() * 15 / entity.getParticleAmount())) {
 					double x2 = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
@@ -38,6 +32,8 @@ public class RenderShockwave extends Render<EntityShockwave> {
 					entity.world.spawnParticle(particle, x2, y2, z2, speed.x(), speed.y(), speed.z());
 				}
 			}
+		}
+		if (entity.ticksExisted <= 2) {
 			if (entity.getSphere()) {
 				double x1, y1, z1, xVel, yVel, zVel;
 				for (double theta = 0; theta <= 180; theta += 1) {

@@ -184,7 +184,7 @@ public class StatCtrlAirJump extends StatusControl {
 			wave.setRange(lvl > 0 ? 2.25F + lvl / 4F : 2.25F);
 			wave.setSpeed(lvl > 0 ? 0.5F + lvl / 30F : 0.5f);
 			wave.setKnockbackHeight(lvl > 0 ? 0.0125F + lvl / 80F : 0.0125F);
-			wave.setParticleName(EnumParticleTypes.EXPLOSION_NORMAL.getParticleName());
+			wave.setParticle(EnumParticleTypes.EXPLOSION_NORMAL);
 			wave.setPerformanceAmount(10);
 			wave.setKnockbackMult(new Vec3d(0.5, 0.2, 0.5));
 			wave.setParticleAmount(1);

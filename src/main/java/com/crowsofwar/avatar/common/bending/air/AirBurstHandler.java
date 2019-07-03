@@ -9,12 +9,11 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -144,7 +143,7 @@ public class AirBurstHandler extends TickHandler {
 				EntityShockwave shockwave = new EntityShockwave(world);
 				shockwave.setOwner(entity);
 				shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
-				shockwave.setParticleName(EnumParticleTypes.EXPLOSION_NORMAL.getParticleName());
+				shockwave.setParticle(EnumParticleTypes.EXPLOSION_NORMAL);
 				shockwave.setElement(new Airbending());
 				shockwave.setParticleSpeed(0.08F);
 				shockwave.setDamageSource(AvatarDamageSource.AIR);
@@ -204,17 +203,5 @@ public class AirBurstHandler extends TickHandler {
 				AvatarUtils.afterVelocityAdded(collided);
 			}
 		}
-
-
-	}
-
-	private boolean canDamageEntity(Entity entity) {
-		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == entity) {
-			return false;
-		}
-		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem ||
-				entity instanceof EntityArmorStand || entity instanceof EntityAreaEffectCloud) {
-			return false;
-		} else return entity.canBeCollidedWith() && entity.canBePushed();
 	}
 }

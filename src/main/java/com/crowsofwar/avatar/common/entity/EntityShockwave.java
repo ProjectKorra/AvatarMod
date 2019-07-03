@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
@@ -14,6 +15,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -95,12 +97,13 @@ public class EntityShockwave extends AvatarEntity {
 		dataManager.set(SYNC_PARTICLE_CONTROLLER, amount);
 	}
 
-	public String getParticleName() {
-		return dataManager.get(SYNC_PARTICLE);
+	public EnumParticleTypes getParticle() {
+		return EnumParticleTypes.getByName(dataManager.get(SYNC_PARTICLE)) != null ? EnumParticleTypes.getByName(dataManager.get(SYNC_PARTICLE)) :
+				AvatarParticles.getParticleFromName(dataManager.get(SYNC_PARTICLE));
 	}
 
-	public void setParticleName(String particle) {
-		dataManager.set(SYNC_PARTICLE, particle);
+	public void setParticle(EnumParticleTypes particle) {
+		dataManager.set(SYNC_PARTICLE, particle.getParticleName());
 	}
 
 	public int getParticleAmount() {

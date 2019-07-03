@@ -40,7 +40,7 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 			particleCount = 5;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			particleCount = 4;
+			particleCount = 3;
 		}
 		if ((data.hasStatusControl(INFERNO_PUNCH_MAIN) || data.hasStatusControl(INFERNO_PUNCH_FIRST) || data.hasStatusControl(INFERNO_PUNCH_SECOND)) && !world.isRemote) {
 			WorldServer World = (WorldServer) world;
@@ -52,7 +52,8 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 				pos = Vector.getLeftSide(entity, 0.55).plus(0, 1.8, 0);
 			}
 			Vector hand = pos.plus(direction.times(0.6));
-			World.spawnParticle(AvatarParticles.getParticleFlames(), hand.x(), hand.y(), hand.z(), particleCount, 0, 0, 0, 0.015);
+			World.spawnParticle(world.rand.nextBoolean() ? AvatarParticles.getParticleFlames() : AvatarParticles.getParticleFire(),
+					hand.x(), hand.y(), hand.z(), particleCount, 0, 0, 0, 0.015);
 
 			return false;
 		} else return true;

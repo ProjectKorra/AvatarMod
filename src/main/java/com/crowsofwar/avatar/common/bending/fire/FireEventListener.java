@@ -80,7 +80,7 @@ public class FireEventListener {
 											wave.setPerformanceAmount(15);
 											wave.setFireTime(15);
 											wave.setSphere(true);
-											wave.setParticleName(AvatarParticles.getParticleBigFlame().getParticleName());
+											wave.setParticle(AvatarParticles.getParticleBigFlame());
 											wave.setParticleSpeed(0.12F);
 											wave.setParticleAmount(1);
 											wave.setParticleController(35);
@@ -100,7 +100,8 @@ public class FireEventListener {
 											WorldServer World = (WorldServer) target.getEntityWorld();
 											for (double angle = 0; angle < 360; angle += 15) {
 												Vector pos = Vector.getOrthogonalVector(Vector.getLookRectangular(entity), angle, 0.2);
-												World.spawnParticle(AvatarParticles.getParticleFlames(), target.posX + pos.x(), (target.posY + (target.getEyeHeight() / 1.25)) + pos.y(), target.posZ + pos.z(),
+												World.spawnParticle(world.rand.nextBoolean() ? AvatarParticles.getParticleFlames() : AvatarParticles.getParticleFire(),
+														target.posX + pos.x(), (target.posY + (target.getEyeHeight() / 1.25)) + pos.y(), target.posZ + pos.z(),
 														4 + abilityData.getLevel(), 0.0, 0.0, 0.0, 0.03 + (abilityData.getLevel() / 100F));
 											}
 										}
