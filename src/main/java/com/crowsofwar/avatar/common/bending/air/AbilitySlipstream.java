@@ -54,7 +54,7 @@ public class AbilitySlipstream extends Ability {
 			float xp = SKILLS_CONFIG.buffUsed;
 
 			// 4s base + 1s per level
-			int duration = abilityData.getLevel() > 0 ? 80 + 20 * abilityData.getLevel() : 80;
+			int duration = abilityData.getLevel() > 0 ? 100 + 20 * abilityData.getLevel() : 80;
 
 			int effectLevel = abilityData.getLevel() >= 2 ? 1 : 0;
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
