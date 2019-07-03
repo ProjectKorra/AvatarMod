@@ -115,7 +115,7 @@ public class FireEventListener {
 											target.attackEntityFrom(fire, damage);
 											target.setFire(fireTime);
 											target.motionX += direction.x() * knockBack;
-											target.motionY += direction.y() * knockBack >= 0 ? knockBack / 2 + (direction.y() * knockBack / 2) : knockBack / 2;
+											target.motionY += direction.y() * knockBack >= 0 ? knockBack / 4 + (direction.y() * knockBack / 4) : knockBack / 4;
 											target.motionZ += direction.z() * knockBack;
 											target.isAirBorne = true;
 											abilityData.addXp(4 - abilityData.getLevel());

@@ -174,7 +174,7 @@ public class ConfigClient {
 
 	public static class FireballRenderSettings {
 		@Load
-		public final boolean isSphere = true;
+		public final boolean isSphere = false;
 	}
 
 }
