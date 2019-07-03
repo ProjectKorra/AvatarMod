@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -106,6 +107,7 @@ public class AbilityFireball extends Ability {
 			EntityLightOrb orb = new EntityLightOrb(world);
 			orb.setOwner(entity);
 			orb.setAbility(this);
+			orb.setColourShiftRange(0.2F);
 			orb.setPosition(target);
 			orb.setOrbSize(size * 0.03125F);
 			orb.setColor(1F, 0.5F, 0F, 1F);
@@ -142,6 +144,20 @@ public class AbilityFireball extends Ability {
 				entity.setOrbSize(((EntityFireball) emitter).getSize() * 0.03125F);
 				entity.rotationPitch = Objects.requireNonNull(((EntityFireball) emitter).getOwner()).rotationPitch;
 				entity.rotationYaw = Objects.requireNonNull(((EntityFireball) emitter).getOwner()).rotationYaw;
+			}
+			if (entity.getColourShiftRange() != 0) {
+				float range = entity.getColourShiftRange();
+				float r = entity.getInitialColourR();
+				float g = entity.getInitialColourG();
+				float b = entity.getInitialColourB();
+				float a = entity.getInitialColourA();
+				float amount = AvatarUtils.getRandomNumberInRange(-(int) (1 / entity.getColourShiftInterval()),
+						(int) (1 / entity.getColourShiftInterval())) * entity.getColourShiftInterval();
+				float red = r + amount > r + range ? r - range : r + range;
+				float green = g + amount > g + range ? g - range : g + range;
+				float blue = b + amount > b + range ? b - range : r + range;
+				float alpha = a + amount > a + range ? a - range : a + range;
+				entity.setColor(red, green, blue, alpha);
 			}
 			return this;
 		}

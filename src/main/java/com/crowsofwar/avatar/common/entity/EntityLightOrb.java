@@ -41,12 +41,21 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 			DataSerializers.FLOAT);
 	private static final DataParameter<Float> SYNC_COLOUR_A = EntityDataManager.createKey(EntityLightOrb.class,
 			DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_INITIAL_COLOUR_R = EntityDataManager.createKey(EntityLightOrb.class,
+			DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_INITIAL_COLOUR_G = EntityDataManager.createKey(EntityLightOrb.class,
+			DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_INITIAL_COLOUR_B = EntityDataManager.createKey(EntityLightOrb.class,
+			DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_INITIAL_COLOUR_A = EntityDataManager.createKey(EntityLightOrb.class,
+			DataSerializers.FLOAT);
 	private static final DataParameter<String> SYNC_EMITTING_ENTITY = EntityDataManager.createKey(EntityLightOrb.class,
 			DataSerializers.STRING);
 	private static final DataParameter<Float> SYNC_COLOUR_RANGE = EntityDataManager.createKey(EntityLightOrb.class,
 			DataSerializers.FLOAT);
 	private static final DataParameter<Float> SYNC_COLOUR_INTERVAL = EntityDataManager.createKey(EntityLightOrb.class,
 			DataSerializers.FLOAT);
+
 	int ticks = 1;
 	private int lifeTime = -1;
 
@@ -68,6 +77,10 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 		dataManager.register(SYNC_COLOUR_G, 1F);
 		dataManager.register(SYNC_COLOUR_B, 1F);
 		dataManager.register(SYNC_COLOUR_A, 1F);
+		dataManager.register(SYNC_INITIAL_COLOUR_R, 1F);
+		dataManager.register(SYNC_INITIAL_COLOUR_G, 1F);
+		dataManager.register(SYNC_INITIAL_COLOUR_B, 1F);
+		dataManager.register(SYNC_INITIAL_COLOUR_A, 1F);
 		dataManager.register(SYNC_COLOUR_RANGE, 0.1F);
 		dataManager.register(SYNC_COLOUR_INTERVAL, 0.025F);
 		//Random string UUID
@@ -158,6 +171,10 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 		dataManager.set(SYNC_COLOUR_G, g);
 		dataManager.set(SYNC_COLOUR_B, b);
 		dataManager.set(SYNC_COLOUR_A, a);
+		dataManager.set(SYNC_INITIAL_COLOUR_R, r);
+		dataManager.set(SYNC_INITIAL_COLOUR_G, g);
+		dataManager.set(SYNC_INITIAL_COLOUR_B, b);
+		dataManager.set(SYNC_INITIAL_COLOUR_A, a);
 	}
 
 	public int getLightRadius() {
@@ -284,6 +301,19 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 
 	public void setColorA(float value) {
 		dataManager.set(SYNC_COLOUR_A, value);
+	}
+
+	public float getInitialColourR() {
+		return dataManager.get(SYNC_INITIAL_COLOUR_R);
+	}
+	public float getInitialColourG() {
+		return dataManager.get(SYNC_INITIAL_COLOUR_G);
+	}
+	public float getInitialColourB() {
+		return dataManager.get(SYNC_INITIAL_COLOUR_B);
+	}
+	public float getInitialColourA() {
+		return dataManager.get(SYNC_INITIAL_COLOUR_A);
 	}
 
 	public boolean shouldUseCustomTexture() {
