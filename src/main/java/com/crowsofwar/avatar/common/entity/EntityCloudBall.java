@@ -302,6 +302,7 @@ public class EntityCloudBall extends AvatarEntity {
 											&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
 										AvatarEntity avent = (AvatarEntity) collided;
 										avent.addVelocity(x, y, z);
+										avent.onAirContact();
 									}
 									entity.isAirBorne = true;
 									AvatarUtils.afterVelocityAdded(entity);

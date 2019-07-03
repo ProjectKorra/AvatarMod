@@ -16,12 +16,12 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -30,7 +30,6 @@ import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-
 import elucent.albedo.event.GatherLightsEvent;
 import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
@@ -50,16 +49,15 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 /**
  * @author CrowsOfWar
@@ -290,19 +288,18 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 
 	public void Explode(float ExplosionSize) {
 		if (world instanceof WorldServer) {
-			float size = ExplosionSize;
-			float speed = size / 20;
-			float hitBox = size + 0.5F;
+			float speed = ExplosionSize / 20;
+			float hitBox = ExplosionSize + 0.5F;
 			if (getOwner() != null) {
 				BendingData data = BendingData.get(getOwner());
 				AbilityData abilityData = data.getAbilityData("fireball");
 				if (abilityData.getLevel() == 1) {
-					speed = size / 8;
-					hitBox = size + 1.5F;
+					speed = ExplosionSize / 8;
+					hitBox = ExplosionSize + 1.5F;
 				}
 				if (abilityData.getLevel() >= 2) {
-					speed = size / 4;
-					hitBox = size + 4;
+					speed = ExplosionSize / 4;
+					hitBox = ExplosionSize + 4;
 				}
 
 				this.setInvisible(true);
@@ -320,27 +317,33 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 					for (Entity entity : collided) {
 						if (entity != getOwner() && entity != null && getOwner() != null) {
 							if (canCollideWith(entity) && entity != getOwner()) {
-
 								damageEntity(entity);
 
-								double mult = abilityData.getLevel() >= 2 ? -2 : -1;
-								double distanceTravelled = entity.getDistance(this.position.getX(),
-										this.position.getY(), this.position.getZ());
+								//Divide the result of the position difference to make entities fly
+								//further the closer they are to the player.
+								double dist = (hitBox - entity.getDistance(entity)) > 1 ? (hitBox - entity.getDistance(entity)) : 1;
+								Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
+								velocity = velocity.dividedBy(50).times(dist).withY(hitBox / 50);
+								velocity = velocity.times(speed);
 
-								Vector vel = position().minus(getEntityPos(entity));
-								vel = vel.normalize().times(mult).plusY(0.15f);
+								double x = (velocity.x());
+								double y = (velocity.y()) > 0 ? velocity.y() : 0.25F;
+								double z = (velocity.z());
 
-								entity.motionX = vel.x() + 0.1 / distanceTravelled;
-								entity.motionY = vel.y() > 0 ? vel.y() + 0.1 / distanceTravelled
-										: 0.3F + 0.1 / distanceTravelled;
-								entity.motionZ = vel.z() + 0.1 / distanceTravelled;
+								if (!entity.world.isRemote) {
+									entity.addVelocity(x, y, z);
 
-								if (entity instanceof AvatarEntity) {
-									AvatarEntity avent = (AvatarEntity) entity;
-									avent.setVelocity(vel);
+									if (collided instanceof AvatarEntity) {
+										if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
+												&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+											AvatarEntity avent = (AvatarEntity) collided;
+											avent.addVelocity(x, y, z);
+											avent.onFireContact();
+										}
+										entity.isAirBorne = true;
+										AvatarUtils.afterVelocityAdded(entity);
+									}
 								}
-								entity.isAirBorne = true;
-								AvatarUtils.afterVelocityAdded(entity);
 							}
 						}
 					}
