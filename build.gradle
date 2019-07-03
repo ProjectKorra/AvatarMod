@@ -39,6 +39,13 @@ ext.dependenciesConfig = parseConfig(file("dependencies.properties"))
 ext.secrets = parseConfig(file("secrets.properties"))
 
 version = config.version
+
+
+def env = System.getenv()
+if (env.BUILD_NUMBER) {
+    version = version + "-" + "${env.BUILD_NUMBER}"
+}
+
 group = config.group
 archivesBaseName = config.archivesBaseName
 
