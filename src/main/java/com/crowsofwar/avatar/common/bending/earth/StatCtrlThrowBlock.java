@@ -58,7 +58,7 @@ public class StatCtrlThrowBlock extends StatusControl {
 
 			// Calculate force and everything
 			double forceMult = data.getAbilityData("pickup_block").getLevel() >= 1 //
-					? 45 : 25;
+					? 50 : 35;
 			Vector lookDir = Vector.toRectangular(yaw, pitch);
 			floating.addVelocity(floating.velocity().times(-1));
 			floating.addVelocity(lookDir.times(forceMult));

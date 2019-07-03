@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -57,11 +58,17 @@ public class WaterParticleSpawner extends TickHandler {
 				}
 			}
 			if (abilityData.getLevel() >= 2) {
-				List<EntityArrow> arrows = world.getEntitiesWithinAABB(EntityArrow.class, box);
-				if (!arrows.isEmpty()) {
-					for (Entity e : arrows) {
-						Vector vel = Vector.getVelocity(e).times(-1);
-						e.addVelocity(vel.x(), 0, vel.z());
+				List<Entity> bolts = world.getEntitiesWithinAABB(Entity.class, box);
+				if (!bolts.isEmpty()) {
+					for (Entity e : bolts) {
+						if (e instanceof EntityArrow) {
+							Vector vel = Vector.getVelocity(e).times(-1);
+							e.addVelocity(vel.x(), 0, vel.z());
+						}
+						if (e instanceof AvatarEntity && ((AvatarEntity) e).isProjectile()) {
+							((AvatarEntity) e).onMajorWaterContact();
+							((AvatarEntity) e).setVelocity(((AvatarEntity) e).velocity().times(0.5F));
+						}
 					}
 				}
 			}
