@@ -113,7 +113,7 @@ public class AbilityPurify extends Ability {
 			orb.setColor(1F, 0.5F, 0F, 3F);
 			orb.setLightRadius(lightRadius);
 			orb.setEmittingEntity(entity);
-			orb.setBehavior(new ImmolateBehaviour());
+			orb.setBehavior(new ImmolateLightOrbBehaviour());
 			orb.setType(EntityLightOrb.EnumType.COLOR_CUBE);
 			world.spawnEntity(orb);
 			abilityData.addXp(SKILLS_CONFIG.buffUsed);
@@ -123,20 +123,11 @@ public class AbilityPurify extends Ability {
 
 	}
 
-	public static class ImmolateBehaviour extends LightOrbBehavior.FollowEntity {
+	public static class ImmolateLightOrbBehaviour extends LightOrbBehavior.FollowPlayer {
 		@Override
 		public Behavior onUpdate(EntityLightOrb entity) {
+			super.onUpdate(entity);
 			Entity emitter = entity.getEmittingEntity();
-			if (emitter != null) {
-				entity.motionX = emitter.motionX;
-				entity.motionY = emitter.motionY;
-				entity.motionZ = emitter.motionZ;
-				entity.posX = emitter.posX;
-				entity.posY = emitter.getEntityBoundingBox().minY + entity.height / 2;
-				entity.posZ = emitter.posZ;
-			} else if (entity.ticksExisted > 1) {
-				entity.setDead();
-			}
 			assert emitter instanceof EntityPlayer || emitter instanceof EntityBender;
 			Bender b = Bender.get((EntityLivingBase) emitter);
 			/*if (b != null && b.getData() != null && entity.ticksExisted > 1) {

@@ -1,11 +1,11 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -26,7 +26,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -185,17 +184,17 @@ public class StatCtrlFireJump extends StatusControl {
 		if (!world.isRemote) {
 			WorldServer World = (WorldServer) world;
 			for (double i = 0; i < range; ) {
-				for (int j = 0; j < 90; j++) {
+				for (int j = 0; j < 30; j++) {
 					Vector lookPos;
 					if (i >= 1) {
-						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + j * 4), 0).times(i);
+						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + j * 12), 0).times(i);
 					} else {
-						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + j * 4), 0);
+						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + j * 12), 0);
 					}
-					World.spawnParticle(EnumParticleTypes.FLAME, lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
+					World.spawnParticle(AvatarParticles.getParticleFlames(), lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
 										lookPos.z() + entity.posZ, numberOfParticles, 0, 0, 0, particleSpeed / 4);
 				}
-				i += range / 10;
+				i += range / 4;
 			}
 		}
 

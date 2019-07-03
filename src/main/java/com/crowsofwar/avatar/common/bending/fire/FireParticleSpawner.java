@@ -23,7 +23,7 @@ public class FireParticleSpawner extends TickHandler {
 
 		Vector pos = Vector.getEntityPos(target).minusY(0.05);
 
-		particles.spawnParticles(target.world, AvatarParticles.getParticleFire(), 10, 15, pos,
+		particles.spawnParticles(target.world, AvatarParticles.getParticleFlames(), 8, 20, pos,
 				new Vector(0.7, 0.2, 0.7));
 
 		return target.isInWater() || target.onGround || bender.isFlying();

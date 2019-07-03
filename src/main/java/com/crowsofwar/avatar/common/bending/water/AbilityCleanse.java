@@ -5,6 +5,9 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.EntityLightOrb;
+import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
@@ -13,6 +16,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -200,6 +205,32 @@ public class AbilityCleanse extends Ability {
 
 	}
 
+	public static class CleanseLightOrbBehaviour extends LightOrbBehavior.FollowPlayer {
+		@Override
+		public Behavior onUpdate(EntityLightOrb entity) {
+			return super.onUpdate(entity);
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+			super.fromBytes(buf);
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+			super.toBytes(buf);
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+			super.load(nbt);
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+			super.save(nbt);
+		}
+	}
 
 }
 

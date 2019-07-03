@@ -39,7 +39,7 @@ public class PurifyParticleHandler extends TickHandler {
 				r = random == 1 ? r : r * -1;
 				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (r * 2)), 0).times(0.5).withY(entity.getEyeHeight() - 0.7);
 				particles.spawnParticles(world, AvatarParticles.getParticleFlames(), 1, 1, location.plus(Vector.getEntityPos(entity)),
-						new Vector(0.4, 4, 0.4));
+						new Vector(0.8, 4, 0.8));
 			}
 		}
 		return duration >= immolateDuration;

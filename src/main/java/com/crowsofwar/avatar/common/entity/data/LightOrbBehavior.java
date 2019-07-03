@@ -46,9 +46,10 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 		registerBehavior(FollowEntity.class);
 		registerBehavior(ShiftColourRandomly.class);
 		registerBehavior(ShiftColour.class);
+		registerBehavior(FollowPlayer.class);
 		registerBehavior(AbilityInfernoPunch.InfernoPunchLightOrb.class);
 		registerBehavior(AbilityFireball.FireballLightOrbBehavior.class);
-		registerBehavior(AbilityPurify.ImmolateBehaviour.class);
+		registerBehavior(AbilityPurify.ImmolateLightOrbBehaviour.class);
 	}
 
 	public static class Idle extends LightOrbBehavior {
@@ -88,6 +89,45 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 				if (emitter instanceof AvatarEntity) {
 					entity.setVelocity((((AvatarEntity) emitter).velocity()));
 				}
+			} else if (entity.ticksExisted > 1) {
+				entity.setDead();
+			}
+			return this;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
+	}
+
+	public static class FollowPlayer extends LightOrbBehavior {
+
+		@Override
+		public Behavior onUpdate(EntityLightOrb entity) {
+			Entity emitter = entity.getEmittingEntity();
+			if (emitter != null) {
+				entity.motionX = emitter.motionX;
+				entity.motionY = emitter.motionY;
+				entity.motionZ = emitter.motionZ;
+				entity.posX = emitter.posX;
+				entity.posY = emitter.posY + entity.height / 2;
+				entity.posZ = emitter.posZ;
 			} else if (entity.ticksExisted > 1) {
 				entity.setDead();
 			}
