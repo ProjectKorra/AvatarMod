@@ -31,6 +31,7 @@ public class AbilityInfernoPunch extends Ability {
 
 	@Override
 	public void execute(AbilityContext ctx) {
+		//TODO: Use a randomiser for the flame particles so they're more dynamic
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		Bender bender = ctx.getBender();
@@ -94,7 +95,7 @@ public class AbilityInfernoPunch extends Ability {
 			orb.setType(EntityLightOrb.EnumType.TEXTURE_SPHERE);
 			orb.setTexture("avatarmod:textures/entity/fireball/frame_%number%.png");
 			orb.setTextureFrameCount(24);
-			world.spawnEntity(orb);
+			//world.spawnEntity(orb);
 		}
 	}
 
