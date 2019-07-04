@@ -17,28 +17,27 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
+import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
-import com.crowsofwar.gorecore.util.VectorI;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static java.lang.Math.floor;
 
 /**
  * @author CrowsOfWar
@@ -65,20 +64,52 @@ public class AbilityFireShot extends Ability {
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
 
-		VectorI looking = ctx.getLookPosI();
-		EnumFacing side = ctx.getLookSide();
-		if (bender.consumeChi(1)) {
-			EntityFlames flames = new EntityFlames(world);
-			flames.setVelocity(entity.getLookVec());
-			flames.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight(), 0).add(entity.getLookVec().scale(0.05)));
-			flames.setOwner(entity);
-			flames.rotationPitch = entity.rotationPitch;
-			flames.rotationYaw = entity.rotationYaw;
-			flames.setAbility(new AbilityFireShot());
-			flames.setDamageMult(bender.getDamageMult(Firebending.ID));
-			world.spawnEntity(flames);
+		//VectorI looking = ctx.getLookPosI();
+		//EnumFacing side = ctx.getLookSide();
+		float speed = 0.5F;
+		if (ctx.getLevel() == 1) {
+			speed += 0.25F;
 		}
-		if (ctx.isLookingAtBlock()) {
+		if (ctx.getLevel() == 2) {
+			speed += 0.5F;
+		}
+		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			speed += 0.75F;
+		}
+		if (bender.consumeChi(1)) {
+			if (!ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+				EntityFlames flames = new EntityFlames(world);
+				flames.setVelocity(entity.getLookVec().scale(speed));
+				flames.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight(), 0).add(entity.getLookVec().scale(0.05)));
+				flames.setOwner(entity);
+				flames.setReflect(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
+				flames.rotationPitch = entity.rotationPitch;
+				flames.rotationYaw = entity.rotationYaw;
+				flames.setAbility(new AbilityFireShot());
+				flames.setTrailingFire(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
+				flames.setDamageMult(bender.getDamageMult(Firebending.ID));
+				world.spawnEntity(flames);
+			}
+			else {
+				EntityShockwave wave = new EntityShockwave(world);
+				wave.setOwner(entity);
+				wave.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight() / 2, 0));
+				wave.setFireTime(10);
+				wave.setElement(new Firebending());
+				wave.setAbility(this);
+				wave.setParticle(AvatarParticles.getParticleFlames());
+				wave.setDamage(5F);
+				wave.setPerformanceAmount(15);
+				wave.setSpeed(0.4F);
+				wave.setKnockbackMult(new Vec3d(1.6, 1, 1.6));
+				wave.setKnockbackHeight(0.15);
+				wave.setParticleSpeed(0.2F);
+				wave.setParticleAmount(8);
+				world.spawnEntity(wave);
+			}
+		}
+
+		/*if (ctx.isLookingAtBlock()) {
 			if (looking != null) {
 				VectorI setAt = new VectorI(looking.x(), looking.y(), looking.z());
 				setAt.offset(side);
@@ -112,20 +143,7 @@ public class AbilityFireShot extends Ability {
 						spawnFire(world, blockPos.add(0, 0, -1), ctx, false, 100);
 						ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
 					}
-					/*EntityShockwave wave = new EntityShockwave(world);
-					wave.setOwner(entity);
-					wave.setPosition(entity.getPositionVector().add(0, 1.0, 0));
-					wave.setFireTime(10);
-					wave.setElement(new Firebending());
-					wave.setAbility(this);
-					wave.setParticleName(AvatarParticles.getParticleFire().getParticleName());
-					wave.setDamage(5F);
-					wave.setPerformanceAmount(15);
-					wave.setSpeed(0.4F);
-					wave.setKnockbackHeight(0.2);
-					wave.setParticleSpeed(1F);
-					wave.setParticleAmount(1);
-					world.spawnEntity(wave);**/
+
 
 
 				} else {
@@ -135,7 +153,7 @@ public class AbilityFireShot extends Ability {
 				}
 
 			}
-		}
+		}**/
 	}
 
 	private boolean spawnFire(World world, BlockPos blockPos, AbilityContext ctx, boolean useChi,

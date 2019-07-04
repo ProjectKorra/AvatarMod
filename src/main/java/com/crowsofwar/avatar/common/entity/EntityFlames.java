@@ -29,7 +29,9 @@ import elucent.albedo.event.GatherLightsEvent;
 import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
@@ -46,20 +48,15 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 @Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
 public class EntityFlames extends AvatarEntity implements ILightProvider {
 
-	/**
-	 * The owner, null client side
-	 */
 	private boolean reflect;
-
+	private boolean lightTrailingFire;
 	private double damageMult;
 
-	/**
-	 *
-	 */
 	public EntityFlames(World worldIn) {
 		super(worldIn);
 		setSize(0.1f, 0.1f);
 		this.setsFires = true;
+		this.lightTrailingFire = false;
 	}
 
 	@Override
@@ -108,6 +105,16 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 
 				}**/
 
+			}
+		}
+		if (lightTrailingFire) {
+			BlockPos pos = getPosition();
+			if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
+				world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+			}
+			BlockPos pos2 = getPosition().down();
+			if (Blocks.FIRE.canPlaceBlockAt(world, pos2) && world.getBlockState(pos2).getBlock() == Blocks.AIR) {
+				world.setBlockState(pos2, Blocks.FIRE.getDefaultState());
 			}
 		}
 
@@ -167,6 +174,10 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 
 	public void setReflect(boolean reflect) {
 		this.reflect = reflect;
+	}
+
+	public void setTrailingFire(boolean fire) {
+		this.lightTrailingFire = fire;
 	}
 
 	public void setDamageMult(double damageMult) {
