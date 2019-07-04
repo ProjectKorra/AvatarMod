@@ -19,7 +19,9 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
@@ -60,11 +62,21 @@ public class AbilityFireShot extends Ability {
 	public void execute(AbilityContext ctx) {
 
 		World world = ctx.getWorld();
+		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
 
 		VectorI looking = ctx.getLookPosI();
 		EnumFacing side = ctx.getLookSide();
 
+		if (bender.consumeChi(1)) {
+			EntityFlames flames = new EntityFlames(world);
+			flames.setVelocity(entity.getLookVec());
+			flames.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight(), 0).add(entity.getLookVec().scale(0.1)));
+			flames.setOwner(entity);
+			flames.setAbility(new AbilityFireShot());
+			flames.setDamageMult(bender.getDamageMult(Firebending.ID));
+			world.spawnEntity(flames);
+		}
 		if (ctx.isLookingAtBlock()) {
 			if (looking != null) {
 				VectorI setAt = new VectorI(looking.x(), looking.y(), looking.z());
@@ -130,7 +142,7 @@ public class AbilityFireShot extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 
 
-		if (world.isRainingAt(blockPos)) {
+		if (world.isRainingAt(blockPos) && ctx.getLookPos() != null) {
 
 			particles.spawnParticles(world, EnumParticleTypes.CLOUD, 3, 7, ctx.getLookPos(),
 					new Vector(0.5f, 0.75f, 0.5f));

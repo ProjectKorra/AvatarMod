@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import elucent.albedo.event.GatherLightsEvent;
@@ -131,9 +130,8 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 		}
 
 		if (!world.isRemote) {
-			BendingData data = BendingData.getFromEntity(owner);
-			if (data != null) {
-				AbilityData abilityData = data.getAbilityData(getAbility());
+			if (getOwner() != null) {
+				AbilityData abilityData = AbilityData.get(getOwner(), getAbility().getName());
 
 				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
 						entity -> entity != owner
