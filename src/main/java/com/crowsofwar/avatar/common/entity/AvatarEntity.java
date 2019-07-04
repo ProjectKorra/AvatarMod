@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
@@ -36,7 +35,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -75,10 +73,9 @@ public abstract class AvatarEntity extends Entity {
 
 	protected boolean putsOutFires;
 	protected boolean flammable;
+	protected boolean pushStoneButton, pushTrapDoor, pushDoor;
 	private double powerRating;
 	private BendingStyle element;
-	protected boolean pushStoneButton, pushTrapDoor, pushDoor;
-
 	private SyncedEntity<EntityLivingBase> ownerRef;
 
 	/**
@@ -185,16 +182,32 @@ public abstract class AvatarEntity extends Entity {
 		return Vector.getVelocity(this);
 	}
 
+	public void addVelocity(Vector velocity) {
+		motionX += velocity.x() / 20;
+		motionY += velocity.y() / 20;
+		motionZ += velocity.z() / 20;
+	}
+
+	public void addVelocity(Vec3d velocity) {
+		motionX += velocity.x;
+		motionY += velocity.y;
+		motionZ += velocity.z;
+	}
+
+	public Vec3d getVelocity() {
+		return new Vec3d(motionX, motionY, motionZ);
+	}
+
 	public void setVelocity(Vector velocity) {
 		motionX = velocity.x() / 20;
 		motionY = velocity.y() / 20;
 		motionZ = velocity.z() / 20;
 	}
 
-	public void addVelocity(Vector velocity) {
-		motionX += velocity.x() / 20;
-		motionY += velocity.y() / 20;
-		motionZ += velocity.z() / 20;
+	public void setVelocity(Vec3d velocity) {
+		motionX = velocity.x;
+		motionY = velocity.y;
+		motionZ = velocity.z;
 	}
 
 	/**
@@ -416,20 +429,15 @@ public abstract class AvatarEntity extends Entity {
 	public boolean canCollideWith(Entity entity) {
 		if (entity == getOwner()) {
 			return false;
-		}
-		else if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
+		} else if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
 			return false;
-		}
-		else if (entity instanceof EntityLivingBase && entity.getControllingPassenger() == getOwner()) {
+		} else if (entity instanceof EntityLivingBase && entity.getControllingPassenger() == getOwner()) {
 			return false;
-		}
-		else if (getOwner() != null && getOwner().getTeam() != null && entity.getTeam() == getOwner().getTeam()) {
+		} else if (getOwner() != null && getOwner().getTeam() != null && entity.getTeam() == getOwner().getTeam()) {
 			return false;
-		}
-		else if (entity instanceof EntityEnderCrystal) {
+		} else if (entity instanceof EntityEnderCrystal) {
 			return true;
-		}
-		else
+		} else
 			return (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase;
 	}
 
