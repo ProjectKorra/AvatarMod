@@ -60,6 +60,7 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 	public EntityFlames(World worldIn) {
 		super(worldIn);
 		setSize(0.1f, 0.1f);
+		this.setsFires = true;
 	}
 
 	@Override

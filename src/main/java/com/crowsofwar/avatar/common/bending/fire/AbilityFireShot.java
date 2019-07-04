@@ -68,7 +68,7 @@ public class AbilityFireShot extends Ability {
 		VectorI looking = ctx.getLookPosI();
 		EnumFacing side = ctx.getLookSide();
 		if (bender.consumeChi(1)) {
-			EntityFlames flames = new EntityFlames(world, entity);
+			EntityFlames flames = new EntityFlames(world);
 			flames.setVelocity(entity.getLookVec());
 			flames.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight(), 0).add(entity.getLookVec().scale(0.1)));
 			flames.setOwner(entity);
