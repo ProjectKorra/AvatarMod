@@ -28,9 +28,7 @@ import elucent.albedo.event.GatherLightsEvent;
 import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -52,9 +50,8 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 	/**
 	 * The owner, null client side
 	 */
-	private EntityLivingBase owner;
+	private boolean reflect;
 
-	private boolean lightsFires;
 	private double damageMult;
 
 	/**
@@ -65,28 +62,11 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 		setSize(0.1f, 0.1f);
 	}
 
-	public EntityFlames(World world, EntityLivingBase owner) {
-		this(world);
-		this.owner = owner;
-	}
-
 	@Override
 	public BendingStyle getElement() {
 		return new Firebending();
 	}
 
-	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		// TODO Support saving/loading of EntityFlames
-		super.readEntityFromNBT(nbt);
-		setDead();
-	}
-
-	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		super.writeEntityToNBT(nbt);
-		setDead();
-	}
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
@@ -109,24 +89,26 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 				true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
-			setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.5));
+			if (reflect) {
+				setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.5));
 
-			// Try to light fires
-			if (sideHit != EnumFacing.DOWN && !world.isRemote) {
+				// Try to light fires
+				if (sideHit != EnumFacing.DOWN && !world.isRemote) {
 
-				BlockPos bouncingOff = getPosition().add(-sideHit.getXOffset(),
-						-sideHit.getYOffset(),
-						-sideHit.getZOffset());
+					BlockPos bouncingOff = getPosition().add(-sideHit.getXOffset(),
+							-sideHit.getYOffset(),
+							-sideHit.getZOffset());
 
-				if (sideHit == EnumFacing.UP || world.getBlockState(bouncingOff).getBlock()
-						.isFlammable(world, bouncingOff, sideHit)) {
+					if (sideHit == EnumFacing.UP || world.getBlockState(bouncingOff).getBlock()
+							.isFlammable(world, bouncingOff, sideHit)) {
 
-					world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
+						world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
+
+					}
 
 				}
 
 			}
-
 		}
 
 		if (!world.isRemote) {
@@ -134,7 +116,7 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 				AbilityData abilityData = AbilityData.get(getOwner(), getAbility().getName());
 
 				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-						entity -> entity != owner
+						entity -> entity != getOwner()
 								&& !(entity instanceof EntityFlames));
 
 				for (Entity entity : collided) {
@@ -151,9 +133,9 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 					}
 					additionalDamage *= damageMult;
 					if (entity.attackEntityFrom(
-							AvatarDamageSource.causeFlamethrowerDamage(entity, owner),
+							AvatarDamageSource.causeFlamethrowerDamage(entity, getOwner()),
 							additionalDamage)) {
-						BattlePerformanceScore.addSmallScore(owner);
+						BattlePerformanceScore.addSmallScore(getOwner());
 					}
 
 				}
@@ -183,12 +165,8 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 		return true;
 	}
 
-	public boolean doesLightFires() {
-		return lightsFires;
-	}
-
-	public void setLightsFires(boolean lightsFires) {
-		this.lightsFires = lightsFires;
+	public void setReflect(boolean reflect) {
+		this.reflect = reflect;
 	}
 
 	public void setDamageMult(double damageMult) {

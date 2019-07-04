@@ -75,6 +75,7 @@ public abstract class AvatarEntity extends Entity {
 	protected boolean flammable;
 	protected boolean pushStoneButton, pushTrapDoor, pushDoor;
 	private double powerRating;
+	private boolean setsFires;
 	private BendingStyle element;
 	private SyncedEntity<EntityLivingBase> ownerRef;
 
@@ -88,6 +89,7 @@ public abstract class AvatarEntity extends Entity {
 		this.putsOutFires = false;
 		this.flammable = false;
 		this.element = null;
+		this.setsFires = false;
 	}
 
 	/**
@@ -299,6 +301,33 @@ public abstract class AvatarEntity extends Entity {
 							world.setBlockToAir(pos);
 							world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
 									SoundCategory.PLAYERS, 1, 1, false);
+						}
+					}
+				}
+			}
+		}
+		if (setsFires && ticksExisted % 2 == 0) {
+			//TODO: Check if the block is flammable
+			for (int x = 0; x <= 1; x++) {
+				for (int z = 0; z <= 1; z++) {
+					for (int y = 0; y <= 1; y++) {
+						BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+						if (world.getBlockState(pos).getBlock() == Blocks.AIR) {
+							if (world.getBlockState(pos.add(0, -1, 0)).isFullBlock()) {
+								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+							}
+						}
+					}
+				}
+			}
+			for (int x = 0; x >= -1; x--) {
+				for (int z = 0; z >= -1; z--) {
+					for (int y = 0; y >= -1; y--) {
+						BlockPos pos = new BlockPos(posX + x * width, posY - y * height, posZ + z * width);
+						if (world.getBlockState(pos).getBlock() == Blocks.AIR) {
+							if (world.getBlockState(pos.add(0, -1, 0)).isFullBlock()) {
+								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+							}
 						}
 					}
 				}
