@@ -17,7 +17,7 @@ public class WaterSmashHandler extends SmashGroundHandler {
 
 	@Override
 	protected int getParticleAmount() {
-		return 10;
+		return 7;
 	}
 
 	@Override

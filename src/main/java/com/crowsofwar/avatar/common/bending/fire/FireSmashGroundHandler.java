@@ -45,7 +45,7 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 
 	@Override
 	protected int getParticleAmount() {
-		return 4;
+		return 6;
 	}
 
 	@Override
