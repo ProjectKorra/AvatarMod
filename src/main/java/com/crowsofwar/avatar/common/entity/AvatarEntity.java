@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
+import com.crowsofwar.gorecore.util.VectorI;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -304,47 +305,6 @@ public abstract class AvatarEntity extends Entity {
 				}
 			}
 		}
-		if (setsFires && ticksExisted % 2 == 0) {
-			//TODO: Check if the block is flammable
-			for (int x = 0; x <= 1; x++) {
-				for (int z = 0; z <= 1; z++) {
-					for (int y = 0; y <= 1; y++) {
-						BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
-						if (world.getBlockState(pos).getBlock() == Blocks.AIR) {
-							if (world.getBlockState(pos.add(0, -1, 0)).getBlock().isFlammable(world, pos.add(0, -1, 0), EnumFacing.UP)) {
-								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-							}
-						}
-					}
-				}
-			}
-			for (int x = 0; x >= -1; x--) {
-				for (int z = 0; z >= -1; z--) {
-					for (int y = 0; y >= -1; y--) {
-						BlockPos pos = new BlockPos(posX + x * width, posY - y * height, posZ + z * width);
-						if (world.getBlockState(pos.add(0, -1, 0)).getBlock().isFlammable(world, pos.add(0, -1, 0), EnumFacing.UP)) {
-							if (world.getBlockState(pos.add(0, -1, 0)).isFullBlock()) {
-								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-							}
-						}
-					}
-				}
-			}
-			Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.3,
-					true);
-			EnumFacing sideHit = raytrace.getSide();
-			// Try to light fires
-			if (sideHit != EnumFacing.DOWN && !world.isRemote) {
-				if (sideHit != null) {
-					BlockPos bouncingOff = getPosition().add(-sideHit.getXOffset(),
-							-sideHit.getYOffset(),
-							-sideHit.getZOffset());
-					if (sideHit == EnumFacing.UP || world.getBlockState(bouncingOff).getBlock().isFlammable(world, bouncingOff, sideHit)) {
-						world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
-					}
-				}
-			}
-		}
 
 		for (int x = 0; x <= 1; x++) {
 			for (int z = 0; z <= 1; z++) {
@@ -402,6 +362,12 @@ public abstract class AvatarEntity extends Entity {
 		}
 
 		if (collided) {
+			if (setsFires) {
+				BlockPos pos = getPosition();
+				if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
+					world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+				}
+			}
 			onCollideWithSolid();
 		}
 		if (inWater) {

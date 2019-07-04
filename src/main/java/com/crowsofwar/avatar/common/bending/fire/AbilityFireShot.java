@@ -70,8 +70,10 @@ public class AbilityFireShot extends Ability {
 		if (bender.consumeChi(1)) {
 			EntityFlames flames = new EntityFlames(world);
 			flames.setVelocity(entity.getLookVec());
-			flames.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight(), 0).add(entity.getLookVec().scale(0.1)));
+			flames.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight(), 0).add(entity.getLookVec().scale(0.05)));
 			flames.setOwner(entity);
+			flames.rotationPitch = entity.rotationPitch;
+			flames.rotationYaw = entity.rotationYaw;
 			flames.setAbility(new AbilityFireShot());
 			flames.setDamageMult(bender.getDamageMult(Firebending.ID));
 			world.spawnEntity(flames);

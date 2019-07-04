@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireShot;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -28,9 +29,7 @@ import elucent.albedo.event.GatherLightsEvent;
 import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
@@ -84,9 +83,9 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 		ignoreFrustumCheck = true;
 		setVelocity(velocity().times(0.99999));
 
-		if (velocity().sqrMagnitude() <= 0.5 * 0.5 || collided) setDead();
+		if (velocity().sqrMagnitude() <= 0.5 * 0.5) setDead();
 
-		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.3,
+		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.5,
 				true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
@@ -94,7 +93,7 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 				setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.5));
 
 				// Try to light fires
-				if (sideHit != EnumFacing.DOWN && !world.isRemote) {
+				/*if (sideHit != EnumFacing.DOWN && !world.isRemote) {
 
 					BlockPos bouncingOff = getPosition().add(-sideHit.getXOffset(),
 							-sideHit.getYOffset(),
@@ -107,7 +106,7 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 
 					}
 
-				}
+				}**/
 
 			}
 		}
@@ -144,9 +143,9 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 				abilityData.addXp(SKILLS_CONFIG.flamethrowerHit * collided.size());
 				if (!collided.isEmpty()) setDead();
 			}
-	}
+		}
 
-}
+	}
 
 	@Override
 	public boolean onMajorWaterContact() {
@@ -160,7 +159,7 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 		setDead();
 
 		// Spawn less extinguish indicators in the rain to prevent spamming
-		if (rand.nextDouble() < 0.3) {
+		if (rand.nextDouble() < 0.4) {
 			spawnExtinguishIndicators();
 		}
 		return true;
@@ -177,6 +176,18 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 	@Override
 	public boolean isProjectile() {
 		return true;
+	}
+
+	@Override
+	public boolean onCollideWithSolid() {
+		if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
+			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
+			if (!data.isMasterPath(AbilityData.AbilityTreePath.FIRST))
+				setDead();
+			return !data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
+		}
+		return true;
+
 	}
 
 	@SideOnly(Side.CLIENT)

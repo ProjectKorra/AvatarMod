@@ -110,12 +110,11 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
 				Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
 
-				EntityFlames flames = new EntityFlames(world, entity);
+				EntityFlames flames = new EntityFlames(world);
 				flames.setVelocity(look.times(speedMult).plus(getVelocity(entity)));
 				flames.setPosition(eye.x(), eye.y(), eye.z());
 				flames.setOwner(entity);
 				flames.setAbility(new AbilityFlamethrower());
-				flames.setLightsFires(lightsFires);
 				flames.setDamageMult(bender.getDamageMult(Firebending.ID));
 				world.spawnEntity(flames);
 

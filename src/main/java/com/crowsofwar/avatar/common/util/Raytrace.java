@@ -149,6 +149,28 @@ public class Raytrace {
 	}
 
 	/**
+	 * Returns a raytrace over blocks.
+	 *
+	 * @param world          World
+	 * @param start          Starting position of raytrace
+	 * @param direction      Normalized direction vec3d of where to go
+	 * @param range          How far to raytrace at most
+	 * @param raycastLiquids Whether to keep going when liquids are hit
+	 */
+	public static Result raytrace(World world, Vec3d start, Vec3d direction, double range,
+								  boolean raycastLiquids) {
+
+		RayTraceResult res = world.rayTraceBlocks(start,
+				start.add(direction.scale(range)), !raycastLiquids, raycastLiquids, true);
+
+		if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
+			return new Result(new VectorI(res.getBlockPos()), res.sideHit, new Vector(res.hitVec));
+		} else {
+			return new Result();
+		}
+	}
+
+	/**
 	 * Custom raytrace which allows you to specify a (Bi)Predicate to determine
 	 * if the block has been hit. Unfortunately, this implementation does not
 	 * correctly report the side hit (always is {@link EnumFacing#DOWN}).
