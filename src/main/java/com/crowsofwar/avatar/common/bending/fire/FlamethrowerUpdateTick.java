@@ -114,6 +114,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				flames.setVelocity(look.times(speedMult).plus(getVelocity(entity)));
 				flames.setPosition(eye.x(), eye.y(), eye.z());
 				flames.setOwner(entity);
+				flames.setAbility(new AbilityFlamethrower());
 				flames.setLightsFires(lightsFires);
 				flames.setDamageMult(bender.getDamageMult(Firebending.ID));
 				world.spawnEntity(flames);
