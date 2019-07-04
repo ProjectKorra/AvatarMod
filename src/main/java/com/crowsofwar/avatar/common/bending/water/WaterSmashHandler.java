@@ -17,7 +17,7 @@ public class WaterSmashHandler extends SmashGroundHandler {
 
 	@Override
 	protected int getParticleAmount() {
-		return 7;
+		return 14;
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class WaterSmashHandler extends SmashGroundHandler {
 
 	@Override
 	protected double getParticleSpeed() {
-		return 0.05;
+		return 0.025F;
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class WaterSmashHandler extends SmashGroundHandler {
 
 	@Override
 	protected double getSpeed() {
-		return 6;
+		return 5;
 	}
 
 	@Override

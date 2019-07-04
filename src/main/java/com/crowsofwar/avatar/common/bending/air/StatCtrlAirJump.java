@@ -59,7 +59,7 @@ import static com.crowsofwar.avatar.common.data.TickHandlerController.SMASH_GROU
  */
 public class StatCtrlAirJump extends StatusControl {
 
-	private Map<String, Integer> timesJumped = new HashMap<String, Integer>();
+	private Map<String, Integer> timesJumped = new HashMap<>();
 
 	public StatCtrlAirJump() {
 		super(0, AvatarControl.CONTROL_JUMP, CrosshairPosition.BELOW_CROSSHAIR);
@@ -187,7 +187,7 @@ public class StatCtrlAirJump extends StatusControl {
 			wave.setParticle(EnumParticleTypes.EXPLOSION_NORMAL);
 			wave.setPerformanceAmount(10);
 			wave.setKnockbackMult(new Vec3d(0.5, 0.2, 0.5));
-			wave.setParticleAmount(1);
+			wave.setParticleAmount(2);
 			wave.setDamageSource(AvatarDamageSource.AIR);
 			wave.setAbility(new AbilityAirJump());
 			wave.setElement(new Airbending());
