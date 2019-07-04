@@ -17,16 +17,14 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-
 import elucent.albedo.event.GatherLightsEvent;
 import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
@@ -37,9 +35,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 import java.util.Objects;
@@ -109,7 +107,7 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 		if (velocity().sqrMagnitude() <= 0.5 * 0.5 || collided) setDead();
 
 		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.3,
-		                                             true);
+				true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
 			setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.5));
@@ -118,11 +116,11 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 			if (sideHit != EnumFacing.DOWN && !world.isRemote) {
 
 				BlockPos bouncingOff = getPosition().add(-sideHit.getXOffset(),
-				                                         -sideHit.getYOffset(),
-				                                         -sideHit.getZOffset());
+						-sideHit.getYOffset(),
+						-sideHit.getZOffset());
 
 				if (sideHit == EnumFacing.UP || world.getBlockState(bouncingOff).getBlock()
-								.isFlammable(world, bouncingOff, sideHit)) {
+						.isFlammable(world, bouncingOff, sideHit)) {
 
 					world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
 
@@ -133,39 +131,41 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 		}
 
 		if (!world.isRemote) {
-			BendingData data = Bender.get(owner).getData();
-			AbilityData abilityData = data.getAbilityData(getAbility());
+			BendingData data = BendingData.getFromEntity(owner);
+			if (data != null) {
+				AbilityData abilityData = data.getAbilityData(getAbility());
 
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-			                                                         entity -> entity != owner
-			                                                                   && !(entity instanceof EntityFlames));
+				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
+						entity -> entity != owner
+								&& !(entity instanceof EntityFlames));
 
-			for (Entity entity : collided) {
+				for (Entity entity : collided) {
 
-				entity.setFire((int) (3F * 1 + abilityData.getTotalXp() / 100f));
+					entity.setFire((int) (3F * 1 + abilityData.getTotalXp() / 100f));
 
-				// Add extra damage
-				// Adding 0 since even though this doesn't affect health, will
-				// cause mobs to aggro
+					// Add extra damage
+					// Adding 0 since even though this doesn't affect health, will
+					// cause mobs to aggro
 
-				float additionalDamage = 0;
-				if (abilityData.getTotalXp() >= 50) {
-					additionalDamage = 2 + (abilityData.getTotalXp() - 50) / 25;
+					float additionalDamage = 0;
+					if (abilityData.getTotalXp() >= 50) {
+						additionalDamage = 2 + (abilityData.getTotalXp() - 50) / 25;
+					}
+					additionalDamage *= damageMult;
+					if (entity.attackEntityFrom(
+							AvatarDamageSource.causeFlamethrowerDamage(entity, owner),
+							additionalDamage)) {
+						BattlePerformanceScore.addSmallScore(owner);
+					}
+
 				}
-				additionalDamage *= damageMult;
-				if (entity.attackEntityFrom(
-								AvatarDamageSource.causeFlamethrowerDamage(entity, owner),
-								additionalDamage)) {
-					BattlePerformanceScore.addSmallScore(owner);
-				}
 
+				abilityData.addXp(SKILLS_CONFIG.flamethrowerHit * collided.size());
+				if (!collided.isEmpty()) setDead();
 			}
-
-			abilityData.addXp(SKILLS_CONFIG.flamethrowerHit * collided.size());
-			if (!collided.isEmpty()) setDead();
-		}
-
 	}
+
+}
 
 	@Override
 	public boolean onMajorWaterContact() {
