@@ -20,7 +20,7 @@ public class RenderShockwave extends Render<EntityShockwave> {
 	public void doRender(EntityShockwave entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
 		EnumParticleTypes particle = entity.getParticle();
-		if (entity.ticksExisted <= 4) {
+		if (entity.ticksExisted <= entity.getParticleAmount()) {
 			if (!entity.getSphere()) {
 				for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.getRange() * 15 / entity.getParticleAmount())) {
 					double x2 = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
@@ -33,7 +33,7 @@ public class RenderShockwave extends Render<EntityShockwave> {
 				}
 			}
 		}
-		if (entity.ticksExisted <= 2) {
+		if (entity.ticksExisted <= entity.getParticleAmount()) {
 			if (entity.getSphere()) {
 				double x1, y1, z1, xVel, yVel, zVel;
 				for (double theta = 0; theta <= 180; theta += 1) {

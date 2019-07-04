@@ -104,7 +104,7 @@ public class AbilityFireShot extends Ability {
 				wave.setKnockbackMult(new Vec3d(1.6, 1, 1.6));
 				wave.setKnockbackHeight(0.15);
 				wave.setParticleSpeed(0.2F);
-				wave.setParticleAmount(8);
+				wave.setParticleAmount(6);
 				world.spawnEntity(wave);
 			}
 		}
