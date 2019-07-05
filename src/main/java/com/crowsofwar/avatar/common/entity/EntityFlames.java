@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.bending.fire.AbilityFireShot;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import elucent.albedo.event.GatherLightsEvent;
@@ -108,13 +109,15 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 			}
 		}
 		if (lightTrailingFire) {
-			BlockPos pos = getPosition();
-			if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
-				world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-			}
-			BlockPos pos2 = getPosition().down();
-			if (Blocks.FIRE.canPlaceBlockAt(world, pos2) && world.getBlockState(pos2).getBlock() == Blocks.AIR) {
-				world.setBlockState(pos2, Blocks.FIRE.getDefaultState());
+			if (AvatarUtils.getRandomNumberInRange(1, 10) <= 5) {
+				BlockPos pos = getPosition();
+				if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
+					world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+				}
+				BlockPos pos2 = getPosition().down();
+				if (Blocks.FIRE.canPlaceBlockAt(world, pos2) && world.getBlockState(pos2).getBlock() == Blocks.AIR) {
+					world.setBlockState(pos2, Blocks.FIRE.getDefaultState());
+				}
 			}
 		}
 
@@ -140,18 +143,44 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 					}
 					additionalDamage *= damageMult;
 					if (entity.attackEntityFrom(
-							AvatarDamageSource.causeFlamethrowerDamage(entity, getOwner()),
+							AvatarDamageSource.causeFireShotDamage(entity, getOwner()),
 							additionalDamage)) {
 						BattlePerformanceScore.addSmallScore(getOwner());
 					}
 
 				}
 
-				abilityData.addXp(SKILLS_CONFIG.flamethrowerHit * collided.size());
-				if (!collided.isEmpty()) setDead();
+				abilityData.addXp(SKILLS_CONFIG.fireShotHit * collided.size());
+				if (getAbility() instanceof AbilityFireShot) {
+					if (!collided.isEmpty() && !abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) setDead();
+				}
+				else if (!collided.isEmpty()) setDead();
 			}
 		}
 
+	}
+
+	@Override
+	public boolean onAirContact() {
+		if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
+			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
+			if (!data.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				setDead();
+				spawnExtinguishIndicators();
+				return true;
+			}
+			else return false;
+		}
+		else {
+			setDead();
+			spawnExtinguishIndicators();
+			return true;
+		}
+	}
+
+	@Override
+	public boolean canBePushed() {
+		return false;
 	}
 
 	@Override
@@ -163,13 +192,25 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 
 	@Override
 	public boolean onMinorWaterContact() {
-		setDead();
+		if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
+			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
+			if (!data.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				setDead();
+				// Spawn less extinguish indicators in the rain to prevent spamming
+				if (rand.nextDouble() < 0.4) {
+					spawnExtinguishIndicators();
+				}
+				return true;
 
-		// Spawn less extinguish indicators in the rain to prevent spamming
-		if (rand.nextDouble() < 0.4) {
-			spawnExtinguishIndicators();
+			} else return false;
+		} else {
+			setDead();
+			// Spawn less extinguish indicators in the rain to prevent spamming
+			if (rand.nextDouble() < 0.4) {
+				spawnExtinguishIndicators();
+			}
+			return true;
 		}
-		return true;
 	}
 
 	public void setReflect(boolean reflect) {

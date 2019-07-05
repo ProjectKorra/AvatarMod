@@ -67,16 +67,27 @@ public class AbilityFireShot extends Ability {
 		//VectorI looking = ctx.getLookPosI();
 		//EnumFacing side = ctx.getLookSide();
 		float speed = 0.5F;
+		double damageMult = bender.getDamageMult(Firebending.ID);
+		float chi = STATS_CONFIG.chiFireShot;
 		if (ctx.getLevel() == 1) {
 			speed += 0.25F;
+			chi += 0.5F;
+			damageMult += 0.5;
 		}
 		if (ctx.getLevel() == 2) {
 			speed += 0.5F;
+			chi += 1;
+			damageMult += 1;
 		}
 		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			speed += 0.75F;
+			chi += 1.5F;
+			damageMult += 2;
 		}
-		if (bender.consumeChi(1)) {
+		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			chi += 2F;
+		}
+		if (bender.consumeChi(chi)) {
 			if (!ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				EntityFlames flames = new EntityFlames(world);
 				flames.setVelocity(entity.getLookVec().scale(speed));
@@ -87,7 +98,7 @@ public class AbilityFireShot extends Ability {
 				flames.rotationYaw = entity.rotationYaw;
 				flames.setAbility(new AbilityFireShot());
 				flames.setTrailingFire(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
-				flames.setDamageMult(bender.getDamageMult(Firebending.ID));
+				flames.setDamageMult(damageMult);
 				world.spawnEntity(flames);
 			}
 			else {
@@ -101,10 +112,10 @@ public class AbilityFireShot extends Ability {
 				wave.setDamage(5F);
 				wave.setPerformanceAmount(15);
 				wave.setSpeed(0.4F);
-				wave.setKnockbackMult(new Vec3d(1.6, 1, 1.6));
+				wave.setKnockbackMult(new Vec3d(1.5, 1, 1.5));
 				wave.setKnockbackHeight(0.15);
 				wave.setParticleSpeed(0.2F);
-				wave.setParticleAmount(6);
+				wave.setParticleAmount(12);
 				world.spawnEntity(wave);
 			}
 		}
@@ -156,7 +167,7 @@ public class AbilityFireShot extends Ability {
 		}**/
 	}
 
-	private boolean spawnFire(World world, BlockPos blockPos, AbilityContext ctx, boolean useChi,
+	/*private boolean spawnFire(World world, BlockPos blockPos, AbilityContext ctx, boolean useChi,
 							  double chance) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 
@@ -199,5 +210,5 @@ public class AbilityFireShot extends Ability {
 
 		return false;
 
-	}
+	}**/
 }
