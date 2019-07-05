@@ -457,6 +457,7 @@ avatar.key.conflict1=%1$s
 avatar.key.conflict2=Conflict w/ %1$s
 
 death.attack.avatar_Fire=%1$s was incinerated by %2$s's §c§lfirebending!
+death.attack.avatar_Fire_fireShot=%1$s was incinerated by %2$s's §c§lfire shot!
 death.attack.avatar_Fire_flamethrower=%1$s just got §c§lROASTED by %2$s !
 death.attack.avatar_Fire_fireArc=%1$s was §c§lFIRED by %2$s !
 death.attack.avatar_Fire_fireball=%2$s §c§lincinerated %1$s with a §c§lfireball!

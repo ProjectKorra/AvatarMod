@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -27,6 +28,9 @@ import static com.crowsofwar.avatar.common.bending.BattlePerformanceScore.SCORE_
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 public class EntityShockwave extends AvatarEntity {
+
+	private static final DataParameter<ShockwaveBehaviour> SYNC_BEHAVIOR = EntityDataManager
+			.createKey(EntityShockwave.class, ShockwaveBehaviour.DATA_SERIALIZER);
 
 	private static final DataParameter<String> SYNC_PARTICLE = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.STRING);
 	//Name of the particles to be spawned.
@@ -75,9 +79,10 @@ public class EntityShockwave extends AvatarEntity {
 		dataManager.register(SYNC_PARTICLE_SPEED, 0.1F);
 		dataManager.register(SYNC_PARTICLE_AMOUNT, 1);
 		dataManager.register(SYNC_PARTICLE_CONTROLLER, 40F);
-		dataManager.register(SYNC_SPEED, 0.8F);;
+		dataManager.register(SYNC_SPEED, 0.8F);
 		dataManager.register(SYNC_IS_SPHERE, false);
 		dataManager.register(SYNC_RANGE, 4F);
+		dataManager.register(SYNC_BEHAVIOR, new ShockwaveBehaviour.Idle());
 
 	}
 
@@ -112,6 +117,14 @@ public class EntityShockwave extends AvatarEntity {
 
 	public void setParticleAmount(int amount) {
 		dataManager.set(SYNC_PARTICLE_AMOUNT, amount);
+	}
+
+	public void setBehaviour(ShockwaveBehaviour behaviour) {
+		dataManager.set(SYNC_BEHAVIOR, behaviour);
+	}
+
+	public ShockwaveBehaviour getBehaviour() {
+		return dataManager.get(SYNC_BEHAVIOR);
 	}
 
 	public double getParticleSpeed() {
@@ -182,6 +195,8 @@ public class EntityShockwave extends AvatarEntity {
 
 	@Override
 	public void onUpdate() {
+		super.onUpdate();
+		setBehaviour((ShockwaveBehaviour) getBehaviour().onUpdate(this));
 
 		this.motionX = this.motionY = this.motionZ = 0;
 

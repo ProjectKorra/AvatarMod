@@ -70,6 +70,7 @@ public abstract class Behavior<E extends Entity> {
 		LightningSpearBehavior.register();
 		LightOrbBehavior.register();
 		LightCylinderBehaviour.register();
+		ShockwaveBehaviour.register();
 	}
 
 	protected static int registerBehavior(Class<? extends Behavior> behaviorClass) {
