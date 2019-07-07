@@ -143,7 +143,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 							BendingData data = Objects.requireNonNull(Bender.get(entity.getOwner())).getData();
 							if (data != null) {
 								data.getAbilityData("fire_arc")
-										.addXp(ConfigSkills.SKILLS_CONFIG.fireHit);
+										.addXp(ConfigSkills.SKILLS_CONFIG.fireArcHit);
 								AbilityData abilityData = data.getAbilityData("fire_arc");
 								if (abilityData.isMasterPath(AbilityTreePath.SECOND) && entity.getOwner() != null) {
 									data.addStatusControl(StatusControl.THROW_FIRE);
