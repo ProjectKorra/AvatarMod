@@ -120,18 +120,26 @@ public class AbilityFireShot extends Ability {
 		public Behavior onUpdate(EntityShockwave entity) {
 			if (entity.getOwner() != null) {
 				BlockPos prevPos = entity.getPosition();
-				for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.ticksExisted * 1.5F)) {
-					int x = entity.posX < 0 ? (int)(entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle) - 1)
-							: (int)(entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle));
-					int y = (int)entity.posY;
-					int z = entity.posZ < 0 ? (int)(entity.posZ + ((entity.ticksExisted * entity.getSpeed())) * Math.cos(angle) - 1)
-							: (int)(entity.posZ + ((entity.ticksExisted * entity.getSpeed())) * Math.cos(angle));
+				for (int angle = 0; angle < 360; angle++) {
+					double radians = Math.toRadians(angle);
 
-					//double x = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
+					//double x = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(radians);
 					//double y = entity.posY;
-					//double z = entity.posZ + (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle);
-					BlockPos spawnPos = new BlockPos((int) x, (int) y, (int) z);
-					if (Blocks.FIRE.canPlaceBlockAt(entity.world, spawnPos) && entity.world.getBlockState(spawnPos).getBlock() == Blocks.AIR) {
+					//double z = entity.posZ + (entity.ticksExisted * entity.getSpeed()) * Math.cos(radians);
+					Vec3d direction = entity.getOwner().getLookVec().add(entity.getOwner().getPositionVector());
+					double x, z, vx, vz;
+
+					x = direction.x;
+					z = direction.z;
+
+					vx = x * Math.cos(radians) - z * Math.sin(radians);
+					vz = x * Math.sin(radians) + z * Math.cos(radians);
+
+					direction = new Vec3d(vx, direction.y, vz);
+
+					BlockPos spawnPos = new BlockPos((int) (direction.x /*+ entity.posX**/), (int) (direction.y /*+ entity.posY**/),
+							(int) (direction.z /*+ entity.posZ**/));
+					if (Blocks.FIRE.canPlaceBlockAt(entity.world, spawnPos)) {
 						entity.world.setBlockToAir(prevPos);
 						entity.world.setBlockState(spawnPos, Blocks.FIRE.getDefaultState());
 						prevPos = spawnPos;
