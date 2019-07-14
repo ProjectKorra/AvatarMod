@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.entity.data;
 
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireShot;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -16,6 +17,7 @@ public abstract class ShockwaveBehaviour extends Behavior<EntityShockwave> {
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
 		registerBehavior(Idle.class);
+		registerBehavior(AbilityFireShot.FireShockwaveBehaviour.class);
 	}
 
 	public static class Idle extends ShockwaveBehaviour {

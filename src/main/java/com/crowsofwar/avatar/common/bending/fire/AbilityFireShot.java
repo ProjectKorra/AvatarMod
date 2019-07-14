@@ -24,15 +24,12 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.gorecore.util.Vector;
+import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -44,12 +41,9 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class AbilityFireShot extends Ability {
 
-	private final ParticleSpawner particles;
-
 	public AbilityFireShot() {
 		super(Firebending.ID, "fire_shot");
 		requireRaytrace(-1, false);
-		particles = new NetworkParticleSpawner();
 	}
 
 	@Override
@@ -64,8 +58,6 @@ public class AbilityFireShot extends Ability {
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
 
-		//VectorI looking = ctx.getLookPosI();
-		//EnumFacing side = ctx.getLookSide();
 		float speed = 0.5F;
 		double damageMult = bender.getDamageMult(Firebending.ID);
 		float chi = STATS_CONFIG.chiFireShot;
@@ -100,8 +92,7 @@ public class AbilityFireShot extends Ability {
 				flames.setTrailingFire(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
 				flames.setDamageMult(damageMult);
 				world.spawnEntity(flames);
-			}
-			else {
+			} else {
 				EntityShockwave wave = new EntityShockwave(world);
 				wave.setOwner(entity);
 				wave.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight() / 2, 0));
@@ -111,6 +102,7 @@ public class AbilityFireShot extends Ability {
 				wave.setParticle(AvatarParticles.getParticleFlames());
 				wave.setDamage(5F);
 				wave.setPerformanceAmount(15);
+				wave.setBehaviour(new FireShockwaveBehaviour());
 				wave.setSpeed(0.4F);
 				wave.setKnockbackMult(new Vec3d(1.5, 1, 1.5));
 				wave.setKnockbackHeight(0.15);
@@ -120,95 +112,53 @@ public class AbilityFireShot extends Ability {
 			}
 		}
 
-		/*if (ctx.isLookingAtBlock()) {
-			if (looking != null) {
-				VectorI setAt = new VectorI(looking.x(), looking.y(), looking.z());
-				setAt.offset(side);
-				BlockPos blockPos = setAt.toBlockPos();
-
-				double chance = 20 * ctx.getLevel() + 40;
-				chance += ctx.getPowerRating() / 10;
-
-				if (ctx.isDynamicMasterLevel(AbilityTreePath.FIRST)) {
-
-					int yaw = (int) floor((ctx.getBenderEntity().rotationYaw * 8 / 360) + 0.5) & 7;
-					int x = 0, z = 0;
-					if (yaw == 1 || yaw == 2 || yaw == 3) x = -1;
-					if (yaw == 5 || yaw == 6 || yaw == 7) x = 1;
-					if (yaw == 3 || yaw == 4 || yaw == 5) z = -1;
-					if (yaw == 0 || yaw == 1 || yaw == 7) z = 1;
-
-					if (spawnFire(world, blockPos, ctx, true, chance)) {
-						for (int i = 1; i < 5; i++) {
-							spawnFire(world, blockPos.add(x * i, 0, z * i), ctx, false, 100);
-						}
-						ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
-					}
-
-				} else if (ctx.isDynamicMasterLevel(AbilityTreePath.SECOND)) {
-
-					if (spawnFire(world, blockPos, ctx, true, chance)) {
-						spawnFire(world, blockPos.add(1, 0, 0), ctx, false, 100);
-						spawnFire(world, blockPos.add(-1, 0, 0), ctx, false, 100);
-						spawnFire(world, blockPos.add(0, 0, 1), ctx, false, 100);
-						spawnFire(world, blockPos.add(0, 0, -1), ctx, false, 100);
-						ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
-					}
-
-
-
-				} else {
-					if (spawnFire(world, blockPos, ctx, true, chance)) {
-						ctx.getAbilityData().addXp(SKILLS_CONFIG.litFire);
-					}
-				}
-
-			}
-		}**/
 	}
 
-	/*private boolean spawnFire(World world, BlockPos blockPos, AbilityContext ctx, boolean useChi,
-							  double chance) {
-		EntityLivingBase entity = ctx.getBenderEntity();
+	public static class FireShockwaveBehaviour extends ShockwaveBehaviour {
 
+		@Override
+		public Behavior onUpdate(EntityShockwave entity) {
+			if (entity.getOwner() != null) {
+				BlockPos prevPos = entity.getPosition();
+				for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.ticksExisted * 1.5F)) {
+					int x = entity.posX < 0 ? (int)(entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle) - 1)
+							: (int)(entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle));
+					int y = (int)entity.posY;
+					int z = entity.posZ < 0 ? (int)(entity.posZ + ((entity.ticksExisted * entity.getSpeed())) * Math.cos(angle) - 1)
+							: (int)(entity.posZ + ((entity.ticksExisted * entity.getSpeed())) * Math.cos(angle));
 
-		if (world.isRainingAt(blockPos) && ctx.getLookPos() != null) {
-
-			particles.spawnParticles(world, EnumParticleTypes.CLOUD, 3, 7, ctx.getLookPos(),
-					new Vector(0.5f, 0.75f, 0.5f));
-			world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
-					SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.PLAYERS,
-					0.4f + (float) Math.random() * 0.2f, 0.9f + (float) Math.random() * 0.2f);
-
-		} else {
-			if (world.getBlockState(blockPos).getBlock() == Blocks.AIR
-					&& Blocks.FIRE.canPlaceBlockAt(world, blockPos)) {
-
-				if (!useChi || ctx.getBender().consumeChi(STATS_CONFIG.chiLightFire)) {
-
-					double random = Math.random() * 100;
-
-					if (random < chance || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
-
-						world.setBlockState(blockPos, Blocks.FIRE.getDefaultState());
-						world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
-								SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.PLAYERS,
-								0.7f + (float) Math.random() * 0.3f, 0.9f + (float) Math.random() * 0.2f);
-
-						return true;
-
-					} else {
-
-						ctx.getBender().sendMessage("avatar.ability.fire_shot.fail");
-
+					//double x = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
+					//double y = entity.posY;
+					//double z = entity.posZ + (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle);
+					BlockPos spawnPos = new BlockPos((int) x, (int) y, (int) z);
+					if (Blocks.FIRE.canPlaceBlockAt(entity.world, spawnPos) && entity.world.getBlockState(spawnPos).getBlock() == Blocks.AIR) {
+						entity.world.setBlockToAir(prevPos);
+						entity.world.setBlockState(spawnPos, Blocks.FIRE.getDefaultState());
+						prevPos = spawnPos;
 					}
-
 				}
-
 			}
+			return this;
 		}
 
-		return false;
+		@Override
+		public void fromBytes(PacketBuffer buf) {
 
-	}**/
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
+	}
 }

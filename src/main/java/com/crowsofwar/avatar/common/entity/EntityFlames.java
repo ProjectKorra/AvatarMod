@@ -238,6 +238,7 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 				setDead();
 			return !data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
 		}
+		setDead();
 		return true;
 
 	}
