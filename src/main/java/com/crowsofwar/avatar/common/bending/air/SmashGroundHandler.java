@@ -62,7 +62,7 @@ public class SmashGroundHandler extends TickHandler {
 		EntityShockwave shockwave = new EntityShockwave(world);
 		shockwave.setDamage(getDamage());
 		shockwave.setOwner(entity);
-		shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
+		shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY + 0.4, entity.posZ);
 		shockwave.setKnockbackHeight(getKnockbackHeight());
 		shockwave.setSpeed((float) getSpeed() / 5);
 		shockwave.setRange((float) getRange());
