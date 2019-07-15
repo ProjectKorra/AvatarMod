@@ -116,12 +116,6 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			if (entity.canDamageEntity(collided)) {
 				collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
 
-				//For some reason damage and velocity called here doesn't work
-
-				/*if (collided.attackEntityFrom(AvatarDamageSource.causeFireballDamage(collided, entity.getOwner()),
-						entity.getDamage())) {
-					BattlePerformanceScore.addMediumScore(entity.getOwner());
-				}**/
 			}
 			if (entity.canCollideWith(collided) && collided.canBeCollidedWith()) {
 
@@ -134,15 +128,6 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 				collided.motionY += motion.y();
 				collided.motionZ += motion.z();
 				AvatarUtils.afterVelocityAdded(collided);
-
-				/*BendingData data = Bender.get(entity.getOwner()).getData();
-				if (!collided.world.isRemote && data != null) {
-					float xp = SKILLS_CONFIG.fireballHit;
-					if (entity.getAbility() != null) {
-						data.getAbilityData(entity.getAbility().getName()).addXp(xp);
-					}
-
-				}**/
 
 				// Remove the fireball & spawn particles
 				if (!entity.world.isRemote) {
