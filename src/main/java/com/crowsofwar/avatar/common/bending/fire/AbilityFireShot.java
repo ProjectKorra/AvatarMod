@@ -120,13 +120,15 @@ public class AbilityFireShot extends Ability {
 		public Behavior onUpdate(EntityShockwave entity) {
 			if (entity.getOwner() != null) {
 				BlockPos prevPos = entity.getPosition();
-				for (int angle = 0; angle < 360; angle++) {
-					double radians = Math.toRadians(angle);
-
-					//double x = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(radians);
-					//double y = entity.posY;
-					//double z = entity.posZ + (entity.ticksExisted * entity.getSpeed()) * Math.cos(radians);
-					Vec3d direction = entity.getOwner().getLookVec().add(entity.getOwner().getPositionVector());
+				for (int degree = 0; degree < 360; degree++) {
+					if (entity.ticksExisted % 2 == 0) {
+						double angle = Math.toRadians(degree);
+						//Sin x for shockwave, cos x for sphere. We want a fire wave, so we sin x.
+						double x = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
+						//double y = entity.posY;
+						double z = entity.posZ + (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle);
+						Vec3d direction = new Vec3d(x, entity.getOwner().getEntityBoundingBox().minY, z);
+					/*Vec3d direction = entity.getOwner().getLookVec().add(entity.getOwner().getPositionVector());
 					double x, z, vx, vz;
 
 					x = direction.x;
@@ -135,14 +137,17 @@ public class AbilityFireShot extends Ability {
 					vx = x * Math.cos(radians) - z * Math.sin(radians);
 					vz = x * Math.sin(radians) + z * Math.cos(radians);
 
-					direction = new Vec3d(vx, direction.y, vz);
+					direction = new Vec3d(vx, direction.y, vz);**/
 
-					BlockPos spawnPos = new BlockPos((int) (direction.x /*+ entity.posX**/), (int) (direction.y /*+ entity.posY**/),
-							(int) (direction.z /*+ entity.posZ**/));
-					if (Blocks.FIRE.canPlaceBlockAt(entity.world, spawnPos)) {
-						entity.world.setBlockToAir(prevPos);
-						entity.world.setBlockState(spawnPos, Blocks.FIRE.getDefaultState());
-						prevPos = spawnPos;
+						BlockPos spawnPos = new BlockPos((int) (direction.x /*+ entity.posX**/), (int) (direction.y /*+ entity.posY**/),
+								(int) (direction.z /*+ entity.posZ**/));
+						if (Blocks.FIRE.canPlaceBlockAt(entity.world, spawnPos) && prevPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ) !=
+								spawnPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ)) {
+							//entity.world.setBlockToAir(prevPos);
+							//Use a hashmap instead
+							entity.world.setBlockState(spawnPos, Blocks.FIRE.getDefaultState());
+							prevPos = spawnPos;
+						}
 					}
 				}
 			}

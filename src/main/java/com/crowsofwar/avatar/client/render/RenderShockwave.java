@@ -24,8 +24,9 @@ public class RenderShockwave extends Render<EntityShockwave> {
 			if (entity.ticksExisted <= entity.getParticleAmount()) {
 				if (!entity.getSphere()) {
 					for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.getRange() * 15 / entity.getParticleAmount())) {
+						//Even though the maths is technically wrong, you use sin if you want a shockwave, and cos if you want a sphere (for x).
 						double x2 = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
-						double y2 = entity.posY + 0.5;
+						double y2 = entity.posY + 0.1;
 						double z2 = entity.posZ + (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle);
 						Vector speed = new Vector((entity.ticksExisted * entity.getSpeed()) * Math.sin(angle) * (entity.getParticleSpeed() * 10),
 								entity.getParticleSpeed() / 2, (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle) * (entity.getParticleSpeed() * 10));
