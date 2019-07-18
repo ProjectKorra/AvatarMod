@@ -119,6 +119,7 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 			}
 			if (entity.canCollideWith(collided) && collided.canBeCollidedWith()) {
 
+				//Velocity doesn't work here for some reason??
 				Vector motion = entity.velocity().dividedBy(20);
 				motion = motion.times(motion.magnitude());
 				//Default size is 16, 16 * 0.03125 is 0.5F, which is the size the fireball is at level 1.

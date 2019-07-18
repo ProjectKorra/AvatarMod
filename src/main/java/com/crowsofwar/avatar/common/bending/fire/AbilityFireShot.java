@@ -34,6 +34,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.HashMap;
+
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -41,10 +43,25 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class AbilityFireShot extends Ability {
 
+	private static HashMap<BlockPos, Integer> blockTimes = new HashMap<>();
+
 	public AbilityFireShot() {
 		super(Firebending.ID, "fire_shot");
 		requireRaytrace(-1, false);
 	}
+
+	private static void setBlockTime(BlockPos block, int time) {
+		if (blockTimes.containsKey(block)) {
+			blockTimes.replace(block, time);
+		} else {
+			blockTimes.put(block, time);
+		}
+	}
+
+	private static int getBlockTime(BlockPos block) {
+		return blockTimes.getOrDefault(block, 0);
+	}
+
 
 	@Override
 	public boolean isUtility() {
@@ -119,37 +136,38 @@ public class AbilityFireShot extends Ability {
 		@Override
 		public Behavior onUpdate(EntityShockwave entity) {
 			if (entity.getOwner() != null) {
-				BlockPos prevPos = entity.getPosition();
-				for (int degree = 0; degree < 360; degree++) {
-					if (entity.ticksExisted % 2 == 0) {
+				if (entity.ticksExisted % 2 == 0) {
+					BlockPos prevPos = entity.getPosition();
+					for (int degree = 0; degree < 360; degree++) {
 						double angle = Math.toRadians(degree);
 						//Sin x for shockwave, cos x for sphere. We want a fire wave, so we sin x.
 						double x = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
 						//double y = entity.posY;
 						double z = entity.posZ + (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle);
 						Vec3d direction = new Vec3d(x, entity.getOwner().getEntityBoundingBox().minY, z);
-					/*Vec3d direction = entity.getOwner().getLookVec().add(entity.getOwner().getPositionVector());
-					double x, z, vx, vz;
-
-					x = direction.x;
-					z = direction.z;
-
-					vx = x * Math.cos(radians) - z * Math.sin(radians);
-					vz = x * Math.sin(radians) + z * Math.cos(radians);
-
-					direction = new Vec3d(vx, direction.y, vz);**/
-
 						BlockPos spawnPos = new BlockPos((int) (direction.x /*+ entity.posX**/), (int) (direction.y /*+ entity.posY**/),
 								(int) (direction.z /*+ entity.posZ**/));
 						if (Blocks.FIRE.canPlaceBlockAt(entity.world, spawnPos) && prevPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ) !=
-								spawnPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ)) {
+								spawnPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ)
+								&& entity.world.getBlockState(spawnPos).getBlock() == Blocks.AIR) {
 							//entity.world.setBlockToAir(prevPos);
 							//Use a hashmap instead
+							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() ? 120 : 10;
+							setBlockTime(spawnPos, time);
 							entity.world.setBlockState(spawnPos, Blocks.FIRE.getDefaultState());
 							prevPos = spawnPos;
 						}
 					}
 				}
+				for (BlockPos pos : blockTimes.keySet()) {
+					blockTimes.replace(pos, getBlockTime(pos), getBlockTime(pos) - 1);
+					if (getBlockTime(pos) == 0) {
+						if (entity.world.getBlockState(pos).getBlock() == Blocks.FIRE) {
+							entity.world.setBlockToAir(pos);
+						}
+					}
+				}
+
 			}
 			return this;
 		}
