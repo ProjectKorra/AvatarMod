@@ -43,23 +43,36 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class AbilityFireShot extends Ability {
 
-	private static HashMap<BlockPos, Integer> blockTimes = new HashMap<>();
+	static HashMap<BlockPos, Integer> ignitedTimes = new HashMap<>();
+ 	static HashMap<BlockPos, String> ignitedBlocks = new HashMap<>();
 
 	public AbilityFireShot() {
 		super(Firebending.ID, "fire_shot");
 		requireRaytrace(-1, false);
 	}
 
-	private static void setBlockTime(BlockPos block, int time) {
-		if (blockTimes.containsKey(block)) {
-			blockTimes.replace(block, time);
+	private static void setIgnitedTimes(BlockPos block, int time) {
+		if (ignitedTimes.containsKey(block)) {
+			ignitedTimes.replace(block, time);
 		} else {
-			blockTimes.put(block, time);
+			ignitedTimes.put(block, time);
 		}
 	}
 
-	private static int getBlockTime(BlockPos block) {
-		return blockTimes.getOrDefault(block, 0);
+	static int getIgnitedTimes(BlockPos block) {
+		return ignitedTimes.getOrDefault(block, 0);
+	}
+
+	private static void setIgnitedBlocks(BlockPos block, String UUID) {
+		if (ignitedBlocks.containsKey(block)) {
+			ignitedBlocks.replace(block, UUID);
+		} else {
+			ignitedBlocks.put(block, UUID);
+		}
+	}
+
+	static String getIgnitedOwner(BlockPos pos) {
+		return ignitedBlocks.getOrDefault(pos, null);
 	}
 
 
@@ -135,6 +148,7 @@ public class AbilityFireShot extends Ability {
 
 		@Override
 		public Behavior onUpdate(EntityShockwave entity) {
+			//TODO: Clear the hasmaps, then remove the code that clears them (need to run mc once to clear the hashmaps)
 			if (entity.getOwner() != null) {
 				if (entity.ticksExisted % 2 == 0) {
 					BlockPos prevPos = entity.getPosition();
@@ -150,20 +164,11 @@ public class AbilityFireShot extends Ability {
 						if (Blocks.FIRE.canPlaceBlockAt(entity.world, spawnPos) && prevPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ) !=
 								spawnPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ)
 								&& entity.world.getBlockState(spawnPos).getBlock() == Blocks.AIR) {
-							//entity.world.setBlockToAir(prevPos);
-							//Use a hashmap instead
 							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() ? 120 : 10;
-							setBlockTime(spawnPos, time);
+							setIgnitedTimes(spawnPos, time);
+							setIgnitedBlocks(spawnPos, entity.getOwner().getUniqueID().toString());
 							entity.world.setBlockState(spawnPos, Blocks.FIRE.getDefaultState());
 							prevPos = spawnPos;
-						}
-					}
-				}
-				for (BlockPos pos : blockTimes.keySet()) {
-					blockTimes.replace(pos, getBlockTime(pos), getBlockTime(pos) - 1);
-					if (getBlockTime(pos) == 0) {
-						if (entity.world.getBlockState(pos).getBlock() == Blocks.FIRE) {
-							entity.world.setBlockToAir(pos);
 						}
 					}
 				}
