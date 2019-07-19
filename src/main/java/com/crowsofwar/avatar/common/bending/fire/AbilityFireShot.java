@@ -148,11 +148,9 @@ public class AbilityFireShot extends Ability {
 
 		@Override
 		public Behavior onUpdate(EntityShockwave entity) {
-			//TODO: Clear the hasmaps, then remove the code that clears them (need to run mc once to clear the hashmaps)
 			if (entity.getOwner() != null) {
-				if (entity.ticksExisted % 2 == 0) {
 					BlockPos prevPos = entity.getPosition();
-					for (int degree = 0; degree < 360; degree++) {
+					for (int degree = 0; degree < 360; degree += 30) {
 						double angle = Math.toRadians(degree);
 						//Sin x for shockwave, cos x for sphere. We want a fire wave, so we sin x.
 						double x = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
@@ -171,7 +169,6 @@ public class AbilityFireShot extends Ability {
 							prevPos = spawnPos;
 						}
 					}
-				}
 
 			}
 			return this;
