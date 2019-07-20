@@ -30,7 +30,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.*;
-import static com.crowsofwar.avatar.common.bending.fire.AbilityFireShot.*;
+import static com.crowsofwar.avatar.common.bending.fire.AbilityFireShot.getIgnitedTime;
+import static com.crowsofwar.avatar.common.bending.fire.AbilityFireShot.ignitedTimes;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
@@ -148,14 +149,10 @@ public class FireEventListener {
 					if (b.getData().hasBendingId(Firebending.ID)) {
 						if (!ignitedTimes.isEmpty()) {
 							for (BlockPos pos : ignitedTimes.keySet()) {
-								if (entity.getUniqueID().toString().equals(getIgnitedOwner(pos))) {
-									ignitedTimes.replace(pos, getIgnitedTimes(pos), getIgnitedTimes(pos) - 1);
-									if (getIgnitedTimes(pos) == 0) {
-										if (entity.world.getBlockState(pos).getBlock() == Blocks.FIRE) {
-											entity.world.setBlockToAir(pos);
-											ignitedTimes.remove(pos);
-											ignitedBlocks.remove(pos);
-										}
+								if (getIgnitedTime(pos) >= entity.world.getWorldTime()) {
+									if (entity.world.getBlockState(pos).getBlock() == Blocks.FIRE) {
+										entity.world.setBlockToAir(pos);
+										ignitedTimes.remove(pos);
 									}
 								}
 							}

@@ -35,7 +35,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -44,27 +43,26 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class AbilityFireShot extends Ability {
 
-	static HashMap<UUID, HashMap<BlockPos, Integer>> ignitedTimes = new HashMap<>();
-	static HashMap<BlockPos, String> ignitedBlocks = new HashMap<>();
+	static HashMap<BlockPos, Long> ignitedTimes = new HashMap<>();
 
 	public AbilityFireShot() {
 		super(Firebending.ID, "fire_shot");
 		requireRaytrace(-1, false);
 	}
 
-	private static void setIgnitedTimes(UUID uuid, BlockPos block, int time) {
-		if (ignitedTimes.containsKey(uuid)) {
-			ignitedTimes.replace(uuid, ignitedTimes.get(uuid), i);
+	private static void setIgnitedTimes(BlockPos block, long time) {
+		if (ignitedTimes.containsKey(block)) {
+			ignitedTimes.replace(block, ignitedTimes.get(block), time);
 		} else {
 			ignitedTimes.put(block, time);
 		}
 	}
 
-	static HashMap<BlockPos, Integer> getIgnitedTimes(UUID uuid) {
-		return ignitedTimes.getOrDefault(uuid, new HashMap<>());
+	static long getIgnitedTime(BlockPos pos) {
+		return ignitedTimes.getOrDefault(pos, 0L);
 	}
 
-	private static void setIgnitedBlocks(BlockPos block, String UUID) {
+	/*private static void setIgnitedBlocks(BlockPos block, String UUID) {
 		if (ignitedBlocks.containsKey(block)) {
 			ignitedBlocks.replace(block, UUID);
 		} else {
@@ -74,35 +72,23 @@ public class AbilityFireShot extends Ability {
 
 	static String getIgnitedOwner(BlockPos pos) {
 		return ignitedBlocks.getOrDefault(pos, null);
-	}
+	}**/
 
-	private static void spawnBlocks(World world, EntityShockwave entity, long initialTime, int targetTime) {
-		assert entity.getOwner() != null;
+
+	/*private static void removeBlocks(World world, EntityShockwave entity) {
 		if (entity.getServer() != null) {
 			entity.getServer().addScheduledTask(() -> {
-				BlockPos prevPos = entity.getPosition();
-				for (int degree = 0; degree < 360; degree += 30) {
-					double angle = Math.toRadians(degree);
-					//Sin x for shockwave, cos x for sphere. We want a fire wave, so we sin x.
-					double x = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
-					//double y = entity.posY;
-					double z = entity.posZ + (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle);
-					Vec3d direction = new Vec3d(x, entity.getOwner().getEntityBoundingBox().minY, z);
-					BlockPos spawnPos = new BlockPos((int) (direction.x /*+ entity.posX**/), (int) (direction.y /*+ entity.posY**/),
-							(int) (direction.z /*+ entity.posZ**/));
-					if (Blocks.FIRE.canPlaceBlockAt(entity.world, spawnPos) && prevPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ) !=
-							spawnPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ)
-							&& entity.world.getBlockState(spawnPos).getBlock() == Blocks.AIR) {
-						setIgnitedTimes(spawnPos, time);
-						setIgnitedBlocks(spawnPos, entity.getOwner().getUniqueID().toString());
-						entity.world.setBlockState(spawnPos, Blocks.FIRE.getDefaultState());
-						prevPos = spawnPos;
+				if (!ignitedTimes.isEmpty()) {
+					for (BlockPos pos : ignitedTimes.keySet()) {
+						if (getIgnitedTime(pos) >= world.getWorldTime()) {
+							world.setBlockToAir(pos);
+							ignitedTimes.remove(pos);
+						}
 					}
 				}
 			});
-
 		}
-	}
+	}**/
 
 	@Override
 	public boolean isUtility() {
@@ -177,9 +163,27 @@ public class AbilityFireShot extends Ability {
 		@Override
 		public Behavior onUpdate(EntityShockwave entity) {
 			if (entity.getOwner() != null) {
-				int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() ? 120 : 10;
-				handleBlocks(entity.world, entity, entity.world.getWorldTime(), time);
-
+				BlockPos prevPos = entity.getPosition();
+				for (int degree = 0; degree < 360; degree += 30) {
+					double angle = Math.toRadians(degree);
+					//Sin x for shockwave, cos x for sphere. We want a fire wave, so we sin x.
+					double x = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
+					//double y = entity.posY;
+					double z = entity.posZ + (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle);
+					Vec3d direction = new Vec3d(x, entity.getOwner().getEntityBoundingBox().minY, z);
+					BlockPos spawnPos = new BlockPos((int) (direction.x /*+ entity.posX**/), (int) (direction.y /*+ entity.posY**/),
+							(int) (direction.z /*+ entity.posZ**/));
+					if (Blocks.FIRE.canPlaceBlockAt(entity.world, spawnPos) && prevPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ) !=
+							spawnPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ)
+							&& entity.world.getBlockState(spawnPos).getBlock() == Blocks.AIR) {
+						int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() ? 120 : 10;
+						setIgnitedTimes(spawnPos, time + entity.world.getWorldTime());
+						entity.world.setBlockState(spawnPos, Blocks.FIRE.getDefaultState());
+						prevPos = spawnPos;
+					}
+				}
+				//spawnBlocks(entity.world, entity);
+				//removeBlocks(entity.world, entity);
 			}
 			return this;
 		}
