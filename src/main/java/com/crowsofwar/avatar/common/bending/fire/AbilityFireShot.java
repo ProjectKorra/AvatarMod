@@ -34,6 +34,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -54,10 +55,12 @@ public class AbilityFireShot extends Ability {
 
 	private static void setIgnitedTimes(UUID uuid, BlockPos block, int time) {
 		if (ignitedTimes.containsKey(uuid)) {
-			ignitedTimes.replace(uuid, ignitedTimes.get(uuid), i);
+			ignitedTimes.replace(uuid, ignitedTimes.get(uuid), ignitedTimes.get(block));
 		} else {
-			ignitedTimes.put(block, time);
-		}
+		    HashMap<BlockPos, Integer> pos = new HashMap<>();
+		    pos.put(block, time);
+            ignitedTimes.put(uuid, pos);
+        }
 	}
 
 	static HashMap<BlockPos, Integer> getIgnitedTimes(UUID uuid) {
@@ -164,7 +167,8 @@ public class AbilityFireShot extends Ability {
 								spawnPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ)
 								&& entity.world.getBlockState(spawnPos).getBlock() == Blocks.AIR) {
 							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() ? 120 : 10;
-							setIgnitedTimes(spawnPos, time);
+							UUID uuid = entity.getOwner().getUniqueID();
+							setIgnitedTimes(uuid, spawnPos, time);
 							setIgnitedBlocks(spawnPos, entity.getOwner().getUniqueID().toString());
 							entity.world.setBlockState(spawnPos, Blocks.FIRE.getDefaultState());
 							prevPos = spawnPos;

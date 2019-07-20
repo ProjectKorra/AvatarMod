@@ -27,7 +27,9 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.*;
 import static com.crowsofwar.avatar.common.bending.fire.AbilityFireShot.*;
@@ -147,10 +149,15 @@ public class FireEventListener {
 				if (b != null) {
 					if (b.getData().hasBendingId(Firebending.ID)) {
 						if (!ignitedTimes.isEmpty()) {
-							for (BlockPos pos : ignitedTimes.keySet()) {
+							UUID benderUUID = b.getEntity().getUniqueID();
+							for (BlockPos pos : ignitedTimes.get(benderUUID).keySet()) {
+								HashMap<BlockPos, Integer> newIgnitedTime = new HashMap<>();
+								getIgnitedTimes(benderUUID).forEach((blockPos, integer) -> {
+									newIgnitedTime.put(blockPos, integer - 1);
+								});
 								if (entity.getUniqueID().toString().equals(getIgnitedOwner(pos))) {
-									ignitedTimes.replace(pos, getIgnitedTimes(pos), getIgnitedTimes(pos) - 1);
-									if (getIgnitedTimes(pos) == 0) {
+									ignitedTimes.replace(benderUUID, getIgnitedTimes(benderUUID), newIgnitedTime);
+									if (getIgnitedTimes(benderUUID).get(pos) == 0) {
 										if (entity.world.getBlockState(pos).getBlock() == Blocks.FIRE) {
 											entity.world.setBlockToAir(pos);
 											ignitedTimes.remove(pos);
