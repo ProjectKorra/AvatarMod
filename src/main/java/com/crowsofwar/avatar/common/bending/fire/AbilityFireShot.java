@@ -35,6 +35,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -43,7 +44,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class AbilityFireShot extends Ability {
 
-	static HashMap<BlockPos, Integer> ignitedTimes = new HashMap<>();
+	static HashMap<UUID, HashMap<BlockPos, Integer>> ignitedTimes = new HashMap<>();
  	static HashMap<BlockPos, String> ignitedBlocks = new HashMap<>();
 
 	public AbilityFireShot() {
@@ -51,16 +52,16 @@ public class AbilityFireShot extends Ability {
 		requireRaytrace(-1, false);
 	}
 
-	private static void setIgnitedTimes(BlockPos block, int time) {
-		if (ignitedTimes.containsKey(block)) {
-			ignitedTimes.replace(block, time);
+	private static void setIgnitedTimes(UUID uuid, BlockPos block, int time) {
+		if (ignitedTimes.containsKey(uuid)) {
+			ignitedTimes.replace(uuid, ignitedTimes.get(uuid), i);
 		} else {
 			ignitedTimes.put(block, time);
 		}
 	}
 
-	static int getIgnitedTimes(BlockPos block) {
-		return ignitedTimes.getOrDefault(block, 0);
+	static HashMap<BlockPos, Integer> getIgnitedTimes(UUID uuid) {
+		return ignitedTimes.getOrDefault(uuid, new HashMap<>());
 	}
 
 	private static void setIgnitedBlocks(BlockPos block, String UUID) {
