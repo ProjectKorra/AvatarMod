@@ -220,8 +220,22 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	}
 
 	@Override
+	public void handleKeyboardInput() throws IOException {
+		super.handleKeyboardInput();
+		int keyCode = Keyboard.getEventKey();
+		handler.type(keyCode);
+		if (!isWindowOpen() && Keyboard.getEventKeyState()) {
+			if (keyCode == Keyboard.KEY_A || keyCode == Keyboard.KEY_LEFT) {
+				scroll += 35;
+			} else if (keyCode == Keyboard.KEY_D || keyCode == Keyboard.KEY_RIGHT) {
+				scroll -= 35;
+			}
+		}
+	}
+
+	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		
+
 		if (isWindowOpen()) {
 			KeyBinding invKb = mc.gameSettings.keyBindInventory;
 
@@ -235,14 +249,14 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		} else {
 			handler.type(keyCode);
 			if (keyCode == Keyboard.KEY_A || keyCode == Keyboard.KEY_LEFT) {
-				scroll += 25;
+				scroll += 5;
 			} else if (keyCode == Keyboard.KEY_D || keyCode == Keyboard.KEY_RIGHT) {
-				scroll -= 25;
+				scroll -= 5;
 			} else {
 				super.keyTyped(typedChar, keyCode);
 			}
 		}
-		
+
 	}
 
 	@Override
