@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "openglider:hang_glider_advanced"
+    "item": "avatarmod:hang_glider_advanced"
   },
   "pattern": [
     " e ",
@@ -10,14 +10,14 @@
   "type": "forge:ore_shaped",
   "key": {
     "l": {
-      "item": "openglider:hang_glider_part",
+      "item": "avatarmod:hang_glider_part",
       "data": 0
     },
     "s": {
-      "item": "openglider:hang_glider_basic"
+      "item": "avatarmod:hang_glider_basic"
     },
     "r": {
-      "item": "openglider:hang_glider_part",
+      "item": "avatarmod:hang_glider_part",
       "data": 1
     },
     "e": {

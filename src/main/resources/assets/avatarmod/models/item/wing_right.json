@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "openglider:items/wing_right"
+    "layer0": "avatarmod:items/wing_right"
   }
 }
