@@ -67,7 +67,6 @@ public class AvatarItemRenderRegister {
 			register(AvatarItems.itemBisonSaddle, i);
 			register(AvatarItems.itemOstrichEquipment, i);
 		}
-
 	}
 
 	/**

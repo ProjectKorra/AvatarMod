@@ -1,16 +1,18 @@
 package com.crowsofwar.avatar.glider.common.item;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.glider.api.item.ItemHangGliderBase;
 import com.crowsofwar.avatar.glider.client.model.ModelGlider;
 import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 
 import static com.crowsofwar.avatar.AvatarInfo.DOMAIN;
 
 
-public class ItemHangGliderAdvanced extends ItemHangGliderBase {
+public class ItemHangGliderAdvanced extends ItemHangGliderBase implements AvatarItem {
 
     public ItemHangGliderAdvanced() {
         super(ConfigHandler.advancedGliderHorizSpeed, ConfigHandler.advancedGliderVertSpeed, ConfigHandler.advancedGliderShiftHorizSpeed, ConfigHandler.advancedGliderShiftVertSpeed, ConfigHandler.advancedGliderWindModifier, ConfigHandler.advancedGliderAirResistance, ConfigHandler.advancedGliderTotalDurability, ModelGlider.MODEL_GLIDER_ADVANCED_TEXTURE_RL);
@@ -27,5 +29,15 @@ public class ItemHangGliderAdvanced extends ItemHangGliderBase {
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
 
+    }
+
+    @Override
+    public Item item() {
+        return this;
+    }
+
+    @Override
+    public String getModelName(int meta) {
+        return ModelGlider.MODEL_GLIDER_ADVANCED_TEXTURE_RL.toString();
     }
 }

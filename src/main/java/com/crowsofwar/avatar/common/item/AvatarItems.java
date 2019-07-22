@@ -54,7 +54,9 @@ AvatarItems {
 	public static ItemOstrichEquipment itemOstrichEquipment;
 	private static ItemStack stackScroll;
 	public static ItemAirbenderStaff airbenderStaff;
-	public static ItemHangGliderPart GLIDER_PART;
+	public static ItemHangGliderPart GLIDER_PART_Scaffolding;
+	public static ItemHangGliderPart GLIDER_PART_LeftWing;
+	public static ItemHangGliderPart GLIDER_PART_RightWing;
 	public static ItemHangGliderBasic GLIDER_BASIC;
 	public static ItemHangGliderAdvanced GLIDER_ADV;
 	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
@@ -90,9 +92,10 @@ AvatarItems {
 	public static void registerModels(ModelRegistryEvent event) {
 		itemRender(GLIDER_BASIC, 0, AvatarInfo.ITEM_GLIDER_BASIC_NAME);
 		itemRender(GLIDER_ADV, 0, AvatarInfo.ITEM_GLIDER_ADVANCED_NAME);
-		itemRender(GLIDER_PART, 0, ItemHangGliderPart.names[0]);
-		itemRender(GLIDER_PART, 1, ItemHangGliderPart.names[1]);
-		itemRender(GLIDER_PART, 2, ItemHangGliderPart.names[2]);
+		itemRender(GLIDER_PART_LeftWing, 0, ItemHangGliderPart.names[0]);
+		itemRender(GLIDER_PART_RightWing, 1, ItemHangGliderPart.names[1]);
+		itemRender(GLIDER_PART_Scaffolding, 2, ItemHangGliderPart.names[2]);
+
 	}
 
 	private static void itemRender(Item item, int meta, String name) {
@@ -110,9 +113,11 @@ AvatarItems {
 		Item[] itemsArr = allItems.toArray(new Item[allItems.size()]);
 		e.getRegistry().registerAll(itemsArr);
 
-		e.getRegistry().register(new ItemHangGliderPart().setRegistryName(AvatarInfo.ITEM_GLIDER_PART_NAME));
-		e.getRegistry().register(new ItemHangGliderBasic().setRegistryName(AvatarInfo.ITEM_GLIDER_BASIC_NAME));
-		e.getRegistry().register(new ItemHangGliderAdvanced().setRegistryName(AvatarInfo.ITEM_GLIDER_ADVANCED_NAME));
+		e.getRegistry().register(new ItemHangGliderPart().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_PART_NAME));
+		e.getRegistry().register(new ItemHangGliderPart().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_PART_NAME));
+		e.getRegistry().register(new ItemHangGliderPart().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_PART_NAME));
+		e.getRegistry().register(new ItemHangGliderBasic().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_BASIC_NAME));
+		e.getRegistry().register(new ItemHangGliderAdvanced().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_ADVANCED_NAME));
 
 		AvatarMod.proxy.registerItemModels();
 	}
