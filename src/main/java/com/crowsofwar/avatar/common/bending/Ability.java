@@ -122,9 +122,10 @@ public abstract class Ability {
 		return true;
 	}
 
-	public boolean isCompatiblecroll(ItemStack stack, int level, AbilityData.AbilityTreePath path) {
+	public boolean isCompatibleScroll(ItemStack stack, int level, AbilityData.AbilityTreePath path) {
+		ItemScroll.ScrollType type = ItemScroll.getScrollType(stack);
 		if (stack.getItem() instanceof ItemScroll) {
-			return ItemScroll.getScrollType(stack).getBendingId() == getBendingId();
+			return type.getBendingId() == getBendingId() || type == ItemScroll.ScrollType.ALL;
 		}
 		return false;
 	}

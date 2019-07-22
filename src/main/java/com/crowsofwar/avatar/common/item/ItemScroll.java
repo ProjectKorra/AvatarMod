@@ -16,8 +16,6 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SPECIALTY_SCROLL_TOOLTIP;
-
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
@@ -34,7 +32,6 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntityItem;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -43,6 +40,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -56,16 +54,21 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SPECIALTY_SCROLL_TOOLTIP;
+
 /**
  * @author CrowsOfWar
  */
 public class ItemScroll extends Item implements AvatarItem {
+
+	private int tier;
 
 	public ItemScroll() {
 		setTranslationKey("scroll");
 		setMaxStackSize(1);
 		setCreativeTab(AvatarItems.tabItems);
 		setMaxDamage(0);
+		this.tier = 1;
 		setHasSubtypes(true);
 	}
 
@@ -79,10 +82,24 @@ public class ItemScroll extends Item implements AvatarItem {
 		stack.setItemDamage(type.id());
 	}
 
+	@Nullable
+	@Override
+	public NBTTagCompound getNBTShareTag(ItemStack stack) {
+		return super.getNBTShareTag(stack);
+	}
+
+	@Override
+	public void readNBTShareTag(ItemStack stack, @Nullable NBTTagCompound nbt) {
+		super.readNBTShareTag(stack, nbt);
+		if (nbt != null) {
+			nbt.setInteger("Tier", 1);
+		}
+	}
+
 	@Nonnull
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player,
-	                                                EnumHand hand) {
+													EnumHand hand) {
 
 		ScrollType type = ScrollType.get(player.getHeldItem(hand).getMetadata());
 		assert type != null;
@@ -112,6 +129,9 @@ public class ItemScroll extends Item implements AvatarItem {
 
 	}
 
+	public void setTier(int tier) {
+		this.tier = tier;
+	}
 
 	/**
 	 * Fired for right-clicking on a specialty bending scroll (e.g. lightningbending scroll)
@@ -161,7 +181,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	@Override
 	public String getTranslationKey(ItemStack stack) {
 		int metadata = stack.getMetadata() >= ScrollType.values().length ? 0 : stack.getMetadata();
-		return super.getTranslationKey(stack) + "." + ScrollType.get(metadata).displayName();
+		return super.getTranslationKey(stack) + "." + ScrollType.get(metadata).displayName() + "." + tier;
 	}
 
 	@Override
@@ -188,7 +208,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> tooltips,
-	                           ITooltipFlag advanced) {
+							   ITooltipFlag advanced) {
 
 		String tooltip = I18n.format("avatar." + getScrollType(stack).getBendingName());
 		tooltips.add(tooltip);
@@ -198,7 +218,7 @@ public class ItemScroll extends Item implements AvatarItem {
 			String translated = I18n.format("avatar.specialtyScroll.tooltip");
 			String bendingName = getScrollType(stack).getBendingName();
 			String formatted = FormattedMessageProcessor.formatText(MSG_SPECIALTY_SCROLL_TOOLTIP,
-			                                                        translated, bendingName);
+					translated, bendingName);
 			tooltips.add(formatted);
 
 		}
@@ -247,7 +267,7 @@ public class ItemScroll extends Item implements AvatarItem {
 
 		private final UUID bendingId;
 
-		private ScrollType(UUID bendingId) {
+		ScrollType(UUID bendingId) {
 			this.bendingId = bendingId;
 		}
 
@@ -286,11 +306,7 @@ public class ItemScroll extends Item implements AvatarItem {
 			}
 
 			// Trying to use parent-type bending scroll on specialty bending style
-			if (BendingStyles.get(bendingId).getParentBendingId() == this.bendingId) {
-				return true;
-			}
-
-			return false;
+			return BendingStyles.get(bendingId).getParentBendingId() == this.bendingId;
 
 		}
 
