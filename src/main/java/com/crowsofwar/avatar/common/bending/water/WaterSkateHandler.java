@@ -198,17 +198,20 @@ public class WaterSkateHandler extends TickHandler {
 	 * Determine if the player is in the ideal conditions to water-skate.
 	 */
 	private boolean shouldSkate(EntityLivingBase player, AbilityData data) {
+
+		//TODO: Auto step-up
 		IBlockState below = player.world.getBlockState(new BlockPos(player.getPosition()).down());
 		IBlockState playerPos = player.world.getBlockState(new BlockPos(player.getPosition()));
 		int surface = getSurfacePos(player);
 
 		boolean allowWaterfallSkating = data.getLevel() >= 2;
 		boolean allowGroundSkating = data.isMasterPath(AbilityTreePath.FIRST);
-		boolean onGround = (below.getBlock() != Blocks.AIR) && below.getBlock() != Blocks.LAVA && below.getBlock() != Blocks.FLOWING_LAVA;
+		boolean onGround = below.getBlock() != Blocks.AIR && below.getBlock() != Blocks.LAVA && below.getBlock() != Blocks.FLOWING_LAVA;
 		boolean onWaterBendableBlock = STATS_CONFIG.waterBendableBlocks.contains(below.getBlock());
 		boolean onSnowLayer = playerPos.getBlock() == Blocks.SNOW_LAYER;
+		boolean onSlab = !playerPos.isFullBlock() && playerPos.getBlock() != Blocks.AIR && playerPos.getBlock() != Blocks.LAVA && playerPos.getBlock() != Blocks.FLOWING_LAVA;
 		boolean inWaterBlock = ((below.getBlock() == Blocks.WATER)
-				&& (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating)) || (player.world.isRainingAt(player.getPosition()) && onGround) || onWaterBendableBlock || onSnowLayer;
+				&& (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating)) || (player.world.isRainingAt(player.getPosition()) && (onGround || onSlab) || onWaterBendableBlock || onSnowLayer);
 
 
 		if (allowGroundSkating && onGround) {
