@@ -1,20 +1,20 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "openglider:items/hang_glider_basic"
+    "layer0": "avatarmod:items/hang_glider_basic"
   },
   "overrides": [
     {
       "predicate": {
         "status": 1
       },
-      "model": "openglider:item/hang_glider_basic_deployed"
+      "model": "avatarmod:item/hang_glider_basic_deployed"
     },
     {
       "predicate": {
         "status": 2
       },
-      "model": "openglider:item/hang_glider_basic_broken"
+      "model": "avatarmod:item/hang_glider_basic_broken"
     }
   ]
 }

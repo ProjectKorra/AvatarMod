@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "openglider:items/hang_glider_advanced_broken"
+    "layer0": "avatarmod:items/hang_glider_advanced_broken"
   }
 }
