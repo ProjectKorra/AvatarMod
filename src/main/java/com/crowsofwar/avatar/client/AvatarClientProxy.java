@@ -200,6 +200,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityFlamethrower.class, RenderFlamethrower::new);
 		//registerEntityRenderingHandler(EntityPlayer.class, RenderSlipstreamInvisibility::new);
 
+
 		// Renderers dependent on CodeChickenLib. 
 		// Do not render if it isn't installed, however, still keep the entity so that it acts as a light source 
 		if(AvatarMod.codeChickenLibCompat) {
