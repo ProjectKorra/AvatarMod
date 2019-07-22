@@ -49,12 +49,19 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.avatar.glider.api.upgrade.UpgradeItems;
+import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
+import com.crowsofwar.avatar.glider.common.event.ServerEventHandler;
+import com.crowsofwar.avatar.glider.common.network.PacketHandler;
+import com.crowsofwar.avatar.glider.common.registry.CapabilityRegistry;
+import com.crowsofwar.avatar.glider.common.wind.WindHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -169,7 +176,17 @@ public class AvatarMod {
 		ConfigClient.load();
 		ConfigChi.load();
 		ConfigMobs.load();
-		ConfigAnalytics.load();
+		ConfigAnalytics.load();//config
+		ConfigHandler.init(e.getSuggestedConfigurationFile());
+
+		//wind
+		WindHelper.initNoiseGenerator();
+
+		//register capabilities
+		CapabilityRegistry.registerAllCapabilities();
+
+		//packets
+		PacketHandler.init();
 
 		AvatarControl.initControls();
 		registerAbilities();
@@ -278,6 +295,14 @@ public class AvatarMod {
 		STATS_CONFIG.loadBlocks();
 		MOBS_CONFIG.loadLists();
 		ConfigMobs.load();
+
+		//glider upgrades
+		UpgradeItems.initUpgradesList();
+
+		//register server events
+		MinecraftForge.EVENT_BUS.register(new ServerEventHandler());
+		//register config changed event
+		MinecraftForge.EVENT_BUS.register(new ConfigHandler());
 
 		proxy.init();
 		proxy.registerParticles();

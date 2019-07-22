@@ -1,0 +1,26 @@
+{
+  "result": {
+    "item": "openglider:hang_glider_basic"
+  },
+  "pattern": [
+    "   ",
+    "lsr",
+    "   "
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "l": {
+      "item": "openglider:hang_glider_part",
+      "data": 0
+    },
+    "s": {
+      "item": "openglider:hang_glider_part",
+      "data": 2
+    },
+    "r": {
+      "item": "openglider:hang_glider_part",
+      "data": 1
+    }
+  },
+  "mirrored": false
+}

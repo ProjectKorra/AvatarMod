@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "openglider:hang_glider_part",
+    "data": 2
+  },
+  "pattern": [
+    " i ",
+    "i i",
+    "iii"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    }
+  }
+}

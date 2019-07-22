@@ -46,6 +46,10 @@ import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSendViewStatus;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
+import com.crowsofwar.avatar.glider.api.capabilities.CapabilityHelper;
+import com.crowsofwar.avatar.glider.api.capabilities.IGliderCapabilityHandler;
+import com.crowsofwar.avatar.glider.client.event.ClientEventHandler;
+import com.crowsofwar.avatar.glider.client.renderer.LayerGlider;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder.Type;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
@@ -236,6 +240,12 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public void init() {
 
+		//Add rendering layer
+		LayerGlider.addLayer();
+
+		//register client events
+		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
+
 		ParticleManager pm = mc.effectRenderer;
 
 		if (CLIENT_CONFIG.useCustomParticles) {
@@ -357,6 +367,21 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			int mode = Minecraft.getMinecraft().gameSettings.thirdPersonView;
 			AvatarMod.network.sendToServer(new PacketSSendViewStatus(mode));
 		}
+	}
+
+	@Override
+	public EntityPlayer getClientPlayer(){
+		return Minecraft.getMinecraft().player;
+	}
+
+	@Override
+	public World getClientWorld() {
+		return Minecraft.getMinecraft().world;
+	}
+
+	@Override
+	public IGliderCapabilityHandler getClientGliderCapability() {
+		return getClientPlayer().getCapability(CapabilityHelper.GLIDER_CAPABILITY, null);
 	}
 
 }
