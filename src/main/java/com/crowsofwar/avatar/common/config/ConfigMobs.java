@@ -43,6 +43,7 @@ public class ConfigMobs {
 
 	private static final Map<String, Double> DEFAULT_SCROLL_DROP = new HashMap<>();
 	private static final Map<String, String> DEFAULT_SCROLL_TYPE = new HashMap<>();
+	//private static final Map<String, Double>
 	public static ConfigMobs MOBS_CONFIG = new ConfigMobs();
 
 	static {
