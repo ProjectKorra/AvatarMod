@@ -37,9 +37,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiPredicate;
 
+import static com.crowsofwar.avatar.common.bending.water.WaterArcComboHandler.*;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 import static java.lang.Math.toRadians;
@@ -49,11 +51,23 @@ import static java.lang.Math.toRadians;
  */
 public class AbilityWaterArc extends Ability {
 
-	public int comboNumber;
+	private static HashMap<String, Integer> comboNumber = new HashMap<>();
 
 	public AbilityWaterArc() {
 		super(Waterbending.ID, "water_arc");
 		requireRaytrace(-1, true);
+	}
+
+	private static int getComboNumber(String UUID) {
+		return comboNumber.getOrDefault(UUID, 1);
+	}
+
+	private static void setComboNumber(String UUID, int number) {
+		if (comboNumber.containsKey(UUID)) {
+			comboNumber.replace(UUID, getComboNumber(UUID), number);
+		} else {
+			comboNumber.put(UUID, number);
+		}
 	}
 
 	@Override
@@ -123,42 +137,51 @@ public class AbilityWaterArc extends Ability {
 			if (bender.consumeChi(STATS_CONFIG.chiWaterArc)) {
 
 				removeExisting(ctx);
+				String UUID = entity.getUniqueID().toString();
 
 				if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 					EntityWaterArc water = new EntityWaterArc(world);
+					setWaterArcActivatedCombo(entity.getUniqueID().toString(), true);
+					setWaterArcComboTicks(entity.getUniqueID().toString(), 0);
 
-					if (comboNumber == 0) {
-						comboNumber = 1;
+
+					if (getComboNumber(UUID) == 0) {
+						setComboNumber(UUID, 1);
 					}
 
-					if (comboNumber <= 1) {
+					if (getComboNumber(UUID) <= 1) {
 						size = 0.5F;
 					}
 
-					if (comboNumber == 3) {
-						//Massive Singular water arc; kinda like airgust
-						size = 1F;
-						gravity = 2;
-						comboNumber = 1;
-					} else {
-						comboNumber++;
-					}
-
-					if (comboNumber == 2) {
+					if (getComboNumber(UUID) == 2) {
 						gravity = -9.81F;
 						size = 0.5F;
 					}
 
-					damageMult = comboNumber >= 3 ? 1.25F : 0.5F;
+					if (getComboNumber(UUID) == 3) {
+						//Massive Singular water arc; kinda like airgust
+						size = 1F;
+						gravity = 2;
+						setComboNumber(UUID, 1);
+					} else {
+						if (getWaterArcActivatedCombo(entity.getUniqueID().toString())) {
+							int number = getComboNumber(UUID);
+							number++;
+							setComboNumber(UUID, number);
+						}
+					}
+
+
+					damageMult = getComboNumber(UUID) >= 3 ? 1.25F : 0.5F;
 					damageMult *= ctx.getPowerRatingDamageMod();
 
 
 					Vector playerEye = Vector.getEyePos(entity);
 					Vector look = playerEye.plus(getLookRectangular(entity).times(1.5));
 					Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch));
-					force = force.times(15 + comboNumber);
+					force = force.times(15 + getComboNumber(UUID));
 
-
+					System.out.println(getComboNumber(UUID));
 					water.setOwner(entity);
 					water.setPosition(look);
 					water.setSize(size);
@@ -172,6 +195,7 @@ public class AbilityWaterArc extends Ability {
 				} else {
 					EntityWaterArc water = new EntityWaterArc(world);
 					water.setOwner(entity);
+					assert targetPos != null;
 					water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
 					water.setDamageMult(damageMult);
 					water.setSize(size);
@@ -187,7 +211,7 @@ public class AbilityWaterArc extends Ability {
 		}
 	}
 
-	private Vector getClosestWaterBlock(EntityLivingBase entity, int level) {
+	/*private Vector getClosestWaterBlock(EntityLivingBase entity, int level) {
 		World world = entity.world;
 
 		Vector eye = Vector.getEyePos(entity);
@@ -220,7 +244,7 @@ public class AbilityWaterArc extends Ability {
 
 		return null;
 
-	}
+	}**/
 
 
 	//For bending snow and ice; is a separate method so that when passives are active it's easy to differentiate

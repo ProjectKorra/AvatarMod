@@ -200,7 +200,10 @@ public abstract class Bender {
 
 			BendingData data = getData();
 			EntityLivingBase entity = getEntity();
-			if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability))) {
+			AbilityData aD = AbilityData.get(getEntity(), ability.getName());
+			int level = aD.getLevel();
+			AbilityData.AbilityTreePath path = aD.getPath();
+			if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
 				double powerRating = calcPowerRating(ability.getBendingId());
 
 				if (data.getMiscData().getAbilityCooldown() == 0) {

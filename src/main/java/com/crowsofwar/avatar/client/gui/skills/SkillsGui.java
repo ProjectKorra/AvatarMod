@@ -249,9 +249,9 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		} else {
 			handler.type(keyCode);
 			if (keyCode == Keyboard.KEY_A || keyCode == Keyboard.KEY_LEFT) {
-				scroll += 5;
+				scroll += 25;
 			} else if (keyCode == Keyboard.KEY_D || keyCode == Keyboard.KEY_RIGHT) {
-				scroll -= 5;
+				scroll -= 25;
 			} else {
 				super.keyTyped(typedChar, keyCode);
 			}
