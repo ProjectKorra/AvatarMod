@@ -116,8 +116,6 @@ public class AvatarItems {
 		e.getRegistry().registerAll(itemsArr);
 
 		e.getRegistry().register(new ItemHangGliderPart().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_PART_NAME));
-		e.getRegistry().register(new ItemHangGliderPart().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_PART_NAME));
-		e.getRegistry().register(new ItemHangGliderPart().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_PART_NAME));
 		e.getRegistry().register(new ItemHangGliderBasic().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_BASIC_NAME));
 		e.getRegistry().register(new ItemHangGliderAdvanced().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_ADVANCED_NAME));
 
