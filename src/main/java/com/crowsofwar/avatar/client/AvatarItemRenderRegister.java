@@ -62,6 +62,7 @@ public class AvatarItemRenderRegister {
 		}
 		register(AvatarItems.itemBisonWhistle);
 		register(AvatarItems.airbenderStaff);
+		register(AvatarItems.GLIDER_ADV);
 		for (int i = 0; i <= 3; i++) {
 			register(AvatarItems.itemBisonArmor, i);
 			register(AvatarItems.itemBisonSaddle, i);

@@ -38,6 +38,11 @@ public class ItemHangGliderAdvanced extends ItemHangGliderBase implements Avatar
 
     @Override
     public String getModelName(int meta) {
-        return ModelGlider.MODEL_GLIDER_ADVANCED_TEXTURE_RL.toString();
+        switch(meta){
+            case 0: return "hang_glider_advanced";
+            case 1: return "hang_glider_advanced_deployed";
+            case 3: return "hang_glider_advanced_broken";
+            default: return "hang_glider_advanced";
+        }
     }
 }
