@@ -1,11 +1,16 @@
 package com.crowsofwar.avatar.glider.client.event;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.glider.api.helper.GliderHelper;
 import com.crowsofwar.avatar.glider.api.item.IGlider;
 import com.crowsofwar.avatar.glider.client.model.ModelGlider;
 import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
 import com.crowsofwar.avatar.glider.common.helper.OpenGliderPlayerHelper;
+import com.crowsofwar.avatar.server.AvatarKeybindingServer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -21,8 +26,11 @@ import net.minecraftforge.client.event.RenderSpecificHandEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.swing.text.JTextComponent;
 
 @SideOnly(Side.CLIENT)
 public class ClientEventHandler extends Gui {
@@ -163,6 +171,12 @@ public class ClientEventHandler extends Gui {
         //move away if sneaking
         if (player.isSneaking())
             GlStateManager.translate(0, 0, -1 * ConfigHandler.shiftSpeedVisualShift); //subtle speed effect (makes gliderBasic smaller looking)
+
+        boolean isAirbender = BendingData.get(player).getAllBending().contains(BendingStyles.get("airbending"));
+        if(Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown() && isAirbender)
+        {
+            GlStateManager.translate(0, 1 * ConfigHandler.airbenderHeightGain, 0); //subtle speed effect (makes gliderBasic smaller looking)
+        }
     }
 
 

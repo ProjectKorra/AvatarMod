@@ -37,16 +37,20 @@ public class ItemHangGliderBase extends Item implements IGlider {
     private double vertSpeed;
     private double shiftHorizSpeed;
     private double shiftVertSpeed;
+    private double spaceHorizSpeed;
+    private double spaceVertSpeed;
     private double windMultiplier;
     private double airResistance;
     private int totalDurability;
     private ResourceLocation modelRL;
 
-    public ItemHangGliderBase(double horizSpeed, double vertSpeed, double shiftHorizSpeed, double shiftVertSpeed, double windMultiplier, double airResistance, int totalDurability, ResourceLocation modelRL) {
+    public ItemHangGliderBase(double horizSpeed, double vertSpeed, double shiftHorizSpeed, double shiftVertSpeed, double spaceHorizSpeed, double spaceVertSpeed, double windMultiplier, double airResistance, int totalDurability, ResourceLocation modelRL) {
         this.horizSpeed = horizSpeed;
         this.vertSpeed = vertSpeed;
         this.shiftHorizSpeed = shiftHorizSpeed;
         this.shiftVertSpeed = shiftVertSpeed;
+        this.spaceHorizSpeed = spaceHorizSpeed;
+        this.spaceVertSpeed = spaceVertSpeed;
         this.windMultiplier = windMultiplier;
         this.airResistance = airResistance;
         this.totalDurability = totalDurability;
@@ -239,6 +243,26 @@ public class ItemHangGliderBase extends Item implements IGlider {
     @Override
     public void setShiftVerticalFlightSpeed(double speed) {
         shiftVertSpeed = speed;
+    }
+
+    @Override
+    public double getSpaceVerticalFlightSpeed() {
+        return 0;
+    }
+
+    @Override
+    public double getSpaceHorizontalFlightSpeed() {
+        return 0;
+    }
+
+    @Override
+    public void setSpaceVerticalFlightSpeed(double speed) {
+
+    }
+
+    @Override
+    public void setSpaceHorizontalFlightSpeed(double speed) {
+
     }
 
     @Override

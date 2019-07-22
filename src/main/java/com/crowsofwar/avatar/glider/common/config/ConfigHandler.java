@@ -31,6 +31,8 @@ public class ConfigHandler {
     public static float advancedGliderVertSpeed;
     public static float advancedGliderShiftHorizSpeed;
     public static float advancedGliderShiftVertSpeed;
+    public static float advancedGliderSpaceHorizSpeed;
+    public static float advancedGliderSpaceVertSpeed;
 
     public static float advancedGliderWindModifier;
     public static float advancedGliderAirResistance;
@@ -62,6 +64,7 @@ public class ConfigHandler {
     public static boolean disableOffhandRenderingWhenGliding;
     public static boolean disableHandleBarRenderingWhenGliding;
     public static float shiftSpeedVisualShift;
+    public static float airbenderHeightGain;
 
     @SubscribeEvent
     public void configChanged(ConfigChangedEvent event) {
@@ -97,6 +100,8 @@ public class ConfigHandler {
         advancedGliderVertSpeed = config.getFloat("2) Normal Fall Distance", category, 0.55F, 0, 100,"The amount of blocks a player falls (per-tick) while gliding normally.");
         advancedGliderShiftHorizSpeed = config.getFloat("3) Fast Forward Movement", category, 0.08F, 0, 100,"The amount of blocks to move forwards (per-tick) while gliding fast (pressing 'Shift').");
         advancedGliderShiftVertSpeed = config.getFloat("4) Fast Fall Distance", category, 0.675F, 0, 100,"The amount of blocks to fall (per-tick) while gliding fast (pressing 'Shift').");
+        advancedGliderSpaceHorizSpeed = config.getFloat("3) Fast Forward Movement", category, 0.5F, 0.4F, 100,"The amount of blocks to move forwards (per-tick) while gliding fast (pressing 'Shift').");
+        advancedGliderSpaceVertSpeed = config.getFloat("4) Fast Fall Distance", category, 0.675F, 0, 100,"The amount of blocks to fall (per-tick) while gliding fast (pressing 'Shift').");
         advancedGliderWindModifier = config.getFloat("5) Overall Wind Power", category, 0.75F, 0.001F, 10, "A quality-of-life option to quickly change the overall power of the wind effect for this glider. Default is an overall quite weak wind, with mild gusts that occur semi-commonly. Note that this value can be a decimal (i.e. 0.5 would be half as strong). More fine-grained options are available in the 'wind' section of this config."); //ToDo: playtest
         advancedGliderAirResistance = config.getFloat("6) Air Resistance", category, 0.99F, 0, 1, "The rate at which air resistance hinders your movement. 1 is no resistance, 0.5 is 1/2 as fast each tick.");
         advancedGliderTotalDurability = config.getInt("7) Total Durability", category, 2202, 1, 100000, "The maximum durability of an unused advanced hang glider.");
@@ -131,6 +136,7 @@ public class ConfigHandler {
         disableHandleBarRenderingWhenGliding = config.getBoolean("4) Disable Handlebar Rendering While Gliding", category, true, "Disables rendering of the handlebar (and also therefore any items held) while the player is gliding.");
         gliderVisibilityFPPShiftAmount = config.getFloat("3) First-Person Glider Visibility", category, 1.9F, 1, 4, "How high above the player's head the glider appears as in first person perspective while flying. Lower values will make it more visible/intrusive.");
         shiftSpeedVisualShift = config.getFloat("5) First-Person Glider Speed Shift", category, 0.05F, 0, 1, "How much the glider should shift visually when in fast/shift mode. 0 is none.");
+        airbenderHeightGain = config.getFloat("5) Airbender height gain", category, 0.5F, 0, 1, "How much the glider should shift visually when in fast/shift mode. 0 is none.");
 
         if (config.hasChanged())
             config.save();

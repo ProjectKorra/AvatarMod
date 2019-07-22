@@ -32,6 +32,14 @@ public interface IGlider extends INBTSerializable<NBTTagCompound> {
 
     void setShiftVerticalFlightSpeed(double speed);
 
+    double getSpaceVerticalFlightSpeed();
+
+    double getSpaceHorizontalFlightSpeed();
+
+    void setSpaceVerticalFlightSpeed(double speed);
+
+    void setSpaceHorizontalFlightSpeed(double speed);
+
     //===============Wind====================
 
     double getWindMultiplier();

@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.glider.common.helper;
 
+import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.glider.api.helper.GliderHelper;
 import com.crowsofwar.avatar.glider.api.item.IGlider;
 import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
@@ -7,6 +9,7 @@ import com.crowsofwar.avatar.glider.common.network.PacketHandler;
 import com.crowsofwar.avatar.glider.common.network.PacketUpdateGliderDamage;
 import com.crowsofwar.avatar.glider.common.wind.WindHelper;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -26,6 +29,7 @@ public class OpenGliderPlayerHelper {
      * @param player - the player gliding
      */
     public static void updatePosition(EntityPlayer player){
+        boolean isAirbender = BendingData.get(player).getAllBending().contains(BendingStyles.get("airbending"));
         if (shouldBeGliding(player)) {
             ItemStack glider = GliderHelper.getGlider(player);
             if (isValidGlider(glider)) {
@@ -40,6 +44,9 @@ public class OpenGliderPlayerHelper {
                     if (!player.isSneaking()) {
                         horizontalSpeed = iGlider.getHorizontalFlightSpeed();
                         verticalSpeed = iGlider.getVerticalFlightSpeed();
+                    } else if(isAirbender && Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown()){
+                        horizontalSpeed = iGlider.getSpaceHorizontalFlightSpeed();
+                        verticalSpeed = iGlider.getSpaceVerticalFlightSpeed();
                     } else {
                         horizontalSpeed = iGlider.getShiftHorizontalFlightSpeed();
                         verticalSpeed = iGlider.getShiftVerticalFlightSpeed();
