@@ -11,10 +11,12 @@ import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
+import com.crowsofwar.avatar.common.item.ItemScroll;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
@@ -31,6 +33,7 @@ public class AbilityInfernoPunch extends Ability {
 	@Override
 	public void execute(AbilityContext ctx) {
 		//TODO: Use a randomiser for the flame particles so they're more dynamic
+		//TODO: Fix gitchiness using a status control+raytrace
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		Bender bender = ctx.getBender();
@@ -82,6 +85,29 @@ public class AbilityInfernoPunch extends Ability {
 			orb.setType(EntityLightOrb.EnumType.COLOR_SPHERE);
 			world.spawnEntity(orb);
 		}
+	}
+
+	@Override
+	public boolean isCompatibleScroll(ItemStack stack, int level, AbilityTreePath path) {
+		ItemScroll.ScrollType type = ItemScroll.getScrollType(stack);
+		if (stack.getItem() instanceof ItemScroll) {
+			ItemScroll scroll = (ItemScroll) stack.getItem();
+			if (type.getBendingId() == getBendingId() || type == ItemScroll.ScrollType.ALL) {
+				switch (scroll.getTier()){
+					case 3  :
+						return level < 1;
+					case 4 :
+						return level < 2;
+					case 5 :
+						return level < 3;
+					case 6 :
+						return true;
+
+				}
+
+			}
+		}
+		return false;
 	}
 
 	@Override

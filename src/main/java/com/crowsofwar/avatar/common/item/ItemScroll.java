@@ -52,6 +52,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SPECIALTY_SCROLL_TOOLTIP;
@@ -86,6 +87,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	@Override
 	public NBTTagCompound getNBTShareTag(ItemStack stack) {
 		NBTTagCompound nbt = super.getNBTShareTag(stack);
+		assert nbt != null;
 		nbt.setInteger("Tier", tier);
 		return nbt;
 	}
@@ -93,6 +95,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	@Override
 	public void readNBTShareTag(ItemStack stack, @Nullable NBTTagCompound nbt) {
 		super.readNBTShareTag(stack, nbt);
+		assert nbt != null;
 		if (nbt.hasKey("Tier")) {
 			tier = nbt.getInteger("Tier");
 		}
@@ -101,7 +104,7 @@ public class ItemScroll extends Item implements AvatarItem {
 	@Nonnull
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player,
-													EnumHand hand) {
+													@Nonnull EnumHand hand) {
 
 		ScrollType type = ScrollType.get(player.getHeldItem(hand).getMetadata());
 		assert type != null;
@@ -150,9 +153,11 @@ public class ItemScroll extends Item implements AvatarItem {
 
 		ScrollType type = ScrollType.get(stack.getMetadata());
 		BendingData data = BendingData.get(player);
+		assert type != null;
 		BendingStyle specialtyStyle = BendingStyles.get(type.getBendingId());
 
 		// Fail if player already has the scroll
+		assert specialtyStyle != null;
 		if (data.hasBending(specialtyStyle)) {
 
 			String specialtyName = specialtyStyle.getName();
@@ -184,10 +189,11 @@ public class ItemScroll extends Item implements AvatarItem {
 
 	}
 
+	@Nonnull
 	@Override
 	public String getTranslationKey(ItemStack stack) {
 		int metadata = stack.getMetadata() >= ScrollType.values().length ? 0 : stack.getMetadata();
-		return super.getTranslationKey(stack) + "." + ScrollType.get(metadata).displayName() + "." + tier;
+		return super.getTranslationKey(stack) + "." + Objects.requireNonNull(ScrollType.get(metadata)).displayName() + "." + tier;
 	}
 
 	@Override

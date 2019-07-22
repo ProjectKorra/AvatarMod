@@ -534,6 +534,66 @@ entity.OstrichHorse.name=Ostrich Horse
 
 itemGroup.avatar.items=Avatar Items
 
+item.avatarmod:scroll.all.1.name=§lTier I §d§lScroll
+item.avatarmod:scroll.air.1.name=§lTier I §f§lAirbending §d§lScroll
+item.avatarmod:scroll.fire.1.name=§lTier I §c§lFirebending §d§lScroll
+item.avatarmod:scroll.earth.1.name=§lTier I §2§lEarthbending §d§lScroll
+item.avatarmod:scroll.water.1.name=§lTier I §9§lWaterbending §d§lScroll
+item.avatarmod:scroll.lightning.1.name=§lTier I §b§lLightningbending §d§lScroll
+item.avatarmod:scroll.ice.1.name=§lTier I §3§lIcebending §d§lScroll
+item.avatarmod:scroll.sand.1.name=§lTier I §6§lSandbending §d§lScroll
+item.avatarmod:scroll.combustion.1.name=§lTier I §8§lCombustionbending §d§lScroll
+
+item.avatarmod:scroll.all.name=§d§lScroll
+item.avatarmod:scroll.air.name=§f§lAirbending §d§lScroll
+item.avatarmod:scroll.fire.name=§c§lFirebending §d§lScroll
+item.avatarmod:scroll.earth.name=§2§lEarthbending §d§lScroll
+item.avatarmod:scroll.water.name=§9§lWaterbending §d§lScroll
+item.avatarmod:scroll.lightning.name=§b§lLightningbending §d§lScroll
+item.avatarmod:scroll.ice.name=§3§lIcebending §d§lScroll
+item.avatarmod:scroll.sand.name=§6§lSandbending §d§lScroll
+item.avatarmod:scroll.combustion.name=§8§lCombustionbending §d§lScroll
+
+item.avatarmod:scroll.all.name=§d§lScroll
+item.avatarmod:scroll.air.name=§f§lAirbending §d§lScroll
+item.avatarmod:scroll.fire.name=§c§lFirebending §d§lScroll
+item.avatarmod:scroll.earth.name=§2§lEarthbending §d§lScroll
+item.avatarmod:scroll.water.name=§9§lWaterbending §d§lScroll
+item.avatarmod:scroll.lightning.name=§b§lLightningbending §d§lScroll
+item.avatarmod:scroll.ice.name=§3§lIcebending §d§lScroll
+item.avatarmod:scroll.sand.name=§6§lSandbending §d§lScroll
+item.avatarmod:scroll.combustion.name=§8§lCombustionbending §d§lScroll
+
+item.avatarmod:scroll.all.name=§d§lScroll
+item.avatarmod:scroll.air.name=§f§lAirbending §d§lScroll
+item.avatarmod:scroll.fire.name=§c§lFirebending §d§lScroll
+item.avatarmod:scroll.earth.name=§2§lEarthbending §d§lScroll
+item.avatarmod:scroll.water.name=§9§lWaterbending §d§lScroll
+item.avatarmod:scroll.lightning.name=§b§lLightningbending §d§lScroll
+item.avatarmod:scroll.ice.name=§3§lIcebending §d§lScroll
+item.avatarmod:scroll.sand.name=§6§lSandbending §d§lScroll
+item.avatarmod:scroll.combustion.name=§8§lCombustionbending §d§lScroll
+
+item.avatarmod:scroll.all.name=§d§lScroll
+item.avatarmod:scroll.air.name=§f§lAirbending §d§lScroll
+item.avatarmod:scroll.fire.name=§c§lFirebending §d§lScroll
+item.avatarmod:scroll.earth.name=§2§lEarthbending §d§lScroll
+item.avatarmod:scroll.water.name=§9§lWaterbending §d§lScroll
+item.avatarmod:scroll.lightning.name=§b§lLightningbending §d§lScroll
+item.avatarmod:scroll.ice.name=§3§lIcebending §d§lScroll
+item.avatarmod:scroll.sand.name=§6§lSandbending §d§lScroll
+item.avatarmod:scroll.combustion.name=§8§lCombustionbending §d§lScroll
+
+item.avatarmod:scroll.all.name=§d§lScroll
+item.avatarmod:scroll.air.name=§f§lAirbending §d§lScroll
+item.avatarmod:scroll.fire.name=§c§lFirebending §d§lScroll
+item.avatarmod:scroll.earth.name=§2§lEarthbending §d§lScroll
+item.avatarmod:scroll.water.name=§9§lWaterbending §d§lScroll
+item.avatarmod:scroll.lightning.name=§b§lLightningbending §d§lScroll
+item.avatarmod:scroll.ice.name=§3§lIcebending §d§lScroll
+item.avatarmod:scroll.sand.name=§6§lSandbending §d§lScroll
+item.avatarmod:scroll.combustion.name=§8§lCombustionbending §d§lScroll
+
 item.avatarmod:scroll.all.name=§d§lScroll
 item.avatarmod:scroll.air.name=§f§lAirbending §d§lScroll
 item.avatarmod:scroll.fire.name=§c§lFirebending §d§lScroll
