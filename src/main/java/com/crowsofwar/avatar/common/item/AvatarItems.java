@@ -82,6 +82,7 @@ public class AvatarItems {
 		addItem(itemBisonSaddle = new ItemBisonSaddle());
 		addItem(itemOstrichEquipment = new ItemOstrichEquipment());
 		addItem(airbenderStaff = new ItemAirbenderStaff(Item.ToolMaterial.WOOD));
+		addItem(GLIDER_ADV = new ItemHangGliderAdvanced());
 
 		stackScroll = new ItemStack(Scrolls.ALL);
 		MinecraftForge.EVENT_BUS.register(new AvatarItems());
@@ -117,7 +118,7 @@ public class AvatarItems {
 
 		e.getRegistry().register(new ItemHangGliderPart().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_PART_NAME));
 		e.getRegistry().register(new ItemHangGliderBasic().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_BASIC_NAME));
-		e.getRegistry().register(new ItemHangGliderAdvanced().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_ADVANCED_NAME));
+//		e.getRegistry().register(new ItemHangGliderAdvanced().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_ADVANCED_NAME));
 
 		AvatarMod.proxy.registerItemModels();
 	}
