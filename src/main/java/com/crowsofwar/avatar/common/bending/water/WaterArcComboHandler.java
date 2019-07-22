@@ -45,6 +45,7 @@ public class WaterArcComboHandler {
 		}
 		if (getWaterArcComboTicks(UUID) >= 15) {
 			setWaterArcActivatedCombo(UUID, false);
+			setWaterArcComboTicks(UUID, 0);
 		}
 	}
 

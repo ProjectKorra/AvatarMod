@@ -17,10 +17,13 @@
 
 package com.crowsofwar.avatar.common.bending;
 
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.item.ItemScroll;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.item.ItemStack;
 
 import java.util.UUID;
 
@@ -117,6 +120,13 @@ public abstract class Ability {
 	 */
 	public boolean isVisibleInRadial() {
 		return true;
+	}
+
+	public boolean isCompatiblecroll(ItemStack stack, int level, AbilityData.AbilityTreePath path) {
+		if (stack.getItem() instanceof ItemScroll) {
+			return ItemScroll.getScrollType(stack).getBendingId() == getBendingId();
+		}
+		return false;
 	}
 
 	/**

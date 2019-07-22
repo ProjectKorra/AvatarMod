@@ -51,6 +51,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
@@ -78,11 +79,13 @@ public class ItemScroll extends Item implements AvatarItem {
 		stack.setItemDamage(type.id());
 	}
 
+	@Nonnull
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player,
 	                                                EnumHand hand) {
 
 		ScrollType type = ScrollType.get(player.getHeldItem(hand).getMetadata());
+		assert type != null;
 		if (type.isSpecialtyType()) {
 			handleSpecialtyScrollUse(world, player, player.getHeldItem(hand));
 		} else {
@@ -108,6 +111,7 @@ public class ItemScroll extends Item implements AvatarItem {
 		}
 
 	}
+
 
 	/**
 	 * Fired for right-clicking on a specialty bending scroll (e.g. lightningbending scroll)
