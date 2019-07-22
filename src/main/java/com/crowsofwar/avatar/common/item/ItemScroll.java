@@ -61,7 +61,7 @@ import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SPECIALTY_SCRO
  */
 public class ItemScroll extends Item implements AvatarItem {
 
-	private int tier;
+	private int tier = 1;
 
 	public ItemScroll() {
 		setTranslationKey("scroll");
@@ -85,14 +85,16 @@ public class ItemScroll extends Item implements AvatarItem {
 	@Nullable
 	@Override
 	public NBTTagCompound getNBTShareTag(ItemStack stack) {
-		return super.getNBTShareTag(stack);
+		NBTTagCompound nbt = super.getNBTShareTag(stack);
+		nbt.setInteger("Tier", tier);
+		return nbt;
 	}
 
 	@Override
 	public void readNBTShareTag(ItemStack stack, @Nullable NBTTagCompound nbt) {
 		super.readNBTShareTag(stack, nbt);
-		if (nbt != null) {
-			nbt.setInteger("Tier", 1);
+		if (nbt.hasKey("Tier")) {
+			tier = nbt.getInteger("Tier");
 		}
 	}
 
@@ -131,6 +133,10 @@ public class ItemScroll extends Item implements AvatarItem {
 
 	public void setTier(int tier) {
 		this.tier = tier;
+	}
+
+	public int getTier() {
+		return tier;
 	}
 
 	/**
