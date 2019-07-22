@@ -12,7 +12,7 @@ import static com.crowsofwar.avatar.AvatarInfo.MOD_ID;
 public class ItemHangGliderBasic extends ItemHangGliderBase {
 
     public ItemHangGliderBasic() {
-        super(ConfigHandler.basicGliderHorizSpeed, ConfigHandler.basicGliderVertSpeed, ConfigHandler.basicGliderShiftHorizSpeed, ConfigHandler.basicGliderShiftVertSpeed, ConfigHandler.basicGliderWindModifier, ConfigHandler.basicGliderAirResistance, ConfigHandler.basicGliderTotalDurability, ModelGlider.MODEL_GLIDER_BASIC_TEXTURE_RL);
+        super(ConfigHandler.basicGliderHorizSpeed, ConfigHandler.basicGliderVertSpeed, ConfigHandler.basicGliderShiftHorizSpeed, ConfigHandler.basicGliderShiftVertSpeed, ConfigHandler.advancedGliderSpaceHorizSpeed, ConfigHandler.advancedGliderSpaceVertSpeed, ConfigHandler.basicGliderWindModifier, ConfigHandler.basicGliderAirResistance, ConfigHandler.basicGliderTotalDurability, ModelGlider.MODEL_GLIDER_BASIC_TEXTURE_RL);
         setCreativeTab(AvatarItems.tabItems);
         setTranslationKey(MOD_ID +":" + AvatarInfo.ITEM_GLIDER_BASIC_NAME);
     }
