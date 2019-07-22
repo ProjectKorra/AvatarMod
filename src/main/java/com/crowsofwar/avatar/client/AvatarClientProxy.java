@@ -42,6 +42,10 @@ import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
+import com.crowsofwar.avatar.glider.api.capabilities.CapabilityHelper;
+import com.crowsofwar.avatar.glider.api.capabilities.IGliderCapabilityHandler;
+import com.crowsofwar.avatar.glider.client.event.ClientEventHandler;
+import com.crowsofwar.avatar.glider.client.renderer.LayerGlider;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
 import net.minecraft.client.Minecraft;
@@ -167,6 +171,12 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public void init() {
 
+		//Add rendering layer
+		LayerGlider.addLayer();
+
+		//register client events
+		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
+
 		ParticleManager pm = mc.effectRenderer;
 
 		if (CLIENT_CONFIG.useCustomParticles) {
@@ -274,6 +284,21 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		} catch (Exception ex) {
 			AvatarLog.error("Could not load all keybindings list by using reflection. Will probably have serious problems", ex);
 		}
+	}
+
+	@Override
+	public EntityPlayer getClientPlayer(){
+		return Minecraft.getMinecraft().player;
+	}
+
+	@Override
+	public World getClientWorld() {
+		return Minecraft.getMinecraft().world;
+	}
+
+	@Override
+	public IGliderCapabilityHandler getClientGliderCapability() {
+		return getClientPlayer().getCapability(CapabilityHelper.GLIDER_CAPABILITY, null);
 	}
 
 }

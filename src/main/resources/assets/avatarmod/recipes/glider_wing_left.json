@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "openglider:hang_glider_part",
+    "data": 0
+  },
+  "pattern": [
+    " sl",
+    "sll",
+    "lll"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "stickWood"
+    },
+    "l": {
+      "type": "forge:ore_dict",
+      "ore": "leather"
+    }
+  },
+  "mirrored": false
+}
