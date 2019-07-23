@@ -53,4 +53,9 @@ public class AbilityAirBurst extends Ability {
 			}
 		}
 	}
+
+	@Override
+	public int getTier() {
+		return 4;
+	}
 }

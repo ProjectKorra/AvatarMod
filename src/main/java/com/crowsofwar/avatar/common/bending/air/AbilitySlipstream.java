@@ -80,9 +80,12 @@ public class AbilitySlipstream extends Ability {
 
 		}
 
-
 	}
 
+	@Override
+	public int getTier() {
+		return 4;
+	}
 }
 
 

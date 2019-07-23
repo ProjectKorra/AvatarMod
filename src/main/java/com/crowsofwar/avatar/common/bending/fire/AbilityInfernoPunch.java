@@ -11,12 +11,10 @@ import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
-import com.crowsofwar.avatar.common.item.ItemScroll;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
@@ -88,26 +86,8 @@ public class AbilityInfernoPunch extends Ability {
 	}
 
 	@Override
-	public boolean isCompatibleScroll(ItemStack stack, int level, AbilityTreePath path) {
-		ItemScroll.ScrollType type = ItemScroll.getScrollType(stack);
-		if (stack.getItem() instanceof ItemScroll) {
-			ItemScroll scroll = (ItemScroll) stack.getItem();
-			if (type.getBendingId() == getBendingId() || type == ItemScroll.ScrollType.ALL) {
-				switch (scroll.getTier()){
-					case 3  :
-						return level < 1;
-					case 4 :
-						return level < 2;
-					case 5 :
-						return level < 3;
-					case 6 :
-						return true;
-
-				}
-
-			}
-		}
-		return false;
+	public int getTier() {
+		return 3;
 	}
 
 	@Override
@@ -145,7 +125,8 @@ public class AbilityInfernoPunch extends Ability {
 								lightRadius = 7;
 							}
 						}
-						if (entity.getEntityWorld().isRemote) entity.setLightRadius(lightRadius + (int) (Math.random() * 4));
+						if (entity.getEntityWorld().isRemote)
+							entity.setLightRadius(lightRadius + (int) (Math.random() * 4));
 					} else entity.setDead();
 				}
 			}

@@ -112,6 +112,11 @@ public class AbilityCloudBurst extends Ability {
 	}
 
 	@Override
+	public int getTier() {
+		return 3;
+	}
+
+	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiCloudBall(this, entity, bender);
 	}
