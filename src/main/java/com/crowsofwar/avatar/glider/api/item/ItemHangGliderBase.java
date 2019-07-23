@@ -247,22 +247,22 @@ public class ItemHangGliderBase extends Item implements IGlider {
 
     @Override
     public double getSpaceVerticalFlightSpeed() {
-        return 0;
+        return spaceVertSpeed;
     }
 
     @Override
     public double getSpaceHorizontalFlightSpeed() {
-        return 0;
+        return shiftHorizSpeed;
     }
 
     @Override
     public void setSpaceVerticalFlightSpeed(double speed) {
-
+        spaceVertSpeed = speed;
     }
 
     @Override
     public void setSpaceHorizontalFlightSpeed(double speed) {
-
+        spaceHorizSpeed = speed;
     }
 
     @Override
