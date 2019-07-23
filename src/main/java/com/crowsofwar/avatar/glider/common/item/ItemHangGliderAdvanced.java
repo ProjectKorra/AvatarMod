@@ -17,7 +17,7 @@ public class ItemHangGliderAdvanced extends ItemHangGliderBase implements Avatar
     public ItemHangGliderAdvanced() {
         super(ConfigHandler.advancedGliderHorizSpeed, ConfigHandler.advancedGliderVertSpeed, ConfigHandler.advancedGliderShiftHorizSpeed, ConfigHandler.advancedGliderShiftVertSpeed, ConfigHandler.advancedGliderSpaceHorizSpeed, ConfigHandler.advancedGliderSpaceVertSpeed, ConfigHandler.advancedGliderWindModifier, ConfigHandler.advancedGliderAirResistance, ConfigHandler.advancedGliderTotalDurability, ModelGlider.MODEL_GLIDER_ADVANCED_TEXTURE_RL);
         setCreativeTab(AvatarItems.tabItems);
-        setTranslationKey(DOMAIN + AvatarInfo.ITEM_GLIDER_ADVANCED_NAME);
+        setTranslationKey(AvatarInfo.ITEM_GLIDER_ADVANCED_NAME);
     }
 
     //ToDo: Needed?

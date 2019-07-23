@@ -83,11 +83,21 @@ public class ModelGlider extends ModelBase {
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
         super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         GlStateManager.translate(0, -0.35, 0); //move to on the back (quite close)
-
-        if (!OpenGliderPlayerHelper.shouldBeGliding(Minecraft.getMinecraft().player)) {
-            GlStateManager.scale(0.9, 0.9, 0.8); //scale slightly smaller
+//        GlStateManager.rotate(0,0,0,0);
+        if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 2)
+        {
+            GlStateManager.scale(1.1, 1.1, 1.2); //scale slightly larger
+            GlStateManager.rotate(90f,0,1,0);
             GlStateManager.translate(0, 0, -.5); // move up if on ground
         }
+
+        if (!OpenGliderPlayerHelper.shouldBeGliding(Minecraft.getMinecraft().player)) {
+            GlStateManager.scale(1.1, 1.1, 1.2); //scale slightly larger
+            GlStateManager.rotate(90f,0,1,0);
+            GlStateManager.translate(0, 0, -.5); // move up if on ground
+
+        }
+
     }
 
     /**
