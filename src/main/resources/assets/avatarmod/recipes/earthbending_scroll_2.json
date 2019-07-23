@@ -4,16 +4,16 @@
     {
       "item": "avatarmod_scroll",
       "data" : 1,
-      "tag" : {"Tier" :  1}
+      "tag" : "{Tier :  1}"
     }, {
       "item": "avatarmod_scroll",
       "data" : 1,
-      "tag" : {"Tier" :  1}
+      "tag" : "{Tier :  1}"
     }
   ],
   "result": {
     "item": "avatarmod:scroll",
     "data": 1,
-    "tag" : {"Tier" :  2}
+    "tag" : "{Tier :  2}"
   }
 }
