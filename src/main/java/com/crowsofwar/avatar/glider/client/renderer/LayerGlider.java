@@ -40,7 +40,8 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
 
                 //push matrix
                 GlStateManager.pushMatrix();
-
+                GlStateManager.translate(0, .35f, 0);
+                GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
                 //set rotation angles of the glider and render it
                 this.modelGlider.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entitylivingbaseIn);
 

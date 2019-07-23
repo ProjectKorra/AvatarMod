@@ -82,25 +82,33 @@ public class ModelGlider extends ModelBase {
 
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
         super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+        GlStateManager.pushMatrix();
         GlStateManager.translate(0, -0.35, 0); //move to on the back (quite close)
 //        GlStateManager.rotate(0,0,0,0);
-        if(Minecraft.getMinecraft().gameSettings.thirdPersonView > 0)
+        if(Minecraft.getMinecraft().gameSettings.thirdPersonView > 0 )
         {
+            GlStateManager.pushMatrix();
 //            GlStateManager.translate(0, -.35f, 0);
 //            GlStateManager.rotate(-90,1,0,0);
 //            GlStateManager.rotate(90, 0, 1, 0); Decent
 //            GlStateManager.rotate(180, 1, 0, 0); No Good
             GlStateManager.rotate(180, 1F, 0, 0);
 //            GlStateManager.rotate(90, 0, 0, 1);
-        }
-
-        if (!OpenGliderPlayerHelper.shouldBeGliding(Minecraft.getMinecraft().player)) {
+            GlStateManager.popMatrix();
+        } else if (!OpenGliderPlayerHelper.shouldBeGliding(Minecraft.getMinecraft().player))
+        {
+            GlStateManager.pushMatrix();
             GlStateManager.scale(1.1, 1.1, 1.2); //scale slightly larger
 //            GlStateManager.rotate(90,0,1,0);
-//            GlStateManager.rotate(90,0,0,1);
+//            GlStateManager.rotate(90,0,0,1); -- stops it loading
+//            GlStateManager.rotate(90, 0, 1, 0); - indecernible effect
+            GlStateManager.rotate(270.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.rotate(-90, 1.0F, 0.0F, 0.0F);
 //            GlStateManager.translate(0, 0, -.5); // move up if on ground
+            GlStateManager.popMatrix();
 
         }
+        GlStateManager.popMatrix();
 
     }
 
