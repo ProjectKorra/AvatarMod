@@ -43,16 +43,8 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
 
                 //set rotation angles of the glider and render it
                 this.modelGlider.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entitylivingbaseIn);
+
                 this.modelGlider.render(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-
-                //render bars
-//                this.playerRenderer.bindTexture(ModelBars.MODEL_GLIDER_BARS_RL);
-//                this.modelBars.render(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-
-                //special glint for me xD
-                if (entitylivingbaseIn.getName().equals("gr8pefish")) {
-//                    LayerArmorBase.renderEnchantedGlint(this.playerRenderer, entitylivingbaseIn, this.modelGlider, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-                }
 
                 //pop matrix
                 GlStateManager.popMatrix();
