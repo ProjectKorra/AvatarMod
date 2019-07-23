@@ -44,4 +44,8 @@ public class AbilityWaterSkate extends Ability {
 		ctx.getData().addTickHandler(WATER_SKATE);
 	}
 
+	@Override
+	public int getTier() {
+		return 2;
+	}
 }

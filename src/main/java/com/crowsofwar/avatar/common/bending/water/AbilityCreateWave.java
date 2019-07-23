@@ -217,6 +217,11 @@ public class AbilityCreateWave extends Ability {
 	}
 
 	@Override
+	public int getTier() {
+		return 2;
+	}
+
+	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiWave(this, entity, bender);
 	}

@@ -88,8 +88,17 @@ public class AbilitySandPrison extends Ability {
 			blocksList = ConfigStats.STATS_CONFIG.sandBlocks;
 		}
 
-		return blocksList.contains(standingOn) || true;
+		return blocksList.contains(standingOn);
 
 	}
 
+	@Override
+	public int getTier() {
+		return 1;
+	}
+
+	@Override
+	public int getParentTier() {
+		return 3;
+	}
 }
