@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.glider.client.model;
 
 import com.crowsofwar.avatar.glider.common.helper.OpenGliderPlayerHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -72,7 +73,7 @@ public class ModelGlider extends ModelBase {
         Right_small_wing.render(f5);
     }
 
-    private void setRotation(ModelRenderer model, float x, float y, float z) {
+    public void setRotation(ModelRenderer model, float x, float y, float z) {
         model.rotateAngleX = x;
         model.rotateAngleY = y;
         model.rotateAngleZ = z;
@@ -80,7 +81,13 @@ public class ModelGlider extends ModelBase {
     }
 
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
-//        super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+        super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+        GlStateManager.translate(0, -0.35, 0); //move to on the back (quite close)
+
+        if (!OpenGliderPlayerHelper.shouldBeGliding(Minecraft.getMinecraft().player)) {
+            GlStateManager.scale(0.9, 0.9, 0.8); //scale slightly smaller
+            GlStateManager.translate(0, 0, -.5); // move up if on ground
+        }
     }
 
     /**
