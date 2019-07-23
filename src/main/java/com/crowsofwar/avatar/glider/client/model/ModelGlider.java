@@ -86,10 +86,11 @@ public class ModelGlider extends ModelBase {
 //        GlStateManager.rotate(0,0,0,0);
         if(Minecraft.getMinecraft().gameSettings.thirdPersonView > 0)
         {
-//            GlStateManager.rotate(70f,1,0,1);
-//            GlStateManager.rotate(-90, 0, 1, 0);
-//            GlStateManager.rotate(180, 1, 0, 0);
-//            GlStateManager.rotate(90, 1, 0, 0);
+//            GlStateManager.translate(0, -.35f, 0);
+//            GlStateManager.rotate(-90,1,0,0);
+//            GlStateManager.rotate(90, 0, 1, 0); Decent
+//            GlStateManager.rotate(180, 1, 0, 0); No Good
+            GlStateManager.rotate(180, 1F, 0, 0);
 //            GlStateManager.rotate(90, 0, 0, 1);
         }
 
@@ -97,7 +98,7 @@ public class ModelGlider extends ModelBase {
             GlStateManager.scale(1.1, 1.1, 1.2); //scale slightly larger
 //            GlStateManager.rotate(90,0,1,0);
 //            GlStateManager.rotate(90,0,0,1);
-            GlStateManager.translate(0, 0, -.5); // move up if on ground
+//            GlStateManager.translate(0, 0, -.5); // move up if on ground
 
         }
 
