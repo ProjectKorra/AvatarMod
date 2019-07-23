@@ -88,4 +88,13 @@ public class AbilityIceBurst extends Ability {
 
 	}
 
+	@Override
+	public int getTier() {
+		return 2;
+	}
+
+	@Override
+	public int getParentTier() {
+		return 4;
+	}
 }
