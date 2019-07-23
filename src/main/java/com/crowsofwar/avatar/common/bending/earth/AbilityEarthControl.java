@@ -45,12 +45,12 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 /**
  * @author CrowsOfWar
  */
-public class AbilityPickUpBlock extends Ability {
+public class AbilityEarthControl extends Ability {
 
 	private final Random random;
 
-	public AbilityPickUpBlock() {
-		super(Earthbending.ID, "pickup_block");
+	public AbilityEarthControl() {
+		super(Earthbending.ID, "earth_control");
 		this.random = new Random();
 		requireRaytrace(-1, true);
 	}

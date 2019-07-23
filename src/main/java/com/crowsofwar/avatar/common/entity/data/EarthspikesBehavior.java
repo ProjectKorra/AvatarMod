@@ -147,7 +147,7 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 					earthspike.posX = entity.posX;
 					earthspike.posY = entity.posY;
 					earthspike.posZ = entity.posZ;
-					earthspike.setAbility(abilityData.getAbility());
+					earthspike.setAbility(Objects.requireNonNull(abilityData.getAbility()));
 					earthspike.setDamage(damage);
 					earthspike.setSize(size + ticks / (30f / size));
 					earthspike.setLifetime(duration);
@@ -296,7 +296,7 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 			moveSpeed.removeModifier(MOVEMENT_MODIFIER_ID);
 
 			moveSpeed.applyModifier(
-					new AttributeModifier(MOVEMENT_MODIFIER_ID, "Earthspike modifier", multiplier - 1, 1));
+					new AttributeModifier(MOVEMENT_MODIFIER_ID, "Earthspikes modifier", multiplier - 1, 1));
 
 		}
 

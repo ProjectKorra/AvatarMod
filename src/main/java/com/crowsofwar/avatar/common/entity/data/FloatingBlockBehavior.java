@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import com.crowsofwar.avatar.common.bending.earth.AbilityEarthControl;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
@@ -213,27 +214,28 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 					if (collided.getHealth() <= 0) {
 						xp = SKILLS_CONFIG.blockKill;
 					}
-					data.getAbilityData("pickup_block").addXp(xp);
+					data.getAbilityData(entity.getAbility().getName()).addXp(xp);
 				}
 
 				// boomerang upgrade handling
 				if (!entity.world.isRemote) {
-					if (data.getAbilityData("pickup_block")
-							.isMasterPath(AbilityTreePath.FIRST)) {
+					if (entity.getAbility() instanceof AbilityEarthControl && data != null) {
+						if (data.getAbilityData("earth_control")
+								.isMasterPath(AbilityTreePath.FIRST)) {
 
-						Bender bender = Bender.get(entity.getOwner());
-						if (bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
-							data.addStatusControl(StatusControl.THROW_BLOCK);
-							data.addStatusControl(StatusControl.PLACE_BLOCK);
-							entity.isDead = false;
+							Bender bender = Bender.get(entity.getOwner());
+							if (bender != null && bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
+								data.addStatusControl(StatusControl.THROW_BLOCK);
+								data.addStatusControl(StatusControl.PLACE_BLOCK);
+								entity.isDead = false;
 
-							return new FloatingBlockBehavior.PlayerControlled();
+								return new FloatingBlockBehavior.PlayerControlled();
+							} else {
+								// Remove the floating block & spawn particles
+								entity.onCollideWithSolid();
+							}
+
 						}
-						else {
-							// Remove the floating block & spawn particles
-							entity.onCollideWithSolid();
-						}
-
 					}
 				}
 			}

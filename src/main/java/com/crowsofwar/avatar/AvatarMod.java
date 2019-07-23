@@ -92,7 +92,7 @@ public class AvatarMod {
 	private static void registerAbilities() {
 		Abilities.register(new AbilityAirGust());
 		Abilities.register(new AbilityAirJump());
-		Abilities.register(new AbilityPickUpBlock());
+		Abilities.register(new AbilityEarthControl());
 		Abilities.register(new AbilityRavine());
 		Abilities.register(new AbilityFireShot());
 		Abilities.register(new AbilityFireArc());
