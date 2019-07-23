@@ -43,7 +43,7 @@ public class FireEventListener {
 		DamageSource source = event.getSource();
 		World world = target.getEntityWorld();
 		if (entity instanceof EntityLivingBase && !AvatarDamageSource.isAvatarDamageSource(source)) {
-			if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
+			if (event.getSource().getTrueSource() == entity && entity instanceof EntityBender) {
 				Bender ctx = Bender.get((EntityLivingBase) entity);
 				if (ctx != null) {
 					if (ctx.getInfo().getId() != null) {
@@ -52,23 +52,23 @@ public class FireEventListener {
 							AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
 							BendingData data = BendingData.get((EntityLivingBase) entity);
 							boolean hasInfernoPunch = data.hasStatusControl(INFERNO_PUNCH_MAIN) || data.hasStatusControl(INFERNO_PUNCH_FIRST);
-							float powerModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
-							float damage = STATS_CONFIG.InfernoPunchDamage + (2 * powerModifier);
-							float knockBack = 1 + powerModifier;
+							float powerModifier = (float) (ctx.getDamageMult(Firebending.ID));
+							float damage = STATS_CONFIG.InfernoPunchDamage * powerModifier;
+							float knockBack = 1 * powerModifier;
 							int fireTime = 5 + (int) (powerModifier * 10);
 
-							if (abilityData.getLevel() >= 1) {
-								damage = STATS_CONFIG.InfernoPunchDamage * 4 / 3 + (2 * powerModifier);
-								knockBack = 1.125F + powerModifier;
+							if (abilityData.getLevel() == 1) {
+								damage = STATS_CONFIG.InfernoPunchDamage * 4 / 3 * powerModifier;
+								knockBack = 1.125F * powerModifier;
 								fireTime = 6;
 							}
 							if (abilityData.getLevel() >= 2) {
-								damage = STATS_CONFIG.InfernoPunchDamage * 5 / 3 + (2 * powerModifier);
+								damage = STATS_CONFIG.InfernoPunchDamage * 5 / 3  * powerModifier;
 								knockBack = 1.25F + powerModifier;
 								fireTime = 8 + (int) (powerModifier * 10);
 							}
 							if (data.hasStatusControl(INFERNO_PUNCH_FIRST)) {
-								damage = STATS_CONFIG.InfernoPunchDamage * 7 / 3 + (2 * powerModifier);
+								damage = STATS_CONFIG.InfernoPunchDamage * 7 / 3* powerModifier;
 								knockBack = 1.5F + powerModifier;
 								fireTime = 15 + (int) (powerModifier * 10);
 							}
@@ -88,8 +88,9 @@ public class FireEventListener {
 											wave.setParticle(AvatarParticles.getParticleBigFlame());
 											wave.setParticleSpeed(0.12F);
 											wave.setParticleAmount(1);
-											wave.setParticleController(35);
 											//Used for spheres
+											wave.setParticleController(35);
+
 											wave.setSpeed(0.8F);
 											wave.setDamageSource(AvatarDamageSource.FIRE);
 											wave.setParticleAmount(2);
@@ -139,7 +140,7 @@ public class FireEventListener {
 		}
 	}
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public static void onUpdateEvent(LivingEvent.LivingUpdateEvent event) {
 		if (event.getEntityLiving() != null) {
 			EntityLivingBase entity = event.getEntityLiving();
@@ -161,5 +162,5 @@ public class FireEventListener {
 				}
 			}
 		}
-	}
+	}**/
 }
