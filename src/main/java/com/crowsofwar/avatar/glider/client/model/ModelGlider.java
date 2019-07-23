@@ -84,11 +84,10 @@ public class ModelGlider extends ModelBase {
         super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, -0.35, 0); //move to on the back (quite close)
-//        GlStateManager.rotate(0,0,0,0);
         if(Minecraft.getMinecraft().gameSettings.thirdPersonView > 0 )
         {
             GlStateManager.pushMatrix();
-//            GlStateManager.translate(0, -.35f, 0);
+            GlStateManager.translate(0, -.35f, 0);
 //            GlStateManager.rotate(-90,1,0,0);
 //            GlStateManager.rotate(90, 0, 1, 0); Decent
 //            GlStateManager.rotate(180, 1, 0, 0); No Good
