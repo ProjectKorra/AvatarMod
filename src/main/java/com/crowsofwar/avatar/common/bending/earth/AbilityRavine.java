@@ -79,4 +79,8 @@ public class AbilityRavine extends Ability {
 
 	}
 
+	@Override
+	public int getTier() {
+		return 2;
+	}
 }

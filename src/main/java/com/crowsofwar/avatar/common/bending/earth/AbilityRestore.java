@@ -92,7 +92,11 @@ public class AbilityRestore extends Ability {
 			data.addTickHandler(RESTORE_COOLDOWN_HANDLER);
 
 		}
+	}
 
+	@Override
+	public int getTier() {
+		return 4;
 	}
 }
 

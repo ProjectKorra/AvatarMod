@@ -94,4 +94,9 @@ public class AbilityEarthspikes extends Ability {
 			}
 		}
 	}
+
+	@Override
+	public int getTier() {
+		return 3;
+	}
 }

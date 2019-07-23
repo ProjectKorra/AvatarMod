@@ -20,13 +20,12 @@ package com.crowsofwar.avatar.common.bending.earth;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityWall;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -91,7 +90,7 @@ public class AbilityWall extends Ability {
 			abilityData.addXp(SKILLS_CONFIG.wallRaised);
 
 			// The range should increase the higher the level is.
-			reach = abilityData.getLevel () <= 0 ? reach : reach + abilityData.getLevel();
+			reach = abilityData.getLevel() <= 0 ? reach : reach + abilityData.getLevel();
 
 			boolean wallCreated = false;
 			if (ctx.getDynamicPath() == AbilityTreePath.MAIN) {
@@ -133,7 +132,7 @@ public class AbilityWall extends Ability {
 	}
 
 	private boolean createLinearWall(AbilityContext ctx, World world, int reach, EnumFacing cardinal,
-			EntityLivingBase entity, int whMin, int whMax, int lenght, Random random) {
+									 EntityLivingBase entity, int whMin, int whMax, int lenght, Random random) {
 		// Used so that the wall can be more precisely placed if needed, useful when
 		// used for building. However, during a fight, it will still spawn even if not
 		// directly looking at the ground. However this won't override the maximum reach
@@ -177,7 +176,7 @@ public class AbilityWall extends Ability {
 	 * Spawn 4 walls around the bender
 	 */
 	private boolean createSurroundingWalls(World world, BlockPos lookPos, Block lookBlock, EntityLivingBase entity,
-			int whMin, int whMax, Random random) {
+										   int whMin, int whMax, Random random) {
 		boolean wall0Created = false, wall1Created = false, wall2Created = false, wall3Created = false;
 
 		wall0Created = createWall(world, lookPos.offset(EnumFacing.EAST, 3), lookBlock, EnumFacing.EAST, entity, whMin,
@@ -196,7 +195,7 @@ public class AbilityWall extends Ability {
 	 * Spawn a wall with provided settings
 	 */
 	private boolean createWall(World world, BlockPos wallPos, Block wallBlock, EnumFacing direction,
-			EntityLivingBase entity, int whMin, int whMax, int height, int width, Random random) {
+							   EntityLivingBase entity, int whMin, int whMax, int height, int width, Random random) {
 		EntityWall wall = new EntityWall(world);
 		if (STATS_CONFIG.bendableBlocks.contains(wallBlock) || STATS_CONFIG.plantBendableBlocks.contains(wallBlock)) {
 			wall.setPosition(wallPos.getX() + .5, wallPos.getY(), wallPos.getZ() + .5);
@@ -258,5 +257,10 @@ public class AbilityWall extends Ability {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public int getTier() {
+		return 2;
 	}
 }
