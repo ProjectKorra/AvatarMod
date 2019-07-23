@@ -84,13 +84,13 @@ public class ModelGlider extends ModelBase {
         super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, -0.5f, 0); //move to on the back (quite close)
-        GlStateManager.popMatrix();
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(0, -0.5f, 0); //move to on the back (quite close)
+//        GlStateManager.popMatrix();
+//        GlStateManager.pushMatrix();
+//        GlStateManager.translate(0, -0.5f, 0); //move to on the back (quite close)
         if(Minecraft.getMinecraft().gameSettings.thirdPersonView > 0 )
         {
             GlStateManager.pushMatrix();
-            GlStateManager.translate(0, -.5f, 0);
+            GlStateManager.translate(0, -.9f, 0);
             GlStateManager.rotate(180, 1F, 0, 0);
             GlStateManager.popMatrix();
         } else if (!OpenGliderPlayerHelper.shouldBeGliding(Minecraft.getMinecraft().player))
