@@ -84,16 +84,19 @@ public class ModelGlider extends ModelBase {
         super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         GlStateManager.translate(0, -0.35, 0); //move to on the back (quite close)
 //        GlStateManager.rotate(0,0,0,0);
-        if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 2)
+        if(Minecraft.getMinecraft().gameSettings.thirdPersonView > 0)
         {
-            GlStateManager.scale(1.1, 1.1, 1.2); //scale slightly larger
-            GlStateManager.rotate(90f,0,1,0);
-            GlStateManager.translate(0, 0, -.5); // move up if on ground
+//            GlStateManager.rotate(70f,1,0,1);
+//            GlStateManager.rotate(-90, 0, 1, 0);
+//            GlStateManager.rotate(180, 1, 0, 0);
+//            GlStateManager.rotate(90, 1, 0, 0);
+//            GlStateManager.rotate(90, 0, 0, 1);
         }
 
         if (!OpenGliderPlayerHelper.shouldBeGliding(Minecraft.getMinecraft().player)) {
             GlStateManager.scale(1.1, 1.1, 1.2); //scale slightly larger
-            GlStateManager.rotate(90f,0,1,0);
+//            GlStateManager.rotate(90,0,1,0);
+//            GlStateManager.rotate(90,0,0,1);
             GlStateManager.translate(0, 0, -.5); // move up if on ground
 
         }
