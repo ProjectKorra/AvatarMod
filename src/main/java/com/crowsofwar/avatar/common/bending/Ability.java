@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -122,10 +123,48 @@ public abstract class Ability {
 		return true;
 	}
 
+	public int getTier() {
+		return 1;
+	}
+
+	public BendingStyle getElement() {
+		return BendingStyles.get(getBendingId());
+	}
+
+	public int getParentTier() {
+		if (this.getElement().getParentBendingId() != null) {
+			return 1;
+		}
+		return 0;
+	}
+
 	public boolean isCompatibleScroll(ItemStack stack, int level, AbilityData.AbilityTreePath path) {
-		ItemScroll.ScrollType type = ItemScroll.getScrollType(stack);
-		if (stack.getItem() instanceof ItemScroll) {
-			return type.getBendingId() == getBendingId() || type == ItemScroll.ScrollType.ALL;
+		if (getBendingId() != null) {
+			ItemScroll.ScrollType type = ItemScroll.getScrollType(stack);
+			if (stack.getItem() instanceof ItemScroll) {
+				ItemScroll scroll = (ItemScroll) stack.getItem();
+				if (type.getBendingId() == getBendingId() || type == ItemScroll.ScrollType.ALL) {
+					if (level < 1) {
+						return scroll.getTier() >= getTier();
+					}
+					if (level == 1) {
+						return scroll.getTier() >= getTier() + 1;
+					}
+					return scroll.getTier() >= getTier() + 2;
+
+				}
+				if (getParentTier() > 0) {
+					if (Objects.requireNonNull(BendingStyles.get(getBendingId())).getParentBendingId() == type.getBendingId()) {
+						if (level < 1) {
+							return scroll.getTier() >= getParentTier();
+						}
+						if (level == 1) {
+							return scroll.getTier() >= getParentTier() + 1;
+						}
+						return scroll.getTier() >= getParentTier() + 2;
+					}
+				}
+			}
 		}
 		return false;
 	}
