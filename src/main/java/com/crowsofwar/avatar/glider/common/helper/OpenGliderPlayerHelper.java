@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.lwjgl.input.Keyboard;
 
 public class OpenGliderPlayerHelper {
 
@@ -39,14 +40,14 @@ public class OpenGliderPlayerHelper {
                     final double horizontalSpeed;
                     final double verticalSpeed;
                     IGlider iGlider = (IGlider) glider.getItem();
-
+                    boolean isJumping = Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode());
                     // Get speed depending on glider and if player is sneaking
-                    if (!player.isSneaking()) {
+                    if (!player.isSneaking() && !(isAirbender && isJumping)) {
                         horizontalSpeed = iGlider.getHorizontalFlightSpeed();
                         verticalSpeed = iGlider.getVerticalFlightSpeed();
-                    } else if(isAirbender && Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown()){
+                    } else if(isAirbender && isJumping){
                         horizontalSpeed = iGlider.getSpaceHorizontalFlightSpeed();
-                        verticalSpeed = iGlider.getSpaceVerticalFlightSpeed();
+                        verticalSpeed = -iGlider.getSpaceVerticalFlightSpeed();
                     } else {
                         horizontalSpeed = iGlider.getShiftHorizontalFlightSpeed();
                         verticalSpeed = iGlider.getShiftVerticalFlightSpeed();
