@@ -18,8 +18,6 @@ package com.crowsofwar.avatar.common.bending.lightning;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -78,7 +76,7 @@ public class AbilityLightningSpear extends Ability {
 			}
 
 			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-				size =  1.2F;
+				size = 1.2F;
 				damage = 6;
 			}
 
@@ -101,6 +99,7 @@ public class AbilityLightningSpear extends Ability {
 			}
 
 
+			assert target != null;
 			spear.setPosition(target);
 			spear.setOwner(entity);
 			spear.setBehavior(new LightningSpearBehavior.PlayerControlled());
@@ -117,6 +116,11 @@ public class AbilityLightningSpear extends Ability {
 
 		}
 
+	}
+
+	@Override
+	public int getParentTier() {
+		return 3;
 	}
 
 	@Override

@@ -14,10 +14,10 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 
-public class PurifyParticleHandler extends TickHandler {
+public class ImmolateParticleHandler extends TickHandler {
 	private final ParticleSpawner particles;
 
-	public PurifyParticleHandler(int id) {
+	public ImmolateParticleHandler(int id) {
 		super(id);
 		particles = new NetworkParticleSpawner();
 	}
@@ -26,7 +26,7 @@ public class PurifyParticleHandler extends TickHandler {
 	public boolean tick(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
-		AbilityData aD = data.getAbilityData("purify");
+		AbilityData aD = data.getAbilityData("immolate");
 		World world = ctx.getWorld();
 		int duration = data.getTickHandlerDuration(this);
 		int immolateDuration = aD.getLevel() > 0 ? 60 + 40 * aD.getLevel() : 40;

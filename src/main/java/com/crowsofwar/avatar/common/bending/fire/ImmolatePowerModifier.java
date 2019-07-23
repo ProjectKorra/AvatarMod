@@ -15,13 +15,13 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 import java.util.List;
 
-public class PurifyPowerModifier extends BuffPowerModifier {
+public class ImmolatePowerModifier extends BuffPowerModifier {
 
 	@Override
 	public double get(BendingContext ctx) {
 
 		BendingData data = ctx.getData();
-		AbilityData abilityData = data.getAbilityData("purify");
+		AbilityData abilityData = data.getAbilityData("immolate");
 
 		double modifier = 20;
 		if (abilityData.getLevel() >= 1) {
@@ -41,7 +41,7 @@ public class PurifyPowerModifier extends BuffPowerModifier {
 	public boolean onUpdate(BendingContext ctx) {
 
 		EntityLivingBase entity = ctx.getBenderEntity();
-		AbilityData abilityData = AbilityData.get(entity, "purify");
+		AbilityData abilityData = AbilityData.get(entity, "immolate");
 
 		// Intermittently light on fire
 		if (entity.ticksExisted % 20 == 0) {
@@ -82,12 +82,12 @@ public class PurifyPowerModifier extends BuffPowerModifier {
 
 	@Override
 	protected Vision[] getVisions() {
-		return new Vision[]{Vision.PURIFY_WEAK, Vision.PURIFY_MEDIUM, Vision.PURIFY_POWERFUL};
+		return new Vision[]{Vision.IMMOLATE_WEAK, Vision.IMMOLATE_MEDIUM, Vision.IMMOLATE_POWERFUL};
 	}
 
 	@Override
 	protected String getAbilityName() {
-		return "purify";
+		return new AbilityImmolate().getName();
 	}
 
 }

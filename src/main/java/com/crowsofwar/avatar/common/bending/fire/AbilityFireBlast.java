@@ -41,10 +41,10 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 /**
  * @author CrowsOfWar
  */
-public class AbilityFireArc extends Ability {
+public class AbilityFireBlast extends Ability {
 
-	public AbilityFireArc() {
-		super(Firebending.ID, "fire_arc");
+	public AbilityFireBlast() {
+		super(Firebending.ID, "fire_blast");
 		requireRaytrace(-1, false);
 	}
 
@@ -128,7 +128,12 @@ public class AbilityFireArc extends Ability {
 	}
 
 	@Override
+	public int getTier() {
+		return 2;
+	}
+
+	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
-		return new AiFireArc(this, entity, bender);
+		return new AiFireBlast(this, entity, bender);
 	}
 }

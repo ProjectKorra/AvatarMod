@@ -130,21 +130,26 @@ public class AbilityFireball extends Ability {
 		return new AiFireball(this, entity, bender);
 	}
 
+	@Override
+	public int getTier() {
+		return 3;
+	}
+
 	public static class FireballLightOrbBehavior extends LightOrbBehavior {
 
 		@Override
 		public Behavior onUpdate(EntityLightOrb entity) {
-			if(entity.getEntityWorld().isRemote) entity.setLightRadius(15 + (int)(Math.random() * 5));
+			if (entity.getEntityWorld().isRemote) entity.setLightRadius(15 + (int) (Math.random() * 5));
 			Entity emitter = entity.getEmittingEntity();
 			if (emitter == null)
 				entity.setDead();
 			if (emitter != null) {
 				assert emitter instanceof EntityFireball;
-					entity.setOrbSize(((EntityFireball) emitter).getSize() * 0.03125F);
-					entity.motionX = emitter.motionX;
-					entity.motionY = emitter.motionY;
-					entity.motionZ = emitter.motionZ;
-					entity.setPosition(emitter.getPositionVector().add(0, entity.height, 0));
+				entity.setOrbSize(((EntityFireball) emitter).getSize() * 0.03125F);
+				entity.motionX = emitter.motionX;
+				entity.motionY = emitter.motionY;
+				entity.motionZ = emitter.motionZ;
+				entity.setPosition(emitter.getPositionVector().add(0, entity.height, 0));
 			/*if (entity.getColourShiftRange() != 0) {
 				float range = entity.getColourShiftRange();
 				float r = entity.getInitialColourR();

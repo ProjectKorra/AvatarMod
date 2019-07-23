@@ -52,7 +52,7 @@ public class StatCtrlThrowFire extends StatusControl {
 
 		if (fire != null) {
 
-			AbilityData abilityData = data.getAbilityData("fire_arc");
+			AbilityData abilityData = data.getAbilityData("fire_blast");
 
 			double powerRating = bender.calcPowerRating(Firebending.ID);
 			double velocity = abilityData.getLevel() >= 1 ? 22 : 16;

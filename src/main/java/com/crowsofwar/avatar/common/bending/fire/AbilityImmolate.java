@@ -25,10 +25,10 @@ import static com.crowsofwar.avatar.common.data.TickHandlerController.PURIFY_COO
 import static com.crowsofwar.avatar.common.data.TickHandlerController.PURIFY_PARTICLE_SPAWNER;
 import static net.minecraft.init.MobEffects.*;
 
-public class AbilityPurify extends Ability {
+public class AbilityImmolate extends Ability {
 
-	public AbilityPurify() {
-		super(Firebending.ID, "purify");
+	public AbilityImmolate() {
+		super(Firebending.ID, "immolate");
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class AbilityPurify extends Ability {
 
 			if (data.hasBendingId(getBendingId())) {
 
-				PurifyPowerModifier modifier = new PurifyPowerModifier();
+				ImmolatePowerModifier modifier = new ImmolatePowerModifier();
 				modifier.setTicks(duration);
 
 				// Ignore warning; we know manager != null if they have the bending style
@@ -123,6 +123,11 @@ public class AbilityPurify extends Ability {
 
 	}
 
+	@Override
+	public int getTier() {
+		return 4;
+	}
+
 	public static class ImmolateLightOrbBehaviour extends LightOrbBehavior.FollowPlayer {
 		@Override
 		public Behavior onUpdate(EntityLightOrb entity) {
@@ -131,7 +136,7 @@ public class AbilityPurify extends Ability {
 			assert emitter instanceof EntityPlayer || emitter instanceof EntityBender;
 			Bender b = Bender.get((EntityLivingBase) emitter);
 			/*if (b != null && b.getData() != null && entity.ticksExisted > 1) {
-				if (!Objects.requireNonNull(b.getData().getPowerRatingManager(Firebending.ID)).hasModifier(PurifyPowerModifier.class)) {
+				if (!Objects.requireNonNull(b.getData().getPowerRatingManager(Firebending.ID)).hasModifier(ImmolatePowerModifier.class)) {
 					entity.setDead();
 				}
 			}**/

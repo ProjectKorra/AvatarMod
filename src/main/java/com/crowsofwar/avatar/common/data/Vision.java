@@ -11,15 +11,15 @@ public enum Vision {
 	/**
 	 * Purify vision for level I-II
 	 */
-	PURIFY_WEAK("shaders/post/purify_weak.json"),
+	IMMOLATE_WEAK("shaders/post/immolate_weak.json"),
 	/**
 	 * Purify vision for Level III
 	 */
-	PURIFY_MEDIUM("shaders/post/purify_medium.json"),
+	IMMOLATE_MEDIUM("shaders/post/immolate_medium.json"),
 	/**
 	 * Purify vision for Level IV
 	 */
-	PURIFY_POWERFUL("shaders/post/purify_powerful.json"),
+	IMMOLATE_POWERFUL("shaders/post/immolate_powerful.json"),
 	/**
 	 * Slipstream vision for level I-II
 	 */

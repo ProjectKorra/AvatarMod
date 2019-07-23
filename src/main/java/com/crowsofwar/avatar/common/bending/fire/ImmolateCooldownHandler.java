@@ -7,9 +7,9 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class PurifyCooldownHandler extends TickHandler {
+public class ImmolateCooldownHandler extends TickHandler {
 
-	public PurifyCooldownHandler(int id) {
+	public ImmolateCooldownHandler(int id) {
 		super(id);
 	}
 
@@ -19,7 +19,7 @@ public class PurifyCooldownHandler extends TickHandler {
 		BendingData data = ctx.getData();
 		int duration = data.getTickHandlerDuration(this);
 		int coolDown = 140;
-		AbilityData aD = data.getAbilityData("purify");
+		AbilityData aD = data.getAbilityData("immolate");
 
 		if (aD.getLevel() == 1) {
 			coolDown = 130;

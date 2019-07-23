@@ -38,8 +38,8 @@ public class TickHandlerController {
 	public static TickHandler RENDER_ELEMENT_HANDLER = new RenderElementTickHandler(19);
 	public static TickHandler STAFF_GUST_HANDLER = new StaffGustCooldown(20);
 	public static TickHandler SLIPSTREAM_COOLDOWN_HANDLER = new SlipstreamCooldownHandler(21);
-	public static TickHandler PURIFY_COOLDOWN_HANDLER = new PurifyCooldownHandler(22);
-	public static TickHandler PURIFY_PARTICLE_SPAWNER = new PurifyParticleHandler(23);
+	public static TickHandler PURIFY_COOLDOWN_HANDLER = new ImmolateCooldownHandler(22);
+	public static TickHandler PURIFY_PARTICLE_SPAWNER = new ImmolateParticleHandler(23);
 	public static TickHandler FIRE_DEVOUR_HANDLER = new FireDevourTickHandler(24);
 	public static TickHandler CLEANSE_COOLDOWN_HANDLER = new CleanseCooldownHandler(25);
 	public static TickHandler RESTORE_COOLDOWN_HANDLER = new RestoreCooldownHandler(26);

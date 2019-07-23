@@ -22,4 +22,10 @@ public class AbilityLightningRedirect extends Ability {
 	public boolean isVisibleInRadial() {
 		return false;
 	}
+
+
+	@Override
+	public int getParentTier() {
+		return 3;
+	}
 }

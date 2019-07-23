@@ -37,7 +37,7 @@ import static java.lang.Math.toDegrees;
 /**
  * @author CrowsOfWar
  */
-public class AiFireArc extends BendingAi {
+public class AiFireBlast extends BendingAi {
 
 	private int timeExecuting;
 
@@ -48,7 +48,7 @@ public class AiFireArc extends BendingAi {
 	 * @param entity
 	 * @param bender
 	 */
-	protected AiFireArc(Ability ability, EntityLiving entity, Bender bender) {
+	protected AiFireBlast(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		timeExecuting = 0;
 		setMutexBits(2);

@@ -95,7 +95,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityEarthControl());
 		Abilities.register(new AbilityRavine());
 		Abilities.register(new AbilityFireShot());
-		Abilities.register(new AbilityFireArc());
+		Abilities.register(new AbilityFireBlast());
 		Abilities.register(new AbilityFlamethrower());
 		Abilities.register(new AbilityWaterArc());
 		Abilities.register(new AbilityCreateWave());
@@ -117,7 +117,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityCleanse());
 		Abilities.register(new AbilityEarthspikes());
 		Abilities.register(new AbilityLightningSpear());
-		Abilities.register(new AbilityPurify());
+		Abilities.register(new AbilityImmolate());
 		Abilities.register(new AbilityWaterCannon());
 		Abilities.register(new AbilityFireJump());
 		Abilities.register(new AbilityExplosion());

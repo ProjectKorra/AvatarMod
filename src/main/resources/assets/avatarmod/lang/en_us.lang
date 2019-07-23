@@ -187,13 +187,13 @@ avatar.ability.fire_shot.lvl3=Greater chance of creating fire
 avatar.ability.fire_shot.lvl4_1=§c§l§oFlame §c§l§odrive ;; Create a line of fire in the direction you're looking
 avatar.ability.fire_shot.lvl4_2=§c§l§oFlame §c§l§owall ;; Light nearby blocks on fire as well
 
-avatar.ability.fire_arc=§c§lFire Arc
-avatar.ability.fire_arc.desc=Make a flaming whip of fire and throw it at your enemies.
-avatar.ability.fire_arc.lvl1=Create a fire arc
-avatar.ability.fire_arc.lvl2=Moves faster
-avatar.ability.fire_arc.lvl3=Tons more damage, and you can redirect fire arcs that you look at in a 3 block radius!
-avatar.ability.fire_arc.lvl4_1=§c§l§oLarge §c§l§ofire ;; Can make even more fire upon landing
-avatar.ability.fire_arc.lvl4_2=§c§l§oBoomerang ;; Comes back upon a successful hit
+avatar.ability.fire_blast=§c§lFire Blast
+avatar.ability.fire_blast.desc=Make a flaming whip of fire and throw it at your enemies.
+avatar.ability.fire_blast.lvl1=Create a fire arc
+avatar.ability.fire_blast.lvl2=Moves faster
+avatar.ability.fire_blast.lvl3=Tons more damage, and you can redirect fire arcs that you look at in a 3 block radius!
+avatar.ability.fire_blast.lvl4_1=§c§l§oLarge §c§l§ofire ;; Can make even more fire upon landing
+avatar.ability.fire_blast.lvl4_2=§c§l§oBoomerang ;; Comes back upon a successful hit
 
 avatar.ability.flamethrower=§c§lFlamethrower
 avatar.ability.flamethrower.desc=Generate a stream of powerful, close-ranged flames. A trademark of Firebending.
@@ -219,13 +219,13 @@ avatar.ability.fire_jump.lvl3=Also attack targets upon landing, light them on fi
 avatar.ability.fire_jump.lvl4_1=§c§l§oCombustion §c§l§olaunch ;; Super huge attack when you jump AND land!
 avatar.ability.fire_jump.lvl4_2=§c§l§oWall §c§l§ojumping ;; Gain the ability to wall jump once after fire jumping
 
-avatar.ability.purify=§c§lImmolate
-avatar.ability.purify.desc=Temporarily boost your firebending powers for a short period of time, but you may burn yourself in the process
-avatar.ability.purify.lvl1=FEEL THE BURRRRNNNNN
-avatar.ability.purify.lvl2=Stronger buff to firebending and speed buff
-avatar.ability.purify.lvl3=Stronger potion effects and don't burn every time
-avatar.ability.purify.lvl4_1=§c§l§oFire §c§l§otolerance ;; Much longer duration, health boost effect, and you don't get set on fire!
-avatar.ability.purify.lvl4_2=§c§l§oInferno ;; Much more powerful effects, incinerate surrounding projectiles!
+avatar.ability.immolate=§c§lImmolate
+avatar.ability.immolate.desc=Temporarily boost your firebending powers for a short period of time, but you may burn yourself in the process
+avatar.ability.immolate.lvl1=FEEL THE BURRRRNNNNN
+avatar.ability.immolate.lvl2=Stronger buff to firebending and speed buff
+avatar.ability.immolate.lvl3=Stronger potion effects and don't burn every time
+avatar.ability.immolate.lvl4_1=§c§l§oFire §c§l§otolerance ;; Much longer duration, health boost effect, and you don't get set on fire!
+avatar.ability.immolate.lvl4_2=§c§l§oInferno ;; Much more powerful effects, incinerate surrounding projectiles!
 
 avatar.ability.inferno_punch=§c§lInferno Punch
 avatar.ability.inferno_punch.desc=Smash your enemies with a fist encased in raw fire!
