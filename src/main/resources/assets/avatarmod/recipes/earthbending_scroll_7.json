@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "avatarmod:scroll_earth",
+      "data" : 5
+    }, {
+      "item": "avatarmod:scroll_earth",
+      "data" : 5
+    }
+  ],
+  "result": {
+    "item": "avatarmod:scroll_earth",
+    "data": 6
+  }
+}
