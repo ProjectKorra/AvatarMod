@@ -63,6 +63,11 @@ public class ItemScroll extends Item implements AvatarItem {
     }
 
     @Override
+    public String getTranslationKey(ItemStack stack) {
+        return "scroll_" + type.displayName() + "_" + stack.getMetadata();
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, World world, List<String> tooltips, ITooltipFlag advanced) {
 
