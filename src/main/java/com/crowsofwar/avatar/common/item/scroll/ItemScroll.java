@@ -1,17 +1,31 @@
 package com.crowsofwar.avatar.common.item.scroll;
 
 import java.util.List;
+import java.util.UUID;
 
+import javax.annotation.Nonnull;
+
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.AvatarChatMessages;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.item.AvatarItems;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -84,4 +98,77 @@ public class ItemScroll extends Item implements AvatarItem {
 
     }
 
+    @Nonnull
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
+
+        ScrollType type = Scrolls.getTypeForStack(player.getHeldItem(hand));
+        assert type != null;
+        if (type.isSpecialtyType()) {
+            handleSpecialtyScrollUse(world, player, player.getHeldItem(hand));
+        } else {
+            handleMainScrollUse(world, player);
+        }
+
+        return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+    }
+
+    /**
+     * Fired for right-clicking on a main bending style scroll (e.g. firebending
+     * scroll)
+     */
+    private void handleMainScrollUse(World world, EntityPlayer player) {
+
+        BendingData data = BendingData.get(player);
+        if (data.getAllBending().isEmpty()) {
+            player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, world, 0, 0, 0);
+        } else {
+            BendingStyle controller = data.getAllBending().get(0);
+            int guiId = AvatarGuiHandler.getGuiId(controller.getId());
+            player.openGui(AvatarMod.instance, guiId, world, 0, 0, 0);
+        }
+
+    }
+
+    /**
+     * Fired for right-clicking on a specialty bending scroll (e.g. lightningbending
+     * scroll)
+     */
+    private void handleSpecialtyScrollUse(World world, EntityPlayer player, ItemStack stack) {
+
+        if (world.isRemote) {
+            return;
+        }
+
+        ScrollType type = Scrolls.getTypeForStack(stack);
+        BendingData data = BendingData.get(player);
+        assert type != null;
+        BendingStyle specialtyStyle = BendingStyles.get(type.getBendingId());
+
+        // Fail if player already has the scroll
+        assert specialtyStyle != null;
+        if (data.hasBending(specialtyStyle)) {
+
+            String specialtyName = specialtyStyle.getName();
+            AvatarChatMessages.MSG_SPECIALTY_SCROLL_ALREADY_HAVE.send(player, specialtyName);
+            return;
+
+        }
+
+        // noinspection ConstantConditions - we already know this is a specialty bending
+        // style
+        UUID requiredMainBending = specialtyStyle.getParentBendingId();
+        if (data.hasBendingId(requiredMainBending)) {
+            data.addBending(specialtyStyle);
+            if (!player.isCreative()) {
+                stack.shrink(1);
+            }
+            String specialtyName = specialtyStyle.getName();
+            AvatarChatMessages.MSG_SPECIALTY_SCROLL_SUCCESS.send(player, specialtyName);
+        } else {
+            String specialtyName = specialtyStyle.getName();
+            String mainName = BendingStyles.getName(requiredMainBending);
+            AvatarChatMessages.MSG_SPECIALTY_SCROLL_FAIL.send(player, specialtyName, mainName);
+        }
+    }
 }
