@@ -19,12 +19,7 @@ import static java.lang.Math.toDegrees;
 public class AiCloudBall extends BendingAi {
 	private int timeExecuting;
 
-	/**
-	 * @param ability
-	 * @param entity
-	 * @param bender
-	 */
-	protected AiCloudBall(Ability ability, EntityLiving entity, Bender bender) {
+	AiCloudBall(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		timeExecuting = 0;
 		setMutexBits(2);
@@ -33,11 +28,8 @@ public class AiCloudBall extends BendingAi {
 	@Override
 	protected void startExec() {
 		BendingData data = bender.getData();
-		data.chi().setMaxChi(10);
-		data.chi().setTotalChi(10);
-		data.chi().setAvailableChi(10);
 		execAbility();
-		data.getMiscData().setAbilityCooldown(100);
+		data.getMiscData().setAbilityCooldown(80);
 	}
 
 	@Override
@@ -49,8 +41,7 @@ public class AiCloudBall extends BendingAi {
 		entity.rotationYaw = (float) toDegrees(rotations.y());
 		entity.rotationPitch = (float) toDegrees(rotations.x());
 
-		if (timeExecuting >= 40) {
-			BendingData data = bender.getData();
+		if (timeExecuting >= 20) {
 			execStatusControl(StatusControl.THROW_CLOUDBURST);
 			timeExecuting = 0;
 			return false;
@@ -63,7 +54,7 @@ public class AiCloudBall extends BendingAi {
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSq(target) > 4 * 4
+		return target != null && entity.getDistanceSq(target) > 3 * 3
 				&& bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
 	}
 

@@ -26,9 +26,6 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -50,34 +47,22 @@ public class EntityAirbender extends EntityHumanBender {
 
 	private static final ResourceLocation LOOT_TABLE = LootTableList
 			.register(new ResourceLocation("avatarmod", "airbender"));
-	private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityAirbender.class, DataSerializers.VARINT);
-
 
 	public EntityAirbender(World world) {
 		super(world);
 
 	}
 
-	public int getLevel() {
-		return dataManager.get(LEVEL);
-	}
-
-	public void setLevel(int level) {
-		dataManager.set(LEVEL, level);
-	}
-
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25 + getLevel() / 100F);
 
 	}
 
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		getData().addBendingId(Airbending.ID);
-		dataManager.register(LEVEL, 1);
 
 	}
 
@@ -91,7 +76,8 @@ public class EntityAirbender extends EntityHumanBender {
 		this.tasks.addTask(4, Objects.requireNonNull(Abilities.getAi("air_bubble", this, Bender.get(this))));
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("air_gust", this, Bender.get(this))));
 		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("airblade", this, Bender.get(this))));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.4, true));
+		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("cloudburst", this, Bender.get(this))));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.4 + getLevel() / 20F, true));
 	}
 
 
@@ -118,12 +104,6 @@ public class EntityAirbender extends EntityHumanBender {
 	@Override
 	protected int getTradeAmount(Item item) {
 		return super.getTradeAmount(item) + MOBS_CONFIG.getAirTradeItemAmount(item);
-	}
-
-	@Override
-	public void onUpdate() {
-		super.onUpdate();
-
 	}
 
 	@Override
