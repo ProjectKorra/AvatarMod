@@ -3,14 +3,14 @@
   "ingredients": [
     {
       "item": "avatarmod:scroll_earth",
-      "data" : 1
+      "data" : 0
     }, {
       "item": "avatarmod:scroll_earth",
-      "data" : 1
+      "data" : 0
     }
   ],
   "result": {
     "item": "avatarmod:scroll_earth",
-    "data": 2
+    "data": 1
   }
 }
