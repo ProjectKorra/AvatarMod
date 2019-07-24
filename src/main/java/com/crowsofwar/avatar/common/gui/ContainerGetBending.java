@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.gui;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -160,7 +161,7 @@ public class ContainerGetBending extends Container {
 			// Possible since all scroll stacks in the inventory must all be
 			// compatible (or they couldn't be added)
 			// Don't return here b/c didn't check if all slots aren't empty
-			UUID bendingId = ((ItemScroll) slot.getStack().getItem()).getScrollType().getBendingId();
+			UUID bendingId = Scrolls.getTypeForStack(slot.getStack()).getBendingId();
 			if (bendingId != null) {
 				foundId = bendingId;
 			}
@@ -188,12 +189,12 @@ public class ContainerGetBending extends Container {
 		public boolean isItemValid(ItemStack stack) {
 			if (stack.getItem() instanceof ItemScroll) {
 
-				ScrollType type1 = ((ItemScroll) stack.getItem()).getScrollType();
+				ScrollType type1 = Scrolls.getTypeForStack(stack);
 
 				for (int i = 0; i <= 2; i++) {
 					ItemStack stack2 = getSlot(i).getStack();
 					if (!stack2.isEmpty()) {
-						ScrollType type2 = ((ItemScroll) stack.getItem()).getScrollType();
+						ScrollType type2 = Scrolls.getTypeForStack(stack);
 						if (!type1.isCompatibleWith(type2)) {
 							incompatibleMsgTicks = 100;
 							return false;

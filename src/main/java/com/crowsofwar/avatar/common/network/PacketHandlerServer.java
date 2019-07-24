@@ -40,8 +40,8 @@ import com.crowsofwar.avatar.common.event.ElementUnlockEvent;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
-import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
@@ -274,7 +274,7 @@ public class PacketHandlerServer implements IPacketHandler {
 					if (stack.getItem() instanceof ItemScroll) {
 
 						// Try to use this scroll
-						ScrollType type = ((ItemScroll) stack.getItem()).getScrollType();
+						ScrollType type = Scrolls.getTypeForStack(stack);
 						assert type != null;
 						AbilityData aD = AbilityData.get(player, packet.getAbility().getName());
 						if (type.accepts(packet.getAbility().getBendingId()) && packet.getAbility().isCompatibleScroll(stack, aD.getLevel(), aD.getPath())) {
