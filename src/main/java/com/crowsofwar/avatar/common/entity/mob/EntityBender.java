@@ -27,7 +27,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
@@ -66,6 +65,7 @@ public abstract class EntityBender extends EntityCreature {
 		bender = initBender();
 		dataManager.register(SYNC_LEVEL, AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
 		applyAbilityLevels(getLevel());
+		setElement();
 	}
 
 	@Override
@@ -94,6 +94,9 @@ public abstract class EntityBender extends EntityCreature {
 
 	public BendingData getData() {
 		return bender.getData();
+	}
+
+	public void setElement() {
 	}
 
 }
