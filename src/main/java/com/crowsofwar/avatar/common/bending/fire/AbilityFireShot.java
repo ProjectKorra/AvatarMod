@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -26,6 +27,7 @@ import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -156,6 +158,11 @@ public class AbilityFireShot extends Ability {
 			}
 		}
 
+	}
+
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiFireShot(this, entity, bender);
 	}
 
 	public static class FireShockwaveBehaviour extends ShockwaveBehaviour {
