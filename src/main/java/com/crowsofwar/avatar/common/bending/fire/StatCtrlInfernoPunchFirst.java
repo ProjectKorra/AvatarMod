@@ -40,7 +40,7 @@ public class StatCtrlInfernoPunchFirst extends StatusControl {
 			float damage = STATS_CONFIG.InfernoPunchDamage * 7 / 3 * powerModifier;
 			float knockBack = 1.5F * powerModifier;
 			int fireTime = 15 + (int) (powerModifier * 10);
-			
+
 			if (entity.isPotionActive(MobEffects.STRENGTH)) {
 				damage += (Objects.requireNonNull(entity.getActivePotionEffect(MobEffects.STRENGTH)).getAmplifier() + 1) / 2F;
 			}
