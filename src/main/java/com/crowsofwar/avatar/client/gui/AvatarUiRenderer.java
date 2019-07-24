@@ -187,49 +187,54 @@ public class AvatarUiRenderer extends Gui {
 	private void renderChiBar(ScaledResolution resolution) {
 		if (CLIENT_CONFIG.chiBarSettings.shouldChibarRender) {
 
-			GlStateManager.color(1, 1, 1, CLIENT_CONFIG.chiBarAlpha);
-
 			BendingData data = BendingData.get(mc.player);
+			boolean shouldRender = !CLIENT_CONFIG.chiBarSettings.shouldChibarDisappear || data.hasTickHandler(RENDER_ELEMENT_HANDLER);
 
-			if (data.getAllBending().isEmpty()) return;
+			if (shouldRender) {
+				float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
+						((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER)) / 200 : CLIENT_CONFIG.bendingCycleAlpha;
+				GlStateManager.color(1, 1, 1, alpha);
 
-			Chi chi = data.chi();
-			float total = chi.getTotalChi();
-			float max = chi.getMaxChi();
-			float available = chi.getAvailableChi();
-			float unavailable = total - available;
+				if (data.getAllBending().isEmpty()) return;
 
-			// Dimensions of end result in pixels
-			float scale = 1.1f;
-			float width = 100 * scale;
-			float height = 9 * scale;
+				Chi chi = data.chi();
+				float total = chi.getTotalChi();
+				float max = chi.getMaxChi();
+				float available = chi.getAvailableChi();
+				float unavailable = total - available;
 
-			mc.getTextureManager().bindTexture(AvatarUiTextures.CHI_BAR);
+				// Dimensions of end result in pixels
+				float scale = 1.1f;
+				float width = 100 * scale;
+				float height = 9 * scale;
 
-			pushMatrix();
+				mc.getTextureManager().bindTexture(AvatarUiTextures.CHI_BAR);
 
-			translate(resolution.getScaledWidth() - 115, resolution.getScaledHeight() - height - 3, 0);
-			scale(scale, scale, 1);
+				pushMatrix();
 
-			// Background of chi bar
-			drawTexturedModalRect(0, 0, 0, 36, 100, 9);
+				translate(resolution.getScaledWidth() - 115, resolution.getScaledHeight() - height - 3, 0);
+				scale(scale, scale, 1);
 
-			// Available chi
+				// Background of chi bar
+				drawTexturedModalRect(0, 0, 0, 36, 100, 9);
 
-			float unadjustedU = 100 * unavailable / max;
-			int adjustedU = (int) Math.floor(unadjustedU / 8f) * 8;
-			float uDiff = unadjustedU - adjustedU;
+				// Available chi
 
-			drawTexturedModalRect(adjustedU, 0, 1, 27, (int) (100 * available / max + uDiff), 9);
+				float unadjustedU = 100 * unavailable / max;
+				int adjustedU = (int) Math.floor(unadjustedU / 8f) * 8;
+				float uDiff = unadjustedU - adjustedU;
 
-			// Unavailable chi
-			drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
-			if (CLIENT_CONFIG.chiBarSettings.shouldChiNumbersRender) {
-				drawString(mc.fontRenderer, ((int) total) + "/" + ((int) max) + ", " + ((int) available), 25, -10,
-						data.getActiveBending().getTextColour() | ((int) (CLIENT_CONFIG.chiBarAlpha * 255) << 24));
+				drawTexturedModalRect(adjustedU, 0, 1, 27, (int) (100 * available / max + uDiff), 9);
+
+				// Unavailable chi
+				drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
+				if (CLIENT_CONFIG.chiBarSettings.shouldChiNumbersRender) {
+					drawString(mc.fontRenderer, ((int) total) + "/" + ((int) max) + ", " + ((int) available), 25, -10,
+							data.getActiveBending().getTextColour() | ((int) (alpha * 255) << 24));
+				}
+				popMatrix();
+
 			}
-			popMatrix();
-
 		}
 	}
 

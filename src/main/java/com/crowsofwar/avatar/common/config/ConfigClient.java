@@ -142,9 +142,9 @@ public class ConfigClient {
 		//Determines if element menu should render at all
 
 		@Load
-		public final boolean shouldBendingMenuDisappear = true;
+		public final boolean shouldBendingMenuDisappear = false;
 		//For some reason if it's not final it won't work
-		//Makes the menu disappear after the duration- affects chi as well.
+		//Makes the menu disappear after the duration
 
 		@Load
 		public final int bendingMenuDuration = 200;
@@ -159,15 +159,15 @@ public class ConfigClient {
 
 		@Load
 		public final boolean shouldChiNumbersRender = true;
-/*
+
 		@Load
-		public final boolean shouldChibarDisappear = true;
+		public final boolean shouldChiMenuDisappear = false;
 		//Currently unused
 
 		@Load
 		public final int chibarDuration = 200;
 		//Currently unused
-	**/
+
 	}
 
 	public static class FireballRenderSettings {
