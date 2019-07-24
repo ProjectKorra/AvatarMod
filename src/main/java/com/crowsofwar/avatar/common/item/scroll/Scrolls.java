@@ -62,6 +62,10 @@ public class Scrolls {
         }
     }
 
+    public static int getTierForStack(ItemStack stack) {
+        return stack.getMetadata();
+    }
+
     public enum ScrollType {
         ALL(null), // 0
         EARTH(Earthbending.ID), // 1

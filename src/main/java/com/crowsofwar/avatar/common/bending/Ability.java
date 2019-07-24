@@ -146,24 +146,24 @@ public abstract class Ability {
 				ItemScroll scroll = (ItemScroll) stack.getItem();
 				if (type.getBendingId() == getBendingId() || type == Scrolls.ScrollType.ALL) {
 					if (level < 1) {
-						return /*scroll.getTier()*/10 >= getTier();
+						return Scrolls.getTierForStack(stack) >= getTier();
 					}
 					if (level == 1) {
-						return /*scroll.getTier()*/10 >= getTier() + 1;
+						return Scrolls.getTierForStack(stack) >= getTier() + 1;
 					}
-					return /*scroll.getTier()*/10 >= getTier() + 2;
+					return Scrolls.getTierForStack(stack) >= getTier() + 2;
 
 				}
 				if (getParentTier() > 0) {
 					if (Objects.requireNonNull(BendingStyles.get(getBendingId())).getParentBendingId() == type
 							.getBendingId()) {
 						if (level < 1) {
-							return /*scroll.getTier()*/10 >= getParentTier();
+							return Scrolls.getTierForStack(stack) >= getParentTier();
 						}
 						if (level == 1) {
-							return /*scroll.getTier()*/10 >= getParentTier() + 1;
+							return Scrolls.getTierForStack(stack) >= getParentTier() + 1;
 						}
-						return /*scroll.getTier()*/10 >= getParentTier() + 2;
+						return Scrolls.getTierForStack(stack) >= getParentTier() + 2;
 					}
 				}
 			}
