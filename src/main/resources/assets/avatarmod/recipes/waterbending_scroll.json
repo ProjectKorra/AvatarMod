@@ -1,13 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "ebe",
-    "bpb",
-    "ebe"
+    "ese",
+    "sps",
+    "ese"
   ],
   "key": {
     "b": {
-      "item": "minecraft:emerald"
+      "item": "minecraft:prismarine_shard"
     },
     "p": {
       "item": "minecraft:paper"
@@ -17,7 +17,7 @@
     }
   },
   "result": {
-    "item": "avatarmod:scroll_earth",
+    "item": "avatarmod:scroll_water",
     "data": 1
   }
 }

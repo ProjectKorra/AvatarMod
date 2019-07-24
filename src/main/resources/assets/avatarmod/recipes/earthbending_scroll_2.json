@@ -2,18 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "avatarmod_scroll",
-      "data" : 1,
-      "tag" : "{Tier :  1}"
+      "item": "avatarmod:scroll_earth",
+      "data" : 1
     }, {
-      "item": "avatarmod_scroll",
-      "data" : 1,
-      "tag" : "{Tier :  1}"
+      "item": "avatarmod:scroll_earth",
+      "data" : 1
     }
   ],
   "result": {
-    "item": "avatarmod:scroll",
-    "data": 1,
-    "tag" : "{Tier :  2}"
+    "item": "avatarmod:scroll_earth",
+    "data": 2
   }
 }

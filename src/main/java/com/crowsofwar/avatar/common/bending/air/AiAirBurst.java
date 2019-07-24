@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.bending.fire;
+package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
@@ -7,9 +7,9 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
-public class AiFireShot extends BendingAi {
+public class AiAirBurst extends BendingAi {
 
-	AiFireShot(Ability ability, EntityLiving entity, Bender bender) {
+	AiAirBurst(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		setMutexBits(2);
 	}

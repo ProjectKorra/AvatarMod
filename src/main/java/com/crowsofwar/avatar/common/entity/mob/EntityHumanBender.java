@@ -65,9 +65,7 @@ public abstract class EntityHumanBender extends EntityBender {
 	private EntityAiGiveScroll aiGiveScroll;
 	private boolean hasAttemptedTrade;
 
-	/**
-	 * @param world
-	 */
+	//TODO: Chi
 	public EntityHumanBender(World world) {
 		super(world);
 		this.hasAttemptedTrade = false;
