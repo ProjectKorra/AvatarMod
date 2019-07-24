@@ -142,7 +142,7 @@ public abstract class Ability {
 	public boolean isCompatibleScroll(ItemStack stack, int level, AbilityData.AbilityTreePath path) {
 		if (getBendingId() != null) {
 			if (stack.getItem() instanceof ItemScroll) {
-				Scrolls.ScrollType type = ((ItemScroll) stack.getItem()).getScrollType();
+				Scrolls.ScrollType type = Scrolls.getTypeForStack(stack);
 				ItemScroll scroll = (ItemScroll) stack.getItem();
 				if (type.getBendingId() == getBendingId() || type == Scrolls.ScrollType.ALL) {
 					if (level < 1) {

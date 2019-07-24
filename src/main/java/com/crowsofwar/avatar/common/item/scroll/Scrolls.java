@@ -56,7 +56,7 @@ public class Scrolls {
 
     public static ScrollType getTypeForStack(ItemStack stack) {
         if (stack.getItem() instanceof ItemScroll) {
-            return ((ItemScroll) stack.getItem()).getScrollType();
+            return Scrolls.getTypeForStack(stack);
         } else {
             return null;
         }
