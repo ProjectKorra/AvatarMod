@@ -35,7 +35,7 @@ public class Icebending extends BendingStyle {
 
 	public Icebending() {
 		super(Waterbending.ID);
-		
+
 		addAbility("ice_prison");
 		addAbility("ice_burst");
 

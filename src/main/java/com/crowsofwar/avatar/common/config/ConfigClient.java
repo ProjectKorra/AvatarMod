@@ -141,17 +141,15 @@ public class ConfigClient {
 		//For some reason if it's not final it won't work
 		//Determines if element menu should render at all
 
-	/*	@Load
+		@Load
 		public final boolean shouldBendingMenuDisappear = true;
 		//For some reason if it's not final it won't work
 		//Makes the menu disappear after the duration- affects chi as well.
-		//Currently unused
 
 		@Load
 		public final int bendingMenuDuration = 200;
 		//If the menu should disappear, how long it should take before disappearing
-		//currently unused
-**/
+
 
 	}
 
