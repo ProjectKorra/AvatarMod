@@ -62,6 +62,6 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 			}
 
 		}
-		return false;
+		return true;
 	}
 }

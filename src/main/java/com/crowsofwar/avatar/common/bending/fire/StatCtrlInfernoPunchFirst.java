@@ -22,6 +22,6 @@ public class StatCtrlInfernoPunchFirst extends StatusControl {
 
 	@Override
 	public boolean execute(BendingContext ctx) {
-		return false;
+		return true;
 	}
 }
