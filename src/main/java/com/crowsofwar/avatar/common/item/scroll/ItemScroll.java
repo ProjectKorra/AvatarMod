@@ -64,7 +64,7 @@ public class ItemScroll extends Item implements AvatarItem {
 
     @Override
     public String getTranslationKey(ItemStack stack) {
-        return "scroll_" + type.displayName() + "_" + stack.getMetadata();
+        return "item.avatarmod:scroll." + type.displayName() + "." + (stack.getMetadata() + 1);
     }
 
     @Override

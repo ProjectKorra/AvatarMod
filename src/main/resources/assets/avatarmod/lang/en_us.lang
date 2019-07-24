@@ -599,6 +599,16 @@ item.avatarmod:scroll.ice.6.name=§lTier VI §3§lIcebending §d§lScroll
 item.avatarmod:scroll.sand.6.name=§lTier VI §6§lSandbending §d§lScroll
 item.avatarmod:scroll.combustion.6.name=§lTier VI §8§lCombustionbending §d§lScroll
 
+item.avatarmod:scroll.all.7.name=§lTier VII §d§lScroll
+item.avatarmod:scroll.air.7.name=§lTier VII §f§lAirbending §d§lScroll
+item.avatarmod:scroll.fire.7.name=§lTier VII §c§lFirebending §d§lScroll
+item.avatarmod:scroll.earth.7.name=§lTier VII §2§lEarthbending §d§lScroll
+item.avatarmod:scroll.water.7.name=§lTier VII §9§lWaterbending §d§lScroll
+item.avatarmod:scroll.lightning.7.name=§lTier VII §b§lLightningbending §d§lScroll
+item.avatarmod:scroll.ice.7.name=§lTier VII §3§lIcebending §d§lScroll
+item.avatarmod:scroll.sand.7.name=§lTier VII §6§lSandbending §d§lScroll
+item.avatarmod:scroll.combustion.7.name=§lTier VII §8§lCombustionbending §d§lScroll
+
 
 
 item.avatarmod:water_pouch.name=Water Skin
