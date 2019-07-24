@@ -54,6 +54,8 @@ import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
  */
 public class EntityFirebender extends EntityHumanBender {
 
+	int level = 1;
+
 	private static final ResourceLocation LOOT_TABLE = LootTableList
 			.register(new ResourceLocation("avatarmod", "firebender"));
 
