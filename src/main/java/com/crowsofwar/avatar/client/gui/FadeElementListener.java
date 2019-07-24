@@ -38,11 +38,13 @@ public class FadeElementListener {
 			EntityLivingBase entity = event.getEntityLiving();
 			BendingData data = BendingData.getFromEntity(entity);
 			if (data != null) {
-				if (data.hasTickHandler(RENDER_ELEMENT_HANDLER)) {
-					data.removeTickHandler(RENDER_ELEMENT_HANDLER);
-					data.addTickHandler(RENDER_ELEMENT_HANDLER);
-				} else {
-					data.addTickHandler(RENDER_ELEMENT_HANDLER);
+				if (CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuDisappear) {
+					if (data.hasTickHandler(RENDER_ELEMENT_HANDLER)) {
+						data.removeTickHandler(RENDER_ELEMENT_HANDLER);
+						data.addTickHandler(RENDER_ELEMENT_HANDLER);
+					} else {
+						data.addTickHandler(RENDER_ELEMENT_HANDLER);
+					}
 				}
 			}
 		}
