@@ -27,7 +27,6 @@ import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.common.entity.ai.*;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
 import com.crowsofwar.avatar.common.entity.data.BisonSpawnData;
@@ -1014,6 +1013,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			playTameEffect(false);
 		}
 
+	}
+
+	@Override
+	public void setElement() {
+		super.setElement();
+		getData().addBending(new Airbending());
 	}
 
 	@Override
