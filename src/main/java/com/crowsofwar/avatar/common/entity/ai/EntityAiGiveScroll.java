@@ -40,10 +40,12 @@ public class EntityAiGiveScroll extends EntityAIBase {
 	private final ScrollType scrollType;
 	private EntityLivingBase target;
 	private int ticksExecuting;
+	private int level;
 
-	public EntityAiGiveScroll(EntityLiving entity, ScrollType scrollType) {
+	public EntityAiGiveScroll(EntityLiving entity, ScrollType scrollType, int level) {
 		this.entity = entity;
 		this.scrollType = scrollType;
+		this.level = level;
 		setMutexBits(1);
 	}
 
@@ -84,7 +86,7 @@ public class EntityAiGiveScroll extends EntityAIBase {
 			World world = entity.world;
 
 			Vector velocity = getEntityPos(target).minus(getEntityPos(entity)).normalize().times(0.3);
-			ItemStack scrollStack = new ItemStack(Scrolls.getItemForType(scrollType), 1, 1);
+			ItemStack scrollStack = new ItemStack(Scrolls.getItemForType(scrollType), 1, level);
 
 			EntityItem entityItem = new EntityItem(world, entity.posX, entity.posY + entity.getEyeHeight(),
 					entity.posZ, scrollStack);
