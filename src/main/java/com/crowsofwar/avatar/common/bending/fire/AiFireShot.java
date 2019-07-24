@@ -39,7 +39,7 @@ public class AiFireShot extends BendingAi {
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSq(target) < 10 * 10
+		return target != null && entity.getDistanceSq(target) < 8 * 8
 				&& bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
 	}
 

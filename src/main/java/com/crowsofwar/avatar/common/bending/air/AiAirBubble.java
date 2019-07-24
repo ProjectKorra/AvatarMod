@@ -54,9 +54,9 @@ public class AiAirBubble extends BendingAi {
 		boolean underAttack = entity.getCombatTracker().getCombatDuration() <= 100;
 		boolean already = AvatarEntity.lookupEntity(entity.world, EntityAirBubble.class,
 				bubble -> bubble.getOwner() == entity) != null;
-		boolean lowHealth = entity.getHealth() / entity.getMaxHealth() <= 0.25f;
+		boolean lowHealth = entity.getHealth() / entity.getMaxHealth() <= 0.5f;
 
-		if (timeExecuting > 200) {
+		if (timeExecuting > 200 || (entity.getAttackTarget() != null && entity.getDistance(entity.getAttackTarget()) < 2) && entity.getRNG().nextBoolean()) {
 			execStatusControl(StatusControl.BUBBLE_EXPAND);
 			return false;
 

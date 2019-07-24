@@ -50,7 +50,6 @@ public class EntityAirbender extends EntityHumanBender {
 
 	public EntityAirbender(World world) {
 		super(world);
-
 	}
 
 	@Override
@@ -122,8 +121,6 @@ public class EntityAirbender extends EntityHumanBender {
 			getData().getAbilityData("air_bubble").setLevel(0);
 			getData().getAbilityData("air_gust").setLevel(2);
 			getData().getAbilityData("airblade").setLevel(1);
-			ItemStack staff = new ItemStack(AvatarItems.airbenderStaff, 1);
-			this.setHeldItem(EnumHand.MAIN_HAND, staff);
 		}
 	}
 

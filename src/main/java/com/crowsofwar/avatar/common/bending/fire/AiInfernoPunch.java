@@ -7,18 +7,21 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.*;
 
 public class AiInfernoPunch extends BendingAi {
 
-	protected AiInfernoPunch(Ability ability, EntityLiving entity, Bender bender) {
+	AiInfernoPunch(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 	}
 
 	@Override
 	protected boolean shouldExec() {
-		return timeExecuting < 5;
+		EntityLivingBase target = entity.getAttackTarget();
+		return target != null && entity.getDistanceSq(target) < 3 * 3
+				&& bender.getData().getMiscData().getAbilityCooldown() == 0;
 	}
 
 	@Override
@@ -32,10 +35,6 @@ public class AiInfernoPunch extends BendingAi {
 
 	}
 
-	@Override
-	public void updateTask() {
-		timeExecuting++;
-	}
 
 
 
