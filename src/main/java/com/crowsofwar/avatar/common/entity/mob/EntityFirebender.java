@@ -57,11 +57,6 @@ public class EntityFirebender extends EntityHumanBender {
 
 	private static final ResourceLocation LOOT_TABLE = LootTableList
 			.register(new ResourceLocation("avatarmod", "firebender"));
-
-	private static final DataParameter<Integer> SYNC_SCROLLS_LEFT = EntityDataManager
-			.createKey(EntityFirebender.class, DataSerializers.VARINT);
-	private static final DataParameter<Integer> SYNC_LEVEL = EntityDataManager
-			.createKey(EntityFirebender.class, DataSerializers.VARINT);
 	/**
 	 * @param world
 	 */
@@ -70,23 +65,11 @@ public class EntityFirebender extends EntityHumanBender {
 		getData().addBendingId(Firebending.ID);
 	}
 
-	public void setScrollsLeft(int scrolls) {
-		dataManager.set(SYNC_SCROLLS_LEFT, scrolls);
-	}
 
-	public int getScrolls() {
-		return dataManager.get(SYNC_SCROLLS_LEFT);
-	}
-
-	public int getLevel() {
-		return dataManager.get(SYNC_LEVEL);
-	}
 
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_LEVEL, AvatarUtils.getRandomNumberInRange(1, 7));
-		dataManager.register(SYNC_SCROLLS_LEFT, getLevel());
 		boolean fireShotPath = world.rand.nextBoolean();
 		boolean flamethrowerPath = world.rand.nextBoolean();
 		boolean infernoPunchPath = world.rand.nextBoolean();
@@ -141,6 +124,11 @@ public class EntityFirebender extends EntityHumanBender {
 			getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
 			getData().getAbilityData("inferno_punch").setLevel(2);
 		}
+	}
+
+	@Override
+	public void applyAbilityLevels(int level) {
+
 	}
 
 	@Override
@@ -215,11 +203,6 @@ public class EntityFirebender extends EntityHumanBender {
 	@Override
 	protected int getNumSkins() {
 		return 1;
-	}
-
-	@Override
-	protected int getScrollsLeft() {
-		return getScrolls();
 	}
 
 	@Override

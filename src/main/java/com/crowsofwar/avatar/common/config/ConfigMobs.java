@@ -23,12 +23,9 @@ import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import scala.actors.threadpool.Arrays;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -137,7 +134,6 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_DROP.put("enderman", 10.0);
 
 
-
 	}
 
 	@Load
@@ -152,20 +148,17 @@ public class ConfigMobs {
 
 	@Load
 	public float bisonBreedMinMinutes = 60, bisonBreedMaxMinutes = 120;
-
+	@Load
+	public BenderSettings benderSettings = new BenderSettings();
 	@Load
 	private Map<String, Integer> bisonFoods;
 	private Map<Item, Integer> bisonFoodList;
-
 	@Load
 	private Map<String, Double> scrollDropChance;
+
+	//The largest of amount of benders that can spawn in a village
 	@Load
 	private Map<String, String> scrollType;
-
-	@Load
-	public final int maxNumberOfBenders = 3;
-	//The largest of amount of benders that can spawn in a village
-
 	@Load
 	private Map<String, Integer> scrollTradeItems;
 	private Map<Item, Integer> tradeItems;
@@ -173,9 +166,6 @@ public class ConfigMobs {
 	private Map<Item, Integer> airTradeItems;
 	private Map<String, Integer> fireScrollTradeItems;
 	private Map<Item, Integer> fireTradeItems;
-
-
-
 
 	public static void load() {
 		MOBS_CONFIG.scrollTradeItems = DEFAULT_TRADE_ITEMS;
@@ -300,6 +290,14 @@ public class ConfigMobs {
 
 		return ScrollType.ALL;
 
+	}
+
+	public static class BenderSettings {
+		@Load
+		public final int maxNumberOfBenders = 3;
+
+		@Load
+		public final int maxLevel = 7;
 	}
 
 }

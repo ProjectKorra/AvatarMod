@@ -152,6 +152,11 @@ public class EntityAirbender extends EntityHumanBender {
 
 	}
 
+	@Override
+	public void applyAbilityLevels(int level) {
+
+	}
+
 
 	@Override
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {

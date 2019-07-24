@@ -1016,6 +1016,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 	}
 
+	@Override
+	public void applyAbilityLevels(int level) {
+
+	}
+
 
 	// moveWithHeading
 	@Override

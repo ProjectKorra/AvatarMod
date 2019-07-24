@@ -59,8 +59,10 @@ public abstract class EntityHumanBender extends EntityBender {
 	private static final DataParameter<Integer> SYNC_SKIN = EntityDataManager
 			.createKey(EntityHumanBender.class, DataSerializers.VARINT);
 
+	private static final DataParameter<Integer> SYNC_SCROLLS_LEFT = EntityDataManager
+			.createKey(EntityHumanBender.class, DataSerializers.VARINT);
+
 	private EntityAiGiveScroll aiGiveScroll;
-	private int scrollsLeft;
 	private boolean hasAttemptedTrade;
 
 	/**
@@ -68,10 +70,15 @@ public abstract class EntityHumanBender extends EntityBender {
 	 */
 	public EntityHumanBender(World world) {
 		super(world);
-		scrollsLeft = getScrollsLeft();
 		this.hasAttemptedTrade = false;
+	}
 
+	public void setScrollsLeft(int scrolls) {
+		dataManager.set(SYNC_SCROLLS_LEFT, scrolls);
+	}
 
+	public int getScrollsLeft() {
+		return dataManager.get(SYNC_SCROLLS_LEFT);
 	}
 
 	@Override
@@ -83,6 +90,8 @@ public abstract class EntityHumanBender extends EntityBender {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_SKIN, (int) (rand.nextDouble() * getNumSkins()));
+		dataManager.register(SYNC_SCROLLS_LEFT, getLevel());
+		setInitialScrolls(getLevel());
 	}
 
 	@Override
@@ -112,14 +121,14 @@ public abstract class EntityHumanBender extends EntityBender {
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		setSkin(nbt.getInteger("Skin"));
-		scrollsLeft = nbt.getInteger("Scrolls");
+		setScrollsLeft(nbt.getInteger("Scrolls"));
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("Skin", getSkin());
-		nbt.setInteger("Scrolls", scrollsLeft);
+		nbt.setInteger("Scrolls", getScrollsLeft());
 	}
 
 	protected abstract void addBendingTasks();
@@ -135,11 +144,6 @@ public abstract class EntityHumanBender extends EntityBender {
 	}
 
 	protected abstract int getNumSkins();
-
-
-	protected int getScrollsLeft() {
-		return  rand.nextInt(3) + 1;
-	}
 
 	public int getSkin() {
 		return dataManager.get(SYNC_SKIN);
@@ -237,14 +241,11 @@ public abstract class EntityHumanBender extends EntityBender {
 
 		if (this.isTradeItem(stack.getItem()) && !world.isRemote/* && amount >= tradeAmount**/) {
 
-			if (scrollsLeft > 0) {
+			if (getScrollsLeft() > 0) {
 				if (aiGiveScroll.giveScrollTo(player)) {
 					System.out.println("Trade started");
 					// Take item
-					scrollsLeft--;
-					if (this instanceof EntityFirebender) {
-						((EntityFirebender) this).setScrollsLeft(scrollsLeft);
-					}
+					setScrollsLeft(getScrollsLeft() - 1);
 					if (!player.capabilities.isCreativeMode) {
 						stack.shrink(1);
 					}
@@ -268,5 +269,9 @@ public abstract class EntityHumanBender extends EntityBender {
 
 		return true;
 
+	}
+
+	public void setInitialScrolls(int level) {
+		setScrollsLeft(level);
 	}
 }
