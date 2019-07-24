@@ -188,7 +188,7 @@ public class AvatarUiRenderer extends Gui {
 		if (CLIENT_CONFIG.chiBarSettings.shouldChibarRender) {
 
 			BendingData data = BendingData.get(mc.player);
-			boolean shouldRender = !CLIENT_CONFIG.chiBarSettings.shouldChibarDisappear || data.hasTickHandler(RENDER_ELEMENT_HANDLER);
+			boolean shouldRender = !CLIENT_CONFIG.chiBarSettings.shouldChiMenuDisappear || data.hasTickHandler(RENDER_ELEMENT_HANDLER);
 
 			if (shouldRender) {
 				float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
