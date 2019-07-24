@@ -144,7 +144,6 @@ public abstract class Ability {
 			if (stack.getItem() instanceof ItemScroll) {
 				Scrolls.ScrollType type = Scrolls.getTypeForStack(stack);
 				assert type != null;
-				ItemScroll scroll = (ItemScroll) stack.getItem();
 				if (type.getBendingId() == getBendingId() || type == Scrolls.ScrollType.ALL) {
 					if (level < 1) {
 						return Scrolls.getTierForStack(stack) >= getTier();
