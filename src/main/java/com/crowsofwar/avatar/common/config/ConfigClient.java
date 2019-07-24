@@ -162,11 +162,9 @@ public class ConfigClient {
 
 		@Load
 		public final boolean shouldChiMenuDisappear = false;
-		//Currently unused
 
 		@Load
 		public final int chibarDuration = 200;
-		//Currently unused
 
 	}
 

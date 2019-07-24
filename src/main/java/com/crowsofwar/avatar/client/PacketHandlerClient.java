@@ -103,9 +103,9 @@ public class PacketHandlerClient implements IPacketHandler {
 
 		Set<Map.Entry<UUID, Double>> entrySet = powerRatings.entrySet();
 		for (Map.Entry<UUID, Double> entry : entrySet) {
-
-			Objects.requireNonNull(data.getPowerRatingManager(entry.getKey())).setCachedRatingValue(entry.getValue());
-
+			if (data.getPowerRatingManager(entry.getKey()) != null) {
+				data.getPowerRatingManager(entry.getKey()).setCachedRatingValue(entry.getValue());
+			}
 		}
 
 		return null;
