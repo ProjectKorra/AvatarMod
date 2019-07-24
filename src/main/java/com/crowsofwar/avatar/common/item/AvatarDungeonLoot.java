@@ -18,6 +18,8 @@ package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls;
+
 import net.minecraft.entity.projectile.EntityEgg;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
@@ -58,12 +60,12 @@ public class AvatarDungeonLoot {
 					new LootItem(AvatarItems.itemBisonSaddle, 5).withMetadata(3),
 					new LootItem(AvatarItems.itemWaterPouch, 30));
 			addLoot(e, 120, //
-					new LootItem(AvatarItems.itemScroll, 20), //
-					new LootItem(AvatarItems.itemScroll, 5).withMetadata(1), //
-					new LootItem(AvatarItems.itemScroll, 5).withMetadata(2), //
-					new LootItem(AvatarItems.itemScroll, 5).withMetadata(3), //
-					new LootItem(AvatarItems.itemScroll, 5).withMetadata(4),
-					new LootItem(AvatarItems.itemScroll, 10).withMetadata(5));
+					new LootItem(Scrolls.ALL, 20), //
+					new LootItem(Scrolls.ALL, 5).withMetadata(1), //
+					new LootItem(Scrolls.ALL, 5).withMetadata(2), //
+					new LootItem(Scrolls.ALL, 5).withMetadata(3), //
+					new LootItem(Scrolls.ALL, 5).withMetadata(4),
+					new LootItem(Scrolls.ALL, 10).withMetadata(5));
 			addLoot(e, 65, //
 					new LootItem(AvatarItems.itemOstrichEquipment, 10).withMetadata(0),
 					new LootItem(AvatarItems.itemOstrichEquipment, 10).withMetadata(1),
@@ -78,11 +80,11 @@ public class AvatarDungeonLoot {
 					new LootItem(AvatarItems.itemBisonArmor, 5).withMetadata(3),
 					new LootItem(AvatarItems.itemWaterPouch, 30));
 			addLoot(e, 100, //
-					new LootItem(AvatarItems.itemScroll, 20), //
-					new LootItem(AvatarItems.itemScroll, 5).withMetadata(1), //
-					new LootItem(AvatarItems.itemScroll, 5).withMetadata(2), //
-					new LootItem(AvatarItems.itemScroll, 5).withMetadata(3), //
-					new LootItem(AvatarItems.itemScroll, 5).withMetadata(4));
+					new LootItem(Scrolls.ALL, 20), //
+					new LootItem(Scrolls.ALL, 5).withMetadata(1), //
+					new LootItem(Scrolls.ALL, 5).withMetadata(2), //
+					new LootItem(Scrolls.ALL, 5).withMetadata(3), //
+					new LootItem(Scrolls.ALL, 5).withMetadata(4));
 			addLoot(e, 65, //
 					new LootItem(AvatarItems.itemOstrichEquipment, 10).withMetadata(0),
 					new LootItem(AvatarItems.itemOstrichEquipment, 10).withMetadata(1),
@@ -92,11 +94,11 @@ public class AvatarDungeonLoot {
 		if (isLootTable(e, CHESTS_VILLAGE_BLACKSMITH, CHESTS_IGLOO_CHEST, CHESTS_DESERT_PYRAMID,
 				CHESTS_JUNGLE_TEMPLE)) {
 			addLoot(e, 20, //
-					new LootItem(AvatarItems.itemScroll, 20), //
-					new LootItem(AvatarItems.itemScroll, 5).withMetadata(1), //
-					new LootItem(AvatarItems.itemScroll, 5).withMetadata(2), //
-					new LootItem(AvatarItems.itemScroll, 5).withMetadata(3), //
-					new LootItem(AvatarItems.itemScroll, 5).withMetadata(4));
+					new LootItem(Scrolls.ALL, 20), //
+					new LootItem(Scrolls.ALL, 5).withMetadata(1), //
+					new LootItem(Scrolls.ALL, 5).withMetadata(2), //
+					new LootItem(Scrolls.ALL, 5).withMetadata(3), //
+					new LootItem(Scrolls.ALL, 5).withMetadata(4));
 			addLoot(e, 65, //
 					new LootItem(AvatarItems.itemOstrichEquipment, 15).withMetadata(0),
 					new LootItem(AvatarItems.itemOstrichEquipment, 15).withMetadata(1),
@@ -104,30 +106,30 @@ public class AvatarDungeonLoot {
 		}
 
 		if (isLootTable(e, CHESTS_SPAWN_BONUS_CHEST)) {
-			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 1));
-			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 1));
-			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 1));
+			addLoot(e, 0, new LootItem(Scrolls.ALL, 1));
+			addLoot(e, 0, new LootItem(Scrolls.ALL, 1));
+			addLoot(e, 0, new LootItem(Scrolls.ALL, 1));
 		}
 
 		if (isLootTable(e, CHESTS_NETHER_BRIDGE)) {
-			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 40).withMetadata(8)); // combustion
+			addLoot(e, 0, new LootItem(Scrolls.ALL, 40).withMetadata(8)); // combustion
 		}
 		if (isLootTable(e, CHESTS_DESERT_PYRAMID)) {
-			addLoot(e, 70, new LootItem(AvatarItems.itemScroll, 30).withMetadata(7)); // sand
+			addLoot(e, 70, new LootItem(Scrolls.ALL, 30).withMetadata(7)); // sand
 		}
 		if (isLootTable(e, CHESTS_IGLOO_CHEST)) {
-			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 100).withMetadata(6)); // ice
-			addLoot(e, 60, new LootItem(AvatarItems.itemScroll, 40).withMetadata(6));
+			addLoot(e, 0, new LootItem(Scrolls.ALL, 100).withMetadata(6)); // ice
+			addLoot(e, 60, new LootItem(Scrolls.ALL, 40).withMetadata(6));
 		}
 		if (isLootTable(e, CHESTS_STRONGHOLD_LIBRARY)) {
-			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 20).withMetadata(5)); // lightning
+			addLoot(e, 0, new LootItem(Scrolls.ALL, 20).withMetadata(5)); // lightning
 		}
 		if (isLootTable(e, CHESTS_WOODLAND_MANSION)) {
-			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 100).withMetadata(1)); // Earth
+			addLoot(e, 0, new LootItem(Scrolls.ALL, 100).withMetadata(1)); // Earth
 		}
 		if (isLootTable(e, CHESTS_DESERT_PYRAMID)) {
-			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 60).withMetadata(7)); //Sand
-			addLoot(e, 0, new LootItem(AvatarItems.itemScroll, 20).withMetadata(1)); //Earth
+			addLoot(e, 0, new LootItem(Scrolls.ALL, 60).withMetadata(7)); //Sand
+			addLoot(e, 0, new LootItem(Scrolls.ALL, 20).withMetadata(1)); //Earth
 
 		}
 

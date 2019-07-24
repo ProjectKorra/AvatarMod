@@ -18,7 +18,10 @@ package com.crowsofwar.avatar.client;
 
 import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
+
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -43,18 +46,18 @@ public class AvatarItemRenderRegister {
 		locationsRegular = new ModelResourceLocation[ScrollType.amount()];
 		locationsGlow = new ModelResourceLocation[ScrollType.amount()];
 
-		for (int i = 0; i < ScrollType.amount(); i++) {
+		
 
-			ScrollType type = ScrollType.get(i);
-
-			locationsRegular[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
-					"inventory");
-			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow",
-					"inventory");
-
-			setCustomModelResourceLocation(AvatarItems.itemScroll, i, locationsGlow[i]);
-			setCustomModelResourceLocation(AvatarItems.itemScroll, i, locationsRegular[i]);
-
+		for (int i = 0; i <= 7; i++) {
+			forScroll(Scrolls.ALL);
+			forScroll(Scrolls.AIR);
+			forScroll(Scrolls.WATER);
+			forScroll(Scrolls.FIRE);
+			forScroll(Scrolls.EARTH);
+			forScroll(Scrolls.COMBUSTION);
+			forScroll(Scrolls.SAND);
+			forScroll(Scrolls.ICE);
+			forScroll(Scrolls.LIGHTNING);
 		}
 
 		for (int i = 0; i <= 5; i++) {
@@ -68,6 +71,18 @@ public class AvatarItemRenderRegister {
 			register(AvatarItems.itemOstrichEquipment, i);
 		}
 
+	}
+
+	private static void forScroll(ItemScroll scroll){
+		for (int i = 0; i < ScrollType.amount(); i++) {
+			ScrollType type = scroll.getScrollType();
+			locationsRegular[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
+					"inventory");
+			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow",
+					"inventory");
+			setCustomModelResourceLocation(scroll, i, locationsGlow[i]);
+			setCustomModelResourceLocation(scroll, i, locationsRegular[i]);
+		}
 	}
 
 	/**

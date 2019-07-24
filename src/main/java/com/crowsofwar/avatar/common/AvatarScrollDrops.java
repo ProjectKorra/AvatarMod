@@ -20,8 +20,10 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.item.ItemScroll;
-import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
+
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -52,8 +54,7 @@ public class AvatarScrollDrops {
 			double random = Math.random() * 100;
 			if (random < chance) {
 
-				ItemStack stack = new ItemStack(AvatarItems.itemScroll);
-				ItemScroll.setScrollType(stack, type);
+				ItemStack stack = new ItemStack(Scrolls.getItemForType(type));
 
 				EntityItem entityItem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
 						stack);
@@ -70,7 +71,7 @@ public class AvatarScrollDrops {
 
 		for (EntityItem drop : drops) {
 			ItemStack stack = drop.getItem();
-			if (stack.getItem() == AvatarItems.itemScroll) {
+			if (stack.getItem() instanceof ItemScroll) {
 
 				ScrollType type = ScrollType.values()[stack.getMetadata()];
 				String entityName = EntityList.getEntityString(entity);

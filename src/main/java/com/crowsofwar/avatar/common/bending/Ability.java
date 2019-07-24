@@ -20,7 +20,9 @@ package com.crowsofwar.avatar.common.bending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.item.ItemScroll;
+import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
+import com.crowsofwar.avatar.common.item.scroll.ItemScrollLightning;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
@@ -72,7 +74,7 @@ public abstract class Ability {
 	}
 
 	/*
-		Generally used for abilities that grant you stat boosts.
+	 * Generally used for abilities that grant you stat boosts.
 	 */
 	public boolean isBuff() {
 		return false;
@@ -80,9 +82,8 @@ public abstract class Ability {
 
 	/**
 	 * Generally used for abilities that help with evreryday tasks, such as mining,
-	 * moving water sources, or just moving around.
-	 * Ex: Mine Blocks, Air Jump, and Water Bubble are all utility
-	 * Abilities.
+	 * moving water sources, or just moving around. Ex: Mine Blocks, Air Jump, and
+	 * Water Bubble are all utility Abilities.
 	 */
 
 	public boolean isUtility() {
@@ -116,8 +117,8 @@ public abstract class Ability {
 	}
 
 	/**
-	 * Whether the ability is visible in the radial menu. Note that this doesn't hide the ability
-	 * from the skills menu.
+	 * Whether the ability is visible in the radial menu. Note that this doesn't
+	 * hide the ability from the skills menu.
 	 */
 	public boolean isVisibleInRadial() {
 		return true;
@@ -140,28 +141,29 @@ public abstract class Ability {
 
 	public boolean isCompatibleScroll(ItemStack stack, int level, AbilityData.AbilityTreePath path) {
 		if (getBendingId() != null) {
-			ItemScroll.ScrollType type = ItemScroll.getScrollType(stack);
 			if (stack.getItem() instanceof ItemScroll) {
+				Scrolls.ScrollType type = ((ItemScroll) stack.getItem()).getScrollType();
 				ItemScroll scroll = (ItemScroll) stack.getItem();
-				if (type.getBendingId() == getBendingId() || type == ItemScroll.ScrollType.ALL) {
+				if (type.getBendingId() == getBendingId() || type == Scrolls.ScrollType.ALL) {
 					if (level < 1) {
-						return scroll.getTier() >= getTier();
+						return /*scroll.getTier()*/10 >= getTier();
 					}
 					if (level == 1) {
-						return scroll.getTier() >= getTier() + 1;
+						return /*scroll.getTier()*/10 >= getTier() + 1;
 					}
-					return scroll.getTier() >= getTier() + 2;
+					return /*scroll.getTier()*/10 >= getTier() + 2;
 
 				}
 				if (getParentTier() > 0) {
-					if (Objects.requireNonNull(BendingStyles.get(getBendingId())).getParentBendingId() == type.getBendingId()) {
+					if (Objects.requireNonNull(BendingStyles.get(getBendingId())).getParentBendingId() == type
+							.getBendingId()) {
 						if (level < 1) {
-							return scroll.getTier() >= getParentTier();
+							return /*scroll.getTier()*/10 >= getParentTier();
 						}
 						if (level == 1) {
-							return scroll.getTier() >= getParentTier() + 1;
+							return /*scroll.getTier()*/10 >= getParentTier() + 1;
 						}
-						return scroll.getTier() >= getParentTier() + 2;
+						return /*scroll.getTier()*/10 >= getParentTier() + 2;
 					}
 				}
 			}
