@@ -63,7 +63,7 @@ public class Scrolls {
     }
 
     public static int getTierForStack(ItemStack stack) {
-        return stack.getMetadata();
+        return stack.getMetadata() + 1;
     }
 
     public enum ScrollType {

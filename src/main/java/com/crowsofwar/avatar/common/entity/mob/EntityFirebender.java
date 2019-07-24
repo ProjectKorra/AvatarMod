@@ -140,10 +140,10 @@ public class EntityFirebender extends EntityHumanBender {
 	@Override
 	protected void addBendingTasks() {
 		//TODO: AI for fire shot
-		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
-		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
+		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
+		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_shot", this, getBender())));
-		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_blast", this, getBender())));
+		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fire_blast", this, getBender())));
 		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("inferno_punch", this, getBender())));
 		if (getData().hasStatusControl(INFERNO_PUNCH_MAIN) || getData().hasStatusControl(INFERNO_PUNCH_FIRST) || getData().hasStatusControl(INFERNO_PUNCH_SECOND)) {
 			this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.35, true));

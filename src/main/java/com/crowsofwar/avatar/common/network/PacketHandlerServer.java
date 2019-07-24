@@ -272,12 +272,11 @@ public class PacketHandlerServer implements IPacketHandler {
 				if (activeSlot != null) {
 					ItemStack stack = activeSlot.getStack();
 					if (stack.getItem() instanceof ItemScroll) {
-
 						// Try to use this scroll
 						ScrollType type = Scrolls.getTypeForStack(stack);
 						assert type != null;
 						AbilityData aD = AbilityData.get(player, packet.getAbility().getName());
-						if (type.accepts(packet.getAbility().getBendingId()) && packet.getAbility().isCompatibleScroll(stack, aD.getLevel(), aD.getPath())) {
+						if (type.accepts(packet.getAbility().getBendingId()) && packet.getAbility().isCompatibleScroll(stack, aD.getLevel())) {
 							if (abilityData.getLevel() < 0 && !MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(player, abilityData.getAbility()))
 									|| !MinecraftForge.EVENT_BUS.post(new AbilityLevelEvent(player, abilityData.getAbility(), abilityData.getLevel() + 1, abilityData.getLevel() + 2))) {
 								activeSlot.putStack(ItemStack.EMPTY);

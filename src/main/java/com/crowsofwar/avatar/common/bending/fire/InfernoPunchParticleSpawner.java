@@ -52,7 +52,7 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 				pos = Vector.getLeftSide(entity, 0.55).plus(0, 1.8, 0);
 			}
 			Vector hand = pos.plus(direction.times(0.6));
-			World.spawnParticle(world.rand.nextBoolean() ? AvatarParticles.getParticleFlames() : AvatarParticles.getParticleFire(),
+			World.spawnParticle(AvatarParticles.getParticleFlames(),
 					hand.x(), hand.y(), hand.z(), particleCount, 0, 0, 0, 0.015);
 
 			return false;
