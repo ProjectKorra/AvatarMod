@@ -73,11 +73,6 @@ public class AvatarDungeonLoot {
 
 		//Nether
 		if (isLootTable(e, CHESTS_NETHER_BRIDGE)) {
-
-		}
-
-		//Village
-		if (isLootTable(e, CHESTS_VILLAGE_BLACKSMITH)) {
 			addLoot(e, 150,
 					new LootItem(AvatarItems.itemOstrichEquipment, 15).withMetadata(0),
 					new LootItem(AvatarItems.itemOstrichEquipment, 15).withMetadata(1),
@@ -85,27 +80,105 @@ public class AvatarDungeonLoot {
 					new LootItem(AvatarItems.itemBisonArmor, 20).withMetadata(1),
 					new LootItem(AvatarItems.itemBisonArmor, 10).withMetadata(0),
 					new LootItem(AvatarItems.itemBisonArmor, 10).withMetadata(2),
-					new LootItem(AvatarItems.itemBisonArmor, 5).withMetadata(3));
+					new LootItem(AvatarItems.itemBisonArmor, 5).withMetadata(3),
+					new LootItem(AvatarItems.itemBisonWhistle, 25));
+			addLoot(e, 120,
+					new LootItem(Scrolls.FIRE, 60 - AvatarUtils.getRandomNumberInRange(4, 6) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(4, 6)),
+					new LootItem(Scrolls.COMBUSTION, 40 - AvatarUtils.getRandomNumberInRange(1, 3) *5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)));
+		}
+
+		//Village
+		if (isLootTable(e, CHESTS_VILLAGE_BLACKSMITH)) {
+			addLoot(e, 150,
+					new LootItem(AvatarItems.itemOstrichEquipment, 15).withMetadata(0),
+					new LootItem(AvatarItems.itemOstrichEquipment, 15).withMetadata(1),
+					new LootItem(AvatarItems.itemOstrichEquipment, 20).withMetadata(2),
+					new LootItem(AvatarItems.itemBisonArmor, 20).withMetadata(1),
+					new LootItem(AvatarItems.itemBisonArmor, 10).withMetadata(0),
+					new LootItem(AvatarItems.itemBisonArmor, 10).withMetadata(2),
+					new LootItem(AvatarItems.itemBisonArmor, 5).withMetadata(3),
+					new LootItem(AvatarItems.itemBisonWhistle, 20));
+			addLoot(e, 120,
+					new LootItem(Scrolls.FIRE, 50 - AvatarUtils.getRandomNumberInRange(1, 4) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 4)),
+					new LootItem(Scrolls.AIR, 40 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)),
+					new LootItem(Scrolls.EARTH, 40 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)));
 		}
 
 		//End
 		if (isLootTable(e, CHESTS_END_CITY_TREASURE)) {
-
+			addLoot(e, 150,
+					new LootItem(AvatarItems.itemOstrichEquipment, 15).withMetadata(0),
+					new LootItem(AvatarItems.itemOstrichEquipment, 15).withMetadata(1),
+					new LootItem(AvatarItems.itemOstrichEquipment, 30).withMetadata(2),
+					new LootItem(AvatarItems.itemBisonArmor, 20).withMetadata(1),
+					new LootItem(AvatarItems.itemBisonArmor, 10).withMetadata(0),
+					new LootItem(AvatarItems.itemBisonArmor, 10).withMetadata(2),
+					new LootItem(AvatarItems.itemBisonArmor, 35).withMetadata(3));
+			addLoot(e, 175,
+					new LootItem(Scrolls.ALL, 50 - AvatarUtils.getRandomNumberInRange(4, 6) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(4, 6)),
+					new LootItem(Scrolls.EARTH, 50 - AvatarUtils.getRandomNumberInRange(4, 6) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(4, 6)),
+					new LootItem(Scrolls.WATER, 45 - AvatarUtils.getRandomNumberInRange(4, 6) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(4, 6)),
+					new LootItem(Scrolls.AIR, 45 - AvatarUtils.getRandomNumberInRange(4, 6) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(4, 6)),
+					new LootItem(Scrolls.FIRE, 45 - AvatarUtils.getRandomNumberInRange(4, 6) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(4, 6)),
+					new LootItem(Scrolls.LIGHTNING, 30 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)),
+					new LootItem(Scrolls.COMBUSTION, 30 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)),
+					new LootItem(Scrolls.ICE, 30 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)),
+					new LootItem(Scrolls.SAND, 30 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)));
 		}
 
 		//Earth structures
 		if (isLootTable(e, CHESTS_WOODLAND_MANSION, CHESTS_JUNGLE_TEMPLE)) {
-
+			addLoot(e, 120,
+					new LootItem(Scrolls.EARTH, 50 - AvatarUtils.getRandomNumberInRange(3, 5) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(3, 5)),
+					new LootItem(Scrolls.ALL, 30 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)),
+					new LootItem(AvatarItems.itemOstrichEquipment, 15).withMetadata(0),
+					new LootItem(AvatarItems.itemOstrichEquipment, 15).withMetadata(1),
+					new LootItem(AvatarItems.itemOstrichEquipment, 20).withMetadata(0),
+					new LootItem(AvatarItems.itemBisonArmor, 20).withMetadata(1),
+					new LootItem(AvatarItems.itemBisonArmor, 10).withMetadata(0),
+					new LootItem(AvatarItems.itemBisonArmor, 10).withMetadata(2),
+					new LootItem(AvatarItems.itemBisonArmor, 5).withMetadata(3),
+					new LootItem(AvatarItems.itemBisonWhistle, 25));
 		}
 
 		//Dungeons/Mineshafts
 		if (isLootTable(e, CHESTS_SIMPLE_DUNGEON, CHESTS_ABANDONED_MINESHAFT)) {
-
+			addLoot(e, 120,
+					new LootItem(Scrolls.ALL, 40 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
+					.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)),
+					new LootItem(Scrolls.EARTH, 40 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)),
+					new LootItem(Scrolls.WATER, 35 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)),
+					new LootItem(Scrolls.AIR, 35 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)),
+					new LootItem(Scrolls.FIRE, 35 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)));
 		}
 
 		//Desert
 		if (isLootTable(e, CHESTS_DESERT_PYRAMID)) {
-
+			addLoot(e, 120,
+				new LootItem(Scrolls.EARTH, 40 - AvatarUtils.getRandomNumberInRange(2, 4) * 5)
+						.withMetadata(AvatarUtils.getRandomNumberInRange(2, 4)),
+				new LootItem(Scrolls.SAND, 50 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
+						.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)));
 		}
 
 		//Tundra/Ice
@@ -171,17 +244,6 @@ public class AvatarDungeonLoot {
 					new LootItem(AvatarItems.itemBisonArmor, 10).withMetadata(0),
 					new LootItem(AvatarItems.itemBisonArmor, 10).withMetadata(2),
 					new LootItem(AvatarItems.itemBisonArmor, 5).withMetadata(3));
-		}
-
-		if (isLootTable(e, CHESTS_STRONGHOLD_LIBRARY)) {
-			addLoot(e, 0, new LootItem(Scrolls.ALL, 20).withMetadata(5)); // lightning
-		}
-		if (isLootTable(e, CHESTS_WOODLAND_MANSION)) {
-			addLoot(e, 0, new LootItem(Scrolls.ALL, 100).withMetadata(1)); // Earth
-		}
-		if (isLootTable(e, CHESTS_DESERT_PYRAMID)) {
-			addLoot(e, 0, new LootItem(Scrolls.ALL, 60).withMetadata(7)); //Sand
-			addLoot(e, 0, new LootItem(Scrolls.ALL, 20).withMetadata(1)); //Earth
 		}
 
 
