@@ -26,12 +26,16 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
@@ -46,9 +50,7 @@ public class EntityFirebender extends EntityHumanBender {
 
 	private static final ResourceLocation LOOT_TABLE = LootTableList
 			.register(new ResourceLocation("avatarmod", "firebender"));
-	/**
-	 * @param world
-	 */
+
 	public EntityFirebender(World world) {
 		super(world);
 	}
@@ -62,7 +64,7 @@ public class EntityFirebender extends EntityHumanBender {
 	public void applyAbilityLevels(int level) {
 		boolean fireShotPath = world.rand.nextBoolean();
 		boolean flamethrowerPath = world.rand.nextBoolean();
-		boolean infernoPunchPath = world.rand.nextBoolean();
+		//	boolean infernoPunchPath = world.rand.nextBoolean();
 		boolean fireBlastPath = world.rand.nextBoolean();
 		boolean fireballPath = world.rand.nextBoolean();
 		if (level <= 1) {
@@ -206,6 +208,16 @@ public class EntityFirebender extends EntityHumanBender {
 	@Override
 	protected boolean isTradeItem(Item item) {
 		return super.isTradeItem(item) || MOBS_CONFIG.isFireTradeItem(item);
+	}
+
+	@Nonnull
+	@Override
+	public ITextComponent getDisplayName() {
+		TextComponentString textcomponentstring = new TextComponentString("Level " + getLevel() + " " + ScorePlayerTeam.formatPlayerName(this.getTeam(), this.getName()));
+		textcomponentstring.getStyle().setHoverEvent(this.getHoverEvent());
+		textcomponentstring.getStyle().setInsertion(this.getCachedUniqueIdString());
+		return textcomponentstring;
+		//return super.getDisplayName();
 	}
 }
 
