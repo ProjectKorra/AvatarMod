@@ -136,7 +136,6 @@ public abstract class EntityHumanBender extends EntityBender {
 
 	protected abstract int getNumSkins();
 
-	//TODO: Make a DataParameter for getLevel
 
 	protected int getScrollsLeft() {
 		return  rand.nextInt(3) + 1;
@@ -243,6 +242,9 @@ public abstract class EntityHumanBender extends EntityBender {
 					System.out.println("Trade started");
 					// Take item
 					scrollsLeft--;
+					if (this instanceof EntityFirebender) {
+						((EntityFirebender) this).setScrollsLeft(scrollsLeft);
+					}
 					if (!player.capabilities.isCreativeMode) {
 						stack.shrink(1);
 					}

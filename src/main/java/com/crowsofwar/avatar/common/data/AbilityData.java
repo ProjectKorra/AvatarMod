@@ -150,6 +150,9 @@ public class AbilityData {
 	 * {@link #getPath()}.
 	 */
 	public void setPath(AbilityTreePath path) {
+		if (path == AbilityTreePath.FIRST || path == AbilityTreePath.SECOND) {
+			setLevel(3);
+		}
 		this.path = path;
 		checkPath();
 		save();

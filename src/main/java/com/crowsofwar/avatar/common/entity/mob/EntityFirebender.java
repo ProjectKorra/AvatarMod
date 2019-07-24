@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
@@ -57,7 +58,8 @@ public class EntityFirebender extends EntityHumanBender {
 	private static final ResourceLocation LOOT_TABLE = LootTableList
 			.register(new ResourceLocation("avatarmod", "firebender"));
 
-	private int scrollsLeft;
+	private static final DataParameter<Integer> SYNC_SCROLLS_LEFT = EntityDataManager
+			.createKey(EntityFirebender.class, DataSerializers.VARINT);
 	private static final DataParameter<Integer> SYNC_LEVEL = EntityDataManager
 			.createKey(EntityFirebender.class, DataSerializers.VARINT);
 	/**
@@ -66,8 +68,14 @@ public class EntityFirebender extends EntityHumanBender {
 	public EntityFirebender(World world) {
 		super(world);
 		getData().addBendingId(Firebending.ID);
+	}
 
+	public void setScrollsLeft(int scrolls) {
+		dataManager.set(SYNC_SCROLLS_LEFT, scrolls);
+	}
 
+	public int getScrolls() {
+		return dataManager.get(SYNC_SCROLLS_LEFT);
 	}
 
 	public int getLevel() {
@@ -78,6 +86,61 @@ public class EntityFirebender extends EntityHumanBender {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_LEVEL, AvatarUtils.getRandomNumberInRange(1, 7));
+		dataManager.register(SYNC_SCROLLS_LEFT, getLevel());
+		boolean fireShotPath = world.rand.nextBoolean();
+		boolean flamethrowerPath = world.rand.nextBoolean();
+		boolean infernoPunchPath = world.rand.nextBoolean();
+		boolean fireBlastPath = world.rand.nextBoolean();
+		boolean fireballPath = world.rand.nextBoolean();
+		if (getLevel() <= 1) {
+			getData().getAbilityData("fireball").setLevel(-1);
+			getData().getAbilityData("flamethrower").setLevel(-1);
+			getData().getAbilityData("fire_blast").setLevel(0);
+			getData().getAbilityData("fire_shot").setLevel(0);
+			getData().getAbilityData("inferno_punch").setLevel(-1);
+		}
+		if (getLevel() == 2) {
+			getData().getAbilityData("fireball").setLevel(-1);
+			getData().getAbilityData("flamethrower").setLevel(-1);
+			getData().getAbilityData("fire_blast").setLevel(0);
+			getData().getAbilityData("fire_shot").setLevel(1);
+			getData().getAbilityData("inferno_punch").setLevel(-1);
+		}
+		if (getLevel() == 3) {
+			getData().getAbilityData("fireball").setLevel(-1);
+			getData().getAbilityData("flamethrower").setLevel(0);
+			getData().getAbilityData("fire_blast").setLevel(1);
+			getData().getAbilityData("fire_shot").setLevel(1);
+			getData().getAbilityData("inferno_punch").setLevel(-1);
+		}
+		if (getLevel() == 4) {
+			getData().getAbilityData("fireball").setLevel(0);
+			getData().getAbilityData("flamethrower").setLevel(1);
+			getData().getAbilityData("fire_blast").setLevel(1);
+			getData().getAbilityData("fire_shot").setLevel(2);
+			getData().getAbilityData("inferno_punch").setLevel(-1);
+		}
+		if (getLevel() == 5) {
+			getData().getAbilityData("fireball").setLevel(1);
+			getData().getAbilityData("flamethrower").setLevel(2);
+			getData().getAbilityData("fire_blast").setLevel(2);
+			getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("inferno_punch").setLevel(0);
+		}
+		if (getLevel() == 6) {
+			getData().getAbilityData("fireball").setLevel(2);
+			getData().getAbilityData("flamethrower").setLevel(2);
+			getData().getAbilityData("fire_blast").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("inferno_punch").setLevel(1);
+		}
+		if (getLevel() == 7) {
+			getData().getAbilityData("fireball").setPath(fireballPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("flamethrower").setPath(flamethrowerPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("fire_blast").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("inferno_punch").setLevel(2);
+		}
 	}
 
 	@Override
@@ -98,7 +161,7 @@ public class EntityFirebender extends EntityHumanBender {
 		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
 		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_blast", this, getBender())));
-		//this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("inferno_punch", this, getBender())));
+		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("inferno_punch", this, getBender())));
 		if (getData().hasStatusControl(INFERNO_PUNCH_MAIN) || getData().hasStatusControl(INFERNO_PUNCH_FIRST) || getData().hasStatusControl(INFERNO_PUNCH_SECOND)) {
 			this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.35, true));
 		}
@@ -113,7 +176,7 @@ public class EntityFirebender extends EntityHumanBender {
 	@Override
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
 		getData().addBendingId(Firebending.ID);
-		if (level == 0 && !world.isRemote) {
+		/*if (level == 0 && !world.isRemote) {
 			Random rand = new Random();
 			int level = rand.nextInt(3) + 1;
 			if (level < 2) {
@@ -140,7 +203,7 @@ public class EntityFirebender extends EntityHumanBender {
 				scrollsLeft = 3;
 				this.level = 3;
 			}
-		}
+		}**/
 		return super.onInitialSpawn(difficulty, livingdata);
 	}
 
@@ -156,7 +219,7 @@ public class EntityFirebender extends EntityHumanBender {
 
 	@Override
 	protected int getScrollsLeft() {
-		return scrollsLeft;
+		return getScrolls();
 	}
 
 	@Override
