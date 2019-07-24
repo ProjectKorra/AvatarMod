@@ -20,6 +20,7 @@ import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.entity.IEntityLivingData;
@@ -28,6 +29,9 @@ import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -54,7 +58,8 @@ public class EntityFirebender extends EntityHumanBender {
 			.register(new ResourceLocation("avatarmod", "firebender"));
 
 	private int scrollsLeft;
-	private int level = 0;
+	private static final DataParameter<Integer> SYNC_LEVEL = EntityDataManager
+			.createKey(EntityFirebender.class, DataSerializers.VARINT);
 	/**
 	 * @param world
 	 */
@@ -63,6 +68,16 @@ public class EntityFirebender extends EntityHumanBender {
 		getData().addBendingId(Firebending.ID);
 
 
+	}
+
+	public int getLevel() {
+		return dataManager.get(SYNC_LEVEL);
+	}
+
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_LEVEL, AvatarUtils.getRandomNumberInRange(1, 7));
 	}
 
 	@Override
@@ -82,7 +97,7 @@ public class EntityFirebender extends EntityHumanBender {
 	protected void addBendingTasks() {
 		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
 		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
-		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_arc", this, getBender())));
+		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_blast", this, getBender())));
 		//this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("inferno_punch", this, getBender())));
 		if (getData().hasStatusControl(INFERNO_PUNCH_MAIN) || getData().hasStatusControl(INFERNO_PUNCH_FIRST) || getData().hasStatusControl(INFERNO_PUNCH_SECOND)) {
 			this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.35, true));
