@@ -46,6 +46,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opencl.CL;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Comparator;
@@ -192,7 +193,9 @@ public class AvatarUiRenderer extends Gui {
 
 			if (shouldRender) {
 				float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
-						((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER)) / 200 : CLIENT_CONFIG.bendingCycleAlpha;
+						//Ensures that at 0 duration the opacity is the same as the opacity when not fading.
+						((float) CLIENT_CONFIG.chiBarSettings.chibarDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER))
+								/ CLIENT_CONFIG.chiBarSettings.chibarDuration * CLIENT_CONFIG.chiBarAlpha : CLIENT_CONFIG.chiBarAlpha;
 				GlStateManager.color(1, 1, 1, alpha);
 
 				if (data.getAllBending().isEmpty()) return;
@@ -271,7 +274,8 @@ public class AvatarUiRenderer extends Gui {
 			if (shouldRender) {
 				if (data.getActiveBending() != null) {
 					float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
-							((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER)) / 200 : CLIENT_CONFIG.bendingCycleAlpha;
+							((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER))
+							/ CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration * CLIENT_CONFIG.bendingCycleAlpha : CLIENT_CONFIG.bendingCycleAlpha;
 					GlStateManager.color(1, 1, 1, alpha);
 					drawBendingIcon(0, -30, data.getActiveBending(), 50.0, 50.0);
 
