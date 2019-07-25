@@ -133,7 +133,7 @@ public class AbilityFireShot extends Ability {
 		public Behavior onUpdate(EntityShockwave entity) {
 			if (entity.getOwner() != null) {
 				BlockPos prevPos = entity.getPosition();
-				for (int degree = 0; degree < 360; degree += 10) {
+				for (int degree = 0; degree < 360; degree += 5) {
 					double angle = Math.toRadians(degree);
 					//Sin x for shockwave, cos x for sphere. We want a fire wave, so we sin x.
 					double x = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
