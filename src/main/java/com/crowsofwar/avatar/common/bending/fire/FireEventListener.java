@@ -12,26 +12,20 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.*;
-import static com.crowsofwar.avatar.common.bending.fire.AbilityFireShot.getIgnitedTime;
-import static com.crowsofwar.avatar.common.bending.fire.AbilityFireShot.ignitedTimes;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
@@ -139,28 +133,4 @@ public class FireEventListener {
 			}
 		}
 	}
-
-	/*@SubscribeEvent
-	public static void onUpdateEvent(LivingEvent.LivingUpdateEvent event) {
-		if (event.getEntityLiving() != null) {
-			EntityLivingBase entity = event.getEntityLiving();
-			if (entity instanceof EntityPlayer || entity instanceof EntityBender) {
-				Bender b = Bender.get(entity);
-				if (b != null) {
-					if (b.getData().hasBendingId(Firebending.ID)) {
-						if (!ignitedTimes.isEmpty()) {
-							for (BlockPos pos : ignitedTimes.keySet()) {
-								if (getIgnitedTime(pos) >= entity.world.getWorldTime()) {
-									if (entity.world.getBlockState(pos).getBlock() == Blocks.FIRE) {
-										entity.world.setBlockToAir(pos);
-										ignitedTimes.remove(pos);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}**/
 }

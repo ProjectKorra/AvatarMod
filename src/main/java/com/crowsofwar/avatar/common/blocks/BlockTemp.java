@@ -60,7 +60,7 @@ public class BlockTemp extends Block implements ITileEntityProvider {
      * 
      * @param world
      * @param pos
-     * @param lifetime
+     * @param lifetime Ticks
      * @param toCopy
      */
     public static void createTempBlock(World world, BlockPos pos, int lifetime, IBlockState toCopy) {

@@ -43,7 +43,6 @@ public class AvatarDungeonLoot {
 
 	@SubscribeEvent
 	public static void onLootLoad(LootTableLoadEvent e) {
-
 		if (!STATS_CONFIG.addDungeonLoot) {
 			return;
 		}
@@ -193,16 +192,16 @@ public class AvatarDungeonLoot {
 		//Bonus Chest/Starter Chest
 		if (isLootTable(e, CHESTS_SPAWN_BONUS_CHEST)) {
 			addLoot(e, 150,
-					new LootItem(Scrolls.ALL, 40 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
-							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)),
-					new LootItem(Scrolls.EARTH, 40 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
-							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)),
-					new LootItem(Scrolls.WATER, 40 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
-							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)),
-					new LootItem(Scrolls.AIR, 40 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
-							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)),
-					new LootItem(Scrolls.FIRE, 40 - AvatarUtils.getRandomNumberInRange(1, 3) * 5)
-							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 3)));
+					new LootItem(Scrolls.ALL, 40 - AvatarUtils.getRandomNumberInRange(1, 2) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 2)),
+					new LootItem(Scrolls.EARTH, 40 - AvatarUtils.getRandomNumberInRange(1, 2) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 2)),
+					new LootItem(Scrolls.WATER, 40 - AvatarUtils.getRandomNumberInRange(1, 2) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 2)),
+					new LootItem(Scrolls.AIR, 40 - AvatarUtils.getRandomNumberInRange(1, 2) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 2)),
+					new LootItem(Scrolls.FIRE, 40 - AvatarUtils.getRandomNumberInRange(1, 2) * 5)
+							.withMetadata(AvatarUtils.getRandomNumberInRange(1, 2)));
 		}
 
 		if (isLootTable(e, CHESTS_NETHER_BRIDGE, CHESTS_END_CITY_TREASURE, CHESTS_STRONGHOLD_CORRIDOR)) {
