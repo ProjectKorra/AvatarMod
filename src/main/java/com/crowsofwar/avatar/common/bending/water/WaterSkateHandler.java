@@ -228,6 +228,7 @@ public class WaterSkateHandler extends TickHandler {
 	 * position at the surface. If the player is out of the water, returns the
 	 * player's ypos. If the player is too deep, returns -1.
 	 */
+	//TODO: Change from an int to stop weird shenanigans
 	private int getSurfacePos(EntityLivingBase player) {
 
 		World world = player.world;

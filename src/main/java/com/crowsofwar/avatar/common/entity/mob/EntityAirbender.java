@@ -111,6 +111,7 @@ public class EntityAirbender extends EntityHumanBender {
 			getData().getAbilityData("air_bubble").setLevel(-1);
 			getData().getAbilityData("air_gust").setLevel(0);
 			getData().getAbilityData("airblade").setLevel(0);
+			getData().getAbilityData("cloud_burst").setLevel(-1);
 		}
 		if (level == 2) {
 			getData().getAbilityData("air_bubble").setLevel(-1);

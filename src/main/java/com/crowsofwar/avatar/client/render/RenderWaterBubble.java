@@ -54,6 +54,12 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		GlStateManager.enableBlend();
 		GlStateManager.color(colorEnhancement, colorEnhancement, colorEnhancement, 0.6f);
 
+		float rotation = ticks * 20F;
+		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.rotate(rotation * 0.2F, 1, 0, 0);
+		GlStateManager.rotate(rotation, 0, 1, 0);
+		GlStateManager.rotate(rotation * 0.2F, 0, 0, 1);
+
 		Matrix4f mat = new Matrix4f();
 		mat.translate((float) x - 0.5f, (float) y * bubble.getSize(), (float) z - 0.5f);
 
@@ -104,7 +110,6 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		drawQuad(2, rtf, rbf, lbf, ltf, 0, v1, 1, v2); // -z
 		drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2); // +z
 
-		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.disableBlend();
 
 	}
