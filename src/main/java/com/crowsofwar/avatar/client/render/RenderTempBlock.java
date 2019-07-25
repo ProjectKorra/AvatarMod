@@ -11,9 +11,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumBlockRenderType;
 
+/**
+ * @author Aang23
+ */
 public class RenderTempBlock extends TileEntitySpecialRenderer<TileBlockTemp> {
     @Override
     public void render(TileBlockTemp te, double x, double y, double z, float partialTicks, int destroyStage,

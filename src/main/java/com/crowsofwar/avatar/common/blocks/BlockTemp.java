@@ -17,6 +17,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+/**
+ * @author Aang23
+ */
 public class BlockTemp extends Block implements ITileEntityProvider {
 
     public BlockTemp() {
@@ -52,6 +55,14 @@ public class BlockTemp extends Block implements ITileEntityProvider {
         ((World) world).setBlockState(pos, Blocks.AIR.getDefaultState());
     }
 
+    /**
+     * Create a temporary block at the specified location.
+     * 
+     * @param world
+     * @param pos
+     * @param lifetime
+     * @param toCopy
+     */
     public static void createTempBlock(World world, BlockPos pos, int lifetime, IBlockState toCopy) {
         IBlockState state = AvatarBlocks.BLOCK_TEMP.getDefaultState();
         world.setBlockState(pos, state);

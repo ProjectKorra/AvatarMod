@@ -7,6 +7,9 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 
+/**
+ * @author Aang23
+ */
 public class TileBlockTemp extends TileEntity implements ITickable {
 
     private IBlockState renderBlock = Blocks.AIR.getDefaultState();
