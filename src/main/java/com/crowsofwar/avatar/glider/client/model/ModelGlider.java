@@ -260,8 +260,9 @@ public class ModelGlider extends ModelBase {
 
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
         super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-//        GlStateManager.translate(0, -0.5f, 0); //move to on the back (quite close)
-//        GlStateManager.rotate(-90, 0.0F, 0.0F, 1.0F);
+        //Handles gliders scale rotation and translation for third person perspective
+        GlStateManager.translate(0, 0.2f, 0); //move to on the back (quite close)
+        GlStateManager.rotate(90, 1.0F, 0.0F, 0.0F);
 
         if (!OpenGliderPlayerHelper.shouldBeGliding(Minecraft.getMinecraft().player))
         {

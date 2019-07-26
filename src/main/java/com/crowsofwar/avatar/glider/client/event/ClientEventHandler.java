@@ -160,6 +160,7 @@ public class ClientEventHandler extends Gui {
      * @param partialTicks - the partial ticks
      */
     private void setRotationFirstPersonPerspective(EntityPlayer player, float partialTicks) {
+        //Handles gliders scale rotation and translation for first person perspective
         double interpolatedYaw = (player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * partialTicks);
         //rotate the gliderBasic to the same orientation as the player is facing
         GlStateManager.rotate((float) -interpolatedYaw, 0, 1, 0);
