@@ -28,7 +28,7 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
     }
 
     public void doRenderLayer(@Nonnull AbstractClientPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        //This is where we can control the scale, rotation and translation of the glider in 3rd person perspective.
+
         if (!entitylivingbaseIn.isInvisible() && ConfigHandler.enableRendering3PP) { //if not invisible and should render
 
             boolean gliding = GliderHelper.getIsGliderDeployed(entitylivingbaseIn); //get if gliding (to render or not)
@@ -40,15 +40,9 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
 
                 //push matrix
                 GlStateManager.pushMatrix();
-                GlStateManager.rotate(-270.0F, 1.0F, 0.0F, 0.0F);
+                GlStateManager.rotate(270.0F, 1.0F, 0.0F, 0.0F);
 //                GlStateManager.rotate(-90.0F, 0.0F, 0.0F, 1.0F);
                 GlStateManager.translate(0, -.5f, 0);
-                GlStateManager.popMatrix();
-                GlStateManager.pushMatrix();
-                GlStateManager.rotate(-270.0F, 0.0F, 1.0F, 0.0F);
-                GlStateManager.popMatrix();
-                GlStateManager.pushMatrix();
-                GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
                 //set rotation angles of the glider and render it
                 this.modelGlider.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entitylivingbaseIn);
 
