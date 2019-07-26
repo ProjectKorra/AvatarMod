@@ -29,6 +29,7 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
 
     public void doRenderLayer(@Nonnull AbstractClientPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 
+        //Handles glider render layers scale rotation and translation for third person perspective
         if (!entitylivingbaseIn.isInvisible() && ConfigHandler.enableRendering3PP) { //if not invisible and should render
 
             boolean gliding = GliderHelper.getIsGliderDeployed(entitylivingbaseIn); //get if gliding (to render or not)
@@ -64,7 +65,7 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
         try {
             RenderPlayer renderPlayer = ObfuscationReflectionHelper.getPrivateValue(RenderManager.class, renderManager, "playerRenderer", "field_178637_m");
             renderPlayer.addLayer(new LayerGlider(renderPlayer));
-            System.out.println("added layer");
+            System.out.println("added glider layer");
         } catch (Exception e) {
             // failed to add layer
             //ToDo: Add logger class
