@@ -56,7 +56,7 @@ public class AiAirBubble extends BendingAi {
 				bubble -> bubble.getOwner() == entity) != null;
 		boolean lowHealth = entity.getHealth() / entity.getMaxHealth() <= 0.5f;
 
-		if (timeExecuting > 200 || (entity.getAttackTarget() != null && entity.getDistance(entity.getAttackTarget()) < 2) && entity.getRNG().nextBoolean()) {
+		if (timeExecuting > 200 || (entity.getAttackTarget() != null && entity.getDistance(entity.getAttackTarget()) < 3) && entity.getRNG().nextBoolean()) {
 			execStatusControl(StatusControl.BUBBLE_EXPAND);
 			return false;
 

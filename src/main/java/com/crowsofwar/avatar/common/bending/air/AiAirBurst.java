@@ -18,14 +18,14 @@ public class AiAirBurst extends BendingAi {
 	protected void startExec() {
 		BendingData data = bender.getData();
 		execAbility();
-		data.getMiscData().setAbilityCooldown(30);
+		data.getMiscData().setAbilityCooldown(120);
 	}
 
 
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistance(target) < 8
+		return target != null && entity.getDistance(target) <= 7
 				&& bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
 	}
 

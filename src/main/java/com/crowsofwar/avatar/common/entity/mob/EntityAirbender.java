@@ -18,16 +18,14 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -72,9 +70,10 @@ public class EntityAirbender extends EntityHumanBender {
 
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(4, Objects.requireNonNull(Abilities.getAi("air_bubble", this, Bender.get(this))));
+		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("air_bubble", this, Bender.get(this))));
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("air_gust", this, Bender.get(this))));
 		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("airblade", this, Bender.get(this))));
+		this.tasks.addTask(4, Objects.requireNonNull(Abilities.getAi("air_burst", this, Bender.get(this))));
 		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("cloudburst", this, Bender.get(this))));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.4 + getLevel() / 20F, true));
 	}
@@ -107,22 +106,61 @@ public class EntityAirbender extends EntityHumanBender {
 
 	@Override
 	public void applyAbilityLevels(int level) {
+
+		boolean airGustPath = world.rand.nextBoolean();
+		boolean cloudBurstPath = world.rand.nextBoolean();
+		boolean airBubblePath = world.rand.nextBoolean();
+		boolean airbladePath = world.rand.nextBoolean();
 		if (level == 1) {
 			getData().getAbilityData("air_bubble").setLevel(-1);
 			getData().getAbilityData("air_gust").setLevel(0);
 			getData().getAbilityData("airblade").setLevel(0);
 			getData().getAbilityData("cloud_burst").setLevel(-1);
+			getData().getAbilityData("air_burst").setLevel(-1);
 		}
 		if (level == 2) {
 			getData().getAbilityData("air_bubble").setLevel(-1);
 			getData().getAbilityData("air_gust").setLevel(1);
 			getData().getAbilityData("airblade").setLevel(0);
+			getData().getAbilityData("cloud_burst").setLevel(0);
+			getData().getAbilityData("air_burst").setLevel(-1);
 		}
-		if (level >= 3) {
+		if (level == 3) {
 			getData().getAbilityData("air_bubble").setLevel(0);
 			getData().getAbilityData("air_gust").setLevel(2);
 			getData().getAbilityData("airblade").setLevel(1);
+			getData().getAbilityData("cloud_burst").setLevel(0);
+			getData().getAbilityData("air_burst").setLevel(-1);
 		}
+		if (level == 4) {
+			getData().getAbilityData("air_bubble").setLevel(0);
+			getData().getAbilityData("air_gust").setLevel(2);
+			getData().getAbilityData("airblade").setLevel(2);
+			getData().getAbilityData("cloud_burst").setLevel(1);
+			getData().getAbilityData("air_burst").setLevel(0);
+		}
+		if (level == 5) {
+			getData().getAbilityData("air_bubble").setLevel(1);
+			getData().getAbilityData("air_gust").setPath(airGustPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("airblade").setPath(airbladePath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("cloud_burst").setLevel(1);
+			getData().getAbilityData("air_burst").setLevel(0);
+		}
+		if (level == 6) {
+			getData().getAbilityData("air_bubble").setLevel(2);
+			getData().getAbilityData("air_gust").setPath(airGustPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("airblade").setPath(airbladePath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("cloud_burst").setPath(cloudBurstPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("air_burst").setLevel(1);
+		}
+		if (level == 7) {
+			getData().getAbilityData("air_bubble").setPath(airBubblePath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("air_gust").setPath(airGustPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("airblade").setPath(airbladePath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("cloud_burst").setPath(cloudBurstPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+			getData().getAbilityData("air_burst").setLevel(2);
+		}
+
 	}
 
 
@@ -142,7 +180,6 @@ public class EntityAirbender extends EntityHumanBender {
 		textcomponentstring.getStyle().setHoverEvent(this.getHoverEvent());
 		textcomponentstring.getStyle().setInsertion(this.getCachedUniqueIdString());
 		return textcomponentstring;
-		//return super.getDisplayName();
 	}
 
 	@Override
