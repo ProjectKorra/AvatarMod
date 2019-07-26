@@ -21,7 +21,6 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
     private final RenderPlayer playerRenderer;
     /** The model used by the gliderBasic. */
     private final ModelGlider modelGlider = new ModelGlider();
-//    private final ModelBars modelBars = new ModelBars();
 
     public LayerGlider(RenderPlayer playerRendererIn) {
         this.playerRenderer = playerRendererIn;
@@ -42,7 +41,6 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
                 //push matrix
                 GlStateManager.pushMatrix();
                 GlStateManager.rotate(270.0F, 1.0F, 0.0F, 0.0F);
-//                GlStateManager.rotate(-90.0F, 0.0F, 0.0F, 1.0F);
                 GlStateManager.translate(0, -.5f, 0);
                 //set rotation angles of the glider and render it
                 this.modelGlider.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entitylivingbaseIn);

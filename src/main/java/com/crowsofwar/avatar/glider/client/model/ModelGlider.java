@@ -266,10 +266,7 @@ public class ModelGlider extends ModelBase {
 
         if (!OpenGliderPlayerHelper.shouldBeGliding(Minecraft.getMinecraft().player))
         {
-//            GlStateManager.scale(1.1, 1.1, 1.2); //scale slightly larger
-//            GlStateManager.rotate(270.0F, 0.0F, 0.0F, 1.0F);
-//            GlStateManager.rotate(-90, 1.0F, 0.0F, 0.0F);
-
+            GlStateManager.scale(1.1, 1.1, 1.2); //scale slightly larger
         }
 
     }
