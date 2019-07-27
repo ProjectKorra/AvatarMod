@@ -35,7 +35,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -55,19 +54,6 @@ public class AvatarDamageSource {
 	public static final DamageSource COMBUSTION = new DamageSource("avatar_Combustion");
 	public static final DamageSource SAND = new DamageSource("avatar_Sand");
 	public static final DamageSource ICE = new DamageSource("avatar_Ice");
-
-	public static HashMap<String, Float> dragonDamage = new HashMap<>();
-
-	public static void setDragonDamage(String dragon, float damage) {
-		if (dragonDamage.containsKey(dragon)) {
-			dragonDamage.replace(dragon, getDragonDamage(dragon), damage);
-		}
-		else dragonDamage.put(dragon, damage);
-	}
-
-	public static float getDragonDamage(String dragon) {
-		return dragonDamage.getOrDefault(dragon, 0F);
-	}
 
 	/**
 	 * Returns whether the given damage was inflicted using an Avatar damage source.
@@ -407,24 +393,12 @@ public class AvatarDamageSource {
 	}
 
 	@SubscribeEvent
-	public static void onAttackDragon(LivingAttackEvent event) {
-		if (AvatarDamageSource.isAvatarDamageSource(event.getSource())) {
-			if (event.getEntityLiving() instanceof EntityDragon) {
-				setDragonDamage(event.getEntityLiving().getUniqueID().toString(), event.getAmount());
-			}
+	public static void onDragonAttack(LivingAttackEvent event) {
+		if (AvatarDamageSource.isAvatarDamageSource(event.getSource()) && event.getEntityLiving() instanceof EntityDragon) {
+			EntityDragon d = (EntityDragon) event.getEntityLiving();
+			System.out.println(event.getAmount());
 		}
 	}
-
-	@SubscribeEvent
-	public static void hurtDragon(LivingHurtEvent event) {
-		if (event.getEntityLiving() instanceof EntityDragon) {
-			if (AvatarDamageSource.isAvatarDamageSource(event.getSource())) {
-				event.setAmount(getDragonDamage(event.getEntityLiving().getUniqueID().toString()));
-				dragonDamage.remove(event.getEntityLiving().getUniqueID().toString());
-			}
-		}
-	}
-
 	@SubscribeEvent
 	public static void onElementalDamage(LivingHurtEvent event) {
 		//TODO: Config for all this stuff; definitely in the rewrite
@@ -432,6 +406,7 @@ public class AvatarDamageSource {
 		Entity hit = event.getEntity();
 		if (hit instanceof EntityLivingBase) {
 			if (hit instanceof EntityDragon && AvatarDamageSource.isAvatarDamageSource(source)) {
+
 				event.setCanceled(false);
 				event.setAmount(event.getAmount());
 			}

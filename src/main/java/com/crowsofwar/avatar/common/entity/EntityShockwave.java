@@ -219,7 +219,7 @@ public class EntityShockwave extends AvatarEntity {
 			if (!targets.isEmpty()) {
 				for (Entity target : targets) {
 					if (this.canCollideWith(target) && target != this) {
-						if (this.canDamageEntity(target) && !world.isRemote) {
+						if (this.canDamageEntity(target)) {
 							DamageSource ds = getSphere() ? AvatarDamageSource.causeSphericalShockwaveDamage(target, getOwner(), source) : AvatarDamageSource.causeShockwaveDamage(target, getOwner(), source);
 							if (target.attackEntityFrom(ds, damage)) {
 								int amount = performanceAmount > SCORE_MOD_SMALL ? performanceAmount : (int) SCORE_MOD_SMALL;

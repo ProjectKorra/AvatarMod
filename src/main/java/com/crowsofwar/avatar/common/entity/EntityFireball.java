@@ -353,6 +353,7 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 				}
 			}
 		}
+		setDead();
 	}
 
 	public void damageEntity(Entity entity) {
