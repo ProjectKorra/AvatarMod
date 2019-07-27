@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.common.damageutils;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.client.AvatarItemRenderRegister;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityFlying;
@@ -30,11 +29,13 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -54,6 +55,19 @@ public class AvatarDamageSource {
 	public static final DamageSource COMBUSTION = new DamageSource("avatar_Combustion");
 	public static final DamageSource SAND = new DamageSource("avatar_Sand");
 	public static final DamageSource ICE = new DamageSource("avatar_Ice");
+
+	public static HashMap<String, Float> dragonDamage = new HashMap<>();
+
+	public static void setDragonDamage(String dragon, float damage) {
+		if (dragonDamage.containsKey(dragon)) {
+			dragonDamage.replace(dragon, getDragonDamage(dragon), damage);
+		}
+		else dragonDamage.put(dragon, damage);
+	}
+
+	public static float getDragonDamage(String dragon) {
+		return dragonDamage.getOrDefault(dragon, 0F);
+	}
 
 	/**
 	 * Returns whether the given damage was inflicted using an Avatar damage source.
@@ -390,6 +404,25 @@ public class AvatarDamageSource {
 	 */
 	public static DamageSource causeSandstormDamage(Entity hit, @Nullable Entity owner) {
 		return new EntityDamageSourceIndirect("avatar_Sand_sandstorm", hit, owner);
+	}
+
+	@SubscribeEvent
+	public static void onAttackDragon(LivingAttackEvent event) {
+		if (AvatarDamageSource.isAvatarDamageSource(event.getSource())) {
+			if (event.getEntityLiving() instanceof EntityDragon) {
+				setDragonDamage(event.getEntityLiving().getUniqueID().toString(), event.getAmount());
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void hurtDragon(LivingHurtEvent event) {
+		if (event.getEntityLiving() instanceof EntityDragon) {
+			if (AvatarDamageSource.isAvatarDamageSource(event.getSource())) {
+				event.setAmount(getDragonDamage(event.getEntityLiving().getUniqueID().toString()));
+				dragonDamage.remove(event.getEntityLiving().getUniqueID().toString());
+			}
+		}
 	}
 
 	@SubscribeEvent
