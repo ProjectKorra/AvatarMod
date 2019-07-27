@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.glider.common.item;
+package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.item.AvatarItems;

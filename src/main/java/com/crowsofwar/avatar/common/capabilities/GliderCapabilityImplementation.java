@@ -1,9 +1,9 @@
-package com.crowsofwar.avatar.glider.common.capabilities;
+package com.crowsofwar.avatar.common.capabilities;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.api.capabilities.IGliderCapabilityHandler;
-import com.crowsofwar.avatar.glider.common.network.PacketHandler;
-import com.crowsofwar.avatar.glider.common.network.PacketSyncGliderDataToClient;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketHandler;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketSyncGliderDataToClient;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;

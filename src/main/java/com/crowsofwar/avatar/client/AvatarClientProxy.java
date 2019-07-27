@@ -51,6 +51,7 @@ import com.crowsofwar.avatar.api.capabilities.IGliderCapabilityHandler;
 import com.crowsofwar.avatar.client.event.GliderEventHandler;
 import com.crowsofwar.avatar.glider.client.renderer.LayerGlider;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder.Type;
+import com.crowsofwar.avatar.client.renderer.LayerGlider;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
 import net.minecraft.block.state.IBlockState;

@@ -1,8 +1,8 @@
-package com.crowsofwar.avatar.glider.common.wind;
+package com.crowsofwar.avatar.common.wind;
 
 import com.crowsofwar.avatar.api.item.IGlider;
-import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
-import com.crowsofwar.avatar.glider.common.wind.generator.OpenSimplexNoise;
+import com.crowsofwar.avatar.common.config.ConfigHandler;
+import com.crowsofwar.avatar.common.wind.generator.OpenSimplexNoise;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 

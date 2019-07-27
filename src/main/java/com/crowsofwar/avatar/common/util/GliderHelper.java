@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.glider.common.util;
+package com.crowsofwar.avatar.common.util;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import net.minecraft.item.ItemStack;

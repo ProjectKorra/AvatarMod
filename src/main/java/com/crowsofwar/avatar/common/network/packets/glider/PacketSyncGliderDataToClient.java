@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.glider.common.network;
+package com.crowsofwar.avatar.common.network.packets.glider;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;

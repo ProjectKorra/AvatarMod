@@ -1,9 +1,9 @@
-package com.crowsofwar.avatar.glider.client.renderer;
+package com.crowsofwar.avatar.client.renderer;
 
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.api.item.IGlider;
-import com.crowsofwar.avatar.glider.client.model.ModelGlider;
-import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
+import com.crowsofwar.avatar.client.model.ModelGlider;
+import com.crowsofwar.avatar.common.config.ConfigHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;

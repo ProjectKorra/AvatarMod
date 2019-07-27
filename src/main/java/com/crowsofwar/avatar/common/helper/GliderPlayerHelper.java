@@ -1,13 +1,13 @@
-package com.crowsofwar.avatar.glider.common.helper;
+package com.crowsofwar.avatar.common.helper;
 
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.api.item.IGlider;
-import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
-import com.crowsofwar.avatar.glider.common.network.PacketHandler;
-import com.crowsofwar.avatar.glider.common.network.PacketUpdateGliderDamage;
-import com.crowsofwar.avatar.glider.common.wind.WindHelper;
+import com.crowsofwar.avatar.common.config.ConfigHandler;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketHandler;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketUpdateGliderDamage;
+import com.crowsofwar.avatar.common.wind.WindHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

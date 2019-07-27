@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.glider.common.config;
+package com.crowsofwar.avatar.common.config;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
