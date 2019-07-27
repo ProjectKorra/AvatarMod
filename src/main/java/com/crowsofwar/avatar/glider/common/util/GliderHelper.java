@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagList;
 
 import java.util.ArrayList;
 
-public class OpenGliderHelper {
+public class GliderHelper {
 
     public static ArrayList<ItemStack> getUpgradesFromNBT(ItemStack glider) {
         ArrayList<ItemStack> upgradesArrayList = new ArrayList<>();

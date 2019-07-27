@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.glider.common.proxy;
+package com.crowsofwar.avatar.client;
 
 import com.crowsofwar.avatar.glider.api.capabilities.IGliderCapabilityHandler;
 import net.minecraft.entity.player.EntityPlayer;

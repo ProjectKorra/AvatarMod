@@ -1,10 +1,9 @@
 package com.crowsofwar.avatar.glider.api.item;
 
-import com.crowsofwar.avatar.glider.api.helper.GliderHelper;
 import com.crowsofwar.avatar.glider.common.helper.GliderPlayerHelper;
 import com.crowsofwar.avatar.glider.common.network.PacketHandler;
 import com.crowsofwar.avatar.glider.common.network.PacketUpdateClientTarget;
-import com.crowsofwar.avatar.glider.common.util.OpenGliderHelper;
+import com.crowsofwar.avatar.glider.common.util.GliderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityTracker;
@@ -76,7 +75,7 @@ public class ItemHangGliderBase extends Item implements IGlider {
             }
 
             private boolean isGlidingGlider(EntityLivingBase entityIn, ItemStack stack){
-                return entityIn != null && entityIn instanceof EntityPlayer && GliderHelper.getIsGliderDeployed((EntityPlayer)entityIn) && GliderPlayerHelper.getGlider((EntityPlayer)entityIn) == stack;
+                return entityIn != null && entityIn instanceof EntityPlayer && com.crowsofwar.avatar.glider.api.helper.GliderHelper.getIsGliderDeployed((EntityPlayer)entityIn) && GliderPlayerHelper.getGlider((EntityPlayer)entityIn) == stack;
             }
 
         });
@@ -106,16 +105,16 @@ public class ItemHangGliderBase extends Item implements IGlider {
             if (!hand.equals(EnumHand.MAIN_HAND)) return ActionResult.newResult(EnumActionResult.PASS, itemStack); //return if not using main hand
 
             //old deployment state
-            boolean isDeployed = GliderHelper.getIsGliderDeployed(player);
+            boolean isDeployed = com.crowsofwar.avatar.glider.api.helper.GliderHelper.getIsGliderDeployed(player);
 
             //toggle state of glider deployment
-            GliderHelper.setIsGliderDeployed(player, !isDeployed);
+            com.crowsofwar.avatar.glider.api.helper.GliderHelper.setIsGliderDeployed(player, !isDeployed);
 
             //client only
             if (!world.isRemote) {
                 //send packet to nearby players to update visually
                 EntityTracker tracker = world.getMinecraftServer().getWorld(player.dimension).getEntityTracker();
-                tracker.sendToTracking(player, PacketHandler.HANDLER.getPacketFrom(new PacketUpdateClientTarget(player, GliderHelper.getIsGliderDeployed(player))));
+                tracker.sendToTracking(player, PacketHandler.HANDLER.getPacketFrom(new PacketUpdateClientTarget(player, com.crowsofwar.avatar.glider.api.helper.GliderHelper.getIsGliderDeployed(player))));
             }
 
         } else {
@@ -182,7 +181,7 @@ public class ItemHangGliderBase extends Item implements IGlider {
 
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        ArrayList<ItemStack> upgrades = OpenGliderHelper.getUpgradesFromNBT(stack);
+        ArrayList<ItemStack> upgrades = GliderHelper.getUpgradesFromNBT(stack);
         for (ItemStack upgrade : upgrades) {
             tooltip.add(upgrade.getDisplayName() + " " + I18n.format("openglider.tooltip.upgrade"));
         }
@@ -309,7 +308,7 @@ public class ItemHangGliderBase extends Item implements IGlider {
 
     @Override
     public ArrayList<ItemStack> getUpgrades(ItemStack glider) {
-        return OpenGliderHelper.getUpgradesFromNBT(glider); //ToDo: too tightly tied, not API friendly
+        return GliderHelper.getUpgradesFromNBT(glider); //ToDo: too tightly tied, not API friendly
     }
 
     @Override
