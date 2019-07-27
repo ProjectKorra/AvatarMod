@@ -1,16 +1,13 @@
 package com.crowsofwar.avatar.glider.client.event;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.glider.api.helper.GliderHelper;
 import com.crowsofwar.avatar.glider.api.item.IGlider;
 import com.crowsofwar.avatar.glider.client.model.ModelGlider;
 import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
-import com.crowsofwar.avatar.glider.common.helper.OpenGliderPlayerHelper;
-import com.crowsofwar.avatar.server.AvatarKeybindingServer;
+import com.crowsofwar.avatar.glider.common.helper.GliderPlayerHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -26,11 +23,8 @@ import net.minecraftforge.client.event.RenderSpecificHandEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.swing.text.JTextComponent;
 
 @SideOnly(Side.CLIENT)
 public class ClientEventHandler extends Gui {
@@ -45,7 +39,7 @@ public class ClientEventHandler extends Gui {
         if (event.getEntity() instanceof EntityPlayer) {
             EntityPlayer playerEntity = (EntityPlayer) event.getEntity();
             if (GliderHelper.getIsGliderDeployed((EntityPlayer) event.getEntity())) { //if gliderBasic deployed
-                if (!OpenGliderPlayerHelper.shouldBeGliding(playerEntity)) return; //don't continue if player is not flying
+                if (!GliderPlayerHelper.shouldBeGliding(playerEntity)) return; //don't continue if player is not flying
                 if (Minecraft.getMinecraft().currentScreen instanceof GuiInventory) return; //don't rotate if the player rendered is in an inventory
                 rotateToHorizontal(event.getEntityPlayer(), event.getX(), event.getY(), event.getZ()); //rotate player to flying position
                 this.needToPop = true; //mark the matrix to pop
@@ -102,7 +96,7 @@ public class ClientEventHandler extends Gui {
         if (ConfigHandler.enableRenderingFPP && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) { //rendering enabled and first person perspective
             EntityPlayer playerEntity = Minecraft.getMinecraft().player;
             if (GliderHelper.getIsGliderDeployed(playerEntity)) { //if gliderBasic deployed
-                if (OpenGliderPlayerHelper.shouldBeGliding(playerEntity)) { //if flying
+                if (GliderPlayerHelper.shouldBeGliding(playerEntity)) { //if flying
                     renderGliderFirstPersonPerspective(event); //render hang gliderBasic above head
                 }
             }

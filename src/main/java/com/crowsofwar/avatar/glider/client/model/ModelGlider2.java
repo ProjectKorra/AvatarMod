@@ -1,14 +1,12 @@
 package com.crowsofwar.avatar.glider.client.model;
 
-import com.crowsofwar.avatar.glider.common.helper.OpenGliderPlayerHelper;
+import com.crowsofwar.avatar.glider.common.helper.GliderPlayerHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 import static com.crowsofwar.avatar.AvatarInfo.MOD_ID;
 
@@ -93,7 +91,7 @@ public class ModelGlider2 extends ModelBase {
             GlStateManager.translate(0, -.9f, 0);
             GlStateManager.rotate(180, 1F, 0, 0);
             GlStateManager.popMatrix();
-        } else if (!OpenGliderPlayerHelper.shouldBeGliding(Minecraft.getMinecraft().player))
+        } else if (!GliderPlayerHelper.shouldBeGliding(Minecraft.getMinecraft().player))
         {
             GlStateManager.pushMatrix();
             GlStateManager.scale(1.1, 1.1, 1.2); //scale slightly larger
@@ -123,7 +121,7 @@ public class ModelGlider2 extends ModelBase {
 //        else
 //            GlStateManager.translate(0, -0.35, 0); //move to on the back (quite close)
 //
-//        if (!OpenGliderPlayerHelper.shouldBeGliding(player)) {
+//        if (!GliderPlayerHelper.shouldBeGliding(player)) {
 //            GlStateManager.scale(0.9, 0.9, 0.8); //scale slightly smaller
 //            GlStateManager.translate(0, 0, -.5); // move up if on ground
 //        }

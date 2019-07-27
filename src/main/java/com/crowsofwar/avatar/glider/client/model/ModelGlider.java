@@ -1,13 +1,12 @@
 package com.crowsofwar.avatar.glider.client.model;
 
-import com.crowsofwar.avatar.glider.common.helper.OpenGliderPlayerHelper;
+import com.crowsofwar.avatar.glider.common.helper.GliderPlayerHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 import static com.crowsofwar.avatar.AvatarInfo.MOD_ID;
 
@@ -264,7 +263,7 @@ public class ModelGlider extends ModelBase {
         GlStateManager.translate(0, 0.2f, 0); //move to on the back (quite close)
         GlStateManager.rotate(90, 1.0F, 0.0F, 0.0F);
 
-        if (!OpenGliderPlayerHelper.shouldBeGliding(Minecraft.getMinecraft().player))
+        if (!GliderPlayerHelper.shouldBeGliding(Minecraft.getMinecraft().player))
         {
             GlStateManager.scale(1.1, 1.1, 1.2); //scale slightly larger
         }

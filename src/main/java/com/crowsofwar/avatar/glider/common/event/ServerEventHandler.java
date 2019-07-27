@@ -3,7 +3,7 @@ package com.crowsofwar.avatar.glider.common.event;
 import com.crowsofwar.avatar.glider.api.capabilities.CapabilityHelper;
 import com.crowsofwar.avatar.glider.api.helper.GliderHelper;
 import com.crowsofwar.avatar.glider.common.capabilities.GliderCapabilityImplementation;
-import com.crowsofwar.avatar.glider.common.helper.OpenGliderPlayerHelper;
+import com.crowsofwar.avatar.glider.common.helper.GliderPlayerHelper;
 import com.crowsofwar.avatar.glider.common.network.PacketHandler;
 import com.crowsofwar.avatar.glider.common.network.PacketUpdateClientTarget;
 import net.minecraft.entity.Entity;
@@ -54,7 +54,7 @@ public class ServerEventHandler {
     @SubscribeEvent
     public void onTick(TickEvent.PlayerTickEvent event){
         if (GliderHelper.getIsGliderDeployed(event.player)){
-            OpenGliderPlayerHelper.updatePosition(event.player);
+            GliderPlayerHelper.updatePosition(event.player);
         }
     }
 
