@@ -9,14 +9,19 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 public abstract class EntityOffensive extends AvatarEntity {
 
 	//Used for all entities that damage things
 	private static final DataParameter<Float> SYNC_DAMAGE = EntityDataManager
 			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
+
+	private AxisAlignedBB expandedHitbox;
 
 	public EntityOffensive(World world) {
 		super(world);
@@ -33,10 +38,17 @@ public abstract class EntityOffensive extends AvatarEntity {
 	@Override
 	public void onCollideWithEntity(Entity entity) {
 		super.onCollideWithEntity(entity);
+		if (!isPiercing())
+		Explode();
+
 	}
 
 	public void Explode() {
 
+	}
+
+	public void applyPiercingCollision() {
+		
 	}
 
 	protected float getAoeDamage() {
@@ -63,6 +75,14 @@ public abstract class EntityOffensive extends AvatarEntity {
 		return AvatarDamageSource.causeFireDamage(target, getOwner());
 	}
 
+	protected double getExpandedHitboxWidth() {
+		return 0.25;
+	}
+
+	protected double getExpandedHitboxHeight() {
+		return 0.25;
+	}
+
 	protected int getFireTime() {
 		return 0;
 	}
@@ -71,8 +91,19 @@ public abstract class EntityOffensive extends AvatarEntity {
 		return false;
 	}
 
+	public AxisAlignedBB getExpandedHitbox() {
+		return expandedHitbox;
+	}
+
 	@Override
 	public boolean canBePushed() {
 		return !isPiercing();
 	}
+
+	@Override
+	public void setEntityBoundingBox(@Nonnull AxisAlignedBB bb) {
+		super.setEntityBoundingBox(bb);
+		expandedHitbox = bb.grow(getExpandedHitboxWidth(), getExpandedHitboxHeight(), getExpandedHitboxWidth());
+	}
+
 }
