@@ -19,9 +19,6 @@ package com.crowsofwar.avatar.common.item;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 
-import com.crowsofwar.avatar.glider.common.item.ItemHangGliderAdvanced;
-import com.crowsofwar.avatar.glider.common.item.ItemHangGliderBasic;
-import com.crowsofwar.avatar.glider.common.item.ItemHangGliderPart;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -31,7 +28,6 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 

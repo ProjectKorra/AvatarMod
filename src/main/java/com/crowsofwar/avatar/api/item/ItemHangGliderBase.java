@@ -1,9 +1,9 @@
 package com.crowsofwar.avatar.api.item;
 
-import com.crowsofwar.avatar.glider.common.helper.GliderPlayerHelper;
-import com.crowsofwar.avatar.glider.common.network.PacketHandler;
-import com.crowsofwar.avatar.glider.common.network.PacketUpdateClientTarget;
-import com.crowsofwar.avatar.glider.common.util.GliderHelper;
+import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketHandler;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketUpdateClientTarget;
+import com.crowsofwar.avatar.common.util.GliderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityTracker;

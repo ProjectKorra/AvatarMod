@@ -1,6 +1,6 @@
-package com.crowsofwar.avatar.glider.client.model;
+package com.crowsofwar.avatar.client.model;
 
-import com.crowsofwar.avatar.glider.common.helper.GliderPlayerHelper;
+import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;

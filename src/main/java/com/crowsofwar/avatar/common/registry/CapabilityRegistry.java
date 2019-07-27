@@ -1,6 +1,6 @@
-package com.crowsofwar.avatar.glider.common.registry;
+package com.crowsofwar.avatar.common.registry;
 
-import com.crowsofwar.avatar.glider.common.capabilities.GliderCapabilityImplementation;
+import com.crowsofwar.avatar.common.capabilities.GliderCapabilityImplementation;
 
 public class CapabilityRegistry {
 

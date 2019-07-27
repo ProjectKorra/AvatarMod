@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.glider.common.network;
+package com.crowsofwar.avatar.common.network.packets.glider;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;

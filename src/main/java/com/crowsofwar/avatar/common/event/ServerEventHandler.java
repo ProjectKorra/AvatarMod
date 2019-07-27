@@ -1,11 +1,11 @@
-package com.crowsofwar.avatar.glider.common.event;
+package com.crowsofwar.avatar.common.event;
 
 import com.crowsofwar.avatar.api.capabilities.CapabilityHelper;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
-import com.crowsofwar.avatar.glider.common.capabilities.GliderCapabilityImplementation;
-import com.crowsofwar.avatar.glider.common.helper.GliderPlayerHelper;
-import com.crowsofwar.avatar.glider.common.network.PacketHandler;
-import com.crowsofwar.avatar.glider.common.network.PacketUpdateClientTarget;
+import com.crowsofwar.avatar.common.capabilities.GliderCapabilityImplementation;
+import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketHandler;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketUpdateClientTarget;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

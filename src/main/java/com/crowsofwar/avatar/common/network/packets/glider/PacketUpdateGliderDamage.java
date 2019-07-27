@@ -1,10 +1,10 @@
-package com.crowsofwar.avatar.glider.common.network;
+package com.crowsofwar.avatar.common.network.packets.glider;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.api.item.IGlider;
-import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
-import com.crowsofwar.avatar.glider.common.helper.GliderPlayerHelper;
+import com.crowsofwar.avatar.common.config.ConfigHandler;
+import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
