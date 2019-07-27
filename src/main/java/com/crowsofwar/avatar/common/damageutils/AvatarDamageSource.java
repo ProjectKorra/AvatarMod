@@ -397,6 +397,7 @@ public class AvatarDamageSource {
 	public static void onDragonAttack(LivingAttackEvent event) {
 		if (AvatarDamageSource.isAvatarDamageSource(event.getSource()) && event.getEntityLiving() instanceof EntityDragon) {
 			EntityDragon d = (EntityDragon) event.getEntityLiving();
+			d.attackEntityFromPart(d.dragonPartBody, event.getSource(), event.getAmount());
 			System.out.println(event.getAmount());
 		}
 	}
