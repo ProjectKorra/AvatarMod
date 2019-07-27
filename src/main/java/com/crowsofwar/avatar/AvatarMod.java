@@ -47,7 +47,7 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.crowsofwar.avatar.glider.api.upgrade.UpgradeItems;
+import com.crowsofwar.avatar.api.upgrade.UpgradeItems;
 import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
 import com.crowsofwar.avatar.glider.common.event.ServerEventHandler;
 import com.crowsofwar.avatar.glider.common.network.PacketHandler;

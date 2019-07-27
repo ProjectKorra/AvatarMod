@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.glider.api.capabilities;
+package com.crowsofwar.avatar.api.capabilities;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;

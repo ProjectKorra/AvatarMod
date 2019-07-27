@@ -1,10 +1,10 @@
-package com.crowsofwar.avatar.glider.client.event;
+package com.crowsofwar.avatar.client.event;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.glider.api.helper.GliderHelper;
-import com.crowsofwar.avatar.glider.api.item.IGlider;
+import com.crowsofwar.avatar.api.helper.GliderHelper;
+import com.crowsofwar.avatar.api.item.IGlider;
 import com.crowsofwar.avatar.glider.client.model.ModelGlider;
 import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
 import com.crowsofwar.avatar.glider.common.helper.GliderPlayerHelper;
@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ClientEventHandler extends Gui {
+public class GliderEventHandler extends Gui {
 
 
     //==================================================Rotating the Player to a Flying Position (Horizontal)=====================================

@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.glider.common.network;
 
-import com.crowsofwar.avatar.glider.api.helper.GliderHelper;
+import com.crowsofwar.avatar.api.helper.GliderHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

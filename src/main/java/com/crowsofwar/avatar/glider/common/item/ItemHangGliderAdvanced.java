@@ -3,13 +3,11 @@ package com.crowsofwar.avatar.glider.common.item;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.glider.api.item.ItemHangGliderBase;
+import com.crowsofwar.avatar.api.item.ItemHangGliderBase;
 import com.crowsofwar.avatar.glider.client.model.ModelGlider;
 import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-
-import static com.crowsofwar.avatar.AvatarInfo.DOMAIN;
 
 
 public class ItemHangGliderAdvanced extends ItemHangGliderBase implements AvatarItem {
