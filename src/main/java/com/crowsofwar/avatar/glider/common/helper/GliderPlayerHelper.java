@@ -2,8 +2,8 @@ package com.crowsofwar.avatar.glider.common.helper;
 
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.glider.api.helper.GliderHelper;
-import com.crowsofwar.avatar.glider.api.item.IGlider;
+import com.crowsofwar.avatar.api.helper.GliderHelper;
+import com.crowsofwar.avatar.api.item.IGlider;
 import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
 import com.crowsofwar.avatar.glider.common.network.PacketHandler;
 import com.crowsofwar.avatar.glider.common.network.PacketUpdateGliderDamage;
@@ -17,7 +17,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 

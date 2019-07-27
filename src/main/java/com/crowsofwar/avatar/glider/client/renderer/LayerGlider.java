@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.glider.client.renderer;
 
-import com.crowsofwar.avatar.glider.api.helper.GliderHelper;
-import com.crowsofwar.avatar.glider.api.item.IGlider;
+import com.crowsofwar.avatar.api.helper.GliderHelper;
+import com.crowsofwar.avatar.api.item.IGlider;
 import com.crowsofwar.avatar.glider.client.model.ModelGlider;
 import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
 import net.minecraft.client.Minecraft;

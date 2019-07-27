@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.glider.common.network;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.glider.api.helper.GliderHelper;
-import com.crowsofwar.avatar.glider.api.item.IGlider;
+import com.crowsofwar.avatar.api.helper.GliderHelper;
+import com.crowsofwar.avatar.api.item.IGlider;
 import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
 import com.crowsofwar.avatar.glider.common.helper.GliderPlayerHelper;
 import io.netty.buffer.ByteBuf;

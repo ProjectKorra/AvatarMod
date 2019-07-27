@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.glider.common.capabilities;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.glider.api.capabilities.IGliderCapabilityHandler;
+import com.crowsofwar.avatar.api.capabilities.IGliderCapabilityHandler;
 import com.crowsofwar.avatar.glider.common.network.PacketHandler;
 import com.crowsofwar.avatar.glider.common.network.PacketSyncGliderDataToClient;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -14,7 +14,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 import static com.crowsofwar.avatar.AvatarInfo.MOD_ID;
-import static com.crowsofwar.avatar.glider.api.capabilities.CapabilityHelper.GLIDER_CAPABILITY;
+import static com.crowsofwar.avatar.api.capabilities.CapabilityHelper.GLIDER_CAPABILITY;
 
 public final class GliderCapabilityImplementation {
 

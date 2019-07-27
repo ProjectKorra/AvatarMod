@@ -24,7 +24,7 @@ import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
-import com.crowsofwar.avatar.glider.api.capabilities.IGliderCapabilityHandler;
+import com.crowsofwar.avatar.api.capabilities.IGliderCapabilityHandler;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;

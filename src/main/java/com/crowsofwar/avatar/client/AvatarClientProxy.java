@@ -46,9 +46,9 @@ import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSendViewStatus;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
-import com.crowsofwar.avatar.glider.api.capabilities.CapabilityHelper;
-import com.crowsofwar.avatar.glider.api.capabilities.IGliderCapabilityHandler;
-import com.crowsofwar.avatar.glider.client.event.ClientEventHandler;
+import com.crowsofwar.avatar.api.capabilities.CapabilityHelper;
+import com.crowsofwar.avatar.api.capabilities.IGliderCapabilityHandler;
+import com.crowsofwar.avatar.client.event.GliderEventHandler;
 import com.crowsofwar.avatar.glider.client.renderer.LayerGlider;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder.Type;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
@@ -245,7 +245,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		LayerGlider.addLayer();
 
 		//register client events
-		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
+		MinecraftForge.EVENT_BUS.register(new GliderEventHandler());
 
 		ParticleManager pm = mc.effectRenderer;
 

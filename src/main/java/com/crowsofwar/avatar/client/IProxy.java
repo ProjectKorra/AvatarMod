@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.client;
 
-import com.crowsofwar.avatar.glider.api.capabilities.IGliderCapabilityHandler;
+import com.crowsofwar.avatar.api.capabilities.IGliderCapabilityHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;

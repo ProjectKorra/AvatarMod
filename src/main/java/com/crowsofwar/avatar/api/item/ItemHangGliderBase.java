@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.glider.api.item;
+package com.crowsofwar.avatar.api.item;
 
 import com.crowsofwar.avatar.glider.common.helper.GliderPlayerHelper;
 import com.crowsofwar.avatar.glider.common.network.PacketHandler;
@@ -75,7 +75,7 @@ public class ItemHangGliderBase extends Item implements IGlider {
             }
 
             private boolean isGlidingGlider(EntityLivingBase entityIn, ItemStack stack){
-                return entityIn != null && entityIn instanceof EntityPlayer && com.crowsofwar.avatar.glider.api.helper.GliderHelper.getIsGliderDeployed((EntityPlayer)entityIn) && GliderPlayerHelper.getGlider((EntityPlayer)entityIn) == stack;
+                return entityIn != null && entityIn instanceof EntityPlayer && com.crowsofwar.avatar.api.helper.GliderHelper.getIsGliderDeployed((EntityPlayer)entityIn) && GliderPlayerHelper.getGlider((EntityPlayer)entityIn) == stack;
             }
 
         });
@@ -105,16 +105,16 @@ public class ItemHangGliderBase extends Item implements IGlider {
             if (!hand.equals(EnumHand.MAIN_HAND)) return ActionResult.newResult(EnumActionResult.PASS, itemStack); //return if not using main hand
 
             //old deployment state
-            boolean isDeployed = com.crowsofwar.avatar.glider.api.helper.GliderHelper.getIsGliderDeployed(player);
+            boolean isDeployed = com.crowsofwar.avatar.api.helper.GliderHelper.getIsGliderDeployed(player);
 
             //toggle state of glider deployment
-            com.crowsofwar.avatar.glider.api.helper.GliderHelper.setIsGliderDeployed(player, !isDeployed);
+            com.crowsofwar.avatar.api.helper.GliderHelper.setIsGliderDeployed(player, !isDeployed);
 
             //client only
             if (!world.isRemote) {
                 //send packet to nearby players to update visually
                 EntityTracker tracker = world.getMinecraftServer().getWorld(player.dimension).getEntityTracker();
-                tracker.sendToTracking(player, PacketHandler.HANDLER.getPacketFrom(new PacketUpdateClientTarget(player, com.crowsofwar.avatar.glider.api.helper.GliderHelper.getIsGliderDeployed(player))));
+                tracker.sendToTracking(player, PacketHandler.HANDLER.getPacketFrom(new PacketUpdateClientTarget(player, com.crowsofwar.avatar.api.helper.GliderHelper.getIsGliderDeployed(player))));
             }
 
         } else {

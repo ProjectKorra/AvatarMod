@@ -1,6 +1,5 @@
-package com.crowsofwar.avatar.glider.api.upgrade;
+package com.crowsofwar.avatar.api.upgrade;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;

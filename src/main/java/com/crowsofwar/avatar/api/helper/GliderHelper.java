@@ -1,9 +1,9 @@
-package com.crowsofwar.avatar.glider.api.helper;
+package com.crowsofwar.avatar.api.helper;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.glider.api.capabilities.CapabilityHelper;
-import com.crowsofwar.avatar.glider.api.capabilities.IGliderCapabilityHandler;
-import com.crowsofwar.avatar.glider.api.item.IGlider;
+import com.crowsofwar.avatar.api.capabilities.CapabilityHelper;
+import com.crowsofwar.avatar.api.capabilities.IGliderCapabilityHandler;
+import com.crowsofwar.avatar.api.item.IGlider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 

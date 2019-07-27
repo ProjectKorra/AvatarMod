@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.glider.api.item;
+package com.crowsofwar.avatar.api.item;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

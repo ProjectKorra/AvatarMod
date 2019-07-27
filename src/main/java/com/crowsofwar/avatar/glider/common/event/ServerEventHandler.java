@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.glider.common.event;
 
-import com.crowsofwar.avatar.glider.api.capabilities.CapabilityHelper;
-import com.crowsofwar.avatar.glider.api.helper.GliderHelper;
+import com.crowsofwar.avatar.api.capabilities.CapabilityHelper;
+import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.glider.common.capabilities.GliderCapabilityImplementation;
 import com.crowsofwar.avatar.glider.common.helper.GliderPlayerHelper;
 import com.crowsofwar.avatar.glider.common.network.PacketHandler;
