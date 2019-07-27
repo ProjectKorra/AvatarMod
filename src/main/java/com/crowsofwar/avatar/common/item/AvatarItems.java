@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.item;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 
+import com.crowsofwar.avatar.common.GliderInfo;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -87,8 +88,8 @@ AvatarItems {
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
-		itemRender(GLIDER_BASIC, 0, AvatarInfo.ITEM_GLIDER_BASIC_NAME);
-		itemRender(GLIDER_ADV, 0, AvatarInfo.ITEM_GLIDER_ADVANCED_NAME);
+		itemRender(GLIDER_BASIC, 0, GliderInfo.ITEM_GLIDER_BASIC_NAME);
+		itemRender(GLIDER_ADV, 0, GliderInfo.ITEM_GLIDER_ADVANCED_NAME);
 		itemRender(GLIDER_PART_LeftWing, 0, ItemHangGliderPart.names[0]);
 		itemRender(GLIDER_PART_RightWing, 1, ItemHangGliderPart.names[1]);
 		itemRender(GLIDER_PART_Scaffolding, 2, ItemHangGliderPart.names[2]);
@@ -110,8 +111,8 @@ AvatarItems {
 		Item[] itemsArr = allItems.toArray(new Item[allItems.size()]);
 		e.getRegistry().registerAll(itemsArr);
 
-		e.getRegistry().register(new ItemHangGliderPart().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_PART_NAME));
-		e.getRegistry().register(new ItemHangGliderBasic().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_BASIC_NAME));
+		e.getRegistry().register(new ItemHangGliderPart().setRegistryName("avatarmod:" + GliderInfo.ITEM_GLIDER_PART_NAME));
+		e.getRegistry().register(new ItemHangGliderBasic().setRegistryName("avatarmod:" + GliderInfo.ITEM_GLIDER_BASIC_NAME));
 //		e.getRegistry().register(new ItemHangGliderAdvanced().setRegistryName("avatarmod:" + AvatarInfo.ITEM_GLIDER_ADVANCED_NAME));
 
 		AvatarMod.proxy.registerItemModels();

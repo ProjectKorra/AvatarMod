@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.glider.common.wind.generator;
+package com.crowsofwar.avatar.common.wind.generator;
 
 /*
  * OpenSimplex Noise in Java.
