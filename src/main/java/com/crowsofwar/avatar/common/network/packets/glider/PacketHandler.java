@@ -1,12 +1,13 @@
 package com.crowsofwar.avatar.common.network.packets.glider;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.GliderInfo;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class PacketHandler {
 
-    public static final SimpleNetworkWrapper HANDLER = new SimpleNetworkWrapper(AvatarInfo.NETWORK_CHANNEL);
+    public static final SimpleNetworkWrapper HANDLER = new SimpleNetworkWrapper(GliderInfo.NETWORK_CHANNEL);
 
     public static void init() {
         int id = 0;

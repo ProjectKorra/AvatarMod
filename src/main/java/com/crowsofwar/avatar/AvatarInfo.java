@@ -44,23 +44,9 @@ public class AvatarInfo {
 	public static final String VERSION = "@version@";
 	public static final String DOMAIN = MOD_ID.toLowerCase(Locale.ENGLISH) + ":"; //for resources
 	public static final SemanticVersion SEMANTIC_VERSION = SemanticVersion.of(VERSION);
-	public static final String NETWORK_CHANNEL = "opngldr";
-
-	public static final String ITEM_GLIDER_BASIC_NAME = "hang_glider_basic";
-	public static final String ITEM_GLIDER_ADVANCED_NAME = "hang_glider_advanced";
-	public static final String ITEM_GLIDER_PART_SCAFFOLDING= "scaffolding";
-	public static final String ITEM_GLIDER_PART_LEFTWING = "wing_left";
-	public static final String ITEM_GLIDER_PART_RIGHTWING = "wing_right";
-	public static final String ITEM_GLIDER_PART_NAME = "hang_glider_part";
 
 	public static final boolean IS_PREVIEW = SEMANTIC_VERSION.isPreRelease();
 
 	public static boolean DEBUG = false;
 	public static final boolean IS_DEVELOPMENT = IS_PREVIEW || DEBUG;
-
-	public static final class NBT_KEYS {
-
-		public static final String UPGRADES = "upgrades";
-
-	}
 }

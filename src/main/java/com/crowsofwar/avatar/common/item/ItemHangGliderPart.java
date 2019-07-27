@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.GliderInfo;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -17,7 +18,7 @@ public class ItemHangGliderPart extends Item {
         super();
         setCreativeTab(AvatarItems.tabItems);
         setHasSubtypes(true);
-        setTranslationKey(MOD_ID +":" + AvatarInfo.ITEM_GLIDER_PART_NAME+ ".");
+        setTranslationKey(MOD_ID +":" + GliderInfo.ITEM_GLIDER_PART_NAME+ ".");
     }
 
     @Override

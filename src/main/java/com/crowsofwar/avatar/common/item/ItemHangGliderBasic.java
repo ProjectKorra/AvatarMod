@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.item;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.api.item.ItemHangGliderBase;
 import com.crowsofwar.avatar.client.model.ModelGlider;
+import com.crowsofwar.avatar.common.GliderInfo;
 import com.crowsofwar.avatar.common.config.ConfigHandler;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -13,7 +14,7 @@ public class ItemHangGliderBasic extends ItemHangGliderBase {
     public ItemHangGliderBasic() {
         super(ConfigHandler.basicGliderHorizSpeed, ConfigHandler.basicGliderVertSpeed, ConfigHandler.basicGliderShiftHorizSpeed, ConfigHandler.basicGliderShiftVertSpeed, ConfigHandler.advancedGliderSpaceHorizSpeed, ConfigHandler.advancedGliderSpaceVertSpeed, ConfigHandler.basicGliderWindModifier, ConfigHandler.basicGliderAirResistance, ConfigHandler.basicGliderTotalDurability, ModelGlider.MODEL_GLIDER_BASIC_TEXTURE_RL);
         setCreativeTab(AvatarItems.tabItems);
-        setTranslationKey(MOD_ID +":" + AvatarInfo.ITEM_GLIDER_BASIC_NAME);
+        setTranslationKey(MOD_ID +":" + GliderInfo.ITEM_GLIDER_BASIC_NAME);
     }
 
     //ToDo: Needed?
