@@ -392,6 +392,7 @@ public class AvatarDamageSource {
 		return new EntityDamageSourceIndirect("avatar_Sand_sandstorm", hit, owner);
 	}
 
+	//From what I can see, the ender dragon isn't even attacked properly. So, why aren't abilities attacking it?
 	@SubscribeEvent
 	public static void onDragonAttack(LivingAttackEvent event) {
 		if (AvatarDamageSource.isAvatarDamageSource(event.getSource()) && event.getEntityLiving() instanceof EntityDragon) {
