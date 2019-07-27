@@ -335,7 +335,7 @@ public class EntityCloudBall extends AvatarEntity {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				damage = getDamage();
 			}
-			if (entity.attackEntityFrom(ds, damage)) {
+			if (entity.attackEntityFrom(ds, getDamage())) {
 				abilityData.addXp(SKILLS_CONFIG.cloudburstHit);
 				BattlePerformanceScore.addMediumScore(getOwner());
 
