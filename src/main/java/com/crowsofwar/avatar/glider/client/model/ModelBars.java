@@ -65,7 +65,7 @@ public class ModelBars extends ModelBase {
 //        else
 //            GlStateManager.translate(0, -0.35, 0); //move to on the back (quite close)
 //
-//        if (!OpenGliderPlayerHelper.shouldBeGliding(player)) {
+//        if (!GliderPlayerHelper.shouldBeGliding(player)) {
 //            GlStateManager.scale(0.9, 0.9, 0.8); //scale slightly smaller
 //            GlStateManager.translate(0, 0, -.5); // move up if on ground
 //        }

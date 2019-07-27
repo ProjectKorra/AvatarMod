@@ -4,7 +4,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.glider.api.helper.GliderHelper;
 import com.crowsofwar.avatar.glider.api.item.IGlider;
 import com.crowsofwar.avatar.glider.common.config.ConfigHandler;
-import com.crowsofwar.avatar.glider.common.helper.OpenGliderPlayerHelper;
+import com.crowsofwar.avatar.glider.common.helper.GliderPlayerHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,7 +34,7 @@ public class PacketUpdateGliderDamage implements IMessage{
             Minecraft.getMinecraft().addScheduledTask(() -> {
                 EntityPlayer player = AvatarMod.proxy.getClientPlayer();
                 if (player != null) {
-                    ItemStack glider = OpenGliderPlayerHelper.getGlider(player);
+                    ItemStack glider = GliderPlayerHelper.getGlider(player);
                     if (glider != null && !glider.isEmpty()) {
                         glider.damageItem(ConfigHandler.durabilityPerUse, player);
                         if (((IGlider)glider.getItem()).isBroken(glider)) { //broken item

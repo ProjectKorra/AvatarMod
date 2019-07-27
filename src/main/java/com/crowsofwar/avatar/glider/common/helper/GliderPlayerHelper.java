@@ -21,7 +21,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 
-public class OpenGliderPlayerHelper {
+public class GliderPlayerHelper {
 
     /**
      * Updates the position of the player when gliding.

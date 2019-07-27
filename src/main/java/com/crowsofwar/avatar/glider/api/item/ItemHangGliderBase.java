@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.glider.api.item;
 
 import com.crowsofwar.avatar.glider.api.helper.GliderHelper;
-import com.crowsofwar.avatar.glider.common.helper.OpenGliderPlayerHelper;
+import com.crowsofwar.avatar.glider.common.helper.GliderPlayerHelper;
 import com.crowsofwar.avatar.glider.common.network.PacketHandler;
 import com.crowsofwar.avatar.glider.common.network.PacketUpdateClientTarget;
 import com.crowsofwar.avatar.glider.common.util.OpenGliderHelper;
@@ -76,7 +76,7 @@ public class ItemHangGliderBase extends Item implements IGlider {
             }
 
             private boolean isGlidingGlider(EntityLivingBase entityIn, ItemStack stack){
-                return entityIn != null && entityIn instanceof EntityPlayer && GliderHelper.getIsGliderDeployed((EntityPlayer)entityIn) && OpenGliderPlayerHelper.getGlider((EntityPlayer)entityIn) == stack;
+                return entityIn != null && entityIn instanceof EntityPlayer && GliderHelper.getIsGliderDeployed((EntityPlayer)entityIn) && GliderPlayerHelper.getGlider((EntityPlayer)entityIn) == stack;
             }
 
         });
