@@ -14,6 +14,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public abstract class EntityOffensive extends AvatarEntity {
 
@@ -25,21 +26,38 @@ public abstract class EntityOffensive extends AvatarEntity {
 
 	public EntityOffensive(World world) {
 		super(world);
-	}
-
-	public void setDamage(float damage) {
-		dataManager.set(SYNC_DAMAGE, damage);
+		this.expandedHitbox = getEntityBoundingBox();
 	}
 
 	public float getDamage() {
 		return dataManager.get(SYNC_DAMAGE);
 	}
 
+	public void setDamage(float damage) {
+		dataManager.set(SYNC_DAMAGE, damage);
+	}
+
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		if (!world.isRemote) {
+			List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, expandedHitbox);
+			if (!targets.isEmpty()) {
+				for (Entity hit : targets) {
+					if (canDamageEntity(hit) && this != hit) {
+						onCollideWithEntity(hit);
+					}
+				}
+			}
+		}
+	}
+
 	@Override
 	public void onCollideWithEntity(Entity entity) {
 		super.onCollideWithEntity(entity);
 		if (!isPiercing())
-		Explode();
+			Explode();
+		else applyPiercingCollision();
 
 	}
 
@@ -48,7 +66,7 @@ public abstract class EntityOffensive extends AvatarEntity {
 	}
 
 	public void applyPiercingCollision() {
-		
+
 	}
 
 	protected float getAoeDamage() {
