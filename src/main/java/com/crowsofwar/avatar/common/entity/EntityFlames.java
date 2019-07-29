@@ -110,6 +110,7 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 			}
 		}
 		if (lightTrailingFire) {
+			//TODO: Use temp blocks.
 			if (AvatarUtils.getRandomNumberInRange(1, 10) <= 5) {
 				BlockPos pos = getPosition();
 				if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
@@ -247,6 +248,15 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		setDead();
 		return true;
 
+	}
+
+	@Override
+	protected int getFireTime() {
+		if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
+			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
+			return (int) (3F * 1 + data.getTotalXp() / 100f);
+		}
+		else return 8;
 	}
 
 	@SideOnly(Side.CLIENT)
