@@ -30,11 +30,6 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
     private static ResourceLocation halo = new ResourceLocation("avatarmod", "textures/entity/spherehalo.png");
     private ResourceLocation fill;
 
-    private CCModel model;
-
-    private static CCModel cubeModel = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/cube.obj")).get("model");
-    private static CCModel sphereModel = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/hemisphere.obj")).get("model");
-
     public RenderLightOrb(RenderManager manager) {
         super(manager);
     }
@@ -44,14 +39,17 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
 
         if(entity.getType() == EntityLightOrb.EnumType.NOTHING) return;
 
-        model = entity.isSphere() ? sphereModel : cubeModel;
         fill = entity.shouldUseCustomTexture() ? new ResourceLocation(entity.getTrueTexture()) : fill_default;
+
+        boolean shouldCclRender = entity.isSphere();
 
         Minecraft minecraft = Minecraft.getMinecraft();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
-        CCRenderState ccrenderstate = CCRenderState.instance();
-        TextureUtils.changeTexture(halo);
+
+        // Only use CLL if present!
+        if (shouldCclRender) TextureUtils.changeTexture(halo);
+        else bindTexture(halo);
 
         if (entity.shouldUseCustomTexture()) {
             GlStateManager.color(1F, 1F, 1F, entity.getColorA());
@@ -83,7 +81,7 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
 
         GlStateManager.pushMatrix();
         {
-            GlStateManager.translate(x, y + entity.getOrbSize() / 2.7D, z);
+            GlStateManager.translate(x, y-0.1/* + entity.getOrbSize() / 2.7D*/, z);
 
             GlStateManager.rotate((float) angleX, 0, 1, 0);
             GlStateManager.rotate((float) (angleY + 90), 1, 0, 0);
@@ -109,7 +107,9 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
             }
             GlStateManager.popMatrix();
 
-            TextureUtils.changeTexture(fill);
+            // Only use CLL if present!
+            if (shouldCclRender) TextureUtils.changeTexture(fill);
+            else bindTexture(fill);
 
             GlStateManager.scale(scale, scale, scale);
 
@@ -130,17 +130,23 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
             }
 
             GlStateManager.disableCull();
-            if (!entity.shouldUseCustomTexture()) GlStateManager.color(entity.getColorR(), entity.getColorG(), entity.getColorB(), entity.getColorA());
-            ccrenderstate.startDrawing(0x04, DefaultVertexFormats.POSITION_TEX_NORMAL);
-            model.render(ccrenderstate);
-            ccrenderstate.draw();
-
-            if (entity.isTextureSphere()) {
-                GlStateManager.rotate(180, 1, 1, 0);
+            if(entity.getType() == EntityLightOrb.EnumType.COLOR_CUBE || entity.getType() == EntityLightOrb.EnumType.TEXTURE_CUBE){
+                RenderUtils.renderCube(0, 0, 0, 0d, 1d, 0d, 1d, 1f, 0f, 0f, 0f);
+            } else {
+                CCRenderState ccrenderstate = CCRenderState.instance();
+                CCModel model = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/hemisphere.obj")).get("model");
                 if (!entity.shouldUseCustomTexture()) GlStateManager.color(entity.getColorR(), entity.getColorG(), entity.getColorB(), entity.getColorA());
                 ccrenderstate.startDrawing(0x04, DefaultVertexFormats.POSITION_TEX_NORMAL);
                 model.render(ccrenderstate);
                 ccrenderstate.draw();
+
+                if (entity.isTextureSphere()) {
+                    GlStateManager.rotate(180, 1, 1, 0);
+                    if (!entity.shouldUseCustomTexture()) GlStateManager.color(entity.getColorR(), entity.getColorG(), entity.getColorB(), entity.getColorA());
+                    ccrenderstate.startDrawing(0x04, DefaultVertexFormats.POSITION_TEX_NORMAL);
+                    model.render(ccrenderstate);
+                    ccrenderstate.draw();
+                }
             }
 
             GlStateManager.enableCull();
