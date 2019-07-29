@@ -37,7 +37,7 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 
 	private boolean useRestoreShaders = ConfigClient.CLIENT_CONFIG.shaderSettings.useRestoreShaders;
 
-	private boolean usePurifyShaders = ConfigClient.CLIENT_CONFIG.shaderSettings.usePurifyShaders;
+	private boolean useImmolateShaders = ConfigClient.CLIENT_CONFIG.shaderSettings.useImmolateShaders;
 
 	private Vision getVision(BendingContext ctx) {
 
@@ -50,7 +50,7 @@ public abstract class BuffPowerModifier extends PowerRatingModifier {
 			return null;
 		} else if (!useRestoreShaders && abilityData.getAbility() == Abilities.get("restore")) {
 			return null;
-		} else if (!usePurifyShaders && abilityData.getAbility() == Abilities.get("purify")) {
+		} else if (!useImmolateShaders && abilityData.getAbility() == Abilities.get("immolate")) {
 			return null;
 		}
 

@@ -9,11 +9,8 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -21,6 +18,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.HashSet;
@@ -34,11 +32,11 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_C
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 
 public class StatCtrlInfernoPunchMain extends StatusControl {
-	private ParticleSpawner particleSpawner;
+	//private ParticleSpawner particleSpawner;
 
 	public StatCtrlInfernoPunchMain() {
 		super(18, CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
-		particleSpawner = new NetworkParticleSpawner();
+		//	particleSpawner = new NetworkParticleSpawner();
 	}
 
 	@Override
@@ -84,46 +82,54 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 		excluded.add(entity);
 		Vec3d startPos = entity.getPositionVector().add(0, entity.getEyeHeight(), 0);
 
-		//Bounding Box to determine excluded entities
-		AxisAlignedBB detectionBox = new AxisAlignedBB(entity.posX + reach, entity.posY + reach, entity.posZ + reach, entity.posX - reach,
-				entity.posY - reach, entity.posZ - reach);
-		List<Entity> exclude = entity.world.getEntitiesWithinAABB(Entity.class, detectionBox);
-		if (!exclude.isEmpty()) {
-			for (Entity detected : exclude) {
-				if (detected instanceof AvatarEntity) {
-					if (((AvatarEntity) detected).getOwner() == entity) {
+		if (!entity.world.isRemote) {
+			//Bounding Box to determine excluded entities
+			AxisAlignedBB detectionBox = new AxisAlignedBB(entity.posX + reach, entity.posY + reach, entity.posZ + reach, entity.posX - reach,
+					entity.posY - reach, entity.posZ - reach);
+			List<Entity> exclude = entity.world.getEntitiesWithinAABB(Entity.class, detectionBox);
+			if (!exclude.isEmpty()) {
+				for (Entity detected : exclude) {
+					if (detected instanceof AvatarEntity) {
+						if (((AvatarEntity) detected).getOwner() == entity) {
+							excluded.add(detected);
+						}
+					}
+					if (detected.getTeam() != null && detected.getTeam() == entity.getTeam()) {
+						excluded.add(detected);
+					}
+					if (detected.getControllingPassenger() == entity) {
 						excluded.add(detected);
 					}
 				}
-				if (detected.getTeam() != null && detected.getTeam() == entity.getTeam()) {
-					excluded.add(detected);
-				}
-				if (detected.getControllingPassenger() == entity) {
-					excluded.add(detected);
-				}
-			}
-			RayTraceResult result = Raytrace.standardEntityRayTrace(entity.world, entity,
-					null, startPos, startPos.add(entity.getLookVec().scale(5)), 1.0F, false, excluded);
-			if (result != null) {
-				if (result.entityHit != null) {
-					Entity hit = result.entityHit;
-					if (canCollideWith(entity)) {
-						DamageUtils.attackEntity(entity, hit, AvatarDamageSource.causeInfernoPunchDamage(hit, entity), damage,
-								performance, new AbilityInfernoPunch(), xp);
-						Vec3d direction = entity.getLookVec();
-						double x = 0.5 * direction.x * knockBack;
-						double y = 0.5 * direction.y * knockBack + 0.15;
-						double z = 0.5 * direction.z * knockBack;
-						hit.setFire(fireTime);
-						hit.addVelocity(x, y, z);
-						AvatarUtils.afterVelocityAdded(hit);
-						Vec3d particlePos = hit.getPositionVector().add(0, hit.getEntityBoundingBox().maxY / 2, 0);
-						particleSpawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 20, 40,
-								new Vector(particlePos.x, particlePos.y, particlePos.z), new Vector(2, 2, 2));
-						return true;
-					}
+				RayTraceResult result = Raytrace.standardEntityRayTrace(entity.world, entity,
+						null, startPos, startPos.add(entity.getLookVec().scale(5)), 0.2F, false, excluded);
+				if (result != null) {
+					if (result.entityHit != null) {
+						Entity hit = result.entityHit;
+						if (canCollideWith(entity)) {
+							DamageUtils.attackEntity(entity, hit, AvatarDamageSource.causeInfernoPunchDamage(hit, entity), damage,
+									performance, new AbilityInfernoPunch(), xp);
+							Vec3d direction = entity.getLookVec();
+							double x = 0.5 * direction.x * knockBack;
+							double y = 0.5 * direction.y * knockBack + 0.15;
+							double z = 0.5 * direction.z * knockBack;
+							hit.setFire(fireTime);
+							hit.addVelocity(x, y, z);
+							AvatarUtils.afterVelocityAdded(hit);
+							Vec3d particlePos = hit.getPositionVector().add(0, hit.getEntityBoundingBox().maxY / 2, 0);
+							if (entity.world instanceof WorldServer) {
+								WorldServer world = (WorldServer) entity.world;
+								world.spawnParticle(AvatarParticles.getParticleFlames(), true, particlePos.x, particlePos.y, particlePos.z, 60,
+										0, 0, 0, 0.02);
+							}
+							//particleSpawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 20, 40,
+							//new Vector(particlePos.x, particlePos.y, particlePos.z), new Vector(2, 2, 2));
+							return true;
+						}
 
+					}
 				}
+
 			}
 
 		}

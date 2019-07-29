@@ -131,7 +131,7 @@ public class ConfigClient {
 		public boolean useRestoreShaders = false;
 
 		@Load
-		public boolean usePurifyShaders = false;
+		public boolean useImmolateShaders = false;
 	}
 
 	public static class ActiveBendingSettings {
