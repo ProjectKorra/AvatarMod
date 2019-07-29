@@ -24,6 +24,8 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
 
     private static final DataParameter<String> SYNC_TEXTURE = EntityDataManager.createKey(EntityLightCylinder.class,
             DataSerializers.STRING);
+    private static final DataParameter<Integer> SYNC_TYPE = EntityDataManager.createKey(EntityLightCylinder.class,
+            DataSerializers.VARINT);
     private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityLightCylinder.class,
             DataSerializers.FLOAT);
     private static final DataParameter<Integer> SYNC_LIGHT_AMOUNT = EntityDataManager
@@ -54,6 +56,7 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
     protected void entityInit() {
         super.entityInit();
         dataManager.register(SYNC_TEXTURE, "avatarmod:textures/entity/fire-ribbon.png");
+        dataManager.register(SYNC_TYPE, EnumType.SQUARE.ordinal());
         dataManager.register(SYNC_SIZE, 1F);
         dataManager.register(SYNC_LIGHT_AMOUNT, 3);
         dataManager.register(SYNC_RADIUS, 10);
@@ -100,6 +103,7 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
     protected void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
         setTexture(nbt.getString("CylTexture"));
+        setType(EnumType.values()[nbt.getInteger("CylType")]);
         setLightAmount(nbt.getInteger("CylAmount"));
         setCylinderSize(nbt.getFloat("CylSize"));
         setLightRadius(nbt.getInteger("CylRadius"));
@@ -116,6 +120,7 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
     protected void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
         nbt.setString("CylTexture", getTexture());
+        nbt.setInteger("CylType", getType().ordinal());
         nbt.setInteger("CylAmount", getLightAmount());
         nbt.setFloat("CylSize", getCylinderSize());
         nbt.setInteger("CylRadius", getLightRadius());
@@ -168,6 +173,14 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
         return dataManager.get(SYNC_RADIUS);
     }
 
+    public void setType(EnumType type) {
+        dataManager.set(SYNC_TYPE, type.ordinal());
+    }
+
+    public EnumType getType() {
+        return EnumType.values()[dataManager.get(SYNC_TYPE)];
+    }
+
     public void setLightAmount(int amount) {
         dataManager.set(SYNC_LIGHT_AMOUNT, amount);
     }
@@ -216,4 +229,7 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
         dataManager.set(SYNC_COLOR_A, value);
     }
 
+    public enum EnumType {
+        ROUND, SQUARE
+    }
 }
