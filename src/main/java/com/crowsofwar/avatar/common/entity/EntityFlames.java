@@ -47,7 +47,7 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
  * @author CrowsOfWar
  */
 @Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityFlames extends AvatarEntity implements ILightProvider {
+public class EntityFlames extends EntityOffensive implements ILightProvider {
 
 	private boolean reflect;
 	private boolean lightTrailingFire;
@@ -68,6 +68,7 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
+		super.onCollideWithEntity(entity);
 		if (entity instanceof AvatarEntity) {
 			((AvatarEntity) entity).onFireContact();
 		}
@@ -179,7 +180,12 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 	}
 
 	@Override
-	public boolean canBePushed() {
+	protected boolean shouldDissipate() {
+		return true;
+	}
+
+	@Override
+	protected boolean shouldExplode() {
 		return false;
 	}
 

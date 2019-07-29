@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -50,7 +49,7 @@ public abstract class EntityOffensive extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 		if (!world.isRemote) {
-			List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, expandedHitbox);
+			List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, getExpandedHitbox());
 			if (!targets.isEmpty()) {
 				for (Entity hit : targets) {
 					if (canDamageEntity(hit) && this != hit) {
@@ -66,14 +65,17 @@ public abstract class EntityOffensive extends AvatarEntity {
 		super.onCollideWithEntity(entity);
 		if (!isPiercing() && isProjectile())
 			Explode();
-		else applyPiercingCollision();
+		else if (!isPiercing() && shouldDissipate()) {
+			Dissipate();
+		} else applyPiercingCollision();
+		if (entity instanceof AvatarEntity)
+			applyElementalContact((AvatarEntity) entity);
 
 	}
 
 	public void Explode() {
 		if (world instanceof WorldServer) {
 			if (getOwner() != null) {
-				BendingData data = BendingData.get(getOwner());
 				WorldServer World = (WorldServer) world;
 				World.spawnParticle(getParticle(), posX, posY, posZ, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
 				world.playSound(null, posX, posY, posZ, getSound(), getSoundCategory(), getVolume(),
@@ -88,7 +90,7 @@ public abstract class EntityOffensive extends AvatarEntity {
 							attackEntity(entity, false);
 							//Divide the result of the position difference to make entities fly
 							//further the closer they are to the player.
-							double dist = (5 / entity.getDistance(this)) > 1 ? 5 / entity.getDistance(this) : 1;
+							double dist = (getExplosionHitboxGrowth() - entity.getDistance(entity)) > 1 ? (getExplosionHitboxGrowth() - entity.getDistance(entity)) : 1;
 							Vec3d velocity = entity.getPositionVector().subtract(this.getPositionVector());
 							velocity = velocity.scale((1 / 40F)).scale(dist).add(0, getExplosionHitboxGrowth() / 50, 0);
 
@@ -98,6 +100,8 @@ public abstract class EntityOffensive extends AvatarEntity {
 							x *= getKnockbackMult().x;
 							y *= getKnockbackMult().y;
 							z *= getKnockbackMult().z;
+
+							attackEntity(entity, true);
 
 							if (!entity.world.isRemote) {
 								entity.motionX += x;
@@ -110,7 +114,6 @@ public abstract class EntityOffensive extends AvatarEntity {
 											&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
 										AvatarEntity avent = (AvatarEntity) collided;
 										avent.addVelocity(x, y, z);
-										avent.onAirContact();
 									}
 									entity.isAirBorne = true;
 									AvatarUtils.afterVelocityAdded(entity);
@@ -125,7 +128,26 @@ public abstract class EntityOffensive extends AvatarEntity {
 	}
 
 	public void applyPiercingCollision() {
+		List<Entity> collided = world.getEntitiesInAABBexcluding(this, getExpandedHitbox(), entity -> entity != getOwner());
+		if (!collided.isEmpty()) {
+			for (Entity entity : collided) {
+				if (entity != getOwner() && entity != null && getOwner() != null) {
+					attackEntity(entity, false);
+				}
+			}
 
+		}
+	}
+
+	public void Dissipate() {
+		if (world instanceof WorldServer) {
+			if (getOwner() != null) {
+				WorldServer World = (WorldServer) world;
+				World.spawnParticle(getParticle(), posX, posY, posZ, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
+				world.playSound(null, posX, posY, posZ, getSound(), getSoundCategory(), getVolume(),
+						getPitch());
+			}
+		}
 	}
 
 	public void attackEntity(Entity hit, boolean explosionDamage) {
@@ -144,8 +166,10 @@ public abstract class EntityOffensive extends AvatarEntity {
 
 	@Override
 	public boolean onCollideWithSolid() {
-		if (isProjectile())
+		if (isProjectile() && shouldExplode())
 			Explode();
+		if (isProjectile() && shouldDissipate())
+			Dissipate();
 		setDead();
 		return true;
 	}
@@ -206,12 +230,24 @@ public abstract class EntityOffensive extends AvatarEntity {
 		return false;
 	}
 
+	protected boolean shouldDissipate() {
+		return false;
+	}
+
+	protected boolean shouldExplode() {
+		return true;
+	}
+
 	public AxisAlignedBB getExpandedHitbox() {
 		return expandedHitbox;
 	}
 
 	public double getExplosionHitboxGrowth() {
 		return 1;
+	}
+
+	public void applyElementalContact(AvatarEntity entity) {
+
 	}
 
 	@Override
