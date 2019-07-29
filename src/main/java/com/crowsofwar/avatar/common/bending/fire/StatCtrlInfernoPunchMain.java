@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 
@@ -53,18 +54,21 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 		int performance = 15;
 		float knockBack = 1 * powerModifier;
 		int fireTime = 5 + (int) (powerModifier * 10);
+		float xp = SKILLS_CONFIG.infernoPunchHit;
 
 		if (abilityData.getLevel() == 1) {
 			damage = STATS_CONFIG.InfernoPunchDamage * 4 / 3 * powerModifier;
 			knockBack = 1.125F * powerModifier;
 			fireTime = 6;
 			performance += 5;
+			xp -= 1;
 		}
 		if (abilityData.getLevel() >= 2) {
 			damage = STATS_CONFIG.InfernoPunchDamage * 5 / 3 * powerModifier;
 			knockBack = 1.25F + powerModifier;
 			fireTime = 8 + (int) (powerModifier * 10);
 			performance = 20;
+			xp -= 2;
 		}
 		if (data.hasStatusControl(INFERNO_PUNCH_FIRST)) {
 			damage = STATS_CONFIG.InfernoPunchDamage * 7 / 3 * powerModifier;
@@ -104,7 +108,8 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 				if (result.entityHit != null) {
 					Entity hit = result.entityHit;
 					if (canCollideWith(entity)) {
-						DamageUtils.attackEntity(entity, hit, AvatarDamageSource.causeInfernoPunchDamage(hit, entity), damage, performance);
+						DamageUtils.attackEntity(entity, hit, AvatarDamageSource.causeInfernoPunchDamage(hit, entity), damage,
+								performance, new AbilityInfernoPunch(), xp);
 						Vec3d direction = entity.getLookVec();
 						double x = 0.5 * direction.x * knockBack;
 						double y = 0.5 * direction.y * knockBack + 0.15;
@@ -112,7 +117,7 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 						hit.setFire(fireTime);
 						hit.addVelocity(x, y, z);
 						AvatarUtils.afterVelocityAdded(hit);
-						Vec3d particlePos = hit.getPositionVector().add(0, hit.getEyeHeight() / 2, 0);
+						Vec3d particlePos = hit.getPositionVector().add(0, hit.getEntityBoundingBox().maxY / 2, 0);
 						particleSpawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 20, 40,
 								new Vector(particlePos.x, particlePos.y, particlePos.z), new Vector(2, 2, 2));
 						return true;

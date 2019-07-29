@@ -43,6 +43,7 @@ public class ConfigSkills {
 			fireShotHit = 2.5F,
 			flamethrowerHit = 0.75f,
 			fireballHit = 4.5f,
+			infernoPunchHit = 5F,
 			cloudburstHit = 5.0f,
 			lightningspearHit = 6.0F,
 			airbladeHit = 3f,
