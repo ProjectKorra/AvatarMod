@@ -143,7 +143,7 @@ public class AbilityImmolate extends Ability {
 			int lightRadius = 5;
 			//Stops constant spam and calculations
 			if (entity.ticksExisted == 1) {
-				AbilityData aD = AbilityData.get((EntityLivingBase) emitter, "purify");
+				AbilityData aD = AbilityData.get((EntityLivingBase) emitter, "immolate");
 				int level = aD.getLevel();
 				if (level >= 1) {
 					lightRadius = 7;
