@@ -106,14 +106,15 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 					if (canCollideWith(entity)) {
 						DamageUtils.attackEntity(entity, hit, AvatarDamageSource.causeInfernoPunchDamage(hit, entity), damage, performance);
 						Vec3d direction = entity.getLookVec();
-						double x = direction.x * knockBack;
-						double y = direction.y * knockBack;
-						double z = direction.z * knockBack;
-						entity.setFire(fireTime);
-						entity.addVelocity(x, y, z);
+						double x = 0.5 * direction.x * knockBack;
+						double y = 0.5 * direction.y * knockBack + 0.15;
+						double z = 0.5 * direction.z * knockBack;
+						hit.setFire(fireTime);
+						hit.addVelocity(x, y, z);
 						AvatarUtils.afterVelocityAdded(hit);
-						particleSpawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 10, 20,
-								new Vector(result.hitVec.x, result.hitVec.y, result.hitVec.z), new Vector(1, 0.4, 1));
+						Vec3d particlePos = hit.getPositionVector().add(0, hit.getEyeHeight() / 2, 0);
+						particleSpawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 20, 40,
+								new Vector(particlePos.x, particlePos.y, particlePos.z), new Vector(2, 2, 2));
 						return true;
 					}
 
