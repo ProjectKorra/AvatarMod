@@ -62,8 +62,12 @@ public class BlockTemp extends Block implements ITileEntityProvider {
 
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
-        return ((TileBlockTemp) ((World) worldIn).getTileEntity(pos)).getRenderBlock().getBlock()
-                .getCollisionBoundingBox(blockState, worldIn, pos);
+        TileBlockTemp tile = ((TileBlockTemp) worldIn.getTileEntity(pos));
+        if (tile != null) {
+            return tile.getRenderBlock().getBlock().getCollisionBoundingBox(blockState, worldIn, pos);
+        } else {
+            return NULL_AABB;
+        }
     }
 
     @Override
