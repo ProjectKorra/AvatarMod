@@ -65,24 +65,29 @@ public class AbilityFireShot extends Ability {
 		World world = ctx.getWorld();
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
+		AbilityData abilityData = ctx.getAbilityData();
 
 		float speed = 0.5F;
 		double damageMult = bender.getDamageMult(Firebending.ID);
+		float damage = 1;
 		float chi = STATS_CONFIG.chiFireShot;
 		if (ctx.getLevel() == 1) {
 			speed += 0.25F;
 			chi += 0.5F;
 			damageMult += 0.5;
+			damage += 2;
 		}
 		if (ctx.getLevel() == 2) {
 			speed += 0.5F;
 			chi += 1;
 			damageMult += 1;
+			damage += 4;
 		}
 		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			speed += 0.75F;
 			chi += 1.5F;
 			damageMult += 2;
+			damage += 7;
 		}
 		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			chi += 2F;
@@ -98,7 +103,9 @@ public class AbilityFireShot extends Ability {
 				flames.rotationYaw = entity.rotationYaw;
 				flames.setAbility(new AbilityFireShot());
 				flames.setTrailingFire(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
+				//TODO: Remove all damage calculations in EntityFlames
 				flames.setDamageMult(damageMult);
+				flames.setDamage(damage *(float) damageMult);
 				world.spawnEntity(flames);
 			} else {
 				EntityShockwave wave = new EntityShockwave(world);
