@@ -393,25 +393,20 @@ public class AvatarDamageSource {
 	}
 
 	//From what I can see, the ender dragon isn't even attacked properly. So, why aren't abilities attacking it?
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public static void onDragonAttack(LivingAttackEvent event) {
 		if (AvatarDamageSource.isAvatarDamageSource(event.getSource()) && event.getEntityLiving() instanceof EntityDragon) {
 			EntityDragon d = (EntityDragon) event.getEntityLiving();
 			d.attackEntityFromPart(d.dragonPartBody, event.getSource(), event.getAmount());
 			System.out.println(event.getAmount());
 		}
-	}
+	}**/
 	@SubscribeEvent
 	public static void onElementalDamage(LivingHurtEvent event) {
 		//TODO: Config for all this stuff; definitely in the rewrite
 		DamageSource source = event.getSource();
 		Entity hit = event.getEntity();
 		if (hit instanceof EntityLivingBase) {
-			if (hit instanceof EntityDragon && AvatarDamageSource.isAvatarDamageSource(source)) {
-
-				event.setCanceled(false);
-				event.setAmount(event.getAmount());
-			}
 			if (AvatarDamageSource.isAvatarDamageSource(source)) {
 				source.setMagicDamage();
 			}

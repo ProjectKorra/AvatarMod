@@ -30,7 +30,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class FireEventListener {
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public static void onInfernoPunch(LivingAttackEvent event) {
 		Entity entity = event.getSource().getTrueSource();
 		Entity target = event.getEntity();
@@ -132,5 +132,5 @@ public class FireEventListener {
 				}
 			}
 		}
-	}
+	}**/
 }

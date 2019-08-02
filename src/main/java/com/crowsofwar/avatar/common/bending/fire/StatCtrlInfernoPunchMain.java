@@ -116,7 +116,7 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 							hit.setFire(fireTime);
 							hit.addVelocity(x, y, z);
 							AvatarUtils.afterVelocityAdded(hit);
-							Vec3d particlePos = hit.getPositionVector().add(0, hit.getEntityBoundingBox().maxY / 2, 0);
+							Vec3d particlePos = hit.getPositionVector().add(0, hit.height / 2, 0);
 							if (entity.world instanceof WorldServer) {
 								WorldServer world = (WorldServer) entity.world;
 								world.spawnParticle(AvatarParticles.getParticleFlames(), true, particlePos.x, particlePos.y, particlePos.z, 60,
