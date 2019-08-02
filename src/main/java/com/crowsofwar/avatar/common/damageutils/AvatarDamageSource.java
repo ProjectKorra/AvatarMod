@@ -28,6 +28,7 @@ import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -234,11 +235,10 @@ public class AvatarDamageSource {
 	/**
 	 * Create a DamageSource for damage caused by punching an enemy with fire..
 	 *
-	 * @param hit   Who was hit by the punch
 	 * @param owner Who punched
 	 */
-	public static DamageSource causeInfernoPunchDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_Fire_infernoPunch", hit, owner);
+	public static DamageSource causeInfernoPunchDamage(@Nullable Entity owner) {
+		return new EntityDamageSource("avatar_Fire_infernoPunch",owner);
 	}
 
 	//EARTH

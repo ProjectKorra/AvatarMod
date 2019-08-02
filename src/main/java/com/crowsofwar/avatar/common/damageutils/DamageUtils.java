@@ -15,14 +15,16 @@ public class DamageUtils {
 		if (hit != null && attacker != null && ability != null) {
 			boolean ds = hit.attackEntityFrom(source, damage);
 			AbilityData data = AbilityData.get(attacker, ability.getName());
-			if (!ds && hit instanceof EntityDragon) {
-				((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, source,
-						damage);
-				BattlePerformanceScore.addScore(attacker, performance);
-				data.addXp(xp);
-			} else if (hit instanceof EntityLivingBase && ds) {
-				BattlePerformanceScore.addScore(attacker, performance);
-				data.addXp(xp);
+			if (data != null) {
+				if (!ds && hit instanceof EntityDragon) {
+					((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, source,
+							damage);
+					BattlePerformanceScore.addScore(attacker, performance);
+					data.addXp(xp);
+				} else if (hit instanceof EntityLivingBase && ds) {
+					BattlePerformanceScore.addScore(attacker, performance);
+					data.addXp(xp);
+				}
 			}
 		}
 	}

@@ -107,7 +107,7 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 					if (result.entityHit != null) {
 						Entity hit = result.entityHit;
 						if (canCollideWith(entity)) {
-							DamageUtils.attackEntity(entity, hit, AvatarDamageSource.causeInfernoPunchDamage(hit, entity), damage,
+							DamageUtils.attackEntity(entity, hit, AvatarDamageSource.causeInfernoPunchDamage(entity), damage,
 									performance, new AbilityInfernoPunch(), xp);
 							Vec3d direction = entity.getLookVec();
 							double x = 0.5 * direction.x * knockBack;
