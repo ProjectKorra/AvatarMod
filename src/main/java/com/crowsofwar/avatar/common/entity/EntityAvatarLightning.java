@@ -25,6 +25,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 
@@ -32,7 +33,9 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
 public class EntityAvatarLightning extends EntityLightningBolt implements ILightProvider {
+	//TODO: Fix by using the new rendering system, make the spawner use behaviour
 
 	/**
 	 * A random long that is used to change the vertex of the lightning rendered in RenderLightningBolt
@@ -198,11 +201,13 @@ public class EntityAvatarLightning extends EntityLightningBolt implements ILight
 	}
 
 	@Override
+	@Optional.Method(modid = "albedo")
 	public void gatherLights(GatherLightsEvent gatherLightsEvent, Entity entity) {
 
 	}
 
 	@Override
+	@Optional.Method(modid = "albedo")
 	public Light provideLight() {
 		return Light.builder().pos(this).color(1F, 2F, 3F).radius(15).build();
 	}
