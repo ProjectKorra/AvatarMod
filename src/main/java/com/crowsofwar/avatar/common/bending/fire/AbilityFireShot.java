@@ -105,7 +105,7 @@ public class AbilityFireShot extends Ability {
 				flames.setTrailingFire(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
 				//TODO: Remove all damage calculations in EntityFlames
 				flames.setDamageMult(damageMult);
-				flames.setDamage(damage *(float) damageMult);
+				flames.setDamage(damage * (float) damageMult);
 				world.spawnEntity(flames);
 			} else {
 				EntityShockwave wave = new EntityShockwave(world);
@@ -140,25 +140,54 @@ public class AbilityFireShot extends Ability {
 		public Behavior onUpdate(EntityShockwave entity) {
 			if (entity.getOwner() != null) {
 				BlockPos prevPos = entity.getPosition();
-				for (int degree = 0; degree < 360; degree += 5) {
+				for (double degrees = 0; degrees < 360; degrees += 1) {
+					double angle = Math.toRadians(degrees);
+					Vec3d direction = entity.getOwner().getLookVec();
+					double x, z, vx, vz;
+
+					x = direction.x;
+					z = direction.z;
+
+					vx = x * Math.cos(angle) - z * Math.sin(angle);
+					vz = x * Math.sin(angle) + z * Math.cos(angle);
+
+					direction = new Vec3d(vx, direction.y, vz);
+					direction = direction.add(entity.getPositionVector());
+
+					BlockPos spawnPos = new BlockPos((int) (direction.x /*+ entity.posX**/), (int) (direction.y /*+ entity.posY**/),
+							(int) (direction.z /*+ entity.posZ**/));
+					if (Blocks.FIRE.canPlaceBlockAt(entity.world, spawnPos) && prevPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ) !=
+							spawnPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ)
+							/*&& entity.world.getBlockState(spawnPos).getBlock() == Blocks.AIR**/) {
+						if (spawnPos != entity.getPosition() && spawnPos != prevPos) {
+							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() - 0.2 ? 120 : 20;
+							BlockTemp.createTempBlock(entity.world, spawnPos, time, Blocks.FIRE.getDefaultState());
+							prevPos = spawnPos;
+						}
+					}
+
+				}
+
+
+				/*for (int degree = 0; degree < 360; degree++) {
 					double angle = Math.toRadians(degree);
 					//Sin x for shockwave, cos x for sphere. We want a fire wave, so we sin x.
 					double x = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
 					//double y = entity.posY;
 					double z = entity.posZ + (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle);
 					Vec3d direction = new Vec3d(x, entity.getOwner().getEntityBoundingBox().minY, z);
-					BlockPos spawnPos = new BlockPos((int) (direction.x /*+ entity.posX**/), (int) (direction.y /*+ entity.posY**/),
-							(int) (direction.z /*+ entity.posZ**/));
+					BlockPos spawnPos = new BlockPos((int) (direction.x), (int) (direction.y ,
+				/*			(int) (direction.z ));
 					if (Blocks.FIRE.canPlaceBlockAt(entity.world, spawnPos) && prevPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ) !=
 							spawnPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ)
 							&& entity.world.getBlockState(spawnPos).getBlock() == Blocks.AIR) {
-						if (spawnPos != entity.getPosition()) {
-							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() ? 120 : 10;
+						if (spawnPos != entity.getPosition() && spawnPos != prevPos) {
+							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() - 0.2 ? 120 : 20;
 							BlockTemp.createTempBlock(entity.world, spawnPos, time, Blocks.FIRE.getDefaultState());
 							prevPos = spawnPos;
 						}
 					}
-				}
+				}**/
 			}
 			return this;
 		}
