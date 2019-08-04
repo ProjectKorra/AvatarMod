@@ -21,6 +21,8 @@ import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireShot;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.blocks.BlockTemp;
+import com.crowsofwar.avatar.common.blocks.BlockUtils;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -113,18 +115,25 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 			//TODO: Use temp blocks.
 			if (AvatarUtils.getRandomNumberInRange(1, 10) <= 5) {
 				BlockPos pos = getPosition();
-				if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
+				if (BlockUtils.canPlaceFireAt(world, pos)) {
+					BlockTemp.createTempBlock(world, pos, 20, Blocks.FIRE.getDefaultState());
+				}
+				/*if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
 					world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-				}
+				}**/
 				BlockPos pos2 = getPosition().down();
-				if (Blocks.FIRE.canPlaceBlockAt(world, pos2) && world.getBlockState(pos2).getBlock() == Blocks.AIR) {
-					world.setBlockState(pos2, Blocks.FIRE.getDefaultState());
+				if (BlockUtils.canPlaceFireAt(world, pos2)) {
+					BlockTemp.createTempBlock(world, pos2, 20, Blocks.FIRE.getDefaultState());
 				}
+				/*if (Blocks.FIRE.canPlaceBlockAt(world, pos2) && world.getBlockState(pos2).getBlock() == Blocks.AIR) {
+					world.setBlockState(pos2, Blocks.FIRE.getDefaultState());
+				}**/
 			}
 		}
 
 		if (!world.isRemote) {
 			if (getOwner() != null) {
+				//TODO: Get rid of this
 				AbilityData abilityData = AbilityData.get(getOwner(), getAbility().getName());
 
 				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
