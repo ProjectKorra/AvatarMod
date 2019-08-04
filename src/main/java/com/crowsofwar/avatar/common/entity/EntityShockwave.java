@@ -38,6 +38,8 @@ public class EntityShockwave extends AvatarEntity {
 	//Speed of the particles
 	private static final DataParameter<Integer> SYNC_PARTICLE_AMOUNT = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.VARINT);
 	//The amount of particles to be spawned
+	private static final DataParameter<Integer> SYNC_PARTICLE_WAVES = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.VARINT);
+	//Waves of particles to be spawned
 	private static final DataParameter<Float> SYNC_PARTICLE_CONTROLLER = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.FLOAT);
 	//Used for spherical shockwaves
 	private static final DataParameter<Float> SYNC_SPEED = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.FLOAT);
@@ -78,6 +80,7 @@ public class EntityShockwave extends AvatarEntity {
 		dataManager.register(SYNC_PARTICLE, "cloud");
 		dataManager.register(SYNC_PARTICLE_SPEED, 0.1F);
 		dataManager.register(SYNC_PARTICLE_AMOUNT, 1);
+		dataManager.register(SYNC_PARTICLE_WAVES, 1);
 		dataManager.register(SYNC_PARTICLE_CONTROLLER, 40F);
 		dataManager.register(SYNC_SPEED, 0.8F);
 		dataManager.register(SYNC_IS_SPHERE, false);
@@ -109,6 +112,14 @@ public class EntityShockwave extends AvatarEntity {
 
 	public void setParticle(EnumParticleTypes particle) {
 		dataManager.set(SYNC_PARTICLE, particle.getParticleName());
+	}
+
+	public void setParticleWaves(int waves) {
+		dataManager.set(SYNC_PARTICLE_WAVES, waves);
+	}
+
+	public int getParticleWaves() {
+		return dataManager.get(SYNC_PARTICLE_WAVES);
 	}
 
 	public int getParticleAmount() {

@@ -22,9 +22,9 @@ public class RenderShockwave extends Render<EntityShockwave> {
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
 		EnumParticleTypes particle = entity.getParticle();
 		if (particle != null) {
-			if (entity.ticksExisted <= entity.getParticleAmount()) {
+			if (entity.ticksExisted <= entity.getParticleWaves()) {
 				if (!entity.getSphere()) {
-					for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.getRange() * 15 / entity.getParticleAmount())) {
+					for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.getRange() * entity.getParticleAmount() * entity.ticksExisted)) {
 						//Even though the maths is technically wrong, you use sin if you want a shockwave, and cos if you want a sphere (for x).
 						double x2 = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
 						double y2 = entity.posY;

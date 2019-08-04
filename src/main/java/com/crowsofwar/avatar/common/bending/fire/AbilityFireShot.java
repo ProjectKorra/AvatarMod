@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.blocks.BlockTemp;
+import com.crowsofwar.avatar.common.blocks.BlockUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -124,8 +125,9 @@ public class AbilityFireShot extends Ability {
 				wave.setSpeed(0.4F);
 				wave.setKnockbackMult(new Vec3d(1.5, 1, 1.5));
 				wave.setKnockbackHeight(0.15);
-				wave.setParticleSpeed(0.2F);
-				wave.setParticleAmount(100);
+				wave.setParticleSpeed(0.18F);
+				wave.setParticleWaves(2);
+				wave.setParticleAmount(10);
 				world.spawnEntity(wave);
 			}
 		}
@@ -142,9 +144,7 @@ public class AbilityFireShot extends Ability {
 		@Override
 		public Behavior onUpdate(EntityShockwave entity) {
 			if (entity.getOwner() != null) {
-				BlockPos prevPos = entity.getPosition();
-				for (double degrees = 0; degrees < 360; degrees += 1) {
-					double angle = Math.toRadians(degrees);
+				/*for(double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.ticksExisted * 1.5)){
 					Vec3d direction = entity.getLookVec();
 					double x, z, vx, vz;
 
@@ -157,15 +157,30 @@ public class AbilityFireShot extends Ability {
 					direction = new Vec3d(vx, direction.y, vz);
 					direction = direction.add(entity.getPositionVector());
 
-					BlockPos spawnPos = new BlockPos((int) (direction.x /*+ entity.posX**/), (int) (entity.posY),
-							(int) (direction.z /*+ entity.posZ**/));
-					if (Blocks.FIRE.canPlaceBlockAt(entity.world, spawnPos) && prevPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ) !=
-							spawnPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ)
-							&& entity.world.getBlockState(spawnPos).getBlock() == Blocks.AIR) {
-						if (spawnPos != entity.getPosition() && spawnPos != prevPos) {
+					BlockPos spawnPos = new BlockPos((int) (direction.x), (int) (entity.posY),
+							(int) (direction.z));
+					if (BlockUtils.canPlaceFireAt(entity.world, spawnPos)){
+						if (spawnPos != entity.getPosition()) {
 							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() - 0.2 ? 120 : 10;
 							BlockTemp.createTempBlock(entity.world, spawnPos, time, Blocks.FIRE.getDefaultState());
-							prevPos = spawnPos;
+						}
+					}
+
+				}**/
+
+			/*if (entity.getOwner() != null) {**/
+				for(double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.ticksExisted * 3)){
+					int x = entity.posX < 0 ? (int)(entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle) - 1)
+							: (int)(entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle));
+					int y = (int)(entity.posY - 0.5);
+					int z = entity.posZ < 0 ? (int)(entity.posZ + ((entity.ticksExisted * entity.getSpeed()) * Math.cos(angle) - 1))
+							: (int)(entity.posZ + ((entity.ticksExisted * entity.getSpeed())) * Math.cos(angle));
+
+					BlockPos spawnPos = new BlockPos(x, (int) (entity.posY), z);
+					if (BlockUtils.canPlaceFireAt(entity.world, spawnPos) ) {
+						if (spawnPos != entity.getPosition()) {
+							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() - 0.2 ? 120 : 10;
+							BlockTemp.createTempBlock(entity.world, spawnPos, time, Blocks.FIRE.getDefaultState());
 						}
 					}
 

@@ -73,6 +73,7 @@ public class SmashGroundHandler extends TickHandler {
 		shockwave.setFireTime(fireTime());
 		shockwave.setDamageSource(getDamageSource());
 		shockwave.setAbility(getAbility());
+		shockwave.setParticleWaves(getParticleWaves());
 		shockwave.setPerformanceAmount(getPerformanceAmount());
 		world.spawnEntity(shockwave);
 	}
@@ -89,8 +90,11 @@ public class SmashGroundHandler extends TickHandler {
 		return EnumParticleTypes.EXPLOSION_NORMAL;
 	}
 
+	protected int getParticleWaves() {
+		return 1;
+	}
 	protected int getParticleAmount() {
-		return 2;
+		return 9;
 	}
 
 	protected Ability getAbility() {
