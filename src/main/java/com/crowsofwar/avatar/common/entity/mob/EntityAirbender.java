@@ -20,11 +20,15 @@ import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.item.scroll.ItemScrollAir;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -167,9 +171,10 @@ public class EntityAirbender extends EntityHumanBender {
 
 	@Override
 	public void setDead() {
-		//if (!world.isRemote && level >= 3) {
-		//	this.entityDropItem(new ItemStack(AvatarItems.airbenderStaff, 1), 0);
-		//}
+		ItemStack stack = new ItemStack(Scrolls.AIR, 1, getLevel());
+		if (AvatarUtils.getRandomNumberInRange(1, 100) < 50) {
+			this.entityDropItem(stack, 1.0F);
+		}
 		super.setDead();
 	}
 
