@@ -111,6 +111,8 @@ public class AbilityFireShot extends Ability {
 				//TODO: Fix particle spawning
 				EntityShockwave wave = new EntityShockwave(world);
 				wave.setOwner(entity);
+				wave.rotationPitch = entity.rotationPitch;
+				wave.rotationYaw = entity.rotationYaw;
 				wave.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight() / 2, 0));
 				wave.setFireTime(10);
 				wave.setElement(new Firebending());
@@ -143,7 +145,7 @@ public class AbilityFireShot extends Ability {
 				BlockPos prevPos = entity.getPosition();
 				for (double degrees = 0; degrees < 360; degrees += 1) {
 					double angle = Math.toRadians(degrees);
-					Vec3d direction = entity.getOwner().getLookVec();
+					Vec3d direction = entity.getLookVec();
 					double x, z, vx, vz;
 
 					x = direction.x * entity.ticksExisted * entity.getSpeed();
@@ -159,9 +161,9 @@ public class AbilityFireShot extends Ability {
 							(int) (direction.z /*+ entity.posZ**/));
 					if (Blocks.FIRE.canPlaceBlockAt(entity.world, spawnPos) && prevPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ) !=
 							spawnPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ)
-							/*&& entity.world.getBlockState(spawnPos).getBlock() == Blocks.AIR**/) {
+							&& entity.world.getBlockState(spawnPos).getBlock() == Blocks.AIR) {
 						if (spawnPos != entity.getPosition() && spawnPos != prevPos) {
-							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() - 0.2 ? 120 : 20;
+							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() - 0.2 ? 120 : 10;
 							BlockTemp.createTempBlock(entity.world, spawnPos, time, Blocks.FIRE.getDefaultState());
 							prevPos = spawnPos;
 						}
