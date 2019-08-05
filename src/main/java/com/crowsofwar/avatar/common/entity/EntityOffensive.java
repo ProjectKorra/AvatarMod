@@ -46,6 +46,12 @@ public abstract class EntityOffensive extends AvatarEntity {
 	}
 
 	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_DAMAGE, 1F);
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		if (!world.isRemote) {

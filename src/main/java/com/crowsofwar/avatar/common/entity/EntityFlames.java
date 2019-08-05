@@ -207,6 +207,14 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+		if (!world.isRemote) {
+			Thread.dumpStack();
+		}
+	}
+
+	@Override
 	public boolean onMinorWaterContact() {
 		if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
 			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
