@@ -206,13 +206,6 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		return true;
 	}
 
-	@Override
-	public void setDead() {
-		super.setDead();
-		if (!world.isRemote) {
-			Thread.dumpStack();
-		}
-	}
 
 	@Override
 	public boolean onMinorWaterContact() {
