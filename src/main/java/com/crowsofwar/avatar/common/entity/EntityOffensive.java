@@ -1,8 +1,10 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,6 +33,9 @@ public abstract class EntityOffensive extends AvatarEntity {
 			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
 
 	private AxisAlignedBB expandedHitbox;
+	private float xp;
+	private int fireTime;
+	private int performanceAmount;
 
 	public EntityOffensive(World world) {
 		super(world);
@@ -93,7 +98,7 @@ public abstract class EntityOffensive extends AvatarEntity {
 				if (!collided.isEmpty()) {
 					for (Entity entity : collided) {
 						if (entity != getOwner() && entity != null && getOwner() != null) {
-							attackEntity(entity, false);
+							attackEntity(entity, false, getAbility(), getXp());
 							//Divide the result of the position difference to make entities fly
 							//further the closer they are to the player.
 							double dist = (getExplosionHitboxGrowth() - entity.getDistance(entity)) > 1 ? (getExplosionHitboxGrowth() - entity.getDistance(entity)) : 1;
@@ -107,7 +112,7 @@ public abstract class EntityOffensive extends AvatarEntity {
 							y *= getKnockbackMult().y;
 							z *= getKnockbackMult().z;
 
-							attackEntity(entity, true);
+							attackEntity(entity, true, getAbility(), getXp());
 
 							if (!entity.world.isRemote) {
 								entity.motionX += x;
@@ -138,7 +143,7 @@ public abstract class EntityOffensive extends AvatarEntity {
 		if (!collided.isEmpty()) {
 			for (Entity entity : collided) {
 				if (entity != getOwner() && entity != null && getOwner() != null) {
-					attackEntity(entity, false);
+					attackEntity(entity, false, getAbility(), getXp());
 				}
 			}
 
@@ -156,16 +161,21 @@ public abstract class EntityOffensive extends AvatarEntity {
 		}
 	}
 
-	public void attackEntity(Entity hit, boolean explosionDamage) {
+	public void attackEntity(Entity hit, boolean explosionDamage, Ability ability, float xp) {
 		if (getOwner() != null && hit != null) {
-			boolean ds = hit.attackEntityFrom(getDamageSource(hit), explosionDamage ? getAoeDamage() : getDamage());
-			if (!ds && hit instanceof EntityDragon) {
-				((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, getDamageSource(hit),
-						explosionDamage ? getAoeDamage() : getDamage());
-				BattlePerformanceScore.addScore(getOwner(), getPerformanceAmount());
+			AbilityData data = AbilityData.get(getOwner(), ability.getName());
+			if (data != null) {
+				boolean ds = hit.attackEntityFrom(getDamageSource(hit), explosionDamage ? getAoeDamage() : getDamage());
+				if (!ds && hit instanceof EntityDragon) {
+					((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, getDamageSource(hit),
+							explosionDamage ? getAoeDamage() : getDamage());
+					BattlePerformanceScore.addScore(getOwner(), getPerformanceAmount());
+					data.addXp(xp);
 
-			} else if (hit instanceof EntityLivingBase && ds) {
-				BattlePerformanceScore.addScore(getOwner(), getPerformanceAmount());
+				} else if (hit instanceof EntityLivingBase && ds) {
+					BattlePerformanceScore.addScore(getOwner(), getPerformanceAmount());
+					data.addXp(xp);
+				}
 			}
 		}
 	}
@@ -200,8 +210,12 @@ public abstract class EntityOffensive extends AvatarEntity {
 		return 0.02;
 	}
 
-	protected int getPerformanceAmount() {
-		return 10;
+	public int getPerformanceAmount() {
+		return this.performanceAmount;
+	}
+
+	public void setPerformanceAmount(int amount) {
+		this.performanceAmount = amount;
 	}
 
 	protected SoundEvent getSound() {
@@ -228,8 +242,12 @@ public abstract class EntityOffensive extends AvatarEntity {
 		return 0.25;
 	}
 
-	protected int getFireTime() {
-		return 0;
+	public int getFireTime() {
+		return this.fireTime;
+	}
+
+	public void setFireTime(int time) {
+		this.fireTime = time;
 	}
 
 	protected boolean isPiercing() {
@@ -254,6 +272,14 @@ public abstract class EntityOffensive extends AvatarEntity {
 
 	public void applyElementalContact(AvatarEntity entity) {
 
+	}
+
+	public float getXp() {
+		return this.xp;
+	}
+
+	public void setXp(float xp) {
+		this.xp = xp;
 	}
 
 	@Override

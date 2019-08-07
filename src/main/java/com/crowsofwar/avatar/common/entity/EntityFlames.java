@@ -17,13 +17,11 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireShot;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.blocks.BlockTemp;
 import com.crowsofwar.avatar.common.blocks.BlockUtils;
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -40,10 +38,7 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
 import java.util.Objects;
-
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -53,7 +48,6 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 
 	private boolean reflect;
 	private boolean lightTrailingFire;
-	private double damageMult;
 
 	public EntityFlames(World worldIn) {
 		super(worldIn);
@@ -131,7 +125,7 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 			}
 		}
 
-		if (!world.isRemote) {
+		/*if (!world.isRemote) {
 			if (getOwner() != null) {
 				//TODO: Get rid of this
 				AbilityData abilityData = AbilityData.get(getOwner(), getAbility().getName());
@@ -167,7 +161,7 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 				}
 				else if (!collided.isEmpty()) setDead();
 			}
-		}
+		}**/
 
 	}
 
@@ -238,9 +232,6 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		this.lightTrailingFire = fire;
 	}
 
-	public void setDamageMult(double damageMult) {
-		this.damageMult = damageMult;
-	}
 
 	@Override
 	public boolean isProjectile() {
@@ -251,22 +242,16 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	public boolean onCollideWithSolid() {
 		if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
 			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
-			if (!data.isMasterPath(AbilityData.AbilityTreePath.FIRST))
+			if (!data.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				setDead();
+				Dissipate();
+			}
 			return !data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
 		}
 		setDead();
+		Dissipate();
 		return true;
 
-	}
-
-	@Override
-	protected int getFireTime() {
-		if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
-			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
-			return (int) (3F * 1 + data.getTotalXp() / 100f);
-		}
-		else return 8;
 	}
 
 	@SideOnly(Side.CLIENT)

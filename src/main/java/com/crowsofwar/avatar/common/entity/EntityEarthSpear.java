@@ -4,7 +4,6 @@ import net.minecraft.world.World;
 
 public class EntityEarthSpear extends EntityOffensive {
 
-	private int performanceAmount;
 
 	public EntityEarthSpear(World world) {
 		super(world);
@@ -15,18 +14,15 @@ public class EntityEarthSpear extends EntityOffensive {
 		super.onUpdate();
 	}
 
+
 	@Override
-	protected int getPerformanceAmount() {
-		return performanceAmount;
+	protected boolean shouldExplode() {
+		return false;
 	}
 
 	@Override
-	public void applyPiercingCollision() {
-		super.applyPiercingCollision();
-	}
-
-	@Override
-	public void Explode() {
+	protected boolean shouldDissipate() {
+		return false;
 	}
 
 	@Override

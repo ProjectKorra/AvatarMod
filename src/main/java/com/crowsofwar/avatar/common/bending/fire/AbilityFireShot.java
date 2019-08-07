@@ -70,7 +70,7 @@ public class AbilityFireShot extends Ability {
 
 		float speed = 0.5F;
 		double damageMult = bender.getDamageMult(Firebending.ID);
-		float damage = 1;
+		float damage = STATS_CONFIG.fireShotSetttings.damage;
 		float chi = STATS_CONFIG.chiFireShot;
 		if (ctx.getLevel() == 1) {
 			speed += 0.25F;
@@ -93,6 +93,7 @@ public class AbilityFireShot extends Ability {
 		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			chi += 2F;
 		}
+		damage += abilityData.getTotalXp() / 50;
 		if (bender.consumeChi(chi)) {
 			if (!ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				EntityFlames flames = new EntityFlames(world);
@@ -105,7 +106,7 @@ public class AbilityFireShot extends Ability {
 				flames.setAbility(new AbilityFireShot());
 				flames.setTrailingFire(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
 				//TODO: Remove all damage calculations in EntityFlames
-				flames.setDamageMult(damageMult);
+				flames.setFireTime((int) (4F * 1 + abilityData.getTotalXp() / 50f));
 				flames.setDamage(damage * (float) damageMult);
 				world.spawnEntity(flames);
 			} else {
