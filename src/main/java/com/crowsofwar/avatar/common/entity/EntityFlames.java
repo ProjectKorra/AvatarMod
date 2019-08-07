@@ -231,8 +231,7 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	public void setTrailingFire(boolean fire) {
 		this.lightTrailingFire = fire;
 	}
-
-
+	
 	@Override
 	public boolean isProjectile() {
 		return true;
