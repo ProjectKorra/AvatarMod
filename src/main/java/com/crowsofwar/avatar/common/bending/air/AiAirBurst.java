@@ -12,14 +12,14 @@ public class AiAirBurst extends BendingAi {
 
 	AiAirBurst(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
-		setMutexBits(2);
+		setMutexBits(4);
 	}
 
 	@Override
 	protected void startExec() {
 		BendingData data = bender.getData();
 		execAbility();
-		data.getMiscData().setAbilityCooldown(120);
+		data.getMiscData().setAbilityCooldown(60);
 	}
 
 	@Override

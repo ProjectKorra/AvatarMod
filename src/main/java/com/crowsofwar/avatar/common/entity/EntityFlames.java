@@ -33,12 +33,15 @@ import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Objects;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -233,8 +236,23 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	}
 
 	@Override
+	public void applyElementalContact(AvatarEntity entity) {
+		entity.onFireContact();
+	}
+
+	@Override
 	public boolean isProjectile() {
 		return true;
+	}
+
+	@Override
+	protected int getNumberofParticles() {
+		return 15;
+	}
+
+	@Override
+	protected double getParticleSpeed() {
+		return 0.04;
 	}
 
 	@Override
@@ -269,5 +287,10 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	@Optional.Method(modid = "albedo")
 	public void gatherLights(GatherLightsEvent event, Entity entity) {
 
+	}
+
+	@Override
+	protected Vec3d getKnockbackMult() {
+		return new Vec3d(STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push * 2);
 	}
 }

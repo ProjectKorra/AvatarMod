@@ -31,6 +31,8 @@ public abstract class EntityOffensive extends AvatarEntity {
 	//Used for all entities that damage things
 	private static final DataParameter<Float> SYNC_DAMAGE = EntityDataManager
 			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
+	private static final DataParameter<Integer> SYNC_LIFETIME = EntityDataManager
+			.createKey(EntityOffensive.class, DataSerializers.VARINT);
 
 	private AxisAlignedBB expandedHitbox;
 	private float xp;
@@ -60,6 +62,7 @@ public abstract class EntityOffensive extends AvatarEntity {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_DAMAGE, 1F);
+		dataManager.register(SYNC_LIFETIME, 100);
 	}
 
 	@Override
@@ -74,6 +77,9 @@ public abstract class EntityOffensive extends AvatarEntity {
 					}
 				}
 			}
+		}
+		if (ticksExisted >= getLifeTime()) {
+			Dissipate();
 		}
 	}
 
@@ -216,6 +222,14 @@ public abstract class EntityOffensive extends AvatarEntity {
 			Dissipate();
 		setDead();
 		return true;
+	}
+
+	public int getLifeTime() {
+		return dataManager.get(SYNC_LIFETIME);
+	}
+
+	public void setLifeTime(int lifeTime) {
+		dataManager.set(SYNC_LIFETIME, lifeTime);
 	}
 
 	protected float getAoeDamage() {

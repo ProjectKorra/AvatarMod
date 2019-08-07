@@ -32,8 +32,10 @@ import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -104,10 +106,14 @@ public class AbilityFireShot extends Ability {
 				flames.rotationPitch = entity.rotationPitch;
 				flames.rotationYaw = entity.rotationYaw;
 				flames.setAbility(new AbilityFireShot());
+				flames.setLifeTime((int) abilityData.getTotalXp() + 60);
 				flames.setTrailingFire(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
 				//TODO: Remove all damage calculations in EntityFlames
 				flames.setFireTime((int) (4F * 1 + abilityData.getTotalXp() / 50f));
 				flames.setDamage(damage * (float) damageMult);
+				if (!world.isRemote)
+					world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
+							world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
 				world.spawnEntity(flames);
 			} else {
 				//TODO: Fix particle spawning
@@ -129,6 +135,9 @@ public class AbilityFireShot extends Ability {
 				wave.setParticleSpeed(0.18F);
 				wave.setParticleWaves(2);
 				wave.setParticleAmount(10);
+				if (!world.isRemote)
+					world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
+							world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
 				world.spawnEntity(wave);
 			}
 		}
@@ -145,40 +154,15 @@ public class AbilityFireShot extends Ability {
 		@Override
 		public Behavior onUpdate(EntityShockwave entity) {
 			if (entity.getOwner() != null) {
-				/*for(double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.ticksExisted * 1.5)){
-					Vec3d direction = entity.getLookVec();
-					double x, z, vx, vz;
-
-					x = direction.x * entity.ticksExisted * entity.getSpeed();
-					z = direction.z * entity.ticksExisted * entity.getSpeed();
-
-					vx = x * Math.cos(angle) - z * Math.sin(angle);
-					vz = x * Math.sin(angle) + z * Math.cos(angle);
-
-					direction = new Vec3d(vx, direction.y, vz);
-					direction = direction.add(entity.getPositionVector());
-
-					BlockPos spawnPos = new BlockPos((int) (direction.x), (int) (entity.posY),
-							(int) (direction.z));
-					if (BlockUtils.canPlaceFireAt(entity.world, spawnPos)){
-						if (spawnPos != entity.getPosition()) {
-							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() - 0.2 ? 120 : 10;
-							BlockTemp.createTempBlock(entity.world, spawnPos, time, Blocks.FIRE.getDefaultState());
-						}
-					}
-
-				}**/
-
-			/*if (entity.getOwner() != null) {**/
-				for(double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.ticksExisted * 3)){
-					int x = entity.posX < 0 ? (int)(entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle) - 1)
-							: (int)(entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle));
-					int y = (int)(entity.posY - 0.5);
-					int z = entity.posZ < 0 ? (int)(entity.posZ + ((entity.ticksExisted * entity.getSpeed()) * Math.cos(angle) - 1))
-							: (int)(entity.posZ + ((entity.ticksExisted * entity.getSpeed())) * Math.cos(angle));
+				for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.ticksExisted * 3)) {
+					int x = entity.posX < 0 ? (int) (entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle) - 1)
+							: (int) (entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle));
+					int y = (int) (entity.posY - 0.5);
+					int z = entity.posZ < 0 ? (int) (entity.posZ + ((entity.ticksExisted * entity.getSpeed()) * Math.cos(angle) - 1))
+							: (int) (entity.posZ + ((entity.ticksExisted * entity.getSpeed())) * Math.cos(angle));
 
 					BlockPos spawnPos = new BlockPos(x, (int) (entity.posY), z);
-					if (BlockUtils.canPlaceFireAt(entity.world, spawnPos) ) {
+					if (BlockUtils.canPlaceFireAt(entity.world, spawnPos)) {
 						if (spawnPos != entity.getPosition()) {
 							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() - 0.2 ? 120 : 10;
 							BlockTemp.createTempBlock(entity.world, spawnPos, time, Blocks.FIRE.getDefaultState());
