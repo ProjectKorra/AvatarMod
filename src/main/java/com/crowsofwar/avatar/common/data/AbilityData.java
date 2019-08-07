@@ -174,7 +174,7 @@ public class AbilityData {
 
 	/**
 	 * Gets the total experience value from 0-100, taking into account the level
-	 * AND current xp.
+	 * AND current xp. Maximum value is 136.
 	 */
 	public float getTotalXp() {
 		return level * 33 + xp * 33f / 100;

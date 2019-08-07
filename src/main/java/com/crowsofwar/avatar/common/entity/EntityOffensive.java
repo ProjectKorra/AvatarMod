@@ -42,6 +42,10 @@ public abstract class EntityOffensive extends AvatarEntity {
 	public EntityOffensive(World world) {
 		super(world);
 		this.expandedHitbox = getEntityBoundingBox();
+		this.performanceAmount = 20;
+		this.fireTime = 3;
+		this.xp = 3;
+		this.piercingKnockback = Vec3d.ZERO;
 	}
 
 	public float getDamage() {
@@ -144,6 +148,7 @@ public abstract class EntityOffensive extends AvatarEntity {
 	public void applyPiercingCollision() {
 		double x = getPiercingKnockback().x * getKnockbackMult().x;
 		double y = getPiercingKnockback().y * getKnockbackMult().y;
+		y = y > 0 ? y : 0.15F;
 		double z = getPiercingKnockback().z * getKnockbackMult().z;
 		List<Entity> collided = world.getEntitiesInAABBexcluding(this, getExpandedHitbox(), entity -> entity != getOwner());
 		if (!collided.isEmpty()) {
@@ -168,6 +173,7 @@ public abstract class EntityOffensive extends AvatarEntity {
 		Vec3d vel = getVelocity();
 		double x = vel.x * getKnockbackMult().x;
 		double y = vel.y * getKnockbackMult().y;
+		y = y > 0 ? y : 0.15F;
 		double z = vel.z * getKnockbackMult().z;
 		List<Entity> collided = world.getEntitiesInAABBexcluding(this, getExpandedHitbox(), entity -> entity != getOwner());
 		if (!collided.isEmpty()) {
