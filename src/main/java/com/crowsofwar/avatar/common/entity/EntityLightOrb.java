@@ -212,11 +212,19 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 			ticks++;
 			if (ticks == getTextureFrameCount()) ticks = 1;
 		}
-		if (ticksExisted > lifeTime && lifeTime != -1) {
+		if (!world.isRemote && ticksExisted > lifeTime && lifeTime != -1) {
 			setDead();
 		}
 		if (getBehavior() instanceof LightOrbBehavior.FollowEntity && getEmittingEntity() == null) {
 			setDead();
+		}
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
+		if (!world.isRemote) {
+			Thread.dumpStack();
 		}
 	}
 

@@ -9,6 +9,8 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.EntityLightOrb;
+import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.Entity;
@@ -122,8 +124,18 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 								world.spawnParticle(AvatarParticles.getParticleFlames(), true, particlePos.x, particlePos.y, particlePos.z, 60,
 										0, 0, 0, 0.02);
 							}
-							//particleSpawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 20, 40,
-							//new Vector(particlePos.x, particlePos.y, particlePos.z), new Vector(2, 2, 2));
+							//test for colour shifting
+							EntityLightOrb test = new EntityLightOrb(entity.world);
+							test.setPosition(particlePos);
+							test.setColor(1.0F, 0.2F, 0F, 1F);
+							test.setEmittingEntity(entity);
+							test.setOwner(entity);
+							test.setOrbSize(1.0F);
+							test.setBehavior(new LightOrbBehavior.ShiftColourRandomly());
+							test.setType(EntityLightOrb.EnumType.COLOR_SPHERE);
+							test.setLightRadius(4);
+							test.setAbility(new AbilityInfernoPunch());
+							entity.world.spawnEntity(test);
 							return true;
 						}
 

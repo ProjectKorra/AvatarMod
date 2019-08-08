@@ -18,8 +18,8 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
-import com.crowsofwar.avatar.common.bending.fire.AbilityInfernoPunch;
 import com.crowsofwar.avatar.common.bending.fire.AbilityImmolate;
+import com.crowsofwar.avatar.common.bending.fire.AbilityInfernoPunch;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -166,14 +166,15 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 				float g = entity.getInitialColourG();
 				float b = entity.getInitialColourB();
 				float a = entity.getInitialColourA();
-				//Even though it looks redundant, this allows for decimal values, making the colour shifting more believable
-				float amount = AvatarUtils.getRandomNumberInRange((int) (- 1 / entity.getColourShiftInterval()),
+				//Even though it looks redundant, this allows for decimal values, making the colour shifting more believable/accurate
+				float amount = AvatarUtils.getRandomNumberInRange((int) (-1 / entity.getColourShiftInterval()),
 						(int) (1 / entity.getColourShiftInterval())) * entity.getColourShiftInterval();
 				float red = r + amount > r + range ? r - amount : r + amount;
 				float green = g + amount > g + range ? g - amount : g + amount;
 				float blue = b + amount > b + range ? b - amount : r + amount;
 				float alpha = a + amount > a + range ? a - amount : a + amount;
-				entity.setColor(red, green, blue, alpha);
+				if (entity.world.isRemote)
+					entity.setColor(red, green, blue, alpha);
 			}
 			return this;
 		}
