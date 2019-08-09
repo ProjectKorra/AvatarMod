@@ -82,6 +82,20 @@ public class AbilityInfernoPunch extends Ability {
 			orb.setBehavior(new InfernoPunchLightOrb());
 			orb.setType(EntityLightOrb.EnumType.COLOR_SPHERE);
 			world.spawnEntity(orb);
+
+			//Test for colour shifting. For some reason it isn't spawned?
+			EntityLightOrb test = new EntityLightOrb(world);
+			test.setOwner(entity);
+			test.setPosition(entity.getPositionVector().add(entity.getLookVec()));
+			test.setColor(1.0F, 0.4F, 0F, 1F);
+			test.setEmittingEntity(entity);
+			test.setLightRadius(4);
+			test.setAbility(new AbilityInfernoPunch());
+			test.setLifeTime(-1);
+			test.setOrbSize(0.5F);
+			test.setBehavior(new LightOrbBehavior.ShiftColourRandomly());
+			test.setType(EntityLightOrb.EnumType.COLOR_SPHERE);
+			world.spawnEntity(test);
 		}
 	}
 
