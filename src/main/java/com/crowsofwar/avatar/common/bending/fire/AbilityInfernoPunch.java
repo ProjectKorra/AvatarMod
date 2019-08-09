@@ -11,12 +11,14 @@ import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.*;
@@ -75,7 +77,7 @@ public class AbilityInfernoPunch extends Ability {
 			orb.setOwner(entity);
 			orb.setAbility(new AbilityInfernoPunch());
 			orb.setPosition(entity.getPositionVector().add(0, entity.height / 2, 0));
-			orb.setOrbSize(0.005F);
+			orb.setOrbSize(0.05F);
 			orb.setColor(1F, 0.5F, 0F, 3F);
 			orb.setLightRadius(lightRadius);
 			orb.setEmittingEntity(entity);
@@ -95,7 +97,7 @@ public class AbilityInfernoPunch extends Ability {
 			test.setOrbSize(0.5F);
 			test.setBehavior(new LightOrbBehavior.ShiftColourRandomly());
 			test.setType(EntityLightOrb.EnumType.COLOR_SPHERE);
-			world.spawnEntity(test);
+			//world.spawnEntity(test);
 		}
 	}
 
@@ -120,7 +122,11 @@ public class AbilityInfernoPunch extends Ability {
 					boolean hasStatCtrl = b.hasStatusControl(INFERNO_PUNCH_MAIN) || b.hasStatusControl(INFERNO_PUNCH_FIRST)
 							|| b.hasStatusControl(INFERNO_PUNCH_SECOND);
 					if (hasStatCtrl) {
-						entity.setPosition(emitter.getPositionVector().add(0, emitter.height / 2, 0));
+						Vec3d pos = emitter.getPositionVector();
+						Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.55).toMinecraft();
+						pos = pos.add(rightSide);
+						pos = pos.add(0, 0.4, 0);
+						entity.setPosition(pos);
 						int lightRadius = 4;
 						//Stops constant spam and calculations
 						if (entity.ticksExisted == 1) {
