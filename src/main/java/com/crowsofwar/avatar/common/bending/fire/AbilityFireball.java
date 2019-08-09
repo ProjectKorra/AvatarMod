@@ -110,6 +110,7 @@ public class AbilityFireball extends Ability {
 			orb.setOrbSize(size * 0.03125F);
 			orb.setColor(1F, 0.5F, 0F, 1F);
 			orb.setLightRadius(15);
+			orb.setSpinning(true);
 			orb.setEmittingEntity(fireball);
 			orb.setBehavior(new FireballLightOrbBehavior());
 			orb.setType(CLIENT_CONFIG.fireballRenderSettings.isSphere ? EntityLightOrb.EnumType.TEXTURE_SPHERE : EntityLightOrb.EnumType.TEXTURE_CUBE);

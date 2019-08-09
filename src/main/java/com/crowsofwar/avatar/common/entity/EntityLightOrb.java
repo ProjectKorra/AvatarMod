@@ -55,6 +55,8 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 			DataSerializers.FLOAT);
 	private static final DataParameter<Float> SYNC_COLOUR_INTERVAL = EntityDataManager.createKey(EntityLightOrb.class,
 			DataSerializers.FLOAT);
+	private static final DataParameter<Boolean> SYNC_SPINNING = EntityDataManager.createKey(EntityLightOrb.class,
+			DataSerializers.BOOLEAN);
 
 	int ticks = 1;
 	private int lifeTime = -1;
@@ -83,6 +85,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 		dataManager.register(SYNC_INITIAL_COLOUR_A, 1F);
 		dataManager.register(SYNC_COLOUR_RANGE, 0.1F);
 		dataManager.register(SYNC_COLOUR_INTERVAL, 0.025F);
+		dataManager.register(SYNC_SPINNING, false);
 		//Random string UUID
 		dataManager.register(SYNC_EMITTING_ENTITY, "06256730-5d15-4e0f-b49b-997644ac6f59");
 	}
@@ -194,6 +197,13 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 		return dataManager.get(SYNC_SIZE);
 	}
 
+	public void setSpinning(boolean spinning) {
+		dataManager.set(SYNC_SPINNING, spinning);
+	}
+
+	public boolean isSpinning() {
+		return dataManager.get(SYNC_SPINNING);
+	}
 	/**
 	 * Sets the orb size
 	 *

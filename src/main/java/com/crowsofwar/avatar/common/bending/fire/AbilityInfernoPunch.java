@@ -77,8 +77,9 @@ public class AbilityInfernoPunch extends Ability {
 			orb.setOwner(entity);
 			orb.setAbility(new AbilityInfernoPunch());
 			orb.setPosition(entity.getPositionVector().add(0, entity.height / 2, 0));
-			orb.setOrbSize(0.05F);
-			orb.setColor(1F, 0.5F, 0F, 3F);
+			orb.setOrbSize(0.4F);
+			//orb.setSpinning(true);
+			orb.setColor(1F, 0.3F, 0F, 3F);
 			orb.setLightRadius(lightRadius);
 			orb.setEmittingEntity(entity);
 			orb.setBehavior(new InfernoPunchLightOrb());
@@ -89,7 +90,7 @@ public class AbilityInfernoPunch extends Ability {
 			EntityLightOrb test = new EntityLightOrb(world);
 			test.setOwner(entity);
 			test.setPosition(entity.getPositionVector().add(entity.getLookVec()));
-			test.setColor(1.0F, 0.4F, 0F, 1F);
+			test.setColor(1.0F, 0.3F, 0F, 1F);
 			test.setEmittingEntity(entity);
 			test.setLightRadius(4);
 			test.setAbility(new AbilityInfernoPunch());
@@ -118,15 +119,15 @@ public class AbilityInfernoPunch extends Ability {
 			Entity emitter = entity.getEmittingEntity();
 			if (emitter != null) {
 				if (emitter instanceof EntityBender || emitter instanceof EntityPlayer) {
-					BendingData b = BendingData.get((EntityLivingBase) emitter);
-					boolean hasStatCtrl = b.hasStatusControl(INFERNO_PUNCH_MAIN) || b.hasStatusControl(INFERNO_PUNCH_FIRST)
-							|| b.hasStatusControl(INFERNO_PUNCH_SECOND);
+					BendingData be = BendingData.get((EntityLivingBase) emitter);
+					boolean hasStatCtrl = be.hasStatusControl(INFERNO_PUNCH_MAIN) || be.hasStatusControl(INFERNO_PUNCH_FIRST)
+							|| be.hasStatusControl(INFERNO_PUNCH_SECOND);
 					if (hasStatCtrl) {
-						Vec3d pos = emitter.getPositionVector();
-						Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.55).toMinecraft();
-						pos = pos.add(rightSide);
-						pos = pos.add(0, 0.4, 0);
-						entity.setPosition(pos);
+						Vec3d height = Vec3d.ZERO.add(0, entity.getOrbSize() - entity.getOrbSize() / 5, 0);
+						Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.75).toMinecraft();
+						rightSide = rightSide.add(height);
+					//	pos = pos.add(rightSide);
+						entity.setPosition(rightSide);
 						int lightRadius = 4;
 						//Stops constant spam and calculations
 						if (entity.ticksExisted == 1) {

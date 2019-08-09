@@ -115,9 +115,6 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
 
             if(entity.getAbility() instanceof AbilityFireball && entity.getEmittingEntity() != null && entity.getEmittingEntity() instanceof EntityFireball) {
                 int amount = entity.getType() == EntityLightOrb.EnumType.TEXTURE_SPHERE ? 1 : 2;
-                GlStateManager.rotate(rotation * 0.2F, 1, 0, 0);
-                GlStateManager.rotate(rotation, 0, 1, 0);
-                GlStateManager.rotate(rotation * 0.2F, 0, 0, 1);
                 for (int i = 0; i < amount; i++) {
                     EntityFireball fireball = (EntityFireball) entity.getEmittingEntity();
                     World world = entity.world;
@@ -129,9 +126,18 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
                 }
             }
 
+            if (entity.isSpinning() && entity.isSphere()) {
+                //TODO: Data parameters for rotation amounts
+                GlStateManager.rotate(rotation * 0.2F, 1, 0, 0);
+                GlStateManager.rotate(rotation, 0, 1, 0);
+                GlStateManager.rotate(rotation * 0.2F, 0, 0, 1);
+            }
+
             GlStateManager.disableCull();
             if(entity.getType() == EntityLightOrb.EnumType.COLOR_CUBE || entity.getType() == EntityLightOrb.EnumType.TEXTURE_CUBE){
-                RenderUtils.renderCube(0, 0, 0, 0d, 1d, 0d, 1d, 1f, 0f, 0f, 0f);
+                if (entity.isSpinning())
+                    RenderUtils.renderCube(0, 0, 0, 0d, 1d, 0d, 1d, 1f, rotation * 0.2F, rotation, rotation * 0.2F);
+                else RenderUtils.renderCube(0, 0, 0, 0d, 1d, 0d, 1d, 1F, 0, 0, 0);
             } else {
                 CCRenderState ccrenderstate = CCRenderState.instance();
                 CCModel model = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/hemisphere.obj")).get("model");
