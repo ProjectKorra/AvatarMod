@@ -71,7 +71,7 @@ repositories {
 	}
 	maven {
 		name = "altillimity"
-		url = "http://www.altillimity.com/nexus/content/groups/maven/"
+		url = "https://maven.altillimity.com/content/groups/maven/"
 	}
 	maven {
 		name = "codechickenlib"
