@@ -11,6 +11,8 @@ import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.common.util.PlayerViewRegistry;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -123,24 +125,33 @@ public class AbilityInfernoPunch extends Ability {
 					boolean hasStatCtrl = be.hasStatusControl(INFERNO_PUNCH_MAIN) || be.hasStatusControl(INFERNO_PUNCH_FIRST)
 							|| be.hasStatusControl(INFERNO_PUNCH_SECOND);
 					if (hasStatCtrl) {
+						//Rn it's lagging tf out. iIdk why. There's no error log.
 						Vec3d height;
 						Vec3d rightSide;
 						if (emitter instanceof EntityPlayer) {
-							//TODO: Use networking, packets, and mc.gameSettings.thirdPersonView to change the positioning of the orb to make it cool.
-							if (((EntityPlayer) emitter).cameraYaw == emitter.rotationYaw && ((EntityPlayer) emitter).cameraPitch == emitter.rotationPitch) {
-								height = emitter.getPositionVector().add(0, entity.getOrbSize() * 4, 0);
-								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.4).withY(0).toMinecraft();
+							if (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) >= 2) {
+								//TODO: Use networking, packets, and mc.gameSettings.thirdPersonView to change the positioning of the orb to make it cool.
+								height = emitter.getPositionVector().add(0, entity.getOrbSize() * 3.5, 0);
+								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.2).withY(0).toMinecraft();
 								//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
 								rightSide = rightSide.add(height);
 								//	pos = pos.add(rightSide);
-								entity.setPosition(rightSide);
+								Vec3d vel = rightSide.subtract(entity.getPositionVector().scale(5));
+								entity.motionX = vel.x;
+								entity.motionY = vel.y;
+								entity.motionZ = vel.z;
+								AvatarUtils.afterVelocityAdded(entity);
 							} else {
 								height = emitter.getPositionVector().add(0, entity.getOrbSize() * 2.1, 0);
 								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.4).withY(0).toMinecraft();
 								//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
 								rightSide = rightSide.add(height);
 								//	pos = pos.add(rightSide);
-								entity.setPosition(rightSide);
+								Vec3d vel = rightSide.subtract(entity.getPositionVector().scale(5));
+								entity.motionX = vel.x;
+								entity.motionY = vel.y;
+								entity.motionZ = vel.z;
+								AvatarUtils.afterVelocityAdded(entity);
 							}
 
 						} else {
@@ -149,7 +160,11 @@ public class AbilityInfernoPunch extends Ability {
 							//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
 							rightSide = rightSide.add(height);
 							//	pos = pos.add(rightSide);
-							entity.setPosition(rightSide);
+							Vec3d vel = rightSide.subtract(entity.getPositionVector().scale(5));
+							entity.motionX = vel.x;
+							entity.motionY = vel.y;
+							entity.motionZ = vel.z;
+							AvatarUtils.afterVelocityAdded(entity);
 						}
 						int lightRadius = 4;
 						//Stops constant spam and calculations
