@@ -67,6 +67,9 @@ public class RenderLightCylinder extends Render<EntityLightCylinder> {
                     GlStateManager.rotate((float) (entity.rotationPitch + 90), 1, 0, 0);
                     GlStateManager.scale(scale, lenght == i + 1 ? scale * lastLenght : scale, scale);
 
+                    if (entity.shouldSpin())
+                       GlStateManager.rotate(entity.ticksExisted * entity.getDegreesPerSecond(), 0,0, 1);
+
                     if (shouldCclRender) {
                         CCModel model = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/cylinder.obj")).get("model");
                         CCRenderState ccrenderstate = CCRenderState.instance();

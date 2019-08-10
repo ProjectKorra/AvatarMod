@@ -9,12 +9,16 @@ import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityLightCylinder;
 import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
+import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.LightCylinderBehaviour;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -136,6 +140,20 @@ public class WaterChargeHandler extends TickHandler {
 		world.spawnEntity(cannon);
 
 		EntityLightCylinder cylinder = new EntityLightCylinder(world);
+		cylinder.setShouldSpin(true);
+		cylinder.setTexture("avatarmod:textures/entity/water-ribbon.png");
+		cylinder.setLightRadius(0);
+		cylinder.setLightAmount(0);
+		//TODO: Later use colours instead of a texture, for colour shifting
+		cylinder.setColorA(1.0F);
+		cylinder.setColorB(1.0F);
+		cylinder.setColorG(1.0F);
+		cylinder.setColorR(1.0F);
+		cylinder.setType(EntityLightCylinder.EnumType.SQUARE);
+		cylinder.setCylinderSize(size);
+		cylinder.setCylinderPitch(entity.rotationPitch);
+		cylinder.setCylinderYaw(entity.rotationYaw);
+		cylinder.setCylinderLength(10);
 
 	}
 
@@ -147,6 +165,34 @@ public class WaterChargeHandler extends TickHandler {
 
 		moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID, "Water charge modifier", multiplier - 1, 1));
 
+	}
+
+	public static class WaterCylinderBehaviour extends LightCylinderBehaviour {
+
+		@Override
+		public Behavior onUpdate(EntityLightCylinder entity) {
+			return this;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
 	}
 
 }
