@@ -123,8 +123,9 @@ public class AbilityInfernoPunch extends Ability {
 					boolean hasStatCtrl = be.hasStatusControl(INFERNO_PUNCH_MAIN) || be.hasStatusControl(INFERNO_PUNCH_FIRST)
 							|| be.hasStatusControl(INFERNO_PUNCH_SECOND);
 					if (hasStatCtrl) {
-						Vec3d height = Vec3d.ZERO.add(0, entity.getOrbSize() - entity.getOrbSize() / 5, 0);
-						Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.75).toMinecraft();
+						Vec3d height = emitter.getPositionVector().add(0, entity.getOrbSize() * 2, 0);
+						Vec3d rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.4).withY(0).toMinecraft();
+						//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
 						rightSide = rightSide.add(height);
 					//	pos = pos.add(rightSide);
 						entity.setPosition(rightSide);
