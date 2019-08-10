@@ -125,7 +125,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityExplosivePillar());
 		Abilities.register(new AbilitySandstorm());
 		Abilities.register(new AbilityInfernoPunch());
-		Abilities.register(new AbilityBoulderRing());
+		//Abilities.register(new AbilityBoulderRing());
 		Abilities.register(new AbilityLightningRaze());
 		Abilities.register(new AbilityAirBurst());
 	}
