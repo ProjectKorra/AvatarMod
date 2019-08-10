@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "avatarmod:scroll_water",
+      "data" : 1
+    }, {
+      "item": "avatarmod:scroll_water",
+      "data" : 1
+    }
+  ],
+  "result": {
+    "item": "avatarmod:scroll_water",
+    "data": 2
+  }
+}

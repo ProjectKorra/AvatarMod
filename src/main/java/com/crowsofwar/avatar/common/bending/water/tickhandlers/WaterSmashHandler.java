@@ -1,8 +1,10 @@
-package com.crowsofwar.avatar.common.bending.water;
+package com.crowsofwar.avatar.common.bending.water.tickhandlers;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
+import com.crowsofwar.avatar.common.bending.water.AbilityWaterSkate;
+import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;

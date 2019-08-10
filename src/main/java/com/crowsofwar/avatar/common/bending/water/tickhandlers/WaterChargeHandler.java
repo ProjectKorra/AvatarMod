@@ -1,5 +1,7 @@
-package com.crowsofwar.avatar.common.bending.water;
+package com.crowsofwar.avatar.common.bending.water.tickhandlers;
 
+import com.crowsofwar.avatar.common.bending.water.AbilityWaterCannon;
+import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;

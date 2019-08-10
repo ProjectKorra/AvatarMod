@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.bending.water;
+package com.crowsofwar.avatar.common.bending.water.tickhandlers;
 
 import com.crowsofwar.avatar.common.bending.BuffPowerModifier;
 import com.crowsofwar.avatar.common.data.AbilityData;
