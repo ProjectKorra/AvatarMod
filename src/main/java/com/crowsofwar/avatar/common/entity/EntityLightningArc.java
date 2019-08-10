@@ -23,7 +23,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
@@ -41,7 +40,6 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 /**
  * @author CrowsOfWar
  */
-@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
 public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningControlPoint> implements ILightProvider {
 
 	private static final DataParameter<Vector> SYNC_ENDPOS = EntityDataManager.createKey
@@ -402,13 +400,11 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	}
 
 	@Override
-	@Optional.Method(modid = "albedo")
 	public void gatherLights(GatherLightsEvent gatherLightsEvent, Entity entity) {
 
 	}
 
 	@Override
-	@Optional.Method(modid = "albedo")
 	public Light provideLight() {
 		return Light.builder().pos(this).color(1F, 2F, 3F).radius(15).build();
 	}

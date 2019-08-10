@@ -44,6 +44,7 @@ import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.avatar.common.network.packets.*;
+import com.crowsofwar.avatar.common.util.PlayerViewRegistry;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -118,6 +119,9 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (packet instanceof PacketSCycleBending)
 			return handleCycleBending((PacketSCycleBending) packet, ctx);
 
+		if (packet instanceof PacketSSendViewStatus)
+			return handleViewUpdate((PacketSSendViewStatus) packet, ctx);
+
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
 	}
@@ -125,6 +129,16 @@ public class PacketHandlerServer implements IPacketHandler {
 	@Override
 	public Side getSide() {
 		return Side.SERVER;
+	}
+
+	private IMessage handleViewUpdate(PacketSSendViewStatus packet, MessageContext ctx) {
+
+		EntityPlayerMP player = ctx.getServerHandler().player;
+		if (player != null) {
+			PlayerViewRegistry.setPlayerViewInRegistry(player.getUniqueID(), packet.getMode());			
+		}
+
+		return null;
 	}
 
 	private IMessage handleKeypress(PacketSUseAbility packet, MessageContext ctx) {
