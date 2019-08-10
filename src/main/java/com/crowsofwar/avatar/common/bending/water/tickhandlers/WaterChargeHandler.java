@@ -7,10 +7,12 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityLightCylinder;
 import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightCylinderBehaviour;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -141,6 +143,7 @@ public class WaterChargeHandler extends TickHandler {
 
 		EntityLightCylinder cylinder = new EntityLightCylinder(world);
 		cylinder.setShouldSpin(true);
+		cylinder.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight() - 0.3, 0).add(entity.getLookVec().scale(0.4)));
 		cylinder.setTexture("avatarmod:textures/entity/water-ribbon.png");
 		cylinder.setLightRadius(0);
 		cylinder.setLightAmount(0);
@@ -153,7 +156,8 @@ public class WaterChargeHandler extends TickHandler {
 		cylinder.setCylinderSize(size);
 		cylinder.setCylinderPitch(entity.rotationPitch);
 		cylinder.setCylinderYaw(entity.rotationYaw);
-		cylinder.setCylinderLength(10);
+		cylinder.setCylinderLength(1);
+		world.spawnEntity(cylinder);
 
 	}
 
@@ -171,6 +175,15 @@ public class WaterChargeHandler extends TickHandler {
 
 		@Override
 		public Behavior onUpdate(EntityLightCylinder entity) {
+			if (entity.getOwner() != null) {
+				EntityWaterCannon cannon = AvatarEntity.lookupControlledEntity(entity.world, EntityWaterCannon.class, entity.getOwner());
+				if (cannon != null) {
+					entity.setCylinderLength(cannon.getDistance(entity.getOwner()));
+					entity.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight() - 0.3, 0).add(entity.getLookVec().scale(0.4)));
+					AvatarUtils.setRotationFromPosition(entity, cannon);
+				}
+				else entity.setDead();
+			}
 			return this;
 		}
 

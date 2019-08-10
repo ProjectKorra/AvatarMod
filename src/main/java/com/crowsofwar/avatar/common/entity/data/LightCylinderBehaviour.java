@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.entity.EntityLightCylinder;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
+import net.minecraft.network.datasync.DataSerializers;
 
 public abstract class LightCylinderBehaviour extends Behavior<EntityLightCylinder> {
 	public static final DataSerializer<LightCylinderBehaviour> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
@@ -13,6 +14,7 @@ public abstract class LightCylinderBehaviour extends Behavior<EntityLightCylinde
 	}
 
 	public static void register() {
+		DataSerializers.registerSerializer(DATA_SERIALIZER);
 		registerBehavior(Idle.class);
 		registerBehavior(WaterChargeHandler.WaterCylinderBehaviour.class);
 	}
