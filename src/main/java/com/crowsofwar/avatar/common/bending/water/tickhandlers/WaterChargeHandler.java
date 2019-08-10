@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityLightCylinder;
 import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -133,6 +134,8 @@ public class WaterChargeHandler extends TickHandler {
 		velocity = velocity.normalize().times(speed);
 		cannon.setVelocity(velocity);
 		world.spawnEntity(cannon);
+
+		EntityLightCylinder cylinder = new EntityLightCylinder(world);
 
 	}
 

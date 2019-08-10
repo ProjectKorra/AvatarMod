@@ -46,6 +46,10 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
             DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_PITCH = EntityDataManager.createKey(EntityLightCylinder.class,
             DataSerializers.FLOAT);
+    private static final DataParameter<Boolean> SYNC_SHOULD_SPIN = EntityDataManager.createKey(EntityLightCylinder.class,
+            DataSerializers.BOOLEAN);
+    private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityLightCylinder.class,
+            DataSerializers.FLOAT);
 
     public EntityLightCylinder(World world) {
         super(world);
