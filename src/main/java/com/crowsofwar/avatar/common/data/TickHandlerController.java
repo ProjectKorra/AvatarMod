@@ -7,7 +7,7 @@ import com.crowsofwar.avatar.common.bending.earth.RestoreParticleHandler;
 import com.crowsofwar.avatar.common.bending.fire.*;
 import com.crowsofwar.avatar.common.bending.lightning.LightningCreateHandler;
 import com.crowsofwar.avatar.common.bending.lightning.LightningRedirectHandler;
-import com.crowsofwar.avatar.common.bending.water.*;
+import com.crowsofwar.avatar.common.bending.water.tickhandlers.*;
 import com.crowsofwar.avatar.common.entity.mob.BisonSummonHandler;
 import io.netty.buffer.ByteBuf;
 
@@ -50,6 +50,7 @@ public class TickHandlerController {
 	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler(27);
 	public static TickHandler INFERNO_PUNCH_COOLDOWN = new InfernoPunchCooldownHandler(28);
 	public static TickHandler SLIPSTREAM_WALK_HANDLER = new SlipstreamAirWalkHandler(29);
+	public static TickHandler WATERARC_COMBO_HANDLER = new WaterArcComboHandler(30);
 
 	// @formatter:on
 

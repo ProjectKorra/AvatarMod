@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
@@ -41,8 +42,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiPredicate;
 
-import static com.crowsofwar.avatar.common.bending.water.WaterArcComboHandler.*;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.WATERARC_COMBO_HANDLER;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 import static java.lang.Math.toRadians;
 
@@ -75,6 +76,7 @@ public class AbilityWaterArc extends Ability {
 		World world = ctx.getWorld();
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
+		BendingData data = ctx.getData();
 
 		Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel() * 2);
 
@@ -141,9 +143,16 @@ public class AbilityWaterArc extends Ability {
 
 				if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 					EntityWaterArc water = new EntityWaterArc(world);
-					setWaterArcActivatedCombo(entity.getUniqueID().toString(), true);
-					setWaterArcComboTicks(entity.getUniqueID().toString(), 0);
 
+					if (data.hasTickHandler(WATERARC_COMBO_HANDLER)) {
+						int number = getComboNumber(UUID);
+						if (number < 3)
+							number++;
+						setComboNumber(UUID, number);
+						data.removeTickHandler(WATERARC_COMBO_HANDLER);
+						data.addTickHandler(WATERARC_COMBO_HANDLER);
+					}
+					else setComboNumber(UUID, 1);
 
 					if (getComboNumber(UUID) == 0) {
 						setComboNumber(UUID, 1);
@@ -158,17 +167,11 @@ public class AbilityWaterArc extends Ability {
 						size = 0.5F;
 					}
 
-					if (getComboNumber(UUID) == 3) {
+					if (getComboNumber(UUID) >= 3) {
 						//Massive Singular water arc; kinda like airgust
 						size = 1F;
 						gravity = 2;
 						setComboNumber(UUID, 1);
-					} else {
-						if (getWaterArcActivatedCombo(entity.getUniqueID().toString())) {
-							int number = getComboNumber(UUID);
-							number++;
-							setComboNumber(UUID, number);
-						}
 					}
 
 

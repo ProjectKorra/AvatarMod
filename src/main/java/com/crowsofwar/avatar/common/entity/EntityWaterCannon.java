@@ -2,7 +2,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterCannon;
-import com.crowsofwar.avatar.common.bending.water.WaterChargeHandler;
+import com.crowsofwar.avatar.common.bending.water.tickhandlers.WaterChargeHandler;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
