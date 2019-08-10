@@ -59,7 +59,7 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
  * @author CrowsOfWar
  */
 @Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityLightningSpear extends AvatarEntity implements ILightProvider {
+public class EntityLightningSpear extends EntityOffensive implements ILightProvider {
 
 	private static final DataParameter<LightningSpearBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityLightningSpear.class, LightningSpearBehavior.DATA_SERIALIZER);
@@ -91,8 +91,6 @@ public class EntityLightningSpear extends AvatarEntity implements ILightProvider
 
 	private float Size;
 
-	private float degreesPerSecond;
-
 	private ParticleSpawner particleSpawner;
 
 
@@ -102,7 +100,6 @@ public class EntityLightningSpear extends AvatarEntity implements ILightProvider
 	public EntityLightningSpear(World world) {
 		super(world);
 		this.Size = 0.8F;
-		this.degreesPerSecond = 400;
 		setSize(Size, Size);
 		this.damage = 3F;
 		this.piercing = false;
@@ -118,7 +115,7 @@ public class EntityLightningSpear extends AvatarEntity implements ILightProvider
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new LightningSpearBehavior.Idle());
 		dataManager.register(SYNC_SIZE, Size);
-		dataManager.register(SYNC_DEGREES_PER_SECOND, degreesPerSecond);
+		dataManager.register(SYNC_DEGREES_PER_SECOND, 400F);
 	}
 
 	@Override
