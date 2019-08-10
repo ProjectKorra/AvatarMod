@@ -270,3 +270,7 @@ task release(dependsOn: ["cleanBuild", "publish"]) {
 	group "build"
 	tasks.publish.mustRunAfter cleanBuild
 }
+
+runClient {
+    args = ['--username', 'Dev']
+}
