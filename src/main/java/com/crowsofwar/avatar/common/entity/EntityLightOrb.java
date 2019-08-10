@@ -231,14 +231,6 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 	}
 
 	@Override
-	public void setDead() {
-		super.setDead();
-		if (!world.isRemote) {
-			Thread.dumpStack();
-		}
-	}
-
-	@Override
 	public boolean canBeCollidedWith() {
 		return false;
 	}

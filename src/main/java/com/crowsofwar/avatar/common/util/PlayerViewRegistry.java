@@ -15,11 +15,8 @@ public class PlayerViewRegistry {
         }
     }
 
+    //-1 is an error, 0 is first person, 1 and 2 are 3rd person.
     public static int getPlayerViewMode(UUID uuid) {
-        if (player_view.containsKey(uuid)) {
-            return player_view.get(uuid);
-        } else {
-            return -1;
-        }
+        return player_view.getOrDefault(uuid, -1);
     }
 }

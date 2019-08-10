@@ -109,6 +109,12 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
 	}
 
 	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		setBehaviour((LightCylinderBehaviour) getBehaviour().onUpdate(this));
+	}
+
+	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		setTexture(nbt.getString("CylTexture"));
@@ -252,6 +258,14 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
 
 	public void setDegreesPerSecond(float degrees) {
 		dataManager.set(SYNC_DEGREES_PER_SECOND, degrees);
+	}
+
+	public void setBehaviour(LightCylinderBehaviour behaviour) {
+		dataManager.set(SYNC_BEHAVIOR, behaviour);
+	}
+
+	public LightCylinderBehaviour getBehaviour() {
+		return dataManager.get(SYNC_BEHAVIOR);
 	}
 
 	public enum EnumType {

@@ -148,15 +148,17 @@ public class WaterChargeHandler extends TickHandler {
 		cylinder.setLightRadius(0);
 		cylinder.setLightAmount(0);
 		//TODO: Later use colours instead of a texture, for colour shifting
-		cylinder.setColorA(1.0F);
+		cylinder.setColorA(0.1F);
 		cylinder.setColorB(1.0F);
 		cylinder.setColorG(1.0F);
 		cylinder.setColorR(1.0F);
+		cylinder.setOwner(entity);
 		cylinder.setType(EntityLightCylinder.EnumType.SQUARE);
 		cylinder.setCylinderSize(size);
 		cylinder.setCylinderPitch(entity.rotationPitch);
 		cylinder.setCylinderYaw(entity.rotationYaw);
 		cylinder.setCylinderLength(1);
+		cylinder.setBehaviour(new WaterCylinderBehaviour());
 		world.spawnEntity(cylinder);
 
 	}
@@ -179,10 +181,14 @@ public class WaterChargeHandler extends TickHandler {
 				EntityWaterCannon cannon = AvatarEntity.lookupControlledEntity(entity.world, EntityWaterCannon.class, entity.getOwner());
 				if (cannon != null) {
 					entity.setCylinderLength(cannon.getDistance(entity.getOwner()));
-					entity.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight() - 0.3, 0).add(entity.getLookVec().scale(0.4)));
+					entity.setPosition(entity.getOwner().getPositionVector().add(0, entity.getOwner().getEyeHeight() - 0.3, 0).add(entity.getOwner().getLookVec().scale(0.4)));
 					AvatarUtils.setRotationFromPosition(entity, cannon);
+					System.out.println(entity.getPositionVector());
+					System.out.println(entity.getOwner().getPositionVector().add(0, entity.getOwner().getEyeHeight() - 0.3, 0).add(entity.getOwner().getLookVec().scale(0.4)));
+				} else {
+					if (entity.ticksExisted > 1)
+						entity.setDead();
 				}
-				else entity.setDead();
 			}
 			return this;
 		}
