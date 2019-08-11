@@ -120,6 +120,9 @@ public class AbilityInfernoPunch extends Ability {
 		public Behavior onUpdate(EntityLightOrb entity) {
 			Entity emitter = entity.getEmittingEntity();
 			if (emitter != null) {
+				float size = 0;
+				if (entity.ticksExisted == 1)
+					size = entity.getOrbSize();
 				if (emitter instanceof EntityBender || emitter instanceof EntityPlayer) {
 					BendingData be = BendingData.get((EntityLivingBase) emitter);
 					boolean hasStatCtrl = be.hasStatusControl(INFERNO_PUNCH_MAIN) || be.hasStatusControl(INFERNO_PUNCH_FIRST)
@@ -130,40 +133,37 @@ public class AbilityInfernoPunch extends Ability {
 						Vec3d rightSide;
 						if (emitter instanceof EntityPlayer) {
 							if (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) == 2) {
-								//TODO: Use networking, packets, and mc.gameSettings.thirdPersonView to change the positioning of the orb to make it cool.
-								height = emitter.getPositionVector().add(0, entity.getOrbSize() * 3.5, 0);
-								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.2).withY(0).toMinecraft();
+								entity.setOrbSize(0.2F);
+								height = emitter.getPositionVector().add(0, 1.6, 0);
+								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.05).withY(0).toMinecraft();
 								//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
 								rightSide = rightSide.add(height);
 								//	pos = pos.add(rightSide);
 								Vec3d vel = rightSide.subtract(entity.getPositionVector());
-								entity.motionX = vel.x;
-								entity.motionY = vel.y;
-								entity.motionZ = vel.z;
+								entity.setPosition(rightSide);
+								entity.setVelocity(new Vector(emitter.motionX, emitter.motionY, emitter.motionZ));
 								AvatarUtils.afterVelocityAdded(entity);
 							} else {
+								entity.setOrbSize(0.4F);
 								height = emitter.getPositionVector().add(0, entity.getOrbSize() * 2.1, 0);
 								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.4).withY(0).toMinecraft();
 								//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
 								rightSide = rightSide.add(height);
 								//	pos = pos.add(rightSide);
-								Vec3d vel = rightSide.subtract(entity.getPositionVector());
-								entity.motionX = vel.x;
-								entity.motionY = vel.y;
-								entity.motionZ = vel.z;
+								entity.setPosition(rightSide);
+								entity.setVelocity(new Vector(emitter.motionX, emitter.motionY, emitter.motionZ));
 								AvatarUtils.afterVelocityAdded(entity);
 							}
 
 						} else {
+							entity.setOrbSize(0.4F);
 							height = emitter.getPositionVector().add(0, entity.getOrbSize() * 2.1, 0);
 							rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.4).withY(0).toMinecraft();
 							//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
 							rightSide = rightSide.add(height);
 							//	pos = pos.add(rightSide);
-							Vec3d vel = rightSide.subtract(entity.getPositionVector());
-							entity.motionX = vel.x;
-							entity.motionY = vel.y;
-							entity.motionZ = vel.z;
+							entity.setPosition(rightSide);
+							entity.setVelocity(new Vector(emitter.motionX, emitter.motionY, emitter.motionZ));
 							AvatarUtils.afterVelocityAdded(entity);
 						}
 						int lightRadius = 4;
