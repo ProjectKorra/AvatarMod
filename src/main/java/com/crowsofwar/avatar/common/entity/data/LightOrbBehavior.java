@@ -28,6 +28,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * @author Aang23
@@ -160,6 +161,7 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 
 		@Override
 		public Behavior onUpdate(EntityLightOrb entity) {
+			//TODO: Frequency
 			if (entity.getColourShiftRange() != 0) {
 				float range = entity.getColourShiftRange() / 2;
 				float r = entity.getInitialColourR();
@@ -167,34 +169,41 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 				float b = entity.getInitialColourB();
 				float a = entity.getInitialColourA();
 				for (int i = 0; i < 4; i++) {
-					//Even though it looks redundant, this allows for decimal values, making the colour shifting more believable/accurate
-					//TODO: Data parameter for frequency
-					float amount = AvatarUtils.getRandomNumberInRange((int) (-1 / entity.getColourShiftInterval()),
-							(int) (1 / entity.getColourShiftInterval())) * entity.getColourShiftInterval();
-					float red = r, green = g, blue = b, alpha = a;
+					float red, green, blue, alpha;
 					switch (i) {
 						case 0:
-							red = r + amount > r + range ? r - amount : r + amount;
+							float amountR = AvatarUtils.getRandomNumberInRange((int) (-100 / entity.getColorR()),
+									(int) (100 / entity.getColorR())) / 100F * entity.getColourShiftInterval();
+							red = r + amountR;
+							red = MathHelper.clamp(red, r - range, r + range);
 							entity.setColorR(red);
 							break;
 
 						case 1:
-							green = g + amount > g + range ? g - amount : g + amount;
+							float amountG = AvatarUtils.getRandomNumberInRange((int) (-100 / entity.getColorG()),
+									(int) (100 / entity.getColorG())) / 100F * entity.getColourShiftInterval();
+							green = g + amountG;
+							green = MathHelper.clamp(green, g - range, g + range);
 							entity.setColorG(green);
 							break;
 
 						case 2:
-							blue = b + amount > b + range ? b - amount : r + amount;
+							float amountB = AvatarUtils.getRandomNumberInRange((int) (-100 / entity.getColorB()),
+									(int) (100 / entity.getColorB())) / 100F * entity.getColourShiftInterval();
+							blue = b + amountB;
+							blue = MathHelper.clamp(blue, b - range, b + range);
 							entity.setColorB(blue);
 							break;
 
 						case 3:
-							alpha = a + amount > a + range ? a - amount : a + amount;
+							float amountA = AvatarUtils.getRandomNumberInRange((int) (-100 / entity.getColorA()),
+									(int) (100 / entity.getColorA())) / 100F * entity.getColourShiftInterval();
+							alpha = a + amountA;
+							alpha = MathHelper.clamp(alpha, a - range, a + range);
 							entity.setColorA(alpha);
 							break;
 
 					}
-
 				}
 			}
 			return this;

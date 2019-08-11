@@ -21,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -149,11 +150,11 @@ public class AbilityInfernoPunch extends Ability {
 								height = emitter.getPositionVector().add(0, 0.88, 0);
 								Vec3d vel;
 								if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.4).withY(0).toMinecraft();
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
 									rightSide = rightSide.add(height);
 									vel = rightSide.subtract(entity.getPositionVector());
 								} else {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.4).withY(0).toMinecraft();
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.5).withY(0).toMinecraft();
 									rightSide = rightSide.add(height);
 									vel = rightSide.subtract(entity.getPositionVector());
 								}
@@ -196,7 +197,7 @@ public class AbilityInfernoPunch extends Ability {
 							}
 						}
 						if (entity.getEntityWorld().isRemote)
-							entity.setLightRadius(lightRadius + (int) (Math.random() * 4));
+							entity.setLightRadius(lightRadius + (int) (java.lang.Math.random() * 4));
 						//Shift colour. Copied from the randomly shift colour class.
 						if (entity.ticksExisted % 8 == 0) {
 							if (entity.getColourShiftRange() != 0) {
@@ -206,45 +207,41 @@ public class AbilityInfernoPunch extends Ability {
 								float b = entity.getInitialColourB();
 								float a = entity.getInitialColourA();
 								for (int i = 0; i < 4; i++) {
-									//Even though it looks redundant, this allows for decimal values, making the colour shifting more believable/accurate
-									float amount = AvatarUtils.getRandomNumberInRange((int) (-1 / entity.getColourShiftInterval()),
-											(int) (1 / entity.getColourShiftInterval())) * entity.getColourShiftInterval();
-									float red = r, green = g, blue = b, alpha = a;
+									float red, green, blue, alpha;
 									switch (i) {
 										case 0:
-											red = r + amount > r + range ? r - amount : r + amount;
-											/*boolean r1 = r + amount < r + range;
-											boolean r2 = r + amount > r - range;
-											red = r1 && r2 ? red : r + range;**/
+											float amountR = AvatarUtils.getRandomNumberInRange((int) (-100 / entity.getColorR()),
+													(int) (100 / entity.getColorR())) / 100F * entity.getColourShiftInterval();
+											red = r + amountR;
+											red = MathHelper.clamp(red, r - range, r + range);
 											entity.setColorR(red);
 											break;
 
 										case 1:
-											green = g + amount > g + range ? g - amount : g + amount;
-											/*boolean g1 = g + amount < g + range;
-											boolean g2 = g + amount > g - range;
-											green = g1 && g2 ? green : g + range;**/
+											float amountG = AvatarUtils.getRandomNumberInRange((int) (-100 / entity.getColorG()),
+													(int) (100 / entity.getColorG())) / 100F * entity.getColourShiftInterval();
+											green = g + amountG;
+											green = MathHelper.clamp(green, g - range, g + range);
 											entity.setColorG(green);
 											break;
 
 										case 2:
-											blue = b + amount > b + range ? b - amount : r + amount;
-											/*boolean b1 = r + amount < b + range;
-											boolean b2 = r + amount > b - range;
-											blue = b1 && b2 ? blue : b + range;**/
+											float amountB = AvatarUtils.getRandomNumberInRange((int) (-100 / entity.getColorB()),
+													(int) (100 / entity.getColorB())) / 100F * entity.getColourShiftInterval();
+											blue = b + amountB;
+											blue = MathHelper.clamp(blue, b - range, b + range);
 											entity.setColorB(blue);
 											break;
 
 										case 3:
-											alpha = a + amount > a + range ? a - amount : a + amount;
-											/*boolean a1 = a + amount < a + range;
-											boolean a2 = a + amount > a - range;
-											alpha = a1 && a2 ? alpha : a + range;
-											entity.setColorA(alpha);**/
+											float amountA = AvatarUtils.getRandomNumberInRange((int) (-100 / entity.getColorA()),
+													(int) (100 / entity.getColorA())) / 100F * entity.getColourShiftInterval();
+											alpha = a + amountA;
+											alpha = MathHelper.clamp(alpha, a - range, a + range);
+											//entity.setColorA(alpha);
 											break;
 
 									}
-
 								}
 							}
 						}
