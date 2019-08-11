@@ -87,11 +87,11 @@ public class AbilityInfernoPunch extends Ability {
 			orb.setPosition(rightSide);
 			orb.setOrbSize(0.4F);
 			orb.setSpinning(true);
-			orb.setColor(1F, 0.3F, 0F, 3F);
+			orb.setColor(1F, 0.3F, 0F, 1F);
 			orb.setLightRadius(lightRadius);
 			orb.setEmittingEntity(entity);
-			orb.setColourShiftRange(0.075F);
-			orb.setColourShiftInterval(0.0005F);
+			orb.setColourShiftRange(0.2F);
+			orb.setColourShiftInterval(0.05F);
 			orb.setBehavior(new InfernoPunchLightOrb());
 			orb.setType(CLIENT_CONFIG.fireRenderSettings.infernoPunchSphere ? EntityLightOrb.EnumType.COLOR_SPHERE : EntityLightOrb.EnumType.COLOR_CUBE);
 			world.spawnEntity(orb);
