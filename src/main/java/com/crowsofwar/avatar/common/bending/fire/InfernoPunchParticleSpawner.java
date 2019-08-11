@@ -55,12 +55,12 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 					height = height.add(entity.getLookVec().scale(0.8));
 					//Right
 					if (entity.getPrimaryHand() == EnumHandSide.RIGHT) {
-						rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.2).withY(0).toMinecraft();
+						rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
 						rightSide = rightSide.add(height);
 					}
 					//Left
 					else {
-						rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw - 90), 0).times(0.2).withY(0).toMinecraft();
+						rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw - 90), 0).times(0.5).withY(0).toMinecraft();
 						rightSide = rightSide.add(height);
 					}
 					AvatarUtils.afterVelocityAdded(entity);

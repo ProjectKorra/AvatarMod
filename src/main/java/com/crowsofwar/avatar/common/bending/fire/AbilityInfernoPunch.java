@@ -36,8 +36,7 @@ public class AbilityInfernoPunch extends Ability {
 
 	@Override
 	public void execute(AbilityContext ctx) {
-		//TODO: Use a randomiser for the flame particles so they're more dynamic
-		//TODO: Fix gitchiness using a status control+raytrace
+		//Todo: Figure out why the player is slowed with inferno punch
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		Bender bender = ctx.getBender();
@@ -127,19 +126,19 @@ public class AbilityInfernoPunch extends Ability {
 						Vec3d rightSide;
 						if (emitter instanceof EntityPlayer) {
 							if (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) <= -1) {
-								entity.setOrbSize(0.2F);
-								height = emitter.getPositionVector().add(0, 1.6, 0);
+								entity.setOrbSize(0.15F);
+								height = emitter.getPositionVector().add(0, 1.65, 0);
 								height = height.add(emitter.getLookVec().scale(0.8));
 								Vec3d vel;
 								//Right
 								if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.2).withY(0).toMinecraft();
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
 									rightSide = rightSide.add(height);
 									vel = rightSide.subtract(entity.getPositionVector());
 								}
 								//Left
 								else {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.2).withY(0).toMinecraft();
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.5).withY(0).toMinecraft();
 									rightSide = rightSide.add(height);
 									vel = rightSide.subtract(entity.getPositionVector());
 								}
