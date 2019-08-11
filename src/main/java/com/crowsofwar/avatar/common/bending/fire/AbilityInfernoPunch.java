@@ -125,18 +125,18 @@ public class AbilityInfernoPunch extends Ability {
 					boolean hasStatCtrl = be.hasStatusControl(INFERNO_PUNCH_MAIN) || be.hasStatusControl(INFERNO_PUNCH_FIRST)
 							|| be.hasStatusControl(INFERNO_PUNCH_SECOND);
 					if (hasStatCtrl) {
-						//Rn it's lagging tf out. iIdk why. There's no error log.
+						//Rn it's lagging tf out. Idk why. There's no error log.
 						Vec3d height;
 						Vec3d rightSide;
 						if (emitter instanceof EntityPlayer) {
-							if (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) >= 2) {
+							if (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) == 2) {
 								//TODO: Use networking, packets, and mc.gameSettings.thirdPersonView to change the positioning of the orb to make it cool.
 								height = emitter.getPositionVector().add(0, entity.getOrbSize() * 3.5, 0);
 								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.2).withY(0).toMinecraft();
 								//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
 								rightSide = rightSide.add(height);
 								//	pos = pos.add(rightSide);
-								Vec3d vel = rightSide.subtract(entity.getPositionVector().scale(5));
+								Vec3d vel = rightSide.subtract(entity.getPositionVector());
 								entity.motionX = vel.x;
 								entity.motionY = vel.y;
 								entity.motionZ = vel.z;
@@ -147,7 +147,7 @@ public class AbilityInfernoPunch extends Ability {
 								//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
 								rightSide = rightSide.add(height);
 								//	pos = pos.add(rightSide);
-								Vec3d vel = rightSide.subtract(entity.getPositionVector().scale(5));
+								Vec3d vel = rightSide.subtract(entity.getPositionVector());
 								entity.motionX = vel.x;
 								entity.motionY = vel.y;
 								entity.motionZ = vel.z;
@@ -160,7 +160,7 @@ public class AbilityInfernoPunch extends Ability {
 							//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
 							rightSide = rightSide.add(height);
 							//	pos = pos.add(rightSide);
-							Vec3d vel = rightSide.subtract(entity.getPositionVector().scale(5));
+							Vec3d vel = rightSide.subtract(entity.getPositionVector());
 							entity.motionX = vel.x;
 							entity.motionY = vel.y;
 							entity.motionZ = vel.z;
