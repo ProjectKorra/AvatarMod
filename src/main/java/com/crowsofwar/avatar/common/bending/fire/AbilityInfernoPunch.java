@@ -208,34 +208,42 @@ public class AbilityInfernoPunch extends Ability {
 								float a = entity.getInitialColourA();
 								for (int i = 0; i < 4; i++) {
 									float red, green, blue, alpha;
+									float rMin = entity.getColorR() == 0 ? - range : -100 / entity.getColorR();
+									float gMin = entity.getColorG() == 0 ? - range : -100 / entity.getColorG();
+									float bMin = entity.getColorB() == 0 ? - range : -100 / entity.getColorB();
+									float aMin = entity.getColorA() == 0 ? - range : -100 / entity.getColorA();
+									float rMax = entity.getColorR() == 0 ? range : 100 / entity.getColorR();
+									float gMax= entity.getColorG() == 0 ? range : 100 / entity.getColorG();
+									float bMax = entity.getColorB() == 0 ? range : 100 / entity.getColorB();
+									float aMax = entity.getColorA() == 0 ? range : 100 / entity.getColorA();
 									switch (i) {
 										case 0:
-											float amountR = AvatarUtils.getRandomNumberInRange((int) (-100 / entity.getColorR()),
-													(int) (100 / entity.getColorR())) / 100F * entity.getColourShiftInterval();
+											float amountR = AvatarUtils.getRandomNumberInRange((int) (rMin),
+													(int) (rMax)) / 100F * entity.getColourShiftInterval();
 											red = r + amountR;
 											red = MathHelper.clamp(red, r - range, r + range);
 											entity.setColorR(red);
 											break;
 
 										case 1:
-											float amountG = AvatarUtils.getRandomNumberInRange((int) (-100 / entity.getColorG()),
-													(int) (100 / entity.getColorG())) / 100F * entity.getColourShiftInterval();
+											float amountG = AvatarUtils.getRandomNumberInRange((int) (gMin),
+													(int) (gMax)) / 100F * entity.getColourShiftInterval();
 											green = g + amountG;
 											green = MathHelper.clamp(green, g - range, g + range);
 											entity.setColorG(green);
 											break;
 
 										case 2:
-											float amountB = AvatarUtils.getRandomNumberInRange((int) (-100 / entity.getColorB()),
-													(int) (100 / entity.getColorB())) / 100F * entity.getColourShiftInterval();
+											float amountB = AvatarUtils.getRandomNumberInRange((int) (bMin),
+													(int) (bMax)) / 100F * entity.getColourShiftInterval();
 											blue = b + amountB;
 											blue = MathHelper.clamp(blue, b - range, b + range);
 											entity.setColorB(blue);
 											break;
 
 										case 3:
-											float amountA = AvatarUtils.getRandomNumberInRange((int) (-100 / entity.getColorA()),
-													(int) (100 / entity.getColorA())) / 100F * entity.getColourShiftInterval();
+											float amountA = AvatarUtils.getRandomNumberInRange((int) (aMin),
+													(int) (aMax)) / 100F * entity.getColourShiftInterval();
 											alpha = a + amountA;
 											alpha = MathHelper.clamp(alpha, a - range, a + range);
 											//entity.setColorA(alpha);
