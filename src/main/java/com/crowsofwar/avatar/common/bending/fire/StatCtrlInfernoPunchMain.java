@@ -9,8 +9,6 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityLightOrb;
-import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.Entity;

@@ -149,11 +149,11 @@ public class AbilityInfernoPunch extends Ability {
 								height = emitter.getPositionVector().add(0, 0.88, 0);
 								Vec3d vel;
 								if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.385).withY(0).toMinecraft();
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.4).withY(0).toMinecraft();
 									rightSide = rightSide.add(height);
 									vel = rightSide.subtract(entity.getPositionVector());
 								} else {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.385).withY(0).toMinecraft();
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.4).withY(0).toMinecraft();
 									rightSide = rightSide.add(height);
 									vel = rightSide.subtract(entity.getPositionVector());
 								}
