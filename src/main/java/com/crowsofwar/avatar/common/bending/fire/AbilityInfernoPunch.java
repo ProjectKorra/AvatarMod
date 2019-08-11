@@ -90,8 +90,8 @@ public class AbilityInfernoPunch extends Ability {
 			orb.setColor(1F, 0.3F, 0F, 3F);
 			orb.setLightRadius(lightRadius);
 			orb.setEmittingEntity(entity);
-			orb.setColourShiftRange(0.2F);
-			orb.setColourShiftInterval(0.005F);
+			orb.setColourShiftRange(0.075F);
+			orb.setColourShiftInterval(0.0005F);
 			orb.setBehavior(new InfernoPunchLightOrb());
 			orb.setType(CLIENT_CONFIG.fireRenderSettings.infernoPunchSphere ? EntityLightOrb.EnumType.COLOR_SPHERE : EntityLightOrb.EnumType.COLOR_CUBE);
 			world.spawnEntity(orb);
@@ -127,16 +127,19 @@ public class AbilityInfernoPunch extends Ability {
 						Vec3d rightSide;
 						if (emitter instanceof EntityPlayer) {
 							if (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) <= -1) {
-								entity.setOrbSize(0.1F);
-								height = emitter.getPositionVector().add(0, 1.65, 0);
+								entity.setOrbSize(0.2F);
+								height = emitter.getPositionVector().add(0, 1.6, 0);
+								height = height.add(emitter.getLookVec().scale(0.8));
 								Vec3d vel;
+								//Right
 								if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.05).withY(0).toMinecraft();
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.2).withY(0).toMinecraft();
 									rightSide = rightSide.add(height);
 									vel = rightSide.subtract(entity.getPositionVector());
 								}
+								//Left
 								else {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.05).withY(0).toMinecraft();
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.2).withY(0).toMinecraft();
 									rightSide = rightSide.add(height);
 									vel = rightSide.subtract(entity.getPositionVector());
 								}
@@ -144,15 +147,14 @@ public class AbilityInfernoPunch extends Ability {
 								AvatarUtils.afterVelocityAdded(entity);
 							} else {
 								entity.setOrbSize(0.4F);
-								height = emitter.getPositionVector().add(0, 0.84, 0);
+								height = emitter.getPositionVector().add(0, 0.88, 0);
 								Vec3d vel;
 								if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.4).withY(0).toMinecraft();
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.385).withY(0).toMinecraft();
 									rightSide = rightSide.add(height);
 									vel = rightSide.subtract(entity.getPositionVector());
-								}
-								else {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.4).withY(0).toMinecraft();
+								} else {
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.385).withY(0).toMinecraft();
 									rightSide = rightSide.add(height);
 									vel = rightSide.subtract(entity.getPositionVector());
 								}
@@ -162,15 +164,14 @@ public class AbilityInfernoPunch extends Ability {
 
 						} else {
 							entity.setOrbSize(0.4F);
-							height = emitter.getPositionVector().add(0, 0.84, 0);
+							height = emitter.getPositionVector().add(0, 0.88, 0);
 							Vec3d vel;
 							if (((EntityBender) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
-								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.4).withY(0).toMinecraft();
+								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.385).withY(0).toMinecraft();
 								rightSide = rightSide.add(height);
 								vel = rightSide.subtract(entity.getPositionVector());
-							}
-							else {
-								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.4).withY(0).toMinecraft();
+							} else {
+								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.385).withY(0).toMinecraft();
 								rightSide = rightSide.add(height);
 								vel = rightSide.subtract(entity.getPositionVector());
 							}
@@ -198,42 +199,57 @@ public class AbilityInfernoPunch extends Ability {
 						if (entity.getEntityWorld().isRemote)
 							entity.setLightRadius(lightRadius + (int) (Math.random() * 4));
 						//Shift colour. Copied from the randomly shift colour class.
-						//TODO: Fix that it doesn't work
-						if (entity.getColourShiftRange() != 0) {
-							float range = entity.getColourShiftRange() / 2;
-							float r = entity.getInitialColourR();
-							float g = entity.getInitialColourG();
-							float b = entity.getInitialColourB();
-							float a = entity.getInitialColourA();
-							for (int i = 0; i < 4; i++) {
-								//Even though it looks redundant, this allows for decimal values, making the colour shifting more believable/accurate
-								float amount = AvatarUtils.getRandomNumberInRange((int) (-1 / entity.getColourShiftInterval()),
-										(int) (1 / entity.getColourShiftInterval())) * entity.getColourShiftInterval();
-								float red = r, green = g, blue = b, alpha = a;
-								switch (i) {
-									case 0:
-										red = r + amount > r + range ? r - amount : r + amount;
-										break;
+						if (entity.ticksExisted % 8 == 0) {
+							if (entity.getColourShiftRange() != 0) {
+								float range = entity.getColourShiftRange() / 2;
+								float r = entity.getInitialColourR();
+								float g = entity.getInitialColourG();
+								float b = entity.getInitialColourB();
+								float a = entity.getInitialColourA();
+								for (int i = 0; i < 4; i++) {
+									//Even though it looks redundant, this allows for decimal values, making the colour shifting more believable/accurate
+									float amount = AvatarUtils.getRandomNumberInRange((int) (-1 / entity.getColourShiftInterval()),
+											(int) (1 / entity.getColourShiftInterval())) * entity.getColourShiftInterval();
+									float red = r, green = g, blue = b, alpha = a;
+									switch (i) {
+										case 0:
+											red = r + amount > r + range ? r - amount : r + amount;
+											/*boolean r1 = r + amount < r + range;
+											boolean r2 = r + amount > r - range;
+											red = r1 && r2 ? red : r + range;**/
+											entity.setColorR(red);
+											break;
 
-									case 1:
-										green = g + amount > g + range ? g - amount : g + amount;
-										break;
+										case 1:
+											green = g + amount > g + range ? g - amount : g + amount;
+											/*boolean g1 = g + amount < g + range;
+											boolean g2 = g + amount > g - range;
+											green = g1 && g2 ? green : g + range;**/
+											entity.setColorG(green);
+											break;
 
-									case 2:
-										blue = b + amount > b + range ? b - amount : r + amount;
-										break;
+										case 2:
+											blue = b + amount > b + range ? b - amount : r + amount;
+											/*boolean b1 = r + amount < b + range;
+											boolean b2 = r + amount > b - range;
+											blue = b1 && b2 ? blue : b + range;**/
+											entity.setColorB(blue);
+											break;
 
-									case 3:
-										alpha = a + amount > a + range ? a - amount : a + amount;
-										break;
+										case 3:
+											alpha = a + amount > a + range ? a - amount : a + amount;
+											/*boolean a1 = a + amount < a + range;
+											boolean a2 = a + amount > a - range;
+											alpha = a1 && a2 ? alpha : a + range;
+											entity.setColorA(alpha);**/
+											break;
+
+									}
 
 								}
-
-								if (entity.world.isRemote)
-									entity.setColor(red, green, blue, a);
 							}
-						} else entity.setDead();
-					}
+						}
+					} else entity.setDead();
 				}
 
 			}

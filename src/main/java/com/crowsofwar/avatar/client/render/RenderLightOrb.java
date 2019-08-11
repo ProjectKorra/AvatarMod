@@ -7,6 +7,7 @@ import codechicken.lib.render.OBJParser;
 import codechicken.lib.texture.TextureUtils;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
+import com.crowsofwar.avatar.common.bending.fire.AbilityInfernoPunch;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -134,10 +135,18 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
             }
 
             GlStateManager.disableCull();
-            if(entity.getType() == EntityLightOrb.EnumType.COLOR_CUBE || entity.getType() == EntityLightOrb.EnumType.TEXTURE_CUBE){
-                if (entity.isSpinning())
-                    RenderUtils.renderCube(0, 0, 0, 0d, 1d, 0d, 1d, 1f, rotation * 0.2F, rotation, rotation * 0.2F);
-                else RenderUtils.renderCube(0, 0, 0, 0d, 1d, 0d, 1d, 1F, 0, 0, 0);
+            if (entity.getType() == EntityLightOrb.EnumType.COLOR_CUBE || entity.getType() == EntityLightOrb.EnumType.TEXTURE_CUBE) {
+                if (entity.isSpinning()) {
+                    if (entity.getAbility() instanceof AbilityInfernoPunch) {
+                        RenderUtils.renderCube(0, 0, 0, 0d, 1d, 0d, 1d, 1f,
+                                rotation * entity.getOrbSize() / 80F, rotation * entity.getOrbSize() / 40F, rotation * entity.getOrbSize() / 80F);
+                    } else {
+                        RenderUtils.renderCube(0, 0, 0, 0d, 1d, 0d, 1d, 1f,
+                                rotation * 0.1F, rotation * 0.5F, rotation * 0.1F);
+                    }
+                } else {
+                    RenderUtils.renderCube(0, 0, 0, 0d, 1d, 0d, 1d, 1F, 0, 0, 0);
+                }
             } else {
                 CCRenderState ccrenderstate = CCRenderState.instance();
                 CCModel model = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/hemisphere.obj")).get("model");

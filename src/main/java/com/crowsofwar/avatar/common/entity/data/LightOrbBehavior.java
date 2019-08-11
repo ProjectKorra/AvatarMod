@@ -168,29 +168,33 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 				float a = entity.getInitialColourA();
 				for (int i = 0; i < 4; i++) {
 					//Even though it looks redundant, this allows for decimal values, making the colour shifting more believable/accurate
+					//TODO: Data parameter for frequency
 					float amount = AvatarUtils.getRandomNumberInRange((int) (-1 / entity.getColourShiftInterval()),
 							(int) (1 / entity.getColourShiftInterval())) * entity.getColourShiftInterval();
 					float red = r, green = g, blue = b, alpha = a;
 					switch (i) {
-						case 0 :
+						case 0:
 							red = r + amount > r + range ? r - amount : r + amount;
+							entity.setColorR(red);
 							break;
 
 						case 1:
 							green = g + amount > g + range ? g - amount : g + amount;
+							entity.setColorG(green);
 							break;
 
 						case 2:
 							blue = b + amount > b + range ? b - amount : r + amount;
+							entity.setColorB(blue);
 							break;
 
 						case 3:
 							alpha = a + amount > a + range ? a - amount : a + amount;
+							entity.setColorA(alpha);
 							break;
 
 					}
-					if (entity.world.isRemote)
-						entity.setColor(red, green, blue, alpha);
+
 				}
 			}
 			return this;
