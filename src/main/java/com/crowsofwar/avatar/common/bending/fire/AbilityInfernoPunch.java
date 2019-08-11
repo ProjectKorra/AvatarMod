@@ -20,10 +20,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.*;
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.INFERNO_PARTICLE_SPAWNER;
 
@@ -78,34 +80,22 @@ public class AbilityInfernoPunch extends Ability {
 
 			Vec3d height = entity.getPositionVector().add(0, 1.8, 0);
 			Vec3d rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.05).withY(0).toMinecraft();
-			//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
 			rightSide = rightSide.add(height);
 			EntityLightOrb orb = new EntityLightOrb(world);
 			orb.setOwner(entity);
 			orb.setAbility(new AbilityInfernoPunch());
 			orb.setPosition(rightSide);
 			orb.setOrbSize(0.4F);
-			//orb.setSpinning(true);
+			orb.setSpinning(true);
 			orb.setColor(1F, 0.3F, 0F, 3F);
 			orb.setLightRadius(lightRadius);
 			orb.setEmittingEntity(entity);
+			orb.setColourShiftRange(0.2F);
+			orb.setColourShiftInterval(0.005F);
 			orb.setBehavior(new InfernoPunchLightOrb());
-			orb.setType(EntityLightOrb.EnumType.COLOR_SPHERE);
+			orb.setType(CLIENT_CONFIG.fireRenderSettings.infernoPunchSphere ? EntityLightOrb.EnumType.COLOR_SPHERE : EntityLightOrb.EnumType.COLOR_CUBE);
 			world.spawnEntity(orb);
 
-			//Test for colour shifting. For some reason it isn't spawned?
-			EntityLightOrb test = new EntityLightOrb(world);
-			test.setOwner(entity);
-			test.setPosition(entity.getPositionVector().add(entity.getLookVec()));
-			test.setColor(1.0F, 0.3F, 0F, 1F);
-			test.setEmittingEntity(entity);
-			test.setLightRadius(4);
-			test.setAbility(new AbilityInfernoPunch());
-			test.setLifeTime(-1);
-			test.setOrbSize(0.5F);
-			test.setBehavior(new LightOrbBehavior.ShiftColourRandomly());
-			test.setType(EntityLightOrb.EnumType.COLOR_SPHERE);
-			//world.spawnEntity(test);
 		}
 	}
 
@@ -138,39 +128,52 @@ public class AbilityInfernoPunch extends Ability {
 						if (emitter instanceof EntityPlayer) {
 							if (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) <= -1) {
 								entity.setOrbSize(0.1F);
-								height = emitter.getPositionVector().add(0, 1.8, 0);
-								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.05).withY(0).toMinecraft();
-								//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
-								rightSide = rightSide.add(height);
-								//	pos = pos.add(rightSide);
-								Vec3d vel = rightSide.subtract(entity.getPositionVector());
-								//entity.setPosition(rightSide);
+								height = emitter.getPositionVector().add(0, 1.65, 0);
+								Vec3d vel;
+								if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.05).withY(0).toMinecraft();
+									rightSide = rightSide.add(height);
+									vel = rightSide.subtract(entity.getPositionVector());
+								}
+								else {
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.05).withY(0).toMinecraft();
+									rightSide = rightSide.add(height);
+									vel = rightSide.subtract(entity.getPositionVector());
+								}
 								entity.setVelocity(vel.scale(0.5));
 								AvatarUtils.afterVelocityAdded(entity);
 							} else {
 								entity.setOrbSize(0.4F);
-								height = emitter.getPositionVector().add(0, entity.getOrbSize() * 2.1, 0);
-								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.4).withY(0).toMinecraft();
-								//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
-								rightSide = rightSide.add(height);
-								//	pos = pos.add(rightSide);
-								//entity.setPosition(rightSide)
-								Vec3d vel = rightSide.subtract(entity.getPositionVector());
-								;
+								height = emitter.getPositionVector().add(0, 0.84, 0);
+								Vec3d vel;
+								if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.4).withY(0).toMinecraft();
+									rightSide = rightSide.add(height);
+									vel = rightSide.subtract(entity.getPositionVector());
+								}
+								else {
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.4).withY(0).toMinecraft();
+									rightSide = rightSide.add(height);
+									vel = rightSide.subtract(entity.getPositionVector());
+								}
 								entity.setVelocity(vel.scale(0.5));
 								AvatarUtils.afterVelocityAdded(entity);
 							}
 
 						} else {
 							entity.setOrbSize(0.4F);
-							height = emitter.getPositionVector().add(0, entity.getOrbSize() * 2.1, 0);
-							rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.4).withY(0).toMinecraft();
-							//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
-							rightSide = rightSide.add(height);
-							//	pos = pos.add(rightSide);
-							//entity.setPosition(rightSide);
-							Vec3d vel = rightSide.subtract(entity.getPositionVector());
-							;
+							height = emitter.getPositionVector().add(0, 0.84, 0);
+							Vec3d vel;
+							if (((EntityBender) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
+								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.4).withY(0).toMinecraft();
+								rightSide = rightSide.add(height);
+								vel = rightSide.subtract(entity.getPositionVector());
+							}
+							else {
+								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.4).withY(0).toMinecraft();
+								rightSide = rightSide.add(height);
+								vel = rightSide.subtract(entity.getPositionVector());
+							}
 							entity.setVelocity(vel.scale(0.5));
 							AvatarUtils.afterVelocityAdded(entity);
 						}
@@ -195,6 +198,7 @@ public class AbilityInfernoPunch extends Ability {
 						if (entity.getEntityWorld().isRemote)
 							entity.setLightRadius(lightRadius + (int) (Math.random() * 4));
 						//Shift colour. Copied from the randomly shift colour class.
+						//TODO: Fix that it doesn't work
 						if (entity.getColourShiftRange() != 0) {
 							float range = entity.getColourShiftRange() / 2;
 							float r = entity.getInitialColourR();
@@ -226,7 +230,7 @@ public class AbilityInfernoPunch extends Ability {
 								}
 
 								if (entity.world.isRemote)
-									entity.setColor(red, green, blue, alpha);
+									entity.setColor(red, green, blue, a);
 							}
 						} else entity.setDead();
 					}

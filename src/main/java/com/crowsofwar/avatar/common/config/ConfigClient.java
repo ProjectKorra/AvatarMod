@@ -67,7 +67,7 @@ public class ConfigClient {
 	public ChiBarSettings chiBarSettings = new ChiBarSettings();
 
 	@Load
-	public FireballRenderSettings fireballRenderSettings = new FireballRenderSettings();
+	public FireRenderSettings fireRenderSettings = new FireRenderSettings();
 
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
@@ -168,9 +168,12 @@ public class ConfigClient {
 
 	}
 
-	public static class FireballRenderSettings {
+	public static class FireRenderSettings {
 		@Load
-		public final boolean isSphere = false;
+		public final boolean fireBallSphere = false;
+
+		@Load
+		public final boolean infernoPunchSphere = false;
 	}
 
 }
