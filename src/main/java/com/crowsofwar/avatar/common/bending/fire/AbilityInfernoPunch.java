@@ -75,10 +75,15 @@ public class AbilityInfernoPunch extends Ability {
 			else if (ctx.isDynamicMasterLevel(AbilityTreePath.SECOND)) data.addStatusControl(INFERNO_PUNCH_SECOND);
 			else data.addStatusControl(INFERNO_PUNCH_MAIN);
 			data.addTickHandler(INFERNO_PARTICLE_SPAWNER);
+
+			Vec3d height = entity.getPositionVector().add(0, 1.8, 0);
+			Vec3d rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.05).withY(0).toMinecraft();
+			//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
+			rightSide = rightSide.add(height);
 			EntityLightOrb orb = new EntityLightOrb(world);
 			orb.setOwner(entity);
 			orb.setAbility(new AbilityInfernoPunch());
-			orb.setPosition(entity.getPositionVector().add(0, entity.height / 2, 0));
+			orb.setPosition(rightSide);
 			orb.setOrbSize(0.4F);
 			//orb.setSpinning(true);
 			orb.setColor(1F, 0.3F, 0F, 3F);
@@ -128,20 +133,19 @@ public class AbilityInfernoPunch extends Ability {
 					boolean hasStatCtrl = be.hasStatusControl(INFERNO_PUNCH_MAIN) || be.hasStatusControl(INFERNO_PUNCH_FIRST)
 							|| be.hasStatusControl(INFERNO_PUNCH_SECOND);
 					if (hasStatCtrl) {
-						//Rn it's lagging tf out. Idk why. There's no error log.
 						Vec3d height;
 						Vec3d rightSide;
 						if (emitter instanceof EntityPlayer) {
-							if (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) == 2) {
-								entity.setOrbSize(0.2F);
-								height = emitter.getPositionVector().add(0, 1.6, 0);
+							if (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) <= -1) {
+								entity.setOrbSize(0.1F);
+								height = emitter.getPositionVector().add(0, 1.8, 0);
 								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.05).withY(0).toMinecraft();
 								//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
 								rightSide = rightSide.add(height);
 								//	pos = pos.add(rightSide);
 								Vec3d vel = rightSide.subtract(entity.getPositionVector());
-								entity.setPosition(rightSide);
-								entity.setVelocity(new Vector(emitter.motionX, emitter.motionY, emitter.motionZ));
+								//entity.setPosition(rightSide);
+								entity.setVelocity(vel.scale(0.5));
 								AvatarUtils.afterVelocityAdded(entity);
 							} else {
 								entity.setOrbSize(0.4F);
@@ -150,8 +154,10 @@ public class AbilityInfernoPunch extends Ability {
 								//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
 								rightSide = rightSide.add(height);
 								//	pos = pos.add(rightSide);
-								entity.setPosition(rightSide);
-								entity.setVelocity(new Vector(emitter.motionX, emitter.motionY, emitter.motionZ));
+								//entity.setPosition(rightSide)
+								Vec3d vel = rightSide.subtract(entity.getPositionVector());
+								;
+								entity.setVelocity(vel.scale(0.5));
 								AvatarUtils.afterVelocityAdded(entity);
 							}
 
@@ -162,8 +168,10 @@ public class AbilityInfernoPunch extends Ability {
 							//Vec3d rightSide = Vector.getRightSide((EntityLivingBase) emitter, 0.725).toMinecraft();
 							rightSide = rightSide.add(height);
 							//	pos = pos.add(rightSide);
-							entity.setPosition(rightSide);
-							entity.setVelocity(new Vector(emitter.motionX, emitter.motionY, emitter.motionZ));
+							//entity.setPosition(rightSide);
+							Vec3d vel = rightSide.subtract(entity.getPositionVector());
+							;
+							entity.setVelocity(vel.scale(0.5));
 							AvatarUtils.afterVelocityAdded(entity);
 						}
 						int lightRadius = 4;
@@ -186,8 +194,44 @@ public class AbilityInfernoPunch extends Ability {
 						}
 						if (entity.getEntityWorld().isRemote)
 							entity.setLightRadius(lightRadius + (int) (Math.random() * 4));
-					} else entity.setDead();
+						//Shift colour. Copied from the randomly shift colour class.
+						if (entity.getColourShiftRange() != 0) {
+							float range = entity.getColourShiftRange() / 2;
+							float r = entity.getInitialColourR();
+							float g = entity.getInitialColourG();
+							float b = entity.getInitialColourB();
+							float a = entity.getInitialColourA();
+							for (int i = 0; i < 4; i++) {
+								//Even though it looks redundant, this allows for decimal values, making the colour shifting more believable/accurate
+								float amount = AvatarUtils.getRandomNumberInRange((int) (-1 / entity.getColourShiftInterval()),
+										(int) (1 / entity.getColourShiftInterval())) * entity.getColourShiftInterval();
+								float red = r, green = g, blue = b, alpha = a;
+								switch (i) {
+									case 0:
+										red = r + amount > r + range ? r - amount : r + amount;
+										break;
+
+									case 1:
+										green = g + amount > g + range ? g - amount : g + amount;
+										break;
+
+									case 2:
+										blue = b + amount > b + range ? b - amount : r + amount;
+										break;
+
+									case 3:
+										alpha = a + amount > a + range ? a - amount : a + amount;
+										break;
+
+								}
+
+								if (entity.world.isRemote)
+									entity.setColor(red, green, blue, alpha);
+							}
+						} else entity.setDead();
+					}
 				}
+
 			}
 			return this;
 		}

@@ -17,6 +17,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -84,7 +85,7 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 		excluded.add(entity);
 		Vec3d startPos = entity.getPositionVector().add(0, entity.getEyeHeight(), 0);
 
-		if (!entity.world.isRemote) {
+		if (!entity.world.isRemote && entity.getHeldItemMainhand() == ItemStack.EMPTY) {
 			//Bounding Box to determine excluded entities
 			AxisAlignedBB detectionBox = new AxisAlignedBB(entity.posX + reach, entity.posY + reach, entity.posZ + reach, entity.posX - reach,
 					entity.posY - reach, entity.posZ - reach);
