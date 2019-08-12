@@ -46,29 +46,34 @@ public class AbilityInfernoPunch extends Ability {
 			return;
 
 		float chi = STATS_CONFIG.chiInfernoPunch;
+		float orbSize = 0.3F;
 		int lightRadius = 4;
 		if (ctx.getLevel() == 1) {
 			chi = STATS_CONFIG.chiInfernoPunch * 4 / 3;
 			//4
 			lightRadius += 2;
+			orbSize += 0.1F;
 
 		}
 		if (ctx.getLevel() == 2) {
 			chi = STATS_CONFIG.chiInfernoPunch * 5 / 3;
 			//5
 			lightRadius += 4;
+			orbSize += 0.2F;
 
 		}
 		if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 			chi = STATS_CONFIG.chiLargeInfernoPunch * 2F;
 			//6
 			lightRadius += 8;
+			orbSize += 0.4F;
 
 		}
 		if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
 			chi = STATS_CONFIG.chiSmallInfernoPunch * 2F;
 			//6
 			lightRadius += 3;
+			orbSize += 0.15F;
 
 		}
 
@@ -85,7 +90,7 @@ public class AbilityInfernoPunch extends Ability {
 			orb.setOwner(entity);
 			orb.setAbility(new AbilityInfernoPunch());
 			orb.setPosition(rightSide);
-			orb.setOrbSize(0.4F);
+			orb.setOrbSize(orbSize);
 			orb.setSpinning(true);
 			orb.setColor(1F, 0.3F, 0F, 1F);
 			orb.setLightRadius(lightRadius);
@@ -127,7 +132,7 @@ public class AbilityInfernoPunch extends Ability {
 						Vec3d rightSide;
 						if (emitter instanceof EntityPlayer) {
 							if (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) <= -1) {
-								entity.setOrbSize(0.15F);
+								entity.setOrbSize(size / 2F - 0.05F);
 								height = emitter.getPositionVector().add(0, 1.65, 0);
 								height = height.add(emitter.getLookVec().scale(0.8));
 								Vec3d vel;
@@ -146,7 +151,7 @@ public class AbilityInfernoPunch extends Ability {
 								entity.setVelocity(vel.scale(0.5));
 								AvatarUtils.afterVelocityAdded(entity);
 							} else {
-								entity.setOrbSize(0.4F);
+								entity.setOrbSize(size);
 								height = emitter.getPositionVector().add(0, 0.88, 0);
 								Vec3d vel;
 								if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
@@ -163,7 +168,7 @@ public class AbilityInfernoPunch extends Ability {
 							}
 
 						} else {
-							entity.setOrbSize(0.4F);
+							entity.setOrbSize(size);
 							height = emitter.getPositionVector().add(0, 0.88, 0);
 							Vec3d vel;
 							if (((EntityBender) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
@@ -208,47 +213,46 @@ public class AbilityInfernoPunch extends Ability {
 								float a = entity.getInitialColourA();
 								for (int i = 0; i < 4; i++) {
 									float red, green, blue, alpha;
-									float rMin = entity.getColorR() == 0 ? - range : -100 / entity.getColorR();
-									float gMin = entity.getColorG() == 0 ? - range : -100 / entity.getColorG();
-									float bMin = entity.getColorB() == 0 ? - range : -100 / entity.getColorB();
-									float aMin = entity.getColorA() == 0 ? - range : -100 / entity.getColorA();
-									float rMax = entity.getColorR() == 0 ? range : 100 / entity.getColorR();
-									float gMax= entity.getColorG() == 0 ? range : 100 / entity.getColorG();
-									float bMax = entity.getColorB() == 0 ? range : 100 / entity.getColorB();
-									float aMax = entity.getColorA() == 0 ? range : 100 / entity.getColorA();
+									float rMin = r < range ? 0 : r - range;
+									float gMin = g < range ? 0 : r - range;
+									float bMin = b < range ? 0 : r - range;
+									float aMin = a < range ? 0 : a - range;
+									float rMax = r + range;
+									float gMax = b + range;
+									float bMax = g + range;
+									float aMax = a + range;
 									switch (i) {
 										case 0:
-											float amountR = AvatarUtils.getRandomNumberInRange((int) (rMin),
-													(int) (rMax)) / 100F * entity.getColourShiftInterval();
-											red = r + amountR;
-											red = MathHelper.clamp(red, r - range, r + range);
+											float amountR = AvatarUtils.getRandomNumberInRange(0,
+													(int) (100 / rMax)) / 100F * entity.getColourShiftInterval();
+											red = entity.world.rand.nextBoolean() ? r + amountR : r - amountR;
+											red = MathHelper.clamp(red, rMin, rMax);
 											entity.setColorR(red);
 											break;
 
 										case 1:
-											float amountG = AvatarUtils.getRandomNumberInRange((int) (gMin),
-													(int) (gMax)) / 100F * entity.getColourShiftInterval();
-											green = g + amountG;
-											green = MathHelper.clamp(green, g - range, g + range);
+											float amountG = AvatarUtils.getRandomNumberInRange(0,
+													(int) (100 / gMax)) / 100F * entity.getColourShiftInterval();
+											green = entity.world.rand.nextBoolean() ? g + amountG : g - amountG;
+											green = MathHelper.clamp(green, gMin, gMax);
 											entity.setColorG(green);
 											break;
 
 										case 2:
-											float amountB = AvatarUtils.getRandomNumberInRange((int) (bMin),
-													(int) (bMax)) / 100F * entity.getColourShiftInterval();
-											blue = b + amountB;
-											blue = MathHelper.clamp(blue, b - range, b + range);
+											float amountB = AvatarUtils.getRandomNumberInRange(0,
+													(int) (100 / bMax)) / 100F * entity.getColourShiftInterval();
+											blue = entity.world.rand.nextBoolean() ? b + amountB : b - amountB;
+											blue = MathHelper.clamp(blue, bMin, bMax);
 											entity.setColorB(blue);
 											break;
 
 										case 3:
-											float amountA = AvatarUtils.getRandomNumberInRange((int) (aMin),
-													(int) (aMax)) / 100F * entity.getColourShiftInterval();
-											alpha = a + amountA;
-											alpha = MathHelper.clamp(alpha, a - range, a + range);
-											//entity.setColorA(alpha);
+											float amountA = AvatarUtils.getRandomNumberInRange(0,
+													(int) (100 / aMax)) / 100F * entity.getColourShiftInterval();
+											alpha = entity.world.rand.nextBoolean() ? a + amountA : a - amountA;
+											alpha = MathHelper.clamp(alpha, aMin, aMax);
+											entity.setColorA(alpha);
 											break;
-
 									}
 								}
 							}
