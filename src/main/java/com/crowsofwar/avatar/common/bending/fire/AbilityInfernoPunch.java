@@ -90,8 +90,8 @@ public class AbilityInfernoPunch extends Ability {
 			orb.setColor(1F, 0.3F, 0F, 1F);
 			orb.setLightRadius(lightRadius);
 			orb.setEmittingEntity(entity);
-			orb.setColourShiftRange(0.2F);
-			orb.setColourShiftInterval(0.05F);
+			orb.setColourShiftRange(0.8F);
+			orb.setColourShiftInterval(0.15F);
 			orb.setBehavior(new InfernoPunchLightOrb());
 			orb.setType(CLIENT_CONFIG.fireRenderSettings.infernoPunchSphere ? EntityLightOrb.EnumType.COLOR_SPHERE : EntityLightOrb.EnumType.COLOR_CUBE);
 			world.spawnEntity(orb);
@@ -150,11 +150,11 @@ public class AbilityInfernoPunch extends Ability {
 								height = emitter.getPositionVector().add(0, 0.88, 0);
 								Vec3d vel;
 								if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.55).withY(0).toMinecraft();
 									rightSide = rightSide.add(height);
 									vel = rightSide.subtract(entity.getPositionVector());
 								} else {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.5).withY(0).toMinecraft();
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.55).withY(0).toMinecraft();
 									rightSide = rightSide.add(height);
 									vel = rightSide.subtract(entity.getPositionVector());
 								}
@@ -167,11 +167,11 @@ public class AbilityInfernoPunch extends Ability {
 							height = emitter.getPositionVector().add(0, 0.88, 0);
 							Vec3d vel;
 							if (((EntityBender) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
-								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.385).withY(0).toMinecraft();
+								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.55).withY(0).toMinecraft();
 								rightSide = rightSide.add(height);
 								vel = rightSide.subtract(entity.getPositionVector());
 							} else {
-								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.385).withY(0).toMinecraft();
+								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.55).withY(0).toMinecraft();
 								rightSide = rightSide.add(height);
 								vel = rightSide.subtract(entity.getPositionVector());
 							}
@@ -199,7 +199,7 @@ public class AbilityInfernoPunch extends Ability {
 						if (entity.getEntityWorld().isRemote)
 							entity.setLightRadius(lightRadius + (int) (java.lang.Math.random() * 4));
 						//Shift colour. Copied from the randomly shift colour class.
-						if (entity.ticksExisted % 8 == 0) {
+						if (entity.ticksExisted % 6 == 0) {
 							if (entity.getColourShiftRange() != 0) {
 								float range = entity.getColourShiftRange() / 2;
 								float r = entity.getInitialColourR();

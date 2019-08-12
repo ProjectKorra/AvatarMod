@@ -63,7 +63,6 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 						rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw - 90), 0).times(0.5).withY(0).toMinecraft();
 						rightSide = rightSide.add(height);
 					}
-					AvatarUtils.afterVelocityAdded(entity);
 				} else {
 					height = entity.getPositionVector().add(0, 0.84, 0);
 					if (entity.getPrimaryHand() == EnumHandSide.RIGHT) {
@@ -73,7 +72,6 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 						rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw - 90), 0).times(0.385).withY(0).toMinecraft();
 						rightSide = rightSide.add(height);
 					}
-					AvatarUtils.afterVelocityAdded(entity);
 				}
 			} else {
 				height = entity.getPositionVector().add(0, 0.84, 0);
@@ -85,10 +83,7 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 					rightSide = rightSide.add(height);
 				}
 
-
-
 			}
-			AvatarUtils.afterVelocityAdded(entity);
 			World.spawnParticle(AvatarParticles.getParticleFlames(),
 					rightSide.x, rightSide.y, rightSide.z, particleCount, 0, 0, 0, 0.015);
 			return false;
