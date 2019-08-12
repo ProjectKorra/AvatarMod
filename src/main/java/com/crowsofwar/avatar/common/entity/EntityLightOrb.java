@@ -31,6 +31,8 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 			DataSerializers.VARINT);
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityLightOrb.class,
 			DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_INITIAL_SIZE = EntityDataManager.createKey(EntityLightOrb.class,
+			DataSerializers.FLOAT);
 	private static final DataParameter<Integer> SYNC_RADIUS = EntityDataManager.createKey(EntityLightOrb.class,
 			DataSerializers.VARINT);
 	private static final DataParameter<Float> SYNC_COLOUR_R = EntityDataManager.createKey(EntityLightOrb.class,
@@ -74,6 +76,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 		dataManager.register(SYNC_ANIMATED_TEXTURE_FRAMES_COUNT, 0);
 		dataManager.register(SYNC_TYPE, EnumType.COLOR_SPHERE.ordinal());
 		dataManager.register(SYNC_SIZE, 2F);
+		dataManager.register(SYNC_INITIAL_SIZE, 2F);
 		dataManager.register(SYNC_RADIUS, 20);
 		dataManager.register(SYNC_COLOUR_R, 1F);
 		dataManager.register(SYNC_COLOUR_G, 1F);
@@ -211,6 +214,14 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 	 */
 	public void setOrbSize(float size) {
 		dataManager.set(SYNC_SIZE, size);
+	}
+
+	public void setInitialSize(float size) {
+		dataManager.set(SYNC_INITIAL_SIZE, size);
+	}
+
+	public float getInitialSize() {
+		return dataManager.get(SYNC_INITIAL_SIZE);
 	}
 
 	@Override

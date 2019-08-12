@@ -83,6 +83,7 @@ public class AbilityInfernoPunch extends Ability {
 			else data.addStatusControl(INFERNO_PUNCH_MAIN);
 			data.addTickHandler(INFERNO_PARTICLE_SPAWNER);
 
+			//Light orb model translating is currently whack
 			Vec3d height = entity.getPositionVector().add(0, 1.8, 0);
 			Vec3d rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.05).withY(0).toMinecraft();
 			rightSide = rightSide.add(height);
@@ -91,6 +92,7 @@ public class AbilityInfernoPunch extends Ability {
 			orb.setAbility(new AbilityInfernoPunch());
 			orb.setPosition(rightSide);
 			orb.setOrbSize(orbSize);
+			orb.setInitialSize(orbSize);
 			orb.setSpinning(true);
 			orb.setColor(1F, 0.3F, 0F, 1F);
 			orb.setLightRadius(lightRadius);
@@ -120,9 +122,6 @@ public class AbilityInfernoPunch extends Ability {
 		public Behavior onUpdate(EntityLightOrb entity) {
 			Entity emitter = entity.getEmittingEntity();
 			if (emitter != null) {
-				float size = 0;
-				if (entity.ticksExisted == 1)
-					size = entity.getOrbSize();
 				if (emitter instanceof EntityBender || emitter instanceof EntityPlayer) {
 					BendingData be = BendingData.get((EntityLivingBase) emitter);
 					boolean hasStatCtrl = be.hasStatusControl(INFERNO_PUNCH_MAIN) || be.hasStatusControl(INFERNO_PUNCH_FIRST)
@@ -132,7 +131,7 @@ public class AbilityInfernoPunch extends Ability {
 						Vec3d rightSide;
 						if (emitter instanceof EntityPlayer) {
 							if (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) <= -1) {
-								entity.setOrbSize(size / 2F - 0.05F);
+								entity.setOrbSize(entity.getInitialSize() / 0.2F - 0.05F);
 								height = emitter.getPositionVector().add(0, 1.65, 0);
 								height = height.add(emitter.getLookVec().scale(0.8));
 								Vec3d vel;
@@ -151,7 +150,7 @@ public class AbilityInfernoPunch extends Ability {
 								entity.setVelocity(vel.scale(0.5));
 								AvatarUtils.afterVelocityAdded(entity);
 							} else {
-								entity.setOrbSize(size);
+								entity.setOrbSize(entity.getInitialSize());
 								height = emitter.getPositionVector().add(0, 0.88, 0);
 								Vec3d vel;
 								if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
@@ -168,7 +167,7 @@ public class AbilityInfernoPunch extends Ability {
 							}
 
 						} else {
-							entity.setOrbSize(size);
+							entity.setOrbSize(entity.getInitialSize());
 							height = emitter.getPositionVector().add(0, 0.88, 0);
 							Vec3d vel;
 							if (((EntityBender) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
