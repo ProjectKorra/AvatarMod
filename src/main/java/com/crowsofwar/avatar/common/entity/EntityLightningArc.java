@@ -18,7 +18,6 @@ import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -101,6 +100,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		super(world);
 		setSize(0.5f, 0.5f);
 		damage = 8;
+		this.setsFires = true;
 	}
 
 	private void LightningBurst(double x, double y, double z) {
@@ -109,15 +109,17 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		wave.setOwner(getOwner());
 		wave.setParticleSpeed((getSizeMultiplier() / 4) / 5);
 		wave.setParticle(AvatarParticles.getParticleElectricity());
-		wave.setSpeed(0.6F + getSizeMultiplier() / 10);
+		wave.setSpeed(0.5F + getSizeMultiplier() / 10);
 		wave.setDamageSource(AvatarDamageSource.LIGHTNING);
-		wave.setPosition(x, y, z);
+		wave.setPosition(x, y + 0.3, z);
+		wave.setParticleSpeed(0.05F);
 		wave.setParticleAmount(1);
 		wave.setParticleWaves(1);
 		wave.setDamage(getDamage() / 2);
+		wave.setRange(6 + getSizeMultiplier() * 2);
 		wave.setRange(getSizeMultiplier());
 		wave.setFire(3 + AbilityData.get(getOwner(), getAbility().getName()).getLevel() + 1);
-		wave.setParticleController(45 - (getSizeMultiplier() * 7));
+		wave.setParticleController(54 - (getSizeMultiplier() * 7));
 		wave.setSphere(true);
 		wave.setElement(new Lightningbending());
 		wave.setPerformanceAmount(10);
@@ -328,16 +330,10 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	@Override
 	public boolean onCollideWithSolid() {
-//		setDead();
+		setDead();
 		this.motionX = this.motionY = this.motionZ = 0;
-		if (!world.isRemote) {
-			if (world.isAirBlock(getPosition())) {
-				world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
-			}
-		}
 		LightningBurst(posX, posY, posZ);
 		return false;
-//		return true;
 	}
 
 	@Override
