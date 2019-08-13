@@ -53,7 +53,7 @@ public class PacketHandlerClient implements IPacketHandler {
 	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
 
 		if (packet instanceof PacketCParticles)
-			return handlePacketParticles((PacketCParticles) packet, ctx);
+			return handlePacketParticles((PacketCParticles) packet, ctx, ((PacketCParticles) packet).getVelIsMagnitude());
 
 		if (packet instanceof PacketCErrorMessage)
 			return handlePacketNotEnoughChi((PacketCErrorMessage) packet, ctx);
@@ -74,7 +74,7 @@ public class PacketHandlerClient implements IPacketHandler {
 		return Side.CLIENT;
 	}
 
-	private IMessage handlePacketParticles(PacketCParticles packet, MessageContext ctx) {
+	private IMessage handlePacketParticles(PacketCParticles packet, MessageContext ctx,  boolean velIsMagnitude) {
 
 		EnumParticleTypes particle = packet.getParticle();
 		if (particle == null) {
@@ -88,9 +88,9 @@ public class PacketHandlerClient implements IPacketHandler {
 
 		for (int i = 0; i < particles; i++) {
 			mc.world.spawnParticle(particle, packet.getX(), packet.getY(), packet.getZ(),
-					packet.getMaxVelocityX() * random.nextGaussian(),
-					packet.getMaxVelocityY() * random.nextGaussian(),
-					packet.getMaxVelocityZ() * random.nextGaussian());
+					velIsMagnitude ? packet.getMaxVelocityX() * random.nextGaussian() : packet.getMaxVelocityX() * random.nextDouble(),
+					velIsMagnitude ? packet.getMaxVelocityY() * random.nextGaussian() : packet.getMaxVelocityY() * random.nextDouble(),
+					velIsMagnitude ? packet.getMaxVelocityZ() * random.nextGaussian() : packet.getMaxVelocityZ() * random.nextDouble());
 		}
 
 		return null;

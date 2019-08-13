@@ -176,7 +176,7 @@ public class WaterSkateHandler extends TickHandler {
 							SoundCategory.PLAYERS, 0.4f, 2f);
 				}
 				particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 50, 60,
-						Vector.getEntityPos(player).plus(0, .1, 0), new Vector(.2, 0.2, .2));
+						Vector.getEntityPos(player).plus(0, .1, 0), new Vector(.2, 0.2, .2), true);
 
 
 				if (player.ticksExisted % 10 == 0) {

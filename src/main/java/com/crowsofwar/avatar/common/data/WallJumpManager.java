@@ -15,8 +15,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-import static com.crowsofwar.avatar.common.data.TickHandlerController.FIRE_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.FIRE_PARTICLE_SPAWNER;
 
 /**
  * Contains all wall jump related logic for a Bender. These methods would normally be in the
@@ -58,7 +58,7 @@ public class WallJumpManager {
 			AvatarUtils.afterVelocityAdded(entity);
 
 			new NetworkParticleSpawner().spawnParticles(world, particles, 4, 10, new Vector
-					(entity).plus(n), n.times(3));
+					(entity).plus(n), n.times(3), true);
 			world.playSound(null, new BlockPos(entity), block.getSoundType().getBreakSound(),
 					SoundCategory.PLAYERS, 1, 0.6f);
 

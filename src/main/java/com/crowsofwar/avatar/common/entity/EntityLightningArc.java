@@ -105,17 +105,19 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 
 	private void LightningBurst(double x, double y, double z) {
 		EntityShockwave wave = new EntityShockwave(world);
-		wave.setAbility(new AbilityLightningArc());
+		wave.setAbility(getAbility());
 		wave.setOwner(getOwner());
 		wave.setParticleSpeed((getSizeMultiplier() / 4) / 5);
 		wave.setParticle(AvatarParticles.getParticleElectricity());
 		wave.setSpeed(0.6F + getSizeMultiplier() / 10);
 		wave.setDamageSource(AvatarDamageSource.LIGHTNING);
 		wave.setPosition(x, y, z);
-		wave.setParticleAmount(2);
+		wave.setParticleAmount(1);
+		wave.setParticleWaves(1);
 		wave.setDamage(getDamage() / 2);
 		wave.setRange(getSizeMultiplier());
-		wave.setParticleController(40 - (getSizeMultiplier() * 10));
+		wave.setFire(3 + AbilityData.get(getOwner(), getAbility().getName()).getLevel() + 1);
+		wave.setParticleController(45 - (getSizeMultiplier() * 7));
 		wave.setSphere(true);
 		wave.setElement(new Lightningbending());
 		wave.setPerformanceAmount(10);

@@ -35,11 +35,11 @@ public class RenderShockwave extends Render<EntityShockwave> {
 					}
 				}
 			}
-			if (entity.ticksExisted < entity.getParticleWaves()) {
+			if (entity.getParticleWaves() <= entity.getParticleWaves()) {
 				if (entity.getSphere()) {
 					double x1, y1, z1, xVel, yVel, zVel;
 					for (double theta = 0; theta <= 180; theta += 1) {
-						double dphi = entity.getParticleController() - entity.getParticleAmount() / Math.sin(Math.toRadians(theta));
+						double dphi = (entity.getParticleController() - entity.getParticleAmount()) / Math.sin(Math.toRadians(theta));
 						for (double phi = 0; phi < 360; phi += dphi) {
 							double rphi = Math.toRadians(phi);
 							double rtheta = Math.toRadians(theta);

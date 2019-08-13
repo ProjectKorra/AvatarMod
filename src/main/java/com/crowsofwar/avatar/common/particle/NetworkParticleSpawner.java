@@ -39,20 +39,21 @@ public class NetworkParticleSpawner implements ParticleSpawner {
 
 		// Velocity -> max velocity... results in not expected velocity client
 		// side.
-		spawnParticles(world, particle, 1, 1, x, y, z, velocityX, velocityY, velocityZ, parameters);
+		spawnParticles(world, particle, 1, 1, x, y, z, velocityX, velocityY, velocityZ, false, parameters);
 
 	}
 
+
+
 	@Override
 	public void spawnParticles(World world, EnumParticleTypes particle, int minimum, int maximum, double x,
-							   double y, double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ,
-							   int... parameters) {
-
+							   double y, double z, double maxVelocityX, double maxVelocityY,double maxVelocityZ,
+							   boolean velIsMagnitude,  int... parameters) {
 		if (!world.isRemote) {
-			TargetPoint point = new TargetPoint(world.provider.getDimension(), x, y, z, 64);
+			TargetPoint point = new TargetPoint(world.provider.getDimension(), x, y, z, 96);
 
 			AvatarMod.network.sendToAllAround(new PacketCParticles(particle, minimum, maximum, x, y, z,
-					maxVelocityX / 20, maxVelocityY / 20, maxVelocityZ / 20), point);
+					maxVelocityX / 20, maxVelocityY / 20, maxVelocityZ / 20, velIsMagnitude), point);
 		}
 
 	}

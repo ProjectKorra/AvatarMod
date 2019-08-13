@@ -69,7 +69,7 @@ public abstract class LightningChargeHandler extends TickHandler {
 				Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
 						i * 45), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
 				particleSpawner.spawnParticles(world, AvatarParticles.getParticleElectricity(), 1, 2, lookpos.x() + entity.posX,
-						lookpos.y() + entity.getEntityBoundingBox().minY, lookpos.z() + entity.posZ, 2, 1.2, 2);
+						lookpos.y() + entity.getEntityBoundingBox().minY, lookpos.z() + entity.posZ, 2, 1.2, 2, true);
 			}
 		}
 

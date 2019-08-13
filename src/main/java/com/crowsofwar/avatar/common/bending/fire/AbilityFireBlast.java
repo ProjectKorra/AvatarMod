@@ -17,24 +17,24 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
-import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -43,9 +43,12 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class AbilityFireBlast extends Ability {
 
+	private ParticleSpawner spawner;
+
 	public AbilityFireBlast() {
 		super(Firebending.ID, "fire_blast");
 		requireRaytrace(-1, false);
+		spawner = new NetworkParticleSpawner();
 	}
 
 	@Override
@@ -71,10 +74,9 @@ public class AbilityFireBlast extends Ability {
 			removeExisting(ctx);
 
 
-
 			float damageMult = ctx.getLevel() >= 2 ? 2 : 1;
 			damageMult *= ctx.getPowerRatingDamageMod();
-
+			/*
 			List<Entity> fireArc = Raytrace.entityRaytrace(world, Vector.getEntityPos(entity).withY(entity.getEyeHeight()), Vector.getLookRectangular(entity).times(10), 3,
 					entity1 -> entity1 != entity);
 
@@ -108,7 +110,39 @@ public class AbilityFireBlast extends Ability {
 
 				data.addStatusControl(StatusControl.THROW_FIRE);
 			}
+**/
+			Vec3d height, rightSide;
+			if (entity instanceof EntityPlayer) {
+				height = entity.getPositionVector().add(0, 1.6, 0);
+				height = height.add(entity.getLookVec().scale(0.8));
+				//Right
+				if (entity.getPrimaryHand() == EnumHandSide.RIGHT) {
+					rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
+					rightSide = rightSide.add(height);
+				}
+				//Left
+				else {
+					rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw - 90), 0).times(0.5).withY(0).toMinecraft();
+					rightSide = rightSide.add(height);
+				}
+			} else {
+				height = entity.getPositionVector().add(0, 1.6, 0);
+				height = height.add(entity.getLookVec().scale(0.8));
+				if (entity.getPrimaryHand() == EnumHandSide.RIGHT) {
+					rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
+					rightSide = rightSide.add(height);
+				} else {
+					rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw - 90), 0).times(0.5).withY(0).toMinecraft();
+					rightSide = rightSide.add(height);
+				}
 
+			}
+			Vec3d vel = entity.getLookVec();
+			vel.scale(20000);
+			//vel.add(world.rand.nextBoolean() ? world.rand.nextFloat() : -world.rand.nextFloat(), world.rand.nextBoolean() ? world.rand.nextFloat() : -world.rand.nextFloat(),
+			//		world.rand.nextBoolean() ? world.rand.nextFloat() : -world.rand.nextFloat());
+			spawner.spawnParticles(world, AvatarParticles.getParticleFlames(), 120, 140, rightSide.x, rightSide.y,
+					rightSide.z, vel.x, vel.y, vel.z, false);
 		}
 
 	}

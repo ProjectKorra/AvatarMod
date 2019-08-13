@@ -46,12 +46,11 @@ public class ClientParticleSpawner implements ParticleSpawner {
 
 	}
 
-	//Spawns particles with a randomised velocity based on the velocity given. The velocity given here only acts as a magnitude, rather
-	//than a direction.
+	//Spawns particles with a randomised velocity based on the velocity given.
 	@Override
 	public void spawnParticles(World world, EnumParticleTypes particle, int minimum, int maximum, double x,
 							   double y, double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ,
-							   int... parameters) {
+							   boolean velIsMagnitude, int... parameters) {
 
 		if (world.isRemote) {
 
@@ -64,10 +63,16 @@ public class ClientParticleSpawner implements ParticleSpawner {
 
 			for (int i = 0; i < particlesToSpawn; i++) {
 
-				world.spawnParticle(particle, x, y, z, random(random, -maxVelocityX, maxVelocityX) / 20,
-						random(random, -maxVelocityY, maxVelocityY) / 20,
-						random(random, -maxVelocityZ, maxVelocityZ) / 20, parameters);
-
+				if (velIsMagnitude) {
+					world.spawnParticle(particle, x, y, z, random(random, -maxVelocityX, maxVelocityX) / 20,
+							random(random, -maxVelocityY, maxVelocityY) / 20,
+							random(random, -maxVelocityZ, maxVelocityZ) / 20, parameters);
+				}
+				else {
+					world.spawnParticle(particle, x, y, z, random(random, 0, maxVelocityX) / 20,
+							random(random, 0, maxVelocityY) / 20,
+							random(random, 0, maxVelocityZ) / 20);
+				}
 			}
 
 		}

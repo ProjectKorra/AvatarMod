@@ -26,9 +26,7 @@ import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import com.crowsofwar.gorecore.util.VectorI;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -44,7 +42,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -622,7 +623,7 @@ public abstract class AvatarEntity extends Entity {
 			particleSpawner = new NetworkParticleSpawner();
 		}
 		particleSpawner.spawnParticles(world, EnumParticleTypes.CLOUD, 4, 8, posX, posY, posZ,
-				0.05, 0.2, 0.05);
+				0.05, 0.2, 0.05, true);
 
 		world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
 				SoundCategory.PLAYERS, 1, rand.nextFloat() * 0.3f + 1.1f);

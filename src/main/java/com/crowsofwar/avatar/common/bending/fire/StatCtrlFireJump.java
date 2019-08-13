@@ -156,7 +156,7 @@ public class StatCtrlFireJump extends StatusControl {
 			}
 
 			ParticleSpawner spawner = new NetworkParticleSpawner();
-			spawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 15, 20, new Vector(entity), new Vector(1, 0, 1));
+			spawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 15, 20, new Vector(entity), new Vector(1, 0, 1), true);
 
 			data.addTickHandler(FIRE_PARTICLE_SPAWNER);
 			data.getMiscData().setFallAbsorption(fallAbsorption);

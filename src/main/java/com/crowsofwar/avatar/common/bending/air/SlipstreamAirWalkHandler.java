@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.data.Chi;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -15,7 +16,7 @@ import net.minecraft.world.World;
 import java.util.Objects;
 
 public class SlipstreamAirWalkHandler extends TickHandler {
-	private NetworkParticleSpawner p;
+	private ParticleSpawner p;
 
 	public SlipstreamAirWalkHandler(int id) {
 		super(id);
@@ -41,7 +42,7 @@ public class SlipstreamAirWalkHandler extends TickHandler {
 				entity.setNoGravity((targetVel.y <= 0 || currentVel.y <= 0) && entity.motionY <= 0);
 				if (entity.getActivePotionEffect(MobEffects.INVISIBILITY) == null)
 					p.spawnParticles(world, EnumParticleTypes.EXPLOSION_NORMAL, 1, 2, entity.posX, entity.getEntityBoundingBox().minY - 0.05, entity.posZ,
-							0, 0, 0);
+							0, 0, 0, true);
 				if (entity.ticksExisted % 5 == 0 && !isCreative) {
 					chi.setAvailableChi(chi.getAvailableChi() - 1);
 				}
