@@ -103,6 +103,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		this.setsFires = true;
 	}
 
+	//Use a particle explosion instead of a shockwave
 	private void LightningBurst(double x, double y, double z) {
 		EntityShockwave wave = new EntityShockwave(world);
 		wave.setAbility(getAbility());
