@@ -40,8 +40,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.HashMap;
-
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -49,7 +47,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class AbilityFireShot extends Ability {
 
-	static HashMap<BlockPos, Long> ignitedTimes = new HashMap<>();
+	//TODO: Use a new entity for this ability, spawn particles along it.
 
 	public AbilityFireShot() {
 		super(Firebending.ID, "fire_shot");
