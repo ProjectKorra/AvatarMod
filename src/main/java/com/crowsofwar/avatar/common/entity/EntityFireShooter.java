@@ -1,14 +1,18 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.entity.data.FireShooterBehaviour;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
-public class EntityFireShooter extends AvatarEntity {
+public class EntityFireShooter extends EntityOffensive {
 
+	//Similar to EntityFlames, except it's bigger, and supports behaviour (works for flamethrower as well)
 	private static final DataParameter<FireShooterBehaviour> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityFireShooter.class, FireShooterBehaviour.DATA_SERIALIZER);
+
+	private float aoeDamage;
 
 	/**
 	 * @param world The world the entity is spawned in
@@ -17,8 +21,14 @@ public class EntityFireShooter extends AvatarEntity {
 		super(world);
 	}
 
-	@Override
-	public void onUpdate() {
-		super.onUpdate();
+	public void setAoeDamage(float damage) {
+		this.aoeDamage = damage;
 	}
+
+	@Override
+	protected float getAoeDamage() {
+		return aoeDamage;
+	}
+
+
 }

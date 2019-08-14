@@ -33,6 +33,10 @@ public abstract class EntityOffensive extends AvatarEntity {
 			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
 	private static final DataParameter<Integer> SYNC_LIFETIME = EntityDataManager
 			.createKey(EntityOffensive.class, DataSerializers.VARINT);
+	private static final DataParameter<Float> SYNC_HEIGHT = EntityDataManager
+			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> SYNC_WIDTh = EntityDataManager
+			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
 
 	private AxisAlignedBB expandedHitbox;
 	private float xp;
@@ -50,6 +54,26 @@ public abstract class EntityOffensive extends AvatarEntity {
 		this.piercingKnockback = Vec3d.ZERO;
 	}
 
+	public float getHeight() {
+		return dataManager.get(SYNC_HEIGHT);
+	}
+
+	public float getWidth() {
+		return dataManager.get(SYNC_WIDTh);
+	}
+
+	public float getAvgSize() {
+		if (getHeight() == getWidth()) {
+			return getHeight();
+		}
+		else return (getHeight() + getWidth()) / 2;
+	}
+
+	public void setEntitySize(float height, float width) {
+		dataManager.set(SYNC_HEIGHT, height);
+		dataManager.set(SYNC_WIDTh, width);
+	}
+
 	public float getDamage() {
 		return dataManager.get(SYNC_DAMAGE);
 	}
@@ -63,6 +87,8 @@ public abstract class EntityOffensive extends AvatarEntity {
 		super.entityInit();
 		dataManager.register(SYNC_DAMAGE, 1F);
 		dataManager.register(SYNC_LIFETIME, 100);
+		dataManager.register(SYNC_WIDTh, 1.0F);
+		dataManager.register(SYNC_HEIGHT, 1.0F);
 	}
 
 	@Override
@@ -81,6 +107,12 @@ public abstract class EntityOffensive extends AvatarEntity {
 		if (ticksExisted >= getLifeTime()) {
 			Dissipate();
 		}
+		setSize(getWidth(), getHeight());
+	}
+
+	@Override
+	public EntityLivingBase getController() {
+		return getOwner();
 	}
 
 	@Override
