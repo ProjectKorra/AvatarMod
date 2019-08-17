@@ -482,6 +482,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		if (index > -1) {
 
+			//Fix this as well, since the max age is now 7. Yay.
 			float sizeOffset = condition.getAgeDays() < 5 ? condition.getAgeDays() / condition.getAdultAge() : 5;
 			double offset = 0.75;
 			double angle = (index + 0.5) * Math.PI - toRadians(rotationYaw);
@@ -914,22 +915,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-
-		if (condition.getAgeDays() == 3) {
-			getData().getAbilityData("air_bubble").setLevel(0);
-			getData().getAbilityData("air_gust").setLevel(1);
-			getData().getAbilityData("airblade").setLevel(0);
-		}
-		if (condition.getAgeDays() == 4) {
-			getData().getAbilityData("air_bubble").setLevel(1);
-			getData().getAbilityData("air_gust").setLevel(1);
-			getData().getAbilityData("airblade").setLevel(1);
-		}
-		if (condition.getAgeDays() == 5) {
-			getData().getAbilityData("air_bubble").setLevel(2);
-			getData().getAbilityData("air_gust").setLevel(3);
-			getData().getAbilityData("airblade").setLevel(1);
-		}
 
 		if (this.isSitting() && hasOwner() && (world.getBlockState(getEntityPos(this)
 				.toBlockPos()).getBlock() != Blocks.AIR)) {

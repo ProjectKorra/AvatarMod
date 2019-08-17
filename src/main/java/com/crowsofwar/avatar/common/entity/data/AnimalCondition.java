@@ -211,6 +211,7 @@ public class AnimalCondition {
 	}
 
 	public float getSizeMultiplier() {
+		//TODO: Fix size maths
 		float adultSize = getAgeDays() < 5 ? getAgeDays() / getAdultAge() : 1.666777f;
 		return isAdult() ? adultSize : 0.1f + getAgeDays() / getAdultAge() * 0.9f;
 	}
@@ -223,7 +224,7 @@ public class AnimalCondition {
 	 * Returns the number of days it takes to become an adult.
 	 */
 	public int getAdultAge() {
-		return 3;
+		return 7;
 	}
 
 	// ================================================================================
