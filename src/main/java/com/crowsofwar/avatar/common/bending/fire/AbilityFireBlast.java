@@ -25,17 +25,23 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
+import com.crowsofwar.avatar.common.entity.EntityFireShooter;
+import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
+import com.crowsofwar.avatar.common.entity.data.FireShooterBehaviour;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -60,8 +66,11 @@ public class AbilityFireBlast extends Ability {
 		BendingData data = ctx.getData();
 
 
-		if (bender.consumeChi(STATS_CONFIG.chiFireArc)) {
+		if (bender.consumeChi(STATS_CONFIG.chiFireBlast)) {
 
+			float xp = SKILLS_CONFIG.fireBlastHit;
+			float damage = STATS_CONFIG.fireBlastSettings.damage;
+			double knockbackMult = STATS_CONFIG.fireBlastSettings.push;
 
 			Vector lookPos;
 			if (ctx.isLookingAtBlock()) {
@@ -137,12 +146,17 @@ public class AbilityFireBlast extends Ability {
 				}
 
 			}
-			Vec3d vel = entity.getLookVec();
-			vel.scale(20000);
+			EntityFireShooter shooter = new EntityFireShooter(world);
+			shooter.setElement(new Firebending());
+			shooter.setOwner(entity);
+			shooter.setAbility(this);
+			shooter.setKnockbackMult(new Vec3d(knockbackMult, knockbackMult, knockbackMult));
+			//Vec3d vel = entity.getLookVec();
+			//vel.scale(20000);
 			//vel.add(world.rand.nextBoolean() ? world.rand.nextFloat() : -world.rand.nextFloat(), world.rand.nextBoolean() ? world.rand.nextFloat() : -world.rand.nextFloat(),
 			//		world.rand.nextBoolean() ? world.rand.nextFloat() : -world.rand.nextFloat());
-			spawner.spawnParticles(world, AvatarParticles.getParticleFlames(), 120, 140, rightSide.x, rightSide.y,
-					rightSide.z, vel.x, vel.y, vel.z, false);
+			//spawner.spawnParticles(world, AvatarParticles.getParticleFlames(), 120, 140, rightSide.x, rightSide.y,
+			//		rightSide.z, vel.x, vel.y, vel.z, false);
 		}
 
 	}
@@ -169,5 +183,33 @@ public class AbilityFireBlast extends Ability {
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiFireBlast(this, entity, bender);
+	}
+
+	public static class FireBlastBehaviour extends FireShooterBehaviour {
+
+		@Override
+		public Behavior onUpdate(EntityFireShooter entity) {
+			return this;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
 	}
 }

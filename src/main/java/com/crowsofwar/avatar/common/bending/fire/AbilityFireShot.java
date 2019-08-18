@@ -40,6 +40,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -72,17 +73,20 @@ public class AbilityFireShot extends Ability {
 		double damageMult = bender.getDamageMult(Firebending.ID);
 		float damage = STATS_CONFIG.fireShotSetttings.damage;
 		float chi = STATS_CONFIG.chiFireShot;
+		float xp  = SKILLS_CONFIG.fireShotHit;
 		if (ctx.getLevel() == 1) {
 			speed += 0.25F;
 			chi += 0.5F;
 			damageMult += 0.5;
 			damage += 2;
+			xp -= 0.5F;
 		}
 		if (ctx.getLevel() == 2) {
 			speed += 0.5F;
 			chi += 1;
 			damageMult += 1;
 			damage += 4;
+			xp -= 1.5F;
 		}
 		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			speed += 0.75F;
@@ -103,12 +107,14 @@ public class AbilityFireShot extends Ability {
 				flames.setReflect(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
 				flames.rotationPitch = entity.rotationPitch;
 				flames.rotationYaw = entity.rotationYaw;
-				flames.setAbility(new AbilityFireShot());
+				flames.setAbility(this);
+				flames.setXp(xp);
 				flames.setLifeTime((int) abilityData.getTotalXp() + 60);
 				flames.setTrailingFire(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
 				//TODO: Remove all damage calculations in EntityFlames
 				flames.setFireTime((int) (4F * 1 + abilityData.getTotalXp() / 50f));
 				flames.setDamage(damage * (float) damageMult);
+				flames.setElement(new Firebending());
 				if (!world.isRemote)
 					world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
 							world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);

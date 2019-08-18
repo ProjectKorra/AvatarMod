@@ -26,9 +26,28 @@ public class EntityFireShooter extends EntityOffensive {
 	}
 
 	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_BEHAVIOR, new FireShooterBehaviour.Idle());
+	}
+
+	@Override
 	protected float getAoeDamage() {
 		return aoeDamage;
 	}
 
+	@Override
+	protected boolean isPiercing() {
+		return true;
+	}
 
+	@Override
+	protected boolean shouldExplode() {
+		return false;
+	}
+
+	@Override
+	protected boolean shouldDissipate() {
+		return false;
+	}
 }

@@ -43,6 +43,7 @@ public abstract class EntityOffensive extends AvatarEntity {
 	private int fireTime;
 	private int performanceAmount;
 	private Vec3d piercingKnockback;
+	private Vec3d knockbackMult;
 
 
 	public EntityOffensive(World world) {
@@ -268,8 +269,12 @@ public abstract class EntityOffensive extends AvatarEntity {
 		return 1;
 	}
 
+	public void setKnockbackMult(Vec3d mult) {
+		this.knockbackMult = mult;
+	}
+
 	protected Vec3d getKnockbackMult() {
-		return new Vec3d(1, 1, 1);
+		return knockbackMult;
 	}
 
 	protected EnumParticleTypes getParticle() {
