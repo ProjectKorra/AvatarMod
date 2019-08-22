@@ -315,13 +315,13 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 	public void damageEntity(Entity entity) {
 		if (canDamageEntity(entity) && !world.isRemote) {
 			DamageSource ds = AvatarDamageSource.causeFireDamage(entity, getOwner());
-			float damage = STATS_CONFIG.fireArcSettings.damage * damageMult;
+			float damage = STATS_CONFIG.fireBlastSettings.damage * damageMult; // TODO - Fix this. Originally fireArcSettings
 			entity.attackEntityFrom(ds, damage);
 			if (entity.attackEntityFrom(ds, damage)) {
 				if (getOwner() != null && !world.isRemote && getAbility() != null) {
 					BendingData data1 = BendingData.get(getOwner());
 					AbilityData abilityData1 = data1.getAbilityData(getAbility().getName());
-					abilityData1.addXp(SKILLS_CONFIG.fireArcHit);
+					abilityData1.addXp(SKILLS_CONFIG.fireBlastHit); // TODO - Fix this; Originally fireArcHit
 					BattlePerformanceScore.addMediumScore(getOwner());
 
 				}

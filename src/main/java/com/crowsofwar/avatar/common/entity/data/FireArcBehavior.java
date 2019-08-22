@@ -129,13 +129,13 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 					if (collided == entity.getOwner()) return this;
 					if (entity.canCollideWith(collided) && collided != entity) {
 
-						double push = STATS_CONFIG.fireArcSettings.push;
+						double push = STATS_CONFIG.fireBlastSettings.push;  // TODO - Fix this; Originally fireArcSettings
 						collided.addVelocity(entity.motionX * push, 0.4 * push, entity.motionZ * push);
 						collided.setFire(3);
 
 						if (entity.canDamageEntity(collided) || collided instanceof EntityPlayer) {
 							if (collided.attackEntityFrom(AvatarDamageSource.causeFireArcDamage(collided, entity.getOwner()),
-									STATS_CONFIG.fireArcSettings.damage * entity.getDamageMult())) {
+									STATS_CONFIG.fireBlastSettings.damage * entity.getDamageMult())) { // TODO - Fix this; Originally fireArcSettings
 								BattlePerformanceScore.addMediumScore(entity.getOwner());
 							}
 						}
@@ -143,7 +143,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 							BendingData data = Objects.requireNonNull(Bender.get(entity.getOwner())).getData();
 							if (data != null) {
 								data.getAbilityData(entity.getAbility().getName())
-										.addXp(ConfigSkills.SKILLS_CONFIG.fireArcHit);
+										.addXp(ConfigSkills.SKILLS_CONFIG.fireBlastHit); // TODO - Fix this; Originally fireArcHit
 								AbilityData abilityData = data.getAbilityData(entity.getAbility().getName());
 								if (abilityData.isMasterPath(AbilityTreePath.SECOND) && entity.getOwner() != null) {
 									data.addStatusControl(StatusControl.THROW_FIRE);
