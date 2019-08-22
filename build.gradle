@@ -103,7 +103,7 @@ dependencies {
 	}
 
 	// Other Stuff
-	shadow "org.joml:joml:1.9.12"
+	shadow "org.joml:joml-jdk8:1.9.17"
 	shadow "org.yaml:snakeyaml:1.23"
 }
 
