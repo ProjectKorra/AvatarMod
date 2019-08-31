@@ -113,6 +113,7 @@ public class EntityRavine extends AvatarEntity {
 		Vector position = position();
 		Vector velocity = velocity();
 
+		//Why? xD
 		setPosition(position.plus(velocity.times(0.05)));
 
 		if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {

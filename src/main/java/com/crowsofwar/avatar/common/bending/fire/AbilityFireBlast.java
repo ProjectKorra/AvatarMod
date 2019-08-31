@@ -151,6 +151,7 @@ public class AbilityFireBlast extends Ability {
 			shooter.setOwner(entity);
 			shooter.setAbility(this);
 			shooter.setKnockbackMult(new Vec3d(knockbackMult, knockbackMult, knockbackMult));
+			shooter.setBehaviour(new FireBlastBehaviour());
 			//Vec3d vel = entity.getLookVec();
 			//vel.scale(20000);
 			//vel.add(world.rand.nextBoolean() ? world.rand.nextFloat() : -world.rand.nextFloat(), world.rand.nextBoolean() ? world.rand.nextFloat() : -world.rand.nextFloat(),

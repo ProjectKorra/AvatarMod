@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.entity.data.FireShooterBehaviour;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
@@ -21,10 +20,6 @@ public class EntityFireShooter extends EntityOffensive {
 		super(world);
 	}
 
-	public void setAoeDamage(float damage) {
-		this.aoeDamage = damage;
-	}
-
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -34,6 +29,10 @@ public class EntityFireShooter extends EntityOffensive {
 	@Override
 	protected float getAoeDamage() {
 		return aoeDamage;
+	}
+
+	public void setAoeDamage(float damage) {
+		this.aoeDamage = damage;
 	}
 
 	@Override
@@ -49,5 +48,19 @@ public class EntityFireShooter extends EntityOffensive {
 	@Override
 	protected boolean shouldDissipate() {
 		return false;
+	}
+
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		setBehaviour(getBehaviour());
+	}
+
+	public FireShooterBehaviour getBehaviour() {
+		return dataManager.get(SYNC_BEHAVIOR);
+	}
+
+	public void setBehaviour(FireShooterBehaviour behaviour) {
+		dataManager.set(SYNC_BEHAVIOR, behaviour);
 	}
 }
