@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.ClientProxy;
 import electroblob.wizardry.entity.ICustomHitbox;
@@ -47,6 +48,24 @@ import java.util.stream.Collectors;
  */
 //@SideOnly(Side.CLIENT)
 public abstract class ParticleWizardry extends Particle {
+
+	//TODO: How to adjust Electroblob's particle system for av2.
+	/**
+	 * ParticleBuilder adjustments:
+	 * -More spawning options. This includes colour shifting for particles, custom behaviour, ability to set the alpha, e.t.c.
+	 * -Better spinning. This means that you'll be able to spin particles along an axis- yay!!!!
+	 * -Particle AI!!!
+	 *
+	 * Particles:
+	 * -ParticleSphere: Alpha setting!
+	 * -ParticleMagicBubble: Actually spins! Behaviour so it can function like MagicFire!
+	 * -More particles in general! Namely, cube, sphere, cylinder, rectangular prism, and water particles!
+	 */
+
+
+
+
+
 
 	/** Implementation of animated particles using the TextureAtlasSprite system. Why vanilla doesn't support this I
 	 * don't know, considering it too has animated particles. */
@@ -533,7 +552,7 @@ public abstract class ParticleWizardry extends Particle {
 		ResourceLocation[] textures = new ResourceLocation[n];
 		
 		for(int i=0; i<n; i++){
-			textures[i] = new ResourceLocation(Wizardry.MODID, "particle/" + stem + "_" + i);
+			textures[i] = new ResourceLocation(AvatarInfo.MOD_ID, "particle/" + stem + "_" + i);
 		}
 		
 		return textures;
