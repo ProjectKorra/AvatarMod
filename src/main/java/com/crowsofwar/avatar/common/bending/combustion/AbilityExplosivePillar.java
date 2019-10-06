@@ -98,4 +98,14 @@ public class AbilityExplosivePillar extends Ability {
 			world.spawnEntity(spawner);
 		}
 	}
+
+	@Override
+	public int getTier() {
+		return 2;
+	}
+
+	@Override
+	public int getParentTier() {
+		return 3;
+	}
 }

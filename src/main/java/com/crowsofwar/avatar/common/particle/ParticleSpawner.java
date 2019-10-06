@@ -80,7 +80,7 @@ public interface ParticleSpawner {
 	 * @param parameters   Extra parameters for the particle effect
 	 */
 	void spawnParticles(World world, EnumParticleTypes particle, int minimum, int maximum, double x, double y,
-						double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ, int... parameters);
+						double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ, boolean velIsMagnitude, int... parameters);
 
 	/**
 	 * Spawn multiple particles in the world. This is better than spawning
@@ -95,9 +95,9 @@ public interface ParticleSpawner {
 	 * @param parameters  Extra parameters for the particle effect
 	 */
 	default void spawnParticles(World world, EnumParticleTypes particle, int minimum, int maximum,
-								Vector position, Vector maxVelocity, int... parameters) {
+								Vector position, Vector maxVelocity, boolean velIsMagnitude, int... parameters) {
 		spawnParticles(world, particle, minimum, maximum, position.x(), position.y(), position.z(),
-				maxVelocity.x(), maxVelocity.y(), maxVelocity.z(), parameters);
+				maxVelocity.x(), maxVelocity.y(), maxVelocity.z(), velIsMagnitude, parameters);
 	}
 
 }

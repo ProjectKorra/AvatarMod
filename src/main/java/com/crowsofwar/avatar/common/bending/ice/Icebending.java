@@ -34,11 +34,11 @@ public class Icebending extends BendingStyle {
 	private final BendingMenuInfo menu;
 
 	public Icebending() {
-
 		super(Waterbending.ID);
 
-		addAbility("ice_burst");
 		addAbility("ice_prison");
+		addAbility("ice_burst");
+
 
 		ThemeColor bkgd = new ThemeColor(0xEBF4F5, 0xDBE1E2);
 		ThemeColor edge = new ThemeColor(0xC5DDDF, 0xACBFC0);

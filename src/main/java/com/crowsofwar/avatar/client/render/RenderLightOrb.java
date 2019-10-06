@@ -7,6 +7,7 @@ import codechicken.lib.render.OBJParser;
 import codechicken.lib.texture.TextureUtils;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
+import com.crowsofwar.avatar.common.bending.fire.AbilityInfernoPunch;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -30,11 +31,6 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
     private static ResourceLocation halo = new ResourceLocation("avatarmod", "textures/entity/spherehalo.png");
     private ResourceLocation fill;
 
-    private CCModel model;
-
-    private static CCModel cubeModel = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/cube.obj")).get("model");
-    private static CCModel sphereModel = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/hemisphere.obj")).get("model");
-
     public RenderLightOrb(RenderManager manager) {
         super(manager);
     }
@@ -44,14 +40,17 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
 
         if(entity.getType() == EntityLightOrb.EnumType.NOTHING) return;
 
-        model = entity.isSphere() ? sphereModel : cubeModel;
         fill = entity.shouldUseCustomTexture() ? new ResourceLocation(entity.getTrueTexture()) : fill_default;
+
+        boolean shouldCclRender = entity.isSphere();
 
         Minecraft minecraft = Minecraft.getMinecraft();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
-        CCRenderState ccrenderstate = CCRenderState.instance();
-        TextureUtils.changeTexture(halo);
+
+        // Only use CLL if present!
+        if (shouldCclRender) TextureUtils.changeTexture(halo);
+        else bindTexture(halo);
 
         if (entity.shouldUseCustomTexture()) {
             GlStateManager.color(1F, 1F, 1F, entity.getColorA());
@@ -83,7 +82,8 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
 
         GlStateManager.pushMatrix();
         {
-            GlStateManager.translate(x, y + entity.getOrbSize() / 2.7D, z);
+            //Current translation is whack af
+            GlStateManager.translate(x, y - 0.1/*+ entity.getOrbSize() / 2.7D**/, z);
 
             GlStateManager.rotate((float) angleX, 0, 1, 0);
             GlStateManager.rotate((float) (angleY + 90), 1, 0, 0);
@@ -109,15 +109,14 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
             }
             GlStateManager.popMatrix();
 
-            TextureUtils.changeTexture(fill);
+            // Only use CLL if present!
+            if (shouldCclRender) TextureUtils.changeTexture(fill);
+            else bindTexture(fill);
 
             GlStateManager.scale(scale, scale, scale);
 
             if(entity.getAbility() instanceof AbilityFireball && entity.getEmittingEntity() != null && entity.getEmittingEntity() instanceof EntityFireball) {
                 int amount = entity.getType() == EntityLightOrb.EnumType.TEXTURE_SPHERE ? 1 : 2;
-                GlStateManager.rotate(rotation * 0.2F, 1, 0, 0);
-                GlStateManager.rotate(rotation, 0, 1, 0);
-                GlStateManager.rotate(rotation * 0.2F, 0, 0, 1);
                 for (int i = 0; i < amount; i++) {
                     EntityFireball fireball = (EntityFireball) entity.getEmittingEntity();
                     World world = entity.world;
@@ -129,13 +128,34 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
                 }
             }
 
-            GlStateManager.disableCull();
-            if (!entity.shouldUseCustomTexture()) GlStateManager.color(entity.getColorR(), entity.getColorG(), entity.getColorB(), entity.getColorA());
-            ccrenderstate.startDrawing(0x04, DefaultVertexFormats.POSITION_TEX_NORMAL);
-            model.render(ccrenderstate);
-            ccrenderstate.draw();
+            if (entity.isSpinning() && entity.isSphere()) {
+                //TODO: Data parameters for rotation amounts
+                GlStateManager.rotate(rotation * 0.2F, 1, 0, 0);
+                GlStateManager.rotate(rotation, 0, 1, 0);
+                GlStateManager.rotate(rotation * 0.2F, 0, 0, 1);
+            }
 
-            if (entity.isTextureSphere()) {
+            GlStateManager.disableCull();
+            if (entity.getType() == EntityLightOrb.EnumType.COLOR_CUBE || entity.getType() == EntityLightOrb.EnumType.TEXTURE_CUBE) {
+                if (entity.isSpinning()) {
+                    if (entity.getAbility() instanceof AbilityInfernoPunch) {
+                        RenderUtils.renderCube(0, 0, 0, 0d, 1d, 0d, 1d, 1f,
+                                rotation * entity.getOrbSize() / 80F, rotation * entity.getOrbSize() / 40F, rotation * entity.getOrbSize() / 80F);
+                    } else {
+                        RenderUtils.renderCube(0, 0, 0, 0d, 1d, 0d, 1d, 1f,
+                                rotation * 0.1F, rotation * 0.5F, rotation * 0.1F);
+                    }
+                } else {
+                    RenderUtils.renderCube(0, 0, 0, 0d, 1d, 0d, 1d, 1F, 0, 0, 0);
+                }
+            } else {
+                CCRenderState ccrenderstate = CCRenderState.instance();
+                CCModel model = OBJParser.parseModels(new ResourceLocation("avatarmod", "models/hemisphere.obj")).get("model");
+                if (!entity.shouldUseCustomTexture()) GlStateManager.color(entity.getColorR(), entity.getColorG(), entity.getColorB(), entity.getColorA());
+                ccrenderstate.startDrawing(0x04, DefaultVertexFormats.POSITION_TEX_NORMAL);
+                model.render(ccrenderstate);
+                ccrenderstate.draw();
+
                 GlStateManager.rotate(180, 1, 1, 0);
                 if (!entity.shouldUseCustomTexture()) GlStateManager.color(entity.getColorR(), entity.getColorG(), entity.getColorB(), entity.getColorA());
                 ccrenderstate.startDrawing(0x04, DefaultVertexFormats.POSITION_TEX_NORMAL);

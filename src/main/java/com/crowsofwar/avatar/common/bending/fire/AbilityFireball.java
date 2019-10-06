@@ -110,9 +110,10 @@ public class AbilityFireball extends Ability {
 			orb.setOrbSize(size * 0.03125F);
 			orb.setColor(1F, 0.5F, 0F, 1F);
 			orb.setLightRadius(15);
+			orb.setSpinning(true);
 			orb.setEmittingEntity(fireball);
 			orb.setBehavior(new FireballLightOrbBehavior());
-			orb.setType(CLIENT_CONFIG.fireballRenderSettings.isSphere ? EntityLightOrb.EnumType.TEXTURE_SPHERE : EntityLightOrb.EnumType.TEXTURE_CUBE);
+			orb.setType(CLIENT_CONFIG.fireRenderSettings.fireBallSphere ? EntityLightOrb.EnumType.TEXTURE_SPHERE : EntityLightOrb.EnumType.TEXTURE_CUBE);
 			orb.setTexture("avatarmod:textures/entity/fireball/frame_%number%.png");
 			orb.setTextureFrameCount(30);
 			world.spawnEntity(orb);
@@ -130,21 +131,26 @@ public class AbilityFireball extends Ability {
 		return new AiFireball(this, entity, bender);
 	}
 
+	@Override
+	public int getTier() {
+		return 3;
+	}
+
 	public static class FireballLightOrbBehavior extends LightOrbBehavior {
 
 		@Override
 		public Behavior onUpdate(EntityLightOrb entity) {
-			if(entity.getEntityWorld().isRemote) entity.setLightRadius(15 + (int)(Math.random() * 5));
+			if (entity.getEntityWorld().isRemote) entity.setLightRadius(15 + (int) (Math.random() * 5));
 			Entity emitter = entity.getEmittingEntity();
 			if (emitter == null)
 				entity.setDead();
 			if (emitter != null) {
 				assert emitter instanceof EntityFireball;
-					entity.setOrbSize(((EntityFireball) emitter).getSize() * 0.03125F);
-					entity.motionX = emitter.motionX;
-					entity.motionY = emitter.motionY;
-					entity.motionZ = emitter.motionZ;
-					entity.setPosition(emitter.getPositionVector().add(0, entity.height, 0));
+				entity.setOrbSize(((EntityFireball) emitter).getSize() * 0.03125F);
+				entity.motionX = emitter.motionX;
+				entity.motionY = emitter.motionY;
+				entity.motionZ = emitter.motionZ;
+				entity.setPosition(emitter.getPositionVector().add(0, entity.height, 0));
 			/*if (entity.getColourShiftRange() != 0) {
 				float range = entity.getColourShiftRange();
 				float r = entity.getInitialColourR();

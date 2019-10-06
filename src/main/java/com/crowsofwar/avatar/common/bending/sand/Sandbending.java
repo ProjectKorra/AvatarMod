@@ -18,7 +18,6 @@ public class Sandbending extends BendingStyle {
 	private final BendingMenuInfo radialMenu;
 
 	public Sandbending() {
-
 		super(Earthbending.ID);
 
 		addAbility("sand_prison");

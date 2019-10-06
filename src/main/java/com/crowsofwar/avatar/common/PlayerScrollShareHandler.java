@@ -5,7 +5,9 @@ import com.crowsofwar.avatar.common.analytics.AnalyticEvent;
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.item.ItemScroll;
+import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -36,9 +38,9 @@ public class PlayerScrollShareHandler {
 
 			ItemStack stack = entity.getItem();
 
-			if (stack.getItem() == AvatarItems.itemScroll) {
+			if (stack.getItem() instanceof ItemScroll) {
 
-				String type = ItemScroll.ScrollType.get(stack.getMetadata()).name().toLowerCase();
+				String type = Scrolls.getTypeForStack(stack).name().toLowerCase();
 				AnalyticEvent analyticEvent = AnalyticEvents.onScrollShared(type);
 				AvatarAnalytics.INSTANCE.pushEvent(analyticEvent);
 

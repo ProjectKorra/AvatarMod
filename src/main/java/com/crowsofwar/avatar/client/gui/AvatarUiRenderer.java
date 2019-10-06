@@ -46,6 +46,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opencl.CL;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Comparator;
@@ -55,6 +56,7 @@ import java.util.UUID;
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.RENDER_ELEMENT_HANDLER;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 /**
@@ -81,6 +83,7 @@ public class AvatarUiRenderer extends Gui {
 	public static void openBendingGui(UUID bending) {
 
 		BendingStyle controller = BendingStyles.get(bending);
+		assert controller != null;
 		BendingMenuInfo menu = controller.getRadialMenu();
 
 		instance.currentBendingMenu = new RadialMenu(controller, menu.getTheme(), menu.getButtons());
@@ -185,72 +188,79 @@ public class AvatarUiRenderer extends Gui {
 	private void renderChiBar(ScaledResolution resolution) {
 		if (CLIENT_CONFIG.chiBarSettings.shouldChibarRender) {
 
-			GlStateManager.color(1, 1, 1, CLIENT_CONFIG.chiBarAlpha);
-
 			BendingData data = BendingData.get(mc.player);
+			boolean shouldRender = !CLIENT_CONFIG.chiBarSettings.shouldChiMenuDisappear || data.hasTickHandler(RENDER_ELEMENT_HANDLER);
 
-			if (data.getAllBending().isEmpty()) return;
+			if (shouldRender) {
+				float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
+						//Ensures that at 0 duration the opacity is the same as the opacity when not fading.
+						((float) CLIENT_CONFIG.chiBarSettings.chibarDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER))
+								/ CLIENT_CONFIG.chiBarSettings.chibarDuration * CLIENT_CONFIG.chiBarAlpha : CLIENT_CONFIG.chiBarAlpha;
+				GlStateManager.color(1, 1, 1, alpha);
 
-			Chi chi = data.chi();
-			float total = chi.getTotalChi();
-			float max = chi.getMaxChi();
-			float available = chi.getAvailableChi();
-			float unavailable = total - available;
+				if (data.getAllBending().isEmpty()) return;
 
-			// Dimensions of end result in pixels
-			float scale = 1.1f;
-			float width = 100 * scale;
-			float height = 9 * scale;
+				Chi chi = data.chi();
+				float total = chi.getTotalChi();
+				float max = chi.getMaxChi();
+				float available = chi.getAvailableChi();
+				float unavailable = total - available;
 
-			mc.getTextureManager().bindTexture(AvatarUiTextures.CHI_BAR);
+				// Dimensions of end result in pixels
+				float scale = 1.1f;
+				float width = 100 * scale;
+				float height = 9 * scale;
 
-			pushMatrix();
+				mc.getTextureManager().bindTexture(AvatarUiTextures.CHI_BAR);
 
-			translate(resolution.getScaledWidth() - 115, resolution.getScaledHeight() - height - 3, 0);
-			scale(scale, scale, 1);
+				pushMatrix();
 
-			// Background of chi bar
-			drawTexturedModalRect(0, 0, 0, 36, 100, 9);
+				translate(resolution.getScaledWidth() - 115, resolution.getScaledHeight() - height - 3, 0);
+				scale(scale, scale, 1);
 
-			// Available chi
+				// Background of chi bar
+				drawTexturedModalRect(0, 0, 0, 36, 100, 9);
 
-			float unadjustedU = 100 * unavailable / max;
-			int adjustedU = (int) Math.floor(unadjustedU / 8f) * 8;
-			float uDiff = unadjustedU - adjustedU;
+				// Available chi
 
-			drawTexturedModalRect(adjustedU, 0, 1, 27, (int) (100 * available / max + uDiff), 9);
+				float unadjustedU = 100 * unavailable / max;
+				int adjustedU = (int) Math.floor(unadjustedU / 8f) * 8;
+				float uDiff = unadjustedU - adjustedU;
 
-			// Unavailable chi
-			drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
-			if (CLIENT_CONFIG.chiBarSettings.shouldChiNumbersRender) {
-				drawString(mc.fontRenderer, ((int) total) + "/" + ((int) max) + ", " + ((int) available), 25, -10,
-						data.getActiveBending().getTextColour() | ((int) (CLIENT_CONFIG.chiBarAlpha * 255) << 24));
+				drawTexturedModalRect(adjustedU, 0, 1, 27, (int) (100 * available / max + uDiff), 9);
+
+				// Unavailable chi
+				drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
+				if (CLIENT_CONFIG.chiBarSettings.shouldChiNumbersRender) {
+					drawString(mc.fontRenderer, ((int) total) + "/" + ((int) max) + ", " + ((int) available), 25, -10,
+							data.getActiveBending().getTextColour() | ((int) (alpha * 255) << 24));
+				}
+				popMatrix();
+
 			}
-			popMatrix();
-
 		}
 	}
 
 	private void renderChiMsg(ScaledResolution res) {
 
-			if (errorMsgFade != -1) {
+		if (errorMsgFade != -1) {
 
-				float seconds = (System.currentTimeMillis() - errorMsgFade) / 1000f;
-				float alpha = seconds < 1 ? 1 : 1 - (seconds - 1);
-				int alphaI = (int) (alpha * 255);
-				// For some reason, any alpha below 4 is displayed at alpha 255
-				if (alphaI < 4) alphaI = 4;
+			float seconds = (System.currentTimeMillis() - errorMsgFade) / 1000f;
+			float alpha = seconds < 1 ? 1 : 1 - (seconds - 1);
+			int alphaI = (int) (alpha * 255);
+			// For some reason, any alpha below 4 is displayed at alpha 255
+			if (alphaI < 4) alphaI = 4;
 
-				String text = TextFormatting.BOLD + I18n.format(errorMsg);
+			String text = TextFormatting.BOLD + I18n.format(errorMsg);
 
-				//@formatter:off
-				drawString(mc.fontRenderer, text,
-						(res.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2,
-						res.getScaledHeight() - mc.fontRenderer.FONT_HEIGHT - 40,
-						0xffffff | (alphaI << 24));
-				//@formatter:on
+			//@formatter:off
+			drawString(mc.fontRenderer, text,
+					(res.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2,
+					res.getScaledHeight() - mc.fontRenderer.FONT_HEIGHT - 40,
+					0xffffff | (alphaI << 24));
+			//@formatter:on
 
-				if (seconds >= 2) errorMsgFade = -1;
+			if (seconds >= 2) errorMsgFade = -1;
 
 		}
 	}
@@ -260,54 +270,48 @@ public class AvatarUiRenderer extends Gui {
 		if (CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuRender) {
 			BendingData data = BendingData.get(mc.player);
 
-			/*if (CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuDisappear) {
-				data.addTickHandler(RENDER_ELEMENT_HANDLER);
-			}**/
-
-			//boolean shouldRender = !CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuDisappear || data.hasTickHandler(RENDER_ELEMENT_HANDLER);
-
-			if (data.getActiveBending() != null) {
-				//float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
-				//		((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER)) / 200 : CLIENT_CONFIG.bendingCycleAlpha;
-				GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha);
-				drawBendingIcon(0, -30, data.getActiveBending(), 50.0, 50.0);
+			boolean shouldRender = !CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuDisappear || data.hasTickHandler(RENDER_ELEMENT_HANDLER);
+			if (shouldRender) {
+				if (data.getActiveBending() != null) {
+					float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
+							((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER))
+							/ CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration * CLIENT_CONFIG.bendingCycleAlpha : CLIENT_CONFIG.bendingCycleAlpha;
+					GlStateManager.color(1, 1, 1, alpha);
+					drawBendingIcon(0, -30, data.getActiveBending(), 50.0, 50.0);
 
 
-				List<BendingStyle> allBending = data.getAllBending();
-				allBending.sort(Comparator.comparing(BendingStyle::getName));
+					List<BendingStyle> allBending = data.getAllBending();
+					allBending.sort(Comparator.comparing(BendingStyle::getName));
 
-				// Draw next
-				int indexNext = allBending.indexOf(data.getActiveBending()) + 1;
-				if (indexNext == allBending.size()) indexNext = 0;
+					// Draw next
+					int indexNext = allBending.indexOf(data.getActiveBending()) + 1;
+					if (indexNext == allBending.size()) indexNext = 0;
 
-				if (allBending.size() > 1) {
-					GlStateManager.pushMatrix();
-					GlStateManager.translate(0, 0, -1);
-					drawBendingIcon(50, 5, allBending.get(indexNext), 35.0, 35.0);
-					//float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
-					//		((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER)) / 200 : CLIENT_CONFIG.bendingCycleAlpha;
-					GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha * 0.5f);
+					if (allBending.size() > 1) {
+						GlStateManager.pushMatrix();
+						GlStateManager.translate(0, 0, -1);
+						drawBendingIcon(50, 5, allBending.get(indexNext), 35.0, 35.0);
+						GlStateManager.color(1, 1, 1, alpha * 0.5f);
 
-					GlStateManager.popMatrix();
-				}
+						GlStateManager.popMatrix();
+					}
 
-				// Draw previous
-				int indexPrevious = allBending.indexOf(data.getActiveBending()) - 1;
-				if (indexPrevious <= -1) indexPrevious = allBending.size() - 1;
+					// Draw previous
+					int indexPrevious = allBending.indexOf(data.getActiveBending()) - 1;
+					if (indexPrevious <= -1) indexPrevious = allBending.size() - 1;
 
-				if (allBending.size() > 2) {
-					GlStateManager.pushMatrix();
-					GlStateManager.translate(0, 0, -1);
-					drawBendingIcon(-35, 5, allBending.get(indexPrevious), 35.0, 35.0);
-					//float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
-					//		((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER)) / 200 : CLIENT_CONFIG.bendingCycleAlpha;
-					GlStateManager.color(1, 1, 1, CLIENT_CONFIG.bendingCycleAlpha * 0.5f);
+					if (allBending.size() > 2) {
+						GlStateManager.pushMatrix();
+						GlStateManager.translate(0, 0, -1);
+						drawBendingIcon(-35, 5, allBending.get(indexPrevious), 35.0, 35.0);
+						GlStateManager.color(1, 1, 1, alpha * 0.5f);
 
-					GlStateManager.popMatrix();
+						GlStateManager.popMatrix();
+					}
+
 				}
 
 			}
-
 		}
 	}
 

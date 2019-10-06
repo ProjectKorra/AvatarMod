@@ -48,8 +48,8 @@ public class RenderFlames extends Render<EntityFlames> {
 	public void doRender(EntityFlames entity, double x, double y, double z, float entityYaw,
 						 float partialTicks) {
 
-		particleSpawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 1, 1,
-				Vector.getEntityPos(entity), new Vector(0.02, 0.01, 0.02));
+		particleSpawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 1, 2,
+				Vector.getEntityPos(entity), new Vector(0.02, 0.01, 0.02), true);
 
 		// entity.world.spawnParticle(AvatarParticles.getParticleFlames(),
 		// entity.posX,

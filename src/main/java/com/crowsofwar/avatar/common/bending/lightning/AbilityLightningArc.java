@@ -31,4 +31,13 @@ public class AbilityLightningArc extends Ability {
 
 	}
 
+	@Override
+	public int getTier() {
+		return 2;
+	}
+
+	@Override
+	public int getParentTier() {
+		return 4;
+	}
 }

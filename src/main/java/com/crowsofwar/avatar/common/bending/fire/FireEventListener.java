@@ -12,18 +12,14 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -32,19 +28,18 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.*;
-import static com.crowsofwar.avatar.common.bending.fire.AbilityFireShot.*;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class FireEventListener {
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public static void onInfernoPunch(LivingAttackEvent event) {
 		Entity entity = event.getSource().getTrueSource();
 		Entity target = event.getEntity();
 		DamageSource source = event.getSource();
 		World world = target.getEntityWorld();
 		if (entity instanceof EntityLivingBase && !AvatarDamageSource.isAvatarDamageSource(source)) {
-			if (event.getSource().getTrueSource() == entity && (entity instanceof EntityBender || entity instanceof EntityPlayer)) {
+			if (event.getSource().getTrueSource() == entity && entity instanceof EntityBender) {
 				Bender ctx = Bender.get((EntityLivingBase) entity);
 				if (ctx != null) {
 					if (ctx.getInfo().getId() != null) {
@@ -53,23 +48,23 @@ public class FireEventListener {
 							AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
 							BendingData data = BendingData.get((EntityLivingBase) entity);
 							boolean hasInfernoPunch = data.hasStatusControl(INFERNO_PUNCH_MAIN) || data.hasStatusControl(INFERNO_PUNCH_FIRST);
-							float powerModifier = (float) (ctx.calcPowerRating(Firebending.ID) / 100);
-							float damage = STATS_CONFIG.InfernoPunchDamage + (2 * powerModifier);
-							float knockBack = 1 + powerModifier;
+							float powerModifier = (float) (ctx.getDamageMult(Firebending.ID));
+							float damage = STATS_CONFIG.InfernoPunchDamage * powerModifier;
+							float knockBack = 1 * powerModifier;
 							int fireTime = 5 + (int) (powerModifier * 10);
 
-							if (abilityData.getLevel() >= 1) {
-								damage = STATS_CONFIG.InfernoPunchDamage * 4 / 3 + (2 * powerModifier);
-								knockBack = 1.125F + powerModifier;
+							if (abilityData.getLevel() == 1) {
+								damage = STATS_CONFIG.InfernoPunchDamage * 4 / 3 * powerModifier;
+								knockBack = 1.125F * powerModifier;
 								fireTime = 6;
 							}
 							if (abilityData.getLevel() >= 2) {
-								damage = STATS_CONFIG.InfernoPunchDamage * 5 / 3 + (2 * powerModifier);
+								damage = STATS_CONFIG.InfernoPunchDamage * 5 / 3  * powerModifier;
 								knockBack = 1.25F + powerModifier;
 								fireTime = 8 + (int) (powerModifier * 10);
 							}
 							if (data.hasStatusControl(INFERNO_PUNCH_FIRST)) {
-								damage = STATS_CONFIG.InfernoPunchDamage * 7 / 3 + (2 * powerModifier);
+								damage = STATS_CONFIG.InfernoPunchDamage * 7 / 3* powerModifier;
 								knockBack = 1.5F + powerModifier;
 								fireTime = 15 + (int) (powerModifier * 10);
 							}
@@ -89,8 +84,9 @@ public class FireEventListener {
 											wave.setParticle(AvatarParticles.getParticleBigFlame());
 											wave.setParticleSpeed(0.12F);
 											wave.setParticleAmount(1);
-											wave.setParticleController(35);
 											//Used for spheres
+											wave.setParticleController(35);
+
 											wave.setSpeed(0.8F);
 											wave.setDamageSource(AvatarDamageSource.FIRE);
 											wave.setParticleAmount(2);
@@ -138,38 +134,5 @@ public class FireEventListener {
 				}
 			}
 		}
-	}
-
-	@SubscribeEvent
-	public static void onUpdateEvent(LivingEvent.LivingUpdateEvent event) {
-		if (event.getEntityLiving() != null) {
-			EntityLivingBase entity = event.getEntityLiving();
-			if (entity instanceof EntityPlayer || entity instanceof EntityBender) {
-				Bender b = Bender.get(entity);
-				if (b != null) {
-					if (b.getData().hasBendingId(Firebending.ID)) {
-						if (!ignitedTimes.isEmpty()) {
-							UUID benderUUID = b.getEntity().getUniqueID();
-							for (BlockPos pos : ignitedTimes.get(benderUUID).keySet()) {
-								HashMap<BlockPos, Integer> newIgnitedTime = new HashMap<>();
-								getIgnitedTimes(benderUUID).forEach((blockPos, integer) -> {
-									newIgnitedTime.put(blockPos, integer - 1);
-								});
-								if (entity.getUniqueID().toString().equals(getIgnitedOwner(pos))) {
-									ignitedTimes.replace(benderUUID, getIgnitedTimes(benderUUID), newIgnitedTime);
-									if (getIgnitedTimes(benderUUID).get(pos) == 0) {
-										if (entity.world.getBlockState(pos).getBlock() == Blocks.FIRE) {
-											entity.world.setBlockToAir(pos);
-											ignitedTimes.remove(pos);
-											ignitedBlocks.remove(pos);
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+	}**/
 }

@@ -17,10 +17,10 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -129,22 +129,22 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 					if (collided == entity.getOwner()) return this;
 					if (entity.canCollideWith(collided) && collided != entity) {
 
-						double push = STATS_CONFIG.fireArcSettings.push;
+						double push = STATS_CONFIG.fireBlastSettings.push;  // TODO - Fix this; Originally fireArcSettings
 						collided.addVelocity(entity.motionX * push, 0.4 * push, entity.motionZ * push);
 						collided.setFire(3);
 
 						if (entity.canDamageEntity(collided) || collided instanceof EntityPlayer) {
 							if (collided.attackEntityFrom(AvatarDamageSource.causeFireArcDamage(collided, entity.getOwner()),
-									STATS_CONFIG.fireArcSettings.damage * entity.getDamageMult())) {
+									STATS_CONFIG.fireBlastSettings.damage * entity.getDamageMult())) { // TODO - Fix this; Originally fireArcSettings
 								BattlePerformanceScore.addMediumScore(entity.getOwner());
 							}
 						}
 						if (!entity.world.isRemote) {
 							BendingData data = Objects.requireNonNull(Bender.get(entity.getOwner())).getData();
 							if (data != null) {
-								data.getAbilityData("fire_arc")
-										.addXp(ConfigSkills.SKILLS_CONFIG.fireArcHit);
-								AbilityData abilityData = data.getAbilityData("fire_arc");
+								data.getAbilityData(entity.getAbility().getName())
+										.addXp(ConfigSkills.SKILLS_CONFIG.fireBlastHit); // TODO - Fix this; Originally fireArcHit
+								AbilityData abilityData = data.getAbilityData(entity.getAbility().getName());
 								if (abilityData.isMasterPath(AbilityTreePath.SECOND) && entity.getOwner() != null) {
 									data.addStatusControl(StatusControl.THROW_FIRE);
 									return new FireArcBehavior.PlayerControlled();

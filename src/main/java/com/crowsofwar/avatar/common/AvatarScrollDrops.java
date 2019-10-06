@@ -19,9 +19,9 @@ package com.crowsofwar.avatar.common;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.item.ItemScroll;
-import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -32,6 +32,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
@@ -42,7 +43,6 @@ public class AvatarScrollDrops {
 	public static void onMobDeath(LivingDropsEvent e) {
 
 		EntityLivingBase entity = e.getEntityLiving();
-		DamageSource source = e.getSource();
 
 		if (e.isRecentlyHit()) {
 
@@ -52,8 +52,8 @@ public class AvatarScrollDrops {
 			double random = Math.random() * 100;
 			if (random < chance) {
 
-				ItemStack stack = new ItemStack(AvatarItems.itemScroll);
-				ItemScroll.setScrollType(stack, type);
+				assert Scrolls.getItemForType(type) != null;
+				ItemStack stack = new ItemStack(Objects.requireNonNull(Scrolls.getItemForType(type)));
 
 				EntityItem entityItem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
 						stack);
@@ -70,7 +70,7 @@ public class AvatarScrollDrops {
 
 		for (EntityItem drop : drops) {
 			ItemStack stack = drop.getItem();
-			if (stack.getItem() == AvatarItems.itemScroll) {
+			if (stack.getItem() instanceof ItemScroll) {
 
 				ScrollType type = ScrollType.values()[stack.getMetadata()];
 				String entityName = EntityList.getEntityString(entity);

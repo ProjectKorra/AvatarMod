@@ -17,7 +17,10 @@
 package com.crowsofwar.avatar.common.gui;
 
 import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -46,20 +49,20 @@ public class ContainerSkillsGui extends Container {
 		addSlotToContainer(new Slot(inventory, 0, 100, 100) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
-				ScrollType scrollType = ScrollType.get(stack.getMetadata());
+				ScrollType scrollType = Scrolls.getTypeForStack(stack);
 				Item item = stack.getItem();
 				Slot other = getSlot(1);
-				return item == AvatarItems.itemScroll && scrollType.accepts(bendingId) && !other.getHasStack();
+				return item instanceof ItemScroll && scrollType.accepts(bendingId) && !other.getHasStack();
 			}
 		});
 		// Second scroll slot
 		addSlotToContainer(new Slot(inventory, 1, 100, 100) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
-				ScrollType scrollType = ScrollType.get(stack.getMetadata());
+				ScrollType scrollType = Scrolls.getTypeForStack(stack);
 				Item item = stack.getItem();
 				Slot other = getSlot(0);
-				return item == AvatarItems.itemScroll && scrollType.accepts(bendingId) && !other.getHasStack();
+				return item instanceof ItemScroll && scrollType.accepts(bendingId) && !other.getHasStack();
 			}
 		});
 

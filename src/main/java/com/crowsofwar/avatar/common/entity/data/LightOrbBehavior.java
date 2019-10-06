@@ -18,8 +18,8 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
+import com.crowsofwar.avatar.common.bending.fire.AbilityImmolate;
 import com.crowsofwar.avatar.common.bending.fire.AbilityInfernoPunch;
-import com.crowsofwar.avatar.common.bending.fire.AbilityPurify;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -28,6 +28,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * @author Aang23
@@ -50,7 +51,7 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 		registerBehavior(FollowPlayer.class);
 		registerBehavior(AbilityInfernoPunch.InfernoPunchLightOrb.class);
 		registerBehavior(AbilityFireball.FireballLightOrbBehavior.class);
-		registerBehavior(AbilityPurify.ImmolateLightOrbBehaviour.class);
+		registerBehavior(AbilityImmolate.ImmolateLightOrbBehaviour.class);
 	}
 
 	public static class Idle extends LightOrbBehavior {
@@ -160,19 +161,59 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 
 		@Override
 		public Behavior onUpdate(EntityLightOrb entity) {
+			//TODO: Frequency
 			if (entity.getColourShiftRange() != 0) {
-				float range = entity.getColourShiftRange();
+				float range = entity.getColourShiftRange() / 2;
 				float r = entity.getInitialColourR();
 				float g = entity.getInitialColourG();
 				float b = entity.getInitialColourB();
 				float a = entity.getInitialColourA();
-				float amount = AvatarUtils.getRandomNumberInRange(-(int) (1 / entity.getColourShiftInterval()),
-						(int) (1 / entity.getColourShiftInterval())) * entity.getColourShiftInterval();
-				float red = r + amount > r + range ? r - range : r + range;
-				float green = g + amount > g + range ? g - range : g + range;
-				float blue = b + amount > b + range ? b - range : r + range;
-				float alpha = a + amount > a + range ? a - range : a + range;
-				entity.setColor(red, green, blue, alpha);
+				for (int i = 0; i < 4; i++) {
+					float red, green, blue, alpha;
+					float rMin = r < range ? 0 : r - range;
+					float gMin = g < range ? 0 : r - range;
+					float bMin = b < range ? 0 : r - range;
+					float aMin = a < range ? 0 : a - range;
+					float rMax = r + range;
+					float gMax = b + range;
+					float bMax = g + range;
+					float aMax = a + range;
+					switch (i) {
+						case 0:
+							//By dividing 100 by the max then dividing that by 100, you get a huge range of numbers, to make colour shifting
+							//more realistic.
+							float amountR = AvatarUtils.getRandomNumberInRange(0,
+									(int) (100 / rMax)) / 100F * entity.getColourShiftInterval();
+							red = entity.world.rand.nextBoolean() ? r + amountR : r - amountR;
+							red = MathHelper.clamp(red, rMin, rMax);
+							entity.setColorR(red);
+							break;
+
+						case 1:
+							float amountG = AvatarUtils.getRandomNumberInRange(0,
+									(int) (100 / gMax)) / 100F * entity.getColourShiftInterval();
+							green = entity.world.rand.nextBoolean() ? g + amountG : g - amountG;
+							green = MathHelper.clamp(green, gMin, gMax);
+							entity.setColorG(green);
+							break;
+
+						case 2:
+							float amountB = AvatarUtils.getRandomNumberInRange(0,
+									(int) (100 / bMax)) / 100F * entity.getColourShiftInterval();
+							blue = entity.world.rand.nextBoolean() ? b + amountB : b - amountB;
+							blue = MathHelper.clamp(blue, bMin, bMax);
+							entity.setColorB(blue);
+							break;
+
+						case 3:
+							float amountA = AvatarUtils.getRandomNumberInRange(0,
+									(int) (100 / aMax)) / 100F * entity.getColourShiftInterval();
+							alpha = entity.world.rand.nextBoolean() ? a + amountA : a - amountA;
+							alpha = MathHelper.clamp(alpha, aMin, aMax);
+							entity.setColorA(alpha);
+							break;
+					}
+				}
 			}
 			return this;
 		}

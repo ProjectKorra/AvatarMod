@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ese",
+    "sps",
+    "ese"
+  ],
+  "key": {
+    "s": {
+      "item": "minecraft:prismarine_shard"
+    },
+    "p": {
+      "item": "minecraft:paper"
+    },
+    "e": {
+      "item": "minecraft:experience_bottle"
+    }
+  },
+  "result": {
+    "item": "avatarmod:scroll_water",
+    "data": 0
+  }
+}
+

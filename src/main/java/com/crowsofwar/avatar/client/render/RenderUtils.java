@@ -36,7 +36,7 @@ public class RenderUtils {
 		}
 	}
 
-	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,
+	public static void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,
 							float rotateX, float rotateY, float rotateZ) {
 		Matrix4f mat = new Matrix4f();
 		mat.translate(x, y + .4f, z);

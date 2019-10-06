@@ -31,6 +31,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	private int minimum, maximum;
 	private double x, y, z;
 	private double maxVelocityX, maxVelocityY, maxVelocityZ;
+	private boolean velIsMagnitude;
 
 	public PacketCParticles() {
 	}
@@ -47,7 +48,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 	 * @param maxVelocityZ
 	 */
 	public PacketCParticles(EnumParticleTypes particle, int minimum, int maximum, double x, double y,
-							double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ) {
+							double z, double maxVelocityX, double maxVelocityY, double maxVelocityZ, boolean velIsMagnitude) {
 		this.particle = particle;
 		this.minimum = minimum;
 		this.maximum = maximum;
@@ -57,6 +58,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 		this.maxVelocityX = maxVelocityX;
 		this.maxVelocityY = maxVelocityY;
 		this.maxVelocityZ = maxVelocityZ;
+		this.velIsMagnitude = velIsMagnitude;
 	}
 
 	@Override
@@ -70,6 +72,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 		maxVelocityX = buf.readDouble();
 		maxVelocityY = buf.readDouble();
 		maxVelocityZ = buf.readDouble();
+		velIsMagnitude = buf.readBoolean();
 	}
 
 	@Override
@@ -83,6 +86,7 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 		buf.writeDouble(maxVelocityX);
 		buf.writeDouble(maxVelocityY);
 		buf.writeDouble(maxVelocityZ);
+		buf.writeBoolean(velIsMagnitude);
 	}
 
 	@Override
@@ -129,6 +133,10 @@ public class PacketCParticles extends AvatarPacket<PacketCParticles> {
 
 	public double getMaxVelocityZ() {
 		return maxVelocityZ;
+	}
+
+	public boolean getVelIsMagnitude() {
+		return velIsMagnitude;
 	}
 
 }

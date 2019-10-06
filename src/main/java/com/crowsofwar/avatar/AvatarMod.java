@@ -35,6 +35,7 @@ import com.crowsofwar.avatar.common.bending.sand.AbilitySandPrison;
 import com.crowsofwar.avatar.common.bending.sand.AbilitySandstorm;
 import com.crowsofwar.avatar.common.bending.sand.Sandbending;
 import com.crowsofwar.avatar.common.bending.water.*;
+import com.crowsofwar.avatar.common.blocks.AvatarBlocks;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.*;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -99,10 +100,10 @@ public class AvatarMod {
 	private static void registerAbilities() {
 		Abilities.register(new AbilityAirGust());
 		Abilities.register(new AbilityAirJump());
-		Abilities.register(new AbilityPickUpBlock());
+		Abilities.register(new AbilityEarthControl());
 		Abilities.register(new AbilityRavine());
 		Abilities.register(new AbilityFireShot());
-		Abilities.register(new AbilityFireArc());
+		Abilities.register(new AbilityFireBlast());
 		Abilities.register(new AbilityFlamethrower());
 		Abilities.register(new AbilityWaterArc());
 		Abilities.register(new AbilityCreateWave());
@@ -124,14 +125,14 @@ public class AvatarMod {
 		Abilities.register(new AbilityCleanse());
 		Abilities.register(new AbilityEarthspikes());
 		Abilities.register(new AbilityLightningSpear());
-		Abilities.register(new AbilityPurify());
+		Abilities.register(new AbilityImmolate());
 		Abilities.register(new AbilityWaterCannon());
 		Abilities.register(new AbilityFireJump());
 		Abilities.register(new AbilityExplosion());
 		Abilities.register(new AbilityExplosivePillar());
 		Abilities.register(new AbilitySandstorm());
 		Abilities.register(new AbilityInfernoPunch());
-		Abilities.register(new AbilityBoulderRing());
+		//Abilities.register(new AbilityBoulderRing());
 		Abilities.register(new AbilityLightningRaze());
 		Abilities.register(new AbilityAirBurst());
 	}
@@ -175,6 +176,7 @@ public class AvatarMod {
 		registerAbilities();
 		registerBendingStyles();
 		AvatarItems.init();
+		AvatarBlocks.init();
 		AvatarParticles.register();
 
 		proxy.preInit();
@@ -197,6 +199,7 @@ public class AvatarMod {
 		registerPacket(PacketSCycleBending.class, Side.SERVER);
 		registerPacket(PacketCPowerRating.class, Side.CLIENT);
 		registerPacket(PacketCOpenSkillCard.class, Side.CLIENT);
+		registerPacket(PacketSSendViewStatus.class, Side.SERVER);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 

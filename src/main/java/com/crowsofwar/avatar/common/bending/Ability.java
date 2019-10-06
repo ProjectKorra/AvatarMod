@@ -17,11 +17,17 @@
 
 package com.crowsofwar.avatar.common.bending;
 
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
+import com.crowsofwar.avatar.common.item.scroll.ItemScrollLightning;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.item.ItemStack;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -68,7 +74,7 @@ public abstract class Ability {
 	}
 
 	/*
-		Generally used for abilities that grant you stat boosts.
+	 * Generally used for abilities that grant you stat boosts.
 	 */
 	public boolean isBuff() {
 		return false;
@@ -76,9 +82,8 @@ public abstract class Ability {
 
 	/**
 	 * Generally used for abilities that help with evreryday tasks, such as mining,
-	 * moving water sources, or just moving around.
-	 * Ex: Mine Blocks, Air Jump, and Water Bubble are all utility
-	 * Abilities.
+	 * moving water sources, or just moving around. Ex: Mine Blocks, Air Jump, and
+	 * Water Bubble are all utility Abilities.
 	 */
 
 	public boolean isUtility() {
@@ -112,11 +117,58 @@ public abstract class Ability {
 	}
 
 	/**
-	 * Whether the ability is visible in the radial menu. Note that this doesn't hide the ability
-	 * from the skills menu.
+	 * Whether the ability is visible in the radial menu. Note that this doesn't
+	 * hide the ability from the skills menu.
 	 */
 	public boolean isVisibleInRadial() {
 		return true;
+	}
+
+	public int getTier() {
+		return 1;
+	}
+
+	public BendingStyle getElement() {
+		return BendingStyles.get(getBendingId());
+	}
+
+	public int getParentTier() {
+		if (this.getElement().getParentBendingId() != null) {
+			return 1;
+		}
+		return 0;
+	}
+
+	public boolean isCompatibleScroll(ItemStack stack, int level) {
+		if (getBendingId() != null) {
+			if (stack.getItem() instanceof ItemScroll) {
+				Scrolls.ScrollType type = Scrolls.getTypeForStack(stack);
+				assert type != null;
+				if (type.getBendingId() == getBendingId() || type == Scrolls.ScrollType.ALL) {
+					if (level < 1) {
+						return Scrolls.getTierForStack(stack) >= getTier();
+					}
+					if (level == 1) {
+						return Scrolls.getTierForStack(stack) >= getTier() + 1;
+					}
+					return Scrolls.getTierForStack(stack) >= getTier() + 2;
+
+				}
+				if (getParentTier() > 0) {
+					if (Objects.requireNonNull(BendingStyles.get(getBendingId())).getParentBendingId() == type
+							.getBendingId()) {
+						if (level < 1) {
+							return Scrolls.getTierForStack(stack) >= getParentTier();
+						}
+						if (level == 1) {
+							return Scrolls.getTierForStack(stack) >= getParentTier() + 1;
+						}
+						return Scrolls.getTierForStack(stack) >= getParentTier() + 2;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

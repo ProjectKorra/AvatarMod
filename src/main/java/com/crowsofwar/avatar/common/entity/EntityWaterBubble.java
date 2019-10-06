@@ -106,7 +106,7 @@ public class EntityWaterBubble extends AvatarEntity {
 		dataManager.register(SYNC_SIZE, 1F);
 		dataManager.register(SYNC_MAX_SIZE, 1.5F);
 		dataManager.register(SYNC_HEALTH, 3F);
-		dataManager.register(SYNC_DEGREES_PER_SECOND, 0F);
+		dataManager.register(SYNC_DEGREES_PER_SECOND, 30F);
 	}
 
 	@Override

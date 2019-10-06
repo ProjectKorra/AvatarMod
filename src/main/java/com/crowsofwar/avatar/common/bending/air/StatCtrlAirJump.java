@@ -142,7 +142,7 @@ public class StatCtrlAirJump extends StatusControl {
 			}
 
 			ParticleSpawner spawner = new NetworkParticleSpawner();
-			spawner.spawnParticles(entity.world, AvatarParticles.getParticleAir(), 2, 6, new Vector(entity), new Vector(1, 0, 1));
+			spawner.spawnParticles(entity.world, AvatarParticles.getParticleAir(), 2, 6, new Vector(entity), new Vector(1, 0, 1), true);
 
 			float fallAbsorption = 0;
 			float xVel = 0, yVel = 0, zVel = 0;

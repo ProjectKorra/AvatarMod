@@ -78,7 +78,7 @@ public class StatCtrlInfernoPunchSecond extends StatusControl {
 								Vector distance = new Vector(result.hitVec.x, e.getEntityBoundingBox().minY + e.height / 2, result.hitVec.z).minus(startPos);
 								distance = distance.times(j);
 								particleSpawner.spawnParticles(world, AvatarParticles.getParticleFlames(), 4, 8,
-										startPos.x() + distance.x(), startPos.y() + distance.y(), startPos.z() + distance.z(), 0, 0, 0);
+										startPos.x() + distance.x(), startPos.y() + distance.y(), startPos.z() + distance.z(), 0, 0, 0, true);
 							}
 							//Spawns particles as if a fireball has slammed into the enemy
 							World.spawnParticle(AvatarParticles.getParticleFlames(), result.hitVec.x, result.hitVec.y, result.hitVec.z, 35, 0.05, 0.05, 0.05, 0.075);

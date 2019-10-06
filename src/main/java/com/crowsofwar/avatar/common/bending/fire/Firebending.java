@@ -33,14 +33,14 @@ public class Firebending extends BendingStyle {
 	private final BendingMenuInfo menu;
 
 	public Firebending() {
-
 		addAbility("fire_shot");
-		addAbility("fire_arc");
+		addAbility("fire_blast");
 		addAbility("flamethrower");
-		addAbility("fireball");
 		addAbility("fire_jump");
-		addAbility("purify");
+		addAbility("fireball");
 		addAbility("inferno_punch");
+		addAbility("immolate");
+
 
 		Color light = new Color(244, 240, 187);
 		Color red = new Color(173, 64, 31);

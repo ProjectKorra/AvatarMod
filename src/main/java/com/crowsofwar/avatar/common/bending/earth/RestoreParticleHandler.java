@@ -4,7 +4,6 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -48,7 +47,7 @@ public class RestoreParticleHandler extends TickHandler {
 							location.z() + entity.posZ, 1, 0, 0, 0, 10D);
 				} else {
 					particles.spawnParticles(world, AvatarParticles.getParticleRestore(), 1, 2, location.plus(Vector.getEntityPos(entity)),
-							new Vector(0.2, 0.65, 0.2));
+							new Vector(0.2, 0.65, 0.2), true);
 				}
 			}
 		}

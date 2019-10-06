@@ -102,7 +102,7 @@ public class StatCtrlShootWall extends StatusControl {
 		floating.addVelocity(floating.velocity().times(-1));
 		floating.addVelocity(lookDir.times(15));
 		floating.setBehavior(new FloatingBlockBehavior.Thrown());
-		floating.setAbility(Abilities.get("wall"));
+		floating.setAbility(new AbilityWall());
 		floating.setOwner(entity);
 		floating.setEntityInvulnerable(true);
 		floating.setPosition(new Vector(segment.getPosition().offset(cardinal, 2).add(0, usedNum - 1, 0)));

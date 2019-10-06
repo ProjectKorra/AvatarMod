@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRaze;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import elucent.albedo.event.GatherLightsEvent;
@@ -10,7 +10,6 @@ import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityItemFrame;
@@ -25,14 +24,18 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
+@SuppressWarnings("EntityConstructor")
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
 public class EntityAvatarLightning extends EntityLightningBolt implements ILightProvider {
+	//TODO: Fix by using the new rendering system, make the spawner use behaviour
 
 	/**
 	 * A random long that is used to change the vertex of the lightning rendered in RenderLightningBolt
@@ -198,11 +201,13 @@ public class EntityAvatarLightning extends EntityLightningBolt implements ILight
 	}
 
 	@Override
+	@Optional.Method(modid = "albedo")
 	public void gatherLights(GatherLightsEvent gatherLightsEvent, Entity entity) {
 
 	}
 
 	@Override
+	@Optional.Method(modid = "albedo")
 	public Light provideLight() {
 		return Light.builder().pos(this).color(1F, 2F, 3F).radius(15).build();
 	}

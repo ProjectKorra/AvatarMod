@@ -76,7 +76,7 @@ public class HumanBenderSpawner {
 			Random rand = new Random();
 			boolean bender = rand.nextBoolean();
 			//Will be changed when more benders are added
-			if (size < MOBS_CONFIG.maxNumberOfBenders && villagerSize >= 6) {
+			if (size < MOBS_CONFIG.benderSettings.maxNumberOfBenders && villagerSize >= 6) {
 				EntityHumanBender b = bender ? new EntityAirbender(world) : new EntityFirebender(world);
 				b.copyLocationAndAnglesFrom(e);
 				world.spawnEntity(b);

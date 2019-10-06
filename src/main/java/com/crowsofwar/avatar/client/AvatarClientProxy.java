@@ -32,6 +32,7 @@ import com.crowsofwar.avatar.client.render.*;
 import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.blocks.tiles.TileBlockTemp;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -41,6 +42,7 @@ import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
+import com.crowsofwar.avatar.common.network.packets.PacketSSendViewStatus;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.api.capabilities.CapabilityHelper;
 import com.crowsofwar.avatar.api.capabilities.IGliderCapabilityHandler;
@@ -60,7 +62,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -126,7 +132,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityEarthspike.class, RenderEarthspikes::new);
 		registerEntityRenderingHandler(EntityLightningSpear.class, RenderLightningSpear::new);
 		registerEntityRenderingHandler(EntityEarthspikeSpawner.class, RenderEarthspikeSpawner::new);
-		registerEntityRenderingHandler(EntityWaterCannon.class, RenderWaterCannon::new);
+		registerEntityRenderingHandler(EntityWaterCannon.class, RenderNothing::new);
 		registerEntityRenderingHandler(EntitySandstorm.class, RenderSandstorm::new);
 		registerEntityRenderingHandler(EntityExplosionSpawner.class, RenderNothing::new);
 		registerEntityRenderingHandler(EntityLightningSpawner.class, RenderLightningSpawner::new);
@@ -149,6 +155,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityFirebender.class, rm -> new RenderHumanBender(rm, "firebender", 1));
 		//registerEntityRenderingHandler(EntityWaterbender.class, rm -> new RenderHumanBender(rm, "waterbender", 1));
 
+		ClientRegistry.bindTileEntitySpecialRenderer(TileBlockTemp.class, new RenderTempBlock());
 	}
 
 	@Override
@@ -284,6 +291,20 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 
 		} catch (Exception ex) {
 			AvatarLog.error("Could not load all keybindings list by using reflection. Will probably have serious problems", ex);
+		}
+	}
+
+	@SubscribeEvent
+	public void onPlayerLogin(ClientConnectedToServerEvent e) {
+		int mode = Minecraft.getMinecraft().gameSettings.thirdPersonView;
+		AvatarMod.network.sendToServer(new PacketSSendViewStatus(mode));
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onKeyPress(KeyInputEvent e) {
+		if(Minecraft.getMinecraft().gameSettings.keyBindTogglePerspective.isKeyDown()) {
+			int mode = Minecraft.getMinecraft().gameSettings.thirdPersonView;
+			AvatarMod.network.sendToServer(new PacketSSendViewStatus(mode));
 		}
 	}
 

@@ -34,8 +34,8 @@ public class Waterbending extends BendingStyle {
 
 	public Waterbending() {
 		addAbility("water_arc");
-		addAbility("wave");
 		addAbility("water_bubble");
+		addAbility("wave");
 		addAbility("water_skate");
 		addAbility("water_cannon");
 		addAbility("cleanse");

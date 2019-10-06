@@ -18,7 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.bending.earth.AbilityPickUpBlock;
+import com.crowsofwar.avatar.common.bending.earth.AbilityEarthControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -288,8 +288,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 			spawnCrackParticle(posX, posY + 0.3, posZ, random.nextGaussian() * 0.1,
 					random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
 		}
-		if (getOwner() != null && getAbility() instanceof AbilityPickUpBlock) {
-			AbilityData data = BendingData.get(getOwner()).getAbilityData("pickup_block");
+		if (getOwner() != null && getAbility() instanceof AbilityEarthControl) {
+			AbilityData data = BendingData.get(getOwner()).getAbilityData("earth_control");
 
 			if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
 

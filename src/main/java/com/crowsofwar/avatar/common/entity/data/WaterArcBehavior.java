@@ -44,7 +44,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 	public static final DataSerializer<WaterArcBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
 
-	public WaterArcBehavior() {
+	WaterArcBehavior() {
 	}
 
 	public static void register() {
@@ -75,6 +75,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				target = Vector.getEyePos(owner).plus(look.times(3));
 			}
 
+			assert target != null;
 			Vector motion = target.minus(water.position());
 			motion = motion.times(0.5 * 20);
 			water.setVelocity(motion);
@@ -143,7 +144,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			if (lvl == 1) {
 				//Level II.
-				if (ticks >= STATS_CONFIG.waterArcTicks * (5 / 4)) {
+				if (ticks >= STATS_CONFIG.waterArcTicks * (5F / 4)) {
 					//150
 					entity.Splash();
 					entity.setDead();
@@ -151,7 +152,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			}
 			if (lvl == 2) {
 				//Level III
-				if (ticks >= STATS_CONFIG.waterArcTicks * (6 / 4)) {
+				if (ticks >= STATS_CONFIG.waterArcTicks * (6F / 4)) {
 					//180
 					entity.Splash();
 					entity.setDead();
@@ -169,7 +170,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			if (abilityData != null) {
 				if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
 					//Level 4 Path One
-					if (ticks >= STATS_CONFIG.waterArcTicks * (5 / 4)) {
+					if (ticks >= STATS_CONFIG.waterArcTicks * (5F / 4)) {
 						//150
 						entity.Splash();
 						entity.setDead();
@@ -188,9 +189,9 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			for (EntityLivingBase collided : collidedList) {
 				if (collided == entity.getOwner()) return this;
 				if (entity.canCollideWith(collided)) {
-					double x = entity.motionX / 2 * STATS_CONFIG.waterArcSettings.push;
+					double x = entity.motionX / 6 * STATS_CONFIG.waterArcSettings.push;
 					double y = entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push > 0.75 ? 0.75 : entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push;
-					double z = entity.motionZ / 2 * STATS_CONFIG.waterArcSettings.push;
+					double z = entity.motionZ / 6 * STATS_CONFIG.waterArcSettings.push;
 					collided.addVelocity(x, y, z);
 					if (entity.canDamageEntity(collided)) {
 						entity.setDamageMult(1);

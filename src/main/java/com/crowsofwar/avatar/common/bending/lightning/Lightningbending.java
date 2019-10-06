@@ -36,10 +36,9 @@ public class Lightningbending extends BendingStyle {
 	public Lightningbending() {
 
 		super(Firebending.ID);
-
-		addAbility("lightning_arc");
 		addAbility("lightning_redirect");
 		addAbility("lightning_spear");
+		addAbility("lightning_arc");
 		addAbility("lightning_raze");
 
 		ThemeColor bkgd = new ThemeColor(0xEBF4F5, 0xDBE1E2);

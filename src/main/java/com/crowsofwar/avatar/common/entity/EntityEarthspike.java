@@ -114,7 +114,7 @@ public class EntityEarthspike extends AvatarEntity {
 
 		damage = damage * belowBlock.getBlockHardness(world.getBlockState(below), world, below);
 		if (getAbility() instanceof AbilityEarthspikes && getOwner() != null) {
-			AbilityData aD = AbilityData.get(getOwner(), "earthspike");
+			AbilityData aD = AbilityData.get(getOwner(), "earth_spikes");
 			if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				if (!world.isRemote
 						&& (!STATS_CONFIG.bendableBlocks.contains(belowBlock) || belowBlock == Blocks.AIR)) {

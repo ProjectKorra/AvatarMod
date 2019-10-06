@@ -82,6 +82,7 @@ public class AbilityWaterCannon extends Ability {
 	}
 
 	//Is broken; will investigate later.
+	//TODO: Investigate if still broken. I don't think it is, I think I forgot to delete my comment
 	private Vector getClosestWaterbendableBlock(EntityLivingBase entity, int level) {
 		World world = entity.world;
 
@@ -117,7 +118,7 @@ public class AbilityWaterCannon extends Ability {
 
 	}
 
-	private Vector getClosestWaterBlock(EntityLivingBase entity, int level) {
+	/*private Vector getClosestWaterBlock(EntityLivingBase entity, int level) {
 		World world = entity.world;
 
 		Vector eye = Vector.getEyePos(entity);
@@ -150,7 +151,11 @@ public class AbilityWaterCannon extends Ability {
 
 		return null;
 
-	}
+	}**/
 
+	@Override
+	public int getTier() {
+		return 3;
+	}
 }
 

@@ -77,9 +77,12 @@ public class RenderFireball extends Render<EntityFireball> {
 		//   if (MinecraftForgeClient.getRenderPass() == 0) {
 		disableLighting();
 
-		int i = 15728880;
-		int j = i % 65536;
-		int k = i / 65536;
+		//Where did crows get this number from?
+		//Maybe try using 3932220 instead?
+		int i = 3932220;
+		//128 * 128 instead of 64^2
+		int j = i % 16384;
+		int k = i / 16384;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
 
 		renderCube(x, y, z, //

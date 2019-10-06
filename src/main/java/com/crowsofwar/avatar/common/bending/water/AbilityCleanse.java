@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.water.tickhandlers.CleansePowerModifier;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -203,6 +204,11 @@ public class AbilityCleanse extends Ability {
 
 		return null;
 
+	}
+
+	@Override
+	public int getTier() {
+		return 4;
 	}
 
 	public static class CleanseLightOrbBehaviour extends LightOrbBehavior.FollowPlayer {

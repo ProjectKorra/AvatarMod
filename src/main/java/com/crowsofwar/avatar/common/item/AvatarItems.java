@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 
 import com.crowsofwar.avatar.common.GliderInfo;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -38,12 +39,9 @@ import java.util.List;
 /**
  * @author CrowsOfWar
  */
-public class
-AvatarItems {
+public class AvatarItems {
 
 	public static List<Item> allItems;
-	public static List<Item> modeledItems;
-	public static ItemScroll itemScroll;
 	public static ItemWaterPouch itemWaterPouch;
 	public static ItemBisonWhistle itemBisonWhistle;
 	public static ItemBisonSaddle itemBisonSaddle;
@@ -68,8 +66,15 @@ AvatarItems {
 
 	public static void init() {
 		allItems = new ArrayList<>();
-		modeledItems = new ArrayList<>();
-		addItem(itemScroll = new ItemScroll());
+		addItem(Scrolls.ALL);
+		addItem(Scrolls.AIR);
+		addItem(Scrolls.EARTH);
+		addItem(Scrolls.FIRE);
+		addItem(Scrolls.WATER);
+		addItem(Scrolls.COMBUSTION);
+		addItem(Scrolls.SAND);
+		addItem(Scrolls.ICE);
+		addItem(Scrolls.LIGHTNING);
 		addItem(itemWaterPouch = new ItemWaterPouch());
 		addItem(itemBisonWhistle = new ItemBisonWhistle());
 		addItem(itemBisonArmor = new ItemBisonArmor());
@@ -78,8 +83,7 @@ AvatarItems {
 		addItem(airbenderStaff = new ItemAirbenderStaff(Item.ToolMaterial.WOOD));
 		addItem(GLIDER_ADV = new ItemHangGliderAdvanced());
 
-
-		stackScroll = new ItemStack(itemScroll);
+		stackScroll = new ItemStack(Scrolls.ALL);
 		MinecraftForge.EVENT_BUS.register(new AvatarItems());
 
 	}

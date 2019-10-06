@@ -353,15 +353,15 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 				}
 			}
 		}
+		setDead();
 	}
 
 	public void damageEntity(Entity entity) {
 		if (getOwner() != null) {
-			AbilityData abilityData = null;
-			if (!world.isRemote && getAbility() instanceof AbilityFireball) {
+			AbilityData abilityData;
+			if (getAbility() instanceof AbilityFireball) {
 				abilityData = AbilityData.get(getOwner(), getAbility().getName());
 				DamageSource ds = AvatarDamageSource.causeFireballDamage(entity, getOwner());
-				int lvl = abilityData.getLevel();
 				if (entity.attackEntityFrom(ds, damage)) {
 					abilityData.addXp(SKILLS_CONFIG.fireballHit);
 					BattlePerformanceScore.addMediumScore(getOwner());

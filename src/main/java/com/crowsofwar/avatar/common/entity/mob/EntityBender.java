@@ -19,9 +19,15 @@ package com.crowsofwar.avatar.common.entity.mob;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -29,6 +35,8 @@ import net.minecraft.world.World;
 public abstract class EntityBender extends EntityCreature {
 
 	private Bender bender;
+	private static final DataParameter<Integer> SYNC_LEVEL = EntityDataManager
+			.createKey(EntityBender.class, DataSerializers.VARINT);
 
 	/**
 	 * @param world
@@ -41,12 +49,23 @@ public abstract class EntityBender extends EntityCreature {
 		return new BenderEntityComponent(this);
 	}
 
+	public int getLevel() {
+		return dataManager.get(SYNC_LEVEL);
+	}
+
+	public void setLevel(int level) {
+		dataManager.set(SYNC_LEVEL, level);
+	}
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		// Initialize the bender here (instead of constructor) so the bender will be ready for
 		// initEntityAI - Constructor is called AFTER initEntityAI
 		bender = initBender();
+		dataManager.register(SYNC_LEVEL, AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
+		applyAbilityLevels(getLevel());
+		setElement();
 	}
 
 	@Override
@@ -67,12 +86,17 @@ public abstract class EntityBender extends EntityCreature {
 		bender.onUpdate();
 	}
 
+	public abstract void applyAbilityLevels(int level);
+
 	public Bender getBender() {
 		return bender;
 	}
 
 	public BendingData getData() {
 		return bender.getData();
+	}
+
+	public void setElement() {
 	}
 
 }

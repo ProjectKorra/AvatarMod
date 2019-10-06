@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.common.damageutils;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.client.AvatarItemRenderRegister;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityFlying;
@@ -29,7 +28,9 @@ import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -234,11 +235,10 @@ public class AvatarDamageSource {
 	/**
 	 * Create a DamageSource for damage caused by punching an enemy with fire..
 	 *
-	 * @param hit   Who was hit by the punch
 	 * @param owner Who punched
 	 */
-	public static DamageSource causeInfernoPunchDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_Fire_infernoPunch", hit, owner);
+	public static DamageSource causeInfernoPunchDamage(@Nullable Entity owner) {
+		return new EntityDamageSource("avatar_Fire_infernoPunch",owner);
 	}
 
 	//EARTH
@@ -392,16 +392,21 @@ public class AvatarDamageSource {
 		return new EntityDamageSourceIndirect("avatar_Sand_sandstorm", hit, owner);
 	}
 
+	//From what I can see, the ender dragon isn't even attacked properly. So, why aren't abilities attacking it?
+	/*@SubscribeEvent
+	public static void onDragonAttack(LivingAttackEvent event) {
+		if (AvatarDamageSource.isAvatarDamageSource(event.getSource()) && event.getEntityLiving() instanceof EntityDragon) {
+			EntityDragon d = (EntityDragon) event.getEntityLiving();
+			d.attackEntityFromPart(d.dragonPartBody, event.getSource(), event.getAmount());
+			System.out.println(event.getAmount());
+		}
+	}**/
 	@SubscribeEvent
 	public static void onElementalDamage(LivingHurtEvent event) {
 		//TODO: Config for all this stuff; definitely in the rewrite
 		DamageSource source = event.getSource();
 		Entity hit = event.getEntity();
 		if (hit instanceof EntityLivingBase) {
-			if (hit instanceof EntityDragon && AvatarDamageSource.isAvatarDamageSource(source)) {
-				event.setCanceled(false);
-				event.setAmount(event.getAmount());
-			}
 			if (AvatarDamageSource.isAvatarDamageSource(source)) {
 				source.setMagicDamage();
 			}

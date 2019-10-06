@@ -17,11 +17,11 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireShot;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.common.blocks.BlockTemp;
+import com.crowsofwar.avatar.common.blocks.BlockUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -33,25 +33,24 @@ import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
 import java.util.Objects;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * @author CrowsOfWar
  */
 @Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityFlames extends AvatarEntity implements ILightProvider {
+public class EntityFlames extends EntityOffensive implements ILightProvider {
 
 	private boolean reflect;
 	private boolean lightTrailingFire;
-	private double damageMult;
 
 	public EntityFlames(World worldIn) {
 		super(worldIn);
@@ -68,6 +67,7 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
+		super.onCollideWithEntity(entity);
 		if (entity instanceof AvatarEntity) {
 			((AvatarEntity) entity).onFireContact();
 		}
@@ -109,20 +109,28 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 			}
 		}
 		if (lightTrailingFire) {
+			//TODO: Use temp blocks.
 			if (AvatarUtils.getRandomNumberInRange(1, 10) <= 5) {
 				BlockPos pos = getPosition();
-				if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
+				if (BlockUtils.canPlaceFireAt(world, pos)) {
+					BlockTemp.createTempBlock(world, pos, 20, Blocks.FIRE.getDefaultState());
+				}
+				/*if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
 					world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-				}
+				}**/
 				BlockPos pos2 = getPosition().down();
-				if (Blocks.FIRE.canPlaceBlockAt(world, pos2) && world.getBlockState(pos2).getBlock() == Blocks.AIR) {
-					world.setBlockState(pos2, Blocks.FIRE.getDefaultState());
+				if (BlockUtils.canPlaceFireAt(world, pos2)) {
+					BlockTemp.createTempBlock(world, pos2, 20, Blocks.FIRE.getDefaultState());
 				}
+				/*if (Blocks.FIRE.canPlaceBlockAt(world, pos2) && world.getBlockState(pos2).getBlock() == Blocks.AIR) {
+					world.setBlockState(pos2, Blocks.FIRE.getDefaultState());
+				}**/
 			}
 		}
 
-		if (!world.isRemote) {
+		/*if (!world.isRemote) {
 			if (getOwner() != null) {
+				//TODO: Get rid of this
 				AbilityData abilityData = AbilityData.get(getOwner(), getAbility().getName());
 
 				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
@@ -156,7 +164,7 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 				}
 				else if (!collided.isEmpty()) setDead();
 			}
-		}
+		}**/
 
 	}
 
@@ -179,7 +187,12 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 	}
 
 	@Override
-	public boolean canBePushed() {
+	protected boolean shouldDissipate() {
+		return true;
+	}
+
+	@Override
+	protected boolean shouldExplode() {
 		return false;
 	}
 
@@ -189,6 +202,7 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 		spawnExtinguishIndicators();
 		return true;
 	}
+
 
 	@Override
 	public boolean onMinorWaterContact() {
@@ -221,8 +235,9 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 		this.lightTrailingFire = fire;
 	}
 
-	public void setDamageMult(double damageMult) {
-		this.damageMult = damageMult;
+	@Override
+	public void applyElementalContact(AvatarEntity entity) {
+		entity.onFireContact();
 	}
 
 	@Override
@@ -231,14 +246,27 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 	}
 
 	@Override
+	protected int getNumberofParticles() {
+		return 15;
+	}
+
+	@Override
+	protected double getParticleSpeed() {
+		return 0.04;
+	}
+
+	@Override
 	public boolean onCollideWithSolid() {
 		if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
 			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
-			if (!data.isMasterPath(AbilityData.AbilityTreePath.FIRST))
+			if (!data.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				setDead();
+				Dissipate();
+			}
 			return !data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
 		}
 		setDead();
+		Dissipate();
 		return true;
 
 	}
@@ -259,5 +287,10 @@ public class EntityFlames extends AvatarEntity implements ILightProvider {
 	@Optional.Method(modid = "albedo")
 	public void gatherLights(GatherLightsEvent event, Entity entity) {
 
+	}
+
+	@Override
+	protected Vec3d getKnockbackMult() {
+		return new Vec3d(STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push * 2);
 	}
 }

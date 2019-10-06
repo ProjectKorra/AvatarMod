@@ -41,6 +41,11 @@ public class AbilityFlamethrower extends Ability {
 	}
 
 	@Override
+	public int getTier() {
+		return 2;
+	}
+
+	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiFlamethrower(this, entity, bender);
 	}

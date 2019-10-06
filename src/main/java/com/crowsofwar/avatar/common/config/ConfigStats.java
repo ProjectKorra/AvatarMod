@@ -40,10 +40,11 @@ public class ConfigStats {
 			ravineSettings = new AttackSettings(3.5F, 0.25), //
 			waveSettings = new AttackSettings(0.25F, 4), //
 			airbladeSettings = new AttackSettings(5, .03), //
-			fireArcSettings = new AttackSettings(2.75F, 1),   //
+			fireBlastSettings = new AttackSettings(2.5F, 1),   //
 			waterArcSettings = new AttackSettings(3, 1),
 			boulderSettings = new AttackSettings(0.1F, 0.1),
 			airBurstSettings = new AttackSettings (5F, 1),
+			fireShotSetttings = new AttackSettings(1F, 0.5),
 			lightningSpearSettings = new AttackSettings(4F, 2);
 
 	@Load
@@ -105,7 +106,7 @@ public class ConfigStats {
 			chiPickUpBlock = 1.25f,
 			chiMining = 2f,
 			chiMiningMaster = 0.5f,
-			chiFireArc = 1f,
+			chiFireBlast = 2f,
 			chiFireball = 2f,
 			chiFlamethrowerSecond = 1.75f,
 			chiFlamethrowerSecondLvl4_1 = 2.625f,

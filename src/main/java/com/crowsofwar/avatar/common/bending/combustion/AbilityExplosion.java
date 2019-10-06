@@ -62,4 +62,16 @@ public class AbilityExplosion extends Ability {
 			}
 		}
 	}
+
+	@Override
+	public int getTier() {
+		return 1;
+	}
+
+	@Override
+	public int getParentTier() {
+		return 3;
+	}
+
+
 }

@@ -2,7 +2,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterCannon;
-import com.crowsofwar.avatar.common.bending.water.WaterChargeHandler;
+import com.crowsofwar.avatar.common.bending.water.tickhandlers.WaterChargeHandler;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -154,11 +154,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 					for (double angle = 0; angle < 360; angle += particleController) {
 						Vector position = Vector.getOrthogonalVector(this.position().minus(getControlPoint(getAmountOfControlPoints() - 1).position()), angle, getSizeMultiplier() * 1.4);
 						particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1,
-								position.x() + startPos.x() + distance.x(), position.y() + startPos.y() + distance.y(), position.z() + startPos.z() + distance.z(), 0, 0, 0);
+								position.x() + startPos.x() + distance.x(), position.y() + startPos.y() + distance.y(), position.z() + startPos.z() + distance.z(), 0, 0, 0, true);
 
 					}
 					particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1,
-							startPos.x() + distance.x(), startPos.y() + distance.y(), startPos.z() + distance.z(), 0, 0, 0);
+							startPos.x() + distance.x(), startPos.y() + distance.y(), startPos.z() + distance.z(), 0, 0, 0, true);
 				}
 
 			}

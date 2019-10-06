@@ -32,13 +32,13 @@ public class Earthbending extends BendingStyle {
 	private final BendingMenuInfo menu;
 
 	public Earthbending() {
-
-		addAbility("pickup_block");
+		addAbility("earth_control");
+		addAbility("mine_blocks");
 		addAbility("ravine");
 		addAbility("wall");
-		addAbility("mine_blocks");
-		addAbility("earthspike");
+		addAbility("earth_spikes");
 		addAbility("restore");
+
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);
 		Color gray = new Color(90, 90, 90);

@@ -21,7 +21,7 @@ import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireArc;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireBlast;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -196,8 +196,8 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 			} else {
 				Firesplosion();
 			}
-			if (getAbility() instanceof AbilityFireArc && !world.isRemote) {
-				AbilityData data = AbilityData.get(getOwner(), "fire_arc");
+			if (getAbility() instanceof AbilityFireBlast && !world.isRemote) {
+				AbilityData data = AbilityData.get(getOwner(), "fire_blast");
 				if (!data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 					cleanup();
 					this.setDead();
@@ -252,7 +252,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 			int numberOfParticles = 150;
 			if (getOwner() != null) {
 				BendingData data = BendingData.get(getOwner());
-				AbilityData abilityData = data.getAbilityData("fire_arc");
+				AbilityData abilityData = data.getAbilityData(getAbility().getName());
 				if (abilityData.getLevel() == 1) {
 					speed = 0.05F;
 					hitBox = 1.5F;
@@ -315,13 +315,13 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 	public void damageEntity(Entity entity) {
 		if (canDamageEntity(entity) && !world.isRemote) {
 			DamageSource ds = AvatarDamageSource.causeFireDamage(entity, getOwner());
-			float damage = STATS_CONFIG.fireArcSettings.damage * damageMult;
+			float damage = STATS_CONFIG.fireBlastSettings.damage * damageMult; // TODO - Fix this. Originally fireArcSettings
 			entity.attackEntityFrom(ds, damage);
 			if (entity.attackEntityFrom(ds, damage)) {
 				if (getOwner() != null && !world.isRemote && getAbility() != null) {
 					BendingData data1 = BendingData.get(getOwner());
 					AbilityData abilityData1 = data1.getAbilityData(getAbility().getName());
-					abilityData1.addXp(SKILLS_CONFIG.fireArcHit);
+					abilityData1.addXp(SKILLS_CONFIG.fireBlastHit); // TODO - Fix this; Originally fireArcHit
 					BattlePerformanceScore.addMediumScore(getOwner());
 
 				}

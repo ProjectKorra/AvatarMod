@@ -18,12 +18,15 @@
 package com.crowsofwar.avatar.client;
 
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.event.BendingCycleEvent;
+import com.crowsofwar.avatar.common.event.BendingUseEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.*;
@@ -182,11 +185,12 @@ public class ClientInput implements IControlsHandler {
 	private void tryOpenBendingMenu() {
 		BendingData data = BendingData.get(mc.player);
 		if (AvatarControl.KEY_USE_BENDING.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
-
 			if (data.getActiveBending() != null) {
+				if (!MinecraftForge.EVENT_BUS.post(new BendingUseEvent(mc.player, data.getActiveBending())))
 				AvatarUiRenderer.openBendingGui(data.getActiveBendingId());
-			} else {
+			}
 
+			else {
 				if (CLIENT_CONFIG.displayGetBendingMessage) {
 					String message = I18n.format(MSG_DONT_HAVE_BENDING.getTranslateKey());
 					message = FormattedMessageProcessor.formatText(MSG_DONT_HAVE_BENDING, message, mc.player.getName());
@@ -201,9 +205,11 @@ public class ClientInput implements IControlsHandler {
 
 	private void tryCycleBending() {
 		if (AvatarControl.KEY_BENDING_CYCLE_LEFT.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
+			if (!MinecraftForge.EVENT_BUS.post(new BendingCycleEvent(mc.player, false)))
 			AvatarMod.network.sendToServer(new PacketSCycleBending(false));
 		}
 		if (AvatarControl.KEY_BENDING_CYCLE_RIGHT.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
+			if (!MinecraftForge.EVENT_BUS.post(new BendingCycleEvent(mc.player, true)))
 			AvatarMod.network.sendToServer(new PacketSCycleBending(true));
 		}
 	}

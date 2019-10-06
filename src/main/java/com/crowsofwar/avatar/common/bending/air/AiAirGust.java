@@ -49,11 +49,9 @@ public class AiAirGust extends BendingAi {
 		BendingData data = bender.getData();
 
 		if (target != null) {
-
 			Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(target));
 			entity.rotationYaw = (float) toDegrees(rotations.y());
 			entity.rotationPitch = (float) toDegrees(rotations.x());
-
 
 			execAbility();
 			data.getMiscData().setAbilityCooldown(20);

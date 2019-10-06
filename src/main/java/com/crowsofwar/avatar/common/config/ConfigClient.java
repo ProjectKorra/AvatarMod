@@ -67,7 +67,7 @@ public class ConfigClient {
 	public ChiBarSettings chiBarSettings = new ChiBarSettings();
 
 	@Load
-	public FireballRenderSettings fireballRenderSettings = new FireballRenderSettings();
+	public FireRenderSettings fireRenderSettings = new FireRenderSettings();
 
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
@@ -131,7 +131,7 @@ public class ConfigClient {
 		public boolean useRestoreShaders = false;
 
 		@Load
-		public boolean usePurifyShaders = false;
+		public boolean useImmolateShaders = false;
 	}
 
 	public static class ActiveBendingSettings {
@@ -141,17 +141,15 @@ public class ConfigClient {
 		//For some reason if it's not final it won't work
 		//Determines if element menu should render at all
 
-	/*	@Load
-		public final boolean shouldBendingMenuDisappear = true;
+		@Load
+		public final boolean shouldBendingMenuDisappear = false;
 		//For some reason if it's not final it won't work
-		//Makes the menu disappear after the duration- affects chi as well.
-		//Currently unused
+		//Makes the menu disappear after the duration
 
 		@Load
 		public final int bendingMenuDuration = 200;
 		//If the menu should disappear, how long it should take before disappearing
-		//currently unused
-**/
+
 
 	}
 
@@ -161,20 +159,21 @@ public class ConfigClient {
 
 		@Load
 		public final boolean shouldChiNumbersRender = true;
-/*
+
 		@Load
-		public final boolean shouldChibarDisappear = true;
-		//Currently unused
+		public final boolean shouldChiMenuDisappear = false;
 
 		@Load
 		public final int chibarDuration = 200;
-		//Currently unused
-	**/
+
 	}
 
-	public static class FireballRenderSettings {
+	public static class FireRenderSettings {
 		@Load
-		public final boolean isSphere = false;
+		public final boolean fireBallSphere = false;
+
+		@Load
+		public final boolean infernoPunchSphere = false;
 	}
 
 }

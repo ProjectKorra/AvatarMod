@@ -5,10 +5,12 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.util.PlayerViewRegistry;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
@@ -45,16 +47,44 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 		if ((data.hasStatusControl(INFERNO_PUNCH_MAIN) || data.hasStatusControl(INFERNO_PUNCH_FIRST) || data.hasStatusControl(INFERNO_PUNCH_SECOND)) && !world.isRemote) {
 			WorldServer World = (WorldServer) world;
 
-			Vector pos = Vector.getRightSide(entity, 0.55).plus(0, 0.8, 0);
-			Vector direction = Vector.getLookRectangular(entity);
+			Vec3d height, rightSide;
+			if (entity instanceof EntityPlayer) {
+				if (PlayerViewRegistry.getPlayerViewMode(entity.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(entity.getUniqueID()) <= -1) {
+					height = entity.getPositionVector().add(0, 1.6, 0);
+					height = height.add(entity.getLookVec().scale(0.8));
+					//Right
+					if (entity.getPrimaryHand() == EnumHandSide.RIGHT) {
+						rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
+						rightSide = rightSide.add(height);
+					}
+					//Left
+					else {
+						rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw - 90), 0).times(0.5).withY(0).toMinecraft();
+						rightSide = rightSide.add(height);
+					}
+				} else {
+					height = entity.getPositionVector().add(0, 0.84, 0);
+					if (entity.getPrimaryHand() == EnumHandSide.RIGHT) {
+						rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.385).withY(0).toMinecraft();
+						rightSide = rightSide.add(height);
+					} else {
+						rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw - 90), 0).times(0.385).withY(0).toMinecraft();
+						rightSide = rightSide.add(height);
+					}
+				}
+			} else {
+				height = entity.getPositionVector().add(0, 0.84, 0);
+				if (entity.getPrimaryHand() == EnumHandSide.RIGHT) {
+					rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.385).withY(0).toMinecraft();
+					rightSide = rightSide.add(height);
+				} else {
+					rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw - 90), 0).times(0.385).withY(0).toMinecraft();
+					rightSide = rightSide.add(height);
+				}
 
-			if (entity instanceof EntityPlayer && entity.getPrimaryHand() == EnumHandSide.LEFT) {
-				pos = Vector.getLeftSide(entity, 0.55).plus(0, 1.8, 0);
 			}
-			Vector hand = pos.plus(direction.times(0.6));
-			World.spawnParticle(world.rand.nextBoolean() ? AvatarParticles.getParticleFlames() : AvatarParticles.getParticleFire(),
-					hand.x(), hand.y(), hand.z(), particleCount, 0, 0, 0, 0.015);
-
+			World.spawnParticle(AvatarParticles.getParticleFlames(),
+					rightSide.x, rightSide.y, rightSide.z, particleCount, 0, 0, 0, 0.015);
 			return false;
 		} else return true;
 	}

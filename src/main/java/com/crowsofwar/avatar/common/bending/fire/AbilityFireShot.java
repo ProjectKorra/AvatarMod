@@ -19,6 +19,9 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.blocks.BlockTemp;
+import com.crowsofwar.avatar.common.blocks.BlockUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -26,18 +29,18 @@ import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.UUID;
-
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -45,38 +48,11 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class AbilityFireShot extends Ability {
 
-	static HashMap<UUID, HashMap<BlockPos, Integer>> ignitedTimes = new HashMap<>();
- 	static HashMap<BlockPos, String> ignitedBlocks = new HashMap<>();
+	//TODO: Use a new entity for this ability, spawn particles along it.
 
 	public AbilityFireShot() {
 		super(Firebending.ID, "fire_shot");
 		requireRaytrace(-1, false);
-	}
-
-	private static void setIgnitedTimes(UUID uuid, BlockPos block, int time) {
-		if (ignitedTimes.containsKey(uuid)) {
-			ignitedTimes.replace(uuid, ignitedTimes.get(uuid), ignitedTimes.get(block));
-		} else {
-		    HashMap<BlockPos, Integer> pos = new HashMap<>();
-		    pos.put(block, time);
-            ignitedTimes.put(uuid, pos);
-        }
-	}
-
-	static HashMap<BlockPos, Integer> getIgnitedTimes(UUID uuid) {
-		return ignitedTimes.getOrDefault(uuid, new HashMap<>());
-	}
-
-	private static void setIgnitedBlocks(BlockPos block, String UUID) {
-		if (ignitedBlocks.containsKey(block)) {
-			ignitedBlocks.replace(block, UUID);
-		} else {
-			ignitedBlocks.put(block, UUID);
-		}
-	}
-
-	static String getIgnitedOwner(BlockPos pos) {
-		return ignitedBlocks.getOrDefault(pos, null);
 	}
 
 
@@ -91,28 +67,37 @@ public class AbilityFireShot extends Ability {
 		World world = ctx.getWorld();
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
+		AbilityData abilityData = ctx.getAbilityData();
 
 		float speed = 0.5F;
 		double damageMult = bender.getDamageMult(Firebending.ID);
+		float damage = STATS_CONFIG.fireShotSetttings.damage;
 		float chi = STATS_CONFIG.chiFireShot;
+		float xp  = SKILLS_CONFIG.fireShotHit;
 		if (ctx.getLevel() == 1) {
 			speed += 0.25F;
 			chi += 0.5F;
 			damageMult += 0.5;
+			damage += 2;
+			xp -= 0.5F;
 		}
 		if (ctx.getLevel() == 2) {
 			speed += 0.5F;
 			chi += 1;
 			damageMult += 1;
+			damage += 4;
+			xp -= 1.5F;
 		}
 		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			speed += 0.75F;
 			chi += 1.5F;
 			damageMult += 2;
+			damage += 7;
 		}
 		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			chi += 2F;
 		}
+		damage += abilityData.getTotalXp() / 50;
 		if (bender.consumeChi(chi)) {
 			if (!ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				EntityFlames flames = new EntityFlames(world);
@@ -122,13 +107,24 @@ public class AbilityFireShot extends Ability {
 				flames.setReflect(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
 				flames.rotationPitch = entity.rotationPitch;
 				flames.rotationYaw = entity.rotationYaw;
-				flames.setAbility(new AbilityFireShot());
+				flames.setAbility(this);
+				flames.setXp(xp);
+				flames.setLifeTime((int) abilityData.getTotalXp() + 60);
 				flames.setTrailingFire(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
-				flames.setDamageMult(damageMult);
+				//TODO: Remove all damage calculations in EntityFlames
+				flames.setFireTime((int) (4F * 1 + abilityData.getTotalXp() / 50f));
+				flames.setDamage(damage * (float) damageMult);
+				flames.setElement(new Firebending());
+				if (!world.isRemote)
+					world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
+							world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
 				world.spawnEntity(flames);
 			} else {
+				//TODO: Fix particle spawning
 				EntityShockwave wave = new EntityShockwave(world);
 				wave.setOwner(entity);
+				wave.rotationPitch = entity.rotationPitch;
+				wave.rotationYaw = entity.rotationYaw;
 				wave.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight() / 2, 0));
 				wave.setFireTime(10);
 				wave.setElement(new Firebending());
@@ -140,12 +136,21 @@ public class AbilityFireShot extends Ability {
 				wave.setSpeed(0.4F);
 				wave.setKnockbackMult(new Vec3d(1.5, 1, 1.5));
 				wave.setKnockbackHeight(0.15);
-				wave.setParticleSpeed(0.2F);
-				wave.setParticleAmount(12);
+				wave.setParticleSpeed(0.18F);
+				wave.setParticleWaves(2);
+				wave.setParticleAmount(10);
+				if (!world.isRemote)
+					world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
+							world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
 				world.spawnEntity(wave);
 			}
 		}
 
+	}
+
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiFireShot(this, entity, bender);
 	}
 
 	public static class FireShockwaveBehaviour extends ShockwaveBehaviour {
@@ -153,28 +158,22 @@ public class AbilityFireShot extends Ability {
 		@Override
 		public Behavior onUpdate(EntityShockwave entity) {
 			if (entity.getOwner() != null) {
-					BlockPos prevPos = entity.getPosition();
-					for (int degree = 0; degree < 360; degree += 30) {
-						double angle = Math.toRadians(degree);
-						//Sin x for shockwave, cos x for sphere. We want a fire wave, so we sin x.
-						double x = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
-						//double y = entity.posY;
-						double z = entity.posZ + (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle);
-						Vec3d direction = new Vec3d(x, entity.getOwner().getEntityBoundingBox().minY, z);
-						BlockPos spawnPos = new BlockPos((int) (direction.x /*+ entity.posX**/), (int) (direction.y /*+ entity.posY**/),
-								(int) (direction.z /*+ entity.posZ**/));
-						if (Blocks.FIRE.canPlaceBlockAt(entity.world, spawnPos) && prevPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ) !=
-								spawnPos.getDistance((int) entity.posX, (int) entity.posY, (int) entity.posZ)
-								&& entity.world.getBlockState(spawnPos).getBlock() == Blocks.AIR) {
-							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() ? 120 : 10;
-							UUID uuid = entity.getOwner().getUniqueID();
-							setIgnitedTimes(uuid, spawnPos, time);
-							setIgnitedBlocks(spawnPos, entity.getOwner().getUniqueID().toString());
-							entity.world.setBlockState(spawnPos, Blocks.FIRE.getDefaultState());
-							prevPos = spawnPos;
+				for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.ticksExisted * 3)) {
+					int x = entity.posX < 0 ? (int) (entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle) - 1)
+							: (int) (entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle));
+					int y = (int) (entity.posY - 0.5);
+					int z = entity.posZ < 0 ? (int) (entity.posZ + ((entity.ticksExisted * entity.getSpeed()) * Math.cos(angle) - 1))
+							: (int) (entity.posZ + ((entity.ticksExisted * entity.getSpeed())) * Math.cos(angle));
+
+					BlockPos spawnPos = new BlockPos(x, (int) (entity.posY), z);
+					if (BlockUtils.canPlaceFireAt(entity.world, spawnPos)) {
+						if (spawnPos != entity.getPosition()) {
+							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() - 0.2 ? 120 : 10;
+							BlockTemp.createTempBlock(entity.world, spawnPos, time, Blocks.FIRE.getDefaultState());
 						}
 					}
 
+				}
 			}
 			return this;
 		}

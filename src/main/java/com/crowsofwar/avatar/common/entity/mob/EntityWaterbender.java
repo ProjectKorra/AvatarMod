@@ -19,7 +19,8 @@ package com.crowsofwar.avatar.common.entity.mob;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
-import com.crowsofwar.avatar.common.item.ItemScroll.ScrollType;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
+
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -42,6 +43,11 @@ public class EntityWaterbender extends EntityHumanBender {
 	@Override
 	protected Bender initBender() {
 		return new WaterbenderBenderComponent();
+	}
+
+	@Override
+	public void applyAbilityLevels(int level) {
+
 	}
 
 	@Override
