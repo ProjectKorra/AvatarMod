@@ -42,9 +42,9 @@ import java.util.stream.Collectors;
  * snow particles nearly always fall at the same speed, which can now be defined in the particle class and no longer
  * needs to be defined when spawning the particle - but importantly, it can still be overridden if desired.
  * 
- * @author Electroblob
- * @since Wizardry 4.2.0 
- * @see electroblob.wizardry.util.ParticleBuilder ParticleBuilder
+ * @author Electroblob, modified by FavouritDragon and Aang23
+ * @since AvatarMod 1.6.0
+ * @see com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder
  */
 //@SideOnly(Side.CLIENT)
 public abstract class ParticleWizardry extends Particle {
@@ -124,7 +124,7 @@ public abstract class ParticleWizardry extends Particle {
 
 	/**
 	 * Creates a new particle in the given world at the given position. All other parameters are set via the various
-	 * setter methods ({@link electroblob.wizardry.util.ParticleBuilder ParticleBuilder} deals with all of that anyway). 
+	 * setter methods ({@link com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder} deals with all of that anyway).
 	 * @param world The world in which to create the particle.
 	 * @param x The x-coordinate at which to create the particle.
 	 * @param y The y-coordinate at which to create the particle.
