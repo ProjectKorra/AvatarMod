@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
-import electroblob.wizardry.Wizardry;
+import com.crowsofwar.avatar.AvatarInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 //@SideOnly(Side.CLIENT)
 public class ParticleSummon extends ParticleAvatar {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/particle/summon.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(AvatarInfo.MOD_ID, "textures/particle/summon.png");
 	private final boolean mirror;
 
 	public ParticleSummon(World world, double x, double y, double z){

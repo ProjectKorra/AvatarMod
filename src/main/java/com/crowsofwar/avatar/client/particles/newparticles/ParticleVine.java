@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
-import electroblob.wizardry.Wizardry;
+import com.crowsofwar.avatar.AvatarInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -27,7 +27,7 @@ public class ParticleVine extends ParticleTargeted {
 	private static final float LEAF_SPACING = 0.5f;
 	private static final float SEGMENT_LENGTH = 1;
 
-	private static final ResourceLocation STEM_TEXTURE = new ResourceLocation(Wizardry.MODID, "particle/vine");
+	private static final ResourceLocation STEM_TEXTURE = new ResourceLocation(AvatarInfo.MOD_ID, "particle/vine");
 	private static final ResourceLocation[] LEAF_TEXTURES = generateTextures("vine_leaf", 5);
 
 	public ParticleVine(World world, double x, double y, double z){

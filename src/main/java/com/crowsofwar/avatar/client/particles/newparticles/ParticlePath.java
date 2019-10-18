@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
-import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.spell.Clairvoyance;
+import com.crowsofwar.avatar.AvatarInfo;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -13,7 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class ParticlePath extends ParticleAvatar {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "particle/path");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(AvatarInfo.MOD_ID, "particle/path");
 
 	private final double originX, originY, originZ;
 
@@ -57,7 +56,7 @@ public class ParticlePath extends ParticleAvatar {
 					- 2 * (((float)this.particleAge - (float)(this.particleMaxAge / 2)) / (float)this.particleMaxAge));
 		}
 
-		if(this.particleAge % Clairvoyance.PARTICLE_MOVEMENT_INTERVAL == 0){
+		if(this.particleAge % 3 /*Clairvoyance.PARTICLE_MOVEMENT_INTERVAL**/ == 0){
 			this.setPosition(this.originX, this.originY, this.originZ);
 			this.prevPosX = this.posX;
 			this.prevPosY = this.posY;
