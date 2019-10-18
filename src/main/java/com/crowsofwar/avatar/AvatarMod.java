@@ -259,6 +259,7 @@ public class AvatarMod {
 		ConfigMobs.load();
 
 		proxy.init();
+		proxy.registerParticles();
 
 	}
 

@@ -4,6 +4,7 @@ package com.crowsofwar.avatar.common.particle;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
@@ -87,8 +88,8 @@ public final class ParticleBuilder {
 	 * Individual constants have comments detailing their corresponding default parameters. A range of values indicates
 	 * randomness.
 	 * <p></p>
-	 * To register your own particle types, use {@link electroblob.wizardry.client.particle.ParticleWizardry#registerParticle(
-	 * ResourceLocation, electroblob.wizardry.client.particle.ParticleWizardry.IWizardryParticleFactory)
+	 * To register your own particle types, use {@link com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar#registerParticle(
+	 * ResourceLocation, com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar.IAvatarParticleFactory)
 	 * ParticleAvatar.registerParticle(ResourceLocation, IWizardryParticleFactory)}.
 	 */
 	// This was originally an enum, but I think having 'Type' explicitly declared is quite nice so I've left it as a
@@ -618,7 +619,7 @@ public final class ParticleBuilder {
 			return;
 		}
 
-	//	electroblob.wizardry.client.particle.ParticleAvatar particle = Wizardry.proxy.createParticle(type, world, x, y, z);
+		ParticleAvatar particle = AvatarMod.proxy.createParticle(type, world, x, y, z);
 
 		if(particle == null){
 			// No need to display a warning here, we already did it in the client proxy

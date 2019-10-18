@@ -18,14 +18,18 @@
 package com.crowsofwar.avatar.common;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -81,6 +85,20 @@ public interface AvatarCommonProxy {
 	 * Get amount of particles. 0 = All, 1 = decreased, 2 = minimal
 	 */
 	int getParticleAmount();
+
+
+	/** Called from init() in the main mod class to initialise the particle factories. */
+	default void registerParticles(){} // Does nothing since particles are client-side only
+
+	/** Creates a new particle of the specified type from the appropriate particle factory. <i>Does not actually spawn the
+	 * particle; use {@link com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder} to spawn particles.</i> */
+	default ParticleAvatar createParticle(ResourceLocation type, World world, double x, double y, double z){
+		return null;
+	}
+
+	default void spawnTornadoParticle(World world, double x, double y, double z, double velX, double velZ, double radius,
+									 int maxAge, IBlockState block, BlockPos pos){
+	}
 
 	/**
 	 * Creates a wrapper so that the keybinding can be used on both sides

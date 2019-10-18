@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.client.AvatarClientProxy;
 import com.crowsofwar.avatar.common.entity.ICustomHitbox;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import net.minecraft.client.Minecraft;
@@ -207,19 +208,19 @@ public abstract class ParticleAvatar extends Particle {
 	}
 
 	/**
-	 * Associates the given {@link ResourceLocation} with the given {@link IWizardryParticleFactory}, allowing it to
-	 * be used in the {@link electroblob.wizardry.util.ParticleBuilder ParticleBuilder}. This is a similar concept to
+	 * Associates the given {@link ResourceLocation} with the given {@link IAvatarParticleFactory}, allowing it to
+	 * be used in the {@link com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder}. This is a similar concept to
 	 * registering entity renderers, in that it associates the client-only bit with its common-code counterpart - but
 	 * of course, particles are client-side only so a simple identifier is all that is necessary. As with entity
 	 * renderers, <b>this method may only be called from the client side</b>, probably a client proxy.
 	 *
 	 * @param name    The {@link ResourceLocation} to use for the particle. This effectively replaces the particle type
 	 *                enum from previous versions. Keep a reference to this somewhere in <b>common</b> code for use later.
-	 * @param factory A {@link IWizardryParticleFactory} that produces your particle. A constructor reference is usually
+	 * @param factory A {@link IAvatarParticleFactory} that produces your particle. A constructor reference is usually
 	 *                sufficient.
 	 */
-	public static void registerParticle(ResourceLocation name, IWizardryParticleFactory factory) {
-		ClientProxy.addParticleFactory(name, factory);
+	public static void registerParticle(ResourceLocation name, IAvatarParticleFactory factory) {
+		AvatarClientProxy.addParticleFactory(name, factory);
 	}
 
 	/**
@@ -631,7 +632,7 @@ public abstract class ParticleAvatar extends Particle {
 	 */
 	@SideOnly(Side.CLIENT)
 	@FunctionalInterface
-	public interface IWizardryParticleFactory {
+	public interface IAvatarParticleFactory {
 		ParticleAvatar createParticle(World world, double x, double y, double z);
 	}
 }
