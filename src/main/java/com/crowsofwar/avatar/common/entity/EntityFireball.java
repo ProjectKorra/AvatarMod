@@ -303,7 +303,6 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 					hitBox = ExplosionSize + 4;
 				}
 
-				this.setInvisible(true);
 				WorldServer World = (WorldServer) this.world;
 				World.spawnParticle(AvatarParticles.getParticleFlames(), posX, posY, posZ, getSize() * 8, 0, 0, 0,
 						getSize() / 25F);

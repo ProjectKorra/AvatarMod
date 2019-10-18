@@ -19,25 +19,26 @@ import net.minecraft.world.WorldServer;
 import java.util.List;
 
 public interface IOffensiveEntity {
-	/*public static void Explode(World world, AvatarEntity entity, EntityLivingBase owner) {
+
+	default void Explode(World world, AvatarEntity entity, EntityLivingBase owner) {
 		if (world instanceof WorldServer) {
 			if (owner != null) {
 				WorldServer World = (WorldServer) world;
-				World.spawnParticle(getParticle(), posX, posY, posZ, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
-				world.playSound(null, posX, posY, posZ, getSound(), getSoundCategory(), getVolume(),
+				World.spawnParticle(getParticle(), entity.posX, entity.posY, entity.posZ, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
+				world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), entity.getSoundCategory(), getVolume(),
 						getPitch());
-				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(getExplosionHitboxGrowth(),
+				List<Entity> collided = world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().grow(getExplosionHitboxGrowth(),
 						getExplosionHitboxGrowth(), getExplosionHitboxGrowth()),
-						entity -> entity != getOwner());
+						entity1 -> entity1 != entity.getOwner());
 
 				if (!collided.isEmpty()) {
-					for (Entity entity : collided) {
-						if (entity != getOwner() && entity != null && getOwner() != null) {
-							attackEntity(entity, false);
+					for (Entity entity1 : collided) {
+						if (entity.getOwner() != null && entity1 != entity.getOwner() && entity1 != null) {
+							attackEntity(entity, entity1, false);
 							//Divide the result of the position difference to make entities fly
 							//further the closer they are to the player.
-							double dist = (getExplosionHitboxGrowth() - entity.getDistance(entity)) > 1 ? (getExplosionHitboxGrowth() - entity.getDistance(entity)) : 1;
-							Vec3d velocity = entity.getPositionVector().subtract(this.getPositionVector());
+							double dist = (getExplosionHitboxGrowth() - entity1.getDistance(entity)) > 1 ? (getExplosionHitboxGrowth() - entity1.getDistance(entity)) : 1;
+							Vec3d velocity = entity1.getPositionVector().subtract(entity.getPositionVector());
 							velocity = velocity.scale((1 / 40F)).scale(dist).add(0, getExplosionHitboxGrowth() / 50, 0);
 
 							double x = velocity.x;
@@ -47,13 +48,13 @@ public interface IOffensiveEntity {
 							y *= getKnockbackMult().y;
 							z *= getKnockbackMult().z;
 
-							attackEntity(entity, true);
+							attackEntity(entity, entity1, true);
 
-							if (!entity.world.isRemote) {
-								entity.motionX += x;
-								entity.motionY += y;
-								entity.motionZ += z;
-								entity.setFire(getFireTime());
+							if (!entity1.world.isRemote) {
+								entity1.motionX += x;
+								entity1.motionY += y;
+								entity1.motionZ += z;
+								entity1.setFire(getFireTime());
 
 								if (collided instanceof AvatarEntity) {
 									if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
@@ -61,8 +62,8 @@ public interface IOffensiveEntity {
 										AvatarEntity avent = (AvatarEntity) collided;
 										avent.addVelocity(x, y, z);
 									}
-									entity.isAirBorne = true;
-									AvatarUtils.afterVelocityAdded(entity);
+									entity1.isAirBorne = true;
+									AvatarUtils.afterVelocityAdded(entity1);
 								}
 							}
 						}
@@ -71,121 +72,125 @@ public interface IOffensiveEntity {
 
 			}
 		}
-	}**/
-	/*static void applyPiercingCollision(AvatarEntity entity) {
-		List<Entity> collided = world.getEntitiesInAABBexcluding(entity, getExpandedHitbox(), entity -> entity != getOwner());
+	}
+	default void applyPiercingCollision(AvatarEntity entity) {
+		List<Entity> collided = entity.world.getEntitiesInAABBexcluding(entity, getExpandedHitbox(entity), entity1 -> entity1 != entity.getOwner());
 		if (!collided.isEmpty()) {
-			for (Entity entity : collided) {
-				if (entity != getOwner() && entity != null && getOwner() != null) {
-					attackEntity(entity, false);
+			for (Entity hit : collided) {
+				if (entity.getOwner() != null && hit != entity.getOwner() && hit != null) {
+					attackEntity(entity, hit, false);
 				}
 			}
 
 		}
 	}
 
-	static void Dissipate() {
-		if (world instanceof WorldServer) {
-			if (getOwner() != null) {
-				WorldServer World = (WorldServer) world;
-				World.spawnParticle(getParticle(), posX, posY, posZ, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
-				world.playSound(null, posX, posY, posZ, getSound(), getSoundCategory(), getVolume(),
+	default void Dissipate(AvatarEntity entity) {
+		if (entity.world instanceof WorldServer) {
+			if (entity.getOwner() != null) {
+				WorldServer World = (WorldServer) entity.world;
+				World.spawnParticle(getParticle(), entity.posX, entity.posY, entity.posZ, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
+				entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), entity.getSoundCategory(), getVolume(),
 						getPitch());
 			}
 		}
 	}
 
-	static void attackEntity(Entity hit, boolean explosionDamage) {
-		if (getOwner() != null && hit != null) {
-			boolean ds = hit.attackEntityFrom(getDamageSource(hit), explosionDamage ? getAoeDamage() : getDamage());
+	default void attackEntity(AvatarEntity attacker, Entity hit, boolean explosionDamage) {
+		if (attacker.getOwner() != null && hit != null) {
+			boolean ds = hit.attackEntityFrom(getDamageSource(hit, attacker.getOwner()), explosionDamage ? getAoeDamage() : getDamage());
 			if (!ds && hit instanceof EntityDragon) {
-				((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, getDamageSource(hit),
+				((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, getDamageSource(hit, attacker.getOwner()),
 						explosionDamage ? getAoeDamage() : getDamage());
-				BattlePerformanceScore.addScore(getOwner(), getPerformanceAmount());
+				BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
 
 			} else if (hit instanceof EntityLivingBase && ds) {
-				BattlePerformanceScore.addScore(getOwner(), getPerformanceAmount());
+				BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
 			}
 		}
 	}
 
 
 
-	static float getAoeDamage() {
+	default float getAoeDamage() {
 		return 1;
 	}
 
-	static Vec3d getKnockbackMult() {
+	default float getDamage() {
+		return 3;
+	}
+
+	default Vec3d getKnockbackMult() {
 		return new Vec3d(1, 1, 1);
 	}
 
-	static EnumParticleTypes getParticle() {
+	default EnumParticleTypes getParticle() {
 		return AvatarParticles.getParticleFlames();
 	}
 
-	static int getNumberofParticles() {
+	default int getNumberofParticles() {
 		return 50;
 	}
 
-	static double getParticleSpeed() {
+	default double getParticleSpeed() {
 		return 0.02;
 	}
 
-	static int getPerformanceAmount() {
+	default int getPerformanceAmount() {
 		return 10;
 	}
 
-	protected SoundEvent getSound() {
+	default SoundEvent getSound() {
 		return SoundEvents.ENTITY_GHAST_SHOOT;
 	}
 
-	protected float getVolume() {
+	default float getVolume() {
 		return 1.0F + AvatarUtils.getRandomNumberInRange(1, 100) / 500F;
 	}
 
-	protected float getPitch() {
+	default float getPitch() {
 		return 1.0F + AvatarUtils.getRandomNumberInRange(1, 100) / 500F;
 	}
 
-	protected DamageSource getDamageSource(Entity target) {
-		return AvatarDamageSource.causeFireDamage(target, getOwner());
+	default DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
+		return AvatarDamageSource.causeFireDamage(target, owner);
 	}
 
-	protected double getExpandedHitboxWidth() {
+	default double getExpandedHitboxWidth() {
 		return 0.25;
 	}
 
-	protected double getExpandedHitboxHeight() {
+	default double getExpandedHitboxHeight() {
 		return 0.25;
 	}
 
-	protected int getFireTime() {
+	default int getFireTime() {
 		return 0;
 	}
 
-	protected boolean isPiercing() {
+	default boolean isPiercing() {
 		return false;
 	}
 
-	protected boolean shouldDissipate() {
+	default boolean shouldDissipate() {
 		return false;
 	}
 
-	protected boolean shouldExplode() {
+	default boolean shouldExplode() {
 		return true;
 	}
 
-	static AxisAlignedBB getExpandedHitbox() {
-		return expandedHitbox;
+	default AxisAlignedBB getExpandedHitbox(AvatarEntity entity) {
+		return entity.getEntityBoundingBox().grow(getExpandedHitboxWidth(), getExpandedHitboxHeight(), getExpandedHitboxWidth());
 	}
 
-	static double getExplosionHitboxGrowth() {
+	default double getExplosionHitboxGrowth() {
 		return 1;
 	}
 
-	static void applyElementalContact(AvatarEntity entity) {
+	default void applyElementalContact(AvatarEntity entity) {
 
 	}
-**/
+
 
 }
