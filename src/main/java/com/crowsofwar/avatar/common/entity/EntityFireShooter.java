@@ -27,7 +27,7 @@ public class EntityFireShooter extends EntityOffensive {
 	}
 
 	@Override
-	protected float getAoeDamage() {
+	public float getAoeDamage() {
 		return aoeDamage;
 	}
 
@@ -36,17 +36,17 @@ public class EntityFireShooter extends EntityOffensive {
 	}
 
 	@Override
-	protected boolean isPiercing() {
+	public boolean isPiercing() {
 		return true;
 	}
 
 	@Override
-	protected boolean shouldExplode() {
+	public boolean shouldExplode() {
 		return false;
 	}
 
 	@Override
-	protected boolean shouldDissipate() {
+	public boolean shouldDissipate() {
 		return false;
 	}
 

@@ -187,12 +187,12 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	}
 
 	@Override
-	protected boolean shouldDissipate() {
+	public boolean shouldDissipate() {
 		return true;
 	}
 
 	@Override
-	protected boolean shouldExplode() {
+	public boolean shouldExplode() {
 		return false;
 	}
 
@@ -246,12 +246,12 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	}
 
 	@Override
-	protected int getNumberofParticles() {
+	public int getNumberofParticles() {
 		return 15;
 	}
 
 	@Override
-	protected double getParticleSpeed() {
+	public double getParticleSpeed() {
 		return 0.04;
 	}
 
@@ -290,7 +290,7 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	}
 
 	@Override
-	protected Vec3d getKnockbackMult() {
+	public Vec3d getKnockbackMult() {
 		return new Vec3d(STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push * 2);
 	}
 }

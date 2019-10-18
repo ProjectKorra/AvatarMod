@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -99,13 +100,18 @@ public interface IOffensiveEntity {
 	default void attackEntity(AvatarEntity attacker, Entity hit, boolean explosionDamage) {
 		if (attacker.getOwner() != null && hit != null) {
 			boolean ds = hit.attackEntityFrom(getDamageSource(hit, attacker.getOwner()), explosionDamage ? getAoeDamage() : getDamage());
-			if (!ds && hit instanceof EntityDragon) {
-				((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, getDamageSource(hit, attacker.getOwner()),
-						explosionDamage ? getAoeDamage() : getDamage());
-				BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
+			AbilityData data = AbilityData.get(attacker.getOwner(), attacker.getAbility().getName());
+			if (data != null) {
+				if (!ds && hit instanceof EntityDragon) {
+					((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, getDamageSource(hit, attacker.getOwner()),
+							explosionDamage ? getAoeDamage() : getDamage());
+					BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
+					data.addXp(getXpPerHit());
 
-			} else if (hit instanceof EntityLivingBase && ds) {
-				BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
+				} else if (hit instanceof EntityLivingBase && ds) {
+					BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
+					data.addXp(getXpPerHit());
+				}
 			}
 		}
 	}
@@ -117,6 +123,10 @@ public interface IOffensiveEntity {
 	}
 
 	default float getDamage() {
+		return 3;
+	}
+
+	default float getXpPerHit() {
 		return 3;
 	}
 

@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public abstract class EntityOffensive extends AvatarEntity {
+public abstract class EntityOffensive extends AvatarEntity implements IOffensiveEntity {
 
 	//Used for all entities that damage things
 	private static final DataParameter<Float> SYNC_DAMAGE = EntityDataManager
@@ -66,8 +66,7 @@ public abstract class EntityOffensive extends AvatarEntity {
 	public float getAvgSize() {
 		if (getHeight() == getWidth()) {
 			return getHeight();
-		}
-		else return (getHeight() + getWidth()) / 2;
+		} else return (getHeight() + getWidth()) / 2;
 	}
 
 	public void setEntitySize(float height, float width) {
@@ -265,27 +264,27 @@ public abstract class EntityOffensive extends AvatarEntity {
 		dataManager.set(SYNC_LIFETIME, lifeTime);
 	}
 
-	protected float getAoeDamage() {
+	public float getAoeDamage() {
 		return 1;
+	}
+
+	public Vec3d getKnockbackMult() {
+		return knockbackMult;
 	}
 
 	public void setKnockbackMult(Vec3d mult) {
 		this.knockbackMult = mult;
 	}
 
-	protected Vec3d getKnockbackMult() {
-		return knockbackMult;
-	}
-
-	protected EnumParticleTypes getParticle() {
+	public EnumParticleTypes getParticle() {
 		return AvatarParticles.getParticleFlames();
 	}
 
-	protected int getNumberofParticles() {
+	public int getNumberofParticles() {
 		return 50;
 	}
 
-	protected double getParticleSpeed() {
+	public double getParticleSpeed() {
 		return 0.02;
 	}
 
@@ -297,27 +296,27 @@ public abstract class EntityOffensive extends AvatarEntity {
 		this.performanceAmount = amount;
 	}
 
-	protected SoundEvent getSound() {
+	public SoundEvent getSound() {
 		return SoundEvents.ENTITY_GHAST_SHOOT;
 	}
 
-	protected float getVolume() {
+	public float getVolume() {
 		return 1.0F + AvatarUtils.getRandomNumberInRange(1, 100) / 500F;
 	}
 
-	protected float getPitch() {
+	public float getPitch() {
 		return 1.0F + AvatarUtils.getRandomNumberInRange(1, 100) / 500F;
 	}
 
-	protected DamageSource getDamageSource(Entity target) {
+	private DamageSource getDamageSource(Entity target) {
 		return AvatarDamageSource.causeFireDamage(target, getOwner());
 	}
 
-	protected double getExpandedHitboxWidth() {
+	public double getExpandedHitboxWidth() {
 		return 0.25;
 	}
 
-	protected double getExpandedHitboxHeight() {
+	public double getExpandedHitboxHeight() {
 		return 0.25;
 	}
 
@@ -329,15 +328,15 @@ public abstract class EntityOffensive extends AvatarEntity {
 		this.fireTime = time;
 	}
 
-	protected boolean isPiercing() {
+	public boolean isPiercing() {
 		return false;
 	}
 
-	protected boolean shouldDissipate() {
+	public boolean shouldDissipate() {
 		return false;
 	}
 
-	protected boolean shouldExplode() {
+	public boolean shouldExplode() {
 		return true;
 	}
 
