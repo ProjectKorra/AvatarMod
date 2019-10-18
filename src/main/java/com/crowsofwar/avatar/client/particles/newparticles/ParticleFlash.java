@@ -11,7 +11,7 @@ import net.minecraft.world.World;
  * @author Electroblob
  * @since Wizardry 4.2.0
  */
-public class ParticleFlash extends ParticleWizardry {
+public class ParticleFlash extends ParticleAvatar {
 
 	public ParticleFlash(World world, double x, double y, double z){
 		super(world, x, y, z);

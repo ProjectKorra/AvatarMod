@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 //@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(Side.CLIENT)
-public class ParticleMagicFlame extends ParticleWizardry {
+public class ParticleMagicFlame extends ParticleAvatar {
 
 	// 4 different animation strips, 8 frames in each strip
 	private static final ResourceLocation[][] TEXTURES = generateTextures("flame", 4, 8);

@@ -89,7 +89,7 @@ public final class ParticleBuilder {
 	 * <p></p>
 	 * To register your own particle types, use {@link electroblob.wizardry.client.particle.ParticleWizardry#registerParticle(
 	 * ResourceLocation, electroblob.wizardry.client.particle.ParticleWizardry.IWizardryParticleFactory)
-	 * ParticleWizardry.registerParticle(ResourceLocation, IWizardryParticleFactory)}.
+	 * ParticleAvatar.registerParticle(ResourceLocation, IWizardryParticleFactory)}.
 	 */
 	// This was originally an enum, but I think having 'Type' explicitly declared is quite nice so I've left it as a
 	// nested class.
@@ -618,7 +618,7 @@ public final class ParticleBuilder {
 			return;
 		}
 
-	//	electroblob.wizardry.client.particle.ParticleWizardry particle = Wizardry.proxy.createParticle(type, world, x, y, z);
+	//	electroblob.wizardry.client.particle.ParticleAvatar particle = Wizardry.proxy.createParticle(type, world, x, y, z);
 
 		if(particle == null){
 			// No need to display a warning here, we already did it in the client proxy

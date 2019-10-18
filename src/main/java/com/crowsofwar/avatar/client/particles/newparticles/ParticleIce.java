@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 //@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(Side.CLIENT)
-public class ParticleIce extends ParticleWizardry {
+public class ParticleIce extends ParticleAvatar {
 
 	private static final ResourceLocation[] TEXTURES = generateTextures("ice", 8);
 	

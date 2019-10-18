@@ -1,18 +1,18 @@
-package com.crowsofwar.avatar.client.particles;
+package com.crowsofwar.avatar.client.particles.oldsystem;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class AvatarParticleElectricity extends AvatarParticle {
+public class AvatarParticleRestore extends AvatarParticle {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/particles/electricity.png");
+			"textures/particles/restore.png");
 
-	private static final ParticleFrame[] FRAMES = new ParticleFrame[8];
+	private static final ParticleFrame[] FRAMES = new ParticleFrame[6];
 
 	static {
 		for (int i = 0; i < FRAMES.length; i++) {
-			FRAMES[i] = new ParticleFrame(TEXTURE, 256, (i % 4) * 64, i / 64, 64, 64);
+			FRAMES[i] = new ParticleFrame(TEXTURE, 256, 0, 7, 64, 64);
 		}
 	}
 
@@ -25,8 +25,8 @@ public class AvatarParticleElectricity extends AvatarParticle {
 	 * @param velY
 	 * @param velZ
 	 */
-	public AvatarParticleElectricity(int particleID, World world, double x, double y, double z, double velX,
-									 double velY, double velZ, int... parameters) {
+	public AvatarParticleRestore(int particleID, World world, double x, double y, double z, double velX,
+								 double velY, double velZ, int... parameters) {
 		super(world, x, y, z, velX, velY, velZ);
 
 		particleScale = 4f;
@@ -49,4 +49,3 @@ public class AvatarParticleElectricity extends AvatarParticle {
 	}
 
 }
-

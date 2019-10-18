@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 //@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(Side.CLIENT)
-public class ParticleLightningPulse extends ParticleWizardry {
+public class ParticleLightningPulse extends ParticleAvatar {
 
 	private static final ResourceLocation[] TEXTURES = generateTextures("lightning_pulse", 8);
 

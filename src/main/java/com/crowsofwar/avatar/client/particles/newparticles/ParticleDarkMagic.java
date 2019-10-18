@@ -5,7 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
 //@SideOnly(Side.CLIENT)
-public class ParticleDarkMagic extends ParticleWizardry {
+public class ParticleDarkMagic extends ParticleAvatar {
 
 	/** Base spell texture index */
 	private int baseSpellTextureIndex = 128;

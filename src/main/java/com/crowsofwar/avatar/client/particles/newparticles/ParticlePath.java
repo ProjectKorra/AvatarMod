@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 //@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(Side.CLIENT)
-public class ParticlePath extends ParticleWizardry {
+public class ParticlePath extends ParticleAvatar {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "particle/path");
 

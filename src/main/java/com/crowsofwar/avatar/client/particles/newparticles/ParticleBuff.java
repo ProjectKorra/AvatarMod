@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 //@SideOnly(Side.CLIENT)
-public class ParticleBuff extends ParticleWizardry {
+public class ParticleBuff extends ParticleAvatar {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(AvatarInfo.MOD_ID, "textures/particle/buff.png");
 	private final boolean mirror;
@@ -58,7 +58,7 @@ public class ParticleBuff extends ParticleWizardry {
 	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float rotationX, float rotationZ,
 							   float rotationYZ, float rotationXY, float rotationXZ){
 
-		// Copied from ParticleWizardry, needs to be here since we're not calling super
+		// Copied from ParticleAvatar, needs to be here since we're not calling super
 		updateEntityLinking(partialTicks);
 		
 		GlStateManager.pushMatrix();

@@ -3,7 +3,7 @@ package com.crowsofwar.avatar.client.particles.newparticles;
 import net.minecraft.world.World;
 
 //@SideOnly(Side.CLIENT)
-public class ParticleMagicBubble extends ParticleWizardry {
+public class ParticleMagicBubble extends ParticleAvatar {
 
 	public ParticleMagicBubble(World world, double x, double y, double z){
 		super(world, x, y, z);

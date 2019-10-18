@@ -3,7 +3,7 @@ package com.crowsofwar.avatar.client.particles.newparticles;
 import net.minecraft.world.World;
 
 //@SideOnly(Side.CLIENT)
-public class ParticleDust extends ParticleWizardry {
+public class ParticleDust extends ParticleAvatar {
 
 	public ParticleDust(World world, double x, double y, double z){
 		super(world, x, y, z);

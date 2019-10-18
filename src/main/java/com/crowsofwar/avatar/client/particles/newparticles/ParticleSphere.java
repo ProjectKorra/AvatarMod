@@ -10,7 +10,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
-public class ParticleSphere extends ParticleWizardry {
+public class ParticleSphere extends ParticleAvatar {
 
 	public ParticleSphere(World world, double x, double y, double z){
 		super(world, x, y, z);
@@ -40,7 +40,7 @@ public class ParticleSphere extends ParticleWizardry {
 	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float rotationX, float rotationZ, float rotationYZ,
 							   float rotationXY, float rotationXZ){
 
-		// Copied from ParticleWizardry, needs to be here since we're not calling super
+		// Copied from ParticleAvatar, needs to be here since we're not calling super
 		updateEntityLinking(partialTicks);
 
 		float x = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks);

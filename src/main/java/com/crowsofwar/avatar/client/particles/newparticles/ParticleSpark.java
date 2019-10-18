@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 //@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(Side.CLIENT)
-public class ParticleSpark extends ParticleWizardry {
+public class ParticleSpark extends ParticleAvatar {
 
 	// 8 different animation strips, 4 in each strip
 	private static final ResourceLocation[][] TEXTURES = generateTextures("lightning", 8, 4);

@@ -15,7 +15,7 @@
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.crowsofwar.avatar.client.particles;
+package com.crowsofwar.avatar.client.particles.oldsystem;
 
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;

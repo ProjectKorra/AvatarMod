@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nullable;
 
 /** Superclass for particles with a second target entity or target position. */
-public abstract class ParticleTargeted extends ParticleWizardry {
+public abstract class ParticleTargeted extends ParticleAvatar {
 
 	protected double targetX;
 	protected double targetY;
@@ -72,7 +72,7 @@ public abstract class ParticleTargeted extends ParticleWizardry {
 	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float rotationX, float rotationZ, float rotationYZ,
 							   float rotationXY, float rotationXZ){
 
-		// Copied from ParticleWizardry, needs to be here since we're not calling super
+		// Copied from ParticleAvatar, needs to be here since we're not calling super
 		updateEntityLinking(partialTicks);
 
 		float x = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks);

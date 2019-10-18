@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 //@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(Side.CLIENT)
-public class ParticleLeaf extends ParticleWizardry {
+public class ParticleLeaf extends ParticleAvatar {
 
 	private static final ResourceLocation[] TEXTURES = generateTextures("leaf", 16);
 

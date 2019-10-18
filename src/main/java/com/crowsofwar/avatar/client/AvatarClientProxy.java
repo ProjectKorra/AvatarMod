@@ -27,7 +27,7 @@ import com.crowsofwar.avatar.client.gui.GuiBisonChest;
 import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
 import com.crowsofwar.avatar.client.gui.skills.GetBendingGui;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
-import com.crowsofwar.avatar.client.particles.*;
+import com.crowsofwar.avatar.client.particles.oldsystem.*;
 import com.crowsofwar.avatar.client.render.*;
 import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;

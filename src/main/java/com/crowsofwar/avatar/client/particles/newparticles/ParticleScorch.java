@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 //@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(Side.CLIENT)
-public class ParticleScorch extends ParticleWizardry {
+public class ParticleScorch extends ParticleAvatar {
 
 	private static final ResourceLocation[] TEXTURES = generateTextures("scorch", 8);
 

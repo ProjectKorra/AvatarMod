@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.client.particles;
+package com.crowsofwar.avatar.client.particles.oldsystem;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -6,25 +6,27 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class AvatarParticleFlame extends AvatarParticle {
+public class AvatarParticleBigFlame extends AvatarParticle {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/particles/fire.png");
+			"textures/particles/big_flame.png");
 	private static final ParticleFrame[] FRAMES = new ParticleFrame[7];
 
 	static {
 		for (int i = 0; i < FRAMES.length; i++) {
-			FRAMES[i] = new ParticleFrame(TEXTURE, 256, 0, 7, 35, 64);
+			FRAMES[i] = new ParticleFrame(TEXTURE, 256, 0, 0, 55, 64);
 		}
 	}
 
-	public AvatarParticleFlame(int particleID, World world, double x, double y, double z, double velX,
-							   double velY, double velZ, int... parameters) {
+	public AvatarParticleBigFlame(int particleID, World world, double x, double y, double z, double velX,
+								  double velY, double velZ, int... parameters) {
+
 		this(world, x, y, z, velX, velY, velZ);
+
 	}
 
-	protected AvatarParticleFlame(World world, double x, double y, double z, double velX, double velY,
-								  double velZ) {
+	protected AvatarParticleBigFlame(World world, double x, double y, double z, double velX, double velY,
+									 double velZ) {
 
 		super(world, x, y, z, velX, velY, velZ);
 		this.particleRed = 1.0F;
