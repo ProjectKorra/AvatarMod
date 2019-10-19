@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.client.render;
 import com.crowsofwar.avatar.common.entity.ControlPoint;
 import com.crowsofwar.avatar.common.entity.EntityArc;
 import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -37,7 +38,7 @@ public class RenderWaterCannon extends RenderArc {
 		if (cannon.getOwner() != null) {
 			Vector eyePos = getEyePos(cannon.getOwner()).minusY(0.3);
 			Vector directionToEnd = cannon.position().minus(eyePos).normalize();
-			AvatarUtils.setRotationFromPosition(cannon, eyePos.plus(directionToEnd.times(0.075)).toMinecraft());
+			AvatarEntityUtils.setRotationFromPosition(cannon, eyePos.plus(directionToEnd.times(0.075)).toMinecraft());
 			double pitch = cannon.rotationPitch;
 			double yaw = cannon.rotationYaw;
 			double dist = cannon.getDistance(cannon.getOwner());

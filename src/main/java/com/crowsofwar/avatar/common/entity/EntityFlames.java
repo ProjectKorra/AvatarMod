@@ -23,7 +23,6 @@ import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.blocks.BlockTemp;
 import com.crowsofwar.avatar.common.blocks.BlockUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -67,14 +66,6 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 
 
 	@Override
-	public void onCollideWithEntity(Entity entity) {
-		super.onCollideWithEntity(entity);
-		if (entity instanceof AvatarEntity) {
-			((AvatarEntity) entity).onFireContact();
-		}
-	}
-
-	@Override
 	public void onUpdate() {
 
 		super.onUpdate();
@@ -84,7 +75,7 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 
 		if (velocity().sqrMagnitude() <= 0.5 * 0.5) setDead();
 
-		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.5,
+		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.25,
 				true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
@@ -179,10 +170,8 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 				setDead();
 				spawnExtinguishIndicators();
 				return true;
-			}
-			else return false;
-		}
-		else {
+			} else return false;
+		} else {
 			setDead();
 			spawnExtinguishIndicators();
 			return true;

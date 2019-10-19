@@ -22,59 +22,61 @@ import java.util.List;
 public interface IOffensiveEntity {
 
 	default void Explode(World world, AvatarEntity entity, EntityLivingBase owner) {
-		if (world instanceof WorldServer) {
-			if (owner != null) {
+		if (owner != null) {
+			if (world.isRemote)
+				spawnParticles();
+			//TODO: Get rid of this particle spawning code. It's outdated.
+			if (world instanceof WorldServer) {
 				WorldServer World = (WorldServer) world;
 				World.spawnParticle(getParticle(), entity.posX, entity.posY, entity.posZ, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), entity.getSoundCategory(), getVolume(),
 						getPitch());
-				List<Entity> collided = world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().grow(getExplosionHitboxGrowth(),
-						getExplosionHitboxGrowth(), getExplosionHitboxGrowth()),
-						entity1 -> entity1 != entity.getOwner());
+			}
+			List<Entity> collided = world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().grow(getExplosionHitboxGrowth(),
+					getExplosionHitboxGrowth(), getExplosionHitboxGrowth()),
+					entity1 -> entity1 != entity.getOwner());
 
-				if (!collided.isEmpty()) {
-					for (Entity entity1 : collided) {
-						if (entity.getOwner() != null && entity1 != entity.getOwner() && entity1 != null) {
-							attackEntity(entity, entity1, false, new Vec3d(getKnockback().x * getKnockbackMult().x, getKnockback().y
-									* getKnockbackMult().y, getKnockback().z * getKnockbackMult().z));
-							//Divide the result of the position difference to make entities fly
-							//further the closer they are to the player.
-							double dist = (getExplosionHitboxGrowth() - entity1.getDistance(entity)) > 1 ? (getExplosionHitboxGrowth() - entity1.getDistance(entity)) : 1;
-							Vec3d velocity = entity1.getPositionVector().subtract(entity.getPositionVector());
-							velocity = velocity.scale((1 / 40F)).scale(dist).add(0, getExplosionHitboxGrowth() / 50, 0);
+			if (!collided.isEmpty()) {
+				for (Entity entity1 : collided) {
+					if (entity.getOwner() != null && entity1 != entity.getOwner() && entity1 != null && !world.isRemote) {
+						attackEntity(entity, entity1, false, new Vec3d(getKnockback().x * getKnockbackMult().x, getKnockback().y
+								* getKnockbackMult().y, getKnockback().z * getKnockbackMult().z));
+						//Divide the result of the position difference to make entities fly
+						//further the closer they are to the player.
+						double dist = (getExplosionHitboxGrowth() - entity1.getDistance(entity)) > 1 ? (getExplosionHitboxGrowth() - entity1.getDistance(entity)) : 1;
+						Vec3d velocity = entity1.getPositionVector().subtract(entity.getPositionVector());
+						velocity = velocity.scale((1 / 40F)).scale(dist).add(0, getExplosionHitboxGrowth() / 50, 0);
 
-							double x = velocity.x;
-							double y = velocity.y > 0 ? velocity.z : 0.15F;
-							double z = velocity.z;
-							x *= getExplosionKnockbackMult().x;
-							y *= getExplosionKnockbackMult().y;
-							z *= getExplosionKnockbackMult().z;
+						double x = velocity.x;
+						double y = velocity.y > 0 ? velocity.z : 0.15F;
+						double z = velocity.z;
+						x *= getExplosionKnockbackMult().x;
+						y *= getExplosionKnockbackMult().y;
+						z *= getExplosionKnockbackMult().z;
 
-							attackEntity(entity, entity1, true, new Vec3d(x, y, z));
+						attackEntity(entity, entity1, true, new Vec3d(x, y, z));
 
-							if (!entity1.world.isRemote) {
-								entity1.motionX += x;
-								entity1.motionY += y;
-								entity1.motionZ += z;
-								entity1.setFire(getFireTime());
+						entity1.motionX += x;
+						entity1.motionY += y;
+						entity1.motionZ += z;
+						entity1.setFire(getFireTime());
 
-								if (collided instanceof AvatarEntity) {
-									if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
-											&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
-										AvatarEntity avent = (AvatarEntity) collided;
-										avent.addVelocity(x, y, z);
-									}
-									entity1.isAirBorne = true;
-									AvatarUtils.afterVelocityAdded(entity1);
-								}
+						if (collided instanceof AvatarEntity) {
+							if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
+									&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+								AvatarEntity avent = (AvatarEntity) collided;
+								avent.addVelocity(x, y, z);
 							}
+							entity1.isAirBorne = true;
+							AvatarUtils.afterVelocityAdded(entity1);
 						}
 					}
 				}
-
 			}
+
 		}
 	}
+
 
 	default void applyPiercingCollision(AvatarEntity entity) {
 		List<Entity> collided = entity.world.getEntitiesInAABBexcluding(entity, getExpandedHitbox(entity), entity1 -> entity1 != entity.getOwner());
@@ -116,13 +118,13 @@ public interface IOffensiveEntity {
 				} else if (hit instanceof EntityLivingBase && ds) {
 					BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
 					data.addXp(getXpPerHit());
+					hit.setFire(getFireTime());
 					hit.addVelocity(vel.x, vel.y, vel.z);
 					AvatarUtils.afterVelocityAdded(hit);
 				}
 			}
 		}
 	}
-
 
 	default float getAoeDamage() {
 		return 1;
@@ -148,6 +150,7 @@ public interface IOffensiveEntity {
 		return new Vec3d(0.5, 0.5, 0.5);
 	}
 
+	//You don't have to do a world.isRemote check, it's done for you.
 	default void spawnParticles() {
 	}
 
@@ -200,6 +203,7 @@ public interface IOffensiveEntity {
 		return false;
 	}
 
+	//NOTE: IOffensiveEntities will dissipate when their lifetime is up even when this is false, unless overridden.
 	default boolean shouldDissipate() {
 		return false;
 	}

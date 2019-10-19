@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import elucent.albedo.event.GatherLightsEvent;
 import elucent.albedo.lighting.ILightProvider;
@@ -142,7 +143,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 	}
 
 	public Entity getEmittingEntity() {
-		return AvatarUtils.getEntityFromStringID(dataManager.get(SYNC_EMITTING_ENTITY));
+		return AvatarEntityUtils.getEntityFromStringID(dataManager.get(SYNC_EMITTING_ENTITY));
 	}
 
 	public void setEmittingEntity(Entity entity) {

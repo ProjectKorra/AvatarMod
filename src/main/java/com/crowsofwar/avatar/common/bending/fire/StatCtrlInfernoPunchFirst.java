@@ -42,6 +42,7 @@ public class StatCtrlInfernoPunchFirst extends StatusControl {
 		particleSpawner = new NetworkParticleSpawner();
 	}
 
+	//TODO: Spawn a schockwave.
 	@Override
 	public boolean execute(BendingContext ctx) {
 		//TODO: Raytrace instead of event

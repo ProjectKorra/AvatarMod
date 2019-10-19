@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
@@ -42,6 +43,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -123,9 +125,10 @@ public class EntityAirBubble extends EntityShield {
 	@Override
 	public void setPositionAndUpdate(double x, double y, double z) {
 		if (getOwner() != null) {
-			x = getOwner().posX;
-			y = getOwner().getEntityBoundingBox().minY;
-			z = getOwner().posZ;
+			Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(getOwner());
+			x = pos.x;
+			y = pos.y;
+			z = pos.z;
 			super.setPositionAndUpdate(x, y, z);
 		} else {
 			super.setPositionAndUpdate(x, y, z);
@@ -163,7 +166,7 @@ public class EntityAirBubble extends EntityShield {
 			return;
 		}
 
-		setPosition(Vector.getEntityPos(owner));
+		setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(getOwner()));
 		this.motionX = this.motionY = this.motionZ = 0;
 
 		if (getOwner() != null) {

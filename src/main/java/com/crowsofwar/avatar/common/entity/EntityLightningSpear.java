@@ -287,6 +287,7 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 		dataManager.set(SYNC_SIZE, size);
 	}
 
+	@Override
 	public boolean isPiercing() {
 		return piercing;
 	}

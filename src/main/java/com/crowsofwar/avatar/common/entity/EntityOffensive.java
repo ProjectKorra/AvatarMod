@@ -1,14 +1,9 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -19,7 +14,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -42,17 +36,15 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	private float xp;
 	private int fireTime;
 	private int performanceAmount;
-	private Vec3d piercingKnockback;
 	private Vec3d knockbackMult;
 
 
 	public EntityOffensive(World world) {
 		super(world);
-		this.expandedHitbox = getEntityBoundingBox();
+		this.expandedHitbox = getExpandedHitbox(this);
 		this.performanceAmount = 20;
 		this.fireTime = 3;
 		this.xp = 3;
-		this.piercingKnockback = Vec3d.ZERO;
 	}
 
 	public float getHeight() {
@@ -80,6 +72,19 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	public void setDamage(float damage) {
 		dataManager.set(SYNC_DAMAGE, damage);
+	}
+
+	//This just makes the methods easier to use.
+	public void Explode() {
+		Explode(world, this, getOwner());
+	}
+
+	public void applyPiercingCollision() {
+		applyPiercingCollision(this);
+	}
+
+	public void Dissipate() {
+		Dissipate(this);
 	}
 
 	@Override
@@ -121,6 +126,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		if (!isPiercing() && isProjectile() && shouldExplode())
 			Explode();
 		else if (!isPiercing() && shouldDissipate()) {
+			attackEntity(this, entity, false, new Vec3d(getKnockback().x * getKnockbackMult().x, getKnockback().y * getKnockbackMult().y,
+					getKnockback().z * getKnockbackMult().z));
 			Dissipate();
 		} else applyPiercingCollision();
 		if (entity instanceof AvatarEntity)
@@ -128,128 +135,12 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	}
 
-	public void Explode() {
-		if (world instanceof WorldServer) {
-			if (getOwner() != null) {
-				WorldServer World = (WorldServer) world;
-				World.spawnParticle(getParticle(), posX, posY, posZ, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
-				world.playSound(null, posX, posY, posZ, getSound(), getSoundCategory(), getVolume(),
-						getPitch());
-				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(getExplosionHitboxGrowth(),
-						getExplosionHitboxGrowth(), getExplosionHitboxGrowth()),
-						entity -> entity != getOwner());
-
-				if (!collided.isEmpty()) {
-					for (Entity entity : collided) {
-						if (entity != getOwner() && entity != null && getOwner() != null) {
-							attackEntity(entity, false, getAbility(), getXp(), Vec3d.ZERO);
-							//Divide the result of the position difference to make entities fly
-							//further the closer they are to the player.
-							double dist = (getExplosionHitboxGrowth() - entity.getDistance(entity)) > 1 ? (getExplosionHitboxGrowth() - entity.getDistance(entity)) : 1;
-							Vec3d velocity = entity.getPositionVector().subtract(this.getPositionVector());
-							velocity = velocity.scale((1 / 40F)).scale(dist).add(0, getExplosionHitboxGrowth() / 50, 0);
-
-							double x = velocity.x;
-							double y = velocity.y > 0 ? velocity.z : 0.15F;
-							double z = velocity.z;
-							x *= getKnockbackMult().x;
-							y *= getKnockbackMult().y;
-							z *= getKnockbackMult().z;
-
-							attackEntity(entity, true, getAbility(), getXp(), Vec3d.ZERO);
-
-							if (!entity.world.isRemote) {
-								if (entity.canBePushed()) {
-									entity.motionX += x;
-									entity.motionY += y;
-									entity.motionZ += z;
-								}
-
-								if (collided instanceof AvatarEntity) {
-									if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
-											&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
-										AvatarEntity avent = (AvatarEntity) collided;
-										avent.addVelocity(x, y, z);
-									}
-									entity.isAirBorne = true;
-									AvatarUtils.afterVelocityAdded(entity);
-								}
-							}
-						}
-					}
-				}
-
-			}
-		}
-	}
-
-	public void applyPiercingCollision() {
-		double x = getPiercingKnockback().x * getKnockbackMult().x;
-		double y = getPiercingKnockback().y * getKnockbackMult().y;
-		y = y > 0 ? y : 0.15F;
-		double z = getPiercingKnockback().z * getKnockbackMult().z;
-		List<Entity> collided = world.getEntitiesInAABBexcluding(this, getExpandedHitbox(), entity -> entity != getOwner());
-		if (!collided.isEmpty()) {
-			for (Entity entity : collided) {
-				if (entity != getOwner() && entity != null && getOwner() != null) {
-					attackEntity(entity, false, getAbility(), getXp(), new Vec3d(x, y, z));
-				}
-			}
-
-		}
-	}
-
-	public void Dissipate() {
-		if (world instanceof WorldServer) {
-			if (getOwner() != null) {
-				WorldServer World = (WorldServer) world;
-				World.spawnParticle(getParticle(), posX, posY, posZ, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
-				world.playSound(null, posX, posY, posZ, getSound(), getSoundCategory(), getVolume(),
-						getPitch());
-			}
-		}
-		Vec3d vel = getVelocity();
-		double x = vel.x * getKnockbackMult().x;
-		double y = vel.y * getKnockbackMult().y;
-		y = y > 0 ? y : 0.15F;
-		double z = vel.z * getKnockbackMult().z;
-		List<Entity> collided = world.getEntitiesInAABBexcluding(this, getExpandedHitbox(), entity -> entity != getOwner());
-		if (!collided.isEmpty()) {
-			for (Entity entity : collided) {
-				if (entity != getOwner() && entity != null && getOwner() != null) {
-					attackEntity(entity, false, getAbility(), getXp(), new Vec3d(x, y, z));
-				}
-			}
-
-		}
-		setDead();
-	}
 
 	@Override
 	public float getXpPerHit() {
 		return xp;
 	}
 
-	public void attackEntity(Entity hit, boolean explosionDamage, Ability ability, float xp, Vec3d velocity) {
-		if (getOwner() != null && hit != null) {
-			AbilityData data = AbilityData.get(getOwner(), ability.getName());
-			if (data != null) {
-				boolean ds = hit.attackEntityFrom(getDamageSource(hit), explosionDamage ? getAoeDamage() : getDamage());
-				if (!ds && hit instanceof EntityDragon) {
-					((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, getDamageSource(hit),
-							explosionDamage ? getAoeDamage() : getDamage());
-					BattlePerformanceScore.addScore(getOwner(), getPerformanceAmount());
-					data.addXp(xp);
-
-				} else if (hit instanceof EntityLivingBase && ds) {
-					BattlePerformanceScore.addScore(getOwner(), getPerformanceAmount());
-					data.addXp(xp);
-					hit.addVelocity(velocity.x, velocity.y, velocity.z);
-					hit.setFire(getFireTime());
-				}
-			}
-		}
-	}
 
 	@Override
 	public boolean onCollideWithSolid() {
@@ -269,6 +160,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		dataManager.set(SYNC_LIFETIME, lifeTime);
 	}
 
+	@Override
 	public float getAoeDamage() {
 		return 1;
 	}
@@ -280,6 +172,13 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	public void setKnockbackMult(Vec3d mult) {
 		this.knockbackMult = mult;
 	}
+
+	@Override
+	public void spawnParticles() {
+
+	}
+
+	//TODO: Remove these particle methods. They're useless currently. Just use spawnParticles();
 
 	public EnumParticleTypes getParticle() {
 		return AvatarParticles.getParticleFlames();
@@ -293,6 +192,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		return 0.02;
 	}
 
+	@Override
 	public int getPerformanceAmount() {
 		return this.performanceAmount;
 	}
@@ -301,30 +201,36 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		this.performanceAmount = amount;
 	}
 
+	@Override
 	public SoundEvent getSound() {
 		return SoundEvents.ENTITY_GHAST_SHOOT;
 	}
 
+	@Override
 	public float getVolume() {
 		return 1.0F + AvatarUtils.getRandomNumberInRange(1, 100) / 500F;
 	}
 
+	@Override
 	public float getPitch() {
 		return 1.0F + AvatarUtils.getRandomNumberInRange(1, 100) / 500F;
 	}
 
-	private DamageSource getDamageSource(Entity target) {
-		return AvatarDamageSource.causeFireDamage(target, getOwner());
+	public DamageSource getDamageSource(Entity target) {
+		return getDamageSource(target, getOwner());
 	}
 
+	@Override
 	public double getExpandedHitboxWidth() {
 		return 0.25;
 	}
 
+	@Override
 	public double getExpandedHitboxHeight() {
 		return 0.25;
 	}
 
+	@Override
 	public int getFireTime() {
 		return this.fireTime;
 	}
@@ -333,14 +239,17 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		this.fireTime = time;
 	}
 
+	@Override
 	public boolean isPiercing() {
 		return false;
 	}
 
+	@Override
 	public boolean shouldDissipate() {
 		return false;
 	}
 
+	@Override
 	public boolean shouldExplode() {
 		return true;
 	}
@@ -349,28 +258,19 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		return expandedHitbox;
 	}
 
+	@Override
 	public double getExplosionHitboxGrowth() {
 		return 1;
 	}
 
+	@Override
 	public void applyElementalContact(AvatarEntity entity) {
 
 	}
 
-	public float getXp() {
-		return this.xp;
-	}
 
 	public void setXp(float xp) {
 		this.xp = xp;
-	}
-
-	public Vec3d getPiercingKnockback() {
-		return this.piercingKnockback;
-	}
-
-	public void setPiercingKnockback(Vec3d knockback) {
-		this.piercingKnockback = knockback;
 	}
 
 	@Override
