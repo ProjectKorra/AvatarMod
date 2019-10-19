@@ -503,6 +503,7 @@ public class AvatarUtils {
 			}
 
 		}
+
 	}
 
 
@@ -532,12 +533,12 @@ public class AvatarUtils {
 										   float borderSize, HashSet<Entity> excluded, boolean collideablesOnly, boolean raytraceNonSolidBlocks) {
 		Vec3d startVec = new Vec3d(x, y, z);
 		Vec3d endVec = new Vec3d(tx, ty, tz);
-		float minX = x < tx ? x : tx;
-		float minY = y < ty ? y : ty;
-		float minZ = z < tz ? z : tz;
-		float maxX = x > tx ? x : tx;
-		float maxY = y > ty ? y : ty;
-		float maxZ = z > tz ? z : tz;
+		float minX = Math.min(x, tx);
+		float minY = Math.min(y, ty);
+		float minZ = Math.min(z, tz);
+		float maxX = Math.max(x, tx);
+		float maxY = Math.max(y, ty);
+		float maxZ = Math.max(z, tz);
 		AxisAlignedBB bb = new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ).grow(borderSize, borderSize,
 				borderSize);
 		List<Entity> allEntities = world.getEntitiesWithinAABBExcludingEntity(null, bb);

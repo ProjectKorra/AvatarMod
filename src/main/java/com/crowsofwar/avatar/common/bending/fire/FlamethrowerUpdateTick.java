@@ -16,20 +16,27 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityShield;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
@@ -115,13 +122,13 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				speedMult = 25;
 				randomness = 0;
 				fireTime = 5;
-				size = 0.75F;
+				size = 1F;
 				damage = 7F;
 				range = 15;
 			}
 			if (level == 3 && path == AbilityTreePath.SECOND) {
 				speedMult = 12;
-				randomness = 2;
+				randomness = 8;
 				fireTime = 20;
 				size = 3.0F;
 				damage = 2.5F;
@@ -141,7 +148,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
 
 
-
 			//Raytrace time, kiddos. Are you ready to rumbbbblee with weird angles?
 			//Technically, the actual raytracing is handled by another method, but we still have to deal with angles. This ensures that everything is actually being hit.
 		/*	for (int angle = 0; angle < size * 3; angle++) {
@@ -150,15 +156,44 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				Vec3d start = look.toMinecraft().add(eye.minusY(0.5).toMinecraft());
 				AvatarUtils.handlePiercingBeamCollision();
 			}**/
-		//You know what, I'm gonna hold off on the fancy stuff for now.
+			//You know what, I'm gonna hold off on the fancy stuff for now.
 
-			Vec3d start = look.toMinecraft().add(eye.minusY(0.5).toMinecraft());
-			AvatarUtils.handlePiercingBeamCollision(world, entity, start, start.add(look.toMinecraft().scale(range)), size, null, new AbilityFlamethrower(),
-					new Firebending(), damage, look.toMinecraft().scale(0.125), fireTime, size / 2);
+			Vector start = look.plus(eye.minusY(0.5));
+
+			List<Entity> hit = Raytrace.entityRaytrace(world, start, look, size, range, entity1 -> entity1 != entity);
+			hit.remove(entity);
+			if (!hit.isEmpty()) {
+				for (Entity targets : hit) {
+					System.out.println("Huh.");
+					if (!world.isRemote) {
+						if (targets.canBeCollidedWith() && targets.getTeam() != null && targets.getTeam() == entity.getTeam() || targets instanceof EntityShield) {
+							targets.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(targets, entity), damage);
+							targets.setFire(fireTime + 2);
+							targets.setEntityInvulnerable(false);
+							Vector knockback = look.times(speedMult / 100);
+							if (targets.canBePushed())
+								targets.addVelocity(knockback.x(), knockback.y(), knockback.z());
+							AvatarUtils.afterVelocityAdded(targets);
+						}
+					}
+				}
+			}
+
+			Raytrace.Result result = Raytrace.raytrace(world, start.toMinecraft(), look.toMinecraft(), range, false);
+			if (result.hitSomething() && result.getPos() != null && world.getBlockState(result.getPos().toBlockPos()).getBlock() != Blocks.AIR) {
+				BlockPos pos = result.getPos().toBlockPos();
+				if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR)
+					world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+
+			}
+
+			//	if (ctx.getData().getTickHandlerDuration(this) % 2 == 0)
+			//		AvatarUtils.handlePiercingBeamCollision(world, entity, start, start.plus(look.times(range)).toMinecraft(), size, null, new AbilityFlamethrower(),
+			//				new Firebending(), damage, look.toMinecraft().scale(0.125), fireTime, size / 2);
 			//Particle code.
 			if (world.isRemote) {
 				for (int i = 0; i < flamesPerSecond; i++) {
-					ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start).scale(size).time(30).collide(true).vel(look.toMinecraft().scale(speedMult / 25)).spawn(world);
+					ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size).time(30).collide(true).vel(look.toMinecraft().scale(speedMult / 25)).spawn(world);
 				}
 			}
 

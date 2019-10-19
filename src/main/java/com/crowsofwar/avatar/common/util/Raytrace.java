@@ -240,6 +240,46 @@ public class Raytrace {
 
 	}
 
+	public static List<Entity> entityRaytrace(World world, Vector start, Vector direction, float borderSize,
+											  double maxDistance) {
+		return entityRaytrace(world, start, direction, maxDistance, borderSize, entity -> true);
+	}
+
+	public static List<Entity> entityRaytrace(World world, Vector start, Vector direction, double maxRange, float borderSize,
+											  Predicate<Entity> filter) {
+
+		// Detect correct range- avoid obstructions from walls
+		double range = maxRange;
+		Result raytrace = raytrace(world, start, direction, maxRange, true);
+		if (raytrace.hitSomething()) {
+			Vector stopAt = raytrace.posPrecise;
+			range = start.minus(stopAt).magnitude();
+		}
+
+		List<Entity> hit = new ArrayList<>();
+
+		Vector end = start.plus(direction.times(range));
+		AxisAlignedBB aabb = new AxisAlignedBB(start.x(), start.y(), start.z(), end.x(), end.y(), end.z());
+		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, aabb);
+
+		for (Entity entity : entities) {
+			if (filter.test(entity)) {
+				float entBorder = entity.getCollisionBorderSize();
+				AxisAlignedBB collisionBox = entity.getEntityBoundingBox();
+				collisionBox = collisionBox.grow(entBorder);
+				collisionBox = collisionBox.grow(borderSize);
+				RayTraceResult result = collisionBox.calculateIntercept(start.toMinecraft(),
+						end.toMinecraft());
+				if (result != null) {
+					hit.add(entity);
+				}
+			}
+		}
+
+		return hit;
+
+	}
+
 	//Vanilla raytrace method, will be cleaned up in the rewrite
 	/**
 	 * Method for ray tracing entities (the useless default method doesn't work, despite EnumHitType having an ENTITY
