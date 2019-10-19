@@ -101,119 +101,130 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 			World world = ctx.getWorld();
 
-			double speedMult = 15 + 5 * totalXp / 100;
-			double randomness = 3.0 - 5 * totalXp / 100;
-			float range = 4;
-			int fireTime = 0;
-			float size = 1;
-			float damage = 0.5F;
-			float performanceAmount = 2;
-			float xp = SKILLS_CONFIG.flamethrowerHit;
-			boolean lightsFires = false;
+			if (!world.isRaining()) {
 
-			switch (abilityData.getLevel()) {
-				case 1:
-					size = 1.5F;
-					damage = 1F;
-					fireTime = 2;
-					range = 5;
-					performanceAmount = 3;
-					xp /= 1.5;
-					break;
-				case 2:
-					size = 2;
-					fireTime = 4;
-					damage = 3F;
-					range = 7;
-					performanceAmount = 5;
-					xp /= 2;
-					break;
-			}
-			if (level == 3 && path == AbilityTreePath.FIRST) {
-				speedMult = 25;
-				randomness = 0;
-				fireTime = 5;
-				size = 0.95F;
-				damage = 7F;
-				range = 12;
-				performanceAmount = 6;
-				xp = 0;
-			}
-			if (level == 3 && path == AbilityTreePath.SECOND) {
-				speedMult = 12;
-				randomness = 12;
-				fireTime = 20;
-				size = 3.0F;
-				damage = 2.5F;
-				range = 6.5F;
-				performanceAmount = 2;
-				lightsFires = true;
-				xp = 0;
-			}
+				double speedMult = 15 + 5 * totalXp / 100;
+				double randomness = 3.0 - 5 * totalXp / 100;
+				float range = 4;
+				int fireTime = 0;
+				float size = 1;
+				float damage = 0.5F;
+				float performanceAmount = 2;
+				float xp = SKILLS_CONFIG.flamethrowerHit;
+				boolean lightsFires = false;
 
-			// Affect stats by power rating
-			range += powerFactor / 100F;
-			size += powerRating / 100F;
-			damage += powerRating / 100F;
-			fireTime += (int) (powerRating / 50F);
-			speedMult += powerRating / 100f * 2.5f;
-			randomness -= randomness >= powerRating / 100f * 6f ? powerRating / 100F * 6 : 0;
+				switch (abilityData.getLevel()) {
+					case 1:
+						size = 1.5F;
+						damage = 1F;
+						fireTime = 2;
+						range = 5;
+						performanceAmount = 3;
+						xp /= 1.5;
+						break;
+					case 2:
+						size = 2;
+						fireTime = 4;
+						damage = 3F;
+						range = 7;
+						performanceAmount = 5;
+						xp /= 2;
+						break;
+				}
+				if (level == 3 && path == AbilityTreePath.FIRST) {
+					speedMult = 25;
+					randomness = 0;
+					fireTime = 5;
+					size = 0.95F;
+					damage = 7F;
+					range = 12;
+					performanceAmount = 6;
+					xp = 0;
+				}
+				if (level == 3 && path == AbilityTreePath.SECOND) {
+					speedMult = 12;
+					randomness = 9;
+					fireTime = 20;
+					size = 3.0F;
+					damage = 2.5F;
+					range = 6.5F;
+					performanceAmount = 2;
+					lightsFires = true;
+					xp = 0;
+				}
 
-			double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
-			double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
-			Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
+				// Affect stats by power rating
+				range += powerFactor / 100F;
+				size += powerRating / 100F;
+				damage += powerRating / 100F;
+				fireTime += (int) (powerRating / 50F);
+				speedMult += powerRating / 100f * 2.5f;
+				randomness -= randomness >= powerRating / 100f * 6f ? powerRating / 100F * 6 : 0;
+
+				double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
+				double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
+				Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
 
 
-			Vector start = look.plus(eye.minusY(0.5));
+				Vector start = look.plus(eye.minusY(0.5));
 
-			List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range, size, entity1 -> entity1 != entity);
-			hit.remove(entity);
-			if (!hit.isEmpty()) {
-				for (Entity target : hit) {
-					if (!world.isRemote) {
-						if (target.canBeCollidedWith() && (target.getTeam() == null || target.getTeam() != null && target.getTeam() != entity.getTeam()) || target instanceof EntityShield) {
-							boolean attack = target.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);
-							if (attack) {
-								target.setFire(fireTime + 2);
-								target.setEntityInvulnerable(false);
-								Vector knockback = look.times(speedMult / 100);
-								if (target.canBePushed())
-									target.addVelocity(knockback.x(), knockback.y(), knockback.z());
-								AvatarUtils.afterVelocityAdded(target);
+				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range, size / 2, entity1 -> entity1 != entity);
+				hit.remove(entity);
+				if (!hit.isEmpty()) {
+					for (Entity target : hit) {
+						if (!world.isRemote) {
+							if (target.canBeCollidedWith() && (target.getTeam() == null || target.getTeam() != null && target.getTeam() != entity.getTeam()) || target instanceof EntityShield) {
+								boolean attack = target.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);
+								if (attack) {
+									target.setFire(fireTime + 2);
+									target.setEntityInvulnerable(false);
+									Vector knockback = look.times(speedMult / 100);
+									if (target.canBePushed())
+										target.addVelocity(knockback.x(), knockback.y(), knockback.z());
+									AvatarUtils.afterVelocityAdded(target);
+									BattlePerformanceScore.addScore(entity, (int) performanceAmount);
+									abilityData.addXp(xp);
+								} else if (target instanceof EntityDragon)
+									AvatarEntityUtils.attackDragon((EntityDragon) target, AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);
 								BattlePerformanceScore.addScore(entity, (int) performanceAmount);
 								abilityData.addXp(xp);
-							} else if (target instanceof EntityDragon)
-								AvatarEntityUtils.attackDragon((EntityDragon) target, AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);
-							BattlePerformanceScore.addScore(entity, (int) performanceAmount);
-							abilityData.addXp(xp);
 
+							}
 						}
 					}
 				}
-			}
 
-			Raytrace.Result result = Raytrace.raytrace(world, start.toMinecraft(), look.toMinecraft(), range, false);
-			if (result.hitSomething() && result.getPos() != null && world.getBlockState(result.getPos().toBlockPos()).getBlock() != Blocks.AIR) {
-				BlockPos pos = result.getPos().toBlockPos();
-				if (lightsFires)
-					if (Blocks.FIRE.canPlaceBlockAt(world, pos) && !world.getBlockState(pos).isFullBlock())
-						world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+				Raytrace.Result result = Raytrace.raytrace(world, start.toMinecraft(), look.toMinecraft(), range, false);
+				if (result.hitSomething() && result.getPos() != null && world.getBlockState(result.getPos().toBlockPos()).getBlock() != Blocks.AIR) {
+					BlockPos pos = result.getPos().toBlockPos();
+					if (lightsFires)
+						if (Blocks.FIRE.canPlaceBlockAt(world, pos) && !world.getBlockState(pos).isFullBlock())
+							world.setBlockState(pos, Blocks.FIRE.getDefaultState());
 
-			}
+				}
 
 
-			//Particle code.
-			if (world.isRemote) {
-				for (int i = 0; i < flamesPerSecond; i++) {
-					ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size).time(30).collide(true).vel(look.toMinecraft().scale(speedMult / 25)).spawn(world);
+				//Particle code.
+				if (world.isRemote) {
+					for (int i = 0; i < flamesPerSecond; i++) {
+						ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size).time(25).collide(true).vel(look.toMinecraft().scale(speedMult / 30)).spawn(world);
+					}
+				}
+
+				if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)
+					world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
+							SoundCategory.PLAYERS, 0.2f, 0.8f);
+
+
+			} else {
+				entity.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 1.0F, 1.0F);
+				if (world.isRemote) {
+					for (int i = 0; i < 5; i++)
+						ParticleBuilder.create(ParticleBuilder.Type.SNOW).collide(true).time(15).vel(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian())
+								.scale(1.0F).pos(Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity)).toMinecraft()).clr(1.0F, 1.0F, 1.0f).spawn(world);
+					
 				}
 			}
-
-			if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)
-				world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
-						SoundCategory.PLAYERS, 0.2f, 0.8f);
-
-
 		} else
 			// not enough chi
 			return true;

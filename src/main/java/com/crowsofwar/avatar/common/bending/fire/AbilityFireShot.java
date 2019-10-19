@@ -29,7 +29,6 @@ import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
-import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -106,7 +105,6 @@ public class AbilityFireShot extends Ability {
 			if (!ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				EntityFlames flames = new EntityFlames(world);
 				flames.setPosition(Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(0.05)));
-				System.out.println(entity.getLookVec());
 				flames.setOwner(entity);
 				flames.setEntitySize(0.1F, 0.1F);
 				flames.setReflect(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
@@ -115,7 +113,6 @@ public class AbilityFireShot extends Ability {
 				flames.setVelocity(entity.getLookVec().scale(speed));
 				flames.setLifeTime((int) abilityData.getTotalXp() + 60);
 				flames.setTrailingFire(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
-				//TODO: Remove all damage calculations in EntityFlames
 				flames.setFireTime((int) (4F * 1 + abilityData.getTotalXp() / 50f));
 				flames.setDamage(damage * (float) damageMult);
 				flames.setElement(new Firebending());
@@ -124,7 +121,6 @@ public class AbilityFireShot extends Ability {
 						world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
 				world.spawnEntity(flames);
 			} else {
-				//TODO: Fix particle spawning
 				EntityShockwave wave = new EntityShockwave(world);
 				wave.setOwner(entity);
 				wave.rotationPitch = entity.rotationPitch;
@@ -165,7 +161,6 @@ public class AbilityFireShot extends Ability {
 				for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.ticksExisted * 3)) {
 					int x = entity.posX < 0 ? (int) (entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle) - 1)
 							: (int) (entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle));
-					int y = (int) (entity.posY - 0.5);
 					int z = entity.posZ < 0 ? (int) (entity.posZ + ((entity.ticksExisted * entity.getSpeed()) * Math.cos(angle) - 1))
 							: (int) (entity.posZ + ((entity.ticksExisted * entity.getSpeed())) * Math.cos(angle));
 

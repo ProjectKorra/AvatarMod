@@ -148,6 +148,10 @@ public class AbilityFireBlast extends Ability {
 
 			}
 
+			if (world.isRemote) {
+				System.out.println("huh");
+				ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(rightSide).scale(1).time(30).collide(true).vel(lookPos.toMinecraft()).spawn(world);
+			}
 
 		/*	EntityFireShooter shooter = new EntityFireShooter(world);
 			shooter.setElement(new Firebending());

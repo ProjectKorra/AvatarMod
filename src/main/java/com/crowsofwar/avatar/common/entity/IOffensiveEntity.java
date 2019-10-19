@@ -117,12 +117,14 @@ public interface IOffensiveEntity {
 							explosionDamage ? getAoeDamage() : getDamage());
 					BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
 					data.addXp(getXpPerHit());
+					hit.setEntityInvulnerable(false);
 
 				} else if (hit instanceof EntityLivingBase && ds) {
 					BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
 					data.addXp(getXpPerHit());
 					hit.setFire(getFireTime());
 					hit.addVelocity(vel.x, vel.y, vel.z);
+					hit.setEntityInvulnerable(false);
 					AvatarUtils.afterVelocityAdded(hit);
 				}
 			}

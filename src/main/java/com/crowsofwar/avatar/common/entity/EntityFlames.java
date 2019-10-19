@@ -151,12 +151,6 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	}
 
 	@Override
-	public void onCollideWithEntity(Entity entity) {
-		super.onCollideWithEntity(entity);
-		System.out.println(entity);
-	}
-
-	@Override
 	public boolean onMinorWaterContact() {
 		if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
 			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());

@@ -87,8 +87,9 @@ public class AiFlamethrower extends BendingAi {
 
 	@Override
 	protected boolean shouldExec() {
+		int amount = bender.getData().getAbilityData(new AbilityFlamethrower()).getLevel() + 5;
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSq(target) < 6 * 6;
+		return target != null && entity.getDistanceSq(target) < amount * amount;
 	}
 
 	@Override
