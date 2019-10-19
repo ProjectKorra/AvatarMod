@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,11 +27,11 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * An AvatarEntity that acts as a shield for further attacks. It has a certain amount of health
@@ -73,9 +74,9 @@ public abstract class EntityShield extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (getOwner() != null) {
-			setPosition(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
-		}
+		if (getOwner() != null)
+			setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(getOwner()));
+		this.motionX = this.motionY = this.motionZ = 0;
 
 		EntityLivingBase owner = getOwner();
 		if (owner == null) {
@@ -107,7 +108,14 @@ public abstract class EntityShield extends AvatarEntity {
 
 	@Override
 	public void setPositionAndUpdate(double x, double y, double z) {
-		super.setPositionAndUpdate(Objects.requireNonNull(getOwner()).posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+		if (getOwner() != null) {
+			Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(getOwner());
+			x = pos.x;
+			y = pos.y;
+			z = pos.z;
+			super.setPositionAndUpdate(x, y, z);
+		} else
+			super.setPositionAndUpdate(x, y, z);
 	}
 
 	@Override
@@ -138,9 +146,8 @@ public abstract class EntityShield extends AvatarEntity {
 				}
 			}
 
-		} else {
-			return true;
-		}
+		} else return true;
+
 		return false;
 
 	}

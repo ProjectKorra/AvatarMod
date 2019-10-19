@@ -57,6 +57,7 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		setSize(0.1f, 0.1f);
 		this.setsFires = true;
 		this.lightTrailingFire = false;
+		this.ignoreFrustumCheck = true;
 	}
 
 	@Override
@@ -70,10 +71,12 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 
 		super.onUpdate();
 
-		ignoreFrustumCheck = true;
-		setVelocity(velocity().times(0.99999));
+		//TODO: Fix weird positioning
+		motionX *= 0.999;
+		motionY *= 0.999;
+		motionZ *= 0.999;
 
-		if (velocity().sqrMagnitude() <= 0.5 * 0.5) setDead();
+		if (velocity().sqrMagnitude() <= 0.5 * 0.5) Dissipate();
 
 		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.25,
 				true);
@@ -101,64 +104,19 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 			}
 		}
 		if (lightTrailingFire) {
-			//TODO: Use temp blocks.
 			if (AvatarUtils.getRandomNumberInRange(1, 10) <= 5) {
 				BlockPos pos = getPosition();
 				if (BlockUtils.canPlaceFireAt(world, pos)) {
 					BlockTemp.createTempBlock(world, pos, 20, Blocks.FIRE.getDefaultState());
 				}
-				/*if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
-					world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-				}**/
 				BlockPos pos2 = getPosition().down();
 				if (BlockUtils.canPlaceFireAt(world, pos2)) {
 					BlockTemp.createTempBlock(world, pos2, 20, Blocks.FIRE.getDefaultState());
 				}
-				/*if (Blocks.FIRE.canPlaceBlockAt(world, pos2) && world.getBlockState(pos2).getBlock() == Blocks.AIR) {
-					world.setBlockState(pos2, Blocks.FIRE.getDefaultState());
-				}**/
 			}
 		}
 
 
-
-		/*if (!world.isRemote) {
-			if (getOwner() != null) {
-				//TODO: Get rid of this
-				AbilityData abilityData = AbilityData.get(getOwner(), getAbility().getName());
-
-				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-						entity -> entity != getOwner()
-								&& !(entity instanceof EntityFlames));
-
-				for (Entity entity : collided) {
-
-					entity.setFire((int) (3F * 1 + abilityData.getTotalXp() / 100f));
-
-					// Add extra damage
-					// Adding 0 since even though this doesn't affect health, will
-					// cause mobs to aggro
-
-					float additionalDamage = 0;
-					if (abilityData.getTotalXp() >= 50) {
-						additionalDamage = 2 + (abilityData.getTotalXp() - 50) / 25;
-					}
-					additionalDamage *= damageMult;
-					if (entity.attackEntityFrom(
-							AvatarDamageSource.causeFireShotDamage(entity, getOwner()),
-							additionalDamage)) {
-						BattlePerformanceScore.addSmallScore(getOwner());
-					}
-
-				}
-
-				abilityData.addXp(SKILLS_CONFIG.fireShotHit * collided.size());
-				if (getAbility() instanceof AbilityFireShot) {
-					if (!collided.isEmpty() && !abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) setDead();
-				}
-				else if (!collided.isEmpty()) setDead();
-			}
-		}**/
 
 	}
 
@@ -285,4 +243,10 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	public Vec3d getKnockbackMult() {
 		return new Vec3d(STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push * 2);
 	}
+
+	@Override
+	public boolean isPiercing() {
+		return false;
+	}
+
 }

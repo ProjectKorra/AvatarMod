@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.common.entity.EntityFlames;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -101,14 +102,14 @@ public class AbilityFireShot extends Ability {
 		if (bender.consumeChi(chi)) {
 			if (!ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				EntityFlames flames = new EntityFlames(world);
-				flames.setVelocity(entity.getLookVec().scale(speed));
-				flames.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight(), 0).add(entity.getLookVec().scale(0.05)));
+				flames.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight(), 0).add(entity.getLookVec().scale(0.05)));
 				flames.setOwner(entity);
 				flames.setReflect(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
 				flames.rotationPitch = entity.rotationPitch;
 				flames.rotationYaw = entity.rotationYaw;
 				flames.setAbility(this);
 				flames.setXp(xp);
+				flames.setVelocity(entity.getLookVec().scale(speed));
 				flames.setLifeTime((int) abilityData.getTotalXp() + 60);
 				flames.setTrailingFire(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
 				//TODO: Remove all damage calculations in EntityFlames

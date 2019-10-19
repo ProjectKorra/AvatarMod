@@ -43,7 +43,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -122,18 +121,6 @@ public class EntityAirBubble extends EntityShield {
 		dataManager.set(SYNC_SIZE, size);
 	}
 
-	@Override
-	public void setPositionAndUpdate(double x, double y, double z) {
-		if (getOwner() != null) {
-			Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(getOwner());
-			x = pos.x;
-			y = pos.y;
-			z = pos.z;
-			super.setPositionAndUpdate(x, y, z);
-		} else {
-			super.setPositionAndUpdate(x, y, z);
-		}
-	}
 
 	@Override
 	public boolean canBeCollidedWith() {
@@ -182,8 +169,8 @@ public class EntityAirBubble extends EntityShield {
 			}
 		}
 
-		AxisAlignedBB box = new AxisAlignedBB(getEntityBoundingBox().minX - (getSize() / 10), getEntityBoundingBox().minY, getEntityBoundingBox().minZ - (getSize() / 10),
-				getEntityBoundingBox().maxX + (getSize() / 10), getEntityBoundingBox().maxY + (getSize() / 4), getEntityBoundingBox().maxZ + (getSize() / 4));
+		AxisAlignedBB box = new AxisAlignedBB(getEntityBoundingBox().minX - (getSize() / 4), getEntityBoundingBox().minY - getSize() / 4, getEntityBoundingBox().minZ - (getSize() / 4),
+				getEntityBoundingBox().maxX + (getSize() / 4), getEntityBoundingBox().maxY + (getSize() / 4), getEntityBoundingBox().maxZ + (getSize() / 4));
 		List<Entity> nearby = world.getEntitiesWithinAABB(Entity.class, box);
 		if (!nearby.isEmpty()) {
 			for (Entity collided : nearby) {
@@ -220,12 +207,12 @@ public class EntityAirBubble extends EntityShield {
 				}
 
 				if (!ownerBender.isFlying() && !getOwner().hasNoGravity()) {
-						owner.motionY += 0.03;
+					owner.motionY += 0.03;
 
 					if (doesAllowHovering()) {
 						if (doesAllowHovering() && !owner.isSneaking()) {
 							handleHovering();
-						} else if (!owner.isSneaking()){
+						} else if (!owner.isSneaking()) {
 							owner.motionY += 0.03;
 						}
 					}
