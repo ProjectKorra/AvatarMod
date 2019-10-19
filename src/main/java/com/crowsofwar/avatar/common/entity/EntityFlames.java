@@ -78,7 +78,7 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 
 		if (velocity().sqrMagnitude() <= 0.5 * 0.5) Dissipate();
 
-		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.25,
+		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.5,
 				true);
 		if (raytrace.hitSomething()) {
 			EnumFacing sideHit = raytrace.getSide();
@@ -86,7 +86,7 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 				setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.5));
 
 				// Try to light fires
-				/*if (sideHit != EnumFacing.DOWN && !world.isRemote) {
+				if (sideHit != EnumFacing.DOWN && !world.isRemote) {
 
 					BlockPos bouncingOff = getPosition().add(-sideHit.getXOffset(),
 							-sideHit.getYOffset(),
@@ -99,11 +99,11 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 
 					}
 
-				}**/
+				}
 
 			}
 		}
-		if (lightTrailingFire) {
+		if (lightTrailingFire && !world.isRemote) {
 			if (AvatarUtils.getRandomNumberInRange(1, 10) <= 5) {
 				BlockPos pos = getPosition();
 				if (BlockUtils.canPlaceFireAt(world, pos)) {
@@ -115,8 +115,6 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 				}
 			}
 		}
-
-
 	}
 
 	@Override

@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -104,7 +105,7 @@ public class AbilityFireShot extends Ability {
 		if (bender.consumeChi(chi)) {
 			if (!ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				EntityFlames flames = new EntityFlames(world);
-				flames.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight(), 0).add(entity.getLookVec().scale(0.05)));
+				flames.setPosition(Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(0.05)));
 				System.out.println(entity.getLookVec());
 				flames.setOwner(entity);
 				flames.setEntitySize(0.1F, 0.1F);

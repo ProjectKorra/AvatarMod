@@ -23,11 +23,12 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
-import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -51,84 +52,126 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 		AbilityData abilityData = data.getAbilityData("flamethrower");
 		AbilityTreePath path = abilityData.getPath();
+
 		float totalXp = abilityData.getTotalXp();
 		int level = abilityData.getLevel();
+		int flamesPerSecond;
 
-		int flamesPerSecond = level <= 0 ? 6 : 10;
-		if (level == 3 && path == AbilityTreePath.FIRST) {
+
+		flamesPerSecond = level <= 0 ? 6 : 10;
+		if (level == 3 && path == AbilityTreePath.FIRST)
 			flamesPerSecond = 15;
+		else if (level == 3 && path == AbilityTreePath.SECOND)
+			flamesPerSecond = 8;
+
+
+		double powerRating = bender.calcPowerRating(Firebending.ID);
+
+		float requiredChi = STATS_CONFIG.chiFlamethrowerSecond / flamesPerSecond;
+		if (level == 3 && path == AbilityTreePath.FIRST) {
+			requiredChi = STATS_CONFIG.chiFlamethrowerSecondLvl4_1 / flamesPerSecond;
 		}
 		if (level == 3 && path == AbilityTreePath.SECOND) {
-			flamesPerSecond = 8;
+			requiredChi = STATS_CONFIG.chiFlamethrowerSecondLvl4_2 / flamesPerSecond;
 		}
 
-	//	if (ctx.getData().getTickHandlerDuration(this) % 2 == 0/*Math.random() < flamesPerSecond / 20.0**/) {
+		// Adjust chi to power rating
+		// Multiply chi by a number (from 0..2) based on the power rating - powerFactor
+		//  Numbers 0..1 would reduce the chi, while numbers 1..2 would increase the chi
+		// maxPowerFactor: maximum amount that the chi can be multiplied by
+		// e.g. 0.1 -> chi can be changed by 10%; powerFactor in between 0.9..1.1
+		double maxPowerFactor = 0.4;
+		double powerFactor = (powerRating + 100) / 100 * maxPowerFactor + 1 - maxPowerFactor;
+		requiredChi *= powerFactor;
 
-			double powerRating = bender.calcPowerRating(Firebending.ID);
+		if (bender.consumeChi(requiredChi)) {
 
-			float requiredChi = STATS_CONFIG.chiFlamethrowerSecond / flamesPerSecond;
+			Vector eye = getEyePos(entity);
+
+			World world = ctx.getWorld();
+
+			double speedMult = 15 + 5 * totalXp / 100;
+			double randomness = 3.5 - 5 * totalXp / 100;
+			float range = 5;
+			int fireTime = 0;
+			float size = 1;
+			float damage = 0.5F;
+
+			switch (abilityData.getLevel()) {
+				case 1:
+					size = 1.5F;
+					damage = 1F;
+					fireTime = 2;
+					range = 6;
+					break;
+				case 2:
+					size = 2;
+					fireTime = 4;
+					damage = 3F;
+					range = 8;
+					break;
+			}
 			if (level == 3 && path == AbilityTreePath.FIRST) {
-				requiredChi = STATS_CONFIG.chiFlamethrowerSecondLvl4_1 / flamesPerSecond;
+				speedMult = 25;
+				randomness = 0;
+				fireTime = 5;
+				size = 0.75F;
+				damage = 7F;
+				range = 15;
 			}
 			if (level == 3 && path == AbilityTreePath.SECOND) {
-				requiredChi = STATS_CONFIG.chiFlamethrowerSecondLvl4_2 / flamesPerSecond;
+				speedMult = 12;
+				randomness = 2;
+				fireTime = 20;
+				size = 3.0F;
+				damage = 2.5F;
+				range = 7;
 			}
 
-			// Adjust chi to power rating
-			// Multiply chi by a number (from 0..2) based on the power rating - powerFactor
-			//  Numbers 0..1 would reduce the chi, while numbers 1..2 would increase the chi
-			// maxPowerFactor: maximum amount that the chi can be multiplied by
-			// e.g. 0.1 -> chi can be changed by 10%; powerFactor in between 0.9..1.1
-			double maxPowerFactor = 0.4;
-			double powerFactor = (powerRating + 100) / 100 * maxPowerFactor + 1 - maxPowerFactor;
-			requiredChi *= powerFactor;
+			// Affect stats by power rating
+			range += powerFactor / 100F;
+			size += powerRating / 100F;
+			damage += powerRating / 100F;
+			fireTime += (int) (powerRating / 50F);
+			speedMult += powerRating / 100f * 2.5f;
+			randomness -= powerRating / 100f * 6f;
 
-			if (bender.consumeChi(requiredChi)) {
+			double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
+			double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
+			Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
 
-				Vector eye = getEyePos(entity);
 
-				World world = ctx.getWorld();
 
-				double speedMult = 15 + 5 * totalXp / 100;
-				double randomness = 7.5 - 5 * totalXp / 100;
-				boolean lightsFires = false;
-				if (level == 3 && path == AbilityTreePath.FIRST) {
-					speedMult = 25;
-					randomness = 1;
+			//Raytrace time, kiddos. Are you ready to rumbbbblee with weird angles?
+			//Technically, the actual raytracing is handled by another method, but we still have to deal with angles. This ensures that everything is actually being hit.
+		/*	for (int angle = 0; angle < size * 3; angle++) {
+				//We want to change the angle based on the portion of the player's circumference, 2*PI, that's being taken up. Yay.
+				yawRandom = yawRandom - (3 * size) * Math.toDegrees((size / (2 * Math.PI))) + angle * (Math.toDegrees(size / (2 * Math.PI)));
+				Vec3d start = look.toMinecraft().add(eye.minusY(0.5).toMinecraft());
+				AvatarUtils.handlePiercingBeamCollision();
+			}**/
+		//You know what, I'm gonna hold off on the fancy stuff for now.
+
+			Vec3d start = look.toMinecraft().add(eye.minusY(0.5).toMinecraft());
+			AvatarUtils.handlePiercingBeamCollision(world, entity, start, start.add(look.toMinecraft().scale(range)), size, null, new AbilityFlamethrower(),
+					new Firebending(), damage, look.toMinecraft().scale(0.125), fireTime, size / 2);
+			//Particle code.
+			if (world.isRemote) {
+				for (int i = 0; i < flamesPerSecond; i++) {
+					ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start).scale(size).time(30).collide(true).vel(look.toMinecraft().scale(speedMult / 25)).spawn(world);
 				}
-				if (level == 3 && path == AbilityTreePath.SECOND) {
-					speedMult = 12;
-					randomness = 20;
-					lightsFires = true;
-				}
+			}
 
-				// Affect stats by power rating
-				speedMult += powerRating / 100f * 2.5f;
-				randomness -= powerRating / 100f * 6f;
-
-				double yawRandom = entity.rotationYaw; // + (Math.random() * 2 - 1) * randomness;
-				double pitchRandom = entity.rotationPitch; //+ (Math.random() * 2 - 1) * randomness;
-				Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
-
-				/*EntityFlames flames = new EntityFlames(world);
-				flames.setVelocity(look.times(speedMult).plus(getVelocity(entity)));
-				flames.setPosition(eye.x(), eye.y(), eye.z());
-				flames.setOwner(entity);
-				flames.setAbility(new AbilityFlamethrower());
-				**///flames.setDamageMult(bender.getDamageMult(Firebending.ID));
-				//world.spawnEntity(flames);
-				if (world.isRemote)
-					ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(look.toMinecraft().add(AvatarEntityUtils.getBottomMiddleOfEntity(entity))
-					.add(0, entity.getEyeHeight() - 0.2, 0)).scale(3).time(30).collide(true).vel(look.toMinecraft().scale(speedMult / 25)).spawn(world);
-
+			if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)
 				world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
 						SoundCategory.PLAYERS, 0.2f, 0.8f);
 
-			} else {
-				// not enough chi
-				return true;
-			}
-	//	}
+
+		} else {
+			// not enough chi
+			return true;
+		}
+		//	}
 
 		return false;
 

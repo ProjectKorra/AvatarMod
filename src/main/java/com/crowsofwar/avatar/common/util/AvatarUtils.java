@@ -18,6 +18,9 @@
 package com.crowsofwar.avatar.common.util;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.*;
@@ -36,6 +39,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.*;
@@ -45,6 +49,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -438,22 +443,37 @@ public class AvatarUtils {
 	 * @param endPos       Where the raytrace ends.
 	 * @param borderSize   The width of the raytrace.
 	 * @param spellEntity  The entity that's using this method, if applicable. If this method is directly used in a spell, just make this null.
-	 * @param damageSource The damage source.
 	 * @param damage       The amount of damage.
 	 * @param knockBack    The amount of knockback.
-	 * @param setFire      Whether to set an enemy on fire.
 	 * @param fireTime     How long to set an enemy on fire.
 	 */
 
-	public static void handlePiercingBeamCollision(World world, EntityLivingBase caster, Vec3d startPos, Vec3d endPos, float borderSize, Entity spellEntity, DamageSource damageSource,
-												   float damage, Vec3d knockBack, boolean setFire, int fireTime, float radius) {
+	public static void handlePiercingBeamCollision(World world, EntityLivingBase caster, Vec3d startPos, Vec3d endPos, float borderSize, @Nullable AvatarEntity spellEntity, @Nullable Ability ability,
+												   @Nullable BendingStyle element, float damage, Vec3d knockBack, int fireTime, float radius) {
 		HashSet<Entity> excluded = new HashSet<>();
 		RayTraceResult result = standardEntityRayTrace(world, caster, spellEntity, startPos, endPos, borderSize, false, excluded);
 		if (result != null && result.entityHit instanceof EntityLivingBase) {
 			EntityLivingBase hit = (EntityLivingBase) result.entityHit;
-			if (setFire) {
-				hit.setFire(fireTime);
+			String abilityName;
+			BendingStyle style;
+			//Ensures that the damage source exists.
+
+			if (spellEntity != null) {
+				style = spellEntity.getElement();
+				abilityName = spellEntity.getAbility().getName();
 			}
+			else  {
+				assert ability != null;
+				assert element != null;
+				style = element;
+				abilityName = ability.getName();
+			}
+
+			String elementName = style.getName().substring(0, style.getName().length() - 7);
+			String damageName = AvatarDamageSource.getNameFromBendingStyle(elementName);
+			DamageSource damageSource = new EntityDamageSourceIndirect("avatar_" + damageName + "_" + abilityName, hit, caster);
+
+			hit.setFire(fireTime);
 			hit.attackEntityFrom(damageSource, damage);
 			hit.motionX += knockBack.x;
 			hit.motionY += knockBack.y;
@@ -468,9 +488,7 @@ public class AvatarUtils {
 			if (!nearby.isEmpty()) {
 				for (Entity e : nearby) {
 					if (e != caster && e != hit && !excluded.contains(e) && e.getTeam() != caster.getTeam()) {
-						if (setFire) {
-							e.setFire(fireTime);
-						}
+						e.setFire(fireTime);
 						e.attackEntityFrom(damageSource, damage);
 						e.motionX += knockBack.x;
 						e.motionY += knockBack.y;
@@ -480,7 +498,7 @@ public class AvatarUtils {
 					}
 				}
 			} else {
-				handlePiercingBeamCollision(world, caster, pos, endPos, borderSize, spellEntity, damageSource, damage, knockBack, setFire, fireTime, radius);
+				handlePiercingBeamCollision(world, caster, pos, endPos, borderSize, spellEntity, ability, element, damage, knockBack, fireTime, radius);
 
 			}
 

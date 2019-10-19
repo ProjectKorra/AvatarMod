@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.init.MobEffects;
@@ -30,7 +29,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -61,6 +59,27 @@ public class AvatarDamageSource {
 	 */
 	public static boolean isAvatarDamageSource(DamageSource source) {
 		return source.getDamageType().startsWith("avatar_");
+	}
+
+	public static String getNameFromBendingStyle(String elementName) {
+		String damageName = "";
+		if (elementName.equalsIgnoreCase("fire"))
+			damageName = "Fire";
+		else if (elementName.equalsIgnoreCase("water"))
+			damageName = "Water";
+		else if (elementName.equalsIgnoreCase("earth"))
+			damageName = "Earth";
+		else if (elementName.equalsIgnoreCase("air"))
+			damageName = "Air";
+		else if (elementName.equalsIgnoreCase("lightning"))
+			damageName = "Lightning";
+		else if (elementName.equalsIgnoreCase("sand"))
+			damageName = "Sand";
+		else if (elementName.equalsIgnoreCase("ice"))
+			damageName = "Ice";
+		else if (elementName.equalsIgnoreCase("combustion"))
+			damageName = "Combustion";
+		return damageName;
 	}
 
 	public static boolean isAirDamage(DamageSource source) {

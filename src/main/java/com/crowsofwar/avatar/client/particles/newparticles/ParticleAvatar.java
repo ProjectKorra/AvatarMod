@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.client.particles.newparticles;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.client.AvatarClientProxy;
+import com.crowsofwar.avatar.client.particles.oldsystem.AvatarParticle;
 import com.crowsofwar.avatar.common.entity.ICustomHitbox;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import net.minecraft.client.Minecraft;
@@ -103,6 +104,10 @@ public abstract class ParticleAvatar extends Particle {
 	protected float angle;
 	protected double radius = 0;
 	protected double speed = 0;
+	protected boolean scaleOnUpdate;
+	protected double scaleChange;
+	protected boolean speedChangeOnUpdate;
+	protected double speedChange;
 	/**
 	 * The entity this particle is linked to. The particle will move with this entity.
 	 */
@@ -536,6 +541,14 @@ public abstract class ParticleAvatar extends Particle {
 			// Math.min included for safety so the index cannot possibly exceed the length - 1 an cause an AIOOBE
 			// (which would probably otherwise happen if particleAge == particleMaxAge)
 			this.setParticleTexture(sprites[Math.min((int) (ageFraction * sprites.length), sprites.length - 1)]);
+		}
+
+		if (scaleOnUpdate)
+			particleScale += scaleChange;
+		if (speedChangeOnUpdate) {
+			motionX += speedChange;
+			motionY += speedChange;
+			motionZ += speedChange;
 		}
 
 		// Collision spreading
