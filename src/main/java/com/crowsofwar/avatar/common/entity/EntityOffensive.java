@@ -225,6 +225,11 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		setDead();
 	}
 
+	@Override
+	public float getXpPerHit() {
+		return xp;
+	}
+
 	public void attackEntity(Entity hit, boolean explosionDamage, Ability ability, float xp, Vec3d velocity) {
 		if (getOwner() != null && hit != null) {
 			AbilityData data = AbilityData.get(getOwner(), ability.getName());

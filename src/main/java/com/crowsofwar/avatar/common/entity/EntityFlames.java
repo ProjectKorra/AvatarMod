@@ -129,8 +129,7 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 			}
 		}
 
-		if (world.isRemote)
-			ParticleBuilder.create(ParticleBuilder.Type.MAGIC_FIRE).pos(getPositionVector()).time(30).spawn(world);
+
 
 		/*if (!world.isRemote) {
 			if (getOwner() != null) {
