@@ -22,7 +22,8 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.EntityFlames;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -31,7 +32,6 @@ import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
-import static com.crowsofwar.gorecore.util.Vector.getVelocity;
 import static java.lang.Math.toRadians;
 
 /**
@@ -62,7 +62,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			flamesPerSecond = 8;
 		}
 
-		if (!entity.world.isRemote && Math.random() < flamesPerSecond / 20.0) {
+	//	if (ctx.getData().getTickHandlerDuration(this) % 2 == 0/*Math.random() < flamesPerSecond / 20.0**/) {
 
 			double powerRating = bender.calcPowerRating(Firebending.ID);
 
@@ -106,17 +106,20 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				speedMult += powerRating / 100f * 2.5f;
 				randomness -= powerRating / 100f * 6f;
 
-				double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
-				double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
+				double yawRandom = entity.rotationYaw; // + (Math.random() * 2 - 1) * randomness;
+				double pitchRandom = entity.rotationPitch; //+ (Math.random() * 2 - 1) * randomness;
 				Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
 
-				EntityFlames flames = new EntityFlames(world);
+				/*EntityFlames flames = new EntityFlames(world);
 				flames.setVelocity(look.times(speedMult).plus(getVelocity(entity)));
 				flames.setPosition(eye.x(), eye.y(), eye.z());
 				flames.setOwner(entity);
 				flames.setAbility(new AbilityFlamethrower());
-				//flames.setDamageMult(bender.getDamageMult(Firebending.ID));
-				world.spawnEntity(flames);
+				**///flames.setDamageMult(bender.getDamageMult(Firebending.ID));
+				//world.spawnEntity(flames);
+				if (world.isRemote)
+					ParticleBuilder.create(ParticleBuilder.Type.MAGIC_FIRE).pos(look.toMinecraft().add(AvatarEntityUtils.getBottomMiddleOfEntity(entity))
+					.add(0, entity.getEyeHeight() - 0.2, 0)).scale(3).time(30).collide(true).vel(look.toMinecraft().scale(speedMult / 25)).spawn(world);
 
 				world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
 						SoundCategory.PLAYERS, 0.2f, 0.8f);
@@ -125,7 +128,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				// not enough chi
 				return true;
 			}
-		}
+	//	}
 
 		return false;
 

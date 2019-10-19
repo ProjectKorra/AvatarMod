@@ -61,6 +61,8 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 @Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
 public class EntityLightningSpear extends EntityOffensive implements ILightProvider {
 
+	//TODO: Clean up this class. Dear lord.
+
 	private static final DataParameter<LightningSpearBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityLightningSpear.class, LightningSpearBehavior.DATA_SERIALIZER);
 
@@ -121,7 +123,6 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
 		setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
 
 		// Add hook or something
@@ -129,13 +130,14 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 			if (getBehavior() != null && getBehavior() instanceof LightningSpearBehavior.PlayerControlled) {
 				this.rotationYaw = this.getOwner().rotationYaw;
 				this.rotationPitch = this.getOwner().rotationPitch;
+				noClip = true;
 			}
+			else noClip = false;
 		}
 
 
-		this.setSize(getSize() / 3, getSize() / 3);
 
-
+		LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
 		if (getOwner() != null) {
 			EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
@@ -169,6 +171,7 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 				setDead();
 			}
 		}
+		this.setEntitySize(getSize() / 3, getSize() / 3);
 
 	}
 
@@ -414,4 +417,15 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	public void gatherLights(GatherLightsEvent event, Entity entity) {
 
 	}
+
+	@Override
+	public boolean canBeCollidedWith() {
+		return !(getBehavior() instanceof LightningSpearBehavior.PlayerControlled);
+	}
+
+	@Override
+	public boolean canBeAttackedWithItem() {
+		return !(getBehavior() instanceof LightningSpearBehavior.PlayerControlled);
+	}
+
 }

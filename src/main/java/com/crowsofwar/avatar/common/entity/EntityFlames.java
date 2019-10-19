@@ -57,6 +57,7 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		setSize(0.1f, 0.1f);
 		this.setsFires = true;
 		this.lightTrailingFire = false;
+		this.reflect = false;
 		this.ignoreFrustumCheck = true;
 	}
 
@@ -68,13 +69,12 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 
 	@Override
 	public void onUpdate() {
-
 		super.onUpdate();
 
-		//TODO: Fix weird positioning
-		motionX *= 0.999;
-		motionY *= 0.999;
-		motionZ *= 0.999;
+		//TODO: Fix weird positioning. It seems there's weird client desync???? Idk how.
+		motionX *= 0.95;
+		motionY *= 0.95;
+		motionZ *= 0.95;
 
 		if (velocity().sqrMagnitude() <= 0.5 * 0.5) Dissipate();
 
@@ -117,7 +117,6 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		}
 
 
-
 	}
 
 	@Override
@@ -153,6 +152,11 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		return true;
 	}
 
+	@Override
+	public void onCollideWithEntity(Entity entity) {
+		super.onCollideWithEntity(entity);
+		System.out.println(entity);
+	}
 
 	@Override
 	public boolean onMinorWaterContact() {
@@ -205,22 +209,6 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		return 0.04;
 	}
 
-	@Override
-	public boolean onCollideWithSolid() {
-		if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
-			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
-			if (!data.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				setDead();
-				Dissipate();
-			}
-			return !data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
-		}
-		setDead();
-		Dissipate();
-		return true;
-
-	}
-
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean isInRangeToRenderDist(double distance) {
@@ -246,6 +234,11 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 
 	@Override
 	public boolean isPiercing() {
+		if (getOwner() != null && getAbility() instanceof AbilityFireShot) {
+			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
+			if (data != null)
+				return data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
+		}
 		return false;
 	}
 

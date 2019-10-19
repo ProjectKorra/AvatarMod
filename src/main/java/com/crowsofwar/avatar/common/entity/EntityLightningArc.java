@@ -41,6 +41,7 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
  */
 public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningControlPoint> implements ILightProvider {
 
+	//TODO: Find out why tf this is lagging my world so much.
 	private static final DataParameter<Vector> SYNC_ENDPOS = EntityDataManager.createKey
 			(EntityLightningArc.class, AvatarDataSerializers.SERIALIZER_VECTOR);
 

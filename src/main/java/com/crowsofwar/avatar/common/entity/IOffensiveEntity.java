@@ -38,7 +38,7 @@ public interface IOffensiveEntity {
 
 			if (!collided.isEmpty()) {
 				for (Entity entity1 : collided) {
-					if (entity.getOwner() != null && entity1 != entity.getOwner() && entity1 != null && !world.isRemote) {
+					if (entity.getOwner() != null && entity1 != entity.getOwner() && entity1 != entity && !world.isRemote) {
 						attackEntity(entity, entity1, false, new Vec3d(getKnockback().x * getKnockbackMult().x, getKnockback().y
 								* getKnockbackMult().y, getKnockback().z * getKnockbackMult().z));
 						//Divide the result of the position difference to make entities fly
@@ -75,11 +75,13 @@ public interface IOffensiveEntity {
 			}
 
 		}
+		entity.setDead();
 	}
 
 
 	default void applyPiercingCollision(AvatarEntity entity) {
-		List<Entity> collided = entity.world.getEntitiesInAABBexcluding(entity, getExpandedHitbox(entity), entity1 -> entity1 != entity.getOwner());
+		List<Entity> collided = entity.world.getEntitiesInAABBexcluding(entity, getExpandedHitbox(entity), entity1 -> entity1 != entity.getOwner() &&
+				entity1 != entity);
 		if (!collided.isEmpty()) {
 			for (Entity hit : collided) {
 				if (entity.getOwner() != null && hit != entity.getOwner() && hit != null) {
@@ -102,10 +104,11 @@ public interface IOffensiveEntity {
 			entity.playSound(getSound(), getVolume(),
 					getPitch());
 		}
+		entity.setDead();
 	}
 
 	default void attackEntity(AvatarEntity attacker, Entity hit, boolean explosionDamage, Vec3d vel) {
-		if (attacker.getOwner() != null && hit != null) {
+		if (attacker.getOwner() != null && hit != null && hit != attacker) {
 			boolean ds = hit.attackEntityFrom(getDamageSource(hit, attacker.getOwner()), explosionDamage ? getAoeDamage() : getDamage());
 			AbilityData data = AbilityData.get(attacker.getOwner(), attacker.getAbility().getName());
 			if (data != null) {
@@ -223,6 +226,5 @@ public interface IOffensiveEntity {
 	default void applyElementalContact(AvatarEntity entity) {
 
 	}
-
 
 }

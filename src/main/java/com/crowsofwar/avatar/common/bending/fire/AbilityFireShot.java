@@ -74,7 +74,7 @@ public class AbilityFireShot extends Ability {
 		double damageMult = bender.getDamageMult(Firebending.ID);
 		float damage = STATS_CONFIG.fireShotSetttings.damage;
 		float chi = STATS_CONFIG.chiFireShot;
-		float xp  = SKILLS_CONFIG.fireShotHit;
+		float xp = SKILLS_CONFIG.fireShotHit;
 		if (ctx.getLevel() == 1) {
 			speed += 0.25F;
 			chi += 0.5F;
@@ -99,14 +99,16 @@ public class AbilityFireShot extends Ability {
 			chi += 2F;
 		}
 		damage += abilityData.getTotalXp() / 50;
+		if (world.isRemote)
+			System.out.println("Client-Side LookVec: " + entity.getLookVec());
 		if (bender.consumeChi(chi)) {
 			if (!ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				EntityFlames flames = new EntityFlames(world);
 				flames.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight(), 0).add(entity.getLookVec().scale(0.05)));
+				System.out.println(entity.getLookVec());
 				flames.setOwner(entity);
+				flames.setEntitySize(0.1F, 0.1F);
 				flames.setReflect(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
-				flames.rotationPitch = entity.rotationPitch;
-				flames.rotationYaw = entity.rotationYaw;
 				flames.setAbility(this);
 				flames.setXp(xp);
 				flames.setVelocity(entity.getLookVec().scale(speed));
@@ -116,9 +118,9 @@ public class AbilityFireShot extends Ability {
 				flames.setFireTime((int) (4F * 1 + abilityData.getTotalXp() / 50f));
 				flames.setDamage(damage * (float) damageMult);
 				flames.setElement(new Firebending());
-				if (!world.isRemote)
-					world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
-							world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
+				flames.setPowerRating(10);
+				world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
+						world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
 				world.spawnEntity(flames);
 			} else {
 				//TODO: Fix particle spawning
@@ -140,9 +142,9 @@ public class AbilityFireShot extends Ability {
 				wave.setParticleSpeed(0.18F);
 				wave.setParticleWaves(2);
 				wave.setParticleAmount(10);
-				if (!world.isRemote)
-					world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
-							world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
+
+				world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
+						world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
 				world.spawnEntity(wave);
 			}
 		}
