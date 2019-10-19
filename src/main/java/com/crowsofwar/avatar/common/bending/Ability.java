@@ -38,6 +38,8 @@ import java.util.UUID;
  */
 public abstract class Ability {
 
+	//NOTE: No client side particles can be spawned in an ability class due to abilities being executed server-side.
+
 	private final UUID type;
 	private final String name;
 	private Raytrace.Info raytrace;

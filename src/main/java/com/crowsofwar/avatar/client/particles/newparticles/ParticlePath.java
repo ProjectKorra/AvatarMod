@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = AvatarInfo.MOD_ID)
 public class ParticlePath extends ParticleAvatar {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(AvatarInfo.MOD_ID, "particle/path");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(AvatarInfo.MOD_ID, "particles/newparticles/path");
 
 	private final double originX, originY, originZ;
 

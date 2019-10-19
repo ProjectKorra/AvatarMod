@@ -147,8 +147,10 @@ public class AbilityFireBlast extends Ability {
 				}
 
 			}
-			if (world.isRemote)
-				ParticleBuilder.create(ParticleBuilder.Type.MAGIC_FIRE).collide(true).time(10).scale(2).pos(rightSide).vel(entity.getLookVec()).spawn(world);
+			if (world.isRemote) {
+				ParticleBuilder.create(ParticleBuilder.Type.MAGIC_FIRE).collide(true).time(40).scale(2).pos(rightSide).vel(entity.getLookVec()).spawn(world);
+				System.out.println("Huh.");
+			}
 		/*	EntityFireShooter shooter = new EntityFireShooter(world);
 			shooter.setElement(new Firebending());
 			shooter.setOwner(entity);

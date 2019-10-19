@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 //@SideOnly(Side.CLIENT)
 public class ParticleSummon extends ParticleAvatar {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(AvatarInfo.MOD_ID, "textures/particle/summon.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(AvatarInfo.MOD_ID, "textures/particles/newparticles/summon.png");
 	private final boolean mirror;
 
 	public ParticleSummon(World world, double x, double y, double z){

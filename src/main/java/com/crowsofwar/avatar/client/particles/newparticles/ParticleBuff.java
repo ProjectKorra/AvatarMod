@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 //@SideOnly(Side.CLIENT)
 public class ParticleBuff extends ParticleAvatar {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(AvatarInfo.MOD_ID, "textures/particle/buff.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(AvatarInfo.MOD_ID, "textures/particles/newparticles/buff.png");
 	private final boolean mirror;
 	
 	public ParticleBuff(World world, double x, double y, double z){

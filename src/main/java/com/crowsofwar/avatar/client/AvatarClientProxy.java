@@ -82,6 +82,7 @@ import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerE
 @SideOnly(Side.CLIENT)
 public class AvatarClientProxy implements AvatarCommonProxy {
 
+	//TODO: Move all particle-spawning for entities to their respective classes. Otherwise, weird things happen, and it's just bad code.
 	private Minecraft mc;
 	private PacketHandlerClient packetHandler;
 	private ClientInput inputHandler;

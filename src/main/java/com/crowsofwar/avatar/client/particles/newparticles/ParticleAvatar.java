@@ -183,7 +183,7 @@ public abstract class ParticleAvatar extends Particle {
 		ResourceLocation[] textures = new ResourceLocation[n];
 
 		for (int i = 0; i < n; i++) {
-			textures[i] = new ResourceLocation(AvatarInfo.MOD_ID, "particle/" + stem + "_" + i);
+			textures[i] = new ResourceLocation(AvatarInfo.MOD_ID, "particles/newparticles" + stem + "_" + i);
 		}
 
 		return textures;
@@ -200,7 +200,7 @@ public abstract class ParticleAvatar extends Particle {
 
 		for (int i = 0; i < m; i++) {
 			for (int j = 0; j < n; j++) {
-				textures[i][j] = new ResourceLocation(AvatarInfo.MOD_ID, "particle/" + stem + "_" + i + "_" + j);
+				textures[i][j] = new ResourceLocation(AvatarInfo.MOD_ID, "particles/newparticles" + stem + "_" + i + "_" + j);
 			}
 		}
 

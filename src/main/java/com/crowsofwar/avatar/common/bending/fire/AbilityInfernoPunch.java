@@ -131,7 +131,7 @@ public class AbilityInfernoPunch extends Ability {
 						Vec3d rightSide;
 						if (emitter instanceof EntityPlayer) {
 							if (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) <= -1) {
-								entity.setOrbSize(entity.getInitialSize() / 0.2F - 0.05F);
+								entity.setOrbSize(entity.getInitialSize() / /*0.2F**/ 2F - 0.05F);
 								height = emitter.getPositionVector().add(0, 1.65, 0);
 								height = height.add(emitter.getLookVec().scale(0.8));
 								Vec3d vel;
