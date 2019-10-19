@@ -66,6 +66,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 	public EntityLightOrb(World world) {
 		super(world);
 		setSize(0.1F, 0.1F);
+		noClip = true;
 	}
 
 	@Override
@@ -243,6 +244,16 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 
 	@Override
 	public boolean canBeCollidedWith() {
+		return false;
+	}
+
+	@Override
+	public boolean canBePushed() {
+		return false;
+	}
+
+	@Override
+	public boolean canBeAttackedWithItem() {
 		return false;
 	}
 
