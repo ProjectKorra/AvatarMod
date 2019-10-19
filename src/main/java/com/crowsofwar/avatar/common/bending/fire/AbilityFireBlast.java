@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.FireShooterBehaviour;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
@@ -146,12 +147,14 @@ public class AbilityFireBlast extends Ability {
 				}
 
 			}
-			EntityFireShooter shooter = new EntityFireShooter(world);
+			if (world.isRemote)
+				ParticleBuilder.create(ParticleBuilder.Type.MAGIC_FIRE).collide(true).time(10).scale(2).pos(rightSide).vel(entity.getLookVec()).spawn(world);
+		/*	EntityFireShooter shooter = new EntityFireShooter(world);
 			shooter.setElement(new Firebending());
 			shooter.setOwner(entity);
 			shooter.setAbility(this);
 			shooter.setKnockbackMult(new Vec3d(knockbackMult, knockbackMult, knockbackMult));
-			shooter.setBehaviour(new FireBlastBehaviour());
+			shooter.setBehaviour(new FireBlastBehaviour());**/
 			//Vec3d vel = entity.getLookVec();
 			//vel.scale(20000);
 			//vel.add(world.rand.nextBoolean() ? world.rand.nextFloat() : -world.rand.nextFloat(), world.rand.nextBoolean() ? world.rand.nextFloat() : -world.rand.nextFloat(),
