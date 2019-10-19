@@ -104,6 +104,12 @@ public abstract class ParticleAvatar extends Particle {
 	protected float angle;
 	protected double radius = 0;
 	protected double speed = 0;
+
+	protected float shiftRRange = 0;
+	protected float shiftGRange = 0;
+	protected float shiftBRange = 0;
+	protected boolean shiftRandomly = false;
+	//Currently not changed by methods.
 	protected boolean scaleOnUpdate;
 	protected double scaleChange;
 	protected boolean speedChangeOnUpdate;

@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
@@ -101,7 +102,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 			World world = ctx.getWorld();
 
-			if (!world.isRaining()) {
+			if (!world.isRaining() && !(world.getBlockState(entity.getPosition()) instanceof BlockLiquid || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WATER)) {
 
 				double speedMult = 15 + 5 * totalXp / 100;
 				double randomness = 3.0 - 5 * totalXp / 100;
@@ -222,7 +223,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					for (int i = 0; i < 5; i++)
 						ParticleBuilder.create(ParticleBuilder.Type.SNOW).collide(true).time(15).vel(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian())
 								.scale(1.0F).pos(Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity)).toMinecraft()).clr(1.0F, 1.0F, 1.0f).spawn(world);
-					
+
 				}
 			}
 		} else

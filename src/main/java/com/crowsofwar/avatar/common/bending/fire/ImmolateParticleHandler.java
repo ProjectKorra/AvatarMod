@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -40,6 +41,18 @@ public class ImmolateParticleHandler extends TickHandler {
 				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (r * 2)), 0).times(0.5).withY(entity.getEyeHeight() - 0.7);
 				particles.spawnParticles(world, AvatarParticles.getParticleFlames(), 1, 1, location.plus(Vector.getEntityPos(entity)),
 						new Vector(0.8, 4, 0.8), true);
+			}
+		}
+		else {
+			for (int i = 0; i < 12; i++) {
+				int random = rand.nextInt(2) + 1;
+				r = random == 1 ? r : r * -1;
+				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (r * 2)), 0).times(0.5).withY(entity.getEyeHeight() - 0.7);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4).
+						vel(world.rand.nextGaussian() / 40, world.rand.nextDouble(), world.rand.nextGaussian() / 40).clr(255, 61, 40)
+						.spawn(world);//.fade(255, 243, 40).spawn(world);
+						//spawnParticles(world, AvatarParticles.getParticleFlames(), 1, 1, location.plus(Vector.getEntityPos(entity)),
+						//new Vector(0.8, 4, 0.8), true);
 			}
 		}
 		return duration >= immolateDuration;
