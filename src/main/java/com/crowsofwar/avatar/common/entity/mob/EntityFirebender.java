@@ -17,6 +17,8 @@
 package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.fire.AbilityInfernoPunch;
+import com.crowsofwar.avatar.common.bending.fire.AiInfernoPunch;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
@@ -40,7 +42,6 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_NEED_FIRE_TRADE_ITEM;
-import static com.crowsofwar.avatar.common.bending.StatusControl.*;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
@@ -139,15 +140,16 @@ public class EntityFirebender extends EntityHumanBender {
 
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
+		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
 		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_shot", this, getBender())));
 		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fire_blast", this, getBender())));
+		//this.tasks.addTask(3, new AiInfernoPunch(new AbilityInfernoPunch(), this, getBender(), this, 1.35, true));
 		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("inferno_punch", this, getBender())));
-		if (getData().hasStatusControl(INFERNO_PUNCH_MAIN) || getData().hasStatusControl(INFERNO_PUNCH_FIRST) || getData().hasStatusControl(INFERNO_PUNCH_SECOND)) {
-			this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.35, true));
-		}
-		this.tasks.addTask(3, new EntityAIAttackMelee(this, 1.3, true));
+	//	if (getData().hasStatusControl(INFERNO_PUNCH_MAIN) || getData().hasStatusControl(INFERNO_PUNCH_FIRST) || getData().hasStatusControl(INFERNO_PUNCH_SECOND)) {
+	//		this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.35, true));
+	//	}
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.3, true));
 	}
 
 	@Override
@@ -158,34 +160,6 @@ public class EntityFirebender extends EntityHumanBender {
 	@Override
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
 		getData().addBendingId(Firebending.ID);
-		/*if (level == 0 && !world.isRemote) {
-			Random rand = new Random();
-			int level = rand.nextInt(3) + 1;
-			if (level < 2) {
-				getData().getAbilityData("fireball").setLevel(-1);
-				getData().getAbilityData("flamethrower").setLevel(0);
-				getData().getAbilityData("fire_arc").setLevel(0);
-				getData().getAbilityData("inferno_punch").setLevel(-1);
-				this.level = 1;
-				scrollsLeft = 1;
-			}
-			if (level == 2) {
-				getData().getAbilityData("fireball").setLevel(0);
-				getData().getAbilityData("flamethrower").setLevel(0);
-				getData().getAbilityData("fire_arc").setLevel(1);
-				getData().getAbilityData("inferno_punch").setLevel(-1);
-				scrollsLeft = 2;
-				this.level = 2;
-			}
-			if (level > 2) {
-				getData().getAbilityData("fireball").setLevel(1);
-				getData().getAbilityData("flamethrower").setLevel(1);
-				getData().getAbilityData("fire_arc").setLevel(2);
-				getData().getAbilityData("inferno_punch").setLevel(0);
-				scrollsLeft = 3;
-				this.level = 3;
-			}
-		}**/
 		return super.onInitialSpawn(difficulty, livingdata);
 	}
 

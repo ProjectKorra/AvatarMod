@@ -15,6 +15,7 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.PlayerViewRegistry;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -113,7 +114,8 @@ public class AbilityInfernoPunch extends Ability {
 
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
-		return new AiInfernoPunch(this, entity, bender);
+		//Defaults for the AI, can be overriden.
+		return new AiInfernoPunch(this, entity, bender, (EntityCreature) entity, 1.35, true);
 	}
 
 	public static class InfernoPunchLightOrb extends LightOrbBehavior {
@@ -154,7 +156,8 @@ public class AbilityInfernoPunch extends Ability {
 								height = emitter.getPositionVector().add(0, 0.88, 0);
 								Vec3d vel;
 								if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.55).withY(0).toMinecraft();
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.55 -
+											Math.min(0.5F / entity.getOrbSize() * 0.1F, 0.05F)).withY(0).toMinecraft();
 									rightSide = rightSide.add(height);
 									vel = rightSide.subtract(entity.getPositionVector());
 								} else {
