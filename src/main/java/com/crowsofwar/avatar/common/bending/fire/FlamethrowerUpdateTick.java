@@ -214,7 +214,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						SoundCategory.PLAYERS, 0.2f, 0.8f);
 
 
-		} else 
+		} else
 			// not enough chi
 			return true;
 
