@@ -3,8 +3,7 @@
     "title": "Awakening in the Iceberg",
     "description": "Gain an airbending scroll!",
     "icon": {
-      "item": "avatarmod:scroll",
-      "data": 4
+      "item": "avatarmod:scroll_air"
     },
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "goal"
@@ -21,8 +20,7 @@
       "conditions": {
         "items": [
           {
-            "item": "avatarmod:scroll",
-            "data": 4
+            "item": "avatarmod:scroll_air"
           }
         ]
       }
