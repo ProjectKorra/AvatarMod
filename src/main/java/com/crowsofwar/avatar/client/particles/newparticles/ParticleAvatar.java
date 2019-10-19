@@ -2,9 +2,9 @@ package com.crowsofwar.avatar.client.particles.newparticles;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.client.AvatarClientProxy;
-import com.crowsofwar.avatar.client.particles.oldsystem.AvatarParticle;
 import com.crowsofwar.avatar.common.entity.ICustomHitbox;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -105,10 +105,10 @@ public abstract class ParticleAvatar extends Particle {
 	protected double radius = 0;
 	protected double speed = 0;
 
-	protected float shiftRRange = 0;
-	protected float shiftGRange = 0;
-	protected float shiftBRange = 0;
+	//Has R, G, B, and A, in that order.
+	protected float[] colourShiftRange = new float[4];
 	protected boolean shiftRandomly = false;
+	protected float[] colourShiftInterval = new float[4];
 	//Currently not changed by methods.
 	protected boolean scaleOnUpdate;
 	protected double scaleChange;
@@ -533,6 +533,63 @@ public abstract class ParticleAvatar extends Particle {
 			this.relativeX += relativeMotionX;
 			this.relativeY += relativeMotionY;
 			this.relativeZ += relativeMotionZ;
+		}
+
+		//Colour shifting! Who needs colour fading, amirite?
+		//Copied from my (FavouriteDragon) glorious light orb code.
+		if (colourShiftRange[0] != 0 && colourShiftInterval[0] != 0) {
+			float rRange = colourShiftRange[0] / 2;
+			float gRange = colourShiftRange[1] / 2;
+			float bRange = colourShiftRange[2] / 2;
+			float aRange = colourShiftRange[3] / 2;
+			float r = initialRed;
+			float g = initialGreen;
+			float b = initialBlue;
+			float a = 1;///entity.getInitialColourA();
+			for (int i = 0; i < 4; i++) {
+				float red, green, blue, alpha;
+				float rMin = r < rRange ? 0 : r - rRange;
+				float gMin = g < gRange ? 0 : r - gRange;
+				float bMin = b < bRange ? 0 : r - bRange;
+				float aMin = a < aRange ? 0 : a - aRange;
+				float rMax = r + rRange;
+				float gMax = b + gRange;
+				float bMax = g + bRange;
+				float aMax = a + aRange;
+				switch (i) {
+					case 0:
+						float amountR = AvatarUtils.getRandomNumberInRange(0,
+								(int) (100 / rMax)) / 100F * colourShiftInterval[0];
+						red = entity.world.rand.nextBoolean() ? r + amountR : r - amountR;
+						red = MathHelper.clamp(red, rMin, rMax);
+						particleRed = red;
+						break;
+
+					case 1:
+						float amountG = AvatarUtils.getRandomNumberInRange(0,
+								(int) (100 / gMax)) / 100F * colourShiftInterval[1];
+						green = entity.world.rand.nextBoolean() ? g + amountG : g - amountG;
+						green = MathHelper.clamp(green, gMin, gMax);
+						particleGreen = green;
+						break;
+
+					case 2:
+						float amountB = AvatarUtils.getRandomNumberInRange(0,
+								(int) (100 / bMax)) / 100F * colourShiftInterval[2];
+						blue = entity.world.rand.nextBoolean() ? b + amountB : b - amountB;
+						blue = MathHelper.clamp(blue, bMin, bMax);
+						particleBlue = blue;
+						break;
+
+					case 3:
+						float amountA = AvatarUtils.getRandomNumberInRange(0,
+								(int) (100 / aMax)) / 100F * colourShiftInterval[3];
+						alpha = entity.world.rand.nextBoolean() ? a + amountA : a - amountA;
+						alpha = MathHelper.clamp(alpha, aMin, aMax);
+						particleAlpha = alpha;
+						break;
+				}
+			}
 		}
 
 		// Colour fading

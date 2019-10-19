@@ -65,6 +65,10 @@ public final class ParticleBuilder {
 	private double x, y, z;
 	private double vx, vy, vz;
 	private float r, g, b;
+	//red/green/blue/e.t.c shift range
+	private float rSR, gSR,  bSR, aSR;
+	//rend/green e.t.c shift interval
+	private float rSI, gSI, bSI, aSI;
 	private float fr, fg, fb;
 	private double radius;
 	private double rpt;
@@ -256,6 +260,15 @@ public final class ParticleBuilder {
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
 	public ParticleBuilder clr(float r, float g, float b){
+		if(!building) throw new IllegalStateException("Not building yet!");
+		this.r = MathHelper.clamp(r, 0, 1);
+		this.g = MathHelper.clamp(g, 0, 1);
+		this.b = MathHelper.clamp(b, 0, 1);
+		return this;
+	}
+
+	//Colour shifting
+	public ParticleBuilder clrShift(float r, float g, float b, boolean shiftRandomly, float rS, float gS, float bS, float aS, float rI, float gI, float bI, float aI){
 		if(!building) throw new IllegalStateException("Not building yet!");
 		this.r = MathHelper.clamp(r, 0, 1);
 		this.g = MathHelper.clamp(g, 0, 1);
