@@ -118,7 +118,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				**///flames.setDamageMult(bender.getDamageMult(Firebending.ID));
 				//world.spawnEntity(flames);
 				if (world.isRemote)
-					ParticleBuilder.create(ParticleBuilder.Type.MAGIC_FIRE).pos(look.toMinecraft().add(AvatarEntityUtils.getBottomMiddleOfEntity(entity))
+					ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(look.toMinecraft().add(AvatarEntityUtils.getBottomMiddleOfEntity(entity))
 					.add(0, entity.getEyeHeight() - 0.2, 0)).scale(3).time(30).collide(true).vel(look.toMinecraft().scale(speedMult / 25)).spawn(world);
 
 				world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,

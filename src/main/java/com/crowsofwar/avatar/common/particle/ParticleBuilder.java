@@ -104,6 +104,8 @@ public final class ParticleBuilder {
 		public static final ResourceLocation DARK_MAGIC = new ResourceLocation(AvatarInfo.MOD_ID,"dark_magic");
 		/** Single pixel particle.<p></p><b>Defaults:</b><br>Lifetime: 16-80 ticks<br>Colour: white */
 		public static final ResourceLocation DUST = new ResourceLocation(AvatarInfo.MOD_ID,"dust");
+		/** A cool custom fire particle, moves like all other fire particles. */
+		public static final ResourceLocation FIRE = new ResourceLocation(AvatarInfo.MOD_ID, " fire");
 		/** Rapid flash, like fireworks.<p></p><b>Defaults:</b><br>Lifetime: 6 ticks<br>Colour: white */
 		public static final ResourceLocation FLASH = new ResourceLocation(AvatarInfo.MOD_ID,"flash");
 		/** Small shard of ice.<p></p><b>Defaults:</b><br>Lifetime: 8-40 ticks<br>Gravity: true */

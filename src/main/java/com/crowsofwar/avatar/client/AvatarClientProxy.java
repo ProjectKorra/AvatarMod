@@ -107,6 +107,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		ParticleAvatar.registerParticle(Type.BUFF, ParticleBuff::new);
 		ParticleAvatar.registerParticle(Type.DARK_MAGIC, ParticleDarkMagic::new);
 		ParticleAvatar.registerParticle(Type.DUST, ParticleDust::new);
+		ParticleAvatar.registerParticle(Type.FIRE, ParticleFire::new);
 		ParticleAvatar.registerParticle(Type.FLASH, ParticleFlash::new);
 		ParticleAvatar.registerParticle(Type.ICE, ParticleIce::new);
 		ParticleAvatar.registerParticle(Type.LEAF, ParticleLeaf::new);
