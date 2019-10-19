@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.blocks.BlockTemp;
 import com.crowsofwar.avatar.common.blocks.BlockUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -127,6 +128,9 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 				}**/
 			}
 		}
+
+		if (world.isRemote)
+			ParticleBuilder.create(ParticleBuilder.Type.MAGIC_FIRE).pos(getPositionVector()).time(30).spawn(world);
 
 		/*if (!world.isRemote) {
 			if (getOwner() != null) {
