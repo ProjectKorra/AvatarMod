@@ -214,7 +214,7 @@ public class AvatarMod {
 		registerEntity(EntityAirGust.class, "AirGust", 128, 1000, true);
 		registerEntity(EntityRavine.class, "Ravine", 128, 1000, true);
 		//For some reason, there's no random desync for its position when spawning it. Setting it to 1 fixes it.
-		registerEntity(EntityFlames.class, "Flames", 128, 1, true);
+		registerEntity(EntityFlames.class, "Flames", 128, 1000, true);
 		registerEntity(EntityWave.class, "Wave", 128, 1000, true);
 		registerEntity(EntityWaterBubble.class, "WaterBubble", 128, 1000, true);
 		registerEntity(EntityWall.class, "Wall", 128, 3, true);

@@ -2,7 +2,9 @@ package com.crowsofwar.avatar.common.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -178,5 +180,9 @@ public class AvatarEntityUtils {
 		double z = entity.getEntityBoundingBox().maxZ - entity.getEntityBoundingBox().minZ;
 		return new Vec3d(entity.getEntityBoundingBox().minX + x / 2, entity.getEntityBoundingBox().minY, entity.getEntityBoundingBox().minZ + z / 2);
 
+	}
+
+	public static void attackDragon(EntityDragon hurt, DamageSource source, float damage) {
+		hurt.attackEntityFromPart(hurt.dragonPartBody, source, damage);
 	}
 }

@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -25,11 +26,13 @@ import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityShield;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
@@ -38,6 +41,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static java.lang.Math.toRadians;
@@ -98,41 +102,53 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			World world = ctx.getWorld();
 
 			double speedMult = 15 + 5 * totalXp / 100;
-			double randomness = 3.5 - 5 * totalXp / 100;
-			float range = 5;
+			double randomness = 3.0 - 5 * totalXp / 100;
+			float range = 4;
 			int fireTime = 0;
 			float size = 1;
 			float damage = 0.5F;
+			float performanceAmount = 2;
+			float xp = SKILLS_CONFIG.flamethrowerHit;
+			boolean lightsFires = false;
 
 			switch (abilityData.getLevel()) {
 				case 1:
 					size = 1.5F;
 					damage = 1F;
 					fireTime = 2;
-					range = 6;
+					range = 5;
+					performanceAmount = 3;
+					xp /= 1.5;
 					break;
 				case 2:
 					size = 2;
 					fireTime = 4;
 					damage = 3F;
-					range = 8;
+					range = 7;
+					performanceAmount = 5;
+					xp /= 2;
 					break;
 			}
 			if (level == 3 && path == AbilityTreePath.FIRST) {
 				speedMult = 25;
 				randomness = 0;
 				fireTime = 5;
-				size = 1F;
+				size = 0.95F;
 				damage = 7F;
-				range = 15;
+				range = 12;
+				performanceAmount = 6;
+				xp = 0;
 			}
 			if (level == 3 && path == AbilityTreePath.SECOND) {
 				speedMult = 12;
-				randomness = 8;
+				randomness = 12;
 				fireTime = 20;
 				size = 3.0F;
 				damage = 2.5F;
-				range = 7;
+				range = 6.5F;
+				performanceAmount = 2;
+				lightsFires = true;
+				xp = 0;
 			}
 
 			// Affect stats by power rating
@@ -141,39 +157,36 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			damage += powerRating / 100F;
 			fireTime += (int) (powerRating / 50F);
 			speedMult += powerRating / 100f * 2.5f;
-			randomness -= powerRating / 100f * 6f;
+			randomness -= randomness >= powerRating / 100f * 6f ? powerRating / 100F * 6 : 0;
 
 			double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
 			double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
 			Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
 
 
-			//Raytrace time, kiddos. Are you ready to rumbbbblee with weird angles?
-			//Technically, the actual raytracing is handled by another method, but we still have to deal with angles. This ensures that everything is actually being hit.
-		/*	for (int angle = 0; angle < size * 3; angle++) {
-				//We want to change the angle based on the portion of the player's circumference, 2*PI, that's being taken up. Yay.
-				yawRandom = yawRandom - (3 * size) * Math.toDegrees((size / (2 * Math.PI))) + angle * (Math.toDegrees(size / (2 * Math.PI)));
-				Vec3d start = look.toMinecraft().add(eye.minusY(0.5).toMinecraft());
-				AvatarUtils.handlePiercingBeamCollision();
-			}**/
-			//You know what, I'm gonna hold off on the fancy stuff for now.
-
 			Vector start = look.plus(eye.minusY(0.5));
 
-			List<Entity> hit = Raytrace.entityRaytrace(world, start, look, size, range, entity1 -> entity1 != entity);
+			List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range, size, entity1 -> entity1 != entity);
 			hit.remove(entity);
 			if (!hit.isEmpty()) {
-				for (Entity targets : hit) {
-					System.out.println("Huh.");
+				for (Entity target : hit) {
 					if (!world.isRemote) {
-						if (targets.canBeCollidedWith() && targets.getTeam() != null && targets.getTeam() == entity.getTeam() || targets instanceof EntityShield) {
-							targets.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(targets, entity), damage);
-							targets.setFire(fireTime + 2);
-							targets.setEntityInvulnerable(false);
-							Vector knockback = look.times(speedMult / 100);
-							if (targets.canBePushed())
-								targets.addVelocity(knockback.x(), knockback.y(), knockback.z());
-							AvatarUtils.afterVelocityAdded(targets);
+						if (target.canBeCollidedWith() && (target.getTeam() == null || target.getTeam() != null && target.getTeam() != entity.getTeam()) || target instanceof EntityShield) {
+							boolean attack = target.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);
+							if (attack) {
+								target.setFire(fireTime + 2);
+								target.setEntityInvulnerable(false);
+								Vector knockback = look.times(speedMult / 100);
+								if (target.canBePushed())
+									target.addVelocity(knockback.x(), knockback.y(), knockback.z());
+								AvatarUtils.afterVelocityAdded(target);
+								BattlePerformanceScore.addScore(entity, (int) performanceAmount);
+								abilityData.addXp(xp);
+							} else if (target instanceof EntityDragon)
+								AvatarEntityUtils.attackDragon((EntityDragon) target, AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);
+							BattlePerformanceScore.addScore(entity, (int) performanceAmount);
+							abilityData.addXp(xp);
+
 						}
 					}
 				}
@@ -182,14 +195,13 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			Raytrace.Result result = Raytrace.raytrace(world, start.toMinecraft(), look.toMinecraft(), range, false);
 			if (result.hitSomething() && result.getPos() != null && world.getBlockState(result.getPos().toBlockPos()).getBlock() != Blocks.AIR) {
 				BlockPos pos = result.getPos().toBlockPos();
-				if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR)
-					world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+				if (lightsFires)
+					if (Blocks.FIRE.canPlaceBlockAt(world, pos) && !world.getBlockState(pos).isFullBlock())
+						world.setBlockState(pos, Blocks.FIRE.getDefaultState());
 
 			}
 
-			//	if (ctx.getData().getTickHandlerDuration(this) % 2 == 0)
-			//		AvatarUtils.handlePiercingBeamCollision(world, entity, start, start.plus(look.times(range)).toMinecraft(), size, null, new AbilityFlamethrower(),
-			//				new Firebending(), damage, look.toMinecraft().scale(0.125), fireTime, size / 2);
+
 			//Particle code.
 			if (world.isRemote) {
 				for (int i = 0; i < flamesPerSecond; i++) {
@@ -202,11 +214,10 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						SoundCategory.PLAYERS, 0.2f, 0.8f);
 
 
-		} else {
+		} else 
 			// not enough chi
 			return true;
-		}
-		//	}
+
 
 		return false;
 
