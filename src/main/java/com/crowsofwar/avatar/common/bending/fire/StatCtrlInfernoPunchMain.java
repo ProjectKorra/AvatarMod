@@ -9,16 +9,19 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Mod;
 
@@ -33,7 +36,7 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_C
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 
 public class StatCtrlInfernoPunchMain extends StatusControl {
-	//private ParticleSpawner particleSpawner;
+	//NOTICE: Abilities and status controls don't allow you to perform stuff client-side! Only tick handlers do that. Stupid, I know.
 
 	public StatCtrlInfernoPunchMain() {
 		super(18, CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
@@ -45,9 +48,11 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 		//TODO: Raytrace instead of event
 		EntityLivingBase entity = ctx.getBenderEntity();
 		HashSet<Entity> excluded = new HashSet<>();
-		double reach = Raytrace.getReachDistance(entity);
+		World world = ctx.getWorld();
 		AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
 		BendingData data = ctx.getData();
+
+		double reach = Raytrace.getReachDistance(entity);
 		float powerModifier = (float) (ctx.getBender().getDamageMult(Firebending.ID));
 		float damage = STATS_CONFIG.InfernoPunchDamage * powerModifier;
 		int performance = 15;
@@ -63,18 +68,18 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 			xp -= 1;
 		}
 		if (abilityData.getLevel() >= 2) {
-			damage = STATS_CONFIG.InfernoPunchDamage * 5 / 3 * powerModifier;
+			damage = STATS_CONFIG.InfernoPunchDamage * 6 / 3 * powerModifier;
 			knockBack = 1.25F + powerModifier;
 			fireTime = 8 + (int) (powerModifier * 10);
 			performance = 20;
 			xp -= 2;
 		}
-		if (data.hasStatusControl(INFERNO_PUNCH_FIRST)) {
+		/*if (data.hasStatusControl(INFERNO_PUNCH_FIRST)) {
 			damage = STATS_CONFIG.InfernoPunchDamage * 7 / 3 * powerModifier;
 			knockBack = 1.5F + powerModifier;
 			fireTime = 15 + (int) (powerModifier * 10);
 			performance = 30;
-		}
+		}**/
 
 		if (entity.isPotionActive(MobEffects.STRENGTH)) {
 			damage += (Objects.requireNonNull(entity.getActivePotionEffect(MobEffects.STRENGTH)).getAmplifier() + 1) / 2F;
@@ -83,7 +88,7 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 		excluded.add(entity);
 		Vec3d startPos = entity.getPositionVector().add(0, entity.getEyeHeight(), 0);
 
-		if (!entity.world.isRemote && entity.getHeldItemMainhand() == ItemStack.EMPTY) {
+		if (entity.getHeldItemMainhand() == ItemStack.EMPTY) {
 			//Bounding Box to determine excluded entities
 			AxisAlignedBB detectionBox = new AxisAlignedBB(entity.posX + reach, entity.posY + reach, entity.posZ + reach, entity.posX - reach,
 					entity.posY - reach, entity.posZ - reach);
@@ -108,30 +113,41 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 					if (result.entityHit != null) {
 						Entity hit = result.entityHit;
 						if (canCollideWith(entity)) {
-							DamageUtils.attackEntity(entity, hit, AvatarDamageSource.causeInfernoPunchDamage(entity), damage,
-									performance, new AbilityInfernoPunch(), xp);
-							Vec3d direction = entity.getLookVec();
-							double x = 0.5 * direction.x * knockBack;
-							double y = 0.5 * direction.y * knockBack + 0.15;
-							double z = 0.5 * direction.z * knockBack;
-							hit.setFire(fireTime);
-							hit.addVelocity(x, y, z);
-							AvatarUtils.afterVelocityAdded(hit);
 							Vec3d particlePos = hit.getPositionVector().add(0, hit.height / 2, 0);
-							if (entity.world instanceof WorldServer) {
-								WorldServer world = (WorldServer) entity.world;
-								world.spawnParticle(AvatarParticles.getParticleFlames(), true, particlePos.x, particlePos.y, particlePos.z, 60,
-										0, 0, 0, 0.02);
+							if (!entity.world.isRemote) {
+								DamageUtils.attackEntity(entity, hit, AvatarDamageSource.causeInfernoPunchDamage(entity), damage,
+										performance, new AbilityInfernoPunch(), xp);
+								Vec3d direction = entity.getLookVec();
+								double x = 0.5 * direction.x * knockBack;
+								double y = 0.5 * direction.y * knockBack + 0.15;
+								double z = 0.5 * direction.z * knockBack;
+								hit.setFire(fireTime);
+								hit.addVelocity(x, y, z);
+								AvatarUtils.afterVelocityAdded(hit);
+								if (entity.world instanceof WorldServer) {
+									WorldServer World = (WorldServer) entity.world;
+											World.spawnParticle(AvatarParticles.getParticleFlames(), true, particlePos.x, particlePos.y, particlePos.z, 60,
+													0, 0, 0, 0.02);
+								}
 							}
+							hit.playSound(SoundEvents.ITEM_FIRECHARGE_USE, 1.0F + performance / 30F, 0.8F + entity.world.rand.nextFloat() / 10);
 
-							return true;
+						/*	if (world.isRemote) {
+								for (int i = 0; i < 20 + Math.max(abilityData.getLevel(), 0); i++)
+									ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(particlePos).time(30).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10,
+											world.rand.nextGaussian() / 10).clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 70), 40).collide(true).
+											scale(abilityData.getLevel() < 1 ? 0.75F : 0.75F + abilityData.getLevel() / 10F).spawn(world);
+								System.out.println("huh");
+								return true;
+							}
+						}**/
+
 						}
-
 					}
+
 				}
 
 			}
-
 		}
 		return false;
 	}

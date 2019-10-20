@@ -16,11 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -30,7 +27,6 @@ import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import elucent.albedo.event.GatherLightsEvent;
 import elucent.albedo.lighting.ILightProvider;
@@ -43,17 +39,15 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -93,7 +87,6 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 
 	private float Size;
 
-	private ParticleSpawner particleSpawner;
 
 
 	/**
@@ -106,11 +99,13 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 		this.damage = 3F;
 		this.piercing = false;
 		this.setInvisible(false);
-		this.particleSpawner = new NetworkParticleSpawner();
 
 	}
 
-	//So lightning spear doesn't bounce off of entities (if piercing)
+	@Override
+	public int getFireTime() {
+		return 0;
+	}
 
 	@Override
 	public void entityInit() {
@@ -175,74 +170,12 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 
 	}
 
-	public void LightningBurst() {
-		if (getOwner() != null) {
-			particleSpawner.spawnParticles(world, AvatarParticles.getParticleElectricity(), (int) (getSize() * 25), (int) (getSize() * 30), posX, posY, posZ, getSize() * 1.25, getSize() * 1.25, getSize() * 1.25, true);
-			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(getSize() * 2, getSize() * 2, getSize() * 2),
-					entity -> entity != getOwner());
-
-			if (!collided.isEmpty()) {
-				for (Entity entity : collided) {
-					if (entity != getOwner() && entity != null && getOwner() != null && entity != this && canCollideWith(entity)) {
-
-						damageEntity(entity);
-
-						//Divide the result of the position difference to make entities fly
-						//further the closer they are to the player.
-						double dist = (getSize() * 2 - entity.getDistance(entity)) > 1 ? (getSize() * 2 - entity.getDistance(entity)) : 1;
-						Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
-						velocity = velocity.dividedBy(40).times(dist).withY(getSize() / 50);
-
-						double x = (velocity.x());
-						double y = (velocity.y()) > 0 ? velocity.y() : 0.2F;
-						double z = (velocity.z());
-
-						if (!entity.world.isRemote) {
-							entity.addVelocity(x, y, z);
-
-							if (collided instanceof AvatarEntity) {
-								if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
-									AvatarEntity avent = (AvatarEntity) collided;
-									avent.addVelocity(x, y, z);
-								}
-								entity.isAirBorne = true;
-								AvatarUtils.afterVelocityAdded(entity);
-							}
-						}
-					}
-				}
-			}
-
-		}
-	}
-
-	public void damageEntity(Entity entity) {
-		if (getOwner() != null) {
-			BendingData data = BendingData.get(getOwner());
-			AbilityData abilityData = data.getAbilityData("lightning_spear");
-			int lvl = abilityData.getLevel();
-			float damage = getDamage() / 3;
-			if (lvl == 1) {
-				damage = getDamage() / 2;
-			}
-			if (lvl == 2) {
-				damage = getDamage() / 1.5F;
-			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				damage = getDamage();
-			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				damage = getDamage();
-			}
-			boolean attack = entity.attackEntityFrom(AvatarDamageSource.causeLightningSpearDamage(entity, getOwner()), damage);
-			if (attack) {
-				abilityData.addXp(SKILLS_CONFIG.lightningspearHit);
-				BattlePerformanceScore.addMediumScore(getOwner());
-
-			}
-		}
+	@Override
+	public SoundEvent[] getSounds() {
+		SoundEvent[] events = new SoundEvent[2];
+		events[0] = SoundEvents.ENTITY_LIGHTNING_IMPACT;
+		events[1] = SoundEvents.ENTITY_LIGHTNING_THUNDER;
+		return events;
 	}
 
 	/**
@@ -252,9 +185,9 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	private void handleWaterElectrocution(Entity entity) {
 
 		// Uses same DamageSource as lightning arc; this is intentional
-		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());
+		DamageSource damageSource = AvatarDamageSource.causeLightningSpearDamage(entity, getOwner());
 
-		if (entity.attackEntityFrom(damageSource, damage / 2)) {
+		if (entity.attackEntityFrom(damageSource, getDamage() / 2)) {
 			BattlePerformanceScore.addLargeScore(getOwner());
 		}
 
@@ -317,15 +250,9 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 
 	@Override
 	public boolean onCollideWithSolid() {
-
-		if (!(getBehavior() instanceof LightningSpearBehavior.Thrown)) {
-			return false;
-		}
-		setInvisible(false);
-		LightningBurst();
-		setDead();
-		return true;
-
+		if (getBehavior() instanceof LightningSpearBehavior.Thrown)
+			return super.onCollideWithSolid();
+		else return false;
 	}
 
 	@Override
@@ -366,26 +293,8 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
-		if (getBehavior() instanceof LightningSpearBehavior.Thrown && getBehavior() != null && !world.isRemote) {
-			if (this.canCollideWith(entity) && entity != getOwner()) {
-				if (getAbility() instanceof AbilityLightningSpear && !world.isRemote) {
-					AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
-					if (!aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-						LightningBurst();
-						setDead();
-					}
-					LightningBurst();
-				} else {
-					LightningBurst();
-				}
-			}
-			if (entity instanceof AvatarEntity) {
-				if (((AvatarEntity) entity).getElement() instanceof Airbending) {
-					this.onAirContact();
-					((AvatarEntity) entity).onLightningContact();
-				}
-			}
-		}
+		if (getBehavior() instanceof LightningSpearBehavior.Thrown && getBehavior() != null)
+			super.onCollideWithEntity(entity);
 	}
 
 	public void removeStatCtrl() {
@@ -428,4 +337,9 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 		return !(getBehavior() instanceof LightningSpearBehavior.PlayerControlled);
 	}
 
+	@Override
+	public void applyElementalContact(AvatarEntity entity) {
+		super.applyElementalContact(entity);
+		entity.onLightningContact();
+	}
 }

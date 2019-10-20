@@ -1,10 +1,11 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.PlayerViewRegistry;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.*;
 
@@ -31,21 +31,17 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 
 		int particleCount = 1;
 		int level = abilityData.getLevel();
-		if (level == 1) {
+		if (level == 1 || level == 2) {
 			particleCount = 2;
 
 		}
-		if (level == 2) {
-			particleCount = 3;
-		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			particleCount = 5;
+			particleCount = 3;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			particleCount = 3;
+			particleCount = 2;
 		}
-		if ((data.hasStatusControl(INFERNO_PUNCH_MAIN) || data.hasStatusControl(INFERNO_PUNCH_FIRST) || data.hasStatusControl(INFERNO_PUNCH_SECOND)) && !world.isRemote) {
-			WorldServer World = (WorldServer) world;
+		if ((data.hasStatusControl(INFERNO_PUNCH_MAIN) || data.hasStatusControl(INFERNO_PUNCH_FIRST) || data.hasStatusControl(INFERNO_PUNCH_SECOND))) {
 
 			Vec3d height, rightSide;
 			if (entity instanceof EntityPlayer) {
@@ -83,8 +79,17 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 				}
 
 			}
-			World.spawnParticle(AvatarParticles.getParticleFlames(),
-					rightSide.x, rightSide.y, rightSide.z, particleCount, 0, 0, 0, 0.015);
+			/*if (!world.isRemote) {
+				WorldServer World = (WorldServer) world;
+				World.spawnParticle(AvatarParticles.getParticleFlames(),
+						rightSide.x, rightSide.y, rightSide.z, particleCount, 0, 0, 0, 0.015);
+			}**/
+			if (world.isRemote)
+				for (int i = 0; i < particleCount; i++)
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(12).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40,
+							world.rand.nextGaussian() / 40).clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 70), 40).collide(true).
+							scale(abilityData.getLevel() < 1 ? 0.9F : 0.9F + abilityData.getLevel() / 5F).spawn(world);
+
 			return false;
 		} else return true;
 	}

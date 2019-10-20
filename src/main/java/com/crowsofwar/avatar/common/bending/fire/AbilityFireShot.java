@@ -78,21 +78,18 @@ public class AbilityFireShot extends Ability {
 		if (ctx.getLevel() == 1) {
 			speed += 0.25F;
 			chi += 0.5F;
-			damageMult += 0.5;
 			damage += 2;
 			xp -= 0.5F;
 		}
 		if (ctx.getLevel() == 2) {
 			speed += 0.5F;
 			chi += 1;
-			damageMult += 1;
 			damage += 4;
 			xp -= 1.5F;
 		}
 		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			speed += 0.75F;
 			chi += 1.5F;
-			damageMult += 2;
 			damage += 7;
 		}
 		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {

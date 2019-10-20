@@ -126,9 +126,10 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 
 		private void collision(Entity collided, EntityLightningSpear entity, boolean triggerGroupAttack) {
-			if (entity.canCollideWith(collided) && collided.canBeCollidedWith() && collided.canBePushed() && collided != entity.getOwner() && collided != entity) {
+			//TODO: Move all of this to the entity class.
+			if (entity.canDamageEntity(collided) && collided != entity.getOwner() && collided != entity) {
 
-				if (collided.attackEntityFrom(AvatarDamageSource.causeLightningDamage(collided, entity.getOwner()),
+			/*	if (collided.attackEntityFrom(AvatarDamageSource.causeLightningDamage(collided, entity.getOwner()),
 						entity.getDamage())) {
 					BattlePerformanceScore.addMediumScore(entity.getOwner());
 				}
@@ -155,7 +156,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 							World.spawnParticle(AvatarParticles.getParticleElectricity(), collided.posX, entity.posY, collided.posZ, 10, 0, 0, 0, 0.025);
 						}
 					}
-				}
+				}**/
 			}
 
 

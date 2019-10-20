@@ -61,6 +61,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		BendingData data = ctx.getData();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
+		World world = ctx.getWorld();
 
 		AbilityData abilityData = data.getAbilityData("flamethrower");
 		AbilityTreePath path = abilityData.getPath();
@@ -100,8 +101,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 			Vector eye = getEyePos(entity);
 
-			World world = ctx.getWorld();
-
 			if (!world.isRaining() && !(world.getBlockState(entity.getPosition()) instanceof BlockLiquid || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WATER)) {
 
 				double speedMult = 15 + 5 * totalXp / 100;
@@ -136,7 +135,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					speedMult = 25;
 					randomness = 0;
 					fireTime = 5;
-					size = 0.95F;
+					size = 1.25F;
 					damage = 7F;
 					range = 12;
 					performanceAmount = 6;
@@ -169,7 +168,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 				Vector start = look.plus(eye.minusY(0.5));
 
-				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range, size / 2, entity1 -> entity1 != entity);
+				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2, entity1 -> entity1 != entity);
 				hit.remove(entity);
 				if (!hit.isEmpty()) {
 					for (Entity target : hit) {
@@ -199,7 +198,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				if (result.hitSomething() && result.getPos() != null && world.getBlockState(result.getPos().toBlockPos()).getBlock() != Blocks.AIR) {
 					BlockPos pos = result.getPos().toBlockPos();
 					if (lightsFires)
-						if (Blocks.FIRE.canPlaceBlockAt(world, pos) && !world.getBlockState(pos).isFullBlock())
+						if (Blocks.FIRE.canPlaceBlockAt(world, pos) && !world.getBlockState(pos).isFullBlock() && !(world.getBlockState(pos) instanceof BlockLiquid))
 							world.setBlockState(pos, Blocks.FIRE.getDefaultState());
 
 				}
@@ -208,7 +207,9 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				//Particle code.
 				if (world.isRemote) {
 					for (int i = 0; i < flamesPerSecond; i++) {
-						ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size).time(25).collide(true).vel(look.toMinecraft().scale(speedMult / 30)).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size).time(20).collide(true).vel(look.toMinecraft().scale(speedMult / 30)).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(25).vel(look.toMinecraft().scale(speedMult / 30)).
+								clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 70), 40).collide(true).scale(size).spawn(world);
 					}
 				}
 
@@ -221,16 +222,22 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				entity.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 1.0F, 1.0F);
 				if (world.isRemote) {
 					for (int i = 0; i < 5; i++)
-						ParticleBuilder.create(ParticleBuilder.Type.SNOW).collide(true).time(15).vel(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian())
-								.scale(1.0F).pos(Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity)).toMinecraft()).clr(1.0F, 1.0F, 1.0f).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.SNOW).collide(true).time(15).vel(world.rand.nextGaussian() / 50, world.rand.nextGaussian() / 50, world.rand.nextGaussian() / 50)
+								.scale(2.0F + abilityData.getLevel() / 2F).pos(Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity)).toMinecraft()).clr(1.0F, 1.0F, 1.0f).spawn(world);
+					return true;
 
 				}
 			}
+
+
 		} else
 			// not enough chi
 			return true;
 
-
+		//The reason we use this, instead of putting it at the end of the code block, is to allow particles to spawn.
+		//It's just something to do with client and server-side stuff.
+		//It's how world.isRemote works.
+		//We're also returning the inverse of what we normally would, as we want it to keep ticking. False means it keeps going, true stops it.
 		return false;
 
 	}

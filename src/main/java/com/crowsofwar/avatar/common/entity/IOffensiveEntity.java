@@ -24,12 +24,14 @@ public interface IOffensiveEntity {
 	default void Explode(World world, AvatarEntity entity, EntityLivingBase owner) {
 		if (owner != null) {
 			if (world.isRemote)
-				spawnParticles();
+				spawnExplosionParticles();
 			//TODO: Get rid of this particle spawning code. It's outdated.
 			if (world instanceof WorldServer) {
 				WorldServer World = (WorldServer) world;
 				World.spawnParticle(getParticle(), entity.posX, entity.posY, entity.posZ, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
-				world.playSound(null, entity.posX, entity.posY, entity.posZ, getSound(), entity.getSoundCategory(), getVolume(),
+			}
+			for (int i = 0; i < getSounds().length; i++) {
+				entity.playSound(getSounds()[i], getVolume(),
 						getPitch());
 			}
 			List<Entity> collided = world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().grow(getExplosionHitboxGrowth(),
@@ -88,21 +90,24 @@ public interface IOffensiveEntity {
 					attackEntity(entity, hit, false, getKnockback().crossProduct(getKnockbackMult()));
 				}
 			}
-
 		}
+		if (entity.world.isRemote)
+			spawnPiercingParticles();
 	}
 
 	default void Dissipate(AvatarEntity entity) {
 		if (entity.getOwner() != null) {
 			if (entity.world.isRemote)
 				//ParticleBuilder particles.
-				spawnParticles();
+				spawnDissipateParticles();
 			if (entity.world instanceof WorldServer) {
 				WorldServer World = (WorldServer) entity.world;
 				World.spawnParticle(getParticle(), entity.posX, entity.posY, entity.posZ, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
 			}
-			entity.playSound(getSound(), getVolume(),
-					getPitch());
+			for (int i = 0; i < getSounds().length; i++) {
+				entity.playSound(getSounds()[i], getVolume(),
+						getPitch());
+			}
 		}
 		entity.setDead();
 	}
@@ -156,8 +161,12 @@ public interface IOffensiveEntity {
 	}
 
 	//You don't have to do a world.isRemote check, it's done for you.
-	default void spawnParticles() {
-	}
+	//Self-explanatory particle spawning methods.
+	default void spawnExplosionParticles() {}
+
+	default void spawnDissipateParticles() {}
+
+	default void spawnPiercingParticles() {}
 
 	//TODO: Get rid of these particle methods as they're unnecessary with the ease of the new particle system.
 	default EnumParticleTypes getParticle() {
@@ -172,12 +181,15 @@ public interface IOffensiveEntity {
 		return 0.02;
 	}
 
+
 	default int getPerformanceAmount() {
 		return 10;
 	}
 
-	default SoundEvent getSound() {
-		return SoundEvents.ENTITY_GHAST_SHOOT;
+	default SoundEvent[] getSounds() {
+		SoundEvent[] events = new SoundEvent[1];
+		events[0] = SoundEvents.ENTITY_GHAST_SHOOT;
+		return events;
 	}
 
 	default float getVolume() {

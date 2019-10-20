@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
@@ -38,7 +39,7 @@ public class ImmolateParticleHandler extends TickHandler {
 			for (int i = 0; i < 12; i++) {
 				int random = rand.nextInt(2) + 1;
 				r = random == 1 ? r : r * -1;
-				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (r * 2)), 0).times(0.5).withY(entity.getEyeHeight() - 0.7);
+				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (r * 2)), 0).times(aD.getLevel() < 1 ? 0.5 : aD.getLevel() * 0.5).withY(entity.getEyeHeight() - 0.7);
 				particles.spawnParticles(world, AvatarParticles.getParticleFlames(), 1, 1, location.plus(Vector.getEntityPos(entity)),
 						new Vector(0.8, 4, 0.8), true);
 			}
@@ -47,9 +48,11 @@ public class ImmolateParticleHandler extends TickHandler {
 			for (int i = 0; i < 12; i++) {
 				int random = rand.nextInt(2) + 1;
 				r = random == 1 ? r : r * -1;
-				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (r * 2)), 0).times(0.5).withY(entity.getEyeHeight() - 0.7);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4).
-						vel(world.rand.nextGaussian() / 40, world.rand.nextDouble(), world.rand.nextGaussian() / 40).clr(255, 61, 40)
+				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (r * 2)), 0).times(aD.getLevel() < 1 ? 0.5 : aD.getLevel() * 0.5).withY(entity.getEyeHeight() - 0.7);
+				//Temporary solution to colour fading: randomising the colour between crimson and orangey-yellow for each particle.
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(8).
+						vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40).clr(255,
+						60 + AvatarUtils.getRandomNumberInRange(1, 92), 40)
 						.spawn(world);//.fade(255, 243, 40).spawn(world);
 						//spawnParticles(world, AvatarParticles.getParticleFlames(), 1, 1, location.plus(Vector.getEntityPos(entity)),
 						//new Vector(0.8, 4, 0.8), true);

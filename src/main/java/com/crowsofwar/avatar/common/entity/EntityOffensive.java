@@ -4,13 +4,11 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -173,11 +171,6 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		this.knockbackMult = mult;
 	}
 
-	@Override
-	public void spawnParticles() {
-
-	}
-
 	//TODO: Remove these particle methods. They're useless currently. Just use spawnParticles();
 
 	public EnumParticleTypes getParticle() {
@@ -199,11 +192,6 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	public void setPerformanceAmount(int amount) {
 		this.performanceAmount = amount;
-	}
-
-	@Override
-	public SoundEvent getSound() {
-		return SoundEvents.ENTITY_GHAST_SHOOT;
 	}
 
 	@Override
