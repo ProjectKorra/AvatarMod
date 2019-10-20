@@ -17,6 +17,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -254,7 +255,7 @@ public class EntityShockwave extends AvatarEntity {
 						double zSpeed = getSphere() ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted * getSpeed()) :
 								Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 5F * getSpeed());
 						if (knockbackHeight != 0) {
-							ySpeed = ySpeed > knockbackHeight ? ySpeed : knockbackHeight;
+							ySpeed = Math.max(ySpeed, knockbackHeight);
 						}
 						xSpeed *= knockbackMult.x;
 						ySpeed *= knockbackMult.y;

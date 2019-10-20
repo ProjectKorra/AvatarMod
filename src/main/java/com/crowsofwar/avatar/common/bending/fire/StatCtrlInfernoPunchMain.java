@@ -6,10 +6,8 @@ import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.damageutils.DamageUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.Entity;
@@ -21,7 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Mod;
 
@@ -45,41 +42,39 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 
 	@Override
 	public boolean execute(BendingContext ctx) {
-		//TODO: Raytrace instead of event
 		EntityLivingBase entity = ctx.getBenderEntity();
 		HashSet<Entity> excluded = new HashSet<>();
-		World world = ctx.getWorld();
 		AbilityData abilityData = ctx.getData().getAbilityData("inferno_punch");
-		BendingData data = ctx.getData();
 
 		double reach = Raytrace.getReachDistance(entity);
 		float powerModifier = (float) (ctx.getBender().getDamageMult(Firebending.ID));
-		float damage = STATS_CONFIG.InfernoPunchDamage * powerModifier;
-		int performance = 15;
-		float knockBack = 1 * powerModifier;
-		int fireTime = 5 + (int) (powerModifier * 10);
+		float xpMod = abilityData.getTotalXp() / 100;
+
+		float damage = STATS_CONFIG.infernoPunchSettings.damage;
+		int performance = STATS_CONFIG.infernoPunchSettings.performanceAmount;
+		float knockBack = STATS_CONFIG.infernoPunchSettings.knockbackMult;
+		int fireTime = STATS_CONFIG.infernoPunchSettings.fireTime;
 		float xp = SKILLS_CONFIG.infernoPunchHit;
 
 		if (abilityData.getLevel() == 1) {
-			damage = STATS_CONFIG.InfernoPunchDamage * 4 / 3 * powerModifier;
-			knockBack = 1.125F * powerModifier;
-			fireTime = 6;
-			performance += 5;
+			damage *= 4 / 3F;
+			knockBack *= 1.125F;
+			fireTime += 2;
+			performance += 2;
 			xp -= 1;
 		}
 		if (abilityData.getLevel() >= 2) {
-			damage = STATS_CONFIG.InfernoPunchDamage * 6 / 3 * powerModifier;
-			knockBack = 1.25F + powerModifier;
-			fireTime = 8 + (int) (powerModifier * 10);
-			performance = 20;
+			damage *= 6 / 3F;
+			knockBack *= 1.25F;
+			fireTime += 4;
+			performance += 5;
 			xp -= 2;
 		}
-		/*if (data.hasStatusControl(INFERNO_PUNCH_FIRST)) {
-			damage = STATS_CONFIG.InfernoPunchDamage * 7 / 3 * powerModifier;
-			knockBack = 1.5F + powerModifier;
-			fireTime = 15 + (int) (powerModifier * 10);
-			performance = 30;
-		}**/
+
+		damage *= powerModifier * xpMod;
+		knockBack *= powerModifier * xpMod;
+		fireTime *= powerModifier * xpMod;
+		performance *= powerModifier * xpMod;
 
 		if (entity.isPotionActive(MobEffects.STRENGTH)) {
 			damage += (Objects.requireNonNull(entity.getActivePotionEffect(MobEffects.STRENGTH)).getAmplifier() + 1) / 2F;
@@ -126,22 +121,13 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 								AvatarUtils.afterVelocityAdded(hit);
 								if (entity.world instanceof WorldServer) {
 									WorldServer World = (WorldServer) entity.world;
-											World.spawnParticle(AvatarParticles.getParticleFlames(), true, particlePos.x, particlePos.y, particlePos.z, 60,
-													0, 0, 0, 0.02);
+									World.spawnParticle(AvatarParticles.getParticleFlames(), true, particlePos.x, particlePos.y, particlePos.z, 60,
+											0, 0, 0, 0.02);
 								}
 							}
 							hit.playSound(SoundEvents.ITEM_FIRECHARGE_USE, 1.0F + performance / 30F, 0.8F + entity.world.rand.nextFloat() / 10);
 
-						/*	if (world.isRemote) {
-								for (int i = 0; i < 20 + Math.max(abilityData.getLevel(), 0); i++)
-									ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(particlePos).time(30).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10,
-											world.rand.nextGaussian() / 10).clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 70), 40).collide(true).
-											scale(abilityData.getLevel() < 1 ? 0.75F : 0.75F + abilityData.getLevel() / 10F).spawn(world);
-								System.out.println("huh");
-								return true;
-							}
-						}**/
-
+							return true;
 						}
 					}
 

@@ -35,10 +35,9 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
-
 public class StatCtrlInfernoPunchSecond extends StatusControl {
 	private ParticleSpawner particleSpawner;
-	private Map<String, Integer> timesPunched = new HashMap<String, Integer>();
+	private Map<String, Integer> timesPunched = new HashMap<>();
 
 	public StatCtrlInfernoPunchSecond() {
 		super(18, CONTROL_LEFT_CLICK, CrosshairPosition.LEFT_OF_CROSSHAIR);
@@ -58,10 +57,11 @@ public class StatCtrlInfernoPunchSecond extends StatusControl {
 		int timesPunchedInt = timesPunched.get(uuid);
 		HashSet<Entity> excluded = new HashSet<>();
 		if (!ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN)) {
-			float damageModifier = (float) (bender.calcPowerRating(Firebending.ID) / 100);
-			float damage = STATS_CONFIG.InfernoPunchDamage * 1.5F + damageModifier;
-			float knockBack = 0.75F;
-			int fireTime = 4;
+			float damageModifier = (float) (bender.getDamageMult(Firebending.ID));
+			float xpMod = abilityData.getTotalXp() / 100;
+			float damage = STATS_CONFIG.infernoPunchSettings.damage * 1.5F * damageModifier * xpMod;
+			float knockBack = STATS_CONFIG.infernoPunchSettings.knockbackMult * damageModifier * xpMod;
+			int fireTime = (int) (STATS_CONFIG.infernoPunchSettings.fireTime * damageModifier * xpMod);
 			Vector direction = Vector.getLookRectangular(entity);
 			RayTraceResult result = AvatarUtils.standardEntityRayTrace(world, entity, null, Vector.getEyePos(entity).toMinecraft(),
 					entity.getLookVec().scale(10).add(entity.getPositionVector()), 0.25F, false, excluded);

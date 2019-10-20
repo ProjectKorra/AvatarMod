@@ -43,7 +43,6 @@ public class ConfigStats {
 			fireBlastSettings = new AttackSettings(2.5F, 1),   //
 			waterArcSettings = new AttackSettings(3, 1),
 			boulderSettings = new AttackSettings(0.1F, 0.1),
-			airBurstSettings = new AttackSettings (5F, 1),
 			fireShotSetttings = new AttackSettings(1F, 0.5),
 			lightningSpearSettings = new AttackSettings(4F, 2);
 
@@ -58,28 +57,32 @@ public class ConfigStats {
 	//Has to be a float so I can times it by a fraction; there aren't any partial ticks, though.
 
 	@Load
-	public FireballSettings fireballSettings = new FireballSettings();
-
-	@Load
-	public ExplosionSettings explosionSettings = new ExplosionSettings();
+	public AirBurstSettings airBurstSettings = new AirBurstSettings();
 
 	@Load
 	public CloudburstSettings cloudburstSettings = new CloudburstSettings();
 
 	@Load
+	public ExplosionSettings explosionSettings = new ExplosionSettings();
+
+	@Load
 	public EarthspikeSettings earthspikeSettings = new EarthspikeSettings();
+
+	@Load
+	public FireballSettings fireballSettings = new FireballSettings();
+
+	@Load
+	public InfernoPunchSettings infernoPunchSettings = new InfernoPunchSettings();
 
 	@Load
 	public LightningRazeSettings lightningRazeSettings = new LightningRazeSettings();
 
 	@Load
-	public AirBurstSettings AirBurstSettings = new AirBurstSettings();
+	public PassiveSettings passiveSettings = new PassiveSettings();
 
 	@Load
 	public WaterCannonSettings waterCannonSettings = new WaterCannonSettings();
 
-	@Load
-	public PassiveSettings passiveSettings = new PassiveSettings();
 	// @formatter:off
 	@Load
 	public float chiAirblade = 1f,
@@ -138,9 +141,6 @@ public class ConfigStats {
 
 	@Load
 	public float sleepChiRegen = 99999;
-
-	@Load
-	public float InfernoPunchDamage = 3F;
 
 	@Load
 	public boolean allowAirBubbleElytra = false;
@@ -348,11 +348,13 @@ public class ConfigStats {
 	public static class AirBurstSettings {
 
 		@Load
-		public float radius = 3;
+		public float damage = 5F;
 
 		@Load
-		public float knockback = 2;
-		//Multiply by push to get the total knockback
+		public float push = 2;
+
+		@Load
+		public float radius = 3;
 
 		@Load
 		public float durationToFire = 40;
@@ -474,6 +476,30 @@ public class ConfigStats {
 
 		@Load
 		public double push = 1;
+
+	}
+
+	public static class InfernoPunchSettings {
+		@Load
+		public float damage = 3;
+
+		@Load
+		public float knockbackMult = 1F;
+
+		@Load
+		public int performanceAmount = 10;
+
+		@Load
+		public int fireTime = 3;
+
+		@Load
+		public float shockwaveRadius = 5;
+
+		@Load
+		public float shockwaveSpeed = 1;
+
+		@Load
+		public float shockwaveDamage = 6F;
 
 	}
 
