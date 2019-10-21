@@ -16,17 +16,15 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.common.damageutils.DamageUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import elucent.albedo.event.GatherLightsEvent;
 import elucent.albedo.lighting.ILightProvider;
@@ -48,6 +46,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -178,6 +177,26 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 		return events;
 	}
 
+	@Override
+	public float getAoeDamage() {
+		return getDamage() / 10;
+	}
+
+	@Override
+	public double getExpandedHitboxHeight() {
+		return getSize() / 4;
+	}
+
+	@Override
+	public double getExpandedHitboxWidth() {
+		return getSize() / 4;
+	}
+
+	@Override
+	public DamageSource getDamageSource(Entity target) {
+		return AvatarDamageSource.causeLightningSpearDamage(target, getOwner());
+	}
+
 	/**
 	 * When a lightning spear hits water, electricity spreads through the water and nearby
 	 * entities are electrocuted. This method is called when an entity gets electrocuted.
@@ -185,11 +204,8 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	private void handleWaterElectrocution(Entity entity) {
 
 		// Uses same DamageSource as lightning arc; this is intentional
-		DamageSource damageSource = AvatarDamageSource.causeLightningSpearDamage(entity, getOwner());
-
-		if (entity.attackEntityFrom(damageSource, getDamage() / 2)) {
-			BattlePerformanceScore.addLargeScore(getOwner());
-		}
+		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());
+		DamageUtils.attackEntity(getOwner(), entity, damageSource, getDamage() / 5, getPerformanceAmount(), getAbility(), getXpPerHit());
 
 	}
 
@@ -341,5 +357,15 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	public void applyElementalContact(AvatarEntity entity) {
 		super.applyElementalContact(entity);
 		entity.onLightningContact();
+	}
+
+	@Override
+	public float getXpPerHit() {
+		return SKILLS_CONFIG.lightningspearHit;
+	}
+
+	@Override
+	public int getPerformanceAmount() {
+		return 15;
 	}
 }

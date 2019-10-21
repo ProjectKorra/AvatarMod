@@ -25,6 +25,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -63,7 +64,7 @@ public class AirBurstHandler extends TickHandler {
 			//Default 4
 			float durationToFire = STATS_CONFIG.airBurstSettings.durationToFire;
 			//Default 40
-			double upwardKnockback = STATS_CONFIG.airBurstSettings.push / 7;
+			double upwardKnockback = STATS_CONFIG.airBurstSettings.push / 40;
 			double suction = 0.05;
 			int performanceAmount = STATS_CONFIG.airBurstSettings.performanceAmount;
 
@@ -73,9 +74,9 @@ public class AirBurstHandler extends TickHandler {
 				knockBack *= 1.25;
 				radius *= 1.25;
 				//4
-				durationToFire *= 0.75F;
+				durationToFire *= 0.825F;
 				//30
-				upwardKnockback *= (7 / 5F);
+				upwardKnockback *= 1.5;
 				performanceAmount += 3;
 			}
 
@@ -83,11 +84,11 @@ public class AirBurstHandler extends TickHandler {
 				damage *= 2;
 				//8
 				knockBack *= 2;
-				radius *= 1.5F;
-				//6
-				durationToFire *= 0.5F;
+				radius *= 1.75F;
+				//7
+				durationToFire *= 0.75F;
 				//20
-				upwardKnockback *= (7 / 3F);
+				upwardKnockback *= 1.75;
 				performanceAmount += 5;
 			}
 
@@ -101,10 +102,10 @@ public class AirBurstHandler extends TickHandler {
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				//Maximum Pressure
 				//Pulls enemies in then blasts them out
-				radius *= (4 / 3F);
-				//9
-				upwardKnockback = STATS_CONFIG.airBurstSettings.push / 2.5F;
-				durationToFire *= 2F;
+				radius *= 1.5;
+				//10.5
+				upwardKnockback = STATS_CONFIG.airBurstSettings.push / 10;
+				durationToFire *= (4 / 3F);
 				//Back to the original amount.
 				performanceAmount += 2;
 			}
@@ -120,16 +121,6 @@ public class AirBurstHandler extends TickHandler {
 			//gets smaller
 			suction -= (float) duration / 400;
 
-
-			/*if (world instanceof WorldServer) {
-				WorldServer World = (WorldServer) world;
-				for (int i = 0; i < 12; i++) {
-					Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-							i * 30), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
-					World.spawnParticle(EnumParticleTypes.CLOUD, lookpos.x() + entity.posX, lookpos.y() + entity.getEntityBoundingBox().minY,
-							lookpos.z() + entity.posZ, 1, 0, 0, 0, 0.005);
-				}
-			}**/
 			if (world.isRemote) {
 				for (int i = 0; i < 12; i++) {
 					Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
@@ -154,15 +145,16 @@ public class AirBurstHandler extends TickHandler {
 
 			if (duration >= durationToFire) {
 
-				int particleController = abilityData.getLevel() > 0 ? 50 - (2 * abilityData.getLevel()) : 50;
+				int particleController = abilityData.getLevel() > 0 ? 60 - (5 * abilityData.getLevel()) : 60;
 				EntityShockwave shockwave = new EntityShockwave(world);
 				shockwave.setOwner(entity);
-				shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
+				shockwave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity));
 				shockwave.setParticle(EnumParticleTypes.EXPLOSION_NORMAL);
 				shockwave.setElement(new Airbending());
 				shockwave.setParticleSpeed(0.5F * radius / STATS_CONFIG.airBurstSettings.radius);
 				shockwave.setDamageSource(AvatarDamageSource.AIR);
 				shockwave.setKnockbackHeight(upwardKnockback);
+				shockwave.setKnockbackMult(new Vec3d(knockBack, knockBack / 4, knockBack));
 				shockwave.setDamage((float) damage);
 				shockwave.setParticleAmount(1);
 				shockwave.setRange(radius);
@@ -226,10 +218,6 @@ public class AirBurstHandler extends TickHandler {
 			World world = entity.world;
 			if (world.isRemote) {
 				if (entity.ticksExisted == 2) {
-					System.out.println("Radius is " + entity.getRange());
-					System.out.println("Speed is " + entity.getSpeed());
-					System.out.println("Particle Speed is " + entity.getParticleSpeed());
-
 					double x1, y1, z1, xVel, yVel, zVel;
 					for (double theta = 0; theta <= 180; theta += 1) {
 						double dphi = (entity.getParticleController() - entity.getParticleAmount()) / Math.sin(Math.toRadians(theta));
@@ -245,8 +233,8 @@ public class AirBurstHandler extends TickHandler {
 							zVel = z1 * entity.getParticleSpeed();
 
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
-									.clr(0.8F, 0.8F, 0.8F).time(12 + (int) (2 * entity.getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
-									.scale(4.0F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).spawn(world);
+									.clr(0.8F, 0.8F, 0.8F).time(13 + (int) (2 * entity.getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
+									.scale(5F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).spawn(world);
 
 						}
 					}

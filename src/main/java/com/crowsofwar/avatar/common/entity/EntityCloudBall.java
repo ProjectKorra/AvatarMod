@@ -10,6 +10,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -132,6 +133,23 @@ public class EntityCloudBall extends AvatarEntity {
 			}
 
 		}
+
+		if (world.isRemote) {
+			if (ticksExisted % 2 == 0) {
+				AxisAlignedBB boundingBox = getEntityBoundingBox();
+				double spawnX = boundingBox.minX + world.rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+				double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+				double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+				//world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, spawnX, spawnY, spawnZ, 0, 0.06, 0);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(motionX + world.rand.nextGaussian() / 60, motionY
+						+ world.rand.nextGaussian() / 60, motionZ + world.rand.nextGaussian() / 60).time(4).clr(0.8F, 0.8F, 0.8F)
+						.scale(getSize() * 0.03125F).spawn(world);
+			}
+		}
+
+		//I'm using 0.03125, because that results in a size of 0.5F when rendering, as the default size for the cloudburst is actually 16.
+		//This is due to weird rendering shenanigans
+		setSize(getSize() * 0.03125F, getSize() * 0.03125F);
 
 	}
 

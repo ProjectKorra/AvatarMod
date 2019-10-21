@@ -1,9 +1,9 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.common.damageutils.DamageUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -23,10 +23,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-
-import static com.crowsofwar.avatar.common.bending.BattlePerformanceScore.SCORE_MOD_MEDIUM;
-import static com.crowsofwar.avatar.common.bending.BattlePerformanceScore.SCORE_MOD_SMALL;
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 public class EntityShockwave extends AvatarEntity {
 
@@ -111,17 +107,16 @@ public class EntityShockwave extends AvatarEntity {
 				AvatarParticles.getParticleFromName(dataManager.get(SYNC_PARTICLE));
 	}
 
-	@Nonnull
 	public void setParticle(EnumParticleTypes particle) {
 		dataManager.set(SYNC_PARTICLE, particle.getParticleName());
 	}
 
-	public void setParticleWaves(int waves) {
-		dataManager.set(SYNC_PARTICLE_WAVES, waves);
-	}
-
 	public int getParticleWaves() {
 		return dataManager.get(SYNC_PARTICLE_WAVES);
+	}
+
+	public void setParticleWaves(int waves) {
+		dataManager.set(SYNC_PARTICLE_WAVES, waves);
 	}
 
 	public int getParticleAmount() {
@@ -132,12 +127,12 @@ public class EntityShockwave extends AvatarEntity {
 		dataManager.set(SYNC_PARTICLE_AMOUNT, amount);
 	}
 
-	public void setBehaviour(ShockwaveBehaviour behaviour) {
-		dataManager.set(SYNC_BEHAVIOR, behaviour);
-	}
-
 	public ShockwaveBehaviour getBehaviour() {
 		return dataManager.get(SYNC_BEHAVIOR);
+	}
+
+	public void setBehaviour(ShockwaveBehaviour behaviour) {
+		dataManager.set(SYNC_BEHAVIOR, behaviour);
 	}
 
 	public double getParticleSpeed() {
@@ -233,20 +228,15 @@ public class EntityShockwave extends AvatarEntity {
 				for (Entity target : targets) {
 					if (this.canCollideWith(target) && target != this) {
 						if (this.canDamageEntity(target)) {
-							DamageSource ds = getSphere() ? AvatarDamageSource.causeSphericalShockwaveDamage(target, getOwner(), source) : AvatarDamageSource.causeShockwaveDamage(target, getOwner(), source);
-							if (target.attackEntityFrom(ds, damage)) {
-								int amount = performanceAmount > SCORE_MOD_SMALL ? performanceAmount : (int) SCORE_MOD_SMALL;
-								amount = amount > SCORE_MOD_MEDIUM ? (int) SCORE_MOD_MEDIUM : performanceAmount;
-								BattlePerformanceScore.addScore(getOwner(), amount);
-								target.setFire(fireTime);
-								if (getAbility() != null && getAbility() instanceof AbilityAirBurst) {
-									AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
-									aD.addXp(SKILLS_CONFIG.airBurstHit - aD.getLevel());
-									if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST) && target instanceof EntityLivingBase) {
-										((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
-										((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
-										((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
-									}
+							DamageUtils.attackEntity(getOwner(), target, getSphere() ? AvatarDamageSource.causeSphericalShockwaveDamage(target, getOwner(), source)
+									: AvatarDamageSource.causeShockwaveDamage(target, getOwner(), source), damage, performanceAmount, getAbility(), 4);
+							target.setFire(fireTime);
+							AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
+							if (getAbility() instanceof AbilityAirBurst) {
+								if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST) && target instanceof EntityLivingBase) {
+									((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
+									((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
+									((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
 								}
 							}
 						}
@@ -270,13 +260,6 @@ public class EntityShockwave extends AvatarEntity {
 				}
 			}
 		}
-	}
-
-	@Override
-	public void setDead() {
-		super.setDead();
-		if (isDead && !world.isRemote)
-			Thread.dumpStack();
 	}
 }
 
