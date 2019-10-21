@@ -73,7 +73,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 		flamesPerSecond = level <= 0 ? 6 : 10;
 		if (level == 3 && path == AbilityTreePath.FIRST)
-			flamesPerSecond = 11;
+			flamesPerSecond = 3;
 		else if (level == 3 && path == AbilityTreePath.SECOND)
 			flamesPerSecond = 9;
 
@@ -100,8 +100,12 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		if (bender.consumeChi(requiredChi)) {
 
 			Vector eye = getEyePos(entity);
+			boolean inWaterBlock = world.getBlockState(entity.getPosition()) instanceof BlockLiquid || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WATER
+					|| world.getBlockState(entity.getPosition()).getBlock() == Blocks.FLOWING_WATER;
+			boolean headInLiquid = world.getBlockState(entity.getPosition().up()) instanceof BlockLiquid || world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.WATER
+					|| world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.FLOWING_WATER;
 
-			if (!world.isRaining() && !(world.getBlockState(entity.getPosition()) instanceof BlockLiquid || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WATER)) {
+			if (!world.isRaining() && !(headInLiquid && inWaterBlock)) {
 
 				double speedMult = 15 + 5 * totalXp / 100;
 				double randomness = 3.0 - 0.5 * totalXp / 100;
@@ -111,6 +115,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				float damage = 0.5F;
 				float performanceAmount = 2;
 				float xp = SKILLS_CONFIG.flamethrowerHit;
+				float knockBack = 1;
 				boolean lightsFires = false;
 
 				switch (abilityData.getLevel()) {
@@ -121,6 +126,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						range = 5;
 						performanceAmount = 3;
 						xp /= 1.5;
+						knockBack += 0.5;
 						break;
 					case 2:
 						size = 2;
@@ -128,17 +134,19 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						damage = 3F;
 						range = 7;
 						performanceAmount = 5;
+						knockBack += 1;
 						xp /= 2;
 						break;
 				}
 				if (level == 3 && path == AbilityTreePath.FIRST) {
-					speedMult = 40;
+					speedMult = 38;
 					randomness = 0;
 					fireTime = 5;
 					size = 1.25F;
 					damage = 7F;
 					range = 11;
 					performanceAmount = 6;
+					knockBack += 2;
 					xp = 0;
 				}
 				if (level == 3 && path == AbilityTreePath.SECOND) {
@@ -150,6 +158,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					range = 6.5F;
 					performanceAmount = 2;
 					lightsFires = true;
+					knockBack += 1;
 					xp = 0;
 				}
 
@@ -178,7 +187,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 								if (attack) {
 									target.setFire(fireTime + 2);
 									target.setEntityInvulnerable(false);
-									Vector knockback = look.times(speedMult / 100);
+									Vector knockback = look.times(speedMult / 100).times(knockBack);
 									if (target.canBePushed())
 										target.addVelocity(knockback.x(), knockback.y(), knockback.z());
 									AvatarUtils.afterVelocityAdded(target);

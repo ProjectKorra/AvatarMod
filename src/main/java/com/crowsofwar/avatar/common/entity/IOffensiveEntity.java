@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,13 +24,8 @@ public interface IOffensiveEntity {
 
 	default void Explode(World world, AvatarEntity entity, EntityLivingBase owner) {
 		if (owner != null) {
-			if (world.isRemote)
-				spawnExplosionParticles();
-			//TODO: Get rid of this particle spawning code. It's outdated.
-			if (world instanceof WorldServer) {
-				WorldServer World = (WorldServer) world;
-				World.spawnParticle(getParticle(), entity.posX, entity.posY, entity.posZ, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
-			}
+			//Having a general method means you can use either particle system! Hooray!
+			spawnExplosionParticles(world, AvatarEntityUtils.getMiddleOfEntity(entity));
 			for (int i = 0; i < getSounds().length; i++) {
 				entity.playSound(getSounds()[i], getVolume(),
 						getPitch());
@@ -91,19 +87,12 @@ public interface IOffensiveEntity {
 				}
 			}
 		}
-		if (entity.world.isRemote)
-			spawnPiercingParticles();
+		spawnPiercingParticles(entity.world, AvatarEntityUtils.getMiddleOfEntity(entity));
 	}
 
 	default void Dissipate(AvatarEntity entity) {
 		if (entity.getOwner() != null) {
-			if (entity.world.isRemote)
-				//ParticleBuilder particles.
-				spawnDissipateParticles();
-			if (entity.world instanceof WorldServer) {
-				WorldServer World = (WorldServer) entity.world;
-				World.spawnParticle(getParticle(), entity.posX, entity.posY, entity.posZ, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
-			}
+			spawnDissipateParticles(entity.world, AvatarEntityUtils.getMiddleOfEntity(entity));
 			for (int i = 0; i < getSounds().length; i++) {
 				entity.playSound(getSounds()[i], getVolume(),
 						getPitch());
@@ -160,13 +149,31 @@ public interface IOffensiveEntity {
 		return new Vec3d(0.5, 0.5, 0.5);
 	}
 
-	//You don't have to do a world.isRemote check, it's done for you.
+	//You do have to do a server or client side check, depending on what you want to spawn.
 	//Self-explanatory particle spawning methods.
-	default void spawnExplosionParticles() {}
+	default void spawnExplosionParticles(World world, Vec3d pos) {
+		if (world instanceof WorldServer && !world.isRemote) {
+			WorldServer World = (WorldServer) world;
+			if (getParticle() != null)
+				World.spawnParticle(getParticle(), pos.x, pos.y, pos.z, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
+		}
+	}
 
-	default void spawnDissipateParticles() {}
+	default void spawnDissipateParticles(World world, Vec3d pos) {
+		if (world instanceof WorldServer && !world.isRemote) {
+			WorldServer World = (WorldServer) world;
+			if (getParticle() != null)
+				World.spawnParticle(getParticle(), pos.x, pos.y, pos.z, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
+		}
+	}
 
-	default void spawnPiercingParticles() {}
+	default void spawnPiercingParticles(World world, Vec3d pos) {
+		if (world instanceof WorldServer && !world.isRemote) {
+			WorldServer World = (WorldServer) world;
+			if (getParticle() != null)
+				World.spawnParticle(getParticle(), pos.x, pos.y, pos.z, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
+		}
+	}
 
 	//TODO: Get rid of these particle methods as they're unnecessary with the ease of the new particle system.
 	default EnumParticleTypes getParticle() {

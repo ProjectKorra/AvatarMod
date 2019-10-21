@@ -154,7 +154,7 @@ public class AirBurstHandler extends TickHandler {
 				shockwave.setParticleSpeed(0.5F * radius / STATS_CONFIG.airBurstSettings.radius);
 				shockwave.setDamageSource(AvatarDamageSource.AIR);
 				shockwave.setKnockbackHeight(upwardKnockback);
-				shockwave.setKnockbackMult(new Vec3d(knockBack, knockBack / 4, knockBack));
+				shockwave.setKnockbackMult(new Vec3d(knockBack * 2, knockBack / 4, knockBack * 2));
 				shockwave.setDamage((float) damage);
 				shockwave.setParticleAmount(1);
 				shockwave.setRange(radius);
@@ -234,7 +234,7 @@ public class AirBurstHandler extends TickHandler {
 
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
 									.clr(0.8F, 0.8F, 0.8F).time(13 + (int) (2 * entity.getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
-									.scale(5F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).spawn(world);
+									.scale(3.5F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).spawn(world);
 
 						}
 					}

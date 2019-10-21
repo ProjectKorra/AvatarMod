@@ -32,6 +32,7 @@ import elucent.albedo.lighting.Light;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -71,7 +72,6 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	public void onUpdate() {
 		super.onUpdate();
 
-		//TODO: Fix weird positioning. It seems there's weird client desync???? Idk how.
 		motionX *= 0.95;
 		motionY *= 0.95;
 		motionZ *= 0.95;

@@ -16,10 +16,9 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
+import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.damageutils.DamageUtils;
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
@@ -37,6 +36,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
@@ -58,9 +58,6 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 
 	private static final DataParameter<LightningSpearBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityLightningSpear.class, LightningSpearBehavior.DATA_SERIALIZER);
-
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityLightningSpear.class,
-			DataSerializers.FLOAT);
 
 	private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityLightningSpear.class,
 			DataSerializers.FLOAT);
@@ -84,7 +81,6 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	 */
 	private LightningFloodFill floodFill;
 
-	private float Size;
 
 
 
@@ -93,8 +89,6 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	 */
 	public EntityLightningSpear(World world) {
 		super(world);
-		this.Size = 0.8F;
-		setSize(Size, Size);
 		this.damage = 3F;
 		this.piercing = false;
 		this.setInvisible(false);
@@ -110,7 +104,6 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	public void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new LightningSpearBehavior.Idle());
-		dataManager.register(SYNC_SIZE, Size);
 		dataManager.register(SYNC_DEGREES_PER_SECOND, 400F);
 	}
 
@@ -165,7 +158,8 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 				setDead();
 			}
 		}
-		this.setEntitySize(getSize() / 3, getSize() / 3);
+
+		setEntitySize(getAvgSize());
 
 	}
 
@@ -184,12 +178,12 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 
 	@Override
 	public double getExpandedHitboxHeight() {
-		return getSize() / 4;
+		return getAvgSize() / 4;
 	}
 
 	@Override
 	public double getExpandedHitboxWidth() {
-		return getSize() / 4;
+		return getAvgSize() / 4;
 	}
 
 	@Override
@@ -229,14 +223,6 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 
 	public void setDamage(float damage) {
 		this.damage = damage;
-	}
-
-	public float getSize() {
-		return dataManager.get(SYNC_SIZE);
-	}
-
-	public void setSize(float size) {
-		dataManager.set(SYNC_SIZE, size);
 	}
 
 	@Override
@@ -296,16 +282,6 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 		removeStatCtrl();
 	}
 
-	@Override
-	public boolean onAirContact() {
-		if (getAbility() instanceof AbilityLightningArc && !world.isRemote) {
-			AbilityData aD = AbilityData.get(getOwner(), "lightning_spear");
-			if (!aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				this.setDead();
-			}
-		}
-		return true;
-	}
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
@@ -334,7 +310,7 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	@Override
 	@Optional.Method(modid = "albedo")
 	public Light provideLight() {
-		return Light.builder().pos(this).color(1F, 2F, 3F).radius(8 + getSize()).build();
+		return Light.builder().pos(this).color(1F, 2F, 3F).radius(8 + getAvgSize()).build();
 	}
 
 	@Override
@@ -367,5 +343,15 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	@Override
 	public int getPerformanceAmount() {
 		return 15;
+	}
+
+	@Override
+	public EnumParticleTypes getParticle() {
+		return AvatarParticles.getParticleElectricity();
+	}
+
+	@Override
+	public boolean shouldExplode() {
+		return getBehavior() instanceof LightningSpearBehavior.Thrown;
 	}
 }

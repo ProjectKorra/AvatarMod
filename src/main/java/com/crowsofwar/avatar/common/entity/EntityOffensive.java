@@ -12,6 +12,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -62,6 +63,11 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	public void setEntitySize(float height, float width) {
 		dataManager.set(SYNC_HEIGHT, height);
 		dataManager.set(SYNC_WIDTh, width);
+	}
+
+	public void setEntitySize(float size) {
+		dataManager.set(SYNC_HEIGHT, size);
+		dataManager.set(SYNC_WIDTh, size);
 	}
 
 	public float getDamage() {
@@ -171,16 +177,17 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		this.knockbackMult = mult;
 	}
 
-	//TODO: Remove these particle methods. They're useless currently. Just use spawnParticles();
-
+	@Override
 	public EnumParticleTypes getParticle() {
 		return AvatarParticles.getParticleFlames();
 	}
 
+	@Override
 	public int getNumberofParticles() {
 		return 50;
 	}
 
+	@Override
 	public double getParticleSpeed() {
 		return 0.02;
 	}
@@ -264,12 +271,6 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	@Override
 	public boolean canBePushed() {
 		return !isPiercing();
-	}
-
-	@Override
-	public void setEntityBoundingBox(@Nonnull AxisAlignedBB bb) {
-		super.setEntityBoundingBox(bb);
-		expandedHitbox = bb.grow(getExpandedHitboxWidth(), getExpandedHitboxHeight(), getExpandedHitboxWidth());
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -135,16 +135,16 @@ public class EntityCloudBall extends AvatarEntity {
 		}
 
 		if (world.isRemote) {
-			if (ticksExisted % 2 == 0) {
+			//if (ticksExisted % 2 == 0) {
 				AxisAlignedBB boundingBox = getEntityBoundingBox();
 				double spawnX = boundingBox.minX + world.rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
 				double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 				double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 				//world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, spawnX, spawnY, spawnZ, 0, 0.06, 0);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(motionX + world.rand.nextGaussian() / 60, motionY
-						+ world.rand.nextGaussian() / 60, motionZ + world.rand.nextGaussian() / 60).time(4).clr(0.8F, 0.8F, 0.8F)
-						.scale(getSize() * 0.03125F).spawn(world);
-			}
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).time(12).clr(0.8F, 0.8F, 0.8F)
+						.scale(getSize() * 0.03125F * 3).spawn(world);
+			//}
 		}
 
 		//I'm using 0.03125, because that results in a size of 0.5F when rendering, as the default size for the cloudburst is actually 16.
