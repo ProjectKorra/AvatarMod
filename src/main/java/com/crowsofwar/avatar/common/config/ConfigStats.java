@@ -112,8 +112,8 @@ public class ConfigStats {
 			chiFireBlast = 2f,
 			chiFireball = 2f,
 			chiFlamethrowerSecond = 1.75f,
-			chiFlamethrowerSecondLvl4_1 = 2.625f,
-			chiFlamethrowerSecondLvl4_2 = 2f,
+			chiFlamethrowerSecondLvl4_1 = 3f,
+			chiFlamethrowerSecondLvl4_2 = 2.5f,
 			chiFireShot = 2.5f,
 			chiWave = 2f,
 			chiWaterArc = 1f,
@@ -348,20 +348,20 @@ public class ConfigStats {
 	public static class AirBurstSettings {
 
 		@Load
-		public float damage = 5F;
+		public float damage = 4F;
 
 		@Load
 		public float push = 2;
 
 		@Load
-		public float radius = 3;
+		public float radius = 4;
 
 		@Load
 		public float durationToFire = 40;
 		//How long it takes to shoot the air burst, in ticks
 
 		@Load
-		public int performanceAmount = 15;
+		public int performanceAmount = 12;
 		//How much performance is added to the player's performance score upon a hit
 
 	}

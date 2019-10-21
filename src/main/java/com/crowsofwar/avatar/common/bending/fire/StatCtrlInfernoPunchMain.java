@@ -48,7 +48,7 @@ public class StatCtrlInfernoPunchMain extends StatusControl {
 
 		double reach = Raytrace.getReachDistance(entity);
 		float powerModifier = (float) (ctx.getBender().getDamageMult(Firebending.ID));
-		float xpMod = abilityData.getTotalXp() / 100;
+		float xpMod = abilityData.getXpModifier();
 
 		float damage = STATS_CONFIG.infernoPunchSettings.damage;
 		int performance = STATS_CONFIG.infernoPunchSettings.performanceAmount;

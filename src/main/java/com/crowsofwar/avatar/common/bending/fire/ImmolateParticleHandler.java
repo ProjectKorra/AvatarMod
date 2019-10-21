@@ -36,7 +36,7 @@ public class ImmolateParticleHandler extends TickHandler {
 		Random rand = new Random();
 		double r = rand.nextDouble();
 		if (!world.isRemote) {
-			for (int i = 0; i < 12; i++) {
+			for (int i = 0; i < 12 + Math.max(aD.getLevel(), 1) * 4; i++) {
 				int random = rand.nextInt(2) + 1;
 				r = random == 1 ? r : r * -1;
 				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (r * 2)), 0).times(aD.getLevel() < 1 ? 0.5 : aD.getLevel() * 0.5).withY(entity.getEyeHeight() - 0.7);
@@ -45,7 +45,7 @@ public class ImmolateParticleHandler extends TickHandler {
 			}
 		}
 		else {
-			for (int i = 0; i < 12; i++) {
+			for (int i = 0; i < 12 + Math.max(aD.getLevel(), 1) * 4; i++) {
 				int random = rand.nextInt(2) + 1;
 				r = random == 1 ? r : r * -1;
 				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (r * 2)), 0).times(aD.getLevel() < 1 ? 0.5 : aD.getLevel() * 0.5).withY(entity.getEyeHeight() - 0.7);
@@ -53,9 +53,7 @@ public class ImmolateParticleHandler extends TickHandler {
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(8).
 						vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40).clr(255,
 						60 + AvatarUtils.getRandomNumberInRange(1, 92), 40)
-						.spawn(world);//.fade(255, 243, 40).spawn(world);
-						//spawnParticles(world, AvatarParticles.getParticleFlames(), 1, 1, location.plus(Vector.getEntityPos(entity)),
-						//new Vector(0.8, 4, 0.8), true);
+						.spawn(world);
 			}
 		}
 		return duration >= immolateDuration;

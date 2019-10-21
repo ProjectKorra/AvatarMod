@@ -73,9 +73,9 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 		flamesPerSecond = level <= 0 ? 6 : 10;
 		if (level == 3 && path == AbilityTreePath.FIRST)
-			flamesPerSecond = 15;
+			flamesPerSecond = 11;
 		else if (level == 3 && path == AbilityTreePath.SECOND)
-			flamesPerSecond = 8;
+			flamesPerSecond = 9;
 
 
 		double powerRating = bender.calcPowerRating(Firebending.ID);
@@ -104,7 +104,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			if (!world.isRaining() && !(world.getBlockState(entity.getPosition()) instanceof BlockLiquid || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WATER)) {
 
 				double speedMult = 15 + 5 * totalXp / 100;
-				double randomness = 3.0 - 5 * totalXp / 100;
+				double randomness = 3.0 - 0.5 * totalXp / 100;
 				float range = 4;
 				int fireTime = 0;
 				float size = 1;
@@ -132,12 +132,12 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						break;
 				}
 				if (level == 3 && path == AbilityTreePath.FIRST) {
-					speedMult = 25;
+					speedMult = 40;
 					randomness = 0;
 					fireTime = 5;
 					size = 1.25F;
 					damage = 7F;
-					range = 12;
+					range = 11;
 					performanceAmount = 6;
 					xp = 0;
 				}
@@ -223,7 +223,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				if (world.isRemote) {
 					for (int i = 0; i < 5; i++)
 						ParticleBuilder.create(ParticleBuilder.Type.SNOW).collide(true).time(15).vel(world.rand.nextGaussian() / 50, world.rand.nextGaussian() / 50, world.rand.nextGaussian() / 50)
-								.scale(2.0F + abilityData.getLevel() / 2F).pos(Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity)).toMinecraft()).clr(1.0F, 1.0F, 1.0f).spawn(world);
+								.scale(1.5F + abilityData.getLevel() / 2F).pos(Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity)).toMinecraft()).clr(0.75F, 0.75F, 0.75f).spawn(world);
 					return true;
 
 				}
@@ -234,10 +234,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			// not enough chi
 			return true;
 
-		//The reason we use this, instead of putting it at the end of the code block, is to allow particles to spawn.
-		//It's just something to do with client and server-side stuff.
-		//It's how world.isRemote works.
-		//We're also returning the inverse of what we normally would, as we want it to keep ticking. False means it keeps going, true stops it.
 		return false;
 
 	}

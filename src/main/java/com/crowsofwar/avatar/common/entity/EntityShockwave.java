@@ -17,11 +17,11 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.bending.BattlePerformanceScore.SCORE_MOD_MEDIUM;
@@ -111,6 +111,7 @@ public class EntityShockwave extends AvatarEntity {
 				AvatarParticles.getParticleFromName(dataManager.get(SYNC_PARTICLE));
 	}
 
+	@Nonnull
 	public void setParticle(EnumParticleTypes particle) {
 		dataManager.set(SYNC_PARTICLE, particle.getParticleName());
 	}
@@ -269,6 +270,13 @@ public class EntityShockwave extends AvatarEntity {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
+		if (isDead && !world.isRemote)
+			Thread.dumpStack();
 	}
 }
 

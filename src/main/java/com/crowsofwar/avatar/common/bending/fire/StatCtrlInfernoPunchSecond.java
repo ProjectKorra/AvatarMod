@@ -58,7 +58,7 @@ public class StatCtrlInfernoPunchSecond extends StatusControl {
 		HashSet<Entity> excluded = new HashSet<>();
 		if (!ctx.getData().hasTickHandler(TickHandlerController.INFERNO_PUNCH_COOLDOWN)) {
 			float damageModifier = (float) (bender.getDamageMult(Firebending.ID));
-			float xpMod = abilityData.getTotalXp() / 100;
+			float xpMod = abilityData.getXpModifier();
 			float damage = STATS_CONFIG.infernoPunchSettings.damage * 1.5F * damageModifier * xpMod;
 			float knockBack = STATS_CONFIG.infernoPunchSettings.knockbackMult * damageModifier * xpMod;
 			int fireTime = (int) (STATS_CONFIG.infernoPunchSettings.fireTime * damageModifier * xpMod);
