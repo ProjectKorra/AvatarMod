@@ -42,6 +42,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
@@ -66,16 +67,17 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		AbilityData abilityData = data.getAbilityData("flamethrower");
 		AbilityTreePath path = abilityData.getPath();
 
-		float totalXp = abilityData.getTotalXp();
 		int level = abilityData.getLevel();
 		int flamesPerSecond;
+
+		//TODO: Movement modifier
 
 
 		flamesPerSecond = level <= 0 ? 6 : 10;
 		if (level == 3 && path == AbilityTreePath.FIRST)
-			flamesPerSecond = 3;
+			flamesPerSecond = 10;
 		else if (level == 3 && path == AbilityTreePath.SECOND)
-			flamesPerSecond = 9;
+			flamesPerSecond = 8;
 
 
 		double powerRating = bender.calcPowerRating(Firebending.ID);
@@ -107,8 +109,8 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 			if (!world.isRaining() && !(headInLiquid && inWaterBlock)) {
 
-				double speedMult = 15 + 5 * totalXp / 100;
-				double randomness = 3.0 - 0.5 * totalXp / 100;
+				double speedMult = 15 + 5 * abilityData.getXpModifier();
+				double randomness = 3.0 - 0.5 * abilityData.getXpModifier();
 				float range = 4;
 				int fireTime = 0;
 				float size = 1;
@@ -125,7 +127,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						fireTime = 2;
 						range = 5;
 						performanceAmount = 3;
-						xp /= 1.5;
 						knockBack += 0.5;
 						break;
 					case 2:
@@ -135,19 +136,19 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						range = 7;
 						performanceAmount = 5;
 						knockBack += 1;
-						xp /= 2;
 						break;
 				}
 				if (level == 3 && path == AbilityTreePath.FIRST) {
 					speedMult = 38;
 					randomness = 0;
 					fireTime = 5;
+					//What the truck? For some reason, if I make the size bigger than this, the whole ability's particle accuracy
+					//just plummets. It's very odd. Don't change it.
 					size = 1.25F;
 					damage = 7F;
 					range = 11;
 					performanceAmount = 6;
 					knockBack += 2;
-					xp = 0;
 				}
 				if (level == 3 && path == AbilityTreePath.SECOND) {
 					speedMult = 12;
@@ -159,7 +160,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					performanceAmount = 2;
 					lightsFires = true;
 					knockBack += 1;
-					xp = 0;
 				}
 
 				// Affect stats by power rating
@@ -168,7 +168,8 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				damage += powerRating / 100F;
 				fireTime += (int) (powerRating / 50F);
 				speedMult += powerRating / 100f * 2.5f;
-				randomness -= randomness >= powerRating / 100f * 6f ? powerRating / 100F * 6 : 0;
+				randomness = randomness >= powerRating / 100f * 6f ? randomness - powerRating / 100F * 6 : 0;
+				randomness = randomness < 0 ? 0 : randomness;
 
 				double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
 				double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
@@ -177,7 +178,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 				Vector start = look.plus(eye.minusY(0.5));
 
-				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2, entity1 -> entity1 != entity);
+				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2.2F, entity1 -> entity1 != entity);
 				hit.remove(entity);
 				if (!hit.isEmpty()) {
 					for (Entity target : hit) {
@@ -216,9 +217,14 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				//Particle code.
 				if (world.isRemote) {
 					for (int i = 0; i < flamesPerSecond; i++) {
-						ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size).time(20).collide(true).vel(look.toMinecraft().scale(speedMult / 30)).spawn(world);
-						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(25).vel(look.toMinecraft().scale(speedMult / 30)).
-								clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 70), 40).collide(true).scale(size).spawn(world);
+						start = look.times((float) i / (float) flamesPerSecond).plus(eye.minusY(0.5));
+						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles)
+							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size).time(20).collide(true).vel(look.toMinecraft().scale(speedMult / 30)).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.toMinecraft().scale(speedMult / 30)).
+								clr(255, 0, 0).collide(true).scale(size).spawn(world);
+						if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles)
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.toMinecraft().scale(speedMult / 30)).
+									clr(255, 193 + AvatarUtils.getRandomNumberInRange(1, 60), 40).collide(true).scale(size).spawn(world);
 					}
 				}
 

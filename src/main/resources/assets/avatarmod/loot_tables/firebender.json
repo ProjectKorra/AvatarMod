@@ -7,7 +7,7 @@
             {  
                "type":"item",
                "weight":1,
-               "name":"avatarmod:scroll",
+               "name":"avatarmod:scroll_fire",
                "functions":[  
                   {  
                      "function":"set_count",
@@ -25,7 +25,7 @@
                   },
                   {  
                      "function":"set_data",
-                     "data":2
+                     "data": 1
                   }
                ],
                "conditions":[  
@@ -48,8 +48,8 @@
             {  
                "type":"item",
                "weight":1,
-               "name":"avatarmod:scroll",
-               "functions":[  
+               "name":"avatarmod:scroll_fire",
+               "functions": [
                   {  
                      "function":"set_count",
                      "count":{  
@@ -63,6 +63,10 @@
                         "min":1,
                         "max":1
                      }
+                  },
+                  {
+                     "function": "set_data",
+                     "data": 2
                   }
                ],
                "conditions":[  

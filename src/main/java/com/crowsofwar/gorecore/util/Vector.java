@@ -368,6 +368,9 @@ public class Vector {
 		return new Vector(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
 	}
 
+	public static Vector fromVec3d(Vec3d vec3d) {
+		return new Vector(vec3d.x, vec3d.y, vec3d.z);
+	}
 	/**
 	 * Creates a new vector from the packet information in the byte buffer. Vectors should be
 	 * encoded using the non-static {@link #toBytes(ByteBuf) toBytes}.

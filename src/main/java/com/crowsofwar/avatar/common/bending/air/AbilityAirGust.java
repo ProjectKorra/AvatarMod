@@ -72,6 +72,8 @@ public class AbilityAirGust extends Ability {
 			gust.setPosition(pos.minusY(0.5));
 			gust.setOwner(entity);
 			gust.setSize(size);
+			gust.rotationPitch = entity.rotationPitch;
+			gust.rotationYaw = entity.rotationYaw;
 			gust.setPushStone(ctx.getLevel() >= 1);
 			gust.setPushIronDoor(ctx.getLevel() >= 2);
 			gust.setPushIronTrapDoor(ctx.getLevel() >= 2);

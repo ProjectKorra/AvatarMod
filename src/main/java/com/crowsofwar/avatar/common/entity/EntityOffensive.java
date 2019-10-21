@@ -139,6 +139,10 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	}
 
+	@Override
+	public Vec3d getKnockback() {
+		return new Vec3d(motionX / 2, motionY / 2, motionZ / 2);
+	}
 
 	@Override
 	public float getXpPerHit() {

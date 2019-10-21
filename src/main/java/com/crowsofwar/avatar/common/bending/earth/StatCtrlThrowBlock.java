@@ -57,7 +57,7 @@ public class StatCtrlThrowBlock extends StatusControl {
 			float pitch = (float) Math.toRadians(entity.rotationPitch);
 
 			// Calculate force and everything
-			double forceMult = data.getAbilityData("pickup_block").getLevel() >= 1 //
+			double forceMult = data.getAbilityData("earth_control").getLevel() >= 1 //
 					? 50 : 35;
 			Vector lookDir = Vector.toRectangular(yaw, pitch);
 			floating.addVelocity(floating.velocity().times(-1));

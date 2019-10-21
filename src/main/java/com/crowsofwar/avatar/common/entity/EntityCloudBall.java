@@ -143,7 +143,7 @@ public class EntityCloudBall extends AvatarEntity {
 				//world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, spawnX, spawnY, spawnZ, 0, 0.06, 0);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
 						world.rand.nextGaussian() / 60).time(12).clr(0.8F, 0.8F, 0.8F)
-						.scale(getSize() * 0.03125F * 3).spawn(world);
+						.scale(getSize() * 0.03125F * 2).spawn(world);
 			//}
 		}
 

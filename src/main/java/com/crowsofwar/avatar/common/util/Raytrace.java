@@ -43,6 +43,9 @@ import java.util.function.Predicate;
 
 public class Raytrace {
 
+	//TODO: Some way to detect raytraces hitting each other!
+
+
 	private Raytrace() {
 	}
 

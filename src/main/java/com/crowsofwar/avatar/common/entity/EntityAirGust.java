@@ -22,6 +22,8 @@ import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -32,6 +34,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -128,6 +131,12 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		float expansionRate = 1f / 80;
 		setSize(getSize() + expansionRate);
 		setSize(getSize(), getSize());
+
+		//Rendering.
+		if (world.isRemote) {
+			Vector startPos = Vector.fromVec3d(AvatarEntityUtils.getMiddleOfEntity(this));
+
+		}
 	}
 
 	@Override
@@ -249,23 +258,6 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		return 8;
 	}
 
-	public static class AirGustControlPoint extends ControlPoint {
-
-		public AirGustControlPoint(EntityArc arc, float size, double x, double y, double z) {
-			super(arc, size, x, y, z);
-		}
-
-		@Override
-		public void onUpdate() {
-			super.onUpdate();
-			if (arc.getControlPoint(0) == this) {
-				float expansionRate = 1f / 80;
-				size += expansionRate;
-			}
-		}
-
-	}
-
 	@Override
 	protected void updateCpBehavior() {
 		getLeader().setPosition(position());
@@ -302,5 +294,22 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 
 		}
 		getControlPoint(0).setPosition(position().plusY(getSize() / 2));
+	}
+
+	public static class AirGustControlPoint extends ControlPoint {
+
+		public AirGustControlPoint(EntityArc arc, float size, double x, double y, double z) {
+			super(arc, size, x, y, z);
+		}
+
+		@Override
+		public void onUpdate() {
+			super.onUpdate();
+			if (arc.getControlPoint(0) == this) {
+				float expansionRate = 1f / 80;
+				size += expansionRate;
+			}
+		}
+
 	}
 }
