@@ -32,7 +32,6 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	private static final DataParameter<Float> SYNC_WIDTh = EntityDataManager
 			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
 
-	private AxisAlignedBB expandedHitbox;
 	private float xp;
 	private int fireTime;
 	private int performanceAmount;
@@ -42,7 +41,6 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	public EntityOffensive(World world) {
 		super(world);
-		this.expandedHitbox = getExpandedHitbox(this);
 		this.performanceAmount = 20;
 		this.fireTime = 3;
 		this.xp = 3;
@@ -105,11 +103,11 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (!world.isRemote) {
-			List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, getExpandedHitbox());
-			if (!targets.isEmpty()) {
-				for (Entity hit : targets) {
-					if (canDamageEntity(hit) && this != hit) {
+		List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, getExpandedHitbox());
+		if (!targets.isEmpty()) {
+			for (Entity hit : targets) {
+				if (canCollideWith(hit) && this != hit) {
+					if (!world.isRemote) {
 						onCollideWithEntity(hit);
 					}
 				}
@@ -141,8 +139,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		if (!isPiercing() && isProjectile() && shouldExplode())
 			Explode();
 		else if (!isPiercing() && shouldDissipate()) {
-			attackEntity(this, entity, false, new Vec3d(getKnockback().x * getKnockbackMult().x, getKnockback().y * getKnockbackMult().y,
-					getKnockback().z * getKnockbackMult().z));
+			attackEntity(this, entity, false, getKnockback());
 			Dissipate();
 		} else applyPiercingCollision();
 		if (entity instanceof AvatarEntity)
@@ -152,7 +149,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	@Override
 	public Vec3d getKnockback() {
-		return new Vec3d(motionX / 2, motionY / 2, motionZ / 2);
+		return new Vec3d(motionX / 2 * getKnockbackMult().x, motionY / 2 * getKnockbackMult().y, motionZ / 2 * getKnockbackMult().z);
 	}
 
 	@Override
@@ -266,7 +263,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	}
 
 	public AxisAlignedBB getExpandedHitbox() {
-		return expandedHitbox;
+		return getExpandedHitbox(this);
 	}
 
 	@Override

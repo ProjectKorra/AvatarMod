@@ -173,7 +173,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				damage += powerRating / 100F;
 				fireTime += (int) (powerRating / 50F);
 				speedMult += powerRating / 100f * 2.5f;
-				randomness = randomness >= powerRating / 100f * 6f ? randomness - powerRating / 100F * 6 : 0;
+				randomness = randomness >= powerRating / 100f * 2.5f ? randomness - powerRating / 100F * 2.5 : 0;
 				randomness = randomness < 0 ? 0 : randomness;
 
 				double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
@@ -226,10 +226,13 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					for (double i = 0; i < flamesPerSecond; i += 1) {
 						Vector start1 = look.times(i / (double) flamesPerSecond).plus(eye.minusY(0.5));
 						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
-								clr(255, 0, 0).collide(true).scale(size).spawn(world);
-						if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles)
+								clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 70), 40).collide(true).scale(size).spawn(world);
+						if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
+									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 60, 40).collide(true).scale(size).spawn(world);
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
 									clr(255, 193 + AvatarUtils.getRandomNumberInRange(1, 60), 40).collide(true).scale(size).spawn(world);
+						}
 					}
 				}
 
@@ -239,7 +242,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 
 			} else {
-				entity.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 1.0F, 1.0F);
 				if (world.isRemote) {
 					for (int i = 0; i < 5; i++)
 						ParticleBuilder.create(ParticleBuilder.Type.SNOW).collide(true).time(15).vel(world.rand.nextGaussian() / 50, world.rand.nextGaussian() / 50, world.rand.nextGaussian() / 50)
@@ -252,6 +254,8 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, pos.x(), pos.y(), pos.z(), 3 + Math.max(abilityData.getLevel(), 0),
 							0, 0, 0, 0.0015);
 				}
+				entity.world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, entity.getSoundCategory(),
+						1.0F, 0.8F + world.rand.nextFloat() / 10);
 				//makes sure the tick handler is removed
 				return true;
 			}

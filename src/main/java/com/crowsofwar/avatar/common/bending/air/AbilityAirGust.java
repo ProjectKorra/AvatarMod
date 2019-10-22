@@ -25,6 +25,8 @@ import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -58,18 +60,24 @@ public class AbilityAirGust extends Ability {
 			float size = 1.0F;
 			int lifetime = 20;
 			if (ctx.getLevel() == 1) {
-				speed = 45;
+				speed = 40;
 				size = 1.25F;
 				lifetime += 10;
 			}
 			if (ctx.getLevel() >= 2) {
-				speed = 50;
+				speed = 45;
 				size = 1.5F;
 				lifetime += 20;
 			}
 			if (ctx.isDynamicMasterLevel(FIRST)) {
-				size = 2.0F;
+				size = 0.75F;
+				speed = 55;
 				lifetime += 10;
+			}
+			if (ctx.isDynamicMasterLevel(SECOND)) {
+				size = 3.0F;
+				speed = 15;
+				lifetime += 30;
 			}
 			EntityAirGust gust = new EntityAirGust(world);
 			gust.setVelocity(look.times(speed));
@@ -83,9 +91,11 @@ public class AbilityAirGust extends Ability {
 			gust.setPushIronDoor(ctx.getLevel() >= 2);
 			gust.setPushIronTrapDoor(ctx.getLevel() >= 2);
 			gust.setDestroyProjectiles(ctx.isDynamicMasterLevel(FIRST));
-			//gust.setAirGrab(ctx.isDynamicMasterLevel(SECOND));
+			gust.setSlowProjectiles(ctx.getLevel() >= 1);
 			gust.setAbility(this);
 			world.spawnEntity(gust);
+
+			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, entity.getSoundCategory(), 1.0F + Math.max(ctx.getLevel(), 0) / 2F, 0.9F + world.rand.nextFloat() / 10);
 		}
 	}
 

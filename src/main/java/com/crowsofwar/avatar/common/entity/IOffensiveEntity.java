@@ -14,6 +14,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -26,10 +27,7 @@ public interface IOffensiveEntity {
 		if (owner != null) {
 			//Having a general method means you can use either particle system! Hooray!
 			spawnExplosionParticles(world, AvatarEntityUtils.getMiddleOfEntity(entity));
-			for (int i = 0; i < getSounds().length; i++) {
-				entity.playSound(getSounds()[i], getVolume(),
-						getPitch());
-			}
+			playExplosionSounds(entity);
 			List<Entity> collided = world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().grow(getExplosionHitboxGrowth(),
 					getExplosionHitboxGrowth(), getExplosionHitboxGrowth()),
 					entity1 -> entity1 != entity.getOwner());
@@ -38,8 +36,7 @@ public interface IOffensiveEntity {
 				for (Entity entity1 : collided) {
 					if (entity.getOwner() != null && entity1 != entity.getOwner() && entity1 != entity && !world.isRemote) {
 
-						attackEntity(entity, entity1, false, new Vec3d(getKnockback().x * getKnockbackMult().x, getKnockback().y
-								* getKnockbackMult().y, getKnockback().z * getKnockbackMult().z));
+						attackEntity(entity, entity1, false, getKnockback());
 						//Divide the result of the position difference to make entities fly
 						//further the closer they are to the player.
 						double dist = (getExplosionHitboxGrowth() - entity1.getDistance(entity)) > 1 ? (getExplosionHitboxGrowth() - entity1.getDistance(entity)) : 1;
@@ -79,20 +76,18 @@ public interface IOffensiveEntity {
 		if (!collided.isEmpty()) {
 			for (Entity hit : collided) {
 				if (entity.getOwner() != null && hit != entity.getOwner() && hit != null) {
-					attackEntity(entity, hit, false, getKnockback().crossProduct(getKnockbackMult()));
+					attackEntity(entity, hit, false, getKnockback());
 				}
 			}
 		}
+		playPiercingSounds(entity);
 		spawnPiercingParticles(entity.world, AvatarEntityUtils.getMiddleOfEntity(entity));
 	}
 
 	default void Dissipate(AvatarEntity entity) {
 		if (entity.getOwner() != null) {
 			spawnDissipateParticles(entity.world, AvatarEntityUtils.getMiddleOfEntity(entity));
-			for (int i = 0; i < getSounds().length; i++) {
-				entity.playSound(getSounds()[i], getVolume(),
-						getPitch());
-			}
+			playDissipateSounds(entity);
 		}
 		entity.setDead();
 	}
@@ -100,7 +95,7 @@ public interface IOffensiveEntity {
 	default void attackEntity(AvatarEntity attacker, Entity hit, boolean explosionDamage, Vec3d vel) {
 		if (attacker.getOwner() != null && hit != null && hit != attacker) {
 			AbilityData data = AbilityData.get(attacker.getOwner(), attacker.getAbility().getName());
-			if (explosionDamage? getAoeDamage() > 0 : getDamage() > 0) {
+			if ((explosionDamage ? getAoeDamage() > 0 : getDamage() > 0) && attacker.canDamageEntity(hit)) {
 				boolean ds = hit.attackEntityFrom(getDamageSource(hit, attacker.getOwner()), explosionDamage ? getAoeDamage() : getDamage());
 				if (data != null) {
 					if (!ds && hit instanceof EntityDragon) {
@@ -119,8 +114,7 @@ public interface IOffensiveEntity {
 						AvatarUtils.afterVelocityAdded(hit);
 					}
 				}
-			}
-			else {
+			} else {
 				if (hit instanceof EntityLivingBase) {
 					BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
 					data.addXp(getXpPerHit());
@@ -146,7 +140,7 @@ public interface IOffensiveEntity {
 	}
 
 	default Vec3d getKnockback() {
-		return Vec3d.ZERO;
+		return new Vec3d(getKnockbackMult().x, getKnockbackMult().y, getKnockbackMult().z);
 	}
 
 	default Vec3d getKnockbackMult() {
@@ -181,6 +175,25 @@ public interface IOffensiveEntity {
 			if (getParticle() != null)
 				World.spawnParticle(getParticle(), pos.x, pos.y, pos.z, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
 		}
+	}
+
+	default void playExplosionSounds(Entity entity) {
+		for (int i = 0; i < getSounds().length; i++)
+			entity.world.playSound(null, new BlockPos(entity), getSounds()[i],
+					entity.getSoundCategory(), getPitch(), getVolume());
+	}
+
+	//Only called when a piercing projectile hits an entity.
+	default void playPiercingSounds(Entity entity) {
+		for (int i = 0; i < getSounds().length; i++)
+			entity.world.playSound(null, new BlockPos(entity), getSounds()[i],
+					entity.getSoundCategory(), getPitch(), getVolume());
+	}
+
+	default void playDissipateSounds(Entity entity) {
+		for (int i = 0; i < getSounds().length; i++)
+			entity.world.playSound(null, new BlockPos(entity), getSounds()[i],
+					entity.getSoundCategory(), getPitch(), getVolume());
 	}
 
 	//TODO: Get rid of these particle methods as they're unnecessary with the ease of the new particle system.
@@ -252,8 +265,6 @@ public interface IOffensiveEntity {
 		return 1;
 	}
 
-	default void applyElementalContact(AvatarEntity entity) {
-
-	}
+	default void applyElementalContact(AvatarEntity entity) {}
 
 }

@@ -286,12 +286,12 @@ avatar.ability.cleanse.lvl4_2=§9§l§oFocus ;; Deal much more damage in combat 
 
 
 avatar.ability.air_gust=§f§lAir Gust
-avatar.ability.air_gust.desc=Generate a strong gust of air to push enemies back, allowing you to focus on another problem.
+avatar.ability.air_gust.desc=Generate a strong gust of air to push enemies back, pushing wooden buttons and weaker pressure plates!
 avatar.ability.air_gust.lvl1=I've got 99 problems and you ain't one!
-avatar.ability.air_gust.lvl2=Larger, and you can now push stone buttons!
+avatar.ability.air_gust.lvl2=Larger, pierces enemies, and you can now push stone buttons!
 avatar.ability.air_gust.lvl3=Stronger push, larger, you can now push iron doors and trapdoors!
-avatar.ability.air_gust.lvl4_1=§f§l§oExtinguish ;; Destroys weaker projectiles
-avatar.ability.air_gust.lvl4_2=§f§l§oVacuum ;; Sucks enemies TOWARDS you
+avatar.ability.air_gust.lvl4_1=§f§l§oWind Bolt ;; Destroys weaker projectiles with a smaller, ultra-fast bolt of air!
+avatar.ability.air_gust.lvl4_2=§f§l§oWind Wall ;; Create a massive air gust that moves more slowly, and slows projectiles!
 
 avatar.ability.air_jump=§f§lAir Jump
 avatar.ability.air_jump.desc=Manipulate the air around you to boost off the ground. Perfect for catching up to an unsuspecting enemy.
