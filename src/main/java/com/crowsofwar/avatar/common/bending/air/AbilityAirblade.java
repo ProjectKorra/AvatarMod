@@ -59,10 +59,9 @@ public class AbilityAirblade extends Ability {
 		Vector spawnAt = Vector.getEyePos(entity).plus(look).minusY(0.6);
 
 		AbilityData abilityData = ctx.getData().getAbilityData(this);
-		float xp = abilityData.getTotalXp();
 		float sizeMult = 1.0F;
 		float damage = STATS_CONFIG.airbladeSettings.damage;
-		damage *= 1 + xp * .015f;
+		damage *= abilityData.getXpModifier();
 		damage *= ctx.getPowerRatingDamageMod();
 
 		switch (ctx.getLevel()) {
@@ -98,10 +97,6 @@ public class AbilityAirblade extends Ability {
 		if (ctx.isMasterLevel(FIRST)) {
 			for (int i = 0; i < 5; i++) {
 				float yaw = entity.rotationYaw - 30 + i * 15;
-				/*if (i >= 3) {
-					yaw = entity.rotationYaw + 160 + i * 20;
-				}**/
-				//Results in a full loop, negative stuff results in weird shenanigans
 				Vector direction = Vector.toRectangular(Math.toRadians(yaw), Math.toRadians(entity.rotationPitch));
 				EntityAirblade airblade = new EntityAirblade(world);
 				airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
@@ -114,7 +109,6 @@ public class AbilityAirblade extends Ability {
 				airblade.setOwner(entity);
 				airblade.setAbility(this);
 				airblade.setPierceArmor(true);
-				airblade.setPierceArmor(false);
 				airblade.setChopBlocksThreshold(chopBlocks);
 				world.spawnEntity(airblade);
 			}

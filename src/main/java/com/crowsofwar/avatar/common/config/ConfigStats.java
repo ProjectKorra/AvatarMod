@@ -39,7 +39,7 @@ public class ConfigStats {
 	public AttackSettings floatingBlockSettings = new AttackSettings(2f, 1),
 			ravineSettings = new AttackSettings(3.5F, 0.25), //
 			waveSettings = new AttackSettings(0.25F, 4), //
-			airbladeSettings = new AttackSettings(5, .03), //
+			airbladeSettings = new AttackSettings(3.5F, 0.5), //
 			fireBlastSettings = new AttackSettings(2.5F, 1),   //
 			waterArcSettings = new AttackSettings(3, 1),
 			boulderSettings = new AttackSettings(0.1F, 0.1),

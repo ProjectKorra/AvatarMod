@@ -79,6 +79,10 @@ public class AbilityAirGust extends Ability {
 				speed = 15;
 				lifetime += 30;
 			}
+
+			size *= ctx.getPowerRatingDamageMod();
+			speed += 5 * ctx.getPowerRatingDamageMod();
+
 			EntityAirGust gust = new EntityAirGust(world);
 			gust.setVelocity(look.times(speed));
 			gust.setPosition(pos.minusY(0.5));

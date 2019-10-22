@@ -31,13 +31,6 @@ public class RenderAirBlade extends RenderModel<EntityAirblade> {
 		GlStateManager.scale(entity.getSizeMult(), entity.getSizeMult(), entity.getSizeMult());
 	}
 
-	@Override
-	public void doRender(EntityAirblade entity, double x, double y, double z, float entityYaw, float partialTicks) {
-		super.doRender(entity, x, y, z, entityYaw, partialTicks);
-		entity.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.posY + 0.75 * entity.getSizeMult(), entity.posZ,
-				entity.world.rand.nextDouble() / 20,entity.world.rand.nextDouble() / 20, entity.world.rand.nextDouble() / 20);
-	}
-
 	@Nullable
 	@Override
 	protected ResourceLocation getEntityTexture(EntityAirblade entity) {
