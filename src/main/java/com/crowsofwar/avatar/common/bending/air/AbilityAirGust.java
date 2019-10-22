@@ -56,29 +56,34 @@ public class AbilityAirGust extends Ability {
 
 			float speed = 35;
 			float size = 1.0F;
+			int lifetime = 20;
 			if (ctx.getLevel() == 1) {
 				speed = 45;
 				size = 1.25F;
+				lifetime += 10;
 			}
 			if (ctx.getLevel() >= 2) {
 				speed = 50;
 				size = 1.5F;
+				lifetime += 20;
 			}
 			if (ctx.isDynamicMasterLevel(FIRST)) {
 				size = 2.0F;
+				lifetime += 10;
 			}
 			EntityAirGust gust = new EntityAirGust(world);
 			gust.setVelocity(look.times(speed));
 			gust.setPosition(pos.minusY(0.5));
 			gust.setOwner(entity);
-			gust.setSize(size);
+			gust.setEntitySize(size);
+			gust.setLifeTime(lifetime);
 			gust.rotationPitch = entity.rotationPitch;
 			gust.rotationYaw = entity.rotationYaw;
 			gust.setPushStone(ctx.getLevel() >= 1);
 			gust.setPushIronDoor(ctx.getLevel() >= 2);
 			gust.setPushIronTrapDoor(ctx.getLevel() >= 2);
 			gust.setDestroyProjectiles(ctx.isDynamicMasterLevel(FIRST));
-			gust.setAirGrab(ctx.isDynamicMasterLevel(SECOND));
+			//gust.setAirGrab(ctx.isDynamicMasterLevel(SECOND));
 			gust.setAbility(this);
 			world.spawnEntity(gust);
 		}

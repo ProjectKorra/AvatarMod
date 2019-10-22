@@ -37,6 +37,7 @@ public interface IOffensiveEntity {
 			if (!collided.isEmpty()) {
 				for (Entity entity1 : collided) {
 					if (entity.getOwner() != null && entity1 != entity.getOwner() && entity1 != entity && !world.isRemote) {
+
 						attackEntity(entity, entity1, false, new Vec3d(getKnockback().x * getKnockbackMult().x, getKnockback().y
 								* getKnockbackMult().y, getKnockback().z * getKnockbackMult().z));
 						//Divide the result of the position difference to make entities fly
@@ -53,11 +54,6 @@ public interface IOffensiveEntity {
 						z *= getExplosionKnockbackMult().z;
 
 						attackEntity(entity, entity1, true, new Vec3d(x, y, z));
-
-						entity1.motionX += x;
-						entity1.motionY += y;
-						entity1.motionZ += z;
-						entity1.setFire(getFireTime());
 
 						if (collided instanceof AvatarEntity) {
 							if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
@@ -103,17 +99,29 @@ public interface IOffensiveEntity {
 
 	default void attackEntity(AvatarEntity attacker, Entity hit, boolean explosionDamage, Vec3d vel) {
 		if (attacker.getOwner() != null && hit != null && hit != attacker) {
-			boolean ds = hit.attackEntityFrom(getDamageSource(hit, attacker.getOwner()), explosionDamage ? getAoeDamage() : getDamage());
 			AbilityData data = AbilityData.get(attacker.getOwner(), attacker.getAbility().getName());
-			if (data != null) {
-				if (!ds && hit instanceof EntityDragon) {
-					((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, getDamageSource(hit, attacker.getOwner()),
-							explosionDamage ? getAoeDamage() : getDamage());
-					BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
-					data.addXp(getXpPerHit());
-					hit.setEntityInvulnerable(false);
+			if (explosionDamage? getAoeDamage() > 0 : getDamage() > 0) {
+				boolean ds = hit.attackEntityFrom(getDamageSource(hit, attacker.getOwner()), explosionDamage ? getAoeDamage() : getDamage());
+				if (data != null) {
+					if (!ds && hit instanceof EntityDragon) {
+						((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, getDamageSource(hit, attacker.getOwner()),
+								explosionDamage ? getAoeDamage() : getDamage());
+						BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
+						data.addXp(getXpPerHit());
+						hit.setEntityInvulnerable(false);
 
-				} else if (hit instanceof EntityLivingBase && ds) {
+					} else if (hit instanceof EntityLivingBase && ds) {
+						BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
+						data.addXp(getXpPerHit());
+						hit.setFire(getFireTime());
+						hit.addVelocity(vel.x, vel.y, vel.z);
+						hit.setEntityInvulnerable(false);
+						AvatarUtils.afterVelocityAdded(hit);
+					}
+				}
+			}
+			else {
+				if (hit instanceof EntityLivingBase) {
 					BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
 					data.addXp(getXpPerHit());
 					hit.setFire(getFireTime());

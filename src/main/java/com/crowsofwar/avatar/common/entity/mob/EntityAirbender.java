@@ -172,7 +172,7 @@ public class EntityAirbender extends EntityHumanBender {
 	@Override
 	public void setDead() {
 		ItemStack stack = new ItemStack(Scrolls.AIR, 1, getLevel());
-		if (AvatarUtils.getRandomNumberInRange(1, 100) < 50) {
+		if (AvatarUtils.getRandomNumberInRange(1, 100) < 50 && !world.isRemote) {
 			this.entityDropItem(stack, 1.0F);
 		}
 		super.setDead();

@@ -16,16 +16,18 @@
 */
 package com.crowsofwar.avatar.common.bending.air;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.world.World;
 
 /**
  * @author CrowsOfWar
@@ -39,15 +41,22 @@ public class AirParticleSpawner extends TickHandler {
 
 	@Override
 	public boolean tick(BendingContext ctx) {
-		EntityLivingBase target = ctx.getBenderEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
+		World world = ctx.getWorld();
+		AbilityData data = AbilityData.get(entity, "air_jump");
 
-		Vector pos = Vector.getEntityPos(target).plus(0, -0.05, 0);
+		Vector pos = Vector.getEntityPos(entity).plus(0, -0.05, 0);
+		if (world.isRemote)
+			for (int i = 0; i < 2 + AvatarUtils.getRandomNumberInRange(0, 2); i++)
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).collide(true).clr(0.8F, 0.8F, 0.8F).pos(pos.toMinecraft()).
+						vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).scale(2.0F +
+						Math.max(data.getLevel(), 0)).time(15).spawn(world);
 
-		particles.spawnParticles(target.world, EnumParticleTypes.EXPLOSION_NORMAL, 1, 4, pos,
-				new Vector(0.7, 0.2, 0.7), true);
+		//particles.spawnParticles(entity.world, EnumParticleTypes.EXPLOSION_NORMAL, 1, 4, pos,
+		//		new Vector(0.7, 0.2, 0.7), true);
 
-		return target.isInWater() || target.onGround || bender.isFlying();
+		return entity.isInWater() || entity.onGround || bender.isFlying();
 
 	}
 

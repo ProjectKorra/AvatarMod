@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -36,9 +37,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
@@ -63,8 +66,12 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
-
 		AbilityData abilityData = data.getAbilityData("flamethrower");
+
+		//Don't remove this, it makes sure the ability data works properly.
+		if (!world.isRemote)
+			abilityData = data.getAbilityData(new AbilityFlamethrower().getName());
+
 		AbilityTreePath path = abilityData.getPath();
 
 		int level = abilityData.getLevel();
@@ -107,10 +114,10 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			boolean headInLiquid = world.getBlockState(entity.getPosition().up()) instanceof BlockLiquid || world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.WATER
 					|| world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.FLOWING_WATER;
 
-			if (!world.isRaining() && !(headInLiquid && inWaterBlock)) {
+			if (!world.isRaining() && !(headInLiquid || inWaterBlock)) {
 
 				double speedMult = 15 + 5 * abilityData.getXpModifier();
-				double randomness = 3.0 - 0.5 * abilityData.getXpModifier();
+				double randomness = 3.0 - 0.5 * (abilityData.getXpModifier() + Math.max(abilityData.getLevel(), 0));
 				float range = 4;
 				int fireTime = 0;
 				float size = 1;
@@ -173,8 +180,10 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 				double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
 				double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
-				Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
+				Vector look = randomness == 0 ? Vector.getLookRectangular(entity) : Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
 
+				System.out.println("level: " + level);
+				System.out.println("Random: " + randomness);
 
 				Vector start = look.plus(eye.minusY(0.5));
 
@@ -216,14 +225,14 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 				//Particle code.
 				if (world.isRemote) {
-					for (int i = 0; i < flamesPerSecond; i++) {
-						start = look.times((float) i / (float) flamesPerSecond).plus(eye.minusY(0.5));
-						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles)
-							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size).time(20).collide(true).vel(look.toMinecraft().scale(speedMult / 30)).spawn(world);
-						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.toMinecraft().scale(speedMult / 30)).
+					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles)
+						ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size).time(25).collide(true).vel(look.times(speedMult / 30).toMinecraft()).spawn(world);
+					for (double i = 0; i < flamesPerSecond; i += 1) {
+						Vector start1 = look.times(i / (double) flamesPerSecond).plus(eye.minusY(0.5));
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
 								clr(255, 0, 0).collide(true).scale(size).spawn(world);
 						if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles)
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.toMinecraft().scale(speedMult / 30)).
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
 									clr(255, 193 + AvatarUtils.getRandomNumberInRange(1, 60), 40).collide(true).scale(size).spawn(world);
 					}
 				}
@@ -239,18 +248,23 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					for (int i = 0; i < 5; i++)
 						ParticleBuilder.create(ParticleBuilder.Type.SNOW).collide(true).time(15).vel(world.rand.nextGaussian() / 50, world.rand.nextGaussian() / 50, world.rand.nextGaussian() / 50)
 								.scale(1.5F + abilityData.getLevel() / 2F).pos(Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity)).toMinecraft()).clr(0.75F, 0.75F, 0.75f).spawn(world);
-					return true;
 
 				}
+				Vector pos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity));
+				if (!world.isRemote && world instanceof WorldServer) {
+					WorldServer World = (WorldServer) world;
+					World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, pos.x(), pos.y(), pos.z(), 3 + Math.max(abilityData.getLevel(), 0),
+							0, 0, 0, 0.0015);
+				}
+				//makes sure the tick handler is removed
+				return true;
 			}
 
 
 		} else
 			// not enough chi
 			return true;
-
-		return false;
-
+		return !data.hasStatusControl(StatusControl.STOP_FLAMETHROW);
 	}
 
 }

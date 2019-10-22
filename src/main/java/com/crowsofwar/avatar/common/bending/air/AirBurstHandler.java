@@ -238,6 +238,8 @@ public class AirBurstHandler extends TickHandler {
 
 						}
 					}
+					ParticleBuilder.create(ParticleBuilder.Type.SPHERE).clr(1.0F, 1.0F, 1.0F).entity(entity).time(12).scale((float) entity.getRange())
+							.pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity)).spawn(world);
 				}
 			}
 			return this;

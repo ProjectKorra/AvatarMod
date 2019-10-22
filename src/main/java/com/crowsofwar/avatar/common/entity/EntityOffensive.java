@@ -2,8 +2,11 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -12,11 +15,9 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public abstract class EntityOffensive extends AvatarEntity implements IOffensiveEntity {
@@ -36,6 +37,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	private int fireTime;
 	private int performanceAmount;
 	private Vec3d knockbackMult;
+	private int ticks = 0;
 
 
 	public EntityOffensive(World world) {
@@ -113,6 +115,15 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 				}
 			}
 		}
+		if (noClip && (shouldExplode() || shouldDissipate())) {
+			IBlockState state = world.getBlockState(getPosition());
+			if (state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()) {
+				ticks++;
+			}
+			if (ticks > 1) {
+				Dissipate();
+			}
+		}
 		if (ticksExisted >= getLifeTime()) {
 			Dissipate();
 		}
@@ -173,6 +184,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		return 1;
 	}
 
+	@Override
 	public Vec3d getKnockbackMult() {
 		return knockbackMult;
 	}
