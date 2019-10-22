@@ -528,7 +528,7 @@ public abstract class AvatarEntity extends Entity {
 
 
 	public boolean canDamageEntity(Entity entity) {
-		return canCollideWith(entity) || entity instanceof EntityEnderCrystal;
+		return canCollideWith(entity) && entity.canBeAttackedWithItem() || entity instanceof EntityEnderCrystal;
 	}
 
 	/**

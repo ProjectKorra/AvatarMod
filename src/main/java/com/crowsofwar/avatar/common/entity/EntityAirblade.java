@@ -92,11 +92,6 @@ public class EntityAirblade extends EntityOffensive {
 	}
 
 	@Override
-	public boolean canCollideWith(Entity entity) {
-		return super.canCollideWith(entity) && !(entity instanceof EntityAirblade) || entity instanceof EntityLivingBase;
-	}
-
-	@Override
 	public void onUpdate() {
 
 		super.onUpdate();

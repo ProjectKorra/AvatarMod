@@ -114,7 +114,7 @@ public interface IOffensiveEntity {
 						AvatarUtils.afterVelocityAdded(hit);
 					}
 				}
-			} else {
+			} else if (attacker.canCollideWith(hit) && hit.canBeAttackedWithItem()){
 				if (hit instanceof EntityLivingBase) {
 					BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
 					data.addXp(getXpPerHit());

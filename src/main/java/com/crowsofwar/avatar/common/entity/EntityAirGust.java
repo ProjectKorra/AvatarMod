@@ -192,10 +192,10 @@ public class EntityAirGust extends EntityOffensive {
 		super.applyElementalContact(entity);
 		entity.onAirContact();
 		if (destroyProjectiles) {
-			if (entity instanceof IOffensiveEntity && ((IOffensiveEntity) entity).getDamage() < 3 * getAvgSize() ||
-					entity instanceof EntityOffensive && getAvgSize() < 1.25 * getAvgSize()) {
+			if (entity instanceof IOffensiveEntity && ((IOffensiveEntity) entity).getDamage() < 6 * getAvgSize() ||
+					entity instanceof EntityOffensive && getAvgSize() < 1.25 * getAvgSize() || (entity.isProjectile() && entity.velocity().sqrMagnitude() <
+					velocity().sqrMagnitude())) {
 				((IOffensiveEntity) entity).Dissipate(entity);
-				Dissipate();
 			}
 		}
 	}
@@ -230,9 +230,9 @@ public class EntityAirGust extends EntityOffensive {
 		super.onCollideWithEntity(entity);
 		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).isProjectile() || entity instanceof EntityArrow || entity instanceof EntityThrowable) {
 			if (slowProjectiles) {
-				entity.motionX *= 0.5;
-				entity.motionY *= 0.5;
-				entity.motionZ *= 0.5;
+				entity.motionX *= 0.4;
+				entity.motionY *= 0.4;
+				entity.motionZ *= 0.4;
 			}
 			if (destroyProjectiles && !(entity instanceof AvatarEntity)) {
 				Vector vel = new Vector(entity);
