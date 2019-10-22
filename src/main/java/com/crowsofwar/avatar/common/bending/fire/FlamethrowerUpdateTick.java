@@ -149,8 +149,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					speedMult = 38;
 					randomness = 0;
 					fireTime = 5;
-					//What the truck? For some reason, if I make the size bigger than this, the whole ability's particle accuracy
-					//just plummets. It's very odd. Don't change it.
 					size = 1.25F;
 					damage = 7F;
 					range = 11;
@@ -182,8 +180,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
 				Vector look = randomness == 0 ? Vector.getLookRectangular(entity) : Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
 
-				System.out.println("level: " + level);
-				System.out.println("Random: " + randomness);
 
 				Vector start = look.plus(eye.minusY(0.5));
 
