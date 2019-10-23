@@ -97,11 +97,6 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 			time++;
 
-			if (!entity.world.isRemote && time > 200) {
-				entity.onCollideWithSolid();
-
-			}
-
 			World world = entity.world;
 			if (!entity.isDead && !world.isRemote) {
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX + entity.getAvgSize(), entity.posY + entity.getAvgSize(), entity.posZ + entity.getAvgSize(),
@@ -151,7 +146,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				}
 
 			}
-			if (!entity.world.isRemote && !entity.isPiercing()) entity.setDead();
+		//	if (!entity.world.isRemote && !entity.isPiercing()) entity.setDead();
 
 		}
 
@@ -184,7 +179,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
 			EntityLivingBase owner = entity.getOwner();
 
-			if (owner == null) return this;
+			if (owner == null || entity.world.isRemote) return this;
 
 			BendingData data = BendingData.get(owner);
 			if (!data.hasStatusControl(StatusControl.THROW_LIGHTNINGSPEAR)) {

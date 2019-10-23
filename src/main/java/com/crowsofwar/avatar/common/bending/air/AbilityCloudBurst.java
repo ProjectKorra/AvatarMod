@@ -14,6 +14,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
@@ -37,6 +38,8 @@ public class AbilityCloudBurst extends Ability {
 
 		float chi = STATS_CONFIG.chiCloudburst;
 		//2.5F
+
+		float xp = SKILLS_CONFIG.cloudburstHit;
 
 		if (ctx.getLevel() == 1) {
 			chi += 1;
@@ -102,6 +105,7 @@ public class AbilityCloudBurst extends Ability {
 			cloudball.setPushIronDoor(ctx.getLevel() >= 2);
 			cloudball.setBehavior(new CloudburstBehavior.PlayerControlled());
 			cloudball.setDamage((float) damage);
+			cloudball.setXp(xp);
 			cloudball.setAbility(this);
 			world.spawnEntity(cloudball);
 

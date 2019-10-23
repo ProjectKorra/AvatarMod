@@ -233,4 +233,6 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		return false;
 	}
 
+
+
 }

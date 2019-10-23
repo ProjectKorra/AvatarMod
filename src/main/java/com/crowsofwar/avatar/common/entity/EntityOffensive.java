@@ -35,8 +35,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	private float xp;
 	private int fireTime;
 	private int performanceAmount;
-	private Vec3d knockbackMult;
-	private int ticks = 0;
+	private int ticks = 0, ticksMoving = 0;
 
 
 	public EntityOffensive(World world) {
@@ -126,7 +125,10 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 					Explode();
 			}
 		}
-		if (ticksExisted >= getLifeTime() && (shouldDissipate() || shouldExplode())) {
+		if (shouldDissipate() || shouldExplode())
+			ticksMoving++;
+
+		if (ticksMoving >= getLifeTime() && (shouldDissipate() || shouldExplode())) {
 			if (shouldDissipate())
 				Dissipate();
 			else if (shouldExplode())
@@ -193,11 +195,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	@Override
 	public Vec3d getKnockbackMult() {
-		return knockbackMult;
-	}
-
-	public void setKnockbackMult(Vec3d mult) {
-		this.knockbackMult = mult;
+		return new Vec3d(1, 2, 1);
 	}
 
 	@Override
@@ -302,4 +300,9 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		return true;
 	}
 
+	//No relation to getKnockback.
+	@Override
+	public Vec3d getExplosionKnockbackMult() {
+		return new Vec3d(0.4, 0.4, 0.4);
+	}
 }

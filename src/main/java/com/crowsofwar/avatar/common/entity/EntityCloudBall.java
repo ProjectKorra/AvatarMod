@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,6 +20,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -296,11 +298,20 @@ public class EntityCloudBall extends EntityOffensive {
 
 	@Override
 	public void spawnExplosionParticles(World world, Vec3d pos) {
-
+		if (world.isRemote)
+			for (int i = 0; i < getSize(); i++)
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(getAvgSize()).collide(true).vel(world.rand.nextGaussian() / 10,
+						world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10).time(8).pos(AvatarEntityUtils.getMiddleOfEntity(this))
+						.clr(0.85F, 0.85F, 0.85F).spawn(world);
 	}
 
 	@Override
 	public void spawnDissipateParticles(World world, Vec3d pos) {
+		if (world.isRemote)
+			for (int i = 0; i < getSize(); i++)
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(getAvgSize()).collide(true).vel(world.rand.nextGaussian() / 40,
+						world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).time(8).pos(AvatarEntityUtils.getMiddleOfEntity(this))
+						.clr(0.85F, 0.85F, 0.85F).spawn(world);
 
 	}
 
@@ -312,6 +323,33 @@ public class EntityCloudBall extends EntityOffensive {
 	@Override
 	public boolean shouldExplode() {
 		return getBehavior() instanceof CloudburstBehavior.Thrown;
+	}
+
+	@Override
+	public SoundEvent[] getSounds() {
+		SoundEvent[] events = new SoundEvent[1];
+		events[0] = SoundEvents.BLOCK_FIRE_EXTINGUISH;
+		return events;
+	}
+
+	@Override
+	public float getVolume() {
+		return super.getVolume() * 5;
+	}
+
+	@Override
+	public Vec3d getKnockbackMult() {
+		return new Vec3d(1.5, 1, 1.5);
+	}
+
+	@Override
+	public Vec3d getExplosionKnockbackMult() {
+		return new Vec3d(0.5, 0.75, 0.5);
+	}
+
+	@Override
+	public int getFireTime() {
+		return 0;
 	}
 }
 

@@ -354,4 +354,9 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	public boolean shouldExplode() {
 		return getBehavior() instanceof LightningSpearBehavior.Thrown;
 	}
+
+	@Override
+	public boolean shouldDissipate() {
+		return getBehavior() instanceof LightningSpearBehavior.Thrown;
+	}
 }
