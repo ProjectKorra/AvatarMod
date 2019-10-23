@@ -95,7 +95,8 @@ public class AbilityAirGust extends Ability {
 			gust.setPushIronDoor(ctx.getLevel() >= 2);
 			gust.setPushIronTrapDoor(ctx.getLevel() >= 2);
 			gust.setDestroyProjectiles(ctx.isDynamicMasterLevel(FIRST));
-			gust.setSlowProjectiles(ctx.getLevel() >= 1);
+			gust.setSlowProjectiles(ctx.isDynamicMasterLevel(SECOND));
+			gust.setPiercesEnemies(ctx.getLevel() >= 1);
 			gust.setAbility(this);
 			world.spawnEntity(gust);
 

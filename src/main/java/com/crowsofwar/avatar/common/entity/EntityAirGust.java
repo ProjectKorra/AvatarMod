@@ -35,7 +35,7 @@ import net.minecraft.world.World;
 
 public class EntityAirGust extends EntityOffensive {
 
-	private boolean slowProjectiles = false, destroyProjectiles = false, pushStone, pushIronTrapDoor, pushIronDoor;
+	private boolean piercesEnemies = false, slowProjectiles = false, destroyProjectiles = false, pushStone, pushIronTrapDoor, pushIronDoor;
 
 	public EntityAirGust(World world) {
 		super(world);
@@ -53,6 +53,7 @@ public class EntityAirGust extends EntityOffensive {
 		super.readEntityFromNBT(nbt);
 		slowProjectiles = nbt.getBoolean("SlowProjectiles");
 		destroyProjectiles = nbt.getBoolean("DestroyProjectiles");
+		piercesEnemies = nbt.getBoolean("PiercesEnemies");
 	}
 
 	@Override
@@ -60,7 +61,7 @@ public class EntityAirGust extends EntityOffensive {
 		super.writeEntityToNBT(nbt);
 		nbt.setBoolean("SlowProjectiles", slowProjectiles);
 		nbt.setBoolean("DestroyProjectiles", destroyProjectiles);
-
+		nbt.setBoolean("PiercesEnemies", piercesEnemies);
 	}
 
 	@Override
@@ -111,6 +112,10 @@ public class EntityAirGust extends EntityOffensive {
 		this.slowProjectiles = slowProjectiles;
 	}
 
+	public void setPiercesEnemies(boolean piercesEnemies) {
+		this.piercesEnemies = piercesEnemies;
+	}
+
 	public void setDestroyProjectiles(boolean destroyProjectiles) {
 		this.destroyProjectiles = destroyProjectiles;
 	}
@@ -159,7 +164,7 @@ public class EntityAirGust extends EntityOffensive {
 
 	@Override
 	public boolean isPiercing() {
-		return destroyProjectiles;
+		return piercesEnemies;
 	}
 
 	@Override
@@ -217,13 +222,6 @@ public class EntityAirGust extends EntityOffensive {
 		return 0;
 	}
 
-	@Override
-	public Vec3d getKnockback() {
-		double x = Math.min(getKnockbackMult().x * motionX, motionX * 2);
-		double y = Math.min(0.7, (motionY + 0.3) * getKnockbackMult().y);
-		double z = Math.min(getKnockbackMult().z * motionZ, motionZ * 2);
-		return new Vec3d(x, y, z);
-	}
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {

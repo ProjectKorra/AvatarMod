@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -29,9 +28,7 @@ import com.crowsofwar.avatar.common.entity.EntityFireShooter;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.FireShooterBehaviour;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -50,12 +47,10 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class AbilityFireBlast extends Ability {
 
-	private ParticleSpawner spawner;
 
 	public AbilityFireBlast() {
 		super(Firebending.ID, "fire_blast");
 		requireRaytrace(-1, false);
-		spawner = new NetworkParticleSpawner();
 	}
 
 	@Override
@@ -152,6 +147,7 @@ public class AbilityFireBlast extends Ability {
 				System.out.println("huh");
 				ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(rightSide).scale(1).time(30).collide(true).vel(lookPos.toMinecraft()).spawn(world);
 			}
+			//data.addTickHandler();
 
 		/*	EntityFireShooter shooter = new EntityFireShooter(world);
 			shooter.setElement(new Firebending());

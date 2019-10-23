@@ -234,7 +234,6 @@ public class FireblastUpdateTick extends TickHandler {
 					}
 				}
 
-				if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)
 					world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
 							SoundCategory.PLAYERS, 0.2f, 0.8f);
 
@@ -262,7 +261,7 @@ public class FireblastUpdateTick extends TickHandler {
 		} else
 			// not enough chi
 			return true;
-		return !data.hasStatusControl(StatusControl.STOP_FLAMETHROW);
+		return duration > 4;
 	}
 
 }
