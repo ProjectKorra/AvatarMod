@@ -113,17 +113,24 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 				}
 			}
 		}
-		if (noClip && (shouldExplode() || shouldDissipate())) {
+		if (noClip) {
 			IBlockState state = world.getBlockState(getPosition());
 			if (state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()) {
 				ticks++;
 			}
 			if (ticks > 1) {
-				Dissipate();
+				//Checks whether to dissipate first.
+				if (shouldDissipate())
+					Dissipate();
+				else if (shouldExplode())
+					Explode();
 			}
 		}
-		if (ticksExisted >= getLifeTime()) {
-			Dissipate();
+		if (ticksExisted >= getLifeTime() && (shouldDissipate() || shouldExplode())) {
+			if (shouldDissipate())
+				Dissipate();
+			else if (shouldExplode())
+				Explode();
 		}
 		setSize(getWidth(), getHeight());
 	}

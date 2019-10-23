@@ -255,12 +255,18 @@ public abstract class AvatarEntity extends Entity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		setAvId(nbt.getInteger("AvId"));
+		pushStoneButton = nbt.getBoolean("PushStoneButton");
+		pushTrapDoor = nbt.getBoolean("PushIronTrapDoor");
+		pushDoor = nbt.getBoolean("PushIronDoor");
 		ownerRef.readFromNbt(nbt);
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("AvId", getAvId());
+		nbt.setBoolean("PushIronDor", pushDoor);
+		nbt.setBoolean("PushIronTrapDoor", pushTrapDoor);
+		nbt.setBoolean("PushStoneButton", pushStoneButton);
 		ownerRef.writeToNbt(nbt);
 	}
 
@@ -446,7 +452,7 @@ public abstract class AvatarEntity extends Entity {
 		} else if (entity instanceof EntityEnderCrystal) {
 			return true;
 		} else
-			return (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase;
+			return (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase || entity instanceof AvatarEntity;
 	}
 
 	@Override
@@ -541,7 +547,7 @@ public abstract class AvatarEntity extends Entity {
 	}
 
 	/**
-	 * Returns whether the entity can be considered a shield. Gerenally,
+	 * Returns whether the entity can be considered a shield. Generally,
 	 * an entity is considered a shield if it blocks other entities.
 	 * Air Bubble and Wall are both shields.
 	 */

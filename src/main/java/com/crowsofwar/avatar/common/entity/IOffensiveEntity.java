@@ -248,7 +248,8 @@ public interface IOffensiveEntity {
 		return false;
 	}
 
-	//NOTE: IOffensiveEntities will dissipate when their lifetime is up even when this is false, unless overridden.
+	//NOTE: shouldDissipate is checked first when timing out or when an entity has noClip is is colliding with a block.
+	//Otherwise, shouldExplode takes precedence over shouldDissipate.
 	default boolean shouldDissipate() {
 		return false;
 	}
