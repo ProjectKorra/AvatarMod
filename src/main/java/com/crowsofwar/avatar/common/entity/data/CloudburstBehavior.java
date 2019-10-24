@@ -104,7 +104,7 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 			if (entity.getAbility() instanceof AbilityCloudBurst && !entity.world.isRemote) {
 				if (data.getAbilityData("cloudburst").isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 					int size = entity.getSize();
-					if (size < 60 && entity.ticksExisted % 4 == 0) {
+					if (size < 45 && entity.ticksExisted % 4 == 0) {
 						entity.setSize(size + 1);
 					}
 				}

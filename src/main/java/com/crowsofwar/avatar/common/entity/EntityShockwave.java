@@ -45,6 +45,8 @@ public class EntityShockwave extends AvatarEntity {
 	//Whether or not to use a sphere of particles instead of a circular ring
 	private static final DataParameter<Float> SYNC_RANGE = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.FLOAT);
 	//The range of the shockwave/how far it'll go before dissipating
+	private static final DataParameter<Boolean> SYNC_RENDER_NORMAL = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.BOOLEAN);
+	//Whether you want to use the shockwave render class or use the ParticleBuilder system in your behaviour class.
 
 	public float damage;
 	//The amount of damage the shockwave will do
@@ -83,6 +85,7 @@ public class EntityShockwave extends AvatarEntity {
 		dataManager.register(SYNC_IS_SPHERE, false);
 		dataManager.register(SYNC_RANGE, 4F);
 		dataManager.register(SYNC_BEHAVIOR, new ShockwaveBehaviour.Idle());
+		dataManager.register(SYNC_RENDER_NORMAL, true);
 
 	}
 
@@ -191,6 +194,13 @@ public class EntityShockwave extends AvatarEntity {
 		this.source = source;
 	}
 
+	public void setRenderNormal(boolean normal) {
+		dataManager.set(SYNC_RENDER_NORMAL, normal);
+	}
+
+	public boolean shouldRenderNormal() {
+		return dataManager.get(SYNC_RENDER_NORMAL);
+	}
 	@Override
 	public boolean canBeCollidedWith() {
 		return false;

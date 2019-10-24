@@ -37,7 +37,7 @@ public class ParticleFire extends ParticleAvatar {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		this.particleScale *= 1.05;
+		this.particleScale *= 1.055;
 		this.motionX *= 0.99;
 		this.motionY *= 0.99;
 		this.motionZ *= 0.99;

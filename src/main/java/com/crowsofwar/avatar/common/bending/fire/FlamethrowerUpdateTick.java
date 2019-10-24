@@ -34,6 +34,9 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -44,6 +47,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -55,6 +59,8 @@ import static java.lang.Math.toRadians;
  * @author CrowsOfWar
  */
 public class FlamethrowerUpdateTick extends TickHandler {
+
+	public static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString("34877be6-6cf5-43f4-a8b3-aa12526651cf");
 
 	public FlamethrowerUpdateTick(int id) {
 		super(id);
@@ -193,7 +199,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 								if (attack) {
 									target.setFire(fireTime + 2);
 									target.setEntityInvulnerable(false);
-									Vector knockback = look.times(speedMult / 100).times(knockBack);
+									Vector knockback = look.times(speedMult / 100);
 									if (target.canBePushed())
 										target.addVelocity(knockback.x(), knockback.y(), knockback.z());
 									AvatarUtils.afterVelocityAdded(target);
@@ -222,23 +228,31 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				//Particle code.
 				if (world.isRemote) {
 					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles)
-						ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size).time(25).collide(true).vel(look.times(speedMult / 30).toMinecraft()).spawn(world);
-					for (double i = 0; i < flamesPerSecond; i += 1) {
-						Vector start1 = look.times(i / (double) flamesPerSecond).plus(eye.minusY(0.5));
-						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
-								clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 70), 40).collide(true).scale(size).spawn(world);
-						if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
-									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 60, 40).collide(true).scale(size).spawn(world);
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
-									clr(255, 193 + AvatarUtils.getRandomNumberInRange(1, 60), 40).collide(true).scale(size).spawn(world);
+						for (double i = 0; i < flamesPerSecond; i += 3) {
+							Vector start1 = look.times(i / (double) flamesPerSecond).plus(eye.minusY(0.5));
+							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.05F).time(25).collide(true).vel(look.times(speedMult / 30).toMinecraft()).spawn(world);
 						}
-					}
+					for (double i = 0; i < flamesPerSecond; i += 1) {
+							Vector start1 = look.times(i / (double) flamesPerSecond).plus(eye.minusY(0.5));
+							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.1F).time(25).collide(true).vel(look.times(speedMult / 30).toMinecraft()).spawn(world);
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
+									clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 70), 40).collide(true).scale(size).spawn(world);
+							if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
+										clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 60, 40).collide(true).scale(size).spawn(world);
+								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
+										clr(255, 193 + AvatarUtils.getRandomNumberInRange(1, 60), 40).collide(true).scale(size).spawn(world);
+							}
+						}
 				}
 
 				if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)
 					world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
 							SoundCategory.PLAYERS, 0.2f, 0.8f);
+
+				float movementModifier = 1F - (float) speedMult / 100F;
+				if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(MOVEMENT_MODIFIER_ID) == null)
+					applyMovementModifier(entity, movementModifier);
 
 
 			} else {
@@ -257,14 +271,29 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				entity.world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, entity.getSoundCategory(),
 						1.0F, 0.8F + world.rand.nextFloat() / 10);
 				//makes sure the tick handler is removed
+				if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(MOVEMENT_MODIFIER_ID) != null)
+					entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 				return true;
 			}
 
 
-		} else
+		} else {
 			// not enough chi
+			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
 			return true;
+		}
 		return !data.hasStatusControl(StatusControl.STOP_FLAMETHROW);
 	}
+
+	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
+
+		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+
+		moveSpeed.removeModifier(MOVEMENT_MODIFIER_ID);
+
+		moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID, "Flamethrower Movement Modifier", multiplier - 1, 1));
+
+	}
+
 
 }

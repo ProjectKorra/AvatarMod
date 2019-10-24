@@ -63,7 +63,6 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 			DataSerializers.FLOAT);
 
 
-	private float damage;
 
 	/**
 	 * Whether the lightning spear can continue through multiple enemies, instead of being destroyed
@@ -89,10 +88,7 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	 */
 	public EntityLightningSpear(World world) {
 		super(world);
-		this.damage = 3F;
 		this.piercing = false;
-		this.setInvisible(false);
-
 	}
 
 	@Override
@@ -111,18 +107,6 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	public void onUpdate() {
 		super.onUpdate();
 		setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
-
-		// Add hook or something
-		if (getOwner() != null) {
-			if (getBehavior() != null && getBehavior() instanceof LightningSpearBehavior.PlayerControlled) {
-				this.rotationYaw = this.getOwner().rotationYaw;
-				this.rotationPitch = this.getOwner().rotationPitch;
-				noClip = true;
-			}
-			else noClip = false;
-		}
-
-
 
 		LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
 		if (getOwner() != null) {
@@ -217,14 +201,6 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	}
 
 
-	public float getDamage() {
-		return damage;
-	}
-
-	public void setDamage(float damage) {
-		this.damage = damage;
-	}
-
 	@Override
 	public boolean isPiercing() {
 		return piercing;
@@ -260,15 +236,15 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		setDamage(nbt.getFloat("Damage"));
 		setBehavior((LightningSpearBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
+		setPiercing(nbt.getBoolean("Piercing"));
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		nbt.setFloat("Damage", getDamage());
 		nbt.setInteger("Behavior", getBehavior().getId());
+		nbt.setBoolean("Piercing", piercing);
 	}
 
 	@Override
@@ -279,6 +255,8 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	@Override
 	public void setDead() {
 		super.setDead();
+		if (this.isDead && !world.isRemote)
+			Thread.dumpStack();
 		removeStatCtrl();
 	}
 
@@ -358,5 +336,15 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	@Override
 	public boolean shouldDissipate() {
 		return getBehavior() instanceof LightningSpearBehavior.Thrown;
+	}
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public float getVolume() {
+		return super.getVolume() * 6;
 	}
 }

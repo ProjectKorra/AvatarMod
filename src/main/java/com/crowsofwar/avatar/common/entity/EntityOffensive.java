@@ -176,7 +176,6 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 			Explode();
 		if (isProjectile() && shouldDissipate())
 			Dissipate();
-		setDead();
 		return true;
 	}
 

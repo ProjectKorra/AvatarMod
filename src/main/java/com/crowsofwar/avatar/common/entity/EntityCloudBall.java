@@ -203,9 +203,8 @@ public class EntityCloudBall extends EntityOffensive {
 						}
 					}
 				}
-
+				super.onCollideWithEntity(entity);
 			}
-			super.onCollideWithEntity(entity);
 		}
 	}
 

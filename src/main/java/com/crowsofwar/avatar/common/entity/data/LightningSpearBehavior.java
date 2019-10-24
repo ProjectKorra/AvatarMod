@@ -96,6 +96,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
 
 			time++;
+			entity.noClip = false;
 
 			World world = entity.world;
 			if (!entity.isDead && !world.isRemote) {
@@ -207,6 +208,10 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			Vector direction = entity.position().minus(Vector.getEyePos(owner)).toSpherical();
 			entity.rotationYaw = (float) Math.toDegrees(direction.y());
 			entity.rotationPitch = (float) Math.toDegrees(direction.x());
+			//entity.rotationPitch = owner.rotationPitch;
+			//entity.rotationYaw = owner.rotationYaw;
+
+			entity.noClip = true;
 
 
 			float size = entity.getAvgSize();

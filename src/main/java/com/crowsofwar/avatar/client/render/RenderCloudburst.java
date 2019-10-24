@@ -53,7 +53,7 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 
 		renderCube(x, y, z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
-				.5f, //
+				size * 0.5F, //
 				ticks / 25F, ticks / 25f, ticks / 25F);
 
 		int i = 15728880;

@@ -254,4 +254,16 @@ public class EntityAirGust extends EntityOffensive {
 	public double getExpandedHitboxHeight() {
 		return getAvgSize() / 3;
 	}
+
+	@Override
+	public Vec3d getKnockback() {
+		double x = Math.min(getKnockbackMult().x * motionX, motionX * 2);
+		double y = Math.min(0.7, (motionY + 0.3) * getKnockbackMult().y);
+		double z = Math.min(getKnockbackMult().z * motionZ, motionZ * 2);
+		if (velocity().sqrMagnitude()  > getAvgSize() * 15) {
+			x = Math.min(x, motionX * 0.75F);
+			z = Math.min(z, motionZ * 0.75F);
+		}
+		return new Vec3d(x, y, z);
+	}
 }
