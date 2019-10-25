@@ -455,6 +455,7 @@ public final class ParticleBuilder {
 		return this;
 	}
 
+	//TODO: Option for colliding with other particles and/or entities!
 	/**
 	 * Sets the collisions of the particle being built. If unspecified, this defaults to false.
 	 * <p></p>

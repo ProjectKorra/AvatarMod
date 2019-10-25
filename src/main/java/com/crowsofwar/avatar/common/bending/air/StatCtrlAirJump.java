@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.common.data.PowerRatingModifier;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -125,6 +126,10 @@ public class StatCtrlAirJump extends StatusControl {
 						numberOfParticles, 0, 0, 0, particleSpeed);
 			}
 
+			if (world.isRemote) {
+				//ParticleBuilder.create(ParticleBuilder.Type.FLASH).collide(true);
+			}
+
 			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1), Math.toRadians(entity.rotationYaw), 0);
 
 			Vector velocity = rotations.toRectangular();
@@ -178,6 +183,8 @@ public class StatCtrlAirJump extends StatusControl {
 			powerRatingModifier.setTicks((int) (powerDuration * 20));
 			//noinspection ConstantConditions
 			data.getPowerRatingManager(Airbending.ID).addModifier(powerRatingModifier, ctx);
+
+
 			EntityShockwave wave = new EntityShockwave(world);
 			wave.setDamage(0);
 			wave.setFireTime(0);
