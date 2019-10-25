@@ -22,7 +22,7 @@ public class RenderShockwave extends Render<EntityShockwave> {
 	@Override
 	public void doRender(EntityShockwave entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
-		if (!entity.shouldRenderNormal() && entity.getParticle() != null) {
+		if (entity.shouldRenderNormal() && entity.getParticle() != null) {
 			EnumParticleTypes particle = entity.getParticle();
 			if (particle != null) {
 				if (entity.ticksExisted <= entity.getParticleWaves()) {

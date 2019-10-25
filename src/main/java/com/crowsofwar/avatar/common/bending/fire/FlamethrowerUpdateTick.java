@@ -230,7 +230,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles)
 						for (double i = 0; i < flamesPerSecond; i += 3) {
 							Vector start1 = look.times(i / (double) flamesPerSecond).plus(eye.minusY(0.5));
-							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.05F).time(25).collide(true).vel(look.times(speedMult / 30).toMinecraft()).spawn(world);
+							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.05F).time(25).collide(true).vel(look.times(speedMult / 30).toMinecraft()).spawn(world);
 						}
 					for (double i = 0; i < flamesPerSecond; i += 1) {
 							Vector start1 = look.times(i / (double) flamesPerSecond).plus(eye.minusY(0.5));

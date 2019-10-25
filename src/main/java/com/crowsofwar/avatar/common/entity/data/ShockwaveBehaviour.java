@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.bending.air.AirBurstHandler;
+import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireShot;
 import com.crowsofwar.avatar.common.bending.fire.StatCtrlInfernoPunchFirst;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
@@ -22,6 +23,7 @@ public abstract class ShockwaveBehaviour extends Behavior<EntityShockwave> {
 		registerBehavior(AbilityFireShot.FireShockwaveBehaviour.class);
 		registerBehavior(StatCtrlInfernoPunchFirst.InfernoPunchShockwave.class);
 		registerBehavior(AirBurstHandler.AirburstShockwave.class);
+		registerBehavior(SmashGroundHandler.AirGroundPoundShockwave.class);
 	}
 
 	public static class Idle extends ShockwaveBehaviour {

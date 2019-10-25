@@ -46,7 +46,7 @@ public class RenderLightningSpear extends RenderModel<EntityLightningSpear> {
 		GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);
 		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
 		GlStateManager.scale(entity.getWidth(), entity.getHeight(), entity.getWidth());
-		GlStateManager.translate(entity.getWidth() / 2, entity.getHeight() / 2, entity.getWidth() / 2);
+		GlStateManager.translate(0, entity.getHeight() / 2, 0);
 		GlStateManager.rotate((float) (entity.ticksExisted / 20.0 * entity.getDegreesPerSecond()), 0, 0, 1);
 
 	}

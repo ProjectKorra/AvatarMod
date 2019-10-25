@@ -21,13 +21,16 @@ import com.crowsofwar.avatar.common.bending.fire.AbilityInfernoPunch;
 import com.crowsofwar.avatar.common.bending.fire.AiInfernoPunch;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -191,6 +194,20 @@ public class EntityFirebender extends EntityHumanBender {
 		textcomponentstring.getStyle().setInsertion(this.getCachedUniqueIdString());
 		return textcomponentstring;
 		//return super.getDisplayName();
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
+		ItemStack stack = new ItemStack(Scrolls.FIRE, 1, getLevel());
+		if (AvatarUtils.getRandomNumberInRange(1, 100) < 50 && !world.isRemote) {
+			this.entityDropItem(stack, 1.0F);
+		}
+	}
+
+	@Override
+	protected void onDeathUpdate() {
+		super.onDeathUpdate();
 	}
 }
 
