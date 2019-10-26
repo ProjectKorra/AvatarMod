@@ -28,6 +28,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -53,11 +54,9 @@ public class AirBurstHandler extends TickHandler {
 		Bender bender = ctx.getBender();
 		AbilityData abilityData = ctx.getData().getAbilityData("air_burst");
 		float charge;
-		//3 stages, max charge of 3.
-		//boolean spawned = false;
-		//This is so the tick handler spawns the entity before returning.
+		//4 stages, max charge of 4.
 
-		//TODO: Airburst charging!
+		//TODO: Air Blast/Laser of Air! At level 1, it activates at charge level 4.
 		if (abilityData != null) {
 
 			float powerRating = ((float) bender.getDamageMult(Airbending.ID));
@@ -76,6 +75,7 @@ public class AirBurstHandler extends TickHandler {
 			double upwardKnockback = STATS_CONFIG.airBurstSettings.push / 40;
 			double suction = 0.05;
 			int performanceAmount = STATS_CONFIG.airBurstSettings.performanceAmount;
+			float shockwaveSpeed;
 
 			if (abilityData.getLevel() == 1) {
 				damage *= 1.5;
@@ -126,14 +126,18 @@ public class AirBurstHandler extends TickHandler {
 			knockBack *= powerRating * xpMod;
 
 			//Makes sure the charge is never 0.
-			charge = Math.max((int) (3 * (duration / durationToFire)), 1);
+			charge = Math.max((int) (3 * (duration / durationToFire)) + 1, 1);
+			charge = Math.min(charge, 4);
+			//We don't want the charge going over 3.
 
+			//how fast the shockwave's particle speed is.
+			shockwaveSpeed = (float) knockBack;
 			//Affect things by the charge. The charge, at stage 3, should set everything to its max.
-			damage *= (0.25 + 0.25 * charge);
+			damage *= (0.20 + 0.20 * charge);
 			//Results in a bigger radius so that it blocks projectiles.
-			radius *= (0.60 + 0.133333333333 * charge);
-			knockBack *= (0.60 + 0.133333333333 * charge);
-			performanceAmount *= (0.25 + 0.25 * charge);
+			radius *= (0.60 + 0.10 * charge);
+			knockBack *= (0.60 + 0.10 * charge);
+			performanceAmount *= (0.20 + 0.20 * charge);
 
 
 			applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
@@ -141,15 +145,16 @@ public class AirBurstHandler extends TickHandler {
 			//gets smaller
 			suction -= (float) duration / 400;
 
-			if (world.isRemote) {
+			if (world.isRemote && duration <= durationToFire) {
 				for (int i = 0; i < 12; i++) {
 					Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
 							i * 30), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(lookpos.toMinecraft()))
-							.collide(true).scale(abilityData.getXpModifier() * 1.5F).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+							.collide(true).scale(abilityData.getXpModifier() * 0.5F * charge).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
 							world.rand.nextGaussian() / 60).clr(0.8F, 0.8F, 0.8F).spawn(world);
 				}
 			}
+			world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 0.25F * charge, 0.8F + world.rand.nextFloat() / 10);
 
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius, entity.posY - radius, entity.posZ - radius);
@@ -180,6 +185,7 @@ public class AirBurstHandler extends TickHandler {
 				shockwave.setParticleAmount(1);
 				shockwave.setRange(radius);
 				shockwave.setPerformanceAmount(performanceAmount);
+				shockwave.setParticleSpeed(shockwaveSpeed);
 				shockwave.setParticleController(particleController);
 				shockwave.setAbility(new AbilityAirBurst());
 				shockwave.setSpeed((float) knockBack / 4);
@@ -241,6 +247,7 @@ public class AirBurstHandler extends TickHandler {
 		public Behavior onUpdate(EntityShockwave entity) {
 			World world = entity.world;
 			if (world.isRemote) {
+				//TODO: Fix particle seeed
 				if (entity.ticksExisted == 2) {
 					double x1, y1, z1, xVel, yVel, zVel;
 					for (double theta = 0; theta <= 180; theta += 1) {
@@ -252,12 +259,12 @@ public class AirBurstHandler extends TickHandler {
 							x1 = entity.ticksExisted * entity.getSpeed() * Math.cos(rphi) * Math.sin(rtheta);
 							y1 = entity.ticksExisted * entity.getSpeed() * Math.sin(rphi) * Math.sin(rtheta);
 							z1 = entity.ticksExisted * entity.getSpeed() * Math.cos(rtheta);
-							xVel = x1 * entity.getParticleSpeed();
-							yVel = y1 * entity.getParticleSpeed();
-							zVel = z1 * entity.getParticleSpeed();
+							xVel = x1 * entity.getParticleSpeed() * 0.25F;
+							yVel = y1 * entity.getParticleSpeed() * 0.25F;
+							zVel = z1 * entity.getParticleSpeed() * 0.25F;
 
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
-									.clr(0.8F, 0.8F, 0.8F).time(13 + (int) (2 * entity.getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
+									.clr(0.8F, 0.8F, 0.8F).time((int) (13 * (Math.min(entity.getSpeed() / entity.getParticleSpeed() * 1.5F, 1)) + (int) (2 * entity.getRange() / STATS_CONFIG.airBurstSettings.radius))).collide(true)
 									.scale(3.25F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).spawn(world);
 
 						}
@@ -275,6 +282,8 @@ public class AirBurstHandler extends TickHandler {
 			List<Entity> nearby = world.getEntitiesWithinAABB(Entity.class, box);
 			for (Entity target : nearby) {
 				if (!world.isRemote) {
+					if (target != entity && target != entity.getOwner() && entity.canCollideWith(target) || target instanceof EntityArrow ||
+					target instanceof EntityThrowable)
 					if (target instanceof IOffensiveEntity && target instanceof AvatarEntity) {
 						if (((AvatarEntity) target).isProjectile()) {
 							if (((AvatarEntity) target).getAbility().getTier() < entity.getAbility().getTier() ||

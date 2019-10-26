@@ -49,7 +49,6 @@ public class StatCtrlSetAirburstCharging extends StatusControl {
 
 		BendingData data = ctx.getData();
 		EntityLivingBase bender = ctx.getBenderEntity();
-		World world = ctx.getWorld();
 
 		if (data.hasBendingId(Airbending.ID)) {
 			if (setting) {
