@@ -326,12 +326,12 @@ avatar.ability.air_bubble.lvl4_1=§f§l§oPressured §f§l§obubble ;; Very larg
 avatar.ability.air_bubble.lvl4_2=§f§l§oUndercurrent ;; Limited hovering, disabled by sneak
 
 avatar.ability.air_burst=§f§lAir Burst
-avatar.ability.air_burst.desc=Slowly draw the surrounding air inwards, then release it in a massive blast that knocks back enemies!
-avatar.ability.air_burst.lvl1="Nope!" nearby enemies, blasting them away with a shockwave of air.
-avatar.ability.air_burst.lvl2=Charge timed reduced; damage, radius, and knockback increased.
-avatar.ability.air_burst.lvl3=Everything is enhanced!
-avatar.ability.air_burst.lvl4_1=§f§lPiercing Winds ;; Way higher damage, and release winds of such ferocity that they blind, weaken, and slow enemies!
-avatar.ability.air_burst.lvl4_2=§f§lMaximum Pressure ;; Slowly draw enemies in before firing them away!! A massive radius!
+avatar.ability.air_burst.desc=Slowly draw the surrounding air inwards, then release it in a massive blast that knocks back enemies! Left click when it's fully charged to shoot a blast of air!
+avatar.ability.air_burst.lvl1="Nope!" nearby enemies, blasting them away with a shockwave of air. 4 charge levels.
+avatar.ability.air_burst.lvl2=Charge timed reduced; damage, radius, and knockback increased. You can shoot an air laser at a charge level of 3 instead of 4!
+avatar.ability.air_burst.lvl3=Everything is enhanced! You can shoot a beam of air at charge level 2!
+avatar.ability.air_burst.lvl4_1=§f§lPiercing Winds ;; Way higher damage, and release winds of such ferocity that they blind, weaken, and slow enemies! Air beam is now a sniper beam.
+avatar.ability.air_burst.lvl4_2=§f§lTempestuous Clouds ;; Slowly draw enemies in before firing them away!! A massive radius! Quickly charge up evverything, and you can use the air laser instantly!
 
 avatar.ability.slipstream=§f§lSlipstream
 avatar.ability.slipstream.desc=Surround yourself in a veil of air, increasing your movement speed.

@@ -185,7 +185,7 @@ public class AirBurstHandler extends TickHandler {
 				shockwave.setParticleAmount(1);
 				shockwave.setRange(radius);
 				shockwave.setPerformanceAmount(performanceAmount);
-				shockwave.setParticleSpeed(shockwaveSpeed);
+				shockwave.setParticleSpeed(Math.min((float) knockBack / shockwaveSpeed * 1.5F, shockwaveSpeed));
 				shockwave.setParticleController(particleController);
 				shockwave.setAbility(new AbilityAirBurst());
 				shockwave.setSpeed((float) knockBack / 4);
@@ -264,7 +264,7 @@ public class AirBurstHandler extends TickHandler {
 							zVel = z1 * entity.getParticleSpeed() * 0.25F;
 
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
-									.clr(0.8F, 0.8F, 0.8F).time((int) (13 * (Math.min(entity.getSpeed() / entity.getParticleSpeed() * 1.5F, 1)) + (int) (2 * entity.getRange() / STATS_CONFIG.airBurstSettings.radius))).collide(true)
+									.clr(0.8F, 0.8F, 0.8F).time((int) (13 /* (Math.min(entity.getSpeed() / entity.getParticleSpeed() * 1.5F, 1))**/ + (int) (2 * entity.getRange() / STATS_CONFIG.airBurstSettings.radius))).collide(true)
 									.scale(3.25F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).spawn(world);
 
 						}
@@ -292,6 +292,7 @@ public class AirBurstHandler extends TickHandler {
 
 						}
 					}
+					System.out.println(entity);
 					if (target instanceof EntityArrow || target instanceof EntityThrowable)
 						target.addVelocity(target.motionX * -1.1, target.motionY * -1.1, target.motionZ * -1.1);
 

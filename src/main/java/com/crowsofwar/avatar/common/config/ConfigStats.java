@@ -364,6 +364,18 @@ public class ConfigStats {
 		public int performanceAmount = 12;
 		//How much performance is added to the player's performance score upon a hit
 
+		@Load
+		public float beamDamage = 6F;
+
+		@Load
+		public float beamPush = 2.5F;
+
+		@Load
+		public float beamSize = 0.5F;
+
+		@Load
+		public int beamRange = 10;
+
 	}
 
 	public static class FireballSettings {
