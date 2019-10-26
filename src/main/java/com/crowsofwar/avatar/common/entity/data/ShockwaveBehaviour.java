@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.bending.air.AirBurstHandler;
-import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
+import com.crowsofwar.avatar.common.bending.air.tickhandlers.AirBurstHandler;
+import com.crowsofwar.avatar.common.bending.air.tickhandlers.SmashGroundHandler;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireShot;
 import com.crowsofwar.avatar.common.bending.fire.StatCtrlInfernoPunchFirst;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;

@@ -82,6 +82,7 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 		super(world);
 		setSize(.8f, .8f);
 		this.position = this.getPosition();
+		this.lightTnt = true;
 	}
 
 	@Override

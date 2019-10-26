@@ -17,17 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.bending.air.StatCtrlAirJump;
-import com.crowsofwar.avatar.common.bending.air.StatCtrlBubbleContract;
-import com.crowsofwar.avatar.common.bending.air.StatCtrlBubbleExpand;
-import com.crowsofwar.avatar.common.bending.air.StatCtrlThrowCloudBall;
-import com.crowsofwar.avatar.common.bending.earth.StatCtrlDropWall;
-import com.crowsofwar.avatar.common.bending.earth.StatCtrlPlaceBlock;
-import com.crowsofwar.avatar.common.bending.earth.StatCtrlPlaceWall;
-import com.crowsofwar.avatar.common.bending.earth.StatCtrlPullWall;
-import com.crowsofwar.avatar.common.bending.earth.StatCtrlPushWall;
-import com.crowsofwar.avatar.common.bending.earth.StatCtrlShootWall;
-import com.crowsofwar.avatar.common.bending.earth.StatCtrlThrowBlock;
+import com.crowsofwar.avatar.common.bending.air.statctrls.*;
+import com.crowsofwar.avatar.common.bending.earth.*;
 import com.crowsofwar.avatar.common.bending.fire.*;
 import com.crowsofwar.avatar.common.bending.ice.StatCtrlShieldShatter;
 import com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear;
@@ -61,7 +52,9 @@ public abstract class StatusControl {
 			AIR_JUMP = new StatCtrlAirJump(),
 			BUBBLE_EXPAND = new StatCtrlBubbleExpand(),
 			BUBBLE_CONTRACT = new StatCtrlBubbleContract(),
-			CHARGE_BUBBLE = new StatCtrlChargeBubble(),
+			CHARGE_AIR_BURST = new StatCtrlSetAirburstCharging(true),
+	//SHOOOT_AIR_BURST = new StatCtrlSetAirburstCharging()
+	CHARGE_BUBBLE = new StatCtrlChargeBubble(),
 			DROP_WALL = new StatCtrlDropWall(),
 			PLACE_WALL = new StatCtrlPlaceWall(),
 			SHOOT_WALL = new StatCtrlShootWall(),
@@ -73,6 +66,7 @@ public abstract class StatusControl {
 			INFERNO_PUNCH_SECOND = new StatCtrlInfernoPunchSecond(),
 			LOB_BUBBLE = new StatCtrlLobBubble(),
 			PLACE_BLOCK = new StatCtrlPlaceBlock(),
+			RELEASE_AIR_BURST = new StatCtrlSetAirburstCharging(false),
 			SANDSTORM_REDIRECT = new StatCtrlSandstormRedirect(),
 			SHIELD_SHATTER = new StatCtrlShieldShatter(),
 			SKATING_JUMP = new StatCtrlSkateJump(),
@@ -175,7 +169,7 @@ public abstract class StatusControl {
 		 * @param x
 		 * @param y
 		 */
-		private CrosshairPosition(int x, int y) {
+		CrosshairPosition(int x, int y) {
 			this.x = x;
 			this.y = y;
 		}

@@ -176,6 +176,9 @@ public class ConfigClient {
 		public final boolean infernoPunchSphere = false;
 
 		@Load
+		public final boolean showInfernoPunchOrb = true;
+
+		@Load
 		public final boolean useFlamethrowerParticles = true;
 	}
 

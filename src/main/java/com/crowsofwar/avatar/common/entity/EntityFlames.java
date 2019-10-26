@@ -59,6 +59,7 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		this.lightTrailingFire = false;
 		this.reflect = false;
 		this.ignoreFrustumCheck = true;
+		this.lightTnt = true;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.bending.air;
+package com.crowsofwar.avatar.common.bending.air.tickhandlers;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

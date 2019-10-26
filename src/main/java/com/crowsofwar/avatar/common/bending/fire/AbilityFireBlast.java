@@ -24,10 +24,8 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
-import com.crowsofwar.avatar.common.entity.EntityFireShooter;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
-import com.crowsofwar.avatar.common.entity.data.FireShooterBehaviour;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
@@ -189,31 +187,4 @@ public class AbilityFireBlast extends Ability {
 		return new AiFireBlast(this, entity, bender);
 	}
 
-	public static class FireBlastBehaviour extends FireShooterBehaviour {
-
-		@Override
-		public Behavior onUpdate(EntityFireShooter entity) {
-			return this;
-		}
-
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-
-		}
-
-		@Override
-		public void toBytes(PacketBuffer buf) {
-
-		}
-
-		@Override
-		public void load(NBTTagCompound nbt) {
-
-		}
-
-		@Override
-		public void save(NBTTagCompound nbt) {
-
-		}
-	}
 }

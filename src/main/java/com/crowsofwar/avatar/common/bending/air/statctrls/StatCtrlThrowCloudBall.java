@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.bending.air;
+package com.crowsofwar.avatar.common.bending.air.statctrls;
 
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;

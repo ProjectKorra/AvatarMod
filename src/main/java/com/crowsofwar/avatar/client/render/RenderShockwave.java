@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.bending.air.AirBurstHandler;
-import com.crowsofwar.avatar.common.bending.fire.StatCtrlInfernoPunchFirst;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.client.renderer.entity.Render;

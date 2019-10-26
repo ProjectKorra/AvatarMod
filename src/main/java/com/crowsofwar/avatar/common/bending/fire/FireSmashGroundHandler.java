@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.air.SmashGroundHandler;
+import com.crowsofwar.avatar.common.bending.air.tickhandlers.SmashGroundHandler;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;

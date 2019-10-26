@@ -129,35 +129,53 @@ public class AbilityInfernoPunch extends Ability {
 					boolean hasStatCtrl = be.hasStatusControl(INFERNO_PUNCH_MAIN) || be.hasStatusControl(INFERNO_PUNCH_FIRST)
 							|| be.hasStatusControl(INFERNO_PUNCH_SECOND);
 					if (hasStatCtrl) {
-						Vec3d height;
-						Vec3d rightSide;
-						if (emitter instanceof EntityPlayer) {
-							if (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) <= -1) {
-								entity.setOrbSize(entity.getInitialSize() /*/ 0.2F**/ - 0.05F);
-								height = emitter.getPositionVector().add(0, 1.65, 0);
-								height = height.add(emitter.getLookVec().scale(0.8));
-								Vec3d vel;
-								//Right
-								if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
-									rightSide = rightSide.add(height);
-									vel = rightSide.subtract(entity.getPositionVector());
+						if (CLIENT_CONFIG.fireRenderSettings.showInfernoPunchOrb) {
+							Vec3d height;
+							Vec3d rightSide;
+							if (emitter instanceof EntityPlayer) {
+								if (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) <= -1) {
+									entity.setOrbSize(entity.getInitialSize() /*/ 0.2F**/ - 0.05F);
+									height = emitter.getPositionVector().add(0, 1.65, 0);
+									height = height.add(emitter.getLookVec().scale(0.8));
+									Vec3d vel;
+									//Right
+									if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
+										rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
+										rightSide = rightSide.add(height);
+										vel = rightSide.subtract(entity.getPositionVector());
+									}
+									//Left
+									else {
+										rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.5).withY(0).toMinecraft();
+										rightSide = rightSide.add(height);
+										vel = rightSide.subtract(entity.getPositionVector());
+									}
+									entity.setVelocity(vel.scale(0.5));
+									AvatarUtils.afterVelocityAdded(entity);
+								} else {
+									entity.setOrbSize(entity.getInitialSize());
+									height = emitter.getPositionVector().add(0, 0.88, 0);
+									Vec3d vel;
+									if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
+										rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.55 -
+												Math.min(0.5F / entity.getOrbSize() * 0.1F, 0.05F)).withY(0).toMinecraft();
+										rightSide = rightSide.add(height);
+										vel = rightSide.subtract(entity.getPositionVector());
+									} else {
+										rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.55).withY(0).toMinecraft();
+										rightSide = rightSide.add(height);
+										vel = rightSide.subtract(entity.getPositionVector());
+									}
+									entity.setVelocity(vel.scale(0.5));
+									AvatarUtils.afterVelocityAdded(entity);
 								}
-								//Left
-								else {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.5).withY(0).toMinecraft();
-									rightSide = rightSide.add(height);
-									vel = rightSide.subtract(entity.getPositionVector());
-								}
-								entity.setVelocity(vel.scale(0.5));
-								AvatarUtils.afterVelocityAdded(entity);
+
 							} else {
 								entity.setOrbSize(entity.getInitialSize());
 								height = emitter.getPositionVector().add(0, 0.88, 0);
 								Vec3d vel;
-								if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
-									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.55 -
-											Math.min(0.5F / entity.getOrbSize() * 0.1F, 0.05F)).withY(0).toMinecraft();
+								if (((EntityBender) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
+									rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.55).withY(0).toMinecraft();
 									rightSide = rightSide.add(height);
 									vel = rightSide.subtract(entity.getPositionVector());
 								} else {
@@ -168,93 +186,77 @@ public class AbilityInfernoPunch extends Ability {
 								entity.setVelocity(vel.scale(0.5));
 								AvatarUtils.afterVelocityAdded(entity);
 							}
+							int lightRadius = 4;
+							//Stops constant spam and calculations
+							if (entity.ticksExisted == 1) {
+								AbilityData aD = AbilityData.get((EntityLivingBase) emitter, "inferno_punch");
+								int level = aD.getLevel();
+								if (level >= 1) {
+									lightRadius = 6;
+								}
+								if (level >= 2) {
+									lightRadius = 8;
+								}
+								if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+									lightRadius = 12;
+								}
+								if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+									lightRadius = 7;
+								}
+							}
+							if (entity.getEntityWorld().isRemote)
+								entity.setLightRadius(lightRadius + (int) (java.lang.Math.random() * 4));
+							//Shift colour. Copied from the randomly shift colour class.
+							if (entity.ticksExisted % 6 == 0) {
+								if (entity.getColourShiftRange() != 0) {
+									float range = entity.getColourShiftRange() / 2;
+									float r = entity.getInitialColourR();
+									float g = entity.getInitialColourG();
+									float b = entity.getInitialColourB();
+									float a = entity.getInitialColourA();
+									for (int i = 0; i < 4; i++) {
+										float red, green, blue, alpha;
+										float rMin = r < range ? 0 : r - range;
+										float gMin = g < range ? 0 : r - range;
+										float bMin = b < range ? 0 : r - range;
+										float aMin = a < range ? 0 : a - range;
+										float rMax = r + range;
+										float gMax = b + range;
+										float bMax = g + range;
+										float aMax = a + range;
+										switch (i) {
+											case 0:
+												float amountR = AvatarUtils.getRandomNumberInRange(0,
+														(int) (100 / rMax)) / 100F * entity.getColourShiftInterval();
+												red = entity.world.rand.nextBoolean() ? r + amountR : r - amountR;
+												red = MathHelper.clamp(red, rMin, rMax);
+												entity.setColorR(red);
+												break;
 
-						} else {
-							entity.setOrbSize(entity.getInitialSize());
-							height = emitter.getPositionVector().add(0, 0.88, 0);
-							Vec3d vel;
-							if (((EntityBender) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
-								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.55).withY(0).toMinecraft();
-								rightSide = rightSide.add(height);
-								vel = rightSide.subtract(entity.getPositionVector());
-							} else {
-								rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.55).withY(0).toMinecraft();
-								rightSide = rightSide.add(height);
-								vel = rightSide.subtract(entity.getPositionVector());
-							}
-							entity.setVelocity(vel.scale(0.5));
-							AvatarUtils.afterVelocityAdded(entity);
-						}
-						int lightRadius = 4;
-						//Stops constant spam and calculations
-						if (entity.ticksExisted == 1) {
-							AbilityData aD = AbilityData.get((EntityLivingBase) emitter, "inferno_punch");
-							int level = aD.getLevel();
-							if (level >= 1) {
-								lightRadius = 6;
-							}
-							if (level >= 2) {
-								lightRadius = 8;
-							}
-							if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-								lightRadius = 12;
-							}
-							if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-								lightRadius = 7;
-							}
-						}
-						if (entity.getEntityWorld().isRemote)
-							entity.setLightRadius(lightRadius + (int) (java.lang.Math.random() * 4));
-						//Shift colour. Copied from the randomly shift colour class.
-						if (entity.ticksExisted % 6 == 0) {
-							if (entity.getColourShiftRange() != 0) {
-								float range = entity.getColourShiftRange() / 2;
-								float r = entity.getInitialColourR();
-								float g = entity.getInitialColourG();
-								float b = entity.getInitialColourB();
-								float a = entity.getInitialColourA();
-								for (int i = 0; i < 4; i++) {
-									float red, green, blue, alpha;
-									float rMin = r < range ? 0 : r - range;
-									float gMin = g < range ? 0 : r - range;
-									float bMin = b < range ? 0 : r - range;
-									float aMin = a < range ? 0 : a - range;
-									float rMax = r + range;
-									float gMax = b + range;
-									float bMax = g + range;
-									float aMax = a + range;
-									switch (i) {
-										case 0:
-											float amountR = AvatarUtils.getRandomNumberInRange(0,
-													(int) (100 / rMax)) / 100F * entity.getColourShiftInterval();
-											red = entity.world.rand.nextBoolean() ? r + amountR : r - amountR;
-											red = MathHelper.clamp(red, rMin, rMax);
-											entity.setColorR(red);
-											break;
+											case 1:
+												float amountG = AvatarUtils.getRandomNumberInRange(0,
+														(int) (100 / gMax)) / 100F * entity.getColourShiftInterval();
+												green = entity.world.rand.nextBoolean() ? g + amountG : g - amountG;
+												green = MathHelper.clamp(green, gMin, gMax);
+												entity.setColorG(green);
+												break;
 
-										case 1:
-											float amountG = AvatarUtils.getRandomNumberInRange(0,
-													(int) (100 / gMax)) / 100F * entity.getColourShiftInterval();
-											green = entity.world.rand.nextBoolean() ? g + amountG : g - amountG;
-											green = MathHelper.clamp(green, gMin, gMax);
-											entity.setColorG(green);
-											break;
+											case 2:
+												float amountB = AvatarUtils.getRandomNumberInRange(0,
+														(int) (100 / bMax)) / 100F * entity.getColourShiftInterval();
+												blue = entity.world.rand.nextBoolean() ? b + amountB : b - amountB;
+												blue = MathHelper.clamp(blue, bMin, bMax);
+												entity.setColorB(blue);
+												break;
 
-										case 2:
-											float amountB = AvatarUtils.getRandomNumberInRange(0,
-													(int) (100 / bMax)) / 100F * entity.getColourShiftInterval();
-											blue = entity.world.rand.nextBoolean() ? b + amountB : b - amountB;
-											blue = MathHelper.clamp(blue, bMin, bMax);
-											entity.setColorB(blue);
-											break;
-
-										case 3:
-											float amountA = AvatarUtils.getRandomNumberInRange(0,
-													(int) (100 / aMax)) / 100F * entity.getColourShiftInterval();
-											alpha = entity.world.rand.nextBoolean() ? a + amountA : a - amountA;
-											alpha = MathHelper.clamp(alpha, aMin, aMax);
-											entity.setColorA(alpha);
-											break;
+											case 3:
+												float amountA = AvatarUtils.getRandomNumberInRange(0,
+														(int) (100 / aMax)) / 100F * entity.getColourShiftInterval();
+												alpha = entity.world.rand.nextBoolean() ? a + amountA : a - amountA;
+												alpha = MathHelper.clamp(alpha, aMin, aMax);
+												entity.setColorA(alpha);
+												break;
+										}
 									}
 								}
 							}

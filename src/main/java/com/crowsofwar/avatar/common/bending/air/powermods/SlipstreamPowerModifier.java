@@ -1,6 +1,7 @@
-package com.crowsofwar.avatar.common.bending.air;
+package com.crowsofwar.avatar.common.bending.air.powermods;
 
 import com.crowsofwar.avatar.common.bending.BuffPowerModifier;
+import com.crowsofwar.avatar.common.bending.air.AbilitySlipstream;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Vision;

@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.bending.air;
+package com.crowsofwar.avatar.common.bending.air.powermods;
 
 import com.crowsofwar.avatar.common.data.PowerRatingModifier;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;

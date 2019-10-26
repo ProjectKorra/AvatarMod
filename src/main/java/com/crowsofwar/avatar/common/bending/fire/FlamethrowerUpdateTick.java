@@ -60,7 +60,7 @@ import static java.lang.Math.toRadians;
  */
 public class FlamethrowerUpdateTick extends TickHandler {
 
-	public static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString("34877be6-6cf5-43f4-a8b3-aa12526651cf");
+	public static final UUID FLAMETHROWER_MOVEMENT_MODIFIER_ID = UUID.fromString("34877be6-6cf5-43f4-a8b3-aa12526651cf");
 
 	public FlamethrowerUpdateTick(int id) {
 		super(id);
@@ -251,7 +251,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 							SoundCategory.PLAYERS, 0.2f, 0.8f);
 
 				float movementModifier = 1F - (float) speedMult / 100F;
-				if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(MOVEMENT_MODIFIER_ID) == null)
+				if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID) == null)
 					applyMovementModifier(entity, movementModifier);
 
 
@@ -271,15 +271,15 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				entity.world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, entity.getSoundCategory(),
 						1.0F, 0.8F + world.rand.nextFloat() / 10);
 				//makes sure the tick handler is removed
-				if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(MOVEMENT_MODIFIER_ID) != null)
-					entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
+				if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID) != null)
+					entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID);
 				return true;
 			}
 
 
 		} else {
 			// not enough chi
-			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
+			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID);
 			return true;
 		}
 		return !data.hasStatusControl(StatusControl.STOP_FLAMETHROW);
@@ -289,9 +289,9 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 
-		moveSpeed.removeModifier(MOVEMENT_MODIFIER_ID);
+		moveSpeed.removeModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID);
 
-		moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID, "Flamethrower Movement Modifier", multiplier - 1, 1));
+		moveSpeed.applyModifier(new AttributeModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID, "Flamethrower Movement Modifier", multiplier - 1, 1));
 
 	}
 

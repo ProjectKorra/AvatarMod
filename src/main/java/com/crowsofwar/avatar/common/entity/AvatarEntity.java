@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockTNT;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -56,6 +57,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import static net.minecraft.block.BlockTNT.EXPLODE;
+
 /**
  * @author CrowsOfWar
  */
@@ -74,8 +77,9 @@ public abstract class AvatarEntity extends Entity {
 	protected boolean putsOutFires;
 	protected boolean flammable;
 	protected boolean pushStoneButton, pushTrapDoor, pushDoor;
-	private double powerRating;
 	protected boolean setsFires;
+	protected boolean lightTnt;
+	private double powerRating;
 	private BendingStyle element;
 	private SyncedEntity<EntityLivingBase> ownerRef;
 
@@ -90,6 +94,7 @@ public abstract class AvatarEntity extends Entity {
 		this.flammable = false;
 		this.element = null;
 		this.setsFires = false;
+		this.lightTnt = false;
 	}
 
 	/**
@@ -370,9 +375,49 @@ public abstract class AvatarEntity extends Entity {
 
 		if (collided) {
 			if (setsFires) {
-				BlockPos pos = getPosition();
-				if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
-					world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+				for (int x = 0; x <= 1; x++) {
+					for (int z = 0; z <= 1; z++) {
+						for (int y = 0; y <= 1; y++) {
+							BlockPos pos = new BlockPos(posX + x * width, posY - y * height, posZ + z * width);
+							if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
+								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+							}
+						}
+					}
+				}
+				for (int x = 0; x >= -1; x--) {
+					for (int z = 0; z >= -1; z--) {
+						for (int y = 0; y >= -1; y--) {
+							BlockPos pos = new BlockPos(posX + x * width, posY - y * height, posZ + z * width);
+							if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
+								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+							}
+						}
+					}
+				}
+				if (lightTnt) {
+					for (int x = 0; x <= 1; x++) {
+						for (int z = 0; z <= 1; z++) {
+							for (int y = 0; y <= 1; y++) {
+								BlockPos pos = new BlockPos(posX + x * width, posY - y * height, posZ + z * width);
+								if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
+									((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
+											world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
+								}
+							}
+						}
+					}
+					for (int x = 0; x >= -1; x--) {
+						for (int z = 0; z >= -1; z--) {
+							for (int y = 0; y >= -1; y--) {
+								BlockPos pos = new BlockPos(posX + x * width, posY - y * height, posZ + z * width);
+								if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
+									((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
+											world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
+								}
+							}
+						}
+					}
 				}
 			}
 			onCollideWithSolid();

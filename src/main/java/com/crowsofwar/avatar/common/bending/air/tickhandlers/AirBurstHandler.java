@@ -1,5 +1,7 @@
-package com.crowsofwar.avatar.common.bending.air;
+package com.crowsofwar.avatar.common.bending.air.tickhandlers;
 
+import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -21,7 +23,6 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -34,7 +35,7 @@ import java.util.UUID;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AirBurstHandler extends TickHandler {
-	private static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString
+	public static final UUID AIRBURST_MOVEMENT_MODIFIER_ID = UUID.fromString
 			("f82d325c-9828-11e8-9eb6-529269fb1459");
 
 	public AirBurstHandler(int id) {
@@ -48,7 +49,10 @@ public class AirBurstHandler extends TickHandler {
 		BendingData data = ctx.getData();
 		Bender bender = ctx.getBender();
 		AbilityData abilityData = ctx.getData().getAbilityData("air_burst");
+		float charge = 1;
+		//3 stages, max charge of 3.
 
+		//TODO: Airburst charging!
 		if (abilityData != null) {
 
 			float powerRating = ((float) bender.getDamageMult(Airbending.ID));
@@ -116,6 +120,15 @@ public class AirBurstHandler extends TickHandler {
 			radius *= powerRating * xpMod;
 			knockBack *= powerRating * xpMod;
 
+			charge = 3 * (duration / durationToFire);
+
+			//Affect things by the charge. The charge, at stage 3, should set everything to its max.
+			damage *= (charge / 3);
+			radius *= (charge / 3);
+			knockBack *= (charge / 3);
+			performanceAmount *= (charge / 3);
+
+
 			applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 			double inverseRadius = (durationToFire - duration) / 10;
 			//gets smaller
@@ -143,6 +156,7 @@ public class AirBurstHandler extends TickHandler {
 				}
 			}
 
+
 			if (duration >= durationToFire) {
 
 				int particleController = abilityData.getLevel() > 0 ? 60 - (5 * abilityData.getLevel()) : 60;
@@ -166,7 +180,7 @@ public class AirBurstHandler extends TickHandler {
 				world.spawnEntity(shockwave);
 
 
-				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
+				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
 
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
 						SoundCategory.BLOCKS, 1, 0.5F);
@@ -182,9 +196,9 @@ public class AirBurstHandler extends TickHandler {
 		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes
 				.MOVEMENT_SPEED);
 
-		moveSpeed.removeModifier(MOVEMENT_MODIFIER_ID);
+		moveSpeed.removeModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
 
-		moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID,
+		moveSpeed.applyModifier(new AttributeModifier(AIRBURST_MOVEMENT_MODIFIER_ID,
 				"Airburst charge modifier", multiplier - 1, 1));
 
 	}
