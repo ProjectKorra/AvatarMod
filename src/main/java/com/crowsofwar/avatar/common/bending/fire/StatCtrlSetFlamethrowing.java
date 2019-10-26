@@ -25,7 +25,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
-import static com.crowsofwar.avatar.common.bending.fire.FlamethrowerUpdateTick.MOVEMENT_MODIFIER_ID;
+import static com.crowsofwar.avatar.common.bending.fire.FlamethrowerUpdateTick.FLAMETHROWER_MOVEMENT_MODIFIER_ID;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_UP;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAMETHROWER;
@@ -55,8 +55,8 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 				data.addStatusControl(STOP_FLAMETHROW);
 				data.addTickHandler(FLAMETHROWER);
 			} else {
-				if (bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(MOVEMENT_MODIFIER_ID) != null)
-					bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
+				if (bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID) != null)
+					bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID);
 				data.removeTickHandler(FLAMETHROWER);
 			}
 		}

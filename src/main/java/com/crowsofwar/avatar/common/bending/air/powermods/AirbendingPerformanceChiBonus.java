@@ -1,6 +1,7 @@
-package com.crowsofwar.avatar.common.bending.air;
+package com.crowsofwar.avatar.common.bending.air.powermods;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;

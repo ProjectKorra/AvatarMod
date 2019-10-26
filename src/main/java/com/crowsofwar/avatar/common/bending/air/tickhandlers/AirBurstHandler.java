@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.bending.air.tickhandlers;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
@@ -49,8 +50,10 @@ public class AirBurstHandler extends TickHandler {
 		BendingData data = ctx.getData();
 		Bender bender = ctx.getBender();
 		AbilityData abilityData = ctx.getData().getAbilityData("air_burst");
-		float charge = 1;
+		float charge;
 		//3 stages, max charge of 3.
+		//boolean spawned = false;
+		//This is so the tick handler spawns the entity before returning.
 
 		//TODO: Airburst charging!
 		if (abilityData != null) {
@@ -120,11 +123,13 @@ public class AirBurstHandler extends TickHandler {
 			radius *= powerRating * xpMod;
 			knockBack *= powerRating * xpMod;
 
-			charge = 3 * (duration / durationToFire);
+			//Makes sure the charge is never 0.
+			charge = Math.max((int) (3 * (duration / durationToFire)), 1);
 
 			//Affect things by the charge. The charge, at stage 3, should set everything to its max.
 			damage *= (charge / 3);
-			radius *= (charge / 3);
+			//Results in a bigger radius so that it blocks projectiles.
+			radius *=  (0.5 + 0.25 * charge);
 			knockBack *= (charge / 3);
 			performanceAmount *= (charge / 3);
 
@@ -157,7 +162,9 @@ public class AirBurstHandler extends TickHandler {
 			}
 
 
-			if (duration >= durationToFire) {
+			if (duration >= durationToFire || !data.hasStatusControl(StatusControl.RELEASE_AIR_BURST)) {
+
+				System.out.println("Debug");
 
 				int particleController = abilityData.getLevel() > 0 ? 60 - (5 * abilityData.getLevel()) : 60;
 				EntityShockwave shockwave = new EntityShockwave(world);
@@ -184,10 +191,13 @@ public class AirBurstHandler extends TickHandler {
 
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
 						SoundCategory.BLOCKS, 1, 0.5F);
+
+				//spawned = true;
 				return true;
 			}
+		//	System.out.println("Has status control: " + data.hasStatusControl(StatusControl.RELEASE_AIR_BURST));
 
-			return false;
+			return !data.hasStatusControl(StatusControl.RELEASE_AIR_BURST);
 		} else return true;
 	}
 
@@ -248,11 +258,11 @@ public class AirBurstHandler extends TickHandler {
 
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
 									.clr(0.8F, 0.8F, 0.8F).time(13 + (int) (2 * entity.getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
-									.scale(3.5F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).spawn(world);
+									.scale(3.25F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).spawn(world);
 
 						}
 					}
-					ParticleBuilder.create(ParticleBuilder.Type.SPHERE).clr(1.0F, 1.0F, 1.0F).entity(entity).time(12).scale((float) entity.getRange())
+					ParticleBuilder.create(ParticleBuilder.Type.SPHERE).clr(1.0F, 1.0F, 1.0F).entity(entity).time(16).scale((float) entity.getRange())
 							.pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity)).spawn(world);
 				}
 			}

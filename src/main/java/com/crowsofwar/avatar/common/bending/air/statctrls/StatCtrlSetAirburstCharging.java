@@ -58,7 +58,7 @@ public class StatCtrlSetAirburstCharging extends StatusControl {
 			} else {
 				if (bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(AIRBURST_MOVEMENT_MODIFIER_ID) != null)
 					bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
-				data.removeTickHandler(AIRBURST_CHARGE_HANDLER);
+				//data.removeTickHandler(AIRBURST_CHARGE_HANDLER);
 			}
 		}
 

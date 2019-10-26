@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -27,7 +28,9 @@ public class AbilityAirBurst extends Ability {
 
 		float chi = 6;
 		//6
-		boolean hasAirCharge = data.hasTickHandler(AIRBURST_CHARGE_HANDLER);
+		//The charge status control adds the release status control, but the release status control doesn't activate until the right click button is released.
+
+		boolean hasAirCharge = data.hasStatusControl(StatusControl.RELEASE_AIR_BURST);
 
 		if (ctx.getLevel() == 1) {
 			chi = 7;
@@ -48,10 +51,10 @@ public class AbilityAirBurst extends Ability {
 
 
 		if (bender.consumeChi(chi) && !hasAirCharge) {
-			data.addTickHandler(AIRBURST_CHARGE_HANDLER);
+			data.addStatusControl(StatusControl.CHARGE_AIR_BURST);
 		} else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
 			if (!hasAirCharge) {
-				data.addTickHandler(AIRBURST_CHARGE_HANDLER);
+				data.addStatusControl(StatusControl.CHARGE_AIR_BURST);
 			}
 		}
 	}
