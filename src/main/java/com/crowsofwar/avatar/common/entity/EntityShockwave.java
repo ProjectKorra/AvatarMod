@@ -226,8 +226,11 @@ public class EntityShockwave extends AvatarEntity {
 		}
 
 		if (!world.isRemote) {
-			AxisAlignedBB box = new AxisAlignedBB(posX + (ticksExisted * getSpeed()), posY + 1.5, posZ + (ticksExisted * getSpeed()),
-					posX - (ticksExisted * getSpeed()), posY - 1.5, posZ - (ticksExisted * getSpeed()));
+			double y = getEntityBoundingBox().maxY - getEntityBoundingBox().minY;
+			y /= 2;
+			AxisAlignedBB box = new AxisAlignedBB(posX + (ticksExisted * getSpeed()), getEntityBoundingBox().minY + y + (ticksExisted * getSpeed()),
+					posZ + (ticksExisted * getSpeed()), posX - (ticksExisted * getSpeed()),
+					posY + y - (ticksExisted * getSpeed()), posZ - (ticksExisted * getSpeed()));
 
 			List<Entity> targets = world.getEntitiesWithinAABB(
 					Entity.class, box);

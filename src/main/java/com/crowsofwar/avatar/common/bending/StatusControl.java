@@ -53,8 +53,7 @@ public abstract class StatusControl {
 			BUBBLE_EXPAND = new StatCtrlBubbleExpand(),
 			BUBBLE_CONTRACT = new StatCtrlBubbleContract(),
 			CHARGE_AIR_BURST = new StatCtrlSetAirburstCharging(true),
-	//SHOOOT_AIR_BURST = new StatCtrlSetAirburstCharging()
-	CHARGE_BUBBLE = new StatCtrlChargeBubble(),
+			CHARGE_BUBBLE = new StatCtrlChargeBubble(),
 			DROP_WALL = new StatCtrlDropWall(),
 			PLACE_WALL = new StatCtrlPlaceWall(),
 			SHOOT_WALL = new StatCtrlShootWall(),
@@ -69,6 +68,7 @@ public abstract class StatusControl {
 			RELEASE_AIR_BURST = new StatCtrlSetAirburstCharging(false),
 			SANDSTORM_REDIRECT = new StatCtrlSandstormRedirect(),
 			SHIELD_SHATTER = new StatCtrlShieldShatter(),
+			SHOOT_AIR_BURST = new StatCtrlShootAirburst(),
 			SKATING_JUMP = new StatCtrlSkateJump(),
 			SKATING_START = new StatCtrlSkateStart(),
 			START_FLAMETHROW = new StatCtrlSetFlamethrowing(true),

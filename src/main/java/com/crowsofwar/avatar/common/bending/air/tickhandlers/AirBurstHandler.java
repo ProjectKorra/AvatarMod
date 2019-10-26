@@ -21,6 +21,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -127,11 +129,11 @@ public class AirBurstHandler extends TickHandler {
 			charge = Math.max((int) (3 * (duration / durationToFire)), 1);
 
 			//Affect things by the charge. The charge, at stage 3, should set everything to its max.
-			damage *= (charge / 3);
+			damage *= (0.25 + 0.25 * charge);
 			//Results in a bigger radius so that it blocks projectiles.
-			radius *=  (0.5 + 0.25 * charge);
-			knockBack *= (charge / 3);
-			performanceAmount *= (charge / 3);
+			radius *= (0.60 + 0.133333333333 * charge);
+			knockBack *= (0.60 + 0.133333333333 * charge);
+			performanceAmount *= (0.25 + 0.25 * charge);
 
 
 			applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
@@ -162,9 +164,7 @@ public class AirBurstHandler extends TickHandler {
 			}
 
 
-			if (duration >= durationToFire || !data.hasStatusControl(StatusControl.RELEASE_AIR_BURST)) {
-
-				System.out.println("Debug");
+			if (!data.hasStatusControl(StatusControl.RELEASE_AIR_BURST)) {
 
 				int particleController = abilityData.getLevel() > 0 ? 60 - (5 * abilityData.getLevel()) : 60;
 				EntityShockwave shockwave = new EntityShockwave(world);
@@ -195,7 +195,7 @@ public class AirBurstHandler extends TickHandler {
 				//spawned = true;
 				return true;
 			}
-		//	System.out.println("Has status control: " + data.hasStatusControl(StatusControl.RELEASE_AIR_BURST));
+			//	System.out.println("Has status control: " + data.hasStatusControl(StatusControl.RELEASE_AIR_BURST));
 
 			return !data.hasStatusControl(StatusControl.RELEASE_AIR_BURST);
 		} else return true;
@@ -264,6 +264,28 @@ public class AirBurstHandler extends TickHandler {
 					}
 					ParticleBuilder.create(ParticleBuilder.Type.SPHERE).clr(1.0F, 1.0F, 1.0F).entity(entity).time(16).scale((float) entity.getRange())
 							.pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity)).spawn(world);
+				}
+			}
+			double middleY = entity.getEntityBoundingBox().maxY - entity.getEntityBoundingBox().minZ;
+			middleY /= 2;
+			AxisAlignedBB box = new AxisAlignedBB(entity.posX + (entity.ticksExisted * entity.getSpeed()), entity.getEntityBoundingBox().minY + middleY + (entity.ticksExisted * entity.getSpeed()),
+					entity.posZ + (entity.ticksExisted * entity.getSpeed()), entity.posX - (entity.ticksExisted * entity.getSpeed()),
+					entity.getEntityBoundingBox().minY + middleY - (entity.ticksExisted * entity.getSpeed()), entity.posZ - (entity.ticksExisted * entity.getSpeed()));
+
+			List<Entity> nearby = world.getEntitiesWithinAABB(Entity.class, box);
+			for (Entity target : nearby) {
+				if (!world.isRemote) {
+					if (target instanceof IOffensiveEntity && target instanceof AvatarEntity) {
+						if (((AvatarEntity) target).isProjectile()) {
+							if (((AvatarEntity) target).getAbility().getTier() < entity.getAbility().getTier() ||
+									((IOffensiveEntity) target).getDamage() < entity.getDamage() || ((AvatarEntity) target).velocity().magnitude() < entity.getSpeed())
+								((IOffensiveEntity) target).Dissipate((AvatarEntity) target);
+
+						}
+					}
+					if (target instanceof EntityArrow || target instanceof EntityThrowable)
+						target.addVelocity(target.motionX * -1.1, target.motionY * -1.1, target.motionZ * -1.1);
+
 				}
 			}
 			return this;

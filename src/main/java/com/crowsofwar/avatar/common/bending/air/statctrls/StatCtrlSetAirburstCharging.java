@@ -39,7 +39,7 @@ public class StatCtrlSetAirburstCharging extends StatusControl {
 	private final boolean setting;
 
 	public StatCtrlSetAirburstCharging(boolean setting) {
-		super(setting ? 4 : 5, setting ? CONTROL_RIGHT_CLICK_DOWN : CONTROL_RIGHT_CLICK_UP,
+		super(setting ? 11 : 12, setting ? CONTROL_RIGHT_CLICK_DOWN : CONTROL_RIGHT_CLICK_UP,
 				RIGHT_OF_CROSSHAIR);
 		this.setting = setting;
 	}
@@ -58,7 +58,7 @@ public class StatCtrlSetAirburstCharging extends StatusControl {
 			} else {
 				if (bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(AIRBURST_MOVEMENT_MODIFIER_ID) != null)
 					bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
-				//data.removeTickHandler(AIRBURST_CHARGE_HANDLER);
+				//We don't remove the status control here since we want to spawn the tick handler if we stop right clicking.
 			}
 		}
 
