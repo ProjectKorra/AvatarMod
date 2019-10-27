@@ -3,9 +3,12 @@ package com.crowsofwar.avatar.common.bending.air.statctrls;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.common.damageutils.DamageUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -100,7 +103,17 @@ public class StatCtrlShootAirburst extends StatusControl {
 				excluded.add(entity);
 
 				if (piercing) {
-					List<Entity> hit = Raytrace.entityRaytrace(world, start, direction, distance, size);
+					List<Entity> targets = Raytrace.entityRaytrace(world, start, direction, distance, size);
+					if (!targets.isEmpty()) {
+						for (Entity nearby : targets) {
+							if (nearby != entity) {
+								if (nearby instanceof AvatarEntity && ((AvatarEntity) nearby).getOwner() != entity || (entity.getTeam() != null &&
+										entity.getTeam() != nearby.getTeam()) && entity instanceof EntityLivingBase || entity.canBeCollidedWith() && entity.canBePushed()) {
+									//DamageUtils.attackEntity(entity, nearby, AvatarDamageSource.causeAirDamage(nearby, entity), damage, );
+								}
+						}
+					}
+				}
 				}
 				else {
 					result = Raytrace.standardEntityRayTrace(world, entity, null, start.toMinecraft(),

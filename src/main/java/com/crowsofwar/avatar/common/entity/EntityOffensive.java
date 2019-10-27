@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -150,7 +151,10 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		else if (!isPiercing() && shouldDissipate()) {
 			attackEntity(this, entity, false, getKnockback());
 			Dissipate();
-		} else applyPiercingCollision();
+		}
+		else if (isShockwave())
+			attackEntity(this, entity, false, getKnockback(entity));
+		else applyPiercingCollision();
 		if (entity instanceof AvatarEntity)
 			applyElementalContact((AvatarEntity) entity);
 
@@ -159,7 +163,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	@Override
 	public Vec3d getKnockback() {
 		double x = Math.min(getKnockbackMult().x * motionX, motionX * 2);
-		double y = Math.min(0.7, (motionY + 0.3) * getKnockbackMult().y);
+		double y = Math.min(0.5, (motionY + 0.3) * getKnockbackMult().y);
 		double z = Math.min(getKnockbackMult().z * motionZ, motionZ * 2);
 		return new Vec3d(x, y, z);
 	}
@@ -303,5 +307,12 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	@Override
 	public Vec3d getExplosionKnockbackMult() {
 		return new Vec3d(0.4, 0.4, 0.4);
+	}
+
+	//Only used in shockwaves
+	@Override
+	public Vec3d getKnockback(Entity target) {
+		Vec3d knockback = Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().toMinecraft();
+		return new Vec3d(knockback.x * getKnockbackMult().x, knockback.y * getKnockbackMult().y, knockback.z * getKnockbackMult().z);
 	}
 }

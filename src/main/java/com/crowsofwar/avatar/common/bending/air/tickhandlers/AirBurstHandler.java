@@ -21,8 +21,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -180,10 +178,11 @@ public class AirBurstHandler extends TickHandler {
 				shockwave.setParticleSpeed(0.5F * radius / STATS_CONFIG.airBurstSettings.radius);
 				shockwave.setDamageSource(AvatarDamageSource.AIR);
 				shockwave.setKnockbackHeight(upwardKnockback);
-				shockwave.setKnockbackMult(new Vec3d(knockBack * 2, knockBack / 4, knockBack * 2));
+				shockwave.setKnockbackMult(new Vec3d(knockBack, knockBack / 2, knockBack));
 				shockwave.setDamage((float) damage);
 				shockwave.setParticleAmount(1);
 				shockwave.setRange(radius);
+				shockwave.setSphere(true);
 				shockwave.setPerformanceAmount(performanceAmount);
 				shockwave.setParticleSpeed(Math.min((float) knockBack / shockwaveSpeed * 1.5F, shockwaveSpeed));
 				shockwave.setParticleController(particleController);
@@ -271,31 +270,6 @@ public class AirBurstHandler extends TickHandler {
 					}
 					ParticleBuilder.create(ParticleBuilder.Type.SPHERE).clr(1.0F, 1.0F, 1.0F).entity(entity).time(16).scale((float) entity.getRange())
 							.pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity)).spawn(world);
-				}
-			}
-			double middleY = entity.getEntityBoundingBox().maxY - entity.getEntityBoundingBox().minZ;
-			middleY /= 2;
-			AxisAlignedBB box = new AxisAlignedBB(entity.posX + (entity.ticksExisted * entity.getSpeed()), entity.getEntityBoundingBox().minY + middleY + (entity.ticksExisted * entity.getSpeed()),
-					entity.posZ + (entity.ticksExisted * entity.getSpeed()), entity.posX - (entity.ticksExisted * entity.getSpeed()),
-					entity.getEntityBoundingBox().minY + middleY - (entity.ticksExisted * entity.getSpeed()), entity.posZ - (entity.ticksExisted * entity.getSpeed()));
-
-			List<Entity> nearby = world.getEntitiesWithinAABB(Entity.class, box);
-			for (Entity target : nearby) {
-				if (!world.isRemote) {
-					if (target != entity && target != entity.getOwner() && entity.canCollideWith(target) || target instanceof EntityArrow ||
-					target instanceof EntityThrowable)
-					if (target instanceof IOffensiveEntity && target instanceof AvatarEntity) {
-						if (((AvatarEntity) target).isProjectile()) {
-							if (((AvatarEntity) target).getAbility().getTier() < entity.getAbility().getTier() ||
-									((IOffensiveEntity) target).getDamage() < entity.getDamage() || ((AvatarEntity) target).velocity().magnitude() < entity.getSpeed())
-								((IOffensiveEntity) target).Dissipate((AvatarEntity) target);
-
-						}
-					}
-					System.out.println(entity);
-					if (target instanceof EntityArrow || target instanceof EntityThrowable)
-						target.addVelocity(target.motionX * -1.1, target.motionY * -1.1, target.motionZ * -1.1);
-
 				}
 			}
 			return this;

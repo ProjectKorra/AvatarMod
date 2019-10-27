@@ -19,9 +19,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface IOffensiveEntity {
+
+	//TODO: Proper methods for shockwaves!
 
 	default void Explode(World world, AvatarEntity entity, EntityLivingBase owner) {
 		if (owner != null) {
@@ -38,7 +41,7 @@ public interface IOffensiveEntity {
 
 						attackEntity(entity, entity1, false, getKnockback());
 						//Divide the result of the position difference to make entities fly
-						//further the closer they are to the player.
+						//further the closer they are to the player/entity.
 						double dist = (getExplosionHitboxGrowth() - entity1.getDistance(entity)) > 1 ? (getExplosionHitboxGrowth() - entity1.getDistance(entity)) : 1;
 						Vec3d velocity = entity1.getPositionVector().subtract(entity.getPositionVector());
 						velocity = velocity.scale((1 / 40F)).scale(dist).add(0, getExplosionHitboxGrowth() / 50, 0);
@@ -114,7 +117,7 @@ public interface IOffensiveEntity {
 						AvatarUtils.afterVelocityAdded(hit);
 					}
 				}
-			} else if (attacker.canCollideWith(hit) && hit.canBeAttackedWithItem()){
+			} else if (attacker.canCollideWith(hit)) {
 				if (hit instanceof EntityLivingBase) {
 					BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
 					data.addXp(getXpPerHit());
@@ -140,6 +143,10 @@ public interface IOffensiveEntity {
 	}
 
 	default Vec3d getKnockback() {
+		return new Vec3d(getKnockbackMult().x, getKnockbackMult().y, getKnockbackMult().z);
+	}
+
+	default Vec3d getKnockback(Entity target) {
 		return new Vec3d(getKnockbackMult().x, getKnockbackMult().y, getKnockbackMult().z);
 	}
 
@@ -178,22 +185,25 @@ public interface IOffensiveEntity {
 	}
 
 	default void playExplosionSounds(Entity entity) {
-		for (int i = 0; i < getSounds().length; i++)
-			entity.world.playSound(null, new BlockPos(entity), getSounds()[i],
-					entity.getSoundCategory(), getPitch(), getVolume());
+		if (getSounds() != null)
+			for (int i = 0; i < getSounds().length; i++)
+				entity.world.playSound(null, new BlockPos(entity), getSounds()[i],
+						entity.getSoundCategory(), getPitch(), getVolume());
 	}
 
 	//Only called when a piercing projectile hits an entity.
 	default void playPiercingSounds(Entity entity) {
-		for (int i = 0; i < getSounds().length; i++)
-			entity.world.playSound(null, new BlockPos(entity), getSounds()[i],
-					entity.getSoundCategory(), getPitch(), getVolume());
+		if (getSounds() != null)
+			for (int i = 0; i < getSounds().length; i++)
+				entity.world.playSound(null, new BlockPos(entity), getSounds()[i],
+						entity.getSoundCategory(), getPitch(), getVolume());
 	}
 
 	default void playDissipateSounds(Entity entity) {
-		for (int i = 0; i < getSounds().length; i++)
-			entity.world.playSound(null, new BlockPos(entity), getSounds()[i],
-					entity.getSoundCategory(), getPitch(), getVolume());
+		if (getSounds() != null)
+			for (int i = 0; i < getSounds().length; i++)
+				entity.world.playSound(null, new BlockPos(entity), getSounds()[i],
+						entity.getSoundCategory(), getPitch(), getVolume());
 	}
 
 	//TODO: Get rid of these particle methods as they're unnecessary with the ease of the new particle system.
@@ -214,6 +224,7 @@ public interface IOffensiveEntity {
 		return 10;
 	}
 
+	@Nullable
 	default SoundEvent[] getSounds() {
 		SoundEvent[] events = new SoundEvent[1];
 		events[0] = SoundEvents.ENTITY_GHAST_SHOOT;
@@ -248,6 +259,12 @@ public interface IOffensiveEntity {
 		return false;
 	}
 
+	//This denotes whether the entity is like a shockwave (expanding hitbox), or like a projectile/still spike-like entity.
+	//Used for determining which collision methods to use.
+	default boolean isShockwave() {
+		return false;
+	}
+
 	//NOTE: shouldDissipate is checked first when timing out or when an entity has noClip is is colliding with a block.
 	//Otherwise, shouldExplode takes precedence over shouldDissipate.
 	default boolean shouldDissipate() {
@@ -266,6 +283,7 @@ public interface IOffensiveEntity {
 		return 1;
 	}
 
-	default void applyElementalContact(AvatarEntity entity) {}
+	default void applyElementalContact(AvatarEntity entity) {
+	}
 
 }
