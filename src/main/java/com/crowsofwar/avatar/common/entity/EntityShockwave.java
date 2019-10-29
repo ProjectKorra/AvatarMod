@@ -17,6 +17,8 @@ import net.minecraft.world.World;
 
 public class EntityShockwave extends EntityOffensive {
 
+	//TODO: A way to put out fires??
+
 	private static final DataParameter<ShockwaveBehaviour> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityShockwave.class, ShockwaveBehaviour.DATA_SERIALIZER);
 

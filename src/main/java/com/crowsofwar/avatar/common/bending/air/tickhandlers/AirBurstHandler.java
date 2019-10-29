@@ -75,6 +75,12 @@ public class AirBurstHandler extends TickHandler {
 			int performanceAmount = STATS_CONFIG.airBurstSettings.performanceAmount;
 			float shockwaveSpeed;
 
+			//Makes sure the charge is never 0.
+			charge = Math.max((int) (3 * (duration / durationToFire)) + 1, 1);
+			charge = Math.min(charge, 4);
+			//We don't want the charge going over 4.
+
+
 			if (abilityData.getLevel() == 1) {
 				damage *= 1.5;
 				//7.5
@@ -123,10 +129,6 @@ public class AirBurstHandler extends TickHandler {
 			radius *= powerRating * xpMod;
 			knockBack *= powerRating * xpMod;
 
-			//Makes sure the charge is never 0.
-			charge = Math.max((int) (3 * (duration / durationToFire)) + 1, 1);
-			charge = Math.min(charge, 4);
-			//We don't want the charge going over 3.
 
 			//how fast the shockwave's particle speed is.
 			shockwaveSpeed = (float) knockBack;
@@ -164,6 +166,71 @@ public class AirBurstHandler extends TickHandler {
 						}
 					}
 				}
+			}
+
+			//Applies the proper status control based on level.
+			switch (abilityData.getLevel()) {
+				case -1:
+				case 0:
+					if (charge == 4) {
+						removeStatCtrls(data);
+						data.addStatusControl(StatusControl.SHOOT_AIR_BURST_4);
+					}
+					break;
+				case 1:
+					switch ((int) charge) {
+						case 3:
+							removeStatCtrls(data);
+							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_3);
+							break;
+						case 4:
+							removeStatCtrls(data);
+							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_4);
+							break;
+						default:
+							break;
+					}
+					break;
+				case 2:
+					switch ((int) charge) {
+						case 2:
+							removeStatCtrls(data);
+							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_2);
+							break;
+						case 3:
+							removeStatCtrls(data);
+							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_3);
+							break;
+						case 4:
+							removeStatCtrls(data);
+							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_4);
+							break;
+						default:
+							break;
+					}
+					break;
+				case 3:
+					switch ((int) charge) {
+						case 1:
+							removeStatCtrls(data);
+							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_1);
+							break;
+						case 2:
+							removeStatCtrls(data);
+							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_2);
+							break;
+						case 3:
+							removeStatCtrls(data);
+							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_3);
+							break;
+						case 4:
+							removeStatCtrls(data);
+							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_4);
+							break;
+						default:
+							break;
+					}
+					break;
 			}
 
 
@@ -263,7 +330,7 @@ public class AirBurstHandler extends TickHandler {
 							zVel = z1 * entity.getParticleSpeed() * 0.25F;
 
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
-									.clr(0.8F, 0.8F, 0.8F).time((int) (13 /* (Math.min(entity.getSpeed() / entity.getParticleSpeed() * 1.5F, 1))**/ + (int) (2 * entity.getRange() / STATS_CONFIG.airBurstSettings.radius))).collide(true)
+									.clr(0.8F, 0.8F, 0.8F).time(13 /* (Math.min(entity.getSpeed() / entity.getParticleSpeed() * 1.5F, 1))**/ + (int) (2 * entity.getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
 									.scale(3.25F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).spawn(world);
 
 						}
@@ -294,5 +361,12 @@ public class AirBurstHandler extends TickHandler {
 		public void save(NBTTagCompound nbt) {
 
 		}
+	}
+
+	private void removeStatCtrls(BendingData data) {
+		data.removeStatusControl(StatusControl.SHOOT_AIR_BURST_1);
+		data.removeStatusControl(StatusControl.SHOOT_AIR_BURST_2);
+		data.removeStatusControl(StatusControl.SHOOT_AIR_BURST_3);
+		data.removeStatusControl(StatusControl.SHOOT_AIR_BURST_4);
 	}
 }

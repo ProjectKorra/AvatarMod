@@ -17,11 +17,10 @@
 
 package com.crowsofwar.avatar.common.bending.air.statctrls;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirJump;
-import com.crowsofwar.avatar.common.bending.air.powermods.AirJumpPowerModifier;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.air.powermods.AirJumpPowerModifier;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -31,8 +30,8 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.PowerRatingModifier;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -45,7 +44,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -77,6 +75,9 @@ public class StatCtrlAirJump extends StatusControl {
 		World world = ctx.getWorld();
 
 		String uuid = Objects.requireNonNull(bender.getInfo().getId()).toString();
+
+		//So it spawns particles then returns server-side.
+		boolean spawnedParticles = false, appliedKnockback = false;
 
 		if (!timesJumped.containsKey(uuid)) timesJumped.put(uuid, 0);
 
@@ -122,14 +123,18 @@ public class StatCtrlAirJump extends StatusControl {
 				particleSpeed = 0.5;
 			}
 
-			if (world instanceof WorldServer) {
+			/*if (world instanceof WorldServer) {
 				WorldServer World = (WorldServer) world;
 				World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.getEntityBoundingBox().minY + 0.1, entity.posZ,
 						numberOfParticles, 0, 0, 0, particleSpeed);
-			}
+			}**/
 
 			if (world.isRemote) {
-				//ParticleBuilder.create(ParticleBuilder.Type.FLASH).collide(true);
+				for (int i = 0; i < numberOfParticles; i++)
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).collide(true).pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.1, 0))
+							.clr(0.8F, 0.8F, 0.8F).time(14).vel(world.rand.nextGaussian() * particleSpeed / 10, world.rand.nextGaussian() * particleSpeed / 20,
+							world.rand.nextGaussian() * particleSpeed / 10).scale(1F + (float) particleSpeed).spawn(world);
+				spawnedParticles = true;
 			}
 
 			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1), Math.toRadians(entity.rotationYaw), 0);
@@ -148,8 +153,8 @@ public class StatCtrlAirJump extends StatusControl {
 				((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 			}
 
-			ParticleSpawner spawner = new NetworkParticleSpawner();
-			spawner.spawnParticles(entity.world, AvatarParticles.getParticleAir(), 2, 6, new Vector(entity), new Vector(1, 0, 1), true);
+			//	ParticleSpawner spawner = new NetworkParticleSpawner();
+			//	spawner.spawnParticles(entity.world, AvatarParticles.getParticleAir(), 2, 6, new Vector(entity), new Vector(1, 0, 1), true);
 
 			float fallAbsorption = 0;
 			float xVel = 0, yVel = 0, zVel = 0;
@@ -204,14 +209,16 @@ public class StatCtrlAirJump extends StatusControl {
 			wave.setPosition(entity.getPositionVector().add(0, 0.5, 0));
 			wave.setOwner(entity);
 			wave.setKnockbackMult(new Vec3d(xVel, yVel, zVel));
-			world.spawnEntity(wave);
+			//TODO: Find a way to spawn client-side particles in stat ctrls and abilities.
+			if (world.spawnEntity(wave))
+				appliedKnockback = true;
 
 			jumps++;
 			timesJumped.replace(uuid, jumps);
 			//If you return when it's greater than 1, it resets, and you can double jump infinitely.
 			boolean isDone = jumps > 2;
 			if (isDone) timesJumped.replace(uuid, 0);
-			return true;
+			return true /*appliedKnockback && spawnedParticles**/;
 
 		}
 
