@@ -153,6 +153,7 @@ public class StatCtrlShootAirburst extends StatusControl {
 		}
 		data.removeStatusControl(RELEASE_AIR_BURST);
 		//world.playSound();
-		return spawnedParticles && attackedEntities;
+		//TODO: Find a way to spawn client-side particles in stat ctrls and abilities.
+		return /*spawnedParticles && **/attackedEntities;
 	}
 }
