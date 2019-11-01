@@ -74,13 +74,12 @@ public abstract class AvatarEntity extends Entity {
 			DataSerializers.STRING);
 
 
-	protected boolean putsOutFires;
-	protected boolean flammable;
+	protected boolean putsOutFires, flammable;
 	protected boolean pushStoneButton, pushTrapDoor, pushDoor;
-	protected boolean setsFires;
-	protected boolean lightTnt;
+	protected boolean setsFires, lightTnt;
 	private double powerRating;
 	private BendingStyle element;
+	private int tier;
 	private SyncedEntity<EntityLivingBase> ownerRef;
 
 	/**
@@ -95,6 +94,7 @@ public abstract class AvatarEntity extends Entity {
 		this.element = null;
 		this.setsFires = false;
 		this.lightTnt = false;
+		this.tier = 1;
 	}
 
 	/**
@@ -718,6 +718,15 @@ public abstract class AvatarEntity extends Entity {
 
 	public void setElement(BendingStyle element) {
 		this.element = element;
+	}
+
+	//Used to determine what the tier of the entity is. Useful for better collision.
+	public int getTier() {
+		return tier;
+	}
+
+	public void setTier(int tier) {
+		this.tier = tier;
 	}
 
 }
