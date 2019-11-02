@@ -11,6 +11,7 @@ import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.PlayerViewRegistry;
 import com.crowsofwar.gorecore.util.Vector;
@@ -108,7 +109,7 @@ public class AbilityInfernoPunch extends Ability {
 	}
 
 	@Override
-	public int getTier() {
+	public int getBaseTier() {
 		return 3;
 	}
 
@@ -207,6 +208,64 @@ public class AbilityInfernoPunch extends Ability {
 							if (entity.getEntityWorld().isRemote)
 								entity.setLightRadius(lightRadius + (int) (java.lang.Math.random() * 4));
 							//Shift colour. Copied from the randomly shift colour class.
+							if (entity.ticksExisted % 6 == 0) {
+								if (entity.getColourShiftRange() != 0) {
+									float range = entity.getColourShiftRange() / 2;
+									float r = entity.getInitialColourR();
+									float g = entity.getInitialColourG();
+									float b = entity.getInitialColourB();
+									float a = entity.getInitialColourA();
+									for (int i = 0; i < 4; i++) {
+										float red, green, blue, alpha;
+										float rMin = r < range ? 0 : r - range;
+										float gMin = g < range ? 0 : r - range;
+										float bMin = b < range ? 0 : r - range;
+										float aMin = a < range ? 0 : a - range;
+										float rMax = r + range;
+										float gMax = b + range;
+										float bMax = g + range;
+										float aMax = a + range;
+										switch (i) {
+											case 0:
+												float amountR = AvatarUtils.getRandomNumberInRange(0,
+														(int) (100 / rMax)) / 100F * entity.getColourShiftInterval();
+												red = entity.world.rand.nextBoolean() ? r + amountR : r - amountR;
+												red = MathHelper.clamp(red, rMin, rMax);
+												entity.setColorR(red);
+												break;
+
+											case 1:
+												float amountG = AvatarUtils.getRandomNumberInRange(0,
+														(int) (100 / gMax)) / 100F * entity.getColourShiftInterval();
+												green = entity.world.rand.nextBoolean() ? g + amountG : g - amountG;
+												green = MathHelper.clamp(green, gMin, gMax);
+												entity.setColorG(green);
+												break;
+
+											case 2:
+												float amountB = AvatarUtils.getRandomNumberInRange(0,
+														(int) (100 / bMax)) / 100F * entity.getColourShiftInterval();
+												blue = entity.world.rand.nextBoolean() ? b + amountB : b - amountB;
+												blue = MathHelper.clamp(blue, bMin, bMax);
+												entity.setColorB(blue);
+												break;
+
+											case 3:
+												float amountA = AvatarUtils.getRandomNumberInRange(0,
+														(int) (100 / aMax)) / 100F * entity.getColourShiftInterval();
+												alpha = entity.world.rand.nextBoolean() ? a + amountA : a - amountA;
+												alpha = MathHelper.clamp(alpha, aMin, aMax);
+												entity.setColorA(alpha);
+												break;
+										}
+									}
+								}
+							}
+						}
+						else {
+							entity.setOrbSize(0.005F);
+							entity.setPosition(AvatarEntityUtils.getMiddleOfEntity(emitter));
+							//Colour shifting
 							if (entity.ticksExisted % 6 == 0) {
 								if (entity.getColourShiftRange() != 0) {
 									float range = entity.getColourShiftRange() / 2;

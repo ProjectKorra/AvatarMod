@@ -207,8 +207,8 @@ public class AbilityCleanse extends Ability {
 	}
 
 	@Override
-	public int getTier() {
-		return 4;
+	public int getBaseTier() {
+		return 5;
 	}
 
 	public static class CleanseLightOrbBehaviour extends LightOrbBehavior.FollowPlayer {

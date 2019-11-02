@@ -120,13 +120,8 @@ public class AbilityLightningSpear extends Ability {
 	}
 
 	@Override
-	public int getParentTier() {
+	public int getBaseParentTier() {
 		return 3;
-	}
-
-	@Override
-	public int getTier() {
-		return 1;
 	}
 
 	@Override

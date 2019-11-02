@@ -84,7 +84,7 @@ public class AbilitySlipstream extends Ability {
 	}
 
 	@Override
-	public int getTier() {
+	public int getBaseTier() {
 		return 4;
 	}
 }

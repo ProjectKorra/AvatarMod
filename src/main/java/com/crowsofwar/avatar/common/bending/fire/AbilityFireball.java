@@ -86,7 +86,7 @@ public class AbilityFireball extends Ability {
 			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
 				size = 30;
 			}
-			damage += size / 10;
+			damage += size / 10F;
 
 
 			assert target != null;
@@ -132,7 +132,7 @@ public class AbilityFireball extends Ability {
 	}
 
 	@Override
-	public int getTier() {
+	public int getBaseTier() {
 		return 3;
 	}
 

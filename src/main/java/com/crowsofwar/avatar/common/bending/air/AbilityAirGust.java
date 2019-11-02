@@ -98,6 +98,7 @@ public class AbilityAirGust extends Ability {
 			gust.setSlowProjectiles(ctx.isDynamicMasterLevel(SECOND));
 			gust.setPiercesEnemies(ctx.getLevel() >= 1);
 			gust.setAbility(this);
+			gust.setTier(getCurrentTier(ctx.getLevel()));
 			world.spawnEntity(gust);
 
 			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, entity.getSoundCategory(), 1.0F + Math.max(ctx.getLevel(), 0) / 2F, 0.9F + world.rand.nextFloat() / 10);

@@ -125,13 +125,14 @@ public class AbilityAirblade extends Ability {
 			airblade.setAbility(this);
 			airblade.setPierceArmor(false);
 			airblade.setChopBlocksThreshold(chopBlocks);
+			airblade.setTier(getCurrentTier(abilityData.getLevel()));
 			world.spawnEntity(airblade);
 		}
 
 	}
 
 	@Override
-	public int getTier() {
+	public int getBaseTier() {
 		return 2;
 	}
 
