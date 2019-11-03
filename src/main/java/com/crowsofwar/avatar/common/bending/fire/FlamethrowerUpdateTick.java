@@ -216,10 +216,12 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				}
 
 				Raytrace.Result result = Raytrace.raytrace(world, start.toMinecraft(), look.toMinecraft(), range, false);
-				if (result.hitSomething() && result.getPos() != null && world.getBlockState(result.getPos().toBlockPos()).getBlock() != Blocks.AIR) {
+				if (result.hitSomething() && result.getPos() != null) {
 					BlockPos pos = result.getPos().toBlockPos();
 					if (lightsFires)
 						if (Blocks.FIRE.canPlaceBlockAt(world, pos) && !world.getBlockState(pos).isFullBlock() && !(world.getBlockState(pos) instanceof BlockLiquid))
+							if (world.getBlockState(pos).getBlock() == Blocks.AIR && world.getBlockState(pos.down()).getBlock() != Blocks.AIR ||
+							world.getBlockState(pos).getBlock() != Blocks.AIR)
 							world.setBlockState(pos, Blocks.FIRE.getDefaultState());
 
 				}

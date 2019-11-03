@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  * @see com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder
  * @since AvatarMod 1.6.0
  */
-//@SideOnly(Side.CLIENT)
+@SideOnly(Side.CLIENT)
 public abstract class ParticleAvatar extends Particle {
 
 	//TODO: How to adjust Electroblob's particle system for av2.
@@ -280,6 +280,10 @@ public abstract class ParticleAvatar extends Particle {
 		this.motionX = vx;
 		this.motionY = vy;
 		this.motionZ = vz;
+	}
+
+	public void setParticleAngle(float angle) {
+		this.particleAngle = angle;
 	}
 
 	/**

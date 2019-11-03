@@ -151,9 +151,10 @@ public class StatCtrlShootAirburst extends StatusControl {
 				attackedEntities = true;
 			}
 		}
+		data.removeTickHandler(AIRBURST_CHARGE_HANDLER);
 		data.removeStatusControl(RELEASE_AIR_BURST);
 		//world.playSound();
 		//TODO: Find a way to spawn client-side particles in stat ctrls and abilities.
-		return /*spawnedParticles && **/attackedEntities;
+		return true;
 	}
 }
