@@ -37,16 +37,6 @@ public class Firebending extends BendingStyle {
 	public Firebending() {
 		for (Ability ability : Abilities.getAbilitiesToRegister(ID))
 			addAbility(ability.getName());
-
-		/*addAbility("fire_shot");
-		addAbility("fire_blast");
-		addAbility("flamethrower");
-		addAbility("fire_jump");
-		addAbility("fireball");
-		addAbility("inferno_punch");
-		addAbility("immolate");**/
-
-
 		Color light = new Color(244, 240, 187);
 		Color red = new Color(173, 64, 31);
 		Color gray = new Color(40, 40, 40);

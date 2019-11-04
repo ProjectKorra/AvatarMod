@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.common.bending.ice;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
@@ -29,17 +31,15 @@ import java.util.UUID;
  */
 public class Icebending extends BendingStyle {
 
-	public static UUID ID = UUID.fromString("a0e4e7d8-b7c0-4ff7-ba6e-5a279bc52848");
+	public static final UUID ID = UUID.fromString("a0e4e7d8-b7c0-4ff7-ba6e-5a279bc52848");
 
 	private final BendingMenuInfo menu;
 
 	public Icebending() {
 		super(Waterbending.ID);
 
-		addAbility("ice_prison");
-		addAbility("ice_burst");
-
-
+		for (Ability ability : Abilities.getAbilitiesToRegister(ID))
+			addAbility(ability.getName());
 		ThemeColor bkgd = new ThemeColor(0xEBF4F5, 0xDBE1E2);
 		ThemeColor edge = new ThemeColor(0xC5DDDF, 0xACBFC0);
 		ThemeColor icon = new ThemeColor(0xFFEBC2, 0xFBE9C3);

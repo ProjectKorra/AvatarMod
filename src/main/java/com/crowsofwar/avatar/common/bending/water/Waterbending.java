@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
@@ -28,18 +30,13 @@ import java.util.UUID;
 
 public class Waterbending extends BendingStyle {
 
-	public static UUID ID = UUID.fromString("33486f81-29cc-4f7e-84ee-972a73b03b95");
+	public static final UUID ID = UUID.fromString("33486f81-29cc-4f7e-84ee-972a73b03b95");
 
 	private BendingMenuInfo menu;
 
 	public Waterbending() {
-		addAbility("water_arc");
-		addAbility("water_bubble");
-		addAbility("wave");
-		addAbility("water_skate");
-		addAbility("water_cannon");
-		addAbility("cleanse");
-
+		for (Ability ability : Abilities.getAbilitiesToRegister(ID))
+			addAbility(ability.getName());
 		Color base = new Color(228, 255, 225);
 		Color edge = new Color(60, 188, 145);
 		Color icon = new Color(129, 149, 148);

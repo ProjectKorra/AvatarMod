@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.air;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
@@ -28,19 +30,13 @@ import java.util.UUID;
 
 public class Airbending extends BendingStyle {
 
-	public static UUID ID = UUID.fromString("231edc16-639e-4dc4-92f5-924e9102df0f");
+	public static final UUID ID = UUID.fromString("231edc16-639e-4dc4-92f5-924e9102df0f");
 
 	private BendingMenuInfo menu;
 
 	public Airbending() {
-		addAbility("air_gust");
-		addAbility("air_jump");
-		addAbility("airblade");
-		addAbility("cloudburst");
-		addAbility("air_bubble");
-		addAbility("air_burst");
-		addAbility("slipstream");
-
+		for (Ability ability : Abilities.getAbilitiesToRegister(ID))
+			addAbility(ability.getName());
 		Color light = new Color(220, 220, 220);
 		Color dark = new Color(172, 172, 172);
 		Color iconClr = new Color(196, 109, 0);

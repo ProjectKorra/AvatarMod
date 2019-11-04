@@ -24,10 +24,6 @@ public class Sandbending extends BendingStyle {
 
 		for (Ability ability : Abilities.getAbilitiesToRegister(getId()))
 			addAbility(ability.getName());
-
-		//addAbility("sand_prison");
-		//addAbility("sandstorm");
-
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);
 		Color gray = new Color(90, 90, 90);

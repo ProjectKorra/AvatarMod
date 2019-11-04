@@ -36,13 +36,6 @@ public class Earthbending extends BendingStyle {
 	public Earthbending() {
 		for (Ability ability : Abilities.getAbilitiesToRegister(getId()))
 			addAbility(ability.getName());
-		/*addAbility("earth_control");
-		addAbility("mine_blocks");
-		addAbility("ravine");
-		addAbility("wall");
-		addAbility("earth_spikes");
-		addAbility("restore");
-**/
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);
 		Color gray = new Color(90, 90, 90);

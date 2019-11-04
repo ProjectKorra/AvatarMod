@@ -261,6 +261,6 @@ public class AbilityWall extends Ability {
 
 	@Override
 	public int getBaseTier() {
-		return 2;
+		return 3;
 	}
 }
