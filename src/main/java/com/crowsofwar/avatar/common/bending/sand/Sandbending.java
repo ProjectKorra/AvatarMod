@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.bending.sand;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
@@ -20,8 +22,11 @@ public class Sandbending extends BendingStyle {
 	public Sandbending() {
 		super(Earthbending.ID);
 
-		addAbility("sand_prison");
-		addAbility("sandstorm");
+		for (Ability ability : Abilities.getAbilitiesToRegister(getId()))
+			addAbility(ability.getName());
+
+		//addAbility("sand_prison");
+		//addAbility("sandstorm");
 
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);

@@ -55,38 +55,62 @@ public class Abilities {
 	}
 
 	//Gets a list of abilities to add in the radial menu based on an element.
+	//You'll probably want to fix this in the future, but it works for now.
 	public static List<Ability> getAbilitiesToRegister(UUID element) {
 		List<Ability> abilityList = abilities;
 		List<Ability> toRemove = new ArrayList<>();
-		List<Ability> elementAbilities;
+		ArrayList<Ability> elementAbilities = new ArrayList<>();
+		//This is to make sure the elementAbilities list is correct.
+		ArrayList<Ability> tempList = new ArrayList<>();
+
 		Ability previousAbility;
-		elementAbilities = abilities;
 		int prevTier = 1, index = 0;
 
 		//This auto-registers the abilities based on tier. Yay!
 		if (!abilityList.isEmpty()) {
 			for (Ability a : abilityList) {
-				if (a.getBendingId() != element) {
+				if (a.getBendingId() != element)
 					toRemove.add(a);
+			}
+			abilityList.removeAll(toRemove);
+			for (Ability ability : abilityList) {
+				if (ability.getBaseTier() > prevTier || ability.getBaseTier() == prevTier) {
+					elementAbilities.add(index, ability);
+					index++;
+				} else {
+					//Moves the previous ability ahead in the list.
+					previousAbility = elementAbilities.get(Math.max(index - 1, 0));
+					elementAbilities.add(index, previousAbility);
+				//	elementAbilities.remove(previousAbility);
+					elementAbilities.set(Math.max(index - 1, 0), ability);
+					index++;
 				}
+				prevTier = ability.getBaseTier();
 			}
 		}
-		abilityList.removeAll(toRemove);
-		for (Ability ability : abilityList) {
-			if (ability.getBaseTier() > prevTier || ability.getBaseTier() == prevTier) {
-				elementAbilities.add(index, ability);
-				index++;
-			} else {
-				//Moves the previous ability ahead in the list.
-				previousAbility = elementAbilities.get(Math.max(index - 1, 0));
-				elementAbilities.add(index, previousAbility);
-				elementAbilities.remove(previousAbility);
-				elementAbilities.add(Math.max(index - 1, 0), ability);
-				index++;
+		abilityList.clear();
+	/*	tempList = elementAbilities;
+		//Resets the previous tier. This double checks and makes sure the abilities are properly registered.
+		prevTier = 1;
+		index = 0;
+		if (!tempList.isEmpty()) {
+			for (Ability ability : tempList) {
+				if (ability.getBaseTier() > prevTier || ability.getBaseTier() == prevTier) {
+					elementAbilities.set(index, ability);
+					index++;
+				} else {
+					//Moves the previous ability ahead in the list.
+					previousAbility = elementAbilities.get(Math.max(index - 1, 0));
+					elementAbilities.set(index, previousAbility);
+					//elementAbilities.remove(previousAbility);
+					elementAbilities.set(Math.max(index - 1, 0), ability);
+					index++;
+				}
+				prevTier = ability.getBaseTier();
 			}
-			prevTier = ability.getBaseTier();
-		}
-		return elementAbilities;
+			tempList.clear();
+		}**/
+			return elementAbilities;
 
 	}
 

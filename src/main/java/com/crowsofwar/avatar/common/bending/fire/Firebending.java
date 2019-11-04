@@ -30,15 +30,13 @@ import java.util.UUID;
 
 public class Firebending extends BendingStyle {
 
-	public static UUID ID = UUID.fromString("8485da8f-20d9-4e98-9a10-721104e962fe");
+	public static final UUID ID = UUID.fromString("8485da8f-20d9-4e98-9a10-721104e962fe");
 
 	private final BendingMenuInfo menu;
 
 	public Firebending() {
-
-		for (Ability fire : Abilities.getAbilitiesToRegister(ID))
-			addAbility(fire.getName());
-
+		for (Ability ability : Abilities.getAbilitiesToRegister(ID))
+			addAbility(ability.getName());
 
 		/*addAbility("fire_shot");
 		addAbility("fire_blast");

@@ -125,7 +125,7 @@ public class AbilityImmolate extends Ability {
 
 	@Override
 	public int getBaseTier() {
-		return 4;
+		return 5;
 	}
 
 	public static class ImmolateLightOrbBehaviour extends LightOrbBehavior.FollowPlayer {
