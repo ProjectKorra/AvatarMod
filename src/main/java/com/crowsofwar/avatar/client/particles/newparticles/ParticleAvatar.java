@@ -715,4 +715,6 @@ public abstract class ParticleAvatar extends Particle {
 	public interface IAvatarParticleFactory {
 		ParticleAvatar createParticle(World world, double x, double y, double z);
 	}
+
+
 }

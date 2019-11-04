@@ -1,6 +1,9 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -11,7 +14,6 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = AvatarInfo.MOD_ID)
 public class ParticleFire extends ParticleAvatar {
 
-	//TODO: Make it iterate frames.
 
 	// 1 different animation strip, 7 frames
 	private static final ResourceLocation[] TEXTURES = generateTextures("fire", 7);
@@ -21,7 +23,7 @@ public class ParticleFire extends ParticleAvatar {
 		super(world, x, y, z, TEXTURES);
 
 		this.setRBGColorF(1, 1, 1);
-		this.particleAlpha = 1;
+		this.particleAlpha = 0.875F;
 		this.particleMaxAge = 12 + rand.nextInt(4);
 		this.shaded = false;
 		this.canCollide = true;
@@ -43,5 +45,12 @@ public class ParticleFire extends ParticleAvatar {
 		this.motionZ *= 0.99;
 	}
 
-
+	@Override
+	protected void drawParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float rotationX, float rotationY, float rotationZ, float rotationYZ, float rotationXY) {
+		GlStateManager.pushMatrix();
+		//GlStateManager.disableBlend();
+		GlStateManager.disableLight(Math.min((int) particleScale, 6));
+		super.drawParticle(buffer, viewer, partialTicks, rotationX, rotationY, rotationZ, rotationYZ, rotationXY);
+		GlStateManager.popMatrix();
+	}
 }

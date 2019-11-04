@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
@@ -33,13 +35,18 @@ public class Firebending extends BendingStyle {
 	private final BendingMenuInfo menu;
 
 	public Firebending() {
-		addAbility("fire_shot");
+
+		for (Ability fire : Abilities.getAbilitiesToRegister(ID))
+			addAbility(fire.getName());
+
+
+		/*addAbility("fire_shot");
 		addAbility("fire_blast");
 		addAbility("flamethrower");
 		addAbility("fire_jump");
 		addAbility("fireball");
 		addAbility("inferno_punch");
-		addAbility("immolate");
+		addAbility("immolate");**/
 
 
 		Color light = new Color(244, 240, 187);

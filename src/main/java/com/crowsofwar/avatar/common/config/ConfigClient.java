@@ -69,6 +69,9 @@ public class ConfigClient {
 	@Load
 	public FireRenderSettings fireRenderSettings = new FireRenderSettings();
 
+	@Load
+	public ParticleRenderSettings particleSettings = new ParticleRenderSettings();
+
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
 
@@ -180,6 +183,11 @@ public class ConfigClient {
 
 		@Load
 		public final boolean useFlamethrowerParticles = true;
+	}
+
+	public static class ParticleRenderSettings {
+		@Load
+		public final boolean voxelFlashParticles = false;
 	}
 
 }

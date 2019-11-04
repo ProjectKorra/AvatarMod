@@ -26,7 +26,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class SlipstreamPowerModifier extends BuffPowerModifier {
 
-	@SideOnly(Side.CLIENT)
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onSlipstreamInvisibility(RenderPlayerEvent event) {
 		if (event.getEntityPlayer() != null) {

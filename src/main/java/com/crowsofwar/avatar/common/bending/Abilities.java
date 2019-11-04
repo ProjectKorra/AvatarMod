@@ -20,10 +20,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import net.minecraft.entity.EntityLiving;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author CrowsOfWar
@@ -55,6 +52,42 @@ public class Abilities {
 	public static void register(Ability ability) {
 		abilities.add(ability);
 		abilitiesByName.put(ability.getName(), ability);
+	}
+
+	//Gets a list of abilities to add in the radial menu based on an element.
+	public static List<Ability> getAbilitiesToRegister(UUID element) {
+		List<Ability> abilityList = abilities;
+		List<Ability> toRemove = new ArrayList<>();
+		List<Ability> elementAbilities;
+		Ability previousAbility;
+		elementAbilities = abilities;
+		int prevTier = 1, index = 0;
+
+		//This auto-registers the abilities based on tier. Yay!
+		if (!abilityList.isEmpty()) {
+			for (Ability a : abilityList) {
+				if (a.getBendingId() != element) {
+					toRemove.add(a);
+				}
+			}
+		}
+		abilityList.removeAll(toRemove);
+		for (Ability ability : abilityList) {
+			if (ability.getBaseTier() > prevTier || ability.getBaseTier() == prevTier) {
+				elementAbilities.add(index, ability);
+				index++;
+			} else {
+				//Moves the previous ability ahead in the list.
+				previousAbility = elementAbilities.get(Math.max(index - 1, 0));
+				elementAbilities.add(index, previousAbility);
+				elementAbilities.remove(previousAbility);
+				elementAbilities.add(Math.max(index - 1, 0), ability);
+				index++;
+			}
+			prevTier = ability.getBaseTier();
+		}
+		return elementAbilities;
+
 	}
 
 }

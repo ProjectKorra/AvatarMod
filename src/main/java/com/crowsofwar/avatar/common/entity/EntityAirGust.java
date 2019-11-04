@@ -24,6 +24,8 @@ import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
@@ -90,9 +92,9 @@ public class EntityAirGust extends EntityOffensive {
 		if (world.isRemote) {
 			Vec3d pos = AvatarEntityUtils.getMiddleOfEntity(this).add(Vector.getLookRectangular(this).times(-1 * getAvgSize()).toMinecraft());
 			//for (int i = 0; i < 4; i++)
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(motionX * 1.05, motionY * 1.05,
-						motionZ * 1.05).time(15 + AvatarUtils.getRandomNumberInRange(0, 8)).clr(0.85F, 0.85F, 0.85F)
-						.scale(getAvgSize() * 1.75F).collide(true).spawn(world);
+			ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(motionX * 1.05, motionY * 1.05,
+					motionZ * 1.05).time(15 + AvatarUtils.getRandomNumberInRange(0, 8)).clr(0.85F, 0.85F, 0.85F)
+					.scale(getAvgSize() * 1.75F).collide(true).spawn(world);
 
 			for (int i = 0; i < 4; i++) {
 				AxisAlignedBB boundingBox = getEntityBoundingBox();
@@ -105,7 +107,6 @@ public class EntityAirGust extends EntityOffensive {
 			}
 		}
 	}
-
 
 
 	public void setSlowProjectiles(boolean slowProjectiles) {
@@ -241,6 +242,22 @@ public class EntityAirGust extends EntityOffensive {
 	}
 
 	@Override
+	public boolean canCollideWith(Entity entity) {
+		if (entity == getOwner()) {
+			return false;
+		} else if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
+			return false;
+		} else if (entity instanceof EntityLivingBase && entity.getControllingPassenger() == getOwner()) {
+			return false;
+		} else if (getOwner() != null && getOwner().getTeam() != null && entity.getTeam() == getOwner().getTeam()) {
+			return false;
+		} else if (entity instanceof EntityEnderCrystal) {
+			return true;
+		} else
+			return true;
+	}
+
+	@Override
 	public boolean isProjectile() {
 		return true;
 	}
@@ -260,7 +277,7 @@ public class EntityAirGust extends EntityOffensive {
 		double x = Math.min(getKnockbackMult().x * motionX, motionX * 2);
 		double y = Math.min(0.7, (motionY + 0.3) * getKnockbackMult().y);
 		double z = Math.min(getKnockbackMult().z * motionZ, motionZ * 2);
-		if (velocity().sqrMagnitude()  > getAvgSize() * 15) {
+		if (velocity().sqrMagnitude() > getAvgSize() * 15) {
 			x = Math.min(x, motionX * 0.75F);
 			z = Math.min(z, motionZ * 0.75F);
 		}
