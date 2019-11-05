@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.entity.EntityLivingBase;
 
 import com.crowsofwar.avatar.common.data.TickHandler;
@@ -37,19 +38,18 @@ public class BisonSummonHandler extends TickHandler {
 
 		if (ctx.getWorld().isRemote) return false;
 
-		//BendingData data = ctx.getData();
+		BendingData data = ctx.getData();
 
-		//int cooldown = data.getMiscData().getPetSummonCooldown();
-		//if (cooldown <= 0) {
+		/*int cooldown = data.getMiscData().getPetSummonCooldown();
+		if (cooldown <= 0) {
 
-		trySummonBison(ctx.getBenderEntity());
-		return true;
+		**/
+		return trySummonBison(ctx.getBenderEntity());
 
 		/*} else {
-
 			data.getMiscData().setPetSummonCooldown(cooldown - 1);
 			return false;
-**/
+		}**/
 	}
 
 	private boolean trySummonBison(EntityLivingBase player) {
@@ -64,9 +64,9 @@ public class BisonSummonHandler extends TickHandler {
 				// Find suitable location near player
 				for (int i = 0; i < 5; i++) {
 
-					double x = player.posX + (random.nextDouble() * 2 - 1) * 15;
-					double y = player.posY + (random.nextDouble() * 2 - 1) * 5;
-					double z = player.posZ + (random.nextDouble() * 2 - 1) * 15;
+					double x = player.posX + (random.nextDouble() * 2 - 1) * 2;
+					double y = player.posY + (random.nextDouble() * 2 - 1) * 2;
+					double z = player.posZ + (random.nextDouble() * 2 - 1) * 2;
 
 					bison.attemptTeleport(x, y, z);
 					if (bison.attemptTeleport(x, y, z)) {
