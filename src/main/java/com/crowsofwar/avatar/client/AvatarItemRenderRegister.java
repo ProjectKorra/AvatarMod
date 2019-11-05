@@ -70,6 +70,10 @@ public class AvatarItemRenderRegister {
 		register(AvatarItems.airbenderStaff);
         register(AvatarItems.GLIDER_ADV);
 
+		register(AvatarItems.GLIDER_BASIC);
+		//TODO: Register the other glider parts
+		register(AvatarItems.GLIDER_ADV);
+
 		for (int i = 0; i <= 3; i++) {
 			register(AvatarItems.itemBisonArmor, i);
 			register(AvatarItems.itemBisonSaddle, i);
