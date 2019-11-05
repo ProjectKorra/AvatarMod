@@ -23,9 +23,7 @@ import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.data.AvatarWorldData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BenderEntityComponent;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.ai.*;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
@@ -1170,6 +1168,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 	protected void playTameEffect(boolean success) {
 
+		//TODO: Fix this terrible thing. Send a message, give particles, e.t.c.
+		BendingData.get(getOwner()).getMiscData().setBisonFollowMode(true);
 		EnumParticleTypes particle;
 		if (success) {
 			particle = EnumParticleTypes.HEART;
