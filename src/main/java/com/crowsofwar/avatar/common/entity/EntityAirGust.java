@@ -200,8 +200,14 @@ public class EntityAirGust extends EntityOffensive {
 		if (destroyProjectiles) {
 			if (entity instanceof IOffensiveEntity && ((IOffensiveEntity) entity).getDamage() < 6 * getAvgSize() ||
 					entity instanceof EntityOffensive && getAvgSize() < 1.25 * getAvgSize() || (entity.isProjectile() && entity.velocity().sqrMagnitude() <
-					velocity().sqrMagnitude())) {
+					velocity().sqrMagnitude()) || entity.getTier() < getTier()) {
 				((IOffensiveEntity) entity).Dissipate(entity);
+			}
+			if (entity.getTier() == getTier()) {
+				Dissipate();
+				if (entity instanceof IOffensiveEntity) {
+					((IOffensiveEntity) entity).Dissipate(entity);
+				}
 			}
 		}
 	}
@@ -232,11 +238,6 @@ public class EntityAirGust extends EntityOffensive {
 				entity.motionX *= 0.4;
 				entity.motionY *= 0.4;
 				entity.motionZ *= 0.4;
-			}
-			if (destroyProjectiles && !(entity instanceof AvatarEntity)) {
-				Vector vel = new Vector(entity);
-				vel = vel.times(-1.1);
-				entity.addVelocity(vel.x(), vel.y(), vel.z());
 			}
 		}
 	}
@@ -282,5 +283,10 @@ public class EntityAirGust extends EntityOffensive {
 			z = Math.min(z, motionZ * 0.75F);
 		}
 		return new Vec3d(x, y, z);
+	}
+
+	@Override
+	public boolean canDamageEntity(Entity entity) {
+		return canCollideWith(entity);
 	}
 }
