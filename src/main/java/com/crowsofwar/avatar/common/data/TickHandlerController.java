@@ -19,6 +19,8 @@ import java.util.Map;
  */
 public class TickHandlerController {
 	// @formatter:off
+	//NOTE: NEVER EVER EVER RUN THE FORMATTER AND LEAVE IT. THIS HASHMAP HAS TO BE AT THE TOP OR BAD STUFF WILL HAPPEN.
+	//IT TOOK US MONTHS TO FIX THIS ISSUE LAST TIME.
 	static Map<Integer, TickHandler> allHandlers = new HashMap<>();
 
 	public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner(0);
