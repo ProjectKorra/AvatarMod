@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.api.item;
 
 import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
+import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketHandler;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketUpdateClientTarget;
 import com.crowsofwar.avatar.common.util.GliderHelper;
@@ -28,7 +29,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemHangGliderBase extends Item implements IGlider {
+public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
 
     //ToDo: NBT saving tags of upgrade (need IRecipe for them)
 
@@ -119,7 +120,7 @@ public class ItemHangGliderBase extends Item implements IGlider {
 
         } else {
             if (world.isRemote) { //client
-                player.sendMessage(new TextComponentTranslation("openglider.elytra.error"));
+                player.sendMessage(new TextComponentTranslation("avatar.gliderElytra"));
             }
         }
 
@@ -340,5 +341,22 @@ public class ItemHangGliderBase extends Item implements IGlider {
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         //ToDo
+    }
+
+    @Override
+    public Item item() {
+        return this;
+    }
+
+    @Override
+    public String getModelName(int meta) {
+        switch (meta) {
+            case 1:
+                return "hang_glider_basic_deployed";
+            case 3:
+                return "hang_basic_advanced_broken";
+            default:
+                return "hang_basic_advanced";
+        }
     }
 }
