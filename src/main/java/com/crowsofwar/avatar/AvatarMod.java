@@ -231,6 +231,8 @@ public class AvatarMod {
 		registerEntity(EntityIceShard.class, "iceshard", 128, 1000, true);
 		registerEntity(EntityIcePrison.class, "iceprison", 128, 1000, true);
 		registerEntity(EntityOstrichHorse.class, "OstrichHorse", 0x5c5b46, 0x0f1108);
+		registerEntity(EntityKomodoRhino.class, "KomodoRhino", 0x9b3a10, 0x0f1108);
+		registerEntity(EntityBadgerMole.class, "BadgerMole", 0x9b3a10, 0x0ba6a0e);
 		registerEntity(EntitySandPrison.class, "sandprison", 128, 1000, true);
 		registerEntity(EntityLightningArc.class, "Lightning_arc", 128, 1000, true);
 		registerEntity(EntityCloudBall.class, "Cloudburst", 128, 1000, true);
@@ -251,6 +253,9 @@ public class AvatarMod {
 		EntityRegistry.addSpawn(EntityOtterPenguin.class, 10, 3, 6, EnumCreatureType.CREATURE, //
 				COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
 		EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 1, 3, EnumCreatureType.CREATURE, //
+				DESERT, DESERT_HILLS, SAVANNA, SAVANNA_PLATEAU, PLAINS);
+
+		EntityRegistry.addSpawn(EntityKomodoRhino.class, 5, 1, 3, EnumCreatureType.CREATURE, //
 				DESERT, DESERT_HILLS, SAVANNA, SAVANNA_PLATEAU, PLAINS);
 
 		// Second loading required since other mods blocks and items might not be

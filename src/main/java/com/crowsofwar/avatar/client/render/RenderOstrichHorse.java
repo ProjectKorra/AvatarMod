@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.common.entity.mob.EntityOstrichHorse;
 import com.crowsofwar.avatar.common.item.ItemOstrichEquipment;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 

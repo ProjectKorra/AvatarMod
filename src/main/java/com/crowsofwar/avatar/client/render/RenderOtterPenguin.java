@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.mob.EntityOtterPenguin;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -40,5 +41,8 @@ public class RenderOtterPenguin extends RenderLiving<EntityOtterPenguin> {
 	protected ResourceLocation getEntityTexture(EntityOtterPenguin entity) {
 		return TEXTURE;
 	}
+
+
+
 
 }

@@ -40,6 +40,7 @@ public class AvatarItems {
 	public static ItemBisonSaddle itemBisonSaddle;
 	public static ItemBisonArmor itemBisonArmor;
 	public static ItemOstrichEquipment itemOstrichEquipment;
+	public static ItemKomodoRhinoEquipment itemKomodoRhinoEquipment;
 	private static ItemStack stackScroll;
 	public static ItemAirbenderStaff airbenderStaff;
 	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
@@ -68,6 +69,7 @@ public class AvatarItems {
 		addItem(itemBisonArmor = new ItemBisonArmor());
 		addItem(itemBisonSaddle = new ItemBisonSaddle());
 		addItem(itemOstrichEquipment = new ItemOstrichEquipment());
+		addItem(itemKomodoRhinoEquipment = new ItemKomodoRhinoEquipment());
 		addItem(airbenderStaff = new ItemAirbenderStaff(Item.ToolMaterial.WOOD));
 
 		stackScroll = new ItemStack(Scrolls.ALL);

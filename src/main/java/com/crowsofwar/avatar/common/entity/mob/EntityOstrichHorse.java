@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import com.crowsofwar.avatar.common.gui.InventoryOstrichChest;
+import com.crowsofwar.avatar.common.gui.InventoryMobChest;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.ItemOstrichEquipment;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -52,7 +52,7 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 	private static final DataParameter<Integer> SYNC_EQUIPMENT = EntityDataManager.createKey
 			(EntityOstrichHorse.class, DataSerializers.VARINT);
 
-	private InventoryOstrichChest chest;
+	private InventoryMobChest chest;
 
 	/**
 	 * @param world
@@ -225,7 +225,7 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 	 * Initializes the the chest for the first time
 	 */
 	private void setupChest() {
-		chest = new InventoryOstrichChest();
+		chest = new InventoryMobChest();
 		if (hasCustomName()) {
 			chest.setCustomName(getName());
 		}

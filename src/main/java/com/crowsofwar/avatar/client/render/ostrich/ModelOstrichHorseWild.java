@@ -1,6 +1,8 @@
 package com.crowsofwar.avatar.client.render.ostrich;
 
+import com.crowsofwar.avatar.common.entity.mob.EntityOstrichHorse;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 
 /**
@@ -323,27 +325,58 @@ public class ModelOstrichHorseWild extends ModelOstrichHorse {
 	}
 
 	@Override
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-		this.RWing2.render(f5);
-		this.Body4.render(f5);
-		this.Body7.render(f5);
-		this.Lleg.render(f5);
-		this.Body2.render(f5);
-		this.neck1.render(f5);
-		this.LWing1.render(f5);
-		this.Body8.render(f5);
-		this.MainTail.render(f5);
-		this.Body10.render(f5);
-		this.BodyMain.render(f5);
-		this.Body6.render(f5);
-		this.Body9.render(f5);
-		this.Body1.render(f5);
-		this.RWing1.render(f5);
-		this.Body3.render(f5);
-		this.Body5.render(f5);
-		this.Rleg.render(f5);
-		this.LWing2.render(f5);
+	public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+		this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
+
+		EntityOstrichHorse ostrichhorse = (EntityOstrichHorse) entity;
+		if (ostrichhorse.isChild()) { // Half the original model size for all baby penguins + translation to keep them flush with the ground
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(0.5f, 0.5f, 0.5f);
+			GlStateManager.translate(0, 1.48f, 0);
+			this.RWing2.render(scale);
+			this.Body4.render(scale);
+			this.Body7.render(scale);
+			this.Lleg.render(scale);
+			this.Body2.render(scale);
+			this.neck1.render(scale);
+			this.LWing1.render(scale);
+			this.Body8.render(scale);
+			this.MainTail.render(scale);
+			this.Body10.render(scale);
+			this.BodyMain.render(scale);
+			this.Body6.render(scale);
+			this.Body9.render(scale);
+			this.Body1.render(scale);
+			this.RWing1.render(scale);
+			this.Body3.render(scale);
+			this.Body5.render(scale);
+			this.Rleg.render(scale);
+			this.LWing2.render(scale);
+			GlStateManager.popMatrix();
+		} else {
+			this.RWing2.render(scale);
+			this.Body4.render(scale);
+			this.Body7.render(scale);
+			this.Lleg.render(scale);
+			this.Body2.render(scale);
+			this.neck1.render(scale);
+			this.LWing1.render(scale);
+			this.Body8.render(scale);
+			this.MainTail.render(scale);
+			this.Body10.render(scale);
+			this.BodyMain.render(scale);
+			this.Body6.render(scale);
+			this.Body9.render(scale);
+			this.Body1.render(scale);
+			this.RWing1.render(scale);
+			this.Body3.render(scale);
+			this.Body5.render(scale);
+			this.Rleg.render(scale);
+			this.LWing2.render(scale);
+		}
+
 	}
+
 
 	/**
 	 * This is a helper function from Tabula to set the rotation of model parts

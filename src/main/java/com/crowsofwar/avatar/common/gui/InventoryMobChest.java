@@ -5,9 +5,9 @@ import net.minecraft.inventory.InventoryBasic;
 /**
  * @author CrowsOfWar
  */
-public class InventoryOstrichChest extends InventoryBasic {
+public class InventoryMobChest extends InventoryBasic {
 
-	public InventoryOstrichChest() {
+	public InventoryMobChest() {
 		super("Ostrich", false, 10);
 	}
 
