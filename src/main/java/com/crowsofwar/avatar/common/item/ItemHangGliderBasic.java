@@ -14,6 +14,7 @@ public class ItemHangGliderBasic extends ItemHangGliderBase {
     public ItemHangGliderBasic() {
         super(ConfigHandler.basicGliderHorizSpeed, ConfigHandler.basicGliderVertSpeed, ConfigHandler.basicGliderShiftHorizSpeed, ConfigHandler.basicGliderShiftVertSpeed, ConfigHandler.advancedGliderSpaceHorizSpeed, ConfigHandler.advancedGliderSpaceVertSpeed, ConfigHandler.basicGliderWindModifier, ConfigHandler.basicGliderAirResistance, ConfigHandler.basicGliderTotalDurability, ModelGlider.MODEL_GLIDER_BASIC_TEXTURE_RL);
         setCreativeTab(AvatarItems.tabItems);
+        setRegistryName("hang_glider_basic");
         setTranslationKey(MOD_ID +":" + GliderInfo.ITEM_GLIDER_BASIC_NAME);
     }
 
