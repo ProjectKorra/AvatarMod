@@ -354,9 +354,9 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
             case 1:
                 return "hang_glider_basic_deployed";
             case 3:
-                return "hang_basic_advanced_broken";
+                return "hang_glider_basic_broken";
             default:
-                return "hang_basic_advanced";
+                return "hang_glider_basic";
         }
     }
 }
