@@ -125,7 +125,7 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 		// Try to put on equipment
 		for (EnumHand hand : EnumHand.values()) {
 			ItemStack heldStack = player.getHeldItem(hand);
-			if (heldStack.getItem() == AvatarItems.itemOstrichEquipment) {
+			if (heldStack.getItem() == AvatarItems.itemOstrichEquipment && !this.isChild()) {
 
 				ItemOstrichEquipment.EquipmentTier proposed = ItemOstrichEquipment.EquipmentTier
 						.getTier(heldStack.getMetadata());
@@ -154,8 +154,9 @@ public class EntityOstrichHorse extends EntityAnimal implements IInventoryChange
 		}
 
 		// Default: ride ostrich
-		player.startRiding(this);
-		return true;
+		if (!this.isChild())
+			player.startRiding(this);
+			return true;
 
 	}
 
