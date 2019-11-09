@@ -80,7 +80,7 @@ public class Waterbending extends BendingStyle {
 
 	@Override
 	public SoundEvent getRadialMenuSound() {
-		return SoundEvents.ENTITY_GENERIC_SPLASH;
+		return SoundEvents.ENTITY_GENERIC_SWIM;
 	}
 
 	@Override

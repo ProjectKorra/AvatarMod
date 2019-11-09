@@ -77,6 +77,6 @@ public class Earthbending extends BendingStyle {
 
 	@Override
 	public SoundEvent getRadialMenuSound() {
-		return SoundEvents.BLOCK_GRASS_STEP;
+		return SoundEvents.BLOCK_GRASS_BREAK;
 	}
 }

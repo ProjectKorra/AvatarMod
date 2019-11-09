@@ -98,7 +98,7 @@ public class ClientInput implements IControlsHandler {
 	@Override
 	public boolean isControlPressed(AvatarControl control) {
 
-		if (control == CONTROL_LEFT_CLICK) return Minecraft.getMinecraft().gameSettings.keyBindAttack.isPressed();
+		if (control == CONTROL_LEFT_CLICK) return mouseLeft;
 		if (control == CONTROL_RIGHT_CLICK) return mouseRight;
 		if (control == CONTROL_MIDDLE_CLICK) return mouseMiddle;
 		if (control == CONTROL_LEFT_CLICK_DOWN) return mouseLeft && !wasLeft;

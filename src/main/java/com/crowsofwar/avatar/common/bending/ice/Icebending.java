@@ -74,7 +74,7 @@ public class Icebending extends BendingStyle {
 
 	@Override
 	public SoundEvent getRadialMenuSound() {
-		return SoundEvents.BLOCK_GLASS_STEP;
+		return SoundEvents.BLOCK_GLASS_BREAK;
 	}
 
 	@Override
