@@ -6,6 +6,9 @@ import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 
 import java.awt.*;
 import java.util.UUID;
@@ -52,5 +55,15 @@ public class Sandbending extends BendingStyle {
 	@Override
 	public UUID getId() {
 		return ID;
+	}
+
+	@Override
+	public TextFormatting getTextFormattingColour() {
+		return TextFormatting.GOLD;
+	}
+
+	@Override
+	public SoundEvent getRadialMenuSound() {
+		return SoundEvents.BLOCK_SAND_STEP;
 	}
 }

@@ -6,7 +6,10 @@ import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 
 import java.awt.*;
 import java.util.UUID;
@@ -61,4 +64,13 @@ public class Combustionbending extends BendingStyle {
 		return ID;
 	}
 
+	@Override
+	public TextFormatting getTextFormattingColour() {
+		return TextFormatting.GRAY;
+	}
+
+	@Override
+	public SoundEvent getRadialMenuSound() {
+		return SoundEvents.ENTITY_GENERIC_EXPLODE;
+	}
 }

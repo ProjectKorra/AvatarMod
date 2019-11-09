@@ -23,6 +23,9 @@ import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.UUID;
 
@@ -69,4 +72,13 @@ public class Lightningbending extends BendingStyle {
 		return ID;
 	}
 
+	@Override
+	public SoundEvent getRadialMenuSound() {
+		return SoundEvents.ENTITY_SHULKER_TELEPORT;
+	}
+
+	@Override
+	public TextFormatting getTextFormattingColour() {
+		return TextFormatting.AQUA;
+	}
 }

@@ -103,7 +103,7 @@ public class WindowAbility {
 		description = new ComponentLongText(I18n.format("avatar.ability." + ability.getName() + ".desc"),
 				fromPercent(frameLeft, 100, 0));
 		description.setFrame(frameLeft);
-		description.setPosition(StartingPosition.custom(0, 0.25f, 0, 0));
+		description.setPosition(StartingPosition.custom(0, 0.3f, 0, 0));
 		description.setZLevel(4);
 		handler.add(description);
 
@@ -159,19 +159,14 @@ public class WindowAbility {
 			}
 		}
 
-		tierName += TextFormatting.BOLD;
-		tierName += ability.getElement().getTextFormattingColour();
-
-		tier = new ComponentText(TextFormatting.BOLD + I18n.format("Tier: " + tierName, ability.getElement().getTextFormattingColour()));
+		//I can't get both colours and bold ;-;
+		tier = new ComponentText(ability.getElement().getTextFormattingColour() + I18n.format("Tier: " + tierName, TextFormatting.BOLD));
 		tier.setFrame(frameLeft);
 		tier.setPosition(StartingPosition.custom(0, 0.0875f, 0, 0));
 		tier.setZLevel(4);
 		handler.add(tier);
 		if (ability.getBaseParentTier() > 0) {
-			parentTierName += TextFormatting.BOLD;
-			parentTierName += BendingStyles.get(ability.getElement().getParentBendingId()).getTextFormattingColour();
-
-			parentTier = new ComponentText(TextFormatting.BOLD + I18n.format("Parent Tier: " + parentTierName, BendingStyles.get(ability.getElement().getParentBendingId()).getTextFormattingColour()));
+			parentTier = new ComponentText(BendingStyles.get(ability.getElement().getParentBendingId()).getTextFormattingColour() + I18n.format("Parent Tier: " + parentTierName, TextFormatting.BOLD));
 			parentTier.setFrame(frameLeft);
 			parentTier.setPosition(StartingPosition.custom(0, 0.15f, 0, 0));
 			parentTier.setZLevel(4);

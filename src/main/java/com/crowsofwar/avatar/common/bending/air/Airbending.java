@@ -82,7 +82,7 @@ public class Airbending extends BendingStyle {
 
 	@Override
 	public SoundEvent getRadialMenuSound() {
-		return SoundEvents.UI_TOAST_IN;
+		return SoundEvents.BLOCK_FIRE_EXTINGUISH;
 	}
 
 	@Override
