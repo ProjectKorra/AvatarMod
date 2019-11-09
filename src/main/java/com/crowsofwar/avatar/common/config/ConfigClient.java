@@ -188,6 +188,9 @@ public class ConfigClient {
 	public static class ParticleRenderSettings {
 		@Load
 		public final boolean voxelFlashParticles = false;
+
+		@Load
+		public final boolean squareFlashParticles = false;
 	}
 
 }

@@ -70,6 +70,21 @@ avatar.spec.lvl4_2=level IV, second path
 avatar.cmd.xpset=Set [value]${player}[/value]'s [value]${ability}[/value] progress to [value][translate=avatar.spec.${spec}][/value]
 avatar.cmd.noAbility=There isn't an ability called %s
 
+avatar.spec.tier1=Tier I
+avatar.spec.tier2=Tier II
+avatar.spec.tier3=Tier III
+avatar.spec.tier4=Tier IV
+avatar.spec.tier5=Tier V
+avatar.spec.tier6=Tier VI
+avatar.spec.tier7=Tier VII
+avatar.spec.parentTier1=Parent Tier I
+avatar.spec.parentTier2=Parent Tier II
+avatar.spec.parentTier3=Parent Tier III
+avatar.spec.parentTier4=Parent Tier IV
+avatar.spec.parentTier5=Parent Tier V
+avatar.spec.parentTier6=Parent Tier VI
+avatar.spec.parentTier7=Parent Tier VII
+
 avatar.donthavebending=[error]You haven't learned ${bending} yet. To get it, type in: [error_value]/avatar bending add ${username} ${bending}[/error_value][/error]
 avatar.nochi=Not enough chi!
 avatar.airBubbleElytra=Cannot use air bubble with elytra

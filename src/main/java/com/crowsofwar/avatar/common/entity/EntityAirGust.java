@@ -98,11 +98,12 @@ public class EntityAirGust extends EntityOffensive {
 
 			for (int i = 0; i < 4; i++) {
 				AxisAlignedBB boundingBox = getEntityBoundingBox();
-				double spawnX = boundingBox.minX + world.rand.nextDouble() / 2 * (boundingBox.maxX - boundingBox.minX);
-				double spawnY = boundingBox.minY + world.rand.nextDouble() / 2 * (boundingBox.maxY - boundingBox.minY);
-				double spawnZ = boundingBox.minZ + world.rand.nextDouble() / 2 * (boundingBox.maxZ - boundingBox.minZ);
+				Vec3d midPos = AvatarEntityUtils.getMiddleOfEntity(this);
+				double spawnX = midPos.x + world.rand.nextGaussian() / 8 * (boundingBox.maxX - boundingBox.minX);
+				double spawnY = midPos.y + world.rand.nextGaussian() / 8 * (boundingBox.maxY - boundingBox.minY);
+				double spawnZ = midPos.z + world.rand.nextGaussian() / 8 * (boundingBox.maxZ - boundingBox.minZ);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(13).clr(0.825F, 0.825F, 0.825F)
+						world.rand.nextGaussian() / 60).time(8).clr(0.825F, 0.825F, 0.825F)
 						.scale(getAvgSize() * 1.25F).spawn(world);
 			}
 		}

@@ -330,8 +330,8 @@ public class AirBurstHandler extends TickHandler {
 							zVel = z1 * entity.getParticleSpeed() * 0.25F;
 
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
-									.clr(0.8F, 0.8F, 0.8F).time(13 /* (Math.min(entity.getSpeed() / entity.getParticleSpeed() * 1.5F, 1))**/ + (int) (2 * entity.getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
-									.scale(3.25F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).spawn(world);
+									.clr(0.8F, 0.8F, 0.8F).time(8 /* (Math.min(entity.getSpeed() / entity.getParticleSpeed() * 1.5F, 1))**/ + (int) (2 * entity.getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
+									.scale(2.5F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).spawn(world);
 
 						}
 					}

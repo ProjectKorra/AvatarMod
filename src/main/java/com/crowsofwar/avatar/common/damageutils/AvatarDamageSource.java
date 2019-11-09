@@ -329,6 +329,16 @@ public class AvatarDamageSource {
 		return new EntityDamageSourceIndirect(element.getDamageType() + "_sphere_shockwave", hit, owner);
 	}
 
+	/**
+	 *
+	 * @param hit What was hit by the beam.
+	 * @param owner What released the beam.
+	 * @param element The element of the beam.
+	 */
+	public static DamageSource causeBeamDamage(Entity hit, @Nullable Entity owner, DamageSource element) {
+		return new EntityDamageSourceIndirect(element.getDamageType() + "_beam", hit, owner);
+	}
+
 
 
 	//LIGHTNING
@@ -411,15 +421,6 @@ public class AvatarDamageSource {
 		return new EntityDamageSourceIndirect("avatar_Sand_sandstorm", hit, owner);
 	}
 
-	//From what I can see, the ender dragon isn't even attacked properly. So, why aren't abilities attacking it?
-	/*@SubscribeEvent
-	public static void onDragonAttack(LivingAttackEvent event) {
-		if (AvatarDamageSource.isAvatarDamageSource(event.getSource()) && event.getEntityLiving() instanceof EntityDragon) {
-			EntityDragon d = (EntityDragon) event.getEntityLiving();
-			d.attackEntityFromPart(d.dragonPartBody, event.getSource(), event.getAmount());
-			System.out.println(event.getAmount());
-		}
-	}**/
 	@SubscribeEvent
 	public static void onElementalDamage(LivingHurtEvent event) {
 		//TODO: Config for all this stuff; definitely in the rewrite

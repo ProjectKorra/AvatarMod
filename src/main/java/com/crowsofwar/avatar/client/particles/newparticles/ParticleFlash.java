@@ -33,12 +33,16 @@ public class ParticleFlash extends ParticleAvatar {
 		return true; // Well this fixes everything... let's hope it doesn't cause any side-effects!
 	}
 
+	@Override
+	public int getFXLayer() {
+		return 0;
+	}
 
 	@Override
 	public void drawParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
 		float f4;
-		if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
-			f4 = particleScale * 0.75F * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
+		if (CLIENT_CONFIG.particleSettings.voxelFlashParticles || CLIENT_CONFIG.particleSettings.squareFlashParticles) {
+			f4 = particleScale * 0.725F * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
 		}
 		else {
 			f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
@@ -55,13 +59,17 @@ public class ParticleFlash extends ParticleAvatar {
 			GlStateManager.disableBlend();
 			GlStateManager.disableCull();
 		}
-		GlStateManager.disableLighting();
-		GlStateManager.clearDepth(10);
+		GlStateManager.enableBlend();
+		if (CLIENT_CONFIG.particleSettings.squareFlashParticles) {
+			GlStateManager.disableTexture2D();
+			GlStateManager.disableNormalize();
+		}
 		buffer.pos(f5 - rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 - rotationYZ * f4 - rotationXZ * f4).tex(0.5D, 0.375D).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
 		buffer.pos(f5 - rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 - rotationYZ * f4 + rotationXZ * f4).tex(0.5D, 0.125D).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
 		buffer.pos(f5 + rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 + rotationYZ * f4 + rotationXZ * f4).tex(0.25D, 0.125D).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
 		buffer.pos(f5 + rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 + rotationYZ * f4 - rotationXZ * f4).tex(0.25D, 0.375D).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
 		GlStateManager.popMatrix();
+		GlStateManager.enableTexture2D();
 	}
 
 	@Override

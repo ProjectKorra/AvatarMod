@@ -107,6 +107,7 @@ public class WindowAbility {
 		description.setZLevel(4);
 		handler.add(description);
 
+		//TODO: Use the lang file and get rif of these switch statements.
 		//Turns the tier into a roman numeral.
 		String tierName;
 		String parentTierName = "";
