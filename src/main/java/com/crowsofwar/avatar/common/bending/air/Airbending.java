@@ -23,7 +23,10 @@ import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 
 import java.awt.*;
 import java.util.UUID;
@@ -77,4 +80,13 @@ public class Airbending extends BendingStyle {
 		return ID;
 	}
 
+	@Override
+	public SoundEvent getRadialMenuSound() {
+		return SoundEvents.UI_TOAST_IN;
+	}
+
+	@Override
+	public TextFormatting getTextFormattingColour() {
+		return TextFormatting.LIGHT_PURPLE;
+	}
 }

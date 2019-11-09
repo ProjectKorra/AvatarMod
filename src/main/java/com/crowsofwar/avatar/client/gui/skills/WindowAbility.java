@@ -27,6 +27,7 @@ import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -56,7 +57,7 @@ public class WindowAbility {
 	private final UiComponentHandler handler;
 
 	private Frame frame;
-	private UiComponent icon, title, overlay, level, invBg, treeView, description, backButton;
+	private UiComponent icon, title, tier, parentTier, overlay, level, invBg, treeView, description, backButton;
 	private ComponentInventorySlots slot1, slot2;
 	private ComponentAbilityKeybind keybind;
 	private ComponentCustomButton button;
@@ -66,6 +67,7 @@ public class WindowAbility {
 
 	public WindowAbility(Ability ability, SkillsGui gui) {
 		this.mc = Minecraft.getMinecraft();
+		EntityPlayer player = mc.player;
 		this.ability = ability;
 		this.gui = gui;
 		this.handler = new UiComponentHandler();
@@ -101,14 +103,85 @@ public class WindowAbility {
 		description = new ComponentLongText(I18n.format("avatar.ability." + ability.getName() + ".desc"),
 				fromPercent(frameLeft, 100, 0));
 		description.setFrame(frameLeft);
-		description.setPosition(StartingPosition.custom(0, 0.2f, 0, 0));
+		description.setPosition(StartingPosition.custom(0, 0.25f, 0, 0));
 		description.setZLevel(4);
 		handler.add(description);
 
-		// level = new ComponentAbilityIcon(ability);
-		// level.setFrame(frameRight);
-		// level.setPosition(StartingPosition.TOP_RIGHT);
-		// handler.add(level);
+		//Turns the tier into a roman numeral.
+		String tierName;
+		String parentTierName = "";
+		switch (ability.getCurrentTier(AbilityData.get(player, ability.getName()).getLevel())) {
+			default:
+				tierName = "I";
+				break;
+			case 2:
+				tierName = "II";
+				break;
+			case 3:
+				tierName = "III";
+				break;
+			case 4:
+				tierName = "IV";
+				break;
+			case 5:
+				tierName = "V";
+				break;
+			case 6:
+				tierName = "VI";
+				break;
+			case 7:
+				tierName = "VII";
+				break;
+		}
+		if (ability.getBaseParentTier() > 0) {
+			switch (ability.getCurrentParentTier(AbilityData.get(player, ability.getName()).getLevel())) {
+				default:
+					parentTierName = "I";
+					break;
+				case 2:
+					parentTierName = "II";
+					break;
+				case 3:
+					parentTierName = "III";
+					break;
+				case 4:
+					parentTierName = "IV";
+					break;
+				case 5:
+					parentTierName = "V";
+					break;
+				case 6:
+					parentTierName = "VI";
+					break;
+				case 7:
+					parentTierName = "VII";
+					break;
+			}
+		}
+
+		tierName += TextFormatting.BOLD;
+		tierName += ability.getElement().getTextFormattingColour();
+
+		tier = new ComponentText(TextFormatting.BOLD + I18n.format("Tier: " + tierName, ability.getElement().getTextFormattingColour()));
+		tier.setFrame(frameLeft);
+		tier.setPosition(StartingPosition.custom(0, 0.0875f, 0, 0));
+		tier.setZLevel(4);
+		handler.add(tier);
+		if (ability.getBaseParentTier() > 0) {
+			parentTierName += TextFormatting.BOLD;
+			parentTierName += BendingStyles.get(ability.getElement().getParentBendingId()).getTextFormattingColour();
+
+			parentTier = new ComponentText(TextFormatting.BOLD + I18n.format("Parent Tier: " + parentTierName, BendingStyles.get(ability.getElement().getParentBendingId()).getTextFormattingColour()));
+			parentTier.setFrame(frameLeft);
+			parentTier.setPosition(StartingPosition.custom(0, 0.15f, 0, 0));
+			parentTier.setZLevel(4);
+			handler.add(parentTier);
+		}
+
+		//	 level = new ComponentAbilityIcon(ability);
+	//	 level.setFrame(frameRight);
+	//	 level.setPosition(StartingPosition.TOP_RIGHT);
+	//	 handler.add(level);
 
 		invBg = new ComponentImage(AvatarUiTextures.skillsGui, 0, 54, 169, 83);
 		invBg.setPosition(StartingPosition.BOTTOM_RIGHT);

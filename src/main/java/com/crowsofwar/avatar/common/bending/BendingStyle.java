@@ -22,7 +22,10 @@ import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.CreateFromNBT;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.ReadableWritable;
 import com.crowsofwar.gorecore.util.GoreCoreNBTInterfaces.WriteToNBT;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -128,6 +131,11 @@ public abstract class BendingStyle implements ReadableWritable {
 		return 0xffffff;
 	}
 
+	//Since I'm too lazy to change Crows' skill menu gui system, this provides compatiblity with it. Yay.
+	public TextFormatting getTextFormattingColour() {
+		return TextFormatting.WHITE;
+	}
+
 	public abstract UUID getId();
 
 	public byte getNetworkId() {
@@ -140,6 +148,10 @@ public abstract class BendingStyle implements ReadableWritable {
 
 	public boolean isSpecialtyBending() {
 		return parentBendingId != null;
+	}
+
+	public SoundEvent getRadialMenuSound() {
+		return SoundEvents.UI_BUTTON_CLICK;
 	}
 
 	//Returns a bending style based on a given UUID.

@@ -73,7 +73,6 @@ public class RadialMenu extends Gui {
 	/**
 	 * Create a new radial menu with the given controls.
 	 *
-	 * @param pressing The key which must be pressed to keep the GUI open.
 	 * @param controls A 8-element array of controls. If the arguments passed are
 	 *                 less than 8, then the array is filled with null. The arguments
 	 *                 can only be a maximum of 8.
@@ -166,6 +165,8 @@ public class RadialMenu extends Gui {
 				second = second.substring(0, second.indexOf(" ;; "));
 			}
 
+			//Ignore if your IDE says that the cast is redundant, it'll then complain that the object specified is too ambiguous.
+
 			second = FormattedMessageProcessor.formatText(MSG_RADIAL_XP, second,
 					(Object[]) ArrayUtils.addAll(secondArgs, level + ""));
 
@@ -181,7 +182,7 @@ public class RadialMenu extends Gui {
 
 	private void playClickSound(float pitch) {
 		mc.getSoundHandler()
-				.playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, pitch));
+				.playSound(PositionedSoundRecord.getMasterRecord(controller.getRadialMenuSound(), pitch));
 	}
 
 	/**

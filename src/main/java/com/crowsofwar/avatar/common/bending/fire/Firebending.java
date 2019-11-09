@@ -23,7 +23,10 @@ import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 
 import java.awt.*;
 import java.util.UUID;
@@ -77,4 +80,13 @@ public class Firebending extends BendingStyle {
 		return ID;
 	}
 
+	@Override
+	public TextFormatting getTextFormattingColour() {
+		return TextFormatting.RED;
+	}
+
+	@Override
+	public SoundEvent getRadialMenuSound() {
+		return SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE;
+	}
 }
