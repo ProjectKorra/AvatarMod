@@ -480,6 +480,7 @@ public abstract class ParticleAvatar extends Particle {
 	 * does the actual rendering. Subclasses should override this method instead of renderParticle. By default, this
 	 * method simply calls super.renderParticle.
 	 */
+	//TODO: Fix this method and/or the renderParticle method to use AvatarParticle's rendering, so it doesn't have holes in water and such.
 	protected void drawParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float rotationX, float rotationY, float rotationZ, float rotationYZ, float rotationXY) {
 		super.renderParticle(buffer, viewer, partialTicks, rotationX, rotationY, rotationZ, rotationYZ, rotationXY);
 	}

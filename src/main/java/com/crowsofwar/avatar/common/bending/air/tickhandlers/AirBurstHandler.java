@@ -34,6 +34,7 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class AirBurstHandler extends TickHandler {
@@ -313,25 +314,37 @@ public class AirBurstHandler extends TickHandler {
 		public Behavior onUpdate(EntityShockwave entity) {
 			World world = entity.world;
 			if (world.isRemote) {
-				//TODO: Fix particle seeed
+				//TODO: Fix particle speed
 				if (entity.ticksExisted == 2) {
 					double x1, y1, z1, xVel, yVel, zVel;
-					for (double theta = 0; theta <= 180; theta += 1) {
-						double dphi = (entity.getParticleController() - entity.getParticleAmount()) / Math.sin(Math.toRadians(theta));
-						for (double phi = 0; phi < 360; phi += dphi) {
-							double rphi = Math.toRadians(phi);
-							double rtheta = Math.toRadians(theta);
+					if (CLIENT_CONFIG.airRenderSettings.airBurstSphere) {
+						for (double theta = 0; theta <= 180; theta += 1) {
+							double dphi = (entity.getParticleController() - entity.getParticleAmount()) / Math.sin(Math.toRadians(theta));
+							for (double phi = 0; phi < 360; phi += dphi) {
+								double rphi = Math.toRadians(phi);
+								double rtheta = Math.toRadians(theta);
 
-							x1 = entity.ticksExisted * entity.getSpeed() * Math.cos(rphi) * Math.sin(rtheta);
-							y1 = entity.ticksExisted * entity.getSpeed() * Math.sin(rphi) * Math.sin(rtheta);
-							z1 = entity.ticksExisted * entity.getSpeed() * Math.cos(rtheta);
-							xVel = x1 * entity.getParticleSpeed() * 0.25F;
-							yVel = y1 * entity.getParticleSpeed() * 0.25F;
-							zVel = z1 * entity.getParticleSpeed() * 0.25F;
+								x1 = entity.ticksExisted * entity.getSpeed() * Math.cos(rphi) * Math.sin(rtheta);
+								y1 = entity.ticksExisted * entity.getSpeed() * Math.sin(rphi) * Math.sin(rtheta);
+								z1 = entity.ticksExisted * entity.getSpeed() * Math.cos(rtheta);
+								xVel = x1 * entity.getParticleSpeed() * 0.375F;
+								yVel = y1 * entity.getParticleSpeed() * 0.375F;
+								zVel = z1 * entity.getParticleSpeed() * 0.375F;
 
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
-									.clr(0.8F, 0.8F, 0.8F).time(8 /* (Math.min(entity.getSpeed() / entity.getParticleSpeed() * 1.5F, 1))**/ + (int) (2 * entity.getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
-									.scale(2.5F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).spawn(world);
+								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
+										.clr(0.8F, 0.8F, 0.8F).time(8 + (int) (3 * entity.getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
+										.scale(2.25F + 0.5F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).spawn(world);
+
+							}
+						}
+					}
+					else {
+						for (double i = 0; i < entity.getRange(); i += 0.0125) {
+							Vec3d vel = new Vec3d(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian());
+							vel = vel.scale(0.275F * entity.getParticleSpeed());
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(entity.posX, entity.posY, entity.posZ).vel(vel)
+									.clr(0.85F, 0.85F, 0.85F).time(13).collide(true)
+									.scale(2.25f + 0.5F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).shaded(true).spawn(world);
 
 						}
 					}

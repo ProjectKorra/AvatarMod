@@ -94,7 +94,7 @@ public class EntityAirGust extends EntityOffensive {
 			//for (int i = 0; i < 4; i++)
 			ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(motionX * 1.05, motionY * 1.05,
 					motionZ * 1.05).time(15 + AvatarUtils.getRandomNumberInRange(0, 8)).clr(0.85F, 0.85F, 0.85F)
-					.scale(getAvgSize() * 1.75F).collide(true).spawn(world);
+					.scale(getAvgSize() * 1.75F).collide(true).shaded(true).spawn(world);
 
 			for (int i = 0; i < 4; i++) {
 				AxisAlignedBB boundingBox = getEntityBoundingBox();
@@ -104,7 +104,7 @@ public class EntityAirGust extends EntityOffensive {
 				double spawnZ = midPos.z + world.rand.nextGaussian() / 8 * (boundingBox.maxZ - boundingBox.minZ);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
 						world.rand.nextGaussian() / 60).time(8).clr(0.825F, 0.825F, 0.825F)
-						.scale(getAvgSize() * 1.25F).spawn(world);
+						.scale(getAvgSize() * 1.25F).shaded(true).spawn(world);
 			}
 		}
 	}

@@ -70,6 +70,9 @@ public class ConfigClient {
 	public FireRenderSettings fireRenderSettings = new FireRenderSettings();
 
 	@Load
+	public AirRenderSettings airRenderSettings = new AirRenderSettings();
+
+	@Load
 	public ParticleRenderSettings particleSettings = new ParticleRenderSettings();
 
 	public static void load() {
@@ -183,6 +186,12 @@ public class ConfigClient {
 
 		@Load
 		public final boolean useFlamethrowerParticles = true;
+	}
+
+	public static class AirRenderSettings {
+		@Load
+		public final boolean airBurstSphere = false;
+
 	}
 
 	public static class ParticleRenderSettings {
