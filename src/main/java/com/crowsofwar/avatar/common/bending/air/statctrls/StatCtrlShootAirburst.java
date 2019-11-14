@@ -13,6 +13,7 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -20,6 +21,7 @@ import net.minecraft.world.World;
 import java.util.HashSet;
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.bending.air.tickhandlers.AirBurstHandler.AIRBURST_MOVEMENT_MODIFIER_ID;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.AIRBURST_CHARGE_HANDLER;
@@ -29,7 +31,7 @@ public class StatCtrlShootAirburst extends StatusControl {
 	private final int charge;
 
 	public StatCtrlShootAirburst(int charge) {
-		super(17, AvatarControl.CONTROL_LEFT_CLICK_DOWN, CrosshairPosition.LEFT_OF_CROSSHAIR);
+		super(16, AvatarControl.CONTROL_LEFT_CLICK_DOWN, CrosshairPosition.LEFT_OF_CROSSHAIR);
 		this.charge = charge;
 	}
 
@@ -99,9 +101,9 @@ public class StatCtrlShootAirburst extends StatusControl {
 			if (charge == 4)
 				piercing = true;
 
-			damage *= (0.5 + 12.5 * charge);
-			size *= (0.5 + 12.5 * charge);
-			knockback *= (0.5 + 12.5 * charge);
+			damage *= (0.5 + 0.125 * charge);
+			size *= (0.5 + 0.125 * charge);
+			knockback *= (0.5 + 0.125 * charge);
 			distance *= (0.8 + 0.05 * charge);
 
 			if (world.isRemote) {
@@ -150,9 +152,10 @@ public class StatCtrlShootAirburst extends StatusControl {
 				}
 				attackedEntities = true;
 			}
+			data.removeTickHandler(AIRBURST_CHARGE_HANDLER);
+			data.removeStatusControl(RELEASE_AIR_BURST);
+			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
 		}
-		data.removeTickHandler(AIRBURST_CHARGE_HANDLER);
-		data.removeStatusControl(RELEASE_AIR_BURST);
 		//world.playSound();
 		//TODO: Find a way to spawn client-side particles in stat ctrls and abilities.
 		return true;

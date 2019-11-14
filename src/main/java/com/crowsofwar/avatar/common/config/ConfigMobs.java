@@ -40,9 +40,11 @@ public class ConfigMobs {
 
 	private static final Map<String, Double> DEFAULT_SCROLL_DROP = new HashMap<>();
 	private static final Map<String, String> DEFAULT_SCROLL_TYPE = new HashMap<>();
+	private static final Map<String, Integer> DEFAULT_SCROLL_DROP_TIER = new HashMap<>();
 	//private static final Map<String, Double>
 	public static ConfigMobs MOBS_CONFIG = new ConfigMobs();
 
+	//TODO: Completely rewrite this class to a list of scrolls, with the number of drops, and mobs.
 	static {
 		//Default items that are tradable for scrolls- the number is just random for now.
 		//TODO: Make the number correspond to the amount of the item the player has to hold
@@ -88,49 +90,49 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_TYPE.put("zombie_pigman", "fire");
 		DEFAULT_SCROLL_DROP.put("magma_cube", 10.0);
 		DEFAULT_SCROLL_TYPE.put("magma_cube", "fire");
-		DEFAULT_SCROLL_DROP.put("wither_skeleton", 15.0);
+		DEFAULT_SCROLL_DROP.put("wither_skeleton", 30.0);
 		DEFAULT_SCROLL_TYPE.put("wither_skeleton", "fire");
-		DEFAULT_SCROLL_DROP.put("ghast", 30.0);
+		DEFAULT_SCROLL_DROP.put("ghast", 60.0);
 		DEFAULT_SCROLL_TYPE.put("ghast", "fire");
 		DEFAULT_SCROLL_DROP.put("blaze", 30.0);
 		DEFAULT_SCROLL_TYPE.put("blaze", "fire");
 
-		DEFAULT_SCROLL_DROP.put("bat", 7.5);
+		DEFAULT_SCROLL_DROP.put("bat", 5.0);
 		DEFAULT_SCROLL_TYPE.put("bat", "air");
 		DEFAULT_SCROLL_DROP.put("parrot", 5.0);
 		DEFAULT_SCROLL_TYPE.put("parrot", "air");
-		DEFAULT_SCROLL_DROP.put("chicken", 1.0);
+		DEFAULT_SCROLL_DROP.put("chicken", 7.5);
 		DEFAULT_SCROLL_TYPE.put("chicken", "air");
-		DEFAULT_SCROLL_DROP.put("sheep", 0.25);
+		DEFAULT_SCROLL_DROP.put("sheep", 5.0);
 		DEFAULT_SCROLL_TYPE.put("sheep", "air");
 
 
 		DEFAULT_SCROLL_DROP.put("mooshroom", 1.0);
 		DEFAULT_SCROLL_TYPE.put("mooshroom", "earth");
-		DEFAULT_SCROLL_DROP.put("cave_spider", 2.5);
+		DEFAULT_SCROLL_DROP.put("cave_spider", 10.0);
 		DEFAULT_SCROLL_TYPE.put("cave_spider", "earth");
-		DEFAULT_SCROLL_DROP.put("silverfish", 5.0);
+		DEFAULT_SCROLL_DROP.put("silverfish", 12.5);
 		DEFAULT_SCROLL_TYPE.put("silverfish", "earth");
-		DEFAULT_SCROLL_DROP.put("spider", 2.0);
+		DEFAULT_SCROLL_DROP.put("spider", 5.0);
 		DEFAULT_SCROLL_TYPE.put("spider", "earth");
-		DEFAULT_SCROLL_DROP.put("skeleton", 1.5);
+		DEFAULT_SCROLL_DROP.put("skeleton", 5.0);
 		DEFAULT_SCROLL_TYPE.put("skeleton", "earth");
-		DEFAULT_SCROLL_DROP.put("zombie", 1.5);
+		DEFAULT_SCROLL_DROP.put("zombie", 5.0);
 		DEFAULT_SCROLL_TYPE.put("zombie", "earth");
 
-		DEFAULT_SCROLL_DROP.put("creeper", 0.5);
+		DEFAULT_SCROLL_DROP.put("creeper", 1.0);
 		DEFAULT_SCROLL_TYPE.put("creeper", "lightning");
 
-		DEFAULT_SCROLL_DROP.put("creeper", 0.75);
+		DEFAULT_SCROLL_DROP.put("creeper", 2.5);
 		DEFAULT_SCROLL_TYPE.put("creeper", "combustion");
 
-		DEFAULT_SCROLL_DROP.put("husk", 3.0);
+		DEFAULT_SCROLL_DROP.put("husk", 7.5);
 		DEFAULT_SCROLL_TYPE.put("husk", "sand");
 
-		DEFAULT_SCROLL_DROP.put("stray", 3.0);
+		DEFAULT_SCROLL_DROP.put("stray", 7.5);
 		DEFAULT_SCROLL_TYPE.put("stray", "ice");
 
-		DEFAULT_SCROLL_DROP.put("witch", 5.0);
+		DEFAULT_SCROLL_DROP.put("witch", 7.5);
 		DEFAULT_SCROLL_DROP.put("enderman", 10.0);
 
 
@@ -155,10 +157,11 @@ public class ConfigMobs {
 	private Map<Item, Integer> bisonFoodList;
 	@Load
 	private Map<String, Double> scrollDropChance;
-
-	//The largest of amount of benders that can spawn in a village
 	@Load
 	private Map<String, String> scrollType;
+	@Load
+	private Map<String, Integer> scrollTier;
+
 	@Load
 	private Map<String, Integer> scrollTradeItems;
 	private Map<Item, Integer> tradeItems;
@@ -174,6 +177,7 @@ public class ConfigMobs {
 		MOBS_CONFIG.bisonFoods = DEFAULT_FOODS;
 		MOBS_CONFIG.scrollDropChance = DEFAULT_SCROLL_DROP;
 		MOBS_CONFIG.scrollType = DEFAULT_SCROLL_TYPE;
+		MOBS_CONFIG.scrollTier = DEFAULT_SCROLL_DROP_TIER;
 		ConfigLoader.load(MOBS_CONFIG, "avatar/mobs.yml");
 		MOBS_CONFIG.loadLists();
 
@@ -289,7 +293,18 @@ public class ConfigMobs {
 		}
 
 		return ScrollType.ALL;
+	}
 
+	/*
+		Gets the default scroll tier level for the drop, from 1 to 7.
+	 */
+	public int getScrollTier(Entity entity) {
+		String entityName = EntityList.getEntityString(entity);
+		if (entityName != null) {
+			String key = entityName.toLowerCase();
+			return  scrollTier.get(key) != null ? scrollTier.get(key) : 1;
+		}
+		return 1;
 	}
 
 	public static class BenderSettings {
