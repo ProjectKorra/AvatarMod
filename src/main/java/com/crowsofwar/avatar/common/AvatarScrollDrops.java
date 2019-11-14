@@ -48,13 +48,14 @@ public class AvatarScrollDrops {
 
 			double chance = MOBS_CONFIG.getScrollDropChance(entity);
 			int tier = MOBS_CONFIG.getScrollTier(entity);
+			int amount = MOBS_CONFIG.getScrollAmount(entity);
 			ScrollType type = MOBS_CONFIG.getScrollType(entity);
 
 			double random = Math.random() * 100;
 			if (random < chance) {
 
 				assert Scrolls.getItemForType(type) != null;
-				ItemStack stack = new ItemStack(Objects.requireNonNull(Scrolls.getItemForType(type)), 1, tier);
+				ItemStack stack = new ItemStack(Objects.requireNonNull(Scrolls.getItemForType(type)), amount, tier);
 
 				EntityItem entityItem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
 						stack);

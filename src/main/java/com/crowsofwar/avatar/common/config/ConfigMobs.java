@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.config;
 
+import akka.japi.Pair;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
@@ -25,7 +26,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.item.Item;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,13 +41,17 @@ public class ConfigMobs {
 	private static final Map<String, Integer> AIRBENDING_TRADE_ITEMS = new HashMap<>();
 	private static final Map<String, Integer> FIREBENDING_TRADE_ITEMS = new HashMap<>();
 
-	private static final Map<String, Double> DEFAULT_SCROLL_DROP = new HashMap<>();
+	//Entity, chance, tier, amount
+	private static final Map<String, Pair<Double, Pair<Integer, Integer>>> DEFAULT_SCROLL_DROP = new HashMap<>();
+	//Entity, type, amount
 	private static final Map<String, String> DEFAULT_SCROLL_TYPE = new HashMap<>();
-	private static final Map<String, Integer> DEFAULT_SCROLL_DROP_TIER = new HashMap<>();
-	//private static final Map<String, Double>
+
+	//Scroll type and tier, and drop chance and entity, all in one list! Hooray!
+
+	private static final Map<Pair<String, Double>, Pair<String, Integer>> DEFAULT_SCROLL_DROPS = new HashMap();
 	public static ConfigMobs MOBS_CONFIG = new ConfigMobs();
 
-	//TODO: Completely rewrite this class to a list of scrolls, with the number of drops, and mobs.
+	//TODO: Completely rewrite this class to a list of scrolls, with the number of drops, and mobs. Also make it easy to read and write.
 	static {
 		//Default items that are tradable for scrolls- the number is just random for now.
 		//TODO: Make the number correspond to the amount of the item the player has to hold
@@ -77,9 +84,15 @@ public class ConfigMobs {
 		DEFAULT_FOODS.put("minecraft:cake", 45);
 		DEFAULT_FOODS.put("minecraft:sugar", 2);
 
-		DEFAULT_SCROLL_DROP.put("polar_bear", 5.0);
+		//Water.
+		DEFAULT_SCROLL_DROP.put("polar_bear", new Pair<>(10.0, new Pair<>(1, 1)));
 		DEFAULT_SCROLL_TYPE.put("polar_bear", "water");
-		DEFAULT_SCROLL_DROP.put("squid", 2.0);
+		DEFAULT_SCROLL_DROP.put("polar_bear", new Pair<>(5.0, 2));
+		DEFAULT_SCROLL_TYPE.put("polar_bear", "water");
+		DEFAULT_SCROLL_DROP.put("polar_bear", new Pair<>(2.5, 3));
+		DEFAULT_SCROLL_TYPE.put("polar_bear", "water");
+		DEFAULT_SCROLL_DROP.put("polar_bear", new Pair<>(1.0, 4));
+		DEFAULT_SCROLL_TYPE.put("polar_bear", "water");
 		DEFAULT_SCROLL_TYPE.put("squid", "water");
 		DEFAULT_SCROLL_DROP.put("guardian", 10.0);
 		DEFAULT_SCROLL_TYPE.put("guardian", "water");
@@ -156,7 +169,7 @@ public class ConfigMobs {
 	private Map<String, Integer> bisonFoods;
 	private Map<Item, Integer> bisonFoodList;
 	@Load
-	private Map<String, Double> scrollDropChance;
+	private Map<String, Pair<Double, Pair<Integer, Integer>>> scrollChanceTierAmount;
 	@Load
 	private Map<String, String> scrollType;
 	@Load
@@ -170,14 +183,26 @@ public class ConfigMobs {
 	private Map<String, Integer> fireScrollTradeItems;
 	private Map<Item, Integer> fireTradeItems;
 
+	@Load
+	public List<String> scrollNames = Arrays.asList(
+			"earth",
+			"water",
+			"fire",
+			"air",
+			"lightning",
+			"combustion",
+			"ice",
+			"sand"
+	);
+
+
 	public static void load() {
 		MOBS_CONFIG.scrollTradeItems = DEFAULT_TRADE_ITEMS;
 		MOBS_CONFIG.airScrollTradeItems = AIRBENDING_TRADE_ITEMS;
 		MOBS_CONFIG.fireScrollTradeItems = FIREBENDING_TRADE_ITEMS;
 		MOBS_CONFIG.bisonFoods = DEFAULT_FOODS;
-		MOBS_CONFIG.scrollDropChance = DEFAULT_SCROLL_DROP;
+		MOBS_CONFIG.scrollChanceTierAmount = DEFAULT_SCROLL_DROP;
 		MOBS_CONFIG.scrollType = DEFAULT_SCROLL_TYPE;
-		MOBS_CONFIG.scrollTier = DEFAULT_SCROLL_DROP_TIER;
 		ConfigLoader.load(MOBS_CONFIG, "avatar/mobs.yml");
 		MOBS_CONFIG.loadLists();
 
@@ -255,18 +280,6 @@ public class ConfigMobs {
 	}
 
 	/**
-	 * Get the default scroll drop chance for that entity in percentage (0-100)
-	 */
-	public double getScrollDropChance(Entity entity) {
-		String entityName = EntityList.getEntityString(entity);
-		if (entityName != null) {
-			String key = entityName.toLowerCase();
-			return scrollDropChance.get(key) != null ? scrollDropChance.get(key) : 0;
-		}
-		return 0;
-	}
-
-	/**
 	 * Gets the scroll type for that entity to drop. By default, is
 	 * ScrollType.ALL.
 	 */
@@ -278,7 +291,6 @@ public class ConfigMobs {
 			String typeName = scrollType.get(key);
 
 			if (typeName != null) {
-
 				ScrollType type = ScrollType.ALL;
 				for (ScrollType t : ScrollType.values()) {
 					if (t.name().toLowerCase().equals(typeName.toLowerCase())) {
@@ -295,6 +307,28 @@ public class ConfigMobs {
 		return ScrollType.ALL;
 	}
 
+	public int getScrollAmount(Entity entity) {
+		String entityName = EntityList.getEntityString(entity);
+		if (entityName != null) {
+			String key = entityName.toLowerCase();
+			return  scrollChanceTierAmount.get(key) .second().second() != null ? scrollChanceTierAmount.get(key).second().second() : 1;
+		}
+		return 1;
+	}
+
+
+	/**
+	 * Get the default scroll drop chance for that entity in percentage (0-100)
+	 */
+	public double getScrollDropChance(Entity entity) {
+		String entityName = EntityList.getEntityString(entity);
+		if (entityName != null) {
+			String key = entityName.toLowerCase();
+			return scrollChanceTierAmount.get(key).first() != null ? scrollChanceTierAmount.get(key).first() : 0;
+		}
+		return 0;
+	}
+
 	/*
 		Gets the default scroll tier level for the drop, from 1 to 7.
 	 */
@@ -302,7 +336,7 @@ public class ConfigMobs {
 		String entityName = EntityList.getEntityString(entity);
 		if (entityName != null) {
 			String key = entityName.toLowerCase();
-			return  scrollTier.get(key) != null ? scrollTier.get(key) : 1;
+			return  scrollChanceTierAmount.get(key).second().first() != null ? scrollChanceTierAmount.get(key).second().first() : 1;
 		}
 		return 1;
 	}
