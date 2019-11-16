@@ -18,13 +18,24 @@
 package com.crowsofwar.avatar.common;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarPlayerTick {
@@ -32,22 +43,40 @@ public class AvatarPlayerTick {
 	@SubscribeEvent
 	public static void onPlayerTick(PlayerTickEvent e) {
 		// Also forces loading of data on client
-		Bender bender = Bender.get(e.player);
-		if (bender != null) {
-			BendingData data = bender.getData();
+		if (Bender.isBenderSupported(e.player)) {
+			Bender bender = Bender.get(e.player);
+			if (bender != null) {
+				BendingData data = bender.getData();
 
-			EntityPlayer player = e.player;
+				EntityPlayer player = e.player;
 
-			if (!player.world.isRemote && player.ticksExisted == 0) {
-				data.saveAll();
+				if (!player.world.isRemote && player.ticksExisted == 0) {
+					data.saveAll();
+				}
+
+				if (e.phase == Phase.START) {
+					bender.onUpdate();
+				}
+
 			}
-
-			if (e.phase == Phase.START) {
-				bender.onUpdate();
-			}
-
 		}
+	}
 
+	@SubscribeEvent (priority = EventPriority.HIGH)
+	public static void worldJoinEvent(EntityJoinWorldEvent event) {
+		if (event.getEntity() instanceof EntityLivingBase && Bender.isBenderSupported((EntityLivingBase) event.getEntity())) {
+			if (SKILLS_CONFIG.startWithRandomBending && !event.getWorld().isRemote) {
+				EntityLivingBase bender = (EntityLivingBase) event.getEntity();
+				BendingData data = BendingData.get(bender);
+				if (!data.hasElements()) {
+					int elementID = AvatarUtils.getRandomNumberInRange(1, 4);
+					List<BendingStyle> elements = BendingStyles.all().stream()
+							.filter(bendingStyle -> bendingStyle.isParentBending() && bendingStyle.canEntityUse())
+							.collect(Collectors.toList());
+					data.addBending(elements.get(elementID - 1));
+				}
+			}
+		}
 	}
 
 }

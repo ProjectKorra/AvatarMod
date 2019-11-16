@@ -128,6 +128,13 @@ public class BendingData {
 	// ================================================================================
 
 	/**
+	 * Checks if the player has any elements.
+	 */
+	public boolean hasElements() {
+		return !bendings.isEmpty();
+	}
+
+	/**
 	 * Checks if the player has that bending style.
 	 */
 	public boolean hasBendingId(UUID bendingId) {

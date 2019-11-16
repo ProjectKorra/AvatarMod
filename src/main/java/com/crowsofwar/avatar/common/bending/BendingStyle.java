@@ -150,6 +150,10 @@ public abstract class BendingStyle implements ReadableWritable {
 		return parentBendingId != null;
 	}
 
+	public boolean isParentBending() {
+		return parentBendingId == null;
+	}
+
 	public SoundEvent getRadialMenuSound() {
 		return SoundEvents.UI_BUTTON_CLICK;
 	}
