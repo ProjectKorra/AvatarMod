@@ -91,26 +91,28 @@ public class ConfigMobs {
 		DEFAULT_FOODS.put("minecraft:sugar", 2);
 
 		//Water.
-		DEFAULT_SCROLL_DROPS.put("polar_bear", 10.0);
-		DEFAULT_SCROLL_TYPE.put("polar_bear", "water");
+		DEFAULT_SCROLL_DROPS.put("polarbear", 10.0);
+		DEFAULT_SCROLL_TYPE.put("polarbear", "water");
 		DEFAULT_SCROLL_TYPE.put("squid", "water");
 		DEFAULT_SCROLL_DROPS.put("guardian", 15.0);
 		DEFAULT_SCROLL_TYPE.put("guardian", "water");
-		//Default: 40.
-		DEFAULT_SCROLL_DROPS.put("elder_guardian", 100.0);
-		DEFAULT_SCROLL_TYPE.put("elder_guardian", "water");
+		DEFAULT_SCROLL_DROPS.put("elderguardian", 40.0);
+		DEFAULT_SCROLL_TYPE.put("elderguardian", "water");
 
-		DEFAULT_SCROLL_DROPS.put("zombie_pigman", 20.0);
-		DEFAULT_SCROLL_TYPE.put("zombie_pigman", "fire");
-		DEFAULT_SCROLL_DROPS.put("magma_cube", 15.0);
-		DEFAULT_SCROLL_TYPE.put("magma_cube", "fire");
-		DEFAULT_SCROLL_DROPS.put("wither_skeleton", 25.0);
-		DEFAULT_SCROLL_TYPE.put("wither_skeleton", "fire");
-		DEFAULT_SCROLL_DROPS.put("ghast", 60.0);
+		//Fire
+		//Some mob names are weird, don't change them.
+		DEFAULT_SCROLL_DROPS.put("pigzombie", 20.0);
+		DEFAULT_SCROLL_TYPE.put("pigzombie", "fire");
+		DEFAULT_SCROLL_DROPS.put("lavaslime", 15.0);
+		DEFAULT_SCROLL_TYPE.put("lavaslime", "fire");
+		DEFAULT_SCROLL_DROPS.put("witherskeleton", 25.0);
+		DEFAULT_SCROLL_TYPE.put("witherskeleton", "fire");
+		DEFAULT_SCROLL_DROPS.put("ghast", 50.0);
 		DEFAULT_SCROLL_TYPE.put("ghast", "fire");
 		DEFAULT_SCROLL_DROPS.put("blaze", 30.0);
 		DEFAULT_SCROLL_TYPE.put("blaze", "fire");
 
+		//Air
 		DEFAULT_SCROLL_DROPS.put("bat", 5.0);
 		DEFAULT_SCROLL_TYPE.put("bat", "air");
 		DEFAULT_SCROLL_DROPS.put("parrot", 5.0);
@@ -121,10 +123,11 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_TYPE.put("sheep", "air");
 
 
+		//Earth
 		DEFAULT_SCROLL_DROPS.put("mooshroom", 5.0);
 		DEFAULT_SCROLL_TYPE.put("mooshroom", "earth");
-		DEFAULT_SCROLL_DROPS.put("cave_spider", 10.0);
-		DEFAULT_SCROLL_TYPE.put("cave_spider", "earth");
+		DEFAULT_SCROLL_DROPS.put("cavespider", 10.0);
+		DEFAULT_SCROLL_TYPE.put("cavespider", "earth");
 		DEFAULT_SCROLL_DROPS.put("silverfish", 12.5);
 		DEFAULT_SCROLL_TYPE.put("silverfish", "earth");
 		DEFAULT_SCROLL_DROPS.put("spider", 5.0);
@@ -134,19 +137,25 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_DROPS.put("zombie", 5.0);
 		DEFAULT_SCROLL_TYPE.put("zombie", "earth");
 
+		//Lightning
 		DEFAULT_SCROLL_DROPS.put("creeper", 1.0);
 		DEFAULT_SCROLL_TYPE.put("creeper", "lightning");
 
+		//Combustion
 		DEFAULT_SCROLL_DROPS.put("creeper", 2.5);
 		DEFAULT_SCROLL_TYPE.put("creeper", "combustion");
 
+		//Sand
 		DEFAULT_SCROLL_DROPS.put("husk", 10.0);
 		DEFAULT_SCROLL_TYPE.put("husk", "sand");
 
-		DEFAULT_SCROLL_DROPS.put("polar_bear", 10.0);
+		//Ice
+		DEFAULT_SCROLL_DROPS.put("polarbear", 10.0);
+		DEFAULT_SCROLL_TYPE.put("polarbear", "ice");
 		DEFAULT_SCROLL_DROPS.put("stray", 10.0);
 		DEFAULT_SCROLL_TYPE.put("stray", "ice");
 
+		//All
 		DEFAULT_SCROLL_DROPS.put("witch", 10.0);
 		DEFAULT_SCROLL_DROPS.put("enderman", 12.5);
 		DEFAULT_SCROLL_DROPS.put("creeper", 5.0);
@@ -316,15 +325,15 @@ public class ConfigMobs {
 	public static class ScrollSettings {
 		//HOw much percent it takes to increase the tier.
 		@Load
-		public final double percentPerTier = 7.5;
+		public final double percentPerTier = 10.0;
 
 		//How much percent it takes to increase the amount of scrolls dropped.
 		@Load
-		public final double percentPerNumber = 5.0;
+		public final double percentPerNumber = 7.5;
 
 		//How much the next chance to drop a tier above decreases by.
 		@Load
-		public final double chanceDecreaseMult = (2 / 3F);
+		public final double chanceDecreaseMult = (5 / 9F);
 	}
 
 	public static class BisonSettings {

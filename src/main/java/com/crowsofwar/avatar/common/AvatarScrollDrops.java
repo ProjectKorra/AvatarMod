@@ -17,12 +17,8 @@
 package com.crowsofwar.avatar.common;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
-import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -57,16 +53,12 @@ public class AvatarScrollDrops {
 					//Each tier has by default 2 / 3 of the original chance to drop.
 					chance = MOBS_CONFIG.getScrollDropChance(entity) * Math.pow(MOBS_CONFIG.scrollSettings.chanceDecreaseMult, i);
 					//There's a 5% less chance for each scroll to drop. Ex: 10% for 1, 5% for 2, e.t.c.
-					chance -= j * MOBS_CONFIG.scrollSettings.percentPerNumber;
-					System.out.println("Chance: " + chance);
-					System.out.println("Random: " + random);
-					System.out.println("Tier: " + (j + 1));
-					System.out.println("Max Tier: " + tier);
-					System.out.println("Number Of Scrolls: " + (j + 1));
-					System.out.println("Max Num of Scrolls: " + amount);
+					double decreaseMult = MOBS_CONFIG.scrollSettings.percentPerNumber / 10 > 1 ? MOBS_CONFIG.scrollSettings.percentPerNumber / 100 :
+							MOBS_CONFIG.scrollSettings.percentPerNumber / 10;
+					chance *= Math.pow(decreaseMult, j);
 					if (random < chance) {
 						assert Scrolls.getItemForType(type) != null;
-						ItemStack stack = new ItemStack(Objects.requireNonNull(Scrolls.getItemForType(type)), j + 1, i + 1);
+						ItemStack stack = new ItemStack(Objects.requireNonNull(Scrolls.getItemForType(type)), j + 1, i);
 
 						EntityItem entityItem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
 								stack);
@@ -81,9 +73,9 @@ public class AvatarScrollDrops {
 
 		// Send analytics for any entities that dropped scrolls
 
-		List<EntityItem> drops = e.getDrops();
+		//List<EntityItem> drops = e.getDrops();
 
-		for (EntityItem drop : drops) {
+		/*for (EntityItem drop : drops) {
 			ItemStack stack = drop.getItem();
 			if (stack.getItem() instanceof ItemScroll) {
 
@@ -93,7 +85,7 @@ public class AvatarScrollDrops {
 						type.name().toLowerCase()));
 
 			}
-		}
+		}**/
 
 	}
 
