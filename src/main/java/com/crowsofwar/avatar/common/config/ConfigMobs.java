@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.common.config;
 
-import akka.japi.Pair;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
@@ -41,19 +40,26 @@ public class ConfigMobs {
 	private static final Map<String, Integer> AIRBENDING_TRADE_ITEMS = new HashMap<>();
 	private static final Map<String, Integer> FIREBENDING_TRADE_ITEMS = new HashMap<>();
 
-	//Entity, chance, tier, amount
-	private static final Map<String, Pair<Double, Pair<Integer, Integer>>> DEFAULT_SCROLL_DROP = new HashMap<>();
-	//Entity, type, amount
+	//Entity, type
 	private static final Map<String, String> DEFAULT_SCROLL_TYPE = new HashMap<>();
 
-	//Scroll type and tier, and drop chance and entity, all in one list! Hooray!
+	//Entity, drop chance.
+	private static final Map<String, Double> DEFAULT_SCROLL_DROPS = new HashMap<>();
 
-	private static final Map<Pair<String, Double>, Pair<String, Integer>> DEFAULT_SCROLL_DROPS = new HashMap();
 	public static ConfigMobs MOBS_CONFIG = new ConfigMobs();
 
-	//TODO: Completely rewrite this class to a list of scrolls, with the number of drops, and mobs. Also make it easy to read and write.
+	@Load
+	public BenderSettings benderSettings = new BenderSettings();
+
+	@Load
+	public ScrollSettings scrollSettings = new ScrollSettings();
+
+	@Load
+	public BisonSettings bisonSettings = new BisonSettings();
+
+
 	static {
-		//Default items that are tradable for scrolls- the number is just random for now.
+		//Default items that are tradeable for scrolls- the number is just random for now.
 		//TODO: Make the number correspond to the amount of the item the player has to hold
 		DEFAULT_TRADE_ITEMS.put("minecraft:diamond", 1);
 		DEFAULT_TRADE_ITEMS.put("minecraft:gold_ingot", 1);
@@ -85,103 +91,66 @@ public class ConfigMobs {
 		DEFAULT_FOODS.put("minecraft:sugar", 2);
 
 		//Water.
-		DEFAULT_SCROLL_DROP.put("polar_bear", new Pair<>(10.0, new Pair<>(1, 1)));
-		DEFAULT_SCROLL_TYPE.put("polar_bear", "water");
-		DEFAULT_SCROLL_DROP.put("polar_bear", new Pair<>(5.0, 2));
-		DEFAULT_SCROLL_TYPE.put("polar_bear", "water");
-		DEFAULT_SCROLL_DROP.put("polar_bear", new Pair<>(2.5, 3));
-		DEFAULT_SCROLL_TYPE.put("polar_bear", "water");
-		DEFAULT_SCROLL_DROP.put("polar_bear", new Pair<>(1.0, 4));
+		DEFAULT_SCROLL_DROPS.put("polar_bear", 10.0);
 		DEFAULT_SCROLL_TYPE.put("polar_bear", "water");
 		DEFAULT_SCROLL_TYPE.put("squid", "water");
-		DEFAULT_SCROLL_DROP.put("guardian", 10.0);
+		DEFAULT_SCROLL_DROPS.put("guardian", 10.0);
 		DEFAULT_SCROLL_TYPE.put("guardian", "water");
-		DEFAULT_SCROLL_DROP.put("elder_guardian", 20.0);
+		DEFAULT_SCROLL_DROPS.put("elder_guardian", 20.0);
 		DEFAULT_SCROLL_TYPE.put("elder_guardian", "water");
 
-		DEFAULT_SCROLL_DROP.put("zombie_pigman", 15.0);
+		DEFAULT_SCROLL_DROPS.put("zombie_pigman", 15.0);
 		DEFAULT_SCROLL_TYPE.put("zombie_pigman", "fire");
-		DEFAULT_SCROLL_DROP.put("magma_cube", 10.0);
+		DEFAULT_SCROLL_DROPS.put("magma_cube", 10.0);
 		DEFAULT_SCROLL_TYPE.put("magma_cube", "fire");
-		DEFAULT_SCROLL_DROP.put("wither_skeleton", 30.0);
+		DEFAULT_SCROLL_DROPS.put("wither_skeleton", 30.0);
 		DEFAULT_SCROLL_TYPE.put("wither_skeleton", "fire");
-		DEFAULT_SCROLL_DROP.put("ghast", 60.0);
+		DEFAULT_SCROLL_DROPS.put("ghast", 60.0);
 		DEFAULT_SCROLL_TYPE.put("ghast", "fire");
-		DEFAULT_SCROLL_DROP.put("blaze", 30.0);
+		DEFAULT_SCROLL_DROPS.put("blaze", 30.0);
 		DEFAULT_SCROLL_TYPE.put("blaze", "fire");
 
-		DEFAULT_SCROLL_DROP.put("bat", 5.0);
+		DEFAULT_SCROLL_DROPS.put("bat", 5.0);
 		DEFAULT_SCROLL_TYPE.put("bat", "air");
-		DEFAULT_SCROLL_DROP.put("parrot", 5.0);
+		DEFAULT_SCROLL_DROPS.put("parrot", 5.0);
 		DEFAULT_SCROLL_TYPE.put("parrot", "air");
-		DEFAULT_SCROLL_DROP.put("chicken", 7.5);
+		DEFAULT_SCROLL_DROPS.put("chicken", 7.5);
 		DEFAULT_SCROLL_TYPE.put("chicken", "air");
-		DEFAULT_SCROLL_DROP.put("sheep", 5.0);
+		DEFAULT_SCROLL_DROPS.put("sheep", 5.0);
 		DEFAULT_SCROLL_TYPE.put("sheep", "air");
 
 
-		DEFAULT_SCROLL_DROP.put("mooshroom", 1.0);
+		DEFAULT_SCROLL_DROPS.put("mooshroom", 1.0);
 		DEFAULT_SCROLL_TYPE.put("mooshroom", "earth");
-		DEFAULT_SCROLL_DROP.put("cave_spider", 10.0);
+		DEFAULT_SCROLL_DROPS.put("cave_spider", 10.0);
 		DEFAULT_SCROLL_TYPE.put("cave_spider", "earth");
-		DEFAULT_SCROLL_DROP.put("silverfish", 12.5);
+		DEFAULT_SCROLL_DROPS.put("silverfish", 12.5);
 		DEFAULT_SCROLL_TYPE.put("silverfish", "earth");
-		DEFAULT_SCROLL_DROP.put("spider", 5.0);
+		DEFAULT_SCROLL_DROPS.put("spider", 5.0);
 		DEFAULT_SCROLL_TYPE.put("spider", "earth");
-		DEFAULT_SCROLL_DROP.put("skeleton", 5.0);
+		DEFAULT_SCROLL_DROPS.put("skeleton", 5.0);
 		DEFAULT_SCROLL_TYPE.put("skeleton", "earth");
-		DEFAULT_SCROLL_DROP.put("zombie", 5.0);
+		DEFAULT_SCROLL_DROPS.put("zombie", 5.0);
 		DEFAULT_SCROLL_TYPE.put("zombie", "earth");
 
-		DEFAULT_SCROLL_DROP.put("creeper", 1.0);
+		DEFAULT_SCROLL_DROPS.put("creeper", 1.0);
 		DEFAULT_SCROLL_TYPE.put("creeper", "lightning");
 
-		DEFAULT_SCROLL_DROP.put("creeper", 2.5);
+		DEFAULT_SCROLL_DROPS.put("creeper", 2.5);
 		DEFAULT_SCROLL_TYPE.put("creeper", "combustion");
 
-		DEFAULT_SCROLL_DROP.put("husk", 7.5);
+		DEFAULT_SCROLL_DROPS.put("husk", 10.0);
 		DEFAULT_SCROLL_TYPE.put("husk", "sand");
 
-		DEFAULT_SCROLL_DROP.put("stray", 7.5);
+		DEFAULT_SCROLL_DROPS.put("polar_bear", 10.0);
+		DEFAULT_SCROLL_DROPS.put("stray", 10.0);
 		DEFAULT_SCROLL_TYPE.put("stray", "ice");
 
-		DEFAULT_SCROLL_DROP.put("witch", 7.5);
-		DEFAULT_SCROLL_DROP.put("enderman", 10.0);
+		DEFAULT_SCROLL_DROPS.put("witch", 10.0);
+		DEFAULT_SCROLL_DROPS.put("enderman", 12.5);
 
 
 	}
-
-	@Load
-	public int bisonMinDomestication = 500, bisonMaxDomestication = 800;
-
-	@Load
-	public int bisonRiderTameness = 800, bisonOwnableTameness = 900, bisonLeashTameness = 1000,
-			bisonChestTameness = 1000;
-
-	@Load
-	public int bisonGrassFoodBonus = 5, bisonRideOneSecondTameness = 3;
-
-	@Load
-	public float bisonBreedMinMinutes = 60, bisonBreedMaxMinutes = 120;
-	@Load
-	public BenderSettings benderSettings = new BenderSettings();
-	@Load
-	private Map<String, Integer> bisonFoods;
-	private Map<Item, Integer> bisonFoodList;
-	@Load
-	private Map<String, Pair<Double, Pair<Integer, Integer>>> scrollChanceTierAmount;
-	@Load
-	private Map<String, String> scrollType;
-	@Load
-	private Map<String, Integer> scrollTier;
-
-	@Load
-	private Map<String, Integer> scrollTradeItems;
-	private Map<Item, Integer> tradeItems;
-	private Map<String, Integer> airScrollTradeItems;
-	private Map<Item, Integer> airTradeItems;
-	private Map<String, Integer> fireScrollTradeItems;
-	private Map<Item, Integer> fireTradeItems;
 
 	@Load
 	public List<String> scrollNames = Arrays.asList(
@@ -194,15 +163,28 @@ public class ConfigMobs {
 			"ice",
 			"sand"
 	);
-
+	@Load
+	private Map<String, Integer> bisonFoods;
+	private Map<Item, Integer> bisonFoodList;
+	@Load
+	private Map<String, Double> scrollDropChance;
+	@Load
+	private Map<String, String> scrollType;
+	@Load
+	private Map<String, Integer> scrollTradeItems;
+	private Map<Item, Integer> tradeItems;
+	private Map<String, Integer> airScrollTradeItems;
+	private Map<Item, Integer> airTradeItems;
+	private Map<String, Integer> fireScrollTradeItems;
+	private Map<Item, Integer> fireTradeItems;
 
 	public static void load() {
 		MOBS_CONFIG.scrollTradeItems = DEFAULT_TRADE_ITEMS;
 		MOBS_CONFIG.airScrollTradeItems = AIRBENDING_TRADE_ITEMS;
 		MOBS_CONFIG.fireScrollTradeItems = FIREBENDING_TRADE_ITEMS;
 		MOBS_CONFIG.bisonFoods = DEFAULT_FOODS;
-		MOBS_CONFIG.scrollChanceTierAmount = DEFAULT_SCROLL_DROP;
 		MOBS_CONFIG.scrollType = DEFAULT_SCROLL_TYPE;
+		MOBS_CONFIG.scrollDropChance = DEFAULT_SCROLL_DROPS;
 		ConfigLoader.load(MOBS_CONFIG, "avatar/mobs.yml");
 		MOBS_CONFIG.loadLists();
 
@@ -307,15 +289,6 @@ public class ConfigMobs {
 		return ScrollType.ALL;
 	}
 
-	public int getScrollAmount(Entity entity) {
-		String entityName = EntityList.getEntityString(entity);
-		if (entityName != null) {
-			String key = entityName.toLowerCase();
-			return  scrollChanceTierAmount.get(key) .second().second() != null ? scrollChanceTierAmount.get(key).second().second() : 1;
-		}
-		return 1;
-	}
-
 
 	/**
 	 * Get the default scroll drop chance for that entity in percentage (0-100)
@@ -324,22 +297,11 @@ public class ConfigMobs {
 		String entityName = EntityList.getEntityString(entity);
 		if (entityName != null) {
 			String key = entityName.toLowerCase();
-			return scrollChanceTierAmount.get(key).first() != null ? scrollChanceTierAmount.get(key).first() : 0;
+			return scrollDropChance.get(key) != null ? scrollDropChance.get(key) : 0;
 		}
 		return 0;
 	}
 
-	/*
-		Gets the default scroll tier level for the drop, from 1 to 7.
-	 */
-	public int getScrollTier(Entity entity) {
-		String entityName = EntityList.getEntityString(entity);
-		if (entityName != null) {
-			String key = entityName.toLowerCase();
-			return  scrollChanceTierAmount.get(key).second().first() != null ? scrollChanceTierAmount.get(key).second().first() : 1;
-		}
-		return 1;
-	}
 
 	public static class BenderSettings {
 		@Load
@@ -347,6 +309,35 @@ public class ConfigMobs {
 
 		@Load
 		public final int maxLevel = 7;
+	}
+
+	public static class ScrollSettings {
+		//HOw much percent it takes to increase the tier.
+		@Load
+		public final double percentPerTier = 7.5;
+
+		//How much percent it takes to increase the amount of scrolls dropped.
+		@Load
+		public final double percentPerNumber = 5.0;
+
+		//How much the next chance to drop a tier above decreases by.
+		@Load
+		public final double chanceDecreaseMult = (2 / 3F);
+	}
+
+	public static class BisonSettings {
+		@Load
+		public int bisonMinDomestication = 500, bisonMaxDomestication = 800;
+
+		@Load
+		public int bisonRiderTameness = 800, bisonOwnableTameness = 900, bisonLeashTameness = 1000,
+				bisonChestTameness = 1000;
+
+		@Load
+		public int bisonGrassFoodBonus = 5, bisonRideOneSecondTameness = 3;
+
+		@Load
+		public float bisonBreedMinMinutes = 60, bisonBreedMaxMinutes = 120;
 	}
 
 }

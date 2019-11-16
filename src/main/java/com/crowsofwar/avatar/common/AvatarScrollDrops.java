@@ -26,7 +26,6 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -47,21 +46,29 @@ public class AvatarScrollDrops {
 		if (e.isRecentlyHit()) {
 
 			double chance = MOBS_CONFIG.getScrollDropChance(entity);
-			int tier = MOBS_CONFIG.getScrollTier(entity);
-			int amount = MOBS_CONFIG.getScrollAmount(entity);
+			//We're doing this dynamically rather than making a crap ton of maps in the mob config file. Gets how many tiers the entity can drop.
+			int tier = (int) (chance / MOBS_CONFIG.scrollSettings.percentPerTier);
+			int amount = (int) (chance / MOBS_CONFIG.scrollSettings.percentPerNumber);
 			ScrollType type = MOBS_CONFIG.getScrollType(entity);
 
-			double random = Math.random() * 100;
-			if (random < chance) {
+			for (int i = 0; i < tier; i++) {
+				for (int j = 0; j < amount; j++) {
+					double random = Math.random() * 100;
+					//Each tier has by default 2 / 3 of the original chance to drop.
+					chance = MOBS_CONFIG.getScrollDropChance(entity) * Math.pow(MOBS_CONFIG.scrollSettings.chanceDecreaseMult, i);
+					//There's a 5% less chance for each scroll to drop. Ex: 10% for 1, 5% for 2, e.t.c.
+					chance -= j * MOBS_CONFIG.scrollSettings.percentPerNumber;
+					if (random < chance) {
+						assert Scrolls.getItemForType(type) != null;
+						ItemStack stack = new ItemStack(Objects.requireNonNull(Scrolls.getItemForType(type)), j + 1, i + 1);
 
-				assert Scrolls.getItemForType(type) != null;
-				ItemStack stack = new ItemStack(Objects.requireNonNull(Scrolls.getItemForType(type)), amount, tier);
+						EntityItem entityItem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
+								stack);
+						entityItem.setDefaultPickupDelay();
+						e.getDrops().add(entityItem);
 
-				EntityItem entityItem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
-						stack);
-				entityItem.setDefaultPickupDelay();
-				e.getDrops().add(entityItem);
-
+					}
+				}
 			}
 
 		}
