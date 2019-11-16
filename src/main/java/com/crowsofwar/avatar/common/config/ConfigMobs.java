@@ -25,9 +25,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.item.Item;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -107,7 +105,7 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_TYPE.put("lavaslime", "fire");
 		DEFAULT_SCROLL_DROPS.put("witherskeleton", 25.0);
 		DEFAULT_SCROLL_TYPE.put("witherskeleton", "fire");
-		DEFAULT_SCROLL_DROPS.put("ghast", 50.0);
+		DEFAULT_SCROLL_DROPS.put("ghast", 40.0);
 		DEFAULT_SCROLL_TYPE.put("ghast", "fire");
 		DEFAULT_SCROLL_DROPS.put("blaze", 30.0);
 		DEFAULT_SCROLL_TYPE.put("blaze", "fire");
@@ -163,17 +161,6 @@ public class ConfigMobs {
 
 	}
 
-	@Load
-	public List<String> scrollNames = Arrays.asList(
-			"earth",
-			"water",
-			"fire",
-			"air",
-			"lightning",
-			"combustion",
-			"ice",
-			"sand"
-	);
 	@Load
 	private Map<String, Integer> bisonFoods;
 	private Map<Item, Integer> bisonFoodList;
@@ -329,11 +316,15 @@ public class ConfigMobs {
 
 		//How much percent it takes to increase the amount of scrolls dropped.
 		@Load
-		public final double percentPerNumber = 7.5;
+		public final double percentPerNumber = 10.0;
 
 		//How much the next chance to drop a tier above decreases by.
 		@Load
-		public final double chanceDecreaseMult = (5 / 9F);
+		public final double tierChanceDecreaseMult = (1 / 2F);
+
+		//How much the chance to drop more scrolls decreases by.
+		@Load
+		public final double numberChanceDecreaseMult = (2 / 3F);
 	}
 
 	public static class BisonSettings {

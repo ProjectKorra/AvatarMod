@@ -26,7 +26,6 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.List;
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
@@ -43,22 +42,22 @@ public class AvatarScrollDrops {
 
 			double chance = MOBS_CONFIG.getScrollDropChance(entity);
 			//We're doing this dynamically rather than making a crap ton of maps in the mob config file. Gets how many tiers the entity can drop.
-			int tier = (int) (chance / MOBS_CONFIG.scrollSettings.percentPerTier);
-			int amount = (int) (chance / MOBS_CONFIG.scrollSettings.percentPerNumber);
+			int tier = Math.max((int) (chance / MOBS_CONFIG.scrollSettings.percentPerTier), 1);
+			int amount = Math.max((int) (chance / MOBS_CONFIG.scrollSettings.percentPerNumber), 1);
 			ScrollType type = MOBS_CONFIG.getScrollType(entity);
 
 			for (int i = 0; i < tier; i++) {
 				for (int j = 0; j < amount; j++) {
 					double random = Math.random() * 100;
 					//Each tier has by default 2 / 3 of the original chance to drop.
-					chance = MOBS_CONFIG.getScrollDropChance(entity) * Math.pow(MOBS_CONFIG.scrollSettings.chanceDecreaseMult, i);
-					//There's a 5% less chance for each scroll to drop. Ex: 10% for 1, 5% for 2, e.t.c.
-					double decreaseMult = MOBS_CONFIG.scrollSettings.percentPerNumber / 10 > 1 ? MOBS_CONFIG.scrollSettings.percentPerNumber / 100 :
-							MOBS_CONFIG.scrollSettings.percentPerNumber / 10;
-					chance *= Math.pow(decreaseMult, j);
+					chance = MOBS_CONFIG.getScrollDropChance(entity) * Math.pow(MOBS_CONFIG.scrollSettings.tierChanceDecreaseMult, i);
+					//There's a 5% less chance for each scroll to drop. Ex: 10% for 1, 5% for 2, e.t.c, which then stacks based on the tier.
+					chance *= Math.pow(MOBS_CONFIG.scrollSettings.numberChanceDecreaseMult, j);
 					if (random < chance) {
 						assert Scrolls.getItemForType(type) != null;
-						ItemStack stack = new ItemStack(Objects.requireNonNull(Scrolls.getItemForType(type)), j + 1, i);
+						//We don't want there to be too many high grade scrolls.
+						int totalAmount = Math.min(j + 1, tier - j);
+						ItemStack stack = new ItemStack(Objects.requireNonNull(Scrolls.getItemForType(type)), totalAmount, i);
 
 						EntityItem entityItem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
 								stack);
