@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.QueuedAbilityExecutionHandler;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -47,6 +48,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * A wrapper for any mob/player that can bend to provide greater abstraction
@@ -116,8 +118,6 @@ public abstract class Bender {
 	public abstract boolean isCreativeMode();
 
 	public abstract boolean isFlying();
-
-	;
 
 	/**
 	 * If any water pouches are in the inventory, checks if there is enough
@@ -285,22 +285,25 @@ public abstract class Bender {
 
 			}
 
-			if (entity.isPlayerSleeping()) {
+			if (data.getPerformance().getScore() != 0)
+				chi.changeTotalChi(CHI_CONFIG.regenInCombat / 20F);
+
+			else if (entity.isPlayerSleeping())
 				chi.changeTotalChi(CHI_CONFIG.regenInBed / 20f);
-			} else {
-				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 20f);
-			}
-			if (data.hasBendingId(Waterbending.ID) && entity.isInWater()) {
+
+			else if (data.hasBendingId(Waterbending.ID) && entity.isInWater())
 				chi.changeTotalChi(CHI_CONFIG.regenInWater / 20F);
-			}
 
-			if (data.hasBendingId(Airbending.ID)) {
-				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 10);
-			}
+			else if (data.hasBendingId(Airbending.ID))
+				chi.changeTotalChi(CHI_CONFIG.regenPerSecond / 15);
 
-			if (chi.getAvailableChi() < CHI_CONFIG.maxAvailableChi) {
+			else if (data.hasBendingId(Earthbending.ID)) {
+				if (STATS_CONFIG.bendableBlocks.contains(world.getBlockState(entity.getPosition()).getBlock()))
+					chi.changeTotalChi(CHI_CONFIG.regenOnEarth / 20F);
+			}
+			else if (chi.getAvailableChi() < CHI_CONFIG.maxAvailableChi)
 				chi.changeAvailableChi(CHI_CONFIG.availablePerSecond / 20f);
-			}
+
 
 		}
 
