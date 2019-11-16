@@ -193,8 +193,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	protected void entityInit() {
 		super.entityInit();
 
-		int domestication = MOBS_CONFIG.bisonMinDomestication
-				+ rand.nextInt(MOBS_CONFIG.bisonMaxDomestication - MOBS_CONFIG.bisonMinDomestication);
+		int domestication = MOBS_CONFIG.bisonSettings.bisonMinDomestication
+				+ rand.nextInt(MOBS_CONFIG.bisonSettings.bisonMaxDomestication - MOBS_CONFIG.bisonSettings.bisonMinDomestication);
 
 		dataManager.register(SYNC_OWNER, Optional.absent());
 		dataManager.register(SYNC_SITTING, false);
@@ -221,7 +221,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 
-		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
+		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
 		this.targetTasks.addTask(2, new EntityAiBisonDefendOwner(this));
 		this.targetTasks.addTask(3, new EntityAiBisonHelpOwnerTarget(this));
 
@@ -256,7 +256,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			sterile = ((BisonSpawnData) livingData).isSterile();
 		}
 		condition.setSterile(sterile);
-		condition.setBreedTimer((int) (MOBS_CONFIG.bisonBreedMaxMinutes * 1200));
+		condition.setBreedTimer((int) (MOBS_CONFIG.bisonSettings.bisonBreedMaxMinutes * 1200));
 
 		IBlockState walkingOn = world.getBlockState(getEntityPos(this).minusY(0.01)
 				.toBlockPos());
@@ -689,8 +689,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		if (stack.getItem() == Item.getItemFromBlock(Blocks.TALLGRASS)) {
 			if (condition.getBreedTimer() == 0) {
-				float min = MOBS_CONFIG.bisonBreedMinMinutes;
-				float max = MOBS_CONFIG.bisonBreedMaxMinutes;
+				float min = MOBS_CONFIG.bisonSettings.bisonBreedMinMinutes;
+				float max = MOBS_CONFIG.bisonSettings.bisonBreedMaxMinutes;
 				float minutes = min + rand.nextFloat() * (max - min);
 				condition.setBreedTimer((int) (minutes * 1200));
 				if (!player.capabilities.isCreativeMode) {
@@ -709,10 +709,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		if (player.isSneaking() && getOwner() == player) {
 			if (!isSitting()) {
-				 Bender b = Bender.get(getOwner());
-				 if (b != null && !world.isRemote) {
-				 	b.sendMessage("avatar.bisonSitting");
-				 }
+				Bender b = Bender.get(getOwner());
+				if (b != null && !world.isRemote) {
+					b.sendMessage("avatar.bisonSitting");
+				}
 			}
 			setSitting(!isSitting());
 			madeSitByPlayer = true;
@@ -753,7 +753,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 	@Override
 	public boolean canBeLeashedTo(EntityPlayer player) {
-		return condition.getDomestication() >= MOBS_CONFIG.bisonLeashTameness && super.canBeLeashedTo(player);
+		return condition.getDomestication() >= MOBS_CONFIG.bisonSettings.bisonRiderTameness && super.canBeLeashedTo(player);
 	}
 
 	private void onLiftoff() {
@@ -777,7 +777,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 	@Override
 	public void eatGrassBonus() {
-		condition.addFood(MOBS_CONFIG.bisonGrassFoodBonus);
+		condition.addFood(MOBS_CONFIG.bisonSettings.bisonGrassFoodBonus);
 	}
 
 	// ================================================================================
@@ -861,11 +861,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	}
 
 	public boolean canPlayerViewInventory(EntityPlayer player) {
-		return getOwner() == player && condition.getDomestication() >= MOBS_CONFIG.bisonChestTameness;
+		return getOwner() == player && condition.getDomestication() >= MOBS_CONFIG.bisonSettings.bisonChestTameness;
 	}
 
 	public int getChestSlots() {
-		if (condition.getDomestication() >= MOBS_CONFIG.bisonChestTameness && condition.isAdult()) {
+		if (condition.getDomestication() >= MOBS_CONFIG.bisonSettings.bisonChestTameness && condition.isAdult()) {
 
 			int age = (int) (condition.getAgeDays() - 1);
 
@@ -942,7 +942,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			this.world.spawnParticle(EnumParticleTypes.HEART,
 					this.posX + this.rand.nextFloat() * this.width * 2 - this.width,
 					this.posY + 0.5D + this.rand.nextFloat() * this.height,
-					this.posZ + this.rand.nextFloat() * this.width * 2 - this.width, d0, d1, d2, new int[0]);
+					this.posZ + this.rand.nextFloat() * this.width * 2 - this.width, d0, d1, d2);
 
 		}
 
@@ -994,7 +994,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			riderTicks = 0;
 		}
 		if (!condition.canHaveOwner() && riderTicks > 0 && riderTicks % 60 == 0) {
-			condition.addDomestication(MOBS_CONFIG.bisonRideOneSecondTameness * 3);
+			condition.addDomestication(MOBS_CONFIG.bisonSettings.bisonRideOneSecondTameness * 3);
 			playTameEffect(false);
 		}
 
@@ -1185,7 +1185,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 					this.posX + this.rand.nextFloat() * this.width * 2.0F - this.width,
 					this.posY + 0.5D + this.rand.nextFloat() * this.height,
 					this.posZ + this.rand.nextFloat() * this.width * 2.0F - this.width, //
-					mx, my, mz, new int[0]);
+					mx, my, mz);
 		}
 
 	}

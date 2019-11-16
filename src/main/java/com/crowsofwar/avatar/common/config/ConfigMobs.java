@@ -94,16 +94,17 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_DROPS.put("polar_bear", 10.0);
 		DEFAULT_SCROLL_TYPE.put("polar_bear", "water");
 		DEFAULT_SCROLL_TYPE.put("squid", "water");
-		DEFAULT_SCROLL_DROPS.put("guardian", 10.0);
+		DEFAULT_SCROLL_DROPS.put("guardian", 15.0);
 		DEFAULT_SCROLL_TYPE.put("guardian", "water");
-		DEFAULT_SCROLL_DROPS.put("elder_guardian", 20.0);
+		//Default: 40.
+		DEFAULT_SCROLL_DROPS.put("elder_guardian", 100.0);
 		DEFAULT_SCROLL_TYPE.put("elder_guardian", "water");
 
-		DEFAULT_SCROLL_DROPS.put("zombie_pigman", 15.0);
+		DEFAULT_SCROLL_DROPS.put("zombie_pigman", 20.0);
 		DEFAULT_SCROLL_TYPE.put("zombie_pigman", "fire");
-		DEFAULT_SCROLL_DROPS.put("magma_cube", 10.0);
+		DEFAULT_SCROLL_DROPS.put("magma_cube", 15.0);
 		DEFAULT_SCROLL_TYPE.put("magma_cube", "fire");
-		DEFAULT_SCROLL_DROPS.put("wither_skeleton", 30.0);
+		DEFAULT_SCROLL_DROPS.put("wither_skeleton", 25.0);
 		DEFAULT_SCROLL_TYPE.put("wither_skeleton", "fire");
 		DEFAULT_SCROLL_DROPS.put("ghast", 60.0);
 		DEFAULT_SCROLL_TYPE.put("ghast", "fire");
@@ -120,7 +121,7 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_TYPE.put("sheep", "air");
 
 
-		DEFAULT_SCROLL_DROPS.put("mooshroom", 1.0);
+		DEFAULT_SCROLL_DROPS.put("mooshroom", 5.0);
 		DEFAULT_SCROLL_TYPE.put("mooshroom", "earth");
 		DEFAULT_SCROLL_DROPS.put("cave_spider", 10.0);
 		DEFAULT_SCROLL_TYPE.put("cave_spider", "earth");
@@ -148,6 +149,7 @@ public class ConfigMobs {
 
 		DEFAULT_SCROLL_DROPS.put("witch", 10.0);
 		DEFAULT_SCROLL_DROPS.put("enderman", 12.5);
+		DEFAULT_SCROLL_DROPS.put("creeper", 5.0);
 
 
 	}
@@ -234,7 +236,7 @@ public class ConfigMobs {
 	}
 
 	public int getDomesticationValue(Item item) {
-		return bisonFoodList.containsKey(item) ? bisonFoodList.get(item) : 0;
+		return bisonFoodList.getOrDefault(item, 0);
 	}
 
 	public boolean isTradeItem(Item item) {
@@ -242,7 +244,7 @@ public class ConfigMobs {
 	}
 
 	public int getTradeItemAmount(Item item) {
-		return tradeItems.getOrDefault(item, 0);
+		return tradeItems.getOrDefault(item, 1);
 	}
 
 	public boolean isAirTradeItem(Item item) {
@@ -250,7 +252,7 @@ public class ConfigMobs {
 	}
 
 	public int getAirTradeItemAmount(Item item) {
-		return airTradeItems.containsKey(item) ? airTradeItems.get(item) : 0;
+		return airTradeItems.getOrDefault(item, 1);
 	}
 
 	public boolean isFireTradeItem(Item item) {

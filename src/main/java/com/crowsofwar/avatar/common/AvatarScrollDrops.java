@@ -58,6 +58,12 @@ public class AvatarScrollDrops {
 					chance = MOBS_CONFIG.getScrollDropChance(entity) * Math.pow(MOBS_CONFIG.scrollSettings.chanceDecreaseMult, i);
 					//There's a 5% less chance for each scroll to drop. Ex: 10% for 1, 5% for 2, e.t.c.
 					chance -= j * MOBS_CONFIG.scrollSettings.percentPerNumber;
+					System.out.println("Chance: " + chance);
+					System.out.println("Random: " + random);
+					System.out.println("Tier: " + (j + 1));
+					System.out.println("Max Tier: " + tier);
+					System.out.println("Number Of Scrolls: " + (j + 1));
+					System.out.println("Max Num of Scrolls: " + amount);
 					if (random < chance) {
 						assert Scrolls.getItemForType(type) != null;
 						ItemStack stack = new ItemStack(Objects.requireNonNull(Scrolls.getItemForType(type)), j + 1, i + 1);
