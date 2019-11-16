@@ -27,6 +27,10 @@ public class ConfigSkills {
 
 	public static final ConfigSkills SKILLS_CONFIG = new ConfigSkills();
 	// @formatter:off
+
+	@Load
+	public boolean startWithRandomBending = true;
+
 	@Load
 	public float blockPlaced = 5f,
 			blockThrowHit = 6.5f,

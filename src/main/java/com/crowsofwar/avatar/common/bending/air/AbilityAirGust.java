@@ -29,6 +29,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
@@ -99,6 +100,7 @@ public class AbilityAirGust extends Ability {
 			gust.setPiercesEnemies(ctx.getLevel() >= 1);
 			gust.setAbility(this);
 			gust.setTier(getCurrentTier(ctx.getLevel()));
+			gust.setXp(SKILLS_CONFIG.airGustHit);
 			world.spawnEntity(gust);
 
 			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, entity.getSoundCategory(), 1.0F + Math.max(ctx.getLevel(), 0) / 2F, 0.9F + world.rand.nextFloat() / 10);

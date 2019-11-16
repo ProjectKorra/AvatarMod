@@ -38,6 +38,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -74,7 +75,7 @@ public abstract class Bender {
 	}
 
 	public static boolean isBenderSupported(EntityLivingBase entity) {
-		return entity == null || entity instanceof EntityPlayer || entity instanceof EntityBender;
+		return entity == null || (entity instanceof EntityPlayer && !(entity instanceof FakePlayer)) || entity instanceof EntityBender;
 	}
 
 	/**

@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarChatMessages;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarItem;
@@ -141,34 +142,36 @@ public class ItemScroll extends Item implements AvatarItem {
         }
 
         ScrollType type = Scrolls.getTypeForStack(stack);
-        BendingData data = BendingData.get(player);
-        assert type != null;
-        BendingStyle specialtyStyle = BendingStyles.get(type.getBendingId());
+        if (Bender.isBenderSupported(player)) {
+            BendingData data = BendingData.get(player);
+            assert type != null;
+            BendingStyle specialtyStyle = BendingStyles.get(type.getBendingId());
 
-        // Fail if player already has the scroll
-        assert specialtyStyle != null;
-        if (data.hasBending(specialtyStyle)) {
+            // Fail if player already has the scroll
+            assert specialtyStyle != null;
+            if (data.hasBending(specialtyStyle)) {
 
-            String specialtyName = specialtyStyle.getName();
-            AvatarChatMessages.MSG_SPECIALTY_SCROLL_ALREADY_HAVE.send(player, specialtyName);
-            return;
+                String specialtyName = specialtyStyle.getName();
+                AvatarChatMessages.MSG_SPECIALTY_SCROLL_ALREADY_HAVE.send(player, specialtyName);
+                return;
 
-        }
-
-        // noinspection ConstantConditions - we already know this is a specialty bending
-        // style
-        UUID requiredMainBending = specialtyStyle.getParentBendingId();
-        if (data.hasBendingId(requiredMainBending)) {
-            data.addBending(specialtyStyle);
-            if (!player.isCreative()) {
-                stack.shrink(1);
             }
-            String specialtyName = specialtyStyle.getName();
-            AvatarChatMessages.MSG_SPECIALTY_SCROLL_SUCCESS.send(player, specialtyName);
-        } else {
-            String specialtyName = specialtyStyle.getName();
-            String mainName = BendingStyles.getName(requiredMainBending);
-            AvatarChatMessages.MSG_SPECIALTY_SCROLL_FAIL.send(player, specialtyName, mainName);
+
+            // noinspection ConstantConditions - we already know this is a specialty bending
+            // style
+            UUID requiredMainBending = specialtyStyle.getParentBendingId();
+            if (data.hasBendingId(requiredMainBending)) {
+                data.addBending(specialtyStyle);
+                if (!player.isCreative()) {
+                    stack.shrink(1);
+                }
+                String specialtyName = specialtyStyle.getName();
+                AvatarChatMessages.MSG_SPECIALTY_SCROLL_SUCCESS.send(player, specialtyName);
+            } else {
+                String specialtyName = specialtyStyle.getName();
+                String mainName = BendingStyles.getName(requiredMainBending);
+                AvatarChatMessages.MSG_SPECIALTY_SCROLL_FAIL.send(player, specialtyName, mainName);
+            }
         }
     }
 }

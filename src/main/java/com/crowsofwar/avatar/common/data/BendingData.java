@@ -83,9 +83,8 @@ public class BendingData {
 	//TODO: Fully implement this everywhere
 	@Nullable
 	public static BendingData getFromEntity(@Nonnull EntityLivingBase entity) {
-		if (entity instanceof FakePlayer) {
+		if (!Bender.isBenderSupported(entity))
 			return null;
-		}
 		else return get(entity);
 	}
 

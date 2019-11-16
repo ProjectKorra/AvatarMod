@@ -325,6 +325,14 @@ public class ConfigMobs {
 		//How much the chance to drop more scrolls decreases by.
 		@Load
 		public final double numberChanceDecreaseMult = (2 / 3F);
+
+		//Randomises drop amount and tier.
+		@Load
+		public final boolean chaos = false;
+
+		//Randomises everything.
+		@Load
+		public final boolean absoluteChaos = false;
 	}
 
 	public static class BisonSettings {
