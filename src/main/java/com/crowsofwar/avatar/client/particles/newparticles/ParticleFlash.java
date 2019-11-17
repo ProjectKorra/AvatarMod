@@ -76,7 +76,6 @@ public class ParticleFlash extends ParticleAvatar {
 		GlStateManager.popMatrix();
 		GlStateManager.enableTexture2D();
 		GlStateManager.enableNormalize();
-		GlStateManager.disableBlend();
 	}
 
 	@Override

@@ -508,6 +508,7 @@ public abstract class ParticleAvatar extends Particle {
 	@Override
 	public void onUpdate() {
 
+		//TODO: Fix collision so that particles don't collide with their owner's entities!
 		super.onUpdate();
 
 		if (this.canCollide && this.onGround) {

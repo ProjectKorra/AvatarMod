@@ -251,7 +251,7 @@ public class Raytrace {
 	}
 
 	public static List<Entity> entityRaytrace(World world, Vector start, Vector direction, double maxRange, float borderSize,
-											  Predicate<Entity> filter) {
+											  Predicate<? super Entity> filter) {
 
 		// Detect correct range- avoid obstructions from walls
 		double range = maxRange;
@@ -466,6 +466,7 @@ public class Raytrace {
 		}**/
 	}
 
+	//TODO: Fix raytraces returning entities that you own
 	public static Predicate<? super Entity> ignoreEntityFilter(Entity entity) {
 		return entity1 -> entity1 == entity;
 	}

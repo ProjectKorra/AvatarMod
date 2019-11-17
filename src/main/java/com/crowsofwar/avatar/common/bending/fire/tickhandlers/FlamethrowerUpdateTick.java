@@ -50,6 +50,7 @@ import net.minecraft.world.WorldServer;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -191,7 +192,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 				Vector start = look.plus(eye.minusY(0.5));
 
-				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2.2F, entity1 -> entity1 != entity);
+				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2.2F, Raytrace.ignoreBenderFilter(entity));
 				hit.remove(entity);
 				if (!hit.isEmpty()) {
 					for (Entity target : hit) {
