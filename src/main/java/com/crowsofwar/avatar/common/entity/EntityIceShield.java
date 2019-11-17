@@ -21,8 +21,6 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,6 +28,7 @@ import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -287,5 +286,15 @@ public class EntityIceShield extends EntityShield {
 
 	public void setPitchAngles(float[] pitchAngles) {
 		this.pitchAngles = pitchAngles;
+	}
+
+	@Override
+	public Vec3d calculateIntercept(Vec3d origin, Vec3d endpoint, float fuzziness) {
+		return null;
+	}
+
+	@Override
+	public boolean contains(Vec3d point) {
+		return false;
 	}
 }

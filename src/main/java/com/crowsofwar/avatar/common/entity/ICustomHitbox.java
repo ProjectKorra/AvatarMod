@@ -5,7 +5,7 @@ import net.minecraft.util.math.Vec3d;
 /** This interface allows implementing entity classes to define their own hitbox for wizardry's raytracing and
  * particle collision methods. Typically, entities implementing this interface will return null from the collision
  * bounding box methods in {@code Entity} (there are two for some reason) <b>but</b> return true from
- * {@link net.minecraft.entity.Entity#canBeCollidedWith()} */
+ * {@link net.minecraft.entity.Entity#canBeCollidedWith()} . Also used for particle collision.*/
 public interface ICustomHitbox {
 
 	/**

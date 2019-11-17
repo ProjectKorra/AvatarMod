@@ -185,4 +185,23 @@ public class AvatarEntityUtils {
 	public static void attackDragon(EntityDragon hurt, DamageSource source, float damage) {
 		hurt.attackEntityFromPart(hurt.dragonPartBody, source, damage);
 	}
+
+	/**
+	 * Returns an array of {@code Vec3d} objects representing the vertices of the given bounding box.
+	 * @param box The bounding box whose vertices are to be returned.
+	 * @return The list of vertices, which will contain 8 elements. Using EnumFacing initials, the order is:
+	 * DNW, DNE, DSE, DSW, UNW, UNE, USE, USW. The returned coordinates are absolute (i.e. measured from the world origin).
+	 */
+	public static Vec3d[] getVertices(AxisAlignedBB box){
+		return new Vec3d[]{
+				new Vec3d(box.minX, box.minY, box.minZ),
+				new Vec3d(box.maxX, box.minY, box.minZ),
+				new Vec3d(box.maxX, box.minY, box.maxZ),
+				new Vec3d(box.minX, box.minY, box.maxZ),
+				new Vec3d(box.minX, box.maxY, box.minZ),
+				new Vec3d(box.maxX, box.maxY, box.minZ),
+				new Vec3d(box.maxX, box.maxY, box.maxZ),
+				new Vec3d(box.minX, box.maxY, box.maxZ)
+		};
+	}
 }

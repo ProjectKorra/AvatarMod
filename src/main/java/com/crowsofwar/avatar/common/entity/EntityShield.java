@@ -40,7 +40,7 @@ import java.util.List;
  *
  * @author CrowsOfWar
  */
-public abstract class EntityShield extends AvatarEntity {
+public abstract class EntityShield extends AvatarEntity implements ICustomHitbox {
 
 	public static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityShield.class,
 			DataSerializers.FLOAT);
