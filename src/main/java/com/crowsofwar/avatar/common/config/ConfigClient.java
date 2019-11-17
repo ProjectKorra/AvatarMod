@@ -179,6 +179,9 @@ public class ConfigClient {
 		public final boolean fireBallSphere = false;
 
 		@Load
+		public final boolean originalFireball = true;
+
+		@Load
 		public final boolean infernoPunchSphere = false;
 
 		@Load

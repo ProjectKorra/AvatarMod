@@ -79,7 +79,7 @@ public final class ParticleBuilder {
 	private boolean shaded;
 	private boolean collide;
 	private float scale;
-	private Entity entity;
+	private Entity entity, spawnEntity;
 	private float yaw, pitch;
 	private double tx, ty, tz;
 	private double tvx, tvy, tvz;
@@ -181,7 +181,7 @@ public final class ParticleBuilder {
 		return String.format("[ Type: %s, Position: (%s, %s, %s), Velocity: (%s, %s, %s), Colour: (%s, %s, %s), "
 						+ "Fade Colour: (%s, %s, %s), Radius: %s, Revs/tick: %s, Lifetime: %s, Gravity: %s, Shaded: %s, "
 						+ "Scale: %s, Entity: %s ]",
-				type, x, y, z, vx, vy, vz, r, g, b, fr, fg, fb, radius, rpt, lifetime, gravity, shaded, scale, entity);
+				type, x, y, z, vx, vy, vz, r, g, b, fr, fg, fb, radius, rpt, lifetime, gravity, shaded, scale, entity, spawnEntity);
 	}
 
 	/**
@@ -496,9 +496,19 @@ public final class ParticleBuilder {
 	public ParticleBuilder entity(Entity entity){
 		if(!building) throw new IllegalStateException("Not building yet!");
 		this.entity = entity;
+		this.spawnEntity = entity;
 		return this;
 	}
 
+	/**
+	 *
+	 * @param entity The spawn entity to set the particle to. Used for determining particle collision boxes.
+	 */
+	public ParticleBuilder spawnEntity(Entity entity) {
+		if(!building) throw new IllegalStateException("Not building yet!");
+		this.spawnEntity = entity;
+		return this;
+	}
 	/**
 	 * Sets the rotation of the particle being built. If unspecified, the particle will use the default behaviour and
 	 * rotate to face the viewer.
@@ -672,6 +682,7 @@ public final class ParticleBuilder {
 		particle.setShaded(shaded);
 		particle.setCollisions(collide);
 		particle.setEntity(entity);
+		particle.setSpawnEntity(spawnEntity);
 		particle.setTargetPosition(tx, ty, tz);
 		particle.setTargetEntity(target);
 
@@ -706,6 +717,7 @@ public final class ParticleBuilder {
 		collide = false;
 		scale = 1;
 		entity = null;
+		spawnEntity = null;
 		yaw = Float.NaN;
 		pitch = Float.NaN;
 		tx = Double.NaN;

@@ -16,15 +16,12 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.World;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -63,15 +60,7 @@ public class RenderFireball extends Render<EntityFireball> {
 		float size = .8f + cos(ticks / 5f) * .05f;
 		size *= Math.sqrt(entity.getSize() / 30f);
 
-
 		enableBlend();
-
-		World world = entity.world;
-		AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-		double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-		double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-		double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-		world.spawnParticle(AvatarParticles.getParticleFlames(), spawnX, spawnY, spawnZ, 0, 0, 0);
 
 
 		//   if (MinecraftForgeClient.getRenderPass() == 0) {

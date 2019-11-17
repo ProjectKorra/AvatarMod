@@ -268,7 +268,7 @@ public class Raytrace {
 		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, aabb);
 
 		for (Entity entity : entities) {
-			if (filter.test(entity)) {
+			if (!filter.test(entity)) {
 				float entBorder = entity.getCollisionBorderSize();
 				AxisAlignedBB collisionBox = entity.getEntityBoundingBox();
 				collisionBox = collisionBox.grow(entBorder);
@@ -467,11 +467,11 @@ public class Raytrace {
 	}
 
 	//TODO: Fix raytraces returning entities that you own
-	public static Predicate<? super Entity> ignoreEntityFilter(Entity entity) {
+	public static Predicate<Entity> ignoreEntityFilter(Entity entity) {
 		return entity1 -> entity1 == entity;
 	}
 
-	public static Predicate<? super Entity> ignoreBenderFilter(Entity entity) {
+	public static Predicate<Entity> ignoreBenderFilter(Entity entity) {
 		return entity1 -> entity1 == entity || entity1 instanceof AvatarEntity && ((AvatarEntity) entity1).getOwner() == entity;
 	}
 

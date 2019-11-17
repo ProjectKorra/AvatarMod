@@ -19,7 +19,7 @@ package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.common.bending.air.statctrls.*;
 import com.crowsofwar.avatar.common.bending.earth.*;
-import com.crowsofwar.avatar.common.bending.fire.*;
+import com.crowsofwar.avatar.common.bending.fire.statctrls.*;
 import com.crowsofwar.avatar.common.bending.ice.StatCtrlShieldShatter;
 import com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear;
 import com.crowsofwar.avatar.common.bending.sand.StatCtrlSandstormRedirect;

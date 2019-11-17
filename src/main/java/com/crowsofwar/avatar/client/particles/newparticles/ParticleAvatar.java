@@ -124,6 +124,12 @@ public abstract class ParticleAvatar extends Particle {
 	 */
 	@Nullable
 	protected Entity entity = null;
+
+	/**
+	 * The entity that spawned the particle. Used for collision detection and nothing else. Setting the normal entity will set this.
+	 */
+	@Nullable
+	protected Entity spawnEntity;
 	// Note that roll (equivalent to rotating the texture) is effectively handled by particleAngle - although that is
 	// actually the rotation speed and not the angle itself.
 	/**
@@ -336,6 +342,10 @@ public abstract class ParticleAvatar extends Particle {
 		}
 	}
 
+	//Sets the spawn entity of the particle. Used for particle collision.
+	public void setSpawnEntity(Entity entity) {
+		this.spawnEntity = entity;
+	}
 	// Setters for parameters that only affect some particles - these are unimplemented in this class because they
 	// doesn't make sense for most particles
 
@@ -518,8 +528,7 @@ public abstract class ParticleAvatar extends Particle {
 			this.motionX /= 0.699999988079071D;
 			this.motionZ /= 0.699999988079071D;
 		}
-
-		if (entity != null || radius > 0) {
+		else if (entity != null || radius > 0) {
 
 			double x = relativeX;
 			double y = relativeY;
@@ -666,7 +675,7 @@ public abstract class ParticleAvatar extends Particle {
 					this.posY, this.posZ, world);
 
 			Predicate<? super Entity> customHitboxFilter = entity1 -> !(entity1 instanceof ICustomHitbox && ((ICustomHitbox) entity1).contains(new Vec3d(this.posX, this.posY, this.posZ)));
-			customHitboxFilter = customHitboxFilter.or(entity1 -> entity1 instanceof AvatarEntity && ((AvatarEntity) entity1).getOwner() == entity);
+			customHitboxFilter = customHitboxFilter.or(entity1 -> entity1 instanceof AvatarEntity && ((AvatarEntity) entity1).getOwner() == spawnEntity);
 			nearbyEntities.removeIf(customHitboxFilter);
 
 			if (nearbyEntities.size() > 0) this.setExpired();
