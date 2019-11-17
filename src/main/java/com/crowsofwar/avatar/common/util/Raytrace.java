@@ -312,6 +312,7 @@ public class Raytrace {
 	 * nothing. Returns {@code null} only if the origin and endpoint are within the same block and no entity was hit.
 	 */
 	// Interestingly enough, aimAssist can be negative, which means hits have to be in the middle of entities!
+	//TODO: Add a custom raytrace entity when spawning entities that has a custom hitbox! This will enable raytrace detection and particle collision!
 	@Nullable
 	public static RayTraceResult rayTrace(World world, Vec3d origin, Vec3d endpoint, float aimAssist,
 										  boolean hitLiquids, boolean ignoreUncollidables, boolean returnLastUncollidable, Class<? extends Entity> entityType, Predicate<? super Entity> filter) {
