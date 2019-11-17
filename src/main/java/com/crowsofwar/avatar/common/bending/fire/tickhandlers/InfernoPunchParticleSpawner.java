@@ -1,5 +1,6 @@
-package com.crowsofwar.avatar.common.bending.fire;
+package com.crowsofwar.avatar.common.bending.fire.tickhandlers;
 
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
@@ -85,10 +86,15 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 						rightSide.x, rightSide.y, rightSide.z, particleCount, 0, 0, 0, 0.015);
 			}**/
 			if (world.isRemote)
-				for (int i = 0; i < particleCount; i++)
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(12).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40,
-							world.rand.nextGaussian() / 40).clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 70), 40).collide(true).
-							scale(abilityData.getLevel() < 1 ? 0.9F : 0.9F + abilityData.getLevel() / 5F).spawn(world);
+				for (int i = 0; i < particleCount; i++) {
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40,
+							world.rand.nextGaussian() / 40).clr(255, 15, 5).collide(true).
+							scale(abilityData.getLevel() < 1 ? 0.9F : 0.9F + abilityData.getLevel() / 5F).element(new Firebending()).spawn(world);
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40,
+							world.rand.nextGaussian() / 40).clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true).
+							scale(abilityData.getLevel() < 1 ? 0.9F : 0.9F + abilityData.getLevel() / 5F).element(new Firebending()).spawn(world);
+				}
+
 
 			return false;
 		} else return true;

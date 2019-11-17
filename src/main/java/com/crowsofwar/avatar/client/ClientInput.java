@@ -73,7 +73,7 @@ public class ClientInput implements IControlsHandler {
 		mouseLeft = mouseRight = mouseMiddle = wasLeft = wasRight = wasMiddle = false;
 		mc = Minecraft.getMinecraft();
 
-		keybindings = new HashMap();
+		keybindings = new HashMap<>();
 
 		keyboardBending = new ArrayList<>();
 		addKeybinding("Bend", Keyboard.KEY_LMENU, "main");

@@ -14,10 +14,12 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.bending.fire;
+package com.crowsofwar.avatar.common.bending.fire.tickhandlers;
 
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -88,9 +90,9 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 		flamesPerSecond = level <= 0 ? 6 : 10;
 		if (level == 3 && path == AbilityTreePath.FIRST)
-			flamesPerSecond = 10;
+			flamesPerSecond = 12;
 		else if (level == 3 && path == AbilityTreePath.SECOND)
-			flamesPerSecond = 8;
+			flamesPerSecond = 4;
 
 
 		double powerRating = bender.calcPowerRating(Firebending.ID);
@@ -221,31 +223,33 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					if (lightsFires)
 						if (Blocks.FIRE.canPlaceBlockAt(world, pos) && !world.getBlockState(pos).isFullBlock() && !(world.getBlockState(pos) instanceof BlockLiquid))
 							if (world.getBlockState(pos).getBlock() == Blocks.AIR && world.getBlockState(pos.down()).getBlock() != Blocks.AIR ||
-							world.getBlockState(pos).getBlock() != Blocks.AIR)
-							world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+									world.getBlockState(pos).getBlock() != Blocks.AIR)
+								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
 
 				}
 
 
 				//Particle code.
 				if (world.isRemote) {
-					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles)
+					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
 						for (double i = 0; i < flamesPerSecond; i += 3) {
-							Vector start1 = look.times(i / (double) flamesPerSecond).plus(eye.minusY(0.5));
-							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.05F).time(25).collide(true).vel(look.times(speedMult / 30).toMinecraft()).spawn(world);
+							Vector start1 = look.times((i / (double) flamesPerSecond) / 1000).plus(eye.minusY(0.5));
+							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.05F).time(23).collide(true).vel(look.times(speedMult / 30).toMinecraft()).spawn(world);
 						}
+					}
 					for (double i = 0; i < flamesPerSecond; i += 1) {
-							Vector start1 = look.times(i / (double) flamesPerSecond).plus(eye.minusY(0.5));
+						Vector start1 = look.times((i / (double) flamesPerSecond) / 1000).plus(eye.minusY(0.5));
+						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
 							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.1F).time(25).collide(true).vel(look.times(speedMult / 30).toMinecraft()).spawn(world);
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
-									clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 70), 40).collide(true).scale(size).spawn(world);
-							if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
-								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
-										clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 60, 40).collide(true).scale(size).spawn(world);
-								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
-										clr(255, 193 + AvatarUtils.getRandomNumberInRange(1, 60), 40).collide(true).scale(size).spawn(world);
-							}
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(18 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
+									clr(255, 30 + AvatarUtils.getRandomNumberInRange(0, 50), 15).collide(true).scale(size).spawn(world);
+						} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(18 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
+									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5).collide(true).scale(size).element(new Firebending()).spawn(world);
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(18 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
+									clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 60), 10).collide(true).scale(size).element(new Firebending()).spawn(world);
 						}
+					}
 				}
 
 				if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)

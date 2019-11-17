@@ -104,7 +104,7 @@ public class EntityAirGust extends EntityOffensive {
 				double spawnZ = midPos.z + world.rand.nextGaussian() / 8 * (boundingBox.maxZ - boundingBox.minZ);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
 						world.rand.nextGaussian() / 60).time(8).clr(0.825F, 0.825F, 0.825F)
-						.scale(getAvgSize() * 1.25F).shaded(true).spawn(world);
+						.scale(getAvgSize() * 1.25F).shaded(true).element(getElement()).spawn(world);
 			}
 		}
 	}

@@ -103,6 +103,7 @@ public class AbilityAirblade extends Ability {
 				airblade.setAbility(new AbilityAirblade());
 				airblade.setVelocity(direction.times(50));
 				airblade.setDamage(damage);
+				airblade.setElement(new Airbending());
 				airblade.setSizeMult(sizeMult);
 				airblade.rotationPitch = entity.rotationPitch;
 				airblade.rotationYaw = yaw;
@@ -115,13 +116,13 @@ public class AbilityAirblade extends Ability {
 		} else {
 			EntityAirblade airblade = new EntityAirblade(world);
 			airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
-			airblade.setAbility(new AbilityAirblade());
 			airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 40 : 30));
 			airblade.setDamage(damage);
 			airblade.setSizeMult(sizeMult);
 			airblade.rotationPitch = entity.rotationPitch;
 			airblade.rotationYaw = entity.rotationYaw;
 			airblade.setOwner(entity);
+			airblade.setElement(new Airbending());
 			airblade.setAbility(this);
 			airblade.setPierceArmor(false);
 			airblade.setChopBlocksThreshold(chopBlocks);

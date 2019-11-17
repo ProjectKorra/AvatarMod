@@ -14,12 +14,14 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.common.bending.fire;
+package com.crowsofwar.avatar.common.bending.fire.tickhandlers;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.tickhandlers.SmashGroundHandler;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireJump;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;

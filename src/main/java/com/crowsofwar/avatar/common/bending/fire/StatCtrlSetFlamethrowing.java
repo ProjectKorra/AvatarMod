@@ -25,7 +25,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
-import static com.crowsofwar.avatar.common.bending.fire.FlamethrowerUpdateTick.FLAMETHROWER_MOVEMENT_MODIFIER_ID;
+import static com.crowsofwar.avatar.common.bending.fire.tickhandlers.FlamethrowerUpdateTick.FLAMETHROWER_MOVEMENT_MODIFIER_ID;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_UP;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAMETHROWER;

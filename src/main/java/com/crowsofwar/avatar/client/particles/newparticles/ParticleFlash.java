@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -48,6 +48,10 @@ public class ParticleFlash extends ParticleAvatar {
 		else {
 			f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
 		}
+		//Great for fire!
+		if (element instanceof Firebending)
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+
 		this.setAlphaF(0.6F - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F);
 		float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
 		float f6 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
@@ -60,12 +64,10 @@ public class ParticleFlash extends ParticleAvatar {
 			GlStateManager.disableBlend();
 			GlStateManager.disableCull();
 		}
-		GlStateManager.enableBlend();
 		if (CLIENT_CONFIG.particleSettings.squareFlashParticles) {
 			GlStateManager.disableTexture2D();
 			GlStateManager.disableNormalize();
 		}
-		//buffer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 		buffer.pos(f5 - rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 - rotationYZ * f4 - rotationXZ * f4).tex(0.5D, 0.375D).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
 		buffer.pos(f5 - rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 - rotationYZ * f4 + rotationXZ * f4).tex(0.5D, 0.125D).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
 		buffer.pos(f5 + rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 + rotationYZ * f4 + rotationXZ * f4).tex(0.25D, 0.125D).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
@@ -73,6 +75,7 @@ public class ParticleFlash extends ParticleAvatar {
 		GlStateManager.popMatrix();
 		GlStateManager.enableTexture2D();
 		GlStateManager.enableNormalize();
+		GlStateManager.enableBlend();
 	}
 
 	@Override

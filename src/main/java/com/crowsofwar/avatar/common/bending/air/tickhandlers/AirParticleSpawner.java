@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.air.tickhandlers;
 
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.TickHandler;
@@ -48,10 +49,10 @@ public class AirParticleSpawner extends TickHandler {
 
 		Vector pos = Vector.getEntityPos(entity).plus(0, -0.05, 0);
 		if (world.isRemote)
-			for (int i = 0; i < 2 + AvatarUtils.getRandomNumberInRange(0, 2); i++)
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).collide(true).clr(0.8F, 0.8F, 0.8F).pos(pos.toMinecraft()).
-						vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).scale(2.0F +
-						Math.max(data.getLevel(), 0)).time(15).spawn(world);
+			for (int i = 0; i < 4 + AvatarUtils.getRandomNumberInRange(0, 4); i++)
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).collide(true).clr(0.85F, 0.85F, 0.85F).pos(pos.toMinecraft()).
+						vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).scale(1.5F +
+						Math.max(data.getLevel(), 0)).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Airbending()).spawn(world);
 
 		//particles.spawnParticles(entity.world, EnumParticleTypes.EXPLOSION_NORMAL, 1, 4, pos,
 		//		new Vector(0.7, 0.2, 0.7), true);

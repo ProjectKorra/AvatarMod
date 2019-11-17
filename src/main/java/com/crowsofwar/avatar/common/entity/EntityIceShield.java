@@ -102,15 +102,18 @@ public class EntityIceShield extends EntityShield {
 		super.onUpdate();
 		EntityLivingBase owner = getOwner();
 		if (owner != null) {
-			IAttributeInstance speed = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+			/*IAttributeInstance speed = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 			if (speed.getBaseValue() != 0) {
 				normalBaseValue = speed.getBaseValue();
 				speed.setBaseValue(0);
-			}
-			owner.setPosition(posX, posY, posZ);
-			owner.motionX = this.motionX;
-			owner.motionY = this.motionY;
-			owner.motionZ = this.motionZ;
+			}**/
+			owner.setPositionAndUpdate(posX, posY, posZ);
+			owner.motionX *= 0;
+			owner.motionZ *= 0;
+			this.motionX *= 0;
+			if (onGround)
+				this.motionY *= 0;
+			this.motionZ *= 0;
 		}
 	}
 
@@ -118,12 +121,12 @@ public class EntityIceShield extends EntityShield {
 	public void setDead() {
 		super.setDead();
 		EntityLivingBase owner = getOwner();
-		if (owner != null) {
+		/*if (owner != null) {
 			IAttributeInstance speed = owner.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 			if (speed.getBaseValue() == 0) {
 				speed.setBaseValue(normalBaseValue);
 			}
-		}
+		}**/
 	}
 
 	@Override

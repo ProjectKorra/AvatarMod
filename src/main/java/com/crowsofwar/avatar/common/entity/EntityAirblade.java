@@ -128,7 +128,7 @@ public class EntityAirblade extends EntityOffensive {
 				double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
 						world.rand.nextGaussian() / 60).collide(true).time(8).clr(0.8F, 0.8F, 0.8F)
-						.scale(getWidth() * 4).spawn(world);
+						.scale(getWidth() * 4).element(getElement()).spawn(world);
 			}
 		}
 
@@ -235,7 +235,7 @@ public class EntityAirblade extends EntityOffensive {
 			for (int i = 0; i < 1; i += 1 / getWidth())
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfEntity(this)).vel(world.rand.nextGaussian() / 20,
 						world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20).time(6).clr(0.8F, 0.8F, 0.8F)
-						.scale(getWidth() * 5F).collide(true).spawn(world);
+						.scale(getWidth() * 5F).collide(true).element(getElement()).spawn(world);
 	}
 
 	@Override

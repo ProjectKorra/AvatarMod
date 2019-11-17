@@ -112,6 +112,7 @@ public class AbilityCloudBurst extends Ability {
 			cloudball.setDamage((float) damage);
 			cloudball.setXp(xp);
 			cloudball.setAbility(this);
+			cloudball.setElement(new Airbending());
 			world.spawnEntity(cloudball);
 
 			data.addStatusControl(StatusControl.THROW_CLOUDBURST);

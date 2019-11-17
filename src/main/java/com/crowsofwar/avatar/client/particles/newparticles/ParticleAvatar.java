@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.client.particles.newparticles;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.client.AvatarClientProxy;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.entity.ICustomHitbox;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -104,6 +105,8 @@ public abstract class ParticleAvatar extends Particle {
 	protected float angle;
 	protected double radius = 0;
 	protected double speed = 0;
+
+	protected BendingStyle element;
 
 	//Has R, G, B, and A, in that order.
 	protected float[] colourShiftRange = new float[4];
@@ -265,6 +268,11 @@ public abstract class ParticleAvatar extends Particle {
 	 */
 	public void setCollisions(boolean canCollide) {
 		this.canCollide = canCollide;
+	}
+
+	//Sets the element of the particle, which is used for different effects, depending on the particle.
+	public void setElement(BendingStyle element) {
+		this.element = element;
 	}
 
 	// Overridden to set the initial colour values

@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
@@ -70,6 +71,7 @@ public final class ParticleBuilder {
 	//rend/green e.t.c shift interval
 	private float rSI, gSI, bSI, aSI;
 	private float fr, fg, fb;
+	private BendingStyle element;
 	private double radius;
 	private double rpt;
 	private int lifetime;
@@ -273,6 +275,16 @@ public final class ParticleBuilder {
 		this.r = MathHelper.clamp(r, 0, 1);
 		this.g = MathHelper.clamp(g, 0, 1);
 		this.b = MathHelper.clamp(b, 0, 1);
+		return this;
+	}
+
+	/**
+	 *
+	 * @param element The element to set for the particle. Used in some particles, like the Flash particle, for different effects.
+	 *                In the future it'll be behaviour, but for now it's not.
+	 */
+	public ParticleBuilder element(BendingStyle element) {
+		this.element = element;
 		return this;
 	}
 
@@ -653,6 +665,7 @@ public final class ParticleBuilder {
 		if(seed != 0)														particle.setSeed(seed);
 		if(!Double.isNaN(tvx) && !Double.isNaN(tvy) && !Double.isNaN(tvz)) 	particle.setTargetVelocity(tvx, tvy, tvz);
 		if(length > 0)														particle.setLength(length);
+		if (element != null)												particle.setElement(element);
 
 		particle.multipleParticleScaleBy(scale);
 		particle.setGravity(gravity);
@@ -702,6 +715,7 @@ public final class ParticleBuilder {
 		tvy = Double.NaN;
 		tvz = Double.NaN;
 		target = null;
+		element = null;
 		seed = 0;
 		length = -1;
 	}

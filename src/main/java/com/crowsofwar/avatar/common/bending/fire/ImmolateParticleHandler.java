@@ -50,10 +50,10 @@ public class ImmolateParticleHandler extends TickHandler {
 				r = random == 1 ? r : r * -1;
 				Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (r * 2)), 0).times(aD.getLevel() < 1 ? 0.5 : aD.getLevel() * 0.5).withY(entity.getEyeHeight() - 0.7);
 				//Temporary solution to colour fading: randomising the colour between crimson and orangey-yellow for each particle.
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(8).
-						vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40).clr(255,
-						60 + AvatarUtils.getRandomNumberInRange(1, 92), 40)
-						.spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
+						vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40)
+						.clr(235 + AvatarUtils.getRandomNumberInRange(1, 20), 30 + AvatarUtils.getRandomNumberInRange(1, 60), 5)
+						.element(new Firebending()).spawn(world);
 			}
 		}
 		return duration >= immolateDuration;

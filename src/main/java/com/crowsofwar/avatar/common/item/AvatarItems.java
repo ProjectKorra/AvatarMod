@@ -26,6 +26,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class AvatarItems {
 	private static ItemStack stackScroll;
 	public static ItemAirbenderStaff airbenderStaff;
 	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
+		@Nonnull
 		@Override
 		public ItemStack createIcon() {
 			return stackScroll;
