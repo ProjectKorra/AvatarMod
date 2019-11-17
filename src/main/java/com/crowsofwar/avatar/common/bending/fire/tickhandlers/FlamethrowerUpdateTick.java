@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityShield;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
@@ -40,6 +41,8 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.item.EntityEnderCrystal;
+import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
@@ -50,7 +53,6 @@ import net.minecraft.world.WorldServer;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -197,7 +199,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				if (!hit.isEmpty()) {
 					for (Entity target : hit) {
 						if (!world.isRemote) {
-							if (target.canBeCollidedWith() && (target.getTeam() == null || target.getTeam() != null && target.getTeam() != entity.getTeam()) || target instanceof EntityShield) {
+							if (canCollideWithEntity(target, entity)) {
 								boolean attack = target.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);
 								if (attack) {
 									target.setFire(fireTime + 2);
@@ -224,8 +226,10 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					if (lightsFires)
 						if (Blocks.FIRE.canPlaceBlockAt(world, pos) && !world.getBlockState(pos).isFullBlock() && !(world.getBlockState(pos) instanceof BlockLiquid))
 							if (world.getBlockState(pos).getBlock() == Blocks.AIR && world.getBlockState(pos.down()).getBlock() != Blocks.AIR ||
-									world.getBlockState(pos).getBlock() != Blocks.AIR)
+									world.getBlockState(pos).getBlock() != Blocks.AIR) {
+								world.setBlockState(pos.down(), Blocks.FIRE.getDefaultState());
 								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+							}
 
 				}
 
@@ -239,16 +243,16 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						}
 					}
 					for (double i = 0; i < flamesPerSecond; i += 1) {
-						Vector start1 = look.times((i / (double) flamesPerSecond) / 1000).plus(eye.minusY(0.5));
+						Vector start1 = look.times((i / (double) flamesPerSecond) / 1000).plus(0, (entity.getEyeHeight() - 0.5), 0);
 						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
 							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.1F).time(25).collide(true).vel(look.times(speedMult / 30).toMinecraft()).spawn(world);
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(18 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
-									clr(255, 30 + AvatarUtils.getRandomNumberInRange(0, 50), 15).collide(true).scale(size).spawn(world);
+									clr(255, 30 + AvatarUtils.getRandomNumberInRange(0, 50), 15).collide(true).entity(entity).scale(size).spawn(world);
 						} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(18 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
-									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5).collide(true).scale(size).element(new Firebending()).spawn(world);
+									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5).collide(true).entity(entity).scale(size).element(new Firebending()).spawn(world);
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(18 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 30).toMinecraft()).
-									clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 60), 10).collide(true).scale(size).element(new Firebending()).spawn(world);
+									clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 60), 10).collide(true).entity(entity).scale(size).element(new Firebending()).spawn(world);
 						}
 					}
 				}
@@ -300,6 +304,24 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 		moveSpeed.applyModifier(new AttributeModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID, "Flamethrower Movement Modifier", multiplier - 1, 1));
 
+	}
+
+	private boolean canCollideWithEntity(Entity entity, Entity owner) {
+		if (entity instanceof AvatarEntity) {
+			if (((AvatarEntity) entity).getOwner() == owner)
+				return false;
+			else if (!entity.canBeCollidedWith())
+				return false;
+			else if (entity instanceof EntityShield)
+				return true;
+		}
+		else if (entity.getTeam() != null && entity.getTeam() == owner.getTeam())
+			return false;
+		else if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() == owner)
+			return false;
+		else if (entity.getRidingEntity() == owner)
+			return false;
+		return entity instanceof EntityLivingBase || entity instanceof EntityEnderCrystal;
 	}
 
 

@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.client.particles.newparticles;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.client.AvatarClientProxy;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.ICustomHitbox;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -24,6 +25,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -663,7 +665,9 @@ public abstract class ParticleAvatar extends Particle {
 			List<Entity> nearbyEntities = AvatarEntityUtils.getEntitiesWithinRadius(searchRadius, this.posX,
 					this.posY, this.posZ, world);
 
-			nearbyEntities.removeIf(e -> !(e instanceof ICustomHitbox && ((ICustomHitbox) e).contains(new Vec3d(this.posX, this.posY, this.posZ))));
+			Predicate<? super Entity> customHitboxFilter = entity1 -> !(entity1 instanceof ICustomHitbox && ((ICustomHitbox) entity1).contains(new Vec3d(this.posX, this.posY, this.posZ)));
+			customHitboxFilter = customHitboxFilter.or(entity1 -> entity1 instanceof AvatarEntity && ((AvatarEntity) entity1).getOwner() == entity);
+			nearbyEntities.removeIf(customHitboxFilter);
 
 			if (nearbyEntities.size() > 0) this.setExpired();
 
