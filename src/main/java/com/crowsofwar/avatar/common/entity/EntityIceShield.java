@@ -288,13 +288,4 @@ public class EntityIceShield extends EntityShield {
 		this.pitchAngles = pitchAngles;
 	}
 
-	@Override
-	public Vec3d calculateIntercept(Vec3d origin, Vec3d endpoint, float fuzziness) {
-		return null;
-	}
-
-	@Override
-	public boolean contains(Vec3d point) {
-		return false;
-	}
 }

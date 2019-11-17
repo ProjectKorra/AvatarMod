@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.util;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.ICustomHitbox;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
@@ -463,6 +464,14 @@ public class Raytrace {
 			}
 
 		}**/
+	}
+
+	public static Predicate<? super Entity> ignoreEntityFilter(Entity entity) {
+		return entity1 -> entity1 == entity;
+	}
+
+	public static Predicate<? super Entity> ignoreBenderFilter(Entity entity) {
+		return entity1 -> entity1 == entity || entity1 instanceof AvatarEntity && ((AvatarEntity) entity1).getOwner() == entity;
 	}
 
 	public static class Result {

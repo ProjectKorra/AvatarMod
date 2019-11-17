@@ -97,7 +97,7 @@ public class StatCtrlInfernoPunchFirst extends StatusControl {
 					}
 				}
 				RayTraceResult result = Raytrace.standardEntityRayTrace(entity.world, entity,
-						null, startPos, startPos.add(entity.getLookVec().scale(5)), 0.2F, false, excluded);
+						null, startPos, startPos.add(entity.getLookVec().scale(5)), 0.2F, false, Raytrace.ignoreBenderFilter(entity));
 				if (result != null) {
 					if (result.entityHit != null) {
 						Entity hit = result.entityHit;

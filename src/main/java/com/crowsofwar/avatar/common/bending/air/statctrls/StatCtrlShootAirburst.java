@@ -136,7 +136,7 @@ public class StatCtrlShootAirburst extends StatusControl {
 					}
 				} else {
 					result = Raytrace.standardEntityRayTrace(world, entity, null, start.toMinecraft(),
-							start.plus(direction.times(distance)).toMinecraft(), size, false, excluded);
+							start.plus(direction.times(distance)).toMinecraft(), size, false, Raytrace.ignoreBenderFilter(entity));
 					if (result != null && result.entityHit != null) {
 						Entity target = result.entityHit;
 						if (target instanceof AvatarEntity && ((AvatarEntity) target).getOwner() != entity || (entity.getTeam() != null &&
