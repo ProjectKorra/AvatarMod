@@ -43,7 +43,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -62,8 +61,6 @@ public class EntityAirBubble extends EntityShield {
 			.createKey(EntityAirBubble.class, DataSerializers.VARINT);
 	public static final DataParameter<Boolean> SYNC_HOVERING = EntityDataManager
 			.createKey(EntityAirBubble.class, DataSerializers.BOOLEAN);
-	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirBubble.class,
-			DataSerializers.FLOAT);
 	public static final UUID SLOW_ATTR_ID = UUID.fromString("40354c68-6e88-4415-8a6b-e3ddc56d6f50");
 	public static final AttributeModifier SLOW_ATTR = new AttributeModifier(SLOW_ATTR_ID,
 			"airbubble_slowness", -.3, 2);
@@ -84,7 +81,6 @@ public class EntityAirBubble extends EntityShield {
 		super.entityInit();
 		dataManager.register(SYNC_DISSIPATE, 0);
 		dataManager.register(SYNC_HOVERING, false);
-		dataManager.register(SYNC_SIZE, 2.5f);
 	}
 
 	@Override
@@ -111,14 +107,6 @@ public class EntityAirBubble extends EntityShield {
 
 	public void setAllowHovering(boolean floating) {
 		dataManager.set(SYNC_HOVERING, floating);
-	}
-
-	public float getSize() {
-		return dataManager.get(SYNC_SIZE);
-	}
-
-	public void setSize(float size) {
-		dataManager.set(SYNC_SIZE, size);
 	}
 
 
@@ -422,7 +410,7 @@ public class EntityAirBubble extends EntityShield {
 
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 1;
+		return true;
 	}
 
 	public int getDissipateTime() {
@@ -469,13 +457,4 @@ public class EntityAirBubble extends EntityShield {
 		}
 	}
 
-	@Override
-	public Vec3d calculateIntercept(Vec3d origin, Vec3d endpoint, float fuzziness) {
-		return null;
-	}
-
-	@Override
-	public boolean contains(Vec3d point) {
-		return false;
-	}
 }
