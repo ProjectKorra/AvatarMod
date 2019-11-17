@@ -18,13 +18,17 @@
 package com.crowsofwar.avatar.common;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.event.AbilityUnlockEvent;
+import com.crowsofwar.avatar.common.event.ElementUnlockEvent;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -33,6 +37,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -62,7 +67,7 @@ public class AvatarPlayerTick {
 		}
 	}
 
-	@SubscribeEvent (priority = EventPriority.HIGH)
+	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void worldJoinEvent(EntityJoinWorldEvent event) {
 		if (event.getEntity() instanceof EntityLivingBase && Bender.isBenderSupported((EntityLivingBase) event.getEntity())) {
 			if (SKILLS_CONFIG.startWithRandomBending && !event.getWorld().isRemote) {
@@ -73,7 +78,18 @@ public class AvatarPlayerTick {
 					List<BendingStyle> elements = BendingStyles.all().stream()
 							.filter(bendingStyle -> bendingStyle.isParentBending() && bendingStyle.canEntityUse())
 							.collect(Collectors.toList());
-					data.addBending(elements.get(elementID - 1));
+					BendingStyle style = BendingStyles.get(elements.get(elementID - 1).getName());
+					if (!MinecraftForge.EVENT_BUS.post(new ElementUnlockEvent(bender, style))) {
+						data.addBending(style);
+
+						// Unlock first ability
+						//noinspection ConstantConditions - can safely assume bending is present if
+						// the ID is in use to unlock it
+						Ability ability = Objects.requireNonNull(style.getAllAbilities().get(0));
+						if (!MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(bender, ability)))
+							data.getAbilityData(ability).unlockAbility();
+
+					}
 				}
 			}
 		}

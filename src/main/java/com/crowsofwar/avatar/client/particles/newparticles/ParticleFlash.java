@@ -16,7 +16,7 @@ import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
  * scale and a few other things
  *
  * @author Electroblob, FavouriteDragon
- * @since Wizardry 4.2.0
+ * @since Wizardry 4.2.0, Av2 1.6.0
  */
 @SideOnly(Side.CLIENT)
 public class ParticleFlash extends ParticleAvatar {
@@ -64,6 +64,7 @@ public class ParticleFlash extends ParticleAvatar {
 			GlStateManager.disableBlend();
 			GlStateManager.disableCull();
 		}
+		//TODO: Figure out a way to do this without breaking everything else
 		if (CLIENT_CONFIG.particleSettings.squareFlashParticles) {
 			GlStateManager.disableTexture2D();
 			GlStateManager.disableNormalize();
@@ -75,7 +76,7 @@ public class ParticleFlash extends ParticleAvatar {
 		GlStateManager.popMatrix();
 		GlStateManager.enableTexture2D();
 		GlStateManager.enableNormalize();
-		GlStateManager.enableBlend();
+		GlStateManager.disableBlend();
 	}
 
 	@Override
