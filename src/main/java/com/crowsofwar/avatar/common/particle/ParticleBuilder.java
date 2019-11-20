@@ -40,6 +40,7 @@ import java.util.Random;
  * <p></p>
  * It also goes without saying that <b>this class should only ever be used client-side</b>. Attempting to spawn particles
  * on the server side will not work and will print a warning to the console.
+ *
  * @author Electroblob
  * @since Wizardry 4.2
  */
@@ -53,10 +54,14 @@ import java.util.Random;
 // every time and clogging the heap with objects. It's also lazy, see the comment about builder variables below.
 public final class ParticleBuilder {
 
-	/** The static instance of the particle builder. */
+	/**
+	 * The static instance of the particle builder.
+	 */
 	public static final ParticleBuilder instance = new ParticleBuilder();
 
-	/** Whether the particle builder is currently building or not. */
+	/**
+	 * Whether the particle builder is currently building or not.
+	 */
 	private boolean building = false;
 
 	// Builder variables
@@ -65,9 +70,9 @@ public final class ParticleBuilder {
 	private ResourceLocation type;
 	private double x, y, z;
 	private double vx, vy, vz;
-	private float r, g, b;
+	private float r, g, b, a;
 	//red/green/blue/e.t.c shift range
-	private float rSR, gSR,  bSR, aSR;
+	private float rSR, gSR, bSR, aSR;
 	//rend/green e.t.c shift interval
 	private float rSI, gSI, bSI, aSI;
 	private float fr, fg, fb;
@@ -87,97 +92,128 @@ public final class ParticleBuilder {
 	private long seed;
 	private double length;
 
-	/**
-	 * {@link ResourceLocation} constants representing the different types of particle added by wizardry. These
-	 * effectively replace the enum {@code WizardryParticleType} from previous versions.
-	 * <p></p>
-	 * Individual constants have comments detailing their corresponding default parameters. A range of values indicates
-	 * randomness.
-	 * <p></p>
-	 * To register your own particle types, use {@link com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar#registerParticle(
-	 * ResourceLocation, com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar.IAvatarParticleFactory)
-	 * ParticleAvatar.registerParticle(ResourceLocation, IWizardryParticleFactory)}.
-	 */
-	// This was originally an enum, but I think having 'Type' explicitly declared is quite nice so I've left it as a
-	// nested class.
-	public static class Type {
-		/** 3D-rendered light-beam particle.<p></p><b>Defaults:</b><br>Lifetime: 1 tick<br> Colour: white */
-		public static final ResourceLocation BEAM = new ResourceLocation(AvatarInfo.MOD_ID,"beam");
-		/** Helical animated 'buffing' particle.<p></p><b>Defaults:</b><br>Lifetime: 15 ticks
-		 * <br>Velocity: (0, 0.27, 0)<br>Colour: white */
-		public static final ResourceLocation BUFF = new ResourceLocation(AvatarInfo.MOD_ID,"buff");
-		/** Spiral particle, like potions.<p></p><b>Defaults:</b><br>Lifetime: 8-40 ticks<br>Colour: white */
-		public static final ResourceLocation DARK_MAGIC = new ResourceLocation(AvatarInfo.MOD_ID,"dark_magic");
-		/** Single pixel particle.<p></p><b>Defaults:</b><br>Lifetime: 16-80 ticks<br>Colour: white */
-		public static final ResourceLocation DUST = new ResourceLocation(AvatarInfo.MOD_ID,"dust");
-		/** A cool custom fire particle, moves like all other fire particles. */
-		public static final ResourceLocation FIRE = new ResourceLocation(AvatarInfo.MOD_ID, " fire");
-		/** Rapid flash, like fireworks.<p></p><b>Defaults:</b><br>Lifetime: 6 ticks<br>Colour: white */
-		public static final ResourceLocation FLASH = new ResourceLocation(AvatarInfo.MOD_ID,"flash");
-		/** Small shard of ice.<p></p><b>Defaults:</b><br>Lifetime: 8-40 ticks<br>Gravity: true */
-		public static final ResourceLocation ICE = new ResourceLocation(AvatarInfo.MOD_ID,"ice");
-		/** Single leaf.<p></p><b>Defaults:</b><br>Lifetime: 10-15 ticks<br>Velocity: (0, -0.03, 0)
-		 * <br>Colour: green/brown */
-		public static final ResourceLocation LEAF = new ResourceLocation(AvatarInfo.MOD_ID,"leaf");
-		/** 3D-rendered lightning particle.<p></p><b>Defaults:</b><br>Lifetime: 3 ticks<br> Colour: blue */
-		public static final ResourceLocation LIGHTNING = new ResourceLocation(AvatarInfo.MOD_ID,"lightning");
-		/** 2D lightning effect, normally on the ground.<p></p><b>Defaults:</b><br>Lifetime: 7 ticks
-		 * <br>Facing: up */
-		public static final ResourceLocation LIGHTNING_PULSE = new ResourceLocation(AvatarInfo.MOD_ID,"lightning_pulse");
-		/** Bubble that doesn't burst in air.<p></p><b>Defaults:</b><br>Lifetime: 8-40 ticks */
-		public static final ResourceLocation MAGIC_BUBBLE = new ResourceLocation(AvatarInfo.MOD_ID,"magic_bubble");
-		/** Animated flame.<p></p><b>Defaults:</b><br>Lifetime: 12-16 ticks<br> */
-		public static final ResourceLocation MAGIC_FIRE = new ResourceLocation(AvatarInfo.MOD_ID,"magic_fire");
-		/** Soft-edged round particle.<p></p><b>Defaults:</b><br>Lifetime: 8-40 ticks<br>Colour: white */
-		public static final ResourceLocation PATH = new ResourceLocation(AvatarInfo.MOD_ID,"path");
-		/** Scorch mark.<p></p><b>Defaults:</b><br>Lifetime: 100-140 ticks<br>Colour: black<br>Fade: black */
-		public static final ResourceLocation SCORCH = new ResourceLocation(AvatarInfo.MOD_ID,"scorch");
-		/** Snowflake particle.<p></p><b>Defaults:</b><br>Lifetime: 40-50 ticks<br>Velocity: (0, -0.02, 0) */
-		public static final ResourceLocation SNOW = new ResourceLocation(AvatarInfo.MOD_ID,"snow");
-		/** Animated lightning particle.<p></p><b>Defaults:</b><br>Lifetime: 3 ticks */
-		public static final ResourceLocation SPARK = new ResourceLocation(AvatarInfo.MOD_ID,"spark");
-		/** Animated sparkle particle.<p></p><b>Defaults:</b><<br>Lifetime: 48-60 ticks<br>Colour: white */
-		public static final ResourceLocation SPARKLE = new ResourceLocation(AvatarInfo.MOD_ID,"sparkle");
-		/** 3D-rendered expanding sphere.<p></p><b>Defaults:</b><<br>Lifetime: 6 ticks<br>Colour: white */
-		public static final ResourceLocation SPHERE = new ResourceLocation(AvatarInfo.MOD_ID,"sphere");
-		/** Wrapped animated 'summoning' particle.<p></p><b>Defaults:</b><<br>Lifetime: 15 ticks */
-		public static final ResourceLocation SUMMON = new ResourceLocation(AvatarInfo.MOD_ID,"summon");
-		/** 3D-rendered vine particle.<p></p><b>Defaults:</b><br>Lifetime: 1 tick<br> Colour: green */
-		public static final ResourceLocation VINE = new ResourceLocation(AvatarInfo.MOD_ID,"vine");
+	private ParticleBuilder() {
+		reset();
 	}
 
-	private ParticleBuilder(){
-		reset();
+	/**
+	 * Starts building a particle of the given type. Static convenience version of
+	 * {@link ParticleBuilder#particle(ResourceLocation)}; makes code more concise.
+	 *
+	 * @param type The type of particle to build
+	 * @return The particle builder instance, allowing other methods to be chained onto this one
+	 * @throws IllegalStateException if the particle builder is already building.
+	 */
+	public static ParticleBuilder create(ResourceLocation type) {
+		return ParticleBuilder.instance.particle(type);
 	}
 
 	// ============================================= Core builder methods =============================================
 
 	/**
-	 * Starts building a particle of the given type. Static convenience version of
-	 * {@link ParticleBuilder#particle(ResourceLocation)}; makes code more concise.
-	 * @param type The type of particle to build
+	 * Starts building a particle of the given type and positions it randomly within the given entity's bounding box.
+	 * Equivalent to calling {@code ParticleBuilder.create(type).pos(...)}; users should chain any additional builder
+	 * methods onto this one and finish with {@code .spawn(world)} as normal.
+	 * Used extensively with summoned creatures; makes code much neater and more concise.
+	 * <p></p>
+	 * <i>N.B. this does <b>not</b> cause the particle to move with the given entity.</i>
+	 *
+	 * @param type   The type of particle to build
+	 * @param entity The entity to position the particle at
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is already building.
 	 */
-	public static ParticleBuilder create(ResourceLocation type){
-		return ParticleBuilder.instance.particle(type);
+	public static ParticleBuilder create(ResourceLocation type, Entity entity) {
+
+		double x = entity.posX + (entity.world.rand.nextDouble() - 0.5D) * (double) entity.width;
+		double y = entity.posY + entity.world.rand.nextDouble() * (double) entity.height;
+		double z = entity.posZ + (entity.world.rand.nextDouble() - 0.5D) * (double) entity.width;
+
+		return ParticleBuilder.instance.particle(type).pos(x, y, z);
+	}
+
+	/**
+	 * Starts building a particle of the given type and positions it randomly within the given radius of the given position,
+	 * with velocity proportional to distance from the given position if move is true. Good for making explosion-type effects.
+	 * Equivalent to calling {@code ParticleBuilder.create(type).pos(...).vel(...)}; users should chain any additional builder
+	 * methods onto this one and finish with {@code .spawn(world)} as normal.
+	 *
+	 * @param type   The type of particle to build
+	 * @param random An RNG instance
+	 * @param x      The x coordinate of the centre of the region in which to position the particle
+	 * @param y      The y coordinate of the centre of the region in which to position the particle
+	 * @param z      The z coordinate of the centre of the region in which to position the particle
+	 * @param radius The radius of the region in which to position the particle
+	 * @param move   Whether the particle should move outwards from the centre (note that if this is false, the particle's
+	 *               default velocity will apply)
+	 * @return The particle builder instance, allowing other methods to be chained onto this one
+	 * @throws IllegalStateException if the particle builder is already building.
+	 */
+	public static ParticleBuilder create(ResourceLocation type, Random random, double x, double y, double z, double radius, boolean move) {
+
+		double px = x + (random.nextDouble() * 2 - 1) * radius;
+		double py = y + (random.nextDouble() * 2 - 1) * radius;
+		double pz = z + (random.nextDouble() * 2 - 1) * radius;
+
+		if (move) return ParticleBuilder.instance.particle(type).pos(px, py, pz).vel(px - x, py - y, pz - z);
+
+		return ParticleBuilder.instance.particle(type).pos(px, py, pz);
+	}
+
+	/**
+	 * Spawns spark and large smoke particles (8 of each) within a 1x1x1 volume centred on the given position.
+	 */
+	public static void spawnShockParticles(World world, double x, double y, double z) {
+
+		double px, py, pz;
+
+		for (int i = 0; i < 8; i++) {
+			px = x + world.rand.nextDouble() - 0.5;
+			py = y + world.rand.nextDouble() - 0.5;
+			pz = z + world.rand.nextDouble() - 0.5;
+			ParticleBuilder.create(Type.SPARK).pos(px, py, pz).spawn(world);
+			px = x + world.rand.nextDouble() - 0.5;
+			py = y + world.rand.nextDouble() - 0.5;
+			pz = z + world.rand.nextDouble() - 0.5;
+			world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, px, py, pz, 0, 0, 0);
+		}
+	}
+
+	/**
+	 * Spawns golden-yellow sparkle particles around the given entity's head and a golden-yellow buff particle around
+	 * its entire body.
+	 */
+	public static void spawnHealParticles(World world, EntityLivingBase entity) {
+
+		for (int i = 0; i < 10; i++) {
+			double x = entity.posX + world.rand.nextDouble() * 2 - 1;
+			double y = entity.getEntityBoundingBox().minY + entity.getEyeHeight() - 0.5 + world.rand.nextDouble();
+			double z = entity.posZ + world.rand.nextDouble() * 2 - 1;
+			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).clr(1, 1, 0.3f).spawn(world);
+		}
+
+		ParticleBuilder.create(Type.BUFF).entity(entity).clr(1, 1, 0.3f).spawn(world);
 	}
 
 	/**
 	 * Starts building a particle of the given type.
+	 *
 	 * @param type The type of particle to build
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is already building.
 	 */
-	public ParticleBuilder particle(ResourceLocation type){
-		if(building) throw new IllegalStateException("Already building! Particle being built: " + getCurrentParticleString());
+	public ParticleBuilder particle(ResourceLocation type) {
+		if (building)
+			throw new IllegalStateException("Already building! Particle being built: " + getCurrentParticleString());
 		this.type = type;
 		this.building = true;
 		return this;
 	}
 
-	/** Gets a readable string representation of the current builder parameters; used in error messages. */
-	private String getCurrentParticleString(){
+	/**
+	 * Gets a readable string representation of the current builder parameters; used in error messages.
+	 */
+	private String getCurrentParticleString() {
 		return String.format("[ Type: %s, Position: (%s, %s, %s), Velocity: (%s, %s, %s), Colour: (%s, %s, %s), "
 						+ "Fade Colour: (%s, %s, %s), Radius: %s, Revs/tick: %s, Lifetime: %s, Gravity: %s, Shaded: %s, "
 						+ "Scale: %s, Entity: %s ]",
@@ -189,14 +225,15 @@ public final class ParticleBuilder {
 	 * is specified using {@link ParticleBuilder#entity(Entity)}, this will be <i>relative to</i> that entity's position.
 	 * <p></p>
 	 * <b>Affects:</b> All particle types
+	 *
 	 * @param x The x coordinate to set
 	 * @param y The y coordinate to set
 	 * @param z The z coordinate to set
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder pos(double x, double y, double z){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder pos(double x, double y, double z) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -205,14 +242,15 @@ public final class ParticleBuilder {
 
 	/**
 	 * Sets the position of the particle being built. This is a vector-based alternative to {@link ParticleBuilder#pos(
-	 * double, double, double)}, allowing for even more concise code when a vector is available.
+	 *double, double, double)}, allowing for even more concise code when a vector is available.
 	 * <p></p>
 	 * <b>Affects:</b> All particle types
+	 *
 	 * @param pos A vector representing the coordinates of the particle to be built.
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder pos(Vec3d pos){
+	public ParticleBuilder pos(Vec3d pos) {
 		return pos(pos.x, pos.y, pos.z);
 	}
 
@@ -221,14 +259,15 @@ public final class ParticleBuilder {
 	 * specified within its constructor.
 	 * <p></p>
 	 * <b>Affects:</b> All particle types
+	 *
 	 * @param vx The x velocity to set
 	 * @param vy The y velocity to set
 	 * @param vz The z velocity to set
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder vel(double vx, double vy, double vz){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder vel(double vx, double vy, double vz) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.vx = vx;
 		this.vy = vy;
 		this.vz = vz;
@@ -237,14 +276,15 @@ public final class ParticleBuilder {
 
 	/**
 	 * Sets the velocity of the particle being built. This is a vector-based alternative to {@link ParticleBuilder#vel(
-	 * double, double, double)}, allowing for even more concise code when a vector is available.
+	 *double, double, double)}, allowing for even more concise code when a vector is available.
 	 * <p></p>
 	 * <b>Affects:</b> All particle types except
+	 *
 	 * @param vel A vector representing the velocity of the particle to be built.
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder vel(Vec3d vel){
+	public ParticleBuilder vel(Vec3d vel) {
 		return vel(vel.x, vel.y, vel.z);
 	}
 
@@ -255,23 +295,15 @@ public final class ParticleBuilder {
 	 * <p></p>
 	 * <b>Affects:</b> All particle types except {@link Type#ICE ICE}, {@link Type#MAGIC_BUBBLE MAGIC_BUBBLE}
 	 * and {@link Type#MAGIC_FIRE MAGIC_FIRE}
+	 *
 	 * @param r The red colour component to set; will be clamped to between 0 and 1
 	 * @param g The green colour component to set; will be clamped to between 0 and 1
 	 * @param b The blue colour component to set; will be clamped to between 0 and 1
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder clr(float r, float g, float b){
-		if(!building) throw new IllegalStateException("Not building yet!");
-		this.r = MathHelper.clamp(r, 0, 1);
-		this.g = MathHelper.clamp(g, 0, 1);
-		this.b = MathHelper.clamp(b, 0, 1);
-		return this;
-	}
-
-	//Colour shifting
-	public ParticleBuilder clrShift(float r, float g, float b, boolean shiftRandomly, float rS, float gS, float bS, float aS, float rI, float gI, float bI, float aI){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder clr(float r, float g, float b) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.r = MathHelper.clamp(r, 0, 1);
 		this.g = MathHelper.clamp(g, 0, 1);
 		this.b = MathHelper.clamp(b, 0, 1);
@@ -279,7 +311,39 @@ public final class ParticleBuilder {
 	}
 
 	/**
+	 * Sets the colour of the particle being built. If unspecified, this defaults to the particle's default colour,
+	 * specified within its constructor. <i>If all colour components are 0 or 1, at least one must have the float suffix
+	 * ({@code f} or {@code F}) or the integer overload will be used instead, causing the particle to appear black!</i>
+	 * <p></p>
+	 * <b>Affects:</b> All particle types except {@link Type#ICE ICE}, {@link Type#MAGIC_BUBBLE MAGIC_BUBBLE}
+	 * and {@link Type#MAGIC_FIRE MAGIC_FIRE}
 	 *
+	 * @param r The red colour component to set; will be clamped to between 0 and 1
+	 * @param g The green colour component to set; will be clamped to between 0 and 1
+	 * @param b The blue colour component to set; will be clamped to between 0 and 1
+	 * @param a The alpha component; clamped between 0 and 1.
+	 * @return The particle builder instance, allowing other methods to be chained onto this one
+	 * @throws IllegalStateException if the particle builder is not yet building.
+	 */
+	public ParticleBuilder clr(float r, float g, float b, float a) {
+		if (!building) throw new IllegalStateException("Not building yet!");
+		this.r = MathHelper.clamp(r, 0, 1);
+		this.g = MathHelper.clamp(g, 0, 1);
+		this.b = MathHelper.clamp(b, 0, 1);
+		this.a = MathHelper.clamp(a, 0, 1);
+		return this;
+	}
+
+	//Colour shifting
+	public ParticleBuilder clrShift(float r, float g, float b, boolean shiftRandomly, float rS, float gS, float bS, float aS, float rI, float gI, float bI, float aI) {
+		if (!building) throw new IllegalStateException("Not building yet!");
+		this.r = MathHelper.clamp(r, 0, 1);
+		this.g = MathHelper.clamp(g, 0, 1);
+		this.b = MathHelper.clamp(b, 0, 1);
+		return this;
+	}
+
+	/**
 	 * @param element The element to set for the particle. Used in some particles, like the Flash particle, for different effects.
 	 *                In the future it'll be behaviour, but for now it's not.
 	 */
@@ -294,14 +358,32 @@ public final class ParticleBuilder {
 	 * <p></p>
 	 * <b>Affects:</b> All particle types except {@link Type#ICE ICE}, {@link Type#MAGIC_BUBBLE MAGIC_BUBBLE}
 	 * and {@link Type#MAGIC_FIRE MAGIC_FIRE}
+	 *
 	 * @param r The red colour component to set; will be clamped to between 0 and 255
 	 * @param g The green colour component to set; will be clamped to between 0 and 255
 	 * @param b The blue colour component to set; will be clamped to between 0 and 255
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder clr(int r, int g, int b){
-		return this.clr(r/255f, g/255f, b/255f); // Yes, 255 is correct and not 256, or else we can't have pure white
+	public ParticleBuilder clr(int r, int g, int b) {
+		return this.clr(r / 255f, g / 255f, b / 255f); // Yes, 255 is correct and not 256, or else we can't have pure white
+	}
+
+	/**
+	 * Sets the colour of the particle being built. This is an 8-bit (0-255) integer version of
+	 * {@link ParticleBuilder#clr(float, float, float)}.
+	 * <p></p>
+	 * <b>Affects:</b> All particle types except {@link Type#ICE ICE}, {@link Type#MAGIC_BUBBLE MAGIC_BUBBLE}
+	 * and {@link Type#MAGIC_FIRE MAGIC_FIRE}
+	 *
+	 * @param r The red colour component to set; will be clamped to between 0 and 255
+	 * @param g The green colour component to set; will be clamped to between 0 and 255
+	 * @param b The blue colour component to set; will be clamped to between 0 and 255
+	 * @return The particle builder instance, allowing other methods to be chained onto this one
+	 * @throws IllegalStateException if the particle builder is not yet building.
+	 */
+	public ParticleBuilder clr(int r, int g, int b, float a) {
+		return this.clr(r / 255f, g / 255f, b / 255f, a / 255F); // Yes, 255 is correct and not 256, or else we can't have pure white
 	}
 
 	/**
@@ -310,11 +392,12 @@ public final class ParticleBuilder {
 	 * <p></p>
 	 * <b>Affects:</b> All particle types except {@link Type#ICE ICE}, {@link Type#MAGIC_BUBBLE MAGIC_BUBBLE}
 	 * and {@link Type#MAGIC_FIRE MAGIC_FIRE}
+	 *
 	 * @param hex The colour to be set, as a packed 6-digit hex integer (e.g. 0xff0000).
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder clr(int hex){
+	public ParticleBuilder clr(int hex) {
 		int r = (hex & 0xFF0000) >> 16;
 		int g = (hex & 0xFF00) >> 8;
 		int b = (hex & 0xFF);
@@ -328,14 +411,15 @@ public final class ParticleBuilder {
 	 * <p></p>
 	 * <b>Affects:</b> All particle types except {@link Type#ICE ICE}, {@link Type#MAGIC_BUBBLE MAGIC_BUBBLE}
 	 * and {@link Type#MAGIC_FIRE MAGIC_FIRE}
+	 *
 	 * @param r The red colour component to set; will be clamped to between 0 and 1
 	 * @param g The green colour component to set; will be clamped to between 0 and 1
 	 * @param b The blue colour component to set; will be clamped to between 0 and 1
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder fade(float r, float g, float b){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder fade(float r, float g, float b) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.fr = MathHelper.clamp(r, 0, 1);
 		this.fg = MathHelper.clamp(g, 0, 1);
 		this.fb = MathHelper.clamp(b, 0, 1);
@@ -348,14 +432,15 @@ public final class ParticleBuilder {
 	 * <p></p>
 	 * <b>Affects:</b> All particle types except {@link Type#ICE ICE}, {@link Type#MAGIC_BUBBLE MAGIC_BUBBLE}
 	 * and {@link Type#MAGIC_FIRE MAGIC_FIRE}
+	 *
 	 * @param r The red colour component to set; will be clamped to between 0 and 255
 	 * @param g The green colour component to set; will be clamped to between 0 and 255
 	 * @param b The blue colour component to set; will be clamped to between 0 and 255
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder fade(int r, int g, int b){
-		return this.clr(r/255f, g/255f, b/255f); // Yes, 255 is correct and not 256, or else we can't have pure white
+	public ParticleBuilder fade(int r, int g, int b) {
+		return this.clr(r / 255f, g / 255f, b / 255f); // Yes, 255 is correct and not 256, or else we can't have pure white
 	}
 
 	/**
@@ -364,11 +449,12 @@ public final class ParticleBuilder {
 	 * <p></p>
 	 * <b>Affects:</b> All particle types except {@link Type#ICE ICE}, {@link Type#MAGIC_BUBBLE MAGIC_BUBBLE}
 	 * and {@link Type#MAGIC_FIRE MAGIC_FIRE}
+	 *
 	 * @param hex The colour to be set, as a packed 6-digit hex integer (e.g. 0xff0000).
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder fade(int hex){
+	public ParticleBuilder fade(int hex) {
 		int r = (hex & 0xFF0000) >> 16;
 		int g = (hex & 0xFF00) >> 8;
 		int b = (hex & 0xFF);
@@ -379,27 +465,31 @@ public final class ParticleBuilder {
 	 * Sets the scale of the particle being built. If unspecified, this defaults to 1.
 	 * <p></p>
 	 * <b>Affects:</b> All particle types
+	 *
 	 * @param scale The scale to set, as a multiple of the particle's default scale
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder scale(float scale){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder scale(float scale) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.scale = scale;
 		return this;
 	}
+
+	// Used to say Affects: {@link Type#ICE ICE}, {@link Type#SPARKLE SPARKLE} - not sure that's true any more
 
 	/**
 	 * Sets the lifetime of the particle being built. If unspecified, this defaults to the particle's default lifetime,
 	 * specified within its constructor.
 	 * <p></p>
 	 * <b>Affects:</b> All particle types
+	 *
 	 * @param lifetime The lifetime to set in ticks
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder time(int lifetime){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder time(int lifetime) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.lifetime = lifetime;
 		return this;
 	}
@@ -412,43 +502,47 @@ public final class ParticleBuilder {
 	 * use {@code .seed(world.getTotalWorldTime() - ticksInUse)}.</i>
 	 * <p></p>
 	 * <b>Affects:</b> All particle types
+	 *
 	 * @param seed The seed to set
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder seed(long seed){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder seed(long seed) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.seed = seed;
 		return this;
 	}
+
+	//TODO: Option for colliding with other particles and/or entities!
 
 	/**
 	 * Sets the spin parameters of the particle being built. If unspecified, these both default to 0.
 	 * <p></p>
 	 * <b>Affects:</b> All particle types
+	 *
 	 * @param radius The rotation radius to set
-	 * @param speed The rotation speed to set, in revolutions per tick
+	 * @param speed  The rotation speed to set, in revolutions per tick
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder spin(double radius, double speed){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder spin(double radius, double speed) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.radius = radius;
 		this.rpt = speed;
 		return this;
 	}
 
-	// Used to say Affects: {@link Type#ICE ICE}, {@link Type#SPARKLE SPARKLE} - not sure that's true any more
 	/**
 	 * Sets the gravity of the particle being built. If unspecified, this defaults to false.
 	 * <p></p>
 	 * <b>Affects:</b> All particle types
+	 *
 	 * @param gravity True to enable gravity for the particle, false to disable
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder gravity(boolean gravity){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder gravity(boolean gravity) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.gravity = gravity;
 		return this;
 	}
@@ -457,27 +551,28 @@ public final class ParticleBuilder {
 	 * Sets the shading of the particle being built. If unspecified, this defaults to false.
 	 * <p></p>
 	 * <b>Affects:</b> All particle types
+	 *
 	 * @param shaded True to enable shading for the particle, false for full brightness
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder shaded(boolean shaded){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder shaded(boolean shaded) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.shaded = shaded;
 		return this;
 	}
 
-	//TODO: Option for colliding with other particles and/or entities!
 	/**
 	 * Sets the collisions of the particle being built. If unspecified, this defaults to false.
 	 * <p></p>
 	 * <b>Affects:</b> All particle types
+	 *
 	 * @param collide True to enable block collisions for the particle, false to disable
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder collide(boolean collide){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder collide(boolean collide) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.collide = collide;
 		return this;
 	}
@@ -488,39 +583,43 @@ public final class ParticleBuilder {
 	 * entity's position.
 	 * <p></p>
 	 * <b>Affects:</b> All particle types
+	 *
 	 * @param entity The entity to set (passing in null will do nothing but will not cause any problems, so for the sake
-	 * of conciseness it is not necessary to perform a null check on the passed-in argument)
+	 *               of conciseness it is not necessary to perform a null check on the passed-in argument)
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder entity(Entity entity){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder entity(Entity entity) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.entity = entity;
 		this.spawnEntity = entity;
 		return this;
 	}
 
+	// ============================================= Targeted-only methods =============================================
+
 	/**
-	 *
 	 * @param entity The spawn entity to set the particle to. Used for determining particle collision boxes.
 	 */
 	public ParticleBuilder spawnEntity(Entity entity) {
-		if(!building) throw new IllegalStateException("Not building yet!");
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.spawnEntity = entity;
 		return this;
 	}
+
 	/**
 	 * Sets the rotation of the particle being built. If unspecified, the particle will use the default behaviour and
 	 * rotate to face the viewer.
 	 * <p></p>
 	 * <b>Affects:</b> All particle types
-	 * @param yaw The yaw angle to set in degrees, where 0 is south.
+	 *
+	 * @param yaw   The yaw angle to set in degrees, where 0 is south.
 	 * @param pitch The pitch angle to set in degrees, where 0 is horizontal.
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder face(float yaw, float pitch){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder face(float yaw, float pitch) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.yaw = yaw;
 		this.pitch = pitch;
 		return this;
@@ -533,28 +632,28 @@ public final class ParticleBuilder {
 	 * If unspecified, the particle will use the default behaviour and rotate to face the viewer.
 	 * <p></p>
 	 * <b>Affects:</b> All particle types
+	 *
 	 * @param direction The {@code EnumFacing} direction to set.
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder face(EnumFacing direction){
+	public ParticleBuilder face(EnumFacing direction) {
 		return face(direction.getHorizontalAngle(), direction.getAxis().isVertical() ? direction.getAxisDirection().getOffset() * 90 : 0);
 	}
-
-	// ============================================= Targeted-only methods =============================================
 
 	/**
 	 * Sets the target of the particle being built. This will cause the particle to stretch to touch the given position.
 	 * <p></p>
 	 * <b>Affects:</b> Targeted particles, namely {@link Type#BEAM BEAM}, {@link Type#LIGHTNING LIGHTNING} and {@link Type#VINE VINE}
+	 *
 	 * @param x The target x-coordinate to set
 	 * @param y The target y-coordinate to set
 	 * @param z The target z-coordinate to set
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder target(double x, double y, double z){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder target(double x, double y, double z) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.tx = x;
 		this.ty = y;
 		this.tz = z;
@@ -567,11 +666,12 @@ public final class ParticleBuilder {
 	 * available.
 	 * <p></p>
 	 * <b>Affects:</b> Targeted particles, namely {@link Type#BEAM BEAM}, {@link Type#LIGHTNING LIGHTNING} and {@link Type#VINE VINE}
+	 *
 	 * @param pos A vector representing the target position of the particle to be built.
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder target(Vec3d pos){
+	public ParticleBuilder target(Vec3d pos) {
 		return target(pos.x, pos.y, pos.z);
 	}
 
@@ -580,14 +680,15 @@ public final class ParticleBuilder {
 	 * at the given velocity. Has no effect unless {@link ParticleBuilder#target(double, double, double)} or one of its
 	 * overloads is also set. <p></p>
 	 * <b>Affects:</b> Targeted particles, namely {@link Type#BEAM BEAM}, {@link Type#LIGHTNING LIGHTNING} and {@link Type#VINE VINE}
+	 *
 	 * @param vx The target point x velocity to set
 	 * @param vy The target point y velocity to set
 	 * @param vz The target point z velocity to set
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder tvel(double vx, double vy, double vz){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder tvel(double vx, double vy, double vz) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.tvx = vx;
 		this.tvy = vy;
 		this.tvz = vz;
@@ -600,11 +701,12 @@ public final class ParticleBuilder {
 	 * available.
 	 * <p></p>
 	 * <b>Affects:</b> Targeted particles, namely {@link Type#BEAM BEAM}, {@link Type#LIGHTNING LIGHTNING} and {@link Type#VINE VINE}
+	 *
 	 * @param vel A vector representing the target point velocity of the particle to be built.
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder tvel(Vec3d vel){
+	public ParticleBuilder tvel(Vec3d vel) {
 		return tvel(vel.x, vel.y, vel.z);
 	}
 
@@ -614,43 +716,54 @@ public final class ParticleBuilder {
 	 * distance from the given position.
 	 * <p></p>
 	 * <b>Affects:</b> Targeted particles, namely {@link Type#BEAM BEAM}, {@link Type#LIGHTNING LIGHTNING} and {@link Type#VINE VINE}
+	 *
 	 * @param length The length of the particle being built.
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder length(double length){
+	public ParticleBuilder length(double length) {
 		this.length = length;
 		return this;
 	}
+
+	// ============================================== Convenience methods ==============================================
+
+	// These may seem to go against the whole point of this class, but of course they return the ParticleBuilder instance
+	// so anything else can still be chained onto them - centralising commonly-used particle spawning patterns without
+	// losing any of the flexibility of the particle builder. In addition, callers of these methods are still free to
+	// change any of the parameters that were set within them afterwards.
 
 	/**
 	 * Sets the target of the particle being built. This will cause the particle to stretch to touch the given entity.
 	 * <p></p>
 	 * <b>Affects:</b> Targeted particles, namely {@link Type#BEAM BEAM}, {@link Type#LIGHTNING LIGHTNING} and {@link Type#VINE VINE}
+	 *
 	 * @param target The entity to set
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder target(Entity target){
-		if(!building) throw new IllegalStateException("Not building yet!");
+	public ParticleBuilder target(Entity target) {
+		if (!building) throw new IllegalStateException("Not building yet!");
 		this.target = target;
 		return this;
 	}
 
 	/**
 	 * Spawns the particle that has been built and resets the particle builder.
+	 *
 	 * @param world The world in which to spawn the particle
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public void spawn(World world){
+	public void spawn(World world) {
 
-		if(!building) throw new IllegalStateException("Not building yet!");
+		if (!building) throw new IllegalStateException("Not building yet!");
 
-		if(y < 0 && entity == null) AvatarLog.warn(AvatarLog.WarningType.INVALID_CODE, "Spawning particle below y = 0 - are you sure the position/entity "
-				+ "has been set correctly?");
+		if (y < 0 && entity == null)
+			AvatarLog.warn(AvatarLog.WarningType.INVALID_CODE, "Spawning particle below y = 0 - are you sure the position/entity "
+					+ "has been set correctly?");
 
-		if(!world.isRemote){
-			AvatarLog.warn(AvatarLog.WarningType.BAD_CLIENT_PACKET,"ParticleBuilder.spawn(...) called on the server side! ParticleBuilder has prevented a "
+		if (!world.isRemote) {
+			AvatarLog.warn(AvatarLog.WarningType.BAD_CLIENT_PACKET, "ParticleBuilder.spawn(...) called on the server side! ParticleBuilder has prevented a "
 					+ "server crash, but calling it on the server will do nothing. Consider adding a world.isRemote check.");
 			// Must stop here because the line after this if statement would crash the server!
 			reset();
@@ -659,23 +772,23 @@ public final class ParticleBuilder {
 
 		ParticleAvatar particle = AvatarMod.proxy.createParticle(type, world, x, y, z);
 
-		if(particle == null){
+		if (particle == null) {
 			// No need to display a warning here, we already did it in the client proxy
 			reset();
 			return;
 		}
 
 		// Anything with an if statement here allows default values to be set in particle constructors
-		if(!Double.isNaN(vx) && !Double.isNaN(vy) && !Double.isNaN(vz)) 	particle.setVelocity(vx, vy, vz);
-		if(r >= 0 && g >= 0 && b >= 0) 										particle.setRBGColorF(r, g, b);
-		if(fr >= 0 && fg >= 0 && fb >= 0)									particle.setFadeColour(fr, fg, fb);
-		if(lifetime >= 0) 													particle.setMaxAge(lifetime);
-		if(radius > 0) 														particle.setSpin(radius, rpt);
-		if(!Float.isNaN(yaw) && !Float.isNaN(pitch)) 						particle.setFacing(yaw, pitch);
-		if(seed != 0)														particle.setSeed(seed);
-		if(!Double.isNaN(tvx) && !Double.isNaN(tvy) && !Double.isNaN(tvz)) 	particle.setTargetVelocity(tvx, tvy, tvz);
-		if(length > 0)														particle.setLength(length);
-		if (element != null)												particle.setElement(element);
+		if (!Double.isNaN(vx) && !Double.isNaN(vy) && !Double.isNaN(vz)) particle.setVelocity(vx, vy, vz);
+		if (r >= 0 && g >= 0 && b >= 0) particle.setRBGColorF(r, g, b);
+		if (fr >= 0 && fg >= 0 && fb >= 0) particle.setFadeColour(fr, fg, fb);
+		if (lifetime >= 0) particle.setMaxAge(lifetime);
+		if (radius > 0) particle.setSpin(radius, rpt);
+		if (!Float.isNaN(yaw) && !Float.isNaN(pitch)) particle.setFacing(yaw, pitch);
+		if (seed != 0) particle.setSeed(seed);
+		if (!Double.isNaN(tvx) && !Double.isNaN(tvy) && !Double.isNaN(tvz)) particle.setTargetVelocity(tvx, tvy, tvz);
+		if (length > 0) particle.setLength(length);
+		if (element != null) particle.setElement(element);
 
 		particle.multipleParticleScaleBy(scale);
 		particle.setGravity(gravity);
@@ -691,8 +804,12 @@ public final class ParticleBuilder {
 		reset();
 	}
 
-	/** Resets the state of the particle builder and resets all the builder variables to their default values. */
-	private void reset(){
+	// Methods for spawning specific effects (similar to the FX playing methods with the ids in RenderGlobal)
+
+	/**
+	 * Resets the state of the particle builder and resets all the builder variables to their default values.
+	 */
+	private void reset() {
 		building = false;
 		type = null;
 		x = 0;
@@ -732,91 +849,102 @@ public final class ParticleBuilder {
 		length = -1;
 	}
 
-	// ============================================== Convenience methods ==============================================
-
-	// These may seem to go against the whole point of this class, but of course they return the ParticleBuilder instance
-	// so anything else can still be chained onto them - centralising commonly-used particle spawning patterns without
-	// losing any of the flexibility of the particle builder. In addition, callers of these methods are still free to
-	// change any of the parameters that were set within them afterwards.
-
 	/**
-	 * Starts building a particle of the given type and positions it randomly within the given entity's bounding box.
-	 * Equivalent to calling {@code ParticleBuilder.create(type).pos(...)}; users should chain any additional builder
-	 * methods onto this one and finish with {@code .spawn(world)} as normal.
-	 * Used extensively with summoned creatures; makes code much neater and more concise.
+	 * {@link ResourceLocation} constants representing the different types of particle added by wizardry. These
+	 * effectively replace the enum {@code WizardryParticleType} from previous versions.
 	 * <p></p>
-	 * <i>N.B. this does <b>not</b> cause the particle to move with the given entity.</i>
-	 * @param type The type of particle to build
-	 * @param entity The entity to position the particle at
-	 * @return The particle builder instance, allowing other methods to be chained onto this one
-	 * @throws IllegalStateException if the particle builder is already building.
+	 * Individual constants have comments detailing their corresponding default parameters. A range of values indicates
+	 * randomness.
+	 * <p></p>
+	 * To register your own particle types, use {@link com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar#registerParticle(
+	 *ResourceLocation, com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar.IAvatarParticleFactory)
+	 * ParticleAvatar.registerParticle(ResourceLocation, IWizardryParticleFactory)}.
 	 */
-	public static ParticleBuilder create(ResourceLocation type, Entity entity){
-
-		double x = entity.posX + (entity.world.rand.nextDouble() - 0.5D) * (double)entity.width;
-		double y = entity.posY + entity.world.rand.nextDouble() * (double)entity.height;
-		double z = entity.posZ + (entity.world.rand.nextDouble() - 0.5D) * (double)entity.width;
-
-		return ParticleBuilder.instance.particle(type).pos(x, y, z);
-	}
-
-	/**
-	 * Starts building a particle of the given type and positions it randomly within the given radius of the given position,
-	 * with velocity proportional to distance from the given position if move is true. Good for making explosion-type effects.
-	 * Equivalent to calling {@code ParticleBuilder.create(type).pos(...).vel(...)}; users should chain any additional builder
-	 * methods onto this one and finish with {@code .spawn(world)} as normal.
-	 * @param type The type of particle to build
-	 * @param random An RNG instance
-	 * @param x The x coordinate of the centre of the region in which to position the particle
-	 * @param y The y coordinate of the centre of the region in which to position the particle
-	 * @param z The z coordinate of the centre of the region in which to position the particle
-	 * @param radius The radius of the region in which to position the particle
-	 * @param move Whether the particle should move outwards from the centre (note that if this is false, the particle's
-	 * default velocity will apply)
-	 * @return The particle builder instance, allowing other methods to be chained onto this one
-	 * @throws IllegalStateException if the particle builder is already building.
-	 */
-	public static ParticleBuilder create(ResourceLocation type, Random random, double x, double y, double z, double radius, boolean move){
-
-		double px = x + (random.nextDouble()*2 - 1) * radius;
-		double py = y + (random.nextDouble()*2 - 1) * radius;
-		double pz = z + (random.nextDouble()*2 - 1) * radius;
-
-		if(move) return ParticleBuilder.instance.particle(type).pos(px, py, pz).vel(px-x, py-y, pz-z);
-
-		return ParticleBuilder.instance.particle(type).pos(px, py, pz);
-	}
-
-	// Methods for spawning specific effects (similar to the FX playing methods with the ids in RenderGlobal)
-
-	/** Spawns spark and large smoke particles (8 of each) within a 1x1x1 volume centred on the given position. */
-	public static void spawnShockParticles(World world, double x, double y, double z) {
-
-		double px, py, pz;
-
-		for(int i=0; i<8; i++){
-			px = x + world.rand.nextDouble() - 0.5;
-			py = y + world.rand.nextDouble() - 0.5;
-			pz = z + world.rand.nextDouble() - 0.5;
-			ParticleBuilder.create(Type.SPARK).pos(px, py, pz).spawn(world);
-			px = x + world.rand.nextDouble() - 0.5;
-			py = y + world.rand.nextDouble() - 0.5;
-			pz = z + world.rand.nextDouble() - 0.5;
-			world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, px, py, pz, 0, 0, 0);
-		}
-	}
-
-	/** Spawns golden-yellow sparkle particles around the given entity's head and a golden-yellow buff particle around
-	 * its entire body. */
-	public static void spawnHealParticles(World world, EntityLivingBase entity){
-
-		for(int i = 0; i < 10; i++){
-			double x = entity.posX + world.rand.nextDouble() * 2 - 1;
-			double y = entity.getEntityBoundingBox().minY + entity.getEyeHeight() - 0.5 + world.rand.nextDouble();
-			double z = entity.posZ + world.rand.nextDouble() * 2 - 1;
-			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).clr(1, 1, 0.3f).spawn(world);
-		}
-
-		ParticleBuilder.create(Type.BUFF).entity(entity).clr(1, 1, 0.3f).spawn(world);
+	// This was originally an enum, but I think having 'Type' explicitly declared is quite nice so I've left it as a
+	// nested class.
+	public static class Type {
+		/**
+		 * 3D-rendered light-beam particle.<p></p><b>Defaults:</b><br>Lifetime: 1 tick<br> Colour: white
+		 */
+		public static final ResourceLocation BEAM = new ResourceLocation(AvatarInfo.MOD_ID, "beam");
+		/**
+		 * Helical animated 'buffing' particle.<p></p><b>Defaults:</b><br>Lifetime: 15 ticks
+		 * <br>Velocity: (0, 0.27, 0)<br>Colour: white
+		 */
+		public static final ResourceLocation BUFF = new ResourceLocation(AvatarInfo.MOD_ID, "buff");
+		/**
+		 * Spiral particle, like potions.<p></p><b>Defaults:</b><br>Lifetime: 8-40 ticks<br>Colour: white
+		 */
+		public static final ResourceLocation DARK_MAGIC = new ResourceLocation(AvatarInfo.MOD_ID, "dark_magic");
+		/**
+		 * Single pixel particle.<p></p><b>Defaults:</b><br>Lifetime: 16-80 ticks<br>Colour: white
+		 */
+		public static final ResourceLocation DUST = new ResourceLocation(AvatarInfo.MOD_ID, "dust");
+		/**
+		 * A cool custom fire particle, moves like all other fire particles.
+		 */
+		public static final ResourceLocation FIRE = new ResourceLocation(AvatarInfo.MOD_ID, " fire");
+		/**
+		 * Rapid flash, like fireworks.<p></p><b>Defaults:</b><br>Lifetime: 6 ticks<br>Colour: white
+		 */
+		public static final ResourceLocation FLASH = new ResourceLocation(AvatarInfo.MOD_ID, "flash");
+		/**
+		 * Small shard of ice.<p></p><b>Defaults:</b><br>Lifetime: 8-40 ticks<br>Gravity: true
+		 */
+		public static final ResourceLocation ICE = new ResourceLocation(AvatarInfo.MOD_ID, "ice");
+		/**
+		 * Single leaf.<p></p><b>Defaults:</b><br>Lifetime: 10-15 ticks<br>Velocity: (0, -0.03, 0)
+		 * <br>Colour: green/brown
+		 */
+		public static final ResourceLocation LEAF = new ResourceLocation(AvatarInfo.MOD_ID, "leaf");
+		/**
+		 * 3D-rendered lightning particle.<p></p><b>Defaults:</b><br>Lifetime: 3 ticks<br> Colour: blue
+		 */
+		public static final ResourceLocation LIGHTNING = new ResourceLocation(AvatarInfo.MOD_ID, "lightning");
+		/**
+		 * 2D lightning effect, normally on the ground.<p></p><b>Defaults:</b><br>Lifetime: 7 ticks
+		 * <br>Facing: up
+		 */
+		public static final ResourceLocation LIGHTNING_PULSE = new ResourceLocation(AvatarInfo.MOD_ID, "lightning_pulse");
+		/**
+		 * Bubble that doesn't burst in air.<p></p><b>Defaults:</b><br>Lifetime: 8-40 ticks
+		 */
+		public static final ResourceLocation MAGIC_BUBBLE = new ResourceLocation(AvatarInfo.MOD_ID, "magic_bubble");
+		/**
+		 * Animated flame.<p></p><b>Defaults:</b><br>Lifetime: 12-16 ticks<br>
+		 */
+		public static final ResourceLocation MAGIC_FIRE = new ResourceLocation(AvatarInfo.MOD_ID, "magic_fire");
+		/**
+		 * Soft-edged round particle.<p></p><b>Defaults:</b><br>Lifetime: 8-40 ticks<br>Colour: white
+		 */
+		public static final ResourceLocation PATH = new ResourceLocation(AvatarInfo.MOD_ID, "path");
+		/**
+		 * Scorch mark.<p></p><b>Defaults:</b><br>Lifetime: 100-140 ticks<br>Colour: black<br>Fade: black
+		 */
+		public static final ResourceLocation SCORCH = new ResourceLocation(AvatarInfo.MOD_ID, "scorch");
+		/**
+		 * Snowflake particle.<p></p><b>Defaults:</b><br>Lifetime: 40-50 ticks<br>Velocity: (0, -0.02, 0)
+		 */
+		public static final ResourceLocation SNOW = new ResourceLocation(AvatarInfo.MOD_ID, "snow");
+		/**
+		 * Animated lightning particle.<p></p><b>Defaults:</b><br>Lifetime: 3 ticks
+		 */
+		public static final ResourceLocation SPARK = new ResourceLocation(AvatarInfo.MOD_ID, "spark");
+		/**
+		 * Animated sparkle particle.<p></p><b>Defaults:</b><<br>Lifetime: 48-60 ticks<br>Colour: white
+		 */
+		public static final ResourceLocation SPARKLE = new ResourceLocation(AvatarInfo.MOD_ID, "sparkle");
+		/**
+		 * 3D-rendered expanding sphere.<p></p><b>Defaults:</b><<br>Lifetime: 6 ticks<br>Colour: white
+		 */
+		public static final ResourceLocation SPHERE = new ResourceLocation(AvatarInfo.MOD_ID, "sphere");
+		/**
+		 * Wrapped animated 'summoning' particle.<p></p><b>Defaults:</b><<br>Lifetime: 15 ticks
+		 */
+		public static final ResourceLocation SUMMON = new ResourceLocation(AvatarInfo.MOD_ID, "summon");
+		/**
+		 * 3D-rendered vine particle.<p></p><b>Defaults:</b><br>Lifetime: 1 tick<br> Colour: green
+		 */
+		public static final ResourceLocation VINE = new ResourceLocation(AvatarInfo.MOD_ID, "vine");
 	}
 }

@@ -25,6 +25,7 @@ public class ParticleFlash extends ParticleAvatar {
 	public ParticleFlash(World world, double x, double y, double z) {
 		super(world, x, y, z);
 		this.setRBGColorF(1, 1, 1);
+		this.setAlphaF(1.0F);
 		this.particleScale = 0.6f; // 7.1f is the value used in fireworks
 		this.particleMaxAge = 6;
 	}
@@ -52,7 +53,6 @@ public class ParticleFlash extends ParticleAvatar {
 		//Great for fire!
 		if (element instanceof Firebending)
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-
 		this.setAlphaF(0.6F - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F);
 		float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
 		float f6 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
@@ -62,8 +62,8 @@ public class ParticleFlash extends ParticleAvatar {
 		int k = i & 65535;
 		GlStateManager.pushMatrix();
 		if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
-			GlStateManager.disableBlend();
-			GlStateManager.disableCull();
+		//	GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.SRC_ALPHA);
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE_MINUS_CONSTANT_ALPHA, GlStateManager.DestFactor.ONE);
 		}
 		//TODO: Figure out a way to do this without breaking everything else
 		if (CLIENT_CONFIG.particleSettings.squareFlashParticles) {
@@ -73,7 +73,7 @@ public class ParticleFlash extends ParticleAvatar {
 
 		GlStateManager.enableDepth();
 		//This does some cool stuff:
-		//GlStateManager.depthMask(true);
+	//	GlStateManager.depthMask(true);
 		buffer.pos(f5 - rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 - rotationYZ * f4 - rotationXZ * f4).tex(0.5D, 0.375D)
 				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
 		buffer.pos(f5 - rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 - rotationYZ * f4 + rotationXZ * f4).tex(0.5D, 0.125D)

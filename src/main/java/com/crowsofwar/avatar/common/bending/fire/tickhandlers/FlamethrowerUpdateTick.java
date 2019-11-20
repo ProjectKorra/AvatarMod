@@ -238,7 +238,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
 						for (double i = 0; i < flamesPerSecond; i += 3) {
 							Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
-							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.05F).time(22).collide(true).vel(look.times(speedMult / 30).toMinecraft()).spawn(world);
+							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.05F).time(22).collide(true).vel(look.times(speedMult / 32.5).toMinecraft()).spawn(world);
 						}
 					}
 					for (double i = 0; i < flamesPerSecond; i += 1) {
@@ -246,12 +246,12 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
 							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.1F).time(22).collide(true).vel(look.times(speedMult / 32.5).toMinecraft()).spawn(world);
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
-									clr(255, 30 + AvatarUtils.getRandomNumberInRange(0, 50), 15).collide(true).spawnEntity(entity).scale(size).spawn(world);
+									clr(255, 30 + AvatarUtils.getRandomNumberInRange(0, 50), 15, 255).collide(true).spawnEntity(entity).scale(size).spawn(world);
 						} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
-									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5).collide(true).spawnEntity(entity).scale(size).element(new Firebending()).spawn(world);
+									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size).element(new Firebending()).spawn(world);
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
-									clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 60), 10).collide(true).spawnEntity(entity).scale(size).element(new Firebending()).spawn(world);
+									clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size).element(new Firebending()).spawn(world);
 						}
 					}
 				}
