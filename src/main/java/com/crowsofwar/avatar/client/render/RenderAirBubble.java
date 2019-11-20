@@ -73,21 +73,24 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		}
 		sizeMult *= entity.getSize() / 2.5f;
 
-		GlStateManager.color(1, 1, 1, .5f * alpha);
+		GlStateManager.color(1, 1, 1, .25f * alpha);
 		{
 			float rotY = ticks / 7f;
 			float rotX = MathHelper.cos(ticks / 4f) * .3f;
 			disableLighting();
 			renderCube(x, y, z, 0, 1, 0, 1, 2.25f * sizeMult, rotX, rotY, 0);
 		}
-		GlStateManager.color(1, 1, 1, 1 * alpha);
+		GlStateManager.color(1, 1, 1, 0.75F * alpha);
 		{
 			float rotY = ticks / 25f;
 			float rotZ = MathHelper.cos(ticks / 10f + 1.3f) * .3f;
 			disableLighting();
 			renderCube(x, y, z, 0, 1, 0, 1, 3f * sizeMult, 0, rotY, rotZ);
 		}
+		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
+		//TODO: Change the texture and mess with depth
+		
 		disableBlend();
 
 	}

@@ -48,8 +48,9 @@ public class ParticleFire extends ParticleAvatar {
 	@Override
 	protected void drawParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float rotationX, float rotationY, float rotationZ, float rotationYZ, float rotationXY) {
 		GlStateManager.pushMatrix();
-		//GlStateManager.disableBlend();
-		GlStateManager.disableLight(Math.min((int) (particleScale * 1.5), 7));
+	//	GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+		GlStateManager.disableLighting();
+		//GlStateManager.disableLight(Math.min((int) (particleScale * 1.5), 7));
 		super.drawParticle(buffer, viewer, partialTicks, rotationX, rotationY, rotationZ, rotationYZ, rotationXY);
 		GlStateManager.popMatrix();
 	}

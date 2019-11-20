@@ -246,7 +246,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
 							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.1F).time(22).collide(true).vel(look.times(speedMult / 32.5).toMinecraft()).spawn(world);
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
-									clr(255, 30 + AvatarUtils.getRandomNumberInRange(0, 50), 15, 255).collide(true).spawnEntity(entity).scale(size).spawn(world);
+									clr(255, 30 + AvatarUtils.getRandomNumberInRange(0, 50), 15, 255).collide(true).element(new Firebending()).spawnEntity(entity).scale(size).spawn(world);
 						} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
 									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size).element(new Firebending()).spawn(world);
