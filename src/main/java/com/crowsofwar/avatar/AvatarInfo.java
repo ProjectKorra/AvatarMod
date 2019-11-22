@@ -42,7 +42,7 @@ public class AvatarInfo {
 	public static final String MOD_NAME = "@name@";
 	public static final String MC_VERSION = "@mcversion@";
 	public static final String VERSION = "@version@";
-	public static final String DOMAIN = MOD_ID.toLowerCase(Locale.ENGLISH) + ":"; //for resources
+	public static final String DOMAIN = "@modid@:"; //for resources
 	public static final SemanticVersion SEMANTIC_VERSION = SemanticVersion.of(VERSION);
 
 	public static final boolean IS_PREVIEW = SEMANTIC_VERSION.isPreRelease();
