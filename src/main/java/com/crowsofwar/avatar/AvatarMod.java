@@ -181,7 +181,9 @@ public class AvatarMod {
 		ConfigClient.load();
 		ConfigChi.load();
 		ConfigMobs.load();
-		ConfigAnalytics.load();//config
+		ConfigAnalytics.load();
+
+		//config
 		ConfigHandler.init(e.getSuggestedConfigurationFile());
 
 		//wind
