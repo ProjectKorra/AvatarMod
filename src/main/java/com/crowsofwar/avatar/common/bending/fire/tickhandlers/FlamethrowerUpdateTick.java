@@ -55,6 +55,7 @@ import net.minecraft.world.WorldServer;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -197,26 +198,73 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				Vector start = look.plus(eye.minusY(0.5));
 				Vector end = start.plus(look.times(range));
 
-				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2.2F, Raytrace.ignoreBenderFilter(entity));
-				List<AxisAlignedBB> hitBoxes = world.getCollisionBoxes(entity, new AxisAlignedBB(start.x(), start.y(), start.z(), end.x(), end.y(),
-						end.z()).grow(size / 2.2F));
+				Raytrace.Result result = Raytrace.raytrace(world, start.toMinecraft(), look.toMinecraft(), range, false);
+				if (result.hitSomething() && result.getPos() != null) {
+					BlockPos pos = result.getPos().toBlockPos();
+					if (lightsFires)
+						if (Blocks.FIRE.canPlaceBlockAt(world, pos) && !world.getBlockState(pos).isFullBlock() && !(world.getBlockState(pos) instanceof BlockLiquid))
+							if (world.getBlockState(pos).getBlock() == Blocks.AIR && world.getBlockState(pos.down()).getBlock() != Blocks.AIR ||
+									world.getBlockState(pos).getBlock() != Blocks.AIR) {
+								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+							}
 
-				hitBoxes.remove(entity.getEntityBoundingBox());
+				}
+
+
+				//Particle code.
+				if (world.isRemote) {
+					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+						for (double i = 0; i < flamesPerSecond; i += 3) {
+							Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
+							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.05F).time(22).collide(true).spawnEntity(entity).vel(look.times(speedMult / 32.5).toMinecraft()).spawn(world);
+						}
+					}
+					for (double i = 0; i < flamesPerSecond; i += 1) {
+						Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
+						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.1F).time(22).collide(true).vel(look.times(speedMult / 32.5).toMinecraft()).spawn(world);
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
+									clr(255, 30 + AvatarUtils.getRandomNumberInRange(0, 50), 15, 255).collide(true).element(new Firebending()).spawnEntity(entity).scale(size).spawn(world);
+						} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
+									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size).element(new Firebending()).spawn(world);
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
+									clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size).element(new Firebending()).spawn(world);
+						}
+					}
+				}
+
+
+				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2.2F, Raytrace.ignoreBenderFilter(entity));
+				List<AxisAlignedBB> hitBoxes; // = world.getCollisionBoxes(entity, new AxisAlignedBB(start.x(), start.y(), start.z(), end.x(), end.y(),
+				List<ParticleAvatar> aliveParticles = ParticleBuilder.aliveParticles.values().stream().
+						filter(particleAvatar -> particleAvatar.getEntity().getUniqueID() == entity.getUniqueID()).collect(Collectors.toList());
+				//end.z()).grow(size / 2.2F));
+
+				//	hitBoxes.remove(entity.getEntityBoundingBox());
 				hit.remove(entity);
 
 				boolean canHitEntity = false;
 
-				if (!hit.isEmpty() && !hitBoxes.isEmpty()) {
+				if (!hit.isEmpty() && !aliveParticles.isEmpty()) {
 					for (Entity target : hit) {
 						if (!world.isRemote) {
 							if (canCollideWithEntity(target, entity)) {
-								//Time to have fun. This makes sure particles are colliding with the entity that you're trying to hit.
-								if (hitBoxes.contains(target.getEntityBoundingBox())) {
-									for (ParticleAvatar particle : ParticleBuilder.aliveParticles.values())
-										if (!canHitEntity)
-											if (particle.getEntity() == entity)
-												if (target.getEntityBoundingBox().contains(particle.getBoundingBox().getCenter()))
+								hitBoxes = world.getCollisionBoxes(entity, target.getEntityBoundingBox().grow(0.1));
+								hitBoxes.remove(entity.getEntityBoundingBox());
+								if (!hitBoxes.isEmpty()) {
+									//Time to have fun. This makes sure particles are colliding with the entity that you're trying to hit.
+										for (ParticleAvatar particle : aliveParticles) {
+											if (!canHitEntity) {
+											//We're going to need a for loop to iterate across all parts of the bounding box.
+												AxisAlignedBB box = target.getEntityBoundingBox().grow(0.1);
+												if (box.intersects(particle.getBoundingBox()) || box.intersect(particle.getBoundingBox()).intersects(box))
+												//if (target.getEntityBoundingBox().grow(0.05).contains(particle.getBoundingBox().getCenter()))
 													canHitEntity = true;
+											}
+
+										}
+
 
 
 									if (canHitEntity) {
@@ -242,41 +290,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					}
 				}
 
-				Raytrace.Result result = Raytrace.raytrace(world, start.toMinecraft(), look.toMinecraft(), range, false);
-				if (result.hitSomething() && result.getPos() != null) {
-					BlockPos pos = result.getPos().toBlockPos();
-					if (lightsFires)
-						if (Blocks.FIRE.canPlaceBlockAt(world, pos) && !world.getBlockState(pos).isFullBlock() && !(world.getBlockState(pos) instanceof BlockLiquid))
-							if (world.getBlockState(pos).getBlock() == Blocks.AIR && world.getBlockState(pos.down()).getBlock() != Blocks.AIR ||
-									world.getBlockState(pos).getBlock() != Blocks.AIR) {
-								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-							}
-
-				}
-
-
-				//Particle code.
-				if (world.isRemote) {
-					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
-						for (double i = 0; i < flamesPerSecond; i += 3) {
-							Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
-							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.05F).time(22).collide(true).vel(look.times(speedMult / 32.5).toMinecraft()).spawn(world);
-						}
-					}
-					for (double i = 0; i < flamesPerSecond; i += 1) {
-						Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
-						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
-							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.1F).time(22).collide(true).vel(look.times(speedMult / 32.5).toMinecraft()).spawn(world);
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
-									clr(255, 30 + AvatarUtils.getRandomNumberInRange(0, 50), 15, 255).collide(true).element(new Firebending()).spawnEntity(entity).scale(size).spawn(world);
-						} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
-									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size).element(new Firebending()).spawn(world);
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
-									clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size).element(new Firebending()).spawn(world);
-						}
-					}
-				}
 
 				if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)
 					world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,

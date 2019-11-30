@@ -777,8 +777,11 @@ public abstract class ParticleAvatar extends Particle {
 	@Override
 	public void setExpired() {
 		super.setExpired();
-		if (ParticleBuilder.aliveParticles.get(getUUID()) != null) {
-			ParticleBuilder.aliveParticles.remove(getUUID());
-		}
+		ParticleBuilder.aliveParticles.remove(getUUID());
+	}
+
+	@Override
+	public float getRedColorF() {
+		return super.getRedColorF();
 	}
 }
