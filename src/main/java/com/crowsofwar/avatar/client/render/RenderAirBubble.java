@@ -31,6 +31,7 @@ import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
 import static net.minecraft.client.renderer.GlStateManager.*;
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * @author CrowsOfWar
@@ -55,6 +56,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		float z = (float) zz;
 
 		enableBlend();
+		enableDepth();
 		GlStateManager.disableLighting();
 
 		float ticks = entity.ticksExisted + partialTicks;
@@ -87,10 +89,11 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 			disableLighting();
 			renderCube(x, y, z, 0, 1, 0, 1, 3f * sizeMult, 0, rotY, rotZ);
 		}
-		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+		//GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+		GlStateManager.depthFunc(GL_GREATER);
 
 		//TODO: Change the texture and mess with depth
-		
+
 		disableBlend();
 
 	}

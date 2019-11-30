@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.data.Bender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
@@ -15,7 +16,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * <i>"Don't waste time spawning particles manually - let {@code ParticleBuilder} do the work for you!"</i>
@@ -58,6 +63,8 @@ public final class ParticleBuilder {
 	 * The static instance of the particle builder.
 	 */
 	public static final ParticleBuilder instance = new ParticleBuilder();
+
+	public static Map<UUID, ParticleAvatar> aliveParticles = new HashMap<>();
 
 	/**
 	 * Whether the particle builder is currently building or not.
@@ -790,6 +797,9 @@ public final class ParticleBuilder {
 		if (length > 0) particle.setLength(length);
 		if (element != null) particle.setElement(element);
 
+		UUID id = UUID.randomUUID();
+
+		particle.setUUID(id);
 		particle.multipleParticleScaleBy(scale);
 		particle.setGravity(gravity);
 		particle.setShaded(shaded);
@@ -797,8 +807,13 @@ public final class ParticleBuilder {
 		particle.setEntity(entity);
 		particle.setSpawnEntity(spawnEntity);
 		particle.setTargetPosition(tx, ty, tz);
-		particle.setTargetEntity(target);
+		particle.setTargetEntity(target);;
 
+		addAliveParticles(particle, id);
+		/*if (entity != null && entity instanceof EntityLivingBase && Bender.isBenderSupported((EntityLivingBase) entity)) {
+			Bender bender = Bender.get((EntityLivingBase) entity);
+			bender.getData().addP
+		}**/
 		net.minecraft.client.Minecraft.getMinecraft().effectRenderer.addEffect(particle);
 
 		reset();
@@ -946,5 +961,16 @@ public final class ParticleBuilder {
 		 * 3D-rendered vine particle.<p></p><b>Defaults:</b><br>Lifetime: 1 tick<br> Colour: green
 		 */
 		public static final ResourceLocation VINE = new ResourceLocation(AvatarInfo.MOD_ID, "vine");
+	}
+
+	public static void addAliveParticles(ParticleAvatar particle, UUID id) {
+		if (!aliveParticles.containsKey(id)) {
+			aliveParticles.put(id, particle);
+		}
+	}
+
+	@Nullable
+	public static ParticleAvatar getParticleFromUUID(UUID id) {
+		return aliveParticles.get(id);
 	}
 }

@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.fire.tickhandlers;
 
+import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
@@ -47,6 +48,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -193,28 +195,48 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 
 				Vector start = look.plus(eye.minusY(0.5));
+				Vector end = start.plus(look.times(range));
 
 				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2.2F, Raytrace.ignoreBenderFilter(entity));
+				List<AxisAlignedBB> hitBoxes = world.getCollisionBoxes(entity, new AxisAlignedBB(start.x(), start.y(), start.z(), end.x(), end.y(),
+						end.z()).grow(size / 2.2F));
+
+				hitBoxes.remove(entity.getEntityBoundingBox());
 				hit.remove(entity);
-				if (!hit.isEmpty()) {
+
+				boolean canHitEntity = false;
+
+				if (!hit.isEmpty() && !hitBoxes.isEmpty()) {
 					for (Entity target : hit) {
 						if (!world.isRemote) {
 							if (canCollideWithEntity(target, entity)) {
-								boolean attack = target.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);
-								if (attack) {
-									target.setFire(fireTime + 2);
-									target.setEntityInvulnerable(false);
-									Vector knockback = look.times(speedMult / 100);
-									if (target.canBePushed())
-										target.addVelocity(knockback.x(), knockback.y(), knockback.z());
-									AvatarUtils.afterVelocityAdded(target);
-									BattlePerformanceScore.addScore(entity, (int) performanceAmount);
-									abilityData.addXp(xp);
-								} else if (target instanceof EntityDragon)
-									AvatarEntityUtils.attackDragon((EntityDragon) target, AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);
-								BattlePerformanceScore.addScore(entity, (int) performanceAmount);
-								abilityData.addXp(xp);
+								//Time to have fun. This makes sure particles are colliding with the entity that you're trying to hit.
+								if (hitBoxes.contains(target.getEntityBoundingBox())) {
+									for (ParticleAvatar particle : ParticleBuilder.aliveParticles.values())
+										if (!canHitEntity)
+											if (particle.getEntity() == entity)
+												if (target.getEntityBoundingBox().contains(particle.getBoundingBox().getCenter()))
+													canHitEntity = true;
 
+
+									if (canHitEntity) {
+										boolean attack = target.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);
+										if (attack) {
+											target.setFire(fireTime + 2);
+											target.setEntityInvulnerable(false);
+											Vector knockback = look.times(speedMult / 100);
+											if (target.canBePushed())
+												target.addVelocity(knockback.x(), knockback.y(), knockback.z());
+											AvatarUtils.afterVelocityAdded(target);
+											BattlePerformanceScore.addScore(entity, (int) performanceAmount);
+											abilityData.addXp(xp);
+										} else if (target instanceof EntityDragon)
+											AvatarEntityUtils.attackDragon((EntityDragon) target, AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);
+										BattlePerformanceScore.addScore(entity, (int) performanceAmount);
+										abilityData.addXp(xp);
+
+									}
+								}
 							}
 						}
 					}
@@ -313,8 +335,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				return false;
 			else if (entity instanceof EntityShield)
 				return true;
-		}
-		else if (entity.getTeam() != null && entity.getTeam() == owner.getTeam())
+		} else if (entity.getTeam() != null && entity.getTeam() == owner.getTeam())
 			return false;
 		else if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() == owner)
 			return false;

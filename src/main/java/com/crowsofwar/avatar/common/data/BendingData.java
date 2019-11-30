@@ -17,8 +17,11 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -53,6 +56,8 @@ public class BendingData {
 	private Chi chi;
 	private MiscData miscData;
 	private Map<UUID, PowerRatingManager> powerRatingManagers;
+	//Particles spawned by the player.
+	private Map<Ability, UUID> particles;
 	private Vision vision;
 
 	/**
@@ -74,6 +79,7 @@ public class BendingData {
 		chi = new Chi(this);
 		miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
 		powerRatingManagers = new HashMap<>();
+		particles = new HashMap<>();
 		performance = new BattlePerformanceScore(this);
 	}
 
@@ -238,6 +244,20 @@ public class BendingData {
 	}
 
 	// ================================================================================
+	// MISCELLANEOUS
+	// ================================================================================
+
+	public void addSpawnedParticle(Ability ability, ParticleAvatar particle) {
+		if (!particles.containsValue(particle.getUUID())) {
+			particles.put(ability, particle.getUUID());
+		}
+	}
+
+	public Map<Ability, UUID> getParticles() {
+		return particles;
+	}
+
+	// ================================================================================
 	// STATUS CONTROLS
 	// ================================================================================
 
@@ -281,6 +301,7 @@ public class BendingData {
 	public boolean hasAbilityData(Ability ability) {
 		return hasAbilityData(ability.getName());
 	}
+
 
 	/**
 	 * Retrieves data about the given ability. Will get data if necessary.

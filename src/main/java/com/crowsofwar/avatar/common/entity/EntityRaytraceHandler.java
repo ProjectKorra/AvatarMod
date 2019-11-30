@@ -6,10 +6,10 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class EntityLaser extends EntityOffensive {
+public class EntityRaytraceHandler extends EntityOffensive {
 
 	//This class handles most laser-like abilities, such as air burst's second mechanic.
-	public EntityLaser(World world) {
+	public EntityRaytraceHandler(World world) {
 		super(world);
 	}
 

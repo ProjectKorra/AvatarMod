@@ -10,6 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static net.minecraft.client.renderer.GlStateManager.tryBlendFuncSeparate;
 import static org.lwjgl.opengl.GL11.GL_LESS;
 
 /**
@@ -82,6 +83,7 @@ public class ParticleFlash extends ParticleAvatar {
 				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
 		buffer.pos(f5 + rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 + rotationYZ * f4 - rotationXZ * f4).tex(0.25D, 0.375D)
 				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+		tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GlStateManager.popMatrix();
 		GlStateManager.enableTexture2D();
 		GlStateManager.enableNormalize();

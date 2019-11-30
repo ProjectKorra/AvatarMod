@@ -3,8 +3,10 @@ package com.crowsofwar.avatar.client.particles.newparticles;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.client.AvatarClientProxy;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.ICustomHitbox;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.client.Minecraft;
@@ -12,6 +14,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -25,6 +28,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -107,6 +111,7 @@ public abstract class ParticleAvatar extends Particle {
 	protected float angle;
 	protected double radius = 0;
 	protected double speed = 0;
+	protected UUID uuid = UUID.fromString("ccc7dd56-8fcc-4477-9782-7f0423e5616d");
 
 	protected BendingStyle element;
 
@@ -255,6 +260,31 @@ public abstract class ParticleAvatar extends Particle {
 		this.seed = seed;
 		this.random = new Random(seed);
 	}
+
+	public long getSeed() {
+		return this.seed;
+	}
+
+	/**
+	 * Sets the UUID for the particle. Good for distinguishing individual particles, especially if you're storing it in a list.
+	 *
+	 */
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+	public UUID getUUID() {
+		return this.uuid;
+	}
+
+	/**
+	 * Returns the entity that spawned it.
+	 */
+	public Entity getEntity() {
+		return spawnEntity;
+	}
+
+
 
 	/**
 	 * Sets whether the particle should render at full brightness or not. True if the particle is shaded, false if
@@ -671,14 +701,18 @@ public abstract class ParticleAvatar extends Particle {
 
 			double searchRadius = 20;
 
-			List<Entity> nearbyEntities = AvatarEntityUtils.getEntitiesWithinRadius(searchRadius, this.posX,
-					this.posY, this.posZ, world);
+			if (spawnEntity != null) {
+				List<Entity> nearbyEntities = AvatarEntityUtils.getEntitiesWithinRadius(searchRadius, this.posX,
+						this.posY, this.posZ, world);
+				//TODO: Add a list of active particles to the player.
+				//Normal collision:
+				Predicate<? super Entity> customHitboxFilter = entity1 -> !(entity1 instanceof ICustomHitbox && ((ICustomHitbox) entity1).contains(new Vec3d(this.posX, this.posY, this.posZ)));
+				customHitboxFilter = customHitboxFilter.or(entity1 -> entity1 instanceof AvatarEntity && ((AvatarEntity) entity1).getOwner() == spawnEntity);
+				nearbyEntities.removeIf(customHitboxFilter);
+				//TODO: Proper particle damaging and such
 
-			Predicate<? super Entity> customHitboxFilter = entity1 -> !(entity1 instanceof ICustomHitbox && ((ICustomHitbox) entity1).contains(new Vec3d(this.posX, this.posY, this.posZ)));
-			customHitboxFilter = customHitboxFilter.or(entity1 -> entity1 instanceof AvatarEntity && ((AvatarEntity) entity1).getOwner() == spawnEntity);
-			nearbyEntities.removeIf(customHitboxFilter);
-
-			if (nearbyEntities.size() > 0) this.setExpired();
+				if (nearbyEntities.size() > 0) this.setExpired();
+			}
 
 		}
 
@@ -740,4 +774,11 @@ public abstract class ParticleAvatar extends Particle {
 	}
 
 
+	@Override
+	public void setExpired() {
+		super.setExpired();
+		if (ParticleBuilder.aliveParticles.get(getUUID()) != null) {
+			ParticleBuilder.aliveParticles.remove(getUUID());
+		}
+	}
 }
