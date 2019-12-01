@@ -90,8 +90,10 @@ public class ParticleFlash extends ParticleAvatar {
 			f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
 		}
 		//Great for fire!
-		if (element instanceof Firebending)
+		if (element instanceof Firebending) {
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+			GlStateManager.disableLighting();
+		}
 		this.setAlphaF(0.6F - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F);
 		float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
 		float f6 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
@@ -110,8 +112,7 @@ public class ParticleFlash extends ParticleAvatar {
 			GlStateManager.disableNormalize();
 		}
 
-		GlStateManager.enableDepth();
-		GlStateManager.disableLighting();
+		//GlStateManager.enableDepth();
 		//This does some cool stuff:
 	//	GlStateManager.depthMask(true);
 		buffer.pos(f5 - rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 - rotationYZ * f4 - rotationXZ * f4).tex(0.5D, 0.375D)

@@ -262,12 +262,13 @@ public class FlamethrowerUpdateTick extends TickHandler {
 										AxisAlignedBB box = target.getEntityBoundingBox().grow(0.1);
 
 										//This prevents crashes, and makes sure the particle is colliding with the entity.
-										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> particleAvatar != null && particleAvatar.getEntity() != null && particleAvatar.getLifetimeRemaining() > 3)
-												.limit(15).collect(Collectors.toList());
-										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> box.intersects(particleAvatar.getBoundingBox().grow(0.05))
-										|| box.contains(particleAvatar.getBoundingBox().grow(0.05).getCenter())).limit(15).collect(Collectors.toList());
-										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().limit(15).filter(particleAvatar -> particleAvatar.getEntity().getUniqueID() == entity.getUniqueID())
+										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> particleAvatar != null && particleAvatar.getEntity() != null
+												&& particleAvatar.getLifetimeRemaining() > 3 && particleAvatar.getAbility() != null && particleAvatar.getAbility() instanceof AbilityFlamethrower)
 												.collect(Collectors.toList());
+										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> box.intersects(particleAvatar.getBoundingBox().grow(0.05))
+										|| box.contains(particleAvatar.getBoundingBox().grow(0.05).getCenter())).filter(particleAvatar -> particleAvatar.getLifetimeRemaining() > 3).collect(Collectors.toList());
+										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> particleAvatar.getEntity().getUniqueID() == entity.getUniqueID())
+												.filter(particleAvatar -> particleAvatar.getLifetimeRemaining() > 3).collect(Collectors.toList());
 
 										if (!aliveParticles.isEmpty())
 											canHitEntity = true;
