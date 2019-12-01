@@ -7,7 +7,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.data.Bender;
+import com.google.common.collect.Lists;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
@@ -17,9 +17,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -65,7 +63,7 @@ public final class ParticleBuilder {
 	 */
 	public static final ParticleBuilder instance = new ParticleBuilder();
 
-	public static HashMap<UUID, ParticleAvatar> aliveParticles = new HashMap<>();
+	public static List<ParticleAvatar> aliveParticles = Lists.newArrayList();
 
 	/**
 	 * Whether the particle builder is currently building or not.
@@ -202,6 +200,10 @@ public final class ParticleBuilder {
 		}
 
 		ParticleBuilder.create(Type.BUFF).entity(entity).clr(1, 1, 0.3f).spawn(world);
+	}
+
+	public static void addAliveParticles(ParticleAvatar particle) {
+		aliveParticles.add(particle);
 	}
 
 	/**
@@ -362,10 +364,10 @@ public final class ParticleBuilder {
 	}
 
 	/**
-	 * @param element The ability to set for the particle. Used in some particles, like the Flash particle, for different effects.
+	 * @param ability The ability to set for the particle. Used in some particles, like the Flash particle, for different effects.
 	 *                In the future it'll be behaviour, but for now it's not.
 	 */
-	public ParticleBuilder ability(Ability  ability) {
+	public ParticleBuilder ability(Ability ability) {
 		this.ability = ability;
 		return this;
 	}
@@ -479,6 +481,8 @@ public final class ParticleBuilder {
 		return this.clr(r, g, b);
 	}
 
+	// Used to say Affects: {@link Type#ICE ICE}, {@link Type#SPARKLE SPARKLE} - not sure that's true any more
+
 	/**
 	 * Sets the scale of the particle being built. If unspecified, this defaults to 1.
 	 * <p></p>
@@ -493,8 +497,6 @@ public final class ParticleBuilder {
 		this.scale = scale;
 		return this;
 	}
-
-	// Used to say Affects: {@link Type#ICE ICE}, {@link Type#SPARKLE SPARKLE} - not sure that's true any more
 
 	/**
 	 * Sets the lifetime of the particle being built. If unspecified, this defaults to the particle's default lifetime,
@@ -511,6 +513,8 @@ public final class ParticleBuilder {
 		this.lifetime = lifetime;
 		return this;
 	}
+
+	//TODO: Option for colliding with other particles and/or entities!
 
 	/**
 	 * Sets the seed of the particle being built. If unspecified, this defaults to the particle's default seed,
@@ -530,8 +534,6 @@ public final class ParticleBuilder {
 		this.seed = seed;
 		return this;
 	}
-
-	//TODO: Option for colliding with other particles and/or entities!
 
 	/**
 	 * Sets the spin parameters of the particle being built. If unspecified, these both default to 0.
@@ -595,6 +597,8 @@ public final class ParticleBuilder {
 		return this;
 	}
 
+	// ============================================= Targeted-only methods =============================================
+
 	/**
 	 * Sets the entity of the particle being built. This will cause the particle to move with the given entity, and will
 	 * make the position specified using {@link ParticleBuilder#pos(double, double, double)} <i>relative to</i> that
@@ -613,8 +617,6 @@ public final class ParticleBuilder {
 		this.spawnEntity = entity;
 		return this;
 	}
-
-	// ============================================= Targeted-only methods =============================================
 
 	/**
 	 * @param entity The spawn entity to set the particle to. Used for determining particle collision boxes.
@@ -728,6 +730,13 @@ public final class ParticleBuilder {
 		return tvel(vel.x, vel.y, vel.z);
 	}
 
+	// ============================================== Convenience methods ==============================================
+
+	// These may seem to go against the whole point of this class, but of course they return the ParticleBuilder instance
+	// so anything else can still be chained onto them - centralising commonly-used particle spawning patterns without
+	// losing any of the flexibility of the particle builder. In addition, callers of these methods are still free to
+	// change any of the parameters that were set within them afterwards.
+
 	/**
 	 * Sets the target and target velocity of the particle being built. This method takes an origin entity and a
 	 * position and estimates the position of the target point based on the given entity's rotational velocities and its
@@ -744,13 +753,6 @@ public final class ParticleBuilder {
 		return this;
 	}
 
-	// ============================================== Convenience methods ==============================================
-
-	// These may seem to go against the whole point of this class, but of course they return the ParticleBuilder instance
-	// so anything else can still be chained onto them - centralising commonly-used particle spawning patterns without
-	// losing any of the flexibility of the particle builder. In addition, callers of these methods are still free to
-	// change any of the parameters that were set within them afterwards.
-
 	/**
 	 * Sets the target of the particle being built. This will cause the particle to stretch to touch the given entity.
 	 * <p></p>
@@ -765,6 +767,8 @@ public final class ParticleBuilder {
 		this.target = target;
 		return this;
 	}
+
+	// Methods for spawning specific effects (similar to the FX playing methods with the ids in RenderGlobal)
 
 	/**
 	 * Spawns the particle that has been built and resets the particle builder.
@@ -819,9 +823,9 @@ public final class ParticleBuilder {
 		particle.setEntity(entity);
 		particle.setSpawnEntity(spawnEntity);
 		particle.setTargetPosition(tx, ty, tz);
-		particle.setTargetEntity(target);;
+		particle.setTargetEntity(target);
 
-		//addAliveParticles(particle, id);
+		addAliveParticles(particle);
 		/*if (entity != null && entity instanceof EntityLivingBase && Bender.isBenderSupported((EntityLivingBase) entity)) {
 			Bender bender = Bender.get((EntityLivingBase) entity);
 			bender.getData().addP
@@ -830,8 +834,6 @@ public final class ParticleBuilder {
 
 		reset();
 	}
-
-	// Methods for spawning specific effects (similar to the FX playing methods with the ids in RenderGlobal)
 
 	/**
 	 * Resets the state of the particle builder and resets all the builder variables to their default values.
@@ -976,14 +978,8 @@ public final class ParticleBuilder {
 		public static final ResourceLocation VINE = new ResourceLocation(AvatarInfo.MOD_ID, "vine");
 	}
 
-	public static void addAliveParticles(ParticleAvatar particle, UUID id) {
-		if (!aliveParticles.containsKey(id)) {
-			aliveParticles.put(id, particle);
-		}
-	}
-
-	@Nullable
+	/*@Nullable
 	public static ParticleAvatar getParticleFromUUID(UUID id) {
 		return aliveParticles.get(id);
-	}
+	}**/
 }

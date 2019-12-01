@@ -239,7 +239,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 
 				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2.2F, Raytrace.ignoreBenderFilter(entity));
-				List<ParticleAvatar> aliveParticles = ParticleBuilder.aliveParticles.values().stream().
+				List<ParticleAvatar> aliveParticles = ParticleBuilder.aliveParticles.stream().
 						filter(particleAvatar -> particleAvatar.getEntity().getUniqueID() == entity.getUniqueID()).collect(Collectors.toList());
 
 				hit.remove(entity);
