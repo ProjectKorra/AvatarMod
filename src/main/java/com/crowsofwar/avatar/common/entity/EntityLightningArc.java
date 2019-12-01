@@ -25,6 +25,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import org.joml.Matrix4d;
 import org.joml.SimplexNoise;
 import org.joml.Vector4d;
@@ -39,6 +40,7 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 /**
  * @author CrowsOfWar
  */
+@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
 public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningControlPoint> implements ILightProvider {
 
 	//TODO: Find out why tf this is lagging my world so much.
@@ -400,11 +402,13 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	}
 
 	@Override
+	@Optional.Method(modid = "albedo")
 	public void gatherLights(GatherLightsEvent gatherLightsEvent, Entity entity) {
 
 	}
 
 	@Override
+	@Optional.Method(modid = "albedo")
 	public Light provideLight() {
 		return Light.builder().pos(this).color(1F, 2F, 3F).radius(15).build();
 	}
