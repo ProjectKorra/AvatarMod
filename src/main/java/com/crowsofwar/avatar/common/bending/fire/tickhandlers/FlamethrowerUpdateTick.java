@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.bending.fire.tickhandlers;
 
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
+import com.crowsofwar.avatar.client.particles.newparticles.ParticleMagicBubble;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
@@ -36,6 +37,7 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -52,10 +54,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import org.lwjgl.Sys;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
@@ -241,17 +243,13 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 
 				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2.2F, Raytrace.ignoreBenderFilter(entity));
-				ArrayList<ParticleAvatar> aliveParticles = (ArrayList<ParticleAvatar>) ParticleBuilder.aliveParticles.keySet().parallelStream()
-						.filter(particleAvatar -> particleAvatar.getLifetimeRemaining() > 3).collect(Collectors.toList());//.stream().
-						//filter(particleAvatar -> particleAvatar != null && particleAvatar.getEntity() != null && particleAvatar.getEntity().getUniqueID() == entity.getUniqueID()).collect(Collectors.toList());
-
 				hit.remove(entity);
 
 				boolean canHitEntity = false;
 				boolean wall = false;
 
 				//This makes sure the raytrace stops when you're looking at a wall.
-				if (!hit.isEmpty() && !aliveParticles.isEmpty()) {
+				if (!hit.isEmpty()) {
 					if (!wall)
 						for (Entity target : hit) {
 							if (!world.isRemote) {
@@ -261,10 +259,34 @@ public class FlamethrowerUpdateTick extends TickHandler {
 								}
 								if (!wall) {
 									if (canCollideWithEntity(target, entity)) {
+										//Queue<ParticleAvatar> aliveParticles = ParticleBuilder.aliveParticles;
+										Iterator<ParticleAvatar> aliveParticles = ParticleBuilder.aliveParticles.iterator();
 										AxisAlignedBB box = target.getEntityBoundingBox().grow(0.1);
 
+										//Makes sure the particle exists, its ability is flamethrower, and it's touching the entity we want to collide with.
+										while (aliveParticles.hasNext() && !canHitEntity) {
+											ParticleAvatar particleAvatar = aliveParticles.next();
+											if (particleAvatar != null && particleAvatar.isAlive()) {
+												if (!(particleAvatar.getAbility() instanceof AbilityFlamethrower)) {
+													aliveParticles.remove();
+													System.out.println("No ability.");
+												}
+												else if (particleAvatar.getEntity().getUniqueID() != entity.getUniqueID()) {
+													aliveParticles.remove();
+													System.out.println("Wrong entity.");
+												}
+												else if (particleAvatar.getLifetimeRemaining() < 1) {
+													aliveParticles.remove();
+													System.out.println("Dead Particle.");
+												}
+												else if (box.contains(particleAvatar.getBoundingBox().getCenter()) || box.intersects(particleAvatar.getBoundingBox().grow(0.05)))
+													canHitEntity = true;
+											}
+											else aliveParticles.remove();
+										}
+
 										//This prevents crashes, and makes sure the particle is colliding with the entity.
-										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> particleAvatar != null && particleAvatar.getEntity() != null
+										/*aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> particleAvatar != null && particleAvatar.getEntity() != null
 												&& particleAvatar.getLifetimeRemaining() > 3 && particleAvatar.getAbility() != null && particleAvatar.getAbility() instanceof AbilityFlamethrower)
 												.collect(Collectors.toList());
 										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> box.intersects(particleAvatar.getBoundingBox().grow(0.05))
@@ -276,9 +298,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 											if (!ParticleBuilder.aliveParticles.getOrDefault(particle, false))
 												ParticleBuilder.aliveParticles.remove(particle);
 										}
-
-										if (!aliveParticles.isEmpty())
-											canHitEntity = true;
+**/
 
 										if (canHitEntity) {
 											boolean attack = target.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);

@@ -23,8 +23,10 @@ import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.event.AbilityUnlockEvent;
 import com.crowsofwar.avatar.common.event.ElementUnlockEvent;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -65,6 +67,18 @@ public class AvatarPlayerTick {
 
 			}
 		}
+
+		//Removes particles.
+		List<EntityLivingBase> benders = e.player.world.getEntities(EntityLivingBase.class, Bender::isBenderSupported);
+		boolean flamethrowerActive = false;
+		if (!benders.isEmpty()) {
+			for (EntityLivingBase entity : benders) {
+				if (Bender.get(entity).getData().hasTickHandler(TickHandlerController.FLAMETHROWER))
+					flamethrowerActive = true;
+			}
+		}
+		if (!flamethrowerActive)
+			ParticleBuilder.aliveParticles.removeIf(particleAvatar -> !particleAvatar.isAlive());
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

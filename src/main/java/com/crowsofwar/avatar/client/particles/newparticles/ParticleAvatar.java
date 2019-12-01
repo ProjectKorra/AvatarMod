@@ -796,9 +796,16 @@ public abstract class ParticleAvatar extends Particle {
 	@Override
 	public void setExpired() {
 		super.setExpired();
-		ParticleBuilder.aliveParticles.replace(this, false);
+		/**
+		 * @throws java.util.ConcurrentModificationException, so we're leaving this commented out for now. Instead, we'll clear lists when joining/leaving worlds.
+		 */
+		//if (ParticleBuilder.aliveParticles.contains(this))
+		//	ParticleBuilder.aliveParticles.remove();
 	}
 
+	public int getLifetimeRemaining() {
+		return this.particleMaxAge - this.particleAge;
+	}
 
 	/**
 	 * Simple particle factory interface which takes a world and a position and returns a particle. Used (via method
@@ -808,10 +815,6 @@ public abstract class ParticleAvatar extends Particle {
 	@FunctionalInterface
 	public interface IAvatarParticleFactory {
 		ParticleAvatar createParticle(World world, double x, double y, double z);
-	}
-
-	public int getLifetimeRemaining() {
-		return this.particleMaxAge - this.particleAge;
 	}
 
 }

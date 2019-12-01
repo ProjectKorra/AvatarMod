@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Queues;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
@@ -61,7 +62,7 @@ public final class ParticleBuilder {
 	 */
 	public static final ParticleBuilder instance = new ParticleBuilder();
 
-	public static HashMap<ParticleAvatar, Boolean> aliveParticles = new HashMap<>();
+	public static Queue<ParticleAvatar> aliveParticles = Queues.newArrayDeque();
 
 	/**
 	 * Whether the particle builder is currently building or not.
@@ -201,7 +202,7 @@ public final class ParticleBuilder {
 	}
 
 	public static void addAliveParticles(ParticleAvatar particle) {
-		aliveParticles.put(particle, false);
+		aliveParticles.add(particle);
 	}
 
 	/**
