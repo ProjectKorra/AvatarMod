@@ -287,7 +287,6 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	}
 
-
 	public void setXp(float xp) {
 		this.xp = xp;
 	}

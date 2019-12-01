@@ -30,7 +30,7 @@ import static org.lwjgl.opengl.GL11.GL_LESS;
  * @author Electroblob, FavouriteDragon
  * @since Wizardry 4.2.0, Av2 1.6.0
  */
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 public class ParticleFlash extends ParticleAvatar {
 
 	public ParticleFlash(World world, double x, double y, double z) {
@@ -55,7 +55,7 @@ public class ParticleFlash extends ParticleAvatar {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (getAbility() instanceof AbilityFlamethrower) {
+		/*if (getAbility() != null && getEntity() != null && getAbility() instanceof AbilityFlamethrower) {
 			List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, getBoundingBox().grow(motionX / 2, motionY / 2, motionZ / 2));
 			targets.remove(getEntity());
 			if (!targets.isEmpty()) {
@@ -65,9 +65,10 @@ public class ParticleFlash extends ParticleAvatar {
 							EntityRaytraceHandler handler = new EntityRaytraceHandler(world);
 							handler.setAbility(new AbilityFlamethrower());
 							handler.setElement(new Firebending());
-							handler.setEntitySize(0.5F);
+							handler.setEntitySize(0.05F);
 							handler.setLifeTime(3);
 							handler.setOwner((EntityLivingBase) getEntity());
+							handler.setPosition(AvatarEntityUtils.getMiddleOfEntity(hit));
 							handler.setVelocity(Vec3d.ZERO);
 							handler.setFollowingEntity(hit);
 							handler.setBehaviour(new RaytraceHandlerBehaviour.DetectCollisionBoxes());
@@ -76,7 +77,7 @@ public class ParticleFlash extends ParticleAvatar {
 					}
 				}
 			}
-		}
+		}**/
 	}
 
 	@Override

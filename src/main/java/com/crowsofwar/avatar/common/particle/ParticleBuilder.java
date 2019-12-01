@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.data.Bender;
 import net.minecraft.entity.Entity;
@@ -64,7 +65,7 @@ public final class ParticleBuilder {
 	 */
 	public static final ParticleBuilder instance = new ParticleBuilder();
 
-	public static Map<UUID, ParticleAvatar> aliveParticles = new HashMap<>();
+	public static HashMap<UUID, ParticleAvatar> aliveParticles = new HashMap<>();
 
 	/**
 	 * Whether the particle builder is currently building or not.
@@ -84,6 +85,7 @@ public final class ParticleBuilder {
 	private float rSI, gSI, bSI, aSI;
 	private float fr, fg, fb;
 	private BendingStyle element;
+	private Ability ability;
 	private double radius;
 	private double rpt;
 	private int lifetime;
@@ -356,6 +358,15 @@ public final class ParticleBuilder {
 	 */
 	public ParticleBuilder element(BendingStyle element) {
 		this.element = element;
+		return this;
+	}
+
+	/**
+	 * @param element The ability to set for the particle. Used in some particles, like the Flash particle, for different effects.
+	 *                In the future it'll be behaviour, but for now it's not.
+	 */
+	public ParticleBuilder ability(Ability  ability) {
+		this.ability = ability;
 		return this;
 	}
 
@@ -796,6 +807,7 @@ public final class ParticleBuilder {
 		if (!Double.isNaN(tvx) && !Double.isNaN(tvy) && !Double.isNaN(tvz)) particle.setTargetVelocity(tvx, tvy, tvz);
 		if (length > 0) particle.setLength(length);
 		if (element != null) particle.setElement(element);
+		if (ability != null) particle.setAbility(ability);
 
 		UUID id = UUID.randomUUID();
 
@@ -860,6 +872,7 @@ public final class ParticleBuilder {
 		tvz = Double.NaN;
 		target = null;
 		element = null;
+		ability = null;
 		seed = 0;
 		length = -1;
 	}

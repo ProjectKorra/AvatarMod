@@ -1,10 +1,12 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.entity.EntityRaytraceHandler;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.math.Vec3d;
 
 public abstract class RaytraceHandlerBehaviour extends Behavior<EntityRaytraceHandler> {
 	public static final DataSerializer<RaytraceHandlerBehaviour> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
@@ -53,7 +55,11 @@ public abstract class RaytraceHandlerBehaviour extends Behavior<EntityRaytraceHa
 		@Override
 		public Behavior onUpdate(EntityRaytraceHandler entity) {
 			if (entity.getFollowingEntity() != null) {
-				entity.setPositionAndUpdate(entity.getFollowingEntity().posX, entity.getFollowingEntity().posY, entity.getFollowingEntity().posZ);
+				Vec3d pos = AvatarEntityUtils.getMiddleOfEntity(entity.getFollowingEntity());
+				entity.setPositionAndUpdate(pos.x, pos.y, pos.z);
+				entity.setPosition(pos);
+				entity.setVelocity(Vec3d.ZERO);
+				entity.setEntitySize(0.05F);
 			}
 			return this;
 		}
