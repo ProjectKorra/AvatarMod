@@ -52,6 +52,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -239,8 +240,8 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 
 				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2.2F, Raytrace.ignoreBenderFilter(entity));
-				List<ParticleAvatar> aliveParticles = ParticleBuilder.aliveParticles.stream().
-						filter(particleAvatar -> particleAvatar.getEntity().getUniqueID() == entity.getUniqueID()).collect(Collectors.toList());
+				ArrayList<ParticleAvatar> aliveParticles = ParticleBuilder.aliveParticles;//.stream().
+						//filter(particleAvatar -> particleAvatar != null && particleAvatar.getEntity() != null && particleAvatar.getEntity().getUniqueID() == entity.getUniqueID()).collect(Collectors.toList());
 
 				hit.remove(entity);
 
@@ -265,12 +266,17 @@ public class FlamethrowerUpdateTick extends TickHandler {
 												handler.setDead();
 											}
 										}**/
-										for (ParticleAvatar avatar : aliveParticles) {
-											AxisAlignedBB box = target.getEntityBoundingBox().grow(0.1);
-											if (box.intersects(avatar.getBoundingBox().grow(0.05)) || box.contains(avatar.getBoundingBox().grow(0.05).getCenter())) {
-												canHitEntity = true;
-											}
-										}
+										AxisAlignedBB box = target.getEntityBoundingBox().grow(0.1);
+
+										//This prevents crashes, and makes sure the particle is colliding with the entity.
+										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> particleAvatar != null && particleAvatar.getEntity() != null && particleAvatar.getLifetimeRemaining() > 2).collect(Collectors.toList());
+										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> box.intersects(particleAvatar.getBoundingBox().grow(0.05))
+										|| box.contains(particleAvatar.getBoundingBox().grow(0.05).getCenter())).collect(Collectors.toList());
+										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> particleAvatar.getEntity().getUniqueID() == entity.getUniqueID())
+												.collect(Collectors.toList());
+
+										if (!aliveParticles.isEmpty())
+											canHitEntity = true;
 
 										if (canHitEntity) {
 											boolean attack = target.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);

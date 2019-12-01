@@ -4,8 +4,6 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.client.AvatarClientProxy;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
@@ -15,7 +13,6 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.ResourceLocation;
@@ -128,21 +125,16 @@ public abstract class ParticleAvatar extends Particle {
 	protected double scaleChange;
 	protected boolean speedChangeOnUpdate;
 	protected double speedChange;
-	private boolean collidedWithSolid;
-	private boolean dynamicCollidedWithEntity;
 	/**
 	 * The entity this particle is linked to. The particle will move with this entity.
 	 */
 	@Nullable
 	protected Entity entity = null;
-
 	/**
 	 * The entity that spawned the particle. Used for collision detection and nothing else. Setting the normal entity will set this.
 	 */
 	@Nullable
 	protected Entity spawnEntity;
-	// Note that roll (equivalent to rotating the texture) is effectively handled by particleAngle - although that is
-	// actually the rotation speed and not the angle itself.
 	/**
 	 * Coordinates of this particle relative to the linked entity. If the linked entity is null, these are used as
 	 * the absolute coordinates of the centre of rotation for particles with spin. If the particle has neither a
@@ -153,6 +145,8 @@ public abstract class ParticleAvatar extends Particle {
 	 * Velocity of this particle relative to the linked entity. If the linked entity is null, these are not used.
 	 */
 	protected double relativeMotionX, relativeMotionY, relativeMotionZ;
+	// Note that roll (equivalent to rotating the texture) is effectively handled by particleAngle - although that is
+	// actually the rotation speed and not the angle itself.
 	/**
 	 * The yaw angle this particle is facing, or {@code NaN} if this particle always faces the viewer (default behaviour).
 	 */
@@ -161,6 +155,8 @@ public abstract class ParticleAvatar extends Particle {
 	 * The pitch angle this particle is facing, or {@code NaN} if this particle always faces the viewer (default behaviour).
 	 */
 	protected float pitch = Float.NaN;
+	private boolean collidedWithSolid;
+	private boolean dynamicCollidedWithEntity;
 	/**
 	 * Previous-tick velocity, used in collision detection.
 	 */
@@ -256,6 +252,10 @@ public abstract class ParticleAvatar extends Particle {
 		AvatarClientProxy.addParticleFactory(name, factory);
 	}
 
+	public long getSeed() {
+		return this.seed;
+	}
+
 	/**
 	 * Sets the seed for this particle's randomly generated values and resets {@link ParticleAvatar#random} to use
 	 * that seed. Implementations will differ between particle types; for example, ParticleLightning has an update
@@ -267,20 +267,15 @@ public abstract class ParticleAvatar extends Particle {
 		this.random = new Random(seed);
 	}
 
-	public long getSeed() {
-		return this.seed;
+	public UUID getUUID() {
+		return this.uuid;
 	}
 
 	/**
 	 * Sets the UUID for the particle. Good for distinguishing individual particles, especially if you're storing it in a list.
-	 *
 	 */
 	public void setUUID(UUID uuid) {
 		this.uuid = uuid;
-	}
-
-	public UUID getUUID() {
-		return this.uuid;
 	}
 
 	/**
@@ -290,7 +285,26 @@ public abstract class ParticleAvatar extends Particle {
 		return spawnEntity;
 	}
 
-
+	/**
+	 * Links this particle to the given entity. This will cause its position and velocity to be relative to the entity.
+	 *
+	 * @param entity The entity to link to.
+	 */
+	public void setEntity(Entity entity) {
+		this.entity = entity;
+		// Set these to the correct values
+		if (entity != null) {
+			this.setPosition(this.entity.posX + relativeX, this.entity.getEntityBoundingBox().minY
+					+ relativeY, this.entity.posZ + relativeZ);
+			this.prevPosX = this.posX;
+			this.prevPosY = this.posY;
+			this.prevPosZ = this.posZ;
+			// Set these to the correct values
+			this.relativeMotionX = motionX;
+			this.relativeMotionY = motionY;
+			this.relativeMotionZ = motionZ;
+		}
+	}
 
 	/**
 	 * Sets whether the particle should render at full brightness or not. True if the particle is shaded, false if
@@ -319,15 +333,15 @@ public abstract class ParticleAvatar extends Particle {
 		this.element = element;
 	}
 
-	public void setAbility(Ability ability) {
-		this.ability = ability;
-	}
-
 	public Ability getAbility() {
 		return this.ability;
 	}
 
 	// Overridden to set the initial colour values
+
+	public void setAbility(Ability ability) {
+		this.ability = ability;
+	}
 
 	/**
 	 * Sets the velocity of the particle.
@@ -363,27 +377,6 @@ public abstract class ParticleAvatar extends Particle {
 		this.relativeMotionX = motionX;
 		this.relativeMotionY = motionY;
 		this.relativeMotionZ = motionZ;
-	}
-
-	/**
-	 * Links this particle to the given entity. This will cause its position and velocity to be relative to the entity.
-	 *
-	 * @param entity The entity to link to.
-	 */
-	public void setEntity(Entity entity) {
-		this.entity = entity;
-		// Set these to the correct values
-		if (entity != null) {
-			this.setPosition(this.entity.posX + relativeX, this.entity.getEntityBoundingBox().minY
-					+ relativeY, this.entity.posZ + relativeZ);
-			this.prevPosX = this.posX;
-			this.prevPosY = this.posY;
-			this.prevPosZ = this.posZ;
-			// Set these to the correct values
-			this.relativeMotionX = motionX;
-			this.relativeMotionY = motionY;
-			this.relativeMotionZ = motionZ;
-		}
 	}
 
 	//Sets the spawn entity of the particle. Used for particle collision.
@@ -571,8 +564,7 @@ public abstract class ParticleAvatar extends Particle {
 			// I reject your friction and substitute my own!
 			this.motionX /= 0.699999988079071D;
 			this.motionZ /= 0.699999988079071D;
-		}
-		else if (entity != null || radius > 0) {
+		} else if (entity != null || radius > 0) {
 
 			double x = relativeX;
 			double y = relativeY;
@@ -754,12 +746,17 @@ public abstract class ParticleAvatar extends Particle {
 						if (((AvatarEntity) hit).getOwner() != getEntity() || hit instanceof EntityWall || hit instanceof EntityWallSegment) {
 							collidedWithSolid = true;
 						}
-					}
-					else if (hit instanceof EntityThrowable || hit instanceof EntityArrow || hit instanceof EntityOffensive) {
+					} else if (hit instanceof EntityThrowable || hit instanceof EntityArrow || hit instanceof EntityOffensive) {
 						dynamicCollidedWithEntity = true;
-						this.motionX += hit.motionX;
-						this.motionY += hit.motionY;
-						this.motionZ += hit.motionZ;
+						Vec3d hitVel = new Vec3d(hit.motionX, hit.motionY, hit.motionZ);
+						Vec3d pVel = new Vec3d(motionX, motionY, motionZ);
+						if (AvatarUtils.getMagnitude(hitVel) >= AvatarUtils.getMagnitude(pVel))
+							motionX = motionY = motionZ = 0;
+						else {
+							this.motionX += hit.motionX;
+							this.motionY += hit.motionY;
+							this.motionZ += hit.motionZ;
+						}
 					}
 				}
 			}
@@ -796,6 +793,13 @@ public abstract class ParticleAvatar extends Particle {
 		if (origZ != z) this.motionZ = 0.0D;
 	}
 
+	@Override
+	public void setExpired() {
+		super.setExpired();
+		ParticleBuilder.aliveParticles.remove(this);
+	}
+
+
 	/**
 	 * Simple particle factory interface which takes a world and a position and returns a particle. Used (via method
 	 * references) in the client proxy to link particle enum types to actual particle classes.
@@ -806,11 +810,8 @@ public abstract class ParticleAvatar extends Particle {
 		ParticleAvatar createParticle(World world, double x, double y, double z);
 	}
 
-
-	@Override
-	public void setExpired() {
-		super.setExpired();
-		ParticleBuilder.aliveParticles.remove(this);
+	public int getLifetimeRemaining() {
+		return this.particleMaxAge - this.particleAge;
 	}
 
 }

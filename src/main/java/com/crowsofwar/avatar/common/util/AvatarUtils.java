@@ -586,6 +586,13 @@ public class AvatarUtils {
 		return r.nextInt((max - min) + 1) + min;
 	}
 
+	public static double getMagnitude(Vec3d vel) {
+		return Math.sqrt(getMagnitude(vel));
+	}
+
+	public static double getSqrMagnutude(Vec3d vel) {
+		return vel.x * vel.x + vel.y * vel.y + vel.z * vel.z;
+	}
 	/**
 	 * An exception thrown by reading/writing methods for NBT
 	 *

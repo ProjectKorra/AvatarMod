@@ -17,6 +17,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -63,7 +64,7 @@ public final class ParticleBuilder {
 	 */
 	public static final ParticleBuilder instance = new ParticleBuilder();
 
-	public static List<ParticleAvatar> aliveParticles = Lists.newArrayList();
+	public static ArrayList<ParticleAvatar> aliveParticles = new ArrayList<>();
 
 	/**
 	 * Whether the particle builder is currently building or not.
