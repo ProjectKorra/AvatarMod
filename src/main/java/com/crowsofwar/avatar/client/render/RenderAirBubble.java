@@ -90,12 +90,12 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 			renderCube(x, y, z, 0, 1, 0, 1, 3f * sizeMult, 0, rotY, rotZ);
 		}
 		//GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.depthFunc(GL_GREATER);
+		GlStateManager.depthFunc(GL_LESS);
 
 		//TODO: Change the texture and mess with depth
 
 		disableBlend();
-
+		disableDepth();
 	}
 
 	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,

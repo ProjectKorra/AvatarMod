@@ -35,6 +35,7 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -240,7 +241,8 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 
 				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2.2F, Raytrace.ignoreBenderFilter(entity));
-				ArrayList<ParticleAvatar> aliveParticles = ParticleBuilder.aliveParticles;//.stream().
+				ArrayList<ParticleAvatar> aliveParticles = (ArrayList<ParticleAvatar>) ParticleBuilder.aliveParticles.keySet().parallelStream()
+						.filter(particleAvatar -> particleAvatar.getLifetimeRemaining() > 3).collect(Collectors.toList());//.stream().
 						//filter(particleAvatar -> particleAvatar != null && particleAvatar.getEntity() != null && particleAvatar.getEntity().getUniqueID() == entity.getUniqueID()).collect(Collectors.toList());
 
 				hit.remove(entity);
@@ -269,6 +271,11 @@ public class FlamethrowerUpdateTick extends TickHandler {
 										|| box.contains(particleAvatar.getBoundingBox().grow(0.05).getCenter())).filter(particleAvatar -> particleAvatar.getLifetimeRemaining() > 3).collect(Collectors.toList());
 										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> particleAvatar.getEntity().getUniqueID() == entity.getUniqueID())
 												.filter(particleAvatar -> particleAvatar.getLifetimeRemaining() > 3).collect(Collectors.toList());
+
+										for (ParticleAvatar particle : aliveParticles) {
+											if (!ParticleBuilder.aliveParticles.getOrDefault(particle, false))
+												ParticleBuilder.aliveParticles.remove(particle);
+										}
 
 										if (!aliveParticles.isEmpty())
 											canHitEntity = true;

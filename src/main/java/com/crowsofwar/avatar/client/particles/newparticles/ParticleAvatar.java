@@ -796,7 +796,7 @@ public abstract class ParticleAvatar extends Particle {
 	@Override
 	public void setExpired() {
 		super.setExpired();
-		ParticleBuilder.aliveParticles.remove(this);
+		ParticleBuilder.aliveParticles.replace(this, false);
 	}
 
 

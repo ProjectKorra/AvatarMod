@@ -30,7 +30,7 @@ import static org.lwjgl.opengl.GL11.GL_LESS;
  * @author Electroblob, FavouriteDragon
  * @since Wizardry 4.2.0, Av2 1.6.0
  */
-//@SideOnly(Side.CLIENT)
+@SideOnly(Side.CLIENT)
 public class ParticleFlash extends ParticleAvatar {
 
 	public ParticleFlash(World world, double x, double y, double z) {

@@ -17,10 +17,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * <i>"Don't waste time spawning particles manually - let {@code ParticleBuilder} do the work for you!"</i>
@@ -64,7 +61,7 @@ public final class ParticleBuilder {
 	 */
 	public static final ParticleBuilder instance = new ParticleBuilder();
 
-	public static ArrayList<ParticleAvatar> aliveParticles = new ArrayList<>();
+	public static HashMap<ParticleAvatar, Boolean> aliveParticles = new HashMap<>();
 
 	/**
 	 * Whether the particle builder is currently building or not.
@@ -204,7 +201,7 @@ public final class ParticleBuilder {
 	}
 
 	public static void addAliveParticles(ParticleAvatar particle) {
-		aliveParticles.add(particle);
+		aliveParticles.put(particle, false);
 	}
 
 	/**
