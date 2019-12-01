@@ -15,6 +15,8 @@ public abstract class RaytraceHandlerBehaviour extends Behavior<EntityRaytraceHa
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
 		registerBehavior(Idle.class);
+		registerBehavior(ProvideEntityDetection.class);
+		registerBehavior(DetectCollisionBoxes.class);
 	}
 
 	public static class Idle extends RaytraceHandlerBehaviour {
@@ -45,6 +47,37 @@ public abstract class RaytraceHandlerBehaviour extends Behavior<EntityRaytraceHa
 		}
 	}
 
+
+	public static class ProvideEntityDetection extends RaytraceHandlerBehaviour {
+
+		@Override
+		public Behavior onUpdate(EntityRaytraceHandler entity) {
+			if (entity.getFollowingEntity() != null) {
+				entity.setPositionAndUpdate(entity.getFollowingEntity().posX, entity.getFollowingEntity().posY, entity.getFollowingEntity().posZ);
+			}
+			return this;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
+	}
 	public static class DetectCollisionBoxes extends RaytraceHandlerBehaviour {
 
 		@Override

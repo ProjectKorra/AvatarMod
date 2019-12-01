@@ -28,8 +28,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityShield;
+import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -241,11 +240,25 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				**/hit.remove(entity);
 
 				boolean canHitEntity = true;
+				boolean wall = false;
 
-				if (!hit.isEmpty()/* && !aliveParticles.isEmpty()**/) {
-					for (Entity target : hit) {
-						if (!world.isRemote) {
-							if (canCollideWithEntity(target, entity)) {
+				//This makes sure the raytrace stops when you're looking at a wall.
+				while (!wall) {
+					if (!hit.isEmpty()/* && !aliveParticles.isEmpty()**/) {
+						for (Entity target : hit) {
+							if (!world.isRemote) {
+								if (target instanceof EntityWall || target instanceof EntityWallSegment || target instanceof EntityShield
+										&& ((EntityShield) target).getOwner() != entity) {
+									wall = true;
+								}
+								if (canCollideWithEntity(target, entity)) {
+									List<Entity> nearbyCollisionDetectors = world.getEntitiesWithinAABB(EntityRaytraceHandler.class, target.getEntityBoundingBox().grow(0.1));
+									if (!nearbyCollisionDetectors.isEmpty()) {
+										canHitEntity = true;
+										for (Entity handler : nearbyCollisionDetectors) {
+											handler.setDead();
+										}
+									}
 									//Time to have fun. This makes sure particles are colliding with the entity that you're trying to hit.
 										/*for (ParticleAvatar particle : aliveParticles) {
 											if (!canHitEntity) {
@@ -257,7 +270,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 											}
 
 										}**/
-
 
 
 									if (canHitEntity) {
@@ -276,6 +288,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 										BattlePerformanceScore.addScore(entity, (int) performanceAmount);
 										abilityData.addXp(xp);
 
+									}
 								}
 							}
 						}

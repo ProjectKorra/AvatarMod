@@ -1,13 +1,23 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
+import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.EntityRaytraceHandler;
+import com.crowsofwar.avatar.common.entity.data.RaytraceHandlerBehaviour;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraft.client.renderer.GlStateManager.tryBlendFuncSeparate;
@@ -40,6 +50,33 @@ public class ParticleFlash extends ParticleAvatar {
 	@Override
 	public int getFXLayer() {
 		return 0;
+	}
+
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		if (getAbility() instanceof AbilityFlamethrower) {
+			List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, getBoundingBox().grow(motionX / 2, motionY / 2, motionZ / 2));
+			targets.remove(getEntity());
+			if (!targets.isEmpty()) {
+				for (Entity hit : targets) {
+					if (hit != getEntity()) {
+						if (hit instanceof EntityLivingBase || hit.canBeCollidedWith() && hit.canBePushed()) {
+							EntityRaytraceHandler handler = new EntityRaytraceHandler(world);
+							handler.setAbility(new AbilityFlamethrower());
+							handler.setElement(new Firebending());
+							handler.setEntitySize(0.5F);
+							handler.setLifeTime(3);
+							handler.setOwner((EntityLivingBase) getEntity());
+							handler.setVelocity(Vec3d.ZERO);
+							handler.setFollowingEntity(hit);
+							handler.setBehaviour(new RaytraceHandlerBehaviour.DetectCollisionBoxes());
+							world.spawnEntity(handler);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	@Override
