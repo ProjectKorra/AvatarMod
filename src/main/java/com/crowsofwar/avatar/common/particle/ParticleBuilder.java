@@ -809,7 +809,7 @@ public final class ParticleBuilder {
 		particle.setTargetPosition(tx, ty, tz);
 		particle.setTargetEntity(target);;
 
-		addAliveParticles(particle, id);
+		//addAliveParticles(particle, id);
 		/*if (entity != null && entity instanceof EntityLivingBase && Bender.isBenderSupported((EntityLivingBase) entity)) {
 			Bender bender = Bender.get((EntityLivingBase) entity);
 			bender.getData().addP

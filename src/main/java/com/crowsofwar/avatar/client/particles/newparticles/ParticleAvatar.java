@@ -2,10 +2,11 @@ package com.crowsofwar.avatar.client.particles.newparticles;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.client.AvatarClientProxy;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.ICustomHitbox;
+import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -15,6 +16,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -114,6 +117,7 @@ public abstract class ParticleAvatar extends Particle {
 	protected UUID uuid = UUID.fromString("ccc7dd56-8fcc-4477-9782-7f0423e5616d");
 
 	protected BendingStyle element;
+	protected Ability ability;
 
 	//Has R, G, B, and A, in that order.
 	protected float[] colourShiftRange = new float[4];
@@ -124,6 +128,8 @@ public abstract class ParticleAvatar extends Particle {
 	protected double scaleChange;
 	protected boolean speedChangeOnUpdate;
 	protected double speedChange;
+	private boolean collidedWithSolid;
+	private boolean dynamicCollidedWithEntity;
 	/**
 	 * The entity this particle is linked to. The particle will move with this entity.
 	 */
@@ -311,6 +317,14 @@ public abstract class ParticleAvatar extends Particle {
 	//Sets the element of the particle, which is used for different effects, depending on the particle.
 	public void setElement(BendingStyle element) {
 		this.element = element;
+	}
+
+	public void setAbility(Ability ability) {
+		this.ability = ability;
+	}
+
+	public Ability getAbility() {
+		return this.ability;
 	}
 
 	// Overridden to set the initial colour values
@@ -732,7 +746,23 @@ public abstract class ParticleAvatar extends Particle {
 		if (this.canCollide) {
 
 			List<AxisAlignedBB> list = this.world.getCollisionBoxes(null, this.getBoundingBox().expand(x, y, z));
+			List<Entity> entityList = this.world.getEntitiesWithinAABB(Entity.class, getBoundingBox().expand(x, y, z));
 
+			for (Entity hit : entityList) {
+				if (hit != getEntity()) {
+					if (hit instanceof EntityShield || hit instanceof EntityWall || hit instanceof EntityWallSegment) {
+						if (((AvatarEntity) hit).getOwner() != getEntity() || hit instanceof EntityWall || hit instanceof EntityWallSegment) {
+							collidedWithSolid = true;
+						}
+					}
+					else if (hit instanceof EntityThrowable || hit instanceof EntityArrow || hit instanceof EntityOffensive) {
+						dynamicCollidedWithEntity = true;
+						this.motionX += hit.motionX;
+						this.motionY += hit.motionY;
+						this.motionZ += hit.motionZ;
+					}
+				}
+			}
 			for (AxisAlignedBB axisalignedbb : list) {
 				y = axisalignedbb.calculateYOffset(this.getBoundingBox(), y);
 			}
@@ -758,6 +788,9 @@ public abstract class ParticleAvatar extends Particle {
 		this.resetPositionToBB();
 		this.onGround = origY != y && origY < 0.0D;
 
+		if (collidedWithSolid)
+			motionX = motionY = motionZ = 0.0D;
+
 		if (origX != x) this.motionX = 0.0D;
 		if (origY != y) this.motionY = 0.0D; // Why doesn't Particle do this for y?
 		if (origZ != z) this.motionZ = 0.0D;
@@ -777,11 +810,7 @@ public abstract class ParticleAvatar extends Particle {
 	@Override
 	public void setExpired() {
 		super.setExpired();
-		ParticleBuilder.aliveParticles.remove(getUUID());
+		//ParticleBuilder.aliveParticles.remove(getUUID());
 	}
 
-	@Override
-	public float getRedColorF() {
-		return super.getRedColorF();
-	}
 }

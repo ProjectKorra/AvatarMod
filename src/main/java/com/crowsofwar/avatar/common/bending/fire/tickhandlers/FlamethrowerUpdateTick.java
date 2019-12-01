@@ -236,25 +236,18 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 
 				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2.2F, Raytrace.ignoreBenderFilter(entity));
-				List<AxisAlignedBB> hitBoxes; // = world.getCollisionBoxes(entity, new AxisAlignedBB(start.x(), start.y(), start.z(), end.x(), end.y(),
-				List<ParticleAvatar> aliveParticles = ParticleBuilder.aliveParticles.values().stream().
-						filter(particleAvatar -> particleAvatar.getEntity().getUniqueID() == entity.getUniqueID()).collect(Collectors.toList());
-				//end.z()).grow(size / 2.2F));
+				/*List<ParticleAvatar> aliveParticles = ParticleBuilder.aliveParticles.values().stream().
+						filter(particleAvatar -> particleAvatar.getEntity().getUniqueID() == entity.getUniqueID()).collect(Collectors.toList());;
+				**/hit.remove(entity);
 
-				//	hitBoxes.remove(entity.getEntityBoundingBox());
-				hit.remove(entity);
+				boolean canHitEntity = true;
 
-				boolean canHitEntity = false;
-
-				if (!hit.isEmpty() && !aliveParticles.isEmpty()) {
+				if (!hit.isEmpty()/* && !aliveParticles.isEmpty()**/) {
 					for (Entity target : hit) {
 						if (!world.isRemote) {
 							if (canCollideWithEntity(target, entity)) {
-								hitBoxes = world.getCollisionBoxes(entity, target.getEntityBoundingBox().grow(0.1));
-								hitBoxes.remove(entity.getEntityBoundingBox());
-								if (!hitBoxes.isEmpty()) {
 									//Time to have fun. This makes sure particles are colliding with the entity that you're trying to hit.
-										for (ParticleAvatar particle : aliveParticles) {
+										/*for (ParticleAvatar particle : aliveParticles) {
 											if (!canHitEntity) {
 											//We're going to need a for loop to iterate across all parts of the bounding box.
 												AxisAlignedBB box = target.getEntityBoundingBox().grow(0.1);
@@ -263,7 +256,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 													canHitEntity = true;
 											}
 
-										}
+										}**/
 
 
 
@@ -283,7 +276,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 										BattlePerformanceScore.addScore(entity, (int) performanceAmount);
 										abilityData.addXp(xp);
 
-									}
 								}
 							}
 						}

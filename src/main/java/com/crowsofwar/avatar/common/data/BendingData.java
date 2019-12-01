@@ -56,8 +56,6 @@ public class BendingData {
 	private Chi chi;
 	private MiscData miscData;
 	private Map<UUID, PowerRatingManager> powerRatingManagers;
-	//Particles spawned by the player.
-	private Map<Ability, UUID> particles;
 	private Vision vision;
 
 	/**
@@ -79,7 +77,6 @@ public class BendingData {
 		chi = new Chi(this);
 		miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
 		powerRatingManagers = new HashMap<>();
-		particles = new HashMap<>();
 		performance = new BattlePerformanceScore(this);
 	}
 
@@ -247,15 +244,6 @@ public class BendingData {
 	// MISCELLANEOUS
 	// ================================================================================
 
-	public void addSpawnedParticle(Ability ability, ParticleAvatar particle) {
-		if (!particles.containsValue(particle.getUUID())) {
-			particles.put(ability, particle.getUUID());
-		}
-	}
-
-	public Map<Ability, UUID> getParticles() {
-		return particles;
-	}
 
 	// ================================================================================
 	// STATUS CONTROLS
