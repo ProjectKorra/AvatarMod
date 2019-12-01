@@ -587,10 +587,10 @@ public class AvatarUtils {
 	}
 
 	public static double getMagnitude(Vec3d vel) {
-		return Math.sqrt(getMagnitude(vel));
+		return Math.sqrt(getSqrMagnitude(vel));
 	}
 
-	public static double getSqrMagnutude(Vec3d vel) {
+	public static double getSqrMagnitude(Vec3d vel) {
 		return vel.x * vel.x + vel.y * vel.y + vel.z * vel.z;
 	}
 	/**

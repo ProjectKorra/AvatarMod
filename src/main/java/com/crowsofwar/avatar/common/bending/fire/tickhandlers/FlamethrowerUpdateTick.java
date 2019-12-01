@@ -259,19 +259,12 @@ public class FlamethrowerUpdateTick extends TickHandler {
 								}
 								if (!wall) {
 									if (canCollideWithEntity(target, entity)) {
-										/*List<Entity> nearbyCollisionDetectors = world.getEntitiesWithinAABB(EntityRaytraceHandler.class, target.getEntityBoundingBox().grow(0.1));
-										if (!nearbyCollisionDetectors.isEmpty()) {
-											canHitEntity = true;
-											for (Entity handler : nearbyCollisionDetectors) {
-												handler.setDead();
-											}
-										}**/
 										AxisAlignedBB box = target.getEntityBoundingBox().grow(0.1);
 
 										//This prevents crashes, and makes sure the particle is colliding with the entity.
 										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> particleAvatar != null && particleAvatar.getEntity() != null && particleAvatar.getLifetimeRemaining() > 2).collect(Collectors.toList());
-										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> box.intersects(particleAvatar.getBoundingBox().grow(0.05))
-										|| box.contains(particleAvatar.getBoundingBox().grow(0.05).getCenter())).collect(Collectors.toList());
+										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> box.intersects(particleAvatar.getBoundingBox().grow(0.1))
+										|| box.contains(particleAvatar.getBoundingBox().grow(0.1).getCenter())).collect(Collectors.toList());
 										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> particleAvatar.getEntity().getUniqueID() == entity.getUniqueID())
 												.collect(Collectors.toList());
 
