@@ -575,9 +575,14 @@ public abstract class ParticleAvatar extends Particle {
 				if (this.entity.isDead) {
 					this.setExpired();
 				} else {
-					x += this.entity.posX;
-					y += this.entity.posY;
-					z += this.entity.posZ;
+					if (canCollide) {
+						//Ensures proper particle collision
+						if (!(motionX == 0 && prevVelX != 0 || motionY == 0 && prevVelY == 0 || motionZ == 0 && prevVelZ == 0)) {
+							x += this.entity.posX;
+							y += this.entity.posY;
+							z += this.entity.posZ;
+						}
+					}
 				}
 			}
 
@@ -737,8 +742,8 @@ public abstract class ParticleAvatar extends Particle {
 
 		if (this.canCollide) {
 
-			List<AxisAlignedBB> list = this.world.getCollisionBoxes(null, this.getBoundingBox().expand(x, y, z));
-			List<Entity> entityList = this.world.getEntitiesWithinAABB(Entity.class, getBoundingBox().expand(x, y, z));
+			List<AxisAlignedBB> list = this.world.getCollisionBoxes(null, this.getBoundingBox().expand(x, y, z).grow(0.1));
+			List<Entity> entityList = this.world.getEntitiesWithinAABB(Entity.class, getBoundingBox().expand(x, y, z).grow(0.15));
 
 			for (Entity hit : entityList) {
 				if (hit != getEntity()) {

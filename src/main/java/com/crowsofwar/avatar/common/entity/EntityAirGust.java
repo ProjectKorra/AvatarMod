@@ -286,6 +286,8 @@ public class EntityAirGust extends EntityOffensive {
 		return new Vec3d(x, y, z);
 	}
 
+
+
 	@Override
 	public boolean canDamageEntity(Entity entity) {
 		return canCollideWith(entity);

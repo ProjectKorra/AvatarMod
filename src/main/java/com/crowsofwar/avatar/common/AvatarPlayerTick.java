@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandlerController;
@@ -69,16 +70,22 @@ public class AvatarPlayerTick {
 		}
 
 		//Removes particles.
-		List<EntityLivingBase> benders = e.player.world.getEntities(EntityLivingBase.class, Bender::isBenderSupported);
-		boolean flamethrowerActive = false;
-		if (!benders.isEmpty()) {
-			for (EntityLivingBase entity : benders) {
-				if (Bender.get(entity).getData().hasTickHandler(TickHandlerController.FLAMETHROWER))
-					flamethrowerActive = true;
+		/*if (e.phase == Phase.END && Bender.get(e.player) != null) {
+			List<EntityLivingBase> benders = e.player.world.getEntities(EntityLivingBase.class, Bender::isBenderSupported);
+			boolean flamethrowerActive = false;
+			if (!benders.isEmpty()) {
+				for (EntityLivingBase entity : benders) {
+					if (Bender.get(entity).getData().hasTickHandler(TickHandlerController.FLAMETHROWER) || Bender.get(entity).getData().hasStatusControl(StatusControl.STOP_FLAMETHROW))
+						flamethrowerActive = true;
+				}
 			}
-		}
-		if (!flamethrowerActive)
-			ParticleBuilder.aliveParticles.removeIf(particleAvatar -> !particleAvatar.isAlive());
+			if (Bender.get(e.player).getData().hasStatusControl(StatusControl.STOP_FLAMETHROW) || Bender.get(e.player).getData().hasTickHandler(TickHandlerController.FLAMETHROWER))
+				flamethrowerActive = true;
+			if (!flamethrowerActive) {
+				System.out.println("Remove flamethrower");
+				//ParticleBuilder.aliveParticles.removeIf(particleAvatar -> !particleAvatar.isAlive());
+			}
+		}**/
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

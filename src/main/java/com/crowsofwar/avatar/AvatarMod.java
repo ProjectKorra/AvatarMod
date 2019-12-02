@@ -245,6 +245,7 @@ public class AvatarMod {
 		registerEntity(EntityLightOrb.class, "LightOrb", 128, 1000, true);
 		registerEntity(EntityLightCylinder.class, "LightCylinder", 128, 1000, true);
 		registerEntity(EntityRaytraceHandler.class, "RaytraceHandler", 128, 1000, true);
+		registerEntity(EntityFlamethrower.class, "Flamethrower", 128, 1000, true);
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 1, 3, EnumCreatureType.CREATURE, //
 				SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, TAIGA_HILLS, ICE_MOUNTAINS, REDWOOD_TAIGA_HILLS, MUTATED_EXTREME_HILLS,

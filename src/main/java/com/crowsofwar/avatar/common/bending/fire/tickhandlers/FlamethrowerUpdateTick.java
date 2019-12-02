@@ -16,49 +16,40 @@
 */
 package com.crowsofwar.avatar.common.bending.fire.tickhandlers;
 
-import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
-import com.crowsofwar.avatar.client.particles.newparticles.ParticleMagicBubble;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.EntityFlamethrower;
+import com.crowsofwar.avatar.common.entity.EntityShield;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
-import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockLiquid;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import org.lwjgl.Sys;
 
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -214,42 +205,73 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				}
 
 
+				//Spawn Entity Code.
+				//if (ctx.getData().getTickHandlerDuration(this) % ((int) 20 / flamesPerSecond) == 0) {
+				Vector knockback = look.times(speedMult / 100);
+				Vector position = look.times((double) flamesPerSecond / 1000D).plus(eye.minusY(0.5));
+
+				EntityFlamethrower flamethrower = new EntityFlamethrower(world);
+				flamethrower.setOwner(entity);
+				flamethrower.setAbility(new AbilityFlamethrower());
+				flamethrower.setDamage(damage);
+				flamethrower.rotationPitch = entity.rotationPitch;
+				flamethrower.rotationYaw = entity.rotationYaw;
+				flamethrower.setPerformanceAmount((int) performanceAmount);
+				flamethrower.setFireTime(fireTime);
+				flamethrower.setVelocity(look.times(speedMult));
+				flamethrower.setLifeTime(17 + AvatarUtils.getRandomNumberInRange(0, 5));
+				flamethrower.setPosition(position);
+				flamethrower.setEntitySize(0.175F);
+				flamethrower.setXp(xp);
+				flamethrower.setExpandedHitbox(size, size);
+				flamethrower.shouldLightFires(abilityData.isMasterPath(AbilityTreePath.SECOND));
+				flamethrower.setTier(Math.max(abilityData.getLevel() + 1, 1));
+				flamethrower.setKnockback(knockback.toMinecraft());
+				if (world.isRemote)
+					world.spawnEntity(flamethrower);
+
 				//Particle code.
-				if (world.isRemote) {
-					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
-						for (double i = 0; i < flamesPerSecond; i += 3) {
-							Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
-							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.05F).time(22).collide(true).spawnEntity(entity).vel(look.times(speedMult / 32.5).toMinecraft()).spawn(world);
-						}
-					}
-					for (double i = 0; i < flamesPerSecond; i += 1) {
-						Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
+				if (ctx.getData().getTickHandlerDuration(this) == 2) {
+					if (world.isRemote) {
+						//Remember to subtract the position vector to account for making the linking entity the flamethrower! Or you'll add the position vector twice!
 						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
-							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.1F).time(22).collide(true).vel(look.times(speedMult / 32.5).toMinecraft()).
-									ability(new AbilityFlamethrower()).spawn(world);
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
-									clr(255, 30 + AvatarUtils.getRandomNumberInRange(0, 50), 15, 255).collide(true).element(new Firebending()).spawnEntity(entity).scale(size)
-									.ability(new AbilityFlamethrower()).spawn(world);
-						} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
-									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size).element(new Firebending())
-									.ability(new AbilityFlamethrower()).spawn(world);
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
-									clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size).element(new Firebending())
-									.ability(new AbilityFlamethrower()).spawn(world);
+							for (double i = 0; i < flamesPerSecond; i += 3) {
+								Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
+								start1 = start1.minus(position);
+								ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.05F).time(22).collide(true).spawnEntity(entity).vel(look.times(speedMult / 32.5).toMinecraft())
+										.entity(flamethrower).spawn(world);
+							}
+						}
+						for (double i = 0; i < flamesPerSecond; i += 1) {
+							Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
+							start1 = start1.minus(position);
+							if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+								ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.1F).time(22).collide(true).vel(look.times(speedMult / 32.5).toMinecraft()).
+										ability(new AbilityFlamethrower()).entity(flamethrower).spawn(world);
+								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
+										clr(255, 30 + AvatarUtils.getRandomNumberInRange(0, 50), 15, 255).collide(true).element(new Firebending()).spawnEntity(entity).scale(size)
+										.ability(new AbilityFlamethrower()).entity(flamethrower).spawn(world);
+							} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
+										clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size).element(new Firebending())
+										.ability(new AbilityFlamethrower()).entity(flamethrower).spawn(world);
+								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(17 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult / 32.5).toMinecraft()).
+										clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size).element(new Firebending())
+										.ability(new AbilityFlamethrower()).entity(flamethrower).spawn(world);
+							}
 						}
 					}
-				}
+					//}
 
 
-				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2.2F, Raytrace.ignoreBenderFilter(entity));
-				hit.remove(entity);
+					List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2.2F, Raytrace.ignoreBenderFilter(entity));
+					hit.remove(entity);
 
-				boolean canHitEntity = false;
-				boolean wall = false;
+					boolean canHitEntity = false;
+					boolean wall = false;
 
-				//This makes sure the raytrace stops when you're looking at a wall.
-				if (!hit.isEmpty()) {
+					//This makes sure the raytrace stops when you're looking at a wall.
+				/*if (!hit.isEmpty()) {
 					if (!wall)
 						for (Entity target : hit) {
 							if (!world.isRemote) {
@@ -265,27 +287,25 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 										//Makes sure the particle exists, its ability is flamethrower, and it's touching the entity we want to collide with.
 										while (aliveParticles.hasNext() && !canHitEntity) {
-											ParticleAvatar particleAvatar = aliveParticles.next();
-											if (particleAvatar != null && particleAvatar.isAlive()) {
-												if (!(particleAvatar.getAbility() instanceof AbilityFlamethrower)) {
-													aliveParticles.remove();
-													System.out.println("No ability.");
+											if (aliveParticles.hasNext()) {
+												ParticleAvatar particleAvatar = aliveParticles.next();
+												if (particleAvatar != null && particleAvatar.isAlive()) {
+													if (particleAvatar.getLifetimeRemaining() > 1 && particleAvatar.getAbility() instanceof AbilityFlamethrower) {
+														if (particleAvatar.getEntity().getUniqueID() == entity.getUniqueID()) {
+															if (box.contains(particleAvatar.getBoundingBox().getCenter()) || box.intersects(particleAvatar.getBoundingBox().grow(0.05)))
+																canHitEntity = true;
+															else aliveParticles.remove();
+														}
+														else aliveParticles.remove();
+													}
+													else aliveParticles.remove();
 												}
-												else if (particleAvatar.getEntity().getUniqueID() != entity.getUniqueID()) {
-													aliveParticles.remove();
-													System.out.println("Wrong entity.");
-												}
-												else if (particleAvatar.getLifetimeRemaining() < 1) {
-													aliveParticles.remove();
-													System.out.println("Dead Particle.");
-												}
-												else if (box.contains(particleAvatar.getBoundingBox().getCenter()) || box.intersects(particleAvatar.getBoundingBox().grow(0.05)))
-													canHitEntity = true;
-											}
-											else aliveParticles.remove();
-										}
+												else aliveParticles.remove();
 
-										//This prevents crashes, and makes sure the particle is colliding with the entity.
+											}
+										}**/
+
+					//This prevents crashes, and makes sure the particle is colliding with the entity.
 										/*aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> particleAvatar != null && particleAvatar.getEntity() != null
 												&& particleAvatar.getLifetimeRemaining() > 3 && particleAvatar.getAbility() != null && particleAvatar.getAbility() instanceof AbilityFlamethrower)
 												.collect(Collectors.toList());
@@ -300,12 +320,12 @@ public class FlamethrowerUpdateTick extends TickHandler {
 										}
 **/
 
-										if (canHitEntity) {
+									/*	if (canHitEntity) {
 											boolean attack = target.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);
 											if (attack) {
 												target.setFire(fireTime + 2);
 												target.setEntityInvulnerable(false);
-												Vector knockback = look.times(speedMult / 100);
+											//	Vector knockback = look.times(speedMult / 100);
 												if (target.canBePushed())
 													target.addVelocity(knockback.x(), knockback.y(), knockback.z());
 												AvatarUtils.afterVelocityAdded(target);
@@ -315,14 +335,16 @@ public class FlamethrowerUpdateTick extends TickHandler {
 												AvatarEntityUtils.attackDragon((EntityDragon) target, AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);
 											BattlePerformanceScore.addScore(entity, (int) performanceAmount);
 											abilityData.addXp(xp);
+											if (aliveParticles.hasNext())
+												aliveParticles.remove();
 
 										}
 									}
 								}
 							}
 						}
+				}**/
 				}
-
 
 				if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)
 					world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
