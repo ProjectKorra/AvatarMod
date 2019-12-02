@@ -75,7 +75,7 @@ public interface IOffensiveEntity {
 
 	default void applyPiercingCollision(AvatarEntity entity) {
 		List<Entity> collided = entity.world.getEntitiesInAABBexcluding(entity, getExpandedHitbox(entity), entity1 -> entity1 != entity.getOwner() &&
-				entity1 != entity);
+				entity1 != entity && entity.canCollideWith(entity1));
 		if (!collided.isEmpty()) {
 			for (Entity hit : collided) {
 				if (entity.getOwner() != null && hit != entity.getOwner() && hit != null) {

@@ -3,15 +3,27 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.Random;
 
 public class EntityFlamethrower extends EntityOffensive {
 
-	private Vec3d knockback = new Vec3d(0,0,0);
+	private Vec3d knockback = new Vec3d(0, 0, 0);
+	//Used for particle maths.
+	private Vec3d spawnPos = Vec3d.ZERO;
+	private double range = 0;
 	private float hitboxWidth, hitboxHeight;
 
 	public EntityFlamethrower(World world) {
@@ -21,6 +33,17 @@ public class EntityFlamethrower extends EntityOffensive {
 		this.noClip = true;
 	}
 
+	@Override
+	public void setPosition(Vec3d position) {
+		super.setPosition(position);
+		this.spawnPos = position;
+	}
+
+	@Override
+	public void setPosition(Vector position) {
+		super.setPosition(position);
+		this.spawnPos = position.toMinecraft();
+	}
 
 	@Override
 	public boolean isPiercing() {
@@ -80,9 +103,32 @@ public class EntityFlamethrower extends EntityOffensive {
 	}
 
 	@Override
-	public float getVolume() {
-		return super.getVolume() * 1.5F;
+	public void applyPiercingCollision() {
+		super.applyPiercingCollision();
 	}
+
+	//We don't want sounds playing
+	@Nullable
+	@Override
+	public SoundEvent[] getSounds() {
+		return null;
+	}
+
+	@Override
+	public void playExplosionSounds(Entity entity) {
+
+	}
+
+	@Override
+	public void playPiercingSounds(Entity entity) {
+
+	}
+
+	@Override
+	public void playDissipateSounds(Entity entity) {
+
+	}
+
 
 	@Override
 	public void onUpdate() {
@@ -93,9 +139,28 @@ public class EntityFlamethrower extends EntityOffensive {
 
 		if (velocity().sqrMagnitude() <= 0.5 * 0.5)
 			Dissipate();
+
 		hitboxWidth *= 1.055;
 		hitboxHeight *= 1.055;
+
+		if (world.isRemote) {
+			for (double i = 0; i < hitboxWidth; i += 0.05) {
+				Random random = new Random();
+				AxisAlignedBB boundingBox = getEntityBoundingBox();
+				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).time(12).clr(255, 10, 5)
+						.scale(hitboxWidth * 2.2F).element(getElement()).spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+						20 + AvatarUtils.getRandomNumberInRange(0, 30), 10)
+						.scale(hitboxWidth * 2.2F).element(getElement()).spawn(world);
+			}
+		}
 	}
+
 
 	@Override
 	public double getExpandedHitboxWidth() {
@@ -113,13 +178,13 @@ public class EntityFlamethrower extends EntityOffensive {
 		return knockback;
 	}
 
+	public void setKnockback(Vec3d knockback) {
+		this.knockback = knockback;
+	}
+
 	@Override
 	public DamageSource getDamageSource(Entity target) {
 		return AvatarDamageSource.causeFlamethrowerDamage(target, getOwner());
-	}
-
-	public void setKnockback(Vec3d knockback) {
-		this.knockback = knockback;
 	}
 
 	public void shouldLightFires(boolean lightFires) {
@@ -131,4 +196,19 @@ public class EntityFlamethrower extends EntityOffensive {
 		this.hitboxWidth = width;
 	}
 
+	public void setRange(float range) {
+		this.range = range;
+	}
+
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isInRangeToRenderDist(double distance) {
+		return true;
+	}
 }

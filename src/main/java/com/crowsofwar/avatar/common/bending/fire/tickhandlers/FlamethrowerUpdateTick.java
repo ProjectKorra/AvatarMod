@@ -218,20 +218,21 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				flamethrower.rotationYaw = entity.rotationYaw;
 				flamethrower.setPerformanceAmount((int) performanceAmount);
 				flamethrower.setFireTime(fireTime);
-				flamethrower.setVelocity(look.times(speedMult));
+				flamethrower.setVelocity(look.times(speedMult / 2));
 				flamethrower.setLifeTime(17 + AvatarUtils.getRandomNumberInRange(0, 5));
 				flamethrower.setPosition(position);
 				flamethrower.setEntitySize(0.175F);
 				flamethrower.setXp(xp);
-				flamethrower.setExpandedHitbox(size, size);
+				flamethrower.setExpandedHitbox(size / 2.2F, size / 2.2F);
 				flamethrower.shouldLightFires(abilityData.isMasterPath(AbilityTreePath.SECOND));
 				flamethrower.setTier(Math.max(abilityData.getLevel() + 1, 1));
 				flamethrower.setKnockback(knockback.toMinecraft());
-				if (world.isRemote)
+				flamethrower.setRange(range);
+			//	if (world.isRemote)
 					world.spawnEntity(flamethrower);
 
 				//Particle code.
-				if (ctx.getData().getTickHandlerDuration(this) == 2) {
+			/*	if (ctx.getData().getTickHandlerDuration(this) == 2) {
 					if (world.isRemote) {
 						//Remember to subtract the position vector to account for making the linking entity the flamethrower! Or you'll add the position vector twice!
 						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
@@ -260,7 +261,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 										.ability(new AbilityFlamethrower()).entity(flamethrower).spawn(world);
 							}
 						}
-					}
+					}**/
 					//}
 
 
@@ -344,7 +345,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 							}
 						}
 				}**/
-				}
+				//}
 
 				if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)
 					world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
