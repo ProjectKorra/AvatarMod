@@ -91,7 +91,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		}
 		//GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
-		//TODO: Change the texture and mess with depth
+		//TODO: Figure out why the dots are appearing
 
 		disableBlend();
 		enableDepth();

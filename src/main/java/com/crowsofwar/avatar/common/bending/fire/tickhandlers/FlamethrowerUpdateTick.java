@@ -224,7 +224,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					flamethrower.setPosition(position);
 					flamethrower.setEntitySize(size / 12.5F);
 					flamethrower.setXp(xp);
-					flamethrower.setExpandedHitbox(size / 25F, size / 2F);
+					flamethrower.setExpandedHitbox(size / 2.25F, size / 2.25F);
 					flamethrower.shouldLightFires(abilityData.isMasterPath(AbilityTreePath.SECOND));
 					flamethrower.setTier(Math.max(abilityData.getLevel() + 1, 1));
 					flamethrower.setKnockback(knockback.toMinecraft());
