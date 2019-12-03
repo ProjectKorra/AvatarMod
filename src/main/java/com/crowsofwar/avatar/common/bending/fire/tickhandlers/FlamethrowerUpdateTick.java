@@ -222,13 +222,16 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					flamethrower.setVelocity(look.times(speedMult / 2));
 					flamethrower.setLifeTime(17 + AvatarUtils.getRandomNumberInRange(0, 5));
 					flamethrower.setPosition(position);
-					flamethrower.setEntitySize(0.1F);
+					flamethrower.setEntitySize(size / 12.5F);
 					flamethrower.setXp(xp);
-					flamethrower.setExpandedHitbox(size / 2.2F, size / 2.2F);
+					flamethrower.setExpandedHitbox(size / 25F, size / 2F);
 					flamethrower.shouldLightFires(abilityData.isMasterPath(AbilityTreePath.SECOND));
 					flamethrower.setTier(Math.max(abilityData.getLevel() + 1, 1));
 					flamethrower.setKnockback(knockback.toMinecraft());
 					flamethrower.setRange(range);
+					flamethrower.setDynamicSpreadingCollision(true);
+					flamethrower.setSolidEntityPredicateOr(entity1 -> entity1 instanceof EntityFlamethrower &&
+							((EntityFlamethrower) entity1).getOwner() != entity);
 					//	if (world.isRemote)
 					world.spawnEntity(flamethrower);
 				}

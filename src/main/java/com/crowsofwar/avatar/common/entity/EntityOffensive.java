@@ -7,6 +7,8 @@ import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -20,6 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class EntityOffensive extends AvatarEntity implements IOffensiveEntity {
 
@@ -33,11 +36,23 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	private static final DataParameter<Float> SYNC_WIDTh = EntityDataManager
 			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
 
+	/**
+	 * The fraction of the impact velocity that should be the maximum spread speed added on impact.
+	 */
+	private static final double SPREAD_FACTOR = 0.2;
+	/**
+	 * Lateral velocity is reduced by this factor on impact, before adding random spread velocity.
+	 */
+	private static final double IMPACT_FRICTION = 0.3;
+
 	private float xp;
 	private int fireTime;
 	private boolean dynamicSpreadingCollision;
+	private boolean collidedWithSolid;
 	private int performanceAmount;
 	private int ticks = 0, ticksMoving = 0;
+	private double prevVelX, prevVelY, prevVelZ;
+	private Predicate<Entity> solidEntities;
 
 
 	public EntityOffensive(World world) {
@@ -46,6 +61,9 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		this.fireTime = 3;
 		this.xp = 3;
 		this.dynamicSpreadingCollision = false;
+		this.prevVelX = prevVelY = prevVelZ = 0;
+		this.solidEntities = entity -> entity instanceof EntityWall || entity instanceof EntityWallSegment ||
+				entity instanceof EntityShield && ((EntityShield) entity).getOwner() != getOwner();
 	}
 
 	public void setDynamicSpreadingCollision(boolean collision) {
@@ -54,6 +72,22 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	public boolean getDynamicSpreadingCollision() {
 		return this.dynamicSpreadingCollision;
+	}
+
+	public void setSolidEntityPredicate(Predicate<Entity> predicate) {
+		this.solidEntities = predicate;
+	}
+
+	public void setSolidEntityPredicateOr(Predicate<Entity> predicate) {
+		this.solidEntities = this.solidEntities.or(predicate);
+	}
+
+	public void setSolidEntityPredicateAnd(Predicate<Entity> predicate) {
+		this.solidEntities = this.solidEntities.and(predicate);
+	}
+
+	public Predicate<Entity> getSolidEntities() {
+		return this.solidEntities;
 	}
 
 	public float getHeight() {
@@ -151,8 +185,91 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		//Dynamic Collision code.
 
 		if (dynamicSpreadingCollision) {
-			
+			//Handles actual motion on colliding
+			if (this.motionX == 0 && this.prevVelX != 0) { // If the particle just collided in x
+				// Reduce lateral velocity so the added spread speed actually has an effect
+				this.motionY *= IMPACT_FRICTION;
+				this.motionZ *= IMPACT_FRICTION;
+				// Add random velocity in y and z proportional to the impact velocity
+				this.motionY += (rand.nextDouble() * 2 - 1) * this.prevVelX * SPREAD_FACTOR;
+				this.motionZ += (rand.nextDouble() * 2 - 1) * this.prevVelX * SPREAD_FACTOR;
+			}
+
+			if (this.motionY == 0 && this.prevVelY != 0) { // If the particle just collided in y
+				// Reduce lateral velocity so the added spread speed actually has an effect
+				this.motionX *= IMPACT_FRICTION;
+				this.motionZ *= IMPACT_FRICTION;
+				// Add random velocity in x and z proportional to the impact velocity
+				this.motionX += (rand.nextDouble() * 2 - 1) * this.prevVelY * SPREAD_FACTOR;
+				this.motionZ += (rand.nextDouble() * 2 - 1) * this.prevVelY * SPREAD_FACTOR;
+			}
+
+			if (this.motionZ == 0 && this.prevVelZ != 0) { // If the particle just collided in z
+				// Reduce lateral velocity so the added spread speed actually has an effect
+				this.motionX *= IMPACT_FRICTION;
+				this.motionY *= IMPACT_FRICTION;
+				// Add random velocity in x and y proportional to the impact velocity
+				this.motionX += (rand.nextDouble() * 2 - 1) * this.prevVelZ * SPREAD_FACTOR;
+				this.motionY += (rand.nextDouble() * 2 - 1) * this.prevVelZ * SPREAD_FACTOR;
+			}
+
+			//Handles if it's colliding with something.
+			double x = motionX, y = motionY, z = motionZ;
+			double origX = x, origY = y, origZ = z;
+			List<AxisAlignedBB> list = this.world.getCollisionBoxes(null, this.getEntityBoundingBox().expand(x, y, z).grow(0.1));
+			List<Entity> entityList = this.world.getEntitiesWithinAABB(Entity.class, getEntityBoundingBox().expand(x, y, z).grow(0.15));
+
+			for (Entity hit : entityList) {
+				if (hit != getOwner()) {
+					if (solidEntities.test(hit)) {
+						collidedWithSolid = true;
+					} else if (hit instanceof EntityThrowable || hit instanceof EntityArrow || hit instanceof EntityOffensive && canCollideWith(hit)) {
+						Vec3d hitVel = new Vec3d(hit.motionX, hit.motionY, hit.motionZ);
+						Vec3d pVel = new Vec3d(motionX, motionY, motionZ);
+						if (AvatarUtils.getMagnitude(hitVel) >= AvatarUtils.getMagnitude(pVel))
+							motionX = motionY = motionZ = 0;
+						else {
+							this.motionX += hit.motionX;
+							this.motionY += hit.motionY;
+							this.motionZ += hit.motionZ;
+						}
+					}
+				}
+			}
+			if (!list.isEmpty()) {
+				for (AxisAlignedBB axisalignedbb : list) {
+					y = axisalignedbb.calculateYOffset(this.getEntityBoundingBox(), y);
+				}
+
+				this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, y, 0.0D));
+
+				for (AxisAlignedBB axisalignedbb1 : list) {
+					x = axisalignedbb1.calculateXOffset(this.getEntityBoundingBox(), x);
+				}
+
+				this.setEntityBoundingBox(this.getEntityBoundingBox().offset(x, 0.0D, 0.0D));
+
+				for (AxisAlignedBB axisalignedbb2 : list) {
+					z = axisalignedbb2.calculateZOffset(this.getEntityBoundingBox(), z);
+				}
+
+				this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, 0.0D, z));
+
+				this.resetPositionToBB();
+			}
+
+			if (collidedWithSolid)
+				motionX = motionY = motionZ = 0.0D;
+
+			if (origX != x) this.motionX = 0.0D;
+			if (origY != y) this.motionY = 0.0D; // Why doesn't Particle do this for y?
+			if (origZ != z) this.motionZ = 0.0D;
 		}
+
+		//These values are only used for proper visual spread collision.
+		prevVelX = motionX;
+		prevVelY = motionY;
+		prevVelZ = motionZ;
 	}
 
 	@Override

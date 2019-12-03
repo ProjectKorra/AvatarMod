@@ -496,8 +496,11 @@ public abstract class AvatarEntity extends Entity {
 			return false;
 		} else if (entity instanceof EntityEnderCrystal) {
 			return true;
-		} else
-			return (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase || entity instanceof AvatarEntity;
+		}
+		else if (entity == this) {
+			return false;
+		}
+		else return (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase || entity instanceof AvatarEntity;
 	}
 
 	@Override
