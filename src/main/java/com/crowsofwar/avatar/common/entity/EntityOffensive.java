@@ -113,6 +113,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 				}
 			}
 		}
+		//TODO: Collision spreading
 		if (noClip) {
 			IBlockState state = world.getBlockState(getPosition());
 			if (state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()) {

@@ -77,12 +77,29 @@ public class EntityFlamethrower extends EntityOffensive {
 
 	@Override
 	public void spawnDissipateParticles(World world, Vec3d pos) {
-		//We don't need to spawn any since particle collision handles it
+		if (world.isRemote) {
+			for (double i = 0; i < hitboxWidth; i += 0.25) {
+				Random random = new Random();
+				//We want the previous pos in order to provide proper collision
+				double prevposx = posX - motionX / 2, prevposy = posY - motionY / 2, prevposz = posZ - motionZ / 2;
+				double xPos = prevposx - hitboxWidth, yPos = prevposy - hitboxHeight, zPos = prevposz - hitboxWidth;
+				double xPos1 = prevposx + hitboxWidth, yPos1 = prevposy + hitboxHeight, zPos1 = prevposz + hitboxWidth;
+				AxisAlignedBB boundingBox = new AxisAlignedBB(xPos, yPos, zPos, xPos1, yPos1, zPos1);
+				double spawnX = boundingBox.minX + random.nextDouble() / 30 * (boundingBox.maxX - boundingBox.minX);
+				double spawnY = boundingBox.minY + random.nextDouble() / 30 * (boundingBox.maxY - boundingBox.minY);
+				double spawnZ = boundingBox.minZ + random.nextDouble() / 30 * (boundingBox.maxZ - boundingBox.minZ);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(motionX, motionY, motionZ).time(5 + AvatarUtils.getRandomNumberInRange(0, 5)).clr(255, 10, 5)
+						.scale(hitboxWidth).element(getElement()).collide(true).spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(motionX, motionY, motionZ).time(5 + AvatarUtils.getRandomNumberInRange(0, 5)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+						20 + AvatarUtils.getRandomNumberInRange(0, 30), 10)
+						.scale(hitboxWidth).element(getElement()).collide(true).spawn(world);
+			}
+		}
 	}
 
 	@Override
 	public void spawnPiercingParticles(World world, Vec3d pos) {
-		//We don't need to spawn any since particle collision handles it
+		//We don't need to spawn any
 	}
 
 	@Override
@@ -144,19 +161,19 @@ public class EntityFlamethrower extends EntityOffensive {
 		hitboxHeight *= 1.055;
 
 		if (world.isRemote) {
-			for (double i = 0; i < hitboxWidth; i += 0.05) {
+			for (double i = 0; i < hitboxWidth; i += 0.3) {
 				Random random = new Random();
 				AxisAlignedBB boundingBox = getEntityBoundingBox();
 				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
 				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(12).clr(255, 10, 5)
-						.scale(hitboxWidth * 2.2F).element(getElement()).spawn(world);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
+						world.rand.nextGaussian() / 80).time(10 + AvatarUtils.getRandomNumberInRange(0, 5)).clr(255, 10, 5)
+						.scale(hitboxWidth / 1.5F).element(getElement()).collide(true).spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
+						world.rand.nextGaussian() / 80).time(10 + AvatarUtils.getRandomNumberInRange(0, 5)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
 						20 + AvatarUtils.getRandomNumberInRange(0, 30), 10)
-						.scale(hitboxWidth * 2.2F).element(getElement()).spawn(world);
+						.scale(hitboxWidth / 1.5F).element(getElement()).collide(true).spawn(world);
 			}
 		}
 	}
@@ -164,12 +181,12 @@ public class EntityFlamethrower extends EntityOffensive {
 
 	@Override
 	public double getExpandedHitboxWidth() {
-		return hitboxWidth;
+		return hitboxWidth * 0.95;
 	}
 
 	@Override
 	public double getExpandedHitboxHeight() {
-		return hitboxHeight;
+		return hitboxHeight * 0.95;
 	}
 
 
