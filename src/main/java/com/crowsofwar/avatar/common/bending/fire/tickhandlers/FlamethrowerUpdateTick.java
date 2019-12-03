@@ -222,7 +222,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					flamethrower.setVelocity(look.times(speedMult / 2));
 					flamethrower.setLifeTime(17 + AvatarUtils.getRandomNumberInRange(0, 5));
 					flamethrower.setPosition(position);
-					flamethrower.setEntitySize(0.175F);
+					flamethrower.setEntitySize(0.1F);
 					flamethrower.setXp(xp);
 					flamethrower.setExpandedHitbox(size / 2.2F, size / 2.2F);
 					flamethrower.shouldLightFires(abilityData.isMasterPath(AbilityTreePath.SECOND));

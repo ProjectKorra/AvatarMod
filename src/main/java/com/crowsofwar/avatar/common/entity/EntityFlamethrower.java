@@ -159,20 +159,21 @@ public class EntityFlamethrower extends EntityOffensive {
 
 		hitboxWidth *= 1.055;
 		hitboxHeight *= 1.055;
-		setEntitySize(Math.min(hitboxWidth, getAvgSize() * 1.25F));
+		setEntitySize(Math.min(hitboxWidth, getAvgSize() * 1.2F));
 
 		if (world.isRemote) {
-			for (int i = 0; i < 3; i ++) {
+			//for (int j = 0; j < 1 / hitboxWidth; j++)
+			for (double i = 0; i < Math.max(Math.min((int) (1 / getAvgSize()), 3), 1); i++) {
 				Random random = new Random();
 				AxisAlignedBB boundingBox = getEntityBoundingBox();
-				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+				double spawnX = boundingBox.minX + random.nextDouble() / 15 * (boundingBox.maxX - boundingBox.minX);
+				double spawnY = boundingBox.minY + random.nextDouble() / 15 * (boundingBox.maxY - boundingBox.minY);
+				double spawnZ = boundingBox.minZ + random.nextDouble() / 15 * (boundingBox.maxZ - boundingBox.minZ);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
-						world.rand.nextGaussian() / 80).time(3 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(255, 10, 5)
+						world.rand.nextGaussian() / 80).time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).clr(255, 10, 5)
 						.scale(getAvgSize() * 2F).element(getElement()).collide(true).spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
-						world.rand.nextGaussian() / 80).time(3 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+						world.rand.nextGaussian() / 80).time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
 						20 + AvatarUtils.getRandomNumberInRange(0, 30), 10)
 						.scale(getAvgSize() * 2F).element(getElement()).collide(true).spawn(world);
 			}
@@ -182,12 +183,12 @@ public class EntityFlamethrower extends EntityOffensive {
 
 	@Override
 	public double getExpandedHitboxWidth() {
-		return hitboxWidth * 0.5;
+		return 0.05;
 	}
 
 	@Override
 	public double getExpandedHitboxHeight() {
-		return hitboxHeight * 0.5;
+		return 0.05;
 	}
 
 

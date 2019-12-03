@@ -35,6 +35,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	private float xp;
 	private int fireTime;
+	private boolean dynamicSpreadingCollision;
 	private int performanceAmount;
 	private int ticks = 0, ticksMoving = 0;
 
@@ -44,6 +45,15 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		this.performanceAmount = 20;
 		this.fireTime = 3;
 		this.xp = 3;
+		this.dynamicSpreadingCollision = false;
+	}
+
+	public void setDynamicSpreadingCollision(boolean collision) {
+		this.dynamicSpreadingCollision = collision;
+	}
+
+	public boolean getDynamicSpreadingCollision() {
+		return this.dynamicSpreadingCollision;
 	}
 
 	public float getHeight() {
@@ -137,6 +147,12 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 				Explode();
 		}
 		setSize(getWidth(), getHeight());
+
+		//Dynamic Collision code.
+
+		if (dynamicSpreadingCollision) {
+			
+		}
 	}
 
 	@Override
