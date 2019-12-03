@@ -210,26 +210,28 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				Vector knockback = look.times(speedMult / 100);
 				Vector position = look.times((double) flamesPerSecond / 1000D).plus(eye.minusY(0.5));
 
-				EntityFlamethrower flamethrower = new EntityFlamethrower(world);
-				flamethrower.setOwner(entity);
-				flamethrower.setAbility(new AbilityFlamethrower());
-				flamethrower.setDamage(damage);
-				flamethrower.rotationPitch = entity.rotationPitch;
-				flamethrower.rotationYaw = entity.rotationYaw;
-				flamethrower.setPerformanceAmount((int) performanceAmount);
-				flamethrower.setFireTime(fireTime);
-				flamethrower.setVelocity(look.times(speedMult / 2));
-				flamethrower.setLifeTime(17 + AvatarUtils.getRandomNumberInRange(0, 5));
-				flamethrower.setPosition(position);
-				flamethrower.setEntitySize(0.175F);
-				flamethrower.setXp(xp);
-				flamethrower.setExpandedHitbox(size / 2.2F, size / 2.2F);
-				flamethrower.shouldLightFires(abilityData.isMasterPath(AbilityTreePath.SECOND));
-				flamethrower.setTier(Math.max(abilityData.getLevel() + 1, 1));
-				flamethrower.setKnockback(knockback.toMinecraft());
-				flamethrower.setRange(range);
-			//	if (world.isRemote)
+				if (ctx.getData().getTickHandlerDuration(this) % 2 == 0) {
+					EntityFlamethrower flamethrower = new EntityFlamethrower(world);
+					flamethrower.setOwner(entity);
+					flamethrower.setAbility(new AbilityFlamethrower());
+					flamethrower.setDamage(damage);
+					flamethrower.rotationPitch = entity.rotationPitch;
+					flamethrower.rotationYaw = entity.rotationYaw;
+					flamethrower.setPerformanceAmount((int) performanceAmount);
+					flamethrower.setFireTime(fireTime);
+					flamethrower.setVelocity(look.times(speedMult / 2));
+					flamethrower.setLifeTime(17 + AvatarUtils.getRandomNumberInRange(0, 5));
+					flamethrower.setPosition(position);
+					flamethrower.setEntitySize(0.175F);
+					flamethrower.setXp(xp);
+					flamethrower.setExpandedHitbox(size / 2.2F, size / 2.2F);
+					flamethrower.shouldLightFires(abilityData.isMasterPath(AbilityTreePath.SECOND));
+					flamethrower.setTier(Math.max(abilityData.getLevel() + 1, 1));
+					flamethrower.setKnockback(knockback.toMinecraft());
+					flamethrower.setRange(range);
+					//	if (world.isRemote)
 					world.spawnEntity(flamethrower);
+				}
 
 				//Particle code.
 			/*	if (ctx.getData().getTickHandlerDuration(this) == 2) {
