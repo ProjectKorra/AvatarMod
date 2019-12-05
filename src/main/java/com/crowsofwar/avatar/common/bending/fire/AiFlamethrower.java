@@ -60,20 +60,16 @@ public class AiFlamethrower extends BendingAi {
 		entity.rotationYaw = (float) toDegrees(rotations.y());
 		entity.rotationPitch = (float) toDegrees(rotations.x());
 
-		if (timeExecuting == 20) {
-
-			BendingContext ctx = new BendingContext(bender.getData(), entity, bender, new Raytrace.Result());
-
+		if (timeExecuting == 10) {
 			execAbility();
 			execStatusControl(StatusControl.START_FLAMETHROW);
-
 		}
 
-		if (timeExecuting > 20 && timeExecuting < 60) {
+		if (timeExecuting > 20 && timeExecuting < 100) {
 			BendingContext ctx = new BendingContext(bender.getData(), entity, bender, new Raytrace.Result());
 			FLAMETHROWER.tick(ctx);
 		}
-		if (timeExecuting >= 60) {
+		if (timeExecuting >= 100) {
 			bender.getData().removeStatusControl(StatusControl.START_FLAMETHROW);
 			bender.getData().removeTickHandler(FLAMETHROWER);
 			execStatusControl(StatusControl.STOP_FLAMETHROW);
@@ -87,7 +83,7 @@ public class AiFlamethrower extends BendingAi {
 
 	@Override
 	protected boolean shouldExec() {
-		int amount = bender.getData().getAbilityData(new AbilityFlamethrower()).getLevel() + 5;
+		int amount = Math.max(bender.getData().getAbilityData(new AbilityFlamethrower()).getLevel(), 0) + 7;
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSq(target) < amount * amount;
 	}

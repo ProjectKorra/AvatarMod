@@ -17,8 +17,6 @@
 package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.fire.AbilityInfernoPunch;
-import com.crowsofwar.avatar.common.bending.fire.AiInfernoPunch;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
@@ -146,7 +144,7 @@ public class EntityFirebender extends EntityHumanBender {
 		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
 		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_shot", this, getBender())));
-		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fire_blast", this, getBender())));
+		//this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fire_blast", this, getBender())));
 		//this.tasks.addTask(3, new AiInfernoPunch(new AbilityInfernoPunch(), this, getBender(), this, 1.35, true));
 		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("inferno_punch", this, getBender())));
 	//	if (getData().hasStatusControl(INFERNO_PUNCH_MAIN) || getData().hasStatusControl(INFERNO_PUNCH_FIRST) || getData().hasStatusControl(INFERNO_PUNCH_SECOND)) {

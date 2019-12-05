@@ -88,9 +88,9 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		//TODO: Movement modifier
 
 
-		flamesPerSecond = level <= 0 ? 2 : 4;
+		flamesPerSecond = level <= 0 ? 1 : 2;
 		if (level == 3 && path == AbilityTreePath.FIRST)
-			flamesPerSecond = 4;
+			flamesPerSecond = 2;
 		else if (level == 3 && path == AbilityTreePath.SECOND)
 			flamesPerSecond = 1;
 
@@ -133,7 +133,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				float performanceAmount = 1;
 				float xp = SKILLS_CONFIG.flamethrowerHit;
 				int frequency = 2;
-				boolean lightsFires = false;
 
 				switch (abilityData.getLevel()) {
 					case 1:
@@ -171,7 +170,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					damage = 2.5F;
 					range = 6.5F;
 					performanceAmount = 2;
-					lightsFires = true;
 					frequency = 5;
 				}
 
@@ -192,25 +190,11 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				Vector start = look.plus(eye.minusY(0.5));
 				Vector end = start.plus(look.times(range));
 
-				Raytrace.Result result = Raytrace.raytrace(world, start.toMinecraft(), look.toMinecraft(), range, false);
-				if (result.hitSomething() && result.getPos() != null) {
-					BlockPos pos = result.getPos().toBlockPos();
-					if (lightsFires)
-						if (Blocks.FIRE.canPlaceBlockAt(world, pos) && !world.getBlockState(pos).isFullBlock() && !(world.getBlockState(pos) instanceof BlockLiquid))
-							if (world.getBlockState(pos).getBlock() == Blocks.AIR && world.getBlockState(pos.down()).getBlock() != Blocks.AIR ||
-									world.getBlockState(pos).getBlock() != Blocks.AIR) {
-								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-							}
 
-				}
-
-
-				//Spawn Entity Code.
-				//if (ctx.getData().getTickHandlerDuration(this) % ((int) 20 / flamesPerSecond) == 0) {
 				Vector knockback = look.times(speedMult / 100);
 				Vector position = look.times((double) flamesPerSecond / 1000D).plus(eye.minusY(0.5));
 
-
+				//Spawn Entity Code.
 				if (ctx.getData().getTickHandlerDuration(this) % frequency == 0) {
 					EntityFlamethrower flamethrower = new EntityFlamethrower(world);
 					flamethrower.setOwner(entity);
@@ -220,8 +204,8 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					flamethrower.rotationYaw = entity.rotationYaw;
 					flamethrower.setPerformanceAmount((int) performanceAmount);
 					flamethrower.setFireTime(fireTime);
-					flamethrower.setVelocity(look.times(speedMult / 2));
-					flamethrower.setLifeTime(17 + AvatarUtils.getRandomNumberInRange(0, 5));
+					flamethrower.setVelocity(look.times(speedMult / 1.75F));
+					flamethrower.setLifeTime(15 + AvatarUtils.getRandomNumberInRange(0, 5));
 					flamethrower.setPosition(position);
 					flamethrower.setEntitySize(size / 12.5F);
 					flamethrower.setXp(xp);
@@ -238,7 +222,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				}
 				//Particle code.
 				if (world.isRemote) {
-					speedMult /= 32.5;
+					speedMult /= 30;
 					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
 						for (double i = 0; i < flamesPerSecond; i += 3) {
 							Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
@@ -246,106 +230,24 @@ public class FlamethrowerUpdateTick extends TickHandler {
 									.spawn(world);
 						}
 					}
-					for (int i = 0; i < flamesPerSecond; i ++) {
+					for (int i = 0; i < flamesPerSecond; i++) {
 						Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
 						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
 							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.1F).time(22).collide(true).vel(look.times(speedMult).toMinecraft()).
 									ability(new AbilityFlamethrower()).spawn(world);
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
 									clr(255, 30 + AvatarUtils.getRandomNumberInRange(0, 50), 15, 255).collide(true).element(new Firebending()).spawnEntity(entity).scale(size * 4)
 									.ability(new AbilityFlamethrower()).spawn(world);
 						} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
 									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size * 2).element(new Firebending())
 									.ability(new AbilityFlamethrower()).spawn(world);
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
 									clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 2).element(new Firebending())
 									.ability(new AbilityFlamethrower()).spawn(world);
 						}
 					}
 				}
-
-				List<Entity> hit = Raytrace.entityRaytrace(world, start, look, range + (int) speedMult / 10F, size / 2.2F, Raytrace.ignoreBenderFilter(entity));
-				hit.remove(entity);
-
-				boolean canHitEntity = false;
-				boolean wall = false;
-
-				//This makes sure the raytrace stops when you're looking at a wall.
-				/*if (!hit.isEmpty()) {
-					if (!wall)
-						for (Entity target : hit) {
-							if (!world.isRemote) {
-								if (target instanceof EntityWall || target instanceof EntityWallSegment || target instanceof EntityShield
-										&& ((EntityShield) target).getOwner() != entity) {
-									wall = true;
-								}
-								if (!wall) {
-									if (canCollideWithEntity(target, entity)) {
-										//Queue<ParticleAvatar> aliveParticles = ParticleBuilder.aliveParticles;
-										Iterator<ParticleAvatar> aliveParticles = ParticleBuilder.aliveParticles.iterator();
-										AxisAlignedBB box = target.getEntityBoundingBox().grow(0.1);
-
-										//Makes sure the particle exists, its ability is flamethrower, and it's touching the entity we want to collide with.
-										while (aliveParticles.hasNext() && !canHitEntity) {
-											if (aliveParticles.hasNext()) {
-												ParticleAvatar particleAvatar = aliveParticles.next();
-												if (particleAvatar != null && particleAvatar.isAlive()) {
-													if (particleAvatar.getLifetimeRemaining() > 1 && particleAvatar.getAbility() instanceof AbilityFlamethrower) {
-														if (particleAvatar.getEntity().getUniqueID() == entity.getUniqueID()) {
-															if (box.contains(particleAvatar.getBoundingBox().getCenter()) || box.intersects(particleAvatar.getBoundingBox().grow(0.05)))
-																canHitEntity = true;
-															else aliveParticles.remove();
-														}
-														else aliveParticles.remove();
-													}
-													else aliveParticles.remove();
-												}
-												else aliveParticles.remove();
-
-											}
-										}**/
-
-				//This prevents crashes, and makes sure the particle is colliding with the entity.
-										/*aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> particleAvatar != null && particleAvatar.getEntity() != null
-												&& particleAvatar.getLifetimeRemaining() > 3 && particleAvatar.getAbility() != null && particleAvatar.getAbility() instanceof AbilityFlamethrower)
-												.collect(Collectors.toList());
-										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> box.intersects(particleAvatar.getBoundingBox().grow(0.05))
-										|| box.contains(particleAvatar.getBoundingBox().grow(0.05).getCenter())).filter(particleAvatar -> particleAvatar.getLifetimeRemaining() > 3).collect(Collectors.toList());
-										aliveParticles = (ArrayList<ParticleAvatar>) aliveParticles.parallelStream().filter(particleAvatar -> particleAvatar.getEntity().getUniqueID() == entity.getUniqueID())
-												.filter(particleAvatar -> particleAvatar.getLifetimeRemaining() > 3).collect(Collectors.toList());
-
-										for (ParticleAvatar particle : aliveParticles) {
-											if (!ParticleBuilder.aliveParticles.getOrDefault(particle, false))
-												ParticleBuilder.aliveParticles.remove(particle);
-										}
-**/
-
-									/*	if (canHitEntity) {
-											boolean attack = target.attackEntityFrom(AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);
-											if (attack) {
-												target.setFire(fireTime + 2);
-												target.setEntityInvulnerable(false);
-											//	Vector knockback = look.times(speedMult / 100);
-												if (target.canBePushed())
-													target.addVelocity(knockback.x(), knockback.y(), knockback.z());
-												AvatarUtils.afterVelocityAdded(target);
-												BattlePerformanceScore.addScore(entity, (int) performanceAmount);
-												abilityData.addXp(xp);
-											} else if (target instanceof EntityDragon)
-												AvatarEntityUtils.attackDragon((EntityDragon) target, AvatarDamageSource.causeFlamethrowerDamage(target, entity), damage);
-											BattlePerformanceScore.addScore(entity, (int) performanceAmount);
-											abilityData.addXp(xp);
-											if (aliveParticles.hasNext())
-												aliveParticles.remove();
-
-										}
-									}
-								}
-							}
-						}
-				}**/
-				//}
 
 				if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)
 					world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,

@@ -318,6 +318,8 @@ public abstract class AvatarEntity extends Entity {
 			}
 		}
 
+
+		//TODO: Fix  bug where stuff is pushed/pulled twice
 		for (int x = 0; x <= 1; x++) {
 			for (int z = 0; z <= 1; z++) {
 				for (int y = 0; y <= 1; y++) {

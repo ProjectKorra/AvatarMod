@@ -30,8 +30,8 @@ public class EntityFlamethrower extends EntityOffensive {
 		super(world);
 		this.ignoreFrustumCheck = true;
 		this.lightTnt = true;
-		this.noClip = true;
-		this.setsFires = true;
+		this.noClip = false;
+		this.setsFires = false;
 	}
 
 	@Override
@@ -143,42 +143,21 @@ public class EntityFlamethrower extends EntityOffensive {
 
 		hitboxWidth *= 1.055;
 		hitboxHeight *= 1.055;
-		setEntitySize(Math.min(hitboxWidth, getAvgSize() * 1.2F));
+		setEntitySize(Math.min(hitboxWidth, getAvgSize() * 1.225F));
 
-		if (world.isRemote) {
-			for (double i = 0; i < Math.max(Math.min((int) (1 / getAvgSize()), 2), 1); i++) {
-				Random random = new Random();
-				AxisAlignedBB boundingBox = getEntityBoundingBox();
-				double spawnX = boundingBox.minX + random.nextDouble() / 15 * (boundingBox.maxX - boundingBox.minX);
-				double spawnY = boundingBox.minY + random.nextDouble() / 15 * (boundingBox.maxY - boundingBox.minY);
-				double spawnZ = boundingBox.minZ + random.nextDouble() / 15 * (boundingBox.maxZ - boundingBox.minZ);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
-						world.rand.nextGaussian() / 80).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(255, 10, 5)
-						.scale(getAvgSize() * 3F).element(getElement()).collide(true).spawn(world);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
-						world.rand.nextGaussian() / 80).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-						20 + AvatarUtils.getRandomNumberInRange(0, 30), 10)
-						.scale(getAvgSize() * 3F).element(getElement()).collide(true).spawn(world);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
-						world.rand.nextGaussian() / 80).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).clr(255, 10, 5)
-						.scale(getAvgSize() * 2F).element(getElement()).collide(true).spawn(world);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
-						world.rand.nextGaussian() / 80).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-						20 + AvatarUtils.getRandomNumberInRange(0, 30), 10)
-						.scale(getAvgSize() * 2F).element(getElement()).collide(true).spawn(world);
-			}
-		}
+		if(onGround)
+			setDead();
 	}
 
 
 	@Override
 	public double getExpandedHitboxWidth() {
-		return 0.05;
+		return 0.1;
 	}
 
 	@Override
 	public double getExpandedHitboxHeight() {
-		return 0.05;
+		return 0.1;
 	}
 
 

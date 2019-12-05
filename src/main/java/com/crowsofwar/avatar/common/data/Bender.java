@@ -285,6 +285,9 @@ public abstract class Bender {
 
 			}
 
+			if (chi.getAvailableChi() < CHI_CONFIG.maxAvailableChi)
+				chi.changeAvailableChi(CHI_CONFIG.availablePerSecond / 20f);
+
 			if (data.getPerformance().getScore() != 0)
 				chi.changeTotalChi(CHI_CONFIG.regenInCombat / 20F);
 
@@ -301,8 +304,6 @@ public abstract class Bender {
 				if (STATS_CONFIG.bendableBlocks.contains(world.getBlockState(entity.getPosition()).getBlock()))
 					chi.changeTotalChi(CHI_CONFIG.regenOnEarth / 20F);
 			}
-			else if (chi.getAvailableChi() < CHI_CONFIG.maxAvailableChi)
-				chi.changeAvailableChi(CHI_CONFIG.availablePerSecond / 20f);
 
 
 		}

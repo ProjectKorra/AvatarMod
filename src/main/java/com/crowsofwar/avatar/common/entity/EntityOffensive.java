@@ -43,7 +43,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	/**
 	 * Lateral velocity is reduced by this factor on impact, before adding random spread velocity.
 	 */
-	private static final double IMPACT_FRICTION = 0.3;
+	private static final double IMPACT_FRICTION = 0.4;
 
 	private float xp;
 	private int fireTime;
@@ -157,7 +157,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 				}
 			}
 		}
-		//TODO: Collision spreading
+
 		if (noClip) {
 			IBlockState state = world.getBlockState(getPosition());
 			if (state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()) {
@@ -236,7 +236,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 					}
 				}
 			}
-			if (!list.isEmpty()) {
+			if (!list.isEmpty() && !onGround) {
 				for (AxisAlignedBB axisalignedbb : list) {
 					y = axisalignedbb.calculateYOffset(this.getEntityBoundingBox(), y);
 				}
