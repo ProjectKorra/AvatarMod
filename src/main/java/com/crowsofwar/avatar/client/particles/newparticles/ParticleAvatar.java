@@ -751,7 +751,7 @@ public abstract class ParticleAvatar extends Particle {
 						if (((AvatarEntity) hit).getOwner() != getEntity() || hit instanceof EntityWall || hit instanceof EntityWallSegment) {
 							collidedWithSolid = true;
 						}
-					} else if (hit instanceof EntityThrowable || hit instanceof EntityArrow || hit instanceof EntityOffensive) {
+					} else if (hit instanceof EntityThrowable || hit instanceof EntityArrow || hit instanceof EntityOffensive && ((EntityOffensive) hit).getOwner() != spawnEntity) {
 						dynamicCollidedWithEntity = true;
 						Vec3d hitVel = new Vec3d(hit.motionX, hit.motionY, hit.motionZ);
 						Vec3d pVel = new Vec3d(motionX, motionY, motionZ);

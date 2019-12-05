@@ -31,6 +31,7 @@ public class EntityFlamethrower extends EntityOffensive {
 		this.ignoreFrustumCheck = true;
 		this.lightTnt = true;
 		this.noClip = true;
+		this.setsFires = true;
 	}
 
 	@Override
@@ -77,24 +78,7 @@ public class EntityFlamethrower extends EntityOffensive {
 
 	@Override
 	public void spawnDissipateParticles(World world, Vec3d pos) {
-		/*if (world.isRemote) {
-			for (double i = 0; i < hitboxWidth; i += 0.25) {
-				Random random = new Random();
-				//We want the previous pos in order to provide proper collision
-				double prevposx = posX - motionX / 2, prevposy = posY - motionY / 2, prevposz = posZ - motionZ / 2;
-				double xPos = prevposx - hitboxWidth, yPos = prevposy - hitboxHeight, zPos = prevposz - hitboxWidth;
-				double xPos1 = prevposx + hitboxWidth, yPos1 = prevposy + hitboxHeight, zPos1 = prevposz + hitboxWidth;
-				AxisAlignedBB boundingBox = new AxisAlignedBB(xPos, yPos, zPos, xPos1, yPos1, zPos1);
-				double spawnX = boundingBox.minX + random.nextDouble() / 30 * (boundingBox.maxX - boundingBox.minX);
-				double spawnY = boundingBox.minY + random.nextDouble() / 30 * (boundingBox.maxY - boundingBox.minY);
-				double spawnZ = boundingBox.minZ + random.nextDouble() / 30 * (boundingBox.maxZ - boundingBox.minZ);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(motionX, motionY, motionZ).time(5 + AvatarUtils.getRandomNumberInRange(0, 5)).clr(255, 10, 5)
-						.scale(hitboxWidth).element(getElement()).collide(true).spawn(world);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(motionX, motionY, motionZ).time(5 + AvatarUtils.getRandomNumberInRange(0, 5)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-						20 + AvatarUtils.getRandomNumberInRange(0, 30), 10)
-						.scale(hitboxWidth).element(getElement()).collide(true).spawn(world);
-			}
-		}**/
+
 	}
 
 	@Override
@@ -162,18 +146,17 @@ public class EntityFlamethrower extends EntityOffensive {
 		setEntitySize(Math.min(hitboxWidth, getAvgSize() * 1.2F));
 
 		if (world.isRemote) {
-			//for (int j = 0; j < 1 / hitboxWidth; j++)
-			for (double i = 0; i < Math.max(Math.min((int) (1 / getAvgSize()), 3), 1); i++) {
+			for (double i = 0; i < Math.max(Math.min((int) (1 / getAvgSize()), 2), 1); i++) {
 				Random random = new Random();
 				AxisAlignedBB boundingBox = getEntityBoundingBox();
 				double spawnX = boundingBox.minX + random.nextDouble() / 15 * (boundingBox.maxX - boundingBox.minX);
 				double spawnY = boundingBox.minY + random.nextDouble() / 15 * (boundingBox.maxY - boundingBox.minY);
 				double spawnZ = boundingBox.minZ + random.nextDouble() / 15 * (boundingBox.maxZ - boundingBox.minZ);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
-						world.rand.nextGaussian() / 80).time(3 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(255, 10, 5)
+						world.rand.nextGaussian() / 80).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(255, 10, 5)
 						.scale(getAvgSize() * 3F).element(getElement()).collide(true).spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
-						world.rand.nextGaussian() / 80).time(3 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+						world.rand.nextGaussian() / 80).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
 						20 + AvatarUtils.getRandomNumberInRange(0, 30), 10)
 						.scale(getAvgSize() * 3F).element(getElement()).collide(true).spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
