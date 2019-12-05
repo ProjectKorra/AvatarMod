@@ -39,7 +39,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class RenderAirBubble extends Render<EntityAirBubble> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/entity/air_bubble.png");
+			"textures/entity/air-bubble.png");
 
 	public RenderAirBubble(RenderManager renderManager) {
 		super(renderManager);
