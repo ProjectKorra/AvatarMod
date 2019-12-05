@@ -55,29 +55,6 @@ public class ParticleFlash extends ParticleAvatar {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		/*if (getAbility() != null && getEntity() != null && getAbility() instanceof AbilityFlamethrower) {
-			List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, getBoundingBox().grow(motionX / 2, motionY / 2, motionZ / 2));
-			targets.remove(getEntity());
-			if (!targets.isEmpty()) {
-				for (Entity hit : targets) {
-					if (hit != getEntity()) {
-						if (hit instanceof EntityLivingBase || hit.canBeCollidedWith() && hit.canBePushed()) {
-							EntityRaytraceHandler handler = new EntityRaytraceHandler(world);
-							handler.setAbility(new AbilityFlamethrower());
-							handler.setElement(new Firebending());
-							handler.setEntitySize(0.05F);
-							handler.setLifeTime(3);
-							handler.setOwner((EntityLivingBase) getEntity());
-							handler.setPosition(AvatarEntityUtils.getMiddleOfEntity(hit));
-							handler.setVelocity(Vec3d.ZERO);
-							handler.setFollowingEntity(hit);
-							handler.setBehaviour(new RaytraceHandlerBehaviour.DetectCollisionBoxes());
-							world.spawnEntity(handler);
-						}
-					}
-				}
-			}
-		}**/
 	}
 
 	@Override

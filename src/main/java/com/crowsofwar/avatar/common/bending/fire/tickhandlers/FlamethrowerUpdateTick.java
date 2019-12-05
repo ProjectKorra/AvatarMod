@@ -51,7 +51,6 @@ import net.minecraft.world.WorldServer;
 import java.util.List;
 import java.util.UUID;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
@@ -132,7 +131,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				float damage = 0.5F;
 				float performanceAmount = 1;
 				float xp = SKILLS_CONFIG.flamethrowerHit;
-				float knockBack = 1;
+				int frequency = 2;
 				boolean lightsFires = false;
 
 				switch (abilityData.getLevel()) {
@@ -142,7 +141,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						fireTime = 2;
 						range = 5;
 						performanceAmount = 2;
-						knockBack += 0.5;
 						break;
 					case 2:
 						size = 2;
@@ -150,7 +148,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						damage = 3F;
 						range = 7;
 						performanceAmount = 3;
-						knockBack += 1;
 						break;
 				}
 				if (level == 3 && path == AbilityTreePath.FIRST) {
@@ -161,7 +158,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					damage = 7F;
 					range = 11;
 					performanceAmount = 4;
-					knockBack += 2;
+					frequency = 1;
 				}
 				if (level == 3 && path == AbilityTreePath.SECOND) {
 					speedMult = 12;
@@ -172,7 +169,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					range = 6.5F;
 					performanceAmount = 2;
 					lightsFires = true;
-					knockBack += 1;
+					frequency = 3;
 				}
 
 				// Affect stats by power rating
@@ -210,7 +207,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				Vector knockback = look.times(speedMult / 100);
 				Vector position = look.times((double) flamesPerSecond / 1000D).plus(eye.minusY(0.5));
 
-				if (ctx.getData().getTickHandlerDuration(this) % 2 == 0) {
+				if (ctx.getData().getTickHandlerDuration(this) % frequency == 0) {
 					EntityFlamethrower flamethrower = new EntityFlamethrower(world);
 					flamethrower.setOwner(entity);
 					flamethrower.setAbility(new AbilityFlamethrower());

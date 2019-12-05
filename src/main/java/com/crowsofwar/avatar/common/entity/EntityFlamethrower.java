@@ -170,12 +170,12 @@ public class EntityFlamethrower extends EntityOffensive {
 				double spawnY = boundingBox.minY + random.nextDouble() / 15 * (boundingBox.maxY - boundingBox.minY);
 				double spawnZ = boundingBox.minZ + random.nextDouble() / 15 * (boundingBox.maxZ - boundingBox.minZ);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
-						world.rand.nextGaussian() / 80).time(4 + AvatarUtils.getRandomNumberInRange(0, 3)).clr(255, 10, 5)
-						.scale(getAvgSize() * 2F).element(getElement()).collide(true).spawn(world);
+						world.rand.nextGaussian() / 80).time(3 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(255, 10, 5)
+						.scale(getAvgSize() * 3F).element(getElement()).collide(true).spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
-						world.rand.nextGaussian() / 80).time(4 + AvatarUtils.getRandomNumberInRange(0, 3)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+						world.rand.nextGaussian() / 80).time(3 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
 						20 + AvatarUtils.getRandomNumberInRange(0, 30), 10)
-						.scale(getAvgSize() * 2F).element(getElement()).collide(true).spawn(world);
+						.scale(getAvgSize() * 3F).element(getElement()).collide(true).spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
 						world.rand.nextGaussian() / 80).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).clr(255, 10, 5)
 						.scale(getAvgSize() * 2F).element(getElement()).collide(true).spawn(world);
