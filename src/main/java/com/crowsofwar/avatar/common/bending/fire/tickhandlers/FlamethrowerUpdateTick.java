@@ -90,7 +90,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 		flamesPerSecond = level <= 0 ? 2 : 4;
 		if (level == 3 && path == AbilityTreePath.FIRST)
-			flamesPerSecond = 5;
+			flamesPerSecond = 4;
 		else if (level == 3 && path == AbilityTreePath.SECOND)
 			flamesPerSecond = 1;
 
@@ -140,6 +140,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						size = 1.5F;
 						damage = 1F;
 						fireTime = 2;
+						frequency = 3;
 						range = 5;
 						performanceAmount = 2;
 						break;
@@ -148,6 +149,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						fireTime = 4;
 						damage = 3F;
 						range = 7;
+						frequency = 3;
 						performanceAmount = 3;
 						break;
 				}
@@ -159,18 +161,18 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					damage = 7F;
 					range = 11;
 					performanceAmount = 4;
-					frequency = 1;
+					frequency = 2;
 				}
 				if (level == 3 && path == AbilityTreePath.SECOND) {
 					speedMult = 12;
 					randomness = 9;
 					fireTime = 20;
-					size = 3.0F;
+					size = 2.75F;
 					damage = 2.5F;
 					range = 6.5F;
 					performanceAmount = 2;
 					lightsFires = true;
-					frequency = 4;
+					frequency = 5;
 				}
 
 				// Affect stats by power rating
