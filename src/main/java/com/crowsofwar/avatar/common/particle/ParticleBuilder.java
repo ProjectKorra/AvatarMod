@@ -345,11 +345,19 @@ public final class ParticleBuilder {
 	}
 
 	//Colour shifting
-	public ParticleBuilder clrShift(float r, float g, float b, boolean shiftRandomly, float rS, float gS, float bS, float aS, float rI, float gI, float bI, float aI) {
+	public ParticleBuilder clrShift(float r, float g, float b, float rS, float gS, float bS, float aS, float rI, float gI, float bI, float aI) {
 		if (!building) throw new IllegalStateException("Not building yet!");
 		this.r = MathHelper.clamp(r, 0, 1);
 		this.g = MathHelper.clamp(g, 0, 1);
 		this.b = MathHelper.clamp(b, 0, 1);
+		this.rSI = MathHelper.clamp(rI, 0, 1);
+		this.gSI = MathHelper.clamp(gI, 0, 1);
+		this.bSI = MathHelper.clamp(bI, 0, 1);
+		this.aSI = MathHelper.clamp(aI, 0, 1);
+		this.rSR = MathHelper.clamp(rS, 0, 1);
+		this.gSR = MathHelper.clamp(bS, 0, 1);
+		this.bSR = MathHelper.clamp(gS, 0, 1);
+		this.aSI = MathHelper.clamp(aS, 0, 1);
 		return this;
 	}
 
@@ -799,10 +807,32 @@ public final class ParticleBuilder {
 			return;
 		}
 
+		boolean colourShift = true;
+		float[] colourShiftInterval = new float[4];
+		colourShiftInterval[0] = rSI;
+		colourShiftInterval[1] = gSI;
+		colourShiftInterval[2] = bSI;
+		colourShiftInterval[3] = aSI;
+
+		float[] colourShiftRange = new float[4];
+		colourShiftInterval[0] = rSR;
+		colourShiftInterval[1] = gSR;
+		colourShiftInterval[2] = bSR;
+		colourShiftInterval[3] = aSR;
+
 		// Anything with an if statement here allows default values to be set in particle constructors
 		if (!Double.isNaN(vx) && !Double.isNaN(vy) && !Double.isNaN(vz)) particle.setVelocity(vx, vy, vz);
 		if (r >= 0 && g >= 0 && b >= 0) particle.setRBGColorF(r, g, b);
 		if (fr >= 0 && fg >= 0 && fb >= 0) particle.setFadeColour(fr, fg, fb);
+
+		for (int i = 0; i < 4; i++) {
+			if (colourShiftInterval[i] < 0 || colourShiftRange[i] < 0) {
+				colourShift = false;
+			}
+		}
+		if (colourShift)
+			particle.setColourShift(colourShiftInterval, colourShiftRange);
+
 		if (lifetime >= 0) particle.setMaxAge(lifetime);
 		if (radius > 0) particle.setSpin(radius, rpt);
 		if (!Float.isNaN(yaw) && !Float.isNaN(pitch)) particle.setFacing(yaw, pitch);

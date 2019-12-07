@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
  * @see com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder
  * @since AvatarMod 1.6.0
  */
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 public abstract class ParticleAvatar extends Particle {
 
 	//TODO: How to adjust Electroblob's particle system for av2.
@@ -116,8 +116,12 @@ public abstract class ParticleAvatar extends Particle {
 	protected BendingStyle element;
 	protected Ability ability;
 
+	//If the particle expands to a max size, like Flash, this makes it expand faster.
+	protected float expansionRate;
+
 	//Has R, G, B, and A, in that order.
 	protected float[] colourShiftRange = new float[4];
+	//Eventually will be used for better colour shifting (either shift up and down the spectrum or shift randomly)
 	protected boolean shiftRandomly = false;
 	protected float[] colourShiftInterval = new float[4];
 	//Currently not changed by methods.
@@ -415,6 +419,16 @@ public abstract class ParticleAvatar extends Particle {
 		this.fadeRed = r;
 		this.fadeGreen = g;
 		this.fadeBlue = b;
+	}
+
+	/**
+	 *
+	 * @param colourShiftInterval The array of values that determine the interval to colour shift by. R, G, B, and A.
+	 * @param colourShiftRange The array of values that determine the total range from the original colour. R, G, B, A.
+	 */
+	public void setColourShift(float[] colourShiftInterval, float[] colourShiftRange) {
+		this.colourShiftInterval = colourShiftInterval;
+		this.colourShiftRange = colourShiftRange;
 	}
 
 	/**

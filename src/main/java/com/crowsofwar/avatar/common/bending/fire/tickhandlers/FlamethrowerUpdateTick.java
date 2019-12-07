@@ -204,7 +204,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					flamethrower.rotationYaw = entity.rotationYaw;
 					flamethrower.setPerformanceAmount((int) performanceAmount);
 					flamethrower.setFireTime(fireTime);
-					flamethrower.setVelocity(look.times(speedMult / 1.75F));
+					flamethrower.setVelocity(look.times(speedMult / 2F));
 					flamethrower.setLifeTime(15 + AvatarUtils.getRandomNumberInRange(0, 5));
 					flamethrower.setPosition(position);
 					flamethrower.setEntitySize(size / 12.5F);
@@ -217,12 +217,11 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					flamethrower.setDynamicSpreadingCollision(true);
 					flamethrower.setSolidEntityPredicateOr(entity1 -> entity1 instanceof EntityFlamethrower &&
 							((EntityFlamethrower) entity1).getOwner() != entity);
-					//	if (world.isRemote)
 					world.spawnEntity(flamethrower);
 				}
 				//Particle code.
 				if (world.isRemote) {
-					speedMult /= 30;
+					speedMult /= 32.5;
 					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
 						for (double i = 0; i < flamesPerSecond; i += 3) {
 							Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
