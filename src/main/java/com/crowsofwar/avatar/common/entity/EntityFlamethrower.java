@@ -143,7 +143,7 @@ public class EntityFlamethrower extends EntityOffensive {
 
 		hitboxWidth *= 1.055;
 		hitboxHeight *= 1.055;
-		setEntitySize(Math.min(hitboxWidth, getAvgSize() * 1.225F));
+		setEntitySize(Math.min(hitboxWidth, getAvgSize() * 1.2F));
 
 		if(onGround)
 			setDead();

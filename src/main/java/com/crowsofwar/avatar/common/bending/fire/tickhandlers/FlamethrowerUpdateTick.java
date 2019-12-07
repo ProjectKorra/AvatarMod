@@ -125,28 +125,28 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				double speedMult = 15 + 5 * abilityData.getXpModifier();
 				double randomness = 3.0 - 0.5 * (abilityData.getXpModifier() + Math.max(abilityData.getLevel(), 0));
 				float range = 4;
-				int fireTime = 0;
+				int fireTime = 2;
 				float size = 1;
-				float damage = 0.5F;
+				float damage = 0.75F;
 				float performanceAmount = 1;
 				float xp = SKILLS_CONFIG.flamethrowerHit;
-				int frequency = 2;
+				int frequency = 3;
 
 				switch (abilityData.getLevel()) {
 					case 1:
-						size = 1.5F;
+						size = 1.25F;
 						damage = 1F;
-						fireTime = 2;
+						fireTime = 3;
 						frequency = 3;
 						range = 5;
 						performanceAmount = 2;
 						break;
 					case 2:
-						size = 2;
+						size = 1.675F;
 						fireTime = 4;
-						damage = 3F;
+						damage = 1.5F;
 						range = 7;
-						frequency = 3;
+						frequency = 4;
 						performanceAmount = 3;
 						break;
 				}
@@ -155,7 +155,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					randomness = 0;
 					fireTime = 5;
 					size = 1.25F;
-					damage = 7F;
+					damage = 3F;
 					range = 11;
 					performanceAmount = 4;
 					frequency = 2;
@@ -163,9 +163,9 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				if (level == 3 && path == AbilityTreePath.SECOND) {
 					speedMult = 12;
 					randomness = 9;
-					fireTime = 20;
+					fireTime = 10;
 					size = 2.75F;
-					damage = 2.5F;
+					damage = 1.5F;
 					range = 6.5F;
 					performanceAmount = 2;
 					frequency = 5;
@@ -205,7 +205,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					flamethrower.setVelocity(look.times(speedMult / 2F));
 					flamethrower.setLifeTime(15 + AvatarUtils.getRandomNumberInRange(0, 5));
 					flamethrower.setPosition(position);
-					flamethrower.setEntitySize(size / 12.5F);
+					flamethrower.setEntitySize(size / 15F);
 					flamethrower.setXp(xp);
 					flamethrower.setExpandedHitbox(size / 2.25F, size / 2.25F);
 					flamethrower.shouldLightFires(abilityData.isMasterPath(AbilityTreePath.SECOND));
@@ -214,7 +214,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					flamethrower.setRange(range);
 					flamethrower.setDynamicSpreadingCollision(true);
 					flamethrower.setSolidEntityPredicateOr(entity1 -> entity1 instanceof EntityFlamethrower &&
-							((EntityFlamethrower) entity1).getOwner() != entity);
+							((EntityFlamethrower) entity1).getOwner() != entity && ((EntityFlamethrower) entity1).getTier() >= flamethrower.getTier());
 					world.spawnEntity(flamethrower);
 				}
 				//Particle code.
