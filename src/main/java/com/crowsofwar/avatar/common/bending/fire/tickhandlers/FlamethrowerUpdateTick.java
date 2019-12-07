@@ -30,7 +30,6 @@ import com.crowsofwar.avatar.common.entity.EntityFlamethrower;
 import com.crowsofwar.avatar.common.entity.EntityShield;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
@@ -48,7 +47,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-import java.util.List;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
@@ -90,7 +88,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 		flamesPerSecond = level <= 0 ? 1 : 2;
 		if (level == 3 && path == AbilityTreePath.FIRST)
-			flamesPerSecond = 2;
+			flamesPerSecond = 3;
 		else if (level == 3 && path == AbilityTreePath.SECOND)
 			flamesPerSecond = 1;
 
@@ -221,7 +219,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				}
 				//Particle code.
 				if (world.isRemote) {
-					speedMult /= 32.5;
+					speedMult /= 30;
 					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
 						for (double i = 0; i < flamesPerSecond; i += 3) {
 							Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));

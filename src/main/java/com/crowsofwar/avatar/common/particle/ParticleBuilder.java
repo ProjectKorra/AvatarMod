@@ -345,11 +345,12 @@ public final class ParticleBuilder {
 	}
 
 	//Colour shifting
-	public ParticleBuilder clrShift(float r, float g, float b, float rS, float gS, float bS, float aS, float rI, float gI, float bI, float aI) {
+	public ParticleBuilder clrShift(float r, float g, float b, float a, float rS, float gS, float bS, float aS, float rI, float gI, float bI, float aI) {
 		if (!building) throw new IllegalStateException("Not building yet!");
 		this.r = MathHelper.clamp(r, 0, 1);
 		this.g = MathHelper.clamp(g, 0, 1);
 		this.b = MathHelper.clamp(b, 0, 1);
+		this.a = MathHelper.clamp(a, 0, 1);
 		this.rSI = MathHelper.clamp(rI, 0, 1);
 		this.gSI = MathHelper.clamp(gI, 0, 1);
 		this.bSI = MathHelper.clamp(bI, 0, 1);

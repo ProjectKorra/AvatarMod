@@ -39,7 +39,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	/**
 	 * The fraction of the impact velocity that should be the maximum spread speed added on impact.
 	 */
-	private static final double SPREAD_FACTOR = 0.2;
+	private static final double SPREAD_FACTOR = 0.1;
 	/**
 	 * Lateral velocity is reduced by this factor on impact, before adding random spread velocity.
 	 */
@@ -240,6 +240,11 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 				for (AxisAlignedBB axisalignedbb : list) {
 					y = axisalignedbb.calculateYOffset(this.getEntityBoundingBox(), y);
 				}
+
+				//TODO: Makes this configurable. Ensures entities are killed when they hit the ground.
+
+				if (y < posY)
+					setDead();
 
 				this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, y, 0.0D));
 
