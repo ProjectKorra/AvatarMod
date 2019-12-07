@@ -130,6 +130,24 @@ public class EntityFlamethrower extends EntityOffensive {
 
 	}
 
+	@Override
+	public boolean onMinorWaterContact() {
+		if (getTier() < 5) {
+			spawnExtinguishIndicators();
+			setDead();
+			return true;
+		}
+		spawnExtinguishIndicators();
+		return true;
+
+	}
+
+	@Override
+	public boolean onMajorWaterContact() {
+		spawnExtinguishIndicators();
+		setDead();
+		return true;
+	}
 
 	@Override
 	public void onUpdate() {
