@@ -27,7 +27,10 @@ import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFlamethrower;
+import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.EntityShield;
+import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -41,6 +44,8 @@ import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -203,7 +208,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					flamethrower.setPerformanceAmount((int) performanceAmount);
 					flamethrower.setFireTime(fireTime);
 					flamethrower.setVelocity(look.times(speedMult / 2F));
-					flamethrower.setLifeTime(15 + AvatarUtils.getRandomNumberInRange(0, 5));
+					flamethrower.setLifeTime(18 + AvatarUtils.getRandomNumberInRange(0, 5));
 					flamethrower.setPosition(position);
 					flamethrower.setEntitySize(size / 15F);
 					flamethrower.setXp(xp);
@@ -213,6 +218,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					flamethrower.setKnockback(knockback.toMinecraft());
 					flamethrower.setRange(range);
 					flamethrower.setDynamicSpreadingCollision(true);
+					flamethrower.setBehaviour(new FlamethrowerBehaviour());
 					flamethrower.setSolidEntityPredicateOr(entity1 -> entity1 instanceof EntityFlamethrower &&
 							((EntityFlamethrower) entity1).getOwner() != entity && ((EntityFlamethrower) entity1).getTier() >= flamethrower.getTier());
 					world.spawnEntity(flamethrower);
@@ -310,6 +316,49 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		else if (entity.getRidingEntity() == owner)
 			return false;
 		return entity instanceof EntityLivingBase || entity instanceof EntityEnderCrystal || entity.canBeCollidedWith() && entity.canBeAttackedWithItem();
+	}
+
+	public static class FlamethrowerBehaviour extends OffensiveBehaviour {
+
+		@Override
+		public Behavior onUpdate(EntityOffensive entity) {
+			if (entity instanceof EntityFlamethrower) {
+				entity.motionX *= 0.99;
+				entity.motionY *= 0.99;
+				entity.motionZ *= 0.99;
+
+				if (entity.velocity().sqrMagnitude() <= 0.5 * 0.5)
+					entity.Dissipate();
+
+				((EntityFlamethrower) entity).hitboxWidth *= 1.055;
+				((EntityFlamethrower) entity).hitboxHeight *= 1.055;
+				entity.setEntitySize(Math.min(((EntityFlamethrower) entity).hitboxWidth, entity.getAvgSize() * 1.2F));
+
+				if (entity.onGround)
+					entity.setDead();
+			}
+			return this;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
 	}
 
 

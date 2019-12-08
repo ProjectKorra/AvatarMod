@@ -19,14 +19,17 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.EntityFlamethrower;
+import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
+import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
@@ -75,46 +78,22 @@ public class AbilityFireBlast extends Ability {
 				lookPos = Vector.getEyePos(entity).plus(look.times(3));
 			}
 
-			removeExisting(ctx);
-
-
 			float damageMult = ctx.getLevel() >= 2 ? 2 : 1;
 			damageMult *= ctx.getPowerRatingDamageMod();
-			/*
-			List<Entity> fireArc = Raytrace.entityRaytrace(world, Vector.getEntityPos(entity).withY(entity.getEyeHeight()), Vector.getLookRectangular(entity).times(10), 3,
-					entity1 -> entity1 != entity);
 
-			if (fireArc.isEmpty()) {
-				if (ctx.getLevel() >= 2) {
-					for (Entity a : fireArc) {
-						if (a instanceof AvatarEntity) {
-							if (((AvatarEntity) a).getOwner() != entity) {
-								if (a instanceof EntityFireArc) {
-									((EntityFireArc) a).setOwner(entity);
-									((EntityFireArc) a).setBehavior(new FireArcBehavior.PlayerControlled());
-									((EntityFireArc) a).setAbility(this);
-									((EntityFireArc) a).setPosition(Vector.getLookRectangular(entity).times(1.5F));
-									((EntityFireArc) a).setDamageMult(damageMult);
-								}
-							}
-						}
-					}
-				}
+			if (ctx.getLevel() == 1) {
+				knockbackMult += 0.25;
+			}
+			if (ctx.getLevel() == 2) {
+				knockbackMult += 0.5;
+			}
+			if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+
+			}
+			if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+
 			}
 
-			EntityFireArc fire = new EntityFireArc(world);
-			if (lookPos != null) {
-				fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
-				fire.setBehavior(new FireArcBehavior.PlayerControlled());
-				fire.setOwner(entity);
-				fire.setDamageMult(damageMult);
-				fire.setCreateBigFire(ctx.isMasterLevel(AbilityTreePath.FIRST));
-				fire.setAbility(this);
-				world.spawnEntity(fire);
-
-				data.addStatusControl(StatusControl.THROW_FIRE);
-			}
-**/
 			Vec3d height, rightSide;
 			if (entity instanceof EntityPlayer) {
 				height = entity.getPositionVector().add(0, 1.6, 0);
@@ -142,15 +121,20 @@ public class AbilityFireBlast extends Ability {
 
 			}
 
-			if (world.isRemote) {
-				System.out.println("huh");
-				ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(rightSide).scale(1).time(30).collide(true).vel(lookPos.toMinecraft()).spawn(world);
-			}
+			//TODO: Tick handler so the player can create more dynamic shapes
 			//data.addTickHandler();
 			EntityFlamethrower fireblast = new EntityFlamethrower(world);
 			fireblast.setTier(getCurrentTier(ctx.getLevel()));
 			fireblast.setPosition(rightSide);
 			fireblast.setVelocity(entity.getLookVec().scale(2));
+			fireblast.setBehaviour(new FireblastBehaviour());
+			fireblast.setElement(new Firebending());
+			fireblast.setAbility(this);
+			fireblast.setDamage(damage * damageMult);
+			fireblast.setEntitySize(0.5F);
+			fireblast.setXp(xp);
+			fireblast.setOwner(entity);
+			world.spawnEntity(fireblast);
 		/*	EntityFireShooter shooter = new EntityFireShooter(world);
 			shooter.setElement(new Firebending());
 			shooter.setOwner(entity);
@@ -191,4 +175,37 @@ public class AbilityFireBlast extends Ability {
 		return new AiFireBlast(this, entity, bender);
 	}
 
+	public static class FireblastBehaviour extends OffensiveBehaviour {
+
+		@Override
+		public Behavior onUpdate(EntityOffensive entity) {
+			entity.setEntitySize(entity.getAvgSize() * 1.3F);
+			entity.setVelocity(entity.getVelocity().scale(0.95));
+			if (entity.velocity().magnitude() < 0.5 * 0.5)
+				entity.setDead();
+			if (entity.onGround)
+				entity.setDead();
+			return this;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
+	}
 }

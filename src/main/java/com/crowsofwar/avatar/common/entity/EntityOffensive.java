@@ -1,6 +1,8 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
+import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockLiquid;
@@ -35,6 +37,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
 	private static final DataParameter<Float> SYNC_WIDTh = EntityDataManager
 			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
+	private static final DataParameter<OffensiveBehaviour> SYNC_BEHAVIOR = EntityDataManager
+			.createKey(EntityFireball.class, OffensiveBehaviour.DATA_SERIALIZER);
 
 	/**
 	 * The fraction of the impact velocity that should be the maximum spread speed added on impact.
@@ -64,6 +68,14 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		this.prevVelX = prevVelY = prevVelZ = 0;
 		this.solidEntities = entity -> entity instanceof EntityWall || entity instanceof EntityWallSegment ||
 				entity instanceof EntityShield && ((EntityShield) entity).getOwner() != getOwner();
+	}
+
+	public void setBehaviour(OffensiveBehaviour behaviour) {
+		dataManager.set(SYNC_BEHAVIOR, behaviour);
+	}
+
+	public OffensiveBehaviour getBehaviour() {
+		return dataManager.get(SYNC_BEHAVIOR);
 	}
 
 	public void setDynamicSpreadingCollision(boolean collision) {
@@ -142,11 +154,15 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		dataManager.register(SYNC_LIFETIME, 100);
 		dataManager.register(SYNC_WIDTh, 1.0F);
 		dataManager.register(SYNC_HEIGHT, 1.0F);
+		dataManager.register(SYNC_BEHAVIOR, new OffensiveBehaviour.Idle());
 	}
 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+
+		setBehaviour((OffensiveBehaviour) getBehaviour().onUpdate(this));
+
 		List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, getExpandedHitbox());
 		if (!targets.isEmpty()) {
 			for (Entity hit : targets) {

@@ -17,11 +17,15 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityFireball;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -74,7 +78,7 @@ public class RenderFireball extends Render<EntityFireball> {
 		int k = i / 16384;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
 
-		renderCube(x, y, z, //
+		/*renderCube(x, y, z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
 				.5f, //
 				ticks / 25F, ticks / 25f, ticks / 25F);
@@ -89,6 +93,29 @@ public class RenderFireball extends Render<EntityFireball> {
 		popMatrix();
 
 		//  }
+		**/
+		World world = entity.world;
+		if (world.isRemote) {
+			for (double h = 0; h < entity.width; h += 0.15) {
+				Random random = new Random();
+				AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).time(12).clr(255, 10, 5)
+						.scale(entity.getSize() * 0.03125F * 2).element(entity.getElement())
+						.face(entity.rotationYaw + rotation * (float) world.rand.nextGaussian(), entity.rotationPitch + rotation * (float) world.rand.nextGaussian())
+						.spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
+						.scale(entity.getSize() * 0.03125F * 2).element(entity.getElement())
+						.face(entity.rotationYaw + rotation * (float) world.rand.nextGaussian(), entity.rotationPitch + rotation * (float) world.rand.nextGaussian())
+						.spawn(world);
+			}
+
+		}
 		enableLighting();
 		disableBlend();
 

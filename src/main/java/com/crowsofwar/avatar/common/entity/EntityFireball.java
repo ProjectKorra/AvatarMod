@@ -103,7 +103,7 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (world.isRemote) {
+		/*if (world.isRemote) {
 			for (double i = 0; i < width; i += 0.05) {
 				Random random = new Random();
 				AxisAlignedBB boundingBox = getEntityBoundingBox();
@@ -118,7 +118,7 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
 						.scale(getSize() * 0.03125F * 2).element(getElement()).spawn(world);
 			}
-		}
+		}**/
 		if (getBehavior() == null) {
 			this.setBehavior(new FireballBehavior.Thrown());
 		}

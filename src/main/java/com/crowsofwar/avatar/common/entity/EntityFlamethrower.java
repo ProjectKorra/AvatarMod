@@ -25,7 +25,7 @@ public class EntityFlamethrower extends EntityOffensive implements ILightProvide
 	//Used for particle maths.
 	private Vec3d spawnPos = Vec3d.ZERO;
 	private double range = 0;
-	private float hitboxWidth, hitboxHeight;
+	public float hitboxWidth, hitboxHeight;
 
 	public EntityFlamethrower(World world) {
 		super(world);

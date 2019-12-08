@@ -5,10 +5,7 @@ import com.crowsofwar.avatar.common.bending.air.tickhandlers.*;
 import com.crowsofwar.avatar.common.bending.earth.RestoreCooldownHandler;
 import com.crowsofwar.avatar.common.bending.earth.RestoreParticleHandler;
 import com.crowsofwar.avatar.common.bending.fire.*;
-import com.crowsofwar.avatar.common.bending.fire.tickhandlers.FireParticleSpawner;
-import com.crowsofwar.avatar.common.bending.fire.tickhandlers.FireSmashGroundHandler;
-import com.crowsofwar.avatar.common.bending.fire.tickhandlers.FlamethrowerUpdateTick;
-import com.crowsofwar.avatar.common.bending.fire.tickhandlers.InfernoPunchParticleSpawner;
+import com.crowsofwar.avatar.common.bending.fire.tickhandlers.*;
 import com.crowsofwar.avatar.common.bending.lightning.LightningCreateHandler;
 import com.crowsofwar.avatar.common.bending.lightning.LightningRedirectHandler;
 import com.crowsofwar.avatar.common.bending.water.tickhandlers.*;
@@ -55,6 +52,7 @@ public class TickHandlerController {
 	public static TickHandler INFERNO_PUNCH_COOLDOWN = new InfernoPunchCooldownHandler(28);
 	public static TickHandler SLIPSTREAM_WALK_HANDLER = new SlipstreamAirWalkHandler(29);
 	public static TickHandler WATERARC_COMBO_HANDLER = new WaterArcComboHandler(30);
+	public static TickHandler FIREBLAST_UPDATE_TICK = new FireblastUpdateTick(31);
 
 	// @formatter:on
 
