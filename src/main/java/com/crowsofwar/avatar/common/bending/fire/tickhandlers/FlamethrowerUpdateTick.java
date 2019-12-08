@@ -126,15 +126,15 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				double randomness = 3.0 - 0.5 * (abilityData.getXpModifier() + Math.max(abilityData.getLevel(), 0));
 				float range = 4;
 				int fireTime = 2;
-				float size = 1;
-				float damage = 0.75F;
+				float size = 0.75F;
+				float damage = STATS_CONFIG.flamethrowerSettings.damage;
 				float performanceAmount = 1;
 				float xp = SKILLS_CONFIG.flamethrowerHit;
 				int frequency = 3;
 
 				switch (abilityData.getLevel()) {
 					case 1:
-						size = 1.25F;
+						size = 1.125F;
 						damage = 1F;
 						fireTime = 3;
 						frequency = 3;
@@ -142,7 +142,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						performanceAmount = 2;
 						break;
 					case 2:
-						size = 1.675F;
+						size = 1.5F;
 						fireTime = 4;
 						damage = 1.5F;
 						range = 7;
@@ -173,7 +173,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 				// Affect stats by power rating
 				range += powerFactor / 100F;
-				size += powerRating / 100F;
+				size += powerRating / 200F;
 				damage += powerRating / 100F;
 				fireTime += (int) (powerRating / 50F);
 				speedMult += powerRating / 100f * 2.5f;
@@ -189,7 +189,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				Vector end = start.plus(look.times(range));
 
 
-				Vector knockback = look.times(speedMult / 100);
+				Vector knockback = look.times(speedMult / 50 * STATS_CONFIG.flamethrowerSettings.push);
 				Vector position = look.times((double) flamesPerSecond / 1000D).plus(eye.minusY(0.5));
 
 				//Spawn Entity Code.
@@ -219,21 +219,21 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				}
 				//Particle code.
 				if (world.isRemote) {
-					speedMult /= 30;
+					speedMult /= 28.75;
 					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
 						for (double i = 0; i < flamesPerSecond; i += 3) {
 							Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
-							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.05F).time(22).collide(true).spawnEntity(entity).vel(look.times(speedMult).toMinecraft())
+							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 2F).time(22).collide(true).spawnEntity(entity).vel(look.times(speedMult).toMinecraft())
 									.spawn(world);
 						}
 					}
 					for (int i = 0; i < flamesPerSecond; i++) {
 						Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
 						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
-							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.1F).time(22).collide(true).vel(look.times(speedMult).toMinecraft()).
+							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 2F).time(22).collide(true).vel(look.times(speedMult / 1.5).toMinecraft()).
 									ability(new AbilityFlamethrower()).spawn(world);
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-									clr(255, 30 + AvatarUtils.getRandomNumberInRange(0, 50), 15, 255).collide(true).element(new Firebending()).spawnEntity(entity).scale(size * 4)
+									clr(255, 30 + AvatarUtils.getRandomNumberInRange(0, 50), 15, 255).collide(true).element(new Firebending()).spawnEntity(entity).scale(size * 2)
 									.ability(new AbilityFlamethrower()).spawn(world);
 						} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).

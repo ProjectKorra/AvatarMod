@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
+import com.crowsofwar.avatar.common.entity.EntityFlamethrower;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
@@ -146,7 +147,10 @@ public class AbilityFireBlast extends Ability {
 				ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(rightSide).scale(1).time(30).collide(true).vel(lookPos.toMinecraft()).spawn(world);
 			}
 			//data.addTickHandler();
-
+			EntityFlamethrower fireblast = new EntityFlamethrower(world);
+			fireblast.setTier(getCurrentTier(ctx.getLevel()));
+			fireblast.setPosition(rightSide);
+			fireblast.setVelocity(entity.getLookVec().scale(2));
 		/*	EntityFireShooter shooter = new EntityFireShooter(world);
 			shooter.setElement(new Firebending());
 			shooter.setOwner(entity);

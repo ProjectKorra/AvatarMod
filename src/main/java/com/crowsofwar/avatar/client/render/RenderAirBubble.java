@@ -31,7 +31,6 @@ import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
 import static net.minecraft.client.renderer.GlStateManager.*;
-import static org.lwjgl.opengl.GL11.*;
 
 /**
  * @author CrowsOfWar
@@ -39,7 +38,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class RenderAirBubble extends Render<EntityAirBubble> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/entity/air-bubble.png");
+			"textures/entity/air-bubble1.png");
 
 	public RenderAirBubble(RenderManager renderManager) {
 		super(renderManager);
@@ -57,7 +56,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 
 		enableBlend();
 		disableDepth();
-		GlStateManager.disableLighting();
+		GlStateManager.enableLighting();
 
 		float ticks = entity.ticksExisted + partialTicks;
 		float sizeMult = 1, alpha = 1;
@@ -79,19 +78,18 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		{
 			float rotY = ticks / 7f;
 			float rotX = MathHelper.cos(ticks / 4f) * .3f;
-			disableLighting();
+			enableLighting();
 			renderCube(x, y, z, 0, 1, 0, 1, 2.25f * sizeMult, rotX, rotY, 0);
 		}
 		GlStateManager.color(1, 1, 1, 0.75F * alpha);
 		{
 			float rotY = ticks / 25f;
 			float rotZ = MathHelper.cos(ticks / 10f + 1.3f) * .3f;
-			disableLighting();
+			enableLighting();
 			renderCube(x, y, z, 0, 1, 0, 1, 3f * sizeMult, 0, rotY, rotZ);
 		}
 		//GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
-		//TODO: Figure out why the dots are appearing
 
 		disableBlend();
 		enableDepth();

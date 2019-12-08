@@ -192,7 +192,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityExplosionSpawner.class, RenderNothing::new);
 		registerEntityRenderingHandler(EntityLightningSpawner.class, RenderLightningSpawner::new);
 		registerEntityRenderingHandler(EntityAvatarLightning.class, RenderAvatarLightning::new);
-		registerEntityRenderingHandler(EntityRaytraceHandler.class, RenderNothing::new);
 		registerEntityRenderingHandler(EntityFlamethrower.class, RenderFlamethrower::new);
 
 		// Renderers dependent on CodeChickenLib. 

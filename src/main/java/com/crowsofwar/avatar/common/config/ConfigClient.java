@@ -188,7 +188,7 @@ public class ConfigClient {
 		public final boolean showInfernoPunchOrb = false;
 
 		@Load
-		public final boolean useFlamethrowerParticles = false;
+		public final boolean useFlamethrowerParticles = true;
 	}
 
 	public static class AirRenderSettings {
