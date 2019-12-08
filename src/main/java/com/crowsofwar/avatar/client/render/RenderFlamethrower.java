@@ -3,22 +3,14 @@ package com.crowsofwar.avatar.client.render;
 import com.crowsofwar.avatar.common.entity.EntityFlamethrower;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.util.Random;
-
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static net.minecraft.client.particle.Particle.*;
 
 public class RenderFlamethrower extends Render<EntityFlamethrower> {
 
@@ -58,9 +50,9 @@ public class RenderFlamethrower extends Render<EntityFlamethrower> {
 						world.rand.nextGaussian() / 80).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
 						20 + AvatarUtils.getRandomNumberInRange(0, 30), 10)
 						.scale(entity.getAvgSize() * 2F).element(entity.getElement()).collide(true).spawn(world);
-				ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
-						world.rand.nextGaussian() / 80).time(12 + AvatarUtils.getRandomNumberInRange(0, 5))
-						.scale(entity.getAvgSize() * 2F).element(entity.getElement()).collide(true).spawn(world);
+			/*	ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
+						world.rand.nextGaussian() / 80).time(2 + AvatarUtils.getRandomNumberInRange(0, 5))
+						.scale(entity.getAvgSize() * 1F).element(entity.getElement()).collide(true).spawn(world);**/
 			}
 		}
 		//Copied from particleFlash.

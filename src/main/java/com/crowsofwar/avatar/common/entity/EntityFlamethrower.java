@@ -3,22 +3,23 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.common.particle.ParticleBuilder;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import elucent.albedo.event.GatherLightsEvent;
+import elucent.albedo.lighting.ILightProvider;
+import elucent.albedo.lighting.Light;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
-public class EntityFlamethrower extends EntityOffensive {
+@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
+public class EntityFlamethrower extends EntityOffensive implements ILightProvider {
 
 	private Vec3d knockback = new Vec3d(0, 0, 0);
 	//Used for particle maths.
@@ -217,4 +218,17 @@ public class EntityFlamethrower extends EntityOffensive {
 	public boolean isInRangeToRenderDist(double distance) {
 		return true;
 	}
+
+	@Override
+	@Optional.Method(modid = "albedo")
+	public Light provideLight() {
+		return Light.builder().pos(this).color(2F, 1F, 0F).radius(6 + getAvgSize()).build();
+	}
+
+	@Override
+	@Optional.Method(modid = "albedo")
+	public void gatherLights(GatherLightsEvent event, Entity entity) {
+
+	}
+
 }

@@ -38,7 +38,7 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 public class RenderAirBubble extends Render<EntityAirBubble> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/entity/air-bubble1.png");
+			"textures/entity/air-bubble.png");
 
 	public RenderAirBubble(RenderManager renderManager) {
 		super(renderManager);
@@ -74,14 +74,14 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		}
 		sizeMult *= entity.getSize() / 2.5f;
 
-		GlStateManager.color(1, 1, 1, .25f * alpha);
+		GlStateManager.color(0.75F, 0.75F, 0.75F, .25f * alpha);
 		{
 			float rotY = ticks / 7f;
 			float rotX = MathHelper.cos(ticks / 4f) * .3f;
 			enableLighting();
 			renderCube(x, y, z, 0, 1, 0, 1, 2.25f * sizeMult, rotX, rotY, 0);
 		}
-		GlStateManager.color(1, 1, 1, 0.75F * alpha);
+		GlStateManager.color(0.85F, 0.85F, 0.85F, 0.5F * alpha);
 		{
 			float rotY = ticks / 25f;
 			float rotZ = MathHelper.cos(ticks / 10f + 1.3f) * .3f;
