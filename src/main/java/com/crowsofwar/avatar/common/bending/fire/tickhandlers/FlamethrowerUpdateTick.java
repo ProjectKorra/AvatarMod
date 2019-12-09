@@ -140,7 +140,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				switch (abilityData.getLevel()) {
 					case 1:
 						size = 1.125F;
-						damage = 1F;
+						damage = 1.75F;
 						fireTime = 3;
 						frequency = 3;
 						range = 5;
@@ -149,7 +149,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					case 2:
 						size = 1.5F;
 						fireTime = 4;
-						damage = 1.5F;
+						damage = 2.5F;
 						range = 7;
 						frequency = 4;
 						performanceAmount = 3;
@@ -160,7 +160,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					randomness = 0;
 					fireTime = 5;
 					size = 1.25F;
-					damage = 3F;
+					damage = 4.5F;
 					range = 11;
 					performanceAmount = 4;
 					frequency = 2;
@@ -207,17 +207,17 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					flamethrower.rotationYaw = entity.rotationYaw;
 					flamethrower.setPerformanceAmount((int) performanceAmount);
 					flamethrower.setFireTime(fireTime);
-					flamethrower.setVelocity(look.times(speedMult / 2F));
+					flamethrower.setVelocity(look.times(speedMult / 1.875F));
 					flamethrower.setLifeTime(18 + AvatarUtils.getRandomNumberInRange(0, 5));
 					flamethrower.setPosition(position);
-					flamethrower.setEntitySize(size / 15F);
+					flamethrower.setEntitySize(size / 15F);;
 					flamethrower.setXp(xp);
 					flamethrower.setExpandedHitbox(size / 2.25F, size / 2.25F);
 					flamethrower.shouldLightFires(abilityData.isMasterPath(AbilityTreePath.SECOND));
 					flamethrower.setTier(Math.max(abilityData.getLevel() + 1, 1));
 					flamethrower.setKnockback(knockback.toMinecraft());
 					flamethrower.setRange(range);
-					flamethrower.setDynamicSpreadingCollision(true);
+					flamethrower.setDynamicSpreadingCollision(false);
 					flamethrower.setBehaviour(new FlamethrowerBehaviour());
 					flamethrower.setSolidEntityPredicateOr(entity1 -> entity1 instanceof EntityFlamethrower &&
 							((EntityFlamethrower) entity1).getOwner() != entity && ((EntityFlamethrower) entity1).getTier() >= flamethrower.getTier());
@@ -323,16 +323,17 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		@Override
 		public Behavior onUpdate(EntityOffensive entity) {
 			if (entity instanceof EntityFlamethrower) {
-				entity.motionX *= 0.99;
-				entity.motionY *= 0.99;
-				entity.motionZ *= 0.99;
+				entity.motionX *= 0.98;
+				entity.motionY *= 0.98;
+				entity.motionZ *= 0.98;
 
-				if (entity.velocity().sqrMagnitude() <= 0.5 * 0.5)
+				if (entity.velocity().sqrMagnitude() <= 0.6 * 0.6)
 					entity.Dissipate();
 
-				((EntityFlamethrower) entity).hitboxWidth *= 1.055;
-				((EntityFlamethrower) entity).hitboxHeight *= 1.055;
-				entity.setEntitySize(Math.min(((EntityFlamethrower) entity).hitboxWidth, entity.getAvgSize() * 1.2F));
+
+				entity.setEntitySize(Math.min(((EntityFlamethrower) entity).hitboxWidth, entity.getAvgSize() * 1.1875F));
+				if (entity.getAvgSize() > ((EntityFlamethrower) entity).hitboxWidth)
+					entity.setDead();
 
 				if (entity.onGround)
 					entity.setDead();

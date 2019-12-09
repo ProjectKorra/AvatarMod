@@ -26,8 +26,10 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
+import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
@@ -150,24 +152,26 @@ public class AbilityFireShot extends Ability {
 		return new AiFireShot(this, entity, bender);
 	}
 
-	public static class FireShockwaveBehaviour extends ShockwaveBehaviour {
+	public static class FireShockwaveBehaviour extends OffensiveBehaviour {
 
 		@Override
-		public Behavior onUpdate(EntityShockwave entity) {
+		public Behavior onUpdate(EntityOffensive entity) {
 			if (entity.getOwner() != null) {
+				if (entity instanceof EntityShockwave) {
 				for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.ticksExisted * 3)) {
-					int x = entity.posX < 0 ? (int) (entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle) - 1)
-							: (int) (entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle));
-					int z = entity.posZ < 0 ? (int) (entity.posZ + ((entity.ticksExisted * entity.getSpeed()) * Math.cos(angle) - 1))
-							: (int) (entity.posZ + ((entity.ticksExisted * entity.getSpeed())) * Math.cos(angle));
+					int x = entity.posX < 0 ? (int) (entity.posX + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed())) * Math.sin(angle) - 1)
+							: (int) (entity.posX + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle)));
+					int z = entity.posZ < 0 ? (int) (entity.posZ + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle) - 1))
+							: (int) (entity.posZ + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed())) * Math.cos(angle));
 
 					BlockPos spawnPos = new BlockPos(x, (int) (entity.posY), z);
 					if (BlockUtils.canPlaceFireAt(entity.world, spawnPos)) {
 						if (spawnPos != entity.getPosition()) {
-							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() - 0.2 ? 120 : 10;
+							int time = entity.ticksExisted * ((EntityShockwave) entity).getSpeed() >= ((EntityShockwave) entity).getRange() - 0.2 ? 120 : 10;
 							BlockTemp.createTempBlock(entity.world, spawnPos, time, Blocks.FIRE.getDefaultState());
 						}
 					}
+				}
 
 				}
 			}

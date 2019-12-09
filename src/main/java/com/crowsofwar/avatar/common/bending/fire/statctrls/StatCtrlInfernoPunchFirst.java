@@ -11,8 +11,10 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
@@ -158,10 +160,10 @@ public class StatCtrlInfernoPunchFirst extends StatusControl {
 			return (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase;
 	}
 
-	public static class InfernoPunchShockwave extends ShockwaveBehaviour {
+	public static class InfernoPunchShockwave extends OffensiveBehaviour {
 
 		@Override
-		public Behavior onUpdate(EntityShockwave entity) {
+		public OffensiveBehaviour onUpdate(EntityOffensive entity) {
 			World world = entity.world;
 			if (world.isRemote) {
 

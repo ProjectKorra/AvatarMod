@@ -11,6 +11,7 @@ import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
@@ -315,49 +316,51 @@ public class AirBurstHandler extends TickHandler {
 		data.removeStatusControl(StatusControl.SHOOT_AIR_BURST_4);
 	}
 
-	public static class AirburstShockwave extends ShockwaveBehaviour {
+	public static class AirburstShockwave extends OffensiveBehaviour {
 
 		@Override
-		public Behavior onUpdate(EntityShockwave entity) {
-			World world = entity.world;
-			if (world.isRemote) {
-				//TODO: Fix particle speed
-				if (entity.ticksExisted == 2) {
-					double x1, y1, z1, xVel, yVel, zVel;
-					if (CLIENT_CONFIG.airRenderSettings.airBurstSphere) {
-						for (double theta = 0; theta <= 180; theta += 1) {
-							double dphi = (entity.getParticleController() - entity.getParticleAmount()) / Math.sin(Math.toRadians(theta));
-							for (double phi = 0; phi < 360; phi += dphi) {
-								double rphi = Math.toRadians(phi);
-								double rtheta = Math.toRadians(theta);
+		public Behavior onUpdate(EntityOffensive entity) {
+			if (entity instanceof EntityShockwave) {
+				World world = entity.world;
+				if (world.isRemote) {
+					//TODO: Fix particle speed
+					if (entity.ticksExisted == 2) {
+						double x1, y1, z1, xVel, yVel, zVel;
+						if (CLIENT_CONFIG.airRenderSettings.airBurstSphere) {
+							for (double theta = 0; theta <= 180; theta += 1) {
+								double dphi = (((EntityShockwave) entity).getParticleController() - ((EntityShockwave) entity).getParticleAmount()) / Math.sin(Math.toRadians(theta));
+								for (double phi = 0; phi < 360; phi += dphi) {
+									double rphi = Math.toRadians(phi);
+									double rtheta = Math.toRadians(theta);
 
-								x1 = entity.ticksExisted * entity.getSpeed() * Math.cos(rphi) * Math.sin(rtheta);
-								y1 = entity.ticksExisted * entity.getSpeed() * Math.sin(rphi) * Math.sin(rtheta);
-								z1 = entity.ticksExisted * entity.getSpeed() * Math.cos(rtheta);
-								xVel = x1 * entity.getParticleSpeed() * 0.375F;
-								yVel = y1 * entity.getParticleSpeed() * 0.375F;
-								zVel = z1 * entity.getParticleSpeed() * 0.375F;
+									x1 = entity.ticksExisted * ((EntityShockwave) entity).getSpeed() * Math.cos(rphi) * Math.sin(rtheta);
+									y1 = entity.ticksExisted * ((EntityShockwave) entity).getSpeed() * Math.sin(rphi) * Math.sin(rtheta);
+									z1 = entity.ticksExisted * ((EntityShockwave) entity).getSpeed() * Math.cos(rtheta);
+									xVel = x1 * entity.getParticleSpeed() * 0.375F;
+									yVel = y1 * entity.getParticleSpeed() * 0.375F;
+									zVel = z1 * entity.getParticleSpeed() * 0.375F;
 
-								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
-										.clr(0.8F, 0.8F, 0.8F).time(8 + (int) (3 * entity.getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
-										.scale(2.25F + 0.5F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).element(entity.getElement())
-										.spawn(world);
+									ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
+											.clr(0.8F, 0.8F, 0.8F).time(8 + (int) (3 * ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
+											.scale(2.25F + 0.5F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).element(entity.getElement())
+											.spawn(world);
+
+								}
+							}
+						} else {
+							for (double i = 0; i < ((EntityShockwave) entity).getRange(); i += 0.0125) {
+								Vec3d vel = new Vec3d(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian());
+								vel = vel.scale(0.275F * entity.getParticleSpeed());
+								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(entity.posX, entity.posY, entity.posZ).vel(vel)
+										.clr(0.85F, 0.85F, 0.85F).time(13).collide(true)
+										.scale(2.25f + 0.5F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).shaded(true).
+										element(entity.getElement()).spawn(world);
 
 							}
 						}
-					} else {
-						for (double i = 0; i < entity.getRange(); i += 0.0125) {
-							Vec3d vel = new Vec3d(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian());
-							vel = vel.scale(0.275F * entity.getParticleSpeed());
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(entity.posX, entity.posY, entity.posZ).vel(vel)
-									.clr(0.85F, 0.85F, 0.85F).time(13).collide(true)
-									.scale(2.25f + 0.5F * (float) entity.getRange() / STATS_CONFIG.airBurstSettings.radius).shaded(true).
-									element(entity.getElement()).spawn(world);
-
-						}
+						ParticleBuilder.create(ParticleBuilder.Type.SPHERE).clr(1.0F, 1.0F, 1.0F).entity(entity).time(16).scale((float) ((EntityShockwave) entity).getRange())
+								.pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity)).element(entity.getElement()).spawn(world);
 					}
-					ParticleBuilder.create(ParticleBuilder.Type.SPHERE).clr(1.0F, 1.0F, 1.0F).entity(entity).time(16).scale((float) entity.getRange())
-							.pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity)).element(entity.getElement()).spawn(world);
 				}
 			}
 			return this;

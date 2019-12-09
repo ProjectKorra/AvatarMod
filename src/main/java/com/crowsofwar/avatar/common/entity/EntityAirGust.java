@@ -89,7 +89,7 @@ public class EntityAirGust extends EntityOffensive {
 		float expansionRate = 1f / 80;
 		setEntitySize(getAvgSize() + expansionRate);
 		//Rendering.
-		if (world.isRemote) {
+		/*if (world.isRemote) {
 			Vec3d pos = AvatarEntityUtils.getMiddleOfEntity(this).add(Vector.getLookRectangular(this).times(-1 * getAvgSize()).toMinecraft());
 			//for (int i = 0; i < 4; i++)
 			ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(motionX * 1.05, motionY * 1.05,
@@ -106,7 +106,7 @@ public class EntityAirGust extends EntityOffensive {
 						world.rand.nextGaussian() / 60).time(8).clr(0.825F, 0.825F, 0.825F)
 						.scale(getAvgSize() * 1.25F).shaded(true).element(getElement()).spawn(world);
 			}
-		}
+		}**/
 	}
 
 

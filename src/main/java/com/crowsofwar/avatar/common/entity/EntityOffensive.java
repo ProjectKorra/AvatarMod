@@ -38,7 +38,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	private static final DataParameter<Float> SYNC_WIDTh = EntityDataManager
 			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
 	private static final DataParameter<OffensiveBehaviour> SYNC_BEHAVIOR = EntityDataManager
-			.createKey(EntityFireball.class, OffensiveBehaviour.DATA_SERIALIZER);
+			.createKey(EntityOffensive.class, OffensiveBehaviour.DATA_SERIALIZER);
 
 	/**
 	 * The fraction of the impact velocity that should be the maximum spread speed added on impact.
@@ -301,6 +301,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	@Override
 	public void onCollideWithEntity(Entity entity) {
 		super.onCollideWithEntity(entity);
+
 		if (!isPiercing() && isProjectile() && shouldExplode())
 			Explode();
 		else if (!isPiercing() && shouldDissipate()) {
@@ -312,6 +313,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		else applyPiercingCollision();
 		if (entity instanceof AvatarEntity)
 			applyElementalContact((AvatarEntity) entity);
+		if (getSolidEntities().test(entity))
+			setDead();
 
 	}
 

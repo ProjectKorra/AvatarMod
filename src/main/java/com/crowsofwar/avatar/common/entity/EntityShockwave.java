@@ -77,7 +77,6 @@ public class EntityShockwave extends EntityOffensive {
 		dataManager.register(SYNC_SPEED, 0.8F);
 		dataManager.register(SYNC_IS_SPHERE, false);
 		dataManager.register(SYNC_RANGE, 4F);
-		dataManager.register(SYNC_BEHAVIOR, new ShockwaveBehaviour.Idle());
 		dataManager.register(SYNC_RENDER_NORMAL, true);
 
 	}
@@ -113,14 +112,6 @@ public class EntityShockwave extends EntityOffensive {
 
 	public void setParticleAmount(int amount) {
 		dataManager.set(SYNC_PARTICLE_AMOUNT, amount);
-	}
-
-	public ShockwaveBehaviour getBehaviour() {
-		return dataManager.get(SYNC_BEHAVIOR);
-	}
-
-	public void setBehaviour(ShockwaveBehaviour behaviour) {
-		dataManager.set(SYNC_BEHAVIOR, behaviour);
 	}
 
 	public double getParticleSpeed() {
@@ -188,7 +179,6 @@ public class EntityShockwave extends EntityOffensive {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		setBehaviour((ShockwaveBehaviour) getBehaviour().onUpdate(this));
 
 		this.motionX = this.motionY = this.motionZ = 0;
 

@@ -31,6 +31,7 @@ import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -96,8 +97,8 @@ public class AbilityFireBlast extends Ability {
 
 			Vec3d height, rightSide;
 			if (entity instanceof EntityPlayer) {
-				height = entity.getPositionVector().add(0, 1.6, 0);
-				height = height.add(entity.getLookVec().scale(0.8));
+				height = entity.getPositionVector().add(0, 0.84, 0);
+				height = height.add(entity.getLookVec().scale(0.1));
 				//Right
 				if (entity.getPrimaryHand() == EnumHandSide.RIGHT) {
 					rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
@@ -109,8 +110,8 @@ public class AbilityFireBlast extends Ability {
 					rightSide = rightSide.add(height);
 				}
 			} else {
-				height = entity.getPositionVector().add(0, 1.6, 0);
-				height = height.add(entity.getLookVec().scale(0.8));
+				height = entity.getPositionVector().add(0, 0.84, 0);
+				height = height.add(entity.getLookVec().scale(0.1));
 				if (entity.getPrimaryHand() == EnumHandSide.RIGHT) {
 					rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
 					rightSide = rightSide.add(height);
@@ -130,6 +131,8 @@ public class AbilityFireBlast extends Ability {
 			fireblast.setBehaviour(new FireblastBehaviour());
 			fireblast.setElement(new Firebending());
 			fireblast.setAbility(this);
+			fireblast.setLifeTime(10 + AvatarUtils.getRandomNumberInRange(0, 4));
+			fireblast.setExpandedHitbox(2, 2);
 			fireblast.setDamage(damage * damageMult);
 			fireblast.setEntitySize(0.5F);
 			fireblast.setXp(xp);
@@ -179,9 +182,9 @@ public class AbilityFireBlast extends Ability {
 
 		@Override
 		public Behavior onUpdate(EntityOffensive entity) {
-			entity.setEntitySize(entity.getAvgSize() * 1.3F);
-			entity.setVelocity(entity.getVelocity().scale(0.95));
-			if (entity.velocity().magnitude() < 0.5 * 0.5)
+			entity.setEntitySize(entity.getAvgSize() * 1.1F);
+			entity.setVelocity(entity.getVelocity().scale(0.925));
+			if (entity.velocity().magnitude() < 0.8 * 0.8)
 				entity.setDead();
 			if (entity.onGround)
 				entity.setDead();

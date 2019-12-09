@@ -20,7 +20,9 @@ import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirJump;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.gorecore.util.Vector;
@@ -151,25 +153,27 @@ public class SmashGroundHandler extends TickHandler {
 		return false;
 	}
 
-	protected ShockwaveBehaviour getBehaviour() {
+	protected OffensiveBehaviour getBehaviour() {
 		return new AirGroundPoundShockwave();
 	}
 
-	public static class AirGroundPoundShockwave extends ShockwaveBehaviour {
+	public static class AirGroundPoundShockwave extends OffensiveBehaviour {
 
 		@Override
-		public Behavior onUpdate(EntityShockwave entity) {
+		public Behavior onUpdate(EntityOffensive entity) {
 			if (entity.world.isRemote) {
-					for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.getRange() * entity.getParticleAmount() * entity.ticksExisted)) {
+				if (entity instanceof EntityShockwave) {
+					for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (((EntityShockwave) entity).getRange() * ((EntityShockwave) entity).getParticleAmount() * entity.ticksExisted)) {
 						//Even though the maths is technically wrong, you use sin if you want a shockwave, and cos if you want a sphere (for x).
-						double x2 = entity.posX + (entity.ticksExisted * entity.getSpeed()) * Math.sin(angle);
+						double x2 = entity.posX + (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle);
 						double y2 = entity.getEntityBoundingBox().minY + 0.3;
-						double z2 = entity.posZ + (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle);
-						Vector speed = new Vector((entity.ticksExisted * entity.getSpeed()) * Math.sin(angle) * (entity.getParticleSpeed() * 8.25),
-								entity.getParticleSpeed() / 6, (entity.ticksExisted * entity.getSpeed()) * Math.cos(angle) * (entity.getParticleSpeed() * 8.25));
+						double z2 = entity.posZ + (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle);
+						Vector speed = new Vector((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle) * (entity.getParticleSpeed() * 8.25),
+								entity.getParticleSpeed() / 6, (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle) * (entity.getParticleSpeed() * 8.25));
 						ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(0.85F, 0.85F, 0.85F).pos(x2, y2, z2).vel(speed.toMinecraft())
 								.collide(true).scale(2.75F).time(10).spawn(entity.world);
 					}
+				}
 				}
 			return this;
 		}

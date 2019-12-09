@@ -153,30 +153,17 @@ public class EntityFlamethrower extends EntityOffensive implements ILightProvide
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		motionX *= 0.99;
-		motionY *= 0.99;
-		motionZ *= 0.99;
-
-		if (velocity().sqrMagnitude() <= 0.5 * 0.5)
-			Dissipate();
-
-		hitboxWidth *= 1.055;
-		hitboxHeight *= 1.055;
-		setEntitySize(Math.min(hitboxWidth, getAvgSize() * 1.2F));
-
-		if(onGround)
-			setDead();
 	}
 
 
 	@Override
 	public double getExpandedHitboxWidth() {
-		return 0.1;
+		return getAvgSize() / 2;
 	}
 
 	@Override
 	public double getExpandedHitboxHeight() {
-		return 0.1;
+		return getAvgSize() / 2;
 	}
 
 
