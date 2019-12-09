@@ -31,11 +31,10 @@ public class RenderFlamethrower extends Render<EntityFlamethrower> {
 		World world = entity.world;
 		if (world.isRemote) {
 			for (double i = 0; i < Math.max(Math.min((int) (1 / entity.getAvgSize()), 2), 1); i++) {
-				Random random = new Random();
 				AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-				double spawnX = boundingBox.minX + random.nextDouble() / 15 * (boundingBox.maxX - boundingBox.minX);
-				double spawnY = boundingBox.minY + random.nextDouble() / 15 * (boundingBox.maxY - boundingBox.minY);
-				double spawnZ = boundingBox.minZ + random.nextDouble() / 15 * (boundingBox.maxZ - boundingBox.minZ);
+				double spawnX = boundingBox.getCenter().x + world.rand.nextGaussian() / 15;
+				double spawnY = boundingBox.getCenter().y + world.rand.nextGaussian() / 15;
+				double spawnZ = boundingBox.getCenter().z + world.rand.nextGaussian() / 15;
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
 						world.rand.nextGaussian() / 80).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(255, 10, 5)
 						.scale(entity.getAvgSize() * 2F).element(entity.getElement()).collide(true).spawn(world);
@@ -50,9 +49,6 @@ public class RenderFlamethrower extends Render<EntityFlamethrower> {
 						world.rand.nextGaussian() / 80).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
 						20 + AvatarUtils.getRandomNumberInRange(0, 30), 10)
 						.scale(entity.getAvgSize() * 2F).element(entity.getElement()).collide(true).spawn(world);
-			/*	ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
-						world.rand.nextGaussian() / 80).time(2 + AvatarUtils.getRandomNumberInRange(0, 5))
-						.scale(entity.getAvgSize() * 1F).element(entity.getElement()).collide(true).spawn(world);**/
 			}
 		}
 		//Copied from particleFlash.

@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.AvatarAnnouncements;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -32,13 +33,16 @@ import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.config.convert.Type;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -127,7 +131,7 @@ public class AbilityFireBlast extends Ability {
 			EntityFlamethrower fireblast = new EntityFlamethrower(world);
 			fireblast.setTier(getCurrentTier(ctx.getLevel()));
 			fireblast.setPosition(rightSide);
-			fireblast.setVelocity(entity.getLookVec().scale(2));
+			fireblast.setVelocity(entity.getLookVec().scale(4));
 			fireblast.setBehaviour(new FireblastBehaviour());
 			fireblast.setElement(new Firebending());
 			fireblast.setAbility(this);
@@ -138,6 +142,7 @@ public class AbilityFireBlast extends Ability {
 			fireblast.setXp(xp);
 			fireblast.setOwner(entity);
 			world.spawnEntity(fireblast);
+			entity.swingArm(EnumHand.MAIN_HAND);
 		/*	EntityFireShooter shooter = new EntityFireShooter(world);
 			shooter.setElement(new Firebending());
 			shooter.setOwner(entity);
@@ -188,6 +193,31 @@ public class AbilityFireBlast extends Ability {
 				entity.setDead();
 			if (entity.onGround)
 				entity.setDead();
+
+			World world = entity.world;
+			if (world.isRemote) {
+				for (int i = 0; i < 3; i++) {
+					AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+					double spawnX = boundingBox.getCenter().x + world.rand.nextGaussian() / 10;
+					double spawnY = boundingBox.getCenter().y + world.rand.nextGaussian() / 10;
+					double spawnZ = boundingBox.getCenter().z + world.rand.nextGaussian() / 10;
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+							scale(entity.getAvgSize() * 1.5F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(255, 10, 5).spawn(world);
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+							scale(entity.getAvgSize() * 1.5F).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(255, 10, 5).spawn(world);
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+							scale(entity.getAvgSize() * 1.5F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+							20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+							scale(entity.getAvgSize() * 1.5F).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+							20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
+
+				}
+			}
 			return this;
 		}
 

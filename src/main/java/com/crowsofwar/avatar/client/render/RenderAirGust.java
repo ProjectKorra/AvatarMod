@@ -28,10 +28,10 @@ public class RenderAirGust extends Render<EntityAirGust> {
 				double spawnZ = boundingBox.getCenter().z + world.rand.nextGaussian() / 10;
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
 						world.rand.nextGaussian() / 45).time(4).clr(0.85F, 0.85F, 0.85F)
-						.scale(entity.getAvgSize()).element(entity.getElement()).spawn(world);
+						.scale(entity.getAvgSize() * 1.25F).element(entity.getElement()).spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
 						world.rand.nextGaussian() / 45).time(12).clr(0.85F, 0.85F, 0.85F)
-						.scale(entity.getAvgSize()).element(entity.getElement()).spawn(world);
+						.scale(entity.getAvgSize() * 1.25F).element(entity.getElement()).spawn(world);
 			}
 		}
 	}
