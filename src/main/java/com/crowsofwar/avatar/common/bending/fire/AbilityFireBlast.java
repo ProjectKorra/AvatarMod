@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
@@ -126,9 +127,8 @@ public class AbilityFireBlast extends Ability {
 
 			}
 
-			//TODO: Tick handler so the player can create more dynamic shapes
-			//data.addTickHandler();
-			EntityFlamethrower fireblast = new EntityFlamethrower(world);
+			data.addTickHandler(TickHandlerController.FIREBLAST_UPDATE_TICK);
+			/*EntityFlamethrower fireblast = new EntityFlamethrower(world);
 			fireblast.setTier(getCurrentTier(ctx.getLevel()));
 			fireblast.setPosition(rightSide);
 			fireblast.setVelocity(entity.getLookVec().scale(4));
@@ -141,7 +141,7 @@ public class AbilityFireBlast extends Ability {
 			fireblast.setEntitySize(0.5F);
 			fireblast.setXp(xp);
 			fireblast.setOwner(entity);
-			world.spawnEntity(fireblast);
+			world.spawnEntity(fireblast);**/
 			entity.swingArm(EnumHand.MAIN_HAND);
 		/*	EntityFireShooter shooter = new EntityFireShooter(world);
 			shooter.setElement(new Firebending());
@@ -187,8 +187,8 @@ public class AbilityFireBlast extends Ability {
 
 		@Override
 		public Behavior onUpdate(EntityOffensive entity) {
-			entity.setEntitySize(entity.getAvgSize() * 1.1F);
-			entity.setVelocity(entity.getVelocity().scale(0.925));
+			entity.setEntitySize(entity.getAvgSize() * 1.15F);
+			entity.setVelocity(entity.getVelocity().scale(0.95));
 			if (entity.velocity().magnitude() < 0.8 * 0.8)
 				entity.setDead();
 			if (entity.onGround)
