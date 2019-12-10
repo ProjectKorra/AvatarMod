@@ -64,15 +64,15 @@ public class FireblastUpdateTick extends TickHandler {
 		double maxPowerFactor = 0.4;
 		double powerFactor = (powerRating + 100) / 100 * maxPowerFactor + 1 - maxPowerFactor;
 		//Max amount of ticks
-		int maxFlames = 4;
+		int maxFlames = 1;
 		float requiredChi = STATS_CONFIG.chiFireBlast;
 
 		if (level == 1) {
-			maxFlames = 6;
+			maxFlames = 2;
 			requiredChi *= 1.5;
 		}
 		if (level == 2) {
-			maxFlames = 8;
+			maxFlames = 4;
 			requiredChi *= 2;
 		}
 		if (abilityData.getPath() == AbilityData.AbilityTreePath.FIRST) {
@@ -97,12 +97,12 @@ public class FireblastUpdateTick extends TickHandler {
 
 			if (!(world.isRaining() && world.canSeeSky(entity.getPosition())) && !(headInLiquid || inWaterBlock)) {
 
-				double speedMult = 15 + 5 * abilityData.getXpModifier();
+				double speedMult = 12.5 + 5 * abilityData.getXpModifier();
 				double randomness = 3.0 - 0.5 * (abilityData.getXpModifier() + Math.max(abilityData.getLevel(), 0));
 				float range = 4;
 				int fireTime = 2;
 				float size = 0.875F;
-				int lifetime = 15;
+				int lifetime = 10;
 				float damage = STATS_CONFIG.fireBlastSettings.damage;
 				float performanceAmount = 1;
 				float xp = SKILLS_CONFIG.fireBlastHit;
@@ -110,7 +110,8 @@ public class FireblastUpdateTick extends TickHandler {
 				switch (abilityData.getLevel()) {
 					case 1:
 						size = 1.175F;
-						damage = 1.75F;
+						speedMult += 2.5;
+						damage *= 2F;
 						fireTime = 3;
 						range = 5;
 						lifetime += 2;
@@ -119,9 +120,10 @@ public class FireblastUpdateTick extends TickHandler {
 					case 2:
 						size = 1.375F;
 						fireTime = 4;
-						damage = 2.5F;
+						speedMult += 5;
+						damage *= 3;
 						range = 7;
-						lifetime += 5;
+						lifetime += 4;
 						performanceAmount = 3;
 						break;
 				}
@@ -130,17 +132,17 @@ public class FireblastUpdateTick extends TickHandler {
 					randomness = 0;
 					fireTime = 5;
 					size = 0.75F;
-					damage = 4.5F;
+					damage *= 5F;
 					range = 11;
-					lifetime += 10;
+					lifetime += 8;
 					performanceAmount = 4;
 				}
 				if (level == 3 && path == AbilityData.AbilityTreePath.SECOND) {
-					speedMult = 12;
+					speedMult = 7.5;
 					randomness = 9;
 					fireTime = 10;
 					size = 2.75F;
-					damage = 1.5F;
+					damage *= 1.6F;
 					range = 6.5F;
 					lifetime += 20;
 					performanceAmount = 2;
@@ -162,8 +164,7 @@ public class FireblastUpdateTick extends TickHandler {
 
 
 
-				Vector knockback = look.times(speedMult / 10 * STATS_CONFIG.flamethrowerSettings.push);
-				Vector position = look.times((double) maxFlames / 1000D).plus(eye.minusY(0.5));
+				Vector knockback = look.times(speedMult / 10 * STATS_CONFIG.fireBlastSettings.push);
 
 				//Spawn Entity Code.
 				Vec3d height, rightSide;
@@ -206,6 +207,7 @@ public class FireblastUpdateTick extends TickHandler {
 				fireblast.setDamage(damage);
 				fireblast.setPerformanceAmount((int) performanceAmount);
 				fireblast.setFireTime(fireTime);
+				fireblast.setShouldExplode(abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST));
 				fireblast.setEntitySize(size / 2);
 				fireblast.setKnockback(knockback.toMinecraft());
 				fireblast.setXp(xp);

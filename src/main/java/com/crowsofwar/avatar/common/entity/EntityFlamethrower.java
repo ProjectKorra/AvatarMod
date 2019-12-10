@@ -21,11 +21,12 @@ import javax.annotation.Nullable;
 @Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
 public class EntityFlamethrower extends EntityOffensive implements ILightProvider {
 
+	public float hitboxWidth, hitboxHeight;
 	private Vec3d knockback = new Vec3d(0, 0, 0);
 	//Used for particle maths.
 	private Vec3d spawnPos = Vec3d.ZERO;
 	private double range = 0;
-	public float hitboxWidth, hitboxHeight;
+	private boolean shouldExplode = false;
 
 	public EntityFlamethrower(World world) {
 		super(world);
@@ -33,6 +34,10 @@ public class EntityFlamethrower extends EntityOffensive implements ILightProvide
 		this.lightTnt = true;
 		this.noClip = false;
 		this.setsFires = false;
+	}
+
+	public void setShouldExplode(boolean explode) {
+		this.shouldExplode = explode;
 	}
 
 	@Override
@@ -59,7 +64,7 @@ public class EntityFlamethrower extends EntityOffensive implements ILightProvide
 
 	@Override
 	public boolean shouldExplode() {
-		return false;
+		return shouldExplode;
 	}
 
 	@Override
