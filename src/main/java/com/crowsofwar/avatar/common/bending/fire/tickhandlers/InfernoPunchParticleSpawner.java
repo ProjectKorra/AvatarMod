@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.bending.fire.tickhandlers;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -46,7 +47,7 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 
 			Vec3d height, rightSide;
 			if (entity instanceof EntityPlayer) {
-				if (PlayerViewRegistry.getPlayerViewMode(entity.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(entity.getUniqueID()) <= -1) {
+				if (!AvatarMod.realFirstPersonRender2Compat && (PlayerViewRegistry.getPlayerViewMode(entity.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(entity.getUniqueID()) <= -1)) {
 					height = entity.getPositionVector().add(0, 1.6, 0);
 					height = height.add(entity.getLookVec().scale(0.8));
 					//Right

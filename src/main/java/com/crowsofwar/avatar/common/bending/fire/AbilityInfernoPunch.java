@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -134,7 +135,7 @@ public class AbilityInfernoPunch extends Ability {
 							Vec3d height;
 							Vec3d rightSide;
 							if (emitter instanceof EntityPlayer) {
-								if (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) <= -1) {
+								if (!AvatarMod.realFirstPersonRender2Compat && (PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(emitter.getUniqueID()) <= -1)) {
 									entity.setOrbSize(entity.getInitialSize() /*/ 0.2F**/ - 0.05F);
 									height = emitter.getPositionVector().add(0, 1.65, 0);
 									height = height.add(emitter.getLookVec().scale(0.8));

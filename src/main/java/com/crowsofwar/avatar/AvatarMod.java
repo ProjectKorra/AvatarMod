@@ -85,7 +85,7 @@ public class AvatarMod {
 
 	public static SimpleNetworkWrapper network;
 
-	public static boolean codeChickenLibCompat;
+	public static boolean codeChickenLibCompat, realFirstPersonRender2Compat;
 
 	private int nextMessageID = 1;
 	private int nextEntityID = 1;
@@ -145,6 +145,8 @@ public class AvatarMod {
 	public void preInit(FMLPreInitializationEvent e) {
 
 		codeChickenLibCompat = Loader.isModLoaded("codechickenlib");
+		//Used for particle and inferno punch shenanigans
+		realFirstPersonRender2Compat = Loader.isModLoaded("rfp2");
 
 		AvatarLog.log = e.getModLog();
 
