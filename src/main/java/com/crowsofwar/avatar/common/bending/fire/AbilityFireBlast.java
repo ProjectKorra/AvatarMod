@@ -184,9 +184,9 @@ public class AbilityFireBlast extends Ability {
 
 		@Override
 		public Behavior onUpdate(EntityOffensive entity) {
-			entity.setEntitySize(entity.getAvgSize() * 1.05F);
-			entity.setVelocity(entity.getVelocity().scale(0.95));
-			if (entity.velocity().magnitude() < 0.8 * 0.8)
+			entity.setEntitySize(entity.getAvgSize() * 1.1F);
+			entity.setVelocity(entity.getVelocity().scale(0.925));
+			if (entity.velocity().magnitude() < 1)
 				entity.setDead();
 			if (entity.onGround)
 				entity.setDead();
@@ -195,22 +195,22 @@ public class AbilityFireBlast extends Ability {
 			if (world.isRemote) {
 				for (int i = 0; i < 3; i++) {
 					AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-					double spawnX = boundingBox.getCenter().x + world.rand.nextGaussian() / 10;
-					double spawnY = boundingBox.getCenter().y + world.rand.nextGaussian() / 10;
-					double spawnZ = boundingBox.getCenter().z + world.rand.nextGaussian() / 10;
+					double spawnX = boundingBox.getCenter().x + world.rand.nextGaussian() / 15;
+					double spawnY = boundingBox.getCenter().y + world.rand.nextGaussian() / 15;
+					double spawnZ = boundingBox.getCenter().z + world.rand.nextGaussian() / 15;
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
 							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
 							scale(entity.getAvgSize() * 1.25F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(255, 10, 5).spawn(world);
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
 							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
-							scale(entity.getAvgSize() * 1.25F).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(255, 10, 5).spawn(world);
+							scale(entity.getAvgSize() * 1.25F).time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(255, 10, 5).spawn(world);
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
 							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
 							scale(entity.getAvgSize() * 1.25F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
 							20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
 							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
-							scale(entity.getAvgSize() * 1.25F).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+							scale(entity.getAvgSize() * 1.25F).time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
 							20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
 
 				}

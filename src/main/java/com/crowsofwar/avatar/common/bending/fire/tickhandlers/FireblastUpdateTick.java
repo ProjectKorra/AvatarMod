@@ -102,7 +102,7 @@ public class FireblastUpdateTick extends TickHandler {
 				float range = 4;
 				int fireTime = 2;
 				float size = 0.875F;
-				int lifetime = 10;
+				int lifetime = 4;
 				float damage = STATS_CONFIG.fireBlastSettings.damage;
 				float performanceAmount = 1;
 				float xp = SKILLS_CONFIG.fireBlastHit;
@@ -120,7 +120,7 @@ public class FireblastUpdateTick extends TickHandler {
 					case 2:
 						size = 1.375F;
 						fireTime = 4;
-						speedMult += 5;
+						speedMult += 4;
 						damage *= 3;
 						range = 7;
 						lifetime += 4;
@@ -144,7 +144,7 @@ public class FireblastUpdateTick extends TickHandler {
 					size = 2.75F;
 					damage *= 1.6F;
 					range = 6.5F;
-					lifetime += 20;
+					lifetime += 14;
 					performanceAmount = 2;
 				}
 
@@ -196,19 +196,19 @@ public class FireblastUpdateTick extends TickHandler {
 
 
 				EntityFlamethrower fireblast = new EntityFlamethrower(world);
+				fireblast.setEntitySize(size / 2);
 				fireblast.setTier(Math.max(abilityData.getLevel() + 1, 1));
 				fireblast.setPosition(rightSide);
 				fireblast.setVelocity(look.times(speedMult));
 				fireblast.setBehaviour(new AbilityFireBlast.FireblastBehaviour());
 				fireblast.setElement(new Firebending());
 				fireblast.setAbility(new AbilityFireBlast());
-				fireblast.setLifeTime(lifetime + AvatarUtils.getRandomNumberInRange(0, 4));
+				fireblast.setLifeTime(lifetime + AvatarUtils.getRandomNumberInRange(0, 2));
 				fireblast.setExpandedHitbox(size, size);
 				fireblast.setDamage(damage);
 				fireblast.setPerformanceAmount((int) performanceAmount);
 				fireblast.setFireTime(fireTime);
 				fireblast.setShouldExplode(abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST));
-				fireblast.setEntitySize(size / 2);
 				fireblast.setKnockback(knockback.toMinecraft());
 				fireblast.setXp(xp);
 				fireblast.setOwner(entity);
@@ -272,6 +272,6 @@ public class FireblastUpdateTick extends TickHandler {
 			// not enough chi
 			return true;
 		}
-		return data.getTickHandlerDuration(this) >= maxFlames;
+		return data.getTickHandlerDuration(this) > maxFlames;
 	}
 }

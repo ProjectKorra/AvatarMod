@@ -68,6 +68,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		this.prevVelX = prevVelY = prevVelZ = 0;
 		this.solidEntities = entity -> entity instanceof EntityWall || entity instanceof EntityWallSegment ||
 				entity instanceof EntityShield && ((EntityShield) entity).getOwner() != getOwner();
+		this.width = getWidth();
+		this.height = getHeight();
 	}
 
 	public void setBehaviour(OffensiveBehaviour behaviour) {
@@ -162,6 +164,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		super.onUpdate();
 
 		setBehaviour((OffensiveBehaviour) getBehaviour().onUpdate(this));
+		setSize(getWidth(), getHeight());
 
 		List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, getExpandedHitbox());
 		if (!targets.isEmpty()) {
@@ -196,7 +199,6 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 			else if (shouldExplode())
 				Explode();
 		}
-		setSize(getWidth(), getHeight());
 
 		//Dynamic Collision code.
 
