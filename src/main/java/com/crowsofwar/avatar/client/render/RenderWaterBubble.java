@@ -86,7 +86,7 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 
 		float t1 = ticks * (float) Math.PI / 10f;
 		float t2 = t1 + (float) Math.PI / 2f;
-		float amt = .05f;
+		float amt = 0.05f;
 		//lbf.rotate()
 
 		lbf.add(cos(t1) * amt, sin(t2) * amt, cos(t2) * amt, 0);

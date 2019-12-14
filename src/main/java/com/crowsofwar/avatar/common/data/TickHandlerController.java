@@ -19,8 +19,10 @@ import java.util.Map;
  * @author Mahtaran
  */
 public class TickHandlerController {
-	// @formatter:off
+	// NOTE: DO NOT MOVE THIS.
+	/** @formatter:off**/
 	static Map<Integer, TickHandler> allHandlers = new HashMap<>();
+	/** @formatter:on**/
 
 	public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner(0);
 	public static TickHandler FIRE_PARTICLE_SPAWNER = new FireParticleSpawner(1);
@@ -53,8 +55,8 @@ public class TickHandlerController {
 	public static TickHandler SLIPSTREAM_WALK_HANDLER = new SlipstreamAirWalkHandler(29);
 	public static TickHandler WATERARC_COMBO_HANDLER = new WaterArcComboHandler(30);
 	public static TickHandler FIREBLAST_UPDATE_TICK = new FireblastUpdateTick(31);
+	public static TickHandler SHOOT_AIRBURST = new ShootAirBurstHandler(32);
 
-	// @formatter:on
 
 	public static TickHandler fromId(int id) {
 		return allHandlers.get(id);

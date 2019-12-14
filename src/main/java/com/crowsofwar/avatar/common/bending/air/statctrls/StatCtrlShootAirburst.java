@@ -25,14 +25,13 @@ import static com.crowsofwar.avatar.common.bending.air.tickhandlers.AirBurstHand
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.AIRBURST_CHARGE_HANDLER;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.SHOOT_AIRBURST;
 
 public class StatCtrlShootAirburst extends StatusControl {
 
-	private final int charge;
 
-	public StatCtrlShootAirburst(int charge) {
+	public StatCtrlShootAirburst() {
 		super(16, AvatarControl.CONTROL_LEFT_CLICK_DOWN, CrosshairPosition.LEFT_OF_CROSSHAIR);
-		this.charge = charge;
 	}
 
 	@Override
@@ -57,7 +56,7 @@ public class StatCtrlShootAirburst extends StatusControl {
 		boolean piercing = false;
 
 		if (data.hasTickHandler(AIRBURST_CHARGE_HANDLER)) {
-
+/*
 			switch (abilityData.getLevel()) {
 				case -1:
 				case 0:
@@ -151,10 +150,11 @@ public class StatCtrlShootAirburst extends StatusControl {
 
 				}
 				attackedEntities = true;
-			}
-			data.removeTickHandler(AIRBURST_CHARGE_HANDLER);
-			data.removeStatusControl(RELEASE_AIR_BURST);
-			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
+			}**/
+			data.addTickHandler(SHOOT_AIRBURST);
+			//data.removeTickHandler(AIRBURST_CHARGE_HANDLER);
+			//data.removeStatusControl(RELEASE_AIR_BURST);
+			//entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
 		}
 		//world.playSound();
 		//TODO: Find a way to spawn client-side particles in stat ctrls and abilities.

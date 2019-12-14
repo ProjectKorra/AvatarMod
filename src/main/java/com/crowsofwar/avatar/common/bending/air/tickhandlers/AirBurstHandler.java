@@ -175,63 +175,21 @@ public class AirBurstHandler extends TickHandler {
 				case -1:
 				case 0:
 					if (charge == 4) {
-						removeStatCtrls(data);
-						data.addStatusControl(StatusControl.SHOOT_AIR_BURST_4);
+						addStatCtrl(data);
 					}
 					break;
+
 				case 1:
-					switch ((int) charge) {
-						case 3:
-							removeStatCtrls(data);
-							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_3);
-							break;
-						case 4:
-							removeStatCtrls(data);
-							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_4);
-							break;
-						default:
-							break;
-					}
+					if (charge >= 3)
+						addStatCtrl(data);
 					break;
 				case 2:
-					switch ((int) charge) {
-						case 2:
-							removeStatCtrls(data);
-							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_2);
-							break;
-						case 3:
-							removeStatCtrls(data);
-							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_3);
-							break;
-						case 4:
-							removeStatCtrls(data);
-							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_4);
-							break;
-						default:
-							break;
-					}
+					if (charge >= 2)
+						addStatCtrl(data);
 					break;
 				case 3:
-					switch ((int) charge) {
-						case 1:
-							removeStatCtrls(data);
-							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_1);
-							break;
-						case 2:
-							removeStatCtrls(data);
-							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_2);
-							break;
-						case 3:
-							removeStatCtrls(data);
-							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_3);
-							break;
-						case 4:
-							removeStatCtrls(data);
-							data.addStatusControl(StatusControl.SHOOT_AIR_BURST_4);
-							break;
-						default:
-							break;
-					}
+					if (charge > 0)
+						addStatCtrl(data);
 					break;
 			}
 
@@ -275,6 +233,11 @@ public class AirBurstHandler extends TickHandler {
 		} else return true;
 	}
 
+	private void addStatCtrl(BendingData data) {
+		if (!data.hasStatusControl(StatusControl.SHOOT_AIR_BURST)) {
+			data.addStatusControl(StatusControl.SHOOT_AIR_BURST);
+		}
+	}
 	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
 
 		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes
@@ -307,13 +270,6 @@ public class AirBurstHandler extends TickHandler {
 				AvatarUtils.afterVelocityAdded(collided);
 			}
 		}
-	}
-
-	private void removeStatCtrls(BendingData data) {
-		data.removeStatusControl(StatusControl.SHOOT_AIR_BURST_1);
-		data.removeStatusControl(StatusControl.SHOOT_AIR_BURST_2);
-		data.removeStatusControl(StatusControl.SHOOT_AIR_BURST_3);
-		data.removeStatusControl(StatusControl.SHOOT_AIR_BURST_4);
 	}
 
 	public static class AirburstShockwave extends OffensiveBehaviour {
