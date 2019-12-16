@@ -17,7 +17,7 @@
 package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.item.scroll.Scrolls;
+import com.crowsofwar.avatar.common.item.scroll.*;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -56,15 +56,15 @@ public class AvatarItems {
 
 	public static void init() {
 		allItems = new ArrayList<>();
-		addItem(Scrolls.ALL);
-		addItem(Scrolls.AIR);
-		addItem(Scrolls.EARTH);
-		addItem(Scrolls.FIRE);
-		addItem(Scrolls.WATER);
-		addItem(Scrolls.COMBUSTION);
-		addItem(Scrolls.SAND);
-		addItem(Scrolls.ICE);
-		addItem(Scrolls.LIGHTNING);
+		addItem(Scrolls.ALL = new ItemScrollAll());
+		addItem(Scrolls.AIR = new ItemScrollAir());
+		addItem(Scrolls.EARTH = new ItemScrollEarth());
+		addItem(Scrolls.FIRE = new ItemScrollFire());
+		addItem(Scrolls.WATER = new ItemScrollWater());
+		addItem(Scrolls.COMBUSTION = new ItemScrollCombustion());
+		addItem(Scrolls.SAND = new ItemScrollSand());
+		addItem(Scrolls.ICE = new ItemScrollIce());
+		addItem(Scrolls.LIGHTNING = new ItemScrollLightning());
 		addItem(itemWaterPouch = new ItemWaterPouch());
 		addItem(itemBisonWhistle = new ItemBisonWhistle());
 		addItem(itemBisonArmor = new ItemBisonArmor());

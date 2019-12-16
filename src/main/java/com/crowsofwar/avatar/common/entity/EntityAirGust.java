@@ -19,10 +19,6 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.particle.ParticleBuilder;
-import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -31,7 +27,6 @@ import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -241,6 +236,13 @@ public class EntityAirGust extends EntityOffensive {
 				entity.motionZ *= 0.4;
 			}
 		}
+		if (entity instanceof EntityAirBubble && ((EntityAirBubble) entity).getTier() <= getTier()) {
+			super.onCollideWithEntity(((EntityAirBubble) entity).getOwner());
+			if (!isPiercing())
+				Dissipate();
+		}
+		else if (entity instanceof EntityAirBubble)
+			Dissipate();
 	}
 
 	@Override

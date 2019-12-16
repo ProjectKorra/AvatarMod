@@ -82,6 +82,7 @@ public class EntityFlamethrower extends EntityOffensive implements ILightProvide
 		return false;
 	}
 
+
 	@Override
 	public void spawnDissipateParticles(World world, Vec3d pos) {
 

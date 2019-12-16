@@ -21,7 +21,7 @@ public class RenderAirGust extends Render<EntityAirGust> {
 	public void doRender(EntityAirGust entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		World world = entity.world;
 		if (world.isRemote) {
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < 4; i++) {
 				AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
 				double spawnX = boundingBox.getCenter().x + world.rand.nextGaussian() / 10;
 				double spawnY = boundingBox.getCenter().y + world.rand.nextGaussian() / 10;

@@ -54,10 +54,11 @@ public class AvatarItemRenderRegister {
 			forScroll(Scrolls.WATER);
 			forScroll(Scrolls.FIRE);
 			forScroll(Scrolls.EARTH);
+			forScroll(Scrolls.LIGHTNING);
 			forScroll(Scrolls.COMBUSTION);
 			forScroll(Scrolls.SAND);
 			forScroll(Scrolls.ICE);
-			forScroll(Scrolls.LIGHTNING);
+
 		}
 
 		for (int i = 0; i <= 5; i++) {
@@ -76,7 +77,7 @@ public class AvatarItemRenderRegister {
 	}
 
 	private static void forScroll(ItemScroll scroll){
-		for (int i = 0; i < ScrollType.amount(); i++) {
+		for (int i = 0; i < 7; i++) {
 			ScrollType type = scroll.getScrollType();
 			locationsRegular[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
 					"inventory");
@@ -111,7 +112,7 @@ public class AvatarItemRenderRegister {
 	@SubscribeEvent
 	public void modelBake(ModelBakeEvent e) {
 
-		for (int i = 0; i < ScrollType.amount(); i++) {
+		for (int i = 0; i < 7; i++) {
 
 			ModelResourceLocation mrlRegular = locationsRegular[i];
 			ModelResourceLocation mrlGlow = locationsGlow[i];
