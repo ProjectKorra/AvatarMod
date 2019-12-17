@@ -159,6 +159,15 @@ public class Vector {
 		return rotateVectorAroundVector(axis, ortho, degrees);
 	}
 
+	public static Vector getOrthogonalVector(Vec3d axis, double degrees,
+											 double length) {
+		Vector ortho = new Vector(axis.y, -axis.x, 0);
+		ortho = ortho.normalize();
+		ortho = ortho.times(length);
+
+		return rotateVectorAroundVector(new Vector(axis.x, axis.y, axis.z), ortho, degrees);
+	}
+
 	/**
 	 * @param distance How big the helix is.
 	 * @param axis The axis along which the helix spawns.

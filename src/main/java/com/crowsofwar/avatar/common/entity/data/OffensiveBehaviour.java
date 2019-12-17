@@ -1,6 +1,8 @@
 package com.crowsofwar.avatar.common.entity.data;
 
+import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.bending.air.tickhandlers.AirBurstHandler;
+import com.crowsofwar.avatar.common.bending.air.tickhandlers.ShootAirBurstHandler;
 import com.crowsofwar.avatar.common.bending.air.tickhandlers.SmashGroundHandler;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireBlast;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireShot;
@@ -25,6 +27,8 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
 		registerBehavior(AbilityFireShot.FireShockwaveBehaviour.class);
 		registerBehavior(StatCtrlInfernoPunchFirst.InfernoPunchShockwave.class);
 		registerBehavior(SmashGroundHandler.AirGroundPoundShockwave.class);
+		registerBehavior(ShootAirBurstHandler.AirBurstBeamBehaviour.class);
+		registerBehavior(AbilityAirGust.AirGustBehaviour.class);
 	}
 
 	public static class Idle extends OffensiveBehaviour {

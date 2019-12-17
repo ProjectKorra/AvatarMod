@@ -22,10 +22,15 @@ import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
+import com.crowsofwar.avatar.common.entity.EntityOffensive;
+import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -89,6 +94,7 @@ public class AbilityAirGust extends Ability {
 			gust.setPosition(pos.minusY(0.5));
 			gust.setOwner(entity);
 			gust.setEntitySize(size);
+			gust.setDamage(0);
 			gust.setLifeTime(lifetime);
 			gust.rotationPitch = entity.rotationPitch;
 			gust.rotationYaw = entity.rotationYaw;
@@ -101,12 +107,48 @@ public class AbilityAirGust extends Ability {
 			gust.setAbility(this);
 			gust.setTier(getCurrentTier(ctx.getLevel()));
 			gust.setXp(SKILLS_CONFIG.airGustHit);
+			gust.setBehaviour(new AirGustBehaviour());
 			world.spawnEntity(gust);
 
 			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, entity.getSoundCategory(), 1.0F + Math.max(ctx.getLevel(), 0) / 2F, 0.9F + world.rand.nextFloat() / 10);
 		}
 	}
 
+	public static class AirGustBehaviour extends OffensiveBehaviour {
+
+		@Override
+		public Behavior onUpdate(EntityOffensive entity) {
+			if (entity != null) {
+				entity.setVelocity(entity.velocity().times(0.95));
+				if (entity.velocity().sqrMagnitude() < 0.5 * 0.5)
+					entity.Dissipate();
+
+				float expansionRate = 1f / 80;
+				entity.setEntitySize(entity.getAvgSize() + expansionRate);
+			}
+			return this;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
+	}
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiAirGust(this, entity, bender);

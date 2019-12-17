@@ -224,13 +224,14 @@ public class AirBurstHandler extends TickHandler {
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
 						SoundCategory.BLOCKS, 1, 0.5F);
 
-				//spawned = true;
+				data.removeStatusControl(StatusControl.SHOOT_AIR_BURST);
 				return true;
 			}
-			//	System.out.println("Has status control: " + data.hasStatusControl(StatusControl.RELEASE_AIR_BURST));
-
 			return !data.hasStatusControl(StatusControl.RELEASE_AIR_BURST);
-		} else return true;
+		} else {
+			data.removeStatusControl(StatusControl.SHOOT_AIR_BURST);
+			return true;
+		}
 	}
 
 	private void addStatCtrl(BendingData data) {

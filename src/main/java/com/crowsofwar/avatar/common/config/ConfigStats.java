@@ -369,10 +369,10 @@ public class ConfigStats {
 		public float beamDamage = 6F;
 
 		@Load
-		public float beamPush = 2.5F;
+		public float beamPush = 20F;
 
 		@Load
-		public float beamSize = 0.5F;
+		public float beamSize = 1F;
 
 		@Load
 		public int beamRange = 10;

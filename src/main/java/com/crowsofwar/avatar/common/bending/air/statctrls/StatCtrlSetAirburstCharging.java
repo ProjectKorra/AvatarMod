@@ -57,6 +57,7 @@ public class StatCtrlSetAirburstCharging extends StatusControl {
 			} else {
 				if (bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(AIRBURST_MOVEMENT_MODIFIER_ID) != null)
 					bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
+				data.removeStatusControl(StatusControl.SHOOT_AIR_BURST);
 				//We don't remove the status control here since we want to spawn the tick handler if we stop right clicking.
 			}
 		}

@@ -42,6 +42,7 @@ public class EntityAirGust extends EntityOffensive {
 		this.pushStoneButton = pushStone;
 		this.pushDoor = pushIronDoor;
 		this.pushTrapDoor = pushIronTrapDoor;
+		setDamage(0);
 	}
 
 
@@ -76,32 +77,6 @@ public class EntityAirGust extends EntityOffensive {
 			this.pushDoor = pushIronDoor;
 			this.pushTrapDoor = pushIronTrapDoor;
 		}
-
-		setVelocity(velocity().times(0.95));
-		if (velocity().sqrMagnitude() < 0.5 * 0.5)
-			Dissipate();
-
-		float expansionRate = 1f / 80;
-		setEntitySize(getAvgSize() + expansionRate);
-		//Rendering.
-		/*if (world.isRemote) {
-			Vec3d pos = AvatarEntityUtils.getMiddleOfEntity(this).add(Vector.getLookRectangular(this).times(-1 * getAvgSize()).toMinecraft());
-			//for (int i = 0; i < 4; i++)
-			ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(motionX * 1.05, motionY * 1.05,
-					motionZ * 1.05).time(15 + AvatarUtils.getRandomNumberInRange(0, 8)).clr(0.85F, 0.85F, 0.85F)
-					.scale(getAvgSize() * 1.75F).collide(true).shaded(true).spawn(world);
-
-			for (int i = 0; i < 4; i++) {
-				AxisAlignedBB boundingBox = getEntityBoundingBox();
-				Vec3d midPos = AvatarEntityUtils.getMiddleOfEntity(this);
-				double spawnX = midPos.x + world.rand.nextGaussian() / 8 * (boundingBox.maxX - boundingBox.minX);
-				double spawnY = midPos.y + world.rand.nextGaussian() / 8 * (boundingBox.maxY - boundingBox.minY);
-				double spawnZ = midPos.z + world.rand.nextGaussian() / 8 * (boundingBox.maxZ - boundingBox.minZ);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(8).clr(0.825F, 0.825F, 0.825F)
-						.scale(getAvgSize() * 1.25F).shaded(true).element(getElement()).spawn(world);
-			}
-		}**/
 	}
 
 
@@ -155,11 +130,6 @@ public class EntityAirGust extends EntityOffensive {
 	}
 
 	@Override
-	public float getDamage() {
-		return 0;
-	}
-
-	@Override
 	public boolean isPiercing() {
 		return piercesEnemies;
 	}
@@ -176,7 +146,7 @@ public class EntityAirGust extends EntityOffensive {
 
 	@Override
 	public Vec3d getKnockbackMult() {
-		return new Vec3d(1.5, 3, 1.5);
+		return new Vec3d(1.5, 2, 1.5);
 	}
 
 	@Override
@@ -268,7 +238,7 @@ public class EntityAirGust extends EntityOffensive {
 
 	@Override
 	public double getExpandedHitboxWidth() {
-		return getAvgSize() / 3;
+		return Math.max(0.25, Math.min(getAvgSize() / 3, 1));
 	}
 
 	@Override
@@ -279,7 +249,7 @@ public class EntityAirGust extends EntityOffensive {
 	@Override
 	public Vec3d getKnockback() {
 		double x = Math.min(getKnockbackMult().x * motionX, motionX * 2);
-		double y = Math.min(0.7, (motionY + 0.3) * getKnockbackMult().y);
+		double y = Math.min(0.5, (motionY + 0.15) * getKnockbackMult().y);
 		double z = Math.min(getKnockbackMult().z * motionZ, motionZ * 2);
 		if (velocity().sqrMagnitude() > getAvgSize() * 15) {
 			x = Math.min(x, motionX * 0.75F);
