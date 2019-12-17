@@ -238,12 +238,12 @@ public class EntityAirGust extends EntityOffensive {
 
 	@Override
 	public double getExpandedHitboxWidth() {
-		return Math.max(0.25, Math.min(getAvgSize() / 3, 1));
+		return Math.max(0.3, Math.min(getAvgSize() / 3, 1));
 	}
 
 	@Override
 	public double getExpandedHitboxHeight() {
-		return getAvgSize() / 3;
+		return Math.max(0.3, Math.min(getAvgSize() / 3, 1));
 	}
 
 	@Override

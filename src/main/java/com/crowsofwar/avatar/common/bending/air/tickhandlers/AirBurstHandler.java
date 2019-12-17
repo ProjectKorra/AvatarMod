@@ -188,7 +188,9 @@ public class AirBurstHandler extends TickHandler {
 						addStatCtrl(data);
 					break;
 				case 3:
-					if (charge > 0)
+					if (charge > 0 && abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND))
+						addStatCtrl(data);
+					else if (charge > 1)
 						addStatCtrl(data);
 					break;
 			}

@@ -99,7 +99,6 @@ public class ShootAirBurstHandler extends TickHandler {
 					speed += 20;
 					distance += 20;
 					performance += 3;
-					size -= 0.25F;
 					//Long, piercing damage beam.
 
 				}
@@ -189,6 +188,8 @@ public class ShootAirBurstHandler extends TickHandler {
 							.scale(entity.getAvgSize() * 1.25F).element(entity.getElement()).spawn(world);
 				}
 			}
+			float expansionRate = 1f / 80;
+			entity.setEntitySize(entity.getAvgSize() + expansionRate);
 			return this;
 		}
 
