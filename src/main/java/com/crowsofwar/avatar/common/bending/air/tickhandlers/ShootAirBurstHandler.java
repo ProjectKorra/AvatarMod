@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.air.tickhandlers;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.TickHandler;
@@ -162,15 +163,15 @@ public class ShootAirBurstHandler extends TickHandler {
 			World world = entity.world;
 			if (world.isRemote && entity.getOwner() != null) {
 					for (double angle = 0; angle < 360; angle += Math.max((int) (entity.getAvgSize() * 20), 1)) {
-						Vector position = Vector.getOrthogonalVector(AvatarEntityUtils.getMiddleOfEntity(entity), angle, entity.getAvgSize());
+						Vector position = Vector.getOrthogonalVector(entity.getLookVec(), angle, entity.getAvgSize());
 						position = position.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
 						position = position.plus(AvatarEntityUtils.getMiddleOfEntity(entity).x, AvatarEntityUtils.getMiddleOfEntity(entity).y,
 								AvatarEntityUtils.getMiddleOfEntity(entity).z);
 						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(position.x(), position.y(), position.z()).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-								world.rand.nextGaussian() / 45).time(4).clr(0.85F, 0.85F, 0.85F)
+								world.rand.nextGaussian() / 45).time(4).clr(0x231DBD).element(new Firebending())
 								.scale(entity.getAvgSize() * 1.25F).element(entity.getElement()).spawn(world);
 						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(position.x(), position.y(), position.z()).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-								world.rand.nextGaussian() / 45).time(12).clr(0.85F, 0.85F, 0.85F)
+								world.rand.nextGaussian() / 45).time(12).clr(0x231DBD).element(new Firebending())
 								.scale(entity.getAvgSize() * 1.25F).element(entity.getElement()).spawn(world);
 					}
 				for (int i = 0; i < 2; i++) {
@@ -179,10 +180,10 @@ public class ShootAirBurstHandler extends TickHandler {
 					double spawnY = boundingBox.getCenter().y + world.rand.nextGaussian() / 20;
 					double spawnZ = boundingBox.getCenter().z + world.rand.nextGaussian() / 20;
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-							world.rand.nextGaussian() / 45).time(18).clr(0.85F, 0.85F, 0.85F)
+							world.rand.nextGaussian() / 45).time(18).clr(0x231DBD).element(new Firebending())
 							.scale(entity.getAvgSize() * 1.25F).element(entity.getElement()).spawn(world);
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-							world.rand.nextGaussian() / 45).time(20).clr(0.85F, 0.85F, 0.85F)
+							world.rand.nextGaussian() / 45).time(20).clr(0x231DBD).element(new Firebending())
 							.scale(entity.getAvgSize() * 1.25F).element(entity.getElement()).spawn(world);
 				}
 			}

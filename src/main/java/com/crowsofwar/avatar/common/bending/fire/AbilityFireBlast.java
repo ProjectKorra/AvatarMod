@@ -195,28 +195,30 @@ public class AbilityFireBlast extends Ability {
 
 			World world = entity.world;
 			if (world.isRemote) {
-				for (double angle = 0; angle < 360; angle += Math.max((int) (entity.getAvgSize() * 20), 5)) {
-					Vector position = Vector.getOrthogonalVector(AvatarEntityUtils.getMiddleOfEntity(entity), angle, entity.getAvgSize());
-					position = position.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
-					position = position.plus(AvatarEntityUtils.getMiddleOfEntity(entity).x, AvatarEntityUtils.getMiddleOfEntity(entity).y,
-							AvatarEntityUtils.getMiddleOfEntity(entity).z);
-					double spawnX = position.x();
-					double spawnY = position.y();
-					double spawnZ = position.z();
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
-							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
-							scale(entity.getAvgSize() * 1.25F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(255, 10, 5).spawn(world);
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
-							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
-							scale(entity.getAvgSize() * 1.25F).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(255, 10, 5).spawn(world);
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
-							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
-							scale(entity.getAvgSize() * 1.25F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-							20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
-							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
-							scale(entity.getAvgSize() * 1.25F).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-							20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
+				if (entity.ticksExisted % 2 == 0) {
+					for (double angle = 0; angle < 360; angle += Math.max((int) (entity.getAvgSize() * 20), 5)) {
+						Vector position = Vector.getOrthogonalVector(entity.getLookVec(), angle, entity.getAvgSize());
+						position = position.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
+						position = position.plus(AvatarEntityUtils.getMiddleOfEntity(entity).x, AvatarEntityUtils.getMiddleOfEntity(entity).y,
+								AvatarEntityUtils.getMiddleOfEntity(entity).z);
+						double spawnX = position.x();
+						double spawnY = position.y();
+						double spawnZ = position.z();
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+								world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+								scale(entity.getAvgSize() * 1.25F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(255, 10, 5).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+								world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+								scale(entity.getAvgSize() * 1.25F).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(255, 10, 5).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+								world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+								scale(entity.getAvgSize() * 1.25F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+								20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+								world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+								scale(entity.getAvgSize() * 1.25F).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+								20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
+					}
 				}
 				for (int i = 0; i < 2; i++) {
 					AxisAlignedBB boundingBox = entity.getEntityBoundingBox();

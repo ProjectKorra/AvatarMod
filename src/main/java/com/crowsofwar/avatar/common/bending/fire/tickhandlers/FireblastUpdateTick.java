@@ -213,6 +213,8 @@ public class FireblastUpdateTick extends TickHandler {
 				fireblast.setKnockback(knockback.toMinecraft());
 				fireblast.setXp(xp);
 				fireblast.setOwner(entity);
+				fireblast.rotationYaw = (float) yawRandom;
+				fireblast.rotationPitch = (float) pitchRandom;
 				world.spawnEntity(fireblast);
 				entity.swingArm(EnumHand.MAIN_HAND);
 				//Particle code.
