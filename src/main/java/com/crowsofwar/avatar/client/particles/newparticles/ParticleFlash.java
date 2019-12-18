@@ -1,6 +1,8 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -9,10 +11,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static net.minecraft.client.renderer.GlStateManager.tryBlendFuncSeparate;
-import static org.lwjgl.opengl.GL11.GL_LESS;
 
 /**
  * Copied from ParticleFirework.Overlay; for some reason that class has no public constructors, plus I want to change the
@@ -50,17 +51,18 @@ public class ParticleFlash extends ParticleAvatar {
 		GlStateManager.enableBlend();
 
 		if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
-			//	GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.SRC_ALPHA);
-			GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE_MINUS_CONSTANT_ALPHA, GlStateManager.DestFactor.ONE);
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		}
 		//TODO: Figure out a way to do this without breaking everything else
-		if (CLIENT_CONFIG.particleSettings.squareFlashParticles) {
+		else if (CLIENT_CONFIG.particleSettings.squareFlashParticles) {
 			GlStateManager.disableTexture2D();
 			GlStateManager.disableNormalize();
 		}
 		//Great for fire!
-		if (element instanceof Firebending) {
-			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+		else {
+			if (element instanceof Firebending) {
+				GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+			}
 		}
 		GlStateManager.disableLighting();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
@@ -68,8 +70,7 @@ public class ParticleFlash extends ParticleAvatar {
 		float f4;
 		if (CLIENT_CONFIG.particleSettings.voxelFlashParticles || CLIENT_CONFIG.particleSettings.squareFlashParticles) {
 			f4 = particleScale * 0.725F * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
-		}
-		else {
+		} else {
 			f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
 		}
 
@@ -83,7 +84,7 @@ public class ParticleFlash extends ParticleAvatar {
 
 		//GlStateManager.enableDepth();
 		//This does some cool stuff:
-	//	GlStateManager.depthMask(true);
+		//	GlStateManager.depthMask(true);
 		buffer.pos(f5 - rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 - rotationYZ * f4 - rotationXZ * f4).tex(0.5D, 0.375D)
 				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
 		buffer.pos(f5 - rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 - rotationYZ * f4 + rotationXZ * f4).tex(0.5D, 0.125D)
@@ -97,7 +98,6 @@ public class ParticleFlash extends ParticleAvatar {
 		GlStateManager.popMatrix();
 		GlStateManager.enableNormalize();
 	}
-
 
 
 	@Override
