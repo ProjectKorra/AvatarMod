@@ -74,7 +74,6 @@ public class ShootAirBurstHandler extends TickHandler {
 			//We don't want the charge going over 4.
 
 
-			if (ctx.getData().hasTickHandler(AIRBURST_CHARGE_HANDLER)) {
 				switch (data.getLevel()) {
 					case -1:
 					case 0:
@@ -149,7 +148,6 @@ public class ShootAirBurstHandler extends TickHandler {
 				AttributeModifier modifier = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
 				if (modifier != null && entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(modifier)) {
 					entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(modifier);
-				}
 			}
 		}
 		ctx.getData().removeTickHandler(AIRBURST_CHARGE_HANDLER);

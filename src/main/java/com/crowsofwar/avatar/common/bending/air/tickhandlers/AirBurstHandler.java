@@ -12,7 +12,6 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
-import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -55,6 +54,7 @@ public class AirBurstHandler extends TickHandler {
 		AbilityData abilityData = ctx.getData().getAbilityData("air_burst");
 		float charge;
 		//4 stages, max charge of 4.
+		boolean shouldRemove = false;
 
 		//TODO: Air Blast/Laser of Air! At level 1, it activates at charge level 4.
 		if (abilityData != null) {
@@ -176,22 +176,30 @@ public class AirBurstHandler extends TickHandler {
 				case 0:
 					if (charge == 4) {
 						addStatCtrl(data);
+						shouldRemove = true;
 					}
 					break;
 
 				case 1:
-					if (charge >= 3)
+					if (charge >= 3) {
 						addStatCtrl(data);
+						shouldRemove = true;
+					}
 					break;
 				case 2:
-					if (charge >= 2)
+					if (charge >= 2) {
 						addStatCtrl(data);
+						shouldRemove = true;
+					}
 					break;
 				case 3:
-					if (charge > 0 && abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND))
+					if (charge > 0 && abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 						addStatCtrl(data);
-					else if (charge > 1)
+						shouldRemove = true;
+					} else if (charge > 1) {
 						addStatCtrl(data);
+						shouldRemove = true;
+					}
 					break;
 			}
 
@@ -229,7 +237,7 @@ public class AirBurstHandler extends TickHandler {
 				data.removeStatusControl(StatusControl.SHOOT_AIR_BURST);
 				return true;
 			}
-			return !data.hasStatusControl(StatusControl.RELEASE_AIR_BURST);
+			return !data.hasStatusControl(StatusControl.RELEASE_AIR_BURST) || shouldRemove && !data.hasStatusControl(StatusControl.SHOOT_AIR_BURST);
 		} else {
 			data.removeStatusControl(StatusControl.SHOOT_AIR_BURST);
 			return true;
@@ -241,6 +249,7 @@ public class AirBurstHandler extends TickHandler {
 			data.addStatusControl(StatusControl.SHOOT_AIR_BURST);
 		}
 	}
+
 	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
 
 		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes
