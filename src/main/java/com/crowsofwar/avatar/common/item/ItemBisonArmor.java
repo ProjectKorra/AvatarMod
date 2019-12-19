@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.item;
 
+import com.crowsofwar.avatar.AvatarMod;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -31,7 +32,7 @@ public class ItemBisonArmor extends Item implements AvatarItem {
 	public ItemBisonArmor() {
 		setTranslationKey("bison_armor");
 		setMaxStackSize(1);
-		setCreativeTab(AvatarItems.tabItems);
+		setCreativeTab(AvatarMod.tabItems);
 		setMaxDamage(0);
 		setHasSubtypes(true);
 	}
@@ -76,7 +77,7 @@ public class ItemBisonArmor extends Item implements AvatarItem {
 		private final float armorPoints;
 		private final float speedMultiplier;
 
-		private ArmorTier(float armorPoints, float speedMultiplier) {
+		ArmorTier(float armorPoints, float speedMultiplier) {
 			this.armorPoints = armorPoints;
 			this.speedMultiplier = speedMultiplier;
 		}

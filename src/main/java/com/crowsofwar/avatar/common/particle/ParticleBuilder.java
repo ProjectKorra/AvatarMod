@@ -81,6 +81,8 @@ public final class ParticleBuilder {
 	//rend/green e.t.c shift interval
 	private float rSI, gSI, bSI, aSI;
 	private float fr, fg, fb;
+	//For flash particles
+	private boolean glow, sparkle;
 	private BendingStyle element;
 	private Ability ability;
 	private double radius;
@@ -164,6 +166,14 @@ public final class ParticleBuilder {
 		if (move) return ParticleBuilder.instance.particle(type).pos(px, py, pz).vel(px - x, py - y, pz - z);
 
 		return ParticleBuilder.instance.particle(type).pos(px, py, pz);
+	}
+
+	public void glow(boolean glow) {
+		this.glow = glow;
+	}
+
+	public void sparkle(boolean sparkle) {
+		this.sparkle = sparkle;
 	}
 
 	/**
@@ -849,6 +859,8 @@ public final class ParticleBuilder {
 		particle.multipleParticleScaleBy(scale);
 		particle.setGravity(gravity);
 		particle.setShaded(shaded);
+		particle.setGlowing(glow);
+		particle.setSparkle(sparkle);
 		particle.setCollisions(collide);
 		particle.setEntity(entity);
 		particle.setSpawnEntity(spawnEntity);
@@ -892,6 +904,8 @@ public final class ParticleBuilder {
 		gravity = false;
 		shaded = false;
 		collide = false;
+		sparkle = false;
+		glow = false;
 		scale = 1;
 		entity = null;
 		spawnEntity = null;

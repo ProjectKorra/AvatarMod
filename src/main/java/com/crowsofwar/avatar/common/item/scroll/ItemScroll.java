@@ -46,7 +46,7 @@ public class ItemScroll extends Item implements AvatarItem {
         this.type = type;
         setMaxStackSize(1);
         setMaxDamage(0);
-        setCreativeTab(AvatarItems.tabItems);
+        setCreativeTab(AvatarMod.tabItems);
         setHasSubtypes(true);
         setTranslationKey("scroll_" + type.displayName());
     }

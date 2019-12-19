@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.item;
 
+import com.crowsofwar.avatar.AvatarMod;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,7 +18,7 @@ public class ItemOstrichEquipment extends Item implements AvatarItem {
 	public ItemOstrichEquipment() {
 		setTranslationKey("ostrich_equip");
 		setMaxStackSize(1);
-		setCreativeTab(AvatarItems.tabItems);
+		setCreativeTab(AvatarMod.tabItems);
 		setMaxDamage(0);
 		setHasSubtypes(true);
 	}
@@ -35,7 +36,7 @@ public class ItemOstrichEquipment extends Item implements AvatarItem {
 	@Override
 	public String getTranslationKey(ItemStack stack) {
 		return super.getTranslationKey(stack) + "." + EquipmentTier
-						.getTierName(stack.getMetadata());
+				.getTierName(stack.getMetadata());
 	}
 
 	@Override
