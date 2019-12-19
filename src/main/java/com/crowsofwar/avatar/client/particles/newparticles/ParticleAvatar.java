@@ -115,6 +115,8 @@ public abstract class ParticleAvatar extends Particle {
 
 	protected BendingStyle element;
 	protected Ability ability;
+	//For flash particles
+	protected boolean glow, sparkle;
 
 	//If the particle expands to a max size, like Flash, this makes it expand faster.
 	protected float expansionRate;
@@ -254,6 +256,14 @@ public abstract class ParticleAvatar extends Particle {
 	 */
 	public static void registerParticle(ResourceLocation name, IAvatarParticleFactory factory) {
 		AvatarClientProxy.addParticleFactory(name, factory);
+	}
+
+	public void setGlowing(boolean glow) {
+		this.glow = glow;
+	}
+
+	public void setSparkle(boolean sparkle) {
+		this.sparkle = sparkle;
 	}
 
 	public long getSeed() {

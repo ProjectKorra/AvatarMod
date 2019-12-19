@@ -1,8 +1,6 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
-import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
-import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -11,7 +9,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
@@ -60,7 +57,7 @@ public class ParticleFlash extends ParticleAvatar {
 		}
 		//Great for fire!
 		else {
-			if (element instanceof Firebending) {
+			if (element instanceof Firebending || glow) {
 				GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 			}
 		}
@@ -74,7 +71,7 @@ public class ParticleFlash extends ParticleAvatar {
 			f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
 		}
 
-		this.setAlphaF(0.6F - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F);
+		this.setAlphaF((sparkle ? particleAlpha * 0.6F : 0.6F) - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F);
 		float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
 		float f6 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
 		float f7 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
