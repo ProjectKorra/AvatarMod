@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.client;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
@@ -48,7 +49,7 @@ public class AvatarItemRenderRegister {
 
 		
 
-		for (int i = 0; i <= 7; i++) {
+		//for (int i = 0; i <= 7; i++) {
 			forScroll(Scrolls.ALL);
 			forScroll(Scrolls.AIR);
 			forScroll(Scrolls.WATER);
@@ -59,7 +60,7 @@ public class AvatarItemRenderRegister {
 			forScroll(Scrolls.SAND);
 			forScroll(Scrolls.ICE);
 
-		}
+		//}
 
 		for (int i = 0; i <= 5; i++) {
 			register(AvatarItems.itemWaterPouch, i);
@@ -83,8 +84,8 @@ public class AvatarItemRenderRegister {
 					"inventory");
 			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow",
 					"inventory");
-			setCustomModelResourceLocation(scroll, i, locationsGlow[i]);
-			setCustomModelResourceLocation(scroll, i, locationsRegular[i]);
+			setCustomModelResourceLocation(scroll.item(), i, locationsGlow[i]);
+			setCustomModelResourceLocation(scroll.item(), i, locationsRegular[i]);
 		}
 	}
 
@@ -103,7 +104,7 @@ public class AvatarItemRenderRegister {
 			ModelResourceLocation mrl = new ModelResourceLocation("avatarmod:" + item.getModelName(meta),
 					"inventory");
 
-			ModelLoader.setCustomModelResourceLocation(item.item(), meta, mrl);
+			setCustomModelResourceLocation(item.item(), meta, mrl);
 
 		}
 
@@ -112,17 +113,19 @@ public class AvatarItemRenderRegister {
 	@SubscribeEvent
 	public void modelBake(ModelBakeEvent e) {
 
-		for (int i = 0; i < 7; i++) {
+	/*	for (int i = 0; i < 7; i++) {
+			for (int j = 0; j < ScrollType.values().length; j++) {
 
-			ModelResourceLocation mrlRegular = locationsRegular[i];
-			ModelResourceLocation mrlGlow = locationsGlow[i];
+				ModelResourceLocation mrlRegular = locationsRegular[i];
+				ModelResourceLocation mrlGlow = locationsGlow[i];
 
-			IBakedModel currentModel = e.getModelRegistry().getObject(mrlRegular);
-			ScrollsPerspectiveModel customModel = new ScrollsPerspectiveModel(mrlRegular, mrlGlow,
-					currentModel, e.getModelRegistry().getObject(mrlGlow));
-			e.getModelRegistry().putObject(mrlRegular, customModel);
+				IBakedModel currentModel = e.getModelRegistry().getObject(mrlRegular);
+				ScrollsPerspectiveModel customModel = new ScrollsPerspectiveModel(mrlRegular, mrlGlow,
+						currentModel, e.getModelRegistry().getObject(mrlGlow));
+				e.getModelRegistry().putObject(mrlRegular, customModel);
 
-		}
+			}
+		}**/
 
 	}
 

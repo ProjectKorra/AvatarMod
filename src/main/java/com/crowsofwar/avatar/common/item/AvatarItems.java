@@ -64,7 +64,6 @@ public class AvatarItems {
 		addItem(itemBisonSaddle = new ItemBisonSaddle());
 		addItem(itemOstrichEquipment = new ItemOstrichEquipment());
 		addItem(airbenderStaff = new ItemAirbenderStaff(Item.ToolMaterial.WOOD));
-		System.out.println(Scrolls.ALL.getCreativeTabs());
 
 		stackScroll = new ItemStack(Scrolls.ALL);
 		MinecraftForge.EVENT_BUS.register(new AvatarItems());

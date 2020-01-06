@@ -137,7 +137,6 @@ public class AvatarMod {
 		Abilities.register(new AbilityExplosivePillar());
 		Abilities.register(new AbilitySandstorm());
 		Abilities.register(new AbilityInfernoPunch());
-		//Abilities.register(new AbilityBoulderRing());
 		Abilities.register(new AbilityLightningRaze());
 		Abilities.register(new AbilityAirBurst());
 	}
@@ -227,7 +226,7 @@ public class AvatarMod {
 		registerEntity(EntityWaterArc.class, "WaterArc", 128, 1000, true);
 		registerEntity(EntityAirGust.class, "AirGust", 128, 1000, true);
 		registerEntity(EntityRavine.class, "Ravine", 128, 1000, true);
-		//For some reason, there's no random desync for its position when spawning it. Setting it to 1 fixes it.
+		//For some reason, there's random desync for its position when spawning it. Setting it to 1 fixes it.
 		registerEntity(EntityFlames.class, "Flames", 128, 1000, true);
 		registerEntity(EntityWave.class, "Wave", 128, 1000, true);
 		registerEntity(EntityWaterBubble.class, "WaterBubble", 128, 1000, true);
