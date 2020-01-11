@@ -18,6 +18,9 @@
 package com.crowsofwar.avatar.common.util;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.*;
@@ -36,6 +39,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.*;
@@ -45,6 +49,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -438,22 +443,37 @@ public class AvatarUtils {
 	 * @param endPos       Where the raytrace ends.
 	 * @param borderSize   The width of the raytrace.
 	 * @param spellEntity  The entity that's using this method, if applicable. If this method is directly used in a spell, just make this null.
-	 * @param damageSource The damage source.
 	 * @param damage       The amount of damage.
 	 * @param knockBack    The amount of knockback.
-	 * @param setFire      Whether to set an enemy on fire.
 	 * @param fireTime     How long to set an enemy on fire.
 	 */
 
-	public static void handlePiercingBeamCollision(World world, EntityLivingBase caster, Vec3d startPos, Vec3d endPos, float borderSize, Entity spellEntity, DamageSource damageSource,
-												   float damage, Vec3d knockBack, boolean setFire, int fireTime, float radius) {
+	public static void handlePiercingBeamCollision(World world, EntityLivingBase caster, Vec3d startPos, Vec3d endPos, float borderSize, @Nullable AvatarEntity spellEntity, @Nullable Ability ability,
+												   @Nullable BendingStyle element, float damage, Vec3d knockBack, int fireTime, float radius) {
 		HashSet<Entity> excluded = new HashSet<>();
 		RayTraceResult result = standardEntityRayTrace(world, caster, spellEntity, startPos, endPos, borderSize, false, excluded);
 		if (result != null && result.entityHit instanceof EntityLivingBase) {
 			EntityLivingBase hit = (EntityLivingBase) result.entityHit;
-			if (setFire) {
-				hit.setFire(fireTime);
+			String abilityName;
+			BendingStyle style;
+			//Ensures that the damage source exists.
+
+			if (spellEntity != null) {
+				style = spellEntity.getElement();
+				abilityName = spellEntity.getAbility().getName();
 			}
+			else  {
+				assert ability != null;
+				assert element != null;
+				style = element;
+				abilityName = ability.getName();
+			}
+
+			String elementName = style.getName().substring(0, style.getName().length() - 7);
+			String damageName = AvatarDamageSource.getNameFromBendingStyle(elementName);
+			DamageSource damageSource = new EntityDamageSourceIndirect("avatar_" + damageName + "_" + abilityName, hit, caster);
+
+			hit.setFire(fireTime);
 			hit.attackEntityFrom(damageSource, damage);
 			hit.motionX += knockBack.x;
 			hit.motionY += knockBack.y;
@@ -468,9 +488,7 @@ public class AvatarUtils {
 			if (!nearby.isEmpty()) {
 				for (Entity e : nearby) {
 					if (e != caster && e != hit && !excluded.contains(e) && e.getTeam() != caster.getTeam()) {
-						if (setFire) {
-							e.setFire(fireTime);
-						}
+						e.setFire(fireTime);
 						e.attackEntityFrom(damageSource, damage);
 						e.motionX += knockBack.x;
 						e.motionY += knockBack.y;
@@ -480,11 +498,12 @@ public class AvatarUtils {
 					}
 				}
 			} else {
-				handlePiercingBeamCollision(world, caster, pos, endPos, borderSize, spellEntity, damageSource, damage, knockBack, setFire, fireTime, radius);
+				handlePiercingBeamCollision(world, caster, pos, endPos, borderSize, spellEntity, ability, element, damage, knockBack, fireTime, radius);
 
 			}
 
 		}
+
 	}
 
 
@@ -514,12 +533,12 @@ public class AvatarUtils {
 										   float borderSize, HashSet<Entity> excluded, boolean collideablesOnly, boolean raytraceNonSolidBlocks) {
 		Vec3d startVec = new Vec3d(x, y, z);
 		Vec3d endVec = new Vec3d(tx, ty, tz);
-		float minX = x < tx ? x : tx;
-		float minY = y < ty ? y : ty;
-		float minZ = z < tz ? z : tz;
-		float maxX = x > tx ? x : tx;
-		float maxY = y > ty ? y : ty;
-		float maxZ = z > tz ? z : tz;
+		float minX = Math.min(x, tx);
+		float minY = Math.min(y, ty);
+		float minZ = Math.min(z, tz);
+		float maxX = Math.max(x, tx);
+		float maxY = Math.max(y, ty);
+		float maxZ = Math.max(z, tz);
 		AxisAlignedBB bb = new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ).grow(borderSize, borderSize,
 				borderSize);
 		List<Entity> allEntities = world.getEntitiesWithinAABBExcludingEntity(null, bb);
@@ -561,102 +580,19 @@ public class AvatarUtils {
 		return blockHit;
 	}
 
-	/**
-	 * Applies a velocity that an entity in the provided cardinal. Does not support UP & DOWN
-	 */
-	public static void applyMotionToEntityInDirection(Entity entity, EnumFacing cardinal, double velocity) {
-		switch (cardinal) {
-			case NORTH:
-				entity.motionZ = -velocity;
-				break;
-			case EAST:
-				entity.motionX = velocity;
-				break;
-			case SOUTH:
-				entity.motionZ = velocity;
-				break;
-			case WEST:
-				entity.motionX = -velocity;
-				break;
-			default:
-				break;
-		}
-	}
-
-	/**
-	 *
-	 */
-	public static void setRotationFromPosition(Entity toChange, Entity lookingAt) {
-		double dx = toChange.posX - lookingAt.posX;
-		double dz = toChange.posZ - lookingAt.posZ;
-		double angle = Math.atan2(dz, dx) * 180 / Math.PI;
-		double pitch = Math.atan2((toChange.posY + toChange.getEyeHeight()) - (lookingAt.posY + (lookingAt.height / 2.0F)), Math.sqrt(dx * dx + dz * dz)) * 180 / Math.PI;
-		double distance = toChange.getDistance(lookingAt);
-		float rYaw = (float) (angle - toChange.rotationYaw);
-		while (rYaw > 180) {
-			rYaw -= 360;
-		}
-		while (rYaw < -180) {
-			rYaw += 360;
-		}
-		rYaw += 90F;
-		float rPitch = (float) pitch - (float) (10.0F / Math.sqrt(distance)) + (float) (distance * Math.PI / 90);
-		toChange.turn(rYaw, -(rPitch - toChange.rotationPitch));
-	}
-
-	/**
-	 *
-	 */
-	public static void setRotationFromPosition(Entity toChange, Vec3d lookingAt) {
-		double dx = toChange.posX - lookingAt.x;
-		double dz = toChange.posZ - lookingAt.z;
-		double angle = Math.atan2(dz, dx) * 180 / Math.PI;
-		double pitch = Math.atan2((toChange.posY + toChange.getEyeHeight()) - (lookingAt.y), Math.sqrt(dx * dx + dz * dz)) * 180 / Math.PI;
-		double distance = toChange.getDistance(lookingAt.x, lookingAt.y, lookingAt.z);
-		float rYaw = (float) (angle - toChange.rotationYaw);
-		while (rYaw > 180) {
-			rYaw -= 360;
-		}
-		while (rYaw < -180) {
-			rYaw += 360;
-		}
-		rYaw += 90F;
-		float rPitch = (float) pitch - (float) (10.0F / Math.sqrt(distance)) + (float) (distance * Math.PI / 90);
-		turnEntity(toChange, rYaw, -(rPitch - toChange.rotationPitch), 1.25F);
-		//toChange.turn(rYaw, -(rPitch - toChange.rotationPitch));
-	}
-
-	public static Entity getEntityFromStringID(String UUID) {
-		return FMLCommonHandler.instance().getMinecraftServerInstance().getEntityFromUuid(java.util.UUID.fromString(UUID));
-	}
-
-	public static EntityPlayer getPlayerFromStringID(String UUID) {
-		return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(java.util.UUID.fromString(UUID));
-	}
-
-	public static EntityPlayer getPlayerFromUsername(String username) {
-		return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUsername(username);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static void turnEntity(Entity entity, float yaw, float pitch, float turnSpeed) {
-		float f = entity.rotationPitch;
-		float f1 = entity.rotationYaw;
-		entity.rotationYaw = (float) ((double) entity.rotationYaw + (double) yaw * 0.15D);
-		entity.rotationPitch = (float) ((double) entity.rotationPitch - (double) pitch * 0.15D);
-		entity.rotationPitch = MathHelper.clamp(entity.rotationPitch, -90.0F, 90.0F);
-		entity.prevRotationPitch += entity.rotationPitch * turnSpeed - f;
-		entity.prevRotationYaw += entity.rotationYaw * turnSpeed - f1;
-		if (entity.getRidingEntity() != null) {
-			entity.getRidingEntity().applyOrientationToEntity(entity);
-		}
-	}
 
 	public static int getRandomNumberInRange(int min, int max) {
 		Random r = new Random();
 		return r.nextInt((max - min) + 1) + min;
 	}
 
+	public static double getMagnitude(Vec3d vel) {
+		return Math.sqrt(getSqrMagnitude(vel));
+	}
+
+	public static double getSqrMagnitude(Vec3d vel) {
+		return vel.x * vel.x + vel.y * vel.y + vel.z * vel.z;
+	}
 	/**
 	 * An exception thrown by reading/writing methods for NBT
 	 *

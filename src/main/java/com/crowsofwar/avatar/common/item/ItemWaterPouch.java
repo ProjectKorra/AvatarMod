@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.item;
 
+import com.crowsofwar.avatar.AvatarMod;
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
@@ -49,7 +50,7 @@ import java.util.List;
 public class ItemWaterPouch extends Item implements AvatarItem {
 
 	public ItemWaterPouch() {
-		setCreativeTab(AvatarItems.tabItems);
+		setCreativeTab(AvatarMod.tabItems);
 		setTranslationKey("water_pouch");
 		setMaxStackSize(1);
 		setMaxDamage(0);
@@ -69,7 +70,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> tooltips,
-	                           ITooltipFlag advanced) {
+							   ITooltipFlag advanced) {
 		int meta = stack.getMetadata();
 		tooltips.add(I18n.format("avatar.tooltip.water_pouch" + (meta == 0 ? ".empty" : ""), meta));
 	}
@@ -85,7 +86,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player,
-	                                                EnumHand hand) {
+													EnumHand hand) {
 		ItemStack itemstack = player.getHeldItem(hand);
 		boolean isFull = itemstack.getMetadata() == 5;
 		if (isFull) {
@@ -101,8 +102,8 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 			BlockPos blockpos = raytraceresult.getBlockPos();
 			// We're not allowed to edit the block
 			if (!world.isBlockModifiable(player, blockpos) || !player
-							.canPlayerEdit(blockpos.offset(raytraceresult.sideHit),
-							               raytraceresult.sideHit, itemstack)) {
+					.canPlayerEdit(blockpos.offset(raytraceresult.sideHit),
+							raytraceresult.sideHit, itemstack)) {
 				return new ActionResult(EnumActionResult.PASS, itemstack);
 			}
 			IBlockState state = world.getBlockState(blockpos);
@@ -113,13 +114,13 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				int toBeFilled = 5 - itemstack.getItemDamage();
 				int willBeFilled = Math.min(canBeFilled, toBeFilled);
 				((BlockCauldron) state.getBlock())
-								.setWaterLevel(world, blockpos, state, canBeFilled - willBeFilled);
+						.setWaterLevel(world, blockpos, state, canBeFilled - willBeFilled);
 				player.addStat(StatList.CAULDRON_USED);
 				player.addStat(StatList.getObjectUseStats(this));
 				// TODO: Custom sound?
 				player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
 				return new ActionResult<>(EnumActionResult.SUCCESS,
-				                          fillPouch(itemstack, player, willBeFilled));
+						fillPouch(itemstack, player, willBeFilled));
 			} else if (material == Material.WATER) {
 				// Get how full the block is
 				int level = state.getValue(BlockLiquid.LEVEL).intValue();
@@ -148,7 +149,7 @@ public class ItemWaterPouch extends Item implements AvatarItem {
 				// TODO: Custom sound?
 				player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
 				return new ActionResult<>(EnumActionResult.SUCCESS,
-				                          fillPouch(itemstack, player, willBeFilled));
+						fillPouch(itemstack, player, willBeFilled));
 			} else {
 				return new ActionResult(EnumActionResult.PASS, itemstack);
 			}

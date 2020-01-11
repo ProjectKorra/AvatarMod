@@ -57,6 +57,9 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		setSize(0.1f, 0.1f);
 		this.setsFires = true;
 		this.lightTrailingFire = false;
+		this.reflect = false;
+		this.ignoreFrustumCheck = true;
+		this.lightTnt = true;
 	}
 
 	@Override
@@ -66,22 +69,14 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 
 
 	@Override
-	public void onCollideWithEntity(Entity entity) {
-		super.onCollideWithEntity(entity);
-		if (entity instanceof AvatarEntity) {
-			((AvatarEntity) entity).onFireContact();
-		}
-	}
-
-	@Override
 	public void onUpdate() {
-
 		super.onUpdate();
 
-		ignoreFrustumCheck = true;
-		setVelocity(velocity().times(0.99999));
+		motionX *= 0.975;
+		motionY *= 0.975;
+		motionZ *= 0.975;
 
-		if (velocity().sqrMagnitude() <= 0.5 * 0.5) setDead();
+		if (velocity().sqrMagnitude() <= 0.5 * 0.5) Dissipate();
 
 		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.5,
 				true);
@@ -91,7 +86,7 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 				setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.5));
 
 				// Try to light fires
-				/*if (sideHit != EnumFacing.DOWN && !world.isRemote) {
+				if (sideHit != EnumFacing.DOWN && !world.isRemote) {
 
 					BlockPos bouncingOff = getPosition().add(-sideHit.getXOffset(),
 							-sideHit.getYOffset(),
@@ -104,68 +99,22 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 
 					}
 
-				}**/
+				}
 
 			}
 		}
-		if (lightTrailingFire) {
-			//TODO: Use temp blocks.
+		if (lightTrailingFire && !world.isRemote) {
 			if (AvatarUtils.getRandomNumberInRange(1, 10) <= 5) {
 				BlockPos pos = getPosition();
 				if (BlockUtils.canPlaceFireAt(world, pos)) {
 					BlockTemp.createTempBlock(world, pos, 20, Blocks.FIRE.getDefaultState());
 				}
-				/*if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
-					world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-				}**/
 				BlockPos pos2 = getPosition().down();
 				if (BlockUtils.canPlaceFireAt(world, pos2)) {
 					BlockTemp.createTempBlock(world, pos2, 20, Blocks.FIRE.getDefaultState());
 				}
-				/*if (Blocks.FIRE.canPlaceBlockAt(world, pos2) && world.getBlockState(pos2).getBlock() == Blocks.AIR) {
-					world.setBlockState(pos2, Blocks.FIRE.getDefaultState());
-				}**/
 			}
 		}
-
-		/*if (!world.isRemote) {
-			if (getOwner() != null) {
-				//TODO: Get rid of this
-				AbilityData abilityData = AbilityData.get(getOwner(), getAbility().getName());
-
-				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-						entity -> entity != getOwner()
-								&& !(entity instanceof EntityFlames));
-
-				for (Entity entity : collided) {
-
-					entity.setFire((int) (3F * 1 + abilityData.getTotalXp() / 100f));
-
-					// Add extra damage
-					// Adding 0 since even though this doesn't affect health, will
-					// cause mobs to aggro
-
-					float additionalDamage = 0;
-					if (abilityData.getTotalXp() >= 50) {
-						additionalDamage = 2 + (abilityData.getTotalXp() - 50) / 25;
-					}
-					additionalDamage *= damageMult;
-					if (entity.attackEntityFrom(
-							AvatarDamageSource.causeFireShotDamage(entity, getOwner()),
-							additionalDamage)) {
-						BattlePerformanceScore.addSmallScore(getOwner());
-					}
-
-				}
-
-				abilityData.addXp(SKILLS_CONFIG.fireShotHit * collided.size());
-				if (getAbility() instanceof AbilityFireShot) {
-					if (!collided.isEmpty() && !abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) setDead();
-				}
-				else if (!collided.isEmpty()) setDead();
-			}
-		}**/
-
 	}
 
 	@Override
@@ -176,10 +125,8 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 				setDead();
 				spawnExtinguishIndicators();
 				return true;
-			}
-			else return false;
-		}
-		else {
+			} else return false;
+		} else {
 			setDead();
 			spawnExtinguishIndicators();
 			return true;
@@ -187,12 +134,12 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	}
 
 	@Override
-	protected boolean shouldDissipate() {
+	public boolean shouldDissipate() {
 		return true;
 	}
 
 	@Override
-	protected boolean shouldExplode() {
+	public boolean shouldExplode() {
 		return false;
 	}
 
@@ -202,7 +149,6 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		spawnExtinguishIndicators();
 		return true;
 	}
-
 
 	@Override
 	public boolean onMinorWaterContact() {
@@ -246,29 +192,13 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	}
 
 	@Override
-	protected int getNumberofParticles() {
+	public int getNumberofParticles() {
 		return 15;
 	}
 
 	@Override
-	protected double getParticleSpeed() {
+	public double getParticleSpeed() {
 		return 0.04;
-	}
-
-	@Override
-	public boolean onCollideWithSolid() {
-		if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
-			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
-			if (!data.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				setDead();
-				Dissipate();
-			}
-			return !data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
-		}
-		setDead();
-		Dissipate();
-		return true;
-
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -290,7 +220,20 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	}
 
 	@Override
-	protected Vec3d getKnockbackMult() {
-		return new Vec3d(STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push * 2);
+	public Vec3d getKnockbackMult() {
+		return new Vec3d(STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push / 2, STATS_CONFIG.fireShotSetttings.push * 2);
 	}
+
+	@Override
+	public boolean isPiercing() {
+		if (getOwner() != null && getAbility() instanceof AbilityFireShot) {
+			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
+			if (data != null)
+				return data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
+		}
+		return false;
+	}
+
+
+
 }

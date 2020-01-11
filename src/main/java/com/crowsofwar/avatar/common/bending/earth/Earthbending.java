@@ -17,28 +17,28 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 
 import java.awt.*;
 import java.util.UUID;
 
 public class Earthbending extends BendingStyle {
 
-	public static UUID ID = UUID.fromString("82ad13b5-4bbe-4eaf-8aa0-00b36b33aed0");
+	public static final UUID ID = UUID.fromString("82ad13b5-4bbe-4eaf-8aa0-00b36b33aed0");
 
 	private final BendingMenuInfo menu;
 
 	public Earthbending() {
-		addAbility("earth_control");
-		addAbility("mine_blocks");
-		addAbility("ravine");
-		addAbility("wall");
-		addAbility("earth_spikes");
-		addAbility("restore");
-
+		for (Ability ability : Abilities.getAbilitiesToRegister(getId()))
+			addAbility(ability.getName());
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);
 		Color gray = new Color(90, 90, 90);
@@ -70,4 +70,13 @@ public class Earthbending extends BendingStyle {
 		return ID;
 	}
 
+	@Override
+	public TextFormatting getTextFormattingColour() {
+		return TextFormatting.DARK_GREEN;
+	}
+
+	@Override
+	public SoundEvent getRadialMenuSound() {
+		return SoundEvents.BLOCK_GRASS_BREAK;
+	}
 }

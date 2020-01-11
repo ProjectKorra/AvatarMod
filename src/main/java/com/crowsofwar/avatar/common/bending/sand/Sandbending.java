@@ -1,9 +1,14 @@
 package com.crowsofwar.avatar.common.bending.sand;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 
 import java.awt.*;
 import java.util.UUID;
@@ -20,9 +25,8 @@ public class Sandbending extends BendingStyle {
 	public Sandbending() {
 		super(Earthbending.ID);
 
-		addAbility("sand_prison");
-		addAbility("sandstorm");
-
+		for (Ability ability : Abilities.getAbilitiesToRegister(getId()))
+			addAbility(ability.getName());
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);
 		Color gray = new Color(90, 90, 90);
@@ -51,5 +55,15 @@ public class Sandbending extends BendingStyle {
 	@Override
 	public UUID getId() {
 		return ID;
+	}
+
+	@Override
+	public TextFormatting getTextFormattingColour() {
+		return TextFormatting.GOLD;
+	}
+
+	@Override
+	public SoundEvent getRadialMenuSound() {
+		return SoundEvents.BLOCK_SAND_STEP;
 	}
 }

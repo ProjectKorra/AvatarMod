@@ -16,17 +16,17 @@ public class EntityEarthSpear extends EntityOffensive {
 
 
 	@Override
-	protected boolean shouldExplode() {
+	public boolean shouldExplode() {
 		return false;
 	}
 
 	@Override
-	protected boolean shouldDissipate() {
+	public boolean shouldDissipate() {
 		return false;
 	}
 
 	@Override
-	protected boolean isPiercing() {
+	public boolean isPiercing() {
 		return true;
 	}
 

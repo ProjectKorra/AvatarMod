@@ -12,6 +12,7 @@ import com.crowsofwar.avatar.common.entity.EntityLightCylinder;
 import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightCylinderBehaviour;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -184,7 +185,7 @@ public class WaterChargeHandler extends TickHandler {
 					Vec3d height = entity.getOwner().getPositionVector().add(0, entity.getOwner().getEyeHeight() - 0.15, 0);
 					Vec3d dist = cannon.getPositionVector().subtract(height).normalize();
 					entity.setPosition(height.add(dist.scale(0.075)));
-					AvatarUtils.setRotationFromPosition(entity, cannon);
+					AvatarEntityUtils.setRotationFromPosition(entity, cannon);
 				} else {
 					if (entity.ticksExisted > 1)
 						entity.setDead();

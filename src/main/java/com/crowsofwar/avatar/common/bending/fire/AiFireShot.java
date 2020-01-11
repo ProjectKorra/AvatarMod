@@ -30,7 +30,7 @@ public class AiFireShot extends BendingAi {
 			entity.rotationPitch = (float) toDegrees(rotations.x());
 
 			execAbility();
-			data.getMiscData().setAbilityCooldown(20);
+			data.getMiscData().setAbilityCooldown(40);
 
 		}
 	}

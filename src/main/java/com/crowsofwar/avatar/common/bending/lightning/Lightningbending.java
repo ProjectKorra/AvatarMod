@@ -16,11 +16,16 @@
 */
 package com.crowsofwar.avatar.common.bending.lightning;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.UUID;
 
@@ -29,18 +34,15 @@ import java.util.UUID;
  */
 public class Lightningbending extends BendingStyle {
 
-	public static UUID ID = UUID.fromString("a1e698cb-f945-4354-8e47-df13446d7da5");
+	public static final UUID ID = UUID.fromString("a1e698cb-f945-4354-8e47-df13446d7da5");
 
 	private final BendingMenuInfo menu;
 
 	public Lightningbending() {
-
 		super(Firebending.ID);
-		addAbility("lightning_redirect");
-		addAbility("lightning_spear");
-		addAbility("lightning_arc");
-		addAbility("lightning_raze");
 
+		for (Ability ability : Abilities.getAbilitiesToRegister(ID))
+			addAbility(ability.getName());
 		ThemeColor bkgd = new ThemeColor(0xEBF4F5, 0xDBE1E2);
 		ThemeColor edge = new ThemeColor(0xC5DDDF, 0xACBFC0);
 		ThemeColor icon = new ThemeColor(0xFFEBC2, 0xFBE9C3);
@@ -70,4 +72,13 @@ public class Lightningbending extends BendingStyle {
 		return ID;
 	}
 
+	@Override
+	public SoundEvent getRadialMenuSound() {
+		return SoundEvents.ENTITY_SHULKER_TELEPORT;
+	}
+
+	@Override
+	public TextFormatting getTextFormattingColour() {
+		return TextFormatting.AQUA;
+	}
 }

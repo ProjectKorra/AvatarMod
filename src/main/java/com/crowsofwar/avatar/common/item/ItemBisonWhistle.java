@@ -16,16 +16,11 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.BISON_SUMMONER;
-import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
-import static net.minecraft.util.EnumActionResult.*;
-
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
@@ -41,6 +36,12 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.BISON_SUMMONER;
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.stackCompound;
+import static net.minecraft.util.EnumActionResult.PASS;
+import static net.minecraft.util.EnumActionResult.SUCCESS;
+
 /**
  * ItemBow
  *
@@ -49,7 +50,7 @@ import java.util.UUID;
 public class ItemBisonWhistle extends Item implements AvatarItem {
 
 	public ItemBisonWhistle() {
-		setCreativeTab(AvatarItems.tabItems);
+		setCreativeTab(AvatarMod.tabItems);
 		setMaxStackSize(1);
 		setTranslationKey("bison_whistle");
 	}
@@ -116,7 +117,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity,
-	                                 int timeLeft) {
+									 int timeLeft) {
 
 		if (!world.isRemote) {
 
@@ -162,7 +163,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player,
-	                                                EnumHand hand) {
+													EnumHand hand) {
 
 		ItemStack stack = player.getHeldItem(hand);
 		if (isBound(stack)) {
@@ -184,7 +185,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 						UUID id = bison.getOwnerId();
 						String username = AccountUUIDs.getUsername(id);
 						MSG_BISON_TRANSFER_OFFLINE
-										.send(player, username == null ? "{error}" : username);
+								.send(player, username == null ? "{error}" : username);
 					}
 
 				}
@@ -211,7 +212,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> tooltip,
-	                           ITooltipFlag advanced) {
+							   ITooltipFlag advanced) {
 
 		if (isBound(stack)) {
 			tooltip.add(I18n.format("avatar.bisonWhistle.tooltipBound", getBisonName(stack)));

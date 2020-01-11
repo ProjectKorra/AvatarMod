@@ -136,8 +136,8 @@ public class EntityAiBisonBreeding extends EntityAIBase {
 
 	private int generateBreedTimer() {
 		Random random = bison.getRNG();
-		float min = MOBS_CONFIG.bisonBreedMinMinutes;
-		float max = MOBS_CONFIG.bisonBreedMaxMinutes;
+		float min = MOBS_CONFIG.bisonSettings.bisonBreedMinMinutes;
+		float max = MOBS_CONFIG.bisonSettings.bisonBreedMaxMinutes;
 		float minutes = min + random.nextFloat() * (max - min);
 		return (int) (minutes * 1200);
 	}

@@ -95,8 +95,8 @@ public class AbilityRestore extends Ability {
 	}
 
 	@Override
-	public int getTier() {
-		return 4;
+	public int getBaseTier() {
+		return 5;
 	}
 }
 

@@ -17,27 +17,31 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
-import com.crowsofwar.avatar.common.entity.EntityFireShooter;
+import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
-import com.crowsofwar.avatar.common.entity.data.FireShooterBehaviour;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -49,12 +53,10 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  */
 public class AbilityFireBlast extends Ability {
 
-	private ParticleSpawner spawner;
 
 	public AbilityFireBlast() {
 		super(Firebending.ID, "fire_blast");
 		requireRaytrace(-1, false);
-		spawner = new NetworkParticleSpawner();
 	}
 
 	@Override
@@ -80,50 +82,26 @@ public class AbilityFireBlast extends Ability {
 				lookPos = Vector.getEyePos(entity).plus(look.times(3));
 			}
 
-			removeExisting(ctx);
-
-
 			float damageMult = ctx.getLevel() >= 2 ? 2 : 1;
 			damageMult *= ctx.getPowerRatingDamageMod();
-			/*
-			List<Entity> fireArc = Raytrace.entityRaytrace(world, Vector.getEntityPos(entity).withY(entity.getEyeHeight()), Vector.getLookRectangular(entity).times(10), 3,
-					entity1 -> entity1 != entity);
 
-			if (fireArc.isEmpty()) {
-				if (ctx.getLevel() >= 2) {
-					for (Entity a : fireArc) {
-						if (a instanceof AvatarEntity) {
-							if (((AvatarEntity) a).getOwner() != entity) {
-								if (a instanceof EntityFireArc) {
-									((EntityFireArc) a).setOwner(entity);
-									((EntityFireArc) a).setBehavior(new FireArcBehavior.PlayerControlled());
-									((EntityFireArc) a).setAbility(this);
-									((EntityFireArc) a).setPosition(Vector.getLookRectangular(entity).times(1.5F));
-									((EntityFireArc) a).setDamageMult(damageMult);
-								}
-							}
-						}
-					}
-				}
+			if (ctx.getLevel() == 1) {
+				knockbackMult += 0.25;
+			}
+			if (ctx.getLevel() == 2) {
+				knockbackMult += 0.5;
+			}
+			if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+
+			}
+			if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+
 			}
 
-			EntityFireArc fire = new EntityFireArc(world);
-			if (lookPos != null) {
-				fire.setPosition(lookPos.x(), lookPos.y(), lookPos.z());
-				fire.setBehavior(new FireArcBehavior.PlayerControlled());
-				fire.setOwner(entity);
-				fire.setDamageMult(damageMult);
-				fire.setCreateBigFire(ctx.isMasterLevel(AbilityTreePath.FIRST));
-				fire.setAbility(this);
-				world.spawnEntity(fire);
-
-				data.addStatusControl(StatusControl.THROW_FIRE);
-			}
-**/
 			Vec3d height, rightSide;
 			if (entity instanceof EntityPlayer) {
-				height = entity.getPositionVector().add(0, 1.6, 0);
-				height = height.add(entity.getLookVec().scale(0.8));
+				height = entity.getPositionVector().add(0, 0.84, 0);
+				height = height.add(entity.getLookVec().scale(0.1));
 				//Right
 				if (entity.getPrimaryHand() == EnumHandSide.RIGHT) {
 					rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
@@ -135,8 +113,8 @@ public class AbilityFireBlast extends Ability {
 					rightSide = rightSide.add(height);
 				}
 			} else {
-				height = entity.getPositionVector().add(0, 1.6, 0);
-				height = height.add(entity.getLookVec().scale(0.8));
+				height = entity.getPositionVector().add(0, 0.84, 0);
+				height = height.add(entity.getLookVec().scale(0.1));
 				if (entity.getPrimaryHand() == EnumHandSide.RIGHT) {
 					rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
 					rightSide = rightSide.add(height);
@@ -146,12 +124,29 @@ public class AbilityFireBlast extends Ability {
 				}
 
 			}
-			EntityFireShooter shooter = new EntityFireShooter(world);
+
+			data.addTickHandler(TickHandlerController.FIREBLAST_UPDATE_TICK);
+			/*EntityFlamethrower fireblast = new EntityFlamethrower(world);
+			fireblast.setTier(getCurrentTier(ctx.getLevel()));
+			fireblast.setPosition(rightSide);
+			fireblast.setVelocity(entity.getLookVec().scale(4));
+			fireblast.setBehaviour(new FireblastBehaviour());
+			fireblast.setElement(new Firebending());
+			fireblast.setAbility(this);
+			fireblast.setLifeTime(10 + AvatarUtils.getRandomNumberInRange(0, 4));
+			fireblast.setExpandedHitbox(2, 2);
+			fireblast.setDamage(damage * damageMult);
+			fireblast.setEntitySize(0.5F);
+			fireblast.setXp(xp);
+			fireblast.setOwner(entity);
+			world.spawnEntity(fireblast);**/
+			entity.swingArm(EnumHand.MAIN_HAND);
+		/*	EntityFireShooter shooter = new EntityFireShooter(world);
 			shooter.setElement(new Firebending());
 			shooter.setOwner(entity);
 			shooter.setAbility(this);
 			shooter.setKnockbackMult(new Vec3d(knockbackMult, knockbackMult, knockbackMult));
-			shooter.setBehaviour(new FireBlastBehaviour());
+			shooter.setBehaviour(new FireBlastBehaviour());**/
 			//Vec3d vel = entity.getLookVec();
 			//vel.scale(20000);
 			//vel.add(world.rand.nextBoolean() ? world.rand.nextFloat() : -world.rand.nextFloat(), world.rand.nextBoolean() ? world.rand.nextFloat() : -world.rand.nextFloat(),
@@ -177,7 +172,7 @@ public class AbilityFireBlast extends Ability {
 	}
 
 	@Override
-	public int getTier() {
+	public int getBaseTier() {
 		return 2;
 	}
 
@@ -186,10 +181,67 @@ public class AbilityFireBlast extends Ability {
 		return new AiFireBlast(this, entity, bender);
 	}
 
-	public static class FireBlastBehaviour extends FireShooterBehaviour {
+	public static class FireblastBehaviour extends OffensiveBehaviour {
 
 		@Override
-		public Behavior onUpdate(EntityFireShooter entity) {
+		public Behavior onUpdate(EntityOffensive entity) {
+			entity.setEntitySize(entity.getAvgSize() * 1.075F);
+			entity.setVelocity(entity.getVelocity().scale(0.9375));
+
+			if (entity.velocity().magnitude() < 4)
+				entity.setDead();
+			if (entity.onGround)
+				entity.setDead();
+
+			World world = entity.world;
+			if (world.isRemote) {
+				if (entity.ticksExisted % 2 == 0) {
+					for (double angle = 0; angle < 360; angle += Math.max((int) (entity.getAvgSize() * 20), 5)) {
+						Vector position = Vector.getOrthogonalVector(entity.getLookVec(), angle, entity.getAvgSize());
+						position = position.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
+						position = position.plus(AvatarEntityUtils.getMiddleOfEntity(entity).x, AvatarEntityUtils.getMiddleOfEntity(entity).y,
+								AvatarEntityUtils.getMiddleOfEntity(entity).z);
+						double spawnX = position.x();
+						double spawnY = position.y();
+						double spawnZ = position.z();
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+								world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+								scale(entity.getAvgSize() * 1.25F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(255, 10, 5).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+								world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+								scale(entity.getAvgSize() * 1.25F).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(255, 10, 5).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+								world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+								scale(entity.getAvgSize() * 1.25F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+								20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+								world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+								scale(entity.getAvgSize() * 1.25F).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+								20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
+					}
+				}
+				for (int i = 0; i < 2; i++) {
+					AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+					double spawnX = boundingBox.getCenter().x + world.rand.nextGaussian() / 15;
+					double spawnY = boundingBox.getCenter().y + world.rand.nextGaussian() / 15;
+					double spawnZ = boundingBox.getCenter().z + world.rand.nextGaussian() / 15;
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+							scale(entity.getAvgSize() * 1.25F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(255, 10, 5).spawn(world);
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+							scale(entity.getAvgSize() * 1.25F).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(255, 10, 5).spawn(world);
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+							scale(entity.getAvgSize() * 1.25F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+							20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
+							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
+							scale(entity.getAvgSize() * 1.25F).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+							20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
+
+				}
+			}
 			return this;
 		}
 

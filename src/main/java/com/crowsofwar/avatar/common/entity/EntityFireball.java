@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import elucent.albedo.event.GatherLightsEvent;
@@ -56,6 +57,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -82,6 +84,7 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 		super(world);
 		setSize(.8f, .8f);
 		this.position = this.getPosition();
+		this.lightTnt = true;
 	}
 
 	@Override
@@ -98,8 +101,24 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 
 	@Override
 	public void onUpdate() {
-
 		super.onUpdate();
+
+		/*if (world.isRemote) {
+			for (double i = 0; i < width; i += 0.05) {
+				Random random = new Random();
+				AxisAlignedBB boundingBox = getEntityBoundingBox();
+				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).time(12).clr(255, 10, 5)
+						.scale(getSize() * 0.03125F * 2).element(getElement()).spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
+						.scale(getSize() * 0.03125F * 2).element(getElement()).spawn(world);
+			}
+		}**/
 		if (getBehavior() == null) {
 			this.setBehavior(new FireballBehavior.Thrown());
 		}
@@ -303,7 +322,6 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 					hitBox = ExplosionSize + 4;
 				}
 
-				this.setInvisible(true);
 				WorldServer World = (WorldServer) this.world;
 				World.spawnParticle(AvatarParticles.getParticleFlames(), posX, posY, posZ, getSize() * 8, 0, 0, 0,
 						getSize() / 25F);

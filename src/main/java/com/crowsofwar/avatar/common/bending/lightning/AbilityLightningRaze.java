@@ -125,12 +125,12 @@ public class AbilityLightningRaze extends Ability {
 	}
 
 	@Override
-	public int getTier() {
+	public int getBaseTier() {
 		return 3;
 	}
 
 	@Override
-	public int getParentTier() {
+	public int getBaseParentTier() {
 		return 5;
 	}
 }

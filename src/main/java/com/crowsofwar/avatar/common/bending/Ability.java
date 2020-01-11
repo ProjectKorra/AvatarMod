@@ -17,11 +17,9 @@
 
 package com.crowsofwar.avatar.common.bending;
 
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
-import com.crowsofwar.avatar.common.item.scroll.ItemScrollLightning;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLiving;
@@ -37,6 +35,8 @@ import java.util.UUID;
  * @author CrowsOfWar
  */
 public abstract class Ability {
+
+	//NOTE: No client side particles can be spawned in an ability class due to abilities being executed server-side.
 
 	private final UUID type;
 	private final String name;
@@ -124,15 +124,47 @@ public abstract class Ability {
 		return true;
 	}
 
-	public int getTier() {
+	public int getBaseTier() {
 		return 1;
+	}
+
+
+	public int getCurrentTier(int level) {
+		int tier = getBaseTier();
+		switch (level) {
+			default:
+				break;
+			case 2:
+				tier++;
+				break;
+			case 3:
+				tier += 2;
+				break;
+		}
+		return tier;
+	}
+
+	//Only for abilities in sub-elements.
+	public int getCurrentParentTier(int level) {
+		int tier = getBaseParentTier();
+		switch (level) {
+			default:
+				break;
+			case 2:
+				tier++;
+				break;
+			case 3:
+				tier += 2;
+				break;
+		}
+		return tier;
 	}
 
 	public BendingStyle getElement() {
 		return BendingStyles.get(getBendingId());
 	}
 
-	public int getParentTier() {
+	public int getBaseParentTier() {
 		if (this.getElement().getParentBendingId() != null) {
 			return 1;
 		}
@@ -144,28 +176,13 @@ public abstract class Ability {
 			if (stack.getItem() instanceof ItemScroll) {
 				Scrolls.ScrollType type = Scrolls.getTypeForStack(stack);
 				assert type != null;
-				if (type.getBendingId() == getBendingId() || type == Scrolls.ScrollType.ALL) {
-					if (level < 1) {
-						return Scrolls.getTierForStack(stack) >= getTier();
-					}
-					if (level == 1) {
-						return Scrolls.getTierForStack(stack) >= getTier() + 1;
-					}
-					return Scrolls.getTierForStack(stack) >= getTier() + 2;
+				if (type.getBendingId() == getBendingId() || type == Scrolls.ScrollType.ALL)
+					return Scrolls.getTierForStack(stack) >= getCurrentTier(level);
 
-				}
-				if (getParentTier() > 0) {
+				if (getBaseParentTier() > 0)
 					if (Objects.requireNonNull(BendingStyles.get(getBendingId())).getParentBendingId() == type
-							.getBendingId()) {
-						if (level < 1) {
-							return Scrolls.getTierForStack(stack) >= getParentTier();
-						}
-						if (level == 1) {
-							return Scrolls.getTierForStack(stack) >= getParentTier() + 1;
-						}
-						return Scrolls.getTierForStack(stack) >= getParentTier() + 2;
-					}
-				}
+							.getBendingId())
+						return Scrolls.getTierForStack(stack) >= getCurrentParentTier(level);
 			}
 		}
 		return false;

@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.item;
 
+import com.crowsofwar.avatar.AvatarMod;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -29,7 +30,7 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 	public ItemBisonSaddle() {
 		setTranslationKey("bison_saddle");
 		setMaxStackSize(1);
-		setCreativeTab(AvatarItems.tabItems);
+		setCreativeTab(AvatarMod.tabItems);
 		setMaxDamage(0);
 		setHasSubtypes(true);
 	}
@@ -74,7 +75,7 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 		private final float armorPoints;
 		private final int maxPassengers;
 
-		private SaddleTier(float armorPoints, int maxPassengers) {
+		SaddleTier(float armorPoints, int maxPassengers) {
 			this.armorPoints = armorPoints;
 			this.maxPassengers = maxPassengers;
 		}

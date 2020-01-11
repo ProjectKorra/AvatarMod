@@ -26,9 +26,12 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityFlames;
+import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -73,54 +76,50 @@ public class AbilityFireShot extends Ability {
 		double damageMult = bender.getDamageMult(Firebending.ID);
 		float damage = STATS_CONFIG.fireShotSetttings.damage;
 		float chi = STATS_CONFIG.chiFireShot;
-		float xp  = SKILLS_CONFIG.fireShotHit;
+		float xp = SKILLS_CONFIG.fireShotHit;
 		if (ctx.getLevel() == 1) {
 			speed += 0.25F;
 			chi += 0.5F;
-			damageMult += 0.5;
 			damage += 2;
 			xp -= 0.5F;
 		}
 		if (ctx.getLevel() == 2) {
 			speed += 0.5F;
 			chi += 1;
-			damageMult += 1;
 			damage += 4;
 			xp -= 1.5F;
 		}
 		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			speed += 0.75F;
 			chi += 1.5F;
-			damageMult += 2;
 			damage += 7;
 		}
 		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			chi += 2F;
 		}
 		damage += abilityData.getTotalXp() / 50;
+		if (world.isRemote)
+			System.out.println("Client-Side LookVec: " + entity.getLookVec());
 		if (bender.consumeChi(chi)) {
 			if (!ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				EntityFlames flames = new EntityFlames(world);
-				flames.setVelocity(entity.getLookVec().scale(speed));
-				flames.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight(), 0).add(entity.getLookVec().scale(0.05)));
+				flames.setPosition(Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(0.05)));
 				flames.setOwner(entity);
+				flames.setEntitySize(0.1F, 0.1F);
 				flames.setReflect(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
-				flames.rotationPitch = entity.rotationPitch;
-				flames.rotationYaw = entity.rotationYaw;
 				flames.setAbility(this);
 				flames.setXp(xp);
+				flames.setVelocity(entity.getLookVec().scale(speed));
 				flames.setLifeTime((int) abilityData.getTotalXp() + 60);
 				flames.setTrailingFire(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
-				//TODO: Remove all damage calculations in EntityFlames
 				flames.setFireTime((int) (4F * 1 + abilityData.getTotalXp() / 50f));
 				flames.setDamage(damage * (float) damageMult);
 				flames.setElement(new Firebending());
-				if (!world.isRemote)
-					world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
-							world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
+				flames.setPowerRating(10);
+				world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
+						world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
 				world.spawnEntity(flames);
 			} else {
-				//TODO: Fix particle spawning
 				EntityShockwave wave = new EntityShockwave(world);
 				wave.setOwner(entity);
 				wave.rotationPitch = entity.rotationPitch;
@@ -139,9 +138,9 @@ public class AbilityFireShot extends Ability {
 				wave.setParticleSpeed(0.18F);
 				wave.setParticleWaves(2);
 				wave.setParticleAmount(10);
-				if (!world.isRemote)
-					world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
-							world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
+
+				world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
+						world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
 				world.spawnEntity(wave);
 			}
 		}
@@ -153,25 +152,26 @@ public class AbilityFireShot extends Ability {
 		return new AiFireShot(this, entity, bender);
 	}
 
-	public static class FireShockwaveBehaviour extends ShockwaveBehaviour {
+	public static class FireShockwaveBehaviour extends OffensiveBehaviour {
 
 		@Override
-		public Behavior onUpdate(EntityShockwave entity) {
+		public Behavior onUpdate(EntityOffensive entity) {
 			if (entity.getOwner() != null) {
+				if (entity instanceof EntityShockwave) {
 				for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.ticksExisted * 3)) {
-					int x = entity.posX < 0 ? (int) (entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle) - 1)
-							: (int) (entity.posX + ((entity.ticksExisted * entity.getSpeed())) * Math.sin(angle));
-					int y = (int) (entity.posY - 0.5);
-					int z = entity.posZ < 0 ? (int) (entity.posZ + ((entity.ticksExisted * entity.getSpeed()) * Math.cos(angle) - 1))
-							: (int) (entity.posZ + ((entity.ticksExisted * entity.getSpeed())) * Math.cos(angle));
+					int x = entity.posX < 0 ? (int) (entity.posX + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed())) * Math.sin(angle) - 1)
+							: (int) (entity.posX + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle)));
+					int z = entity.posZ < 0 ? (int) (entity.posZ + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle) - 1))
+							: (int) (entity.posZ + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed())) * Math.cos(angle));
 
 					BlockPos spawnPos = new BlockPos(x, (int) (entity.posY), z);
 					if (BlockUtils.canPlaceFireAt(entity.world, spawnPos)) {
 						if (spawnPos != entity.getPosition()) {
-							int time = entity.ticksExisted * entity.getSpeed() >= entity.getRange() - 0.2 ? 120 : 10;
+							int time = entity.ticksExisted * ((EntityShockwave) entity).getSpeed() >= ((EntityShockwave) entity).getRange() - 0.2 ? 120 : 10;
 							BlockTemp.createTempBlock(entity.world, spawnPos, time, Blocks.FIRE.getDefaultState());
 						}
 					}
+				}
 
 				}
 			}

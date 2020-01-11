@@ -48,8 +48,10 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -66,6 +68,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+
+import javax.annotation.Nonnull;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -85,10 +89,18 @@ public class AvatarMod {
 
 	public static SimpleNetworkWrapper network;
 
-	public static boolean codeChickenLibCompat;
+	public static boolean codeChickenLibCompat, realFirstPersonRender2Compat;
 
 	private int nextMessageID = 1;
 	private int nextEntityID = 1;
+
+	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
+		@Nonnull
+		@Override
+		public ItemStack createIcon() {
+			return AvatarItems.stackScroll;
+		}
+	};
 
 	private static void registerAbilities() {
 		Abilities.register(new AbilityAirGust());
@@ -125,7 +137,6 @@ public class AvatarMod {
 		Abilities.register(new AbilityExplosivePillar());
 		Abilities.register(new AbilitySandstorm());
 		Abilities.register(new AbilityInfernoPunch());
-		//Abilities.register(new AbilityBoulderRing());
 		Abilities.register(new AbilityLightningRaze());
 		Abilities.register(new AbilityAirBurst());
 	}
@@ -145,6 +156,8 @@ public class AvatarMod {
 	public void preInit(FMLPreInitializationEvent e) {
 
 		codeChickenLibCompat = Loader.isModLoaded("codechickenlib");
+		//Used for particle and inferno punch shenanigans
+		realFirstPersonRender2Compat = Loader.isModLoaded("rfp2");
 
 		AvatarLog.log = e.getModLog();
 
@@ -213,6 +226,7 @@ public class AvatarMod {
 		registerEntity(EntityWaterArc.class, "WaterArc", 128, 1000, true);
 		registerEntity(EntityAirGust.class, "AirGust", 128, 1000, true);
 		registerEntity(EntityRavine.class, "Ravine", 128, 1000, true);
+		//For some reason, there's random desync for its position when spawning it. Setting it to 1 fixes it.
 		registerEntity(EntityFlames.class, "Flames", 128, 1000, true);
 		registerEntity(EntityWave.class, "Wave", 128, 1000, true);
 		registerEntity(EntityWaterBubble.class, "WaterBubble", 128, 1000, true);
@@ -243,6 +257,7 @@ public class AvatarMod {
 		registerEntity(EntityShockwave.class, "Shockwave", 128, 1000, false);
 		registerEntity(EntityLightOrb.class, "LightOrb", 128, 1000, true);
 		registerEntity(EntityLightCylinder.class, "LightCylinder", 128, 1000, true);
+		registerEntity(EntityFlamethrower.class, "Flamethrower", 128, 1000, true);
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 1, 3, EnumCreatureType.CREATURE, //
 				SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, TAIGA_HILLS, ICE_MOUNTAINS, REDWOOD_TAIGA_HILLS, MUTATED_EXTREME_HILLS,
@@ -259,6 +274,7 @@ public class AvatarMod {
 		ConfigMobs.load();
 
 		proxy.init();
+		proxy.registerParticles();
 
 	}
 

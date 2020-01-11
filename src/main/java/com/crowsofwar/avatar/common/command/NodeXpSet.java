@@ -22,11 +22,10 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.event.AbilityLevelEvent;
 import com.crowsofwar.avatar.common.event.AbilityUnlockEvent;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.gorecore.tree.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.List;
 
@@ -66,7 +65,7 @@ public class NodeXpSet extends NodeFunctional {
 
 		BendingData data = BendingData.get(call.getFrom().getEntityWorld(), playerName);
 		AbilityData abilityData = data.getAbilityData(ability);
-		EntityPlayer player = AvatarUtils.getPlayerFromUsername(playerName);
+		EntityPlayer player = AvatarEntityUtils.getPlayerFromUsername(playerName);
 
 		int level;
 		AbilityTreePath path = AbilityTreePath.MAIN;

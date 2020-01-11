@@ -17,8 +17,11 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -83,9 +86,8 @@ public class BendingData {
 	//TODO: Fully implement this everywhere
 	@Nullable
 	public static BendingData getFromEntity(@Nonnull EntityLivingBase entity) {
-		if (entity instanceof FakePlayer) {
+		if (!Bender.isBenderSupported(entity))
 			return null;
-		}
 		else return get(entity);
 	}
 
@@ -127,6 +129,13 @@ public class BendingData {
 	// ================================================================================
 	// BENDINGS METHODS
 	// ================================================================================
+
+	/**
+	 * Checks if the player has any elements.
+	 */
+	public boolean hasElements() {
+		return !bendings.isEmpty();
+	}
 
 	/**
 	 * Checks if the player has that bending style.
@@ -232,6 +241,11 @@ public class BendingData {
 	}
 
 	// ================================================================================
+	// MISCELLANEOUS
+	// ================================================================================
+
+
+	// ================================================================================
 	// STATUS CONTROLS
 	// ================================================================================
 
@@ -275,6 +289,7 @@ public class BendingData {
 	public boolean hasAbilityData(Ability ability) {
 		return hasAbilityData(ability.getName());
 	}
+
 
 	/**
 	 * Retrieves data about the given ability. Will get data if necessary.

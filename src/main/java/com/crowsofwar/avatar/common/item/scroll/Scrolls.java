@@ -19,15 +19,15 @@ import net.minecraft.item.ItemStack;
 
 public class Scrolls {
 
-    public static ItemScroll WATER = new ItemScrollWater();
-    public static ItemScroll EARTH = new ItemScrollEarth();
-    public static ItemScroll FIRE = new ItemScrollFire();
-    public static ItemScroll AIR = new ItemScrollAir();
-    public static ItemScroll COMBUSTION = new ItemScrollCombustion();
-    public static ItemScroll SAND = new ItemScrollSand();
-    public static ItemScroll ICE = new ItemScrollIce();
-    public static ItemScroll LIGHTNING = new ItemScrollLightning();
-    public static ItemScroll ALL = new ItemScrollAll();
+    public static ItemScroll WATER;
+    public static ItemScroll EARTH;
+    public static ItemScroll FIRE;
+    public static ItemScroll AIR;
+    public static ItemScroll COMBUSTION;
+    public static ItemScroll SAND;
+    public static ItemScroll ICE;
+    public static ItemScroll LIGHTNING;
+    public static ItemScroll ALL;
 
     public static ItemScroll getItemForType(ScrollType type) {
         switch (type) {

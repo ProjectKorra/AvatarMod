@@ -96,16 +96,12 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
 
 			time++;
-
-			if (!entity.world.isRemote && time > 200) {
-				entity.onCollideWithSolid();
-
-			}
+			entity.noClip = false;
 
 			World world = entity.world;
 			if (!entity.isDead && !world.isRemote) {
-				AxisAlignedBB box = new AxisAlignedBB(entity.posX + entity.getSize(), entity.posY + entity.getSize(), entity.posZ + entity.getSize(),
-						entity.posX - entity.getSize(), entity.posY - entity.getSize(), entity.posZ - entity.getSize());
+				AxisAlignedBB box = new AxisAlignedBB(entity.posX + entity.getAvgSize(), entity.posY + entity.getAvgSize(), entity.posZ + entity.getAvgSize(),
+						entity.posX - entity.getAvgSize(), entity.posY - entity.getAvgSize(), entity.posZ - entity.getAvgSize());
 				List<Entity> collidedList = world.getEntitiesWithinAABB(Entity.class,
 						box);
 				if (!collidedList.isEmpty()) {
@@ -126,36 +122,9 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 
 		private void collision(Entity collided, EntityLightningSpear entity, boolean triggerGroupAttack) {
-			if (entity.canCollideWith(collided) && collided.canBeCollidedWith() && collided.canBePushed() && collided != entity.getOwner() && collided != entity) {
+			//TODO: Move all of this to the entity class.
+			if (entity.canDamageEntity(collided) && collided != entity.getOwner() && collided != entity) {
 
-				if (collided.attackEntityFrom(AvatarDamageSource.causeLightningDamage(collided, entity.getOwner()),
-						entity.getDamage())) {
-					BattlePerformanceScore.addMediumScore(entity.getOwner());
-				}
-				Vector motion = entity.velocity().dividedBy(40);
-				motion = motion.times(STATS_CONFIG.lightningSpearSettings.push).withY(0.04);
-				collided.addVelocity(motion.x(), motion.y(), motion.z());
-
-				BendingData data = Objects.requireNonNull(Bender.get(entity.getOwner())).getData();
-				if (!entity.world.isRemote && data != null) {
-					float xp = SKILLS_CONFIG.lightningspearHit;
-					data.getAbilityData("lightning_spear").addXp(xp);
-					if (!data.getAbilityData("lightning_spear").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-						entity.LightningBurst();
-						entity.world.playSound(null,collided.posX, entity.posY, collided.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 2.0F,
-								(1.0F + (entity.world.rand.nextFloat() - entity.world.rand.nextFloat()) * 0.2F));
-						entity.removeStatCtrl();
-
-					}
-					else {
-						if (entity.world instanceof WorldServer) {
-							WorldServer World = (WorldServer) entity.world;
-							World.playSound(null,collided.posX, entity.posY, collided.posZ, SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.BLOCKS, 2.0F,
-									(1.0F + (entity.world.rand.nextFloat() - entity.world.rand.nextFloat()) * 0.2F));
-							World.spawnParticle(AvatarParticles.getParticleElectricity(), collided.posX, entity.posY, collided.posZ, 10, 0, 0, 0, 0.025);
-						}
-					}
-				}
 			}
 
 
@@ -178,7 +147,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				}
 
 			}
-			if (!entity.world.isRemote && !entity.isPiercing()) entity.setDead();
+		//	if (!entity.world.isRemote && !entity.isPiercing()) entity.setDead();
 
 		}
 
@@ -211,7 +180,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
 			EntityLivingBase owner = entity.getOwner();
 
-			if (owner == null) return this;
+			if (owner == null || entity.world.isRemote) return this;
 
 			BendingData data = BendingData.get(owner);
 			if (!data.hasStatusControl(StatusControl.THROW_LIGHTNINGSPEAR)) {
@@ -228,7 +197,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			} else {
 				Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
 						Math.toRadians(owner.rotationPitch));
-				target = Vector.getEyePos(owner).plus(look.times(1 + entity.getSize()));
+				target = Vector.getEyePos(owner).plus(look.times(1 + entity.getAvgSize()));
 			}
 
 			assert target != null;
@@ -239,9 +208,13 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			Vector direction = entity.position().minus(Vector.getEyePos(owner)).toSpherical();
 			entity.rotationYaw = (float) Math.toDegrees(direction.y());
 			entity.rotationPitch = (float) Math.toDegrees(direction.x());
+			//entity.rotationPitch = owner.rotationPitch;
+			//entity.rotationYaw = owner.rotationYaw;
+
+			entity.noClip = true;
 
 
-			float size = entity.getSize();
+			float size = entity.getAvgSize();
 			float damage = entity.getDamage();
 
 			if (entity.getAbility() instanceof AbilityLightningSpear && !entity.world.isRemote) {
@@ -264,7 +237,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				}
 			}
 			if (size < maxSize && entity.ticksExisted % 4 == 0) {
-				entity.setSize(size + 0.005F);
+				entity.setEntitySize(size + 0.005F);
 			}
 			if (damage < maxDamage && entity.ticksExisted % 4 == 0) {
 				entity.setDamage(damage + 0.005F);

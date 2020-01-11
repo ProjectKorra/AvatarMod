@@ -217,7 +217,7 @@ public class AbilityCreateWave extends Ability {
 	}
 
 	@Override
-	public int getTier() {
+	public int getBaseTier() {
 		return 2;
 	}
 

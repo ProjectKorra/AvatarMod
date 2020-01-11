@@ -177,7 +177,15 @@ public class AbilityData {
 	 * AND current xp. Maximum value is 136.
 	 */
 	public float getTotalXp() {
-		return level * 33 + xp * 33f / 100;
+		return level * 33 + xp * 33F / 100;
+	}
+
+	/**
+	 *
+	 * @return Returns a modifier based on the current xp, from 1 to 1.36.
+	 */
+	public float getXpModifier() {
+		return getTotalXp() / 100 < 1 ? 1 : getTotalXp() / 100;
 	}
 
 	public float getXp() {

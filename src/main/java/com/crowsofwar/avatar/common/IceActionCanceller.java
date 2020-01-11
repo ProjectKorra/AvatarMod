@@ -57,8 +57,12 @@ public class IceActionCanceller {
 	@SubscribeEvent
 	public static void onJump(LivingJumpEvent e) {
 		EntityLivingBase entity = e.getEntityLiving();
-		if (isTrapped(entity)) {
-			entity.motionY = 0;
+		if (isTrapped(entity) && entity.onGround) {
+			entity.motionY *= 0;
+		}
+		else if (isTrapped(entity)) {
+			entity.motionX *= 0;
+			entity.motionZ *= 0;
 		}
 	}
 

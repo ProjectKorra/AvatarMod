@@ -1,33 +1,23 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.MobEffects;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.List;
+public class EntityShockwave extends EntityOffensive {
 
-import static com.crowsofwar.avatar.common.bending.BattlePerformanceScore.SCORE_MOD_MEDIUM;
-import static com.crowsofwar.avatar.common.bending.BattlePerformanceScore.SCORE_MOD_SMALL;
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-
-public class EntityShockwave extends AvatarEntity {
+	//TODO: A way to put out fires??
 
 	private static final DataParameter<ShockwaveBehaviour> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityShockwave.class, ShockwaveBehaviour.DATA_SERIALIZER);
@@ -48,6 +38,8 @@ public class EntityShockwave extends AvatarEntity {
 	//Whether or not to use a sphere of particles instead of a circular ring
 	private static final DataParameter<Float> SYNC_RANGE = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.FLOAT);
 	//The range of the shockwave/how far it'll go before dissipating
+	private static final DataParameter<Boolean> SYNC_RENDER_NORMAL = EntityDataManager.createKey(EntityShockwave.class, DataSerializers.BOOLEAN);
+	//Whether you want to use the shockwave render class or use the ParticleBuilder system in your behaviour class.
 
 	public float damage;
 	//The amount of damage the shockwave will do
@@ -85,16 +77,8 @@ public class EntityShockwave extends AvatarEntity {
 		dataManager.register(SYNC_SPEED, 0.8F);
 		dataManager.register(SYNC_IS_SPHERE, false);
 		dataManager.register(SYNC_RANGE, 4F);
-		dataManager.register(SYNC_BEHAVIOR, new ShockwaveBehaviour.Idle());
+		dataManager.register(SYNC_RENDER_NORMAL, true);
 
-	}
-
-	public void setFireTime(int time) {
-		this.fireTime = time;
-	}
-
-	public void setPerformanceAmount(int amount) {
-		this.performanceAmount = amount;
 	}
 
 	public float getParticleController() {
@@ -114,12 +98,12 @@ public class EntityShockwave extends AvatarEntity {
 		dataManager.set(SYNC_PARTICLE, particle.getParticleName());
 	}
 
-	public void setParticleWaves(int waves) {
-		dataManager.set(SYNC_PARTICLE_WAVES, waves);
-	}
-
 	public int getParticleWaves() {
 		return dataManager.get(SYNC_PARTICLE_WAVES);
+	}
+
+	public void setParticleWaves(int waves) {
+		dataManager.set(SYNC_PARTICLE_WAVES, waves);
 	}
 
 	public int getParticleAmount() {
@@ -128,14 +112,6 @@ public class EntityShockwave extends AvatarEntity {
 
 	public void setParticleAmount(int amount) {
 		dataManager.set(SYNC_PARTICLE_AMOUNT, amount);
-	}
-
-	public void setBehaviour(ShockwaveBehaviour behaviour) {
-		dataManager.set(SYNC_BEHAVIOR, behaviour);
-	}
-
-	public ShockwaveBehaviour getBehaviour() {
-		return dataManager.get(SYNC_BEHAVIOR);
 	}
 
 	public double getParticleSpeed() {
@@ -170,18 +146,6 @@ public class EntityShockwave extends AvatarEntity {
 		this.knockbackHeight = height;
 	}
 
-	public void setKnockbackMult(Vec3d mult) {
-		this.knockbackMult = mult;
-	}
-
-	public double getDamage() {
-		return damage;
-	}
-
-	public void setDamage(float damage) {
-		this.damage = damage;
-	}
-
 	public boolean getSphere() {
 		return dataManager.get(SYNC_IS_SPHERE);
 	}
@@ -192,6 +156,14 @@ public class EntityShockwave extends AvatarEntity {
 
 	public void setDamageSource(DamageSource source) {
 		this.source = source;
+	}
+
+	public void setRenderNormal(boolean normal) {
+		dataManager.set(SYNC_RENDER_NORMAL, normal);
+	}
+
+	public boolean shouldRenderNormal() {
+		return dataManager.get(SYNC_RENDER_NORMAL);
 	}
 
 	@Override
@@ -207,7 +179,6 @@ public class EntityShockwave extends AvatarEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		setBehaviour((ShockwaveBehaviour) getBehaviour().onUpdate(this));
 
 		this.motionX = this.motionY = this.motionZ = 0;
 
@@ -217,57 +188,105 @@ public class EntityShockwave extends AvatarEntity {
 		if (ticksExisted > 140) {
 			setDead();
 		}
+	}
 
-		if (!world.isRemote) {
-			AxisAlignedBB box = new AxisAlignedBB(posX + (ticksExisted * getSpeed()), posY + 1.5, posZ + (ticksExisted * getSpeed()),
-					posX - (ticksExisted * getSpeed()), posY - 1.5, posZ - (ticksExisted * getSpeed()));
+	@Override
+	public double getExpandedHitboxWidth() {
+		return (ticksExisted * getSpeed());
+	}
 
-			List<Entity> targets = world.getEntitiesWithinAABB(
-					Entity.class, box);
+	@Override
+	public double getExpandedHitboxHeight() {
+		return (ticksExisted * getSpeed());
+	}
 
-			targets.remove(getOwner());
+	@Override
+	public DamageSource getDamageSource(Entity target) {
+		return getSphere() ? AvatarDamageSource.causeSphericalShockwaveDamage(target, getOwner(), source)
+				: AvatarDamageSource.causeShockwaveDamage(target, getOwner(), source);
+	}
 
-			if (!targets.isEmpty()) {
-				for (Entity target : targets) {
-					if (this.canCollideWith(target) && target != this) {
-						if (this.canDamageEntity(target)) {
-							DamageSource ds = getSphere() ? AvatarDamageSource.causeSphericalShockwaveDamage(target, getOwner(), source) : AvatarDamageSource.causeShockwaveDamage(target, getOwner(), source);
-							if (target.attackEntityFrom(ds, damage)) {
-								int amount = performanceAmount > SCORE_MOD_SMALL ? performanceAmount : (int) SCORE_MOD_SMALL;
-								amount = amount > SCORE_MOD_MEDIUM ? (int) SCORE_MOD_MEDIUM : performanceAmount;
-								BattlePerformanceScore.addScore(getOwner(), amount);
-								target.setFire(fireTime);
-								if (getAbility() != null && getAbility() instanceof AbilityAirBurst) {
-									AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
-									aD.addXp(SKILLS_CONFIG.airBurstHit - aD.getLevel());
-									if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST) && target instanceof EntityLivingBase) {
-										((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50));
-										((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 50));
-										((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 50));
-									}
-								}
-							}
-						}
-						double xSpeed = getSphere() ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted * getSpeed()) :
-								Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().x() * (ticksExisted / 5F * getSpeed());
-						double ySpeed = Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().y() * (ticksExisted / 2F * getSpeed()); // Throws target into the air.
-						double zSpeed = getSphere() ? Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted * getSpeed()) :
-								Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().z() * (ticksExisted / 5F * getSpeed());
-						if (knockbackHeight != 0) {
-							ySpeed = ySpeed > knockbackHeight ? ySpeed : knockbackHeight;
-						}
-						xSpeed *= knockbackMult.x;
-						ySpeed *= knockbackMult.y;
-						zSpeed *= knockbackMult.z;
-						target.motionX += xSpeed;
-						target.motionY += ySpeed;
-						target.motionZ += zSpeed;
+	@Override
+	public Vec3d getKnockback(Entity target) {
+		double dist = (getExpandedHitboxWidth() - target.getDistance(this)) > 1 ? (getExpandedHitboxWidth() - target.getDistance(this)) : 1;
+		Vec3d velocity = target.getPositionVector().subtract(getPositionVector());
+		velocity = velocity.scale(dist).add(0, getKnockbackHeight(), 0);
+		double y = velocity.y;
+		y = getKnockbackHeight() != 0 ? Math.min(y * getKnockbackMult().y, getKnockbackHeight()) : y;
+		return new Vec3d(velocity.x, y, velocity.z);
+	}
 
-						AvatarUtils.afterVelocityAdded(target);
-					}
-				}
-			}
-		}
+	@Override
+	public Vec3d getKnockbackMult() {
+		double amount = getSphere() ? (ticksExisted * getSpeed()) * 12.5 : ticksExisted * 10 * getSpeed();
+		return new Vec3d(amount * knockbackMult.x, amount * knockbackMult.y, amount * knockbackMult.z);
+	}
+
+	public void setKnockbackMult(Vec3d mult) {
+		this.knockbackMult = mult;
+	}
+
+	@Override
+	public int getPerformanceAmount() {
+		return performanceAmount;
+	}
+
+	public void setPerformanceAmount(int amount) {
+		this.performanceAmount = amount;
+	}
+
+	@Override
+	public float getXpPerHit() {
+		return 4;
+	}
+
+	@Override
+	public int getFireTime() {
+		return fireTime;
+	}
+
+	public void setFireTime(int time) {
+		this.fireTime = time;
+	}
+
+	@Override
+	public boolean canCollideWith(Entity entity) {
+		return super.canCollideWith(entity) || entity instanceof EntityArrow || entity instanceof EntityThrowable;
+	}
+
+	@Override
+	public SoundEvent[] getSounds() {
+		return new SoundEvent[0];
+	}
+
+	@Override
+	public void spawnExplosionParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public void spawnDissipateParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public void spawnPiercingParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public boolean shouldDissipate() {
+		return false;
+	}
+
+	@Override
+	public boolean shouldExplode() {
+		return false;
+	}
+
+	@Override
+	public boolean isShockwave() {
+		return true;
 	}
 }
 

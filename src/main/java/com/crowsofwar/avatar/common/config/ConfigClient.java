@@ -69,6 +69,12 @@ public class ConfigClient {
 	@Load
 	public FireRenderSettings fireRenderSettings = new FireRenderSettings();
 
+	@Load
+	public AirRenderSettings airRenderSettings = new AirRenderSettings();
+
+	@Load
+	public ParticleRenderSettings particleSettings = new ParticleRenderSettings();
+
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
 
@@ -173,7 +179,30 @@ public class ConfigClient {
 		public final boolean fireBallSphere = false;
 
 		@Load
+		public final boolean originalFireball = true;
+
+		@Load
 		public final boolean infernoPunchSphere = false;
+
+		@Load
+		public final boolean showInfernoPunchOrb = false;
+
+		@Load
+		public final boolean useFlamethrowerParticles = true;
+	}
+
+	public static class AirRenderSettings {
+		@Load
+		public final boolean airBurstSphere = true;
+
+	}
+
+	public static class ParticleRenderSettings {
+		@Load
+		public final boolean voxelFlashParticles = false;
+
+		@Load
+		public final boolean squareFlashParticles = false;
 	}
 
 }

@@ -222,12 +222,14 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	@Override
 	public void handleKeyboardInput() throws IOException {
 		super.handleKeyboardInput();
-		if (Keyboard.getEventKey() == mc.gameSettings.keyBindLeft.getKeyCode() && mc.gameSettings.keyBindLeft.isKeyDown()) {
-			scroll += 40;
-		}
-		if (Keyboard.getEventKey() == mc.gameSettings.keyBindRight.getKeyCode() && mc.gameSettings.keyBindRight.isKeyDown()) {
-			scroll -= 40;
-		}
+		boolean minecraftLeft = Keyboard.getEventKey() == mc.gameSettings.keyBindLeft.getKeyCode() && mc.gameSettings.keyBindLeft.isKeyDown();
+		boolean keyboardLeft = Keyboard.getEventKey() == Keyboard.KEY_LEFT && Keyboard.getEventKeyState();
+		boolean minecraftRight = Keyboard.getEventKey() == mc.gameSettings.keyBindRight.getKeyCode() && mc.gameSettings.keyBindRight.isKeyDown();
+		boolean keyboardRight = Keyboard.getEventKey() == Keyboard.KEY_RIGHT && Keyboard.getEventKeyState();
+		if (minecraftLeft || keyboardLeft)
+			scroll += 20;
+		if (minecraftRight || keyboardRight)
+			scroll -= 20;
 	}
 
 	@Override

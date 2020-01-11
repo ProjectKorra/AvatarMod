@@ -25,7 +25,7 @@ public class AbilityLightningRedirect extends Ability {
 
 
 	@Override
-	public int getParentTier() {
+	public int getBaseParentTier() {
 		return 3;
 	}
 }

@@ -40,7 +40,7 @@ public class AvatarBlocks {
 	@SubscribeEvent
 	public void registerBlocks(RegistryEvent.Register<Block> e) {
 		e.getRegistry().register(BLOCK_TEMP);
-		GameRegistry.registerTileEntity(TileBlockTemp.class, "avatarmod_block_temp");
+		GameRegistry.registerTileEntity(TileBlockTemp.class, "avatarmod:block_temp");
 	}
 
 	@SubscribeEvent

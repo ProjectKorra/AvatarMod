@@ -70,6 +70,21 @@ avatar.spec.lvl4_2=level IV, second path
 avatar.cmd.xpset=Set [value]${player}[/value]'s [value]${ability}[/value] progress to [value][translate=avatar.spec.${spec}][/value]
 avatar.cmd.noAbility=There isn't an ability called %s
 
+avatar.spec.tier1=Tier I
+avatar.spec.tier2=Tier II
+avatar.spec.tier3=Tier III
+avatar.spec.tier4=Tier IV
+avatar.spec.tier5=Tier V
+avatar.spec.tier6=Tier VI
+avatar.spec.tier7=Tier VII
+avatar.spec.parentTier1=Parent Tier I
+avatar.spec.parentTier2=Parent Tier II
+avatar.spec.parentTier3=Parent Tier III
+avatar.spec.parentTier4=Parent Tier IV
+avatar.spec.parentTier5=Parent Tier V
+avatar.spec.parentTier6=Parent Tier VI
+avatar.spec.parentTier7=Parent Tier VII
+
 avatar.donthavebending=[error]You haven't learned ${bending} yet. To get it, type in: [error_value]/avatar bending add ${username} ${bending}[/error_value][/error]
 avatar.nochi=Not enough chi!
 avatar.airBubbleElytra=Cannot use air bubble with elytra
@@ -286,12 +301,12 @@ avatar.ability.cleanse.lvl4_2=§9§l§oFocus ;; Deal much more damage in combat 
 
 
 avatar.ability.air_gust=§f§lAir Gust
-avatar.ability.air_gust.desc=Generate a strong gust of air to push enemies back, allowing you to focus on another problem.
+avatar.ability.air_gust.desc=Generate a strong gust of air to push enemies back, pushing wooden buttons and weaker pressure plates!
 avatar.ability.air_gust.lvl1=I've got 99 problems and you ain't one!
-avatar.ability.air_gust.lvl2=Larger, and you can now push stone buttons!
+avatar.ability.air_gust.lvl2=Larger, pierces enemies, and you can now push stone buttons!
 avatar.ability.air_gust.lvl3=Stronger push, larger, you can now push iron doors and trapdoors!
-avatar.ability.air_gust.lvl4_1=§f§l§oExtinguish ;; Destroys weaker projectiles
-avatar.ability.air_gust.lvl4_2=§f§l§oVacuum ;; Sucks enemies TOWARDS you
+avatar.ability.air_gust.lvl4_1=§f§l§oWind Bolt ;; Destroys weaker projectiles with a smaller, ultra-fast bolt of air!
+avatar.ability.air_gust.lvl4_2=§f§l§oWind Wall ;; Create a massive air gust that moves more slowly, and slows projectiles!
 
 avatar.ability.air_jump=§f§lAir Jump
 avatar.ability.air_jump.desc=Manipulate the air around you to boost off the ground. Perfect for catching up to an unsuspecting enemy.
@@ -326,12 +341,12 @@ avatar.ability.air_bubble.lvl4_1=§f§l§oPressured §f§l§obubble ;; Very larg
 avatar.ability.air_bubble.lvl4_2=§f§l§oUndercurrent ;; Limited hovering, disabled by sneak
 
 avatar.ability.air_burst=§f§lAir Burst
-avatar.ability.air_burst.desc=Slowly draw the surrounding air inwards, then release it in a massive blast that knocks back enemies!
-avatar.ability.air_burst.lvl1="Nope!" nearby enemies, blasting them away with a shockwave of air.
-avatar.ability.air_burst.lvl2=Charge timed reduced; damage, radius, and knockback increased.
-avatar.ability.air_burst.lvl3=Everything is enhanced!
-avatar.ability.air_burst.lvl4_1=§f§lPiercing Winds ;; Way higher damage, and release winds of such ferocity that they blind, weaken, and slow enemies!
-avatar.ability.air_burst.lvl4_2=§f§lMaximum Pressure ;; Slowly draw enemies in before firing them away!! A massive radius!
+avatar.ability.air_burst.desc=Slowly draw the surrounding air inwards, then release it in a massive blast that knocks back enemies! Left click when it's fully charged to shoot a blast of air!
+avatar.ability.air_burst.lvl1="Nope!" nearby enemies, blasting them away with a shockwave of air. 4 charge levels.
+avatar.ability.air_burst.lvl2=Charge timed reduced; damage, radius, and knockback increased. You can shoot an air laser at a charge level of 3 instead of 4!
+avatar.ability.air_burst.lvl3=Everything is enhanced! You can shoot a beam of air at charge level 2!
+avatar.ability.air_burst.lvl4_1=§f§lPiercing Winds ;; Way higher damage, and release winds of such ferocity that they blind, weaken, and slow enemies! Air beam is now a sniper beam.
+avatar.ability.air_burst.lvl4_2=§f§lTempestuous Clouds ;; Slowly draw enemies in before firing them away!! A massive radius! Quickly charge up evverything, and you can use the air laser instantly!
 
 avatar.ability.slipstream=§f§lSlipstream
 avatar.ability.slipstream.desc=Surround yourself in a veil of air, increasing your movement speed.

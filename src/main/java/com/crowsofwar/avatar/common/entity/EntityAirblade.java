@@ -16,41 +16,38 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.BlockLiquid;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.List;
-
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * @author CrowsOfWar
  */
-public class EntityAirblade extends AvatarEntity {
+public class EntityAirblade extends EntityOffensive {
 
 	private static final DataParameter<Float> SYNC_SIZE_MULT = EntityDataManager.createKey(EntityAirblade.class, DataSerializers.FLOAT);
-	private float damage;
 	/**
 	 * Hardness threshold to chop blocks. For example, setting to 1.5 will allow
 	 * the airblade to chop stone.
@@ -60,15 +57,12 @@ public class EntityAirblade extends AvatarEntity {
 	 */
 	private float chopBlocksThreshold;
 	private boolean pierceArmor;
-	//Used for killing the airblade when in a block
-	private int ticks;
 
 	public EntityAirblade(World world) {
 		super(world);
 		setSize(0.2f, 1.5f);
 		this.chopBlocksThreshold = -1;
 		this.noClip = true;
-		this.ticks = 0;
 	}
 
 	public float getSizeMult() {
@@ -92,38 +86,32 @@ public class EntityAirblade extends AvatarEntity {
 	}
 
 	@Override
-	public boolean canCollideWith(Entity entity) {
-		return super.canCollideWith(entity) && !(entity instanceof EntityAirblade) || entity instanceof EntityLivingBase;
+	public void applyElementalContact(AvatarEntity entity) {
+		super.applyElementalContact(entity);
+		entity.onAirContact();
 	}
 
 	@Override
 	public void onUpdate() {
 
 		super.onUpdate();
-		setSize(getSizeMult() * 0.2F, getSizeMult() * 1.5F);
+		setEntitySize(getSizeMult() * 1.5F, getSizeMult() * 0.2F);
 
-		this.motionX = this.motionX * 0.98;
-		this.motionY = this.motionY * 0.98;
-		this.motionZ = this.motionZ * 0.98;
+		this.motionX *= 0.98;
+		this.motionY *= 0.98;
+		this.motionZ *= 0.98;
 
 		if (!world.isRemote && getOwner() != null && getAbility() instanceof AbilityAirblade) {
 			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
 			if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				if (velocity().sqrMagnitude() <= 0.5) {
+				if (velocity().sqrMagnitude() <= 0.7 * 0.7) {
 					setDead();
 				}
 
-			} else if (velocity().sqrMagnitude() <= 0.9) {
+			} else if (velocity().sqrMagnitude() <= 0.9 * 0.9) {
 				setDead();
 			}
-		} else if (!world.isRemote && velocity().sqrMagnitude() <= .9) {
-			setDead();
-		}
-
-		if (this.ticksExisted > 200) {
-			this.setDead();
-		}
-		if (!world.isRemote && inWater) {
+		} else if (!world.isRemote && velocity().sqrMagnitude() <= 0.9 * 0.9) {
 			setDead();
 		}
 
@@ -131,56 +119,25 @@ public class EntityAirblade extends AvatarEntity {
 			breakCollidingBlocks();
 		}
 
-		IBlockState state = world.getBlockState(getPosition());
-		if (state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()) {
-			ticks++;
-		}
-		if (ticks >= 2) {
-			this.setDead();
-		}
 
-		if (!isDead && !world.isRemote) {
-			List<Entity> collidedList = world.getEntitiesWithinAABB(Entity.class,
-					getEntityBoundingBox().grow(0.35F));
-			if (!collidedList.isEmpty()) {
-				for (Entity collided : collidedList) {
-					if (collided instanceof AvatarEntity) {
-						((AvatarEntity) collided).onAirContact();
-					} else if (canCollideWith(collided)) {
-						handleCollision(collided);
-					}
-
-				}
+		if (world.isRemote) {
+			for (double i = 0; i < 0.5; i += 1 / getHeight()) {
+				AxisAlignedBB boundingBox = getEntityBoundingBox();
+				double spawnX = boundingBox.minX + world.rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+				double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+				double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).collide(true).time(8).clr(0.8F, 0.8F, 0.8F)
+						.scale(getWidth() * 4).element(getElement()).spawn(world);
 			}
 		}
 
 	}
 
-	private void handleCollision(Entity collided) {
-		Vector motion = velocity();
-		motion = motion.times(STATS_CONFIG.airbladeSettings.push).withY(0.08);
-		motion = motion.times(0.5);
-		collided.addVelocity(motion.x(), motion.y(), motion.z());
-
-		if (canDamageEntity(collided) && getOwner() != null) {
-
-			BendingData data = getOwnerBender().getData();
-			DamageSource source = AvatarDamageSource.causeAirbladeDamage(collided, getOwner());
-			if (pierceArmor) {
-				source.setDamageBypassesArmor();
-			}
-
-			boolean successfulHit = collided.attackEntityFrom(source, damage);
-
-			if (successfulHit && getAbility() != null) {
-				BattlePerformanceScore.addMediumScore(getOwner());
-				data.getAbilityData(getAbility().getName()).addXp(SKILLS_CONFIG.airbladeHit);
-			}
-			if (!(getAbility() instanceof AbilityAirblade) || data.getAbilityData("airblade").getLevel() < 3) {
-				setDead();
-			}
-
-		}
+	@Override
+	public DamageSource getDamageSource(Entity target) {
+		DamageSource ds = AvatarDamageSource.causeAirbladeDamage(target, getOwner());
+		return pierceArmor ? ds.setDamageBypassesArmor() : ds;
 	}
 
 	/**
@@ -229,9 +186,6 @@ public class EntityAirblade extends AvatarEntity {
 		return Bender.get(getOwner());
 	}
 
-	public void setDamage(float damage) {
-		this.damage = damage;
-	}
 
 	public float getChopBlocksThreshold() {
 		return chopBlocksThreshold;
@@ -252,7 +206,6 @@ public class EntityAirblade extends AvatarEntity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		damage = nbt.getFloat("Damage");
 		chopBlocksThreshold = nbt.getFloat("ChopBlocksThreshold");
 		pierceArmor = nbt.getBoolean("Piercing");
 	}
@@ -260,15 +213,87 @@ public class EntityAirblade extends AvatarEntity {
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		nbt.setFloat("Damage", damage);
 		nbt.setFloat("ChopBlocksThreshold", chopBlocksThreshold);
 		nbt.setBoolean("Piercing", pierceArmor);
 	}
 
+	@Override
+	public boolean onCollideWithSolid() {
+		if (chopBlocksThreshold > 0)
+			return super.onCollideWithSolid();
+		else return false;
+	}
+
+	@Override
+	public void spawnExplosionParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public void spawnDissipateParticles(World world, Vec3d pos) {
+		if (world.isRemote)
+			for (int i = 0; i < 1; i += 1 / getWidth())
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfEntity(this)).vel(world.rand.nextGaussian() / 20,
+						world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20).time(6).clr(0.8F, 0.8F, 0.8F)
+						.scale(getWidth() * 5F).collide(true).element(getElement()).spawn(world);
+	}
+
+	@Override
+	public void spawnPiercingParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public boolean shouldDissipate() {
+		return true;
+	}
 
 	@Override
 	public boolean isProjectile() {
 		return true;
 	}
+
+	@Override
+	public boolean isPiercing() {
+		return getAbility() instanceof AbilityAirblade && AbilityData.get(getOwner(), getAbility().getName()).getLevel() == 3;
+	}
+
+	@Override
+	public Vec3d getKnockbackMult() {
+		return new Vec3d(STATS_CONFIG.airbladeSettings.push, STATS_CONFIG.airbladeSettings.push * 2, STATS_CONFIG.airbladeSettings.push);
+	}
+
+	@Override
+	public int getFireTime() {
+		return 0;
+	}
+
+	@Override
+	public Vec3d getKnockback() {
+		return super.getKnockback();
+	}
+
+	@Override
+	public double getExpandedHitboxWidth() {
+		return getAvgSize() / 3;
+	}
+
+	@Override
+	public double getExpandedHitboxHeight() {
+		return getAvgSize() / 3;
+	}
+
+	@Override
+	public SoundEvent[] getSounds() {
+		SoundEvent[] events = new SoundEvent[1];
+		events[0] = SoundEvents.BLOCK_FIRE_EXTINGUISH;
+		return events;
+	}
+
+	@Override
+	public float getVolume() {
+		return super.getVolume() * 6;
+	}
+
 
 }

@@ -18,19 +18,18 @@ package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.common.data.Bender;
 import net.minecraft.entity.EntityLiving;
+import org.yaml.snakeyaml.events.Event;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author CrowsOfWar
  */
 public class Abilities {
 
-	private static final List<Ability> abilities = new ArrayList<>();
+	private static final ArrayList<Ability> abilities = new ArrayList<>();
 	private static final Map<String, Ability> abilitiesByName = new HashMap<>();
 
 	@Nullable
@@ -48,13 +47,24 @@ public class Abilities {
 		}
 	}
 
-	public static List<Ability> all() {
+	public static ArrayList<Ability> all() {
 		return abilities;
 	}
 
 	public static void register(Ability ability) {
 		abilities.add(ability);
 		abilitiesByName.put(ability.getName(), ability);
+	}
+
+	//Gets a list of abilities to add in the radial menu based on an element.
+	public static List<Ability> getAbilitiesToRegister(UUID element) {
+		ArrayList<Ability> abilityList = all();
+		List<Ability> elementAbilities;
+		elementAbilities = abilityList.stream()
+				.filter(a -> a.getBendingId() == element)
+				.sorted(Comparator.comparing(Ability::getBaseTier))
+				.collect(Collectors.toList());
+		return elementAbilities;
 	}
 
 }
