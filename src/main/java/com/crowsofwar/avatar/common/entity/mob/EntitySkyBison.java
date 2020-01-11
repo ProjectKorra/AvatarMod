@@ -213,7 +213,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(2);
+		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.6);
 		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100);
 	}
 
@@ -263,6 +263,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		wasTouchingGround = walkingOn.getMaterial() != Material.AIR;
 
 		condition.setAge(rand.nextInt(48000) + 40000);
+
 
 		originalPos = Vector.getEntityPos(this);
 		return super.onInitialSpawn(difficulty, livingData);
@@ -865,7 +866,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	}
 
 	public int getChestSlots() {
-		if (condition.getDomestication() >= MOBS_CONFIG.bisonSettings.bisonChestTameness && condition.isAdult()) {
+		if (condition.getDomestication() >= MOBS_CONFIG.bisonSettings.bisonChestTameness && condition.getAgeDays() > 1) {
 
 			int age = (int) (condition.getAgeDays() - 1);
 
@@ -916,6 +917,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	public void onUpdate() {
 		super.onUpdate();
 
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20 + Math.min(80 * condition.getAgeDays()
+		/ condition.getAdultAge(), 80));
 		if (this.isSitting() && hasOwner() && (world.getBlockState(getEntityPos(this)
 				.toBlockPos()).getBlock() != Blocks.AIR)) {
 			this.motionX = this.motionY = this.motionZ = 0;

@@ -62,11 +62,11 @@ public class BisonSummonHandler extends TickHandler {
 				Random random = new Random();
 
 				// Find suitable location near player
-				for (int i = 0; i < 5; i++) {
+				for (int i = 0; i < 10; i++) {
 
-					double x = player.posX + (random.nextDouble() * 2 - 1) * 15;
-					double y = player.posY + (random.nextDouble() * 2 - 1) * 5;
-					double z = player.posZ + (random.nextDouble() * 2 - 1) * 15;
+					double x = player.posX + (random.nextDouble() * 2 - 1) * 6;
+					double y = player.posY + (random.nextDouble() * 2 - 1) * 3;
+					double z = player.posZ + (random.nextDouble() * 2 - 1) * 6;
 
 					bison.attemptTeleport(x, y, z);
 					if (bison.attemptTeleport(x, y, z)) {

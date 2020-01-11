@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -115,7 +116,8 @@ public class AbilityAirblade extends Ability {
 			}
 		} else {
 			EntityAirblade airblade = new EntityAirblade(world);
-			airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
+			Vec3d spawn = spawnAt.toMinecraft();
+			airblade.setPosition(spawn.x, spawn.y, spawn.z);
 			airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 40 : 30));
 			airblade.setDamage(damage);
 			airblade.setSizeMult(sizeMult);

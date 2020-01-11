@@ -120,8 +120,9 @@ public class AnimalCondition {
 
 	public int getMaxRiders() {
 
-		if (!isAdult()) {
-			return 0;
+		//As the max adult age is 7, it'll have a max of 7 riders.
+		if (getAgeDays() >= (int) (getAdultAge() / getAgeDays())) {
+			return 1 + (int) Math.min(getAgeDays() - (int) (getAdultAge() / getAgeDays()), getAdultAge());
 		}
 
 		if (canHaveOwner()) {
