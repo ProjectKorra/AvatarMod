@@ -34,6 +34,11 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 		}
 
 		@Override
+		public void renderUpdate(EntityCloudBall entity) {
+
+		}
+
+		@Override
 		public void fromBytes(PacketBuffer buf) {
 		}
 
@@ -62,6 +67,11 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 			entity.addVelocity(0, -1F / 120, 0);
 
 			return this;
+
+		}
+
+		@Override
+		public void renderUpdate(EntityCloudBall entity) {
 
 		}
 
@@ -110,6 +120,11 @@ public abstract class CloudburstBehavior extends Behavior<EntityCloudBall> {
 				}
 			}
 			return this;
+		}
+
+		@Override
+		public void renderUpdate(EntityCloudBall entity) {
+
 		}
 
 		@Override

@@ -117,6 +117,10 @@ public abstract class Behavior<E extends Entity> {
 	 */
 	public abstract Behavior onUpdate(E entity);
 
+	public void renderUpdate(E entity) {
+
+	}
+
 	public abstract void fromBytes(PacketBuffer buf);
 
 	public abstract void toBytes(PacketBuffer buf);
@@ -124,6 +128,8 @@ public abstract class Behavior<E extends Entity> {
 	public abstract void load(NBTTagCompound nbt);
 
 	public abstract void save(NBTTagCompound nbt);
+
+
 
 	public static class BehaviorSerializer<B extends Behavior<? extends Entity>> implements DataSerializer<B> {
 

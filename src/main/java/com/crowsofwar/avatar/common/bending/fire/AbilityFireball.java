@@ -171,6 +171,11 @@ public class AbilityFireball extends Ability {
 		}
 
 		@Override
+		public void renderUpdate(EntityLightOrb entity) {
+
+		}
+
+		@Override
 		public void fromBytes(PacketBuffer buf) {
 
 		}

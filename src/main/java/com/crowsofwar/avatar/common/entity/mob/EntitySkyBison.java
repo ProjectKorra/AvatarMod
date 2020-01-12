@@ -484,7 +484,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		if (index > -1) {
 
 			//Fix this as well, since the max age is now 7. Yay.
-			float sizeOffset = condition.getAgeDays() < 7 ? condition.getAgeDays() / condition.getAdultAge() : 1;
+			float sizeOffset = condition.getAgeDays() < 7 ? condition.getAgeDays() / condition.getAdultAge() / 2F : 0.5F;
 			double offset = 0.75;
 			double angle = (index + 0.5) * Math.PI - toRadians(rotationYaw);
 			double yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.35));
@@ -500,7 +500,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.35)) - Math.sin(toRadians(rotationPitch));
 			}
 
-			passenger.setPosition(posX + sin(angle) * offset, posY + yOffset, posZ + cos(angle) * offset);
+			passenger.setPosition(posX + sin(angle) * offset - sin(angle), posY + yOffset,
+					posZ + cos(angle) * offset - cos(angle));
 
 			if (passenger != getControllingPassenger()) {
 				if (motionX != 0 || motionY != 0 || motionZ != 0) {

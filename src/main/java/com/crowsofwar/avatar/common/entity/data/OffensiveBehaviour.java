@@ -38,6 +38,11 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
 			return this;
 		}
 
+		@Override
+		public void renderUpdate(EntityOffensive entity) {
+
+		}
+
 
 		@Override
 		public void fromBytes(PacketBuffer buf) {
