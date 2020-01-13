@@ -249,7 +249,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty,
 											@Nullable IEntityLivingData livingData) {
 		getData().addBendingId(Airbending.ID);
-		getData().getAbilityData("air_gust").setLevel(0);
 
 
 		boolean sterile = false;
@@ -925,6 +924,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		setLevel((int) Math.min(condition.getAgeDays(), 7));
+		//Applies AI stuff as it ages
+		applyAbilityLevels(getLevel());
 
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20 + Math.min(80 * condition.getAgeDays()
 		/ condition.getAdultAge(), 80));
@@ -1050,7 +1052,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			Vector look = toRectangular(toRadians(driver.rotationYaw), toRadians(pitch));
 			forward = (float) look.withY(0).magnitude();
 
-			float speedMult = getSpeedMultiplier() * driver.moveForward * 2;
+			float speedMult = getSpeedMultiplier() * driver.moveForward * 1.25F;
 
 			float current = normalizeAngle(this.rotationYaw);
 			float target = normalizeAngle(driver.rotationYaw);
