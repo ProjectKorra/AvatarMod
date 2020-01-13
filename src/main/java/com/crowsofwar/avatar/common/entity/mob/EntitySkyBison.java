@@ -38,6 +38,7 @@ import com.crowsofwar.avatar.common.item.ItemBisonArmor.ArmorTier;
 import com.crowsofwar.avatar.common.item.ItemBisonSaddle.SaddleTier;
 import com.crowsofwar.avatar.common.item.ItemBisonWhistle;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.avatar.common.util.PlayerViewRegistry;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
@@ -492,16 +493,23 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			if (passenger == getControllingPassenger() && !this.isSitting()) {
 				angle = -toRadians(passenger.rotationYaw);
 				offset = 1;
-				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.40)) - Math.sin(toRadians(rotationPitch));
+				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.40));
 			}
 			if (passenger == getControllingPassenger() && this.isSitting()) {
 				angle = -toRadians(passenger.rotationYaw);
 				offset = 1;
-				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.35)) - Math.sin(toRadians(rotationPitch));
+				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.35));
 			}
 
-			passenger.setPosition(posX + sin(angle) * offset - sin(angle), posY + yOffset,
-					posZ + cos(angle) * offset - cos(angle));
+			if (/*!AvatarMod.realFirstPersonRender2Compat && **/(PlayerViewRegistry.getPlayerViewMode(passenger.getUniqueID()) >= 2 ||
+					PlayerViewRegistry.getPlayerViewMode(passenger.getUniqueID()) <= -1)) {
+				passenger.setPosition(posX + sin(angle) * offset, posY + yOffset,
+						posZ + cos(angle) * offset);
+			}
+			else {
+				passenger.setPosition(posX + sin(angle) * offset - sin(angle), posY + yOffset,
+						posZ + cos(angle) * offset - cos(angle));
+			}
 
 			if (passenger != getControllingPassenger()) {
 				if (motionX != 0 || motionY != 0 || motionZ != 0) {
