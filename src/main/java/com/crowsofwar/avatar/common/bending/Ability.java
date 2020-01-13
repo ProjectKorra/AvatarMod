@@ -19,9 +19,11 @@ package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 
@@ -64,7 +66,11 @@ public abstract class Ability {
 	 *
 	 * @param ctx Information for the ability
 	 */
-	public abstract void execute(AbilityContext ctx);
+	public void execute(AbilityContext ctx) {
+		if (ctx.getBenderEntity() instanceof EntityBender)
+			//Used for AI purposes
+			((EntityBender) ctx.getBenderEntity()).modifyAbilities(this);
+	}
 
 	/**
 	 * Get cooldown after the ability is activated.

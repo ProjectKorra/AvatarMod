@@ -57,6 +57,7 @@ public class AbilityAirBurst extends Ability {
 				data.addStatusControl(StatusControl.CHARGE_AIR_BURST);
 			}
 		}
+		super.execute(ctx);
 	}
 
 	@Override

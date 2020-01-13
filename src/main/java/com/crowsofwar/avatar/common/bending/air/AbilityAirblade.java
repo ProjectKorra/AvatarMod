@@ -131,6 +131,7 @@ public class AbilityAirblade extends Ability {
 			airblade.setTier(getCurrentTier(abilityData.getLevel()));
 			world.spawnEntity(airblade);
 		}
+		super.execute(ctx);
 
 	}
 

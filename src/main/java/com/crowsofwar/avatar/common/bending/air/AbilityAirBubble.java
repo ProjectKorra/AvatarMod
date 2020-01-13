@@ -89,6 +89,7 @@ public class AbilityAirBubble extends Ability {
 			data.addStatusControl(StatusControl.BUBBLE_EXPAND);
 			data.addStatusControl(StatusControl.BUBBLE_CONTRACT);
 		}
+		super.execute(ctx);
 
 	}
 

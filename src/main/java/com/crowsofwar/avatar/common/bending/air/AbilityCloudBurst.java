@@ -116,8 +116,8 @@ public class AbilityCloudBurst extends Ability {
 			world.spawnEntity(cloudball);
 
 			data.addStatusControl(StatusControl.THROW_CLOUDBURST);
-
 		}
+		super.execute(ctx);
 
 	}
 

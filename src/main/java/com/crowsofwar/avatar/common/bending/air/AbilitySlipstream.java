@@ -78,8 +78,8 @@ public class AbilitySlipstream extends Ability {
 			modifier.setTicks(duration);
 			Objects.requireNonNull(data.getPowerRatingManager(getBendingId())).addModifier(modifier, ctx);
 			data.addTickHandler(SLIPSTREAM_COOLDOWN_HANDLER);
-
 		}
+		super.execute(ctx);
 
 	}
 
