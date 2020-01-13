@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -95,6 +96,13 @@ public abstract class EntityBender extends EntityCreature {
 	public BendingData getData() {
 		return bender.getData();
 	}
+
+	//Used for changing stuff like the size of an air bubble or something. Usually called right
+	//before an entity is spawned
+	public void modifyAbilities(Ability ability) {
+
+	}
+
 
 	public void setElement() {
 	}

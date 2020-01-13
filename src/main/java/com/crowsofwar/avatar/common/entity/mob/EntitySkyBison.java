@@ -977,16 +977,18 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			setSitting(false);
 		}
 
-		if (!isForceLoadingChunks() && hasOwner()) {
-			beginForceLoadingChunks();
-		}
-		if (isForceLoadingChunks()) {
-			ForgeChunkManager.forceChunk(ticket, new ChunkPos(getPosition()));
-			if (!hasOwner() || getHealth() <= 0) {
-				stopForceLoadingChunks();
+		//Stops crashes; weird bugs will ensue, but blame cubic chunks
+		if (!AvatarMod.cubicChunks) {
+			if (!isForceLoadingChunks() && hasOwner()) {
+				beginForceLoadingChunks();
+			}
+			if (isForceLoadingChunks()) {
+				ForgeChunkManager.forceChunk(ticket, new ChunkPos(getPosition()));
+				if (!hasOwner() || getHealth() <= 0) {
+					stopForceLoadingChunks();
+				}
 			}
 		}
-
 		if (!world.isRemote) {
 
 			IBlockState walkingOn = world.getBlockState(getEntityPos(this).withY(0.01)

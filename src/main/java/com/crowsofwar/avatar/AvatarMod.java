@@ -48,6 +48,7 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.gorecore.config.Load;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
@@ -89,7 +90,7 @@ public class AvatarMod {
 
 	public static SimpleNetworkWrapper network;
 
-	public static boolean codeChickenLibCompat, realFirstPersonRender2Compat;
+	public static boolean codeChickenLibCompat, realFirstPersonRender2Compat, cubicChunks;
 
 	private int nextMessageID = 1;
 	private int nextEntityID = 1;
@@ -158,6 +159,8 @@ public class AvatarMod {
 		codeChickenLibCompat = Loader.isModLoaded("codechickenlib");
 		//Used for particle and inferno punch shenanigans
 		realFirstPersonRender2Compat = Loader.isModLoaded("rfp2");
+		//Prevents sky bison crashing
+		cubicChunks = Loader.isModLoaded("cubicchunkscore");
 
 		AvatarLog.log = e.getModLog();
 
