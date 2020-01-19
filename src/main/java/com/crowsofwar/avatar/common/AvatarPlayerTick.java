@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.event.AbilityUnlockEvent;
+import com.crowsofwar.avatar.common.event.AbilityUseEvent;
 import com.crowsofwar.avatar.common.event.ElementUnlockEvent;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -111,6 +112,18 @@ public class AvatarPlayerTick {
 							data.getAbilityData(ability).unlockAbility();
 
 					}
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onBendingUseEvent(AbilityUseEvent event) {
+		if (event.getEntityLiving() != null) {
+			if (BendingData.getFromEntity(event.getEntityLiving()) != null) {
+				BendingData data = BendingData.getFromEntity(event.getEntityLiving());
+				if (!data.hasBendingId(event.getAbility().getBendingId())) {
+					event.setCanceled(true);
 				}
 			}
 		}
