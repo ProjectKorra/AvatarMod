@@ -191,7 +191,7 @@ public abstract class Bender {
 	}
 
 	/**
-	 * Same as regular {@link #executeAbility(Ability)}, but allows a provided raytrace, instead
+	 * Same as regular {@link #executeAbility(Ability, boolean)}, but allows a provided raytrace, instead
 	 * of performing another on the fly.
 	 *
 	 * @see #executeAbility(Ability, Raytrace.Result, boolean) (Ability)

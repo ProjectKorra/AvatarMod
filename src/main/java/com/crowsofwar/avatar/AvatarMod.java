@@ -214,6 +214,8 @@ public class AvatarMod {
 
 		PacketHandlerServer.register();
 
+		HumanBenderSpawner.register();
+
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {
 		});
 
