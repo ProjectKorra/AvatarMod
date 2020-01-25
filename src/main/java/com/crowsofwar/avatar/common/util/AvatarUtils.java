@@ -92,35 +92,37 @@ public class AvatarUtils {
 	}
 
 	//Methods for pushing stuff.
-	public static void pushButton(World world, boolean pushStone, BlockPos pos) {
+	public static boolean pushButton(World world, boolean pushStone, BlockPos pos) {
 		IBlockState state = world.getBlockState(pos);
 		if (pushStone) {
 			if (state.getBlock() instanceof BlockButton) {
 				BlockButton button = (BlockButton) state.getBlock();
-				button.onBlockActivated(world, pos, state, null, null, null, (float) pos.getX(),
+				return button.onBlockActivated(world, pos, state, null, null, null, (float) pos.getX(),
 						(float) pos.getY(), (float) pos.getZ());
 			}
 		} else if (state.getBlock() == Blocks.WOODEN_BUTTON) {
 			BlockButton button = (BlockButton) state.getBlock();
-			button.onBlockActivated(world, pos, state, null, null, null, (float) pos.getX(),
+			return button.onBlockActivated(world, pos, state, null, null, null, (float) pos.getX(),
 					(float) pos.getY(), (float) pos.getZ());
 		}
+		return false;
 	}
 
-	public static void pushLever(World world, BlockPos pos) {
+	public static boolean pushLever(World world, BlockPos pos) {
 		IBlockState state = world.getBlockState(pos);
 		if (state.getBlock() == Blocks.LEVER) {
 			BlockLever lever = (BlockLever) state.getBlock();
-			lever.onBlockActivated(world, pos, state, null, null, null, (float) pos.getX(),
+			return lever.onBlockActivated(world, pos, state, null, null, null, (float) pos.getX(),
 					(float) pos.getY(), (float) pos.getZ());
 		}
+		return false;
 	}
 
-	public static void pushTrapDoor(World world, boolean pushIron, BlockPos pos) {
+	public static boolean pushTrapDoor(World world, boolean pushIron, BlockPos pos) {
 		IBlockState state = world.getBlockState(pos);
 		if (state.getBlock() == Blocks.TRAPDOOR) {
 			BlockTrapDoor trap = (BlockTrapDoor) state.getBlock();
-			trap.onBlockActivated(world, pos, state, null, null, null, (float) pos.getX(),
+			return trap.onBlockActivated(world, pos, state, null, null, null, (float) pos.getX(),
 					(float) pos.getY(), (float) pos.getZ());
 		}
 		if (pushIron) {
@@ -130,11 +132,13 @@ public class AvatarUtils {
 				world.setBlockState(pos, state, 2);
 				world.markBlockRangeForRenderUpdate(pos, pos.add(0, 1, 0));
 				world.scheduleUpdate(pos, trap, trap.tickRate(world));
+				return true;
 			}
 		}
+		return false;
 	}
 
-	public static void pushDoor(Entity entity, boolean pushIron, BlockPos pos) {
+	public static boolean pushDoor(Entity entity, boolean pushIron, BlockPos pos) {
 		IBlockState state = entity.world.getBlockState(pos);
 		EntityPlayer player = null;
 		if (entity instanceof AvatarEntity) {
@@ -144,7 +148,7 @@ public class AvatarUtils {
 		}
 		if (state.getBlock() instanceof BlockDoor && state.getBlock() != Blocks.IRON_DOOR) {
 			BlockDoor door = (BlockDoor) state.getBlock();
-			door.onBlockActivated(entity.world, pos, state, player, null, null, (float) pos.getX(),
+			return door.onBlockActivated(entity.world, pos, state, player, null, null, (float) pos.getX(),
 					(float) pos.getY(), (float) pos.getZ());
 		}
 		if (pushIron) {
@@ -158,11 +162,13 @@ public class AvatarUtils {
 				entity.world.setBlockState(blockpos, state, 10);
 				entity.world.markBlockRangeForRenderUpdate(blockpos, pos);
 				entity.world.playEvent(player, state.getValue(BlockDoor.OPEN) ? open : closed, pos, 0);
+				return true;
 			}
 		}
+		return false;
 	}
 
-	public static void pushGate(Entity entity, BlockPos pos) {
+	public static boolean pushGate(Entity entity, BlockPos pos) {
 		IBlockState state = entity.world.getBlockState(pos);
 		EntityPlayer player = null;
 		if (state.getBlock() instanceof BlockFenceGate) {
@@ -179,7 +185,9 @@ public class AvatarUtils {
 				entity.world.setBlockState(pos, state, 10);
 			}
 			entity.world.playEvent(player, state.getValue(BlockFenceGate.OPEN) ? 1008 : 1014, pos, 0);
+			return true;
 		}
+		return false;
 	}
 
 	/**

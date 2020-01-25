@@ -81,6 +81,8 @@ public abstract class AvatarEntity extends Entity {
 	private BendingStyle element;
 	private int tier;
 	private SyncedEntity<EntityLivingBase> ownerRef;
+	private IBlockState prevLeverState = null, prevDoorState = null, prevTrapdoorState = null,
+			prevButtonState = null, prevGateState = null;
 
 	/**
 	 * @param world
@@ -319,53 +321,85 @@ public abstract class AvatarEntity extends Entity {
 		}
 
 
-		//TODO: Fix  bug where stuff is pushed/pulled twice
-		for (int x = 0; x <= 1; x++) {
-			for (int z = 0; z <= 1; z++) {
-				for (int y = 0; y <= 1; y++) {
+		//Prev states are used to make sure each button isn't activated twice
+		for (double x = 0; x <= 1; x += 0.1) {
+			for (double z = 0; z <= 1; z += 0.1) {
+				for (double y = 0; y <= 1; y += 0.1) {
 					BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
 					if (pushButton(pushStoneButton)) {
-						AvatarUtils.pushButton(world, pushStoneButton, pos);
+						if (world.getBlockState(pos) != prevButtonState) {
+							if ((AvatarUtils.pushButton(world, pushStoneButton, pos)))
+								prevButtonState = world.getBlockState(pos);
+						}
 					}
 					if (pushLever()) {
-						AvatarUtils.pushLever(world, pos);
+						if (world.getBlockState(pos) != prevLeverState) {
+							if (AvatarUtils.pushLever(world, pos))
+								prevLeverState = world.getBlockState(pos);
+						}
 					}
 
 					if (pushTrapdoor(pushTrapDoor)) {
-						AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos);
+						if (world.getBlockState(pos) != prevTrapdoorState) {
+							if (AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos))
+								prevTrapdoorState = world.getBlockState(pos);
+						}
 					}
 
 					if (pushDoor(pushDoor)) {
-						AvatarUtils.pushDoor(this, pushDoor, pos);
+						if (world.getBlockState(pos) != prevDoorState) {
+							if (AvatarUtils.pushDoor(this, pushDoor, pos))
+								prevDoorState = world.getBlockState(pos);
+						}
 					}
 
 					if (pushGate()) {
-						AvatarUtils.pushGate(this, pos);
+						if (world.getBlockState(pos) != prevGateState) {
+							if (AvatarUtils.pushGate(this, pos)) {
+								prevGateState = world.getBlockState(pos);
+							}
+						}
 					}
 				}
 			}
 		}
-		for (int x = 0; x >= -1; x--) {
-			for (int z = 0; z >= -1; z--) {
-				for (int y = 0; y >= -1; y--) {
-					BlockPos pos = new BlockPos(posX + x * width, posY - y * height, posZ + z * width);
+		for (double x = 0; x >= -1; x -= 0.1) {
+			for (double z = 0; z >= -1; z -= 0.1) {
+				for (double y = 0; y >= -1; y -= 0.1) {
+					BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
 					if (pushButton(pushStoneButton)) {
-						AvatarUtils.pushButton(world, pushStoneButton, pos);
+						if (world.getBlockState(pos) != prevButtonState) {
+							if ((AvatarUtils.pushButton(world, pushStoneButton, pos)))
+								prevButtonState = world.getBlockState(pos);
+						}
 					}
 					if (pushLever()) {
-						AvatarUtils.pushLever(world, pos);
+						if (world.getBlockState(pos) != prevLeverState) {
+							if (AvatarUtils.pushLever(world, pos))
+								prevLeverState = world.getBlockState(pos);
+						}
 					}
 
 					if (pushTrapdoor(pushTrapDoor)) {
-						AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos);
+						if (world.getBlockState(pos) != prevTrapdoorState) {
+							if (AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos))
+								prevTrapdoorState = world.getBlockState(pos);
+						}
 					}
 
 					if (pushDoor(pushDoor)) {
-						AvatarUtils.pushDoor(this, pushDoor, pos);
+						if (world.getBlockState(pos) != prevDoorState) {
+							if (AvatarUtils.pushDoor(this, pushDoor, pos))
+								prevDoorState = world.getBlockState(pos);
+						}
 					}
 
 					if (pushGate()) {
-						AvatarUtils.pushGate(this, pos);
+						if (world.getBlockState(pos) != prevGateState) {
+							if (AvatarUtils.pushGate(this, pos)) {
+								prevGateState = world.getBlockState(pos);
+							}
+						}
 					}
 				}
 			}
@@ -498,11 +532,10 @@ public abstract class AvatarEntity extends Entity {
 			return false;
 		} else if (entity instanceof EntityEnderCrystal) {
 			return true;
-		}
-		else if (entity == this) {
+		} else if (entity == this) {
 			return false;
-		}
-		else return (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase || entity instanceof AvatarEntity;
+		} else
+			return (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase || entity instanceof AvatarEntity;
 	}
 
 	@Override
