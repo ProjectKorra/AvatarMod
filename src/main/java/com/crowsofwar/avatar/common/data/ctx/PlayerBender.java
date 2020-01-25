@@ -54,7 +54,7 @@ public class PlayerBender extends Bender {
 
 	@Override
 	public BendingData getData() {
-		return BendingData.get(player);
+		return BendingData.getFromEntity(player);
 	}
 
 	@Override

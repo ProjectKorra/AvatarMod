@@ -53,6 +53,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 	}
 
 
+
 	@Override
 	public float getAttackDamage() {
 		return 1F;

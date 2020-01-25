@@ -64,31 +64,6 @@ public class HumanBenderSpawner {
 
 	}
 
-	/*@SubscribeEvent
-	public static void modifyVillagerSpawns(LivingSpawnEvent event) {
-		Entity e = event.getEntity();
-		World world = e.getEntityWorld();
-		if (event.getEntity() == e && e instanceof EntityVillager) {
-
-			AxisAlignedBB box = new AxisAlignedBB(e.posX + 200,
-					e.posY + 200, e.posZ + 200,
-					e.posX - 200, e.posY - 200,
-					e.posZ - 200);
-			List<Entity> nearbyBenders = world.getEntitiesWithinAABB(EntityHumanBender.class, box);
-			List<Entity> nearbyVillagers = world.getEntitiesWithinAABB(EntityVillager.class, box);
-			int villagerSize = nearbyVillagers.size();
-			int size = nearbyBenders.size();
-			Random rand = new Random();
-			boolean bender = rand.nextBoolean();
-			//Will be changed when more benders are added
-			if (size < MOBS_CONFIG.benderSettings.maxNumberOfBenders && villagerSize >= 6) {
-				EntityHumanBender b = bender ? new EntityAirbender(world) : new EntityFirebender(world);
-				b.copyLocationAndAnglesFrom(e);
-				world.spawnEntity(b);
-			}
-		}
-	}**/
-
 	private static class MapGenVillageWithHumanbenders extends MapGenVillage {
 
 		public MapGenVillageWithHumanbenders() {
@@ -103,6 +78,7 @@ public class HumanBenderSpawner {
 		public synchronized boolean generateStructure(World worldIn, Random randomIn, ChunkPos chunkCoord) {
 			boolean result = super.generateStructure(worldIn, randomIn, chunkCoord);
 			if (result) {
+				//TODO: More immersive spawning
 
 
 				// This list contains villagers in that structure
@@ -123,20 +99,6 @@ public class HumanBenderSpawner {
 					Village village = worldIn.getVillageCollection()
 							.getNearestVillage(chunkCoord.getBlock(0, 0, 0), 200);
 
-					/*if (village != null) {
-						EntityHumanBender airbender = new EntityAirbender(worldIn);
-						airbender.setPosition(village.getCenter().getX(), village.getCenter().getY(), village.getCenter().getZ());
-					}**/
-
-
-				/*	for (Entity e : villagers) {
-						int i = rand.nextInt(3) + 1;
-						if (i == 3) {
-							EntityHumanBender b = new EntityAirbender(worldIn);
-							b.copyLocationAndAnglesFrom(e);
-							worldIn.spawnEntity(b);
-						}
-					}**/
 
 
 					double chance = 100;

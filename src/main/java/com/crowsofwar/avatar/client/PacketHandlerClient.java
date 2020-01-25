@@ -99,11 +99,11 @@ public class PacketHandlerClient implements IPacketHandler {
 	private IMessage handlePacketPowerRating(PacketCPowerRating packet, MessageContext ctx) {
 
 		Map<UUID, Double> powerRatings = packet.getPowerRatings();
-		BendingData data = BendingData.get(mc.player);
+		BendingData data = BendingData.getFromEntity(mc.player);
 
 		Set<Map.Entry<UUID, Double>> entrySet = powerRatings.entrySet();
 		for (Map.Entry<UUID, Double> entry : entrySet) {
-			if (data.getPowerRatingManager(entry.getKey()) != null) {
+			if (data != null && data.getPowerRatingManager(entry.getKey()) != null) {
 				data.getPowerRatingManager(entry.getKey()).setCachedRatingValue(entry.getValue());
 			}
 		}
