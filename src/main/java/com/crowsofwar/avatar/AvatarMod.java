@@ -48,7 +48,6 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.crowsofwar.gorecore.config.Load;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
@@ -199,6 +198,7 @@ public class AvatarMod {
 		registerPacket(PacketCPowerRating.class, Side.CLIENT);
 		registerPacket(PacketCOpenSkillCard.class, Side.CLIENT);
 		registerPacket(PacketSSendViewStatus.class, Side.SERVER);
+		registerPacket(PacketSParticleCollideEvent.class, Side.SERVER);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 

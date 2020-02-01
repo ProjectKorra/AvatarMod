@@ -24,9 +24,12 @@ import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Queues;
+import com.google.common.collect.UnmodifiableIterator;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
@@ -49,12 +52,14 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.asm.transformers.AccessTransformer;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -91,9 +96,22 @@ public class AvatarUtils {
 	}
 
 	public static Queue<Particle> getAliveParticles() {
-		Queue<Particle> particleQueue = ReflectionHelper.getPrivateValue(ParticleManager.class, null, "queue",
-				"field_187241_h");
-		return new LinkedList<>(particleQueue.stream().filter(particle -> particle instanceof ParticleAvatar).collect(Collectors.toCollection(ArrayDeque::new)));
+		Queue<Particle> particleQueue = ((ArrayDeque) ReflectionHelper.getPrivateValue(ParticleManager.class, Minecraft.getMinecraft().effectRenderer, "queue",
+				"field_187241_h")).clone();
+		return particleQueue;
+	}
+
+	public static ParticleAvatar getParticleFromUUID(UUID id) {
+		if (!getAliveParticles().isEmpty()) {
+			for (Particle particle = getAliveParticles().poll(); particle != null; particle = getAliveParticles().poll()) {
+				if (particle instanceof ParticleAvatar) {
+					if (((ParticleAvatar) particle).getUUID().equals(id)) {
+						return (ParticleAvatar) particle;
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	public static void chargeCreeper(EntityCreeper creeper) {
