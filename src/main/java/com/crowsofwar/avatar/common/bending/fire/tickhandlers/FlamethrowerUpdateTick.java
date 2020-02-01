@@ -56,6 +56,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
 
@@ -204,7 +206,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				Vector position = look.times((double) flamesPerSecond / 1000D).plus(eye.minusY(0.5));
 
 				//Spawn Entity Code.
-				if (ctx.getData().getTickHandlerDuration(this) % frequency == 0) {
+				/*if (ctx.getData().getTickHandlerDuration(this) % frequency == 0) {
 					EntityFlamethrower flamethrower = new EntityFlamethrower(world);
 					flamethrower.setOwner(entity);
 					flamethrower.setAbility(new AbilityFlamethrower());
@@ -228,7 +230,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					flamethrower.setSolidEntityPredicateOr(entity1 -> entity1 instanceof EntityFlamethrower &&
 							((EntityFlamethrower) entity1).getOwner() != entity && ((EntityFlamethrower) entity1).getTier() >= flamethrower.getTier());
 					world.spawnEntity(flamethrower);
-				}
+				}**/
 				//Particle code.
 				if (world.isRemote) {
 					speedMult /= 28.75;
@@ -367,10 +369,14 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 		}
 	}
+	//TODO: Rather than having a server-side laggy event, make a client side event and create a damage packet based on that
 
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public static void particleEventTest(ParticleCollideEvent event) {
-		if (event.getParticle().getAbility() instanceof AbilityFlamethrower) {
+		System.out.println("YES");
+		//Move all damage, knockback, e.t.c calculations to here
+		if (event.getParticle() != null && event.getParticle().getAbility() instanceof AbilityFlamethrower) {
 			System.out.println("Success!");
 		}
 	}

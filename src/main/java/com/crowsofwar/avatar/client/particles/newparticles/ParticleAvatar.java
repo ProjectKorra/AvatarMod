@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.damageutils.DamageUtils;
 import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.avatar.common.event.ParticleCollideEvent;
 import com.crowsofwar.avatar.common.network.packets.PacketSParticleCollideEvent;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
@@ -25,6 +26,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -165,7 +167,7 @@ public abstract class ParticleAvatar extends Particle {
 	 * The pitch angle this particle is facing, or {@code NaN} if this particle always faces the viewer (default behaviour).
 	 */
 	protected float pitch = Float.NaN;
-	private boolean collidedWithSolid;
+	private boolean collidedWithSolid, collidedWithParticle;
 	private boolean dynamicCollidedWithEntity;
 	/**
 	 * Previous-tick velocity, used in collision detection.
@@ -296,6 +298,10 @@ public abstract class ParticleAvatar extends Particle {
 		this.uuid = uuid;
 	}
 
+	//Used for collision
+	public Vec3d getVelocity() {
+		return new Vec3d(motionX, motionY, motionZ);
+	}
 	/**
 	 * Returns the entity that spawned it.
 	 */
@@ -793,7 +799,8 @@ public abstract class ParticleAvatar extends Particle {
 					}
 					if (hit != spawnEntity && !(hit instanceof AvatarEntity) || ((AvatarEntity) hit).getOwner() != spawnEntity && !collidedWithSolid) {
 						//Send packets
-						AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this));
+						//AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this));
+						MinecraftForge.EVENT_BUS.post(new ParticleCollideEvent(spawnEntity, this));
 					}
 				}
 			}
@@ -819,10 +826,29 @@ public abstract class ParticleAvatar extends Particle {
 			this.setBoundingBox(this.getBoundingBox().offset(x, y, z));
 		}
 
+		if (!AvatarUtils.getAliveParticles().isEmpty()) {
+			for (Particle particle = AvatarUtils.getAliveParticles().poll(); particle != null; particle = AvatarUtils.getAliveParticles().poll()) {
+				if (particle instanceof ParticleAvatar) {
+					if (particle.getBoundingBox().intersects(getBoundingBox())) {
+						//Makes particles spread out on collision, but also makes them push other particles
+						collidedWithParticle = true;
+						Vec3d hitVel = ((ParticleAvatar) particle).getVelocity();
+						Vec3d pVel = getVelocity();
+						if (AvatarUtils.getMagnitude(hitVel) >= AvatarUtils.getMagnitude(pVel))
+							motionX = motionY = motionZ = 0;
+						else {
+							this.motionX += hitVel.x;
+							this.motionY += hitVel.y;
+							this.motionZ += hitVel.z;
+						}
+					}
+				}
+			}
+		}
 		this.resetPositionToBB();
 		this.onGround = origY != y && origY < 0.0D;
 
-		if (collidedWithSolid)
+		if (collidedWithSolid || collidedWithParticle)
 			motionX = motionY = motionZ = 0.0D;
 
 		if (origX != x) this.motionX = 0.0D;
