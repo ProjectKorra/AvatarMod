@@ -1,10 +1,13 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.AvatarClientProxy;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.damageutils.DamageUtils;
 import com.crowsofwar.avatar.common.entity.*;
+import com.crowsofwar.avatar.common.network.packets.PacketSParticleCollideEvent;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -786,6 +789,10 @@ public abstract class ParticleAvatar extends Particle {
 							this.motionY += hit.motionY;
 							this.motionZ += hit.motionZ;
 						}
+					}
+					if (hit != spawnEntity) {
+						//Send packets
+						AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this));
 					}
 				}
 			}

@@ -18,13 +18,17 @@
 package com.crowsofwar.avatar.common.util;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.collect.Queues;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -52,8 +56,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.AvatarLog.WarningType.INVALID_SAVE;
 import static java.lang.Math.cos;
@@ -81,6 +88,12 @@ public class AvatarUtils {
 			}
 		};
 
+	}
+
+	public static Queue<Particle> getAliveParticles() {
+		Queue<Particle> particleQueue = ReflectionHelper.getPrivateValue(ParticleManager.class, null, "queue",
+				"field_187241_h");
+		return new LinkedList<>(particleQueue.stream().filter(particle -> particle instanceof ParticleAvatar).collect(Collectors.toCollection(ArrayDeque::new)));
 	}
 
 	public static void chargeCreeper(EntityCreeper creeper) {

@@ -31,6 +31,7 @@ import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.EntityShield;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.common.event.ParticleCollideEvent;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -51,6 +52,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.UUID;
 
@@ -359,6 +361,13 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		@Override
 		public void save(NBTTagCompound nbt) {
 
+		}
+	}
+
+	@SubscribeEvent
+	public static void particleEventTest(ParticleCollideEvent event) {
+		if (event.getParticle().getAbility() instanceof AbilityFlamethrower) {
+			System.out.println("Success!");
 		}
 	}
 

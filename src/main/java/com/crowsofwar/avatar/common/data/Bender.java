@@ -291,7 +291,7 @@ public abstract class Bender {
 			if (data.getPerformance().getScore() != 0)
 				chi.changeTotalChi(CHI_CONFIG.regenInCombat / 20F);
 
-			else if (entity.isPlayerSleeping())
+			if (entity.isPlayerSleeping())
 				chi.changeTotalChi(CHI_CONFIG.regenInBed / 20f);
 
 			else if (data.hasBendingId(Waterbending.ID) && entity.isInWater())

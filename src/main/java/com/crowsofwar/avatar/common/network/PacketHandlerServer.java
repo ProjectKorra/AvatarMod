@@ -37,6 +37,7 @@ import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.event.AbilityLevelEvent;
 import com.crowsofwar.avatar.common.event.AbilityUnlockEvent;
 import com.crowsofwar.avatar.common.event.ElementUnlockEvent;
+import com.crowsofwar.avatar.common.event.ParticleCollideEvent;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
@@ -121,6 +122,12 @@ public class PacketHandlerServer implements IPacketHandler {
 
 		if (packet instanceof PacketSSendViewStatus)
 			return handleViewUpdate((PacketSSendViewStatus) packet, ctx);
+
+		if (packet instanceof PacketSParticleCollideEvent) {
+			MinecraftForge.EVENT_BUS.post(new ParticleCollideEvent(((PacketSParticleCollideEvent) packet).getEntity(),
+					((PacketSParticleCollideEvent) packet).getParticle()));
+			return null;
+		}
 
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;

@@ -113,7 +113,6 @@ public class ShootAirBurstHandler extends TickHandler {
 			distance *= (0.8 + 0.05 * charge);
 
 			EntityAirGust gust = new EntityAirGust(world);
-			gust.setVelocity(look.times(speed + 40));
 			gust.setPosition(pos.minusY(0.5));
 			gust.setOwner(entity);
 			gust.setEntitySize(size);
@@ -130,6 +129,7 @@ public class ShootAirBurstHandler extends TickHandler {
 			gust.setPiercesEnemies(data.getLevel() >= 2);
 			gust.setAbility(new AbilityAirBurst());
 			gust.setTier(Math.min(new AbilityAirBurst().getCurrentTier(data.getLevel()), charge));
+			gust.setVelocity(look.times(speed + 40));
 			gust.setBehaviour(new AirBurstBeamBehaviour());
 			world.spawnEntity(gust);
 
