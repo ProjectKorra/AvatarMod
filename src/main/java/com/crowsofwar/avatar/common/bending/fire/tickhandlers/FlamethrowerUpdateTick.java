@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.fire.tickhandlers;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
@@ -32,6 +33,7 @@ import com.crowsofwar.avatar.common.entity.EntityShield;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.event.ParticleCollideEvent;
+import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -52,6 +54,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.UUID;
@@ -65,6 +68,7 @@ import static java.lang.Math.toRadians;
 /**
  * @author CrowsOfWar
  */
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class FlamethrowerUpdateTick extends TickHandler {
 
 	public static final UUID FLAMETHROWER_MOVEMENT_MODIFIER_ID = UUID.fromString("34877be6-6cf5-43f4-a8b3-aa12526651cf");

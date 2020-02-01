@@ -791,7 +791,7 @@ public abstract class ParticleAvatar extends Particle {
 							this.motionZ += hit.motionZ;
 						}
 					}
-					if (hit != spawnEntity) {
+					if (hit != spawnEntity && !(hit instanceof AvatarEntity) || ((AvatarEntity) hit).getOwner() != spawnEntity && !collidedWithSolid) {
 						//Send packets
 						AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this));
 					}
