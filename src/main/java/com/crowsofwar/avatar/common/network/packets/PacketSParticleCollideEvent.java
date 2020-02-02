@@ -1,6 +1,8 @@
 package com.crowsofwar.avatar.common.network.packets;
 
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -18,11 +20,20 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 	private Entity entity;
 	private UUID bendingID;
 	private Entity spawner;
+	private Ability ability;
 
 	public PacketSParticleCollideEvent(Entity entity, ParticleAvatar particle, Entity spawner, UUID bendingID) {
 		this.entity = entity;
 		this.particle = particle;
 		this.bendingID = bendingID;
+		this.spawner = spawner;
+	}
+
+	public PacketSParticleCollideEvent(Entity entity, ParticleAvatar particle, Entity spawner, Ability ability) {
+		this.entity = entity;
+		this.particle = particle;
+		this.ability = ability;
+		this.bendingID = ability.getBendingId();
 		this.spawner = spawner;
 	}
 
@@ -41,6 +52,8 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 		particle = AvatarUtils.getParticleFromUUID(buffer.readUniqueId());
 		spawner = AvatarEntityUtils.getEntityFromStringID(buffer.readUniqueId().toString());
 		bendingID = buffer.readUniqueId();
+		ability = Abilities.get(buffer.readString(buffer.readVarInt()));
+
 	}
 
 	@Override
@@ -50,6 +63,8 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 		buffer.writeUniqueId(particle.getUUID());
 		buffer.writeUniqueId(spawner.getUniqueID());
 		buffer.writeUniqueId(bendingID);
+		buffer.writeVarInt(ability.getName().length());
+		buffer.writeString(ability.getName());
 	}
 
 	@Override
@@ -76,5 +91,9 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 
 	public UUID getBendingID() {
 		return this.bendingID;
+	}
+
+	public Ability getAbility() {
+		return this.ability;
 	}
 }

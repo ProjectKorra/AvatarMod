@@ -174,24 +174,24 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 				Vector knockback = look.times(speedMult / 250 * STATS_CONFIG.flamethrowerSettings.push);
 
-				List<Entity> raytraceTargets = Raytrace.entityRaytrace(world, start, look, range, size, entity1 -> canCollideWithEntity(entity1, entity));
+				List<Entity> raytraceTargets = Raytrace.entityRaytrace(world, start, look, range, size * 1.25F, entity1 -> canCollideWithEntity(entity1, entity));
 				if (raytraceTargets.contains(target) && !world.isRemote) {
 					DamageUtils.attackEntity((EntityLivingBase) attacker, target, AvatarDamageSource.causeFlamethrowerDamage(target, attacker), damage, (int) performanceAmount,
 							new AbilityFlamethrower(), xp);
-					target.addVelocity(knockback.x(), knockback.y(), knockback.z());
-					target.motionY = Math.max(0.25, target.motionY);
+					//NOTE: Add velocity like this is great for stuff like a water blast! Not so great for fire.
+					target.addVelocity(knockback.x() / 10, knockback.y() / 2, knockback.z() / 10);
+					target.motionY = Math.min(0.15, target.motionY);
 					target.setFire(fireTime);
 				}
 			}
 		}
 	}
 
-	//@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public static void particleEventTest(ParticleCollideEvent event) {
 		//Move all damage, knockback, e.t.c calculations to here
 		if (event.getSpawner() != event.getEntity()) {
-			if (event.getBendingID().equals(Firebending.ID)) {
+			if (event.getAbility() instanceof AbilityFlamethrower) {
 				if (event.getSpawner() instanceof EntityLivingBase) {
 					EntityLivingBase entity = (EntityLivingBase) event.getSpawner();
 					BendingData data = BendingData.getFromEntity(entity);
@@ -281,57 +281,37 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				double speedMult = 15 + 5 * abilityData.getXpModifier();
 				double randomness = 3.0 - 0.5 * (abilityData.getXpModifier() + Math.max(abilityData.getLevel(), 0));
 				float range = 4;
-				int fireTime = 2;
 				float size = 0.75F;
-				float damage = STATS_CONFIG.flamethrowerSettings.damage;
-				float performanceAmount = 1;
-				float xp = SKILLS_CONFIG.flamethrowerHit;
-				int frequency = 3;
+
 
 				switch (abilityData.getLevel()) {
 					case 1:
 						size = 1.125F;
-						damage = 1.75F;
-						fireTime = 3;
-						frequency = 3;
 						range = 5;
-						performanceAmount = 2;
 						break;
 					case 2:
 						size = 1.5F;
-						fireTime = 4;
-						damage = 2.5F;
 						range = 7;
-						frequency = 4;
-						performanceAmount = 3;
 						break;
 				}
 				if (level == 3 && path == AbilityTreePath.FIRST) {
 					speedMult = 38;
 					randomness = 0;
-					fireTime = 5;
 					size = 1.25F;
-					damage = 4.5F;
 					range = 11;
-					performanceAmount = 4;
-					frequency = 2;
+
 				}
 				if (level == 3 && path == AbilityTreePath.SECOND) {
 					speedMult = 12;
 					randomness = 9;
-					fireTime = 10;
-					size = 2.75F;
-					damage = 1.5F;
+					size = 2.5F;
 					range = 6.5F;
-					performanceAmount = 2;
-					frequency = 5;
+
 				}
 
 				// Affect stats by power rating
 				range += powerFactor / 100F;
 				size += powerRating / 200F;
-				damage += powerRating / 100F;
-				fireTime += (int) (powerRating / 50F);
 				speedMult += powerRating / 100f * 2.5f;
 				randomness = randomness >= powerRating / 100f * 2.5f ? randomness - powerRating / 100F * 2.5 : 0;
 				randomness = randomness < 0 ? 0 : randomness;
@@ -339,41 +319,8 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
 				double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
 				Vector look = randomness == 0 ? Vector.getLookRectangular(entity) : Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
-
-
 				Vector start = look.plus(eye.minusY(0.5));
-				Vector end = start.plus(look.times(range));
 
-
-				Vector knockback = look.times(speedMult / 50 * STATS_CONFIG.flamethrowerSettings.push);
-				Vector position = look.times((double) flamesPerSecond / 1000D).plus(eye.minusY(0.5));
-
-				//Spawn Entity Code.
-				/*if (ctx.getData().getTickHandlerDuration(this) % frequency == 0) {
-					EntityFlamethrower flamethrower = new EntityFlamethrower(world);
-					flamethrower.setOwner(entity);
-					flamethrower.setAbility(new AbilityFlamethrower());
-					flamethrower.setDamage(damage);
-					flamethrower.rotationPitch = entity.rotationPitch;
-					flamethrower.rotationYaw = entity.rotationYaw;
-					flamethrower.setPerformanceAmount((int) performanceAmount);
-					flamethrower.setFireTime(fireTime);
-					flamethrower.setVelocity(look.times(speedMult / 1.875F));
-					flamethrower.setLifeTime(18 + AvatarUtils.getRandomNumberInRange(0, 5));
-					flamethrower.setPosition(position);
-					flamethrower.setEntitySize(size / 15F);;
-					flamethrower.setXp(xp);
-					flamethrower.setExpandedHitbox(size / 2.25F, size / 2.25F);
-					flamethrower.shouldLightFires(abilityData.isMasterPath(AbilityTreePath.SECOND));
-					flamethrower.setTier(Math.max(abilityData.getLevel() + 1, 1));
-					flamethrower.setKnockback(knockback.toMinecraft());
-					flamethrower.setRange(range);
-					flamethrower.setDynamicSpreadingCollision(false);
-					flamethrower.setBehaviour(new FlamethrowerBehaviour());
-					flamethrower.setSolidEntityPredicateOr(entity1 -> entity1 instanceof EntityFlamethrower &&
-							((EntityFlamethrower) entity1).getOwner() != entity && ((EntityFlamethrower) entity1).getTier() >= flamethrower.getTier());
-					world.spawnEntity(flamethrower);
-				}**/
 				//Particle code.
 				if (world.isRemote) {
 					speedMult /= 28.75;

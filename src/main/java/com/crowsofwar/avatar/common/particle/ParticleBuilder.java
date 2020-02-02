@@ -867,12 +867,7 @@ public final class ParticleBuilder {
 		particle.setTargetPosition(tx, ty, tz);
 		particle.setTargetEntity(target);
 
-		//if (spawnEntity != null)
-			//addAliveParticles(particle);
-		/*if (entity != null && entity instanceof EntityLivingBase && Bender.isBenderSupported((EntityLivingBase) entity)) {
-			Bender bender = Bender.get((EntityLivingBase) entity);
-			bender.getData().addP
-		}**/
+
 		net.minecraft.client.Minecraft.getMinecraft().effectRenderer.addEffect(particle);
 
 		reset();

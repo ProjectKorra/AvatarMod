@@ -15,12 +15,21 @@ public class ParticleCollideEvent extends EntityEvent {
 	private ParticleAvatar particle;
 	private Entity spawner;
 	private UUID bendingID;
+	private Ability ability;
 
 	public ParticleCollideEvent(Entity entity, ParticleAvatar particle, Entity spawner, UUID bendingID) {
 		super(entity);
 		this.particle = particle;
 		this.spawner = spawner;
 		this.bendingID = bendingID;
+	}
+
+	public ParticleCollideEvent(Entity entity, ParticleAvatar particle, Entity spawner, Ability ability) {
+		super(entity);
+		this.particle = particle;
+		this.spawner = spawner;
+		this.ability = ability;
+		this.bendingID = ability.getBendingId();
 	}
 
 	public ParticleAvatar getParticle() {
@@ -33,5 +42,9 @@ public class ParticleCollideEvent extends EntityEvent {
 
 	public UUID getBendingID() {
 		return bendingID;
+	}
+
+	public Ability getAbility() {
+		return this.ability;
 	}
 }

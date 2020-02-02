@@ -5,11 +5,8 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.AvatarClientProxy;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.damageutils.DamageUtils;
 import com.crowsofwar.avatar.common.entity.*;
-import com.crowsofwar.avatar.common.event.ParticleCollideEvent;
 import com.crowsofwar.avatar.common.network.packets.PacketSParticleCollideEvent;
-import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.client.Minecraft;
@@ -17,7 +14,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.ResourceLocation;
@@ -26,7 +23,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -299,6 +295,7 @@ public abstract class ParticleAvatar extends Particle {
 	public Vec3d getVelocity() {
 		return new Vec3d(motionX, motionY, motionZ);
 	}
+
 	/**
 	 * Returns the entity that spawned it.
 	 */
@@ -439,9 +436,8 @@ public abstract class ParticleAvatar extends Particle {
 	}
 
 	/**
-	 *
 	 * @param colourShiftInterval The array of values that determine the interval to colour shift by. R, G, B, and A.
-	 * @param colourShiftRange The array of values that determine the total range from the original colour. R, G, B, A.
+	 * @param colourShiftRange    The array of values that determine the total range from the original colour. R, G, B, A.
 	 */
 	public void setColourShift(float[] colourShiftInterval, float[] colourShiftRange) {
 		this.colourShiftInterval = colourShiftInterval;
@@ -800,8 +796,14 @@ public abstract class ParticleAvatar extends Particle {
 					if (spawnEntity != null && getAbility() != null && hit != spawnEntity && !(hit instanceof AvatarEntity) || ((AvatarEntity) hit).getOwner() != spawnEntity && !collidedWithSolid) {
 						//Send packets
 						//TODO: Find a way to reduce lag
-						if (!hit.getIsInvulnerable())
-							AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility().getBendingId()));
+						if (!hit.getIsInvulnerable()) {
+							if (hit instanceof EntityLivingBase) {
+								if (((EntityLivingBase) hit).attackable() && hit.canBeAttackedWithItem())
+									AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
+
+							} else
+								AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
+						}
 					}
 				}
 			}
@@ -829,7 +831,7 @@ public abstract class ParticleAvatar extends Particle {
 
 		if (!AvatarUtils.getAliveParticles().isEmpty()) {
 			Queue<Particle> particles = AvatarUtils.getAliveParticles().stream().filter(particle -> particle.getBoundingBox().intersects(getBoundingBox())
-			&& particle instanceof ParticleAvatar && ((ParticleAvatar) particle).spawnEntity != spawnEntity && particle != this)
+					&& particle instanceof ParticleAvatar && ((ParticleAvatar) particle).spawnEntity != spawnEntity && particle != this)
 					.collect(Collectors.toCollection(ArrayDeque::new));
 			if (!particles.isEmpty()) {
 				//Makes particles spread out on collision, but also makes them push other particles
