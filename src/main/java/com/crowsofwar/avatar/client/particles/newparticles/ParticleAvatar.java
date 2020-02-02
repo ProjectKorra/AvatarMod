@@ -31,10 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -167,7 +164,7 @@ public abstract class ParticleAvatar extends Particle {
 	 * The pitch angle this particle is facing, or {@code NaN} if this particle always faces the viewer (default behaviour).
 	 */
 	protected float pitch = Float.NaN;
-	private boolean collidedWithSolid, collidedWithParticle;
+	private boolean collidedWithSolid, collidedWithParticle = false;
 	private boolean dynamicCollidedWithEntity;
 	/**
 	 * Previous-tick velocity, used in collision detection.
@@ -779,6 +776,9 @@ public abstract class ParticleAvatar extends Particle {
 			List<AxisAlignedBB> list = this.world.getCollisionBoxes(null, this.getBoundingBox().expand(x, y, z).grow(0.1));
 			List<Entity> entityList = this.world.getEntitiesWithinAABB(Entity.class, getBoundingBox().expand(x, y, z).grow(0.15));
 
+			collidedWithSolid = false;
+			collidedWithParticle = false;
+			dynamicCollidedWithEntity = false;
 			for (Entity hit : entityList) {
 				if (hit != getEntity()) {
 					if (hit instanceof EntityShield || hit instanceof EntityWall || hit instanceof EntityWallSegment) {
@@ -827,23 +827,41 @@ public abstract class ParticleAvatar extends Particle {
 		}
 
 		if (!AvatarUtils.getAliveParticles().isEmpty()) {
-			for (Particle particle = AvatarUtils.getAliveParticles().poll(); particle != null; particle = AvatarUtils.getAliveParticles().poll()) {
+			Queue<Particle> particles = AvatarUtils.getAliveParticles().stream().filter(particle -> particle.getBoundingBox().intersects(getBoundingBox())
+			&& particle instanceof ParticleAvatar && ((ParticleAvatar) particle).spawnEntity != spawnEntity && particle != this)
+					.collect(Collectors.toCollection(ArrayDeque::new));
+			if (!particles.isEmpty()) {
+				//Makes particles spread out on collision, but also makes them push other particles
+				collidedWithParticle = true;
+				Vec3d hitVel = ((ParticleAvatar) particles.peek()).getVelocity();
+				Vec3d pVel = getVelocity();
+				if (AvatarUtils.getMagnitude(hitVel) >= AvatarUtils.getMagnitude(pVel))
+					motionX = motionY = motionZ = 0;
+				else {
+					this.motionX += hitVel.x;
+					this.motionY += hitVel.y;
+					this.motionZ += hitVel.z;
+				}
+			}
+			/*for (Particle particle = AvatarUtils.getAliveParticles().poll(); particle != null; particle = AvatarUtils.getAliveParticles().poll()) {
 				if (particle instanceof ParticleAvatar) {
-					if (particle.getBoundingBox().intersects(getBoundingBox())) {
-						//Makes particles spread out on collision, but also makes them push other particles
-						collidedWithParticle = true;
-						Vec3d hitVel = ((ParticleAvatar) particle).getVelocity();
-						Vec3d pVel = getVelocity();
-						if (AvatarUtils.getMagnitude(hitVel) >= AvatarUtils.getMagnitude(pVel))
-							motionX = motionY = motionZ = 0;
-						else {
-							this.motionX += hitVel.x;
-							this.motionY += hitVel.y;
-							this.motionZ += hitVel.z;
+					if (((ParticleAvatar) particle).spawnEntity != spawnEntity && particle != this) {
+						if (particle.getBoundingBox().intersects(getBoundingBox())) {
+							//Makes particles spread out on collision, but also makes them push other particles
+							collidedWithParticle = true;
+							Vec3d hitVel = ((ParticleAvatar) particle).getVelocity();
+							Vec3d pVel = getVelocity();
+							if (AvatarUtils.getMagnitude(hitVel) >= AvatarUtils.getMagnitude(pVel))
+								motionX = motionY = motionZ = 0;
+							else {
+								this.motionX += hitVel.x;
+								this.motionY += hitVel.y;
+								this.motionZ += hitVel.z;
+							}
 						}
 					}
 				}
-			}
+			}**/
 		}
 		this.resetPositionToBB();
 		this.onGround = origY != y && origY < 0.0D;
