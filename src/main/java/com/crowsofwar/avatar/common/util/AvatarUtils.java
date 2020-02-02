@@ -98,19 +98,20 @@ public class AvatarUtils {
 	public static Queue<Particle> getAliveParticles() {
 		Queue<Particle> particleQueue = ((ArrayDeque) ReflectionHelper.getPrivateValue(ParticleManager.class, Minecraft.getMinecraft().effectRenderer, "queue",
 				"field_187241_h")).clone();
-		particleQueue = particleQueue.stream().filter(particle -> particle instanceof ParticleAvatar).collect(Collectors.toCollection(ArrayDeque::new));
+		//particleQueue = particleQueue.stream().filter(particle -> particle instanceof ParticleAvatar).collect(Collectors.toCollection(ArrayDeque::new));
 		return particleQueue;
 	}
 
 	public static ParticleAvatar getParticleFromUUID(UUID id) {
 		if (!getAliveParticles().isEmpty()) {
-			for (Particle particle = getAliveParticles().poll(); particle != null; particle = getAliveParticles().poll()) {
-				if (particle instanceof ParticleAvatar) {
+			for (Particle particle : getAliveParticles()) {
+				if(particle instanceof ParticleAvatar) {
 					if (((ParticleAvatar) particle).getUUID().equals(id)) {
 						return (ParticleAvatar) particle;
 					}
 				}
 			}
+			
 		}
 		return null;
 	}

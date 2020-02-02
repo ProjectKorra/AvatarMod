@@ -268,7 +268,7 @@ public class Raytrace {
 		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, aabb);
 
 		for (Entity entity : entities) {
-			if (!filter.test(entity)) {
+			if (filter.test(entity)) {
 				float entBorder = entity.getCollisionBorderSize();
 				AxisAlignedBB collisionBox = entity.getEntityBoundingBox();
 				collisionBox = collisionBox.grow(entBorder);

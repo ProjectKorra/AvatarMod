@@ -20,11 +20,10 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
-import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.common.damageutils.DamageUtils;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFlamethrower;
@@ -33,9 +32,9 @@ import com.crowsofwar.avatar.common.entity.EntityShield;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.event.ParticleCollideEvent;
-import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
@@ -45,7 +44,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.passive.EntityTameable;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -57,9 +55,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
@@ -78,6 +75,151 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 	public FlamethrowerUpdateTick(int id) {
 		super(id);
+	}
+
+	private static void attackEntity(Entity attacker, Entity target) {
+		//LET'S DO THIS
+		EntityLivingBase entity = (EntityLivingBase) attacker;
+		BendingData data = BendingData.getFromEntity(entity);
+		if (data != null) {
+			Bender bender = Bender.get(entity);
+			World world = entity.world;
+
+			AbilityData abilityData = data.getAbilityData("flamethrower");
+
+			//Don't remove this, it makes sure the ability data works properly.
+			if (!world.isRemote)
+				abilityData = data.getAbilityData(new AbilityFlamethrower().getName());
+
+			AbilityTreePath path = abilityData.getPath();
+
+			int level = abilityData.getLevel();
+
+
+			double powerRating = bender.calcPowerRating(Firebending.ID);
+
+			double maxPowerFactor = 0.4;
+			double powerFactor = (powerRating + 100) / 100 * maxPowerFactor + 1 - maxPowerFactor;
+
+
+			Vector eye = getEyePos(entity);
+			boolean inWaterBlock = world.getBlockState(entity.getPosition()) instanceof BlockLiquid || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WATER
+					|| world.getBlockState(entity.getPosition()).getBlock() == Blocks.FLOWING_WATER;
+			boolean headInLiquid = world.getBlockState(entity.getPosition().up()) instanceof BlockLiquid || world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.WATER
+					|| world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.FLOWING_WATER;
+
+			if (!(world.isRaining() && world.canSeeSky(entity.getPosition())) && !(headInLiquid || inWaterBlock)) {
+
+				double speedMult = 15 + 5 * abilityData.getXpModifier();
+				double randomness = 3.0 - 0.5 * (abilityData.getXpModifier() + Math.max(abilityData.getLevel(), 0));
+				float range = 4;
+				int fireTime = 2;
+				float size = 0.75F;
+				float damage = STATS_CONFIG.flamethrowerSettings.damage;
+				float performanceAmount = 1;
+				float xp = SKILLS_CONFIG.flamethrowerHit;
+
+				switch (abilityData.getLevel()) {
+					case 1:
+						size = 1.125F;
+						damage = 1.75F;
+						fireTime = 3;
+						range = 5;
+						performanceAmount = 2;
+						break;
+					case 2:
+						size = 1.5F;
+						fireTime = 4;
+						damage = 2.5F;
+						range = 7;
+						performanceAmount = 3;
+						break;
+				}
+				if (level == 3 && path == AbilityTreePath.FIRST) {
+					speedMult = 38;
+					randomness = 0;
+					fireTime = 5;
+					size = 1.25F;
+					damage = 4.5F;
+					range = 11;
+					performanceAmount = 4;
+				}
+				if (level == 3 && path == AbilityTreePath.SECOND) {
+					speedMult = 12;
+					randomness = 9;
+					fireTime = 10;
+					size = 2.75F;
+					damage = 1.5F;
+					range = 6.5F;
+					performanceAmount = 2;
+				}
+
+				// Affect stats by power rating
+				range += powerFactor / 100F;
+				size += powerRating / 200F;
+				damage += powerRating / 100F;
+				fireTime += (int) (powerRating / 50F);
+				speedMult += powerRating / 100f * 2.5f;
+				randomness = randomness >= powerRating / 100f * 2.5f ? randomness - powerRating / 100F * 2.5 : 0;
+				randomness = randomness < 0 ? 0 : randomness;
+
+				double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
+				double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
+				Vector look = randomness == 0 ? Vector.getLookRectangular(entity) : Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
+
+
+				Vector start = look.plus(eye.minusY(0.5));
+				Vector end = start.plus(look.times(range));
+
+
+				Vector knockback = look.times(speedMult / 250 * STATS_CONFIG.flamethrowerSettings.push);
+
+				List<Entity> raytraceTargets = Raytrace.entityRaytrace(world, start, look, range, size, entity1 -> canCollideWithEntity(entity1, entity));
+				if (raytraceTargets.contains(target) && !world.isRemote) {
+					DamageUtils.attackEntity((EntityLivingBase) attacker, target, AvatarDamageSource.causeFlamethrowerDamage(target, attacker), damage, (int) performanceAmount,
+							new AbilityFlamethrower(), xp);
+					target.addVelocity(knockback.x(), knockback.y(), knockback.z());
+					target.motionY = Math.max(0.25, target.motionY);
+					target.setFire(fireTime);
+				}
+			}
+		}
+	}
+
+	//@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public static void particleEventTest(ParticleCollideEvent event) {
+		//Move all damage, knockback, e.t.c calculations to here
+		if (event.getSpawner() != event.getEntity()) {
+			if (event.getBendingID().equals(Firebending.ID)) {
+				if (event.getSpawner() instanceof EntityLivingBase) {
+					EntityLivingBase entity = (EntityLivingBase) event.getSpawner();
+					BendingData data = BendingData.getFromEntity(entity);
+					if (data != null) {
+						if (data.hasTickHandler(TickHandlerController.FLAMETHROWER)) {
+							attackEntity(entity, event.getEntity());
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private static boolean canCollideWithEntity(Entity entity, Entity owner) {
+		if (entity instanceof AvatarEntity) {
+			if (((AvatarEntity) entity).getOwner() == owner)
+				return false;
+			else if (!entity.canBeCollidedWith())
+				return false;
+			else if (entity instanceof EntityShield)
+				return true;
+		} else if (entity.getTeam() != null && entity.getTeam() == owner.getTeam())
+			return false;
+		else if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() == owner)
+			return false;
+		else if (entity.getRidingEntity() == owner)
+			return false;
+		return entity instanceof EntityLivingBase || entity instanceof EntityEnderCrystal || entity.canBeCollidedWith() && entity.canBeAttackedWithItem();
 	}
 
 	@Override
@@ -239,7 +381,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						for (double i = 0; i < flamesPerSecond; i += 3) {
 							Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
 							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.5F).time(22).collide(true).spawnEntity(entity).vel(look.times(speedMult).toMinecraft())
-									.spawn(world);
+									.ability(new AbilityFlamethrower()).spawn(world);
 						}
 					}
 					for (int i = 0; i < flamesPerSecond; i++) {
@@ -312,23 +454,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		moveSpeed.applyModifier(new AttributeModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID, "Flamethrower Movement Modifier", multiplier - 1, 1));
 
 	}
-
-	private boolean canCollideWithEntity(Entity entity, Entity owner) {
-		if (entity instanceof AvatarEntity) {
-			if (((AvatarEntity) entity).getOwner() == owner)
-				return false;
-			else if (!entity.canBeCollidedWith())
-				return false;
-			else if (entity instanceof EntityShield)
-				return true;
-		} else if (entity.getTeam() != null && entity.getTeam() == owner.getTeam())
-			return false;
-		else if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() == owner)
-			return false;
-		else if (entity.getRidingEntity() == owner)
-			return false;
-		return entity instanceof EntityLivingBase || entity instanceof EntityEnderCrystal || entity.canBeCollidedWith() && entity.canBeAttackedWithItem();
-	}
+	//TODO: Rather than having a server-side laggy event, make a client side event and create a damage packet based on that
 
 	public static class FlamethrowerBehaviour extends OffensiveBehaviour {
 
@@ -371,18 +497,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		@Override
 		public void save(NBTTagCompound nbt) {
 
-		}
-	}
-	//TODO: Rather than having a server-side laggy event, make a client side event and create a damage packet based on that
-
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public static void particleEventTest(ParticleCollideEvent event) {
-		System.out.println("YES");
-		//Move all damage, knockback, e.t.c calculations to here
-		if (event.getParticle() != null && event.getParticle().getAbility() instanceof AbilityFlamethrower) {
-			//LET'S DO THIS
-			System.out.println("Success!");
 		}
 	}
 

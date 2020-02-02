@@ -797,10 +797,11 @@ public abstract class ParticleAvatar extends Particle {
 							this.motionZ += hit.motionZ;
 						}
 					}
-					if (hit != spawnEntity && !(hit instanceof AvatarEntity) || ((AvatarEntity) hit).getOwner() != spawnEntity && !collidedWithSolid) {
+					if (spawnEntity != null && getAbility() != null && hit != spawnEntity && !(hit instanceof AvatarEntity) || ((AvatarEntity) hit).getOwner() != spawnEntity && !collidedWithSolid) {
 						//Send packets
-						//AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this));
-						MinecraftForge.EVENT_BUS.post(new ParticleCollideEvent(spawnEntity, this));
+						//TODO: Find a way to reduce lag
+						if (!hit.getIsInvulnerable())
+							AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility().getBendingId()));
 					}
 				}
 			}
@@ -843,25 +844,6 @@ public abstract class ParticleAvatar extends Particle {
 					this.motionZ += hitVel.z;
 				}
 			}
-			/*for (Particle particle = AvatarUtils.getAliveParticles().poll(); particle != null; particle = AvatarUtils.getAliveParticles().poll()) {
-				if (particle instanceof ParticleAvatar) {
-					if (((ParticleAvatar) particle).spawnEntity != spawnEntity && particle != this) {
-						if (particle.getBoundingBox().intersects(getBoundingBox())) {
-							//Makes particles spread out on collision, but also makes them push other particles
-							collidedWithParticle = true;
-							Vec3d hitVel = ((ParticleAvatar) particle).getVelocity();
-							Vec3d pVel = getVelocity();
-							if (AvatarUtils.getMagnitude(hitVel) >= AvatarUtils.getMagnitude(pVel))
-								motionX = motionY = motionZ = 0;
-							else {
-								this.motionX += hitVel.x;
-								this.motionY += hitVel.y;
-								this.motionZ += hitVel.z;
-							}
-						}
-					}
-				}
-			}**/
 		}
 		this.resetPositionToBB();
 		this.onGround = origY != y && origY < 0.0D;

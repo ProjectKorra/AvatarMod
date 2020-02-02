@@ -21,6 +21,7 @@ import java.util.Map;
 public class TickHandlerController {
 	// NOTE: DO NOT MOVE THIS.
 	/** @formatter:off**/
+	//formatter off
 	static Map<Integer, TickHandler> allHandlers = new HashMap<>();
 	/** @formatter:on**/
 

@@ -5,24 +5,25 @@ import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCollideEvent> {
 
 	//REFLECTION AH
 	private ParticleAvatar particle;
 	private Entity entity;
+	private UUID bendingID;
+	private Entity spawner;
 
-	public PacketSParticleCollideEvent(Entity entity, ParticleAvatar particle) {
+	public PacketSParticleCollideEvent(Entity entity, ParticleAvatar particle, Entity spawner, UUID bendingID) {
 		this.entity = entity;
 		this.particle = particle;
+		this.bendingID = bendingID;
+		this.spawner = spawner;
 	}
 
 	public PacketSParticleCollideEvent() {
@@ -32,10 +33,14 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 	@Override
 	protected void avatarFromBytes(ByteBuf buf) {
 
+		//TODO: Read and write abilities!
+
 		PacketBuffer buffer = new PacketBuffer(buf);
 		entity = AvatarEntityUtils.getEntityFromStringID(buffer.readUniqueId().toString());
 		//I regret nothing
 		particle = AvatarUtils.getParticleFromUUID(buffer.readUniqueId());
+		spawner = AvatarEntityUtils.getEntityFromStringID(buffer.readUniqueId().toString());
+		bendingID = buffer.readUniqueId();
 	}
 
 	@Override
@@ -43,6 +48,8 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 		PacketBuffer buffer = new PacketBuffer(buf);
 		buffer.writeUniqueId(entity.getUniqueID());
 		buffer.writeUniqueId(particle.getUUID());
+		buffer.writeUniqueId(spawner.getUniqueID());
+		buffer.writeUniqueId(bendingID);
 	}
 
 	@Override
@@ -61,5 +68,13 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 
 	public ParticleAvatar getParticle() {
 		return this.particle;
+	}
+
+	public Entity getSpawnerEntity() {
+		return this.spawner;
+	}
+
+	public UUID getBendingID() {
+		return this.bendingID;
 	}
 }
