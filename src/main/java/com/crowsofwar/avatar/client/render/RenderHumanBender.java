@@ -57,10 +57,8 @@ public class RenderHumanBender extends RenderLiving<EntityHumanBender> {
 		if (bender != null) {
 			BendingData data = BendingData.getFromEntity(entity);
 			if (data != null) {
-				if (data.hasTickHandler(FLAMETHROWER)) {
-					System.out.println("h a l p");
+				if (data.hasTickHandler(FLAMETHROWER))
 					FLAMETHROWER.renderTick(new BendingContext(data, entity, bender, new Raytrace.Result()));
-				}
 			}
 			bender.onRenderUpdate();
 		}
