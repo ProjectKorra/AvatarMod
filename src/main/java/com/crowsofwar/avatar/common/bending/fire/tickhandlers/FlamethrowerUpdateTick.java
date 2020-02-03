@@ -31,6 +31,7 @@ import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.EntityShield;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.event.ParticleCollideEvent;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -44,6 +45,8 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.passive.EntityTameable;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -176,11 +179,14 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 				List<Entity> raytraceTargets = Raytrace.entityRaytrace(world, start, look, range, size * 1.25F, entity1 -> canCollideWithEntity(entity1, entity));
 				if (raytraceTargets.contains(target) && !world.isRemote) {
-					DamageUtils.attackEntity((EntityLivingBase) attacker, target, AvatarDamageSource.causeFlamethrowerDamage(target, attacker), damage, (int) performanceAmount,
-							new AbilityFlamethrower(), xp);
-					//NOTE: Add velocity like this is great for stuff like a water blast! Not so great for fire.
-					target.addVelocity(knockback.x() / 10, knockback.y() / 2, knockback.z() / 10);
-					target.motionY = Math.min(0.15, target.motionY);
+					if (canDamageEntity(target, entity)) {
+						DamageUtils.attackEntity((EntityLivingBase) attacker, target, AvatarDamageSource.causeFlamethrowerDamage(target, attacker), damage, (int) performanceAmount,
+								new AbilityFlamethrower(), xp);
+						//NOTE: Add velocity like this is great for stuff like a water blast!
+						target.addVelocity(knockback.x() / 10, knockback.y() / 2 + 0.15, knockback.z() / 10);
+						target.motionY = Math.min(0.25, target.motionY);
+					} else
+						target.addVelocity(knockback.x() / 10, knockback.y() / 2 + 0.15, knockback.z() / 10);
 					target.setFire(fireTime);
 				}
 			}
@@ -206,6 +212,24 @@ public class FlamethrowerUpdateTick extends TickHandler {
 	}
 
 	private static boolean canCollideWithEntity(Entity entity, Entity owner) {
+		if (entity instanceof AvatarEntity) {
+			if (((AvatarEntity) entity).getOwner() == owner)
+				return false;
+			else if (!entity.canBeCollidedWith())
+				return false;
+			else if (entity instanceof EntityShield)
+				return true;
+		} else if (entity.getTeam() != null && entity.getTeam() == owner.getTeam())
+			return false;
+		else if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() == owner)
+			return false;
+		else if (entity.getRidingEntity() == owner)
+			return false;
+		return entity instanceof EntityLivingBase || entity instanceof EntityEnderCrystal || entity.canBeCollidedWith() || entity instanceof EntityArrow
+				|| entity instanceof EntityThrowable;
+	}
+
+	private static boolean canDamageEntity(Entity entity, Entity owner) {
 		if (entity instanceof AvatarEntity) {
 			if (((AvatarEntity) entity).getOwner() == owner)
 				return false;
@@ -258,6 +282,8 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		if (level == 3 && path == AbilityTreePath.SECOND) {
 			requiredChi = STATS_CONFIG.chiFlamethrowerSecondLvl4_2 / 20;
 		}
+		if (level < 3)
+			requiredChi = requiredChi * (1F + (float) (Math.max(level, 0)) / 10F);
 
 		// Adjust chi to power rating
 		// Multiply chi by a number (from 0..2) based on the power rating - powerFactor
@@ -271,46 +297,41 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		if (bender.consumeChi(requiredChi)) {
 
 			Vector eye = getEyePos(entity);
+			boolean isRaining = world.isRaining() && world.canSeeSky(entity.getPosition()) && world.getBiome(entity.getPosition()).canRain();
 			boolean inWaterBlock = world.getBlockState(entity.getPosition()) instanceof BlockLiquid || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WATER
 					|| world.getBlockState(entity.getPosition()).getBlock() == Blocks.FLOWING_WATER;
 			boolean headInLiquid = world.getBlockState(entity.getPosition().up()) instanceof BlockLiquid || world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.WATER
 					|| world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.FLOWING_WATER;
 
-			if (!(world.isRaining() && world.canSeeSky(entity.getPosition())) && !(headInLiquid || inWaterBlock)) {
+			if (!isRaining && !(headInLiquid || inWaterBlock)) {
 
 				double speedMult = 15 + 5 * abilityData.getXpModifier();
 				double randomness = 3.0 - 0.5 * (abilityData.getXpModifier() + Math.max(abilityData.getLevel(), 0));
-				float range = 4;
 				float size = 0.75F;
 
 
 				switch (abilityData.getLevel()) {
 					case 1:
 						size = 1.125F;
-						range = 5;
 						break;
 					case 2:
 						size = 1.5F;
-						range = 7;
 						break;
 				}
 				if (level == 3 && path == AbilityTreePath.FIRST) {
 					speedMult = 38;
 					randomness = 0;
 					size = 1.25F;
-					range = 11;
 
 				}
 				if (level == 3 && path == AbilityTreePath.SECOND) {
 					speedMult = 12;
 					randomness = 9;
 					size = 2.5F;
-					range = 6.5F;
 
 				}
 
 				// Affect stats by power rating
-				range += powerFactor / 100F;
 				size += powerRating / 200F;
 				speedMult += powerRating / 100f * 2.5f;
 				randomness = randomness >= powerRating / 100f * 2.5f ? randomness - powerRating / 100F * 2.5 : 0;
@@ -390,6 +411,117 @@ public class FlamethrowerUpdateTick extends TickHandler {
 			return true;
 		}
 		return !data.hasStatusControl(StatusControl.STOP_FLAMETHROW);
+	}
+
+	@Override
+	public void renderTick(BendingContext ctx) {
+		super.renderTick(ctx);
+		BendingData data = ctx.getData();
+		EntityLivingBase entity = ctx.getBenderEntity();
+		Bender bender = ctx.getBender();
+		World world = ctx.getWorld();
+		AbilityData abilityData = data.getAbilityData("flamethrower");
+		if (entity instanceof EntityBender) {
+
+			//Don't remove this, it makes sure the ability data works properly.
+			if (!world.isRemote)
+				abilityData = data.getAbilityData(new AbilityFlamethrower().getName());
+
+			AbilityTreePath path = abilityData.getPath();
+
+			int level = abilityData.getLevel();
+			int flamesPerSecond;
+
+
+			flamesPerSecond = level <= 0 ? 1 : 2;
+			if (level == 3 && path == AbilityTreePath.FIRST)
+				flamesPerSecond = 3;
+			else if (level == 3 && path == AbilityTreePath.SECOND)
+				flamesPerSecond = 1;
+
+
+			double powerRating = bender.calcPowerRating(Firebending.ID);
+
+
+			Vector eye = getEyePos(entity);
+			boolean isRaining = world.isRaining() && world.canSeeSky(entity.getPosition()) && world.getBiome(entity.getPosition()).canRain();
+			boolean inWaterBlock = world.getBlockState(entity.getPosition()) instanceof BlockLiquid || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WATER
+					|| world.getBlockState(entity.getPosition()).getBlock() == Blocks.FLOWING_WATER;
+			boolean headInLiquid = world.getBlockState(entity.getPosition().up()) instanceof BlockLiquid || world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.WATER
+					|| world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.FLOWING_WATER;
+
+			if (!isRaining && !(headInLiquid || inWaterBlock)) {
+
+				double speedMult = 15 + 5 * abilityData.getXpModifier();
+				double randomness = 3.0 - 0.5 * (abilityData.getXpModifier() + Math.max(abilityData.getLevel(), 0));
+				float size = 0.75F;
+
+
+				switch (abilityData.getLevel()) {
+					case 1:
+						size = 1.125F;
+						break;
+					case 2:
+						size = 1.5F;
+						break;
+				}
+				if (level == 3 && path == AbilityTreePath.FIRST) {
+					speedMult = 38;
+					randomness = 0;
+					size = 1.25F;
+
+				}
+				if (level == 3 && path == AbilityTreePath.SECOND) {
+					speedMult = 12;
+					randomness = 9;
+					size = 2.5F;
+
+				}
+
+				// Affect stats by power rating
+				size += powerRating / 200F;
+				speedMult += powerRating / 100f * 2.5f;
+				randomness = randomness >= powerRating / 100f * 2.5f ? randomness - powerRating / 100F * 2.5 : 0;
+				randomness = randomness < 0 ? 0 : randomness;
+
+				double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
+				double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
+				Vector look = randomness == 0 ? Vector.getLookRectangular(entity) : Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
+				Vector start = look.plus(eye.minusY(0.5));
+
+				//Particle code.
+				if (world.isRemote) {
+					speedMult /= 28.75;
+					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+						for (double i = 0; i < flamesPerSecond; i += 3) {
+							Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
+							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.5F).time(22).collide(true).spawnEntity(entity).vel(look.times(speedMult).toMinecraft())
+									.ability(new AbilityFlamethrower()).spawn(world);
+						}
+					}
+					for (int i = 0; i < flamesPerSecond; i++) {
+						Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
+						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.5F).time(22).collide(true).vel(look.times(speedMult / 1.25).toMinecraft()).
+									ability(new AbilityFlamethrower()).spawnEntity(entity).spawn(world);
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
+									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+									.ability(new AbilityFlamethrower()).spawn(world);
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
+									clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+									.ability(new AbilityFlamethrower()).spawn(world);
+						} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
+									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+									.ability(new AbilityFlamethrower()).spawn(world);
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
+									clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+									.ability(new AbilityFlamethrower()).spawn(world);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {

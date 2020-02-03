@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.EntityLivingBase;
 
 /**
  * @author CrowsOfWar
@@ -34,6 +35,11 @@ public abstract class TickHandler {
 	 * Ticks and returns whether to remove (false to stay)
 	 */
 	public abstract boolean tick(BendingContext ctx);
+
+	//Used for bender npc's for particle effects
+	public void renderTick(BendingContext ctx) {
+
+	}
 
 	public int id() {
 		return id;

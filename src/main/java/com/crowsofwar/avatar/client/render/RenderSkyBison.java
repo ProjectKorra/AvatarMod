@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -47,8 +48,13 @@ public class RenderSkyBison extends RenderLiving<EntitySkyBison> {
 	public void doRenderShadowAndFire(Entity entity, double x, double y, double z, float yaw,
 									  float partialTicks) {
 
+		//TODO: Centralise render update code
 		EntitySkyBison bison = (EntitySkyBison) entity;
 		shadowSize = 2.5f * bison.getCondition().getSizeMultiplier();
+		Bender bender = Bender.get(bison);
+		if (bender != null) {
+			bender.onRenderUpdate();
+		}
 		super.doRenderShadowAndFire(entity, x, y, z, yaw, partialTicks);
 
 	}

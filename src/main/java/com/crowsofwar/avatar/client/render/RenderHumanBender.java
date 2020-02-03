@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderLiving;
@@ -42,6 +43,15 @@ public class RenderHumanBender extends RenderLiving<EntityHumanBender> {
 			locations[i] = new ResourceLocation("avatarmod", "textures/mob/" + texture + "_" + i + ".png");
 		}
 
+	}
+
+	@Override
+	public void doRender(EntityHumanBender entity, double x, double y, double z, float entityYaw, float partialTicks) {
+		super.doRender(entity, x, y, z, entityYaw, partialTicks);
+		Bender bender = Bender.get(entity);
+		if (bender != null) {
+			bender.onRenderUpdate();
+		}
 	}
 
 	@Override

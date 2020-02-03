@@ -26,7 +26,7 @@ public class ConfigChi {
 
 	public static final ConfigChi CHI_CONFIG = new ConfigChi();
 	@Load
-	public float regenPerSecond = 0.25f, regenInCombat = 0.5F, availablePerSecond = 1.75f,
+	public float regenPerSecond = 0.25f, regenInCombat = 0.5F, availablePerSecond = 1.5f,
 			maxAvailableChi = 12f, regenInBed = 2f, regenInWater = 1f, regenOnEarth = 1f;
 	@Load
 	public float bonusLearnedBending = 16, bonusAbility = 6, bonusAbilityLevel = 3;

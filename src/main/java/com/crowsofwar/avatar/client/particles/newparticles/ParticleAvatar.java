@@ -779,6 +779,7 @@ public abstract class ParticleAvatar extends Particle {
 				if (hit != getEntity()) {
 					if (hit instanceof EntityShield || hit instanceof EntityWall || hit instanceof EntityWallSegment) {
 						if (((AvatarEntity) hit).getOwner() != getEntity() || hit instanceof EntityWall || hit instanceof EntityWallSegment) {
+							AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
 							collidedWithSolid = true;
 						}
 					} else if (hit instanceof EntityThrowable || hit instanceof EntityArrow || hit instanceof EntityOffensive && ((EntityOffensive) hit).getOwner() != spawnEntity) {
@@ -792,8 +793,8 @@ public abstract class ParticleAvatar extends Particle {
 							this.motionY += hit.motionY;
 							this.motionZ += hit.motionZ;
 						}
-					}
-					if (spawnEntity != null && getAbility() != null && hit != spawnEntity && !(hit instanceof AvatarEntity) || ((AvatarEntity) hit).getOwner() != spawnEntity && !collidedWithSolid) {
+						AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
+					} else if (spawnEntity != null && getAbility() != null && hit != spawnEntity && !(hit instanceof AvatarEntity) || hit instanceof AvatarEntity && ((AvatarEntity) hit).getOwner() != spawnEntity && !collidedWithSolid) {
 						//Send packets
 						//TODO: Find a way to reduce lag
 						if (!hit.getIsInvulnerable()) {

@@ -255,6 +255,25 @@ public abstract class Bender {
 		return false;
 	}
 
+	//Called for npc benders in order to properly render the particle system without packets
+	public void onRenderUpdate() {
+		BendingData data = getData();
+		World world = getWorld();
+		EntityLivingBase entity = getEntity();
+
+		data.getMiscData().decrementCooldown();
+
+		BendingContext ctx = new BendingContext(data, entity, this, new Raytrace.Result());
+
+		List<TickHandler> tickHandlers = data.getAllTickHandlers();
+		if (tickHandlers != null) {
+			for (TickHandler handler : tickHandlers) {
+				if (handler != null) {
+					handler.renderTick(ctx);
+				}
+			}
+		}
+	}
 	/**
 	 * Called every tick; updates things like chi.
 	 */
