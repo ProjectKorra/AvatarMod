@@ -17,11 +17,16 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
+
+import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAMETHROWER;
 
 /**
  * @author CrowsOfWar
@@ -50,6 +55,13 @@ public class RenderHumanBender extends RenderLiving<EntityHumanBender> {
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
 		Bender bender = Bender.get(entity);
 		if (bender != null) {
+			BendingData data = BendingData.getFromEntity(entity);
+			if (data != null) {
+				if (data.hasTickHandler(FLAMETHROWER)) {
+					System.out.println("h a l p");
+					FLAMETHROWER.renderTick(new BendingContext(data, entity, bender, new Raytrace.Result()));
+				}
+			}
 			bender.onRenderUpdate();
 		}
 	}

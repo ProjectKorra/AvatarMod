@@ -69,55 +69,58 @@ public class EntityFirebender extends EntityHumanBender {
 		//	boolean infernoPunchPath = world.rand.nextBoolean();
 		boolean fireBlastPath = world.rand.nextBoolean();
 		boolean fireballPath = world.rand.nextBoolean();
-		if (level <= 1) {
-			getData().getAbilityData("fireball").setLevel(-1);
-			getData().getAbilityData("flamethrower").setLevel(-1);
-			getData().getAbilityData("fire_blast").setLevel(0);
-			getData().getAbilityData("fire_shot").setLevel(0);
-			getData().getAbilityData("inferno_punch").setLevel(-1);
+		switch (level) {
+			case 2:
+				getData().getAbilityData("fireball").setLevel(-1);
+				getData().getAbilityData("flamethrower").setLevel(0);
+				getData().getAbilityData("fire_blast").setLevel(0);
+				getData().getAbilityData("fire_shot").setLevel(1);
+				getData().getAbilityData("inferno_punch").setLevel(-1);
+				break;
+			case 3:
+				getData().getAbilityData("fireball").setLevel(-1);
+				getData().getAbilityData("flamethrower").setLevel(0);
+				getData().getAbilityData("fire_blast").setLevel(1);
+				getData().getAbilityData("fire_shot").setLevel(1);
+				getData().getAbilityData("inferno_punch").setLevel(-1);
+				break;
+			case 4:
+				getData().getAbilityData("fireball").setLevel(0);
+				getData().getAbilityData("flamethrower").setLevel(1);
+				getData().getAbilityData("fire_blast").setLevel(1);
+				getData().getAbilityData("fire_shot").setLevel(2);
+				getData().getAbilityData("inferno_punch").setLevel(0);
+				break;
+			case 5:
+				getData().getAbilityData("fireball").setLevel(1);
+				getData().getAbilityData("flamethrower").setLevel(2);
+				getData().getAbilityData("fire_blast").setLevel(2);
+				getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+				getData().getAbilityData("inferno_punch").setLevel(1);
+				break;
+			case 6:
+				getData().getAbilityData("fireball").setLevel(2);
+				getData().getAbilityData("flamethrower").setLevel(2);
+				getData().getAbilityData("fire_blast").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+				getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+				getData().getAbilityData("inferno_punch").setLevel(1);
+				break;
+			case 7:
+				getData().getAbilityData("fireball").setPath(fireballPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+				getData().getAbilityData("flamethrower").setPath(flamethrowerPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+				getData().getAbilityData("fire_blast").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+				getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+				getData().getAbilityData("inferno_punch").setLevel(2);
+				break;
+			default:
+				getData().getAbilityData("fireball").setLevel(-1);
+				getData().getAbilityData("flamethrower").setLevel(-1);
+				getData().getAbilityData("fire_blast").setLevel(0);
+				getData().getAbilityData("fire_shot").setLevel(0);
+				getData().getAbilityData("inferno_punch").setLevel(-1);
+				break;
 		}
-		if (level == 2) {
-			getData().getAbilityData("fireball").setLevel(-1);
-			getData().getAbilityData("flamethrower").setLevel(-1);
-			getData().getAbilityData("fire_blast").setLevel(0);
-			getData().getAbilityData("fire_shot").setLevel(1);
-			getData().getAbilityData("inferno_punch").setLevel(-1);
-		}
-		if (level == 3) {
-			getData().getAbilityData("fireball").setLevel(-1);
-			getData().getAbilityData("flamethrower").setLevel(0);
-			getData().getAbilityData("fire_blast").setLevel(1);
-			getData().getAbilityData("fire_shot").setLevel(1);
-			getData().getAbilityData("inferno_punch").setLevel(-1);
-		}
-		if (level == 4) {
-			getData().getAbilityData("fireball").setLevel(0);
-			getData().getAbilityData("flamethrower").setLevel(1);
-			getData().getAbilityData("fire_blast").setLevel(1);
-			getData().getAbilityData("fire_shot").setLevel(2);
-			getData().getAbilityData("inferno_punch").setLevel(-1);
-		}
-		if (level == 5) {
-			getData().getAbilityData("fireball").setLevel(1);
-			getData().getAbilityData("flamethrower").setLevel(2);
-			getData().getAbilityData("fire_blast").setLevel(2);
-			getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-			getData().getAbilityData("inferno_punch").setLevel(0);
-		}
-		if (level == 6) {
-			getData().getAbilityData("fireball").setLevel(2);
-			getData().getAbilityData("flamethrower").setLevel(2);
-			getData().getAbilityData("fire_blast").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-			getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-			getData().getAbilityData("inferno_punch").setLevel(1);
-		}
-		if (level == 7) {
-			getData().getAbilityData("fireball").setPath(fireballPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-			getData().getAbilityData("flamethrower").setPath(flamethrowerPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-			getData().getAbilityData("fire_blast").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-			getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-			getData().getAbilityData("inferno_punch").setLevel(2);
-		}
+
 	}
 
 	@Override
@@ -141,15 +144,15 @@ public class EntityFirebender extends EntityHumanBender {
 
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
-		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
-		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_shot", this, getBender())));
+		this.tasks.addTask(1 /*2**/, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
+		//this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
+		//this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_shot", this, getBender())));
 		//this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fire_blast", this, getBender())));
 		//this.tasks.addTask(3, new AiInfernoPunch(new AbilityInfernoPunch(), this, getBender(), this, 1.35, true));
-		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("inferno_punch", this, getBender())));
-	//	if (getData().hasStatusControl(INFERNO_PUNCH_MAIN) || getData().hasStatusControl(INFERNO_PUNCH_FIRST) || getData().hasStatusControl(INFERNO_PUNCH_SECOND)) {
-	//		this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.35, true));
-	//	}
+		//this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("inferno_punch", this, getBender())));
+		//	if (getData().hasStatusControl(INFERNO_PUNCH_MAIN) || getData().hasStatusControl(INFERNO_PUNCH_FIRST) || getData().hasStatusControl(INFERNO_PUNCH_SECOND)) {
+		//		this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.35, true));
+		//	}
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.3, true));
 	}
 

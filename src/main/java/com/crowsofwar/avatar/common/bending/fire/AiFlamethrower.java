@@ -38,7 +38,7 @@ public class AiFlamethrower extends BendingAi {
 
 	protected AiFlamethrower(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
-		setMutexBits(2);
+		setMutexBits(3);
 	}
 
 	@Override
@@ -60,13 +60,14 @@ public class AiFlamethrower extends BendingAi {
 		entity.rotationYaw = (float) toDegrees(rotations.y());
 		entity.rotationPitch = (float) toDegrees(rotations.x());
 
-		if (timeExecuting == 10) {
+		if (timeExecuting <= 2) {
 			execAbility();
 			execStatusControl(StatusControl.START_FLAMETHROW);
 		}
 
 		if (timeExecuting > 20 && timeExecuting < 100) {
 			BendingContext ctx = new BendingContext(bender.getData(), entity, bender, new Raytrace.Result());
+			System.out.println("H A L P");
 			FLAMETHROWER.tick(ctx);
 		}
 		if (timeExecuting >= 100) {

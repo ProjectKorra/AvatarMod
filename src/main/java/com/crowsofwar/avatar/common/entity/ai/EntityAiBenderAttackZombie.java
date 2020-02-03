@@ -17,7 +17,7 @@ public class EntityAiBenderAttackZombie  extends EntityAIBase {
 	public EntityAiBenderAttackZombie(EntityHumanBender bender) {
 		this.bender = bender;
 		this.followRange = 15;
-		setMutexBits(1);
+		setMutexBits(3);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class EntityAiBenderAttackZombie  extends EntityAIBase {
 				return false;
 			}
 
-			if (bender.getAttackTarget() == null) {
+			if (bender.getAttackTarget() == null && z != null) {
 				bender.setAttackTarget(z);
 			}
 

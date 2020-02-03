@@ -45,6 +45,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.passive.EntityTameable;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
@@ -343,33 +344,35 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				Vector start = look.plus(eye.minusY(0.5));
 
 				//Particle code.
-				if (world.isRemote) {
-					speedMult /= 28.75;
-					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
-						for (double i = 0; i < flamesPerSecond; i += 3) {
-							Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
-							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.5F).time(22).collide(true).spawnEntity(entity).vel(look.times(speedMult).toMinecraft())
-									.ability(new AbilityFlamethrower()).spawn(world);
-						}
-					}
-					for (int i = 0; i < flamesPerSecond; i++) {
-						Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
+				if (entity instanceof EntityPlayer) {
+					if (world.isRemote) {
+						speedMult /= 28.75;
 						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
-							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.5F).time(22).collide(true).vel(look.times(speedMult / 1.25).toMinecraft()).
-									ability(new AbilityFlamethrower()).spawnEntity(entity).spawn(world);
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-									.ability(new AbilityFlamethrower()).spawn(world);
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-									clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-									.ability(new AbilityFlamethrower()).spawn(world);
-						} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-									.ability(new AbilityFlamethrower()).spawn(world);
-							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-									clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-									.ability(new AbilityFlamethrower()).spawn(world);
+							for (double i = 0; i < flamesPerSecond; i += 3) {
+								Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
+								ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.5F).time(22).collide(true).spawnEntity(entity).vel(look.times(speedMult).toMinecraft())
+										.ability(new AbilityFlamethrower()).spawn(world);
+							}
+						}
+						for (int i = 0; i < flamesPerSecond; i++) {
+							Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
+							if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+								ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.5F).time(22).collide(true).vel(look.times(speedMult / 1.25).toMinecraft()).
+										ability(new AbilityFlamethrower()).spawnEntity(entity).spawn(world);
+								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
+										clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+										.ability(new AbilityFlamethrower()).spawn(world);
+								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
+										clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+										.ability(new AbilityFlamethrower()).spawn(world);
+							} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
+										clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+										.ability(new AbilityFlamethrower()).spawn(world);
+								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
+										clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+										.ability(new AbilityFlamethrower()).spawn(world);
+							}
 						}
 					}
 				}
@@ -421,6 +424,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		AbilityData abilityData = data.getAbilityData("flamethrower");
+		System.out.println("2.0: Help me");
 		if (entity instanceof EntityBender) {
 
 			//Don't remove this, it makes sure the ability data works properly.

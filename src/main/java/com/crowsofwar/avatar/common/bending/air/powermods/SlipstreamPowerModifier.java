@@ -16,6 +16,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -27,13 +28,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class SlipstreamPowerModifier extends BuffPowerModifier {
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public static void onSlipstreamInvisibility(RenderPlayerEvent event) {
-		if (event.getEntityPlayer() != null) {
-			EntityPlayer player = event.getEntityPlayer();
-			Bender b = Bender.get(player);
+	public static void onSlipstreamInvisibility(RenderLivingEvent event) {
+		if (event.getEntity() != null) {
+			EntityLivingBase entity = event.getEntity();
+			Bender b = Bender.get(entity);
 			if (b != null && b.getData() != null)
 				if (b.getData().getPowerRatingManager(Airbending.ID).hasModifier(SlipstreamPowerModifier.class))
-					if (player.getActivePotionEffect(MobEffects.INVISIBILITY) != null && player.getActivePotionEffect(MobEffects.INVISIBILITY).getDuration() > 0)
+					if (entity.getActivePotionEffect(MobEffects.INVISIBILITY) != null && entity.getActivePotionEffect(MobEffects.INVISIBILITY).getDuration() > 0)
 						event.setCanceled(true);
 		}
 	}

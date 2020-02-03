@@ -16,7 +16,7 @@ public class AiFireShot extends BendingAi {
 
 	AiFireShot(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
-		setMutexBits(2);
+		setMutexBits(3);
 	}
 
 	@Override

@@ -105,8 +105,8 @@ public abstract class EntityHumanBender extends EntityBender {
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 
-		this.tasks.addTask(4, new EntityAiBenderAttackZombie(this));
-		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
+		this.tasks.addTask(3, new EntityAiBenderAttackZombie(this));
+		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.tasks.addTask(4, aiGiveScroll = new EntityAiGiveScroll(this, getScrollType(), this.getLevel() - 1));
 		addBendingTasks();
 		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));
@@ -231,42 +231,42 @@ public abstract class EntityHumanBender extends EntityBender {
 
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		hasAttemptedTrade = false;
+		if (this.getLastAttackedEntity() != player) {
+			hasAttemptedTrade = false;
 
-		ItemStack stack = player.getHeldItem(hand);
+			ItemStack stack = player.getHeldItem(hand);
 		/*int amount = stack.getCount();
 		int tradeAmount = getTradeAmount(stack.getItem());**/
 
-		if (this.isTradeItem(stack.getItem()) && !world.isRemote/* && amount >= tradeAmount**/) {
+			if (this.isTradeItem(stack.getItem()) && !world.isRemote/* && amount >= tradeAmount**/) {
 
-			if (getScrollsLeft() > 0) {
-				if (aiGiveScroll.giveScrollTo(player)) {
-					System.out.println("Trade started");
-					// Take item
-					setScrollsLeft(getScrollsLeft() - 1);
-					if (!player.capabilities.isCreativeMode) {
-						stack.shrink(1);
+				if (getScrollsLeft() > 0) {
+					if (aiGiveScroll.giveScrollTo(player)) {
+						System.out.println("Trade started");
+						// Take item
+						setScrollsLeft(getScrollsLeft() - 1);
+						if (!player.capabilities.isCreativeMode) {
+							stack.shrink(1);
+						}
+
 					}
-
+					hasAttemptedTrade = true;
+				} else {
+					MSG_HUMANBENDER_NO_SCROLLS.send(player);
+					AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onNpcNoScrolls());
 				}
+
+				return true;
+
+			} else if (!(this.isTradeItem(stack.getItem())) && !world.isRemote && !hasAttemptedTrade) {
+				getTradeFailMessage().send(player);
 				hasAttemptedTrade = true;
-			} else {
-				MSG_HUMANBENDER_NO_SCROLLS.send(player);
-				AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onNpcNoScrolls());
+				return true;
 			}
 
-			return true;
 
 		}
-		else if (!(this.isTradeItem(stack.getItem())) && !world.isRemote && !hasAttemptedTrade){
-			getTradeFailMessage().send(player);
-			hasAttemptedTrade = true;
-			return true;
-		}
-
-
 		return true;
-
 	}
 
 	public void setInitialScrolls(int level) {

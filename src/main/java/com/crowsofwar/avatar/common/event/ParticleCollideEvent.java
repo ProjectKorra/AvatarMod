@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.event;
 
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.event.entity.EntityEvent;
 
@@ -29,7 +30,7 @@ public class ParticleCollideEvent extends EntityEvent {
 		this.particle = particle;
 		this.spawner = spawner;
 		this.ability = ability;
-		this.bendingID = ability.getBendingId();
+		this.bendingID = ability == null ? Airbending.ID : ability.getBendingId();
 	}
 
 	public ParticleAvatar getParticle() {

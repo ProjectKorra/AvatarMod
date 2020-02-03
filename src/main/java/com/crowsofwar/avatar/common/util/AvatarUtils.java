@@ -103,7 +103,7 @@ public class AvatarUtils {
 	}
 
 	public static ParticleAvatar getParticleFromUUID(UUID id) {
-		if (!getAliveParticles().isEmpty()) {
+		if (!getAliveParticles().isEmpty() && getAliveParticles().peek() != null) {
 			for (Particle particle : getAliveParticles()) {
 				if(particle instanceof ParticleAvatar) {
 					if (((ParticleAvatar) particle).getUUID().equals(id)) {

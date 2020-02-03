@@ -334,6 +334,8 @@ public abstract class Bender {
 			for (TickHandler handler : tickHandlers) {
 				if (handler != null) {
 					if (handler.tick(ctx)) {
+						if (!(entity instanceof EntityPlayer))
+							handler.renderTick(ctx);
 						// Can use this since the list is a COPY of the
 						// underlying list
 						data.removeTickHandler(handler);
