@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -57,8 +58,11 @@ public class RenderHumanBender extends RenderLiving<EntityHumanBender> {
 		if (bender != null) {
 			BendingData data = BendingData.getFromEntity(entity);
 			if (data != null) {
-				if (data.hasTickHandler(FLAMETHROWER))
+				if (data.hasStatusControl(StatusControl.STOP_FLAMETHROW)) {
+					System.out.println("nice");
 					FLAMETHROWER.renderTick(new BendingContext(data, entity, bender, new Raytrace.Result()));
+				}
+
 			}
 			bender.onRenderUpdate();
 		}

@@ -39,7 +39,7 @@ public class AiFlamethrower extends BendingAi {
 
 	protected AiFlamethrower(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
-		setMutexBits(3);
+		setMutexBits(2);
 	}
 
 	@Override
@@ -71,6 +71,7 @@ public class AiFlamethrower extends BendingAi {
 
 		if (timeExecuting > 20 && timeExecuting < 100) {
 			BendingContext ctx = new BendingContext(bender.getData(), entity, bender, new Raytrace.Result());
+			execStatusControl(StatusControl.START_FLAMETHROW);
 			FLAMETHROWER.tick(ctx);
 			FLAMETHROWER.renderTick(ctx);
 		}
@@ -90,11 +91,13 @@ public class AiFlamethrower extends BendingAi {
 	protected boolean shouldExec() {
 		int amount = Math.max(bender.getData().getAbilityData(new AbilityFlamethrower()).getLevel(), 0) + 7;
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSq(target) < amount * amount;
+		return target != null && entity.getDistance(target) < amount;
 	}
 
 	@Override
 	protected void startExec() {
+		bender.getData().addStatusControl(StatusControl.START_FLAMETHROW);
+		execAbility();
 	}
 
 }

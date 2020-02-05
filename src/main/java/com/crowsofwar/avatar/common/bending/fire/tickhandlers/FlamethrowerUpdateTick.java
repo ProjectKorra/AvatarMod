@@ -344,7 +344,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				Vector start = look.plus(eye.minusY(0.5));
 
 				//Particle code.
-				if (entity instanceof EntityPlayer) {
+				//if (entity instanceof EntityPlayer) {
 					if (world.isRemote) {
 						speedMult /= 28.75;
 						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
@@ -375,7 +375,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 							}
 						}
 					}
-				}
+				//}
 
 				if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)
 					world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
@@ -424,12 +424,9 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		AbilityData abilityData = data.getAbilityData("flamethrower");
-		System.out.println("2.0: Help me");
+		//System.out.println("2.0: Help me");
 		if (entity instanceof EntityBender) {
 
-			//Don't remove this, it makes sure the ability data works properly.
-			if (!world.isRemote)
-				abilityData = data.getAbilityData(new AbilityFlamethrower().getName());
 
 			AbilityTreePath path = abilityData.getPath();
 

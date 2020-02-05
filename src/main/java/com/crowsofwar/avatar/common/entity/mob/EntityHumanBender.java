@@ -18,9 +18,14 @@ package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.common.entity.ai.EntityAiBenderAttackZombie;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.TickHandlerController;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.ai.EntityAIAttackMobs;
+import com.crowsofwar.avatar.common.entity.ai.EntityAIBenderDefendVillage;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiGiveScroll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -46,7 +51,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_HUMANBENDER_NO_SCROLLS;
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_NEED_TRADE_ITEM;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
@@ -71,12 +75,12 @@ public abstract class EntityHumanBender extends EntityBender {
 		this.hasAttemptedTrade = false;
 	}
 
-	public void setScrollsLeft(int scrolls) {
-		dataManager.set(SYNC_SCROLLS_LEFT, scrolls);
-	}
-
 	public int getScrollsLeft() {
 		return dataManager.get(SYNC_SCROLLS_LEFT);
+	}
+
+	public void setScrollsLeft(int scrolls) {
+		dataManager.set(SYNC_SCROLLS_LEFT, scrolls);
 	}
 
 	@Override
@@ -105,8 +109,9 @@ public abstract class EntityHumanBender extends EntityBender {
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 
-		this.tasks.addTask(3, new EntityAiBenderAttackZombie(this));
-		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+		this.targetTasks.addTask(0, new EntityAIBenderDefendVillage(this));
+		this.targetTasks.addTask(2, new EntityAIAttackMobs(this));
+		this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, false));
 		this.tasks.addTask(4, aiGiveScroll = new EntityAiGiveScroll(this, getScrollType(), this.getLevel() - 1));
 		addBendingTasks();
 		this.tasks.addTask(6, new EntityAIWanderAvoidWater(this, 1.0D));
@@ -147,12 +152,12 @@ public abstract class EntityHumanBender extends EntityBender {
 		return dataManager.get(SYNC_SKIN);
 	}
 
-	protected FormattedMessage getTradeFailMessage() {
-		return MSG_NEED_TRADE_ITEM;
-	}
-
 	public void setSkin(int skin) {
 		dataManager.set(SYNC_SKIN, skin);
+	}
+
+	protected FormattedMessage getTradeFailMessage() {
+		return MSG_NEED_TRADE_ITEM;
 	}
 
 	@Override
@@ -271,5 +276,13 @@ public abstract class EntityHumanBender extends EntityBender {
 
 	public void setInitialScrolls(int level) {
 		setScrollsLeft(level);
+	}
+
+
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		if (getData().hasTickHandler(TickHandlerController.FLAMETHROWER))
+			TickHandlerController.FLAMETHROWER.tick(new BendingContext(getData(), this, Bender.get(this), new Raytrace.Result()));
 	}
 }
