@@ -52,9 +52,11 @@ public class AvatarItems {
 	public static ItemOstrichEquipment itemOstrichEquipment;
 	public static ItemStack stackScroll;
 	public static ItemAirbenderStaff airbenderStaff;
-	public static ItemHangGliderPart GLIDER_PART_Scaffolding;
-	public static ItemHangGliderPart GLIDER_PART_LeftWing;
-	public static ItemHangGliderPart GLIDER_PART_RightWing;
+	public static ItemHangGliderPart gliderPartScaffolding;
+	public static ItemHangGliderPart gliderPartLeftWing;
+	public static ItemHangGliderPart gliderPartRightWing;
+	public static ItemHangGliderBasic gliderBasic;
+	public static ItemHangGliderAdvanced gliderAdv;
 	public static ItemHangGliderBasic GLIDER_BASIC;
 	public static ItemHangGliderAdvanced GLIDER_ADV;
 
@@ -79,8 +81,8 @@ public class AvatarItems {
 		addItem(itemBisonSaddle = new ItemBisonSaddle());
 		addItem(itemOstrichEquipment = new ItemOstrichEquipment());
 		addItem(airbenderStaff = new ItemAirbenderStaff(Item.ToolMaterial.WOOD));
-		addItem(GLIDER_BASIC = new ItemHangGliderBasic());
-		addItem(GLIDER_ADV = new ItemHangGliderAdvanced());
+		addItem(gliderBasic = new ItemHangGliderBasic());
+		addItem(gliderAdv = new ItemHangGliderAdvanced());
 
 		stackScroll = new ItemStack(Scrolls.ALL);
 		MinecraftForge.EVENT_BUS.register(new AvatarItems());
@@ -91,11 +93,11 @@ public class AvatarItems {
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
-		itemRender(GLIDER_BASIC, 0, GliderInfo.ITEM_GLIDER_BASIC_NAME);
-		itemRender(GLIDER_ADV, 0, GliderInfo.ITEM_GLIDER_ADVANCED_NAME);
-		itemRender(GLIDER_PART_LeftWing, 0, ItemHangGliderPart.names[0]);
-		itemRender(GLIDER_PART_RightWing, 1, ItemHangGliderPart.names[1]);
-		itemRender(GLIDER_PART_Scaffolding, 2, ItemHangGliderPart.names[2]);
+		itemRender(gliderBasic, 0, GliderInfo.ITEM_GLIDER_BASIC_NAME);
+		itemRender(gliderAdv, 0, GliderInfo.ITEM_GLIDER_ADVANCED_NAME);
+		itemRender(gliderPartLeftWing, 0, ItemHangGliderPart.names[0]);
+		itemRender(gliderPartRightWing, 1, ItemHangGliderPart.names[1]);
+		itemRender(gliderPartScaffolding, 2, ItemHangGliderPart.names[2]);
 
 	}
 
@@ -114,9 +116,9 @@ public class AvatarItems {
 		Item[] itemsArr = allItems.toArray(new Item[allItems.size()]);
 		e.getRegistry().registerAll(itemsArr);
 
-		e.getRegistry().register(new ItemHangGliderPart().setRegistryName("avatarmod:" + GliderInfo.ITEM_GLIDER_PART_NAME));
-		//e.getRegistry().register(new ItemHangGliderBasic().setRegistryName("avatarmod:" + GliderInfo.ITEM_GLIDER_BASIC_NAME));
-		//e.getRegistry().register(new ItemHangGliderAdvanced().setRegistryName("avatarmod:" + GliderInfo.ITEM_GLIDER_ADVANCED_NAME));
+		e.getRegistry().register(new ItemHangGliderPart().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.ITEM_GLIDER_PART_NAME));
+		e.getRegistry().register(new ItemHangGliderBasic().setRegistryName(AvatarInfo.MOD_ID+ GliderInfo.ITEM_GLIDER_BASIC_NAME));
+		//e.getRegistry().register(new ItemHangGliderAdvanced().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.ITEM_GLIDER_ADVANCED_NAME));
 
 		AvatarMod.proxy.registerItemModels();
 	}

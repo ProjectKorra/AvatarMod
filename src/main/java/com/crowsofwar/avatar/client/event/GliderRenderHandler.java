@@ -49,37 +49,6 @@ public class GliderRenderHandler {
         }
     }
 
-    /**
-     * Makes the player's body rotate visually to be flat, parallel to the ground (e.g. like superman flies).
-     *
-     * @param playerEntity - the player to rotate
-     * @param x - player's x pos
-     * @param y - player's y pos
-     * @param z - player's z pos
-     */
-    private void rotateToHorizontal(EntityPlayer playerEntity, double x, double y, double z){
-
-        float partialTicks = Minecraft.getMinecraft().getRenderPartialTicks();
-        double interpolatedYaw = (playerEntity.prevRotationYaw + (playerEntity.rotationYaw - playerEntity.prevRotationYaw) * partialTicks);
-
-        GlStateManager.pushMatrix();
-        //7. Set position back to normal
-        GlStateManager.translate(x, y, z);
-        //6. Redo yaw rotation
-        GlStateManager.rotate((float) -interpolatedYaw, 0, 1, 0);
-        //5. Move back to (0, 0, 0)
-        GlStateManager.translate(0, playerEntity.height / 2f, 0);
-        //4. Rotate about x, so player leans over forward (z direction is forwards)
-        GlStateManager.rotate(90, 1, 0, 0);
-        //3. So we rotate around the centre of the player instead of the bottom of the player
-        GlStateManager.translate(0, -playerEntity.height / 2f, 0);
-        //2. Undo yaw rotation (this will make the player face +z (south)
-        GlStateManager.rotate((float) interpolatedYaw, 0, 1, 0);
-        //1. Set position to (0, 0, 0)
-        GlStateManager.translate(-x, -y, -z);
-
-    }
-
     @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
     public void onRender(RenderPlayerEvent.Post event) {
         if (this.needToPop) {

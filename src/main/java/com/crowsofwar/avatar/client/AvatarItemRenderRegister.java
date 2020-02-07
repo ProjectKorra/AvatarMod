@@ -71,8 +71,11 @@ public class AvatarItemRenderRegister {
         register(AvatarItems.GLIDER_ADV);
 
 		register(AvatarItems.GLIDER_BASIC);
+		register(AvatarItems.gliderBasic);
 		//TODO: Register the other glider parts
 		register(AvatarItems.GLIDER_ADV);
+
+		register(AvatarItems.gliderAdv);
 
 		for (int i = 0; i <= 3; i++) {
 			register(AvatarItems.itemBisonArmor, i);
