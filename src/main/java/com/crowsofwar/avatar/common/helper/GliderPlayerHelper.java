@@ -65,32 +65,10 @@ public class GliderPlayerHelper {
                         player.motionZ += z; //ToDo: Wrong, need multiplication to slow down
 
                     } else {
-//                        player.setNoGravity(true);
-//                        double velocityToAdd = 0.25f;
-//                        player.getPitchYaw();
-//
-//                        double xValue = player.getLookVec().x * velocityToAdd;
-//                        double yValue = player.getLookVec().y * velocityToAdd;
-//                        double zValue = player.getLookVec().z * velocityToAdd;
-//
-//                        player.addVelocity(xValue,yValue,zValue);
-                        final float speed = (float) MathHelper.clampedLerp(1, 10, player.moveForward);
-                        final float elevationBoost = transform(
-                                Math.abs(player.rotationPitch),
-                                45.0F, 90.0F,
-                                1.0F, 0.0F
-                        );
-                        final float pitch = -toRadians(player.rotationPitch - 30.0f * elevationBoost);
-                        final float yaw = -toRadians(player.rotationYaw) - (float)Math.PI;
-                        final float vxz = -MathHelper.cos(pitch);
-                        final float vy = MathHelper.sin(pitch);
-                        final float vz = MathHelper.cos(yaw);
-                        final float vx = MathHelper.sin(yaw);
-                        player.motionX += vx * vxz * speed;
-                        player.motionY += (vy * speed + 0.05f * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D)) * 0.5;
-                        player.motionZ += vz * vxz * speed;
-                        player.fallDistance = 0.0f;
-                        //player.addVelocity(xValue, yValue, zValue);
+                        double xValue = player.getLookVec().x * MathHelper.clamp(0.5f, 0.1, 4);
+                        double yValue = player.getLookVec().y * MathHelper.clamp(0.5f, 0.1, 4);
+                        double zValue = player.getLookVec().z * MathHelper.clamp(0.5f, 0.1, 10);
+                        player.addVelocity(xValue, yValue, zValue);
                     }
 
 
