@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.api.item.IGlider;
 import com.crowsofwar.avatar.client.model.ModelGlider;
 import com.crowsofwar.avatar.common.config.ConfigHandler;
 import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -17,6 +18,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderSpecificHandEvent;
@@ -27,7 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GliderEventHandler extends Gui {
+public class GliderRenderHandler {
 
 
     //==================================================Rotating the Player to a Flying Position (Horizontal)=====================================
@@ -41,7 +43,7 @@ public class GliderEventHandler extends Gui {
             if (GliderHelper.getIsGliderDeployed((EntityPlayer) event.getEntity())) { //if gliderBasic deployed
                 if (!GliderPlayerHelper.shouldBeGliding(playerEntity)) return; //don't continue if player is not flying
                 if (Minecraft.getMinecraft().currentScreen instanceof GuiInventory) return; //don't rotate if the player rendered is in an inventory
-                rotateToHorizontal(event.getEntityPlayer(), event.getX(), event.getY(), event.getZ()); //rotate player to flying position
+                AvatarUtils.setRotationFromPosition(event.getEntityPlayer(), new Vec3d(event.getX(), event.getY(), event.getZ()));//rotate player to flying position
                 this.needToPop = true; //mark the matrix to pop
             }
         }

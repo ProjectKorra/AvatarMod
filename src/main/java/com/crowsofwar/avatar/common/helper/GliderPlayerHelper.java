@@ -5,7 +5,9 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.api.item.IGlider;
 import com.crowsofwar.avatar.common.config.ConfigHandler;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketClientGliding;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketHandler;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketServerGliding;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketUpdateGliderDamage;
 import com.crowsofwar.avatar.common.wind.WindHelper;
 import net.minecraft.block.Block;
@@ -17,6 +19,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 
@@ -28,29 +31,68 @@ public class GliderPlayerHelper {
      *
      * @param player - the player gliding
      */
+    private static final float MIN_SPEED = 0.03F;
+
+    private static final float MAX_SPEED = 0.0715F;
     public static void updatePosition(EntityPlayer player){
         boolean isAirbender = BendingData.get(player).getAllBending().contains(BendingStyles.get("airbending"));
         if (shouldBeGliding(player)) {
             ItemStack glider = GliderHelper.getGlider(player);
             if (isValidGlider(glider)) {
                 if (player.motionY < 0) { //if falling (flying)
-
+                    IGlider iGlider = (IGlider) glider.getItem();
                     // Init variables
                     final double horizontalSpeed;
                     final double verticalSpeed;
-                    IGlider iGlider = (IGlider) glider.getItem();
                     boolean isJumping = Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode());
                     // Get speed depending on glider and if player is sneaking
-                    if (!player.isSneaking() && !(isAirbender && isJumping)) {
+                    if (!player.isSneaking()) {
                         horizontalSpeed = iGlider.getHorizontalFlightSpeed();
                         verticalSpeed = iGlider.getVerticalFlightSpeed();
-                    } else if(isAirbender && isJumping){
-                        horizontalSpeed = iGlider.getSpaceHorizontalFlightSpeed();
-                        verticalSpeed = -iGlider.getSpaceVerticalFlightSpeed();
                     } else {
                         horizontalSpeed = iGlider.getShiftHorizontalFlightSpeed();
                         verticalSpeed = iGlider.getShiftVerticalFlightSpeed();
                     }
+                    if(!isAirbender) {
+                        player.setNoGravity(false);
+                        // Apply falling motion
+                        player.motionY *= verticalSpeed;
+
+                        // Apply forward motion
+                        double x = Math.cos(Math.toRadians(player.rotationYaw + 90)) * horizontalSpeed;
+                        double z = Math.sin(Math.toRadians(player.rotationYaw + 90)) * horizontalSpeed;
+                        player.motionX += x;
+                        player.motionZ += z; //ToDo: Wrong, need multiplication to slow down
+
+                    } else {
+//                        player.setNoGravity(true);
+//                        double velocityToAdd = 0.25f;
+//                        player.getPitchYaw();
+//
+//                        double xValue = player.getLookVec().x * velocityToAdd;
+//                        double yValue = player.getLookVec().y * velocityToAdd;
+//                        double zValue = player.getLookVec().z * velocityToAdd;
+//
+//                        player.addVelocity(xValue,yValue,zValue);
+                        final float speed = (float) MathHelper.clampedLerp(1, 10, player.moveForward);
+                        final float elevationBoost = transform(
+                                Math.abs(player.rotationPitch),
+                                45.0F, 90.0F,
+                                1.0F, 0.0F
+                        );
+                        final float pitch = -toRadians(player.rotationPitch - 30.0f * elevationBoost);
+                        final float yaw = -toRadians(player.rotationYaw) - (float)Math.PI;
+                        final float vxz = -MathHelper.cos(pitch);
+                        final float vy = MathHelper.sin(pitch);
+                        final float vz = MathHelper.cos(yaw);
+                        final float vx = MathHelper.sin(yaw);
+                        player.motionX += vx * vxz * speed;
+                        player.motionY += (vy * speed + 0.05f * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D)) * 0.5;
+                        player.motionZ += vz * vxz * speed;
+                        player.fallDistance = 0.0f;
+                        //player.addVelocity(xValue, yValue, zValue);
+                    }
+
 
                     // Apply wind effects
                     WindHelper.applyWind(player, glider);
@@ -59,15 +101,6 @@ public class GliderPlayerHelper {
                     if (ConfigHandler.heatUpdraftEnabled) {
                         applyHeatUplift(player, iGlider);
                     }
-
-                    // Apply falling motion
-                    player.motionY *= verticalSpeed;
-
-                    // Apply forward motion
-                    double x = Math.cos(Math.toRadians(player.rotationYaw + 90)) * horizontalSpeed;
-                    double z = Math.sin(Math.toRadians(player.rotationYaw + 90)) * horizontalSpeed;
-                    player.motionX += x;
-                    player.motionZ += z; //ToDo: Wrong, need multiplication to slow down
 
                     // Apply air resistance
                     if (ConfigHandler.airResistanceEnabled) {
@@ -101,12 +134,25 @@ public class GliderPlayerHelper {
                 }
 
                 //SetPositionAndUpdate on server only
-
+                player.setNoGravity(false);
             } else { //Invalid item (likely changed selected item slot, update)
                 GliderHelper.setIsGliderDeployed(player, false);
             }
         }
 
+    }
+
+    public static float toRadians(final float degrees) {
+        return degrees * (float) (Math.PI / 180.0D);
+    }
+    public static float transform(final float x, final float domainMin, final float domainMax, final float rangeMin, final float rangeMax) {
+        if (x <= domainMin) {
+            return rangeMin;
+        }
+        if (x >= domainMax) {
+            return rangeMax;
+        }
+        return (rangeMax - rangeMin) * (x - domainMin) / (domainMax - domainMin) + rangeMin;
     }
 
     private static void applyHeatUplift(EntityPlayer player, IGlider glider) {
