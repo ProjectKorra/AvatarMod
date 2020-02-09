@@ -19,6 +19,7 @@ package com.crowsofwar.gorecore.data;
 
 import java.util.UUID;
 
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,7 +63,7 @@ public interface PlayerDataFetcher<T extends PlayerData> {
 		if (world == null) throw new IllegalArgumentException("Cannot get player-data with null World");
 		if (playerName == null)
 			throw new IllegalArgumentException("Cannot get player-data with null player name");
-		return fetch(world, AccountUUIDs.getId(playerName));
+		return fetch(world, AvatarEntityUtils.getPlayerFromUsername(playerName).getUniqueID());//AccountUUIDs.getId(playerName));
 	}
 	
 	/**

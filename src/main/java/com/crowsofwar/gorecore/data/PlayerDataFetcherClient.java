@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 
@@ -94,7 +95,7 @@ public class PlayerDataFetcherClient<T extends PlayerData> implements PlayerData
 	private T createPlayerData(Class<T> dataClass, UUID playerID) {
 		try {
 			
-			EntityPlayer player = AccountUUIDs.findEntityFromUUID(mc.world, playerID);
+			EntityPlayer player = AvatarEntityUtils.getPlayerFromStringID(playerID.toString());//AccountUUIDs.findEntityFromUUID(mc.world, playerID);
 			return dataClass.getConstructor(DataSaver.class, UUID.class, EntityPlayer.class)
 					.newInstance(new DataSaverDontSave(), playerID, player);
 			
@@ -118,7 +119,7 @@ public class PlayerDataFetcherClient<T extends PlayerData> implements PlayerData
 			if (onCreate != null) onCreate.accept(data);
 		}
 		
-		data.setPlayerEntity(AccountUUIDs.findEntityFromUUID(world, playerID));
+		data.setPlayerEntity(AvatarEntityUtils.getPlayerFromStringID(playerID.toString()));//AccountUUIDs.findEntityFromUUID(world, playerID));
 		return data;
 	}
 	

@@ -591,7 +591,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		if (willBeOwned) {
 			playTameEffect(true);
-			setOwnerId(AccountUUIDs.getId(player.getName()));
+			setOwnerId(player.getUniqueID());//AccountUUIDs.getId(player.getName()));
 			if (!player.capabilities.isCreativeMode) {
 				stack.shrink(1);
 			}
