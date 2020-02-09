@@ -41,7 +41,7 @@ public class PacketSRequestData extends AvatarPacket<PacketSRequestData> {
 	}
 
 	public PacketSRequestData(EntityPlayer player) {
-		this.asking = AccountUUIDs.getId(player.getName());
+		this.asking = player.getUniqueID();//AccountUUIDs.getId(player.getName());
 	}
 
 	@Override

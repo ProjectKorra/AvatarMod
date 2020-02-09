@@ -45,6 +45,7 @@ import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.avatar.common.network.packets.*;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.PlayerViewRegistry;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -185,8 +186,7 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleRequestData(PacketSRequestData packet, MessageContext ctx) {
 
 		UUID id = packet.getAskedPlayer();
-		EntityPlayer player = AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().player.world,
-				id);
+		EntityPlayer player = AvatarEntityUtils.getPlayerFromStringID(id.toString());//AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().player.world, id);
 
 		if (player == null) {
 

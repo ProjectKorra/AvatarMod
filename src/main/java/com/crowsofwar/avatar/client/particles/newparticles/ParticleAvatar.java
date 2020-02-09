@@ -793,7 +793,8 @@ public abstract class ParticleAvatar extends Particle {
 							this.motionY += hit.motionY;
 							this.motionZ += hit.motionZ;
 						}
-						AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
+						if (hit != null && spawnEntity != null && getAbility() != null)
+							AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
 					} else if (spawnEntity != null && getAbility() != null && hit != spawnEntity && !(hit instanceof AvatarEntity) || hit instanceof AvatarEntity && ((AvatarEntity) hit).getOwner() != spawnEntity && !collidedWithSolid) {
 						//Send packets
 						//TODO: Find a way to reduce lag
