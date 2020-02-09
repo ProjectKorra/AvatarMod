@@ -209,14 +209,15 @@ public class AvatarUiRenderer extends Gui {
 				// Dimensions of end result in pixels
 				float scale = 1.1f;
 				float width = 100 * scale;
-				float height = 9 * scale;
+				float height = 9F * (float) CLIENT_CONFIG.chiBarSettings.heightScale;
 
 				mc.getTextureManager().bindTexture(AvatarUiTextures.CHI_BAR);
 
 				pushMatrix();
 
-				translate(resolution.getScaledWidth() - 115, resolution.getScaledHeight() - height - 3, 0);
-				scale(scale, scale, 1);
+				translate(resolution.getScaledWidth() - CLIENT_CONFIG.chiBarSettings.xPos,
+						resolution.getScaledHeight() - height - CLIENT_CONFIG.chiBarSettings.yPos, 0);
+				scale(CLIENT_CONFIG.chiBarSettings.widthScale, CLIENT_CONFIG.chiBarSettings.heightScale, 1);
 
 				// Background of chi bar
 				drawTexturedModalRect(0, 0, 0, 36, 100, 9);
@@ -277,7 +278,9 @@ public class AvatarUiRenderer extends Gui {
 							((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER))
 							/ CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration * CLIENT_CONFIG.bendingCycleAlpha : CLIENT_CONFIG.bendingCycleAlpha;
 					GlStateManager.color(1, 1, 1, alpha);
-					drawBendingIcon(0, -30, data.getActiveBending(), 50.0, 50.0);
+					drawBendingIcon(CLIENT_CONFIG.activeBendingSettings.middleXPosition,
+							CLIENT_CONFIG.activeBendingSettings.middleYPosition, data.getActiveBending(),
+							CLIENT_CONFIG.activeBendingSettings.middleBendingWidth, CLIENT_CONFIG.activeBendingSettings.middleBendingHeight);
 
 
 					List<BendingStyle> allBending = data.getAllBending();
@@ -290,7 +293,9 @@ public class AvatarUiRenderer extends Gui {
 					if (allBending.size() > 1) {
 						GlStateManager.pushMatrix();
 						GlStateManager.translate(0, 0, -1);
-						drawBendingIcon(50, 5, allBending.get(indexNext), 35.0, 35.0);
+						drawBendingIcon(CLIENT_CONFIG.activeBendingSettings.rightXPosition, CLIENT_CONFIG.activeBendingSettings.rightYPosition,
+								allBending.get(indexNext), CLIENT_CONFIG.activeBendingSettings.rightBendingWidth,
+								CLIENT_CONFIG.activeBendingSettings.rightBendingHeight);
 						GlStateManager.color(1, 1, 1, alpha * 0.5f);
 
 						GlStateManager.popMatrix();
@@ -303,7 +308,8 @@ public class AvatarUiRenderer extends Gui {
 					if (allBending.size() > 2) {
 						GlStateManager.pushMatrix();
 						GlStateManager.translate(0, 0, -1);
-						drawBendingIcon(-35, 5, allBending.get(indexPrevious), 35.0, 35.0);
+						drawBendingIcon(CLIENT_CONFIG.activeBendingSettings.leftXPosition, CLIENT_CONFIG.activeBendingSettings.leftYPosition,
+								allBending.get(indexPrevious), CLIENT_CONFIG.activeBendingSettings.leftBendingWidth, CLIENT_CONFIG.activeBendingSettings.leftBendingHeight);
 						GlStateManager.color(1, 1, 1, alpha * 0.5f);
 
 						GlStateManager.popMatrix();

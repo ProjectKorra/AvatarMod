@@ -156,6 +156,19 @@ public class ConfigClient {
 		public final int bendingMenuDuration = 200;
 		//If the menu should disappear, how long it should take before disappearing
 
+		@Load
+		public final int middleXPosition = 0, rightXPosition = 50, leftXPosition = -35;
+		//The x pos of the middle/active bending, the bending icon on the right, and the bending icon on the left
+
+		@Load
+		public final int middleYPosition = -30, rightYPosition = 5, leftYPosition = 5;
+		//The xp pos of the bending icon on the left
+
+		@Load
+		public final float middleBendingWidth = 50, leftBendingWidth = 35, rightBendingWidth = 35;
+
+		@Load
+		public final float middleBendingHeight = 50, leftBendingHeight = 35, rightBendingHeight = 35;
 
 	}
 
@@ -171,6 +184,12 @@ public class ConfigClient {
 
 		@Load
 		public final int chibarDuration = 200;
+
+		@Load
+		public final double widthScale = 1.1F, heightScale = 1.1F;
+
+		@Load
+		public final int xPos = 115, yPos = 3;
 
 	}
 
