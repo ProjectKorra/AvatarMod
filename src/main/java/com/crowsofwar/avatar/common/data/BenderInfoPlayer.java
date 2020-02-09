@@ -1,10 +1,6 @@
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -19,7 +15,7 @@ public class BenderInfoPlayer extends BenderInfo {
 	private UUID playerId;
 
 	public BenderInfoPlayer(@Nonnull String playerName) {
-		this(AvatarEntityUtils.getPlayerFromUsername(playerName).getUniqueID());//AccountUUIDs.getId(playerName));
+		this(AccountUUIDs.getId(playerName));
 	}
 
 	public BenderInfoPlayer(@Nonnull UUID playerId) {
@@ -40,10 +36,6 @@ public class BenderInfoPlayer extends BenderInfo {
 	@Nullable
 	@Override
 	public Bender find(World world) {
-		Entity entity = AvatarEntityUtils.getEntityFromStringID(playerId.toString());
-		if (entity instanceof EntityLivingBase) {
-			return Bender.get((EntityLivingBase) entity);//AccountUUIDs.findEntityFromUUID(world, playerId));
-		}
-		return null;
+		return Bender.get(AccountUUIDs.findEntityFromUUID(world, playerId));
 	}
 }

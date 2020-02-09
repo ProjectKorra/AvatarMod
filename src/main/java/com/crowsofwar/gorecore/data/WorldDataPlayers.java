@@ -19,7 +19,6 @@ package com.crowsofwar.gorecore.data;
 
 import java.util.*;
 
-import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.util.*;
 
@@ -71,7 +70,7 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 		if (data == null) {
 			data = createNewPlayerData(player);
 			players.put(player, data);
-			data.setPlayerEntity(AvatarEntityUtils.getPlayerFromStringID(player.toString()));//AccountUUIDs.findEntityFromUUID(getWorld(), player));
+			data.setPlayerEntity(AccountUUIDs.findEntityFromUUID(getWorld(), player));
 			saveChanges();
 		}
 		Objects.requireNonNull(data, String.format("Couldn't create data for player \"%s\" and world \"%s\"!", player, getWorld().provider.getDimensionType().getName()));
@@ -90,7 +89,7 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 	public T getPlayerDataWithoutCreate(UUID player) {
 		T data = (T) players.get(player);
 		if (data != null && data.getPlayerEntity() == null) {
-			data.setPlayerEntity(AvatarEntityUtils.getPlayerFromStringID(player.toString()));//AccountUUIDs.findEntityFromUUID(getWorld(), player));
+			data.setPlayerEntity(AccountUUIDs.findEntityFromUUID(getWorld(), player));
 		}
 		return data;
 	}
@@ -100,7 +99,7 @@ public abstract class WorldDataPlayers<T extends PlayerData> extends WorldData {
 	private T createNewPlayerData(UUID player) {
 		try {
 			
-			EntityPlayer playerEntity = AvatarEntityUtils.getPlayerFromStringID(player.toString());//AccountUUIDs.findEntityFromUUID(getWorld(), player);
+			EntityPlayer playerEntity = AccountUUIDs.findEntityFromUUID(getWorld(), player);
 			if (playerEntity == null)
 				GoreCore.LOGGER.warn("WARNING: playerEntity was null while creating new player data");
 			PlayerData data = playerDataClass()

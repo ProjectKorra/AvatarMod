@@ -20,7 +20,6 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
-import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -32,7 +31,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -185,7 +183,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 						return new ActionResult<>(SUCCESS, stack);
 					} else {
 						UUID id = bison.getOwnerId();
-						String username = AvatarEntityUtils.getPlayerFromUsername(id.toString()).getName();//AccountUUIDs.getUsername(id);
+						String username = AccountUUIDs.getUsername(id);
 						MSG_BISON_TRANSFER_OFFLINE
 								.send(player, username == null ? "{error}" : username);
 					}
