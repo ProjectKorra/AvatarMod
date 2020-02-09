@@ -186,15 +186,18 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleRequestData(PacketSRequestData packet, MessageContext ctx) {
 
 		UUID id = packet.getAskedPlayer();
-		EntityPlayer player = AvatarEntityUtils.getPlayerFromStringID(id.toString());//AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().player.world, id);
+		EntityPlayer player = AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().player.world, id);
 
 		if (player == null) {
 
-			AvatarLog.warnHacking(ctx.getServerHandler().player.getName(),
-					"Sent request data for a player with account '" + id
-							+ "', but that player is not in the world.");
-			return null;
+			player = AvatarEntityUtils.getPlayerFromStringID(id.toString());
+			if (player == null) {
 
+				AvatarLog.warnHacking(ctx.getServerHandler().player.getName(),
+						"Sent request data for a player with account '" + id
+								+ "', but that player is not in the world.");
+				return null;
+			}
 		}
 
 		BendingData data = null;
