@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.network.packets;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -33,7 +34,7 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 		this.entity = entity;
 		this.particle = particle;
 		this.ability = ability;
-		this.bendingID = ability.getBendingId();
+		this.bendingID = ability.getBendingId() == null ? Airbending.ID : ability.getBendingId();
 		this.spawner = spawner;
 	}
 

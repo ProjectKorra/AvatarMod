@@ -801,10 +801,12 @@ public abstract class ParticleAvatar extends Particle {
 						if (!hit.getIsInvulnerable()) {
 							if (hit instanceof EntityLivingBase) {
 								if (((EntityLivingBase) hit).attackable() && hit.canBeAttackedWithItem())
+									if (((EntityLivingBase) hit).hurtTime == 0)
 									AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
 
 							} else
-								AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
+								if (hit.canBeAttackedWithItem())
+									AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
 						}
 					}
 				}

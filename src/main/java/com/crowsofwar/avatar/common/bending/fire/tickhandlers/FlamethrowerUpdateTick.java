@@ -129,14 +129,13 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						damage = 1.75F;
 						fireTime = 3;
 						range = 5;
-						performanceAmount = 2;
 						break;
 					case 2:
 						size = 1.5F;
 						fireTime = 4;
 						damage = 2.5F;
 						range = 7;
-						performanceAmount = 3;
+						performanceAmount = 2;
 						break;
 				}
 				if (level == 3 && path == AbilityTreePath.FIRST) {
@@ -146,7 +145,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					size = 1.25F;
 					damage = 4.5F;
 					range = 11;
-					performanceAmount = 4;
+					performanceAmount = 3;
 				}
 				if (level == 3 && path == AbilityTreePath.SECOND) {
 					speedMult = 12;
@@ -155,7 +154,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					size = 2.75F;
 					damage = 1.5F;
 					range = 6.5F;
-					performanceAmount = 2;
+					performanceAmount = 1;
 				}
 
 				// Affect stats by power rating
@@ -181,6 +180,8 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				List<Entity> raytraceTargets = Raytrace.entityRaytrace(world, start, look, range, size * 1.25F, entity1 -> canCollideWithEntity(entity1, entity));
 				if (raytraceTargets.contains(target) && !world.isRemote) {
 					if (canDamageEntity(target, entity)) {
+						if (!(target instanceof EntityLivingBase) || ((EntityLivingBase) target).attackable() &&
+								((EntityLivingBase) target).hurtTime == 0)
 						DamageUtils.attackEntity((EntityLivingBase) attacker, target, AvatarDamageSource.causeFlamethrowerDamage(target, attacker), damage, (int) performanceAmount,
 								new AbilityFlamethrower(), xp);
 						//NOTE: Add velocity like this is great for stuff like a water blast!
