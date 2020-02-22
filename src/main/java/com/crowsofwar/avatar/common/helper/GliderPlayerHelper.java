@@ -1,6 +1,8 @@
 package com.crowsofwar.avatar.common.helper;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.api.item.IGlider;
@@ -9,6 +11,7 @@ import com.crowsofwar.avatar.common.network.packets.glider.PacketClientGliding;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketHandler;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketServerGliding;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketUpdateGliderDamage;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.wind.WindHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -19,11 +22,13 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.lwjgl.input.Keyboard;
+
+import static com.crowsofwar.avatar.common.helper.MathHelper.*;
 
 public class GliderPlayerHelper {
+
+    private static final float FALL_REDUCTION = 0.9F;
 
     /**
      * Updates the position of the player when gliding.
@@ -31,107 +36,45 @@ public class GliderPlayerHelper {
      *
      * @param player - the player gliding
      */
-    private static final float MIN_SPEED = 0.03F;
-
-    private static final float MAX_SPEED = 0.0715F;
     public static void updatePosition(EntityPlayer player){
-        boolean isAirbender = BendingData.get(player).getAllBending().contains(BendingStyles.get("airbending"));
-        if (shouldBeGliding(player)) {
-            ItemStack glider = GliderHelper.getGlider(player);
-            if (isValidGlider(glider)) {
-                if (player.motionY < 0) { //if falling (flying)
-                    IGlider iGlider = (IGlider) glider.getItem();
-                    // Init variables
-                    final double horizontalSpeed;
-                    final double verticalSpeed;
-                    boolean isJumping = Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode());
-                    // Get speed depending on glider and if player is sneaking
-                    if (!player.isSneaking()) {
-                        horizontalSpeed = iGlider.getHorizontalFlightSpeed();
-                        verticalSpeed = iGlider.getVerticalFlightSpeed();
+        boolean isAirbender = BendingData.get(player).getActiveBending() instanceof Airbending;
+        ItemStack glider = GliderHelper.getGlider(player);
+        if(isValidGlider(glider)) {
+            IGlider iGlider = (IGlider) glider.getItem();
+            if (player.isServerWorld()) {
+                if (shouldBeGliding(player)) {
+                    if(isAirbender) {
+                        final float speed = (float) MathHelper.clampedLerp(iGlider.getMinSpeed(), iGlider.getMaxSpeed(), player.moveForward);
+                        final float elevationBoost = transform(
+                                Math.abs(player.rotationPitch),
+                                45.0F, 90.0F,
+                                1.0F, 0.0F);
+                        final float pitch = -toRadians(player.rotationPitch - iGlider.getPitchOffset() * elevationBoost);
+                        final float yaw = -toRadians(player.rotationYaw) - (float)Math.PI;
+                        final float vxz = -MathHelper.cos(pitch);
+                        final float vy = MathHelper.sin(pitch);
+                        final float vz = MathHelper.cos(yaw);
+                        final float vx = MathHelper.sin(yaw);
+                        player.motionX += vx * vxz * speed;
+                        player.motionY += vy * speed + iGlider.getYBoost() * (player.rotationPitch > 0.0F ? elevationBoost : 1.0D);
+                        player.motionZ += vz * vxz * speed;
                     } else {
-                        horizontalSpeed = iGlider.getShiftHorizontalFlightSpeed();
-                        verticalSpeed = iGlider.getShiftVerticalFlightSpeed();
-                    }
-                    if(!isAirbender) {
-                        player.setNoGravity(false);
-                        // Apply falling motion
-                        player.motionY *= verticalSpeed;
-
-                        // Apply forward motion
-                        double x = Math.cos(Math.toRadians(player.rotationYaw + 90)) * horizontalSpeed;
-                        double z = Math.sin(Math.toRadians(player.rotationYaw + 90)) * horizontalSpeed;
-                        player.motionX += x;
-                        player.motionZ += z; //ToDo: Wrong, need multiplication to slow down
-
-                    } else {
-                        double xValue = player.getLookVec().x * MathHelper.clamp(0.5f, 0.1, 4);
-                        double yValue = player.getLookVec().y * MathHelper.clamp(0.5f, 0.1, 4);
-                        double zValue = player.getLookVec().z * MathHelper.clamp(0.5f, 0.1, 10);
-                        player.addVelocity(xValue, yValue, zValue);
-                    }
-
-
-                    // Apply wind effects
-                    WindHelper.applyWind(player, glider);
-
-                    // Apply heat uplift
-                    if (ConfigHandler.heatUpdraftEnabled) {
-                        applyHeatUplift(player, iGlider);
-                    }
-
-                    // Apply air resistance
-                    if (ConfigHandler.airResistanceEnabled) {
-                        player.motionX *= iGlider.getAirResistance();
-                        player.motionZ *= iGlider.getAirResistance();
-                    }
-
-                    // Stop fall damage
-                    player.fallDistance = 0.0F;
-
-//                    playWindSound(player); //ToDo: sounds
-                }
-
-                //no wild arm swinging while flying
-                if (player.world.isRemote) {
-                    player.limbSwing = 0;
-                    player.limbSwingAmount = 0;
-                }
-
-                //damage the hang glider
-                if (ConfigHandler.durabilityEnabled) { //durability should be taken away
-                    if (!player.world.isRemote) { //server
-                        if (player.world.rand.nextInt(ConfigHandler.durabilityTimeframe) == 0) { //damage about once per x ticks
-                            PacketHandler.HANDLER.sendTo(new PacketUpdateGliderDamage(), (EntityPlayerMP) player); //send to client
-                            glider.damageItem(ConfigHandler.durabilityPerUse, player);
-                            if (((IGlider)(glider.getItem())).isBroken(glider)) { //broken item
-                                GliderHelper.setIsGliderDeployed(player, false);
-                            }
+                        if (player.motionY < 0.0D) {
+                            player.motionY *= FALL_REDUCTION;
                         }
+                        player.fallDistance = 0.0F;
                     }
                 }
-
-                //SetPositionAndUpdate on server only
-                player.setNoGravity(false);
-            } else { //Invalid item (likely changed selected item slot, update)
-                GliderHelper.setIsGliderDeployed(player, false);
+                if (player.motionY < 0.0D) {
+                    player.motionY *= iGlider.getFallReduction();
+                }
+                player.fallDistance = 0.0F;
             }
+        } else {
+            GliderHelper.setIsGliderDeployed(player, false);
         }
-
     }
 
-    public static float toRadians(final float degrees) {
-        return degrees * (float) (Math.PI / 180.0D);
-    }
-    public static float transform(final float x, final float domainMin, final float domainMax, final float rangeMin, final float rangeMax) {
-        if (x <= domainMin) {
-            return rangeMin;
-        }
-        if (x >= domainMax) {
-            return rangeMax;
-        }
-        return (rangeMax - rangeMin) * (x - domainMin) / (domainMax - domainMin) + rangeMin;
-    }
 
     private static void applyHeatUplift(EntityPlayer player, IGlider glider) {
 
@@ -258,7 +201,7 @@ public class GliderPlayerHelper {
      */
     private static boolean isValidGlider(ItemStack stack) {
         if (stack != null && !stack.isEmpty()) {
-            if (stack.getItem() instanceof IGlider && (!((IGlider)(stack.getItem())).isBroken(stack))) { //hang glider, not broken
+            if (stack.getItem() instanceof IGlider && (!((IGlider)(stack.getItem())).isBroken(stack))) { //glider, not broken
                 return true;
             }
         }
