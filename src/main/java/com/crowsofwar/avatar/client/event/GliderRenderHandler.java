@@ -43,7 +43,8 @@ public class GliderRenderHandler {
             if (GliderHelper.getIsGliderDeployed((EntityPlayer) event.getEntity())) { //if gliderBasic deployed
                 if (!GliderPlayerHelper.shouldBeGliding(playerEntity)) return; //don't continue if player is not flying
                 if (Minecraft.getMinecraft().currentScreen instanceof GuiInventory) return; //don't rotate if the player rendered is in an inventory
-                AvatarUtils.setRotationFromPosition(event.getEntityPlayer(), new Vec3d(event.getX(), event.getY(), event.getZ()));//rotate player to flying position
+                setRotationThirdPersonPerspective(event.getEntityPlayer(), event.getPartialRenderTick());
+                //AvatarUtils.setRotationFromPosition(event.getEntityPlayer(), new Vec3d(event.getX(), event.getY(), event.getZ()));//rotate player to flying position
                 this.needToPop = true; //mark the matrix to pop
             }
         }
@@ -145,6 +146,24 @@ public class GliderRenderHandler {
         {
             GlStateManager.translate(0, 1 * ConfigHandler.airbenderHeightGain, 0); //subtle speed effect (makes gliderBasic smaller looking)
         }
+    }
+
+    private void setRotationThirdPersonPerspective(EntityPlayer player, float partialTicks) {
+        //Handles gliders scale rotation and translation for third person perspective
+        float interpolatedPitch = (player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks) + 90;
+        //rotate the gliderBasic to the same orientation as the player is facing
+        GlStateManager.rotate((float) interpolatedPitch, 1, 0, 0);
+        float interpolatedYaw = (player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) - partialTicks);
+//        //rotate the gliderBasic to the same orientation as the player is facing
+        GlStateManager.rotate((float) -interpolatedYaw, 0, 1, 0);
+
+//        //rotate the gliderBasic so it is forwards facing, as it should be
+//        GlStateManager.rotate(180F, 0, 1, 0);
+//        GlStateManager.rotate(90F, 1, 0, 0);
+//        //move up to correct position (above player's head)
+//        GlStateManager.translate(0, ConfigHandler.gliderVisibilityFPPShiftAmount, 0);
+//        GlStateManager.translate(0, 0, -3f);
+
     }
 
 

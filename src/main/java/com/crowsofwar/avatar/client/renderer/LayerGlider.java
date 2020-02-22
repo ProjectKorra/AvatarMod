@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.client.renderer;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.api.item.IGlider;
 import com.crowsofwar.avatar.client.model.ModelGlider;
@@ -65,8 +66,7 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
             renderPlayer.addLayer(new LayerGlider(renderPlayer));
             System.out.println("added glider layer");
         } catch (Exception e) {
-            // failed to add layer
-            //ToDo: Add logger class
+            AvatarLog.error("Could not add glider layer!");
         }
     }
 }

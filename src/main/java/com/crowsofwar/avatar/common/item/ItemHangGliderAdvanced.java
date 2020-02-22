@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 public class ItemHangGliderAdvanced extends ItemHangGliderBase implements AvatarItem {
 
 	public ItemHangGliderAdvanced() {
-		super(ConfigHandler.advancedGliderHorizSpeed, ConfigHandler.advancedGliderVertSpeed, ConfigHandler.advancedGliderShiftHorizSpeed, ConfigHandler.advancedGliderShiftVertSpeed, ConfigHandler.advancedGliderSpaceHorizSpeed, ConfigHandler.advancedGliderSpaceVertSpeed, ConfigHandler.advancedGliderWindModifier, ConfigHandler.advancedGliderAirResistance, ConfigHandler.advancedGliderTotalDurability, ModelGlider.MODEL_GLIDER_ADVANCED_TEXTURE_RL);
+		super(ConfigHandler.advancedGliderMinSpeed, ConfigHandler.advancedGliderMaxSpeed, ConfigHandler.advancedGliderPitchOffset, ConfigHandler.advancedGliderYBoost, ConfigHandler.advancedGliderFallReduction, ConfigHandler.advancedGliderWindModifier, ConfigHandler.advancedGliderAirResistance, ConfigHandler.advancedGliderTotalDurability, ModelGlider.MODEL_GLIDER_ADVANCED_TEXTURE_RL);
 		setCreativeTab(AvatarItems.tabItems);
 		setTranslationKey(GliderInfo.ITEM_GLIDER_ADVANCED_NAME);
 	}

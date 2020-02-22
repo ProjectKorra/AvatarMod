@@ -15,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -29,40 +30,33 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.crowsofwar.avatar.api.helper.GliderHelper.getIsGliderDeployed;
+import static com.crowsofwar.avatar.api.helper.GliderHelper.setIsGliderDeployed;
+
 public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
 
     //ToDo: NBT saving tags of upgrade (need IRecipe for them)
 
-    private double horizSpeed;
-    private double vertSpeed;
-    private double shiftHorizSpeed;
-    private double shiftVertSpeed;
-    private double spaceHorizSpeed;
-    private double spaceVertSpeed;
+    private float minSpeed = 0.03F;
+    private float maxSpeed = 0.0715F;
+    private float pitchOffset = 10.0F;
+    private float yBoost = 0.025F;
+    private float fallReduction = 0.9F;
     private double windMultiplier;
     private double airResistance;
     private int totalDurability;
     private ResourceLocation modelRL;
 
-    public ItemHangGliderBase(double horizSpeed, double vertSpeed, double shiftHorizSpeed, double shiftVertSpeed, double spaceHorizSpeed, double spaceVertSpeed, double windMultiplier, double airResistance, int totalDurability, ResourceLocation modelRL) {
-        this.horizSpeed = horizSpeed;
-        this.vertSpeed = vertSpeed;
-        this.shiftHorizSpeed = shiftHorizSpeed;
-        this.shiftVertSpeed = shiftVertSpeed;
-        this.spaceHorizSpeed = spaceHorizSpeed;
-        this.spaceVertSpeed = spaceVertSpeed;
+    public ItemHangGliderBase(float minSpeed, float maxSpeed, float pitchOffset, float yBoost, float fallReduction, double windMultiplier, double airResistance, int totalDurability, ResourceLocation modelRL) {
         this.windMultiplier = windMultiplier;
         this.airResistance = airResistance;
         this.totalDurability = totalDurability;
         this.modelRL = modelRL;
-
-//        setHorizontalFlightSpeed(horizSpeed);
-//        setVerticalFlightSpeed(vertSpeed);
-//        setShiftHorizontalFlightSpeed(shiftHorizSpeed);
-//        setShiftVerticalFlightSpeed(vertSpeed);
-//        setWindMultiplier(windMultiplier);
-//        setTotalDurability(totalDurability);
-//        setModelTexture(modelRL);
+        this.minSpeed = minSpeed;
+        this.maxSpeed = maxSpeed;
+        this.pitchOffset = pitchOffset;
+        this.yBoost = yBoost;
+        this.fallReduction = fallReduction;
 
         setMaxDamage(totalDurability);
         setMaxStackSize(1);
@@ -76,7 +70,7 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
             }
 
             private boolean isGlidingGlider(EntityLivingBase entityIn, ItemStack stack){
-                return entityIn != null && entityIn instanceof EntityPlayer && com.crowsofwar.avatar.api.helper.GliderHelper.getIsGliderDeployed((EntityPlayer)entityIn) && GliderPlayerHelper.getGlider((EntityPlayer)entityIn) == stack;
+                return entityIn != null && entityIn instanceof EntityPlayer && getIsGliderDeployed((EntityPlayer)entityIn) && GliderPlayerHelper.getGlider((EntityPlayer)entityIn) == stack;
             }
 
         });
@@ -106,16 +100,16 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
             if (!hand.equals(EnumHand.MAIN_HAND)) return ActionResult.newResult(EnumActionResult.PASS, itemStack); //return if not using main hand
 
             //old deployment state
-            boolean isDeployed = com.crowsofwar.avatar.api.helper.GliderHelper.getIsGliderDeployed(player);
+            boolean isDeployed = getIsGliderDeployed(player);
 
             //toggle state of glider deployment
-            com.crowsofwar.avatar.api.helper.GliderHelper.setIsGliderDeployed(player, !isDeployed);
+            setIsGliderDeployed(player, !isDeployed);
 
             //client only
             if (!world.isRemote) {
                 //send packet to nearby players to update visually
                 EntityTracker tracker = world.getMinecraftServer().getWorld(player.dimension).getEntityTracker();
-                tracker.sendToTracking(player, PacketHandler.HANDLER.getPacketFrom(new PacketUpdateClientTarget(player, com.crowsofwar.avatar.api.helper.GliderHelper.getIsGliderDeployed(player))));
+                tracker.sendToTracking(player, PacketHandler.HANDLER.getPacketFrom(new PacketUpdateClientTarget(player, getIsGliderDeployed(player))));
             }
 
         } else {
@@ -126,53 +120,6 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
 
         return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);
     }
-
-    /**
-     * Handles the visual bobbing of reequipping the item.
-     * Doesn't do so unless the item breaks, or it is a new slot.
-     * This means that it won't bob when updating the damage value when flying.
-     *
-     * @param oldStack - the old stack selected
-     * @param newStack - the new stack selected
-     * @param slotChanged - if the slot was changed
-     *
-     * @return - True to cause re-equip, false otherwise
-     */
-
-    //ToDo: This bish (why does it error)
-    //ToDo: Possible solution: Ignore rendering when gliding, and add in model for bars.
-    /**
-     Hmm, so I have an item that changes texture depending on the state the player is in. The issue is with item re-equipping animation.
-
-     The item is a glider that turns into handlebars if the player has deployed the glider. The glider has durability, so every flight tick there is a chance for the glider to be damaged, which, by default, causes the re-equip animation. This looks odd with it bobbing up and down a lot, so I'd like to remove it. Here's what it looks like bobbing: https://streamable.com/o4sak Note that it also changes to the other texture before reverting back to the handlebars.
-
-     This can be fixed with an override of shouldCauseReequipAnimation(), but that causes the dynamic texturing of the item to not occur correctly, so the item changes to the glider sprite (not the handlebars as it should) and stays there. Video example: https://streamable.com/z9qze
-
-     Now, anyone have an idea of how to make it not bob up and down when flying/taking damage, but still respect the changing/dynamic item texture (glider sprite -> handlebars)?
-
-     Here's all my code for reference: https://github.com/gr8pefish/OpenGlider
-     */
-
-//    @Override
-//    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-//        if (oldStack.getItem() == newStack.getItem()) {
-//            if (newStack.getItem() instanceof ItemHangGliderBasic && isBroken(newStack))
-//                return true;
-//            else if (GliderHelper.getIsGliderDeployed(Minecraft.getMinecraft().thePlayer)) {
-//                return false;
-//            }
-//        }
-//        return !oldStack.equals(newStack);
-//    }
-//        return newStack.getItem() instanceof ItemHangGliderBase;
-//        if (slotChanged) return true;
-//        //ToDo: Allow broken stacks to reequip, need to alter fp rotation in the json files
-//        if (newStack != null && newStack.getItem() != null && newStack.getItem() instanceof ItemHangGliderBasic && isBroken(newStack))
-//            return true;
-//        else
-//            return !(oldStack.getItem().equals(newStack.getItem())); //no more bobbing when damaged if it is the same exact item
-//        return !(oldStack.getItemDamage() == newStack.getItemDamage());
-//    }
 
     //Helper method for checking if a hang glider is broken (1 durability left)
     @Override
@@ -206,63 +153,53 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
     //==============================================IGlider========================================
 
     @Override
-    public double getHorizontalFlightSpeed() {
-        return horizSpeed;
+    public float getMaxSpeed() {
+        return maxSpeed;
     }
 
     @Override
-    public void setHorizontalFlightSpeed(double speed) {
-        horizSpeed = speed;
+    public void setMaxSpeed(float speed) {
+        maxSpeed = speed;
     }
 
     @Override
-    public double getVerticalFlightSpeed() {
-        return vertSpeed;
+    public float getMinSpeed() {
+        return minSpeed;
     }
 
     @Override
-    public void setVerticalFlightSpeed(double speed) {
-        vertSpeed = speed;
+    public void setMinSpeed(float speed) {
+        minSpeed = speed;
     }
 
     @Override
-    public double getShiftHorizontalFlightSpeed() {
-        return shiftHorizSpeed;
+    public float getYBoost() {
+        return yBoost;
     }
 
     @Override
-    public void setShiftHorizontalFlightSpeed(double speed) {
-        shiftHorizSpeed = speed;
+    public void setYBoost(float boost) {
+        yBoost = boost;
     }
 
     @Override
-    public double getShiftVerticalFlightSpeed() {
-        return shiftVertSpeed;
+    public float getFallReduction() {
+        return fallReduction;
     }
 
     @Override
-    public void setShiftVerticalFlightSpeed(double speed) {
-        shiftVertSpeed = speed;
+    public void setFallReduction(float reduction) {
+        fallReduction = reduction;
     }
 
     @Override
-    public double getSpaceVerticalFlightSpeed() {
-        return spaceVertSpeed;
+    public float getPitchOffset() {
+        return pitchOffset;
     }
 
     @Override
-    public double getSpaceHorizontalFlightSpeed() {
-        return shiftHorizSpeed;
-    }
-
-    @Override
-    public void setSpaceVerticalFlightSpeed(double speed) {
-        spaceVertSpeed = speed;
-    }
-
-    @Override
-    public void setSpaceHorizontalFlightSpeed(double speed) {
-        spaceHorizSpeed = speed;
+    public void setPitchOffset(float offset) {
+        pitchOffset = offset;
     }
 
     @Override

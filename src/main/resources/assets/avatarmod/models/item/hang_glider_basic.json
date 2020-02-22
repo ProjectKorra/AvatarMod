@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "all": "avatarmod:items/hang_glider_basic"
+    "layer0": "avatarmod:items/hang_glider_basic"
   },
   "overrides": [
     {
