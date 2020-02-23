@@ -37,11 +37,11 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
 
     //ToDo: NBT saving tags of upgrade (need IRecipe for them)
 
-    private float minSpeed = 0.03F;
-    private float maxSpeed = 0.0715F;
-    private float pitchOffset = 10.0F;
-    private float yBoost = 0.025F;
-    private float fallReduction = 0.9F;
+    private float minSpeed;
+    private float maxSpeed;
+    private float pitchOffset;
+    private float yBoost;
+    private float fallReduction;
     private double windMultiplier;
     private double airResistance;
     private int totalDurability;
@@ -131,7 +131,7 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         ArrayList<ItemStack> upgrades = GliderHelper.getUpgradesFromNBT(stack);
         for (ItemStack upgrade : upgrades) {
-            tooltip.add(upgrade.getDisplayName() + " " + I18n.format("openglider.tooltip.upgrade"));
+            tooltip.add(upgrade.getDisplayName() + " " + I18n.format("glider.tooltip.upgrade"));
         }
     }
 

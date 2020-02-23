@@ -27,6 +27,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class GliderRenderHandler {
@@ -77,7 +78,6 @@ public class GliderRenderHandler {
 
     //The model to display
     private final ModelGlider modelGlider = new ModelGlider();
-//    private final ModelBars modelBars = new ModelBars();
 
     /**
      * Renders the gliderBasic above the player
@@ -152,17 +152,16 @@ public class GliderRenderHandler {
         //Handles gliders scale rotation and translation for third person perspective
         float interpolatedPitch = (player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks) + 90;
         //rotate the gliderBasic to the same orientation as the player is facing
-        GlStateManager.rotate((float) interpolatedPitch, 1, 0, 0);
+        GlStateManager.rotate(interpolatedPitch, 1, 0, 0);
         float interpolatedYaw = (player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) - partialTicks);
-//        //rotate the gliderBasic to the same orientation as the player is facing
-        GlStateManager.rotate((float) -interpolatedYaw, 0, 1, 0);
+        //rotate the gliderBasic to the same orientation as the player is facing
+        GlStateManager.rotate(interpolatedYaw, 0, 1, 0);
 
-//        //rotate the gliderBasic so it is forwards facing, as it should be
-//        GlStateManager.rotate(180F, 0, 1, 0);
-//        GlStateManager.rotate(90F, 1, 0, 0);
-//        //move up to correct position (above player's head)
-//        GlStateManager.translate(0, ConfigHandler.gliderVisibilityFPPShiftAmount, 0);
-//        GlStateManager.translate(0, 0, -3f);
+        GlStateManager.pushMatrix();
+        GlStateManager.popMatrix();
+
+        GlStateManager.rotate(player.prevRotationYaw - (player.rotationYaw - player.prevRotationYaw), 1, 0, 0);
+        this.needToPop = true;
 
     }
 
