@@ -85,10 +85,10 @@ public class ConfigHandler {
         categories.add(category);
 
         basicGliderMinSpeed = config.getFloat("1) Min speed", category, 0.03F, 0, 0.05f,"The amount of blocks to move forwards (per-tick) while gliding normally.");
-        basicGliderMinSpeed = config.getFloat("2) Max speed", category, 0.0715F, 0.02f, 0.1f,"The amount of blocks to move forwards (per-tick) while gliding quickly.");
+        basicGliderMinSpeed = config.getFloat("2) Max speed", category, 0.0515F, 0.02f, 0.1f,"The amount of blocks to move forwards (per-tick) while gliding quickly.");
         basicGliderPitchOffset = config.getFloat("2) Look sensitivity", category, 20F, 10F, 30F,"Glider look sensitivity.");
-        basicGliderYBoost = config.getFloat("3) Height gain increment", category, 0.025F, 0.01F, 0.035F,"height increment scale.");
-        basicGliderFallReduction = config.getFloat("4) Fast Fall Distance", category, 0.9F, 0.8F, 1F,"The amount of blocks to fall (per-tick) while gliding downward");
+        basicGliderYBoost = config.getFloat("3) Height gain increment", category, 0.0015F, 0.001F, 0.035F,"height increment scale.");
+        basicGliderFallReduction = config.getFloat("4) Fast Fall Distance", category, 0.7F, 0.5F, 1F,"The amount of blocks to fall (per-tick) while gliding downward");
         basicGliderWindModifier = config.getFloat("5) Overall Wind Power", category, 1.4F, 0.001F, 10, "A quality-of-life option to quickly change the overall power of the wind effect for this glider. Default is an overall relatively weak wind, with moderate gusts that occur semi-commonly. Note that this value can be a decimal (i.e. 0.5 would be half as strong). More fine-grained options are available in the 'wind' section of this config.");
         basicGliderAirResistance = config.getFloat("6) Air Resistance", category, 0.985F, 0, 1, "The rate at which air resistance hinders your movement. 1 is no resistance, 0.5 is 1/2 as fast each tick.");
         basicGliderTotalDurability = config.getInt("7) Total Durability", category, 818, 1, 10000, "The maximum durability of an unused hang glider.");
