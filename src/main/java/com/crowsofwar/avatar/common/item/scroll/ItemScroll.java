@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarItem;
+import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 import net.minecraft.client.resources.I18n;
@@ -43,7 +44,7 @@ public class ItemScroll extends Item implements AvatarItem {
 		this.type = type;
 		setMaxStackSize(1);
 		setMaxDamage(0);
-		setCreativeTab(AvatarMod.tabItems);
+		setCreativeTab(AvatarItems.tabItems);
 		setHasSubtypes(true);
 		setTranslationKey("scroll_" + type.displayName());
 	}

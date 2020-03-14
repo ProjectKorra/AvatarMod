@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.common.item;
 
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
@@ -50,7 +49,7 @@ import static net.minecraft.util.EnumActionResult.SUCCESS;
 public class ItemBisonWhistle extends Item implements AvatarItem {
 
 	public ItemBisonWhistle() {
-		setCreativeTab(AvatarMod.tabItems);
+		setCreativeTab(AvatarItems.tabItems);
 		setMaxStackSize(1);
 		setTranslationKey("bison_whistle");
 	}

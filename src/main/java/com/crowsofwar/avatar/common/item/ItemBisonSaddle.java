@@ -30,7 +30,7 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 	public ItemBisonSaddle() {
 		setTranslationKey("bison_saddle");
 		setMaxStackSize(1);
-		setCreativeTab(AvatarMod.tabItems);
+		setCreativeTab(AvatarItems.tabItems);
 		setMaxDamage(0);
 		setHasSubtypes(true);
 	}

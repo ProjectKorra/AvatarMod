@@ -95,14 +95,6 @@ public class AvatarMod {
 	private int nextMessageID = 1;
 	private int nextEntityID = 1;
 
-	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
-		@Nonnull
-		@Override
-		public ItemStack createIcon() {
-			return AvatarItems.stackScroll;
-		}
-	};
-
 	private static void registerAbilities() {
 		Abilities.register(new AbilityAirGust());
 		Abilities.register(new AbilityAirJump());

@@ -44,6 +44,14 @@ public class AvatarItems {
 	public static ItemStack stackScroll;
 	public static ItemAirbenderStaff airbenderStaff;
 
+	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
+		@Nonnull
+		@Override
+		public ItemStack createIcon() {
+			return AvatarItems.stackScroll;
+		}
+	};
+
 	private AvatarItems() {
 	}
 

@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.item;
 
-import com.crowsofwar.avatar.AvatarMod;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,7 +17,7 @@ public class ItemOstrichEquipment extends Item implements AvatarItem {
 	public ItemOstrichEquipment() {
 		setTranslationKey("ostrich_equip");
 		setMaxStackSize(1);
-		setCreativeTab(AvatarMod.tabItems);
+		setCreativeTab(AvatarItems.tabItems);
 		setMaxDamage(0);
 		setHasSubtypes(true);
 	}

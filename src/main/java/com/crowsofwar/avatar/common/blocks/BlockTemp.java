@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.blocks;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.blocks.tiles.TileBlockTemp;
+import com.crowsofwar.avatar.common.item.AvatarItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -25,7 +26,7 @@ public class BlockTemp extends Block implements ITileEntityProvider {
 	public BlockTemp() {
 		super(Material.ROCK);
 		setRegistryName("temp_block");
-		setCreativeTab(AvatarMod.tabItems);
+		setCreativeTab(AvatarItems.tabItems);
 	}
 
 	/**
