@@ -16,24 +16,30 @@
 */
 package com.crowsofwar.avatar.common.blocks;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.blocks.tiles.TileBlockTemp;
 import com.google.common.base.Preconditions;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.minecraftforge.client.model.ModelLoader.setCustomModelResourceLocation;
+
 /**
  * @author Aang23
  */
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarBlocks {
 
 
@@ -43,17 +49,20 @@ public class AvatarBlocks {
 	public static CloudBlock blockCloud;
 
 	public static void init() {
-		MinecraftForge.EVENT_BUS.register(new AvatarBlocks());
-				allBlocks = new ArrayList<>();
+		allBlocks = new ArrayList<>();
 		addBlock(blockCloud = new CloudBlock());
-
-		MinecraftForge.EVENT_BUS.register(new AvatarBlocks());
+		blockCloud.initModel();
 	}
 
 	private static void addBlock(Block block) {
 		// Remove the "tile." prefix
-		block.setRegistryName("avatarmod", block.getTranslationKey().substring(5));
-		block.setTranslationKey("avatarmod:" + block.getTranslationKey().substring(5));
+		if (block.getTranslationKey().contains("tile.")) {
+			block.setRegistryName(AvatarInfo.MOD_ID, block.getTranslationKey().substring(5));
+			block.setTranslationKey("avatarmod:" + block.getTranslationKey().substring(5));
+		}
+		else {
+			block.setRegistryName("avatarmod:" + block.getTranslationKey());
+		}
 		allBlocks.add(block);
 	}
 
@@ -65,21 +74,21 @@ public class AvatarBlocks {
 					"Block %s has null registry name", block);
 			itemBlock.setRegistryName(registryName);
 			e.getRegistry().register(itemBlock);
+			setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(itemBlock.getRegistryName(),
+					"inventory"));
 
 		}
 	}
 
 
 	@SubscribeEvent
-	public void registerBlocks(RegistryEvent.Register<Block> e) {
+	public static void registerBlocks(RegistryEvent.Register<Block> e) {
 		init();
 		Block[] blocksArr = allBlocks.toArray(new Block[allBlocks.size()]);
 		e.getRegistry().registerAll(blocksArr);
-		AvatarMod.proxy.registerItemModels();
 		GameRegistry.registerTileEntity(TileBlockTemp.class, "avatarmod:block_temp");
 
 	}
-
 
 
 }
