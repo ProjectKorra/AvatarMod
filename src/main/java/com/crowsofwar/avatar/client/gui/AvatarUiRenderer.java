@@ -186,6 +186,7 @@ public class AvatarUiRenderer extends Gui {
 	}
 
 	private void renderChiBar(ScaledResolution resolution) {
+		refreshDimensions();
 		if (CLIENT_CONFIG.chiBarSettings.shouldChibarRender) {
 
 			BendingData data = BendingData.get(mc.player);
@@ -243,7 +244,7 @@ public class AvatarUiRenderer extends Gui {
 	}
 
 	private void renderChiMsg(ScaledResolution res) {
-
+		refreshDimensions();
 		if (errorMsgFade != -1) {
 
 			float seconds = (System.currentTimeMillis() - errorMsgFade) / 1000f;
@@ -267,7 +268,7 @@ public class AvatarUiRenderer extends Gui {
 	}
 
 	private void renderActiveBending(ScaledResolution res) {
-
+		refreshDimensions();
 		if (CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuRender) {
 			BendingData data = BendingData.get(mc.player);
 
@@ -335,6 +336,7 @@ public class AvatarUiRenderer extends Gui {
 	}
 
 	private void renderAirBubbleHealth(ScaledResolution res) {
+		refreshDimensions();
 		World world = mc.world;
 		EntityPlayer player = mc.player;
 		BendingData data = BendingData.get(player);
@@ -349,6 +351,7 @@ public class AvatarUiRenderer extends Gui {
 	}
 
 	private void renderIceShieldHealth(ScaledResolution res) {
+		refreshDimensions();
 		World world = mc.world;
 		EntityPlayer player = mc.player;
 		BendingData data = BendingData.get(player);
@@ -364,7 +367,7 @@ public class AvatarUiRenderer extends Gui {
 
 	private void renderShieldHealth(ScaledResolution res, float health, float maxHealth, int
 			textureV) {
-
+		refreshDimensions();
 		mc.renderEngine.bindTexture(AvatarUiTextures.shieldHealth);
 		GlStateManager.color(1, 1, 1, 1);
 
@@ -393,7 +396,7 @@ public class AvatarUiRenderer extends Gui {
 	}
 
 	private void renderPrisonCracks(ScaledResolution res) {
-
+		refreshDimensions();
 		EntityPlayer player = mc.player;
 		EntityIcePrison prison = EntityIcePrison.getPrison(player);
 		if (prison != null) {
@@ -436,7 +439,6 @@ public class AvatarUiRenderer extends Gui {
 	 * @see Vision
 	 */
 	private void applyVisionShader() {
-
 		BendingData data = BendingData.get(mc.player);
 		Vision vision = data.getVision();
 
@@ -452,7 +454,7 @@ public class AvatarUiRenderer extends Gui {
 	 * Displays current Battle Performance and Power Rating.
 	 */
 	private void renderBattleStatus(ScaledResolution res) {
-
+		refreshDimensions();
 		BendingData data = BendingData.get(mc.player);
 
 		if (data.getAllBending().isEmpty()) {

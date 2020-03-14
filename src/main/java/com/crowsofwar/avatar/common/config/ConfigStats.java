@@ -112,7 +112,7 @@ public class ConfigStats {
 			chiMiningMaster = 0.5f,
 			chiFireBlast = 2f,
 			chiFireball = 2f,
-			chiFlamethrowerSecond = 2f,
+			chiFlamethrowerSecond = 2.5f,
 			chiFlamethrowerSecondLvl4_1 = 3.75f,
 			chiFlamethrowerSecondLvl4_2 = 4.25f,
 			chiFireShot = 2.5f,

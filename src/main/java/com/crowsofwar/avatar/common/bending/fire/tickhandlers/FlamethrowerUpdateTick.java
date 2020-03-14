@@ -114,13 +114,13 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 			if (!(world.isRaining() && world.canSeeSky(entity.getPosition())) && !(headInLiquid || inWaterBlock)) {
 
-				double speedMult = 15 + 5 * abilityData.getXpModifier();
+				double speedMult = 15;
 				double randomness = 3.0 - 0.5 * (abilityData.getXpModifier() + Math.max(abilityData.getLevel(), 0));
 				float range = 4;
 				int fireTime = 2;
 				float size = 0.75F;
 				float damage = STATS_CONFIG.flamethrowerSettings.damage;
-				float performanceAmount = 1;
+				float performanceAmount = 3;
 				float xp = SKILLS_CONFIG.flamethrowerHit;
 
 				switch (abilityData.getLevel()) {
@@ -129,32 +129,33 @@ public class FlamethrowerUpdateTick extends TickHandler {
 						damage = 1.75F;
 						fireTime = 3;
 						range = 5;
+						speedMult += 5;
 						break;
 					case 2:
 						size = 1.5F;
 						fireTime = 4;
 						damage = 2.5F;
 						range = 7;
-						performanceAmount = 2;
+						performanceAmount = 4;
+						speedMult += 10;
 						break;
 				}
 				if (level == 3 && path == AbilityTreePath.FIRST) {
-					speedMult = 38;
+					speedMult += 20;
 					randomness = 0;
 					fireTime = 5;
 					size = 1.25F;
 					damage = 4.5F;
 					range = 11;
-					performanceAmount = 3;
+					performanceAmount = 6;
 				}
 				if (level == 3 && path == AbilityTreePath.SECOND) {
-					speedMult = 12;
 					randomness = 9;
 					fireTime = 10;
 					size = 2.75F;
 					damage = 1.5F;
 					range = 6.5F;
-					performanceAmount = 1;
+					performanceAmount = 3;
 				}
 
 				// Affect stats by power rating
@@ -163,6 +164,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				damage += powerRating / 100F;
 				fireTime += (int) (powerRating / 50F);
 				speedMult += powerRating / 100f * 2.5f;
+				speedMult *= abilityData.getXpModifier();
 				randomness = randomness >= powerRating / 100f * 2.5f ? randomness - powerRating / 100F * 2.5 : 0;
 				randomness = randomness < 0 ? 0 : randomness;
 
@@ -175,7 +177,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				Vector end = start.plus(look.times(range));
 
 
-				Vector knockback = look.times(speedMult / 250 * STATS_CONFIG.flamethrowerSettings.push);
+				Vector knockback = look.times(speedMult / 200 * STATS_CONFIG.flamethrowerSettings.push);
 
 				List<Entity> raytraceTargets = Raytrace.entityRaytrace(world, start, look, range, size * 1.25F, entity1 -> canCollideWithEntity(entity1, entity));
 				if (raytraceTargets.contains(target) && !world.isRemote) {
@@ -184,11 +186,17 @@ public class FlamethrowerUpdateTick extends TickHandler {
 								((EntityLivingBase) target).hurtTime == 0)
 						DamageUtils.attackEntity((EntityLivingBase) attacker, target, AvatarDamageSource.causeFlamethrowerDamage(target, attacker), damage, (int) performanceAmount,
 								new AbilityFlamethrower(), xp);
+						else {
+							//NOTE: Add velocity like this is great for stuff like a water blast!
+							target.addVelocity(knockback.x() / 10, knockback.y() / 2 + 0.2, knockback.z() / 10);
+							target.motionY = Math.min(0.25, target.motionY);
+						}
+
+					} else {
 						//NOTE: Add velocity like this is great for stuff like a water blast!
-						target.addVelocity(knockback.x() / 10, knockback.y() / 2 + 0.15, knockback.z() / 10);
+						target.addVelocity(knockback.x() / 10, knockback.y() / 2 + 0.2, knockback.z() / 10);
 						target.motionY = Math.min(0.25, target.motionY);
-					} else
-						target.addVelocity(knockback.x() / 10, knockback.y() / 2 + 0.15, knockback.z() / 10);
+					}
 					target.setFire(fireTime);
 				}
 			}
