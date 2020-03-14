@@ -645,5 +645,7 @@ item.avatarmod:ostrich_equip.plate.name=Golden Ostrich Armor
 
 item.avatarmod:airbender_staff.name=Airbending Staff
 
+tile.avatarmod:cloudblock.name=Cloud Block
+
 avatar.tooltip.water_pouch=%d/5 Water
 avatar.tooltip.water_pouch.empty=Empty
