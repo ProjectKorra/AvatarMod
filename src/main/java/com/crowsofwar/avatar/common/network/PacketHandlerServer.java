@@ -98,7 +98,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (packet instanceof PacketSUseStatusControl)
 			return handleUseStatusControl((PacketSUseStatusControl) packet, ctx);
 
-		if (packet instanceof PacketSWallJump) return handleWallJump((PacketSWallJump) packet, ctx);
+		if (packet instanceof PacketSWallJump)
+			return handleWallJump((PacketSWallJump) packet, ctx);
 
 		if (packet instanceof PacketSSkillsMenu)
 			return handleSkillsMenu((PacketSSkillsMenu) packet, ctx);

@@ -46,7 +46,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opencl.CL;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Comparator;
@@ -108,21 +107,46 @@ public class AvatarUiRenderer extends Gui {
 	@SubscribeEvent
 	public void onGuiRender(RenderGameOverlayEvent.Post e) {
 
-		if (e.getType() != ElementType.EXPERIENCE) return;
-
 		ScaledResolution resolution = e.getResolution();
+	/*	if (e.getType() == ElementType.EXPERIENCE) {
+			//HUD bending stuff
+			renderRadialMenu(resolution);
+			renderChiBar(resolution);
+			renderActiveBending(resolution);
+			//Text
+			renderChiMsg(resolution);
+			renderBattleStatus(resolution);
+			//Shield health
+			renderAirBubbleHealth(resolution);
+			renderIceShieldHealth(resolution);
+			//Status Controls
+			renderStatusControls(resolution);
+			//Misc.
+			applyVisionShader();
+			renderPrisonCracks(resolution);
+		}**/
 
-		renderRadialMenu(resolution);
-		renderStatusControls(resolution);
-		renderChiBar(resolution);
-		renderChiMsg(resolution);
-		renderActiveBending(resolution);
-		renderAirBubbleHealth(resolution);
-		renderIceShieldHealth(resolution);
-		renderPrisonCracks(resolution);
-		renderBattleStatus(resolution);
 
-		applyVisionShader();
+		if (e.getType() == ElementType.HOTBAR) {
+			renderRadialMenu(resolution);
+			renderChiBar(resolution);
+			renderActiveBending(resolution);
+		}
+		if (e.getType() == ElementType.TEXT) {
+			renderChiMsg(resolution);
+			renderBattleStatus(resolution);
+		}
+		if (e.getType() == ElementType.ARMOR) {
+			renderAirBubbleHealth(resolution);
+			renderIceShieldHealth(resolution);
+		}
+		if (e.getType() == ElementType.CROSSHAIRS) {
+			renderStatusControls(resolution);
+		}
+		if (e.getType() == ElementType.ALL) {
+			applyVisionShader();
+			renderPrisonCracks(resolution);
+		}
 
 	}
 
@@ -157,6 +181,7 @@ public class AvatarUiRenderer extends Gui {
 				fadingSegment = null;
 			} else {
 				float scale = (float) (1 + Math.sqrt(timeSinceStart / 10000f));
+				GlStateManager.color(1, 1, 1, (1 - timeSinceStart / timeToFade) * CLIENT_CONFIG.radialMenuAlpha);
 				fadingSegment.draw(true, resolution,
 						(1 - timeSinceStart / timeToFade) * CLIENT_CONFIG.radialMenuAlpha, scale);
 			}

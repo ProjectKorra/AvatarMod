@@ -776,12 +776,13 @@ public abstract class ParticleAvatar extends Particle {
 			collidedWithParticle = false;
 			dynamicCollidedWithEntity = false;
 			for (Entity hit : entityList) {
-				if (hit != getEntity()) {
-					if (hit instanceof EntityShield || hit instanceof EntityWall || hit instanceof EntityWallSegment) {
-						if (((AvatarEntity) hit).getOwner() != getEntity() || hit instanceof EntityWall || hit instanceof EntityWallSegment) {
+				if (hit != getEntity() && (getAbility() != null || this.element != null)) {
+					if (hit instanceof EntityShield && ((EntityShield) hit).getOwner() != getEntity() || hit instanceof EntityWall || hit instanceof EntityWallSegment) {
+						if (getAbility() != null)
 							AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
-							collidedWithSolid = true;
-						}
+						else
+							AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, element.getId()));
+						collidedWithSolid = true;
 					} else if (hit instanceof EntityThrowable || hit instanceof EntityArrow || hit instanceof EntityOffensive && ((EntityOffensive) hit).getOwner() != spawnEntity) {
 						dynamicCollidedWithEntity = true;
 						Vec3d hitVel = new Vec3d(hit.motionX, hit.motionY, hit.motionZ);
@@ -802,11 +803,10 @@ public abstract class ParticleAvatar extends Particle {
 							if (hit instanceof EntityLivingBase) {
 								if (((EntityLivingBase) hit).attackable() && hit.canBeAttackedWithItem())
 									//if (((EntityLivingBase) hit).hurtTime == 0)
-										AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
-
-							} else
-								if (hit.canBeAttackedWithItem())
 									AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
+
+							} else if (hit.canBeAttackedWithItem())
+								AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
 						}
 					}
 				}

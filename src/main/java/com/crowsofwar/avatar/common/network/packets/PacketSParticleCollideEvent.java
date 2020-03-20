@@ -34,7 +34,7 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 		this.entity = entity;
 		this.particle = particle;
 		this.ability = ability;
-		this.bendingID = ability.getBendingId() == null ? Airbending.ID : ability.getBendingId();
+		this.bendingID = ability.getBendingId() == null || ability == null ? Airbending.ID : ability.getBendingId();
 		this.spawner = spawner;
 	}
 

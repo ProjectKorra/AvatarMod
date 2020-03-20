@@ -28,7 +28,7 @@ public class CloudBlock extends Block {
 		this.setTranslationKey("cloudblock");
 		this.setHardness(1f);
 		this.setLightOpacity(0);
-		this.setLightLevel(5F);
+		this.setLightLevel(15F);
 		this.setResistance(10F);
 		this.setSoundType(SoundType.CLOTH);
 	}
