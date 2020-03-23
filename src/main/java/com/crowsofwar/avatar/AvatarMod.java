@@ -49,10 +49,8 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -69,8 +67,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-
-import javax.annotation.Nonnull;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -101,7 +97,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityEarthControl());
 		Abilities.register(new AbilityRavine());
 		Abilities.register(new AbilityFireShot());
-		Abilities.register(new AbilityFireBlast());
+		Abilities.register(new AbilityFlameStrike());
 		Abilities.register(new AbilityFlamethrower());
 		Abilities.register(new AbilityWaterArc());
 		Abilities.register(new AbilityCreateWave());

@@ -4,7 +4,7 @@ import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.bending.air.tickhandlers.AirBurstHandler;
 import com.crowsofwar.avatar.common.bending.air.tickhandlers.ShootAirBurstHandler;
 import com.crowsofwar.avatar.common.bending.air.tickhandlers.SmashGroundHandler;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireBlast;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireShot;
 import com.crowsofwar.avatar.common.bending.fire.statctrls.StatCtrlInfernoPunchFirst;
 import com.crowsofwar.avatar.common.bending.fire.tickhandlers.FlamethrowerUpdateTick;
@@ -22,7 +22,7 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
 		registerBehavior(Idle.class);
 		registerBehavior(FlamethrowerUpdateTick.FlamethrowerBehaviour.class);
-		registerBehavior(AbilityFireBlast.FireblastBehaviour.class);
+		registerBehavior(AbilityFlameStrike.FireblastBehaviour.class);
 		registerBehavior(AirBurstHandler.AirburstShockwave.class);
 		registerBehavior(AbilityFireShot.FireShockwaveBehaviour.class);
 		registerBehavior(StatCtrlInfernoPunchFirst.InfernoPunchShockwave.class);

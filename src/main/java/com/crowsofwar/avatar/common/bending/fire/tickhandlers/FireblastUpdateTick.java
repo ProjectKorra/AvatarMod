@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common.bending.fire.tickhandlers;
 
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireBlast;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -15,7 +15,6 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumHand;
@@ -27,7 +26,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
@@ -201,9 +199,9 @@ public class FireblastUpdateTick extends TickHandler {
 				fireblast.setTier(Math.max(abilityData.getLevel() + 1, 1));
 				fireblast.setPosition(rightSide);
 				fireblast.setVelocity(look.times(speedMult));
-				fireblast.setBehaviour(new AbilityFireBlast.FireblastBehaviour());
+				fireblast.setBehaviour(new AbilityFlameStrike.FireblastBehaviour());
 				fireblast.setElement(new Firebending());
-				fireblast.setAbility(new AbilityFireBlast());
+				fireblast.setAbility(new AbilityFlameStrike());
 				fireblast.setLifeTime(lifetime + AvatarUtils.getRandomNumberInRange(0, 2));
 				fireblast.setExpandedHitbox(size, size);
 				fireblast.setDamage(damage);
@@ -238,10 +236,10 @@ public class FireblastUpdateTick extends TickHandler {
 						} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {**/
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
 									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size * 2).element(new Firebending())
-									.ability(new AbilityFireBlast()).spawn(world);
+									.ability(new AbilityFlameStrike()).spawn(world);
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
 									clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 2).element(new Firebending())
-									.ability(new AbilityFireBlast()).spawn(world);
+									.ability(new AbilityFlameStrike()).spawn(world);
 						//}
 					}
 				}

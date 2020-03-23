@@ -51,10 +51,10 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 /**
  * @author CrowsOfWar
  */
-public class AbilityFireBlast extends Ability {
+public class AbilityFlameStrike extends Ability {
 
 
-	public AbilityFireBlast() {
+	public AbilityFlameStrike() {
 		super(Firebending.ID, "fire_blast");
 		requireRaytrace(-1, false);
 	}

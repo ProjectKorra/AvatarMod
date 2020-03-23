@@ -131,6 +131,15 @@ public class BendingData {
 	// ================================================================================
 
 	/**
+	 * Checks if the given ability can be used by the player.
+	 */
+	public boolean canUse(Ability ability) {
+		if (bendings.contains(ability.getBendingId())) {
+			return getAbilityData(ability).getLevel() > -1;
+		}
+		return false;
+	}
+	/**
 	 * Checks if the player has any elements.
 	 */
 	public boolean hasElements() {

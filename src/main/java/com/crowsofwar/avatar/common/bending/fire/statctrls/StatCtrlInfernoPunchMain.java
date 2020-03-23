@@ -10,6 +10,7 @@ import com.crowsofwar.avatar.common.damageutils.DamageUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.Entity;
@@ -21,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Mod;
 

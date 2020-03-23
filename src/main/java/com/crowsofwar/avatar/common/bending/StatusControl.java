@@ -27,6 +27,8 @@ import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;

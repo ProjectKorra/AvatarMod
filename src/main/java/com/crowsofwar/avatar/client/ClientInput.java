@@ -18,6 +18,8 @@
 package com.crowsofwar.avatar.client;
 
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.event.BendingCycleEvent;
 import com.crowsofwar.avatar.common.event.BendingUseEvent;
 import net.minecraft.client.Minecraft;
@@ -234,35 +236,45 @@ public class ClientInput implements IControlsHandler {
 			// Send any input to the server
 			if (Objects.requireNonNull(Bender.get(player)).getInfo().getId() != null) {
 				BendingData data = BendingData.get(player);
+				if (data != null) {
 
-				if (mc.inGameHasFocus) {
-					Collection<AvatarControl> pressed = getAllPressed();
-					Collection<StatusControl> statusControls = data.getAllStatusControls();
-					for (StatusControl sc : statusControls) {
-						if (pressed.contains(sc.getSubscribedControl())) {
-							Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
-							AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
+					if (mc.inGameHasFocus) {
+						Collection<AvatarControl> pressed = getAllPressed();
+						Collection<StatusControl> statusControls = data.getAllStatusControls();
+						for (StatusControl sc : statusControls) {
+							if (pressed.contains(sc.getSubscribedControl())) {
+								Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
+								//Call it client-side
+								sc.execute(new BendingContext(data, player, raytrace));
+								//Then server side
+								AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
+							}
 						}
 					}
-				}
 
-				boolean isSwitchPathKeyDown = AvatarControl.KEY_SWITCH.isDown();
+					boolean isSwitchPathKeyDown = AvatarControl.KEY_SWITCH.isDown();
 
-				List<Ability> allAbilities = Abilities.all();
-				for (int i = 0; i < allAbilities.size(); i++) {
-					Ability ability = allAbilities.get(i);
-					boolean down = isAbilityPressed(ability);
+					List<Ability> allAbilities = Abilities.all();
+					for (int i = 0; i < allAbilities.size(); i++) {
+						Ability ability = allAbilities.get(i);
+						boolean down = isAbilityPressed(ability);
 
-					if (!CLIENT_CONFIG.conflicts.containsKey(ability)) CLIENT_CONFIG.conflicts.put(ability, false);
-					boolean conflict = CLIENT_CONFIG.conflicts.get(ability);
+						if (!CLIENT_CONFIG.conflicts.containsKey(ability)) CLIENT_CONFIG.conflicts.put(ability, false);
+						boolean conflict = CLIENT_CONFIG.conflicts.get(ability);
 
-					if (!conflict && mc.inGameHasFocus && mc.currentScreen == null && down && !wasAbilityDown[i]) {
-						Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player, ability.getRaytrace());
-						AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, isSwitchPathKeyDown));
+						if (!conflict && mc.inGameHasFocus && mc.currentScreen == null && down && !wasAbilityDown[i]) {
+							Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player, ability.getRaytrace());
+							if (data.hasBendingId(ability.getBendingId()) && player.isCreative() || data.canUse(ability)) {
+								//Client side
+								Bender.get(player).executeAbility(ability, raytrace, isSwitchPathKeyDown);
+								//Server side
+								AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, isSwitchPathKeyDown));
+							}
+						}
+						wasAbilityDown[i] = down;
 					}
-					wasAbilityDown[i] = down;
-				}
 
+				}
 			}
 		}
 
