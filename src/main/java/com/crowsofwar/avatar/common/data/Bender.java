@@ -197,8 +197,8 @@ public abstract class Bender {
 	 * @see #executeAbility(Ability, Raytrace.Result, boolean) (Ability)
 	 */
 	public void executeAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath) {
-		if (!getWorld().isRemote) {
-			// Server-side : Execute the ability
+		//if (!getWorld().isRemote) {
+			// Do any effects besides particles server-side.
 
 			BendingData data = getData();
 			EntityLivingBase entity = getEntity();
@@ -231,10 +231,10 @@ public abstract class Bender {
 				sendMessage("avatar.abilityLocked");
 			}
 
-		}
+	//	}
 
 		// On client-side, players will send a packet to the server, while other entities will do
-		// nothing
+		// nothing. Particles will be spawned. Remember to check what side you're on when executing abilities!
 
 	}
 
