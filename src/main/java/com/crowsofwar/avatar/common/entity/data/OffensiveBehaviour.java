@@ -6,7 +6,6 @@ import com.crowsofwar.avatar.common.bending.air.tickhandlers.ShootAirBurstHandle
 import com.crowsofwar.avatar.common.bending.air.tickhandlers.SmashGroundHandler;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireShot;
-import com.crowsofwar.avatar.common.bending.fire.statctrls.StatCtrlInfernoPunchFirst;
 import com.crowsofwar.avatar.common.bending.fire.tickhandlers.FlamethrowerUpdateTick;
 import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,7 +24,6 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
 		registerBehavior(AbilityFlameStrike.FireblastBehaviour.class);
 		registerBehavior(AirBurstHandler.AirburstShockwave.class);
 		registerBehavior(AbilityFireShot.FireShockwaveBehaviour.class);
-		registerBehavior(StatCtrlInfernoPunchFirst.InfernoPunchShockwave.class);
 		registerBehavior(SmashGroundHandler.AirGroundPoundShockwave.class);
 		registerBehavior(ShootAirBurstHandler.AirBurstBeamBehaviour.class);
 		registerBehavior(AbilityAirGust.AirGustBehaviour.class);

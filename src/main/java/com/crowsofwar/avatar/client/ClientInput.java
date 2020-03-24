@@ -18,7 +18,7 @@
 package com.crowsofwar.avatar.client;
 
 import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.event.BendingCycleEvent;
 import com.crowsofwar.avatar.common.event.BendingUseEvent;

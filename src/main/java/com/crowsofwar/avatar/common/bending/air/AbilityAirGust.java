@@ -108,11 +108,17 @@ public class AbilityAirGust extends Ability {
 			gust.setTier(getCurrentTier(ctx.getLevel()));
 			gust.setXp(SKILLS_CONFIG.airGustHit);
 			gust.setBehaviour(new AirGustBehaviour());
-			world.spawnEntity(gust);
+			if (!world.isRemote)
+				world.spawnEntity(gust);
 
 			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, entity.getSoundCategory(), 1.0F + Math.max(ctx.getLevel(), 0) / 2F, 0.9F + world.rand.nextFloat() / 10);
 		}
 		super.execute(ctx);
+	}
+
+	@Override
+	public BendingAi getAi(EntityLiving entity, Bender bender) {
+		return new AiAirGust(this, entity, bender);
 	}
 
 	public static class AirGustBehaviour extends OffensiveBehaviour {
@@ -149,10 +155,6 @@ public class AbilityAirGust extends Ability {
 		public void save(NBTTagCompound nbt) {
 
 		}
-	}
-	@Override
-	public BendingAi getAi(EntityLiving entity, Bender bender) {
-		return new AiAirGust(this, entity, bender);
 	}
 
 }

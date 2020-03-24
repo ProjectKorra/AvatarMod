@@ -15,7 +15,7 @@
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.crowsofwar.avatar.common.bending;
+package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.bending.air.statctrls.*;
 import com.crowsofwar.avatar.common.bending.earth.*;
@@ -27,8 +27,7 @@ import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.World;
+import net.minecraft.util.EnumHand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,40 +47,6 @@ import java.util.List;
  * @author CrowsOfWar
  */
 public abstract class StatusControl {
-
-	// @formatter:off
-	public static final StatusControl
-			AIR_JUMP = new StatCtrlAirJump(),
-			BUBBLE_EXPAND = new StatCtrlBubbleExpand(),
-			BUBBLE_CONTRACT = new StatCtrlBubbleContract(),
-			CHARGE_AIR_BURST = new StatCtrlSetAirburstCharging(true),
-			CHARGE_BUBBLE = new StatCtrlChargeBubble(),
-			DROP_WALL = new StatCtrlDropWall(),
-			PLACE_WALL = new StatCtrlPlaceWall(),
-			SHOOT_WALL = new StatCtrlShootWall(),
-			PUSH_WALL = new StatCtrlPushWall(),
-			PULL_WALL = new StatCtrlPullWall(),
-			FIRE_JUMP = new StatCtrlFireJump(),
-			INFERNO_PUNCH_MAIN = new StatCtrlInfernoPunchMain(),
-			INFERNO_PUNCH_FIRST = new StatCtrlInfernoPunchFirst(),
-			INFERNO_PUNCH_SECOND = new StatCtrlInfernoPunchSecond(),
-			LOB_BUBBLE = new StatCtrlLobBubble(),
-			PLACE_BLOCK = new StatCtrlPlaceBlock(),
-			RELEASE_AIR_BURST = new StatCtrlSetAirburstCharging(false),
-			SANDSTORM_REDIRECT = new StatCtrlSandstormRedirect(),
-			SHIELD_SHATTER = new StatCtrlShieldShatter(),
-			SHOOT_AIR_BURST = new StatCtrlShootAirburst(),
-			SKATING_JUMP = new StatCtrlSkateJump(),
-			SKATING_START = new StatCtrlSkateStart(),
-			START_FLAMETHROW = new StatCtrlSetFlamethrowing(true),
-			STOP_FLAMETHROW = new StatCtrlSetFlamethrowing(false),
-			THROW_BLOCK = new StatCtrlThrowBlock(),
-			THROW_CLOUDBURST = new StatCtrlThrowCloudBall(),
-			THROW_FIRE = new StatCtrlThrowFire(),
-			THROW_FIREBALL = new StatCtrlThrowFireball(),
-			THROW_LIGHTNINGSPEAR = new StatCtrlThrowLightningSpear(),
-			THROW_WATER = new StatCtrlThrowWater();
-	// @formatter:on
 
 	private static int nextId = 0;
 	private static List<StatusControl> allControls;

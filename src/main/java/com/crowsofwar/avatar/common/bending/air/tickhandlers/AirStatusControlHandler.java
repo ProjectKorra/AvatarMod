@@ -3,7 +3,7 @@ package com.crowsofwar.avatar.common.bending.air.tickhandlers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.*;

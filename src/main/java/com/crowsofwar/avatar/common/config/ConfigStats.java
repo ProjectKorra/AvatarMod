@@ -70,6 +70,9 @@ public class ConfigStats {
 	public EarthspikeSettings earthspikeSettings = new EarthspikeSettings();
 
 	@Load
+	public FlameStrikeSettings flameStrikeSettings = new FlameStrikeSettings();
+
+	@Load
 	public FireballSettings fireballSettings = new FireballSettings();
 
 	@Load
@@ -110,7 +113,7 @@ public class ConfigStats {
 			chiPickUpBlock = 1.25f,
 			chiMining = 2f,
 			chiMiningMaster = 0.5f,
-			chiFireBlast = 2f,
+			chiFlameStrike = 2f,
 			chiFireball = 2f,
 			chiFlamethrowerSecond = 2.5f,
 			chiFlamethrowerSecondLvl4_1 = 3.75f,
@@ -346,6 +349,44 @@ public class ConfigStats {
 
 	}
 
+	public static class FlameStrikeSettings {
+
+		@Load
+		public int strikeNumber = 2;
+
+		@Load
+		public float size = 1f;
+
+		@Load
+		public int chargeDuration = 40;
+
+		@Load
+		public float damage = 2;
+
+		@Load
+		public float knockback = 2;
+
+	}
+
+
+	public static class FireballSettings {
+
+		@Load
+		public float damage = 5F;
+
+		@Load
+		public int fireTime = 6;
+
+		@Load
+		public float explosionSize = 1f;
+
+		@Load
+		public boolean damageBlocks = false;
+
+		@Load
+		public double push = 1.25;
+
+	}
 	public static class AirBurstSettings {
 
 		@Load
@@ -376,25 +417,6 @@ public class ConfigStats {
 
 		@Load
 		public int beamRange = 10;
-
-	}
-
-	public static class FireballSettings {
-
-		@Load
-		public float damage = 5F;
-
-		@Load
-		public int fireTime = 6;
-
-		@Load
-		public float explosionSize = 1f;
-
-		@Load
-		public boolean damageBlocks = false;
-
-		@Load
-		public double push = 1.25;
 
 	}
 

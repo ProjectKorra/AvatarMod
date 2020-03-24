@@ -118,7 +118,8 @@ public class AbilityFireShot extends Ability {
 				flames.setPowerRating(10);
 				world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
 						world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
-				world.spawnEntity(flames);
+				if (!world.isRemote)
+					world.spawnEntity(flames);
 			} else {
 				EntityShockwave wave = new EntityShockwave(world);
 				wave.setOwner(entity);
@@ -138,10 +139,10 @@ public class AbilityFireShot extends Ability {
 				wave.setParticleSpeed(0.18F);
 				wave.setParticleWaves(2);
 				wave.setParticleAmount(10);
-
 				world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
 						world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
-				world.spawnEntity(wave);
+				if (!world.isRemote)
+					world.spawnEntity(wave);
 			}
 		}
 

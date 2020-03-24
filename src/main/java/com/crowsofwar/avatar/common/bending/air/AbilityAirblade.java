@@ -112,7 +112,8 @@ public class AbilityAirblade extends Ability {
 				airblade.setAbility(this);
 				airblade.setPierceArmor(true);
 				airblade.setChopBlocksThreshold(chopBlocks);
-				world.spawnEntity(airblade);
+				if (!world.isRemote)
+					world.spawnEntity(airblade);
 			}
 		} else {
 			EntityAirblade airblade = new EntityAirblade(world);
@@ -129,7 +130,8 @@ public class AbilityAirblade extends Ability {
 			airblade.setPierceArmor(false);
 			airblade.setChopBlocksThreshold(chopBlocks);
 			airblade.setTier(getCurrentTier(abilityData.getLevel()));
-			world.spawnEntity(airblade);
+			if (!world.isRemote)
+				world.spawnEntity(airblade);
 		}
 		super.execute(ctx);
 

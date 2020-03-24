@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.bending.fire.tickhandlers;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.fire.statctrls.StatCtrlFlameStrike;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandler;
@@ -16,11 +17,12 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.*;
+import static com.crowsofwar.avatar.common.data.StatusControl.*;
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-public class InfernoPunchParticleSpawner extends TickHandler {
+public class FlameStrikeHandler extends TickHandler {
 
-	public InfernoPunchParticleSpawner(int id) {
+	public FlameStrikeHandler(int id) {
 		super(id);
 	}
 
@@ -31,6 +33,7 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 		World world = ctx.getWorld();
 		AbilityData abilityData = AbilityData.get(entity, "inferno_punch");
 
+		int usage = STATS_CONFIG.flameStrikeSettings.strikeNumber;
 		int particleCount = 1;
 		int level = abilityData.getLevel();
 		if (level == 1 || level == 2) {
@@ -43,7 +46,7 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			particleCount = 2;
 		}
-		if ((data.hasStatusControl(INFERNO_PUNCH_MAIN) || data.hasStatusControl(INFERNO_PUNCH_FIRST) || data.hasStatusControl(INFERNO_PUNCH_SECOND))) {
+		if ((data.hasStatusControl(FLAME_STRIKE_MAIN) || data.hasStatusControl(FLAME_STRIKE_OFF))) {
 
 			Vec3d height, rightSide;
 			if (entity instanceof EntityPlayer) {
@@ -81,11 +84,6 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 				}
 
 			}
-			/*if (!world.isRemote) {
-				WorldServer World = (WorldServer) world;
-				World.spawnParticle(AvatarParticles.getParticleFlames(),
-						rightSide.x, rightSide.y, rightSide.z, particleCount, 0, 0, 0, 0.015);
-			}**/
 			if (world.isRemote)
 				for (int i = 0; i < particleCount; i++) {
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40,
@@ -98,7 +96,12 @@ public class InfernoPunchParticleSpawner extends TickHandler {
 
 
 			return false;
-		} else return true;
+		}
+		if (usage - StatCtrlFlameStrike.getTimesUsed(entity.getPersistentID()) == 0) {
+			StatCtrlFlameStrike.setTimesUsed(entity.getPersistentID(), 0);
+			return true;
+		}
+		return false;
 	}
 
 }

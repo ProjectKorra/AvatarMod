@@ -38,7 +38,7 @@ public class TickHandlerController {
 	public static TickHandler SMASH_GROUND_FIRE_BIG = new FireSmashGroundHandlerBig(10);
 	public static TickHandler SMASH_GROUND_WATER = new WaterSmashHandler(11);
 	public static TickHandler WATER_PARTICLE_SPAWNER = new WaterParticleSpawner(12);
-	public static TickHandler INFERNO_PARTICLE_SPAWNER = new InfernoPunchParticleSpawner(13);
+	public static TickHandler FLAME_STRIKE_HANDLER = new FlameStrikeHandler(13);
 	public static TickHandler AIRBURST_CHARGE_HANDLER = new AirBurstHandler(15);
 	public static TickHandler AIR_STATCTRL_HANDLER = new AirStatusControlHandler(16);
 	public static TickHandler FIRE_STATCTRL_HANDLER = new FireStatusControlHandler(17);
@@ -55,8 +55,7 @@ public class TickHandlerController {
 	public static TickHandler INFERNO_PUNCH_COOLDOWN = new InfernoPunchCooldownHandler(28);
 	public static TickHandler SLIPSTREAM_WALK_HANDLER = new SlipstreamAirWalkHandler(29);
 	public static TickHandler WATERARC_COMBO_HANDLER = new WaterArcComboHandler(30);
-	public static TickHandler FIREBLAST_UPDATE_TICK = new FireblastUpdateTick(31);
-	public static TickHandler SHOOT_AIRBURST = new ShootAirBurstHandler(32);
+	public static TickHandler SHOOT_AIRBURST = new ShootAirBurstHandler(31);
 
 
 	public static TickHandler fromId(int id) {

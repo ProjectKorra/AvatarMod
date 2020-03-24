@@ -24,7 +24,7 @@ import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.AIR_JUMP;
+import static com.crowsofwar.avatar.common.data.StatusControl.AIR_JUMP;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.AIR_PARTICLE_SPAWNER;
 
@@ -52,9 +52,9 @@ public class AbilityAirJump extends Ability {
 			data.addStatusControl(AIR_JUMP);
 			if (data.hasTickHandler(AIR_PARTICLE_SPAWNER)) {
 				Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
-				if (AIR_JUMP.execute(
-						new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
-					data.removeStatusControl(AIR_JUMP);
+				if (AIR_JUMP.execute(new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
+					if (!ctx.getWorld().isRemote)
+						data.removeStatusControl(AIR_JUMP);
 				}
 			}
 		}

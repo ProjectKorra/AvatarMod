@@ -201,10 +201,10 @@ public class ConfigClient {
 		public final boolean originalFireball = true;
 
 		@Load
-		public final boolean infernoPunchSphere = false;
+		public final boolean flameStrikeSphere = false;
 
 		@Load
-		public final boolean showInfernoPunchOrb = false;
+		public final boolean showFlameStrikeOrb = false;
 
 		@Load
 		public final boolean useFlamethrowerParticles = true;

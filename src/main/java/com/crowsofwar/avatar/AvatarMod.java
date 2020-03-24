@@ -42,7 +42,6 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
-import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.*;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarItems;
@@ -125,7 +124,6 @@ public class AvatarMod {
 		Abilities.register(new AbilityExplosion());
 		Abilities.register(new AbilityExplosivePillar());
 		Abilities.register(new AbilitySandstorm());
-		Abilities.register(new AbilityInfernoPunch());
 		Abilities.register(new AbilityLightningRaze());
 		Abilities.register(new AbilityAirBurst());
 	}
