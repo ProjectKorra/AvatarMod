@@ -25,6 +25,8 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLiving;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.START_FLAMETHROW;
+
 /**
  * @author CrowsOfWar
  */
@@ -37,7 +39,7 @@ public class AbilityFlamethrower extends Ability {
 	@Override
 	public void execute(AbilityContext ctx) {
 		BendingData data = ctx.getData();
-		data.addStatusControl(StatusControl.START_FLAMETHROW);
+		data.addStatusControl(START_FLAMETHROW);
 	}
 
 	@Override

@@ -45,8 +45,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Objects;
 
-import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_LIGHTNINGSPEAR;
 
 /**
  * @author CrowsOfWar
@@ -61,7 +61,6 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 
 	private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityLightningSpear.class,
 			DataSerializers.FLOAT);
-
 
 
 	/**
@@ -79,8 +78,6 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	 * Handles electrocution of nearby entities when the lightning spear touches water
 	 */
 	private LightningFloodFill floodFill;
-
-
 
 
 	/**

@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.statctrls.StatCtrlFlameStrike;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -51,6 +50,8 @@ import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_STRIKE_MAIN;
+import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_STRIKE_OFF;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAME_STRIKE_HANDLER;
 
 /**
@@ -70,7 +71,7 @@ public class AbilityFlameStrike extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
-		if (data.hasStatusControl(StatusControl.FLAME_STRIKE_MAIN) || data.hasStatusControl(StatusControl.FLAME_STRIKE_OFF))
+		if (data.hasStatusControl(FLAME_STRIKE_MAIN) || data.hasStatusControl(FLAME_STRIKE_OFF))
 			return;
 
 		float chi = STATS_CONFIG.chiFlameStrike;
@@ -130,7 +131,7 @@ public class AbilityFlameStrike extends Ability {
 		}
 		StatCtrlFlameStrike.setTimesUsed(ctx.getBenderEntity().getPersistentID(), 0);
 		data.addTickHandler(FLAME_STRIKE_HANDLER);
-		data.addStatusControl(StatusControl.FLAME_STRIKE_MAIN);
+		data.addStatusControl(FLAME_STRIKE_MAIN);
 	}
 
 
@@ -141,7 +142,7 @@ public class AbilityFlameStrike extends Ability {
 
 	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
-		return new AiFireBlast(this, entity, bender);
+		return new AiFlameStrike(this, entity, bender);
 	}
 
 	public static class FireblastBehaviour extends OffensiveBehaviour {
@@ -237,7 +238,7 @@ public class AbilityFlameStrike extends Ability {
 			if (emitter != null) {
 				if (emitter instanceof EntityBender || emitter instanceof EntityPlayer) {
 					BendingData be = BendingData.get((EntityLivingBase) emitter);
-					boolean hasStatCtrl = be.hasStatusControl(StatusControl.FLAME_STRIKE_MAIN) || be.hasStatusControl(StatusControl.FLAME_STRIKE_OFF);
+					boolean hasStatCtrl = be.hasStatusControl(FLAME_STRIKE_MAIN) || be.hasStatusControl(FLAME_STRIKE_OFF);
 					if (hasStatCtrl) {
 						if (CLIENT_CONFIG.fireRenderSettings.showFlameStrikeOrb) {
 							Vec3d height;

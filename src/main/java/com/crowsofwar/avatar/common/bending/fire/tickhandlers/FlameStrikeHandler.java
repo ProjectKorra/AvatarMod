@@ -17,8 +17,9 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.data.StatusControl.*;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_STRIKE_MAIN;
+import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_STRIKE_OFF;
 
 public class FlameStrikeHandler extends TickHandler {
 

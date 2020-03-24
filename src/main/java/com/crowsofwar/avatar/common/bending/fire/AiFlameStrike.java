@@ -18,9 +18,9 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
@@ -28,6 +28,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_FIRE;
 import static com.crowsofwar.avatar.common.util.AvatarUtils.normalizeAngle;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
@@ -37,7 +38,7 @@ import static java.lang.Math.toDegrees;
 /**
  * @author CrowsOfWar
  */
-public class AiFireBlast extends BendingAi {
+public class AiFlameStrike extends BendingAi {
 
 	private int timeExecuting;
 
@@ -48,7 +49,7 @@ public class AiFireBlast extends BendingAi {
 	 * @param entity
 	 * @param bender
 	 */
-	protected AiFireBlast(Ability ability, EntityLiving entity, Bender bender) {
+	protected AiFlameStrike(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
 		timeExecuting = 0;
 		setMutexBits(2);
@@ -92,10 +93,9 @@ public class AiFireBlast extends BendingAi {
 		}
 
 
-
 		if (timeExecuting >= 20) {
 			BendingData data = bender.getData();
-			execStatusControl(StatusControl.THROW_FIRE);
+			execStatusControl(THROW_FIRE);
 			timeExecuting = 0;
 			return false;
 		} else {
@@ -125,7 +125,7 @@ public class AiFireBlast extends BendingAi {
 
 		if (fire != null) {
 			fire.setDead();
-			bender.getData().removeStatusControl(StatusControl.THROW_FIRE);
+			bender.getData().removeStatusControl(THROW_FIRE);
 		}
 
 	}

@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.common.bending.fire.statctrls;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.Entity;
@@ -10,12 +10,15 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.util.EnumHand;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK;
+import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_STRIKE_MAIN;
+import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_STRIKE_OFF;
 
 public class StatCtrlFlameStrike extends StatusControl {
 

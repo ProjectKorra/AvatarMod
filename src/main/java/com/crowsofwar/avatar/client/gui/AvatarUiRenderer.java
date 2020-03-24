@@ -21,9 +21,9 @@ import com.crowsofwar.avatar.client.AvatarShaderUtils;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Chi;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.Vision;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
@@ -55,6 +55,8 @@ import java.util.UUID;
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.BUBBLE_CONTRACT;
+import static com.crowsofwar.avatar.common.data.StatusControlController.SHIELD_SHATTER;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.RENDER_ELEMENT_HANDLER;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
@@ -302,7 +304,7 @@ public class AvatarUiRenderer extends Gui {
 				if (data.getActiveBending() != null) {
 					float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
 							((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER))
-							/ CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration * CLIENT_CONFIG.bendingCycleAlpha : CLIENT_CONFIG.bendingCycleAlpha;
+									/ CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration * CLIENT_CONFIG.bendingCycleAlpha : CLIENT_CONFIG.bendingCycleAlpha;
 					GlStateManager.color(1, 1, 1, alpha);
 					drawBendingIcon(CLIENT_CONFIG.activeBendingSettings.middleXPosition,
 							CLIENT_CONFIG.activeBendingSettings.middleYPosition, data.getActiveBending(),
@@ -366,7 +368,7 @@ public class AvatarUiRenderer extends Gui {
 		EntityPlayer player = mc.player;
 		BendingData data = BendingData.get(player);
 
-		if (data.hasStatusControl(StatusControl.BUBBLE_CONTRACT)) {
+		if (data.hasStatusControl(BUBBLE_CONTRACT)) {
 			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class,
 					player);
 			if (bubble != null) {
@@ -381,7 +383,7 @@ public class AvatarUiRenderer extends Gui {
 		EntityPlayer player = mc.player;
 		BendingData data = BendingData.get(player);
 
-		if (data.hasStatusControl(StatusControl.SHIELD_SHATTER)) {
+		if (data.hasStatusControl(SHIELD_SHATTER)) {
 			EntityIceShield shield = AvatarEntity.lookupControlledEntity(world, EntityIceShield
 					.class, player);
 			if (shield != null) {

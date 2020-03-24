@@ -18,13 +18,13 @@
 package com.crowsofwar.avatar.common.entity.data;
 
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.entity.EntityFireArc;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_FIRE;
 
 /**
  * @author CrowsOfWar
@@ -88,7 +89,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 
 			// Ensure that owner always has stat ctrl active
 			if (entity.ticksExisted % 10 == 0) {
-				BendingData.get(owner).addStatusControl(StatusControl.THROW_FIRE);
+				BendingData.get(owner).addStatusControl(THROW_FIRE);
 			}
 			//If statement reduces lag
 
@@ -146,7 +147,7 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 										.addXp(ConfigSkills.SKILLS_CONFIG.fireBlastHit); // TODO - Fix this; Originally fireArcHit
 								AbilityData abilityData = data.getAbilityData(entity.getAbility().getName());
 								if (abilityData.isMasterPath(AbilityTreePath.SECOND) && entity.getOwner() != null) {
-									data.addStatusControl(StatusControl.THROW_FIRE);
+									data.addStatusControl(THROW_FIRE);
 									return new FireArcBehavior.PlayerControlled();
 								}
 							}

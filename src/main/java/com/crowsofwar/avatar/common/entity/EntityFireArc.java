@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
@@ -27,12 +26,12 @@ import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-
 import elucent.albedo.event.GatherLightsEvent;
 import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
@@ -50,14 +49,15 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_FIRE;
 
 @Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
 public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> implements ILightProvider {
@@ -128,11 +128,11 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 		if (getOwner() != null) {
 			EntityFireArc arc = AvatarEntity.lookupControlledEntity(world, EntityFireArc.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (arc == null && bD.hasStatusControl(StatusControl.THROW_FIRE)) {
-				bD.removeStatusControl(StatusControl.THROW_FIRE);
+			if (arc == null && bD.hasStatusControl(THROW_FIRE)) {
+				bD.removeStatusControl(THROW_FIRE);
 			}
-			if (arc != null && arc.getBehavior() instanceof FireArcBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_FIRE))) {
-				bD.addStatusControl(StatusControl.THROW_FIRE);
+			if (arc != null && arc.getBehavior() instanceof FireArcBehavior.PlayerControlled && !(bD.hasStatusControl(THROW_FIRE))) {
+				bD.addStatusControl(THROW_FIRE);
 			}
 
 		}
@@ -174,7 +174,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 	public void cleanup() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
-			data.removeStatusControl(StatusControl.THROW_FIRE);
+			data.removeStatusControl(THROW_FIRE);
 		}
 	}
 
@@ -374,14 +374,6 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 		return velocityMultiplier;
 	}
 
-	public static class FireControlPoint extends ControlPoint {
-
-		public FireControlPoint(EntityArc arc, float size, double x, double y, double z) {
-			super(arc, size, x, y, z);
-		}
-
-	}
-
 	@Override
 	@Optional.Method(modid = "albedo")
 	public Light provideLight() {
@@ -391,6 +383,14 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 	@Override
 	@Optional.Method(modid = "albedo")
 	public void gatherLights(GatherLightsEvent event, Entity entity) {
+
+	}
+
+	public static class FireControlPoint extends ControlPoint {
+
+		public FireControlPoint(EntityArc arc, float size, double x, double y, double z) {
+			super(arc, size, x, y, z);
+		}
 
 	}
 }

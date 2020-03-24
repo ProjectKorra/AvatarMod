@@ -10,6 +10,9 @@ import com.crowsofwar.avatar.common.entity.EntityFireball;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_FIRE;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_FIREBALL;
+
 public class FireStatusControlHandler extends TickHandler {
 
 	private int ticks = 0;
@@ -26,19 +29,19 @@ public class FireStatusControlHandler extends TickHandler {
 		int duration = data.getTickHandlerDuration(this);
 
 		EntityFireball ball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
-		if (ball == null && data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
+		if (ball == null && data.hasStatusControl(THROW_FIREBALL)) {
 			ticks++;
 			if (ticks >= 20) {
-				data.removeStatusControl(StatusControl.THROW_FIREBALL);
+				data.removeStatusControl(THROW_FIREBALL);
 				ticks = 0;
 				return true;
 			}
 		}
 		EntityFireArc arc = AvatarEntity.lookupControlledEntity(world, EntityFireArc.class, entity);
-		if (arc == null && data.hasStatusControl(StatusControl.THROW_FIRE)) {
+		if (arc == null && data.hasStatusControl(THROW_FIRE)) {
 			ticks++;
 			if (ticks >= 20) {
-				data.removeStatusControl(StatusControl.THROW_FIRE);
+				data.removeStatusControl(THROW_FIRE);
 				ticks = 0;
 				return true;
 			}

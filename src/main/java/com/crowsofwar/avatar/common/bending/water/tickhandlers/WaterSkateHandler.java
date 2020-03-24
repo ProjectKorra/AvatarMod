@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.common.bending.water.tickhandlers;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -41,10 +40,10 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-import static com.crowsofwar.avatar.common.data.StatusControl.SKATING_JUMP;
-import static com.crowsofwar.avatar.common.data.StatusControl.SKATING_START;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.SKATING_JUMP;
+import static com.crowsofwar.avatar.common.data.StatusControlController.SKATING_START;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.Math.toRadians;
 import static net.minecraft.init.Blocks.WATER;
@@ -75,7 +74,7 @@ public class WaterSkateHandler extends TickHandler {
 		}
 
 		if (data.hasStatusControl(SKATING_JUMP) && skate(data, entity, ctx.getBender())) {
-			data.removeStatusControl(StatusControl.SKATING_JUMP);
+			data.removeStatusControl(SKATING_JUMP);
 			data.getMiscData().setCanUseAbilities(true);
 			return true;
 		} else {

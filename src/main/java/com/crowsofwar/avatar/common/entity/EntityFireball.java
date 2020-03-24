@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
@@ -59,6 +58,7 @@ import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_FIREBALL;
 
 /**
  * @author CrowsOfWar
@@ -134,12 +134,12 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 		if (getOwner() != null) {
 			EntityFireball ball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (ball == null && bD.hasStatusControl(StatusControl.THROW_FIREBALL)) {
-				bD.removeStatusControl(StatusControl.THROW_FIREBALL);
+			if (ball == null && bD.hasStatusControl(THROW_FIREBALL)) {
+				bD.removeStatusControl(THROW_FIREBALL);
 			}
 			if (ball != null && ball.getBehavior() instanceof FireballBehavior.PlayerControlled
-					&& !(bD.hasStatusControl(StatusControl.THROW_FIREBALL))) {
-				bD.addStatusControl(StatusControl.THROW_FIREBALL);
+					&& !(bD.hasStatusControl(THROW_FIREBALL))) {
+				bD.addStatusControl(THROW_FIREBALL);
 			}
 			if (getBehavior() != null && getBehavior() instanceof FireballBehavior.PlayerControlled) {
 				this.position = this.getPosition();
@@ -294,7 +294,7 @@ public class EntityFireball extends AvatarEntity implements ILightProvider {
 		if (getOwner() != null) {
 			BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
 			if (data != null) {
-				data.removeStatusControl(StatusControl.THROW_FIREBALL);
+				data.removeStatusControl(THROW_FIREBALL);
 			}
 		}
 	}

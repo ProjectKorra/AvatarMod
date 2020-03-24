@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
@@ -42,6 +41,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Objects;
+
+import static com.crowsofwar.avatar.common.data.StatusControlController.LOB_BUBBLE;
 
 /**
  * @author CrowsOfWar
@@ -155,7 +156,7 @@ public class EntityWaterBubble extends AvatarEntity {
 			if (getOwner() != null) {
 				BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
 				if (data != null) {
-					data.removeStatusControl(StatusControl.LOB_BUBBLE);
+					data.removeStatusControl(LOB_BUBBLE);
 				}
 			}
 		}

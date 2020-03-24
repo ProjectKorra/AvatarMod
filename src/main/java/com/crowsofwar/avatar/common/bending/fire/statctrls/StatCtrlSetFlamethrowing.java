@@ -17,18 +17,19 @@
 
 package com.crowsofwar.avatar.common.bending.fire.statctrls;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.data.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.bending.fire.tickhandlers.FlamethrowerUpdateTick.FLAMETHROWER_MOVEMENT_MODIFIER_ID;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_UP;
+import static com.crowsofwar.avatar.common.data.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
+import static com.crowsofwar.avatar.common.data.StatusControlController.STOP_FLAMETHROW;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAMETHROWER;
 
 /**

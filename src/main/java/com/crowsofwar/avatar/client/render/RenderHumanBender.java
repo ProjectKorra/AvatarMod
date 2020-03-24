@@ -54,18 +54,6 @@ public class RenderHumanBender extends RenderLiving<EntityHumanBender> {
 	@Override
 	public void doRender(EntityHumanBender entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
-		Bender bender = Bender.get(entity);
-		if (bender != null) {
-			BendingData data = BendingData.getFromEntity(entity);
-			if (data != null) {
-				if (data.hasStatusControl(StatusControl.STOP_FLAMETHROW)) {
-					System.out.println("nice");
-					FLAMETHROWER.renderTick(new BendingContext(data, entity, bender, new Raytrace.Result()));
-				}
-
-			}
-			bender.onRenderUpdate();
-		}
 	}
 
 	@Override

@@ -18,7 +18,6 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -38,6 +37,7 @@ import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_FIREBALL;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
@@ -60,7 +60,7 @@ public class AbilityFireball extends Ability {
 		BendingData data = ctx.getData();
 
 
-		if (bender.consumeChi(STATS_CONFIG.chiFireball) && !data.hasStatusControl(StatusControl.THROW_FIREBALL)) {
+		if (bender.consumeChi(STATS_CONFIG.chiFireball) && !data.hasStatusControl(THROW_FIREBALL)) {
 
 			Vector target;
 			if (ctx.isLookingAtBlock()) {
@@ -119,7 +119,7 @@ public class AbilityFireball extends Ability {
 			world.spawnEntity(orb);
 
 
-			data.addStatusControl(StatusControl.THROW_FIREBALL);
+			data.addStatusControl(THROW_FIREBALL);
 			world.spawnEntity(fireball);
 
 		}

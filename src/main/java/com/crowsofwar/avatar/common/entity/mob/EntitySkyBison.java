@@ -21,11 +21,11 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.ai.*;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
@@ -85,6 +85,7 @@ import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.AIR_JUMP;
 import static com.crowsofwar.avatar.common.util.AvatarUtils.*;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
@@ -504,8 +505,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 					PlayerViewRegistry.getPlayerViewMode(passenger.getUniqueID()) <= -1)) {
 				passenger.setPosition(posX + sin(angle) * offset, posY + yOffset,
 						posZ + cos(angle) * offset);
-			}
-			else {
+			} else {
 				passenger.setPosition(posX + sin(angle) * offset - sin(angle), posY + yOffset,
 						posZ + cos(angle) * offset - cos(angle));
 			}
@@ -768,9 +768,9 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	private void onLiftoff() {
 		if (!isEatingGrass()) {
 			getBender().executeAbility(Abilities.get("air_jump"), false);
-			StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, getBender(), new
+			AIR_JUMP.execute(new BendingContext(getData(), this, getBender(), new
 					Raytrace.Result()));
-			getData().removeStatusControl(StatusControl.AIR_JUMP);
+			getData().removeStatusControl(AIR_JUMP);
 		}
 	}
 
@@ -929,7 +929,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		applyAbilityLevels(getLevel());
 
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20 + Math.min(80 * condition.getAgeDays()
-		/ condition.getAdultAge(), 80));
+				/ condition.getAdultAge(), 80));
 		if (this.isSitting() && hasOwner() && (world.getBlockState(getEntityPos(this)
 				.toBlockPos()).getBlock() != Blocks.AIR)) {
 			this.motionX = this.motionY = this.motionZ = 0;
