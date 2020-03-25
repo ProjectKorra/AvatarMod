@@ -32,20 +32,26 @@ public class FlameStrikeHandler extends TickHandler {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
-		AbilityData abilityData = AbilityData.get(entity, "inferno_punch");
+		AbilityData abilityData = AbilityData.get(entity, "flame_strike");
 
 		int usage = STATS_CONFIG.flameStrikeSettings.strikeNumber;
 		int particleCount = 1;
 		int level = abilityData.getLevel();
+
 		if (level == 1 || level == 2) {
 			particleCount = 2;
-
 		}
+
+		if (level == 2)
+			usage += 1;
+
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			particleCount = 3;
+			usage += 3;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			particleCount = 2;
+			usage += 1;
 		}
 		if ((data.hasStatusControl(FLAME_STRIKE_MAIN) || data.hasStatusControl(FLAME_STRIKE_OFF))) {
 
@@ -55,7 +61,8 @@ public class FlameStrikeHandler extends TickHandler {
 					height = entity.getPositionVector().add(0, 1.6, 0);
 					height = height.add(entity.getLookVec().scale(0.8));
 					//Right
-					if (entity.getPrimaryHand() == EnumHandSide.RIGHT) {
+					if (entity.getPrimaryHand() == EnumHandSide.RIGHT && data.hasStatusControl(FLAME_STRIKE_MAIN)
+							|| entity.getPrimaryHand() == EnumHandSide.LEFT && data.hasStatusControl(FLAME_STRIKE_OFF)) {
 						rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
 						rightSide = rightSide.add(height);
 					}
@@ -66,7 +73,8 @@ public class FlameStrikeHandler extends TickHandler {
 					}
 				} else {
 					height = entity.getPositionVector().add(0, 0.84, 0);
-					if (entity.getPrimaryHand() == EnumHandSide.RIGHT) {
+					if (entity.getPrimaryHand() == EnumHandSide.RIGHT && data.hasStatusControl(FLAME_STRIKE_MAIN)
+							|| entity.getPrimaryHand() == EnumHandSide.LEFT && data.hasStatusControl(FLAME_STRIKE_OFF)) {
 						rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.385).withY(0).toMinecraft();
 						rightSide = rightSide.add(height);
 					} else {
@@ -76,7 +84,8 @@ public class FlameStrikeHandler extends TickHandler {
 				}
 			} else {
 				height = entity.getPositionVector().add(0, 0.84, 0);
-				if (entity.getPrimaryHand() == EnumHandSide.RIGHT) {
+				if (entity.getPrimaryHand() == EnumHandSide.RIGHT && data.hasStatusControl(FLAME_STRIKE_MAIN)
+						|| entity.getPrimaryHand() == EnumHandSide.LEFT && data.hasStatusControl(FLAME_STRIKE_OFF)) {
 					rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.385).withY(0).toMinecraft();
 					rightSide = rightSide.add(height);
 				} else {
@@ -87,19 +96,20 @@ public class FlameStrikeHandler extends TickHandler {
 			}
 			if (world.isRemote)
 				for (int i = 0; i < particleCount; i++) {
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40,
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
 							world.rand.nextGaussian() / 40).clr(255, 15, 5).collide(true).
 							scale(abilityData.getLevel() < 1 ? 0.9F : 0.9F + abilityData.getLevel() / 5F).element(new Firebending()).spawn(world);
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40,
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
 							world.rand.nextGaussian() / 40).clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true).
 							scale(abilityData.getLevel() < 1 ? 0.9F : 0.9F + abilityData.getLevel() / 5F).element(new Firebending()).spawn(world);
 				}
 
-
-			return false;
 		}
-		if (usage - StatCtrlFlameStrike.getTimesUsed(entity.getPersistentID()) == 0) {
-			StatCtrlFlameStrike.setTimesUsed(entity.getPersistentID(), 0);
+		else return true;
+		System.out.println(StatCtrlFlameStrike.getTimesUsed(entity.getPersistentID()));
+		if (usage - StatCtrlFlameStrike.getTimesUsed(entity.getPersistentID()) <= 0) {
+			data.removeStatusControl(FLAME_STRIKE_MAIN);
+			data.removeStatusControl(FLAME_STRIKE_OFF);
 			return true;
 		}
 		return false;

@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.network.packets;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.data.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import io.netty.buffer.ByteBuf;
@@ -44,7 +45,7 @@ public class PacketSUseStatusControl extends AvatarPacket<PacketSUseStatusContro
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		int id = buf.readInt();
-		statusControl = StatusControl.lookup(id);
+		statusControl = StatusControlController.lookup(id);
 		if (statusControl == null) {
 			AvatarLog.warn(WarningType.BAD_CLIENT_PACKET,
 					"Player trying to crash the server?? While sending UseStatusControl packet, sent invalid id "

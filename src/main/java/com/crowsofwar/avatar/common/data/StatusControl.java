@@ -32,6 +32,9 @@ import net.minecraft.util.EnumHand;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.allControls;
+import static com.crowsofwar.avatar.common.data.StatusControlController.nextId;
+
 /**
  * Describes a temporary effect where a callback listener is added to a control
  * event. The listener then will perform certain actions associated with that
@@ -47,9 +50,6 @@ import java.util.List;
  * @author CrowsOfWar
  */
 public abstract class StatusControl {
-
-	private static int nextId = 0;
-	private static List<StatusControl> allControls;
 
 	private final int texture;
 	private final AvatarControl control;
@@ -68,11 +68,6 @@ public abstract class StatusControl {
 		this.id = ++nextId;
 		allControls.add(this);
 
-	}
-
-	public static StatusControl lookup(int id) {
-		id--;
-		return id >= 0 && id < allControls.size() ? allControls.get(id) : null;
 	}
 
 	/**

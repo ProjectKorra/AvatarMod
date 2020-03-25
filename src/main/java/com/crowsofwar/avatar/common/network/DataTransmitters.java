@@ -103,7 +103,7 @@ public class DataTransmitters {
 			int size = buf.readInt();
 			List<StatusControl> out = new ArrayList<>();
 			for (int i = 0; i < size; i++) {
-				StatusControl sc = StatusControl.lookup(buf.readInt());
+				StatusControl sc = StatusControlController.lookup(buf.readInt());
 				if (sc == null)
 					AvatarLog.warn(WarningType.WEIRD_PACKET, "Invalid status control id");
 				else

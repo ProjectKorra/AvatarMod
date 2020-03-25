@@ -61,7 +61,7 @@ public class AbilityFlameStrike extends Ability {
 
 
 	public AbilityFlameStrike() {
-		super(Firebending.ID, "fire_blast");
+		super(Firebending.ID, "flame_strike");
 		requireRaytrace(-1, false);
 	}
 

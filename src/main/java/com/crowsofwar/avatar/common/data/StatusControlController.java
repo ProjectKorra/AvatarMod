@@ -9,7 +9,12 @@ import com.crowsofwar.avatar.common.bending.sand.StatCtrlSandstormRedirect;
 import com.crowsofwar.avatar.common.bending.water.*;
 import net.minecraft.util.EnumHand;
 
+import java.util.List;
+
 public class StatusControlController {
+	public static int nextId = 0;
+	public static List<StatusControl> allControls;
+
 	// @formatter:off
 	public static final StatusControl
 			AIR_JUMP = new StatCtrlAirJump(),
@@ -42,4 +47,9 @@ public class StatusControlController {
 			THROW_LIGHTNINGSPEAR = new StatCtrlThrowLightningSpear(),
 			THROW_WATER = new StatCtrlThrowWater();
 	// @formatter:on
+
+	public static StatusControl lookup(int id) {
+		id--;
+		return id >= 0 && id < allControls.size() ? allControls.get(id) : null;
+	}
 }

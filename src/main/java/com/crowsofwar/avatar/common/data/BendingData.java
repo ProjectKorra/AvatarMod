@@ -603,7 +603,7 @@ public class BendingData {
 				"BendingControllers");
 
 		AvatarUtils.readList(statusControls,
-				nbt -> StatusControl.lookup(nbt.getInteger("Id")),
+				nbt -> StatusControlController.lookup(nbt.getInteger("Id")),
 				readFrom,
 				"StatusControls");
 

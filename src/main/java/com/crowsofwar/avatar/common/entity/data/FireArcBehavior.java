@@ -143,8 +143,8 @@ public abstract class FireArcBehavior extends Behavior<EntityFireArc> {
 						if (!entity.world.isRemote) {
 							BendingData data = Objects.requireNonNull(Bender.get(entity.getOwner())).getData();
 							if (data != null) {
-								data.getAbilityData(entity.getAbility().getName())
-										.addXp(ConfigSkills.SKILLS_CONFIG.fireBlastHit); // TODO - Fix this; Originally fireArcHit
+							//	data.getAbilityData(entity.getAbility().getName())
+							//			.addXp(ConfigSkills.SKILLS_CONFIG.fireBlastHit); // TODO - Fix this; Originally fireArcHit
 								AbilityData abilityData = data.getAbilityData(entity.getAbility().getName());
 								if (abilityData.isMasterPath(AbilityTreePath.SECOND) && entity.getOwner() != null) {
 									data.addStatusControl(THROW_FIRE);

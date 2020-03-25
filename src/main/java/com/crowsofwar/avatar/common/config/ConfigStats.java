@@ -76,9 +76,6 @@ public class ConfigStats {
 	public FireballSettings fireballSettings = new FireballSettings();
 
 	@Load
-	public InfernoPunchSettings infernoPunchSettings = new InfernoPunchSettings();
-
-	@Load
 	public LightningRazeSettings lightningRazeSettings = new LightningRazeSettings();
 
 	@Load
@@ -366,6 +363,21 @@ public class ConfigStats {
 		@Load
 		public float knockback = 2;
 
+		@Load
+		public int performanceAmount = 6;
+
+		@Load
+		public int fireTime = 3;
+
+		@Load
+		public float shockwaveRadius = 5;
+
+		@Load
+		public float shockwaveSpeed = 1;
+
+		@Load
+		public float shockwaveDamage = 6F;
+
 	}
 
 
@@ -511,30 +523,6 @@ public class ConfigStats {
 
 		@Load
 		public double push = 1;
-
-	}
-
-	public static class InfernoPunchSettings {
-		@Load
-		public float damage = 3;
-
-		@Load
-		public float knockbackMult = 1F;
-
-		@Load
-		public int performanceAmount = 10;
-
-		@Load
-		public int fireTime = 3;
-
-		@Load
-		public float shockwaveRadius = 5;
-
-		@Load
-		public float shockwaveSpeed = 1;
-
-		@Load
-		public float shockwaveDamage = 6F;
 
 	}
 

@@ -321,7 +321,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 				if (getOwner() != null && !world.isRemote && getAbility() != null) {
 					BendingData data1 = BendingData.get(getOwner());
 					AbilityData abilityData1 = data1.getAbilityData(getAbility().getName());
-					abilityData1.addXp(SKILLS_CONFIG.fireBlastHit); // TODO - Fix this; Originally fireArcHit
+					//abilityData1.addXp(SKILLS_CONFIG.fireBlastHit); // TODO - Fix this; Originally fireArcHit
 					BattlePerformanceScore.addMediumScore(getOwner());
 
 				}
