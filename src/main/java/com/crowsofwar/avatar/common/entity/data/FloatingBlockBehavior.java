@@ -42,6 +42,8 @@ import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.PLACE_BLOCK;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_BLOCK;
 
 /**
  * @author CrowsOfWar
@@ -225,8 +227,8 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 
 							Bender bender = Bender.get(entity.getOwner());
 							if (bender != null && bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
-								data.addStatusControl(StatusControl.THROW_BLOCK);
-								data.addStatusControl(StatusControl.PLACE_BLOCK);
+								data.addStatusControl(THROW_BLOCK);
+								data.addStatusControl(PLACE_BLOCK);
 								entity.isDead = false;
 
 								return new FloatingBlockBehavior.PlayerControlled();

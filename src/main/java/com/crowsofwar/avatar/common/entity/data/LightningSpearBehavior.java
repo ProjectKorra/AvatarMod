@@ -36,6 +36,8 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_LIGHTNINGSPEAR;
+
 /**
  * @author CrowsOfWar
  */
@@ -172,10 +174,10 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			if (owner == null || entity.world.isRemote) return this;
 
 			BendingData data = BendingData.get(owner);
-			if (!data.hasStatusControl(StatusControl.THROW_LIGHTNINGSPEAR)) {
+			if (!data.hasStatusControl(THROW_LIGHTNINGSPEAR)) {
 				EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(entity.world, EntityLightningSpear.class, entity.getOwner());
 				if (spear != null) {
-					data.addStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
+					data.addStatusControl(THROW_LIGHTNINGSPEAR);
 				}
 			}
 			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);

@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -28,6 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.SANDSTORM_REDIRECT;
 
 public class EntitySandstorm extends AvatarEntity {
 
@@ -375,8 +375,8 @@ public class EntitySandstorm extends AvatarEntity {
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData bD = BendingData.get(getOwner());
-			if (bD.hasStatusControl(StatusControl.SANDSTORM_REDIRECT)) {
-				bD.removeStatusControl(StatusControl.SANDSTORM_REDIRECT);
+			if (bD.hasStatusControl(SANDSTORM_REDIRECT)) {
+				bD.removeStatusControl(SANDSTORM_REDIRECT);
 			}
 		}
 	}

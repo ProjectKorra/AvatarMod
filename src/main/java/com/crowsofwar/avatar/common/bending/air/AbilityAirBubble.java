@@ -18,7 +18,6 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -33,6 +32,8 @@ import net.minecraft.world.World;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
+import static com.crowsofwar.avatar.common.data.StatusControlController.BUBBLE_CONTRACT;
+import static com.crowsofwar.avatar.common.data.StatusControlController.BUBBLE_EXPAND;
 
 /**
  * @author CrowsOfWar
@@ -57,7 +58,7 @@ public class AbilityAirBubble extends Ability {
 			ctx.getBender().sendMessage("avatar.airBubbleElytra");
 		}
 
-		if (!data.hasStatusControl(StatusControl.BUBBLE_CONTRACT) && elytraOk) {
+		if (!data.hasStatusControl(BUBBLE_CONTRACT) && elytraOk) {
 
 			if (!bender.consumeChi(STATS_CONFIG.chiAirBubble)) return;
 
@@ -86,8 +87,8 @@ public class AbilityAirBubble extends Ability {
 			bubble.setAbility(this);
 			world.spawnEntity(bubble);
 
-			data.addStatusControl(StatusControl.BUBBLE_EXPAND);
-			data.addStatusControl(StatusControl.BUBBLE_CONTRACT);
+			data.addStatusControl(BUBBLE_EXPAND);
+			data.addStatusControl(BUBBLE_CONTRACT);
 		}
 		super.execute(ctx);
 

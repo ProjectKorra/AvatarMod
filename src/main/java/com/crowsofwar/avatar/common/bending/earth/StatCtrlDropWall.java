@@ -11,6 +11,8 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.*;
+
 /**
  * @author CrowsOfWar
  */
@@ -38,9 +40,9 @@ public class StatCtrlDropWall extends StatusControl {
 			seg.setBehavior(new WallBehavior.Drop());
 		}
 
-		ctx.getData().removeStatusControl(StatusControl.PLACE_WALL);
-		ctx.getData().removeStatusControl(StatusControl.PUSH_WALL);
-		ctx.getData().removeStatusControl(StatusControl.PULL_WALL);
+		ctx.getData().removeStatusControl(PLACE_WALL);
+		ctx.getData().removeStatusControl(PUSH_WALL);
+		ctx.getData().removeStatusControl(PULL_WALL);
 
 		return true;
 	}

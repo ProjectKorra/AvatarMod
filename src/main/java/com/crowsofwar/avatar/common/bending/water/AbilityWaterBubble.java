@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -38,6 +37,7 @@ import java.util.function.BiPredicate;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.LOB_BUBBLE;
 import static java.lang.Math.toRadians;
 
 /**
@@ -99,7 +99,7 @@ public class AbilityWaterBubble extends Ability {
 
 					world.spawnEntity(bubble);
 
-					data.addStatusControl(StatusControl.LOB_BUBBLE);
+					data.addStatusControl(LOB_BUBBLE);
 					//data.addStatusControl(StatusControl.CHARGE_BUBBLE);
 					data.getAbilityData(this).addXp(SKILLS_CONFIG.createBubble);
 

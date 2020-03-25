@@ -17,10 +17,10 @@
 package com.crowsofwar.avatar.common.bending.ice;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityIceShield;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,6 +28,7 @@ import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.SHIELD_SHATTER;
 
 /**
  * @author CrowsOfWar
@@ -51,7 +52,7 @@ public class AbilityIceBurst extends Ability {
 		}
 
 		// Don't allow 2 ice shields at once
-		if (data.hasStatusControl(StatusControl.SHIELD_SHATTER)) {
+		if (data.hasStatusControl(SHIELD_SHATTER)) {
 			return;
 		}
 
@@ -82,7 +83,7 @@ public class AbilityIceBurst extends Ability {
 		shield.setAbility(this);
 
 		world.spawnEntity(shield);
-		data.addStatusControl(StatusControl.SHIELD_SHATTER);
+		data.addStatusControl(SHIELD_SHATTER);
 
 		abilityData.addXp(SKILLS_CONFIG.iceShieldCreated);
 

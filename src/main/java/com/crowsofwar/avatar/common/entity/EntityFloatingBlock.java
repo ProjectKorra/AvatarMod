@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.bending.earth.AbilityEarthControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -52,6 +51,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Objects;
 import java.util.Random;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.PLACE_BLOCK;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_BLOCK;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
@@ -250,13 +251,13 @@ public class EntityFloatingBlock extends AvatarEntity {
 		if (getOwner() != null) {
 			EntityFloatingBlock block = AvatarEntity.lookupControlledEntity(world, EntityFloatingBlock.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (block == null && (bD.hasStatusControl(StatusControl.THROW_BLOCK) || bD.hasStatusControl(StatusControl.PLACE_BLOCK))) {
-				bD.removeStatusControl(StatusControl.THROW_BLOCK);
-				bD.removeStatusControl(StatusControl.PLACE_BLOCK);
+			if (block == null && (bD.hasStatusControl(THROW_BLOCK) || bD.hasStatusControl(PLACE_BLOCK))) {
+				bD.removeStatusControl(THROW_BLOCK);
+				bD.removeStatusControl(PLACE_BLOCK);
 			}
-			if (block != null && block.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_BLOCK))) {
-				bD.addStatusControl(StatusControl.THROW_BLOCK);
-				bD.addStatusControl(StatusControl.PLACE_BLOCK);
+			if (block != null && block.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled && !(bD.hasStatusControl(THROW_BLOCK))) {
+				bD.addStatusControl(THROW_BLOCK);
+				bD.addStatusControl(PLACE_BLOCK);
 			}
 
 		}
@@ -376,11 +377,11 @@ public class EntityFloatingBlock extends AvatarEntity {
 		removeStatCtrl();
 	}
 
-	 private void removeStatCtrl() {
+	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData bD = BendingData.get(getOwner());
-			bD.removeStatusControl(StatusControl.THROW_BLOCK);
-			bD.removeStatusControl(StatusControl.PLACE_BLOCK);
+			bD.removeStatusControl(THROW_BLOCK);
+			bD.removeStatusControl(PLACE_BLOCK);
 		}
 
 	}

@@ -26,6 +26,8 @@ import net.minecraft.entity.EntityLiving;
 
 import java.util.Random;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.BUBBLE_EXPAND;
+
 /**
  * @author CrowsOfWar
  */
@@ -57,7 +59,7 @@ public class AiAirBubble extends BendingAi {
 		boolean lowHealth = entity.getHealth() / entity.getMaxHealth() <= 0.5f;
 
 		if (timeExecuting > 200 || (entity.getAttackTarget() != null && entity.getDistance(entity.getAttackTarget()) < 3) && entity.getRNG().nextBoolean()) {
-			execStatusControl(StatusControl.BUBBLE_EXPAND);
+			execStatusControl(BUBBLE_EXPAND);
 			return false;
 
 		}

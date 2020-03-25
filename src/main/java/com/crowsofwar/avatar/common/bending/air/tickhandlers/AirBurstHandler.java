@@ -1,13 +1,9 @@
 package com.crowsofwar.avatar.common.bending.air.tickhandlers;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
@@ -36,6 +32,8 @@ import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.RELEASE_AIR_BURST;
+import static com.crowsofwar.avatar.common.data.StatusControlController.SHOOT_AIR_BURST;
 
 public class AirBurstHandler extends TickHandler {
 	public static final UUID AIRBURST_MOVEMENT_MODIFIER_ID = UUID.fromString
@@ -204,7 +202,7 @@ public class AirBurstHandler extends TickHandler {
 			}
 
 
-			if (!data.hasStatusControl(StatusControl.RELEASE_AIR_BURST)) {
+			if (!data.hasStatusControl(RELEASE_AIR_BURST)) {
 
 				int particleController = abilityData.getLevel() > 0 ? 60 - (5 * abilityData.getLevel()) : 60;
 				EntityShockwave shockwave = new EntityShockwave(world);
@@ -234,19 +232,19 @@ public class AirBurstHandler extends TickHandler {
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
 						SoundCategory.BLOCKS, 1, 0.5F);
 
-				data.removeStatusControl(StatusControl.SHOOT_AIR_BURST);
+				data.removeStatusControl(SHOOT_AIR_BURST);
 				return true;
 			}
-			return !data.hasStatusControl(StatusControl.RELEASE_AIR_BURST) || shouldRemove && !data.hasStatusControl(StatusControl.SHOOT_AIR_BURST);
+			return !data.hasStatusControl(RELEASE_AIR_BURST) || shouldRemove && !data.hasStatusControl(SHOOT_AIR_BURST);
 		} else {
-			data.removeStatusControl(StatusControl.SHOOT_AIR_BURST);
+			data.removeStatusControl(SHOOT_AIR_BURST);
 			return true;
 		}
 	}
 
 	private void addStatCtrl(BendingData data) {
-		if (!data.hasStatusControl(StatusControl.SHOOT_AIR_BURST)) {
-			data.addStatusControl(StatusControl.SHOOT_AIR_BURST);
+		if (!data.hasStatusControl(SHOOT_AIR_BURST)) {
+			data.addStatusControl(SHOOT_AIR_BURST);
 		}
 	}
 

@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_CLOUDBURST;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
@@ -34,7 +35,7 @@ public class AbilityCloudBurst extends Ability {
 		Bender bender = ctx.getBender();
 		BendingData data = ctx.getData();
 
-		if (data.hasStatusControl(StatusControl.THROW_CLOUDBURST)) return;
+		if (data.hasStatusControl(THROW_CLOUDBURST)) return;
 
 		float chi = STATS_CONFIG.chiCloudburst;
 		//2.5F
@@ -115,7 +116,7 @@ public class AbilityCloudBurst extends Ability {
 			cloudball.setElement(new Airbending());
 			world.spawnEntity(cloudball);
 
-			data.addStatusControl(StatusControl.THROW_CLOUDBURST);
+			data.addStatusControl(THROW_CLOUDBURST);
 		}
 		super.execute(ctx);
 

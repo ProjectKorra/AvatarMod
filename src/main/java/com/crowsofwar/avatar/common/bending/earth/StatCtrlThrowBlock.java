@@ -30,6 +30,8 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.PLACE_BLOCK;
+
 /**
  * @author CrowsOfWar
  */

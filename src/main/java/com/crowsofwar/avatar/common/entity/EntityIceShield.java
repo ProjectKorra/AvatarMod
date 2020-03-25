@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -34,6 +33,7 @@ import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.SHIELD_SHATTER;
 
 /**
  * @author CrowsOfWar
@@ -193,7 +193,8 @@ public class EntityIceShield extends EntityShield {
 		shatter();
 
 		if (getOwner() != null) {
-			BendingData.get(getOwner()).removeStatusControl(StatusControl.SHIELD_SHATTER);
+			BendingData.get(getOwner()).removeStatusControl(
+					SHIELD_SHATTER);
 		}
 
 	}

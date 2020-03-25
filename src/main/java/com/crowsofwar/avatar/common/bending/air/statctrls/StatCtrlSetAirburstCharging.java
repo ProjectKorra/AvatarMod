@@ -17,17 +17,19 @@
 
 package com.crowsofwar.avatar.common.bending.air.statctrls;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 
-import static com.crowsofwar.avatar.common.data.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.bending.air.tickhandlers.AirBurstHandler.AIRBURST_MOVEMENT_MODIFIER_ID;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_UP;
+import static com.crowsofwar.avatar.common.data.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
+import static com.crowsofwar.avatar.common.data.StatusControlController.RELEASE_AIR_BURST;
+import static com.crowsofwar.avatar.common.data.StatusControlController.SHOOT_AIR_BURST;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.AIRBURST_CHARGE_HANDLER;
 
 /**
@@ -56,7 +58,7 @@ public class StatCtrlSetAirburstCharging extends StatusControl {
 			} else {
 				if (bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(AIRBURST_MOVEMENT_MODIFIER_ID) != null)
 					bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
-				data.removeStatusControl(StatusControl.SHOOT_AIR_BURST);
+				data.removeStatusControl(SHOOT_AIR_BURST);
 				//We don't remove the status control here since we want to spawn the tick handler if we stop right clicking.
 			}
 		}

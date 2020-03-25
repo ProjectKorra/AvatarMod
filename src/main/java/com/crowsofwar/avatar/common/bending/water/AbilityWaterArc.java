@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -43,6 +42,7 @@ import java.util.List;
 import java.util.function.BiPredicate;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_WATER;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.WATERARC_COMBO_HANDLER;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 import static java.lang.Math.toRadians;
@@ -151,8 +151,7 @@ public class AbilityWaterArc extends Ability {
 						setComboNumber(UUID, number);
 						data.removeTickHandler(WATERARC_COMBO_HANDLER);
 						data.addTickHandler(WATERARC_COMBO_HANDLER);
-					}
-					else setComboNumber(UUID, 1);
+					} else setComboNumber(UUID, 1);
 
 					if (getComboNumber(UUID) == 0) {
 						setComboNumber(UUID, 1);
@@ -207,7 +206,7 @@ public class AbilityWaterArc extends Ability {
 					water.setGravity(gravity);
 					water.setAbility(this);
 					world.spawnEntity(water);
-					ctx.getData().addStatusControl(StatusControl.THROW_WATER);
+					ctx.getData().addStatusControl(THROW_WATER);
 				}
 
 			}

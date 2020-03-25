@@ -41,6 +41,8 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.PLACE_BLOCK;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_BLOCK;
 
 /**
  * @author CrowsOfWar
@@ -135,8 +137,8 @@ public class AbilityEarthControl extends Ability {
 							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 				}
 
-				data.addStatusControl(StatusControl.PLACE_BLOCK);
-				data.addStatusControl(StatusControl.THROW_BLOCK);
+				data.addStatusControl(PLACE_BLOCK);
+				data.addStatusControl(THROW_BLOCK);
 
 			}
 

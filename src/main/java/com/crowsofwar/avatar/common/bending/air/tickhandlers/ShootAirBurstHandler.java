@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.bending.air.tickhandlers;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -27,6 +26,7 @@ import net.minecraft.world.World;
 import static com.crowsofwar.avatar.common.bending.air.tickhandlers.AirBurstHandler.AIRBURST_MOVEMENT_MODIFIER_ID;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.CHARGE_AIR_BURST;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.AIRBURST_CHARGE_HANDLER;
 
 public class ShootAirBurstHandler extends TickHandler {
@@ -143,7 +143,7 @@ public class ShootAirBurstHandler extends TickHandler {
 			}
 		}
 		ctx.getData().removeTickHandler(AIRBURST_CHARGE_HANDLER);
-		ctx.getData().removeStatusControl(StatusControl.CHARGE_AIR_BURST);
+		ctx.getData().removeStatusControl(CHARGE_AIR_BURST);
 		return true;
 	}
 

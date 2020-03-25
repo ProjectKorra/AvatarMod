@@ -33,6 +33,8 @@ import net.minecraft.world.World;
 
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.DROP_WALL;
+import static com.crowsofwar.avatar.common.data.StatusControlController.PLACE_WALL;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 import static java.lang.Math.abs;
 import static net.minecraft.util.EnumFacing.NORTH;
@@ -188,8 +190,8 @@ public class EntityWall extends AvatarEntity {
 		}
 		if (getOwner() != null) {
 			BendingData bD = BendingData.get(getOwner());
-			bD.removeStatusControl(StatusControl.PLACE_WALL);
-			bD.removeStatusControl(StatusControl.DROP_WALL);
+			bD.removeStatusControl(PLACE_WALL);
+			bD.removeStatusControl(DROP_WALL);
 		}
 		super.setDead();
 	}

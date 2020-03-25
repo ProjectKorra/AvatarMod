@@ -1,16 +1,17 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 import java.util.List;
+
+import static com.crowsofwar.avatar.common.data.StatusControlController.PLACE_WALL;
 
 /**
  * @author Aang23
@@ -42,7 +43,7 @@ public class StatCtrlPushWall extends StatusControl {
 					segment.setBehavior(new WallBehavior.Push());
 			}
 
-			ctx.getData().removeStatusControl(StatusControl.PLACE_WALL);
+			ctx.getData().removeStatusControl(PLACE_WALL);
 
 			return true;
 		} else {

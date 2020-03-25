@@ -11,6 +11,8 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.SANDSTORM_REDIRECT;
+
 public class AbilitySandstorm extends Ability {
 
 	public AbilitySandstorm() {
@@ -58,7 +60,7 @@ public class AbilitySandstorm extends Ability {
 
 			world.spawnEntity(sandstorm);
 
-			ctx.getData().addStatusControl(StatusControl.SANDSTORM_REDIRECT);
+			ctx.getData().addStatusControl(SANDSTORM_REDIRECT);
 
 		}
 

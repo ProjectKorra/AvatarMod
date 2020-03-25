@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
@@ -32,6 +31,7 @@ import net.minecraft.util.EnumFacing;
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.PULL_WALL;
 
 /**
  * @author CrowsOfWar
@@ -274,7 +274,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			boolean done = ticks > 50;
 
 			if (done) {
-				BendingData.get(entity.getOwner()).addStatusControl(StatusControl.PULL_WALL);
+				BendingData.get(entity.getOwner()).addStatusControl(PULL_WALL);
 			}
 
 			return done ? new Waiting() : this;

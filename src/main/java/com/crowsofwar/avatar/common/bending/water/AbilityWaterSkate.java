@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.SKATING_START;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.WATER_SKATE;
 
 /**
@@ -40,7 +41,7 @@ public class AbilityWaterSkate extends Ability {
 	@Override
 	public void execute(AbilityContext ctx) {
 		BendingData data = ctx.getData();
-		data.addStatusControl(StatusControl.SKATING_START);
+		data.addStatusControl(SKATING_START);
 		ctx.getData().addTickHandler(WATER_SKATE);
 	}
 

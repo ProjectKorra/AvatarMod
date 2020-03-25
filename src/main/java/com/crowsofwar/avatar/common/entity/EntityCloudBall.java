@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.powermods.CloudburstPowerModifier;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -30,6 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Objects;
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_CLOUDBURST;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.AIR_STATCTRL_HANDLER;
 
 public class EntityCloudBall extends EntityOffensive {
@@ -107,12 +107,12 @@ public class EntityCloudBall extends EntityOffensive {
 		if (getOwner() != null) {
 			EntityCloudBall ball = AvatarEntity.lookupControlledEntity(world, EntityCloudBall.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (ball == null && bD.hasStatusControl(StatusControl.THROW_CLOUDBURST)) {
-				bD.removeStatusControl(StatusControl.THROW_CLOUDBURST);
+			if (ball == null && bD.hasStatusControl(THROW_CLOUDBURST)) {
+				bD.removeStatusControl(THROW_CLOUDBURST);
 			}
 			if (ball != null && ball.getBehavior() instanceof CloudburstBehavior.PlayerControlled && !(bD
-					.hasStatusControl(StatusControl.THROW_CLOUDBURST))) {
-				bD.addStatusControl(StatusControl.THROW_CLOUDBURST);
+					.hasStatusControl(THROW_CLOUDBURST))) {
+				bD.addStatusControl(THROW_CLOUDBURST);
 			}
 
 		}
@@ -245,7 +245,7 @@ public class EntityCloudBall extends EntityOffensive {
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
-			data.removeStatusControl(StatusControl.THROW_CLOUDBURST);
+			data.removeStatusControl(THROW_CLOUDBURST);
 		}
 	}
 
