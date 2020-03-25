@@ -191,6 +191,7 @@ public class AvatarUiRenderer extends Gui {
 	}
 
 	private void renderStatusControls(ScaledResolution resolution) {
+		refreshDimensions();
 		List<StatusControl> statusControls = BendingData.get(mc.player).getAllStatusControls();
 		for (StatusControl statusControl : statusControls) {
 			mc.getTextureManager().bindTexture(AvatarUiTextures.STATUS_CONTROL_ICONS);
@@ -203,7 +204,8 @@ public class AvatarUiRenderer extends Gui {
 
 			GlStateManager.color(1, 1, 1);
 
-			GlStateManager.enableBlend();
+			GlStateManager.disableLighting();
+			GlStateManager.disableBlend();
 			GlStateManager.pushMatrix();
 			GlStateManager.scale(scale, scale, scale);
 			drawTexturedModalRect((int) ((centerX - xOffset) / scale), (int) ((centerY - yOffset) / scale),
@@ -224,7 +226,6 @@ public class AvatarUiRenderer extends Gui {
 						//Ensures that at 0 duration the opacity is the same as the opacity when not fading.
 						((float) CLIENT_CONFIG.chiBarSettings.chibarDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER))
 								/ CLIENT_CONFIG.chiBarSettings.chibarDuration * CLIENT_CONFIG.chiBarAlpha : CLIENT_CONFIG.chiBarAlpha;
-				GlStateManager.color(1, 1, 1, alpha);
 
 				if (data.getAllBending().isEmpty()) return;
 
@@ -264,6 +265,7 @@ public class AvatarUiRenderer extends Gui {
 					drawString(mc.fontRenderer, ((int) total) + "/" + ((int) max) + ", " + ((int) available), 25, -10,
 							data.getActiveBending().getTextColour() | ((int) (alpha * 255) << 24));
 				}
+				GlStateManager.color(1, 1, 1, alpha);
 				popMatrix();
 
 			}
@@ -305,11 +307,10 @@ public class AvatarUiRenderer extends Gui {
 					float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
 							((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER))
 									/ CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration * CLIENT_CONFIG.bendingCycleAlpha : CLIENT_CONFIG.bendingCycleAlpha;
-					GlStateManager.color(1, 1, 1, alpha);
 					drawBendingIcon(CLIENT_CONFIG.activeBendingSettings.middleXPosition,
 							CLIENT_CONFIG.activeBendingSettings.middleYPosition, data.getActiveBending(),
 							CLIENT_CONFIG.activeBendingSettings.middleBendingWidth, CLIENT_CONFIG.activeBendingSettings.middleBendingHeight);
-
+					GlStateManager.color(1, 1, 1, alpha);
 
 					List<BendingStyle> allBending = data.getAllBending();
 					allBending.sort(Comparator.comparing(BendingStyle::getName));

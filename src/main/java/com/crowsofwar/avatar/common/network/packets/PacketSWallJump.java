@@ -48,7 +48,7 @@ public class PacketSWallJump extends AvatarPacket<PacketSWallJump> {
 
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
-		buf.writeInt(key.getKeyCode());
+//		buf.writeInt(key.getKeyCode());
 	}
 
 	@Override
