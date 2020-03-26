@@ -106,7 +106,6 @@ public class FlameStrikeHandler extends TickHandler {
 
 		}
 		else return true;
-		System.out.println(StatCtrlFlameStrike.getTimesUsed(entity.getPersistentID()));
 		if (usage - StatCtrlFlameStrike.getTimesUsed(entity.getPersistentID()) <= 0) {
 			data.removeStatusControl(FLAME_STRIKE_MAIN);
 			data.removeStatusControl(FLAME_STRIKE_OFF);

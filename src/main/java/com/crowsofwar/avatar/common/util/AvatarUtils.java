@@ -96,8 +96,8 @@ public class AvatarUtils {
 	}
 
 	public static Queue<Particle> getAliveParticles() {
-		Queue<Particle> particleQueue = ((ArrayDeque) ReflectionHelper.getPrivateValue(ParticleManager.class, Minecraft.getMinecraft().effectRenderer, "queue",
-				"field_187241_h")).clone();
+		Queue<Particle> particleQueue = ReflectionHelper.getPrivateValue(ParticleManager.class, Minecraft.getMinecraft().effectRenderer, "queue",
+				"field_187241_h");
 		//particleQueue = particleQueue.stream().filter(particle -> particle instanceof ParticleAvatar).collect(Collectors.toCollection(ArrayDeque::new));
 		return particleQueue;
 	}

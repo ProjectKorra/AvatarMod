@@ -1,18 +1,30 @@
 package com.crowsofwar.avatar.common.bending.fire.statctrls;
 
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.common.damageutils.DamageUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.EntityShield;
+import com.crowsofwar.avatar.common.event.ParticleCollideEvent;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
+import net.minecraft.entity.passive.EntityTameable;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -25,6 +37,7 @@ import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_ST
 import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_STRIKE_OFF;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAME_STRIKE_HANDLER;
 
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class StatCtrlFlameStrike extends StatusControl {
 
 	private static HashMap<UUID, Integer> timesUsed = new HashMap<>();
@@ -46,6 +59,121 @@ public class StatCtrlFlameStrike extends StatusControl {
 		else timesUsed.put(id, times);
 	}
 
+	@SubscribeEvent
+	public static void particleCollision(ParticleCollideEvent event) {
+		if (event.getAbility() instanceof AbilityFlameStrike) {
+			if (event.getSpawner() != event.getEntity()) {
+				if (event.getSpawner() instanceof EntityLivingBase) {
+					//	if (((EntityLivingBase) event.getSpawner()).getActiveHand() != null) {
+					attackEntity((EntityLivingBase) event.getSpawner(), event.getEntity());
+					//}
+				}
+			}
+		}
+	}
+
+	private static boolean attackEntity(EntityLivingBase attacker, Entity target) {
+		AbilityData abilityData = AbilityData.get(attacker, new AbilityFlameStrike().getName());
+		Bender bender = Bender.get(attacker);
+		World world = attacker.world;
+		if (abilityData != null && bender != null && !world.isRemote) {
+			float powerModifier = (float) (bender.getDamageMult(Firebending.ID));
+			float xpMod = abilityData.getXpModifier();
+
+			float damage = STATS_CONFIG.flameStrikeSettings.damage;
+			int performance = STATS_CONFIG.flameStrikeSettings.performanceAmount;
+			float knockBack = STATS_CONFIG.flameStrikeSettings.knockback;
+			int fireTime = STATS_CONFIG.flameStrikeSettings.fireTime;
+			float xp = SKILLS_CONFIG.flameStrikeHit;
+
+			if (abilityData.getLevel() == 1) {
+				damage *= 1.5F;
+				knockBack *= 1.125F;
+				fireTime += 2;
+				performance += 2;
+				xp -= 1;
+			}
+			if (abilityData.getLevel() == 2) {
+				damage *= 2F;
+				knockBack *= 1.25F;
+				fireTime += 4;
+				performance += 5;
+				xp -= 2;
+			}
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+				damage *= 2.5F;
+				performance += 10;
+				fireTime += 3;
+			}
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+				damage *= 4;
+				performance += 2;
+				fireTime += 5;
+			}
+
+			damage *= powerModifier * xpMod;
+			knockBack *= powerModifier * xpMod;
+			fireTime *= powerModifier * xpMod;
+			performance *= powerModifier * xpMod;
+
+			Vec3d lookPos = attacker.getLookVec().scale(0.00025).scale(knockBack);
+
+			if (canDamageEntity(target, attacker)) {
+				if (!(target instanceof EntityLivingBase) || ((EntityLivingBase) target).attackable() &&
+						((EntityLivingBase) target).hurtTime == 0)
+					DamageUtils.attackEntity(attacker, target, AvatarDamageSource.causeFireDamage(target, attacker), damage, performance,
+							new AbilityFlameStrike(), xp);
+				else {
+					//NOTE: Add velocity like this is great for stuff like a water blast!
+					target.addVelocity(lookPos.x, lookPos.y + 0.15, lookPos.z);
+					target.motionY = Math.min(0.15, target.motionY);
+				}
+
+			} else {
+				//NOTE: Add velocity like this is great for stuff like a water blast!
+				target.addVelocity(lookPos.x, lookPos.y + 0.15, lookPos.z);
+				target.motionY = Math.min(0.15, target.motionY);
+			}
+			target.setFire(fireTime);
+		}
+		return false;
+	}
+
+	private static boolean canCollideWithEntity(Entity entity, Entity owner) {
+		if (entity instanceof AvatarEntity) {
+			if (((AvatarEntity) entity).getOwner() == owner)
+				return false;
+			else if (!entity.canBeCollidedWith())
+				return false;
+			else if (entity instanceof EntityShield)
+				return true;
+		} else if (entity.getTeam() != null && entity.getTeam() == owner.getTeam())
+			return false;
+		else if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() == owner)
+			return false;
+		else if (entity.getRidingEntity() == owner)
+			return false;
+		return entity instanceof EntityLivingBase || entity instanceof EntityEnderCrystal || entity.canBeCollidedWith() || entity instanceof EntityArrow
+				|| entity instanceof EntityThrowable;
+	}
+
+	private static boolean canDamageEntity(Entity entity, Entity owner) {
+		if (entity instanceof AvatarEntity) {
+			if (((AvatarEntity) entity).getOwner() == owner)
+				return false;
+			else if (!entity.canBeCollidedWith())
+				return false;
+			else if (entity instanceof EntityShield)
+				return true;
+		} else if (entity.getTeam() != null && entity.getTeam() == owner.getTeam())
+			return false;
+		else if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() == owner)
+			return false;
+		else if (entity.getRidingEntity() == owner)
+			return false;
+		return entity instanceof EntityLivingBase || entity instanceof EntityEnderCrystal || entity.canBeCollidedWith() && entity.canBeAttackedWithItem();
+	}
+
 	@Override
 	public boolean execute(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
@@ -54,66 +182,41 @@ public class StatCtrlFlameStrike extends StatusControl {
 
 		if (!ctx.getData().hasTickHandler(FLAME_STRIKE_HANDLER))
 			return true;
+		if (!entity.getHeldItem(hand).isEmpty())
+			return false;
 
-		double reach = Raytrace.getReachDistance(entity);
-		float powerModifier = (float) (ctx.getBender().getDamageMult(Firebending.ID));
-		float xpMod = abilityData.getXpModifier();
-
-		float damage = STATS_CONFIG.flameStrikeSettings.damage;
-		int performance = STATS_CONFIG.flameStrikeSettings.performanceAmount;
-		float knockBack = STATS_CONFIG.flameStrikeSettings.knockback;
-		int fireTime = STATS_CONFIG.flameStrikeSettings.fireTime;
-		float size= STATS_CONFIG.flameStrikeSettings.size;
-		float xp = SKILLS_CONFIG.flameStrikeHit;
+		float size = STATS_CONFIG.flameStrikeSettings.size;
 		int particleCount = 4;
 
 		if (abilityData.getLevel() == 1) {
-			damage *= 1.5F;
-			knockBack *= 1.125F;
-			fireTime += 2;
-			performance += 2;
-			xp -= 1;
 			particleCount += 2;
 		}
 		if (abilityData.getLevel() == 2) {
-			damage *= 2F;
-			knockBack *= 1.25F;
-			fireTime += 4;
-			performance += 5;
-			xp -= 2;
 			particleCount += 4;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			damage *= 2.5F;
-			performance += 10;
-			fireTime += 3;
 			size *= 0.5F;
 			particleCount += 10;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			damage *= 4;
-			performance += 2;
-			fireTime += 5;
 			size *= 2;
 			particleCount -= 1;
 		}
 
-		damage *= powerModifier * xpMod;
-		knockBack *= powerModifier * xpMod;
-		fireTime *= powerModifier * xpMod;
-		performance *= powerModifier * xpMod;
 
 		Vec3d lookPos = entity.getLookVec();
 
 		if (world.isRemote) {
-			Vec3d direction = lookPos.scale(0.25).add(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40);
-			for (int i = 0; i < particleCount * 20; i++) {
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(lookPos.add(entity.getPositionVector().add(0, entity.getEyeHeight(), 0)))
-						.time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(direction).
-						clr(255, 15, 5).collide(true).scale(size).element(new Firebending()).spawn(world);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(lookPos.add(entity.getPositionVector())).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(direction)
+			Vec3d direction = lookPos.scale(0.5).add(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
+			for (int i = 0; i < particleCount * 10; i++) {
+				Vec3d pos = entity.getPositionVector().add(0, entity.getEyeHeight() - 0.125, 0);
+				pos = pos.add(world.rand.nextGaussian() / 7.5, world.rand.nextGaussian() / 7.5, world.rand.nextGaussian() / 7.5);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos)
+						.time(5 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(direction).
+						clr(255, 15, 5).collide(true).scale(size / 2).ability(new AbilityFlameStrike()).spawnEntity(entity).element(new Firebending()).spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).time(5 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(direction)
 						.clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true).
-						scale(size).element(new Firebending()).spawn(world);
+						scale(size / 2).ability(new AbilityFlameStrike()).spawnEntity(entity).element(new Firebending()).spawn(world);
 			}
 		}
 
