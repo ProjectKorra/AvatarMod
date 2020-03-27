@@ -41,6 +41,7 @@ import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAME_STRI
 public class StatCtrlFlameStrike extends StatusControl {
 
 	private static HashMap<UUID, Integer> timesUsed = new HashMap<>();
+	private static HashMap<UUID, Integer> chargeLevel = new HashMap<>();
 	EnumHand hand;
 
 	public StatCtrlFlameStrike(EnumHand hand) {
@@ -57,6 +58,17 @@ public class StatCtrlFlameStrike extends StatusControl {
 		if (timesUsed.containsKey(id))
 			timesUsed.replace(id, times);
 		else timesUsed.put(id, times);
+	}
+
+	public static int getChargeLevel(UUID id) {
+		return chargeLevel.getOrDefault(id, 1);
+	}
+
+	public static void setChargeLevel(UUID id, int level) {
+		if (chargeLevel.containsKey(id)) {
+			chargeLevel.replace(id, level);
+		}
+		else chargeLevel.put(id, level);
 	}
 
 	@SubscribeEvent
