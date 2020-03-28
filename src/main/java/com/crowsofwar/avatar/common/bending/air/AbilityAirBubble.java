@@ -85,7 +85,8 @@ public class AbilityAirBubble extends Ability {
 			bubble.motionX = bubble.motionY = bubble.motionZ = 0;
 			bubble.setAllowHovering(ctx.isMasterLevel(SECOND));
 			bubble.setAbility(this);
-			world.spawnEntity(bubble);
+			if (!world.isRemote)
+				world.spawnEntity(bubble);
 
 			data.addStatusControl(BUBBLE_EXPAND);
 			data.addStatusControl(BUBBLE_CONTRACT);

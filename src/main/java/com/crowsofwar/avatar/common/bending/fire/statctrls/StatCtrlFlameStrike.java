@@ -31,8 +31,7 @@ import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
 import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_STRIKE_MAIN;
 import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_STRIKE_OFF;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAME_STRIKE_HANDLER;

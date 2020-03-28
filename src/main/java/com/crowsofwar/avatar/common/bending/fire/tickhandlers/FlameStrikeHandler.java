@@ -18,8 +18,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_STRIKE_MAIN;
-import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_STRIKE_OFF;
+import static com.crowsofwar.avatar.common.data.StatusControlController.*;
 
 public class FlameStrikeHandler extends TickHandler {
 
@@ -37,22 +36,37 @@ public class FlameStrikeHandler extends TickHandler {
 		int usage = STATS_CONFIG.flameStrikeSettings.strikeNumber;
 		int particleCount = 1;
 		int level = abilityData.getLevel();
+		boolean charge = false;
+		int chargeLevel = StatCtrlFlameStrike.getChargeLevel(entity.getPersistentID());
+		float particleSize = 0.6F;
 
 		if (level == 1 || level == 2) {
 			particleCount = 2;
 		}
 
-		if (level == 2)
+		if (level == 1) {
 			usage += 1;
+			particleSize += 0.2F;
+		}
+		if (level == 2) {
+			particleSize += 0.4F;
+		}
+		if (level >= 2)
+			charge = true;
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			particleCount = 3;
 			usage += 3;
+			particleSize += 0.1F;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			particleCount = 2;
 			usage += 1;
+			particleSize += 0.8F;
 		}
+
+		particleSize = (float) (particleSize * (0.8 + chargeLevel / 5F));
+		charge |= usage - StatCtrlFlameStrike.getTimesUsed(entity.getPersistentID()) == 1;
 		if ((data.hasStatusControl(FLAME_STRIKE_MAIN) || data.hasStatusControl(FLAME_STRIKE_OFF))) {
 
 			Vec3d height, rightSide;
@@ -97,19 +111,39 @@ public class FlameStrikeHandler extends TickHandler {
 			if (world.isRemote)
 				for (int i = 0; i < particleCount; i++) {
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
-							world.rand.nextGaussian() / 40).clr(255, 15, 5).collide(true).
-							scale(abilityData.getLevel() < 1 ? 0.9F : 0.9F + abilityData.getLevel() / 5F).element(new Firebending()).spawn(world);
+							world.rand.nextGaussian() / 40).clr(255, 15, 5).collide(false).
+							scale(particleSize).element(new Firebending()).spawn(world);
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
-							world.rand.nextGaussian() / 40).clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true).
-							scale(abilityData.getLevel() < 1 ? 0.9F : 0.9F + abilityData.getLevel() / 5F).element(new Firebending()).spawn(world);
+							world.rand.nextGaussian() / 40).clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(false).
+							scale(particleSize).element(new Firebending()).spawn(world);
 				}
 
-		}
-		else return true;
+		} else return true;
 		if (usage - StatCtrlFlameStrike.getTimesUsed(entity.getPersistentID()) <= 0) {
 			data.removeStatusControl(FLAME_STRIKE_MAIN);
 			data.removeStatusControl(FLAME_STRIKE_OFF);
 			return true;
+		}
+		if (charge) {
+			if (data.hasStatusControl(FLAME_STRIKE_OFF) && !data.hasStatusControl(START_CHARGE_FLAME_STRIKE_MAIN) &&
+					!data.hasStatusControl(STOP_CHARGE_FLAME_STRIKE_MAIN)) {
+				//initialDuration = data.getTickHandlerDuration(this);
+				data.addStatusControl(START_CHARGE_FLAME_STRIKE_MAIN);
+			} else if (data.hasStatusControl(FLAME_STRIKE_MAIN) && !data.hasStatusControl(START_CHARGE_FLAME_STRIKE_OFF)
+					&& !data.hasStatusControl(STOP_CHARGE_FLAME_STRIKE_OFF)) {
+				//initialDuration = data.getTickHandlerDuration(this);
+				data.addStatusControl(START_CHARGE_FLAME_STRIKE_OFF);
+			} else if (!data.hasStatusControl(STOP_CHARGE_FLAME_STRIKE_OFF) && !data.hasStatusControl(STOP_CHARGE_FLAME_STRIKE_MAIN)) {
+				//initialDuration = data.getTickHandlerDuration(this);
+			} else { //if (initialDuration > 0) {
+			//	if ((data.getTickHandlerDuration(this) - initialDuration) % 20 == 0) {
+					//Makes sure the charge is not 0.
+				//	if (data.getTickHandlerDuration(this) != initialDuration) {
+						StatCtrlFlameStrike.setChargeLevel(entity.getPersistentID(), chargeLevel + 1);
+					}
+				//}
+		//}
+
 		}
 		return false;
 	}

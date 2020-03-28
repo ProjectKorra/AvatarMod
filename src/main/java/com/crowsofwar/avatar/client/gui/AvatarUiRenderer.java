@@ -107,7 +107,7 @@ public class AvatarUiRenderer extends Gui {
 	}
 
 	@SubscribeEvent
-	public void onGuiRender(RenderGameOverlayEvent.Post e) {
+	public void onGuiRender(RenderGameOverlayEvent e) {
 
 		ScaledResolution resolution = e.getResolution();
 	/*	if (e.getType() == ElementType.EXPERIENCE) {
@@ -138,7 +138,7 @@ public class AvatarUiRenderer extends Gui {
 			renderChiMsg(resolution);
 			renderBattleStatus(resolution);
 		}
-		if (e.getType() == ElementType.ARMOR) {
+		if (e.getType() == ElementType.ARMOR && Minecraft.getMinecraft().world.isRemote) {
 			renderAirBubbleHealth(resolution);
 			renderIceShieldHealth(resolution);
 		}
@@ -336,6 +336,7 @@ public class AvatarUiRenderer extends Gui {
 
 					if (allBending.size() > 2) {
 						GlStateManager.pushMatrix();
+						GlStateManager.enableDepth();
 						GlStateManager.translate(0, 0, -1);
 						drawBendingIcon(CLIENT_CONFIG.activeBendingSettings.leftXPosition, CLIENT_CONFIG.activeBendingSettings.leftYPosition,
 								allBending.get(indexPrevious), CLIENT_CONFIG.activeBendingSettings.leftBendingWidth, CLIENT_CONFIG.activeBendingSettings.leftBendingHeight);
@@ -387,7 +388,7 @@ public class AvatarUiRenderer extends Gui {
 		if (data.hasStatusControl(SHIELD_SHATTER)) {
 			EntityIceShield shield = AvatarEntity.lookupControlledEntity(world, EntityIceShield
 					.class, player);
-			if (shield != null) {
+			if (shield != null && shield.getOwner() == player) {
 				renderShieldHealth(res, shield.getHealth(), shield.getMaxHealth(), 9);
 			}
 		}
@@ -400,7 +401,7 @@ public class AvatarUiRenderer extends Gui {
 		GlStateManager.color(1, 1, 1, 1);
 
 		int x = res.getScaledWidth() / 2 - 91;
-		int y = res.getScaledHeight() - GuiIngameForge.left_height;
+		int y = res.getScaledHeight() - GuiIngameForge.left_height + 10;
 		if (mc.player.getTotalArmorValue() == 0) {
 			y += 10;
 		}
