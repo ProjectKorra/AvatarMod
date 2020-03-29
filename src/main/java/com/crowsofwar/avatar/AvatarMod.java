@@ -214,7 +214,7 @@ public class AvatarMod {
 	public void init(FMLInitializationEvent e) {
 		//Anything with a low update frequency needs that frequency in order to function properly. Otherwise, they have a high frequency (ticks between updates).
 		registerEntity(EntityFloatingBlock.class, "FloatingBlock", 128, 1000, true);
-		registerEntity(EntityFireArc.class, "FireArc", 128, 1000, true);
+		//registerEntity(EntityFireArc.class, "FireArc", 128, 1000, true);
 		registerEntity(EntityWaterArc.class, "WaterArc", 128, 1000, true);
 		registerEntity(EntityAirGust.class, "AirGust", 128, 1000, true);
 		registerEntity(EntityRavine.class, "Ravine", 128, 1000, true);

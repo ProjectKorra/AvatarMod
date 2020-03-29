@@ -46,7 +46,6 @@ public class StatusControlController {
 			STOP_FLAMETHROW = new StatCtrlSetFlamethrowing(false),
 			THROW_BLOCK = new StatCtrlThrowBlock(),
 			THROW_CLOUDBURST = new StatCtrlThrowCloudBall(),
-			THROW_FIRE = new StatCtrlThrowFire(),
 			THROW_FIREBALL = new StatCtrlThrowFireball(),
 			THROW_LIGHTNINGSPEAR = new StatCtrlThrowLightningSpear(),
 			THROW_WATER = new StatCtrlThrowWater();

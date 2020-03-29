@@ -21,11 +21,11 @@ import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.damageutils.DamageUtils;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
@@ -45,14 +45,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Objects;
 
-import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 /**
  * @author CrowsOfWar
  */
 @Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
-public class EntityLightningSpear extends EntityOffensive  implements IGlowingEntity {
+public class EntityLightningSpear extends EntityOffensive implements IGlowingEntity {
 
 	//TODO: Clean up this class. Dear lord.
 
@@ -61,7 +60,6 @@ public class EntityLightningSpear extends EntityOffensive  implements IGlowingEn
 
 	private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityLightningSpear.class,
 			DataSerializers.FLOAT);
-
 
 
 	/**
@@ -79,8 +77,6 @@ public class EntityLightningSpear extends EntityOffensive  implements IGlowingEn
 	 * Handles electrocution of nearby entities when the lightning spear touches water
 	 */
 	private LightningFloodFill floodFill;
-
-
 
 
 	/**
@@ -112,11 +108,11 @@ public class EntityLightningSpear extends EntityOffensive  implements IGlowingEn
 		if (getOwner() != null) {
 			EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (spear == null && bD.hasStatusControl(THROW_LIGHTNINGSPEAR)) {
-				bD.removeStatusControl(THROW_LIGHTNINGSPEAR);
+			if (spear == null && bD.hasStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR)) {
+				bD.removeStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR);
 			}
-			if (spear != null && spear.getBehavior().equals(controlled) && !(bD.hasStatusControl(THROW_LIGHTNINGSPEAR))) {
-				bD.addStatusControl(THROW_LIGHTNINGSPEAR);
+			if (spear != null && spear.getBehavior().equals(controlled) && !(bD.hasStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR))) {
+				bD.addStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR);
 			}
 
 		}
@@ -270,7 +266,7 @@ public class EntityLightningSpear extends EntityOffensive  implements IGlowingEn
 	public void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
-			data.removeStatusControl(THROW_LIGHTNINGSPEAR);
+			data.removeStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR);
 		}
 	}
 
@@ -284,7 +280,6 @@ public class EntityLightningSpear extends EntityOffensive  implements IGlowingEn
 	public int getBrightnessForRender() {
 		return 15728880;
 	}
-
 
 
 	@Override

@@ -19,7 +19,6 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
@@ -27,15 +26,13 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
-import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
-import com.zeitheron.hammercore.command.CommandSetEnchantmentColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -58,7 +55,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -137,12 +133,12 @@ public class EntityFireball extends AvatarEntity implements IGlowingEntity {
 		if (getOwner() != null) {
 			EntityFireball ball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (ball == null && bD.hasStatusControl(StatusControl.THROW_FIREBALL)) {
-				bD.removeStatusControl(StatusControl.THROW_FIREBALL);
+			if (ball == null && bD.hasStatusControl(StatusControlController.THROW_FIREBALL)) {
+				bD.removeStatusControl(StatusControlController.THROW_FIREBALL);
 			}
 			if (ball != null && ball.getBehavior() instanceof FireballBehavior.PlayerControlled
-					&& !(bD.hasStatusControl(StatusControl.THROW_FIREBALL))) {
-				bD.addStatusControl(StatusControl.THROW_FIREBALL);
+					&& !(bD.hasStatusControl(StatusControlController.THROW_FIREBALL))) {
+				bD.addStatusControl(StatusControlController.THROW_FIREBALL);
 			}
 			if (getBehavior() != null && getBehavior() instanceof FireballBehavior.PlayerControlled) {
 				this.position = this.getPosition();
@@ -297,7 +293,7 @@ public class EntityFireball extends AvatarEntity implements IGlowingEntity {
 		if (getOwner() != null) {
 			BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
 			if (data != null) {
-				data.removeStatusControl(StatusControl.THROW_FIREBALL);
+				data.removeStatusControl(StatusControlController.THROW_FIREBALL);
 			}
 		}
 	}
@@ -399,7 +395,7 @@ public class EntityFireball extends AvatarEntity implements IGlowingEntity {
 
 	@Override
 	public ColoredLight produceColoredLight(float partialTicks) {
-		return ColoredLight.builder().pos(this).color(1f,0f,0f,1f).radius(10f).build();
+		return ColoredLight.builder().pos(this).color(1f, 0f, 0f, 1f).radius(10f).build();
 	}
 
 }

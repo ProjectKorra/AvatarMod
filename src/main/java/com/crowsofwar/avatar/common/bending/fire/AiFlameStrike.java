@@ -20,15 +20,10 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.StatusControl;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
-import com.crowsofwar.avatar.common.entity.EntityFireArc;
-import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
-import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_FIRE;
 import static com.crowsofwar.avatar.common.util.AvatarUtils.normalizeAngle;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
@@ -95,7 +90,7 @@ public class AiFlameStrike extends BendingAi {
 
 		if (timeExecuting >= 20) {
 			BendingData data = bender.getData();
-			execStatusControl(THROW_FIRE);
+			//execStatusControl(THROW_FIRE);
 			timeExecuting = 0;
 			return false;
 		} else {
@@ -119,14 +114,6 @@ public class AiFlameStrike extends BendingAi {
 	@Override
 	public void resetTask() {
 
-		EntityFireArc fire = AvatarEntity.lookupEntity(entity.world, EntityFireArc.class, //
-				arc -> arc.getBehavior() instanceof FireArcBehavior.PlayerControlled
-						&& arc.getOwner() == entity);
-
-		if (fire != null) {
-			fire.setDead();
-			bender.getData().removeStatusControl(THROW_FIRE);
-		}
 
 	}
 

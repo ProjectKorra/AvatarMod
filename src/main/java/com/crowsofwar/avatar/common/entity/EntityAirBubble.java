@@ -17,10 +17,10 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -58,8 +58,7 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 /**
  * @author CrowsOfWar
  */
-@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
-public class EntityAirBubble extends EntityShield implements IGlowingEntity {
+public class EntityAirBubble extends EntityShield {
 
 	public static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
 			.createKey(EntityAirBubble.class, DataSerializers.VARINT);
@@ -151,13 +150,13 @@ public class EntityAirBubble extends EntityShield implements IGlowingEntity {
 		if (getOwner() != null) {
 			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (bubble == null && (bD.hasStatusControl(StatusControl.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControl.BUBBLE_EXPAND))) {
-				bD.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
-				bD.removeStatusControl(StatusControl.BUBBLE_EXPAND);
+			if (bubble == null && (bD.hasStatusControl(StatusControlController.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControlController.BUBBLE_EXPAND))) {
+				bD.removeStatusControl(StatusControlController.BUBBLE_CONTRACT);
+				bD.removeStatusControl(StatusControlController.BUBBLE_EXPAND);
 			}
-			if (bubble != null && !(bD.hasStatusControl(StatusControl.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControl.BUBBLE_EXPAND))) {
-				bD.addStatusControl(StatusControl.BUBBLE_CONTRACT);
-				bD.addStatusControl(StatusControl.BUBBLE_EXPAND);
+			if (bubble != null && !(bD.hasStatusControl(StatusControlController.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControlController.BUBBLE_EXPAND))) {
+				bD.addStatusControl(StatusControlController.BUBBLE_CONTRACT);
+				bD.addStatusControl(StatusControlController.BUBBLE_EXPAND);
 			}
 		}
 
@@ -450,8 +449,8 @@ public class EntityAirBubble extends EntityShield implements IGlowingEntity {
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
-			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
-			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
+			data.removeStatusControl(StatusControlController.BUBBLE_EXPAND);
+			data.removeStatusControl(StatusControlController.BUBBLE_CONTRACT);
 
 			IAttributeInstance attribute = getOwner()
 					.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
@@ -459,10 +458,5 @@ public class EntityAirBubble extends EntityShield implements IGlowingEntity {
 				attribute.removeModifier(SLOW_ATTR);
 			}
 		}
-	}
-
-	@Override
-	public ColoredLight produceColoredLight(float partialTicks) {
-		return  ColoredLight.builder().color(194, 190, 190).radius(5.0f).pos(this).build();
 	}
 }

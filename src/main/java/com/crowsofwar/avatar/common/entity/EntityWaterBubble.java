@@ -17,13 +17,13 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.gorecore.util.Vector;
@@ -159,7 +159,7 @@ public class EntityWaterBubble extends AvatarEntity implements IGlowingEntity {
 			if (getOwner() != null) {
 				BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
 				if (data != null) {
-					data.removeStatusControl(StatusControl.LOB_BUBBLE);
+					data.removeStatusControl(StatusControlController.LOB_BUBBLE);
 				}
 			}
 		}

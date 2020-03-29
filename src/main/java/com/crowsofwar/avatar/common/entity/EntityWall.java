@@ -17,8 +17,8 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
@@ -188,8 +188,8 @@ public class EntityWall extends AvatarEntity {
 		}
 		if (getOwner() != null) {
 			BendingData bD = BendingData.get(getOwner());
-			bD.removeStatusControl(StatusControl.PLACE_WALL);
-			bD.removeStatusControl(StatusControl.DROP_WALL);
+			bD.removeStatusControl(StatusControlController.PLACE_WALL);
+			bD.removeStatusControl(StatusControlController.DROP_WALL);
 		}
 		super.setDead();
 	}

@@ -18,11 +18,11 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -65,10 +65,6 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 
 	private static final DataParameter<Optional<IBlockState>>[] SYNC_BLOCKS_DATA;
 
-	private boolean restrictToVertical;
-
-	private Vector initialPos;
-
 	static {
 		SYNC_BLOCKS_DATA = new DataParameter[SEGMENT_HEIGHT];
 		for (int i = 0; i < SEGMENT_HEIGHT; i++) {
@@ -78,6 +74,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	}
 
 	private final SyncedEntity<EntityWall> wallReference;
+	private boolean restrictToVertical;
+	private Vector initialPos;
 	/**
 	 * direction that all wall-segments are facing towards. Only set on server.
 	 */
@@ -114,12 +112,12 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		this.restrictToVertical = value;
 	}
 
-	public void setInitialPos(Vector pos) {
-		initialPos = pos;
-	}
-
 	public Vector getInitialPos() {
 		return initialPos;
+	}
+
+	public void setInitialPos(Vector pos) {
+		initialPos = pos;
 	}
 
 	/**
@@ -151,21 +149,21 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		// Remove "drop wall" statCtrl if the wall is dropping
 		if (behavior instanceof WallBehavior.Drop) {
 			if (getOwner() != null) {
-				BendingData.get(getOwner()).removeStatusControl(StatusControl.DROP_WALL);
-				BendingData.get(getOwner()).removeStatusControl(StatusControl.PLACE_WALL);
-				BendingData.get(getOwner()).removeStatusControl(StatusControl.SHOOT_WALL);
-				BendingData.get(getOwner()).removeStatusControl(StatusControl.PUSH_WALL);
-				BendingData.get(getOwner()).removeStatusControl(StatusControl.PULL_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControlController.DROP_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControlController.PLACE_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControlController.SHOOT_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControlController.PUSH_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControlController.PULL_WALL);
 			}
 		}
 	}
 
-	public void setDirection(EnumFacing dir) {
-		this.direction = dir;
-	}
-
 	public EnumFacing getDirection() {
 		return direction;
+	}
+
+	public void setDirection(EnumFacing dir) {
+		this.direction = dir;
 	}
 
 	public int getBlocksOffset() {

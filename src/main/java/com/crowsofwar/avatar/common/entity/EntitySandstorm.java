@@ -1,12 +1,12 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.SandstormMovementHandler;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
@@ -379,8 +379,8 @@ public class EntitySandstorm extends AvatarEntity implements IGlowingEntity {
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData bD = BendingData.get(getOwner());
-			if (bD.hasStatusControl(StatusControl.SANDSTORM_REDIRECT)) {
-				bD.removeStatusControl(StatusControl.SANDSTORM_REDIRECT);
+			if (bD.hasStatusControl(StatusControlController.SANDSTORM_REDIRECT)) {
+				bD.removeStatusControl(StatusControlController.SANDSTORM_REDIRECT);
 			}
 		}
 	}

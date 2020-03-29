@@ -5,9 +5,8 @@ import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningRaze;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
-import elucent.albedo.event.GatherLightsEvent;
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
@@ -33,8 +32,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 @SuppressWarnings("EntityConstructor")
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
-@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityAvatarLightning extends EntityLightningBolt implements ILightProvider {
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityAvatarLightning extends EntityLightningBolt implements IGlowingEntity {
 	//TODO: Fix by using the new rendering system, make the spawner use behaviour
 
 	/**
@@ -201,14 +200,7 @@ public class EntityAvatarLightning extends EntityLightningBolt implements ILight
 	}
 
 	@Override
-	@Optional.Method(modid = "albedo")
-	public void gatherLights(GatherLightsEvent gatherLightsEvent, Entity entity) {
-
-	}
-
-	@Override
-	@Optional.Method(modid = "albedo")
-	public Light provideLight() {
-		return Light.builder().pos(this).color(1F, 2F, 3F).radius(15).build();
+	public ColoredLight produceColoredLight(float v) {
+		return ColoredLight.builder().color(1F, 2F, 3F).radius(15).pos(this).build();
 	}
 }
