@@ -110,7 +110,6 @@ public class AvatarUiRenderer extends Gui {
 	public void onGuiRender(RenderGameOverlayEvent.Post e) {
 
 		ScaledResolution resolution = e.getResolution();
-		Minecraft mc = Minecraft.getMinecraft();
 		if (e.getType() == ElementType.EXPERIENCE) {
 			//HUD bending stuff
 			renderBattleStatus(resolution);
