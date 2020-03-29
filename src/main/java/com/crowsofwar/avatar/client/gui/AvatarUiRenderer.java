@@ -107,10 +107,11 @@ public class AvatarUiRenderer extends Gui {
 	}
 
 	@SubscribeEvent
-	public void onGuiRender(RenderGameOverlayEvent e) {
+	public void onGuiRender(RenderGameOverlayEvent.Post e) {
 
 		ScaledResolution resolution = e.getResolution();
-	/*	if (e.getType() == ElementType.EXPERIENCE) {
+		Minecraft mc = Minecraft.getMinecraft();
+		if (e.getType() == ElementType.EXPERIENCE) {
 			//HUD bending stuff
 			renderRadialMenu(resolution);
 			renderChiBar(resolution);
@@ -126,10 +127,10 @@ public class AvatarUiRenderer extends Gui {
 			//Misc.
 			applyVisionShader();
 			renderPrisonCracks(resolution);
-		}**/
+		}
 
 
-		if (e.getType() == ElementType.HOTBAR) {
+		/*if (e.getType() == ElementType.HOTBAR) {
 			renderRadialMenu(resolution);
 			renderChiBar(resolution);
 			renderActiveBending(resolution);
@@ -139,6 +140,7 @@ public class AvatarUiRenderer extends Gui {
 			renderBattleStatus(resolution);
 		}
 		if (e.getType() == ElementType.ARMOR && Minecraft.getMinecraft().world.isRemote) {
+			mc.profiler.clearProfiling();
 			renderAirBubbleHealth(resolution);
 			renderIceShieldHealth(resolution);
 		}
@@ -148,7 +150,7 @@ public class AvatarUiRenderer extends Gui {
 		if (e.getType() == ElementType.ALL) {
 			applyVisionShader();
 			renderPrisonCracks(resolution);
-		}
+		}**/
 
 	}
 
@@ -373,7 +375,7 @@ public class AvatarUiRenderer extends Gui {
 		if (data.hasStatusControl(BUBBLE_CONTRACT)) {
 			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class,
 					player);
-			if (bubble != null) {
+			if (bubble != null && bubble.getOwner() == player) {
 				renderShieldHealth(res, bubble.getHealth(), bubble.getMaxHealth(), 0);
 			}
 		}
@@ -397,11 +399,12 @@ public class AvatarUiRenderer extends Gui {
 	private void renderShieldHealth(ScaledResolution res, float health, float maxHealth, int
 			textureV) {
 		refreshDimensions();
+		GlStateManager.pushMatrix();
 		mc.renderEngine.bindTexture(AvatarUiTextures.shieldHealth);
 		GlStateManager.color(1, 1, 1, 1);
 
 		int x = res.getScaledWidth() / 2 - 91;
-		int y = res.getScaledHeight() - GuiIngameForge.left_height + 10;
+		int y = res.getScaledHeight() - GuiIngameForge.left_height;
 		if (mc.player.getTotalArmorValue() == 0) {
 			y += 10;
 		}
@@ -421,6 +424,7 @@ public class AvatarUiRenderer extends Gui {
 			}
 
 		}
+		GlStateManager.popMatrix();
 
 	}
 
