@@ -22,7 +22,7 @@ buildscript {
 	}
 	dependencies {
 		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-		//classpath "com.github.jengelman.gradle.plugins:shadow:4.0.3"
+		classpath "com.github.jengelman.gradle.plugins:shadow:4.0.3"
 		classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7"
 
 	}
@@ -31,7 +31,7 @@ buildscript {
 apply plugin: "java"
 apply plugin: "idea"
 apply plugin: "net.minecraftforge.gradle.forge"
-//apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: "org.sonarqube"
 apply plugin: "maven-publish"
 
@@ -94,8 +94,10 @@ repositories {
 }
 
 configurations {
+	shadow
 
 	compile.extendsFrom provided
+	provided.extendsFrom shadow
 }
 
 task useDeobfDependencies {
@@ -122,8 +124,8 @@ dependencies {
 	}
 	//jei_1.12.2-4.15.0.293.jar
 	// Other Stuff
-	compile group: 'org.yaml', name: 'snakeyaml', version: '1.8'
-	compile "org.joml:joml:1.9.22"
+	shadow "org.yaml:snakeyaml:1.23"
+	shadow "org.joml:joml:1.9.22"
 }
 
 minecraft {

@@ -298,12 +298,12 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			return;
 		}
 
-		if (AvatarInfo.IS_PREVIEW && e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
+		/*if (AvatarInfo.IS_PREVIEW && e.getGui() instanceof GuiMainMenu && !displayedMainMenu) {
 			GuiScreen screen = new PreviewWarningGui();
 			mc.displayGuiScreen(screen);
 			e.setGui(screen);
 			displayedMainMenu = true;
-		}
+		}**/
 	}
 
 	@Override
