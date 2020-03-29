@@ -22,6 +22,8 @@ import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.earth.AbilityEarthspikes;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -36,6 +38,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 
@@ -45,7 +48,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 /**
  * @author CrowsOfWar
  */
-public class EntityEarthspike extends AvatarEntity {
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityEarthspike extends AvatarEntity implements IGlowingEntity {
 
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityEarthspike.class,
 			DataSerializers.FLOAT);
@@ -185,5 +189,11 @@ public class EntityEarthspike extends AvatarEntity {
 		entity.motionX += this.motionX / 4;
 		entity.motionY += (STATS_CONFIG.earthspikeSettings.push / 6) + (damage / 100);
 		entity.motionZ += this.motionZ / 4;
+	}
+
+	@Override
+	public ColoredLight produceColoredLight(float partialTicks) {
+		return  ColoredLight.builder().color(8, 128, 20).radius(5.0f).pos(this).build();
+
 	}
 }

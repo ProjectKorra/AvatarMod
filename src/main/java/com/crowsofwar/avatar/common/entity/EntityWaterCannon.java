@@ -11,6 +11,8 @@ import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -25,6 +27,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -33,7 +36,9 @@ import java.util.List;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControlPoint> {
+
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControlPoint> implements IGlowingEntity {
 
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey
 			(EntityWaterCannon.class, DataSerializers.FLOAT);
@@ -346,6 +351,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 				getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(modifier);
 			}
 		}
+	}
+
+	@Override
+	public ColoredLight produceColoredLight(float partialTicks) {
+		return ColoredLight.builder().color(61, 77, 255).pos(this).radius(10f).build();
 	}
 
 	class CannonControlPoint extends ControlPoint {

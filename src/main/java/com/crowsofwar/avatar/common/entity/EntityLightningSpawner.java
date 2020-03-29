@@ -1,15 +1,18 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.gorecore.util.Vector;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 
-
-public class EntityLightningSpawner extends AvatarEntity {
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityLightningSpawner extends AvatarEntity implements IGlowingEntity {
 	private int maxTicksAlive;
 	private float lightningFrequency;
 	private boolean playerControl;
@@ -132,5 +135,10 @@ public class EntityLightningSpawner extends AvatarEntity {
 	}
 
 
+	@Override
+	public ColoredLight produceColoredLight(float partialTicks) {
+		return ColoredLight.builder().pos(this).color(87, 161, 235).radius(10f).build();
+
+	}
 }
 

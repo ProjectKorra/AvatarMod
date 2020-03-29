@@ -26,9 +26,9 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import elucent.albedo.event.GatherLightsEvent;
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
+
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
@@ -46,8 +46,10 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 /**
  * @author CrowsOfWar
  */
-@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityFlames extends EntityOffensive implements ILightProvider {
+
+// todo:Colored Flux
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityFlames extends EntityOffensive implements IGlowingEntity {
 
 	private boolean reflect;
 	private boolean lightTrailingFire;
@@ -207,17 +209,7 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		return true;
 	}
 
-	@Override
-	@Optional.Method(modid = "albedo")
-	public Light provideLight() {
-		return Light.builder().pos(this).color(2F, 1F, 0F).radius(8).build();
-	}
 
-	@Override
-	@Optional.Method(modid = "albedo")
-	public void gatherLights(GatherLightsEvent event, Entity entity) {
-
-	}
 
 	@Override
 	public Vec3d getKnockbackMult() {
@@ -235,5 +227,8 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	}
 
 
-
+	@Override
+	public ColoredLight produceColoredLight(float partialTicks) {
+		return ColoredLight.builder().pos(this).color(1f,0f,0f,1f).radius(10f).build();
+	}
 }

@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
@@ -26,6 +27,8 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.gorecore.util.Vector;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -39,15 +42,15 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.Objects;
-
-import static com.crowsofwar.avatar.common.data.StatusControlController.LOB_BUBBLE;
 
 /**
  * @author CrowsOfWar
  */
-public class EntityWaterBubble extends AvatarEntity {
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityWaterBubble extends AvatarEntity implements IGlowingEntity {
 
 	private static final DataParameter<WaterBubbleBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterBubble.class, WaterBubbleBehavior.DATA_SERIALIZER);
@@ -156,7 +159,7 @@ public class EntityWaterBubble extends AvatarEntity {
 			if (getOwner() != null) {
 				BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
 				if (data != null) {
-					data.removeStatusControl(LOB_BUBBLE);
+					data.removeStatusControl(StatusControl.LOB_BUBBLE);
 				}
 			}
 		}
@@ -237,4 +240,8 @@ public class EntityWaterBubble extends AvatarEntity {
 		return pass == 1;
 	}
 
+	@Override
+	public ColoredLight produceColoredLight(float partialTicks) {
+		return ColoredLight.builder().color(61, 77, 255).pos(this).radius(10f).build();
+	}
 }

@@ -3,9 +3,7 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import elucent.albedo.event.GatherLightsEvent;
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -20,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author Aang23
  */
 @Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityLightOrb extends AvatarEntity implements ILightProvider {
+public class EntityLightOrb extends AvatarEntity   {
 
 	private static final DataParameter<LightOrbBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityLightOrb.class, LightOrbBehavior.DATA_SERIALIZER);
@@ -264,17 +262,7 @@ public class EntityLightOrb extends AvatarEntity implements ILightProvider {
 		return true;
 	}
 
-	@Override
-	@Optional.Method(modid = "albedo")
-	public Light provideLight() {
-		return Light.builder().pos(this).color(getColorR(), getColorG(), getColorB()).radius(getLightRadius()).build();
-	}
 
-	@Override
-	@Optional.Method(modid = "albedo")
-	public void gatherLights(GatherLightsEvent event, Entity entity) {
-
-	}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
