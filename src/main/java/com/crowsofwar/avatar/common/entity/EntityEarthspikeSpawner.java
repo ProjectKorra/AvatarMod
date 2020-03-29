@@ -4,6 +4,8 @@ import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.entity.data.EarthspikesBehavior;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -18,8 +20,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 
-public class EntityEarthspikeSpawner extends AvatarEntity {
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityEarthspikeSpawner extends AvatarEntity implements IGlowingEntity {
 
 	private static final DataParameter<EarthspikesBehavior> SPIKES_BEHAVIOR = EntityDataManager
 			.createKey(EntityEarthspikeSpawner.class, EarthspikesBehavior.SERIALIZER);
@@ -186,6 +190,12 @@ public class EntityEarthspikeSpawner extends AvatarEntity {
 	@Override
 	public BendingStyle getElement() {
 		return new Earthbending();
+	}
+
+	@Override
+	public ColoredLight produceColoredLight(float partialTicks) {
+		return  ColoredLight.builder().color(8, 128, 20).radius(5.0f).pos(this).build();
+
 	}
 
 	// Allows setting the spikes type

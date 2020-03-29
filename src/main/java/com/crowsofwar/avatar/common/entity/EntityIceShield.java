@@ -16,8 +16,11 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
@@ -27,18 +30,20 @@ import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.StatusControlController.SHIELD_SHATTER;
 
 /**
  * @author CrowsOfWar
  */
-public class EntityIceShield extends EntityShield {
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityIceShield extends EntityShield implements IGlowingEntity {
 
 	private double normalBaseValue;
 
@@ -193,8 +198,7 @@ public class EntityIceShield extends EntityShield {
 		shatter();
 
 		if (getOwner() != null) {
-			BendingData.get(getOwner()).removeStatusControl(
-					SHIELD_SHATTER);
+			BendingData.get(getOwner()).removeStatusControl(StatusControl.SHIELD_SHATTER);
 		}
 
 	}
@@ -288,4 +292,9 @@ public class EntityIceShield extends EntityShield {
 		this.pitchAngles = pitchAngles;
 	}
 
+	@Override
+	public ColoredLight produceColoredLight(float partialTicks) {
+		return ColoredLight.builder().pos(this).radius(5.5f).color(196, 242, 235).build();
+
+	}
 }

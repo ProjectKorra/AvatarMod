@@ -25,9 +25,9 @@ import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-import elucent.albedo.event.GatherLightsEvent;
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
+
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -45,14 +45,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Objects;
 
+import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_LIGHTNINGSPEAR;
 
 /**
  * @author CrowsOfWar
  */
-@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityLightningSpear extends EntityOffensive implements ILightProvider {
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityLightningSpear extends EntityOffensive  implements IGlowingEntity {
 
 	//TODO: Clean up this class. Dear lord.
 
@@ -61,6 +61,7 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 
 	private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityLightningSpear.class,
 			DataSerializers.FLOAT);
+
 
 
 	/**
@@ -78,6 +79,8 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	 * Handles electrocution of nearby entities when the lightning spear touches water
 	 */
 	private LightningFloodFill floodFill;
+
+
 
 
 	/**
@@ -282,17 +285,7 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 		return 15728880;
 	}
 
-	@Override
-	@Optional.Method(modid = "albedo")
-	public Light provideLight() {
-		return Light.builder().pos(this).color(1F, 2F, 3F).radius(8 + getAvgSize()).build();
-	}
 
-	@Override
-	@Optional.Method(modid = "albedo")
-	public void gatherLights(GatherLightsEvent event, Entity entity) {
-
-	}
 
 	@Override
 	public boolean canBeCollidedWith() {
@@ -343,5 +336,11 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	@Override
 	public float getVolume() {
 		return super.getVolume() * 6;
+	}
+
+	@Override
+	public ColoredLight produceColoredLight(float partialTicks) {
+		return ColoredLight.builder().pos(this).color(87, 161, 235).radius(10f).build();
+
 	}
 }

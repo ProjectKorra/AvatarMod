@@ -19,22 +19,22 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFlameStrike;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireBlast;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.entity.data.FireArcBehavior;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import elucent.albedo.event.GatherLightsEvent;
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
+
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -49,18 +49,17 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_FIRE;
 
-@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> implements ILightProvider {
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> implements IGlowingEntity {
 
 	private static final DataParameter<FireArcBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityFireArc.class, FireArcBehavior.DATA_SERIALIZER);
@@ -128,11 +127,11 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 		if (getOwner() != null) {
 			EntityFireArc arc = AvatarEntity.lookupControlledEntity(world, EntityFireArc.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (arc == null && bD.hasStatusControl(THROW_FIRE)) {
-				bD.removeStatusControl(THROW_FIRE);
+			if (arc == null && bD.hasStatusControl(StatusControl.THROW_FIRE)) {
+				bD.removeStatusControl(StatusControl.THROW_FIRE);
 			}
-			if (arc != null && arc.getBehavior() instanceof FireArcBehavior.PlayerControlled && !(bD.hasStatusControl(THROW_FIRE))) {
-				bD.addStatusControl(THROW_FIRE);
+			if (arc != null && arc.getBehavior() instanceof FireArcBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_FIRE))) {
+				bD.addStatusControl(StatusControl.THROW_FIRE);
 			}
 
 		}
@@ -174,7 +173,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 	public void cleanup() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
-			data.removeStatusControl(THROW_FIRE);
+			data.removeStatusControl(StatusControl.THROW_FIRE);
 		}
 	}
 
@@ -196,7 +195,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 			} else {
 				Firesplosion();
 			}
-			if (getAbility() instanceof AbilityFlameStrike && !world.isRemote) {
+			if (getAbility() instanceof AbilityFireBlast && !world.isRemote) {
 				AbilityData data = AbilityData.get(getOwner(), "fire_blast");
 				if (!data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 					cleanup();
@@ -321,7 +320,7 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 				if (getOwner() != null && !world.isRemote && getAbility() != null) {
 					BendingData data1 = BendingData.get(getOwner());
 					AbilityData abilityData1 = data1.getAbilityData(getAbility().getName());
-					//abilityData1.addXp(SKILLS_CONFIG.fireBlastHit); // TODO - Fix this; Originally fireArcHit
+					abilityData1.addXp(SKILLS_CONFIG.fireBlastHit); // TODO - Fix this; Originally fireArcHit
 					BattlePerformanceScore.addMediumScore(getOwner());
 
 				}
@@ -375,15 +374,8 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 	}
 
 	@Override
-	@Optional.Method(modid = "albedo")
-	public Light provideLight() {
-		return Light.builder().pos(this).color(2F, 1F, 0F).radius(8).build();
-	}
-
-	@Override
-	@Optional.Method(modid = "albedo")
-	public void gatherLights(GatherLightsEvent event, Entity entity) {
-
+	public ColoredLight produceColoredLight(float partialTicks) {
+		return ColoredLight.builder().pos(this).color(1f,0f,0f,1f).build();
 	}
 
 	public static class FireControlPoint extends ControlPoint {
@@ -393,4 +385,6 @@ public class EntityFireArc extends EntityArc<EntityFireArc.FireControlPoint> imp
 		}
 
 	}
+
+
 }

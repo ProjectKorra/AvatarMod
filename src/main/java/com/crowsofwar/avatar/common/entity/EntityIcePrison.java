@@ -23,6 +23,8 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.google.common.base.Optional;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -47,7 +49,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 /**
  * @author CrowsOfWar
  */
-public class EntityIcePrison extends AvatarEntity {
+@net.minecraftforge.fml.common.Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityIcePrison extends AvatarEntity implements IGlowingEntity {
 
 	public static final DataParameter<Optional<UUID>> SYNC_IMPRISONED = EntityDataManager
 			.createKey(EntityIcePrison.class, DataSerializers.OPTIONAL_UNIQUE_ID);
@@ -281,4 +284,8 @@ public class EntityIcePrison extends AvatarEntity {
 
 	}
 
+	@Override
+	public ColoredLight produceColoredLight(float partialTicks) {
+		return ColoredLight.builder().pos(this).radius(5.5f).color(196, 242, 235).build();
+	}
 }

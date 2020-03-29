@@ -17,12 +17,15 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -43,20 +46,20 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.StatusControlController.BUBBLE_CONTRACT;
-import static com.crowsofwar.avatar.common.data.StatusControlController.BUBBLE_EXPAND;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 
 /**
  * @author CrowsOfWar
  */
-public class EntityAirBubble extends EntityShield {
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityAirBubble extends EntityShield implements IGlowingEntity {
 
 	public static final DataParameter<Integer> SYNC_DISSIPATE = EntityDataManager
 			.createKey(EntityAirBubble.class, DataSerializers.VARINT);
@@ -148,13 +151,13 @@ public class EntityAirBubble extends EntityShield {
 		if (getOwner() != null) {
 			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (bubble == null && (bD.hasStatusControl(BUBBLE_CONTRACT) || bD.hasStatusControl(BUBBLE_EXPAND))) {
-				bD.removeStatusControl(BUBBLE_CONTRACT);
-				bD.removeStatusControl(BUBBLE_EXPAND);
+			if (bubble == null && (bD.hasStatusControl(StatusControl.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControl.BUBBLE_EXPAND))) {
+				bD.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
+				bD.removeStatusControl(StatusControl.BUBBLE_EXPAND);
 			}
-			if (bubble != null && !(bD.hasStatusControl(BUBBLE_CONTRACT) || bD.hasStatusControl(BUBBLE_EXPAND))) {
-				bD.addStatusControl(BUBBLE_CONTRACT);
-				bD.addStatusControl(BUBBLE_EXPAND);
+			if (bubble != null && !(bD.hasStatusControl(StatusControl.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControl.BUBBLE_EXPAND))) {
+				bD.addStatusControl(StatusControl.BUBBLE_CONTRACT);
+				bD.addStatusControl(StatusControl.BUBBLE_EXPAND);
 			}
 		}
 
@@ -447,8 +450,8 @@ public class EntityAirBubble extends EntityShield {
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
-			data.removeStatusControl(BUBBLE_EXPAND);
-			data.removeStatusControl(BUBBLE_CONTRACT);
+			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
+			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
 
 			IAttributeInstance attribute = getOwner()
 					.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
@@ -458,4 +461,8 @@ public class EntityAirBubble extends EntityShield {
 		}
 	}
 
+	@Override
+	public ColoredLight produceColoredLight(float partialTicks) {
+		return  ColoredLight.builder().color(194, 190, 190).radius(5.0f).pos(this).build();
+	}
 }
