@@ -106,19 +106,18 @@ public class AvatarUiRenderer extends Gui {
 		instance.errorMsg = message;
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent (receiveCanceled = true)
 	public void onGuiRender(RenderGameOverlayEvent.Post e) {
 
 		ScaledResolution resolution = e.getResolution();
 		Minecraft mc = Minecraft.getMinecraft();
 		if (e.getType() == ElementType.EXPERIENCE) {
 			//HUD bending stuff
+			renderBattleStatus(resolution);
 			renderRadialMenu(resolution);
 			renderChiBar(resolution);
-			renderActiveBending(resolution);
-			//Text
 			renderChiMsg(resolution);
-			renderBattleStatus(resolution);
+			renderActiveBending(resolution);
 			//Shield health
 			renderAirBubbleHealth(resolution);
 			renderIceShieldHealth(resolution);
@@ -128,29 +127,6 @@ public class AvatarUiRenderer extends Gui {
 			applyVisionShader();
 			renderPrisonCracks(resolution);
 		}
-
-
-		/*if (e.getType() == ElementType.HOTBAR) {
-			renderRadialMenu(resolution);
-			renderChiBar(resolution);
-			renderActiveBending(resolution);
-		}
-		if (e.getType() == ElementType.TEXT) {
-			renderChiMsg(resolution);
-			renderBattleStatus(resolution);
-		}
-		if (e.getType() == ElementType.ARMOR && Minecraft.getMinecraft().world.isRemote) {
-			mc.profiler.clearProfiling();
-			renderAirBubbleHealth(resolution);
-			renderIceShieldHealth(resolution);
-		}
-		if (e.getType() == ElementType.CROSSHAIRS) {
-			renderStatusControls(resolution);
-		}
-		if (e.getType() == ElementType.ALL) {
-			applyVisionShader();
-			renderPrisonCracks(resolution);
-		}**/
 
 	}
 
@@ -250,6 +226,8 @@ public class AvatarUiRenderer extends Gui {
 						resolution.getScaledHeight() - height - CLIENT_CONFIG.chiBarSettings.yPos, 0);
 				scale(CLIENT_CONFIG.chiBarSettings.widthScale, CLIENT_CONFIG.chiBarSettings.heightScale, 1);
 
+				GlStateManager.color(1, 1, 1, alpha);
+
 				// Background of chi bar
 				drawTexturedModalRect(0, 0, 0, 36, 100, 9);
 
@@ -267,7 +245,7 @@ public class AvatarUiRenderer extends Gui {
 					drawString(mc.fontRenderer, ((int) total) + "/" + ((int) max) + ", " + ((int) available), 25, -10,
 							data.getActiveBending().getTextColour() | ((int) (alpha * 255) << 24));
 				}
-				GlStateManager.color(1, 1, 1, alpha);
+
 				popMatrix();
 
 			}
@@ -405,7 +383,9 @@ public class AvatarUiRenderer extends Gui {
 
 		int x = res.getScaledWidth() / 2 - 91;
 		int y = res.getScaledHeight() - GuiIngameForge.left_height;
-		if (mc.player.getTotalArmorValue() == 0) {
+		if (mc.player.isCreative())
+			y -= 1;
+		else if (mc.player.getTotalArmorValue() == 0) {
 			y += 10;
 		}
 
