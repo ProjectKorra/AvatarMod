@@ -150,6 +150,29 @@ jar {
 	}
 }
 
+shadowJar {
+	// Overwrite the default file
+	classifier = null
+	configurations = [project.configurations.shadow]
+
+	from(sourceSets.main.allJava) {
+		include "*"
+	}
+	from("./") {
+		include "*.md"
+	}
+
+	relocate "org.joml", "com.crowsofwar.avatar.joml"
+	relocate "org.yaml.snakeyaml", "com.crowsofwar.avatar.snakeyaml"
+}
+
+reobf {
+	shadowJar {
+		mappingType = "SEARGE"
+	}
+}
+tasks.reobfShadowJar.mustRunAfter shadowJar
+
 
 task sourcesJar(type: Jar, dependsOn: classes) {
 	classifier = 'sources'
@@ -246,7 +269,13 @@ task cleanBuild(dependsOn: ["buildInformation", "startBuild", "clean", "build", 
 
 publishing {
 	publications {
-
+		shadowPublication(MavenPublication) {
+			project.shadow.component(it)
+			afterEvaluate {
+				artifact sourcesJar
+				// TODO artifact javadocJar
+			}
+		}
 	}
 	repositories {
 		maven {
