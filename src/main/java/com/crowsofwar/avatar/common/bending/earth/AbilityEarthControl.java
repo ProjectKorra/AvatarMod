@@ -38,6 +38,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -70,14 +71,7 @@ public class AbilityEarthControl extends Ability {
 		//Bender bender = ctx.getBender();
 		//World world = ctx.getWorld();
 
-		EntityFloatingBlock currentBlock = AvatarEntity.lookupEntity(ctx.getWorld(),
-				EntityFloatingBlock.class,
-				fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
-						&& fb.getOwner() == ctx.getBenderEntity());
 
-		if (currentBlock != null) {
-			return;
-		} else {
 			VectorI target = ctx.getLookPosI();
 			if (target != null) {
 
@@ -90,7 +84,6 @@ public class AbilityEarthControl extends Ability {
 
 			}
 		}
-	}
 
 	private void pickupBlock(AbilityContext ctx, BlockPos pos) {
 
@@ -102,7 +95,21 @@ public class AbilityEarthControl extends Ability {
 		IBlockState ibs = world.getBlockState(pos);
 		Block block = ibs.getBlock();
 
-		if (!world.isAirBlock(pos) && STATS_CONFIG.bendableBlocks.contains(block)) {
+		int maxBlocks = 1;
+		int heldBlocks = 0;
+
+		if (ctx.getLevel() == 2)
+			maxBlocks = 2;
+		else if (ctx.getDynamicPath().equals(AbilityData.AbilityTreePath.FIRST))
+			maxBlocks = 3;
+
+		List<EntityFloatingBlock> blocks = world.getEntitiesWithinAABB(EntityFloatingBlock.class,
+				entity.getEntityBoundingBox().grow(3, 1, 3));
+		for (EntityFloatingBlock b : blocks) {
+			if (b.getController() == entity)
+				heldBlocks++;
+		}
+		if (!world.isAirBlock(pos) && STATS_CONFIG.bendableBlocks.contains(block) && heldBlocks < maxBlocks) {
 
 			if (bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
 
@@ -129,7 +136,8 @@ public class AbilityEarthControl extends Ability {
 					world.setBlockState(pos, Blocks.AIR.getDefaultState());
 				}
 
-				world.spawnEntity(floating);
+				if (!world.isRemote)
+					world.spawnEntity(floating);
 
 				SoundType sound = block.getSoundType();
 				if (sound != null) {
@@ -137,8 +145,10 @@ public class AbilityEarthControl extends Ability {
 							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 				}
 
-				data.addStatusControl(PLACE_BLOCK);
-				data.addStatusControl(THROW_BLOCK);
+				if (!data.hasStatusControl(PLACE_BLOCK))
+					data.addStatusControl(PLACE_BLOCK);
+				if (!data.hasStatusControl(THROW_BLOCK))
+					data.addStatusControl(THROW_BLOCK);
 
 			}
 

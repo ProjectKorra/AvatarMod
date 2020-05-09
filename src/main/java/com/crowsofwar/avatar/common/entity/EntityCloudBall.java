@@ -104,9 +104,9 @@ public class EntityCloudBall extends EntityOffensive {
 			Dissipate();
 
 
-		if (getOwner() != null) {
+		if (getOwner() != null && Bender.isBenderSupported(getOwner())) {
 			EntityCloudBall ball = AvatarEntity.lookupControlledEntity(world, EntityCloudBall.class, getOwner());
-			BendingData bD = BendingData.get(getOwner());
+			BendingData bD = BendingData.getFromEntity(getOwner());
 			if (ball == null && bD.hasStatusControl(StatusControlController.THROW_CLOUDBURST)) {
 				bD.removeStatusControl(StatusControlController.THROW_CLOUDBURST);
 			}

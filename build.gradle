@@ -223,7 +223,7 @@ def fancyBorder = ""
 
 task buildInformation {
 	doFirst {
-		def lines = startBuildMessage.readLines();
+		def lines = startBuildMessage.readLines()
 		lines.addAll(finishBuildMessage.readLines())
 		def maxLength = 0
 		for (String line : lines)

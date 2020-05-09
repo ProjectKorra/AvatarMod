@@ -19,8 +19,6 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.zeitheron.hammercore.api.lighting.ColoredLight;
-import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -31,10 +29,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
 
-@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
-public class EntityAirGust extends EntityOffensive implements IGlowingEntity {
+public class EntityAirGust extends EntityOffensive {
 
 	private boolean piercesEnemies = false, slowProjectiles = false, destroyProjectiles = false, pushStone, pushIronTrapDoor, pushIronDoor;
 
@@ -214,8 +210,7 @@ public class EntityAirGust extends EntityOffensive implements IGlowingEntity {
 			super.onCollideWithEntity(((EntityAirBubble) entity).getOwner());
 			if (!isPiercing())
 				Dissipate();
-		}
-		else if (entity instanceof EntityAirBubble)
+		} else if (entity instanceof EntityAirBubble)
 			Dissipate();
 	}
 
@@ -263,15 +258,8 @@ public class EntityAirGust extends EntityOffensive implements IGlowingEntity {
 	}
 
 
-
 	@Override
 	public boolean canDamageEntity(Entity entity) {
 		return canCollideWith(entity);
-	}
-
-	@Override
-	public ColoredLight produceColoredLight(float partialTicks) {
-		return  ColoredLight.builder().color(194, 190, 190).radius(5.0f).pos(this).build();
-
 	}
 }

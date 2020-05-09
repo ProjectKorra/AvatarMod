@@ -48,9 +48,9 @@ public interface AvatarCommonProxy {
 	 * Called from the main class, subclasses should initialize themselves here
 	 * (fields, etc).
 	 */
-	public void preInit();
+	void preInit();
 
-	public IControlsHandler getKeyHandler();
+	IControlsHandler getKeyHandler();
 
 	/**
 	 * Get a client-side packet handler safely. When the machine is running a
@@ -58,7 +58,7 @@ public interface AvatarCommonProxy {
 	 * packet handler for the client. Otherwise (this only happens on dedicated
 	 * servers), returns null.
 	 */
-	public IPacketHandler getClientPacketHandler();
+	IPacketHandler getClientPacketHandler();
 
 	/**
 	 * Get client player's reach. Returns 0 on server.
@@ -111,7 +111,7 @@ public interface AvatarCommonProxy {
 	/**
 	 * Register the item models so they can be configured to use the correct textures
 	 */
-	public void registerItemModels();
+	void registerItemModels();
 
 	boolean isOptifinePresent();
 

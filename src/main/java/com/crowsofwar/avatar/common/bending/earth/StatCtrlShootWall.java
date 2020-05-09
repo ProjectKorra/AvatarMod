@@ -112,7 +112,7 @@ public class StatCtrlShootWall extends StatusControl {
 	}
 
 	private Pair<Block, Integer> getBlockToUseFromSegment(EntityWallSegment seg) {
-		for (int i = seg.SEGMENT_HEIGHT - 1; i >= 0; i--) {
+		for (int i = EntityWallSegment.SEGMENT_HEIGHT - 1; i >= 0; i--) {
 			Block temp = seg.getBlock(i).getBlock();
 			if (temp != Blocks.AIR) {
 				seg.setBlock(i, Blocks.AIR.getDefaultState());

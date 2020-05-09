@@ -40,7 +40,7 @@ public class TreeCommandException extends RuntimeException {
 		return format;
 	}
 	
-	public static enum Reason {
+	public enum Reason {
 		ARGUMENT_MISSING("gc.tree.error.missingArgs"),
 		NO_BRANCH_NODE("gc.tree.error.noBranchNode"),
 		CANT_CONVERT("gc.tree.error.cantConvert"),
@@ -49,7 +49,7 @@ public class TreeCommandException extends RuntimeException {
 		
 		private final String message;
 		
-		private Reason(String message) {
+		Reason(String message) {
 			this.message = message;
 		}
 		

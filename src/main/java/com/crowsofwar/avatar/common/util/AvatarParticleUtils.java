@@ -53,6 +53,7 @@ public class AvatarParticleUtils {
 											  double velX, double velY, double velZ) {
 		for (int angle = 0; angle < particleAmount; angle++) {
 			double radius = minRadius + (angle / radiusScale);
+			//Why isn't this in radians
 			double x = radius * cos(angle);
 			double y = angle / (particleAmount / vortexLength);
 			double z = radius * sin(angle);
@@ -210,7 +211,7 @@ public class AvatarParticleUtils {
 		float f1 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
 		float f2 = -MathHelper.cos(-pitch * 0.017453292F);
 		float f3 = MathHelper.sin(-pitch * 0.017453292F);
-		return new Vec3d((double) (f1 * f2), (double) f3, (double) (f * f2));
+		return new Vec3d(f1 * f2, f3, f * f2);
 	}
 
 	public static Vec3d getDirectionalVortexEndPos(EntityLivingBase entity, Vec3d direction, int maxAngle, double vortexLength, double radiusScale, double posX, double posY, double posZ) {

@@ -63,8 +63,8 @@ public class RenderLightCylinder extends Render<EntityLightCylinder> {
                             .plus(new Vector(entity.getLookVec()).times(i * (scale * (shouldCclRender ? 2 : 1))));
 
                     GlStateManager.translate(end.x(), end.y(), end.z());
-                    GlStateManager.rotate((float) (entity.rotationYaw - entity.rotationYaw * 2), 0, 1, 0);
-                    GlStateManager.rotate((float) (entity.rotationPitch + 90), 1, 0, 0);
+                    GlStateManager.rotate(entity.rotationYaw - entity.rotationYaw * 2, 0, 1, 0);
+                    GlStateManager.rotate(entity.rotationPitch + 90, 1, 0, 0);
                     GlStateManager.scale(scale, lenght == i + 1 ? scale * lastLenght : scale, scale);
 
                     if (entity.shouldSpin())

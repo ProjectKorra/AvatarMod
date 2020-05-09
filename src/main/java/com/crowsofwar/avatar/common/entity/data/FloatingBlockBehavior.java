@@ -17,14 +17,14 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.earth.AbilityEarthControl;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
+import com.crowsofwar.avatar.common.util.AvatarParticleUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -36,6 +36,7 @@ import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -300,6 +301,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 
 	public static class PlayerControlled extends FloatingBlockBehavior {
 
+		int ticks = 0;
 		public PlayerControlled() {
 		}
 
@@ -312,9 +314,24 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			Vector forward = Vector.getLookRectangular(owner);
 			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2.5).plus(eye);
-			Vector motion = target.minus(Vector.getEntityPos(entity)).times(6);
-			entity.setVelocity(motion);
+			Vec3d motion = target.minus(Vector.getEntityPos(entity)).times(0.5).toMinecraft();
+			int angle = ticks % 360;
+			List<EntityFloatingBlock> blocks = entity.world.getEntitiesWithinAABB(entity.getClass(),
+					owner.getEntityBoundingBox().grow(3, 3, 3));
+			//S P I N
+			if (!blocks.isEmpty() && blocks.size() > 1) {
+				angle *= 5;
+				angle += entity.ticksExisted % 360;
+				double radians = Math.toRadians(angle);
+				double x = 2.5 * Math.cos(radians);
+				double z = 2.5 * Math.sin(radians);
+				Vec3d pos = new Vec3d(x, 0 , z);
+				pos = pos.add(owner.posX, owner.getEntityBoundingBox().minY + 1.5, owner.posZ);
+				motion = pos.subtract(entity.getPositionVector()).scale(.5);
+			}
 
+			entity.setVelocity(motion);
+			ticks++;
 			return this;
 
 		}

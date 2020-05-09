@@ -38,7 +38,7 @@ public class ConfigStats {
 	@Load
 	public AttackSettings floatingBlockSettings = new AttackSettings(2f, 1),
 			ravineSettings = new AttackSettings(3.5F, 0.25), //
-			waveSettings = new AttackSettings(0.25F, 4), //
+			waveSettings = new AttackSettings(0.25F, 2), //
 			airbladeSettings = new AttackSettings(3.5F, 0.5), //
 			fireBlastSettings = new AttackSettings(2.5F, 1),   //
 			flamethrowerSettings = new AttackSettings(0.75F, 0.5),

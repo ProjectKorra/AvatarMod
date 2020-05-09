@@ -17,17 +17,13 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.config.ConfigStats;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.EntityEquipmentSlot.Type;
@@ -35,11 +31,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -47,7 +43,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 /**
  * @author CrowsOfWar
  */
-public class EntityRavine extends AvatarEntity {
+public class EntityRavine extends EntityOffensive {
 
 	private Vector initialPosition;
 
@@ -61,8 +57,33 @@ public class EntityRavine extends AvatarEntity {
 	 */
 	public EntityRavine(World world) {
 		super(world);
-		setSize(1, 1);
+		setSize(0.125F, 0.125F);
 		this.damageMult = 1;
+	}
+
+	@Override
+	public boolean isInRangeToRender3d(double x, double y, double z) {
+		return true;
+	}
+
+	@Override
+	public boolean isInRangeToRenderDist(double distance) {
+		return true;
+	}
+
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return true;
+	}
+
+	@Override
+	public double getExpandedHitboxWidth() {
+		return 0.5;
+	}
+
+	@Override
+	public double getExpandedHitboxHeight() {
+		return 0.5;
 	}
 
 	public void setDamageMult(float mult) {
@@ -85,16 +106,6 @@ public class EntityRavine extends AvatarEntity {
 		return position().sqrDist(initialPosition);
 	}
 
-	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		super.readEntityFromNBT(nbt);
-	}
-
-	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		super.writeEntityToNBT(nbt);
-		setDead();
-	}
 
 	@Override
 	public boolean isProjectile() {
@@ -102,8 +113,18 @@ public class EntityRavine extends AvatarEntity {
 	}
 
 	@Override
-	public void onEntityUpdate() {
+	public Vec3d getKnockback() {
+		return super.getKnockback();
+	}
 
+	@Override
+	public Vec3d getKnockbackMult() {
+		return new Vec3d(STATS_CONFIG.ravineSettings.push, STATS_CONFIG.ravineSettings.push * 2,
+				STATS_CONFIG.ravineSettings.push);
+	}
+
+	@Override
+	public void onEntityUpdate() {
 		super.onEntityUpdate();
 
 		if (initialPosition == null) {
@@ -114,10 +135,10 @@ public class EntityRavine extends AvatarEntity {
 		Vector velocity = velocity();
 
 		//Why? xD
-		setPosition(position.plus(velocity.times(0.05)));
+		//setPosition(position.plus(velocity.times(0.05)));
 
 		if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
-			setDead();
+			Dissipate();
 		}
 
 		BlockPos below = getPosition().offset(EnumFacing.DOWN);
@@ -128,17 +149,17 @@ public class EntityRavine extends AvatarEntity {
 				SoundCategory.PLAYERS, 1, 1, false);
 
 		if (!world.getBlockState(below).isNormalCube()) {
-			setDead();
+			Dissipate();
 		}
 
 		if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock)) {
-			setDead();
+			Dissipate();
 		}
 
 		// Destroy if in a block
 		IBlockState inBlock = world.getBlockState(getPosition());
 		if (inBlock.isFullBlock()) {
-			setDead();
+			Dissipate();
 		}
 
 		// Destroy non-solid blocks in the ravine
@@ -146,33 +167,9 @@ public class EntityRavine extends AvatarEntity {
 			if (inBlock.getBlockHardness(world, getPosition()) == 0) {
 				breakBlock(getPosition());
 			} else {
-				setDead();
+				Dissipate();
 			}
 
-		}
-
-		// amount of entities which were successfully attacked
-		int attacked = 0;
-
-		// Push collided entities back
-		if (!world.isRemote) {
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-					entity -> entity != getOwner());
-			if (!collided.isEmpty()) {
-				for (Entity entity : collided) {
-					if (attackEntity(entity)) {
-						attacked++;
-						BattlePerformanceScore.addMediumScore(getOwner());
-					}
-				}
-			}
-		}
-
-		if (!world.isRemote && getOwner() != null) {
-			BendingData data = BendingData.get(getOwner());
-			if (data != null) {
-				data.getAbilityData("ravine").addXp(SKILLS_CONFIG.ravineHit * attacked);
-			}
 		}
 
 		if (!world.isRemote && breakBlocks) {
@@ -195,47 +192,81 @@ public class EntityRavine extends AvatarEntity {
 	}
 
 	@Override
-	public boolean onCollideWithSolid() {
-		setDead();
-		return false;
+	public float getDamage() {
+		return damageMult * STATS_CONFIG.ravineSettings.damage;
 	}
 
-	private boolean attackEntity(Entity entity) {
+	@Override
+	public boolean isPiercing() {
+		return true;
+	}
 
-		if (/*!(entity instanceof EntityItem && entity.ticksExisted <= 10) &&**/  canDamageEntity(entity)) {
+	@Override
+	public boolean shouldDissipate() {
+		return true;
+	}
 
-			Vector push = velocity().withY(1).times(STATS_CONFIG.ravineSettings.push);
-			push = push.times(0.4);
-			entity.addVelocity(push.x(), push.y(), push.z());
-			AvatarUtils.afterVelocityAdded(entity);
+	@Override
+	public int getFireTime() {
+		return 0;
+	}
 
+	@Override
+	public void Dissipate() {
+		if (world.isRemote && world.getBlockState(getPosition().down()) != null)
+			world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ, world.rand.nextGaussian() / 20,
+					world.rand.nextDouble() / 20, world.rand.nextGaussian() / 20,
+					Block.getStateId(world.getBlockState(getPosition())));
+		setDead();
+	}
+
+	@Override
+	public float getXpPerHit() {
+		return SKILLS_CONFIG.ravineHit;
+	}
+
+	@Override
+	public DamageSource getDamageSource(Entity target) {
+		return AvatarDamageSource.causeRavineDamage(target, getOwner());
+	}
+
+	@Override
+	public void spawnExplosionParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public void spawnDissipateParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public void spawnPiercingParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public void onCollideWithEntity(Entity entity) {
+		super.onCollideWithEntity(entity);
+		if (canCollideWith(entity)) {
 			if (dropEquipment && entity instanceof EntityLivingBase) {
 
-				EntityLivingBase elb = (EntityLivingBase) entity;
+				EntityLivingBase living = (EntityLivingBase) entity;
 
 				for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
 
-					ItemStack stack = elb.getItemStackFromSlot(slot);
+					ItemStack stack = living.getItemStackFromSlot(slot);
 					if (!stack.isEmpty()) {
 						double chance = slot.getSlotType() == Type.HAND ? 40 : 20;
 						if (rand.nextDouble() * 100 <= chance) {
-							elb.entityDropItem(stack, 0);
-							elb.setItemStackToSlot(slot, ItemStack.EMPTY);
+							living.entityDropItem(stack, 0);
+							living.setItemStackToSlot(slot, ItemStack.EMPTY);
 						}
 					}
 
 				}
 
 			}
-
-			DamageSource ds = AvatarDamageSource.causeRavineDamage(entity, getOwner());
-			float damage = STATS_CONFIG.ravineSettings.damage * damageMult;
-			return entity.attackEntityFrom(ds, damage);
-
 		}
-
-		return false;
-
 	}
-
 }

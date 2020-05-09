@@ -167,6 +167,7 @@ public class RadialMenu extends Gui {
 
 			//Ignore if your IDE says that the cast is redundant, it'll then complain that the object specified is too ambiguous.
 
+			//Ignore the redundant casting, it stops Intellij from throwing a fit
 			second = FormattedMessageProcessor.formatText(MSG_RADIAL_XP, second,
 					(Object[]) ArrayUtils.addAll(secondArgs, level + ""));
 

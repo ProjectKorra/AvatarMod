@@ -197,6 +197,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 			return false;
 
 		float size = STATS_CONFIG.flameStrikeSettings.size;
+		float accuracy;
 		int particleCount = 4;
 
 		if (abilityData.getLevel() == 1) {
@@ -206,7 +207,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 			particleCount += 4;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			size *= 0.5F;
+			size *= 0.25F;
 			particleCount += 10;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {

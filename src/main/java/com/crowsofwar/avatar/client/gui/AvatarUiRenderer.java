@@ -110,6 +110,8 @@ public class AvatarUiRenderer extends Gui {
 	public void onGuiRender(RenderGameOverlayEvent.Post e) {
 
 		ScaledResolution resolution = e.getResolution();
+		if (e.isCancelable())
+			e.setCanceled(false);
 		if (e.getType() == ElementType.EXPERIENCE) {
 			//HUD bending stuff
 			renderBattleStatus(resolution);
@@ -136,6 +138,7 @@ public class AvatarUiRenderer extends Gui {
 
 		// For some reason, not including this will cause weirdness in 3rd
 		// person
+		GlStateManager.pushMatrix();
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 
 		if (currentBendingMenu != null) {
@@ -165,6 +168,7 @@ public class AvatarUiRenderer extends Gui {
 						(1 - timeSinceStart / timeToFade) * CLIENT_CONFIG.radialMenuAlpha, scale);
 			}
 		}
+		GlStateManager.popMatrix();
 	}
 
 	private void renderStatusControls(ScaledResolution resolution) {
@@ -225,7 +229,7 @@ public class AvatarUiRenderer extends Gui {
 						resolution.getScaledHeight() - height - CLIENT_CONFIG.chiBarSettings.yPos, 0);
 				scale(CLIENT_CONFIG.chiBarSettings.widthScale, CLIENT_CONFIG.chiBarSettings.heightScale, 1);
 
-				GlStateManager.color(1, 1, 1, alpha);
+				color(1, 1, 1, alpha);
 
 				// Background of chi bar
 				drawTexturedModalRect(0, 0, 0, 36, 100, 9);
@@ -253,6 +257,7 @@ public class AvatarUiRenderer extends Gui {
 
 	private void renderChiMsg(ScaledResolution res) {
 		refreshDimensions();
+		GlStateManager.pushMatrix();
 		if (errorMsgFade != -1) {
 
 			float seconds = (System.currentTimeMillis() - errorMsgFade) / 1000f;
@@ -273,6 +278,7 @@ public class AvatarUiRenderer extends Gui {
 			if (seconds >= 2) errorMsgFade = -1;
 
 		}
+		GlStateManager.popMatrix();
 	}
 
 	private void renderActiveBending(ScaledResolution res) {
@@ -283,14 +289,15 @@ public class AvatarUiRenderer extends Gui {
 			boolean shouldRender = !CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuDisappear || data.hasTickHandler(RENDER_ELEMENT_HANDLER);
 			if (shouldRender) {
 				if (data.getActiveBending() != null) {
+					GlStateManager.pushMatrix();
 					float alpha = data.hasTickHandler(RENDER_ELEMENT_HANDLER) ?
 							((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER))
 									/ CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration * CLIENT_CONFIG.bendingCycleAlpha : CLIENT_CONFIG.bendingCycleAlpha;
+					GlStateManager.color(1, 1, 1, alpha);
 					drawBendingIcon(CLIENT_CONFIG.activeBendingSettings.middleXPosition,
 							CLIENT_CONFIG.activeBendingSettings.middleYPosition, data.getActiveBending(),
 							CLIENT_CONFIG.activeBendingSettings.middleBendingWidth, CLIENT_CONFIG.activeBendingSettings.middleBendingHeight);
-					GlStateManager.color(1, 1, 1, alpha);
-
+					GlStateManager.popMatrix();
 					List<BendingStyle> allBending = data.getAllBending();
 					allBending.sort(Comparator.comparing(BendingStyle::getName));
 

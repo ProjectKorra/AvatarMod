@@ -259,6 +259,7 @@ public class EntityAirBubble extends EntityShield {
 		final double minFloatHeight = 1.2;
 		final double maxFloatHeight = 3;
 
+
 		EntityLivingBase owner = getOwner();
 
 		// Find whether there are blocks under the owner

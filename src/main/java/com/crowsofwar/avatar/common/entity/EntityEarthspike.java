@@ -48,8 +48,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 /**
  * @author CrowsOfWar
  */
-@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
-public class EntityEarthspike extends AvatarEntity implements IGlowingEntity {
+//@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityEarthspike extends AvatarEntity {
 
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityEarthspike.class,
 			DataSerializers.FLOAT);
@@ -191,9 +191,4 @@ public class EntityEarthspike extends AvatarEntity implements IGlowingEntity {
 		entity.motionZ += this.motionZ / 4;
 	}
 
-	@Override
-	public ColoredLight produceColoredLight(float partialTicks) {
-		return  ColoredLight.builder().color(8, 128, 20).radius(5.0f).pos(this).build();
-
-	}
 }

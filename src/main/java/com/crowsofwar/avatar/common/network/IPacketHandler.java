@@ -28,8 +28,8 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public interface IPacketHandler {
 
-	public IMessage onPacketReceived(IMessage packet, MessageContext ctx);
+	IMessage onPacketReceived(IMessage packet, MessageContext ctx);
 
-	public Side getSide();
+	Side getSide();
 
 }

@@ -118,7 +118,7 @@ public class EarthbendingEvents {
 				block.dropBlockAsItem(world, pos, iblockstate, fortune);
 			}
 
-			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
 		}
 
 	}

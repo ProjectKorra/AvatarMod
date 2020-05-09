@@ -48,7 +48,6 @@ public class TickHandlerController {
 	public static TickHandler SLIPSTREAM_COOLDOWN_HANDLER = new SlipstreamCooldownHandler(21);
 	public static TickHandler PURIFY_COOLDOWN_HANDLER = new ImmolateCooldownHandler(22);
 	public static TickHandler PURIFY_PARTICLE_SPAWNER = new ImmolateParticleHandler(23);
-	public static TickHandler FIRE_DEVOUR_HANDLER = new FireDevourTickHandler(24);
 	public static TickHandler CLEANSE_COOLDOWN_HANDLER = new CleanseCooldownHandler(25);
 	public static TickHandler RESTORE_COOLDOWN_HANDLER = new RestoreCooldownHandler(26);
 	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler(27);

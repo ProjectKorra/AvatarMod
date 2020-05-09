@@ -48,7 +48,7 @@ public enum Type {
 	private static final Map<Class<?>, Type> classToType;
 	private final Class<?> cls;
 	
-	private Type(Class<?> cls) {
+	Type(Class<?> cls) {
 		this.cls = cls;
 	}
 	
