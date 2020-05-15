@@ -57,7 +57,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
-		ID_NOTHING = registerBehavior(DoNothing.class);
+		ID_NOTHING = registerBehavior(Idle.class);
 		ID_FALL = registerBehavior(Fall.class);
 		ID_PICKUP = registerBehavior(PickUp.class);
 		ID_PLACE = registerBehavior(Place.class);
@@ -65,7 +65,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 		ID_THROWN = registerBehavior(Thrown.class);
 	}
 
-	public static class DoNothing extends FloatingBlockBehavior {
+	public static class Idle extends FloatingBlockBehavior {
 
 		@Override
 		public FloatingBlockBehavior onUpdate(EntityFloatingBlock entity) {
@@ -173,7 +173,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 			entity.addVelocity(Vector.DOWN.times(9.81 / 30));
 
 			World world = entity.world;
-			if (!entity.isDead) {
+			/*if (!entity.isDead) {
 				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
 						entity.getExpandedHitbox());
 				if (!collidedList.isEmpty()) {
@@ -188,7 +188,7 @@ public abstract class FloatingBlockBehavior extends Behavior<EntityFloatingBlock
 
 				}
 				entity.setBehavior(new FloatingBlockBehavior.PlayerControlled());
-			}
+			}**/
 
 			return this;
 

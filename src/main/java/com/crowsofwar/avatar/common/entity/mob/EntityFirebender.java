@@ -38,8 +38,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.village.MerchantRecipe;
+import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -194,6 +197,38 @@ public class EntityFirebender extends EntityHumanBender {
 		return super.isTradeItem(item) || MOBS_CONFIG.isFireTradeItem(item);
 	}
 
+	@Override
+	public void setCustomer(@Nullable EntityPlayer player) {
+
+	}
+
+	@Nullable
+	@Override
+	public EntityPlayer getCustomer() {
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public MerchantRecipeList getRecipes(EntityPlayer player) {
+		return null;
+	}
+
+	@Override
+	public void setRecipes(@Nullable MerchantRecipeList recipeList) {
+
+	}
+
+	@Override
+	public void useRecipe(MerchantRecipe recipe) {
+
+	}
+
+	@Override
+	public void verifySellingItem(ItemStack stack) {
+
+	}
+
 	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
@@ -202,6 +237,16 @@ public class EntityFirebender extends EntityHumanBender {
 		textcomponentstring.getStyle().setInsertion(this.getCachedUniqueIdString());
 		return textcomponentstring;
 		//return super.getDisplayName();
+	}
+
+	@Override
+	public World getWorld() {
+		return null;
+	}
+
+	@Override
+	public BlockPos getPos() {
+		return null;
 	}
 
 	@Override

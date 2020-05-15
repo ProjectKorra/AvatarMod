@@ -193,7 +193,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		if (shouldDissipate() || shouldExplode())
 			ticksMoving++;
 
-		if (ticksMoving >= getLifeTime() && (shouldDissipate() || shouldExplode())) {
+		if (ticksMoving >= getLifeTime() && (shouldDissipate() || shouldExplode()) && getLifeTime() > 0) {
 			if (shouldDissipate())
 				Dissipate();
 			else if (shouldExplode())

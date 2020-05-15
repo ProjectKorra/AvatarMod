@@ -22,11 +22,18 @@ import com.crowsofwar.avatar.common.data.BenderEntityComponent;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 
 import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.village.MerchantRecipe;
+import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
+
+import javax.annotation.Nullable;
 
 /**
  * @author CrowsOfWar
@@ -70,6 +77,48 @@ public class EntityWaterbender extends EntityHumanBender {
 	@Override
 	protected ResourceLocation getLootTable() {
 		return LOOT_TABLE;
+	}
+
+	@Override
+	public void setCustomer(@Nullable EntityPlayer player) {
+
+	}
+
+	@Nullable
+	@Override
+	public EntityPlayer getCustomer() {
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public MerchantRecipeList getRecipes(EntityPlayer player) {
+		return null;
+	}
+
+	@Override
+	public void setRecipes(@Nullable MerchantRecipeList recipeList) {
+
+	}
+
+	@Override
+	public void useRecipe(MerchantRecipe recipe) {
+
+	}
+
+	@Override
+	public void verifySellingItem(ItemStack stack) {
+
+	}
+
+	@Override
+	public World getWorld() {
+		return null;
+	}
+
+	@Override
+	public BlockPos getPos() {
+		return null;
 	}
 
 	private class WaterbenderBenderComponent extends BenderEntityComponent {

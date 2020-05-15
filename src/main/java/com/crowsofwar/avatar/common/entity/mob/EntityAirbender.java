@@ -27,16 +27,21 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.village.MerchantRecipe;
+import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_NEED_AIR_TRADE_ITEM;
@@ -179,6 +184,38 @@ public class EntityAirbender extends EntityHumanBender {
 	}
 
 
+	@Override
+	public void setCustomer(@Nullable EntityPlayer player) {
+
+	}
+
+	@Nullable
+	@Override
+	public EntityPlayer getCustomer() {
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public MerchantRecipeList getRecipes(EntityPlayer player) {
+		return null;
+	}
+
+	@Override
+	public void setRecipes(@Nullable MerchantRecipeList recipeList) {
+
+	}
+
+	@Override
+	public void useRecipe(MerchantRecipe recipe) {
+
+	}
+
+	@Override
+	public void verifySellingItem(ItemStack stack) {
+
+	}
+
 	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
@@ -186,6 +223,16 @@ public class EntityAirbender extends EntityHumanBender {
 		textcomponentstring.getStyle().setHoverEvent(this.getHoverEvent());
 		textcomponentstring.getStyle().setInsertion(this.getCachedUniqueIdString());
 		return textcomponentstring;
+	}
+
+	@Override
+	public World getWorld() {
+		return null;
+	}
+
+	@Override
+	public BlockPos getPos() {
+		return null;
 	}
 
 	@Override

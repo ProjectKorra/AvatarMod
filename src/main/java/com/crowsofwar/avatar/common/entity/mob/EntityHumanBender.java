@@ -28,10 +28,7 @@ import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -46,6 +43,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
@@ -58,7 +56,7 @@ import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 /**
  * @author CrowsOfWar
  */
-public abstract class EntityHumanBender extends EntityBender {
+public abstract class EntityHumanBender extends EntityBender implements IMerchant, INpc {
 
 	private static final DataParameter<Integer> SYNC_SKIN = EntityDataManager
 			.createKey(EntityHumanBender.class, DataSerializers.VARINT);
@@ -68,6 +66,7 @@ public abstract class EntityHumanBender extends EntityBender {
 
 	private EntityAiGiveScroll aiGiveScroll;
 	private boolean hasAttemptedTrade;
+	private MerchantRecipeList trades;
 
 	//TODO: Chi
 	public EntityHumanBender(World world) {
@@ -87,6 +86,7 @@ public abstract class EntityHumanBender extends EntityBender {
 	public boolean getAlwaysRenderNameTagForRender() {
 		return true;
 	}
+
 
 	@Override
 	protected void entityInit() {

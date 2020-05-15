@@ -57,15 +57,15 @@ public class StatCtrlThrowBlock extends StatusControl {
 			float pitch = (float) Math.toRadians(entity.rotationPitch);
 
 			// Calculate force and everything
-			double forceMult = 12.5;
+			double forceMult = 15;
 			if (abilityData.getLevel() == 1)
-				forceMult += 3.5;
+				forceMult += 7;
 			if (abilityData.getLevel() == 2)
-				forceMult += 7.5;
+				forceMult += 12;
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST))
-				forceMult += 8.5;
+				forceMult += 15;
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND))
-				forceMult += 10;
+				forceMult += 30;
 
 			Vector lookDir = Vector.toRectangular(yaw, pitch);
 			floating.setVelocity(lookDir.times(forceMult));

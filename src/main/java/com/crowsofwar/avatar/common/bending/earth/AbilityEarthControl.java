@@ -41,6 +41,7 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Random;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.StatusControlController.PLACE_BLOCK;
 import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_BLOCK;
@@ -119,7 +120,7 @@ public class AbilityEarthControl extends Ability {
 				floating.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 				floating.setItemDropsEnabled(!bender.isCreativeMode());
 
-				float damageMult = abilityData.getLevel() >= 2 ? 2 : 1;
+				float damageMult = abilityData.getLevel() >= 2 ? 1.5F : 1;
 				damageMult *= ctx.getPowerRatingDamageMod();
 
 				double dist = 2.5;
@@ -129,6 +130,9 @@ public class AbilityEarthControl extends Ability {
 				floating.setOwner(entity);
 				floating.setAbility(this);
 				floating.setDamageMult(damageMult);
+				floating.setXp(SKILLS_CONFIG.blockThrowHit);
+				floating.setFireTime(0);
+				floating.setLifeTime(150);
 
 				if (STATS_CONFIG.preventPickupBlockGriefing) {
 					floating.setItemDropsEnabled(false);
