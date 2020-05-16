@@ -177,10 +177,6 @@ public class EntityFirebender extends EntityHumanBender {
 		return super.onInitialSpawn(difficulty, livingdata);
 	}
 
-	@Override
-	protected ScrollType getScrollType() {
-		return ScrollType.FIRE;
-	}
 
 	@Override
 	protected int getNumSkins() {
@@ -190,43 +186,6 @@ public class EntityFirebender extends EntityHumanBender {
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		return super.processInteract(player, hand);
-	}
-
-	@Override
-	protected boolean isTradeItem(Item item) {
-		return super.isTradeItem(item) || MOBS_CONFIG.isFireTradeItem(item);
-	}
-
-	@Override
-	public void setCustomer(@Nullable EntityPlayer player) {
-
-	}
-
-	@Nullable
-	@Override
-	public EntityPlayer getCustomer() {
-		return null;
-	}
-
-	@Nullable
-	@Override
-	public MerchantRecipeList getRecipes(EntityPlayer player) {
-		return null;
-	}
-
-	@Override
-	public void setRecipes(@Nullable MerchantRecipeList recipeList) {
-
-	}
-
-	@Override
-	public void useRecipe(MerchantRecipe recipe) {
-
-	}
-
-	@Override
-	public void verifySellingItem(ItemStack stack) {
-
 	}
 
 	@Nonnull

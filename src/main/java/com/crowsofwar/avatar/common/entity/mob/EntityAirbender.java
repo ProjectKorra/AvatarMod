@@ -95,23 +95,8 @@ public class EntityAirbender extends EntityHumanBender {
 	}
 
 	@Override
-	protected ScrollType getScrollType() {
-		return ScrollType.AIR;
-	}
-
-	@Override
 	protected int getNumSkins() {
 		return 7;
-	}
-
-	@Override
-	protected boolean isTradeItem(Item item) {
-		return super.isTradeItem(item) || MOBS_CONFIG.isAirTradeItem(item);
-	}
-
-	@Override
-	protected int getTradeAmount(Item item) {
-		return super.getTradeAmount(item) + MOBS_CONFIG.getAirTradeItemAmount(item);
 	}
 
 	@Override
@@ -184,38 +169,6 @@ public class EntityAirbender extends EntityHumanBender {
 	}
 
 
-	@Override
-	public void setCustomer(@Nullable EntityPlayer player) {
-
-	}
-
-	@Nullable
-	@Override
-	public EntityPlayer getCustomer() {
-		return null;
-	}
-
-	@Nullable
-	@Override
-	public MerchantRecipeList getRecipes(EntityPlayer player) {
-		return null;
-	}
-
-	@Override
-	public void setRecipes(@Nullable MerchantRecipeList recipeList) {
-
-	}
-
-	@Override
-	public void useRecipe(MerchantRecipe recipe) {
-
-	}
-
-	@Override
-	public void verifySellingItem(ItemStack stack) {
-
-	}
-
 	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
@@ -225,15 +178,6 @@ public class EntityAirbender extends EntityHumanBender {
 		return textcomponentstring;
 	}
 
-	@Override
-	public World getWorld() {
-		return null;
-	}
-
-	@Override
-	public BlockPos getPos() {
-		return null;
-	}
 
 	@Override
 	public void setElement() {

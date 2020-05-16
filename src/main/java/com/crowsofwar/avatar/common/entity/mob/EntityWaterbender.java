@@ -64,10 +64,6 @@ public class EntityWaterbender extends EntityHumanBender {
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 	}
 
-	@Override
-	protected ScrollType getScrollType() {
-		return ScrollType.WATER;
-	}
 
 	@Override
 	protected int getNumSkins() {

@@ -245,6 +245,10 @@ public class ConfigMobs {
 		return tradeItems.getOrDefault(item, new Pair<>(1, "all")).second().equals("air");
 	}
 
+	public boolean isFireTradeItem(Item item) {
+		return tradeItems.getOrDefault(item, new Pair<>(1, "all")).second().equals("fire");
+	}
+
 	public boolean isBisonFood(Item item) {
 		return bisonFoodList.containsKey(item);
 	}

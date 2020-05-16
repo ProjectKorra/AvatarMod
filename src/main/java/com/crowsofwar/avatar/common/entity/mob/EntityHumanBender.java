@@ -17,19 +17,21 @@
 package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
-import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.common.entity.ai.EntityAiGiveScroll;
-import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
+import com.crowsofwar.avatar.common.item.scroll.ItemScrollAll;
+import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.WildCardTradeList;
 import com.crowsofwar.gorecore.format.FormattedMessage;
+import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
+import com.google.common.base.Predicate;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
@@ -50,13 +52,11 @@ import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
-import java.util.function.Predicate;
+import java.util.Random;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_HUMANBENDER_NO_SCROLLS;
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_NEED_TRADE_ITEM;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
@@ -74,7 +74,6 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	 * The entity selector passed into the new AI methods.
 	 */
 	protected Predicate<Entity> targetSelector;
-	private EntityAiGiveScroll aiGiveScroll;
 	private boolean hasAttemptedTrade;
 	/**
 	 * The wizard's trades.
@@ -162,7 +161,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
 		// By default, wizards don't attack players unless the player has attacked them.
 		this.targetTasks.addTask(0, new EntityAINearestAttackableTarget<>(this, EntityLiving.class, 0,
-				false, true, (com.google.common.base.Predicate<? super EntityLiving>) this.targetSelector));
+				false, true, this.targetSelector));
 		addBendingTasks();
 
 	}
@@ -170,6 +169,11 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
+		if (nbt.hasKey("trades")) {
+			NBTTagCompound nbttagcompound1 = nbt.getCompoundTag("trades");
+			this.trades = new WildCardTradeList(nbttagcompound1);
+		}
+
 		setSkin(nbt.getInteger("Skin"));
 		setScrollsLeft(nbt.getInteger("Scrolls"));
 	}
@@ -177,20 +181,18 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
+		if (this.trades != null) {
+			GoreCoreNBTUtil.storeTagSafely(nbt, "trades", this.trades.getRecipiesAsTags());
+		}
+
 		nbt.setInteger("Skin", getSkin());
 		nbt.setInteger("Scrolls", getScrollsLeft());
 	}
 
 	protected abstract void addBendingTasks();
 
-	protected abstract ScrollType getScrollType();
-
 	protected boolean isTradeItem(Item item) {
 		return MOBS_CONFIG.isTradeItem(item);
-	}
-
-	protected int getTradeAmount(Item item) {
-		return MOBS_CONFIG.getTradeItemAmount(item);
 	}
 
 	protected abstract int getNumSkins();
@@ -283,42 +285,19 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		if (this.getLastAttackedEntity() != player) {
-			hasAttemptedTrade = false;
 
-			ItemStack stack = player.getHeldItem(hand);
-		/*int amount = stack.getCount();
-		int tradeAmount = getTradeAmount(stack.getItem());**/
-
-			if (this.isTradeItem(stack.getItem()) && !world.isRemote/* && amount >= tradeAmount**/) {
-
-				if (getScrollsLeft() > 0) {
-					if (aiGiveScroll.giveScrollTo(player)) {
-						System.out.println("Trade started");
-						// Take item
-						setScrollsLeft(getScrollsLeft() - 1);
-						if (!player.capabilities.isCreativeMode) {
-							stack.shrink(1);
-						}
-
-					}
-					hasAttemptedTrade = true;
-				} else {
-					MSG_HUMANBENDER_NO_SCROLLS.send(player);
-					AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onNpcNoScrolls());
-				}
-
-				return true;
-
-			} else if (!(this.isTradeItem(stack.getItem())) && !world.isRemote && !hasAttemptedTrade) {
-				getTradeFailMessage().send(player);
-				hasAttemptedTrade = true;
-				return true;
+		// Won't trade with a player that has attacked them.
+		if (this.isEntityAlive() && !this.isTrading() && !this.isChild() && !player.isSneaking()
+				&& this.getAttackTarget() != player) {
+			if (!this.world.isRemote) {
+				this.setCustomer(player);
+				player.displayVillagerTradeGui(this);
 			}
 
-
+			return true;
+		} else {
+			return false;
 		}
-		return true;
 	}
 
 	public void setInitialScrolls(int level) {
@@ -382,32 +361,9 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		}
 	}
 
-	@
-	@Override
-	public void writeEntityToNBT(NBTTagCompound nbt) {
 
-		super.writeEntityToNBT(nbt);
-
-		if (this.trades != null) {
-			NBTExtras.storeTagSafely(nbt, "trades", this.trades.getRecipiesAsTags());
-		}
-
-		nbt.setInteger("element", this.getElement().ordinal());
-		nbt.setInteger("skin", this.textureIndex);
-	}
-
-	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt) {
-
-		super.readEntityFromNBT(nbt);
-
-		if (nbt.hasKey("trades")) {
-			NBTTagCompound nbttagcompound1 = nbt.getCompoundTag("trades");
-			this.trades = new WildCardTradeList(nbttagcompound1);
-		}
-
-		this.setElement(Element.values()[nbt.getInteger("element")]);
-		this.textureIndex = nbt.getInteger("skin");
+	public BendingStyle getElement() {
+		return new Airbending();
 	}
 
 	@Override
@@ -470,14 +426,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	public MerchantRecipeList getRecipes(EntityPlayer par1EntityPlayer) {
 
 		if (this.trades == null) {
-
 			this.trades = new WildCardTradeList();
-
-			// All wizards will buy spell books
-			ItemStack anySpellBook = new ItemStack(WizardryItems.spell_book, 1, OreDictionary.WILDCARD_VALUE);
-			ItemStack crystalStack = new ItemStack(WizardryItems.magic_crystal, 5);
-
-			this.trades.add(new MerchantRecipe(anySpellBook, crystalStack));
 
 			this.addRandomRecipes(3);
 		}
@@ -559,6 +508,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		this.trades.addAll(merchantrecipelist);
 	}
 
+
 	// TODO: Switch all of this over to some kind of loot pool system?
 
 	@SuppressWarnings("unchecked")
@@ -567,6 +517,21 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 
 		Item item = MOBS_CONFIG.getTradeItems().get(AvatarUtils.getRandomNumberInRange(0,
 				MOBS_CONFIG.getTradeItems().size() - 1));
+		String element = getElement().getName();
+		switch (element) {
+			case "air":
+				while (MOBS_CONFIG.isFireTradeItem(item))
+					item = MOBS_CONFIG.getTradeItems().get(AvatarUtils.getRandomNumberInRange(0,
+							MOBS_CONFIG.getTradeItems().size() - 1));
+				break;
+			case "fire":
+				while (MOBS_CONFIG.isAirTradeItem(item))
+					item = MOBS_CONFIG.getTradeItems().get(AvatarUtils.getRandomNumberInRange(0,
+							MOBS_CONFIG.getTradeItems().size() - 1));
+				break;
+			default:
+				break;
+		}
 		int price;
 
 		if (item == null) {
@@ -590,130 +555,13 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	}
 
 	private ItemStack getRandomItemOfTier(int tier) {
+		ItemStack toSell;
+		boolean rand = new Random().nextBoolean();
+		if (rand)
+			toSell = new ItemStack(new ItemScrollAll(), tier);
+		else toSell = new ItemStack(new ItemScroll(Scrolls.getTypeFromElement(getElement().getName())), tier);
 
-		int randomiser;
-
-		// All enabled spells of the given tier
-		List<Spell> spells = Spell.getSpells(new Spell.TierElementFilter(tier, null, SpellProperties.Context.TRADES));
-		// All enabled spells of the given tier that match this wizard's element
-		List<Spell> specialismSpells = Spell.getSpells(new Spell.TierElementFilter(tier, this.getElement(), SpellProperties.Context.TRADES));
-
-		// Wizards don't sell scrolls
-		spells.removeIf(s -> !s.isEnabled(SpellProperties.Context.BOOK));
-		specialismSpells.removeIf(s -> !s.isEnabled(SpellProperties.Context.BOOK));
-
-		// This code is sooooooo much neater with the new filter system!
-		switch (tier) {
-
-			case NOVICE:
-				randomiser = rand.nextInt(5);
-				if (randomiser < 4 && !spells.isEmpty()) {
-					if (this.getElement() != Element.MAGIC && rand.nextInt(4) > 0 && !specialismSpells.isEmpty()) {
-						// This means it is more likely for spell books sold to be of the same element as the wizard if the
-						// wizard has an element.
-						return new ItemStack(WizardryItems.spell_book, 1,
-								specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
-					} else {
-						return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).metadata());
-					}
-				} else {
-					if (this.getElement() != Element.MAGIC && rand.nextInt(4) > 0) {
-						// This means it is more likely for wands sold to be of the same element as the wizard if the wizard
-						// has an element.
-						return new ItemStack(WizardryItems.getWand(tier, this.getElement()));
-					} else {
-						return new ItemStack(
-								WizardryItems.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
-					}
-				}
-
-			case APPRENTICE:
-				randomiser = rand.nextInt(Wizardry.settings.discoveryMode ? 12 : 10);
-				if (randomiser < 5 && !spells.isEmpty()) {
-					if (this.getElement() != Element.MAGIC && rand.nextInt(4) > 0 && !specialismSpells.isEmpty()) {
-						// This means it is more likely for spell books sold to be of the same element as the wizard if the
-						// wizard has an element.
-						return new ItemStack(WizardryItems.spell_book, 1,
-								specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
-					} else {
-						return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).metadata());
-					}
-				} else if (randomiser < 6) {
-					if (this.getElement() != Element.MAGIC && rand.nextInt(4) > 0) {
-						// This means it is more likely for wands sold to be of the same element as the wizard if the wizard
-						// has an element.
-						return new ItemStack(WizardryItems.getWand(tier, this.getElement()));
-					} else {
-						return new ItemStack(
-								WizardryItems.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
-					}
-				} else if (randomiser < 8) {
-					return new ItemStack(WizardryItems.arcane_tome, 1, 1);
-				} else if (randomiser < 10) {
-					EntityEquipmentSlot slot = WizardryUtilities.ARMOUR_SLOTS[rand.nextInt(WizardryUtilities.ARMOUR_SLOTS.length)];
-					if (this.getElement() != Element.MAGIC && rand.nextInt(4) > 0) {
-						// This means it is more likely for armour sold to be of the same element as the wizard if the
-						// wizard has an element.
-						return new ItemStack(WizardryItems.getArmour(this.getElement(), slot));
-					} else {
-						return new ItemStack(
-								WizardryItems.getArmour(Element.values()[rand.nextInt(Element.values().length)], slot));
-					}
-				} else {
-					// Don't need to check for discovery mode here since it is done above
-					return new ItemStack(WizardryItems.identification_scroll);
-				}
-
-			case ADVANCED:
-				randomiser = rand.nextInt(12);
-				if (randomiser < 5 && !spells.isEmpty()) {
-					if (this.getElement() != Element.MAGIC && rand.nextInt(4) > 0 && !specialismSpells.isEmpty()) {
-						// This means it is more likely for spell books sold to be of the same element as the wizard if the
-						// wizard has an element.
-						return new ItemStack(WizardryItems.spell_book, 1,
-								specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
-					} else {
-						return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).metadata());
-					}
-				} else if (randomiser < 6) {
-					if (this.getElement() != Element.MAGIC && rand.nextInt(4) > 0) {
-						// This means it is more likely for wands sold to be of the same element as the wizard if the wizard
-						// has an element.
-						return new ItemStack(WizardryItems.getWand(tier, this.getElement()));
-					} else {
-						return new ItemStack(
-								WizardryItems.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
-					}
-				} else if (randomiser < 8) {
-					return new ItemStack(WizardryItems.arcane_tome, 1, 2);
-				} else {
-					List<Item> upgrades = new ArrayList<Item>(WandHelper.getSpecialUpgrades());
-					randomiser = rand.nextInt(upgrades.size());
-					return new ItemStack(upgrades.get(randomiser));
-				}
-
-			case MASTER:
-				// If a regular wizard rolls a master trade, it can only be a simple master wand or a tome of arcana
-				randomiser = this.getElement() != Element.MAGIC ? rand.nextInt(8) : 5 + rand.nextInt(3);
-
-				if (randomiser < 5 && this.getElement() != Element.MAGIC && !specialismSpells.isEmpty()) {
-					// Master spells can only be sold by a specialist in that element.
-					return new ItemStack(WizardryItems.spell_book, 1,
-							specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
-
-				} else if (randomiser < 6) {
-					if (this.getElement() != Element.MAGIC && rand.nextInt(4) > 0) {
-						// Master elemental wands can only be sold by a specialist in that element.
-						return new ItemStack(WizardryItems.getWand(tier, this.getElement()));
-					} else {
-						return new ItemStack(WizardryItems.master_wand);
-					}
-				} else {
-					return new ItemStack(WizardryItems.arcane_tome, 1, 3);
-				}
-		}
-
-		return new ItemStack(Blocks.STONE);
+		return toSell;
 	}
 
 

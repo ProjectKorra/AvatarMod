@@ -66,6 +66,49 @@ public class Scrolls {
         return stack.getMetadata() + 1;
     }
 
+    @Nullable
+    public static ScrollType getTypeFromElement(BendingStyle style) {
+        if (style instanceof Airbending)
+            return ScrollType.AIR;
+        if (style instanceof Firebending)
+            return ScrollType.FIRE;
+        if (style instanceof Waterbending)
+            return ScrollType.WATER;
+        if (style instanceof Earthbending)
+            return ScrollType.EARTH;
+        if (style instanceof Combustionbending)
+            return ScrollType.COMBUSTION;
+        if (style instanceof Icebending)
+            return ScrollType.ICE;
+        if (style instanceof Sandbending)
+            return ScrollType.SAND;
+        if (style instanceof Lightningbending)
+            return ScrollType.LIGHTNING;
+        else return ScrollType.ALL;
+    }
+
+    public static ScrollType getTypeFromElement(String element) {
+        switch (element) {
+            case "air":
+                return ScrollType.AIR;
+            case "fire":
+                return ScrollType.FIRE;
+            case "water":
+                return ScrollType.WATER;
+            case "earth":
+                return ScrollType.EARTH;
+            case "combustion":
+                return ScrollType.COMBUSTION;
+            case "ice":
+                return ScrollType.ICE;
+            case "sand":
+                return ScrollType.SAND;
+            case "lightning":
+                return ScrollType.LIGHTNING;
+            default:
+                return ScrollType.ALL;
+        }
+    }
     public enum ScrollType {
         ALL(null), // 0
         EARTH(Earthbending.ID), // 1
