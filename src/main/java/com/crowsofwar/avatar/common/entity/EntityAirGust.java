@@ -32,7 +32,8 @@ import net.minecraft.world.World;
 
 public class EntityAirGust extends EntityOffensive {
 
-	private boolean piercesEnemies = false, slowProjectiles = false, destroyProjectiles = false, pushStone, pushIronTrapDoor, pushIronDoor;
+	private boolean piercesEnemies = false, slowProjectiles = false, destroyProjectiles = false,
+			pushStone, pushIronTrapDoor, pushIronDoor;
 
 	public EntityAirGust(World world) {
 		super(world);

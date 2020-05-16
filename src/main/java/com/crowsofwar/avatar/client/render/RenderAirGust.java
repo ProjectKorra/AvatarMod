@@ -20,17 +20,17 @@ public class RenderAirGust extends Render<EntityAirGust> {
 	@Override
 	public void doRender(EntityAirGust entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		World world = entity.world;
-		if (world.isRemote) {
+		if (world.isRemote && entity.getOwner() != null) {
 			for (int i = 0; i < 4; i++) {
 				AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
 				double spawnX = boundingBox.getCenter().x + world.rand.nextGaussian() / 10;
 				double spawnY = boundingBox.getCenter().y + world.rand.nextGaussian() / 10;
 				double spawnZ = boundingBox.getCenter().z + world.rand.nextGaussian() / 10;
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-						world.rand.nextGaussian() / 45).time(4).clr(0.85F, 0.85F, 0.85F)
+						world.rand.nextGaussian() / 45).time(4).clr(0.85F, 0.85F, 0.85F).spawnEntity(entity.getOwner())
 						.scale(entity.getAvgSize() * 1.25F).element(entity.getElement()).spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-						world.rand.nextGaussian() / 45).time(12).clr(0.85F, 0.85F, 0.85F)
+						world.rand.nextGaussian() / 45).time(12).clr(0.85F, 0.85F, 0.85F).spawnEntity(entity.getOwner())
 						.scale(entity.getAvgSize() * 1.25F).element(entity.getElement()).spawn(world);
 			}
 		}
