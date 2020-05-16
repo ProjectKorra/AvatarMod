@@ -79,47 +79,6 @@ public class EntityWaterbender extends EntityHumanBender {
 		return LOOT_TABLE;
 	}
 
-	@Override
-	public void setCustomer(@Nullable EntityPlayer player) {
-
-	}
-
-	@Nullable
-	@Override
-	public EntityPlayer getCustomer() {
-		return null;
-	}
-
-	@Nullable
-	@Override
-	public MerchantRecipeList getRecipes(EntityPlayer player) {
-		return null;
-	}
-
-	@Override
-	public void setRecipes(@Nullable MerchantRecipeList recipeList) {
-
-	}
-
-	@Override
-	public void useRecipe(MerchantRecipe recipe) {
-
-	}
-
-	@Override
-	public void verifySellingItem(ItemStack stack) {
-
-	}
-
-	@Override
-	public World getWorld() {
-		return null;
-	}
-
-	@Override
-	public BlockPos getPos() {
-		return null;
-	}
 
 	private class WaterbenderBenderComponent extends BenderEntityComponent {
 

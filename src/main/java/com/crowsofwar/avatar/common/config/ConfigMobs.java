@@ -59,16 +59,16 @@ public class ConfigMobs {
 	static {
 		//Default items that are tradeable for scrolls- the number is just random for now.
 		//TODO: Make the number correspond to the amount of the item the player has to hold
-		DEFAULT_TRADE_ITEMS.put("minecraft:diamond", 1);
-		DEFAULT_TRADE_ITEMS.put("minecraft:gold_ingot", 1);
+		DEFAULT_TRADE_ITEMS.put("minecraft:diamond", 2);
+		DEFAULT_TRADE_ITEMS.put("minecraft:gold_ingot", 2);
 		DEFAULT_TRADE_ITEMS.put("minecraft:emerald", 1);
 		//Required items for trading for a airbending scroll
-		AIRBENDING_TRADE_ITEMS.put("minecraft:elytra", 1);
-		AIRBENDING_TRADE_ITEMS.put("minecraft:dragon_breath", 1);
-		AIRBENDING_TRADE_ITEMS.put("minecraft:totem_of_undying", 1);
+		AIRBENDING_TRADE_ITEMS.put("minecraft:elytra", 4);
+		AIRBENDING_TRADE_ITEMS.put("minecraft:dragon_breath", 5);
+		AIRBENDING_TRADE_ITEMS.put("minecraft:totem_of_undying", 4);
 		//Required items for trading for a firebending scroll
-		FIREBENDING_TRADE_ITEMS.put("minecraft:magma_cream", 1);
-		FIREBENDING_TRADE_ITEMS.put("minecraft:blaze_rod", 1);
+		FIREBENDING_TRADE_ITEMS.put("minecraft:magma_cream", 2);
+		FIREBENDING_TRADE_ITEMS.put("minecraft:blaze_rod", 3);
 
 		// Wheat
 		DEFAULT_FOODS.put("minecraft:bread", 5);
@@ -239,16 +239,16 @@ public class ConfigMobs {
 		return tradeItems.containsKey(item);
 	}
 
-	public int getTradeItemAmount(Item item) {
-		return tradeItems.getOrDefault(item, 1);
+	public int getTradeItemTier(Item item) {
+		if (tradeItems.containsKey(item))
+			return tradeItems.getOrDefault(item, 1);
+		else if (airTradeItems.containsKey(item))
+			return airTradeItems.getOrDefault(item, 1);
+		else return fireTradeItems.getOrDefault(item, 1);
 	}
 
 	public boolean isAirTradeItem(Item item) {
 		return airTradeItems.containsKey(item);
-	}
-
-	public int getAirTradeItemAmount(Item item) {
-		return airTradeItems.getOrDefault(item, 1);
 	}
 
 	public boolean isFireTradeItem(Item item) {
