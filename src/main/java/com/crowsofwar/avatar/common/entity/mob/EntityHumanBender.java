@@ -16,14 +16,12 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
-import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.entity.ai.EntityAiGiveScroll;
-import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.WildCardTradeList;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -501,7 +499,9 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 
 			boolean itemAlreadySold = true;
 
-			Tier tier = Tier.NOVICE;
+			int tier = 1;
+			int maxTier = getLevel();
+			double tierInc = (maxTier - tier) / 3F;
 
 			while (itemAlreadySold) {
 
@@ -516,19 +516,20 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 
 				double tierIncreaseChance = 0.5 + 0.04 * (Math.max(this.trades.size() - 4, 0));
 
-				tier = Tier.NOVICE;
-
 				if (rand.nextDouble() < tierIncreaseChance) {
-					tier = Tier.APPRENTICE;
+					tier += tierInc;
 					if (rand.nextDouble() < tierIncreaseChance) {
-						tier = Tier.ADVANCED;
+						tier += tierInc;
 						if (rand.nextDouble() < tierIncreaseChance * 0.6) {
-							tier = Tier.MASTER;
+							tier += tierInc;
 						}
 					}
 				}
+				tier = Math.min(tier, maxTier);
 
-				itemToSell = this.getRandomItemOfTier(tier);
+				int finalTier = (Math.min(AvatarUtils.getRandomNumberInRange(1, tier) +
+						(int) tierIncreaseChance * AvatarUtils.getRandomNumberInRange(0, 3), maxTier));
+				itemToSell = this.getRandomItemOfTier(AvatarUtils.getRandomNumberInRange(1, finalTier));
 
 				for (Object recipe : merchantrecipelist) {
 					if (ItemStack.areItemStacksEqual(((MerchantRecipe) recipe).getItemToSell(), itemToSell))
@@ -546,10 +547,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 			// Don't know how it can ever be empty here, but it's a failsafe.
 			if (itemToSell.isEmpty()) return;
 
-			ItemStack secondItemToBuy = tier == Tier.MASTER ? new ItemStack(WizardryItems.astral_diamond)
-					: new ItemStack(WizardryItems.magic_crystal, tier.ordinal() * 3 + 1 + rand.nextInt(4));
-
-			merchantrecipelist.add(new MerchantRecipe(this.getRandomPrice(tier), secondItemToBuy, itemToSell));
+			merchantrecipelist.add(new MerchantRecipe(this.getRandomPrice(tier), this.getRandomPrice(tier), itemToSell));
 		}
 
 		Collections.shuffle(merchantrecipelist);
@@ -567,25 +565,28 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	private ItemStack getRandomPrice(int tier) {
 
 
-		Map<Pair<ResourceLocation, Short>, Integer> map = Wizardry.settings.currencyItems;
-		// This isn't that efficient but it's not called very often really so it doesn't matter
-		Pair<ResourceLocation, Short> itemName = map.keySet().toArray(new Pair[0])[rand.nextInt(map.size())];
-		Item item = Item.REGISTRY.getObject(itemName.getLeft());
-		short meta = itemName.getRight();
-		int value;
+		Item item = MOBS_CONFIG.getTradeItems().get(AvatarUtils.getRandomNumberInRange(0,
+				MOBS_CONFIG.getTradeItems().size() - 1));
+		int price;
 
 		if (item == null) {
 			AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Invalid item in currency items");
 			item = Items.EMERALD; // Fallback item
-			value = 6;
+			price = 2;
 		} else {
-			value = map.get(itemName);
+			price = MOBS_CONFIG.getTradeItemTier(item);
+			if (tier <= price)
+				price = 1;
+				//This doubles the amount required per tier, as 2 scrolls of the previous tier
+				//are required to make 1 scroll of the next tier.
+			else price = (int) Math.pow(2, tier - price);
+
 		}
 
 		// ((tier.ordinal() + 1) * 16 + rand.nextInt(6)) gives a 'value' for the item being bought
 		// This is then divided by the value of the currency item to give a price
 		// The absolute maximum stack size that can result from this calculation (with value = 1) is 64.
-		return new ItemStack(item, value);
+		return new ItemStack(item, price);
 	}
 
 	private ItemStack getRandomItemOfTier(int tier) {
