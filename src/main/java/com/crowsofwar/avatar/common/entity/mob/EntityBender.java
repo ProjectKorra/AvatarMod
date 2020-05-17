@@ -17,23 +17,31 @@
 package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+
+import javax.annotation.Nullable;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
  * @author CrowsOfWar
  */
-public abstract class EntityBender extends EntityCreature {
+public abstract class EntityBender extends EntityCreature implements IEntityAdditionalSpawnData {
 
 	private Bender bender;
 	private static final DataParameter<Integer> SYNC_LEVEL = EntityDataManager
@@ -64,9 +72,9 @@ public abstract class EntityBender extends EntityCreature {
 		// Initialize the bender here (instead of constructor) so the bender will be ready for
 		// initEntityAI - Constructor is called AFTER initEntityAI
 		bender = initBender();
-		dataManager.register(SYNC_LEVEL, AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
+		dataManager.register(SYNC_LEVEL, 1);
 		applyAbilityLevels(getLevel());
-		setElement();
+		getData().addBending(getElement());
 	}
 
 	@Override
@@ -104,7 +112,24 @@ public abstract class EntityBender extends EntityCreature {
 	}
 
 
-	public void setElement() {
+	public BendingStyle getElement() {
+		return new Airbending();
 	}
 
+	@Nullable
+	@Override
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
+		setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
+		return super.onInitialSpawn(difficulty, livingdata);
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer) {
+		buffer.writeInt(getLevel());
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf additionalData) {
+		setLevel(additionalData.readInt());
+	}
 }

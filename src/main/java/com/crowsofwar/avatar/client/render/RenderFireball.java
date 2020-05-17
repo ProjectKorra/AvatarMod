@@ -78,7 +78,7 @@ public class RenderFireball extends Render<EntityFireball> {
 		int k = i / 16384;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
 
-		/*renderCube(x, y, z, //
+		renderCube(x, y, z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
 				.5f, //
 				ticks / 25F, ticks / 25f, ticks / 25F);
@@ -93,10 +93,9 @@ public class RenderFireball extends Render<EntityFireball> {
 		popMatrix();
 
 		//  }
-		**/
 		World world = entity.world;
-		if (world.isRemote) {
-			for (double h = 0; h < entity.width; h += 0.15) {
+		if (world.isRemote && entity.getOwner() != null) {
+			for (double h = 0; h < entity.width; h += 0.3) {
 				Random random = new Random();
 				AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
 				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
@@ -104,13 +103,13 @@ public class RenderFireball extends Render<EntityFireball> {
 				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
 						world.rand.nextGaussian() / 60).time(12).clr(255, 10, 5)
-						.scale(entity.getSize() * 0.03125F * 2).element(entity.getElement())
+						.scale(entity.getSize() * 0.03125F).element(entity.getElement()).spawnEntity(entity.getOwner())
 						.face(entity.rotationYaw + rotation * (float) world.rand.nextGaussian(), entity.rotationPitch + rotation * (float) world.rand.nextGaussian())
 						.spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
 						world.rand.nextGaussian() / 60).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
 						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
-						.scale(entity.getSize() * 0.03125F * 2).element(entity.getElement())
+						.scale(entity.getSize() * 0.03125F).element(entity.getElement()).spawnEntity(entity.getOwner())
 						.face(entity.rotationYaw + rotation * (float) world.rand.nextGaussian(), entity.rotationPitch + rotation * (float) world.rand.nextGaussian())
 						.spawn(world);
 			}

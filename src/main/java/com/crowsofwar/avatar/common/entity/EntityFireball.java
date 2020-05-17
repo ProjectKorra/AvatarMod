@@ -47,6 +47,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Optional;
@@ -63,7 +64,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
  * @author CrowsOfWar
  */
 @Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
-public class EntityFireball extends AvatarEntity implements IGlowingEntity {
+public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
 	public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityFireball.class,
 			DataSerializers.VARINT);
@@ -100,22 +101,7 @@ public class EntityFireball extends AvatarEntity implements IGlowingEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
-		/*if (world.isRemote) {
-			for (double i = 0; i < width; i += 0.05) {
-				Random random = new Random();
-				AxisAlignedBB boundingBox = getEntityBoundingBox();
-				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(12).clr(255, 10, 5)
-						.scale(getSize() * 0.03125F * 2).element(getElement()).spawn(world);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
-						.scale(getSize() * 0.03125F * 2).element(getElement()).spawn(world);
-			}
-		}**/
+
 		if (getBehavior() == null) {
 			this.setBehavior(new FireballBehavior.Thrown());
 		}
@@ -179,13 +165,6 @@ public class EntityFireball extends AvatarEntity implements IGlowingEntity {
 		return getBehavior() instanceof FireballBehavior.PlayerControlled ? getOwner() : null;
 	}
 
-	public float getDamage() {
-		return damage;
-	}
-
-	public void setDamage(float damage) {
-		this.damage = damage;
-	}
 
 	public int getSize() {
 		return dataManager.get(SYNC_SIZE);
@@ -196,56 +175,29 @@ public class EntityFireball extends AvatarEntity implements IGlowingEntity {
 	}
 
 	@Override
-	public void onCollideWithEntity(Entity entity) {
-		if (entity instanceof AvatarEntity) {
-			((AvatarEntity) entity).onFireContact();
-		}
-		if (canCollideWith(entity) && entity != getOwner() && getBehavior() instanceof FireballBehavior.Thrown) {
-			float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
-
-			explosionSize *= getSize() / 15f;
-			explosionSize += getPowerRating() * 2.0 / 100;
-			Explode(explosionSize);
-		}
+	public Vec3d getExplosionKnockbackMult() {
+		return super.getExplosionKnockbackMult().scale(STATS_CONFIG.fireballSettings.explosionSize * getSize() / 15F + getPowerRating() * 0.02);
 	}
 
 	@Override
-	public boolean onCollideWithSolid() {
+	public double getExplosionHitboxGrowth() {
+		return STATS_CONFIG.fireballSettings.explosionSize * getSize() / 15F + getPowerRating() * 0.02;
+	}
 
-		if (getBehavior() instanceof FireballBehavior.Thrown) {
-			float explosionSize = STATS_CONFIG.fireballSettings.explosionSize;
+	@Override
+	public void applyElementalContact(AvatarEntity entity) {
+		super.applyElementalContact(entity);
+		entity.onFireContact();
+	}
 
-			explosionSize *= getSize() / 15f;
-			explosionSize += getPowerRating() * 2.0 / 100;
-			boolean destroyObsidian = false;
+	@Override
+	public boolean shouldExplode() {
+		return getBehavior() instanceof FireballBehavior.PlayerControlled;
+	}
 
-			if (getOwner() != null && !world.isRemote) {
-				if (getAbility() instanceof AbilityFireball) {
-					AbilityData abilityData = BendingData.get(getOwner()).getAbilityData("fireball");
-					if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
-						destroyObsidian = true;
-					}
-				}
-
-			}
-
-			Explode(explosionSize);
-
-			if (destroyObsidian) {
-				for (EnumFacing dir : EnumFacing.values()) {
-					BlockPos pos = getPosition().offset(dir);
-					if (world.getBlockState(pos).getBlock() == Blocks.OBSIDIAN) {
-						world.destroyBlock(pos, true);
-					}
-				}
-			}
-
-			setDead();
-			removeStatCtrl();
-
-		}
-		return true;
-
+	@Override
+	public boolean shouldDissipate() {
+		return false;
 	}
 
 	@Override
@@ -303,88 +255,6 @@ public class EntityFireball extends AvatarEntity implements IGlowingEntity {
 		return true;
 	}
 
-	public void Explode(float ExplosionSize) {
-		if (world instanceof WorldServer) {
-			float speed = ExplosionSize / 20;
-			float hitBox = ExplosionSize + 0.5F;
-			if (getOwner() != null) {
-				BendingData data = BendingData.get(getOwner());
-				AbilityData abilityData = data.getAbilityData("fireball");
-				if (abilityData.getLevel() == 1) {
-					speed = ExplosionSize / 8;
-					hitBox = ExplosionSize + 1.5F;
-				}
-				if (abilityData.getLevel() >= 2) {
-					speed = ExplosionSize / 4;
-					hitBox = ExplosionSize + 4;
-				}
-
-				WorldServer World = (WorldServer) this.world;
-				World.spawnParticle(AvatarParticles.getParticleFlames(), posX, posY, posZ, getSize() * 8, 0, 0, 0,
-						getSize() / 25F);
-				World.spawnParticle(EnumParticleTypes.LAVA, posX, posY, posZ, (int) (getSize() * 3.5), 0, 0, 0, speed);
-				world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GHAST_SHOOT,
-						SoundCategory.BLOCKS, 4.0F,
-						(1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-				List<Entity> collided = world.getEntitiesInAABBexcluding(this,
-						getEntityBoundingBox().grow(hitBox, hitBox, hitBox), entity -> entity != getOwner());
-
-				if (!collided.isEmpty()) {
-					for (Entity entity : collided) {
-						if (entity != getOwner() && entity != null && getOwner() != null) {
-							if (canCollideWith(entity) && entity != getOwner()) {
-								damageEntity(entity);
-
-								//Divide the result of the position difference to make entities fly
-								//further the closer they are to the player.
-								double dist = (hitBox - entity.getDistance(entity)) > 1 ? (hitBox - entity.getDistance(entity)) : 1;
-								Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
-								velocity = velocity.dividedBy(60).times(dist).withY(hitBox / 50);
-								velocity = velocity.times(ExplosionSize);
-
-								double x = (velocity.x());
-								double y = (velocity.y()) > 0 ? velocity.y() : 0.25F;
-								double z = (velocity.z());
-
-								if (!entity.world.isRemote) {
-									entity.motionX += velocity.x();
-									entity.motionY += velocity.y();
-									entity.motionZ += velocity.z();
-
-									if (collided instanceof AvatarEntity) {
-										if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
-												&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
-											AvatarEntity avent = (AvatarEntity) collided;
-											avent.addVelocity(x, y, z);
-											avent.onFireContact();
-										}
-										entity.isAirBorne = true;
-										AvatarUtils.afterVelocityAdded(entity);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		setDead();
-	}
-
-	public void damageEntity(Entity entity) {
-		if (getOwner() != null) {
-			AbilityData abilityData;
-			if (getAbility() instanceof AbilityFireball) {
-				abilityData = AbilityData.get(getOwner(), getAbility().getName());
-				DamageSource ds = AvatarDamageSource.causeFireballDamage(entity, getOwner());
-				if (entity.attackEntityFrom(ds, damage)) {
-					abilityData.addXp(SKILLS_CONFIG.fireballHit);
-					BattlePerformanceScore.addMediumScore(getOwner());
-
-				}
-			}
-		}
-	}
 
 	@SideOnly(Side.CLIENT)
 	@Override

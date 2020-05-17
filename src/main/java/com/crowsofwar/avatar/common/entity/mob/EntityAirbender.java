@@ -178,10 +178,4 @@ public class EntityAirbender extends EntityHumanBender {
 		return textcomponentstring;
 	}
 
-
-	@Override
-	public void setElement() {
-		super.setElement();
-		getData().addBending(new Airbending());
-	}
 }

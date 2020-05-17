@@ -1016,12 +1016,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	}
 
 	@Override
-	public void setElement() {
-		super.setElement();
-		getData().addBending(new Airbending());
-	}
-
-	@Override
 	public void applyAbilityLevels(int level) {
 
 	}

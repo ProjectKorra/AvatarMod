@@ -17,23 +17,16 @@
 package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.TickHandler;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
-import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.EnumHand;
@@ -41,8 +34,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.village.MerchantRecipe;
-import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -52,8 +43,6 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_NEED_FIRE_TRADE_ITEM;
-import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAMETHROWER;
 
 /**
  * @author CrowsOfWar
@@ -83,60 +72,59 @@ public class EntityFirebender extends EntityHumanBender {
 			case 2:
 				getData().getAbilityData("fireball").setLevel(-1);
 				getData().getAbilityData("flamethrower").setLevel(0);
-				getData().getAbilityData("fire_blast").setLevel(0);
+				getData().getAbilityData("flame_strike").setLevel(0);
 				getData().getAbilityData("fire_shot").setLevel(1);
-				getData().getAbilityData("inferno_punch").setLevel(-1);
+			//	getData().getAbilityData("inferno_punch").setLevel(-1);
 				break;
 			case 3:
 				getData().getAbilityData("fireball").setLevel(-1);
 				getData().getAbilityData("flamethrower").setLevel(0);
-				getData().getAbilityData("fire_blast").setLevel(1);
+				getData().getAbilityData("flame_strike").setLevel(1);
 				getData().getAbilityData("fire_shot").setLevel(1);
-				getData().getAbilityData("inferno_punch").setLevel(-1);
+			//	getData().getAbilityData("inferno_punch").setLevel(-1);
 				break;
 			case 4:
 				getData().getAbilityData("fireball").setLevel(0);
 				getData().getAbilityData("flamethrower").setLevel(1);
-				getData().getAbilityData("fire_blast").setLevel(1);
+				getData().getAbilityData("flame_strike").setLevel(1);
 				getData().getAbilityData("fire_shot").setLevel(2);
-				getData().getAbilityData("inferno_punch").setLevel(0);
+			//	getData().getAbilityData("inferno_punch").setLevel(0);
 				break;
 			case 5:
 				getData().getAbilityData("fireball").setLevel(1);
 				getData().getAbilityData("flamethrower").setLevel(2);
-				getData().getAbilityData("fire_blast").setLevel(2);
+				getData().getAbilityData("flame_strike").setLevel(2);
 				getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-				getData().getAbilityData("inferno_punch").setLevel(1);
+			//	getData().getAbilityData("inferno_punch").setLevel(1);
 				break;
 			case 6:
 				getData().getAbilityData("fireball").setLevel(2);
 				getData().getAbilityData("flamethrower").setLevel(2);
-				getData().getAbilityData("fire_blast").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+				getData().getAbilityData("flame_strike").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
 				getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-				getData().getAbilityData("inferno_punch").setLevel(1);
+			//	getData().getAbilityData("inferno_punch").setLevel(1);
 				break;
 			case 7:
 				getData().getAbilityData("fireball").setPath(fireballPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
 				getData().getAbilityData("flamethrower").setPath(flamethrowerPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-				getData().getAbilityData("fire_blast").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+				getData().getAbilityData("flame_strike").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
 				getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-				getData().getAbilityData("inferno_punch").setLevel(2);
+			//	getData().getAbilityData("inferno_punch").setLevel(2);
 				break;
 			default:
 				getData().getAbilityData("fireball").setLevel(-1);
 				getData().getAbilityData("flamethrower").setLevel(-1);
-				getData().getAbilityData("fire_blast").setLevel(0);
+				getData().getAbilityData("flame_strike").setLevel(0);
 				getData().getAbilityData("fire_shot").setLevel(0);
-				getData().getAbilityData("inferno_punch").setLevel(-1);
+			//	getData().getAbilityData("inferno_punch").setLevel(-1);
 				break;
 		}
 
 	}
 
 	@Override
-	public void setElement() {
-		super.setElement();
-		getData().addBending(new Firebending());
+	public BendingStyle getElement() {
+		return new Firebending();
 	}
 
 	@Override

@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.util.WildCardTradeList;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
 import com.google.common.base.Predicate;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
@@ -52,16 +53,17 @@ import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
-import java.util.Random;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_NEED_TRADE_ITEM;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
- * @author CrowsOfWar
+ * @author CrowsOfWar, FavouriteDraogn
  */
 public abstract class EntityHumanBender extends EntityBender implements IMerchant, INpc {
 
@@ -114,7 +116,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		dataManager.register(SYNC_SKIN, (int) (rand.nextDouble() * getNumSkins()));
+		dataManager.register(SYNC_SKIN, AvatarUtils.getRandomNumberInRange(1, getNumSkins()));
 		dataManager.register(SYNC_SCROLLS_LEFT, getLevel());
 		setInitialScrolls(getLevel());
 	}
@@ -220,8 +222,22 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
 		setEquipmentBasedOnDifficulty(difficulty);
 		setHomePosAndDistance(getPosition(), 20);
+		setSkin((int) (rand.nextDouble() * getNumSkins()));
+		setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
 
 		return livingdata;
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer) {
+		super.writeSpawnData(buffer);
+		buffer.writeInt(getSkin());
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf additionalData) {
+		super.readSpawnData(additionalData);
+		setSkin(additionalData.readInt());
 	}
 
 	@Override
@@ -293,6 +309,8 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 				this.setCustomer(player);
 				player.displayVillagerTradeGui(this);
 			}
+			if (trades != null)
+				System.out.println(trades.get(0).getItemToSell());
 
 			return true;
 		} else {
@@ -367,6 +385,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void setRecipes(@Nullable MerchantRecipeList recipeList) {
 		//Nothing goes here
 	}
@@ -377,36 +396,6 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		merchantrecipe.incrementToolUses();
 		this.livingSoundTime = -this.getTalkInterval();
 		this.playSound(SoundEvents.ENTITY_VILLAGER_YES, this.getSoundVolume(), this.getSoundPitch());
-
-		/* if (this.getCustomer() != null) {
-
-			if (merchantrecipe.getItemToSell().getItem() instanceof ItemScroll) {
-
-				Spell spell = Spell.byMetadata(merchantrecipe.getItemToSell().getItemDamage());
-
-				if (spell.getTier() == Tier.MASTER)
-					WizardryAdvancementTriggers.buy_master_spell.triggerFor(this.getCustomer());
-
-				// Spell discovery (a lot of this is the same as in the event handler)
-				WizardData data = WizardData.get(this.getCustomer());
-
-				if (data != null) {
-
-					if (!MinecraftForge.EVENT_BUS.post(new DiscoverSpellEvent(this.getCustomer(), spell,
-							DiscoverSpellEvent.Source.PURCHASE)) && data.discoverSpell(spell)) {
-
-						data.sync();
-
-						if (!world.isRemote && !this.getCustomer().isCreative() && Wizardry.settings.discoveryMode) {
-							// Sound and text only happen server-side, in survival, with discovery mode on
-							WizardryUtilities.playSoundAtPlayer(this.getCustomer(), WizardrySounds.MISC_DISCOVER_SPELL, 1.25f, 1);
-							this.getCustomer().sendMessage(new TextComponentTranslation("spell.discover",
-									spell.getNameForTranslationFormatted()));
-						}
-					}
-				}
-			}
-		}**/
 
 		// Changed to a 4 in 5 chance of unlocking a new recipe.
 		if (this.rand.nextInt(5) > 0) {
@@ -427,7 +416,10 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 
 		if (this.trades == null) {
 			this.trades = new WildCardTradeList();
-
+			//All benders will sell their element scroll for universal scrolls
+			ItemStack universalScroll = new ItemStack(new ItemScrollAll(), 1, 1);
+			ItemStack elementScroll = new ItemStack(new ItemScroll(Scrolls.getTypeFromElement(getElement().getName())), 1, 1);
+			this.trades.add(new MerchantRecipe(universalScroll, elementScroll));
 			this.addRandomRecipes(3);
 		}
 
@@ -496,6 +488,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 			// Don't know how it can ever be empty here, but it's a failsafe.
 			if (itemToSell.isEmpty()) return;
 
+			System.out.println("Item: " + itemToSell);
 			merchantrecipelist.add(new MerchantRecipe(this.getRandomPrice(tier), this.getRandomPrice(tier), itemToSell));
 		}
 
@@ -513,7 +506,6 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 
 	@SuppressWarnings("unchecked")
 	private ItemStack getRandomPrice(int tier) {
-
 
 		Item item = MOBS_CONFIG.getTradeItems().get(AvatarUtils.getRandomNumberInRange(0,
 				MOBS_CONFIG.getTradeItems().size() - 1));
@@ -540,7 +532,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 			price = 2;
 		} else {
 			price = MOBS_CONFIG.getTradeItemTier(item);
-			if (tier <= price)
+			if (tier < price)
 				price = 1;
 				//This doubles the amount required per tier, as 2 scrolls of the previous tier
 				//are required to make 1 scroll of the next tier.
@@ -556,10 +548,10 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 
 	private ItemStack getRandomItemOfTier(int tier) {
 		ItemStack toSell;
-		boolean rand = new Random().nextBoolean();
+		boolean rand = world.rand.nextBoolean();
 		if (rand)
-			toSell = new ItemStack(new ItemScrollAll(), tier);
-		else toSell = new ItemStack(new ItemScroll(Scrolls.getTypeFromElement(getElement().getName())), tier);
+			toSell = new ItemStack(new ItemScrollAll(), 1, tier);
+		else toSell = new ItemStack(new ItemScroll(Scrolls.getTypeFromElement(getElement().getName())), 1, tier);
 
 		return toSell;
 	}
