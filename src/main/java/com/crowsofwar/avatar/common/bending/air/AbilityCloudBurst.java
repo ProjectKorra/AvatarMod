@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -114,7 +113,8 @@ public class AbilityCloudBurst extends Ability {
 			cloudball.setXp(xp);
 			cloudball.setAbility(this);
 			cloudball.setElement(new Airbending());
-			world.spawnEntity(cloudball);
+			if (!world.isRemote)
+				world.spawnEntity(cloudball);
 
 			data.addStatusControl(THROW_CLOUDBURST);
 		}

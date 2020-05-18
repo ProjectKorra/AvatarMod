@@ -56,7 +56,8 @@ public class StatCtrlThrowFireball extends StatusControl {
 			fireball.setBehavior(new FireballBehavior.Thrown());
 			fireball.rotationPitch = entity.rotationPitch;
 			fireball.rotationYaw = entity.rotationYaw;
-			fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+			if (!world.isRemote)
+				fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
 
 		}
 

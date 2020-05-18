@@ -89,21 +89,21 @@ public class Scrolls {
 
     public static ScrollType getTypeFromElement(String element) {
         switch (element) {
-            case "air":
+            case "airbending":
                 return ScrollType.AIR;
-            case "fire":
+            case "firebending":
                 return ScrollType.FIRE;
-            case "water":
+            case "waterbending":
                 return ScrollType.WATER;
-            case "earth":
+            case "earthbending":
                 return ScrollType.EARTH;
-            case "combustion":
+            case "combustionbending":
                 return ScrollType.COMBUSTION;
-            case "ice":
+            case "icebending":
                 return ScrollType.ICE;
-            case "sand":
+            case "sandbending":
                 return ScrollType.SAND;
-            case "lightning":
+            case "lightningbending":
                 return ScrollType.LIGHTNING;
             default:
                 return ScrollType.ALL;

@@ -192,7 +192,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
 	@Override
 	public boolean shouldExplode() {
-		return getBehavior() instanceof FireballBehavior.PlayerControlled;
+		return getBehavior() instanceof FireballBehavior.Thrown;
 	}
 
 	@Override

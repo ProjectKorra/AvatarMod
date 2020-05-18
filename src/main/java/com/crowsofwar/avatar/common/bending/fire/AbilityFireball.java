@@ -35,7 +35,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_FIREBALL;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
@@ -63,7 +63,7 @@ public class AbilityFireball extends Ability {
 		if (bender.consumeChi(STATS_CONFIG.chiFireball) && !data.hasStatusControl(THROW_FIREBALL)) {
 
 			Vector target;
-			if (ctx.isLookingAtBlock()) {
+			if (ctx.isLookingAtBlock() && !world.isRemote) {
 				target = ctx.getLookPos();
 			} else {
 				Vector playerPos = getEyePos(entity);
@@ -99,10 +99,12 @@ public class AbilityFireball extends Ability {
 			fireball.setPowerRating(bender.calcPowerRating(Firebending.ID));
 			fireball.setSize(size);
 			fireball.setAbility(this);
+			fireball.setFireTime(size / 5);
+			fireball.setXp(SKILLS_CONFIG.fireballHit);
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(20);
 
 
-			EntityLightOrb orb = new EntityLightOrb(world);
+			/*EntityLightOrb orb = new EntityLightOrb(world);
 			orb.setOwner(entity);
 			orb.setAbility(this);
 			//orb.setColourShiftRange(0.2F);
@@ -116,11 +118,12 @@ public class AbilityFireball extends Ability {
 			orb.setType(CLIENT_CONFIG.fireRenderSettings.fireBallSphere ? EntityLightOrb.EnumType.TEXTURE_SPHERE : EntityLightOrb.EnumType.TEXTURE_CUBE);
 			orb.setTexture("avatarmod:textures/entity/fireball/frame_%number%.png");
 			orb.setTextureFrameCount(30);
-			world.spawnEntity(orb);
+			world.spawnEntity(orb);**/
 
 
 			data.addStatusControl(THROW_FIREBALL);
-			world.spawnEntity(fireball);
+			if (!world.isRemote)
+				world.spawnEntity(fireball);
 
 		}
 

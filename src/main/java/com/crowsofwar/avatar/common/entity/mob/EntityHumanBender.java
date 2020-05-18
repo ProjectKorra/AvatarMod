@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity.mob;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import com.crowsofwar.avatar.common.item.scroll.ItemScrollAll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
@@ -28,6 +29,7 @@ import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
 import com.google.common.base.Predicate;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
@@ -307,6 +309,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 				&& this.getAttackTarget() != player) {
 			if (!this.world.isRemote) {
 				this.setCustomer(player);
+				Unpooled.buffer().clear();
 				player.displayVillagerTradeGui(this);
 			}
 			if (trades != null)
@@ -414,12 +417,17 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	@Override
 	public MerchantRecipeList getRecipes(EntityPlayer par1EntityPlayer) {
 
-		if (this.trades == null) {
+		if (this.trades == null && !world.isRemote) {
 			this.trades = new WildCardTradeList();
 			//All benders will sell their element scroll for universal scrolls
-			ItemStack universalScroll = new ItemStack(new ItemScrollAll(), 1, 1);
-			ItemStack elementScroll = new ItemStack(new ItemScroll(Scrolls.getTypeFromElement(getElement().getName())), 1, 1);
-			this.trades.add(new MerchantRecipe(universalScroll, elementScroll));
+			ItemStack universalScroll = new ItemStack(new ItemScrollAll(), 1, 2);
+			ItemStack elementScroll = new ItemStack(new ItemScroll(Scrolls.getTypeFromElement(getElement().getName())), 1, 2);
+			ItemStack staff;
+			if (getElement() instanceof Airbending)
+				staff = new ItemStack(AvatarItems.airbenderStaff, 1);
+			else staff = new ItemStack(new ItemScrollAll(), 2, 1);
+			System.out.println(elementScroll);
+			this.trades.add(new MerchantRecipe(universalScroll, elementScroll, staff));
 			this.addRandomRecipes(3);
 		}
 
@@ -442,6 +450,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 
 			int tier = 1;
 			int maxTier = getLevel();
+			int finalTier = tier;
 			double tierInc = (maxTier - tier) / 3F;
 
 			while (itemAlreadySold) {
@@ -468,8 +477,8 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 				}
 				tier = Math.min(tier, maxTier);
 
-				int finalTier = (Math.min(AvatarUtils.getRandomNumberInRange(1, tier) +
-						(int) tierIncreaseChance * AvatarUtils.getRandomNumberInRange(0, 3), maxTier));
+				finalTier = (Math.min(AvatarUtils.getRandomNumberInRange(Math.max(tier - 1, 1), tier) +
+						(int) tierIncreaseChance * AvatarUtils.getRandomNumberInRange(1, 4), maxTier));
 				itemToSell = this.getRandomItemOfTier(AvatarUtils.getRandomNumberInRange(1, finalTier));
 
 				for (Object recipe : merchantrecipelist) {
@@ -489,7 +498,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 			if (itemToSell.isEmpty()) return;
 
 			System.out.println("Item: " + itemToSell);
-			merchantrecipelist.add(new MerchantRecipe(this.getRandomPrice(tier), this.getRandomPrice(tier), itemToSell));
+			merchantrecipelist.add(new MerchantRecipe(this.getRandomPrice(finalTier), this.getRandomPrice(finalTier), itemToSell));
 		}
 
 		Collections.shuffle(merchantrecipelist);
@@ -511,12 +520,12 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 				MOBS_CONFIG.getTradeItems().size() - 1));
 		String element = getElement().getName();
 		switch (element) {
-			case "air":
+			case "airbending":
 				while (MOBS_CONFIG.isFireTradeItem(item))
 					item = MOBS_CONFIG.getTradeItems().get(AvatarUtils.getRandomNumberInRange(0,
 							MOBS_CONFIG.getTradeItems().size() - 1));
 				break;
-			case "fire":
+			case "firebending":
 				while (MOBS_CONFIG.isAirTradeItem(item))
 					item = MOBS_CONFIG.getTradeItems().get(AvatarUtils.getRandomNumberInRange(0,
 							MOBS_CONFIG.getTradeItems().size() - 1));
@@ -550,8 +559,8 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		ItemStack toSell;
 		boolean rand = world.rand.nextBoolean();
 		if (rand)
-			toSell = new ItemStack(new ItemScrollAll(), 1, tier);
-		else toSell = new ItemStack(new ItemScroll(Scrolls.getTypeFromElement(getElement().getName())), 1, tier);
+			toSell = new ItemStack(new ItemScrollAll(), 1, tier - 1);
+		else toSell = new ItemStack(new ItemScroll(Scrolls.getTypeFromElement(getElement().getName())), 1, tier - 1);
 
 		return toSell;
 	}

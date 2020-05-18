@@ -22,21 +22,15 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.Objects;
-
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -95,49 +89,11 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 
 			entity.addVelocity(Vector.DOWN.times(1F / 40));
 
-			World world = entity.world;
-			if (!entity.isDead && !world.isRemote) {
-				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
-						entity.getExpandedHitbox());
-				if (!collidedList.isEmpty()) {
-					Entity collided = collidedList.get(0);
-					if (entity.canCollideWith(collided) && collided != entity.getOwner()) {
-						collision(collided, entity);
-					}
-				}
-			}
 
 			return this;
 
 		}
 
-		private void collision(Entity collided, EntityFireball entity) {
-
-			if (entity.canDamageEntity(collided)) {
-				collided.setFire(STATS_CONFIG.fireballSettings.fireTime);
-
-			}
-			if (entity.canCollideWith(collided) && collided.canBeCollidedWith()) {
-
-				//Velocity doesn't work here for some reason??
-				Vector motion = entity.velocity().dividedBy(20);
-				motion = motion.times(motion.magnitude());
-				//Default size is 16, 16 * 0.03125 is 0.5F, which is the size the fireball is at level 1.
-				motion = motion.times(entity.getSize() * 0.03125F);
-				motion = motion.times(STATS_CONFIG.fireballSettings.push).withY(0.1);
-				collided.motionX += motion.x();
-				collided.motionY += motion.y();
-				collided.motionZ += motion.z();
-				AvatarUtils.afterVelocityAdded(collided);
-
-				// Remove the fireball & spawn particles
-				if (!entity.world.isRemote) {
-					entity.onCollideWithSolid();
-				}
-				entity.setDead();
-
-			}
-		}
 
 		@Override
 		public void fromBytes(PacketBuffer buf) {
@@ -170,25 +126,27 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 
 			BendingData data = Objects.requireNonNull(Bender.get(owner)).getData();
 
-			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
+			if (!entity.world.isRemote) {
+				Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
 
-			Vector target;
-			if (res.hitSomething()) {
-				target = res.getPosPrecise();
-			} else {
-				Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
-						Math.toRadians(owner.rotationPitch));
-				target = Vector.getEyePos(owner).plus(look.times(3));
+				Vector target;
+				if (res.hitSomething()) {
+					target = res.getPosPrecise();
+				} else {
+					Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
+							Math.toRadians(owner.rotationPitch));
+					target = Vector.getEyePos(owner).plus(look.times(3));
+				}
+
+				Vector motion = Objects.requireNonNull(target).minus(entity.position());
+				motion = motion.times(5);
+				entity.setVelocity(motion);
+				entity.rotationYaw = owner.rotationYaw;
+				entity.rotationPitch = owner.rotationPitch;
 			}
 
-			Vector motion = Objects.requireNonNull(target).minus(entity.position());
-			motion = motion.times(5);
-			entity.setVelocity(motion);
-			entity.rotationYaw = owner.rotationYaw;
-			entity.rotationPitch = owner.rotationPitch;
-
 			if (entity.getAbility() instanceof AbilityFireball) {
-				if (data.getAbilityData("fireball").isMasterPath(AbilityTreePath.SECOND)) {
+				if (data.getAbilityData(new AbilityFireball().getName()).isMasterPath(AbilityTreePath.SECOND)) {
 					int size = entity.getSize();
 					if (size < 60 && entity.ticksExisted % 4 == 0) {
 						entity.setSize(size + 1);
