@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
+import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -12,6 +12,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -72,20 +73,20 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		this.height = getHeight();
 	}
 
-	public void setBehaviour(OffensiveBehaviour behaviour) {
-		dataManager.set(SYNC_BEHAVIOR, behaviour);
-	}
-
 	public OffensiveBehaviour getBehaviour() {
 		return dataManager.get(SYNC_BEHAVIOR);
 	}
 
-	public void setDynamicSpreadingCollision(boolean collision) {
-		this.dynamicSpreadingCollision = collision;
+	public void setBehaviour(OffensiveBehaviour behaviour) {
+		dataManager.set(SYNC_BEHAVIOR, behaviour);
 	}
 
 	public boolean getDynamicSpreadingCollision() {
 		return this.dynamicSpreadingCollision;
+	}
+
+	public void setDynamicSpreadingCollision(boolean collision) {
+		this.dynamicSpreadingCollision = collision;
 	}
 
 	public void setSolidEntityPredicate(Predicate<Entity> predicate) {
@@ -157,6 +158,22 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		dataManager.register(SYNC_WIDTh, 1.0F);
 		dataManager.register(SYNC_HEIGHT, 1.0F);
 		dataManager.register(SYNC_BEHAVIOR, new OffensiveBehaviour.Idle());
+	}
+
+	@Override
+	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		setDamage(nbt.getFloat("Damage"));
+		setLifeTime(nbt.getInteger("Lifetime"));
+		setBehaviour((OffensiveBehaviour) Behavior.lookup(nbt.getInteger("Behavior"), this));
+	}
+
+	@Override
+	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		nbt.setFloat("Damage", getDamage());
+		nbt.setInteger("Lifetime", getLifeTime());
+		nbt.setInteger("Behaviour", getBehaviour().getId());
 	}
 
 	@Override
@@ -309,8 +326,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		else if (!isPiercing() && shouldDissipate()) {
 			attackEntity(this, entity, false, getKnockback());
 			Dissipate();
-		}
-		else if (isShockwave())
+		} else if (isShockwave())
 			attackEntity(this, entity, false, getKnockback(entity));
 		else applyPiercingCollision();
 		if (entity instanceof AvatarEntity)

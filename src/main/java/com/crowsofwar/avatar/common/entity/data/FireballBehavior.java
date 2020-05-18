@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -75,21 +74,10 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 
 	public static class Thrown extends FireballBehavior {
 
-		int time = 0;
-
 		@Override
 		public FireballBehavior onUpdate(EntityFireball entity) {
 
-			time++;
-
-			if (entity.collided || (!entity.world.isRemote && time > 100)) {
-				entity.setDead();
-				entity.onCollideWithSolid();
-			}
-
 			entity.addVelocity(Vector.DOWN.times(1F / 40));
-
-
 			return this;
 
 		}
@@ -126,24 +114,12 @@ public abstract class FireballBehavior extends Behavior<EntityFireball> {
 
 			BendingData data = Objects.requireNonNull(Bender.get(owner)).getData();
 
-			if (!entity.world.isRemote) {
-				Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
+			Vector look = Vector.getLookRectangular(owner);
+			Vector target = Vector.getEyePos(owner).plus(look.times(2));
 
-				Vector target;
-				if (res.hitSomething()) {
-					target = res.getPosPrecise();
-				} else {
-					Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
-							Math.toRadians(owner.rotationPitch));
-					target = Vector.getEyePos(owner).plus(look.times(3));
-				}
-
-				Vector motion = Objects.requireNonNull(target).minus(entity.position());
-				motion = motion.times(5);
-				entity.setVelocity(motion);
-				entity.rotationYaw = owner.rotationYaw;
-				entity.rotationPitch = owner.rotationPitch;
-			}
+			Vector motion = Objects.requireNonNull(target).minus(Vector.getEntityPos(entity));
+			motion = motion.times(5);
+			entity.setVelocity(motion);
 
 			if (entity.getAbility() instanceof AbilityFireball) {
 				if (data.getAbilityData(new AbilityFireball().getName()).isMasterPath(AbilityTreePath.SECOND)) {

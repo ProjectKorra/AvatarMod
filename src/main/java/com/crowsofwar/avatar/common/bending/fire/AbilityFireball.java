@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -98,27 +99,11 @@ public class AbilityFireball extends Ability {
 			fireball.setDamage(damage);
 			fireball.setPowerRating(bender.calcPowerRating(Firebending.ID));
 			fireball.setSize(size);
+			fireball.setPerformanceAmount((int) (BattlePerformanceScore.SCORE_MOD_SMALL * 1.5));
 			fireball.setAbility(this);
 			fireball.setFireTime(size / 5);
 			fireball.setXp(SKILLS_CONFIG.fireballHit);
 			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(20);
-
-
-			/*EntityLightOrb orb = new EntityLightOrb(world);
-			orb.setOwner(entity);
-			orb.setAbility(this);
-			//orb.setColourShiftRange(0.2F);
-			orb.setPosition(target.plusY(fireball.height * 2));
-			orb.setOrbSize(size * 0.03125F);
-			orb.setColor(1F, 0.5F, 0F, 1F);
-			orb.setLightRadius(15);
-			orb.setSpinning(true);
-			orb.setEmittingEntity(fireball);
-			orb.setBehavior(new FireballLightOrbBehavior());
-			orb.setType(CLIENT_CONFIG.fireRenderSettings.fireBallSphere ? EntityLightOrb.EnumType.TEXTURE_SPHERE : EntityLightOrb.EnumType.TEXTURE_CUBE);
-			orb.setTexture("avatarmod:textures/entity/fireball/frame_%number%.png");
-			orb.setTextureFrameCount(30);
-			world.spawnEntity(orb);**/
 
 
 			data.addStatusControl(THROW_FIREBALL);

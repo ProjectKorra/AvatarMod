@@ -220,7 +220,6 @@ public class EntityCloudBall extends EntityOffensive {
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		setDamage(nbt.getFloat("Damage"));
 		setBehavior((CloudburstBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 		setAbsorb(nbt.getBoolean("Absorb"));
 		setChiSmash(nbt.getBoolean("ChiSmash"));
@@ -229,7 +228,6 @@ public class EntityCloudBall extends EntityOffensive {
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		nbt.setFloat("Damage", getDamage());
 		nbt.setInteger("Behavior", getBehavior().getId());
 		nbt.setBoolean("Absorb", absorbtion);
 		nbt.setBoolean("ChiSmash", chismash);

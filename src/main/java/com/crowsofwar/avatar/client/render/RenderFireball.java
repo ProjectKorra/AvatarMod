@@ -104,13 +104,11 @@ public class RenderFireball extends Render<EntityFireball> {
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
 						world.rand.nextGaussian() / 60).time(12).clr(255, 10, 5)
 						.scale(entity.getSize() * 0.03125F).element(entity.getElement()).spawnEntity(entity.getOwner())
-						.face(entity.rotationYaw + rotation * (float) world.rand.nextGaussian(), entity.rotationPitch + rotation * (float) world.rand.nextGaussian())
 						.spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
 						world.rand.nextGaussian() / 60).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
 						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
 						.scale(entity.getSize() * 0.03125F).element(entity.getElement()).spawnEntity(entity.getOwner())
-						.face(entity.rotationYaw + rotation * (float) world.rand.nextGaussian(), entity.rotationPitch + rotation * (float) world.rand.nextGaussian())
 						.spawn(world);
 			}
 

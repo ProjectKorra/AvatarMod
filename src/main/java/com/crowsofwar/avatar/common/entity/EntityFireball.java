@@ -16,48 +16,35 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.gorecore.util.Vector;
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -70,10 +57,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 			DataSerializers.VARINT);
 	private static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
-	private AxisAlignedBB expandedHitbox;
 
-	private float damage;
-	private BlockPos position;
 
 	/**
 	 * @param world
@@ -81,7 +65,6 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 	public EntityFireball(World world) {
 		super(world);
 		setSize(.8f, .8f);
-		this.position = this.getPosition();
 		this.lightTnt = true;
 	}
 
@@ -100,21 +83,16 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-
+		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
 
 		if (getBehavior() == null) {
 			this.setBehavior(new FireballBehavior.Thrown());
 		}
-		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
+
 		if (ticksExisted % 30 == 0) {
 			world.playSound(null, posX, posY, posZ, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 6, 0.8F);
 		}
 
-		// Add hook or something
-		if (getOwner() == null) {
-			setDead();
-			removeStatCtrl();
-		}
 
 		if (getOwner() != null) {
 			EntityFireball ball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
@@ -126,23 +104,16 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 					&& !(bD.hasStatusControl(StatusControlController.THROW_FIREBALL))) {
 				bD.addStatusControl(StatusControlController.THROW_FIREBALL);
 			}
-			if (getBehavior() != null && getBehavior() instanceof FireballBehavior.PlayerControlled) {
-				this.position = this.getPosition();
-			}
 		}
 		//I'm using 0.03125, because that results in a size of 0.5F when rendering, as the default size for the fireball is actually 16.
 		//This is due to weird rendering shenanigans
-		setSize(getSize() * 0.03125F, getSize() * 0.03125F);
+		setEntitySize(getSize() * 0.03125F, getSize() * 0.03125F);
 	}
 
 	@Override
 	public boolean onMajorWaterContact() {
 		spawnExtinguishIndicators();
-		if (getBehavior() instanceof FireballBehavior.PlayerControlled) {
-			removeStatCtrl();
-		}
 		setDead();
-		removeStatCtrl();
 		return true;
 	}
 
@@ -176,12 +147,17 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
 	@Override
 	public Vec3d getExplosionKnockbackMult() {
-		return super.getExplosionKnockbackMult().scale(STATS_CONFIG.fireballSettings.explosionSize * getSize() / 15F + getPowerRating() * 0.02);
+		return super.getExplosionKnockbackMult().scale(STATS_CONFIG.fireballSettings.explosionSize * getSize() / 16F + getPowerRating() * 0.002);
 	}
 
 	@Override
 	public double getExplosionHitboxGrowth() {
-		return STATS_CONFIG.fireballSettings.explosionSize * getSize() / 15F + getPowerRating() * 0.02;
+		return STATS_CONFIG.fireballSettings.explosionSize * getSize() / 16F + getPowerRating() * 0.02;
+	}
+
+	@Override
+	public Vec3d getKnockbackMult() {
+		return super.getKnockbackMult().scale(0.5 * STATS_CONFIG.fireballSettings.push);
 	}
 
 	@Override
@@ -201,6 +177,29 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 	}
 
 	@Override
+	public void spawnExplosionParticles(World world, Vec3d pos) {
+		if (world.isRemote && getOwner() != null) {
+			for (double h = 0; h < width * 2; h += 0.2) {
+				Random random = new Random();
+				AxisAlignedBB boundingBox = getEntityBoundingBox();
+				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10,
+						world.rand.nextGaussian() / 10).time(12).clr(255, 10, 5)
+						.scale(getSize() * 0.03125F).element(getElement()).spawnEntity(getOwner())
+						.spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10,
+						world.rand.nextGaussian() / 10).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
+						.scale(getSize() * 0.03125F).element(getElement()).spawnEntity(getOwner())
+						.spawn(world);
+			}
+
+		}
+	}
+
+	@Override
 	public void setDead() {
 		super.setDead();
 		removeStatCtrl();
@@ -209,14 +208,12 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		setDamage(nbt.getFloat("Damage"));
 		setBehavior((FireballBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		nbt.setFloat("Damage", getDamage());
 		nbt.setInteger("Behavior", getBehavior().getId());
 	}
 
@@ -225,14 +222,14 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 		return 150;
 	}
 
-	public AxisAlignedBB getExpandedHitbox() {
-		return this.expandedHitbox;
+	@Override
+	public double getExpandedHitboxWidth() {
+		return getWidth() / 4;
 	}
 
 	@Override
-	public void setEntityBoundingBox(AxisAlignedBB bb) {
-		super.setEntityBoundingBox(bb);
-		expandedHitbox = bb.grow(0.35, 0.35, 0.35);
+	public double getExpandedHitboxHeight() {
+		return getHeight() / 4;
 	}
 
 	@Override
@@ -265,7 +262,25 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
 	@Override
 	public ColoredLight produceColoredLight(float partialTicks) {
-		return ColoredLight.builder().pos(this).color(1f, 0f, 0f, 1f).radius(10f).build();
+		return ColoredLight.builder().pos(this).color(1f, 0f, 0f, 1f).radius(getSize() / 4F).build();
 	}
 
+	@Override
+	public boolean canCollideWith(Entity entity) {
+		if (getBehavior() instanceof FireballBehavior.Thrown)
+			return super.canCollideWith(entity);
+		else return false;
+	}
+
+	@Override
+	public boolean canBeCollidedWith() {
+		if (getBehavior() instanceof FireballBehavior.Thrown)
+			return super.canBeCollidedWith();
+		else return false;
+	}
+
+	@Override
+	public boolean canBePushed() {
+		return false;
+	}
 }
