@@ -67,46 +67,46 @@ public class Scrolls {
     }
 
     @Nullable
-    public static ScrollType getTypeFromElement(BendingStyle style) {
+    public static ItemScroll getTypeFromElement(BendingStyle style) {
         if (style instanceof Airbending)
-            return ScrollType.AIR;
+            return AIR;
         if (style instanceof Firebending)
-            return ScrollType.FIRE;
+            return FIRE;
         if (style instanceof Waterbending)
-            return ScrollType.WATER;
+            return WATER;
         if (style instanceof Earthbending)
-            return ScrollType.EARTH;
+            return EARTH;
         if (style instanceof Combustionbending)
-            return ScrollType.COMBUSTION;
+            return COMBUSTION;
         if (style instanceof Icebending)
-            return ScrollType.ICE;
+            return ICE;
         if (style instanceof Sandbending)
-            return ScrollType.SAND;
+            return SAND;
         if (style instanceof Lightningbending)
-            return ScrollType.LIGHTNING;
-        else return ScrollType.ALL;
+            return LIGHTNING;
+        else return ALL;
     }
 
-    public static ScrollType getTypeFromElement(String element) {
+    public static ItemScroll getTypeFromElement(String element) {
         switch (element) {
             case "airbending":
-                return ScrollType.AIR;
+                return AIR;
             case "firebending":
-                return ScrollType.FIRE;
+                return FIRE;
             case "waterbending":
-                return ScrollType.WATER;
+                return WATER;
             case "earthbending":
-                return ScrollType.EARTH;
+                return EARTH;
             case "combustionbending":
-                return ScrollType.COMBUSTION;
+                return COMBUSTION;
             case "icebending":
-                return ScrollType.ICE;
+                return ICE;
             case "sandbending":
-                return ScrollType.SAND;
+                return SAND;
             case "lightningbending":
-                return ScrollType.LIGHTNING;
+                return LIGHTNING;
             default:
-                return ScrollType.ALL;
+                return ALL;
         }
     }
     public enum ScrollType {

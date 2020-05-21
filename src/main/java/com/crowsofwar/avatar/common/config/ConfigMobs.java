@@ -60,18 +60,16 @@ public class ConfigMobs {
 
 
 	static {
-		//Default items that are tradeable for scrolls- the number is just random for now.
-		//TODO: Make the number correspond to the amount of the item the player has to hold
-		TRADE_ITEMS.put("minecraft:diamond 2", "all");
-		TRADE_ITEMS.put("minecraft:gold_ingot 2", "all");
-		TRADE_ITEMS.put("minecraft:emerald 2", "all");
+		TRADE_ITEMS.put("minecraft:diamond 1", "all");
+		TRADE_ITEMS.put("minecraft:gold_ingot 1", "all");
+		TRADE_ITEMS.put("minecraft:emerald 1", "all");
 		//Required items for trading for a airbending scroll
 		TRADE_ITEMS.put("minecraft:elytra 4", "air");
 		TRADE_ITEMS.put("minecraft:dragon_breath 5", "air");
 		TRADE_ITEMS.put("minecraft:totem_of_undying 3", "air");
 		//Required items for trading for a firebending scroll
 		TRADE_ITEMS.put("minecraft:magma_cream 2", "fire");
-		TRADE_ITEMS.put("minecraft:blaze_rod 3", "fire");
+		TRADE_ITEMS.put("minecraft:blaze_rod 1", "fire");
 
 		// Wheat
 		DEFAULT_FOODS.put("minecraft:bread", 5);

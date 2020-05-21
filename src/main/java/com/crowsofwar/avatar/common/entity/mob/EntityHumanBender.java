@@ -20,8 +20,6 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
-import com.crowsofwar.avatar.common.item.scroll.ItemScrollAll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.WildCardTradeList;
@@ -29,7 +27,6 @@ import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
 import com.google.common.base.Predicate;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
@@ -227,6 +224,17 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		setSkin((int) (rand.nextDouble() * getNumSkins()));
 		setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
 
+		//Trade stuff
+		/*this.trades = new WildCardTradeList();
+		ItemStack universalScroll = new ItemStack(Scrolls.ALL, 1, 2);
+		ItemStack elementScroll = new ItemStack(Scrolls.getTypeFromElement(getElement()), 1, 2);
+		ItemStack staff;
+		if (getElement() instanceof Airbending)
+			staff = new ItemStack(AvatarItems.airbenderStaff, 1);
+		else staff = new ItemStack(Scrolls.ALL, 2, 1);
+		this.trades.add(new MerchantRecipe(universalScroll, elementScroll, staff));
+		this.addRandomRecipes(3);**/
+
 		return livingdata;
 	}
 
@@ -306,18 +314,18 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 
 		// Won't trade with a player that has attacked them.
 		if (this.isEntityAlive() && !this.isTrading() && !this.isChild() && !player.isSneaking()
-				&& this.getAttackTarget() != player) {
+				&& this.getAttackTarget() != player && trades != null && !trades.isEmpty()) {
 			if (!this.world.isRemote) {
 				this.setCustomer(player);
-				Unpooled.buffer().clear();
 				player.displayVillagerTradeGui(this);
 			}
-			if (trades != null)
-				System.out.println(trades.get(0).getItemToSell());
+			if (trades == null)
+				return super.processInteract(player, hand);
 
 			return true;
 		} else {
-			return false;
+			getRecipes(player);
+			return super.processInteract(player, hand);
 		}
 	}
 
@@ -417,16 +425,15 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	@Override
 	public MerchantRecipeList getRecipes(EntityPlayer par1EntityPlayer) {
 
-		if (this.trades == null && !world.isRemote) {
+		if ((this.trades == null || trades != null && trades.isEmpty()) && !world.isRemote) {
 			this.trades = new WildCardTradeList();
 			//All benders will sell their element scroll for universal scrolls
-			ItemStack universalScroll = new ItemStack(new ItemScrollAll(), 1, 2);
-			ItemStack elementScroll = new ItemStack(new ItemScroll(Scrolls.getTypeFromElement(getElement().getName())), 1, 2);
+			ItemStack universalScroll = new ItemStack(Scrolls.ALL, 1, 2);
+			ItemStack elementScroll = new ItemStack(Scrolls.getTypeFromElement(getElement()), 1, 2);
 			ItemStack staff;
 			if (getElement() instanceof Airbending)
 				staff = new ItemStack(AvatarItems.airbenderStaff, 1);
-			else staff = new ItemStack(new ItemScrollAll(), 2, 1);
-			System.out.println(elementScroll);
+			else staff = new ItemStack(Scrolls.ALL, 2, 1);
 			this.trades.add(new MerchantRecipe(universalScroll, elementScroll, staff));
 			this.addRandomRecipes(3);
 		}
@@ -440,7 +447,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	private void addRandomRecipes(int numberOfItemsToAdd) {
 
 		MerchantRecipeList merchantrecipelist;
-		merchantrecipelist = new MerchantRecipeList();
+		merchantrecipelist = new WildCardTradeList();
 
 		for (int i = 0; i < numberOfItemsToAdd; i++) {
 
@@ -481,10 +488,10 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 						(int) tierIncreaseChance * AvatarUtils.getRandomNumberInRange(1, 4), maxTier));
 				itemToSell = this.getRandomItemOfTier(AvatarUtils.getRandomNumberInRange(1, finalTier));
 
-				for (Object recipe : merchantrecipelist) {
+				/*for (Object recipe : merchantrecipelist) {
 					if (ItemStack.areItemStacksEqual(((MerchantRecipe) recipe).getItemToSell(), itemToSell))
 						itemAlreadySold = true;
-				}
+				}**/
 
 				if (this.trades != null) {
 					for (Object recipe : this.trades) {
@@ -497,7 +504,6 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 			// Don't know how it can ever be empty here, but it's a failsafe.
 			if (itemToSell.isEmpty()) return;
 
-			System.out.println("Item: " + itemToSell);
 			merchantrecipelist.add(new MerchantRecipe(this.getRandomPrice(finalTier), this.getRandomPrice(finalTier), itemToSell));
 		}
 
@@ -521,18 +527,19 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		String element = getElement().getName();
 		switch (element) {
 			case "airbending":
-				while (MOBS_CONFIG.isFireTradeItem(item))
+				while (MOBS_CONFIG.isFireTradeItem(item) || MOBS_CONFIG.getTradeItemTier(MOBS_CONFIG.getTradeItems().get(0)) < tier)
 					item = MOBS_CONFIG.getTradeItems().get(AvatarUtils.getRandomNumberInRange(0,
 							MOBS_CONFIG.getTradeItems().size() - 1));
 				break;
 			case "firebending":
-				while (MOBS_CONFIG.isAirTradeItem(item))
+				while (MOBS_CONFIG.isAirTradeItem(item) || MOBS_CONFIG.getTradeItemTier(MOBS_CONFIG.getTradeItems().get(0)) < tier)
 					item = MOBS_CONFIG.getTradeItems().get(AvatarUtils.getRandomNumberInRange(0,
 							MOBS_CONFIG.getTradeItems().size() - 1));
 				break;
 			default:
 				break;
 		}
+		
 		int price;
 
 		if (item == null) {
@@ -559,8 +566,8 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		ItemStack toSell;
 		boolean rand = world.rand.nextBoolean();
 		if (rand)
-			toSell = new ItemStack(new ItemScrollAll(), 1, tier - 1);
-		else toSell = new ItemStack(new ItemScroll(Scrolls.getTypeFromElement(getElement().getName())), 1, tier - 1);
+			toSell = new ItemStack(Scrolls.ALL, 1, tier - 1);
+		else toSell = new ItemStack(Scrolls.getTypeFromElement(getElement().getName()), 1, tier - 1);
 
 		return toSell;
 	}

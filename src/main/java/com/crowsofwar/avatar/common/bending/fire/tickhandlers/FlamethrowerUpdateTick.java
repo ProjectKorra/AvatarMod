@@ -46,6 +46,7 @@ import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -55,6 +56,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.biome.BiomeDesert;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -110,8 +112,9 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					|| world.getBlockState(entity.getPosition()).getBlock() == Blocks.FLOWING_WATER;
 			boolean headInLiquid = world.getBlockState(entity.getPosition().up()) instanceof BlockLiquid || world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.WATER
 					|| world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.FLOWING_WATER;
+			boolean isRaining = world.isRaining() && !(world.getBiome(entity.getPosition()) instanceof BiomeDesert);
 
-			if (!(world.isRaining() && world.canSeeSky(entity.getPosition())) && !(headInLiquid || inWaterBlock)) {
+			if (!isRaining && !(headInLiquid || inWaterBlock)) {
 
 				double speedMult = 15;
 				double randomness = 3.0 - 0.5 * (abilityData.getXpModifier() + Math.max(abilityData.getLevel(), 0));

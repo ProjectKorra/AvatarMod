@@ -36,6 +36,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_FIREBALL;
@@ -61,7 +63,7 @@ public class AbilityFireball extends Ability {
 		BendingData data = ctx.getData();
 
 
-		if (bender.consumeChi(STATS_CONFIG.chiFireball) && !data.hasStatusControl(THROW_FIREBALL)) {
+		if (bender.consumeChi(STATS_CONFIG.chiFireball)) {
 
 			Vector target;
 			if (ctx.isLookingAtBlock() && !world.isRemote) {
@@ -73,6 +75,11 @@ public class AbilityFireball extends Ability {
 
 			float damage = STATS_CONFIG.fireballSettings.damage;
 			int size = 16;
+			boolean canUse = !data.hasStatusControl(THROW_FIREBALL);
+			List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class,
+					entity.getEntityBoundingBox().grow(3.5, 3.5, 3.5));
+			canUse |= fireballs.size() < 3 && ctx.isDynamicMasterLevel(AbilityTreePath.FIRST);
+
 			damage *= ctx.getLevel() >= 2 ? 1.75f : 1f;
 			damage *= ctx.getPowerRatingDamageMod();
 
@@ -85,30 +92,31 @@ public class AbilityFireball extends Ability {
 			}
 
 			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-				size = 30;
+				size = 18;
+				damage -= 2F;
 			}
+			if (ctx.isDynamicMasterLevel(AbilityTreePath.SECOND))
+				size = 20;
 			damage += size / 10F;
 
-
-			assert target != null;
-
-			EntityFireball fireball = new EntityFireball(world);
-			fireball.setPosition(target);
-			fireball.setOwner(entity);
-			fireball.setBehavior(new FireballBehavior.PlayerControlled());
-			fireball.setDamage(damage);
-			fireball.setPowerRating(bender.calcPowerRating(Firebending.ID));
-			fireball.setSize(size);
-			fireball.setPerformanceAmount((int) (BattlePerformanceScore.SCORE_MOD_SMALL * 1.5));
-			fireball.setAbility(this);
-			fireball.setFireTime(size / 5);
-			fireball.setXp(SKILLS_CONFIG.fireballHit);
-			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) fireball.setSize(20);
+			if (canUse) {
+				EntityFireball fireball = new EntityFireball(world);
+				fireball.setPosition(target);
+				fireball.setOwner(entity);
+				fireball.setBehavior(new FireballBehavior.PlayerControlled());
+				fireball.setDamage(damage);
+				fireball.setPowerRating(bender.calcPowerRating(Firebending.ID));
+				fireball.setSize(size);
+				fireball.setPerformanceAmount((int) (BattlePerformanceScore.SCORE_MOD_SMALL * 1.5));
+				fireball.setAbility(this);
+				fireball.setFireTime(size / 5);
+				fireball.setXp(SKILLS_CONFIG.fireballHit);
 
 
-			data.addStatusControl(THROW_FIREBALL);
-			if (!world.isRemote)
-				world.spawnEntity(fireball);
+				data.addStatusControl(THROW_FIREBALL);
+				if (!world.isRemote)
+					world.spawnEntity(fireball);
+			}
 
 		}
 

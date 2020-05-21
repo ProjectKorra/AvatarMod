@@ -51,7 +51,6 @@ public class TickHandlerController {
 	public static TickHandler CLEANSE_COOLDOWN_HANDLER = new CleanseCooldownHandler(25);
 	public static TickHandler RESTORE_COOLDOWN_HANDLER = new RestoreCooldownHandler(26);
 	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler(27);
-	public static TickHandler INFERNO_PUNCH_COOLDOWN = new InfernoPunchCooldownHandler(28);
 	public static TickHandler SLIPSTREAM_WALK_HANDLER = new SlipstreamAirWalkHandler(29);
 	public static TickHandler WATERARC_COMBO_HANDLER = new WaterArcComboHandler(30);
 	public static TickHandler SHOOT_AIRBURST = new ShootAirBurstHandler(31);

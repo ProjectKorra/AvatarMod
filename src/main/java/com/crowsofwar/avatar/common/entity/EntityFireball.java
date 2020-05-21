@@ -46,6 +46,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_FIREBALL;
 
 /**
  * @author CrowsOfWar
@@ -95,15 +96,15 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
 
 		if (getOwner() != null) {
-			EntityFireball ball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
+			EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (ball == null && bD.hasStatusControl(StatusControlController.THROW_FIREBALL)) {
-				bD.removeStatusControl(StatusControlController.THROW_FIREBALL);
+			if (fireball == null && (bD.hasStatusControl(THROW_FIREBALL))) {
+				bD.removeStatusControl(THROW_FIREBALL);
 			}
-			if (ball != null && ball.getBehavior() instanceof FireballBehavior.PlayerControlled
-					&& !(bD.hasStatusControl(StatusControlController.THROW_FIREBALL))) {
-				bD.addStatusControl(StatusControlController.THROW_FIREBALL);
+			if (fireball != null && fireball.getBehavior() instanceof FireballBehavior.PlayerControlled && !(bD.hasStatusControl(THROW_FIREBALL))) {
+				bD.addStatusControl(THROW_FIREBALL);
 			}
+
 		}
 		//I'm using 0.03125, because that results in a size of 0.5F when rendering, as the default size for the fireball is actually 16.
 		//This is due to weird rendering shenanigans
@@ -145,19 +146,20 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 		dataManager.set(SYNC_SIZE, size);
 	}
 
+
 	@Override
 	public Vec3d getExplosionKnockbackMult() {
-		return super.getExplosionKnockbackMult().scale(STATS_CONFIG.fireballSettings.explosionSize * getSize() / 16F + getPowerRating() * 0.002);
+		return super.getExplosionKnockbackMult().scale(STATS_CONFIG.fireballSettings.explosionSize * getSize() / 32F + getPowerRating() * 0.02);
 	}
 
 	@Override
 	public double getExplosionHitboxGrowth() {
-		return STATS_CONFIG.fireballSettings.explosionSize * getSize() / 16F + getPowerRating() * 0.02;
+		return STATS_CONFIG.fireballSettings.explosionSize * getSize() / 32F + getPowerRating() * 0.02;
 	}
 
 	@Override
 	public Vec3d getKnockbackMult() {
-		return super.getKnockbackMult().scale(0.5 * STATS_CONFIG.fireballSettings.push);
+		return super.getKnockbackMult().scale(0.25 * STATS_CONFIG.fireballSettings.push);
 	}
 
 	@Override
@@ -208,13 +210,13 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		setBehavior((FireballBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
+		//setBehavior((FireballBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		nbt.setInteger("Behavior", getBehavior().getId());
+		//nbt.setInteger("Behavior", getBehavior().getId());
 	}
 
 	@Override

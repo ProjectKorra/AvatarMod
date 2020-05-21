@@ -125,7 +125,7 @@ dependencies {
 	//jei_1.12.2-4.15.0.293.jar
 	// Other Stuff
 	shadow "org.yaml:snakeyaml:1.23"
-	shadow "org.joml:joml:1.9.22"
+	shadow "org.joml:joml:1.9.24"
 }
 
 minecraft {

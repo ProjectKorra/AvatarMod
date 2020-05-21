@@ -16,8 +16,9 @@
 */
 package com.crowsofwar.avatar.common.bending.fire.statctrls;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
@@ -28,8 +29,9 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.data.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK_DOWN;
+import static com.crowsofwar.avatar.common.data.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
 
 /**
  * @author CrowsOfWar
@@ -37,7 +39,7 @@ import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_C
 public class StatCtrlThrowFireball extends StatusControl {
 
 	public StatCtrlThrowFireball() {
-		super(10, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
+		super(10, CONTROL_LEFT_CLICK_DOWN, LEFT_OF_CROSSHAIR);
 	}
 
 	@Override
@@ -46,18 +48,15 @@ public class StatCtrlThrowFireball extends StatusControl {
 		World world = ctx.getWorld();
 		world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.HOSTILE, 4F, 0.8F);
 
-		double size = 6;
-
 		EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
 
 		if (fireball != null) {
-			AbilityData abilityData = ctx.getData().getAbilityData("fireball");
+			AbilityData abilityData = ctx.getData().getAbilityData(new AbilityFireball());
 			double speedMult = abilityData.getLevel() >= 2 ? 32.5 : 27.5;
 			fireball.setBehavior(new FireballBehavior.Thrown());
 			fireball.rotationPitch = entity.rotationPitch;
 			fireball.rotationYaw = entity.rotationYaw;
-			//if (!world.isRemote)
-				fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+			fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
 
 		}
 

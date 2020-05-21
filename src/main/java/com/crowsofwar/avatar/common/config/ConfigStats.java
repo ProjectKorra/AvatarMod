@@ -384,7 +384,7 @@ public class ConfigStats {
 	public static class FireballSettings {
 
 		@Load
-		public float damage = 5F;
+		public float damage = 3.5F;
 
 		@Load
 		public int fireTime = 6;
