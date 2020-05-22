@@ -80,12 +80,14 @@ public abstract class EntityBender extends EntityCreature implements IEntityAddi
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
+		setLevel(nbt.getInteger("Level"));
 		bender.getData().readFromNbt(nbt);
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
+		nbt.setInteger("Level", getLevel());
 		bender.getData().writeToNbt(nbt);
 	}
 

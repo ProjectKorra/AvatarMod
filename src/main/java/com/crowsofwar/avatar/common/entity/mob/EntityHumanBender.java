@@ -176,7 +176,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		}
 
 		setSkin(nbt.getInteger("Skin"));
-		setScrollsLeft(nbt.getInteger("Scrolls"));
+		//	setScrollsLeft(nbt.getInteger("Scrolls"));
 	}
 
 	@Override
@@ -187,7 +187,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		}
 
 		nbt.setInteger("Skin", getSkin());
-		nbt.setInteger("Scrolls", getScrollsLeft());
+		//	nbt.setInteger("Scrolls", getScrollsLeft());
 	}
 
 	protected abstract void addBendingTasks();
@@ -223,17 +223,6 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		setHomePosAndDistance(getPosition(), 20);
 		setSkin((int) (rand.nextDouble() * getNumSkins()));
 		setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
-
-		//Trade stuff
-		/*this.trades = new WildCardTradeList();
-		ItemStack universalScroll = new ItemStack(Scrolls.ALL, 1, 2);
-		ItemStack elementScroll = new ItemStack(Scrolls.getTypeFromElement(getElement()), 1, 2);
-		ItemStack staff;
-		if (getElement() instanceof Airbending)
-			staff = new ItemStack(AvatarItems.airbenderStaff, 1);
-		else staff = new ItemStack(Scrolls.ALL, 2, 1);
-		this.trades.add(new MerchantRecipe(universalScroll, elementScroll, staff));
-		this.addRandomRecipes(3);**/
 
 		return livingdata;
 	}
@@ -314,17 +303,21 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 
 		// Won't trade with a player that has attacked them.
 		if (this.isEntityAlive() && !this.isTrading() && !this.isChild() && !player.isSneaking()
-				&& this.getAttackTarget() != player && trades != null && !trades.isEmpty()) {
+				&& this.getAttackTarget() != player) {
+			if (trades == null || trades != null && trades.isEmpty())
+				this.addRandomRecipes(3);
 			if (!this.world.isRemote) {
 				this.setCustomer(player);
 				player.displayVillagerTradeGui(this);
 			}
-			if (trades == null)
+			if (trades == null) {
+				trades = getRecipes(player);
 				return super.processInteract(player, hand);
-
+			}
 			return true;
 		} else {
-			getRecipes(player);
+			this.trades = new WildCardTradeList();
+			trades = getRecipes(player);
 			return super.processInteract(player, hand);
 		}
 	}
@@ -425,10 +418,10 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	@Override
 	public MerchantRecipeList getRecipes(EntityPlayer par1EntityPlayer) {
 
-		if ((this.trades == null || trades != null && trades.isEmpty()) && !world.isRemote) {
+		if ((this.trades == null || trades != null && trades.isEmpty())) {
 			this.trades = new WildCardTradeList();
 			//All benders will sell their element scroll for universal scrolls
-			ItemStack universalScroll = new ItemStack(Scrolls.ALL, 1, 2);
+			ItemStack universalScroll = new ItemStack(Scrolls.ALL, 1, 1);
 			ItemStack elementScroll = new ItemStack(Scrolls.getTypeFromElement(getElement()), 1, 2);
 			ItemStack staff;
 			if (getElement() instanceof Airbending)
@@ -446,7 +439,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	 */
 	private void addRandomRecipes(int numberOfItemsToAdd) {
 
-		MerchantRecipeList merchantrecipelist;
+		WildCardTradeList merchantrecipelist;
 		merchantrecipelist = new WildCardTradeList();
 
 		for (int i = 0; i < numberOfItemsToAdd; i++) {
@@ -471,7 +464,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 				 * 1 46% 25% 20% 9% 2 42% 24% 22% 12% 3 38% 24% 24% 14% 4 34% 22% 26% 17% 5 30% 21% 28% 21% 6 26% 19%
 				 * 30% 24% 7 22% 17% 32% 28% 8 18% 15% 34% 33% */
 
-				double tierIncreaseChance = 0.5 + 0.04 * (Math.max(this.trades.size() - 4, 0));
+				double tierIncreaseChance = 0.75 + 0.04 * (Math.max(trades == null ? 0 : this.trades.size() - 4, 0));
 
 				if (rand.nextDouble() < tierIncreaseChance) {
 					tier += tierInc;
@@ -485,8 +478,8 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 				tier = Math.min(tier, maxTier);
 
 				finalTier = (Math.min(AvatarUtils.getRandomNumberInRange(Math.max(tier - 1, 1), tier) +
-						(int) tierIncreaseChance * AvatarUtils.getRandomNumberInRange(1, 4), maxTier));
-				itemToSell = this.getRandomItemOfTier(AvatarUtils.getRandomNumberInRange(1, finalTier));
+						(int) tierIncreaseChance * AvatarUtils.getRandomNumberInRange(2, 4) + 1, maxTier));
+				itemToSell = this.getRandomItemOfTier(finalTier);
 
 				/*for (Object recipe : merchantrecipelist) {
 					if (ItemStack.areItemStacksEqual(((MerchantRecipe) recipe).getItemToSell(), itemToSell))
@@ -539,7 +532,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 			default:
 				break;
 		}
-		
+
 		int price;
 
 		if (item == null) {
