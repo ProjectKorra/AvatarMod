@@ -18,23 +18,21 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSnow;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -74,18 +72,16 @@ public class AbilityEarthControl extends Ability {
 		//World world = ctx.getWorld();
 
 
-			VectorI target = ctx.getLookPosI();
-			if (target != null) {
+		VectorI target = ctx.getLookPosI();
+		if (target != null) {
+			pickupBlock(ctx, target.toBlockPos());
+			//EnumFacing direction = entity.getHorizontalFacing();
+			//pickupBlock(ctx, target.toBlockPos().offset(direction));
+			//pickupBlock(ctx,
+			//target.toBlockPos().offset(direction.getOpposite()));
 
-				pickupBlock(ctx, target.toBlockPos());
-
-				 EnumFacing direction = entity.getHorizontalFacing();
-				 pickupBlock(ctx, target.toBlockPos().offset(direction));
-				 pickupBlock(ctx,
-				 target.toBlockPos().offset(direction.getOpposite()));
-
-			}
 		}
+	}
 
 	private void pickupBlock(AbilityContext ctx, BlockPos pos) {
 
@@ -106,12 +102,16 @@ public class AbilityEarthControl extends Ability {
 			maxBlocks = 3;
 
 		List<EntityFloatingBlock> blocks = world.getEntitiesWithinAABB(EntityFloatingBlock.class,
-				entity.getEntityBoundingBox().grow(3, 1, 3));
+				entity.getEntityBoundingBox().grow(3, 2, 3));
 		for (EntityFloatingBlock b : blocks) {
 			if (b.getController() == entity)
 				heldBlocks++;
 		}
-		if (!world.isAirBlock(pos) && STATS_CONFIG.bendableBlocks.contains(block) && heldBlocks < maxBlocks) {
+
+		boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
+		bendable |= !bendable && STATS_CONFIG.bendableBlocks.contains(world.getBlockState(pos.down()).getBlock())
+		&& !(block instanceof BlockSnow || ibs.isFullCube() && ibs.isFullBlock());
+		if (!world.isAirBlock(pos) && bendable && heldBlocks < maxBlocks) {
 
 			if (bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
 

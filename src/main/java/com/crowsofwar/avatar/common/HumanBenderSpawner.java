@@ -20,6 +20,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
 import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -36,6 +37,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -95,37 +98,29 @@ public class HumanBenderSpawner {
 					Village village = worldIn.getVillageCollection()
 							.getNearestVillage(chunkCoord.getBlock(0, 0, 0), 200);
 
-
-
-					double chance = 100;
 					Random rand = new Random();
-					if (!villagers.isEmpty()/* && rand.nextDouble() * 100 < chance**/) {
+					boolean firebender;
 
+					if (nearbyBenders.isEmpty()) {
+						firebender = rand.nextBoolean();
+					} else {
+						firebender = !(nearbyBenders.get(0) instanceof EntityFirebender);
+					}
 
-						boolean firebender;
+					for (Entity e : villagers) {
+						int i = AvatarUtils.getRandomNumberInRange(1, 2);
+						if (i == 2) {
+							EntityHumanBender bender = firebender ? new EntityFirebender(worldIn)
+									: new EntityAirbender(worldIn);
+							bender.copyLocationAndAnglesFrom(e);
+							bender.setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
+							worldIn.spawnEntity(bender);
 
-						if (nearbyBenders.isEmpty()) {
-							firebender = new Random().nextBoolean();
-						} else {
-							firebender = !(nearbyBenders.get(0) instanceof EntityFirebender);
-						}
-
-						for (Entity e : villagers) {
-							int i = rand.nextInt(3) + 1;
-							if (i == 3) {
-								EntityHumanBender bender = firebender ? new EntityFirebender(worldIn)
-										: new EntityAirbender(worldIn);
-								bender.copyLocationAndAnglesFrom(e);
-								worldIn.spawnEntity(bender);
-
-							}
 						}
 					}
 				}
 			}
 			return false;
 		}
-
 	}
-
 }
