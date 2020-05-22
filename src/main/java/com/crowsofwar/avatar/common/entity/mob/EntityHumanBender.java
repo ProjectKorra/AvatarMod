@@ -224,6 +224,9 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		setSkin((int) (rand.nextDouble() * getNumSkins()));
 		setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
 
+		this.trades = new WildCardTradeList();
+		this.addRandomRecipes(3);
+
 		return livingdata;
 	}
 
@@ -304,21 +307,15 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		// Won't trade with a player that has attacked them.
 		if (this.isEntityAlive() && !this.isTrading() && !this.isChild() && !player.isSneaking()
 				&& this.getAttackTarget() != player) {
-			if (trades == null || trades != null && trades.isEmpty())
-				this.addRandomRecipes(3);
 			if (!this.world.isRemote) {
 				this.setCustomer(player);
 				player.displayVillagerTradeGui(this);
+				// player.displayGUIMerchant(this, this.getElement().getWizardName());
 			}
-			if (trades == null) {
-				trades = getRecipes(player);
-				return super.processInteract(player, hand);
-			}
+
 			return true;
 		} else {
-			this.trades = new WildCardTradeList();
-			trades = getRecipes(player);
-			return super.processInteract(player, hand);
+			return false;
 		}
 	}
 
@@ -418,7 +415,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	@Override
 	public MerchantRecipeList getRecipes(EntityPlayer par1EntityPlayer) {
 
-		if ((this.trades == null || trades != null && trades.isEmpty())) {
+		if (this.trades == null) {
 			this.trades = new WildCardTradeList();
 			//All benders will sell their element scroll for universal scrolls
 			ItemStack universalScroll = new ItemStack(Scrolls.ALL, 1, 1);
@@ -558,6 +555,9 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	private ItemStack getRandomItemOfTier(int tier) {
 		ItemStack toSell;
 		boolean rand = world.rand.nextBoolean();
+		if (tier > 7)
+			tier--;
+
 		if (rand)
 			toSell = new ItemStack(Scrolls.ALL, 1, tier - 1);
 		else toSell = new ItemStack(Scrolls.getTypeFromElement(getElement().getName()), 1, tier - 1);
