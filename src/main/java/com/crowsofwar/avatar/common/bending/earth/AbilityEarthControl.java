@@ -34,6 +34,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -68,7 +69,7 @@ public class AbilityEarthControl extends Ability {
 	public void execute(AbilityContext ctx) {
 
 		BendingData data = ctx.getData();
-		//EntityLivingBase entity = ctx.getBenderEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
 		//Bender bender = ctx.getBender();
 		//World world = ctx.getWorld();
 
@@ -78,10 +79,10 @@ public class AbilityEarthControl extends Ability {
 
 				pickupBlock(ctx, target.toBlockPos());
 
-				// EnumFacing direction = entity.getHorizontalFacing();
-				// pickupBlock(ctx, target.toBlockPos().offset(direction));
-				// pickupBlock(ctx,
-				// target.toBlockPos().offset(direction.getOpposite()));
+				 EnumFacing direction = entity.getHorizontalFacing();
+				 pickupBlock(ctx, target.toBlockPos().offset(direction));
+				 pickupBlock(ctx,
+				 target.toBlockPos().offset(direction.getOpposite()));
 
 			}
 		}

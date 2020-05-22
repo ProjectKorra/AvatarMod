@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.*;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -100,17 +101,17 @@ public class BendingData {
 
 	@Nullable
 	public static BendingData get(World world, UUID playerId) {
-		return AvatarPlayerData.fetcher().fetch(world, playerId).getData();
+		return getFromEntity(AvatarEntityUtils.getPlayerFromStringID(playerId.toString()));
 	}
 
 	@Nullable
 	public static BendingData get(World world, String playerName) {
-		return AvatarPlayerData.fetcher().fetch(world, playerName).getData();
+		return getFromEntity(AvatarEntityUtils.getPlayerFromUsername(playerName));
 	}
 
 	@Nullable
 	public static BendingData get(World world, BenderInfo info) {
-		if (info.isPlayer()) {
+		if (info != null && info.isPlayer()) {
 			return get(world, info.getId());
 		} else {
 			Bender bender = info.find(world);
