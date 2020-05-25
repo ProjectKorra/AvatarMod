@@ -38,18 +38,17 @@ public class FlameStrikeHandler extends TickHandler {
 		int level = abilityData.getLevel();
 		boolean charge = false;
 		int chargeLevel = StatCtrlFlameStrike.getChargeLevel(entity.getPersistentID());
-		float particleSize = 0.6F;
+		float particleSize = 0.7F;
 
 		if (level == 1 || level == 2) {
 			particleCount = 2;
 		}
 
 		if (level == 1) {
-			usage += 1;
-			particleSize = 0.625F;
+			particleSize = 0.8F;
 		}
 		if (level == 2) {
-			particleSize = 0.65F;
+			particleSize = 0.875F;
 		}
 		if (level >= 2)
 			charge = true;
@@ -57,15 +56,15 @@ public class FlameStrikeHandler extends TickHandler {
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			particleCount = 3;
 			usage = 5;
-			particleSize = 0.6025F;
+			particleSize = 0.825F;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			particleCount = 2;
 			usage = 3;
-			particleSize = 0.7F;
+			particleSize = 1F;
 		}
 
-		particleSize = (float) (particleSize * (0.8 + chargeLevel / 5F));
+		//particleSize = (float) (particleSize * (0.8 + chargeLevel / 5F));
 		charge |= usage - StatCtrlFlameStrike.getTimesUsed(entity.getPersistentID()) == 1;
 		if ((data.hasStatusControl(FLAME_STRIKE_MAIN) || data.hasStatusControl(FLAME_STRIKE_OFF))) {
 
@@ -112,10 +111,10 @@ public class FlameStrikeHandler extends TickHandler {
 				for (int i = 0; i < particleCount; i++) {
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
 							world.rand.nextGaussian() / 40).clr(255, 15, 5).collide(false).
-							scale(particleSize / 30).element(new Firebending()).spawn(world);
+							scale(particleSize / 2).element(new Firebending()).spawn(world);
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
 							world.rand.nextGaussian() / 40).clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(false).
-							scale(particleSize / 30).element(new Firebending()).spawn(world);
+							scale(particleSize / 2).element(new Firebending()).spawn(world);
 				}
 
 		} else return true;

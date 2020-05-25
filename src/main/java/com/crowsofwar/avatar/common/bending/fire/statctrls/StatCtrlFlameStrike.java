@@ -210,7 +210,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			size *= 0.5F;
 			particleCount += 10;
-			accuracyMult = 0.005F;
+			accuracyMult = 0.000001F;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			size *= 2;
@@ -225,26 +225,20 @@ public class StatCtrlFlameStrike extends StatusControl {
 		if (world.isRemote) {
 				//Spawn particles
 				for(int i = 0; i < 30 + particleCount * 2; i++) {
-					double x1 = entity.posX + look.x + world.rand.nextFloat() * accuracyMult - 0.05f * accuracyMult * 10;
-					double y1 = eyePos - 0.4F + world.rand.nextFloat() * accuracyMult - 0.05f * accuracyMult * 10;
-					double z1 = entity.posZ + look.z + world.rand.nextFloat() * accuracyMult - 0.05f * accuracyMult * 10;
+					double x1 = entity.posX + look.x * i / 30 + world.rand.nextGaussian() * accuracyMult;
+					double y1 = eyePos - 0.4F + world.rand.nextGaussian() * accuracyMult;
+					double z1 = entity.posZ + look.z * i / 30 + world.rand.nextGaussian() * accuracyMult;
 
 					//Using the random function each time ensures a different number for every value, making the ability "feel" better.
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult * AvatarUtils.getRandomNumberInRange(1, 100) / 30
-									+ AvatarUtils.getRandomNumberInRange(-10, 10) / 40F * accuracyMult * 10,
-							look.y * mult * AvatarUtils.getRandomNumberInRange(1, 100) / 30
-									+ AvatarUtils.getRandomNumberInRange(-10, 10) / 40F * accuracyMult * 10,
-							look.z * mult * AvatarUtils.getRandomNumberInRange(1, 100) / 30
-									+ AvatarUtils.getRandomNumberInRange(-10, 10) / 40F * accuracyMult * 10)
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult,
+							look.y * mult,
+							look.z * mult)
 							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity)
 							.clr(255, 15, 5).collide(true).scale(size / 2).spawn(world);
 					//Using the random function each time ensures a different number for every value, making the ability "feel" better.
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult * AvatarUtils.getRandomNumberInRange(1, 100) / 30
-									+ AvatarUtils.getRandomNumberInRange(-10, 10) / 40F * accuracyMult * 10,
-							look.y * mult * AvatarUtils.getRandomNumberInRange(1, 100) / 30
-									+ AvatarUtils.getRandomNumberInRange(-10, 10) / 40F * accuracyMult * 10,
-							look.z * mult * AvatarUtils.getRandomNumberInRange(1, 100) / 30
-									+ AvatarUtils.getRandomNumberInRange(-10, 10) / 40F * accuracyMult * 10)
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult,
+							look.y * mult,
+							look.z * mult)
 							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity)
 							.clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true)
 							.scale(size / 2).spawn(world);
