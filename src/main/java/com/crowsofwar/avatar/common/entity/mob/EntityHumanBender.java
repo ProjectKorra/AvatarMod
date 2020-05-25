@@ -477,7 +477,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 				}
 
 				// Don't know how it can ever be empty here, but it's a failsafe.
-				if (itemToSell.isEmpty()) return;
+				if (itemToSell == ItemStack.EMPTY) return;
 
 				ItemStack firstPrice = this.getRandomPrice(finalTier);
 				ItemStack secondPrice = this.getRandomPrice(finalTier);
@@ -564,7 +564,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 
 	private void generateRecipes() {
 		if (trades == null || trades.isEmpty()) {
-			trades = new WildCardTradeList();
+			trades = trades == null ? new WildCardTradeList() : trades;
 			ItemStack universalScroll = new ItemStack(Scrolls.ALL, 1, 1);
 			ItemStack elementScroll = new ItemStack(Scrolls.getTypeFromElement(getElement()), 1, 2);
 			ItemStack staff;

@@ -194,17 +194,17 @@ avatar.ability.restore.lvl4_1=§2§l§oGuardian §2§l§oof §2§l§oLife ;; You
 avatar.ability.restore.lvl4_2=§2§l§oSustenance §2§l§oof §2§l§oLife ;; You receive instantaneous health, and your hunger disappears.
 
 avatar.ability.fire_shot=§c§lFire Shot
-avatar.ability.fire_shot.desc=A small, utility type ability to light fires. It's less practical in combat than some other abilities.
-avatar.ability.fire_shot.lvl1=When you don't succeed, keep trying, otherwise mobs will start spawning...
-avatar.ability.fire_shot.lvl2=Greater chance of creating fire
-avatar.ability.fire_shot.lvl3=Greater chance of creating fire
-avatar.ability.fire_shot.lvl4_1=§c§l§oFlame §c§l§odrive ;; Create a line of fire in the direction you're looking
-avatar.ability.fire_shot.lvl4_2=§c§l§oFlame §c§l§owall ;; Light nearby blocks on fire as well
+avatar.ability.fire_shot.desc=A small utility and offensive ability to light fires and keep mobs at bay.
+avatar.ability.fire_shot.lvl1=Shoot tiny fireballs to set the world on fire!
+avatar.ability.fire_shot.lvl2=Faster and stronger.
+avatar.ability.fire_shot.lvl3=Even faster and stronger!
+avatar.ability.fire_shot.lvl4_1=§c§l§oFlame §c§l§oDrive ;; Create a line of fire in the direction you're looking; extermely powerful.
+avatar.ability.fire_shot.lvl4_2=§c§l§oBlazing §c§l§oBurst ;; Create a shockwave of pure fire!
 
 avatar.ability.flame_strike=§c§lFlame Strike
 avatar.ability.flame_strike.desc=Strike with the power of condensed fire, creating a concussive blast at your fist!
 avatar.ability.flame_strike.lvl1=Punch with the power of flame!
-avatar.ability.flame_strike.lvl2=Bigger blasts
+avatar.ability.flame_strike.lvl2=Bigger blasts!
 avatar.ability.flame_strike.lvl3=Tons more damage!
 avatar.ability.flame_strike.lvl4_1=§c§l§oFlame §c§l§oBeam ;; Piercing arcs of flame shoot from your fist!
 avatar.ability.flame_strike.lvl4_2=§c§l§oPyrotechnic §c§l§oBurst ;; Short explosions of condensed fire!

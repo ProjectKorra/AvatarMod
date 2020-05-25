@@ -10,6 +10,7 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
@@ -22,12 +23,14 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 	private UUID bendingID;
 	private Entity spawner;
 	private Ability ability;
+	private Vec3d velocity;
 
 	public PacketSParticleCollideEvent(Entity entity, ParticleAvatar particle, Entity spawner, UUID bendingID) {
 		this.entity = entity;
 		this.particle = particle;
 		this.bendingID = bendingID;
 		this.spawner = spawner;
+		this.velocity = particle.getVelocity();
 	}
 
 	public PacketSParticleCollideEvent(Entity entity, ParticleAvatar particle, Entity spawner, Ability ability) {
@@ -36,6 +39,7 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 		this.ability = ability;
 		this.bendingID = ability.getBendingId() == null || ability == null ? Airbending.ID : ability.getBendingId();
 		this.spawner = spawner;
+		this.velocity = particle.getVelocity();
 	}
 
 	public PacketSParticleCollideEvent() {
@@ -54,6 +58,7 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 		spawner = AvatarEntityUtils.getEntityFromStringID(buffer.readUniqueId().toString());
 		bendingID = buffer.readUniqueId();
 		ability = Abilities.get(buffer.readString(buffer.readVarInt()));
+		velocity = new Vec3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
 
 	}
 
@@ -66,6 +71,9 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 		buffer.writeUniqueId(bendingID);
 		buffer.writeVarInt(ability.getName().length());
 		buffer.writeString(ability.getName());
+		buffer.writeDouble(velocity.x);
+		buffer.writeDouble(velocity.y);
+		buffer.writeDouble(velocity.z);
 	}
 
 	@Override
@@ -96,5 +104,9 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 
 	public Ability getAbility() {
 		return this.ability;
+	}
+
+	public Vec3d getVelocity() {
+		return this.velocity;
 	}
 }

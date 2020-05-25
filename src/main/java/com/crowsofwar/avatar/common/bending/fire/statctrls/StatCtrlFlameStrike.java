@@ -77,14 +77,14 @@ public class StatCtrlFlameStrike extends StatusControl {
 			if (event.getSpawner() != event.getEntity()) {
 				if (event.getSpawner() instanceof EntityLivingBase) {
 					//	if (((EntityLivingBase) event.getSpawner()).getActiveHand() != null) {
-					attackEntity((EntityLivingBase) event.getSpawner(), event.getEntity());
+					attackEntity((EntityLivingBase) event.getSpawner(), event.getEntity(), event.getVelocity());
 					//}
 				}
 			}
 		}
 	}
 
-	private static boolean attackEntity(EntityLivingBase attacker, Entity target) {
+	private static boolean attackEntity(EntityLivingBase attacker, Entity target,  Vec3d vel) {
 		AbilityData abilityData = AbilityData.get(attacker, new AbilityFlameStrike().getName());
 		Bender bender = Bender.get(attacker);
 		World world = attacker.world;
@@ -99,18 +99,16 @@ public class StatCtrlFlameStrike extends StatusControl {
 			float xp = SKILLS_CONFIG.flameStrikeHit;
 
 			if (abilityData.getLevel() == 1) {
-				damage *= 1.5F;
+				damage *= 1.25F;
 				knockBack *= 1.125F;
 				fireTime += 2;
 				performance += 2;
-				xp -= 1;
 			}
 			if (abilityData.getLevel() == 2) {
 				damage *= 2F;
 				knockBack *= 1.25F;
 				fireTime += 4;
 				performance += 5;
-				xp -= 2;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage *= 2.5F;
@@ -128,7 +126,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 			fireTime *= powerModifier * xpMod;
 			performance *= powerModifier * xpMod;
 
-			Vec3d lookPos = attacker.getLookVec().scale(0.00025).scale(knockBack);
+			vel = vel.scale(0.0005).scale(knockBack);
 
 			if (canDamageEntity(target, attacker)) {
 				if (!(target instanceof EntityLivingBase) || ((EntityLivingBase) target).attackable() &&
@@ -137,13 +135,13 @@ public class StatCtrlFlameStrike extends StatusControl {
 							new AbilityFlameStrike(), xp);
 				else {
 					//NOTE: Add velocity like this is great for stuff like a water blast!
-					target.addVelocity(lookPos.x, lookPos.y + 0.15, lookPos.z);
+					target.addVelocity(vel.x, vel.y + 0.15, vel.z);
 					target.motionY = Math.min(0.15, target.motionY);
 				}
 
-			} else {
+			} else if (canCollideWithEntity(target, attacker)){
 				//NOTE: Add velocity like this is great for stuff like a water blast!
-				target.addVelocity(lookPos.x, lookPos.y + 0.15, lookPos.z);
+				target.addVelocity(vel.x, vel.y + 0.15, vel.z);
 				target.motionY = Math.min(0.15, target.motionY);
 			}
 			target.setFire(fireTime);
@@ -200,48 +198,56 @@ public class StatCtrlFlameStrike extends StatusControl {
 		float size = STATS_CONFIG.flameStrikeSettings.size;
 		float accuracyMult = 0.1F;
 		int particleCount = 4;
+		int lifeTime = 4;
+		float mult = 0.4F;
 
 		if (abilityData.getLevel() == 1) {
 			particleCount += 2;
+			size *= 1.25;
 		}
 		if (abilityData.getLevel() == 2) {
 			particleCount += 4;
+			size *= 1.25;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			size *= 0.5F;
-			particleCount += 10;
-			accuracyMult = 0.000001F;
+			size *= 0.35F;
+			particleCount += 20;
+			accuracyMult = 0.0125F;
+			lifeTime = 12;
+			mult = 0.6F;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			size *= 2;
 			particleCount -= 1;
+			lifeTime = 3;
+			mult = 0.8F;
 		}
 
 
 		Vec3d look = entity.getLookVec();
 		double eyePos = entity.getEyeHeight() + entity.getEntityBoundingBox().minY;
-		float mult = 0.4F;
+
 
 		if (world.isRemote) {
 				//Spawn particles
 				for(int i = 0; i < 30 + particleCount * 2; i++) {
-					double x1 = entity.posX + look.x * i / 30 + world.rand.nextGaussian() * accuracyMult;
+					double x1 = entity.posX + look.x * i / 50 + world.rand.nextGaussian() * accuracyMult;
 					double y1 = eyePos - 0.4F + world.rand.nextGaussian() * accuracyMult;
-					double z1 = entity.posZ + look.z * i / 30 + world.rand.nextGaussian() * accuracyMult;
+					double z1 = entity.posZ + look.z * i / 50 + world.rand.nextGaussian() * accuracyMult;
 
 					//Using the random function each time ensures a different number for every value, making the ability "feel" better.
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
 							look.y * mult + world.rand.nextGaussian() * accuracyMult,
 							look.z * mult + world.rand.nextGaussian() * accuracyMult)
 							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity)
-							.clr(255, 15, 5).collide(true).scale(size / 2).spawn(world);
+							.clr(255, 15, 5).collide(true).scale(size / 2).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
 					//Using the random function each time ensures a different number for every value, making the ability "feel" better.
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
 							look.y * mult + world.rand.nextGaussian() * accuracyMult,
 							look.z * mult + world.rand.nextGaussian() * accuracyMult)
 							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity)
 							.clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true)
-							.scale(size / 2).spawn(world);
+							.scale(size / 2).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
 				}
 			}
 
