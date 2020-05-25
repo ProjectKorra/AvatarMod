@@ -58,7 +58,8 @@ public class RenderHumanBender extends RenderLiving<EntityHumanBender> {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityHumanBender entity) {
-		return locations[entity.getSkin() - 1];
+		int location = Math.min(locations.length - 1, entity.getSkin());
+		return locations[location];
 	}
 
 }

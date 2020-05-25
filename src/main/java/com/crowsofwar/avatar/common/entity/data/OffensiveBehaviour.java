@@ -20,7 +20,6 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
 		registerBehavior(Idle.class);
-		registerBehavior(FlamethrowerUpdateTick.FlamethrowerBehaviour.class);
 		registerBehavior(AbilityFlameStrike.FireblastBehaviour.class);
 		registerBehavior(AirBurstHandler.AirburstShockwave.class);
 		registerBehavior(AbilityFireShot.FireShockwaveBehaviour.class);

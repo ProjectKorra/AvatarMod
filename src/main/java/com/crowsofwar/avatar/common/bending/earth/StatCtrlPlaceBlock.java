@@ -77,14 +77,14 @@ public class StatCtrlPlaceBlock extends StatusControl {
 
 				data.removeStatusControl(THROW_BLOCK);
 
-				data.getAbilityData("earth_control").addXp(SKILLS_CONFIG.blockPlaced);
+				data.getAbilityData(new AbilityEarthControl()).addXp(SKILLS_CONFIG.blockPlaced);
 
 				return true;
 			}
 			return false;
 		}
 
-		return false;
+		return true;
 
 	}
 

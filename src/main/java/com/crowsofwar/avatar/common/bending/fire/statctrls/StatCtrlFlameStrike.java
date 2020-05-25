@@ -31,7 +31,8 @@ import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
+import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK;
 import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_STRIKE_MAIN;
 import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_STRIKE_OFF;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAME_STRIKE_HANDLER;
@@ -197,7 +198,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 			return false;
 
 		float size = STATS_CONFIG.flameStrikeSettings.size;
-		float accuracy;
+		float accuracyMult = 0.1F;
 		int particleCount = 4;
 
 		if (abilityData.getLevel() == 1) {
@@ -207,8 +208,9 @@ public class StatCtrlFlameStrike extends StatusControl {
 			particleCount += 4;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			size *= 0.25F;
+			size *= 0.5F;
 			particleCount += 10;
+			accuracyMult = 0.005F;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			size *= 2;
@@ -216,21 +218,38 @@ public class StatCtrlFlameStrike extends StatusControl {
 		}
 
 
-		Vec3d lookPos = entity.getLookVec();
+		Vec3d look = entity.getLookVec();
+		double eyePos = entity.getEyeHeight() + entity.getEntityBoundingBox().minY;
+		float mult = 0.4F;
 
 		if (world.isRemote) {
-			Vec3d direction = lookPos.scale(0.5).add(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
-			for (int i = 0; i < particleCount * 10; i++) {
-				Vec3d pos = entity.getPositionVector().add(0, entity.getEyeHeight() - 0.125, 0);
-				pos = pos.add(world.rand.nextGaussian() / 7.5, world.rand.nextGaussian() / 7.5, world.rand.nextGaussian() / 7.5);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos)
-						.time(5 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(direction).
-						clr(255, 15, 5).collide(true).scale(size / 2).ability(new AbilityFlameStrike()).spawnEntity(entity).element(new Firebending()).spawn(world);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).time(5 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(direction)
-						.clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true).
-						scale(size / 2).ability(new AbilityFlameStrike()).spawnEntity(entity).element(new Firebending()).spawn(world);
+				//Spawn particles
+				for(int i = 0; i < 30 + particleCount * 2; i++) {
+					double x1 = entity.posX + look.x + world.rand.nextFloat() * accuracyMult - 0.05f * accuracyMult * 10;
+					double y1 = eyePos - 0.4F + world.rand.nextFloat() * accuracyMult - 0.05f * accuracyMult * 10;
+					double z1 = entity.posZ + look.z + world.rand.nextFloat() * accuracyMult - 0.05f * accuracyMult * 10;
+
+					//Using the random function each time ensures a different number for every value, making the ability "feel" better.
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult * AvatarUtils.getRandomNumberInRange(1, 100) / 30
+									+ AvatarUtils.getRandomNumberInRange(-10, 10) / 40F * accuracyMult * 10,
+							look.y * mult * AvatarUtils.getRandomNumberInRange(1, 100) / 30
+									+ AvatarUtils.getRandomNumberInRange(-10, 10) / 40F * accuracyMult * 10,
+							look.z * mult * AvatarUtils.getRandomNumberInRange(1, 100) / 30
+									+ AvatarUtils.getRandomNumberInRange(-10, 10) / 40F * accuracyMult * 10)
+							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity)
+							.clr(255, 15, 5).collide(true).scale(size / 2).spawn(world);
+					//Using the random function each time ensures a different number for every value, making the ability "feel" better.
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult * AvatarUtils.getRandomNumberInRange(1, 100) / 30
+									+ AvatarUtils.getRandomNumberInRange(-10, 10) / 40F * accuracyMult * 10,
+							look.y * mult * AvatarUtils.getRandomNumberInRange(1, 100) / 30
+									+ AvatarUtils.getRandomNumberInRange(-10, 10) / 40F * accuracyMult * 10,
+							look.z * mult * AvatarUtils.getRandomNumberInRange(1, 100) / 30
+									+ AvatarUtils.getRandomNumberInRange(-10, 10) / 40F * accuracyMult * 10)
+							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity)
+							.clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true)
+							.scale(size / 2).spawn(world);
+				}
 			}
-		}
 
 		if (hand == EnumHand.OFF_HAND)
 			entity.swingArm(hand);

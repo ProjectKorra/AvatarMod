@@ -75,10 +75,6 @@ public class AbilityEarthControl extends Ability {
 		VectorI target = ctx.getLookPosI();
 		if (target != null) {
 			pickupBlock(ctx, target.toBlockPos());
-			//EnumFacing direction = entity.getHorizontalFacing();
-			//pickupBlock(ctx, target.toBlockPos().offset(direction));
-			//pickupBlock(ctx,
-			//target.toBlockPos().offset(direction.getOpposite()));
 
 		}
 	}

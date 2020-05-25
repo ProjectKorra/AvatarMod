@@ -46,23 +46,23 @@ public class FlameStrikeHandler extends TickHandler {
 
 		if (level == 1) {
 			usage += 1;
-			particleSize += 0.2F;
+			particleSize = 0.625F;
 		}
 		if (level == 2) {
-			particleSize += 0.4F;
+			particleSize = 0.65F;
 		}
 		if (level >= 2)
 			charge = true;
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			particleCount = 3;
-			usage += 3;
-			particleSize += 0.1F;
+			usage = 5;
+			particleSize = 0.6025F;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			particleCount = 2;
-			usage += 1;
-			particleSize += 0.8F;
+			usage = 3;
+			particleSize = 0.7F;
 		}
 
 		particleSize = (float) (particleSize * (0.8 + chargeLevel / 5F));
@@ -112,10 +112,10 @@ public class FlameStrikeHandler extends TickHandler {
 				for (int i = 0; i < particleCount; i++) {
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
 							world.rand.nextGaussian() / 40).clr(255, 15, 5).collide(false).
-							scale(particleSize).element(new Firebending()).spawn(world);
+							scale(particleSize / 30).element(new Firebending()).spawn(world);
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
 							world.rand.nextGaussian() / 40).clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(false).
-							scale(particleSize).element(new Firebending()).spawn(world);
+							scale(particleSize / 30).element(new Firebending()).spawn(world);
 				}
 
 		} else return true;

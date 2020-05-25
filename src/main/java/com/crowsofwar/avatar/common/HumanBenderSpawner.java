@@ -25,7 +25,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenVillage;
 import net.minecraftforge.common.MinecraftForge;
@@ -95,8 +94,6 @@ public class HumanBenderSpawner {
 							villagers.get(0).posX - 100, villagers.get(0).posY - 100, villagers.get(0).posZ - 100);
 					List<EntityHumanBender> nearbyBenders = worldIn.getEntitiesWithinAABB(EntityHumanBender.class,
 							aabb);
-					Village village = worldIn.getVillageCollection()
-							.getNearestVillage(chunkCoord.getBlock(0, 0, 0), 200);
 
 					Random rand = new Random();
 					boolean firebender;
@@ -114,7 +111,9 @@ public class HumanBenderSpawner {
 									: new EntityAirbender(worldIn);
 							bender.copyLocationAndAnglesFrom(e);
 							bender.setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
-							worldIn.spawnEntity(bender);
+							bender.setHomePosAndDistance(e.getPosition(), 20);
+							if (!worldIn.isRemote)
+								worldIn.spawnEntity(bender);
 
 						}
 					}

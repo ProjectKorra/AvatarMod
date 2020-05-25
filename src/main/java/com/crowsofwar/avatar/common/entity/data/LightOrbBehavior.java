@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.entity.data;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.common.bending.fire.AbilityImmolate;
+import com.crowsofwar.avatar.common.bending.fire.tickhandlers.FlamethrowerUpdateTick;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -52,6 +53,7 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 		registerBehavior(AbilityFlameStrike.FlameStrikeLightOrb.class);
 		registerBehavior(AbilityFireball.FireballLightOrbBehavior.class);
 		registerBehavior(AbilityImmolate.ImmolateLightOrbBehaviour.class);
+		registerBehavior(FlamethrowerUpdateTick.FlamethrowerBehaviour.class);
 	}
 
 	public static class Idle extends LightOrbBehavior {

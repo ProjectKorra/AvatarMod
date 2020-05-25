@@ -220,7 +220,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 											@Nullable IEntityLivingData livingdata) {
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
 		setEquipmentBasedOnDifficulty(difficulty);
-		setHomePosAndDistance(getPosition(), 20);
+		setHomePosAndDistance(getPosition(), 40);
 		setSkin((int) (rand.nextDouble() * getNumSkins()));
 		setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
 
@@ -312,7 +312,6 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 				player.displayVillagerTradeGui(this);
 				// player.displayGUIMerchant(this, this.getElement().getWizardName());
 			}
-
 			return true;
 		} else {
 			return false;

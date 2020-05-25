@@ -48,7 +48,6 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 /**
  * @author CrowsOfWar
  */
-//@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
 public class EntityEarthspike extends AvatarEntity {
 
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityEarthspike.class,

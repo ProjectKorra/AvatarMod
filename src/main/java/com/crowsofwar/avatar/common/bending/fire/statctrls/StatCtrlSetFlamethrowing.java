@@ -17,12 +17,17 @@
 
 package com.crowsofwar.avatar.common.bending.fire.statctrls;
 
+import com.crowsofwar.avatar.common.bending.fire.AbilityFlameStrike;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.fire.tickhandlers.FlamethrowerUpdateTick;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.bending.fire.tickhandlers.FlamethrowerUpdateTick.FLAMETHROWER_MOVEMENT_MODIFIER_ID;
@@ -54,6 +59,19 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 
 		if (data.hasBendingId(Firebending.ID)) {
 			if (setting) {
+				if (!world.isRemote && !(bender instanceof EntityPlayer)) {
+					EntityLightOrb orb = new EntityLightOrb(world);
+					orb.setOwner(bender);
+					orb.setPosition(bender.getPositionVector().add(0, bender.getEyeHeight() - 0.5, 0));
+					orb.setOrbSize(0.25F);
+					orb.setAbility(new AbilityFlamethrower());
+					orb.setColor(1F, 77 / 255F, 0F, 1F);
+					orb.setType(EntityLightOrb.EnumType.COLOR_CUBE);
+					orb.setLightRadius(3);
+					orb.setEmittingEntity(bender);
+					orb.setBehavior(new FlamethrowerUpdateTick.FlamethrowerBehaviour());
+					world.spawnEntity(orb);
+				}
 				data.addStatusControl(STOP_FLAMETHROW);
 				data.addTickHandler(FLAMETHROWER);
 			} else {
