@@ -223,10 +223,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		setHomePosAndDistance(getPosition(), 40);
 		setSkin((int) (rand.nextDouble() * getNumSkins()));
 		setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
-
-		this.trades = new WildCardTradeList();
-		this.addRandomRecipes(3);
-
+		generateRecipes();
 		return livingdata;
 	}
 
@@ -413,20 +410,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	// villager, at which point the first is added.
 	@Override
 	public MerchantRecipeList getRecipes(EntityPlayer par1EntityPlayer) {
-
-		if (this.trades == null) {
-			this.trades = new WildCardTradeList();
-			//All benders will sell their element scroll for universal scrolls
-			ItemStack universalScroll = new ItemStack(Scrolls.ALL, 1, 1);
-			ItemStack elementScroll = new ItemStack(Scrolls.getTypeFromElement(getElement()), 1, 2);
-			ItemStack staff;
-			if (getElement() instanceof Airbending)
-				staff = new ItemStack(AvatarItems.airbenderStaff, 1);
-			else staff = new ItemStack(Scrolls.ALL, 2, 1);
-			this.trades.add(new MerchantRecipe(universalScroll, elementScroll, staff));
-			this.addRandomRecipes(3);
-		}
-
+		generateRecipes();
 		return this.trades;
 	}
 
@@ -435,7 +419,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	 */
 	private void addRandomRecipes(int numberOfItemsToAdd) {
 
-		WildCardTradeList merchantrecipelist;
+		MerchantRecipeList merchantrecipelist;
 		merchantrecipelist = new WildCardTradeList();
 
 		for (int i = 0; i < numberOfItemsToAdd; i++) {
@@ -448,53 +432,67 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 			int maxTier = getLevel();
 			int finalTier = tier;
 			double tierInc = (maxTier - tier) / 3F;
+			boolean greaterTier;
 
 			while (itemAlreadySold) {
+		//		if (!world.isRemote) {
 
-				itemAlreadySold = false;
+					itemAlreadySold = false;
 
-				/* New way of getting random item, by giving a chance to increase the tier which depends on how much the
-				 * player has already traded with the wizard. The more the player has traded with the wizard, the more
-				 * likely they are to get items of a higher tier. The -4 is to ignore the original 4 trades. For
-				 * reference, the chances are as follows: Trades done Basic Apprentice Advanced Master 0 50% 25% 18% 8%
-				 * 1 46% 25% 20% 9% 2 42% 24% 22% 12% 3 38% 24% 24% 14% 4 34% 22% 26% 17% 5 30% 21% 28% 21% 6 26% 19%
-				 * 30% 24% 7 22% 17% 32% 28% 8 18% 15% 34% 33% */
+					/* New way of getting random item, by giving a chance to increase the tier which depends on how much the
+					 * player has already traded with the wizard. The more the player has traded with the wizard, the more
+					 * likely they are to get items of a higher tier. The -4 is to ignore the original 4 trades. For
+					 * reference, the chances are as follows: Trades done Basic Apprentice Advanced Master 0 50% 25% 18% 8%
+					 * 1 46% 25% 20% 9% 2 42% 24% 22% 12% 3 38% 24% 24% 14% 4 34% 22% 26% 17% 5 30% 21% 28% 21% 6 26% 19%
+					 * 30% 24% 7 22% 17% 32% 28% 8 18% 15% 34% 33% */
 
-				double tierIncreaseChance = 0.75 + 0.04 * (Math.max(trades == null ? 0 : this.trades.size() - 4, 0));
+					double tierIncreaseChance = 0.75 + 0.04 * (Math.max(trades == null ? 0 : this.trades.size() - 4, 0));
 
-				if (rand.nextDouble() < tierIncreaseChance) {
-					tier += tierInc;
 					if (rand.nextDouble() < tierIncreaseChance) {
 						tier += tierInc;
-						if (rand.nextDouble() < tierIncreaseChance * 0.6) {
+						if (rand.nextDouble() < tierIncreaseChance) {
 							tier += tierInc;
+							if (rand.nextDouble() < tierIncreaseChance * 0.6) {
+								tier += tierInc;
+							}
 						}
 					}
-				}
-				tier = Math.min(tier, maxTier);
+					tier = Math.min(tier, maxTier);
 
-				finalTier = (Math.min(AvatarUtils.getRandomNumberInRange(Math.max(tier - 1, 1), tier) +
-						(int) tierIncreaseChance * AvatarUtils.getRandomNumberInRange(2, 4) + 1, maxTier));
-				itemToSell = this.getRandomItemOfTier(finalTier);
+					finalTier = (Math.min(AvatarUtils.getRandomNumberInRange(Math.max(tier - 1, 1), tier) +
+							(int) tierIncreaseChance * AvatarUtils.getRandomNumberInRange(2, 4) + 1, maxTier));
+					itemToSell = this.getRandomItemOfTier(finalTier);
 
 				/*for (Object recipe : merchantrecipelist) {
 					if (ItemStack.areItemStacksEqual(((MerchantRecipe) recipe).getItemToSell(), itemToSell))
 						itemAlreadySold = true;
 				}**/
 
-				if (this.trades != null) {
-					for (Object recipe : this.trades) {
-						if (ItemStack.areItemStacksEqual(((MerchantRecipe) recipe).getItemToSell(), itemToSell))
-							itemAlreadySold = true;
+					if (this.trades != null) {
+						for (Object recipe : this.trades) {
+							if (ItemStack.areItemStacksEqual(((MerchantRecipe) recipe).getItemToSell(), itemToSell))
+								itemAlreadySold = true;
+						}
 					}
 				}
+
+				// Don't know how it can ever be empty here, but it's a failsafe.
+				if (itemToSell.isEmpty()) return;
+
+				ItemStack firstPrice = this.getRandomPrice(finalTier);
+				ItemStack secondPrice = this.getRandomPrice(finalTier);
+				greaterTier = MOBS_CONFIG.getTradeItemTier(firstPrice.getItem()) > finalTier;
+				if (greaterTier)
+					merchantrecipelist.add(new MerchantRecipe(firstPrice, itemToSell));
+				else {
+					greaterTier = MOBS_CONFIG.getTradeItemTier(secondPrice.getItem()) > finalTier;
+					if (greaterTier)
+						merchantrecipelist.add(new MerchantRecipe(secondPrice, itemToSell));
+					else merchantrecipelist.add(new MerchantRecipe(firstPrice, secondPrice, itemToSell));
+				}
+
 			}
-
-			// Don't know how it can ever be empty here, but it's a failsafe.
-			if (itemToSell.isEmpty()) return;
-
-			merchantrecipelist.add(new MerchantRecipe(this.getRandomPrice(finalTier), this.getRandomPrice(finalTier), itemToSell));
-		}
+		//}
 
 		Collections.shuffle(merchantrecipelist);
 
@@ -564,6 +562,19 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		return toSell;
 	}
 
+	private void generateRecipes() {
+		if (trades == null || trades.isEmpty()) {
+			trades = new WildCardTradeList();
+			ItemStack universalScroll = new ItemStack(Scrolls.ALL, 1, 1);
+			ItemStack elementScroll = new ItemStack(Scrolls.getTypeFromElement(getElement()), 1, 2);
+			ItemStack staff;
+			if (getElement() instanceof Airbending)
+				staff = new ItemStack(AvatarItems.airbenderStaff, 1);
+			else staff = new ItemStack(Scrolls.ALL, 2, 1);
+			this.trades.add(new MerchantRecipe(universalScroll, elementScroll, staff));
+			this.addRandomRecipes(3);
+		}
+	}
 
 	@Override
 	public World getWorld() {

@@ -111,10 +111,10 @@ public class FlameStrikeHandler extends TickHandler {
 				for (int i = 0; i < particleCount; i++) {
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
 							world.rand.nextGaussian() / 40).clr(255, 15, 5).collide(false).
-							scale(particleSize / 2).element(new Firebending()).spawn(world);
+							scale(particleSize / 1.5F).element(new Firebending()).spawn(world);
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
 							world.rand.nextGaussian() / 40).clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(false).
-							scale(particleSize / 2).element(new Firebending()).spawn(world);
+							scale(particleSize / 1.5F).element(new Firebending()).spawn(world);
 				}
 
 		} else return true;

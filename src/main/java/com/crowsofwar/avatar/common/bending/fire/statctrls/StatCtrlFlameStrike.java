@@ -230,15 +230,15 @@ public class StatCtrlFlameStrike extends StatusControl {
 					double z1 = entity.posZ + look.z * i / 30 + world.rand.nextGaussian() * accuracyMult;
 
 					//Using the random function each time ensures a different number for every value, making the ability "feel" better.
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult,
-							look.y * mult,
-							look.z * mult)
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
+							look.y * mult + world.rand.nextGaussian() * accuracyMult,
+							look.z * mult + world.rand.nextGaussian() * accuracyMult)
 							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity)
 							.clr(255, 15, 5).collide(true).scale(size / 2).spawn(world);
 					//Using the random function each time ensures a different number for every value, making the ability "feel" better.
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult,
-							look.y * mult,
-							look.z * mult)
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
+							look.y * mult + world.rand.nextGaussian() * accuracyMult,
+							look.z * mult + world.rand.nextGaussian() * accuracyMult)
 							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity)
 							.clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true)
 							.scale(size / 2).spawn(world);
