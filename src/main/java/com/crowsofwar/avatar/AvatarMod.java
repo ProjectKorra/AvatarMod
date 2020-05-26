@@ -72,7 +72,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
-@Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false, //
+@Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore",  //
 		updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "[1.12,1.13)")
 
 public class AvatarMod {
@@ -91,41 +91,51 @@ public class AvatarMod {
 	private int nextEntityID = 1;
 
 	private static void registerAbilities() {
+		/*    			Air		  			*/
 		Abilities.register(new AbilityAirGust());
 		Abilities.register(new AbilityAirJump());
-		Abilities.register(new AbilityEarthControl());
-		Abilities.register(new AbilityRavine());
+		Abilities.register(new AbilityAirblade());
+		Abilities.register(new AbilityCloudBurst());
+		Abilities.register(new AbilityAirBubble());
+		Abilities.register(new AbilityAirBurst());
+		Abilities.register(new AbilitySlipstream());
+		/*    			Fire	  			*/
 		Abilities.register(new AbilityFireShot());
 		Abilities.register(new AbilityFlameStrike());
 		Abilities.register(new AbilityFlamethrower());
+		Abilities.register(new AbilityFireball());
+		Abilities.register(new AbilityFireJump());
+		Abilities.register(new AbilityImmolate());
+		/*    			Water	  			*/
 		Abilities.register(new AbilityWaterArc());
 		Abilities.register(new AbilityCreateWave());
 		Abilities.register(new AbilityWaterBubble());
-		Abilities.register(new AbilityWall());
 		Abilities.register(new AbilityWaterSkate());
-		Abilities.register(new AbilityFireball());
-		Abilities.register(new AbilityAirblade());
+		Abilities.register(new AbilityWaterCannon());
+		Abilities.register(new AbilityCleanse());
+		/*    			Earth	  			*/
+		Abilities.register(new AbilityEarthControl());
 		Abilities.register(new AbilityMining());
-		Abilities.register(new AbilityAirBubble());
+		Abilities.register(new AbilityRavine());
+		Abilities.register(new AbilityWall());
+		Abilities.register(new AbilityEarthspikes());
+		Abilities.register(new AbilityRestore());
+		/*    			Ice		  			*/
 		Abilities.register(new AbilityIceBurst());
 		Abilities.register(new AbilityIcePrison());
+		/*    			Sand	  			*/
 		Abilities.register(new AbilitySandPrison());
+		Abilities.register(new AbilitySandstorm());
+		/*    			Lightning	  		*/
+		Abilities.register(new AbilityLightningSpear());
 		Abilities.register(new AbilityLightningArc());
 		Abilities.register(new AbilityLightningRedirect());
-		Abilities.register(new AbilityCloudBurst());
-		Abilities.register(new AbilityRestore());
-		Abilities.register(new AbilitySlipstream());
-		Abilities.register(new AbilityCleanse());
-		Abilities.register(new AbilityEarthspikes());
-		Abilities.register(new AbilityLightningSpear());
-		Abilities.register(new AbilityImmolate());
-		Abilities.register(new AbilityWaterCannon());
-		Abilities.register(new AbilityFireJump());
+		Abilities.register(new AbilityLightningRaze());
+		/*    			Combustion	  		*/
 		Abilities.register(new AbilityExplosion());
 		Abilities.register(new AbilityExplosivePillar());
-		Abilities.register(new AbilitySandstorm());
-		Abilities.register(new AbilityLightningRaze());
-		Abilities.register(new AbilityAirBurst());
+
+
 	}
 
 	private static void registerBendingStyles() {
