@@ -175,7 +175,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 				return false;
 			else if (entity instanceof EntityShield)
 				return true;
-		} else if (entity.getTeam() != null && entity.getTeam() == owner.getTeam())
+		} else if (entity.getTeam() != null && owner.getTeam() != null && entity.getTeam() == owner.getTeam())
 			return false;
 		else if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() == owner)
 			return false;
@@ -198,7 +198,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 		float size = STATS_CONFIG.flameStrikeSettings.size;
 		float accuracyMult = 0.1F;
 		int particleCount = 4;
-		int lifeTime = 4;
+		int lifeTime = 6;
 		float mult = 0.4F;
 
 		if (abilityData.getLevel() == 1) {
@@ -219,7 +219,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			size *= 2;
 			particleCount -= 1;
-			lifeTime = 3;
+			lifeTime = 5;
 			mult = 0.8F;
 		}
 
@@ -261,12 +261,5 @@ public class StatCtrlFlameStrike extends StatusControl {
 			ctx.getData().addStatusControl(hand == EnumHand.MAIN_HAND ? FLAME_STRIKE_OFF : FLAME_STRIKE_MAIN);
 
 		return true;
-	}
-
-	public boolean canCollideWith(Entity entity) {
-		if (entity instanceof EntityEnderCrystal) {
-			return true;
-		} else
-			return (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase;
 	}
 }

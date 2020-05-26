@@ -123,7 +123,7 @@ public class FlameStrikeHandler extends TickHandler {
 			data.removeStatusControl(FLAME_STRIKE_OFF);
 			return true;
 		}
-		if (charge) {
+		/*if (charge) {
 			if (data.hasStatusControl(FLAME_STRIKE_OFF) && !data.hasStatusControl(START_CHARGE_FLAME_STRIKE_MAIN) &&
 					!data.hasStatusControl(STOP_CHARGE_FLAME_STRIKE_MAIN)) {
 				//initialDuration = data.getTickHandlerDuration(this);
@@ -143,7 +143,7 @@ public class FlameStrikeHandler extends TickHandler {
 				//}
 		//}
 
-		}
+		}**/
 		return false;
 	}
 

@@ -54,13 +54,10 @@ public class EntityEarthspike extends AvatarEntity {
 			DataSerializers.FLOAT);
 
 	private double damage;
-	private float Size;
 	private double lifetime;
 
 	public EntityEarthspike(World world) {
 		super(world);
-		this.Size = 1;
-		setSize(Size, Size);
 		this.damage = STATS_CONFIG.earthspikeSettings.damage;
 		this.noClip = true;
 		this.lifetime = 30;
