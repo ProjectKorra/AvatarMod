@@ -223,7 +223,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		setHomePosAndDistance(getPosition(), 40);
 		setSkin((int) (rand.nextDouble() * getNumSkins()));
 		setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
-		generateRecipes();
+
 		return livingdata;
 	}
 
@@ -420,7 +420,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	private void addRandomRecipes(int numberOfItemsToAdd) {
 
 		MerchantRecipeList merchantrecipelist;
-		merchantrecipelist = new WildCardTradeList();
+		merchantrecipelist = new MerchantRecipeList();
 
 		for (int i = 0; i < numberOfItemsToAdd; i++) {
 
@@ -563,8 +563,8 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	}
 
 	private void generateRecipes() {
-		if (trades == null || trades.isEmpty()) {
-			trades = trades == null ? new WildCardTradeList() : trades;
+		if (trades == null) {
+			trades = new WildCardTradeList();
 			ItemStack universalScroll = new ItemStack(Scrolls.ALL, 1, 1);
 			ItemStack elementScroll = new ItemStack(Scrolls.getTypeFromElement(getElement()), 1, 2);
 			ItemStack staff;

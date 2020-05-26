@@ -211,8 +211,8 @@ public class StatCtrlFlameStrike extends StatusControl {
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			size *= 0.35F;
-			particleCount += 20;
-			accuracyMult = 0.0125F;
+			particleCount += 10;
+			accuracyMult = 0.025F;
 			lifeTime = 12;
 			mult = 0.6F;
 		}

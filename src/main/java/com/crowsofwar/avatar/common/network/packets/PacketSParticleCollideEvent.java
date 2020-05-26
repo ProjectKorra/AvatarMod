@@ -54,7 +54,7 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 		PacketBuffer buffer = new PacketBuffer(buf);
 		entity = AvatarEntityUtils.getEntityFromStringID(buffer.readUniqueId().toString());
 		//I regret nothing
-		particle = AvatarUtils.getParticleFromUUID(buffer.readUniqueId());
+		//particle = AvatarUtils.getParticleFromUUID(buffer.readUniqueId());
 		spawner = AvatarEntityUtils.getEntityFromStringID(buffer.readUniqueId().toString());
 		bendingID = buffer.readUniqueId();
 		ability = Abilities.get(buffer.readString(buffer.readVarInt()));
@@ -66,7 +66,7 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 	protected void avatarToBytes(ByteBuf buf) {
 		PacketBuffer buffer = new PacketBuffer(buf);
 		buffer.writeUniqueId(entity.getUniqueID());
-		buffer.writeUniqueId(particle.getUUID());
+		//buffer.writeUniqueId(particle.getUUID());
 		buffer.writeUniqueId(spawner.getUniqueID());
 		buffer.writeUniqueId(bendingID);
 		buffer.writeVarInt(ability.getName().length());
