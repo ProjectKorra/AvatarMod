@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -276,6 +277,7 @@ public class EntityLightOrb extends AvatarEntity   {
 		setColorG(nbt.getFloat("OrbColorG"));
 		setColorB(nbt.getFloat("OrbColorB"));
 		setColorA(nbt.getFloat("OrbColorA"));
+		setBehavior((LightOrbBehavior) Behavior.lookup(nbt.getInteger("Behaviour"), this));
 	}
 
 	@Override
@@ -290,6 +292,7 @@ public class EntityLightOrb extends AvatarEntity   {
 		nbt.setFloat("OrbColorG", getColorG());
 		nbt.setFloat("OrbColorB", getColorB());
 		nbt.setFloat("OrbColorA", getColorA());
+		nbt.setInteger("Behaviour", getBehavior().getId());
 	}
 
 	public float getColorR() {

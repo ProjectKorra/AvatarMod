@@ -370,13 +370,7 @@ public class ConfigStats {
 		public int fireTime = 3;
 
 		@Load
-		public float shockwaveRadius = 5;
-
-		@Load
-		public float shockwaveSpeed = 1;
-
-		@Load
-		public float shockwaveDamage = 6F;
+		public float maxDistance = 3;
 
 	}
 

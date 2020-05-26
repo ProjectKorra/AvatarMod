@@ -18,9 +18,9 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -56,14 +56,14 @@ public class AiFlamethrower extends BendingAi {
 	public boolean shouldContinueExecuting() {
 
 
-		if (entity.getAttackTarget() == null) return false;
+		if (entity.getAttackTarget() == null || AbilityData.get(bender.getEntity(), "flamethrower").getLevel() < 0) return false;
 
 		Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
 		BendingData data = BendingData.getFromEntity(entity);
 		entity.rotationYaw = (float) toDegrees(rotations.y());
 		entity.rotationPitch = (float) toDegrees(rotations.x());
 
-		if (timeExecuting == 1) {
+		if (timeExecuting == 5) {
 			if (!entity.world.isRemote) {
 				execAbility();
 				execStatusControl(START_FLAMETHROW);
@@ -75,10 +75,7 @@ public class AiFlamethrower extends BendingAi {
 		if (timeExecuting > 20 && timeExecuting < 100) {
 			BendingContext ctx = new BendingContext(bender.getData(), entity, bender, new Raytrace.Result());
 			execStatusControl(START_FLAMETHROW);
-			if (entity.world.isRemote)
-				FLAMETHROWER.tick(ctx);
-			if (!entity.world.isRemote)
-				FLAMETHROWER.tick(ctx);
+			FLAMETHROWER.tick(ctx);
 		}
 		if (timeExecuting >= 120) {
 			bender.getData().removeStatusControl(START_FLAMETHROW);

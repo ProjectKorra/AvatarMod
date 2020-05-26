@@ -446,7 +446,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					int level = abilityData.getLevel();
 					AbilityTreePath path = abilityData.getPath();
 					Bender bender = Bender.get(entity.getOwner());
-					if (bender != null) {
+					if (bender != null && level > -1) {
 
 						flamesPerSecond = level <= 0 ? 1 : 2;
 						if (level == 3 && path == AbilityTreePath.FIRST)

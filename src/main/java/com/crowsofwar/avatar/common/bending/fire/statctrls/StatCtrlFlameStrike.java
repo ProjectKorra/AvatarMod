@@ -14,6 +14,8 @@ import com.crowsofwar.avatar.common.entity.EntityShield;
 import com.crowsofwar.avatar.common.event.ParticleCollideEvent;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -27,6 +29,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -97,28 +100,34 @@ public class StatCtrlFlameStrike extends StatusControl {
 			float knockBack = STATS_CONFIG.flameStrikeSettings.knockback;
 			int fireTime = STATS_CONFIG.flameStrikeSettings.fireTime;
 			float xp = SKILLS_CONFIG.flameStrikeHit;
+			float distance = STATS_CONFIG.flameStrikeSettings.maxDistance;
+			float size = STATS_CONFIG.flameStrikeSettings.size * 3F;
 
 			if (abilityData.getLevel() == 1) {
 				damage *= 1.25F;
 				knockBack *= 1.125F;
 				fireTime += 2;
 				performance += 2;
+				size *= 1.25F;
 			}
 			if (abilityData.getLevel() == 2) {
 				damage *= 2F;
 				knockBack *= 1.25F;
 				fireTime += 4;
 				performance += 5;
+				size *= 1.25F;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 				damage *= 2.5F;
 				performance += 10;
 				fireTime += 3;
+				size *= 0.35F;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 				damage *= 4;
 				performance += 2;
 				fireTime += 5;
+				size *= 1.75;
 			}
 
 			damage *= powerModifier * xpMod;
@@ -128,23 +137,28 @@ public class StatCtrlFlameStrike extends StatusControl {
 
 			vel = vel.scale(0.0005).scale(knockBack);
 
-			if (canDamageEntity(target, attacker)) {
-				if (!(target instanceof EntityLivingBase) || ((EntityLivingBase) target).attackable() &&
-						((EntityLivingBase) target).hurtTime == 0)
-					DamageUtils.attackEntity(attacker, target, AvatarDamageSource.causeFireDamage(target, attacker), damage, performance,
-							new AbilityFlameStrike(), xp);
-				else {
+			List<Entity> targets = Raytrace.entityRaytrace(world, Vector.getEyePos(attacker).minus(0, 0.4, 0).toMinecraft(),
+					attacker.getLookVec(), distance, size, entity -> canCollideWithEntity(entity, attacker));
+
+			if (!targets.isEmpty() && targets.contains(target)) {
+				if (canDamageEntity(target, attacker)) {
+					if (!(target instanceof EntityLivingBase) || ((EntityLivingBase) target).attackable() &&
+							((EntityLivingBase) target).hurtTime == 0)
+						DamageUtils.attackEntity(attacker, target, AvatarDamageSource.causeFireDamage(target, attacker), damage, performance,
+								new AbilityFlameStrike(), xp);
+					else {
+						//NOTE: Add velocity like this is great for stuff like a water blast!
+						target.addVelocity(vel.x, vel.y + 0.15, vel.z);
+						target.motionY = Math.min(0.15, target.motionY);
+					}
+
+				} else if (canCollideWithEntity(target, attacker)) {
 					//NOTE: Add velocity like this is great for stuff like a water blast!
 					target.addVelocity(vel.x, vel.y + 0.15, vel.z);
 					target.motionY = Math.min(0.15, target.motionY);
 				}
-
-			} else if (canCollideWithEntity(target, attacker)){
-				//NOTE: Add velocity like this is great for stuff like a water blast!
-				target.addVelocity(vel.x, vel.y + 0.15, vel.z);
-				target.motionY = Math.min(0.15, target.motionY);
+				target.setFire(fireTime);
 			}
-			target.setFire(fireTime);
 		}
 		return false;
 	}
@@ -157,7 +171,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 				return false;
 			else if (entity instanceof EntityShield)
 				return true;
-		} else if (entity.getTeam() != null && entity.getTeam() == owner.getTeam())
+		} else if (entity.getTeam() != null && owner.getTeam() != null && entity.getTeam() == owner.getTeam())
 			return false;
 		else if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() == owner)
 			return false;
@@ -196,9 +210,9 @@ public class StatCtrlFlameStrike extends StatusControl {
 			return false;
 
 		float size = STATS_CONFIG.flameStrikeSettings.size;
+		float dist = STATS_CONFIG.flameStrikeSettings.maxDistance;
 		float accuracyMult = 0.1F;
 		int particleCount = 4;
-		int lifeTime = 6;
 		float mult = 0.4F;
 
 		if (abilityData.getLevel() == 1) {
@@ -208,20 +222,22 @@ public class StatCtrlFlameStrike extends StatusControl {
 		if (abilityData.getLevel() == 2) {
 			particleCount += 4;
 			size *= 1.25;
+			dist = 4;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			size *= 0.35F;
 			particleCount += 10;
 			accuracyMult = 0.025F;
-			lifeTime = 12;
+			dist = 7;
 			mult = 0.6F;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			size *= 2;
-			particleCount -= 1;
-			lifeTime = 5;
+			size *= 1.75F;
+			particleCount -= 5;
 			mult = 0.8F;
 		}
+
+		int lifeTime = (int) dist * 2;
 
 
 		Vec3d look = entity.getLookVec();

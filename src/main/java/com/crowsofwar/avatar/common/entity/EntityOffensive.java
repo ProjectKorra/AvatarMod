@@ -165,7 +165,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		super.readEntityFromNBT(nbt);
 		setDamage(nbt.getFloat("Damage"));
 		setLifeTime(nbt.getInteger("Lifetime"));
-		setBehaviour((OffensiveBehaviour) Behavior.lookup(nbt.getInteger("Behavior"), this));
+		setBehaviour((OffensiveBehaviour) Behavior.lookup(nbt.getInteger("Behaviour"), this));
 	}
 
 	@Override

@@ -56,7 +56,6 @@ public class AiFlameStrike extends BendingAi {
 		velocityYaw = 0;
 		velocityPitch = 0;
 		execAbility();
-		data.getMiscData().setAbilityCooldown(80);
 	}
 
 	@Override
@@ -102,7 +101,7 @@ public class AiFlameStrike extends BendingAi {
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSq(target) > 4 * 4
+		return target != null && entity.getDistanceSq(target) < 3 * 3
 				&& bender.getData().getMiscData().getAbilityCooldown() == 0;
 	}
 
