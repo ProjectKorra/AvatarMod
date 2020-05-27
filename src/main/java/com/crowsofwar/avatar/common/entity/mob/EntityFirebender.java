@@ -142,15 +142,10 @@ public class EntityFirebender extends EntityHumanBender {
 
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(1 /*2**/, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
-		//this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
-		//this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_shot", this, getBender())));
+		this.tasks.addTask(1 , Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
+		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
+		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_shot", this, getBender())));
 		//this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fire_blast", this, getBender())));
-		//this.tasks.addTask(3, new AiInfernoPunch(new AbilityInfernoPunch(), this, getBender(), this, 1.35, true));
-		//this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("inferno_punch", this, getBender())));
-		//	if (getData().hasStatusControl(INFERNO_PUNCH_MAIN) || getData().hasStatusControl(INFERNO_PUNCH_FIRST) || getData().hasStatusControl(INFERNO_PUNCH_SECOND)) {
-		//		this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.35, true));
-		//	}
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.3, true));
 	}
 

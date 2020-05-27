@@ -68,7 +68,7 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 					orb.setColor(1F, 77 / 255F, 0F, 1F);
 					orb.setType(EntityLightOrb.EnumType.COLOR_CUBE);
 					orb.setLightRadius(3);
-					orb.setEmittingEntity(bender);
+					orb.setElement(new Firebending());
 					orb.setBehavior(new FlamethrowerUpdateTick.FlamethrowerBehaviour());
 					world.spawnEntity(orb);
 				}

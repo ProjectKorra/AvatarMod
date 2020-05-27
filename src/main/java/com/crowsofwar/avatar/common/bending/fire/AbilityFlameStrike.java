@@ -112,6 +112,7 @@ public class AbilityFlameStrike extends Ability {
 			Vec3d height = entity.getPositionVector().add(0, 1.8, 0);
 			Vec3d rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.05).withY(0).toMinecraft();
 			rightSide = rightSide.add(height);
+
 			EntityLightOrb orb = new EntityLightOrb(world);
 			orb.setOwner(entity);
 			orb.setAbility(new AbilityFlameStrike());

@@ -101,7 +101,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 			int fireTime = STATS_CONFIG.flameStrikeSettings.fireTime;
 			float xp = SKILLS_CONFIG.flameStrikeHit;
 			float distance = STATS_CONFIG.flameStrikeSettings.maxDistance;
-			float size = STATS_CONFIG.flameStrikeSettings.size * 3F;
+			float size = STATS_CONFIG.flameStrikeSettings.size * 5F;
 
 			if (abilityData.getLevel() == 1) {
 				damage *= 1.25F;
@@ -140,6 +140,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 			List<Entity> targets = Raytrace.entityRaytrace(world, Vector.getEyePos(attacker).minus(0, 0.4, 0).toMinecraft(),
 					attacker.getLookVec(), distance, size, entity -> canCollideWithEntity(entity, attacker));
 
+			System.out.println(targets.size());
 			if (!targets.isEmpty() && targets.contains(target)) {
 				if (canDamageEntity(target, attacker)) {
 					if (!(target instanceof EntityLivingBase) || ((EntityLivingBase) target).attackable() &&

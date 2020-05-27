@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -50,13 +51,13 @@ public class AiFlamethrower extends BendingAi {
 		bender.getData().removeStatusControl(START_FLAMETHROW);
 		bender.getData().removeTickHandler(FLAMETHROWER);
 		bender.getData().removeStatusControl(STOP_FLAMETHROW);
+		bender.getData().getMiscData().setAbilityCooldown(40);
 	}
 
 	@Override
 	public boolean shouldContinueExecuting() {
 
 
-		System.out.println(AbilityData.get(bender.getEntity(), "flamethrower").getLevel());
 		if (entity.getAttackTarget() == null || AbilityData.get(bender.getEntity(), "flamethrower").getLevel() < 0) return false;
 
 		Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
@@ -66,22 +67,21 @@ public class AiFlamethrower extends BendingAi {
 
 		if (timeExecuting == 1) {
 			if (!entity.world.isRemote) {
-				execAbility();
 				execStatusControl(START_FLAMETHROW);
 			}
-			if (data != null)
-				data.addTickHandler(FLAMETHROWER);
 		}
 
-		if (timeExecuting > 20 && timeExecuting < 100) {
+		if (timeExecuting > 20 && timeExecuting < 120) {
+			if (entity.world.isRemote)
+				AvatarLog.info("TimeExecuting: " + timeExecuting);
 			BendingContext ctx = new BendingContext(bender.getData(), entity, bender, new Raytrace.Result());
-			execStatusControl(START_FLAMETHROW);
 			FLAMETHROWER.tick(ctx);
 		}
 		if (timeExecuting >= 120) {
+			execStatusControl(STOP_FLAMETHROW);
 			bender.getData().removeStatusControl(START_FLAMETHROW);
 			bender.getData().removeTickHandler(FLAMETHROWER);
-			execStatusControl(STOP_FLAMETHROW);
+
 
 			return false;
 		}
@@ -94,12 +94,11 @@ public class AiFlamethrower extends BendingAi {
 	protected boolean shouldExec() {
 		int amount = Math.max(bender.getData().getAbilityData(new AbilityFlamethrower()).getLevel(), 0) + 7;
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistance(target) < amount;
+		return target != null && entity.getDistance(target) < amount && bender.getData().getMiscData().getAbilityCooldown() == 0;
 	}
 
 	@Override
 	protected void startExec() {
-		bender.getData().addStatusControl(START_FLAMETHROW);
 		execAbility();
 	}
 
