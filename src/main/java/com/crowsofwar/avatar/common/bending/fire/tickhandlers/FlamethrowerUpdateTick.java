@@ -174,12 +174,9 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 
 				Vector start = look.plus(eye.minusY(0.5));
-				Vector end = start.plus(look.times(range));
-
-
 				Vector knockback = look.times(speedMult / 200 * STATS_CONFIG.flamethrowerSettings.push);
 
-				List<Entity> raytraceTargets = Raytrace.entityRaytrace(world, start, look, range, size * 1.25F, entity1 -> canCollideWithEntity(entity1, entity));
+				List<Entity> raytraceTargets = Raytrace.entityRaytrace(world, start, look, range, size * 1.3F, entity1 -> canCollideWithEntity(entity1, entity));
 				if (raytraceTargets.contains(target) && !world.isRemote) {
 					if (canDamageEntity(target, entity)) {
 						if (!(target instanceof EntityLivingBase) || ((EntityLivingBase) target).attackable() &&
@@ -352,7 +349,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				//Particle code.
 				if (world.isRemote && entity instanceof EntityPlayer) {
 					speedMult /= 28.75;
-					if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+					if (CLIENT_CONFIG.fireRenderSettings.solidFireParticles) {
 						for (double i = 0; i < flamesPerSecond; i += 3) {
 							Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
 							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.5F).time(22).collide(true).spawnEntity(entity).vel(look.times(speedMult).toMinecraft())
@@ -361,7 +358,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 					}
 					for (int i = 0; i < flamesPerSecond; i++) {
 						Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
-						if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+						if (CLIENT_CONFIG.fireRenderSettings.solidFireParticles) {
 							ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.5F).time(22).collide(true).vel(look.times(speedMult / 1.25).toMinecraft()).
 									ability(new AbilityFlamethrower()).spawnEntity(entity).spawn(world);
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
@@ -370,7 +367,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
 									clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
 									.ability(new AbilityFlamethrower()).spawn(world);
-						} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+						} else if (!CLIENT_CONFIG.fireRenderSettings.solidFireParticles) {
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
 									clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
 									.ability(new AbilityFlamethrower()).spawn(world);
@@ -395,10 +392,10 @@ public class FlamethrowerUpdateTick extends TickHandler {
 				if (world.isRemote) {
 					for (int i = 0; i < 5; i++)
 						ParticleBuilder.create(ParticleBuilder.Type.SNOW).collide(true).time(15).vel(world.rand.nextGaussian() / 50, world.rand.nextGaussian() / 50, world.rand.nextGaussian() / 50)
-								.scale(1.5F + abilityData.getLevel() / 2F).pos(Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity)).toMinecraft()).clr(0.75F, 0.75F, 0.75f).spawn(world);
+								.scale(1.5F + abilityData.getLevel() / 2F).pos(getEyePos(entity).plus(Vector.getLookRectangular(entity)).toMinecraft()).clr(0.75F, 0.75F, 0.75f).spawn(world);
 
 				}
-				Vector pos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity));
+				Vector pos = getEyePos(entity).plus(Vector.getLookRectangular(entity));
 				if (!world.isRemote && world instanceof WorldServer) {
 					WorldServer World = (WorldServer) world;
 					World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, pos.x(), pos.y(), pos.z(), 3 + Math.max(abilityData.getLevel(), 0),
@@ -489,14 +486,14 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 						double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
 						double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
-						Vector eye = Vector.getEyePos(entity.getOwner());
+						Vector eye = getEyePos(entity.getOwner());
 						Vector look = randomness == 0 ? Vector.getLookRectangular(entity) : Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
 						Vector start = look.plus(eye.minusY(0.5));
 
 
 						if (entity.world.isRemote) {
 							speedMult /= 28.75;
-							if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+							if (CLIENT_CONFIG.fireRenderSettings.solidFireParticles) {
 								for (double i = 0; i < flamesPerSecond; i += 3) {
 									Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
 									ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.5F).time(22).collide(true).spawnEntity(entity).vel(look.times(speedMult).toMinecraft())
@@ -505,7 +502,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 							}
 							for (int i = 0; i < flamesPerSecond; i++) {
 								Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
-								if (CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+								if (CLIENT_CONFIG.fireRenderSettings.solidFireParticles) {
 									ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.5F).time(22).collide(true).vel(look.times(speedMult / 1.25).toMinecraft()).
 											ability(new AbilityFlamethrower()).spawnEntity(entity).spawn(world);
 									ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
@@ -514,7 +511,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 									ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
 											clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
 											.ability(new AbilityFlamethrower()).spawn(world);
-								} else if (!CLIENT_CONFIG.fireRenderSettings.useFlamethrowerParticles) {
+								} else if (!CLIENT_CONFIG.fireRenderSettings.solidFireParticles) {
 									ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
 											clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
 											.ability(new AbilityFlamethrower()).spawn(world);

@@ -207,7 +207,8 @@ public class ConfigClient {
 		public final boolean showFlameStrikeOrb = false;
 
 		@Load
-		public final boolean useFlamethrowerParticles = true;
+		public final boolean solidFireParticles = true;
+
 	}
 
 	public static class AirRenderSettings {
