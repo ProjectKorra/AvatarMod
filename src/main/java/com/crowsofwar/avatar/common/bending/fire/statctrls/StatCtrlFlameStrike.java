@@ -228,9 +228,9 @@ public class StatCtrlFlameStrike extends StatusControl {
 			accuracyMult *= 1.5F;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			size *= 0.35F;
+			size *= 0.4F;
 			particleCount += 10;
-			accuracyMult = 0.025F;
+			accuracyMult = 0.03F;
 			dist = 7;
 			mult = 0.7F;
 		}
