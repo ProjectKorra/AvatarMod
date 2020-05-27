@@ -56,6 +56,7 @@ public class AiFlamethrower extends BendingAi {
 	public boolean shouldContinueExecuting() {
 
 
+		System.out.println(AbilityData.get(bender.getEntity(), "flamethrower").getLevel());
 		if (entity.getAttackTarget() == null || AbilityData.get(bender.getEntity(), "flamethrower").getLevel() < 0) return false;
 
 		Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
@@ -63,7 +64,7 @@ public class AiFlamethrower extends BendingAi {
 		entity.rotationYaw = (float) toDegrees(rotations.y());
 		entity.rotationPitch = (float) toDegrees(rotations.x());
 
-		if (timeExecuting == 5) {
+		if (timeExecuting == 1) {
 			if (!entity.world.isRemote) {
 				execAbility();
 				execStatusControl(START_FLAMETHROW);

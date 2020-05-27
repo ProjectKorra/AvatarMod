@@ -117,7 +117,6 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		super.entityInit();
 		dataManager.register(SYNC_SKIN, AvatarUtils.getRandomNumberInRange(1, getNumSkins()));
 		dataManager.register(SYNC_SCROLLS_LEFT, getLevel());
-		setInitialScrolls(getLevel());
 	}
 
 	@Override
@@ -150,7 +149,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		this.targetSelector = entity -> {
 
 			if (entity != null && !entity.isInvisible() && entity.canBeAttackedWithItem()) {
-				if (entity.getTeam() == null || entity.getTeam() != null && entity.getTeam() == getTeam()) {
+				if (entity.getTeam() == null || getTeam() == null || entity.getTeam() != null && getTeam() != null && entity.getTeam() == getTeam()) {
 					return entity instanceof EntityMob
 							&& (((EntityMob) entity).isEntityUndead());
 				}
@@ -159,9 +158,9 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 			return false;
 		};
 
-		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
+		this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, true));
 		// By default, wizards don't attack players unless the player has attacked them.
-		this.targetTasks.addTask(0, new EntityAINearestAttackableTarget<>(this, EntityLiving.class, 0,
+		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityLiving.class, 0,
 				false, true, this.targetSelector));
 		addBendingTasks();
 

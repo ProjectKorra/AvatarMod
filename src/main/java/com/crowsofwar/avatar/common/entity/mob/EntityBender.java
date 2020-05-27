@@ -78,6 +78,13 @@ public abstract class EntityBender extends EntityCreature implements IEntityAddi
 	}
 
 	@Override
+	protected void applyEntityAttributes() {
+		super.applyEntityAttributes();
+		applyAbilityLevels(getLevel());
+		getData().addBending(getElement());
+	}
+
+	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		setLevel(nbt.getInteger("Level"));
@@ -122,6 +129,8 @@ public abstract class EntityBender extends EntityCreature implements IEntityAddi
 	@Override
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
 		setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
+		applyAbilityLevels(getLevel());
+		getData().addBending(getElement());
 		return super.onInitialSpawn(difficulty, livingdata);
 	}
 
