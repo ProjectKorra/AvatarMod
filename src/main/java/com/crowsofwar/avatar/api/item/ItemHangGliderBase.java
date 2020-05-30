@@ -140,11 +140,11 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
      */
     @Override
     public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-
-        List<ItemStack> leathers = OreDictionary.getOres("leather");
-        for (ItemStack stack : leathers) {
+        //Does not currently use durability TODO: [AD]: Figure out how and when to lose durability
+        /*List<ItemStack> wools = OreDictionary.getOres("wool");
+        for (ItemStack stack : wools) {
             if (stack.getItem() == repair.getItem()) return true;
-        }
+        }*/
         return false;
 
     }

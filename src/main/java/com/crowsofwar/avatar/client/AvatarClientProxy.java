@@ -47,9 +47,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSendViewStatus;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.api.capabilities.CapabilityHelper;
-import com.crowsofwar.avatar.api.capabilities.IGliderCapabilityHandler;
-import com.crowsofwar.avatar.client.event.GliderEventHandler;
-import com.crowsofwar.avatar.glider.client.renderer.LayerGlider;
+import com.crowsofwar.avatar.api.capabilities.IAdvancedGliderCapabilityHandler;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder.Type;
 import com.crowsofwar.avatar.client.event.GliderRenderHandler;
 import com.crowsofwar.avatar.client.renderer.LayerGlider;
@@ -382,7 +380,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	}
 
 	@Override
-	public IGliderCapabilityHandler getClientGliderCapability() {
+	public IAdvancedGliderCapabilityHandler getClientGliderCapability() {
 		return getClientPlayer().getCapability(CapabilityHelper.GLIDER_CAPABILITY, null);
 	}
 

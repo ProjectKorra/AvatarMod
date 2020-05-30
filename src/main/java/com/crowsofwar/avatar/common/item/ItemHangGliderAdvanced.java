@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.item;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.api.item.ItemHangGliderBase;
 import com.crowsofwar.avatar.client.model.ModelGlider;
 import com.crowsofwar.avatar.common.GliderInfo;
@@ -12,8 +13,8 @@ public class ItemHangGliderAdvanced extends ItemHangGliderBase implements Avatar
 
 	public ItemHangGliderAdvanced() {
 		super(ConfigHandler.advancedGliderMinSpeed, ConfigHandler.advancedGliderMaxSpeed, ConfigHandler.advancedGliderPitchOffset, ConfigHandler.advancedGliderYBoost, ConfigHandler.advancedGliderFallReduction, ConfigHandler.advancedGliderWindModifier, ConfigHandler.advancedGliderAirResistance, ConfigHandler.advancedGliderTotalDurability, ModelGlider.MODEL_GLIDER_ADVANCED_TEXTURE_RL);
-		setCreativeTab(AvatarItems.tabItems);
-		setTranslationKey(GliderInfo.ITEM_GLIDER_ADVANCED_NAME);
+		setCreativeTab(AvatarMod.tabItems);
+		setTranslationKey(GliderInfo.itemGliderAdvancedName);
 	}
 
 	//ToDo: Needed?

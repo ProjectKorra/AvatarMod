@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.INBTSerializable;
  * Acquire an instance of this using {@link net.minecraft.entity.Entity#getCapability(Capability, EnumFacing)}.
  * It should only ever be present on players.
  */
-public interface IGliderCapabilityHandler extends INBTSerializable<NBTTagCompound> {
+public interface IAdvancedGliderCapabilityHandler extends INBTSerializable<NBTTagCompound> {
 
     /**
      * Get the current gliding status of the player.

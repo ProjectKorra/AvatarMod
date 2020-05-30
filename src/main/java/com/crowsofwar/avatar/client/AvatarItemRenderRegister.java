@@ -68,13 +68,10 @@ public class AvatarItemRenderRegister {
 
 		register(AvatarItems.itemBisonWhistle);
 		register(AvatarItems.airbenderStaff);
-        register(AvatarItems.GLIDER_ADV);
 
-		register(AvatarItems.GLIDER_BASIC);
-		register(AvatarItems.gliderBasic);
 		//TODO: Register the other glider parts
-		register(AvatarItems.GLIDER_ADV);
 
+		register(AvatarItems.gliderBasic);
 		register(AvatarItems.gliderAdv);
 
 		for (int i = 0; i <= 3; i++) {
@@ -109,10 +106,8 @@ public class AvatarItemRenderRegister {
 
 		for (int meta : metadata) {
 			ModelResourceLocation mrl = new ModelResourceLocation("avatarmod:" + item.getModelName(meta),
-					"inventory");
-
+				"inventory");
 			setCustomModelResourceLocation(item.item(), meta, mrl);
-
 		}
 
 	}

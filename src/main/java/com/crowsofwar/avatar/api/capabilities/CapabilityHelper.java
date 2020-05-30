@@ -7,8 +7,8 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 public class CapabilityHelper {
 
     /** Holds the capability **/
-    @CapabilityInject(IGliderCapabilityHandler.class)
-    public static final Capability<IGliderCapabilityHandler> GLIDER_CAPABILITY = null;
+    @CapabilityInject(IAdvancedGliderCapabilityHandler.class)
+    public static final Capability<IAdvancedGliderCapabilityHandler> GLIDER_CAPABILITY = null;
 
 
     //===================================== Helper Methods ==================================================
@@ -19,7 +19,7 @@ public class CapabilityHelper {
      * @param player - the player to check
      * @return The capability if the player has the capability, null otherwise
      */
-    public static IGliderCapabilityHandler getGliderCapability(EntityPlayer player) {
+    public static IAdvancedGliderCapabilityHandler getGliderCapability(EntityPlayer player) {
         return player.getCapability(GLIDER_CAPABILITY, null);
     }
 

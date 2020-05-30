@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.common.item.scroll.*;
 
 import com.crowsofwar.avatar.common.GliderInfo;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -33,7 +32,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,8 +55,6 @@ public class AvatarItems {
 	public static ItemHangGliderPart gliderPartRightWing;
 	public static ItemHangGliderBasic gliderBasic;
 	public static ItemHangGliderAdvanced gliderAdv;
-	public static ItemHangGliderBasic GLIDER_BASIC;
-	public static ItemHangGliderAdvanced GLIDER_ADV;
 
 	private AvatarItems() {
 	}
@@ -93,12 +89,11 @@ public class AvatarItems {
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
-		itemRender(gliderBasic, 0, GliderInfo.ITEM_GLIDER_BASIC_NAME);
-		itemRender(gliderAdv, 0, GliderInfo.ITEM_GLIDER_ADVANCED_NAME);
+		itemRender(gliderBasic, 0, GliderInfo.itemGliderBasicName);
+		itemRender(gliderAdv, 0, GliderInfo.itemGliderAdvancedName);
 		itemRender(gliderPartLeftWing, 0, ItemHangGliderPart.names[0]);
 		itemRender(gliderPartRightWing, 1, ItemHangGliderPart.names[1]);
 		itemRender(gliderPartScaffolding, 2, ItemHangGliderPart.names[2]);
-
 	}
 
 	private static void itemRender(Item item, int meta, String name) {
@@ -116,9 +111,9 @@ public class AvatarItems {
 		Item[] itemsArr = allItems.toArray(new Item[allItems.size()]);
 		e.getRegistry().registerAll(itemsArr);
 
-		e.getRegistry().register(new ItemHangGliderPart().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.ITEM_GLIDER_PART_NAME));
-		e.getRegistry().register(new ItemHangGliderBasic().setRegistryName(AvatarInfo.MOD_ID+ GliderInfo.ITEM_GLIDER_BASIC_NAME));
-		//e.getRegistry().register(new ItemHangGliderAdvanced().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.ITEM_GLIDER_ADVANCED_NAME));
+		e.getRegistry().register(new ItemHangGliderPart().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.itemGliderPartName));
+		e.getRegistry().register(new ItemHangGliderBasic().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.itemGliderBasicName));
+		e.getRegistry().register(new ItemHangGliderAdvanced().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.itemGliderAdvancedName));
 
 		AvatarMod.proxy.registerItemModels();
 	}

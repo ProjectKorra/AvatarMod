@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.capabilities;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.api.capabilities.IGliderCapabilityHandler;
+import com.crowsofwar.avatar.api.capabilities.IAdvancedGliderCapabilityHandler;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketHandler;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketSyncGliderDataToClient;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -19,22 +19,22 @@ import static com.crowsofwar.avatar.api.capabilities.CapabilityHelper.GLIDER_CAP
 public final class GliderCapabilityImplementation {
 
     public static void init(){
-        CapabilityManager.INSTANCE.register(IGliderCapabilityHandler.class, new Capability.IStorage<IGliderCapabilityHandler>() {
+        CapabilityManager.INSTANCE.register(IAdvancedGliderCapabilityHandler.class, new Capability.IStorage<IAdvancedGliderCapabilityHandler>() {
 
             @Override
-            public NBTBase writeNBT(Capability<IGliderCapabilityHandler> capability, IGliderCapabilityHandler instance, EnumFacing side) {
+            public NBTBase writeNBT(Capability<IAdvancedGliderCapabilityHandler> capability, IAdvancedGliderCapabilityHandler instance, EnumFacing side) {
                 return instance.serializeNBT();
             }
 
             @Override
-            public void readNBT(Capability<IGliderCapabilityHandler> capability, IGliderCapabilityHandler instance, EnumFacing side, NBTBase nbt) {
+            public void readNBT(Capability<IAdvancedGliderCapabilityHandler> capability, IAdvancedGliderCapabilityHandler instance, EnumFacing side, NBTBase nbt) {
                 if (nbt instanceof NBTTagCompound)
                     instance.deserializeNBT(((NBTTagCompound) nbt));
             }
         }, DefaultGliderCapImplementation.class);
     }
 
-    public static class DefaultGliderCapImplementation implements IGliderCapabilityHandler {
+    public static class DefaultGliderCapImplementation implements IAdvancedGliderCapabilityHandler {
 
         private boolean isPlayerGliding;
         private boolean isGliderDeployed;
@@ -113,7 +113,7 @@ public final class GliderCapabilityImplementation {
 
         public static final ResourceLocation NAME = new ResourceLocation(MOD_ID, "cap");
 
-        private final IGliderCapabilityHandler capabilityImplementation = new DefaultGliderCapImplementation();
+        private final IAdvancedGliderCapabilityHandler capabilityImplementation = new DefaultGliderCapImplementation();
 
         @Override
         public boolean hasCapability(Capability<?> capability, EnumFacing facing) {

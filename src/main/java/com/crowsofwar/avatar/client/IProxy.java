@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.client;
 
-import com.crowsofwar.avatar.api.capabilities.IGliderCapabilityHandler;
+import com.crowsofwar.avatar.api.capabilities.IAdvancedGliderCapabilityHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -19,5 +19,5 @@ public interface IProxy {
 
     public World getClientWorld();
 
-    public IGliderCapabilityHandler getClientGliderCapability();
+    public IAdvancedGliderCapabilityHandler getClientGliderCapability();
 }
