@@ -19,12 +19,10 @@ package com.crowsofwar.avatar.client.gui;
 
 import com.crowsofwar.avatar.client.AvatarShaderUtils;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.StatusControl;
-import com.crowsofwar.avatar.common.data.Vision;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityIcePrison;
@@ -51,6 +49,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
@@ -349,7 +348,19 @@ public class AvatarUiRenderer extends Gui {
 		refreshDimensions();
 		int x = screenWidth() / scaleFactor() - 85 + xOff;
 		int y = screenHeight() / scaleFactor() - 60 + yOff;
-		mc.renderEngine.bindTexture(AvatarUiTextures.getBendingIconTexture(controller.getId()));
+		int level = 0;
+		EntityPlayer player = Minecraft.getMinecraft().player;
+		if (BendingData.getFromEntity(player) != null) {
+			List<Ability> abilities = controller.getAllAbilities();
+			abilities = abilities.stream().filter(ability -> AbilityData.get(player, ability.getName()).getLevel() > -1).collect(Collectors.toList());
+			for (Ability ability : abilities) {
+				AbilityData aD = AbilityData.get(player, ability.getName());
+				if (aD.getLevel() > -1) {
+					level += aD.getLevel() + 1;
+				}
+			}
+		}
+		mc.renderEngine.bindTexture(AvatarUiTextures.getBendingIconTexture(controller.getId(), level));
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 0);
 		GlStateManager.scale(width / 256F, height / 256F, 1);

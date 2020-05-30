@@ -123,27 +123,6 @@ public class FlameStrikeHandler extends TickHandler {
 			data.removeStatusControl(FLAME_STRIKE_OFF);
 			return true;
 		}
-		/*if (charge) {
-			if (data.hasStatusControl(FLAME_STRIKE_OFF) && !data.hasStatusControl(START_CHARGE_FLAME_STRIKE_MAIN) &&
-					!data.hasStatusControl(STOP_CHARGE_FLAME_STRIKE_MAIN)) {
-				//initialDuration = data.getTickHandlerDuration(this);
-				data.addStatusControl(START_CHARGE_FLAME_STRIKE_MAIN);
-			} else if (data.hasStatusControl(FLAME_STRIKE_MAIN) && !data.hasStatusControl(START_CHARGE_FLAME_STRIKE_OFF)
-					&& !data.hasStatusControl(STOP_CHARGE_FLAME_STRIKE_OFF)) {
-				//initialDuration = data.getTickHandlerDuration(this);
-				data.addStatusControl(START_CHARGE_FLAME_STRIKE_OFF);
-			} else if (!data.hasStatusControl(STOP_CHARGE_FLAME_STRIKE_OFF) && !data.hasStatusControl(STOP_CHARGE_FLAME_STRIKE_MAIN)) {
-				//initialDuration = data.getTickHandlerDuration(this);
-			} else { //if (initialDuration > 0) {
-			//	if ((data.getTickHandlerDuration(this) - initialDuration) % 20 == 0) {
-					//Makes sure the charge is not 0.
-				//	if (data.getTickHandlerDuration(this) != initialDuration) {
-						StatCtrlFlameStrike.setChargeLevel(entity.getPersistentID(), chargeLevel + 1);
-					}
-				//}
-		//}
-
-		}**/
 		return false;
 	}
 

@@ -51,7 +51,6 @@ public class AiFlamethrower extends BendingAi {
 		bender.getData().removeStatusControl(START_FLAMETHROW);
 		bender.getData().removeTickHandler(FLAMETHROWER);
 		bender.getData().removeStatusControl(STOP_FLAMETHROW);
-		bender.getData().getMiscData().setAbilityCooldown(40);
 	}
 
 	@Override
@@ -71,12 +70,6 @@ public class AiFlamethrower extends BendingAi {
 			}
 		}
 
-		if (timeExecuting > 20 && timeExecuting < 120) {
-			if (entity.world.isRemote)
-				AvatarLog.info("TimeExecuting: " + timeExecuting);
-			BendingContext ctx = new BendingContext(bender.getData(), entity, bender, new Raytrace.Result());
-			FLAMETHROWER.tick(ctx);
-		}
 		if (timeExecuting >= 120) {
 			execStatusControl(STOP_FLAMETHROW);
 			bender.getData().removeStatusControl(START_FLAMETHROW);
@@ -94,12 +87,14 @@ public class AiFlamethrower extends BendingAi {
 	protected boolean shouldExec() {
 		int amount = Math.max(bender.getData().getAbilityData(new AbilityFlamethrower()).getLevel(), 0) + 7;
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistance(target) < amount && bender.getData().getMiscData().getAbilityCooldown() == 0;
+		return target != null && entity.getDistance(target) < amount;
 	}
 
 	@Override
 	protected void startExec() {
+		timeExecuting = 0;
 		execAbility();
+		bender.getData().getMiscData().setAbilityCooldown(200);
 	}
 
 }

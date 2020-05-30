@@ -49,8 +49,7 @@ import java.util.Objects;
 /**
  * @author CrowsOfWar
  */
-@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
-public class EntityWaterBubble extends AvatarEntity implements IGlowingEntity {
+public class EntityWaterBubble extends AvatarEntity {
 
 	private static final DataParameter<WaterBubbleBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterBubble.class, WaterBubbleBehavior.DATA_SERIALIZER);
@@ -110,7 +109,7 @@ public class EntityWaterBubble extends AvatarEntity implements IGlowingEntity {
 		dataManager.register(SYNC_SIZE, 1F);
 		dataManager.register(SYNC_MAX_SIZE, 1.5F);
 		dataManager.register(SYNC_HEALTH, 3F);
-		dataManager.register(SYNC_DEGREES_PER_SECOND, 30F);
+		dataManager.register(SYNC_DEGREES_PER_SECOND, 5F);
 	}
 
 	@Override
@@ -238,10 +237,5 @@ public class EntityWaterBubble extends AvatarEntity implements IGlowingEntity {
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;
-	}
-
-	@Override
-	public ColoredLight produceColoredLight(float partialTicks) {
-		return ColoredLight.builder().color(61, 77, 255).pos(this).radius(10f).build();
 	}
 }

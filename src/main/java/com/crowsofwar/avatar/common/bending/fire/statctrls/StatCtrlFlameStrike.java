@@ -11,6 +11,7 @@ import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityShield;
+import com.crowsofwar.avatar.common.entity.IShieldEntity;
 import com.crowsofwar.avatar.common.event.ParticleCollideEvent;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -187,7 +188,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 				return false;
 			else if (!entity.canBeCollidedWith())
 				return false;
-			else if (entity instanceof EntityShield)
+			else if (entity instanceof EntityShield || entity instanceof IShieldEntity)
 				return true;
 		} else if (entity.getTeam() != null && owner.getTeam() != null && entity.getTeam() == owner.getTeam())
 			return false;
