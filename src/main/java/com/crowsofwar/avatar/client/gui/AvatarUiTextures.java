@@ -89,10 +89,10 @@ public class AvatarUiTextures {
 	public static ResourceLocation getBendingIconTexture(UUID bendingId, int totalLevel) {
 		List<Ability> abilities = BendingStyles.get(bendingId).getAllAbilities();
 		int maxLevel = abilities.size() * 4;
-		float level = (float) totalLevel / maxLevel;
+		int level = Math.min(3, (int) ((float) totalLevel / maxLevel * 4));
 
 		String bendingName = BendingStyles.getName(bendingId);
-		String suffix = level >= 0.75F ? "_glow" : "";
+		String suffix = level > 0 ? "_" + level : "";
 		String location = "textures/gui/icon/" + bendingName + suffix + ".png";
 
 		//Using cached images makes it set; using a resource location lets the textures change
