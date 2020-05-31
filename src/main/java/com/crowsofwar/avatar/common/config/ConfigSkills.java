@@ -32,6 +32,13 @@ public class ConfigSkills {
 	public boolean startWithRandomBending = true;
 
 	@Load
+	public boolean setKeepInventory = true;
+
+	@Load
+	public boolean setChopBlocksThreshold; = 0;
+
+
+	@Load
 	public float blockPlaced = 5f,
 			airBurstHit = 4F,
 			airbladeHit = 3f,
