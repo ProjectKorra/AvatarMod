@@ -51,7 +51,7 @@ public class AirParticleSpawner extends TickHandler {
 		if (world.isRemote)
 			for (int i = 0; i < 3 + AvatarUtils.getRandomNumberInRange(0, 2); i++)
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).collide(false).clr(0.85F, 0.85F, 0.85F).pos(pos.toMinecraft()).
-						vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).scale(1.25F +
+						vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).scale(1 +
 						Math.max(data.getLevel(), 0) / 2F).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Airbending()).spawn(world);
 
 		//particles.spawnParticles(entity.world, EnumParticleTypes.EXPLOSION_NORMAL, 1, 4, pos,

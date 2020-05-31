@@ -243,7 +243,7 @@ public class AvatarUiRenderer extends Gui {
 					int adjustedU = (int) Math.floor(unadjustedU / 8f) * 8;
 					float uDiff = unadjustedU - adjustedU;
 
-					drawTexturedModalRect(adjustedU, 0, 1, 27, (int) (100 * available / max + uDiff), 9);
+					drawTexturedModalRect(adjustedU, 0, 0, 27, (int) (99 * available / max + uDiff), 9);
 
 					// Unavailable chi
 					drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);

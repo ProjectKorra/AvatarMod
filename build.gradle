@@ -111,8 +111,8 @@ dependencies {
 	provided fileTree(dir: dependenciesConfig.libraries + (dependenciesConfig.obfuscated ? "" : "Deobf"), include: ["*.jar"])
 	//provided "elucent.albedo:albedo:1.1.0-3"
 	provided "codechicken:CodeChickenLib:1.12.2-3.2.2.353:universal"
-	deobfCompile "tk.zeitheron.HammerLib:HammerLib-1.12.2:2.0.6.13:deobf"
-	deobfCompile "tk.zeitheron.ColoredLux:ColoredLux-1.12.2:12r:deobf"
+	provided "tk.zeitheron.HammerLib:HammerLib-1.12.2:2.0.6.13:deobf"
+	provided "tk.zeitheron.ColoredLux:ColoredLux-1.12.2:12r:deobf"
 	//deobfCompile "colored-lux:ColoredLux-1.12.2:12r:deobf"
 	// compile against the JEI API but do not include it at runtime
 	deobfProvided "mezz.jei:jei_1.12.2:4.15.0.293:api"

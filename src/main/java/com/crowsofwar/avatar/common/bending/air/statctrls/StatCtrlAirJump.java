@@ -84,7 +84,7 @@ public class StatCtrlAirJump extends StatusControl {
 		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.4, 1, 0.4));
 		boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WEB;
 
-		if (jumps < 2 && onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiAirJump))) {
+		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiAirJump))) {
 
 			int lvl = abilityData.getLevel();
 			double multiplier = 0.65;

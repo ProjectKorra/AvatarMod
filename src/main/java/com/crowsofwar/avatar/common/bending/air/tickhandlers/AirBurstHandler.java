@@ -3,7 +3,10 @@ package com.crowsofwar.avatar.common.bending.air.tickhandlers;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
@@ -204,7 +207,7 @@ public class AirBurstHandler extends TickHandler {
 
 			if (!data.hasStatusControl(RELEASE_AIR_BURST)) {
 
-				int particleController = abilityData.getLevel() > 0 ? 60 - (5 * abilityData.getLevel()) : 60;
+				int particleController = abilityData.getLevel() > 0 ? 60 - (4 * abilityData.getLevel()) : 60;
 				EntityShockwave shockwave = new EntityShockwave(world);
 				shockwave.setOwner(entity);
 				shockwave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity));
@@ -307,8 +310,8 @@ public class AirBurstHandler extends TickHandler {
 									zVel = z1 * entity.getParticleSpeed() * 0.375F;
 
 									ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
-											.clr(0.8F, 0.8F, 0.8F).time(8 + (int) (3 * ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
-											.scale(2.25F + 0.5F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).element(entity.getElement())
+											.clr(0.8F, 0.8F, 0.8F).time(9 + (int) (3 * ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
+											.scale(1.5F + 0.5F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).element(entity.getElement())
 											.spawn(world);
 
 								}
@@ -318,14 +321,12 @@ public class AirBurstHandler extends TickHandler {
 								Vec3d vel = new Vec3d(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian());
 								vel = vel.scale(0.275F * entity.getParticleSpeed());
 								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(entity.posX, entity.posY, entity.posZ).vel(vel)
-										.clr(0.85F, 0.85F, 0.85F).time(13).collide(true)
-										.scale(2.25f + 0.5F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).shaded(true).
+										.clr(0.85F, 0.85F, 0.85F).time(15).collide(true)
+										.scale(1.5f + 0.5F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).shaded(true).
 										element(entity.getElement()).spawn(world);
 
 							}
 						}
-						ParticleBuilder.create(ParticleBuilder.Type.SPHERE).clr(1.0F, 1.0F, 1.0F).entity(entity).time(16).scale((float) ((EntityShockwave) entity).getRange())
-								.pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity)).element(entity.getElement()).spawn(world);
 					}
 				}
 			}
