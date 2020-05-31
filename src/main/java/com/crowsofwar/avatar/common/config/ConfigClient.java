@@ -189,7 +189,7 @@ public class ConfigClient {
 		public final double widthScale = 1.1F, heightScale = 1.1F;
 
 		@Load
-		public final int xPos = 120, yPos = 3;
+		public final int xPos = 115, yPos = 3;
 
 	}
 
