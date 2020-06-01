@@ -214,7 +214,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 		float dist = STATS_CONFIG.flameStrikeSettings.maxDistance;
 		float accuracyMult = 0.05F;
 		int particleCount = 4;
-		float mult = 0.4F;
+		float mult = 0.45F;
 
 		if (abilityData.getLevel() == 1) {
 			particleCount += 2;
@@ -252,7 +252,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 		if (world.isRemote) {
 			//Spawn particles
 			if (CLIENT_CONFIG.fireRenderSettings.solidFireParticles) {
-				for (int i = 0; i < 15 + particleCount; i++) {
+				for (int i = 0; i < 10 + particleCount; i++) {
 					double x1 = entity.posX + look.x * i / 50 + world.rand.nextGaussian() * accuracyMult;
 					double y1 = eyePos - 0.4F + world.rand.nextGaussian() * accuracyMult;
 					double z1 = entity.posZ + look.z * i / 50 + world.rand.nextGaussian() * accuracyMult;
