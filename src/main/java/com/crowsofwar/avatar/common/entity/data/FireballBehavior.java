@@ -50,6 +50,7 @@ public abstract class FireballBehavior extends OffensiveBehaviour {
 		ID_NOTHING = registerBehavior(Idle.class);
 		ID_PLAYER_CONTROL = registerBehavior(PlayerControlled.class);
 		ID_THROWN = registerBehavior(Thrown.class);
+		registerBehavior(AbilityFireball.FireballOrbitController.class);
 	}
 
 	public static class Idle extends FireballBehavior {
@@ -115,7 +116,7 @@ public abstract class FireballBehavior extends OffensiveBehaviour {
 
 		@Override
 		public FireballBehavior onUpdate(EntityOffensive entity) {
-			EntityLivingBase owner = entity.getOwner();
+			/*EntityLivingBase owner = entity.getOwner();
 
 			if (owner == null || !(entity instanceof EntityFireball)) return this;
 
@@ -152,7 +153,7 @@ public abstract class FireballBehavior extends OffensiveBehaviour {
 				}
 			}
 
-			ticks++;
+			ticks++;**/
 			return this;
 		}
 

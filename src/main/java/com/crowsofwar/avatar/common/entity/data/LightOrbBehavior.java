@@ -51,7 +51,6 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 		registerBehavior(ShiftColour.class);
 		registerBehavior(FollowPlayer.class);
 		registerBehavior(AbilityFlameStrike.FlameStrikeLightOrb.class);
-		registerBehavior(AbilityFireball.FireballLightOrbBehavior.class);
 		registerBehavior(AbilityImmolate.ImmolateLightOrbBehaviour.class);
 		registerBehavior(FlamethrowerUpdateTick.FlamethrowerBehaviour.class);
 	}

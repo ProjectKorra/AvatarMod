@@ -57,8 +57,8 @@ public class AvatarBlocks {
 	private static void addBlock(Block block) {
 		// Remove the "tile." prefix
 		if (block.getTranslationKey().contains("tile.")) {
-			block.setRegistryName(AvatarInfo.MOD_ID, block.getTranslationKey().substring(5));
-			block.setTranslationKey("avatarmod:" + block.getTranslationKey().substring(5));
+			block.setRegistryName(block.getTranslationKey().substring(5));
+			block.setTranslationKey(block.getTranslationKey().substring(5));
 		}
 		else {
 			block.setRegistryName("avatarmod:" + block.getTranslationKey());

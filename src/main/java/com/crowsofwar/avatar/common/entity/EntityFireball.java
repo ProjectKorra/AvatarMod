@@ -21,7 +21,6 @@ import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.StatusControlController;
-import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -58,6 +57,8 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 			DataSerializers.VARINT);
 	private static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
+	private static final DataParameter<Integer> SYNC_ORBIT_ID = EntityDataManager.createKey(EntityFireball.class,
+			DataSerializers.VARINT);
 
 
 	/**
@@ -79,6 +80,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new FireballBehavior.Idle());
 		dataManager.register(SYNC_SIZE, 30);
+		dataManager.register(SYNC_ORBIT_ID, 1);
 	}
 
 	@Override
@@ -87,6 +89,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
 
 		if (getBehavior() == null) {
+			this.setVelocity(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian());
 			this.setBehavior(new FireballBehavior.Thrown());
 		}
 
@@ -146,10 +149,18 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 		dataManager.set(SYNC_SIZE, size);
 	}
 
+	public int getOrbitID() {
+		return dataManager.get(SYNC_ORBIT_ID);
+	}
+
+	public void setOrbitID(int id) {
+		dataManager.set(SYNC_ORBIT_ID, id);
+	}
+
 
 	@Override
 	public Vec3d getExplosionKnockbackMult() {
-		return super.getExplosionKnockbackMult().scale(STATS_CONFIG.fireballSettings.explosionSize * getSize() / 32F + getPowerRating() * 0.02);
+		return super.getExplosionKnockbackMult().scale(STATS_CONFIG.fireballSettings.explosionSize * getSize() / 128F + getPowerRating() * 0.02);
 	}
 
 	@Override
@@ -159,7 +170,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
 	@Override
 	public Vec3d getKnockbackMult() {
-		return super.getKnockbackMult().scale(0.25 * STATS_CONFIG.fireballSettings.push);
+		return super.getKnockbackMult().scale(0.125 * STATS_CONFIG.fireballSettings.push);
 	}
 
 	@Override

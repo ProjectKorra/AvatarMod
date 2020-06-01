@@ -154,7 +154,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_DAMAGE, 1F);
-		dataManager.register(SYNC_LIFETIME, 100);
+		dataManager.register(SYNC_LIFETIME, 20);
 		dataManager.register(SYNC_WIDTh, 1.0F);
 		dataManager.register(SYNC_HEIGHT, 1.0F);
 		dataManager.register(SYNC_BEHAVIOR, new OffensiveBehaviour.Idle());

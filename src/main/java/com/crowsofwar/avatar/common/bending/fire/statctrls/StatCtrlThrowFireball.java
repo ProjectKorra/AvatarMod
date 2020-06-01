@@ -29,7 +29,9 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK_DOWN;
 import static com.crowsofwar.avatar.common.data.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
 
@@ -49,6 +51,8 @@ public class StatCtrlThrowFireball extends StatusControl {
 		world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.HOSTILE, 4F, 0.8F);
 
 		EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
+		List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class,
+				entity.getEntityBoundingBox().grow(3.5, 3, 3.5));
 
 		if (fireball != null) {
 			AbilityData abilityData = ctx.getData().getAbilityData(new AbilityFireball());
@@ -58,7 +62,17 @@ public class StatCtrlThrowFireball extends StatusControl {
 			fireball.rotationYaw = entity.rotationYaw;
 			fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
 
+			if (!fireballs.isEmpty()) {
+				fireballs = fireballs.stream().filter(fireball1 -> !(fireball1.getBehavior() instanceof FireballBehavior.Thrown
+						|| fireball1.getBehavior() instanceof AbilityFireball.FireballOrbitController)).collect(Collectors.toList());
+				if (!fireballs.isEmpty()) {
+					fireballs.get(0).setBehavior(new AbilityFireball.FireballOrbitController());
+					for (EntityFireball ball : fireballs)
+						ball.setOrbitID(ball.getOrbitID() - 1);
+				}
+			}
 		}
+
 
 		return true;
 	}
