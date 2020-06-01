@@ -36,7 +36,7 @@ public class ConfigClient {
 	public float radialMenuAlpha = 0.75f;
 
 	@Load
-	public float chiBarAlpha = 0.5f;
+	public float chiBarAlpha = 0.625f;
 
 	@Load
 	public final float bendingCycleAlpha = 0.75f;

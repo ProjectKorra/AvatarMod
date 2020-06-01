@@ -73,7 +73,7 @@ import static net.minecraft.init.Biomes.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore",  //
-		updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "[1.12,1.13)")
+		updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "1.12")
 
 public class AvatarMod {
 

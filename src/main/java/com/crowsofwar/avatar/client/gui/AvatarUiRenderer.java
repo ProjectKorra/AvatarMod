@@ -224,9 +224,11 @@ public class AvatarUiRenderer extends Gui {
 					float width = 100 * scale;
 					float height = 9F * (float) CLIENT_CONFIG.chiBarSettings.heightScale;
 
-					mc.getTextureManager().bindTexture(AvatarUiTextures.CHI_BAR);
+
+					mc.getTextureManager().bindTexture(AvatarUiTextures.getChiTexture(data.getActiveBendingId()));
 
 					pushMatrix();
+					enableBlend();
 
 					translate(resolution.getScaledWidth() - CLIENT_CONFIG.chiBarSettings.xPos,
 							resolution.getScaledHeight() - height - CLIENT_CONFIG.chiBarSettings.yPos, 0);
@@ -239,19 +241,17 @@ public class AvatarUiRenderer extends Gui {
 
 					// Available chi
 
-					float unadjustedU = 100 * unavailable / max;
-					int adjustedU = (int) Math.floor(unadjustedU / 8f) * 8;
-					float uDiff = unadjustedU - adjustedU;
-
-					drawTexturedModalRect(adjustedU, 0, 0, 27, (int) (99 * available / max + uDiff), 9);
+					color(1, 1, 1, alpha * 1.5F);
+					drawTexturedModalRect(0, 0, 0, 27, (int) (99 * (available + unavailable) / max), 9);
 
 					// Unavailable chi
-					drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
+					drawTexturedModalRect(0, 0, 0, 45, (int) (98 * unavailable / max), 9);
+
+					color(1, 1, 1, alpha);
 					if (CLIENT_CONFIG.chiBarSettings.shouldChiNumbersRender) {
 						drawString(mc.fontRenderer, ((int) total) + "/" + ((int) max) + ", " + ((int) available), 25, -10,
 								data.getActiveBending().getTextColour() | ((int) (alpha * 255) << 24));
 					}
-
 					popMatrix();
 
 				}

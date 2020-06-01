@@ -107,6 +107,15 @@ public class AvatarUiTextures {
 		return getCachedImage(bendingBackgrounds, bendingId, location);
 	}
 
+	public static ResourceLocation getChiTexture(UUID bendingID) {
+		BendingStyle style = BendingStyles.get(bendingID);
+		ResourceLocation loc;
+		String suffix = "_" + style.getName();
+		String prefix = "chi";
+		loc = new ResourceLocation("avatarmod", "textures/gui/chi/" + prefix + suffix + ".png");
+		return loc != null ? loc : new ResourceLocation("avatarmod", "textures/gui/chi/" + prefix + ".png");
+	}
+
 	/**
 	 * The {@link #getBendingBackgroundTexture(UUID) bending backgrounds} have different dimensions,
 	 * so this returns the width in pixels of the specified background image.
