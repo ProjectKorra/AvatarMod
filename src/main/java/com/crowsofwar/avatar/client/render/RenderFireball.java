@@ -93,26 +93,7 @@ public class RenderFireball extends Render<EntityFireball> {
 		popMatrix();
 
 		//  }
-		World world = entity.world;
-		if (world.isRemote && entity.getOwner() != null) {
-			for (double h = 0; h < entity.width; h += 0.3) {
-				Random random = new Random();
-				AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(12).clr(255, 10, 5)
-						.scale(entity.getSize() * 0.03125F).element(entity.getElement()).spawnEntity(entity.getOwner())
-						.spawn(world);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
-						.scale(entity.getSize() * 0.03125F).element(entity.getElement()).spawnEntity(entity.getOwner())
-						.spawn(world);
-			}
 
-		}
 		enableLighting();
 		disableBlend();
 
