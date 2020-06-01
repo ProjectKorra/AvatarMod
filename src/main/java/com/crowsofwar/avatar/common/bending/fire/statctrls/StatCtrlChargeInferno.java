@@ -6,8 +6,8 @@ import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
 public class StatCtrlChargeInferno extends StatusControl {
 
-	public StatCtrlChargeInferno(int texture, AvatarControl subscribeTo, CrosshairPosition position) {
-		super(texture, subscribeTo, position);
+	public StatCtrlChargeInferno(boolean setting) {
+		super(10, setting ? AvatarControl.CONTROL_RIGHT_CLICK_DOWN : AvatarControl.CONTROL_RIGHT_CLICK_UP, CrosshairPosition.RIGHT_OF_CROSSHAIR);
 	}
 
 	@Override

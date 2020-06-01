@@ -93,28 +93,30 @@ public class StatCtrlAirJump extends StatusControl {
 			int numberOfParticles = 10;
 			double particleSpeed = 0.2;
 			if (lvl >= 1) {
-				multiplier = 1;
+				multiplier = 0.75;
 				powerModifier = 15;
 				powerDuration = 4;
 				numberOfParticles = 15;
 				particleSpeed = 0.3;
 			}
 			if (lvl >= 2) {
-				multiplier = 1.2;
+				multiplier = 0.875;
 				powerModifier = 20;
 				powerDuration = 5;
 				numberOfParticles = 20;
 				particleSpeed = 0.35;
 			}
 			if (lvl >= 3) {
-				multiplier = 1.4;
 				powerModifier = 25;
 				powerDuration = 6;
 			}
 			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
 				numberOfParticles = 35;
 				particleSpeed = 0.5;
+				multiplier = 1.2;
 			}
+			if (abilityData.isMasterPath(AbilityTreePath.FIRST))
+				multiplier = 1.0F;
 
 			if (world.isRemote) {
 				for (int i = 0; i < numberOfParticles; i++)
@@ -123,18 +125,14 @@ public class StatCtrlAirJump extends StatusControl {
 							world.rand.nextGaussian() * particleSpeed / 10).scale(1F + (float) particleSpeed).spawn(world);
 			}
 
-			Vector rotations = new Vector(Math.toRadians((entity.rotationPitch) / 1), Math.toRadians(entity.rotationYaw), 0);
-
-			Vector velocity = rotations.toRectangular();
-			velocity = velocity.withY(Math.pow(velocity.y(), .1));
-			velocity = velocity.times(multiplier);
+			Vector velocity = Vector.getLookRectangular(entity);
+			velocity = velocity.times(multiplier * 1.25);
+			velocity = velocity.withY(Math.max(velocity.y(), 0.15));
 			if (!onGround) {
-				velocity = velocity.times(0.6);
-				entity.motionX = 0;
-				entity.motionY = 0;
-				entity.motionZ = 0;
-			}
-			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
+				velocity = velocity.times(0.875);
+				entity.setVelocity(velocity.x(), velocity.y(), velocity.z());
+			} else
+				entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
 			AvatarUtils.afterVelocityAdded(entity);
 
 			float fallAbsorption = 0;
