@@ -53,8 +53,7 @@ import java.util.Random;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
-public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> implements IGlowingEntity {
+public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> {
 
 	private static final DataParameter<WaterArcBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterArc.class, WaterArcBehavior.DATA_SERIALIZER);
@@ -404,11 +403,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			breakBlock(pos);
 			setVelocity(velocity().times(0.75));
 		}
-	}
-
-	@Override
-	public ColoredLight produceColoredLight(float partialTicks) {
-		return ColoredLight.builder().color(61, 77, 255).pos(this).radius(10f).build();
 	}
 
 	@Override

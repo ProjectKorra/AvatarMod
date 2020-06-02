@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author Aang23
  */
-@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
 public class EntityLightOrb extends AvatarEntity   {
 
 	private static final DataParameter<LightOrbBehavior> SYNC_BEHAVIOR = EntityDataManager
