@@ -136,6 +136,7 @@ public class EntityLightningSpawner extends AvatarEntity implements IGlowingEnti
 
 
 	@Override
+	@Optional.Method(modid = "hammercore")
 	public ColoredLight produceColoredLight(float partialTicks) {
 		return ColoredLight.builder().pos(this).color(87, 161, 235).radius(10f).build();
 

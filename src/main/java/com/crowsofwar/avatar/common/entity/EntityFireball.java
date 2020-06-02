@@ -296,6 +296,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
 
 	@Override
+	@Optional.Method(modid = "hammercore")
 	public ColoredLight produceColoredLight(float partialTicks) {
 		return ColoredLight.builder().pos(this).color(1f, 0f, 0f, 1f).radius(getSize() / 4F).build();
 	}
