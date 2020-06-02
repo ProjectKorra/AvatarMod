@@ -263,16 +263,6 @@ public abstract class Bender {
 
 		data.getMiscData().decrementCooldown();
 
-		BendingContext ctx = new BendingContext(data, entity, this, new Raytrace.Result());
-
-		List<TickHandler> tickHandlers = data.getAllTickHandlers();
-		if (tickHandlers != null) {
-			for (TickHandler handler : tickHandlers) {
-				if (handler != null) {
-					handler.renderTick(ctx);
-				}
-			}
-		}
 	}
 	/**
 	 * Called every tick; updates things like chi.
@@ -334,8 +324,6 @@ public abstract class Bender {
 			for (TickHandler handler : tickHandlers) {
 				if (handler != null) {
 					if (handler.tick(ctx)) {
-						if (!(entity instanceof EntityPlayer))
-							handler.renderTick(ctx);
 						// Can use this since the list is a COPY of the
 						// underlying list
 						data.removeTickHandler(handler);

@@ -116,7 +116,7 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
 
             GlStateManager.scale(scale, scale, scale);
 
-            if(entity.getAbility() instanceof AbilityFireball && entity.getEmittingEntity() != null && entity.getEmittingEntity() instanceof EntityFireball) {
+          /*  if(entity.getAbility() instanceof AbilityFireball && entity.getEmittingEntity() != null && entity.getEmittingEntity() instanceof EntityFireball) {
                 int amount = entity.getType() == EntityLightOrb.EnumType.TEXTURE_SPHERE ? 1 : 2;
                 for (int i = 0; i < amount; i++) {
                     EntityFireball fireball = (EntityFireball) entity.getEmittingEntity();
@@ -127,7 +127,7 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
                     double spawnZ = boundingBox.minZ + AvatarUtils.getRandomNumberInRange(1, 10) / 10F * (boundingBox.maxZ - boundingBox.minZ);
                     world.spawnParticle(AvatarParticles.getParticleFlames(), spawnX, spawnY, spawnZ, 0, 0, 0);
                 }
-            }
+            }**/
 
             if (entity.isSpinning() && entity.isSphere()) {
                 //TODO: Data parameters for rotation amounts

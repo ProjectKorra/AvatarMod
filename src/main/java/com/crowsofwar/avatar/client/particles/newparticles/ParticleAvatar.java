@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
  * @see com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder
  * @since AvatarMod 1.6.0
  */
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 public abstract class ParticleAvatar extends Particle {
 
 	//TODO: How to adjust Electroblob's particle system for av2.
