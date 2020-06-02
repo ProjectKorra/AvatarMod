@@ -6,7 +6,6 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
@@ -18,28 +17,28 @@ import java.util.UUID;
 public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCollideEvent> {
 
 	//REFLECTION AH
-	private ParticleAvatar particle;
+	//private ParticleAvatar particle;
 	private Entity entity;
 	private UUID bendingID;
 	private Entity spawner;
 	private Ability ability;
 	private Vec3d velocity;
 
-	public PacketSParticleCollideEvent(Entity entity, ParticleAvatar particle, Entity spawner, UUID bendingID) {
+	public PacketSParticleCollideEvent(Entity entity, Vec3d velocity, Entity spawner, UUID bendingID) {
 		this.entity = entity;
-		this.particle = particle;
+	//	this.particle = particle;
 		this.bendingID = bendingID;
 		this.spawner = spawner;
-		this.velocity = particle.getVelocity();
+		this.velocity = velocity;
 	}
 
-	public PacketSParticleCollideEvent(Entity entity, ParticleAvatar particle, Entity spawner, Ability ability) {
+	public PacketSParticleCollideEvent(Entity entity, Vec3d velocity, Entity spawner, Ability ability) {
 		this.entity = entity;
-		this.particle = particle;
+		//this.particle = particle;
 		this.ability = ability;
 		this.bendingID = ability.getBendingId() == null || ability == null ? Airbending.ID : ability.getBendingId();
 		this.spawner = spawner;
-		this.velocity = particle.getVelocity();
+		this.velocity = velocity;
 	}
 
 	public PacketSParticleCollideEvent() {
@@ -90,9 +89,9 @@ public class PacketSParticleCollideEvent extends AvatarPacket<PacketSParticleCol
 		return this.entity;
 	}
 
-	public ParticleAvatar getParticle() {
+	/*public ParticleAvatar getParticle() {
 		return this.particle;
-	}
+	}**/
 
 	public Entity getSpawnerEntity() {
 		return this.spawner;

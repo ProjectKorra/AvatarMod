@@ -127,7 +127,7 @@ public class PacketHandlerServer implements IPacketHandler {
 
 		if (packet instanceof PacketSParticleCollideEvent) {
 			MinecraftForge.EVENT_BUS.post(new ParticleCollideEvent(((PacketSParticleCollideEvent) packet).getEntity(),
-					null, ((PacketSParticleCollideEvent) packet).getSpawnerEntity(), ((PacketSParticleCollideEvent) packet).getAbility(),
+					((PacketSParticleCollideEvent) packet).getSpawnerEntity(), ((PacketSParticleCollideEvent) packet).getAbility(),
 					((PacketSParticleCollideEvent) packet).getVelocity()));
 			return null;
 		}

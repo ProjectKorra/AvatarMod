@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.common.bending.fire.tickhandlers.FlamethrowerUpdate
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -56,10 +57,11 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 		BendingData data = ctx.getData();
 		EntityLivingBase bender = ctx.getBenderEntity();
 		World world = ctx.getWorld();
+		EntityLightOrb existing = AvatarEntity.lookupControlledEntity(world, EntityLightOrb.class, bender);
 
 		if (data.hasBendingId(Firebending.ID)) {
 			if (setting) {
-				if (!world.isRemote && !(bender instanceof EntityPlayer)) {
+				if (!(bender instanceof EntityPlayer) && (existing == null || !(existing.getBehavior() instanceof FlamethrowerUpdateTick.FlamethrowerBehaviour))) {
 					EntityLightOrb orb = new EntityLightOrb(world);
 					orb.setOwner(bender);
 					orb.setPosition(bender.getPositionVector().add(0, bender.getEyeHeight() - 0.5, 0));
@@ -70,7 +72,8 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 					orb.setLightRadius(3);
 					orb.setElement(new Firebending());
 					orb.setBehavior(new FlamethrowerUpdateTick.FlamethrowerBehaviour());
-					//world.spawnEntity(orb);
+					if (!world.isRemote)
+						world.spawnEntity(orb);
 				}
 				data.addStatusControl(STOP_FLAMETHROW);
 				data.addTickHandler(FLAMETHROWER);

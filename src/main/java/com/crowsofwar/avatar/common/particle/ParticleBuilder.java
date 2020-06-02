@@ -62,9 +62,7 @@ public final class ParticleBuilder {
 	 */
 	public static final ParticleBuilder instance = new ParticleBuilder();
 
-	public static Queue<ParticleAvatar> aliveParticles = Queues.newArrayDeque();
-
-	/**
+		/**
 	 * Whether the particle builder is currently building or not.
 	 */
 	private boolean building = false;
@@ -209,10 +207,6 @@ public final class ParticleBuilder {
 		}
 
 		ParticleBuilder.create(Type.BUFF).entity(entity).clr(1, 1, 0.3f).spawn(world);
-	}
-
-	public static void addAliveParticles(ParticleAvatar particle) {
-		aliveParticles.add(particle);
 	}
 
 	/**

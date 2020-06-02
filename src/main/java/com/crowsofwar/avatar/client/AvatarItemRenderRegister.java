@@ -23,13 +23,21 @@ import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 
+import com.google.common.base.Preconditions;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import static com.crowsofwar.avatar.common.blocks.AvatarBlocks.allBlocks;
+import static com.crowsofwar.avatar.common.blocks.AvatarBlocks.blockCloud;
 import static net.minecraftforge.client.model.ModelLoader.setCustomModelResourceLocation;
 
 /**
@@ -68,6 +76,7 @@ public class AvatarItemRenderRegister {
 
 		register(AvatarItems.itemBisonWhistle);
 		register(AvatarItems.airbenderStaff);
+		blockCloud.initModel();
 		
 		for (int i = 0; i <= 3; i++) {
 			register(AvatarItems.itemBisonArmor, i);
@@ -108,6 +117,20 @@ public class AvatarItemRenderRegister {
 
 		}
 
+	}
+
+	@SubscribeEvent
+	public void registerItemBlocks(RegistryEvent.Register<Item> e) {
+		for (Block block : allBlocks) {
+			ItemBlock itemBlock = new ItemBlock(block);
+			ResourceLocation registryName = Preconditions.checkNotNull(block.getRegistryName(),
+					"Block %s has null registry name", block);
+			itemBlock.setRegistryName(registryName);
+			e.getRegistry().register(itemBlock);
+			setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(itemBlock.getRegistryName(),
+					"inventory"));
+
+		}
 	}
 
 	@SubscribeEvent

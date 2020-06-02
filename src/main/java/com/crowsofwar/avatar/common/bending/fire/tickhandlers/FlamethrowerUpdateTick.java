@@ -71,7 +71,6 @@ import static java.lang.Math.toRadians;
 /**
  * @author CrowsOfWar
  */
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class FlamethrowerUpdateTick extends TickHandler {
 
 	public static final UUID FLAMETHROWER_MOVEMENT_MODIFIER_ID = UUID.fromString("34877be6-6cf5-43f4-a8b3-aa12526651cf");
@@ -80,7 +79,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		super(id);
 	}
 
-	private static void attackEntity(Entity attacker, Entity target) {
+	public static void attackEntity(Entity attacker, Entity target) {
 		//LET'S DO THIS
 		EntityLivingBase entity = (EntityLivingBase) attacker;
 		BendingData data = BendingData.getFromEntity(entity);
@@ -200,23 +199,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
 		}
 	}
 
-	@SubscribeEvent
-	public static void particleEventTest(ParticleCollideEvent event) {
-		//Move all damage, knockback, e.t.c calculations to here
-		if (event.getSpawner() != event.getEntity()) {
-			if (event.getAbility() instanceof AbilityFlamethrower) {
-				if (event.getSpawner() instanceof EntityLivingBase) {
-					EntityLivingBase entity = (EntityLivingBase) event.getSpawner();
-					BendingData data = BendingData.getFromEntity(entity);
-					if (data != null) {
-						if (data.hasTickHandler(TickHandlerController.FLAMETHROWER)) {
-							attackEntity(entity, event.getEntity());
-						}
-					}
-				}
-			}
-		}
-	}
+
 
 	private static boolean canCollideWithEntity(Entity entity, Entity owner) {
 		if (entity instanceof AvatarEntity) {
@@ -343,11 +326,11 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 				double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
 				double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
-				Vector look = randomness == 0 ? Vector.getLookRectangular(entity) : Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
+				Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
 				Vector start = look.plus(eye.minusY(0.5));
 
 				//Particle code.
-				if (world.isRemote && entity instanceof EntityPlayer) {
+				if (world.isRemote) {
 					speedMult /= 28.75;
 					if (CLIENT_CONFIG.fireRenderSettings.solidFireParticles) {
 						for (double i = 0; i < flamesPerSecond; i += 3) {

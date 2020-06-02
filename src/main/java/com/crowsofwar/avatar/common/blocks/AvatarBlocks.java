@@ -51,7 +51,6 @@ public class AvatarBlocks {
 	public static void init() {
 		allBlocks = new ArrayList<>();
 		addBlock(blockCloud = new CloudBlock());
-		blockCloud.initModel();
 	}
 
 	private static void addBlock(Block block) {
@@ -64,20 +63,6 @@ public class AvatarBlocks {
 			block.setRegistryName("avatarmod:" + block.getTranslationKey());
 		}
 		allBlocks.add(block);
-	}
-
-	@SubscribeEvent
-	public static void registerItemBlocks(RegistryEvent.Register<Item> e) {
-		for (Block block : allBlocks) {
-			ItemBlock itemBlock = new ItemBlock(block);
-			ResourceLocation registryName = Preconditions.checkNotNull(block.getRegistryName(),
-					"Block %s has null registry name", block);
-			itemBlock.setRegistryName(registryName);
-			e.getRegistry().register(itemBlock);
-			setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(itemBlock.getRegistryName(),
-					"inventory"));
-
-		}
 	}
 
 
