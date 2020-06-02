@@ -142,8 +142,8 @@ public class EntityFirebender extends EntityHumanBender {
 
 	@Override
 	protected void addBendingTasks() {
-		this.tasks.addTask(1 , Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
-		this.tasks.addTask(3, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
+		this.tasks.addTask(2 , Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
+		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_shot", this, getBender())));
 		//this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fire_blast", this, getBender())));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.3, true));

@@ -70,7 +70,7 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 					orb.setLightRadius(3);
 					orb.setElement(new Firebending());
 					orb.setBehavior(new FlamethrowerUpdateTick.FlamethrowerBehaviour());
-					world.spawnEntity(orb);
+					//world.spawnEntity(orb);
 				}
 				data.addStatusControl(STOP_FLAMETHROW);
 				data.addTickHandler(FLAMETHROWER);
