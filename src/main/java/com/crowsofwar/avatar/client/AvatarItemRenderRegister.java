@@ -120,20 +120,6 @@ public class AvatarItemRenderRegister {
 	}
 
 	@SubscribeEvent
-	public void registerItemBlocks(RegistryEvent.Register<Item> e) {
-		for (Block block : allBlocks) {
-			ItemBlock itemBlock = new ItemBlock(block);
-			ResourceLocation registryName = Preconditions.checkNotNull(block.getRegistryName(),
-					"Block %s has null registry name", block);
-			itemBlock.setRegistryName(registryName);
-			e.getRegistry().register(itemBlock);
-			setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(itemBlock.getRegistryName(),
-					"inventory"));
-
-		}
-	}
-
-	@SubscribeEvent
 	public void modelBake(ModelBakeEvent e) {
 
 	/*	for (int i = 0; i < 7; i++) {

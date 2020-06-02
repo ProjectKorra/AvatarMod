@@ -51,6 +51,7 @@ public class AvatarBlocks {
 	public static void init() {
 		allBlocks = new ArrayList<>();
 		addBlock(blockCloud = new CloudBlock());
+		//blockCloud.initModel();
 	}
 
 	private static void addBlock(Block block) {
