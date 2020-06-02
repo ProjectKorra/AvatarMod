@@ -21,6 +21,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.bending.air.tickhandlers.AirBurstHandler.AIRBURST_MOVEMENT_MODIFIER_ID;
@@ -166,10 +167,10 @@ public class ShootAirBurstHandler extends TickHandler {
 							.scale(entity.getAvgSize() * 1.25F).element(entity.getElement()).spawn(world);
 				}
 				for (int i = 0; i < 2; i++) {
-					AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-					double spawnX = boundingBox.getCenter().x + world.rand.nextGaussian() / 20;
-					double spawnY = boundingBox.getCenter().y + world.rand.nextGaussian() / 20;
-					double spawnZ = boundingBox.getCenter().z + world.rand.nextGaussian() / 20;
+					Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(entity);
+					double spawnX = mid.x + world.rand.nextGaussian() / 20;
+					double spawnY = mid.y + world.rand.nextGaussian() / 20;
+					double spawnZ = mid.z + world.rand.nextGaussian() / 20;
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
 							world.rand.nextGaussian() / 45).time(18).clr(0.85F, 0.85F, 0.85F)
 							.scale(entity.getAvgSize() * 1.25F).element(entity.getElement()).spawn(world);

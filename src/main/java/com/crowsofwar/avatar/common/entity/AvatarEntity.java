@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
@@ -293,14 +294,15 @@ public abstract class AvatarEntity extends Entity {
 	public void onUpdate() {
 		super.onUpdate();
 		collideWithNearbyEntities();
+
 		if (putsOutFires && ticksExisted % 2 == 0) {
 			setFire(0);
 			for (int x = 0; x <= 1; x++) {
 				for (int z = 0; z <= 1; z++) {
 					for (int y = 0; y <= 1; y++) {
-						double xPos = getEntityBoundingBox().getCenter().x;
-						double yPos = getEntityBoundingBox().getCenter().y;
-						double zPos = getEntityBoundingBox().getCenter().z;
+						double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+						double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+						double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
 						BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
 						if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
 							world.setBlockToAir(pos);
@@ -313,9 +315,9 @@ public abstract class AvatarEntity extends Entity {
 			for (int x = 0; x >= -1; x--) {
 				for (int z = 0; z >= -1; z--) {
 					for (int y = 0; y >= -1; y--) {
-						double xPos = getEntityBoundingBox().getCenter().x;
-						double yPos = getEntityBoundingBox().getCenter().y;
-						double zPos = getEntityBoundingBox().getCenter().z;
+						double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+						double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+						double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
 						BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
 						if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
 							world.setBlockToAir(pos);
@@ -332,9 +334,9 @@ public abstract class AvatarEntity extends Entity {
 		for (double x = 0; x <= 1; x++) {
 			for (double z = 0; z <= 1; z++) {
 				for (double y = 0; y <= 1; y++) {
-					double xPos = getEntityBoundingBox().getCenter().x;
-					double yPos = getEntityBoundingBox().getCenter().y;
-					double zPos = getEntityBoundingBox().getCenter().z;
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
 					BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
 					if (pushButton(pushStoneButton)) {
 						if (world.getBlockState(pos) != prevButtonState)
@@ -395,9 +397,9 @@ public abstract class AvatarEntity extends Entity {
 		for (double x = 0; x >= -1; x--) {
 			for (double z = 0; z >= -1; z--) {
 				for (double y = 0; y >= -1; y--) {
-					double xPos = getEntityBoundingBox().getCenter().x;
-					double yPos = getEntityBoundingBox().getCenter().y;
-					double zPos = getEntityBoundingBox().getCenter().z;
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
 					BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
 					if (pushButton(pushStoneButton)) {
 						if (world.getBlockState(pos) != prevButtonState)

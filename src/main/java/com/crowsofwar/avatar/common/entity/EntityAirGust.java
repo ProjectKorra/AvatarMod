@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -27,6 +29,7 @@ import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -71,6 +74,21 @@ public class EntityAirGust extends EntityOffensive {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+
+		if (world.isRemote && getOwner() != null) {
+			for (int i = 0; i < 4; i++) {
+				Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(this);
+				double spawnX = mid.x + world.rand.nextGaussian() / 10;
+				double spawnY = mid.y + world.rand.nextGaussian() / 10;
+				double spawnZ = mid.z + world.rand.nextGaussian() / 10;
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
+						world.rand.nextGaussian() / 45).time(4).clr(0.85F, 0.85F, 0.85F).spawnEntity(getOwner())
+						.scale(getAvgSize() * 1.25F).element(getElement()).spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
+						world.rand.nextGaussian() / 45).time(12).clr(0.85F, 0.85F, 0.85F).spawnEntity(getOwner())
+						.scale(getAvgSize() * 1.25F).element(getElement()).spawn(world);
+			}
+		}
 
 		//Not sure why I have this here, but I'm too lazy to test it right now.
 		if (ticksExisted <= 2) {

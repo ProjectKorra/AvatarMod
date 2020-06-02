@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.blocks;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -54,8 +55,8 @@ public class CloudBlock extends Block {
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
 		super.updateTick(worldIn, pos, state, rand);
-		Vec3d centre = state.getCollisionBoundingBox(worldIn, pos).getCenter().add(new Vec3d(pos.getX(), pos.getY(), pos.getZ()));
-		if (worldIn.isRemote)
+		Vec3d centre = AvatarEntityUtils.getMiddleOfBlock(state, worldIn, pos);
+		if (worldIn.isRemote && centre != null)
 			ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Airbending()).clr(0.85F, 0.85F, 0.85F)
 					.pos(centre).scale(1.5F).time(25).spin(0.25F, 0.125 * worldIn.rand.nextGaussian()).spawn(worldIn);
 	}

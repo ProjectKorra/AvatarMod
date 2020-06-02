@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.common.util;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
@@ -7,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -14,6 +17,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class AvatarEntityUtils {
@@ -172,6 +176,19 @@ public class AvatarEntityUtils {
 		double y = entity.getEntityBoundingBox().maxY - entity.getEntityBoundingBox().minY;
 		double z = entity.getEntityBoundingBox().maxZ - entity.getEntityBoundingBox().minZ;
 		return new Vec3d(entity.getEntityBoundingBox().minX + x / 2, entity.getEntityBoundingBox().minY + y / 2, entity.getEntityBoundingBox().minZ + z / 2);
+	}
+
+	@Nullable
+	public static Vec3d getMiddleOfBlock(IBlockState block, World world, BlockPos pos) {
+		AxisAlignedBB box = block.getCollisionBoundingBox(world, pos);
+		if (box != null) {
+			double x = box.maxX - box.minX;
+			double y = box.maxY - box.minY;
+			double z = box.maxZ - box.minZ;
+			return new Vec3d(box.minX + x / 2, box.minY + y / 2, box.minZ + z / 2);
+		}
+		return null;
+
 	}
 
 	//Same as the above method, but the bottom y value of the entity instead of the middle y value.
