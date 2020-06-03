@@ -213,7 +213,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 		float size = STATS_CONFIG.flameStrikeSettings.size;
 		float dist = STATS_CONFIG.flameStrikeSettings.maxDistance;
 		float accuracyMult = 0.075F;
-		int particleCount = 5;
+		int particleCount = 3;
 		float mult = 0.5F;
 
 		if (abilityData.getLevel() == 1) {
@@ -230,7 +230,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			size *= 0.4F;
-			particleCount += 10;
+			particleCount += 8;
 			accuracyMult = 0.03F;
 			dist = 7;
 			mult = 0.7F;
@@ -242,7 +242,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 			mult = 0.8F;
 		}
 
-		int lifeTime = (int) dist * 2;
+		int lifeTime = (int) dist * 2 + 4;
 
 
 		Vec3d look = entity.getLookVec();
@@ -252,7 +252,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 		if (world.isRemote) {
 			//Spawn particles
 			if (CLIENT_CONFIG.fireRenderSettings.solidFireParticles) {
-				for (int i = 0; i < 10 + particleCount; i++) {
+				for (int i = 0; i < 20 + particleCount; i++) {
 					double x1 = entity.posX + look.x * i / 50 + world.rand.nextGaussian() * accuracyMult;
 					double y1 = eyePos - 0.4F + world.rand.nextGaussian() * accuracyMult;
 					double z1 = entity.posZ + look.z * i / 50 + world.rand.nextGaussian() * accuracyMult;
@@ -262,7 +262,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 							look.y * mult + world.rand.nextGaussian() * accuracyMult,
 							look.z * mult + world.rand.nextGaussian() * accuracyMult)
 							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity)
-							.clr(255, 15, 5).collide(true).scale(size / 2).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
+							.clr(255, 15, 5).collide(true).scale(size / 2).time(lifeTime + 2 + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
 					//Using the random function each time ensures a different number for every value, making the ability "feel" better.
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
 							look.y * mult + world.rand.nextGaussian() * accuracyMult,
@@ -274,7 +274,18 @@ public class StatCtrlFlameStrike extends StatusControl {
 							look.y * mult + world.rand.nextGaussian() * accuracyMult,
 							look.z * mult + world.rand.nextGaussian() * accuracyMult)
 							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity).collide(true)
-							.scale(size / 2).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
+							.scale(size / 2).time(lifeTime + 2 + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
+				}
+				for (int i = 0; i < particleCount; i++) {
+					double x1 = entity.posX + look.x * i / 50 + world.rand.nextGaussian() * accuracyMult;
+					double y1 = eyePos - 0.4F + world.rand.nextGaussian() * accuracyMult;
+					double z1 = entity.posZ + look.z * i / 50 + world.rand.nextGaussian() * accuracyMult;
+
+					ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
+							look.y * mult + world.rand.nextGaussian() * accuracyMult,
+							look.z * mult + world.rand.nextGaussian() * accuracyMult)
+							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity).collide(true)
+							.scale(size / 6).time(lifeTime - 6 + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
 				}
 			} else {
 				for (int i = 0; i < 30 + particleCount * 2; i++) {
