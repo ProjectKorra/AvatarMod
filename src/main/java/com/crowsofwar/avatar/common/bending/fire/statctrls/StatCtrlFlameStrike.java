@@ -215,6 +215,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 		float accuracyMult = 0.075F;
 		int particleCount = 3;
 		float mult = 0.5F;
+		double powerFactor = ctx.getBender().calcPowerRating(Firebending.ID) / 100D;
 
 		if (abilityData.getLevel() == 1) {
 			particleCount += 2;
@@ -226,10 +227,10 @@ public class StatCtrlFlameStrike extends StatusControl {
 			size *= 1.25;
 			dist = 4;
 			mult += 0.1F;
-			accuracyMult *= 1.5F;
+			accuracyMult *= 0.75F;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			size *= 0.4F;
+			size *= 0.75F;
 			particleCount += 8;
 			accuracyMult = 0.03F;
 			dist = 7;
@@ -238,11 +239,15 @@ public class StatCtrlFlameStrike extends StatusControl {
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			size *= 2.25F;
 			particleCount -= 5;
-			accuracyMult *= 2;
+			accuracyMult *= 0.95;
 			mult = 0.8F;
 		}
 
 		int lifeTime = (int) dist * 2 + 4;
+
+		lifeTime += powerFactor * 3;
+		mult += powerFactor / 5;
+		size *= (1 + powerFactor * 0.25);
 
 
 		Vec3d look = entity.getLookVec();
@@ -251,8 +256,8 @@ public class StatCtrlFlameStrike extends StatusControl {
 
 		if (world.isRemote) {
 			//Spawn particles
-			if (CLIENT_CONFIG.fireRenderSettings.solidFireParticles) {
-				for (int i = 0; i < 20 + particleCount; i++) {
+			if (CLIENT_CONFIG.fireRenderSettings.solidFlameStrikeParticles) {
+				for (int i = 0; i < 15 + particleCount; i++) {
 					double x1 = entity.posX + look.x * i / 50 + world.rand.nextGaussian() * accuracyMult;
 					double y1 = eyePos - 0.4F + world.rand.nextGaussian() * accuracyMult;
 					double z1 = entity.posZ + look.z * i / 50 + world.rand.nextGaussian() * accuracyMult;
@@ -262,30 +267,25 @@ public class StatCtrlFlameStrike extends StatusControl {
 							look.y * mult + world.rand.nextGaussian() * accuracyMult,
 							look.z * mult + world.rand.nextGaussian() * accuracyMult)
 							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity)
-							.clr(255, 15, 5).collide(true).scale(size / 2).time(lifeTime + 2 + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
+							.clr(255, 15, 5).collide(true).scale(size / 4).time(lifeTime + 2 + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
 					//Using the random function each time ensures a different number for every value, making the ability "feel" better.
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
 							look.y * mult + world.rand.nextGaussian() * accuracyMult,
 							look.z * mult + world.rand.nextGaussian() * accuracyMult)
 							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity)
 							.clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true)
-							.scale(size / 2).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
-					ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
-							look.y * mult + world.rand.nextGaussian() * accuracyMult,
-							look.z * mult + world.rand.nextGaussian() * accuracyMult)
-							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity).collide(true)
-							.scale(size / 2).time(lifeTime + 2 + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
+							.scale(size / 4).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
 				}
-				for (int i = 0; i < particleCount; i++) {
+				for (int i = 0; i < 1 + particleCount; i++) {
 					double x1 = entity.posX + look.x * i / 50 + world.rand.nextGaussian() * accuracyMult;
 					double y1 = eyePos - 0.4F + world.rand.nextGaussian() * accuracyMult;
 					double z1 = entity.posZ + look.z * i / 50 + world.rand.nextGaussian() * accuracyMult;
 
 					ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
-							look.y * mult + world.rand.nextGaussian() * accuracyMult,
-							look.z * mult + world.rand.nextGaussian() * accuracyMult)
+							look.y * mult + world.rand.nextGaussian() * accuracyMult * 0.1,
+							look.z * mult + world.rand.nextGaussian() * accuracyMult * 0.1)
 							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity).collide(true)
-							.scale(size / 6).time(lifeTime - 6 + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
+							.scale(size / 4).time(lifeTime - 6 + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
 				}
 			} else {
 				for (int i = 0; i < 30 + particleCount * 2; i++) {

@@ -94,7 +94,7 @@ public class RenderFireball extends Render<EntityFireball> {
 
 		//  }
 
-		enableLighting();
+		//enableLighting();
 		disableBlend();
 
 	}
