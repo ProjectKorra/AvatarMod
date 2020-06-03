@@ -42,10 +42,8 @@ import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAME_STRI
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class StatCtrlFlameStrike extends StatusControl {
 
-	private static HashMap<UUID, Integer> timesUsed = new HashMap<>();
-	private static HashMap<UUID, Integer> chargeLevel = new HashMap<>();
-	//Ensures the target has been struck by the centre of the flame blast.
-	private static HashMap<UUID, Integer> timesHit = new HashMap<>();
+	private static final HashMap<UUID, Integer> timesUsed = new HashMap<>();
+	private static final HashMap<UUID, Integer> chargeLevel = new HashMap<>();
 	EnumHand hand;
 
 	public StatCtrlFlameStrike(EnumHand hand) {
@@ -74,15 +72,6 @@ public class StatCtrlFlameStrike extends StatusControl {
 		} else chargeLevel.put(id, level);
 	}
 
-	public static int getTimesHit(UUID id) {
-		return chargeLevel.getOrDefault(id, 1);
-	}
-
-	public static void setTimesHit(UUID id, int hit) {
-		if (timesHit.containsKey(id)) {
-			timesHit.replace(id, hit);
-		} else timesHit.put(id, hit);
-	}
 
 	@SubscribeEvent
 	public static void particleCollision(ParticleCollideEvent event) {
@@ -158,7 +147,6 @@ public class StatCtrlFlameStrike extends StatusControl {
 				target.motionY = Math.min(0.15, target.motionY);
 			}
 			target.setFire(fireTime);
-			setTimesHit(target.getUniqueID(), 0);
 
 		}
 		return false;
@@ -239,7 +227,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			size *= 2.25F;
 			particleCount -= 5;
-			accuracyMult *= 0.95;
+			accuracyMult *= 1.25;
 			mult = 0.8F;
 		}
 
