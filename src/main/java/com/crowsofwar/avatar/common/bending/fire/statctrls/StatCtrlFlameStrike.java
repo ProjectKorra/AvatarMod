@@ -88,7 +88,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 	public static void particleCollision(ParticleCollideEvent event) {
 		if (event.getAbility() instanceof AbilityFlameStrike) {
 			if (event.getSpawner() != event.getEntity()) {
-				if (event.getSpawner() instanceof EntityLivingBase) {
+				if (event.getSpawner() instanceof EntityLivingBase && event.getEntity() != null && event.getVelocity() != null) {
 					if (AvatarUtils.getMagnitude(event.getVelocity()) > 0.5)
 						attackEntity((EntityLivingBase) event.getSpawner(), event.getEntity(), event.getVelocity());
 				}
@@ -172,7 +172,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 				return false;
 			else if (entity instanceof EntityShield)
 				return true;
-		} else if (entity.getTeam() != null && owner.getTeam() != null && entity.getTeam() == owner.getTeam())
+		} else if (entity.isOnSameTeam(owner))
 			return false;
 		else if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() == owner)
 			return false;
@@ -190,7 +190,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 				return false;
 			else if (entity instanceof EntityShield || entity instanceof IShieldEntity)
 				return true;
-		} else if (entity.getTeam() != null && owner.getTeam() != null && entity.getTeam() == owner.getTeam())
+		} else if (entity.isOnSameTeam(owner))
 			return false;
 		else if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() == owner)
 			return false;
@@ -212,9 +212,9 @@ public class StatCtrlFlameStrike extends StatusControl {
 
 		float size = STATS_CONFIG.flameStrikeSettings.size;
 		float dist = STATS_CONFIG.flameStrikeSettings.maxDistance;
-		float accuracyMult = 0.05F;
-		int particleCount = 4;
-		float mult = 0.45F;
+		float accuracyMult = 0.075F;
+		int particleCount = 5;
+		float mult = 0.5F;
 
 		if (abilityData.getLevel() == 1) {
 			particleCount += 2;

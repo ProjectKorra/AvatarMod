@@ -32,7 +32,7 @@ import org.lwjgl.input.Keyboard;
  */
 public class PacketSWallJump extends AvatarPacket<PacketSWallJump> {
 
-	private KeyBinding key;
+	//private KeyBinding key;
 	private int direction;
 
 	public PacketSWallJump(int direction) {
@@ -45,12 +45,12 @@ public class PacketSWallJump extends AvatarPacket<PacketSWallJump> {
 
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
-		key = getKeyFromID(buf.readInt());
+	//	key = getKeyFromID(buf.readInt());
 	}
 
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
-		buf.writeInt(direction);
+		//buf.writeInt(direction);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class PacketSWallJump extends AvatarPacket<PacketSWallJump> {
 		return PacketRedirector::redirectMessage;
 	}
 
-	private KeyBinding getKeyFromID(int id) {
+	/*private KeyBinding getKeyFromID(int id) {
 		GameSettings settings = Minecraft.getMinecraft().gameSettings;
 		switch (id) {
 			case 0:
@@ -78,10 +78,10 @@ public class PacketSWallJump extends AvatarPacket<PacketSWallJump> {
 				break;
 		}
 		return settings.keyBindForward;
-	}
+	}**/
 
-	public KeyBinding getKey() {
+	/*public KeyBinding getKey() {
 		return this.key;
-	}
+	}**/
 
 }

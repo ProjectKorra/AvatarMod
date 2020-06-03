@@ -141,8 +141,9 @@ public class EntityLightOrb extends AvatarEntity  implements IGlowingEntity {
 		dataManager.set(SYNC_TYPE, type.ordinal());
 	}
 
+	//Will fix this later
 	public Entity getEmittingEntity() {
-		return AvatarEntityUtils.getEntityFromStringID(dataManager.get(SYNC_EMITTING_ENTITY));
+		return getOwner();
 	}
 
 	public void setEmittingEntity(Entity entity) {
