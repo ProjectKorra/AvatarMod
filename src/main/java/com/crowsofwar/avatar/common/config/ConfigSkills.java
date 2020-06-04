@@ -32,11 +32,10 @@ public class ConfigSkills {
 	public boolean startWithRandomBending = true;
 
 	@Load
-	public boolean setKeepInventory = true;
+	public boolean MultipleElements = true;
 
 	@Load
-	public boolean setChopBlocksThreshold; = 0;
-
+	public boolean setKeepInventory = true;
 
 	@Load
 	public float blockPlaced = 5f,
