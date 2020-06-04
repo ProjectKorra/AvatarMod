@@ -53,10 +53,9 @@ public class AvatarPlayerTick {
 			Bender bender = Bender.get(e.player);
 			if (bender != null) {
 				BendingData data = bender.getData();
-
 				EntityPlayer player = e.player;
 
-				if (!player.world.isRemote && player.ticksExisted == 0) {
+				if (!player.world.isRemote && player.ticksExisted % 1000 == 0) {
 					data.saveAll();
 				}
 
@@ -66,24 +65,6 @@ public class AvatarPlayerTick {
 
 			}
 		}
-
-		//Removes particles.
-		/*if (e.phase == Phase.END && Bender.get(e.player) != null) {
-			List<EntityLivingBase> benders = e.player.world.getEntities(EntityLivingBase.class, Bender::isBenderSupported);
-			boolean flamethrowerActive = false;
-			if (!benders.isEmpty()) {
-				for (EntityLivingBase entity : benders) {
-					if (Bender.get(entity).getData().hasTickHandler(TickHandlerController.FLAMETHROWER) || Bender.get(entity).getData().hasStatusControl(StatusControl.STOP_FLAMETHROW))
-						flamethrowerActive = true;
-				}
-			}
-			if (Bender.get(e.player).getData().hasStatusControl(StatusControl.STOP_FLAMETHROW) || Bender.get(e.player).getData().hasTickHandler(TickHandlerController.FLAMETHROWER))
-				flamethrowerActive = true;
-			if (!flamethrowerActive) {
-				System.out.println("Remove flamethrower");
-				//ParticleBuilder.aliveParticles.removeIf(particleAvatar -> !particleAvatar.isAlive());
-			}
-		}**/
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
@@ -91,23 +72,25 @@ public class AvatarPlayerTick {
 		if (event.getEntity() instanceof EntityLivingBase && Bender.isBenderSupported((EntityLivingBase) event.getEntity())) {
 			if (SKILLS_CONFIG.startWithRandomBending && !event.getWorld().isRemote) {
 				EntityLivingBase bender = (EntityLivingBase) event.getEntity();
-				BendingData data = BendingData.get(bender);
-				if (!data.hasElements()) {
-					int elementID = AvatarUtils.getRandomNumberInRange(1, 4);
-					List<BendingStyle> elements = BendingStyles.all().stream()
-							.filter(bendingStyle -> bendingStyle.isParentBending() && bendingStyle.canEntityUse())
-							.collect(Collectors.toList());
-					BendingStyle style = BendingStyles.get(elements.get(elementID - 1).getName());
-					if (!MinecraftForge.EVENT_BUS.post(new ElementUnlockEvent(bender, style))) {
-						data.addBending(style);
+				if (Bender.isBenderSupported(bender)) {
+					BendingData data = BendingData.getFromEntity(bender);
+					if (data != null && !data.hasElements()) {
+						int elementID = AvatarUtils.getRandomNumberInRange(1, 4);
+						List<BendingStyle> elements = BendingStyles.all().stream()
+								.filter(bendingStyle -> bendingStyle.isParentBending() && bendingStyle.canEntityUse())
+								.collect(Collectors.toList());
+						BendingStyle style = BendingStyles.get(elements.get(elementID - 1).getName());
+						if (!MinecraftForge.EVENT_BUS.post(new ElementUnlockEvent(bender, style))) {
+							data.addBending(style);
 
-						// Unlock first ability
-						//noinspection ConstantConditions - can safely assume bending is present if
-						// the ID is in use to unlock it
-						Ability ability = Objects.requireNonNull(style.getAllAbilities().get(0));
-						if (!MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(bender, ability)))
-							data.getAbilityData(ability).unlockAbility();
+							// Unlock first ability
+							//noinspection ConstantConditions - can safely assume bending is present if
+							// the ID is in use to unlock it
+							Ability ability = Objects.requireNonNull(style.getAllAbilities().get(0));
+							if (!MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(bender, ability)))
+								data.getAbilityData(ability).unlockAbility();
 
+						}
 					}
 				}
 			}

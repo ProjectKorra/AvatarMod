@@ -26,7 +26,7 @@ public class CloudBlock extends Block {
 	public CloudBlock() {
 		super(Material.GLASS);
 		this.setCreativeTab(AvatarItems.tabItems);
-		this.setTranslationKey("cloudblock");
+		this.setTranslationKey("avatarmod:cloudblock");
 		this.setHardness(1f);
 		this.setLightOpacity(0);
 		this.setLightLevel(15F);

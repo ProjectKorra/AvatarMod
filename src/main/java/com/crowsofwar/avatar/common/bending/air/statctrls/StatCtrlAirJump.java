@@ -55,7 +55,7 @@ import static com.crowsofwar.avatar.common.data.TickHandlerController.SMASH_GROU
  */
 public class StatCtrlAirJump extends StatusControl {
 
-	private Map<String, Integer> timesJumped = new HashMap<>();
+	public static Map<String, Integer> timesJumped = new HashMap<>();
 
 	public StatCtrlAirJump() {
 		super(0, AvatarControl.CONTROL_JUMP, CrosshairPosition.BELOW_CROSSHAIR);
@@ -188,14 +188,14 @@ public class StatCtrlAirJump extends StatusControl {
 			wave.setPosition(entity.getPositionVector().add(0, 0.5, 0));
 			wave.setOwner(entity);
 			wave.setKnockbackMult(new Vec3d(xVel, yVel, zVel));
-			if (!world.isRemote)
+			if (!world.isRemote) {
 				world.spawnEntity(wave);
-
-			jumps++;
+				jumps++;
+			}
 			timesJumped.replace(uuid, jumps);
 			//If you return when it's greater than 1, it resets, and you can double jump infinitely.
 			boolean isDone = jumps > 2;
-			if (isDone) timesJumped.replace(uuid, 0);
+				if (isDone) timesJumped.replace(uuid, 0);
 			return true;
 
 		}

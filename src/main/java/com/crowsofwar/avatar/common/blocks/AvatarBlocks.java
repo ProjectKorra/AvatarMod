@@ -51,7 +51,7 @@ public class AvatarBlocks {
 	public static void init() {
 		allBlocks = new ArrayList<>();
 		addBlock(blockCloud = new CloudBlock());
-		//blockCloud.initModel();
+		blockCloud.initModel();
 	}
 
 	private static void addBlock(Block block) {
@@ -61,7 +61,7 @@ public class AvatarBlocks {
 			block.setTranslationKey(block.getTranslationKey().substring(5));
 		}
 		else {
-			block.setRegistryName("avatarmod:" + block.getTranslationKey());
+			block.setRegistryName(block.getTranslationKey());
 		}
 		allBlocks.add(block);
 	}
