@@ -87,6 +87,9 @@ public class AbilityEarthControl extends Ability {
 		BendingData data = ctx.getData();
 
 		IBlockState ibs = world.getBlockState(pos);
+		if (!ibs.isFullBlock() && !STATS_CONFIG.bendableBlocks.contains(ibs.getBlock()))
+			ibs = world.getBlockState(pos.down());
+
 		Block block = ibs.getBlock();
 
 		int maxBlocks = 1;
