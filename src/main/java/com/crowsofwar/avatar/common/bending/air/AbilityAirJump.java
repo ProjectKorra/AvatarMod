@@ -61,7 +61,7 @@ public class AbilityAirJump extends Ability {
 
 		boolean allowDoubleJump = ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST) &&
 				timesJumped.getOrDefault(bender.getInfo().getId().toString(), 0) < 2;
-		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.4, 1, 0.4));
+		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.2, 0.5, 0.2));
 		boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WEB;
 
 		if (!data.hasStatusControl(AIR_JUMP) && bender.consumeChi(STATS_CONFIG.chiAirJump)) {
