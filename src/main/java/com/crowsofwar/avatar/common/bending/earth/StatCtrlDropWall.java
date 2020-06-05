@@ -28,8 +28,6 @@ public class StatCtrlDropWall extends StatusControl {
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 
-		// TODO: When upgrade to a5.0 , call setOwner on the wall itself , then lookup based on wall
-
 		// Wall has no owner so we go for segments
 		EntityWallSegment wallSegment = AvatarEntity.lookupOwnedEntity(world, EntityWallSegment.class, entity);
 

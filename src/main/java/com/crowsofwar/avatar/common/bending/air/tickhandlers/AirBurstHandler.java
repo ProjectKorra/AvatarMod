@@ -207,7 +207,7 @@ public class AirBurstHandler extends TickHandler {
 
 			if (!data.hasStatusControl(RELEASE_AIR_BURST)) {
 
-				int particleController = abilityData.getLevel() > 0 ? 60 - (4 * abilityData.getLevel()) : 60;
+				int particleController = abilityData.getLevel() > 0 ? 62 - (4 * abilityData.getLevel()) : 62;
 				EntityShockwave shockwave = new EntityShockwave(world);
 				shockwave.setOwner(entity);
 				shockwave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity));
@@ -310,24 +310,25 @@ public class AirBurstHandler extends TickHandler {
 									zVel = z1 * entity.getParticleSpeed() * 0.375F;
 
 									ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
-											.clr(0.8F, 0.8F, 0.8F).time(9 + (int) (3 * ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
-											.scale(1.5F + 0.5F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).element(entity.getElement())
+											.clr(0.8F, 0.8F, 0.8F).time(12 + AvatarUtils.getRandomNumberInRange(0, 10) + (int) (3 * ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
+											.scale(0.225F + 0.5F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).element(entity.getElement())
 											.spawn(world);
 
 								}
 							}
-						} else {
-							for (double i = 0; i < ((EntityShockwave) entity).getRange(); i += 0.0125) {
+
+						} //else {
+							for (double i = 0; i < ((EntityShockwave) entity).getRange() + ((EntityShockwave) entity).getParticleAmount(); i += 0.025) {
 								Vec3d vel = new Vec3d(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian());
 								vel = vel.scale(0.275F * entity.getParticleSpeed());
 								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(entity.posX, entity.posY, entity.posZ).vel(vel)
-										.clr(0.85F, 0.85F, 0.85F).time(15).collide(true)
-										.scale(1.5f + 0.5F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).shaded(true).
+										.clr(0.85F, 0.85F, 0.85F).time(12 + AvatarUtils.getRandomNumberInRange(0, 10)).collide(true)
+										.scale(0.275f + 0.575F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).shaded(true).
 										element(entity.getElement()).spawn(world);
 
 							}
 						}
-					}
+					//}
 				}
 			}
 			return this;

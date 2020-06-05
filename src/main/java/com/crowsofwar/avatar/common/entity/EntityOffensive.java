@@ -306,6 +306,13 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 			if (origZ != z) this.motionZ = 0.0D;
 		}
 
+		if (onCollideWithSolid()) {
+			if (isProjectile() && shouldExplode())
+				Explode();
+			if (isProjectile() && shouldDissipate())
+				Dissipate();
+		}
+
 		//These values are only used for proper visual spread collision.
 		prevVelX = motionX;
 		prevVelY = motionY;
@@ -332,7 +339,9 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		if (entity instanceof AvatarEntity)
 			applyElementalContact((AvatarEntity) entity);
 		if (getSolidEntities().test(entity))
-			setDead();
+			if (shouldExplode())
+				Explode();
+			else Dissipate();
 
 	}
 
@@ -352,11 +361,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	@Override
 	public boolean onCollideWithSolid() {
-		if (isProjectile() && shouldExplode())
-			Explode();
-		if (isProjectile() && shouldDissipate())
-			Dissipate();
-		return true;
+		return !world.getCollisionBoxes(this, getExpandedHitbox()).isEmpty();
 	}
 
 	public int getLifeTime() {

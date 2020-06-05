@@ -28,7 +28,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.EntityEquipmentSlot.Type;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
@@ -59,6 +58,7 @@ public class EntityRavine extends EntityOffensive {
 		super(world);
 		setSize(0.125F, 0.125F);
 		this.damageMult = 1;
+		this.noClip = true;
 	}
 
 	@Override
@@ -131,11 +131,6 @@ public class EntityRavine extends EntityOffensive {
 			initialPosition = position();
 		}
 
-		Vector position = position();
-		Vector velocity = velocity();
-
-		//Why? xD
-		//setPosition(position.plus(velocity.times(0.05)));
 
 		if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
 			Dissipate();
@@ -148,21 +143,17 @@ public class EntityRavine extends EntityOffensive {
 				world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
 				SoundCategory.PLAYERS, 1, 1, false);
 
-		if (!world.getBlockState(below).isNormalCube()) {
-			Dissipate();
-		}
-
-		if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock)) {
-			Dissipate();
-		}
-
-		// Destroy if in a block
-		IBlockState inBlock = world.getBlockState(getPosition());
-		if (inBlock.isFullBlock()) {
-			Dissipate();
+		//Lowers the ravine if there's a step below
+		if (!ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock)) {
+			if (!STATS_CONFIG.bendableBlocks.contains(world.getBlockState(getPosition().down(2)).getBlock()))
+				Dissipate();
+			else {
+				setPosition(position().minusY(1));
+			}
 		}
 
 		// Destroy non-solid blocks in the ravine
+		IBlockState inBlock = world.getBlockState(getPosition());
 		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
 			if (inBlock.getBlockHardness(world, getPosition()) == 0) {
 				breakBlock(getPosition());
@@ -268,5 +259,21 @@ public class EntityRavine extends EntityOffensive {
 
 			}
 		}
+	}
+
+	@Override
+	public boolean onCollideWithSolid() {
+		// Destroy if in a block
+		IBlockState inBlock = world.getBlockState(getPosition());
+		if (inBlock.isFullBlock()) {
+			inBlock = world.getBlockState(getPosition().up());
+			if (inBlock.getBlock() == Blocks.AIR || !inBlock.isFullBlock() && inBlock.getBlockHardness(world, getPosition()) == 0) {
+				setPosition(position().plusY(2));
+				return false;
+			}
+			else return true;
+
+		}
+		return false;
 	}
 }
