@@ -3,11 +3,9 @@ package com.crowsofwar.avatar.client.particles.newparticles;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.AvatarClientProxy;
+import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleBehaviour;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.fire.Firebending;
-import com.crowsofwar.avatar.common.bending.water.Waterbending;
-import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.network.packets.PacketSParticleCollideEvent;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
@@ -72,6 +70,7 @@ public abstract class ParticleAvatar extends Particle {
 	 */
 
 
+	private ParticleBehaviour behaviour;
 	/**
 	 * The fraction of the impact velocity that should be the maximum spread speed added on impact.
 	 */
@@ -114,6 +113,7 @@ public abstract class ParticleAvatar extends Particle {
 	protected double radius = 0;
 	protected double speed = 0;
 	protected UUID uuid = UUID.fromString("ccc7dd56-8fcc-4477-9782-7f0423e5616d");
+
 
 	protected BendingStyle element;
 	protected Ability ability;

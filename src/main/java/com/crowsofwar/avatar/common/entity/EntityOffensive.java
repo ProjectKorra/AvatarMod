@@ -361,7 +361,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	@Override
 	public boolean onCollideWithSolid() {
-		return !world.getCollisionBoxes(this, getExpandedHitbox()).isEmpty() && collided;
+		return collided;
 	}
 
 	public int getLifeTime() {

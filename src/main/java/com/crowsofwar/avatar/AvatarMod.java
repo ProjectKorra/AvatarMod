@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar;
 
+import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleBehaviour;
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
@@ -207,6 +208,8 @@ public class AvatarMod {
 		AvatarChatMessages.loadAll();
 
 		Behavior.registerBehaviours();
+
+		ParticleBehaviour.registerBehaviours();
 
 		EarthbendingEvents.register();
 
