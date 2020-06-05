@@ -78,7 +78,7 @@ public class ConfigClient {
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
 
-		CLIENT_CONFIG.keymappings.clear();
+		//CLIENT_CONFIG.keymappings.clear();
 		Set<Map.Entry<String, Integer>> entries = CLIENT_CONFIG.nameKeymappings.entrySet();
 		for (Map.Entry<String, Integer> entry : entries) {
 			Ability ability = null;
@@ -92,7 +92,7 @@ public class ConfigClient {
 				CLIENT_CONFIG.keymappings.put(ability, entry.getValue());
 			}
 		}
-		CLIENT_CONFIG.conflicts.clear();
+		//CLIENT_CONFIG.conflicts.clear();
 		Set<Map.Entry<String, Boolean>> entries2 = CLIENT_CONFIG.nameConflicts.entrySet();
 		for (Map.Entry<String, Boolean> entry : entries2) {
 			Ability ability = null;

@@ -97,14 +97,13 @@ public class AvatarPlayerTick {
 		}
 	}
 
+	//Prevents keybinds from letting you use abilities you haven't learned
 	@SubscribeEvent
 	public static void onBendingUseEvent(AbilityUseEvent event) {
 		if (event.getEntityLiving() != null) {
-			if (BendingData.getFromEntity(event.getEntityLiving()) != null) {
 				BendingData data = BendingData.getFromEntity(event.getEntityLiving());
-				if (!data.hasBendingId(event.getAbility().getBendingId())) {
+				if (data != null && !data.hasBendingId(event.getAbility().getBendingId())) {
 					event.setCanceled(true);
-				}
 			}
 		}
 	}
