@@ -36,11 +36,6 @@ public abstract class TickHandler {
 	 */
 	public abstract boolean tick(BendingContext ctx);
 
-	//Used for bender npc's for particle effects
-	public void renderTick(BendingContext ctx) {
-
-	}
-
 	public int id() {
 		return id;
 	}

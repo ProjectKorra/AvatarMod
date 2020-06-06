@@ -32,8 +32,7 @@ import javax.annotation.Nullable;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
-@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
-public class EntitySandstorm extends AvatarEntity implements IGlowingEntity {
+public class EntitySandstorm extends AvatarEntity {
 
 	private static final DataParameter<Float> SYNC_VELOCITY_MULT = EntityDataManager.createKey(EntitySandstorm.class, DataSerializers.FLOAT);
 	private static final DataParameter<Float> SYNC_STRENGTH = EntityDataManager.createKey(EntitySandstorm.class, DataSerializers.FLOAT);
@@ -383,10 +382,5 @@ public class EntitySandstorm extends AvatarEntity implements IGlowingEntity {
 				bD.removeStatusControl(StatusControlController.SANDSTORM_REDIRECT);
 			}
 		}
-	}
-
-	@Override
-	public ColoredLight produceColoredLight(float partialTicks) {
-		return ColoredLight.builder().pos(this).color(179, 150, 9).radius(10f).build();
 	}
 }

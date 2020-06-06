@@ -186,10 +186,10 @@ public class AbilityFlameStrike extends Ability {
 					}
 				}
 				for (int i = 0; i < 2; i++) {
-					AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-					double spawnX = boundingBox.getCenter().x + world.rand.nextGaussian() / 15;
-					double spawnY = boundingBox.getCenter().y + world.rand.nextGaussian() / 15;
-					double spawnZ = boundingBox.getCenter().z + world.rand.nextGaussian() / 15;
+					Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(entity);
+					double spawnX = mid.x + world.rand.nextGaussian() / 15;
+					double spawnY = mid.y + world.rand.nextGaussian() / 15;
+					double spawnZ = mid.z + world.rand.nextGaussian() / 15;
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
 							world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
 							scale(entity.getAvgSize() * 1.25F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(255, 10, 5).spawn(world);

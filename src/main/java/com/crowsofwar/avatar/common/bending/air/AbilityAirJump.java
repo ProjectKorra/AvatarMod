@@ -18,12 +18,21 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.bending.air.statctrls.StatCtrlAirJump.timesJumped;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.StatusControlController.AIR_JUMP;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.AIR_PARTICLE_SPAWNER;
@@ -45,12 +54,19 @@ public class AbilityAirJump extends Ability {
 	@Override
 	public void execute(AbilityContext ctx) {
 
+		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		Bender bender = ctx.getBender();
+		World world = ctx.getWorld();
+
+		boolean allowDoubleJump = ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST) &&
+				timesJumped.getOrDefault(bender.getInfo().getId().toString(), 0) < 2;
+		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.2, 0.5, 0.2));
+		boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WEB;
 
 		if (!data.hasStatusControl(AIR_JUMP) && bender.consumeChi(STATS_CONFIG.chiAirJump)) {
 			data.addStatusControl(AIR_JUMP);
-			if (data.hasTickHandler(AIR_PARTICLE_SPAWNER)) {
+			if (data.hasTickHandler(AIR_PARTICLE_SPAWNER) || allowDoubleJump && !onGround) {
 				Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
 				if (AIR_JUMP.execute(new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
 					if (!ctx.getWorld().isRemote)

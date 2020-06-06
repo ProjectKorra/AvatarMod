@@ -37,8 +37,7 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 
-@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
-public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControlPoint> implements IGlowingEntity {
+public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControlPoint> {
 
 	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey
 			(EntityWaterCannon.class, DataSerializers.FLOAT);
@@ -353,10 +352,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 		}
 	}
 
-	@Override
-	public ColoredLight produceColoredLight(float partialTicks) {
-		return ColoredLight.builder().color(61, 77, 255).pos(this).radius(10f).build();
-	}
 
 	class CannonControlPoint extends ControlPoint {
 

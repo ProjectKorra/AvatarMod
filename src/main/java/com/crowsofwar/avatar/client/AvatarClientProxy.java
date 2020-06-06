@@ -33,6 +33,7 @@ import com.crowsofwar.avatar.client.render.*;
 import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.blocks.AvatarBlocks;
 import com.crowsofwar.avatar.common.blocks.tiles.TileBlockTemp;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
@@ -80,7 +81,7 @@ import static com.crowsofwar.avatar.common.config.ConfigAnalytics.ANALYTICS_CONF
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler;
 
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 public class AvatarClientProxy implements AvatarCommonProxy {
 
 	//TODO: Move all particle-spawning for entities to their respective classes. Otherwise, weird things happen, and it's just bad code.
@@ -320,6 +321,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public void registerItemModels() {
 		AvatarItemRenderRegister.register();
+		AvatarBlocks.init();
 	}
 
 	@Override

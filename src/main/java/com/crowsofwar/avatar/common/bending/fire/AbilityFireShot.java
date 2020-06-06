@@ -96,8 +96,7 @@ public class AbilityFireShot extends Ability {
 			chi += 2F;
 		}
 		damage += abilityData.getTotalXp() / 50;
-		if (world.isRemote)
-			System.out.println("Client-Side LookVec: " + entity.getLookVec());
+
 		if (bender.consumeChi(chi)) {
 			if (!ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				EntityFlames flames = new EntityFlames(world);

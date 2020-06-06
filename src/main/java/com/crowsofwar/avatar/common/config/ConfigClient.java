@@ -36,7 +36,7 @@ public class ConfigClient {
 	public float radialMenuAlpha = 0.75f;
 
 	@Load
-	public float chiBarAlpha = 0.5f;
+	public float chiBarAlpha = 0.625f;
 
 	@Load
 	public final float bendingCycleAlpha = 0.75f;
@@ -78,7 +78,7 @@ public class ConfigClient {
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
 
-		CLIENT_CONFIG.keymappings.clear();
+		//CLIENT_CONFIG.keymappings.clear();
 		Set<Map.Entry<String, Integer>> entries = CLIENT_CONFIG.nameKeymappings.entrySet();
 		for (Map.Entry<String, Integer> entry : entries) {
 			Ability ability = null;
@@ -92,7 +92,7 @@ public class ConfigClient {
 				CLIENT_CONFIG.keymappings.put(ability, entry.getValue());
 			}
 		}
-		CLIENT_CONFIG.conflicts.clear();
+		//CLIENT_CONFIG.conflicts.clear();
 		Set<Map.Entry<String, Boolean>> entries2 = CLIENT_CONFIG.nameConflicts.entrySet();
 		for (Map.Entry<String, Boolean> entry : entries2) {
 			Ability ability = null;
@@ -194,11 +194,6 @@ public class ConfigClient {
 	}
 
 	public static class FireRenderSettings {
-		@Load
-		public final boolean fireBallSphere = false;
-
-		@Load
-		public final boolean originalFireball = true;
 
 		@Load
 		public final boolean flameStrikeSphere = false;
@@ -207,7 +202,11 @@ public class ConfigClient {
 		public final boolean showFlameStrikeOrb = false;
 
 		@Load
-		public final boolean solidFireParticles = true;
+		public final boolean solidFlamethrowerParticles = true;
+
+		@Load
+		public final boolean solidFlameStrikeParticles = true;
+
 
 	}
 

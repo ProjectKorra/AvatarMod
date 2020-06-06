@@ -19,12 +19,10 @@ package com.crowsofwar.avatar.client.gui;
 
 import com.crowsofwar.avatar.client.AvatarShaderUtils;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.Chi;
-import com.crowsofwar.avatar.common.data.StatusControl;
-import com.crowsofwar.avatar.common.data.Vision;
+import com.crowsofwar.avatar.common.data.*;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import com.crowsofwar.avatar.common.entity.EntityIcePrison;
@@ -51,6 +49,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
@@ -225,9 +224,11 @@ public class AvatarUiRenderer extends Gui {
 					float width = 100 * scale;
 					float height = 9F * (float) CLIENT_CONFIG.chiBarSettings.heightScale;
 
-					mc.getTextureManager().bindTexture(AvatarUiTextures.CHI_BAR);
+
+					mc.getTextureManager().bindTexture(AvatarUiTextures.getChiTexture(data.getActiveBendingId()));
 
 					pushMatrix();
+					enableBlend();
 
 					translate(resolution.getScaledWidth() - CLIENT_CONFIG.chiBarSettings.xPos,
 							resolution.getScaledHeight() - height - CLIENT_CONFIG.chiBarSettings.yPos, 0);
@@ -240,19 +241,17 @@ public class AvatarUiRenderer extends Gui {
 
 					// Available chi
 
-					float unadjustedU = 100 * unavailable / max;
-					int adjustedU = (int) Math.floor(unadjustedU / 8f) * 8;
-					float uDiff = unadjustedU - adjustedU;
-
-					drawTexturedModalRect(adjustedU, 0, 1, 27, (int) (100 * available / max + uDiff), 9);
+					color(1, 1, 1, alpha * 1.5F);
+					drawTexturedModalRect(0, 0, 0, 27, (int) (99 * (available + unavailable) / max), 9);
 
 					// Unavailable chi
-					drawTexturedModalRect(0, 0, 0, 45, (int) (100 * unavailable / max), 9);
+					drawTexturedModalRect(0, 0, 0, 45, (int) (98 * unavailable / max), 9);
+
+					color(1, 1, 1, alpha);
 					if (CLIENT_CONFIG.chiBarSettings.shouldChiNumbersRender) {
 						drawString(mc.fontRenderer, ((int) total) + "/" + ((int) max) + ", " + ((int) available), 25, -10,
 								data.getActiveBending().getTextColour() | ((int) (alpha * 255) << 24));
 					}
-
 					popMatrix();
 
 				}
@@ -349,7 +348,19 @@ public class AvatarUiRenderer extends Gui {
 		refreshDimensions();
 		int x = screenWidth() / scaleFactor() - 85 + xOff;
 		int y = screenHeight() / scaleFactor() - 60 + yOff;
-		mc.renderEngine.bindTexture(AvatarUiTextures.getBendingIconTexture(controller.getId()));
+		int level = 0;
+		EntityPlayer player = Minecraft.getMinecraft().player;
+		if (BendingData.getFromEntity(player) != null) {
+			List<Ability> abilities = controller.getAllAbilities();
+			abilities = abilities.stream().filter(ability -> AbilityData.get(player, ability.getName()).getLevel() > -1).collect(Collectors.toList());
+			for (Ability ability : abilities) {
+				AbilityData aD = AbilityData.get(player, ability.getName());
+				if (aD.getLevel() > -1) {
+					level += aD.getLevel() + 1;
+				}
+			}
+		}
+		mc.renderEngine.bindTexture(AvatarUiTextures.getBendingIconTexture(controller.getId(), level));
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 0);
 		GlStateManager.scale(width / 256F, height / 256F, 1);

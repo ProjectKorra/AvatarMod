@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.client.particles.newparticles;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.AvatarClientProxy;
+import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleBehaviour;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.entity.*;
@@ -52,7 +53,7 @@ import java.util.stream.Collectors;
  * @see com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder
  * @since AvatarMod 1.6.0
  */
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 public abstract class ParticleAvatar extends Particle {
 
 	//TODO: How to adjust Electroblob's particle system for av2.
@@ -69,6 +70,7 @@ public abstract class ParticleAvatar extends Particle {
 	 */
 
 
+	private ParticleBehaviour behaviour;
 	/**
 	 * The fraction of the impact velocity that should be the maximum spread speed added on impact.
 	 */
@@ -111,6 +113,7 @@ public abstract class ParticleAvatar extends Particle {
 	protected double radius = 0;
 	protected double speed = 0;
 	protected UUID uuid = UUID.fromString("ccc7dd56-8fcc-4477-9782-7f0423e5616d");
+
 
 	protected BendingStyle element;
 	protected Ability ability;
@@ -776,40 +779,7 @@ public abstract class ParticleAvatar extends Particle {
 			collidedWithParticle = false;
 			dynamicCollidedWithEntity = false;
 			for (Entity hit : entityList) {
-				if (hit != getEntity() && (getAbility() != null || this.element != null)) {
-					if (hit instanceof EntityShield && ((EntityShield) hit).getOwner() != getEntity() || hit instanceof EntityWall || hit instanceof EntityWallSegment) {
-						if (getAbility() != null)
-							AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
-						else
-							AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, element.getId()));
-						collidedWithSolid = true;
-					} else if (hit instanceof EntityThrowable || hit instanceof EntityArrow || hit instanceof EntityOffensive && ((EntityOffensive) hit).getOwner() != spawnEntity) {
-						dynamicCollidedWithEntity = true;
-						Vec3d hitVel = new Vec3d(hit.motionX, hit.motionY, hit.motionZ);
-						Vec3d pVel = new Vec3d(motionX, motionY, motionZ);
-						if (AvatarUtils.getMagnitude(hitVel) >= AvatarUtils.getMagnitude(pVel))
-							motionX = motionY = motionZ = 0;
-						else {
-							this.motionX += hit.motionX;
-							this.motionY += hit.motionY;
-							this.motionZ += hit.motionZ;
-						}
-						if (hit != null && spawnEntity != null && getAbility() != null)
-							AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
-					} else if (spawnEntity != null && getAbility() != null && hit != spawnEntity && !(hit instanceof AvatarEntity) || hit instanceof AvatarEntity && ((AvatarEntity) hit).getOwner() != spawnEntity && !collidedWithSolid) {
-						//Send packets
-						//TODO: Find a way to reduce lag
-						if (!hit.getIsInvulnerable()) {
-							if (hit instanceof EntityLivingBase) {
-								if (((EntityLivingBase) hit).attackable() && hit.canBeAttackedWithItem())
-									//if (((EntityLivingBase) hit).hurtTime == 0)
-									AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
-
-							} else if (hit.canBeAttackedWithItem())
-								AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
-						}
-					}
-				}
+				onCollideWithEntity(hit);
 			}
 			for (AxisAlignedBB axisalignedbb : list) {
 				y = axisalignedbb.calculateYOffset(this.getBoundingBox(), y);
@@ -862,16 +832,63 @@ public abstract class ParticleAvatar extends Particle {
 		if (origZ != z) this.motionZ = 0.0D;
 	}
 
-	@Override
-	public void setExpired() {
-		super.setExpired();
-		/**
-		 * @throws java.util.ConcurrentModificationException, so we're leaving this commented out for now. Instead, we'll clear lists when joining/leaving worlds.
-		 */
-		//if (ParticleBuilder.aliveParticles.contains(this))
-		//	ParticleBuilder.aliveParticles.remove();
+
+	public void onCollideWithEntity(Entity entity) {
+		if (entity != getEntity() && (getAbility() != null || this.element != null)) {
+			if (entity instanceof EntityShield && ((EntityShield) entity).getOwner() != getEntity() || entity instanceof EntityWall || entity instanceof EntityWallSegment) {
+				if (getAbility() != null)
+					AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
+				else
+					AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, element.getId()));
+				collidedWithSolid = true;
+			} else if (entity instanceof EntityThrowable || entity instanceof EntityArrow || entity instanceof EntityOffensive && ((EntityOffensive) entity).getOwner() != spawnEntity
+					|| entity instanceof IOffensiveEntity && ((AvatarEntity) entity).getOwner() != spawnEntity) {
+				dynamicCollidedWithEntity = true;
+				Vec3d hitVel = new Vec3d(entity.motionX, entity.motionY, entity.motionZ);
+				Vec3d pVel = new Vec3d(motionX, motionY, motionZ);
+				if (AvatarUtils.getMagnitude(hitVel) >= AvatarUtils.getMagnitude(pVel))
+					motionX = motionY = motionZ = 0;
+				else {
+					this.motionX += entity.motionX;
+					this.motionY += entity.motionY;
+					this.motionZ += entity.motionZ;
+				}
+				if (entity instanceof AvatarEntity)
+					applyElementalContact((AvatarEntity) entity);
+
+				if (entity != null && spawnEntity != null && getAbility() != null)
+					AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
+			} else if (spawnEntity != null && getAbility() != null && entity != spawnEntity && !(entity instanceof AvatarEntity) || entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != spawnEntity && !collidedWithSolid) {
+				//Send packets
+				//TODO: Find a way to reduce lag
+				if (!entity.getIsInvulnerable()) {
+					if (entity instanceof EntityLivingBase) {
+						if (((EntityLivingBase) entity).attackable() && entity.canBeAttackedWithItem())
+							AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
+
+					} else if (entity.canBeAttackedWithItem())
+						AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
+				}
+			}
+		}
 	}
 
+	public void applyElementalContact(ParticleAvatar particle) {
+
+	}
+
+	public void applyElementalContact(AvatarEntity entity) {
+		if (entity.getOwner() != null && entity.getElement() != null) {
+			switch (entity.getElement().getName()) {
+				case "waterbending":
+					break;
+				case "firebending":
+					break;
+				default:
+					break;
+			}
+		}
+	}
 	public int getLifetimeRemaining() {
 		return this.particleMaxAge - this.particleAge;
 	}

@@ -20,10 +20,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
 
-@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
-public class EntityEarthspikeSpawner extends AvatarEntity implements IGlowingEntity {
+public class EntityEarthspikeSpawner extends AvatarEntity {
 
 	private static final DataParameter<EarthspikesBehavior> SPIKES_BEHAVIOR = EntityDataManager
 			.createKey(EntityEarthspikeSpawner.class, EarthspikesBehavior.SERIALIZER);
@@ -190,12 +188,6 @@ public class EntityEarthspikeSpawner extends AvatarEntity implements IGlowingEnt
 	@Override
 	public BendingStyle getElement() {
 		return new Earthbending();
-	}
-
-	@Override
-	public ColoredLight produceColoredLight(float partialTicks) {
-		return  ColoredLight.builder().color(8, 128, 20).radius(5.0f).pos(this).build();
-
 	}
 
 	// Allows setting the spikes type

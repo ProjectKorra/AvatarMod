@@ -10,8 +10,8 @@
       "item": "minecraft:hay_block"
     },
     "c": {
-      "item": "avatarmod:scroll",
-      "data": 4
+      "item": "avatarmod:scroll_air",
+      "data": 1
     },
     "s": {
       "item": "minecraft:string"

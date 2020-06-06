@@ -214,6 +214,7 @@ public class EntityFlamethrower extends EntityOffensive implements IGlowingEntit
 
 
 	@Override
+	@Optional.Method(modid = "hammercore")
 	public ColoredLight produceColoredLight(float partialTicks) {
 		return ColoredLight.builder().pos(this).color(1f,0f,0f,1f).radius(10f).build();
 	}

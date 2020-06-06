@@ -200,6 +200,7 @@ public class EntityAvatarLightning extends EntityLightningBolt implements IGlowi
 	}
 
 	@Override
+	@Optional.Method(modid = "hammercore")
 	public ColoredLight produceColoredLight(float v) {
 		return ColoredLight.builder().color(1F, 2F, 3F).radius(15).pos(this).build();
 	}

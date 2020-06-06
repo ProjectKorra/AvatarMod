@@ -36,8 +36,7 @@ import java.util.List;
 /**
  * @author CrowsOfWar
  */
-@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
-public class EntityIceShard extends Entity implements IGlowingEntity {
+public class EntityIceShard extends Entity {
 
 	private double damageMult;
 
@@ -137,12 +136,6 @@ public class EntityIceShard extends Entity implements IGlowingEntity {
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
-
-	}
-
-	@Override
-	public ColoredLight produceColoredLight(float partialTicks) {
-		return ColoredLight.builder().pos(this).radius(5.5f).color(196, 242, 235).build();
 
 	}
 }

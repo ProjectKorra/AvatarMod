@@ -11,6 +11,7 @@ import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityShield;
+import com.crowsofwar.avatar.common.entity.IShieldEntity;
 import com.crowsofwar.avatar.common.event.ParticleCollideEvent;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -41,10 +42,8 @@ import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAME_STRI
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class StatCtrlFlameStrike extends StatusControl {
 
-	private static HashMap<UUID, Integer> timesUsed = new HashMap<>();
-	private static HashMap<UUID, Integer> chargeLevel = new HashMap<>();
-	//Ensures the target has been struck by the centre of the flame blast.
-	private static HashMap<UUID, Integer> timesHit = new HashMap<>();
+	private static final HashMap<UUID, Integer> timesUsed = new HashMap<>();
+	private static final HashMap<UUID, Integer> chargeLevel = new HashMap<>();
 	EnumHand hand;
 
 	public StatCtrlFlameStrike(EnumHand hand) {
@@ -73,21 +72,12 @@ public class StatCtrlFlameStrike extends StatusControl {
 		} else chargeLevel.put(id, level);
 	}
 
-	public static int getTimesHit(UUID id) {
-		return chargeLevel.getOrDefault(id, 1);
-	}
-
-	public static void setTimesHit(UUID id, int hit) {
-		if (timesHit.containsKey(id)) {
-			timesHit.replace(id, hit);
-		} else timesHit.put(id, hit);
-	}
 
 	@SubscribeEvent
 	public static void particleCollision(ParticleCollideEvent event) {
 		if (event.getAbility() instanceof AbilityFlameStrike) {
 			if (event.getSpawner() != event.getEntity()) {
-				if (event.getSpawner() instanceof EntityLivingBase) {
+				if (event.getSpawner() instanceof EntityLivingBase && event.getEntity() != null && event.getVelocity() != null) {
 					if (AvatarUtils.getMagnitude(event.getVelocity()) > 0.5)
 						attackEntity((EntityLivingBase) event.getSpawner(), event.getEntity(), event.getVelocity());
 				}
@@ -157,7 +147,6 @@ public class StatCtrlFlameStrike extends StatusControl {
 				target.motionY = Math.min(0.15, target.motionY);
 			}
 			target.setFire(fireTime);
-			setTimesHit(target.getUniqueID(), 0);
 
 		}
 		return false;
@@ -171,7 +160,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 				return false;
 			else if (entity instanceof EntityShield)
 				return true;
-		} else if (entity.getTeam() != null && owner.getTeam() != null && entity.getTeam() == owner.getTeam())
+		} else if (entity.isOnSameTeam(owner))
 			return false;
 		else if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() == owner)
 			return false;
@@ -187,9 +176,9 @@ public class StatCtrlFlameStrike extends StatusControl {
 				return false;
 			else if (!entity.canBeCollidedWith())
 				return false;
-			else if (entity instanceof EntityShield)
+			else if (entity instanceof EntityShield || entity instanceof IShieldEntity)
 				return true;
-		} else if (entity.getTeam() != null && owner.getTeam() != null && entity.getTeam() == owner.getTeam())
+		} else if (entity.isOnSameTeam(owner))
 			return false;
 		else if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() == owner)
 			return false;
@@ -211,9 +200,10 @@ public class StatCtrlFlameStrike extends StatusControl {
 
 		float size = STATS_CONFIG.flameStrikeSettings.size;
 		float dist = STATS_CONFIG.flameStrikeSettings.maxDistance;
-		float accuracyMult = 0.05F;
-		int particleCount = 4;
-		float mult = 0.4F;
+		float accuracyMult = 0.075F;
+		int particleCount = 3;
+		float mult = 0.5F;
+		double powerFactor = ctx.getBender().calcPowerRating(Firebending.ID) / 100D;
 
 		if (abilityData.getLevel() == 1) {
 			particleCount += 2;
@@ -225,11 +215,11 @@ public class StatCtrlFlameStrike extends StatusControl {
 			size *= 1.25;
 			dist = 4;
 			mult += 0.1F;
-			accuracyMult *= 1.5F;
+			accuracyMult *= 0.75F;
 		}
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			size *= 0.4F;
-			particleCount += 10;
+			size *= 0.75F;
+			particleCount += 8;
 			accuracyMult = 0.03F;
 			dist = 7;
 			mult = 0.7F;
@@ -237,11 +227,15 @@ public class StatCtrlFlameStrike extends StatusControl {
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
 			size *= 2.25F;
 			particleCount -= 5;
-			accuracyMult *= 2;
+			accuracyMult *= 1.25;
 			mult = 0.8F;
 		}
 
-		int lifeTime = (int) dist * 2;
+		int lifeTime = (int) dist * 2 + 4;
+
+		lifeTime += powerFactor * 3;
+		mult += powerFactor / 5;
+		size *= (1 + powerFactor * 0.25);
 
 
 		Vec3d look = entity.getLookVec();
@@ -250,7 +244,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 
 		if (world.isRemote) {
 			//Spawn particles
-			if (CLIENT_CONFIG.fireRenderSettings.solidFireParticles) {
+			if (CLIENT_CONFIG.fireRenderSettings.solidFlameStrikeParticles) {
 				for (int i = 0; i < 15 + particleCount; i++) {
 					double x1 = entity.posX + look.x * i / 50 + world.rand.nextGaussian() * accuracyMult;
 					double y1 = eyePos - 0.4F + world.rand.nextGaussian() * accuracyMult;
@@ -261,19 +255,25 @@ public class StatCtrlFlameStrike extends StatusControl {
 							look.y * mult + world.rand.nextGaussian() * accuracyMult,
 							look.z * mult + world.rand.nextGaussian() * accuracyMult)
 							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity)
-							.clr(255, 15, 5).collide(true).scale(size / 2).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
+							.clr(255, 15, 5).collide(true).scale(size / 4).time(lifeTime + 2 + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
 					//Using the random function each time ensures a different number for every value, making the ability "feel" better.
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
 							look.y * mult + world.rand.nextGaussian() * accuracyMult,
 							look.z * mult + world.rand.nextGaussian() * accuracyMult)
 							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity)
 							.clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true)
-							.scale(size / 2).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
+							.scale(size / 4).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
+				}
+				for (int i = 0; i < 1 + particleCount; i++) {
+					double x1 = entity.posX + look.x * i / 50 + world.rand.nextGaussian() * accuracyMult;
+					double y1 = eyePos - 0.4F + world.rand.nextGaussian() * accuracyMult;
+					double z1 = entity.posZ + look.z * i / 50 + world.rand.nextGaussian() * accuracyMult;
+
 					ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
-							look.y * mult + world.rand.nextGaussian() * accuracyMult,
-							look.z * mult + world.rand.nextGaussian() * accuracyMult)
+							look.y * mult + world.rand.nextGaussian() * accuracyMult * 0.1,
+							look.z * mult + world.rand.nextGaussian() * accuracyMult * 0.1)
 							.element(new Firebending()).ability(new AbilityFlameStrike()).spawnEntity(entity).collide(true)
-							.scale(size / 2).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
+							.scale(size / 4).time(lifeTime - 6 + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
 				}
 			} else {
 				for (int i = 0; i < 30 + particleCount * 2; i++) {

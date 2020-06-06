@@ -1,14 +1,15 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.Optional;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
@@ -19,8 +20,9 @@ import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
  * @author Electroblob, FavouriteDragon
  * @since Wizardry 4.2.0, Av2 1.6.0
  */
-@SideOnly(Side.CLIENT)
-public class ParticleFlash extends ParticleAvatar {
+//@SideOnly(Side.CLIENT)
+//@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ {
 
 	public ParticleFlash(World world, double x, double y, double z) {
 		super(world, x, y, z);
@@ -101,4 +103,12 @@ public class ParticleFlash extends ParticleAvatar {
 	public int getBrightnessForRender(float partialTicks) {
 		return 15728880;
 	}
+
+	/*@Override
+	@Optional.Method(modid = "hammercore")
+	public ColoredLight produceColoredLight(float v) {
+		if (element instanceof Firebending)
+			return ColoredLight.builder().pos(posX, posY, posZ).radius(particleScale * 0.5F).color(getRedColorF(), getGreenColorF(), getBlueColorF()).build();
+		else return null;
+	}**/
 }

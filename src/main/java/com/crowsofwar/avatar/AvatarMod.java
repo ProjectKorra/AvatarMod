@@ -17,11 +17,13 @@
 
 package com.crowsofwar.avatar;
 
+import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleBehaviour;
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirJump;
 import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosion;
 import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosivePillar;
 import com.crowsofwar.avatar.common.bending.combustion.Combustionbending;
@@ -73,7 +75,7 @@ import static net.minecraft.init.Biomes.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore",  //
-		updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "[1.12,1.13)")
+		updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "1.12")
 
 public class AvatarMod {
 
@@ -206,6 +208,8 @@ public class AvatarMod {
 		AvatarChatMessages.loadAll();
 
 		Behavior.registerBehaviours();
+
+		ParticleBehaviour.registerBehaviours();
 
 		EarthbendingEvents.register();
 

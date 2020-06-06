@@ -23,15 +23,15 @@ import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.blocks.BlockTemp;
 import com.crowsofwar.avatar.common.blocks.BlockUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -40,6 +40,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Objects;
+import java.util.Random;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -105,6 +106,24 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity {
 
 			}
 		}
+
+		if (world.isRemote) {
+			for (double i = 0; i < width; i += 0.05) {
+				Random random = new Random();
+				AxisAlignedBB boundingBox = getEntityBoundingBox();
+				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).time(12).clr(255, 10, 5)
+						.scale(getAvgSize() * 4).element(getElement()).spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
+						.scale(getAvgSize() * 4).element(getElement()).spawn(world);
+			}
+		}
+
 		if (lightTrailingFire && !world.isRemote) {
 			if (AvatarUtils.getRandomNumberInRange(1, 10) <= 5) {
 				BlockPos pos = getPosition();
@@ -210,7 +229,6 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity {
 	}
 
 
-
 	@Override
 	public Vec3d getKnockbackMult() {
 		return new Vec3d(STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push / 2, STATS_CONFIG.fireShotSetttings.push * 2);
@@ -227,8 +245,11 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity {
 	}
 
 
+
+
 	@Override
+	@Optional.Method(modid = "hammercore")
 	public ColoredLight produceColoredLight(float partialTicks) {
-		return ColoredLight.builder().pos(this).color(1f,0f,0f,1f).radius(10f).build();
+		return ColoredLight.builder().pos(this).color(1f, 0f, 0f, 1f).radius(10f).build();
 	}
 }

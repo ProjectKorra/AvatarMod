@@ -120,6 +120,8 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_TYPE.put("chicken", "air");
 		DEFAULT_SCROLL_DROPS.put("sheep", 5.0);
 		DEFAULT_SCROLL_TYPE.put("sheep", "air");
+		DEFAULT_SCROLL_DROPS.put("shulker", 50.0);
+		DEFAULT_SCROLL_TYPE.put("shulker", "air");
 
 
 		//Earth

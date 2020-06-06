@@ -35,7 +35,7 @@ public class RenderFlamethrower extends Render<EntityFlamethrower> {
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 		World world = entity.world;
 		//GlStateManager.pushMatrix();
-		if (world.isRemote) {
+	/*	if (world.isRemote) {
 			for (double i = 0; i < Math.max(Math.min((int) (1 / entity.getAvgSize()), 2), 1); i++) {
 				AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
 				double spawnX = boundingBox.getCenter().x + world.rand.nextGaussian() / 15;
@@ -56,7 +56,7 @@ public class RenderFlamethrower extends Render<EntityFlamethrower> {
 						20 + AvatarUtils.getRandomNumberInRange(0, 30), 10)
 						.scale(entity.getAvgSize() * 2F).element(entity.getElement()).collide(true).spawn(world);
 			}
-		}
+		}**/
 		//Copied from particleFlash.
 		/*int maxFlashes = AvatarUtils.getRandomNumberInRange(2, 4);
 		for (int i = 0; i < maxFlashes; i++) {

@@ -20,18 +20,15 @@ package com.crowsofwar.avatar.client.gui;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
 import net.minecraft.util.ResourceLocation;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -46,7 +43,7 @@ public class AvatarUiTextures {
 			"textures/gui/shield_health.png");
 	public static final ResourceLocation STATUS_CONTROL_ICONS = new ResourceLocation("avatarmod",
 			"textures/gui/status_controls.png");
-	public static final ResourceLocation CHI_BAR = new ResourceLocation("avatarmod", "textures/gui/chi.png");
+	//public static final ResourceLocation CHI_BAR = new ResourceLocation("avatarmod", "textures/gui/chi.png");
 	public static final ResourceLocation ICE = new ResourceLocation("minecraft", "textures/blocks/ice.png");
 	public static final ResourceLocation[] BLOCK_BREAK = getBlockBreakTextures();
 	public static final ResourceLocation WHITE = new ResourceLocation("avatarmod", "textures/gui/white.png");
@@ -76,7 +73,7 @@ public class AvatarUiTextures {
 		return getCachedImage(abilityTextures, ability, "textures/radial/icon_" + ability.getName() + ".png");
 	}
 
-	public static ResourceLocation getBendingRadialTexture (BendingStyle element) {
+	public static ResourceLocation getBendingRadialTexture(BendingStyle element) {
 		return getCachedImage(radialTextures, element, "textures/radial/" + element.getName() + "_segment.png");
 	}
 
@@ -89,10 +86,18 @@ public class AvatarUiTextures {
 				"textures/gui/skillmenu/" + ability.getName() + "_plain.png");
 	}
 
-	public static ResourceLocation getBendingIconTexture(UUID bendingId) {
+	public static ResourceLocation getBendingIconTexture(UUID bendingId, int totalLevel) {
+		List<Ability> abilities = BendingStyles.get(bendingId).getAllAbilities();
+		int maxLevel = abilities.size() * 4;
+		int level = Math.min(3, (int) ((float) totalLevel / maxLevel * 4));
+
 		String bendingName = BendingStyles.getName(bendingId);
-		String location = "textures/gui/icon/" + bendingName + ".png";
-		return getCachedImage(bendingIcons, bendingId, location);
+		String suffix = level > 0 ? "_" + level : "";
+		String location = "textures/gui/icon/" + bendingName + suffix + ".png";
+
+		//Using cached images makes it set; using a resource location lets the textures change
+		return new ResourceLocation("avatarmod", location);
+		//return getCachedImage(bendingIcons, bendingId, location);
 	}
 
 	public static ResourceLocation getBendingBackgroundTexture(UUID bendingId) {
@@ -100,6 +105,14 @@ public class AvatarUiTextures {
 		String location = "textures/gui/background/" + bendingName + ".png";
 
 		return getCachedImage(bendingBackgrounds, bendingId, location);
+	}
+
+	public static ResourceLocation getChiTexture(UUID bendingID) {
+		BendingStyle style = BendingStyles.get(bendingID);
+		ResourceLocation loc;
+		String suffix = "_" + style.getName();
+		String prefix = "chi";
+		return new ResourceLocation("avatarmod", "textures/gui/chi/" + prefix + suffix + ".png");
 	}
 
 	/**

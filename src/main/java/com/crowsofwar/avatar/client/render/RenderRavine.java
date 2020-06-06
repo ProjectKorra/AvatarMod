@@ -22,6 +22,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -48,7 +49,7 @@ public class RenderRavine extends Render<EntityRavine> {
 						 float partialTicks) {
 		World world = entity.world;
 		IBlockState blockState = world.getBlockState(entity.getPosition().down());
-		if (entity.ticksExisted % 2 == 0)
+		if (entity.ticksExisted % 2 == 0 && blockState.getBlock() != Blocks.AIR)
 			world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, entity.posX, entity.posY, entity.posZ,
 				random.nextGaussian() * 0.5, random.nextDouble() * 0.4, random.nextGaussian() * 0.5,
 				Block.getStateId(blockState));

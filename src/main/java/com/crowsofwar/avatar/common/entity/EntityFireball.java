@@ -21,7 +21,6 @@ import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.StatusControlController;
-import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -58,6 +57,8 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 			DataSerializers.VARINT);
 	private static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
+	private static final DataParameter<Integer> SYNC_ORBIT_ID = EntityDataManager.createKey(EntityFireball.class,
+			DataSerializers.VARINT);
 
 
 	/**
@@ -79,6 +80,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new FireballBehavior.Idle());
 		dataManager.register(SYNC_SIZE, 30);
+		dataManager.register(SYNC_ORBIT_ID, 1);
 	}
 
 	@Override
@@ -87,6 +89,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 		setBehavior((FireballBehavior) getBehavior().onUpdate(this));
 
 		if (getBehavior() == null) {
+			this.setVelocity(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian());
 			this.setBehavior(new FireballBehavior.Thrown());
 		}
 
@@ -106,6 +109,28 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 			}
 
 		}
+
+		//particles!
+		if (world.isRemote && getOwner() != null) {
+			for (double h = 0; h < width; h += 0.3) {
+				Random random = new Random();
+				AxisAlignedBB boundingBox = getEntityBoundingBox();
+				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).time(12).clr(255, 10, 5)
+						.scale(getSize() * 0.03125F).element(getElement()).spawnEntity(getOwner())
+						.spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
+						.scale(getSize() * 0.03125F).element(getElement()).spawnEntity(getOwner())
+						.spawn(world);
+			}
+
+		}
+
 		//I'm using 0.03125, because that results in a size of 0.5F when rendering, as the default size for the fireball is actually 16.
 		//This is due to weird rendering shenanigans
 		setEntitySize(getSize() * 0.03125F, getSize() * 0.03125F);
@@ -146,10 +171,18 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 		dataManager.set(SYNC_SIZE, size);
 	}
 
+	public int getOrbitID() {
+		return dataManager.get(SYNC_ORBIT_ID);
+	}
+
+	public void setOrbitID(int id) {
+		dataManager.set(SYNC_ORBIT_ID, id);
+	}
+
 
 	@Override
 	public Vec3d getExplosionKnockbackMult() {
-		return super.getExplosionKnockbackMult().scale(STATS_CONFIG.fireballSettings.explosionSize * getSize() / 32F + getPowerRating() * 0.02);
+		return super.getExplosionKnockbackMult().scale(STATS_CONFIG.fireballSettings.explosionSize * getSize() / 128F + getPowerRating() * 0.02);
 	}
 
 	@Override
@@ -159,7 +192,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
 	@Override
 	public Vec3d getKnockbackMult() {
-		return super.getKnockbackMult().scale(0.25 * STATS_CONFIG.fireballSettings.push);
+		return super.getKnockbackMult().scale(0.125 * STATS_CONFIG.fireballSettings.push);
 	}
 
 	@Override
@@ -263,6 +296,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
 
 	@Override
+	@Optional.Method(modid = "hammercore")
 	public ColoredLight produceColoredLight(float partialTicks) {
 		return ColoredLight.builder().pos(this).color(1f, 0f, 0f, 1f).radius(getSize() / 4F).build();
 	}

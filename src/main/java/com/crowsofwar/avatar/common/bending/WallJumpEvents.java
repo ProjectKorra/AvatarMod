@@ -38,23 +38,11 @@ public class WallJumpEvents {
 	private static void tick(EntityPlayer player, World world, BendingData data) {
 		MiscData miscData = data.getMiscData();
 		Bender bender = Bender.get(player);
-		GameSettings settings = Minecraft.getMinecraft().gameSettings;
+	//	GameSettings settings = Minecraft.getMinecraft().gameSettings;
 		if (player == GoreCore.proxy.getClientSidePlayer() && bender.getWallJumpManager()
 				.canWallJump()) {
 			if (AvatarControl.CONTROL_JUMP.isPressed()) {
-				if (settings.keyBindForward.isKeyDown()) {
-					AvatarMod.network.sendToServer(new PacketSWallJump(0));
-				}
-				else if (settings.keyBindRight.isKeyDown()) {
-					AvatarMod.network.sendToServer(new PacketSWallJump(1));
-				}
-				else if (settings.keyBindBack.isKeyDown()) {
-					AvatarMod.network.sendToServer(new PacketSWallJump(2));
-				}
-				else if (settings.keyBindLeft.isKeyDown()) {
-					AvatarMod.network.sendToServer(new PacketSWallJump(3));
-				}
-				else AvatarMod.network.sendToServer(new PacketSWallJump());
+				AvatarMod.network.sendToServer(new PacketSWallJump());
 			}
 		}
 		if (player.onGround) {
