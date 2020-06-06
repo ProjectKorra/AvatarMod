@@ -4,7 +4,6 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.AvatarClientProxy;
 import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
-import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleBehaviour;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.entity.*;
@@ -59,20 +58,6 @@ public abstract class ParticleAvatar extends Particle {
 
 	//TODO: How to adjust Electroblob's particle system for av2.
 	/**
-	 * ParticleBuilder adjustments:
-	 * -More spawning options. This includes colour shifting for particles, custom behaviour, ability to set the alpha, e.t.c.
-	 * -Better spinning. This means that you'll be able to spin particles along an axis- yay!!!!
-	 * -Particle AI!!!
-	 *
-	 * Particles:
-	 * -ParticleSphere: Alpha setting!
-	 * -ParticleMagicBubble: Actually spins! Behaviour so it can function like MagicFire!
-	 * -More particles in general! Namely, cube, sphere, cylinder, rectangular prism, and water particles!
-	 */
-
-
-	private ParticleAvatarBehaviour behaviour;
-	/**
 	 * The fraction of the impact velocity that should be the maximum spread speed added on impact.
 	 */
 	private static final double SPREAD_FACTOR = 0.2;
@@ -114,16 +99,12 @@ public abstract class ParticleAvatar extends Particle {
 	protected double radius = 0;
 	protected double speed = 0;
 	protected UUID uuid = UUID.fromString("ccc7dd56-8fcc-4477-9782-7f0423e5616d");
-
-
 	protected BendingStyle element;
 	protected Ability ability;
 	//For flash particles
 	protected boolean glow, sparkle;
-
 	//If the particle expands to a max size, like Flash, this makes it expand faster.
 	protected float expansionRate;
-
 	//Has R, G, B, and A, in that order.
 	protected float[] colourShiftRange = new float[4];
 	//Eventually will be used for better colour shifting (either shift up and down the spectrum or shift randomly)
@@ -154,16 +135,30 @@ public abstract class ParticleAvatar extends Particle {
 	 * Velocity of this particle relative to the linked entity. If the linked entity is null, these are not used.
 	 */
 	protected double relativeMotionX, relativeMotionY, relativeMotionZ;
-	// Note that roll (equivalent to rotating the texture) is effectively handled by particleAngle - although that is
-	// actually the rotation speed and not the angle itself.
 	/**
 	 * The yaw angle this particle is facing, or {@code NaN} if this particle always faces the viewer (default behaviour).
 	 */
 	protected float yaw = Float.NaN;
+	// Note that roll (equivalent to rotating the texture) is effectively handled by particleAngle - although that is
+	// actually the rotation speed and not the angle itself.
 	/**
 	 * The pitch angle this particle is facing, or {@code NaN} if this particle always faces the viewer (default behaviour).
 	 */
 	protected float pitch = Float.NaN;
+	/**
+	 * ParticleBuilder adjustments:
+	 * -More spawning options. This includes colour shifting for particles, custom behaviour, ability to set the alpha, e.t.c.
+	 * -Better spinning. This means that you'll be able to spin particles along an axis- yay!!!!
+	 * -Particle AI!!!
+	 * <p>
+	 * Particles:
+	 * -ParticleSphere: Alpha setting!
+	 * -ParticleMagicBubble: Actually spins! Behaviour so it can function like MagicFire!
+	 * -More particles in general! Namely, cube, sphere, cylinder, rectangular prism, and water particles!
+	 */
+
+
+	private ParticleAvatarBehaviour behaviour;
 	private boolean collidedWithSolid, collidedWithParticle = false;
 	private boolean dynamicCollidedWithEntity;
 	/**
@@ -893,8 +888,14 @@ public abstract class ParticleAvatar extends Particle {
 			}
 		}
 	}
+
 	public int getLifetimeRemaining() {
 		return this.particleMaxAge - this.particleAge;
+	}
+
+
+	public void setBehaviour(ParticleAvatarBehaviour behaviour) {
+		this.behaviour = behaviour;
 	}
 
 	/**

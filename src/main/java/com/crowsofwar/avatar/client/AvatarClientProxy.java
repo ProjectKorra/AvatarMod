@@ -125,6 +125,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		ParticleAvatar.registerParticle(Type.SPHERE, ParticleSphere::new);
 		ParticleAvatar.registerParticle(Type.SUMMON, ParticleSummon::new);
 		ParticleAvatar.registerParticle(Type.VINE, ParticleVine::new);
+		ParticleAvatar.registerParticle(Type.WATER, ParticleWater::new);
 	}
 
 	@Override
