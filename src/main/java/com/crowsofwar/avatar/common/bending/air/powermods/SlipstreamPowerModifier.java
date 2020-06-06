@@ -27,18 +27,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class SlipstreamPowerModifier extends BuffPowerModifier {
 
-	/*@SubscribeEvent(priority = EventPriority.HIGHEST)
-	@SideOnly(Side.CLIENT)
-	public static void onSlipstreamInvisibility(RenderLivingEvent event) {
-		if (event.getEntity() != null) {
-			EntityLivingBase entity = event.getEntity();
-			Bender b = Bender.get(entity);
-			if (b != null && b.getData() != null)
-				if (b.getData().getPowerRatingManager(Airbending.ID).hasModifier(SlipstreamPowerModifier.class))
-					if (entity.getActivePotionEffect(MobEffects.INVISIBILITY) != null && entity.getActivePotionEffect(MobEffects.INVISIBILITY).getDuration() > 0)
-						event.setCanceled(true);
-		}
-	}**/
 
 	@Override
 	public double get(BendingContext ctx) {

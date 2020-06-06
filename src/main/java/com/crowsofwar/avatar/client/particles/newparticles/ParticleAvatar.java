@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.client.particles.newparticles;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.AvatarClientProxy;
+import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
 import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleBehaviour;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
@@ -70,7 +71,7 @@ public abstract class ParticleAvatar extends Particle {
 	 */
 
 
-	private ParticleBehaviour behaviour;
+	private ParticleAvatarBehaviour behaviour;
 	/**
 	 * The fraction of the impact velocity that should be the maximum spread speed added on impact.
 	 */
@@ -589,6 +590,9 @@ public abstract class ParticleAvatar extends Particle {
 
 		//TODO: Fix collision so that particles don't collide with their owner's entities!
 		super.onUpdate();
+
+		if (behaviour != null)
+			behaviour.onUpdate(this);
 
 		if (this.canCollide && this.onGround) {
 			// I reject your friction and substitute my own!
