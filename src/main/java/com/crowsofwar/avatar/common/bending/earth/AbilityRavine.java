@@ -68,7 +68,7 @@ public class AbilityRavine extends Ability {
 			EntityRavine ravine = new EntityRavine(world);
 			ravine.setOwner(entity);
 			ravine.setDamageMult(damage);
-			ravine.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
+			ravine.setPosition(Vector.getEntityPos(entity).plus(Vector.getLookRectangular(entity).withY(0)));
 			ravine.setVelocity(look.times(speed));
 			ravine.setDamage(damage * STATS_CONFIG.ravineSettings.damage);
 			ravine.setAbility(this);

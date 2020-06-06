@@ -24,6 +24,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.EntityEquipmentSlot.Type;
@@ -123,6 +124,22 @@ public class EntityRavine extends EntityOffensive {
 				STATS_CONFIG.ravineSettings.push);
 	}
 
+	private void spawnEntity() {
+		if (!world.isRemote) {
+			BlockPos pos = new BlockPos(prevPosX, prevPosY, prevPosZ);
+
+			if (world.getBlockState(pos.down()).getBlockHardness(world, pos.down()) != -1 && !world.isAirBlock(pos.down()) && world.isBlockNormalCube(pos.down(), false)
+					// Checks that the block above is not solid, since this causes the falling sand to vanish.
+					&& !world.isBlockNormalCube(pos, false)) {
+
+				// Falling blocks do the setting block to air themselves.
+				EntityFallingBlock fallingblock = new EntityFallingBlock(world, prevPosX, prevPosY - 1, prevPosZ,
+						world.getBlockState(new BlockPos(prevPosX, prevPosY - 1, prevPosZ)));
+				fallingblock.motionY = 0.3;
+				world.spawnEntity(fallingblock);
+			}
+		}
+	}
 	@Override
 	public void onEntityUpdate() {
 		super.onEntityUpdate();
@@ -131,6 +148,8 @@ public class EntityRavine extends EntityOffensive {
 			initialPosition = position();
 		}
 
+		if (ticksExisted % 3 == 0)
+			spawnEntity();
 
 		if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
 			Dissipate();
@@ -144,7 +163,8 @@ public class EntityRavine extends EntityOffensive {
 				SoundCategory.PLAYERS, 1, 1, false);
 
 		//Lowers the ravine if there's a step below
-		if (!ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock)) {
+		if (!ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && world.getEntitiesWithinAABB(EntityFallingBlock.class,
+				getEntityBoundingBox().grow(1, 1, 1)).isEmpty()) {
 			if (!STATS_CONFIG.bendableBlocks.contains(world.getBlockState(getPosition().down(2)).getBlock()))
 				Dissipate();
 			else {
