@@ -49,10 +49,12 @@ public class RenderRavine extends Render<EntityRavine> {
 						 float partialTicks) {
 		World world = entity.world;
 		IBlockState blockState = world.getBlockState(entity.getPosition().down());
-		if (entity.ticksExisted % 2 == 0 && blockState.getBlock() != Blocks.AIR)
-			world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, entity.posX, entity.posY, entity.posZ,
-				random.nextGaussian() * 0.5, random.nextDouble() * 0.4, random.nextGaussian() * 0.5,
-				Block.getStateId(blockState));
+		if (blockState.getBlock() != Blocks.AIR)
+			for (int i = 0; i < 3; i++)
+				world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, entity.posX + world.rand.nextGaussian() * 0.5,
+						entity.posY + world.rand.nextDouble(), entity.posZ + world.rand.nextGaussian() * 0.5,
+						random.nextGaussian() * 0.4, random.nextDouble() * 0.4, random.nextGaussian() * 0.4,
+						Block.getStateId(blockState));
 	}
 
 	@Override

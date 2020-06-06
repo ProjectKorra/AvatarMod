@@ -148,7 +148,7 @@ public class EntityRavine extends EntityOffensive {
 			initialPosition = position();
 		}
 
-		if (ticksExisted % 3 == 0)
+		if (ticksExisted % 2 == 0)
 			spawnEntity();
 
 		if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
