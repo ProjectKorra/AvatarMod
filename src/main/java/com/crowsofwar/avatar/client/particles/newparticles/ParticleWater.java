@@ -32,13 +32,10 @@ public class ParticleWater extends ParticleAvatar {
 	 * @param x        The x-coordinate at which to create the particle.
 	 * @param y        The y-coordinate at which to create the particle.
 	 * @param z        The z-coordinate at which to create the particle.
-	 * @param textures One or more {@code ResourceLocation}s representing the texture(s) used by this particle. These
-	 *                 <b>must</b> be registered as {@link TextureAtlasSprite}s using {@link TextureStitchEvent} or the textures will be
-	 *                 missing. If more than one {@code ResourceLocation} is specified, the particle will be animated with each texture
-	 *                 shown in order for an equal proportion of the particle's lifetime. If this argument is omitted (or a zero-length
+	 * @param textures One or more {@code ResourceLocation}s representing the texture(s) used by this particle.
 	 */
 	public ParticleWater(World world, double x, double y, double z) {
-		super(world, x, y, z, water);
+		super(world, x, y, z);
 		this.setRBGColorF(1, 1, 1);
 		this.particleAlpha = 1F;
 		this.particleMaxAge = 12 + rand.nextInt(4);
@@ -50,6 +47,12 @@ public class ParticleWater extends ParticleAvatar {
 
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float lookZ, float lookY, float lookX, float lookXY, float lookYZ) {
+		super.renderParticle(buffer, viewer, partialTicks, lookZ, lookY, lookX, lookXY, lookYZ);
+
+		GlStateManager.disableLighting();
+		GlStateManager.enableBlend();
+		GlStateManager.disableTexture2D();
+
 		float x = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks);
 		float y = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks);
 		float z = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks);
@@ -59,7 +62,6 @@ public class ParticleWater extends ParticleAvatar {
 
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.renderEngine.bindTexture(water);
-		GlStateManager.enableBlend();
 		GlStateManager.color(colorEnhancement, colorEnhancement, colorEnhancement, 0.6f);
 
 		Matrix4f mat = new Matrix4f();
@@ -101,7 +103,7 @@ public class ParticleWater extends ParticleAvatar {
 		// @formatter:on
 
 
-		float existed = ticks / 4f;
+		float existed = ticks;
 		int anim = ((int) existed % 16);
 		float v1 = anim / 16f, v2 = v1 + 1f / 16;
 
@@ -115,8 +117,11 @@ public class ParticleWater extends ParticleAvatar {
 
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.disableBlend();
+		GlStateManager.enableTexture2D();
+		GlStateManager.enableLighting();
 
 	}
+
 
 	@Override
 	public int getFXLayer() {
