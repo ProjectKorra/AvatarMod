@@ -97,7 +97,8 @@ public class AbilityWaterBubble extends Ability {
 					// This will allow the bubble to travel out of the way of the water before it gets destroyed
 					bubble.setVelocity(Vector.UP);
 
-					world.spawnEntity(bubble);
+					if (!world.isRemote)
+						world.spawnEntity(bubble);
 
 					data.addStatusControl(LOB_BUBBLE);
 					//data.addStatusControl(StatusControl.CHARGE_BUBBLE);

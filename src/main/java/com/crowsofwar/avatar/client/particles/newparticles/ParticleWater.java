@@ -5,6 +5,8 @@ import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -13,6 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
+import org.lwjgl.opengl.GL11;
 
 import static com.crowsofwar.avatar.client.render.RenderUtils.drawQuad;
 import static net.minecraft.util.math.MathHelper.cos;
@@ -47,22 +50,29 @@ public class ParticleWater extends ParticleAvatar {
 
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float lookZ, float lookY, float lookX, float lookXY, float lookYZ) {
-		super.renderParticle(buffer, viewer, partialTicks, lookZ, lookY, lookX, lookXY, lookYZ);
 
+		updateEntityLinking(partialTicks);
+
+		float x = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks);
+		float y = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks);
+		float z = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks);
+
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, z);
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
-		GlStateManager.disableTexture2D();
 
-		float x = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks);
-		float y = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks);
-		float z = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks);
+		Tessellator tessellator = Tessellator.getInstance();
+
+
 		float ticks = this.particleAge + partialTicks;
 		float colorEnhancement = 1.2f;
-		float size = particleScale / 10;
+		float size = particleScale / 5;
 
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.renderEngine.bindTexture(water);
-		GlStateManager.color(colorEnhancement, colorEnhancement, colorEnhancement, 0.6f);
+		GlStateManager.color(colorEnhancement * getRedColorF()
+				, colorEnhancement * getGreenColorF(), colorEnhancement * getBlueColorF(), 0.6f);
 
 		Matrix4f mat = new Matrix4f();
 		mat = mat.translate(x, y + 0.4F, z);
@@ -107,21 +117,42 @@ public class ParticleWater extends ParticleAvatar {
 		int anim = ((int) existed % 16);
 		float v1 = anim / 16f, v2 = v1 + 1f / 16;
 
-		drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2); // -x
-		drawQuad(2, rtb, rbb, rbf, rtf, 0, v1, 1, v2); // +x
-		drawQuad(2, rbb, rbf, lbf, lbb, 0, v1, 1, v2); // -y
-		drawQuad(2, rtb, rtf, ltf, ltb, 0, v1, 1, v2); // +y
-		drawQuad(2, rtf, rbf, lbf, ltf, 0, v1, 1, v2); // -z
-		drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2); // +z
+		drawQuad(tessellator, 2, ltb, lbb, lbf, ltf, 0, v1, 1, v2); // -x
+		drawQuad(tessellator, 2, rtb, rbb, rbf, rtf, 0, v1, 1, v2); // +x
+		drawQuad(tessellator, 2, rbb, rbf, lbf, lbb, 0, v1, 1, v2); // -y
+		drawQuad(tessellator, 2, rtb, rtf, ltf, ltb, 0, v1, 1, v2); // +y
+		drawQuad(tessellator, 2, rtf, rbf, lbf, ltf, 0, v1, 1, v2); // -z
+		drawQuad(tessellator,2, rtb, rbb, lbb, ltb, 0, v1, 1, v2); // +z
 
 
-		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.disableBlend();
-		GlStateManager.enableTexture2D();
 		GlStateManager.enableLighting();
+		GlStateManager.popMatrix();
 
 	}
 
+	public static void drawQuad(Tessellator tessellator, int normal, Vector4f pos1, Vector4f pos2, Vector4f pos3, Vector4f
+			pos4, double u1, double v1, double u2, double v2) {
+
+
+		BufferBuilder buffer = tessellator.getBuffer();
+		if (normal == 0 || normal == 2) {
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			buffer.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).endVertex();
+			buffer.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).endVertex();
+			buffer.pos(pos3.x, pos3.y, pos3.z).tex(u1, v2).endVertex();
+			buffer.pos(pos4.x, pos4.y, pos4.z).tex(u1, v1).endVertex();
+			tessellator.draw();
+		}
+		if (normal == 1 || normal == 2) {
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			buffer.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).endVertex();
+			buffer.pos(pos4.x, pos4.y, pos4.z).tex(u1, v1).endVertex();
+			buffer.pos(pos3.x, pos3.y, pos3.z).tex(u1, v2).endVertex();
+			buffer.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).endVertex();
+			tessellator.draw();
+		}
+	}
 
 	@Override
 	public int getFXLayer() {
