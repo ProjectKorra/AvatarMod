@@ -21,8 +21,8 @@ import static net.minecraft.util.math.MathHelper.sin;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class ParticleWater extends ParticleAvatar {
 
-	private static final ResourceLocation water = new ResourceLocation("minecraft",
-			"textures/blocks/water_still.png");
+	private static final ResourceLocation water = new ResourceLocation("avatarmod",
+			"textures/particles/newparticles/water.png");
 
 	/**
 	 * Creates a new particle in the given world at the given position. All other parameters are set via the various
@@ -83,17 +83,17 @@ public class ParticleWater extends ParticleAvatar {
 
 		GlStateManager.translate(x, y, z);
 		GlStateManager.enableBlend();
-		//GlStateManager.enableTexture2D();
+	//	GlStateManager.enableTexture2D();
 
 
 
 		float ticks = this.particleAge + partialTicks;
-		float colorEnhancement = 2f;
-		float size = particleScale / 5;
+		float colorEnhancement = 0.75f;
+		float size = particleScale / 10;
 
 
-		GlStateManager.color(colorEnhancement * particleRed
-				, colorEnhancement * particleGreen, colorEnhancement * particleBlue, colorEnhancement * particleAlpha);
+		GlStateManager.color(colorEnhancement * particleRed * 0
+				, colorEnhancement * particleGreen * 0, colorEnhancement * particleBlue, 0.16F * particleAlpha);
 
 		Matrix4f mat = new Matrix4f();
 		mat = mat.translate(x, y + 0.4F, z);
@@ -148,9 +148,10 @@ public class ParticleWater extends ParticleAvatar {
 
 
 
-		GlStateManager.popMatrix();
+
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.disableBlend();
+		GlStateManager.popMatrix();
 
 	}
 
