@@ -82,19 +82,18 @@ public class ParticleWater extends ParticleAvatar {
 		mc.renderEngine.bindTexture(water);
 
 		GlStateManager.translate(x, y, z);
-		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
-		GlStateManager.enableTexture2D();
+		//GlStateManager.enableTexture2D();
 
 
 
 		float ticks = this.particleAge + partialTicks;
-		float colorEnhancement = 1.2f;
-		float size = particleScale / 10;
+		float colorEnhancement = 2f;
+		float size = particleScale / 5;
 
 
 		GlStateManager.color(colorEnhancement * particleRed
-				, colorEnhancement * particleGreen, colorEnhancement * particleBlue, 0.6f * particleAlpha);
+				, colorEnhancement * particleGreen, colorEnhancement * particleBlue, colorEnhancement * particleAlpha);
 
 		Matrix4f mat = new Matrix4f();
 		mat = mat.translate(x, y + 0.4F, z);
@@ -122,6 +121,7 @@ public class ParticleWater extends ParticleAvatar {
 		float t2 = t1 + (float) Math.PI / 2f;
 		float amt = 0.05f;
 
+		mc.renderEngine.bindTexture(water);
 		lbf.add(cos(t1) * amt, sin(t2) * amt, cos(t2) * amt, 0);
 		rbf.add(sin(t1) * amt, cos(t2) * amt, sin(t2) * amt, 0);
 		lbb.add(sin(t2) * amt, cos(t2) * amt, cos(t2) * amt, 0);
@@ -147,9 +147,10 @@ public class ParticleWater extends ParticleAvatar {
 		drawQuad(tessellator, 2, rtb, rbb, lbb, ltb, 0, v1, 1, v2); // +z
 
 
-		GlStateManager.disableBlend();
-		GlStateManager.enableLighting();
+
 		GlStateManager.popMatrix();
+		GlStateManager.color(1F, 1F, 1F, 1F);
+		GlStateManager.disableBlend();
 
 	}
 

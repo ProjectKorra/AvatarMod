@@ -176,15 +176,15 @@ public class EntityWaterBubble extends AvatarEntity {
 				Random random = new Random();
 				AxisAlignedBB boundingBox = getEntityBoundingBox();
 				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY) - getSize();
 				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-				ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(12)
-						.scale(getSize()).element(getElement()).spawnEntity(getOwner())
+				ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 30, world.rand.nextGaussian() / 30,
+						world.rand.nextGaussian() / 30).time(17 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(1, 1, 1, 1)
+						.scale(getSize() * 0.75F).element(getElement()).spawnEntity(getOwner())
 						.spawn(world);
-				ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(12)
-						.scale(getSize()).element(getElement()).spawnEntity(getOwner())
+				ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 30, world.rand.nextGaussian() / 30,
+						world.rand.nextGaussian() / 30).time(17 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(1, 1, 1, 1)
+						.scale(getSize() * 0.75F).element(getElement()).spawnEntity(getOwner())
 						.spawn(world);
 			}
 
