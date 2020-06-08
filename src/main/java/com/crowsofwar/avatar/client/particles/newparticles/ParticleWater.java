@@ -10,14 +10,11 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
-import static com.crowsofwar.avatar.client.render.RenderUtils.drawQuad;
 import static net.minecraft.util.math.MathHelper.cos;
 import static net.minecraft.util.math.MathHelper.sin;
 
@@ -46,33 +43,58 @@ public class ParticleWater extends ParticleAvatar {
 		this.canCollide = true;
 	}
 
+	public static void drawQuad(Tessellator tessellator, int normal, Vector4f pos1, Vector4f pos2, Vector4f pos3, Vector4f
+			pos4, double u1, double v1, double u2, double v2) {
 
+
+		BufferBuilder buffer = tessellator.getBuffer();
+		if (normal == 0 || normal == 2) {
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			buffer.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).endVertex();
+			buffer.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).endVertex();
+			buffer.pos(pos3.x, pos3.y, pos3.z).tex(u1, v2).endVertex();
+			buffer.pos(pos4.x, pos4.y, pos4.z).tex(u1, v1).endVertex();
+			tessellator.draw();
+		}
+		if (normal == 1 || normal == 2) {
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			buffer.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).endVertex();
+			buffer.pos(pos4.x, pos4.y, pos4.z).tex(u1, v1).endVertex();
+			buffer.pos(pos3.x, pos3.y, pos3.z).tex(u1, v2).endVertex();
+			buffer.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).endVertex();
+			tessellator.draw();
+		}
+	}
 
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float lookZ, float lookY, float lookX, float lookXY, float lookYZ) {
 
 		updateEntityLinking(partialTicks);
 
-		float x = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks);
-		float y = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks);
-		float z = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks);
+		Minecraft mc = Minecraft.getMinecraft();
+		Tessellator tessellator = Tessellator.getInstance();
+
+		float x = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
+		float y = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
+		float z = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
 
 		GlStateManager.pushMatrix();
+		mc.renderEngine.bindTexture(water);
+
 		GlStateManager.translate(x, y, z);
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
+		GlStateManager.enableTexture2D();
 
-		Tessellator tessellator = Tessellator.getInstance();
 
 
 		float ticks = this.particleAge + partialTicks;
 		float colorEnhancement = 1.2f;
-		float size = particleScale / 5;
+		float size = particleScale / 10;
 
-		Minecraft mc = Minecraft.getMinecraft();
-		mc.renderEngine.bindTexture(water);
-		GlStateManager.color(colorEnhancement * getRedColorF()
-				, colorEnhancement * getGreenColorF(), colorEnhancement * getBlueColorF(), 0.6f);
+
+		GlStateManager.color(colorEnhancement * particleRed
+				, colorEnhancement * particleGreen, colorEnhancement * particleBlue, 0.6f * particleAlpha);
 
 		Matrix4f mat = new Matrix4f();
 		mat = mat.translate(x, y + 0.4F, z);
@@ -122,36 +144,13 @@ public class ParticleWater extends ParticleAvatar {
 		drawQuad(tessellator, 2, rbb, rbf, lbf, lbb, 0, v1, 1, v2); // -y
 		drawQuad(tessellator, 2, rtb, rtf, ltf, ltb, 0, v1, 1, v2); // +y
 		drawQuad(tessellator, 2, rtf, rbf, lbf, ltf, 0, v1, 1, v2); // -z
-		drawQuad(tessellator,2, rtb, rbb, lbb, ltb, 0, v1, 1, v2); // +z
+		drawQuad(tessellator, 2, rtb, rbb, lbb, ltb, 0, v1, 1, v2); // +z
 
 
 		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 
-	}
-
-	public static void drawQuad(Tessellator tessellator, int normal, Vector4f pos1, Vector4f pos2, Vector4f pos3, Vector4f
-			pos4, double u1, double v1, double u2, double v2) {
-
-
-		BufferBuilder buffer = tessellator.getBuffer();
-		if (normal == 0 || normal == 2) {
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			buffer.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).endVertex();
-			buffer.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).endVertex();
-			buffer.pos(pos3.x, pos3.y, pos3.z).tex(u1, v2).endVertex();
-			buffer.pos(pos4.x, pos4.y, pos4.z).tex(u1, v1).endVertex();
-			tessellator.draw();
-		}
-		if (normal == 1 || normal == 2) {
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			buffer.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).endVertex();
-			buffer.pos(pos4.x, pos4.y, pos4.z).tex(u1, v1).endVertex();
-			buffer.pos(pos3.x, pos3.y, pos3.z).tex(u1, v2).endVertex();
-			buffer.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).endVertex();
-			tessellator.draw();
-		}
 	}
 
 	@Override
