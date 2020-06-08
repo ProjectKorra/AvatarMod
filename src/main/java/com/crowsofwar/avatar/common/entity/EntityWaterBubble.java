@@ -53,7 +53,7 @@ import java.util.Random;
 /**
  * @author CrowsOfWar
  */
-public class EntityWaterBubble extends AvatarEntity {
+public class EntityWaterBubble extends EntityOffensive implements IShieldEntity {
 
 	private static final DataParameter<WaterBubbleBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterBubble.class, WaterBubbleBehavior.DATA_SERIALIZER);
@@ -156,7 +156,7 @@ public class EntityWaterBubble extends AvatarEntity {
 				}
 			}
 		}
-
+		/*
 		if (!world.isRemote && inWaterSource) {
 			setDead();
 			if (getOwner() != null) {
@@ -165,7 +165,7 @@ public class EntityWaterBubble extends AvatarEntity {
 					data.removeStatusControl(StatusControlController.LOB_BUBBLE);
 				}
 			}
-		}
+		}**/
 		if (this.getOwner() == null) {
 			this.setDead();
 		}
