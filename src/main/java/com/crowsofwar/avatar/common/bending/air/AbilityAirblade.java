@@ -96,7 +96,7 @@ public class AbilityAirblade extends Ability {
 				float yaw = entity.rotationYaw - 30 + i * 15;
 				Vector direction = Vector.toRectangular(Math.toRadians(yaw), Math.toRadians(entity.rotationPitch));
 				EntityAirblade airblade = new EntityAirblade(world);
-				airblade.setPositionAndUpdate(spawnAt.x(), spawnAt.y(), spawnAt.z());
+				airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
 				airblade.setAbility(new AbilityAirblade());
 				airblade.setVelocity(direction.times(50));
 				airblade.setDamage(damage);
@@ -113,8 +113,7 @@ public class AbilityAirblade extends Ability {
 			}
 		} else {
 			EntityAirblade airblade = new EntityAirblade(world);
-			Vec3d spawn = spawnAt.toMinecraft();
-			airblade.setPositionAndUpdate(spawn.x, spawn.y, spawn.z);
+			airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
 			airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 40 : 30));
 			airblade.setDamage(damage);
 			airblade.setSizeMult(sizeMult);
