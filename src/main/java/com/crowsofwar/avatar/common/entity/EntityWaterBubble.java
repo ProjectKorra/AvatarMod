@@ -44,6 +44,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 
@@ -176,7 +177,7 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 				Random random = new Random();
 				AxisAlignedBB boundingBox = getEntityBoundingBox();
 				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY) - getSize();
+				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 				ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40,
 						world.rand.nextGaussian() / 40).time(17 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(1, 1, 1, 1)
@@ -190,6 +191,27 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 
 		}
 
+
+	}
+
+
+	@Override
+	public boolean shouldExplode() {
+		return !(getBehavior() instanceof WaterBubbleBehavior.PlayerControlled);
+	}
+
+	@Override
+	public void spawnExplosionParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public void spawnDissipateParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public void spawnPiercingParticles(World world, Vec3d pos) {
 
 	}
 

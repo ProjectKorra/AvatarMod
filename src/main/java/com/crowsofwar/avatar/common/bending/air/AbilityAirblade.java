@@ -50,11 +50,7 @@ public class AbilityAirblade extends Ability {
 
 		if (!bender.consumeChi(STATS_CONFIG.chiAirblade)) return;
 
-		/*double pitchDeg = entity.rotationPitch;
-		if (abs(pitchDeg) > 30) {
-			pitchDeg = pitchDeg / abs(pitchDeg) * 30;
-		}
-		float pitch = (float) Math.toRadians(pitchDeg);**/
+
 
 		Vector look = Vector.getLookRectangular(entity);
 		Vector spawnAt = Vector.getEyePos(entity).plus(look).minusY(0.6);
@@ -100,7 +96,7 @@ public class AbilityAirblade extends Ability {
 				float yaw = entity.rotationYaw - 30 + i * 15;
 				Vector direction = Vector.toRectangular(Math.toRadians(yaw), Math.toRadians(entity.rotationPitch));
 				EntityAirblade airblade = new EntityAirblade(world);
-				airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
+				airblade.setPositionAndUpdate(spawnAt.x(), spawnAt.y(), spawnAt.z());
 				airblade.setAbility(new AbilityAirblade());
 				airblade.setVelocity(direction.times(50));
 				airblade.setDamage(damage);
@@ -118,7 +114,7 @@ public class AbilityAirblade extends Ability {
 		} else {
 			EntityAirblade airblade = new EntityAirblade(world);
 			Vec3d spawn = spawnAt.toMinecraft();
-			airblade.setPosition(spawn.x, spawn.y, spawn.z);
+			airblade.setPositionAndUpdate(spawn.x, spawn.y, spawn.z);
 			airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 40 : 30));
 			airblade.setDamage(damage);
 			airblade.setSizeMult(sizeMult);

@@ -6,11 +6,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
@@ -21,7 +24,7 @@ import static net.minecraft.util.math.MathHelper.sin;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class ParticleWater extends ParticleAvatar {
 
-	private static final ResourceLocation water = new ResourceLocation("avatarmod",
+	private static final ResourceLocation WATER = new ResourceLocation("avatarmod",
 			"textures/particles/newparticles/water.png");
 
 	/**
@@ -32,10 +35,9 @@ public class ParticleWater extends ParticleAvatar {
 	 * @param x        The x-coordinate at which to create the particle.
 	 * @param y        The y-coordinate at which to create the particle.
 	 * @param z        The z-coordinate at which to create the particle.
-	 * @param textures One or more {@code ResourceLocation}s representing the texture(s) used by this particle.
 	 */
 	public ParticleWater(World world, double x, double y, double z) {
-		super(world, x, y, z);
+		super(world, x, y, z);//, WATER);
 		this.setRBGColorF(1, 1, 1);
 		this.particleAlpha = 1F;
 		this.particleMaxAge = 12 + rand.nextInt(4);
@@ -43,12 +45,11 @@ public class ParticleWater extends ParticleAvatar {
 		this.canCollide = true;
 	}
 
-	public static void drawQuad(Tessellator tessellator, int normal, Vector4f pos1, Vector4f pos2, Vector4f pos3, Vector4f
+	public static void drawQuad(Tessellator tessellator, BufferBuilder buffer, int normal, Vector4f pos1, Vector4f pos2, Vector4f pos3, Vector4f
 			pos4, double u1, double v1, double u2, double v2) {
 
-
-		BufferBuilder buffer = tessellator.getBuffer();
 		if (normal == 0 || normal == 2) {
+			//Clears the previous builder
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			buffer.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).endVertex();
 			buffer.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).endVertex();
@@ -66,6 +67,11 @@ public class ParticleWater extends ParticleAvatar {
 		}
 	}
 
+	@SubscribeEvent
+	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
+		event.getMap().registerSprite(WATER);
+	}
+
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float lookZ, float lookY, float lookX, float lookXY, float lookYZ) {
 
@@ -79,21 +85,22 @@ public class ParticleWater extends ParticleAvatar {
 		float z = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
 
 		GlStateManager.pushMatrix();
-		mc.renderEngine.bindTexture(water);
+		mc.renderEngine.bindTexture(WATER);
 
 		GlStateManager.translate(x, y, z);
 		GlStateManager.enableBlend();
-	//	GlStateManager.enableTexture2D();
-
+		GlStateManager.enableAlpha();
 
 
 		float ticks = this.particleAge + partialTicks;
 		float colorEnhancement = 0.75f;
-		float size = particleScale / 10;
+		float size = 1;
+		float scale = particleScale / 10;
 
 
-		GlStateManager.color(colorEnhancement * particleRed * 0
-				, colorEnhancement * particleGreen * 0, colorEnhancement * particleBlue, 0.16F * particleAlpha);
+		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.color(colorEnhancement * particleRed
+				, colorEnhancement * particleGreen, colorEnhancement * particleBlue, 0.16F * particleAlpha);
 
 		Matrix4f mat = new Matrix4f();
 		mat = mat.translate(x, y + 0.4F, z);
@@ -121,7 +128,7 @@ public class ParticleWater extends ParticleAvatar {
 		float t2 = t1 + (float) Math.PI / 2f;
 		float amt = 0.05f;
 
-		mc.renderEngine.bindTexture(water);
+		mc.renderEngine.bindTexture(WATER);
 		lbf.add(cos(t1) * amt, sin(t2) * amt, cos(t2) * amt, 0);
 		rbf.add(sin(t1) * amt, cos(t2) * amt, sin(t2) * amt, 0);
 		lbb.add(sin(t2) * amt, cos(t2) * amt, cos(t2) * amt, 0);
@@ -139,21 +146,23 @@ public class ParticleWater extends ParticleAvatar {
 		int anim = ((int) existed % 16);
 		float v1 = anim / 16f, v2 = v1 + 1f / 16;
 
-		drawQuad(tessellator, 2, ltb, lbb, lbf, ltf, 0, v1, 1, v2); // -x
-		drawQuad(tessellator, 2, rtb, rbb, rbf, rtf, 0, v1, 1, v2); // +x
-		drawQuad(tessellator, 2, rbb, rbf, lbf, lbb, 0, v1, 1, v2); // -y
-		drawQuad(tessellator, 2, rtb, rtf, ltf, ltb, 0, v1, 1, v2); // +y
-		drawQuad(tessellator, 2, rtf, rbf, lbf, ltf, 0, v1, 1, v2); // -z
-		drawQuad(tessellator, 2, rtb, rbb, lbb, ltb, 0, v1, 1, v2); // +z
-
-
-
+		drawQuad(tessellator, buffer,2, ltb, lbb, lbf, ltf, 0, v1, 1, v2); // -x
+		drawQuad(tessellator, buffer, 2, rtb, rbb, rbf, rtf, 0, v1, 1, v2); // +x
+		drawQuad(tessellator, buffer, 2, rbb, rbf, lbf, lbb, 0, v1, 1, v2); // -y
+		drawQuad(tessellator, buffer, 2, rtb, rtf, ltf, ltb, 0, v1, 1, v2); // +y
+		drawQuad(tessellator, buffer, 2, rtf, rbf, lbf, ltf, 0, v1, 1, v2); // -z
+		drawQuad(tessellator, buffer, 2, rtb, rbb, lbb, ltb, 0, v1, 1, v2); // +z
 
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.disableBlend();
 		GlStateManager.popMatrix();
 
 	}
+
+/*	@Override
+	public void setParticleTexture(TextureAtlasSprite texture) {
+		super.setParticleTexture(texture);
+	}**/
 
 	@Override
 	public int getFXLayer() {
