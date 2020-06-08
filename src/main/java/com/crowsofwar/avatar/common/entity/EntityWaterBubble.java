@@ -180,11 +180,11 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 				ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40,
-						world.rand.nextGaussian() / 40).time(17 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(1, 1, 1, 1)
+						world.rand.nextGaussian() / 40).time(17 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0, 102, 255, 255)
 						.scale(getSize() * 1.25F).element(getElement()).spawnEntity(getOwner())
 						.spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40,
-						world.rand.nextGaussian() / 40).time(17 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(1, 1, 1, 1)
+						world.rand.nextGaussian() / 40).time(17 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0, 102, 255, 255)
 						.scale(getSize() * 1.25F).element(getElement()).spawnEntity(getOwner())
 						.spawn(world);
 			}
