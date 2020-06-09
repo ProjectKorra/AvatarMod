@@ -17,15 +17,12 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityFireball;
-import com.crowsofwar.avatar.common.particle.ParticleBuilder;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.World;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -64,38 +61,40 @@ public class RenderFireball extends Render<EntityFireball> {
 		float size = .8f + cos(ticks / 5f) * .05f;
 		size *= Math.sqrt(entity.getSize() / 30f);
 
+		pushMatrix();
 		enableBlend();
-
-
-		//   if (MinecraftForgeClient.getRenderPass() == 0) {
 		disableLighting();
 
-		//Where did crows get this number from?
-		//Maybe try using 3932220 instead?
-		int i = 3932220;
-		//128 * 128 instead of 64^2
-		int j = i % 16384;
-		int k = i / 16384;
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+		GlStateManager.color(2F, 2F, 2F, 0.45f);
 
 		renderCube(x, y, z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
 				.5f, //
 				ticks / 25F, ticks / 25f, ticks / 25F);
 
-		//  } else {
 
-		pushMatrix();
+
+		//pushMatrix();
+		//Where did crows get this number from?
+		//Maybe try using 3932220 instead?
+		int i = 15728880;
+		int j = i % 65536;
+		int k = i / 65536;
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+		GlStateManager.color(2F, 2F, 2F, 0.475f);
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE);
 		renderCube(x, y, z, //
 				8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
 				size, //
 				rotation * .2f, rotation, rotation * -.4f);
-		popMatrix();
 
-		//  }
 
-		//enableLighting();
+
 		disableBlend();
+		popMatrix();
 
 	}
 	// @formatter:on

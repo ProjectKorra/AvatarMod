@@ -55,7 +55,6 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
 		//TODO: Figure out a way to do this without breaking everything else
 		else if (CLIENT_CONFIG.particleSettings.squareFlashParticles) {
 			GlStateManager.disableTexture2D();
-			GlStateManager.disableNormalize();
 		}
 		//Great for fire!
 		else {
@@ -95,7 +94,7 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
 
 		GlStateManager.enableTexture2D();
 		GlStateManager.popMatrix();
-		GlStateManager.enableNormalize();
+
 	}
 
 

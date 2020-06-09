@@ -20,6 +20,7 @@ import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -54,9 +55,12 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		float y = (float) yy + .8f;
 		float z = (float) zz;
 
+		pushMatrix();
 		enableBlend();
 		disableDepth();
-		GlStateManager.enableLighting();
+		enableLighting();
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE);
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
 		float ticks = entity.ticksExisted + partialTicks;
 		float sizeMult = 1, alpha = 1;
@@ -74,14 +78,14 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		}
 		sizeMult *= entity.getSize() / 2.5f;
 
-		GlStateManager.color(0.75F, 0.75F, 0.75F, .25f * alpha);
+		GlStateManager.color(0.25F, 0.25F, 0.25F, 0.15f * alpha);
 		{
 			float rotY = ticks / 7f;
 			float rotX = MathHelper.cos(ticks / 4f) * .3f;
 			enableLighting();
 			renderCube(x, y, z, 0, 1, 0, 1, 2.25f * sizeMult, rotX, rotY, 0);
 		}
-		GlStateManager.color(0.85F, 0.85F, 0.85F, 0.5F * alpha);
+		GlStateManager.color(0.5F, 0.5F, 0.5F, 0.3F * alpha);
 		{
 			float rotY = ticks / 25f;
 			float rotZ = MathHelper.cos(ticks / 10f + 1.3f) * .3f;
@@ -93,6 +97,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 
 		disableBlend();
 		enableDepth();
+		popMatrix();
 	}
 
 	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,

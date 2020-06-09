@@ -294,5 +294,6 @@ public abstract class TreeCommand implements ICommand {
 		nodeHelpAcceptedItem = newChatMessage(cfg, "gc.tree.nodeHelp.accepted.item", "input");
 		
 	}
-	
+
+
 }

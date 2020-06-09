@@ -91,8 +91,6 @@ public class ParticleWater extends ParticleAvatar {
 		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-	//	OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-
 		GlStateManager.translate(x, y, z);
 
 
@@ -103,8 +101,6 @@ public class ParticleWater extends ParticleAvatar {
 
 
 		GlStateManager.scale(scale, scale, scale);
-	//	GlStateManager.color(1,//colorEnhancement * particleRed,
-	//			 1, /*colorEnhancement * particleGreen**/ 1, /*colorEnhancement * particleBlue,**/ colorEnhancement * particleAlpha);
 
 		Matrix4f mat = new Matrix4f();
 		mat = mat.translate(x, y + 0.4F, z);
