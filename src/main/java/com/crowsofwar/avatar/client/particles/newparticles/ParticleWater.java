@@ -89,7 +89,7 @@ public class ParticleWater extends ParticleAvatar {
 		GlStateManager.pushMatrix();
 		mc.renderEngine.bindTexture(WATER);
 		GlStateManager.enableBlend();
-	//	GlStateManager.disableLighting();
+		GlStateManager.disableLighting();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 	//	OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
@@ -151,17 +151,17 @@ public class ParticleWater extends ParticleAvatar {
 		float v1 = anim / 16f, v2 = v1 + 1f / 16;
 
 		drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // -x
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // -x
 		drawQuad(2, rtb, rbb, rbf, rtf, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // +x
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // +x
 		drawQuad(2, rbb, rbf, lbf, lbb, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // -y
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // -y
 		drawQuad(2, rtb, rtf, ltf, ltb, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // +y
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // +y
 		drawQuad(2, rtf, rbf, lbf, ltf, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // -z
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // -z
 		drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // +z
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // +z
 
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		mc.renderEngine.bindTexture(WATER);
