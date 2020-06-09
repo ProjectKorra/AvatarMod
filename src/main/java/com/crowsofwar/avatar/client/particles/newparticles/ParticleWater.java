@@ -24,8 +24,8 @@ import static net.minecraft.util.math.MathHelper.sin;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class ParticleWater extends ParticleAvatar {
 
-	private static final ResourceLocation WATER = new ResourceLocation("avatarmod",
-			"textures/particles/newparticles/water.png");
+	private static final ResourceLocation WATER = new ResourceLocation("minecraft",
+							 "textures/blocks/water_still.png");
 
 	/**
 	 * Creates a new particle in the given world at the given position. All other parameters are set via the various
@@ -88,23 +88,23 @@ public class ParticleWater extends ParticleAvatar {
 
 		GlStateManager.pushMatrix();
 		mc.renderEngine.bindTexture(WATER);
-	//	GlStateManager.enableBlend();
-		GlStateManager.disableLighting();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+		GlStateManager.enableBlend();
+	//	GlStateManager.disableLighting();
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 	//	OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
 		GlStateManager.translate(x, y, z);
 
 
 		float ticks = this.particleAge + partialTicks;
-		float colorEnhancement = 0.75f;
+		float colorEnhancement = 1.5f;
 		float size = 1;
 		float scale = particleScale / 10;
 
 
 		GlStateManager.scale(scale, scale, scale);
-		GlStateManager.color(colorEnhancement * particleRed * 0
-				, colorEnhancement * particleGreen * 0, colorEnhancement * particleBlue, particleAlpha);
+	//	GlStateManager.color(1,//colorEnhancement * particleRed,
+	//			 1, /*colorEnhancement * particleGreen**/ 1, /*colorEnhancement * particleBlue,**/ colorEnhancement * particleAlpha);
 
 		Matrix4f mat = new Matrix4f();
 		mat = mat.translate(x, y + 0.4F, z);
@@ -150,12 +150,18 @@ public class ParticleWater extends ParticleAvatar {
 		int anim = ((int) existed % 16);
 		float v1 = anim / 16f, v2 = v1 + 1f / 16;
 
-		drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2, particleRed, particleGreen, particleBlue, particleAlpha); // -x
-		drawQuad(2, rtb, rbb, rbf, rtf, 0, v1, 1, v2, particleRed, particleGreen, particleBlue, particleAlpha); // +x
-		drawQuad(2, rbb, rbf, lbf, lbb, 0, v1, 1, v2, particleRed, particleGreen, particleBlue, particleAlpha); // -y
-		drawQuad(2, rtb, rtf, ltf, ltb, 0, v1, 1, v2, particleRed, particleGreen, particleBlue, particleAlpha); // +y
-		drawQuad(2, rtf, rbf, lbf, ltf, 0, v1, 1, v2, particleRed, particleGreen, particleBlue, particleAlpha); // -z
-		drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2, particleRed, particleGreen, particleBlue, particleAlpha); // +z
+		drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2,
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // -x
+		drawQuad(2, rtb, rbb, rbf, rtf, 0, v1, 1, v2,
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // +x
+		drawQuad(2, rbb, rbf, lbf, lbb, 0, v1, 1, v2,
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // -y
+		drawQuad(2, rtb, rtf, ltf, ltb, 0, v1, 1, v2,
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // +y
+		drawQuad(2, rtf, rbf, lbf, ltf, 0, v1, 1, v2,
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // -z
+		drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2,
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // +z
 
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		mc.renderEngine.bindTexture(WATER);
@@ -165,10 +171,6 @@ public class ParticleWater extends ParticleAvatar {
 
 	}
 
-/*	@Override
-	public void setParticleTexture(TextureAtlasSprite texture) {
-		super.setParticleTexture(texture);
-	}**/
 
 	@Override
 	public int getFXLayer() {

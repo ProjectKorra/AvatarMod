@@ -417,4 +417,9 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		}
 
 	}
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
 }
