@@ -27,6 +27,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -66,21 +67,28 @@ public class AbilityRavine extends Ability {
 
 			EntityRavine ravine = new EntityRavine(world);
 			ravine.setOwner(entity);
-			ravine.setPosition(entity.posX, entity.posY, entity.posZ);
-			ravine.setVelocity(look.times(speed));
 			ravine.setDamageMult(damage);
+			ravine.setPosition(Vector.getEntityPos(entity).plus(Vector.getLookRectangular(entity).withY(0)));
+			ravine.setVelocity(look.times(speed));
+			ravine.setDamage(damage * STATS_CONFIG.ravineSettings.damage);
 			ravine.setAbility(this);
+			ravine.setElement(new Earthbending());
+			ravine.setLifeTime(80);
+			ravine.setEntitySize(0.125F);
+			ravine.setXp(SKILLS_CONFIG.ravineHit);
 			ravine.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
 			ravine.setBreakBlocks(ctx.isMasterLevel(AbilityTreePath.FIRST));
 			ravine.setDropEquipment(ctx.isMasterLevel(AbilityTreePath.SECOND));
-			world.spawnEntity(ravine);
+			if (!world.isRemote) {
+				world.spawnEntity(ravine);
+			}
 
 		}
 
 	}
 
 	@Override
-	public int getTier() {
+	public int getBaseTier() {
 		return 2;
 	}
 }

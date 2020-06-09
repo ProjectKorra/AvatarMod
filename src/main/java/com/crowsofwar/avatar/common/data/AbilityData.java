@@ -42,6 +42,7 @@ public class AbilityData {
 	private final String abilityName;
 	private float lastXp;
 	private float xp;
+	private final boolean switchPath;
 	/**
 	 * The current level. -1 for locked
 	 * <p>
@@ -60,6 +61,16 @@ public class AbilityData {
 		this.xp = 0;
 		this.level = -1;
 		this.path = AbilityTreePath.MAIN;
+		this.switchPath = false;
+	}
+
+	public AbilityData(BendingData data, String abilityName, boolean switchPath) {
+		this.data = data;
+		this.abilityName = abilityName;
+		this.xp = 0;
+		this.level = -1;
+		this.path = AbilityTreePath.MAIN;
+		this.switchPath = switchPath;
 	}
 
 	/**
@@ -163,6 +174,13 @@ public class AbilityData {
 	}
 
 	/**
+	 * Same as isMasterLevel(), but accounts for a dynamic change
+	 */
+	public boolean isDynamicMasterLevel(AbilityTreePath path) {
+		return getLevel() == 3 && getDynamicPath() == path;
+	}
+
+	/**
 	 * Ensures ability path is correct - on level 4, if still on MAIN path, will
 	 * switch to FIRST automatically
 	 */
@@ -172,12 +190,39 @@ public class AbilityData {
 		}
 	}
 
+
+	/*
+	 * Same as getPath(), but accounts for a dynamic change
+	 */
+	public AbilityTreePath getDynamicPath() {
+		AbilityTreePath currentPath = getPath();
+		if (switchPath) {
+			if (currentPath == AbilityTreePath.FIRST) {
+				return AbilityTreePath.SECOND;
+			} else if (currentPath == AbilityTreePath.SECOND) {
+				return AbilityTreePath.FIRST;
+			} else {
+				return AbilityTreePath.MAIN;
+			}
+		} else {
+			return currentPath;
+		}
+	}
+
 	/**
 	 * Gets the total experience value from 0-100, taking into account the level
 	 * AND current xp. Maximum value is 136.
 	 */
 	public float getTotalXp() {
-		return level * 33 + xp * 33f / 100;
+		return level * 33 + xp * 33F / 100;
+	}
+
+	/**
+	 *
+	 * @return Returns a modifier based on the current xp, from 1 to 1.36.
+	 */
+	public float getXpModifier() {
+		return getTotalXp() / 100 < 1 ? 1 : getTotalXp() / 100;
 	}
 
 	public float getXp() {

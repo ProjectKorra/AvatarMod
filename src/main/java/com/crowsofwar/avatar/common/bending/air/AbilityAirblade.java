@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -49,20 +50,15 @@ public class AbilityAirblade extends Ability {
 
 		if (!bender.consumeChi(STATS_CONFIG.chiAirblade)) return;
 
-		/*double pitchDeg = entity.rotationPitch;
-		if (abs(pitchDeg) > 30) {
-			pitchDeg = pitchDeg / abs(pitchDeg) * 30;
-		}
-		float pitch = (float) Math.toRadians(pitchDeg);**/
+
 
 		Vector look = Vector.getLookRectangular(entity);
 		Vector spawnAt = Vector.getEyePos(entity).plus(look).minusY(0.6);
 
 		AbilityData abilityData = ctx.getData().getAbilityData(this);
-		float xp = abilityData.getTotalXp();
 		float sizeMult = 1.0F;
 		float damage = STATS_CONFIG.airbladeSettings.damage;
-		damage *= 1 + xp * .015f;
+		damage *= abilityData.getXpModifier();
 		damage *= ctx.getPowerRatingDamageMod();
 
 		switch (ctx.getLevel()) {
@@ -98,46 +94,46 @@ public class AbilityAirblade extends Ability {
 		if (ctx.isMasterLevel(FIRST)) {
 			for (int i = 0; i < 5; i++) {
 				float yaw = entity.rotationYaw - 30 + i * 15;
-				/*if (i >= 3) {
-					yaw = entity.rotationYaw + 160 + i * 20;
-				}**/
-				//Results in a full loop, negative stuff results in weird shenanigans
 				Vector direction = Vector.toRectangular(Math.toRadians(yaw), Math.toRadians(entity.rotationPitch));
 				EntityAirblade airblade = new EntityAirblade(world);
 				airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
 				airblade.setAbility(new AbilityAirblade());
 				airblade.setVelocity(direction.times(50));
 				airblade.setDamage(damage);
+				airblade.setElement(new Airbending());
 				airblade.setSizeMult(sizeMult);
 				airblade.rotationPitch = entity.rotationPitch;
 				airblade.rotationYaw = yaw;
 				airblade.setOwner(entity);
 				airblade.setAbility(this);
 				airblade.setPierceArmor(true);
-				airblade.setPierceArmor(false);
 				airblade.setChopBlocksThreshold(chopBlocks);
-				world.spawnEntity(airblade);
+				if (!world.isRemote)
+					world.spawnEntity(airblade);
 			}
 		} else {
 			EntityAirblade airblade = new EntityAirblade(world);
 			airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
-			airblade.setAbility(new AbilityAirblade());
 			airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 40 : 30));
 			airblade.setDamage(damage);
 			airblade.setSizeMult(sizeMult);
 			airblade.rotationPitch = entity.rotationPitch;
 			airblade.rotationYaw = entity.rotationYaw;
 			airblade.setOwner(entity);
+			airblade.setElement(new Airbending());
 			airblade.setAbility(this);
 			airblade.setPierceArmor(false);
 			airblade.setChopBlocksThreshold(chopBlocks);
-			world.spawnEntity(airblade);
+			airblade.setTier(getCurrentTier(abilityData.getLevel()));
+			if (!world.isRemote)
+				world.spawnEntity(airblade);
 		}
+		super.execute(ctx);
 
 	}
 
 	@Override
-	public int getTier() {
+	public int getBaseTier() {
 		return 2;
 	}
 

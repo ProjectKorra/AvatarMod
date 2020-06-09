@@ -1,8 +1,6 @@
 package com.crowsofwar.avatar.common.item;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_AIR_STAFF_COOLDOWN;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.STAFF_GUST_HANDLER;
-
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
@@ -14,7 +12,6 @@ import com.crowsofwar.avatar.common.event.StaffUseEvent;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -37,6 +34,9 @@ import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Random;
 
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_AIR_STAFF_COOLDOWN;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.STAFF_GUST_HANDLER;
+
 public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
 	private boolean spawnGust;
@@ -53,6 +53,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 	}
 
 
+
 	@Override
 	public float getAttackDamage() {
 		return 1F;
@@ -67,7 +68,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
 		boolean isCreative =
-						attacker instanceof EntityPlayer && ((EntityPlayer) attacker).isCreative();
+				attacker instanceof EntityPlayer && ((EntityPlayer) attacker).isCreative();
 		if (!isCreative) {
 			stack.damageItem(1, attacker);
 		}
@@ -92,7 +93,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn,
-	                                                EnumHand handIn) {
+													EnumHand handIn) {
 		if (handIn == EnumHand.OFF_HAND) {
 			boolean isCreative = playerIn.isCreative();
 			BendingData data = BendingData.get(playerIn);
@@ -142,7 +143,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 				MSG_AIR_STAFF_COOLDOWN.send(playerIn);
 			}
 			return new ActionResult<>(EnumActionResult.SUCCESS,
-			                          playerIn.getHeldItem(handIn));
+					playerIn.getHeldItem(handIn));
 		}
 		return new ActionResult<>(EnumActionResult.FAIL, playerIn.getHeldItem(handIn));
 	}
@@ -150,7 +151,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 	@Override
 	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack) {
 		boolean isCreative = entityLiving instanceof EntityPlayer && ((EntityPlayer) entityLiving)
-						.isCreative();
+				.isCreative();
 		BendingData data = BendingData.get(entityLiving);
 		if (!data.hasTickHandler(STAFF_GUST_HANDLER) && !entityLiving.world.isRemote) {
 			if (!MinecraftForge.EVENT_BUS.post(new StaffUseEvent(entityLiving, spawnGust))) {
@@ -192,7 +193,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 			}
 		}
 		if (data.hasTickHandler(STAFF_GUST_HANDLER) && entityLiving instanceof EntityPlayer
-		    && !entityLiving.world.isRemote) {
+				&& !entityLiving.world.isRemote) {
 			MSG_AIR_STAFF_COOLDOWN.send(entityLiving);
 		}
 		return false;
@@ -200,7 +201,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot,
-	                     boolean isSelected) {
+						 boolean isSelected) {
 
 		if (isSelected && entityIn instanceof EntityLivingBase) {
 			spawnGust = !entityIn.isSneaking();
@@ -208,12 +209,12 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 				WorldServer world = (WorldServer) worldIn;
 				if (entityIn.ticksExisted % 40 == 0) {
 					world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entityIn.posX,
-					                    entityIn.posY + entityIn.getEyeHeight(),
-					                    entityIn.posZ, 1, 0, 0, 0, 0.04);
+							entityIn.posY + entityIn.getEyeHeight(),
+							entityIn.posZ, 1, 0, 0, 0, 0.04);
 					((EntityLivingBase) entityIn)
-									.addPotionEffect(new PotionEffect(MobEffects.SPEED, 40, 0, false, false));
+							.addPotionEffect(new PotionEffect(MobEffects.SPEED, 40, 0, false, false));
 					((EntityLivingBase) entityIn)
-									.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 40, 0, false, false));
+							.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 40, 0, false, false));
 				}
 			}
 		}
@@ -223,12 +224,12 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 					WorldServer world = (WorldServer) worldIn;
 					if (entityIn.ticksExisted % 40 == 0) {
 						world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entityIn.posX,
-						                    entityIn.posY + entityIn.getEyeHeight(),
-						                    entityIn.posZ, 1, 0, 0, 0, 0.04);
+								entityIn.posY + entityIn.getEyeHeight(),
+								entityIn.posZ, 1, 0, 0, 0, 0.04);
 						((EntityLivingBase) entityIn)
-										.addPotionEffect(new PotionEffect(MobEffects.SPEED, 40, 0, false, false));
+								.addPotionEffect(new PotionEffect(MobEffects.SPEED, 40, 0, false, false));
 						((EntityLivingBase) entityIn).addPotionEffect(
-										new PotionEffect(MobEffects.JUMP_BOOST, 40, 0, false, false));
+								new PotionEffect(MobEffects.JUMP_BOOST, 40, 0, false, false));
 					}
 				}
 			}
@@ -238,12 +239,12 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 			BendingData data = BendingData.get((EntityLivingBase) entityIn);
 			Chi chi = data.chi();
 			if (entityIn.ticksExisted % 80 == 0 && chi != null && data.hasBendingId(Airbending.ID)
-			    && ((new Random().nextInt(2) + 1) >= 2)) {
+					&& ((new Random().nextInt(2) + 1) >= 2)) {
 				if (stack.isItemDamaged()) {
 					float availableChi = chi.getAvailableChi();
 					if (availableChi > 1) {
 						if (!(entityIn instanceof EntityPlayer && (((EntityPlayer) entityIn)
-										.isCreative()))) {
+								.isCreative()))) {
 							chi.setTotalChi(chi.getTotalChi() - 2);
 						}
 						stack.damageItem(-1, (EntityLivingBase) entityIn);
@@ -256,16 +257,16 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
 	@Override
 	public Multimap<String, AttributeModifier> getItemAttributeModifiers(
-					EntityEquipmentSlot equipmentSlot) {
+			EntityEquipmentSlot equipmentSlot) {
 		Multimap<String, AttributeModifier> multimap = HashMultimap.create();
 
 		if (equipmentSlot == EntityEquipmentSlot.MAINHAND) {
 			spawnGust = new Random().nextBoolean();
 			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(),
-			             new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier",
-			                                   getAttackDamage(), 0));
+					new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier",
+							getAttackDamage(), 0));
 			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(),
-			             new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", 0, 0));
+					new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", 0, 0));
 		}
 
 		return multimap;

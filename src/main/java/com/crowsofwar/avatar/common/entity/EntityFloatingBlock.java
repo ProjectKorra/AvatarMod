@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.earth.AbilityEarthControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -25,6 +25,8 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
@@ -42,6 +44,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -52,10 +55,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Objects;
 import java.util.Random;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.PLACE_BLOCK;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_BLOCK;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
-public class EntityFloatingBlock extends AvatarEntity {
+public class EntityFloatingBlock extends EntityOffensive {
 
 	public static final Block DEFAULT_BLOCK = Blocks.STONE;
 
@@ -67,6 +73,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 			DataSerializers.FLOAT);
 	private static final DataParameter<Optional<IBlockState>> SYNC_BLOCK = createKey(
 			EntityFloatingBlock.class, DataSerializers.OPTIONAL_BLOCK_STATE);
+	private static final DataParameter<Integer> SYNC_HITS_LEFT = createKey(EntityFloatingBlock.class,
+			DataSerializers.VARINT);
 
 	private static final DataParameter<FloatingBlockBehavior> SYNC_BEHAVIOR = createKey(
 			EntityFloatingBlock.class, FloatingBlockBehavior.DATA_SERIALIZER);
@@ -133,7 +141,8 @@ public class EntityFloatingBlock extends AvatarEntity {
 		dataManager.register(SYNC_VELOCITY, Vector.ZERO);
 		dataManager.register(SYNC_FRICTION, 1f);
 		dataManager.register(SYNC_BLOCK, Optional.of(DEFAULT_BLOCK.getDefaultState()));
-		dataManager.register(SYNC_BEHAVIOR, new FloatingBlockBehavior.DoNothing());
+		dataManager.register(SYNC_BEHAVIOR, new FloatingBlockBehavior.Idle());
+		dataManager.register(SYNC_HITS_LEFT, 3);
 
 	}
 
@@ -142,8 +151,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 		super.readEntityFromNBT(nbt);
 		setBlockState(
 				Block.getBlockById(nbt.getInteger("BlockId")).getStateFromMeta(nbt.getInteger("Metadata")));
-		//setVelocity(new Vector(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble
-		//		("VelocityZ")));
 		setFriction(nbt.getFloat("Friction"));
 		setItemDropsEnabled(nbt.getBoolean("DropItems"));
 		setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
@@ -156,9 +163,6 @@ public class EntityFloatingBlock extends AvatarEntity {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("BlockId", Block.getIdFromBlock(getBlock()));
 		nbt.setInteger("Metadata", getBlock().getMetaFromState(getBlockState()));
-		//nbt.setDouble("VelocityX", velocity().x());
-		//nbt.setDouble("VelocityY", velocity().y());
-		//nbt.setDouble("VelocityZ", velocity().z());
 		nbt.setFloat("Friction", getFriction());
 		nbt.setBoolean("DropItems", areItemDropsEnabled());
 		nbt.setInteger("Behavior", getBehavior().getId());
@@ -250,21 +254,16 @@ public class EntityFloatingBlock extends AvatarEntity {
 		if (getOwner() != null) {
 			EntityFloatingBlock block = AvatarEntity.lookupControlledEntity(world, EntityFloatingBlock.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (block == null && (bD.hasStatusControl(StatusControl.THROW_BLOCK) || bD.hasStatusControl(StatusControl.PLACE_BLOCK))) {
-				bD.removeStatusControl(StatusControl.THROW_BLOCK);
-				bD.removeStatusControl(StatusControl.PLACE_BLOCK);
+			if (block == null && (bD.hasStatusControl(THROW_BLOCK) || bD.hasStatusControl(PLACE_BLOCK))) {
+				bD.removeStatusControl(THROW_BLOCK);
+				bD.removeStatusControl(PLACE_BLOCK);
 			}
-			if (block != null && block.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_BLOCK))) {
-				bD.addStatusControl(StatusControl.THROW_BLOCK);
-				bD.addStatusControl(StatusControl.PLACE_BLOCK);
+			if (block != null && block.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled && !(bD.hasStatusControl(THROW_BLOCK))) {
+				bD.addStatusControl(THROW_BLOCK);
+				bD.addStatusControl(PLACE_BLOCK);
 			}
 
 		}
-
-		/*prevPosX = posX;
-		prevPosY = posY;
-		prevPosZ = posZ;**/
-		//Uhhh what's this for? It just seems to induce glichtiness...
 
 		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) Objects.requireNonNull(getBehavior()).onUpdate(this);
 		if (nextBehavior != getBehavior()) setBehavior(nextBehavior);
@@ -322,6 +321,60 @@ public class EntityFloatingBlock extends AvatarEntity {
 
 	}
 
+	@Override
+	public boolean shouldDissipate() {
+		return getBehavior() instanceof FloatingBlockBehavior.Thrown;
+	}
+
+	@Override
+	public boolean shouldExplode() {
+		return false;
+	}
+
+	@Override
+	public boolean isPiercing() {
+		return true;
+	}
+
+	@Override
+	public boolean canBeCollidedWith() {
+		return getBehavior() instanceof FloatingBlockBehavior.Thrown;
+	}
+
+	@Override
+	public void applyPiercingCollision() {
+		super.applyPiercingCollision();
+		if (getOwner() != null) {
+			AbilityData abilityData = AbilityData.get(getOwner(), new AbilityEarthControl().getName());
+			if (abilityData != null) {
+				if (abilityData.isMasterPath(AbilityTreePath.FIRST))
+					setBehavior(new FloatingBlockBehavior.PlayerControlled());
+			}
+		}
+	}
+
+	@Override
+	public void spawnDissipateParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public void spawnExplosionParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public void spawnPiercingParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public boolean canCollideWith(Entity entity) {
+		if (getBehavior() instanceof FloatingBlockBehavior.Thrown)
+			return super.canCollideWith(entity);
+		else return false;
+	}
+
 	public float getFriction() {
 		return dataManager.get(SYNC_FRICTION);
 	}
@@ -338,6 +391,14 @@ public class EntityFloatingBlock extends AvatarEntity {
 		return dataManager.get(SYNC_BEHAVIOR);
 	}
 
+	@Override
+	public Vec3d getKnockback() {
+		double x = Math.min(getKnockbackMult().x * motionX, motionX * 2);
+		double y = Math.min(0.15, (motionY + 0.1) * getKnockbackMult().y);
+		double z = Math.min(getKnockbackMult().z * motionZ, motionZ * 2);
+		return new Vec3d(x, y, z);
+	}
+
 	public void setBehavior(FloatingBlockBehavior behavior) {
 		// FIXME research: why doesn't sync_Behavior cause an update to client?
 		if (behavior == null) throw new IllegalArgumentException("Cannot have null behavior");
@@ -349,14 +410,15 @@ public class EntityFloatingBlock extends AvatarEntity {
 		return getBehavior() instanceof FloatingBlockBehavior.PlayerControlled ? getOwner() : null;
 	}
 
-	public AxisAlignedBB getExpandedHitbox() {
-		return this.expandedHitbox;
+
+	@Override
+	public double getExpandedHitboxWidth() {
+		return 0.35;
 	}
 
 	@Override
-	public void setEntityBoundingBox(AxisAlignedBB bb) {
-		super.setEntityBoundingBox(bb);
-		expandedHitbox = bb.grow(0.35, 0.35, 0.35);
+	public double getExpandedHitboxHeight() {
+		return 0.35;
 	}
 
 	@Override
@@ -371,16 +433,22 @@ public class EntityFloatingBlock extends AvatarEntity {
 	}
 
 	@Override
+	public float getDamage() {
+		return (float) (AvatarUtils.getMagnitude(velocity().toMinecraft()) / 25 * STATS_CONFIG.floatingBlockSettings.damage
+						* getDamageMult());
+	}
+
+	@Override
 	public void setDead() {
 		super.setDead();
 		removeStatCtrl();
 	}
 
-	 private void removeStatCtrl() {
+	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData bD = BendingData.get(getOwner());
-			bD.removeStatusControl(StatusControl.THROW_BLOCK);
-			bD.removeStatusControl(StatusControl.PLACE_BLOCK);
+			bD.removeStatusControl(THROW_BLOCK);
+			bD.removeStatusControl(PLACE_BLOCK);
 		}
 
 	}

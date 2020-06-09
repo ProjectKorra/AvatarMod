@@ -23,15 +23,15 @@ import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.blocks.BlockTemp;
 import com.crowsofwar.avatar.common.blocks.BlockUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import elucent.albedo.event.GatherLightsEvent;
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
-import net.minecraft.entity.Entity;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -40,14 +40,17 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Objects;
+import java.util.Random;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 /**
  * @author CrowsOfWar
  */
-@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityFlames extends EntityOffensive implements ILightProvider {
+
+// todo:Colored Flux
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityFlames extends EntityOffensive implements IGlowingEntity {
 
 	private boolean reflect;
 	private boolean lightTrailingFire;
@@ -57,6 +60,9 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		setSize(0.1f, 0.1f);
 		this.setsFires = true;
 		this.lightTrailingFire = false;
+		this.reflect = false;
+		this.ignoreFrustumCheck = true;
+		this.lightTnt = true;
 	}
 
 	@Override
@@ -66,22 +72,14 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 
 
 	@Override
-	public void onCollideWithEntity(Entity entity) {
-		super.onCollideWithEntity(entity);
-		if (entity instanceof AvatarEntity) {
-			((AvatarEntity) entity).onFireContact();
-		}
-	}
-
-	@Override
 	public void onUpdate() {
-
 		super.onUpdate();
 
-		ignoreFrustumCheck = true;
-		setVelocity(velocity().times(0.99999));
+		motionX *= 0.975;
+		motionY *= 0.975;
+		motionZ *= 0.975;
 
-		if (velocity().sqrMagnitude() <= 0.5 * 0.5) setDead();
+		if (velocity().sqrMagnitude() <= 0.5 * 0.5) Dissipate();
 
 		Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.5,
 				true);
@@ -91,7 +89,7 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 				setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.5));
 
 				// Try to light fires
-				/*if (sideHit != EnumFacing.DOWN && !world.isRemote) {
+				if (sideHit != EnumFacing.DOWN && !world.isRemote) {
 
 					BlockPos bouncingOff = getPosition().add(-sideHit.getXOffset(),
 							-sideHit.getYOffset(),
@@ -104,68 +102,40 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 
 					}
 
-				}**/
+				}
 
 			}
 		}
-		if (lightTrailingFire) {
-			//TODO: Use temp blocks.
+
+		if (world.isRemote) {
+			for (double i = 0; i < width; i += 0.05) {
+				Random random = new Random();
+				AxisAlignedBB boundingBox = getEntityBoundingBox();
+				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).time(12).clr(255, 10, 5)
+						.scale(getAvgSize() * 4).element(getElement()).spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
+						.scale(getAvgSize() * 4).element(getElement()).spawn(world);
+			}
+		}
+
+		if (lightTrailingFire && !world.isRemote) {
 			if (AvatarUtils.getRandomNumberInRange(1, 10) <= 5) {
 				BlockPos pos = getPosition();
 				if (BlockUtils.canPlaceFireAt(world, pos)) {
 					BlockTemp.createTempBlock(world, pos, 20, Blocks.FIRE.getDefaultState());
 				}
-				/*if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
-					world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-				}**/
 				BlockPos pos2 = getPosition().down();
 				if (BlockUtils.canPlaceFireAt(world, pos2)) {
 					BlockTemp.createTempBlock(world, pos2, 20, Blocks.FIRE.getDefaultState());
 				}
-				/*if (Blocks.FIRE.canPlaceBlockAt(world, pos2) && world.getBlockState(pos2).getBlock() == Blocks.AIR) {
-					world.setBlockState(pos2, Blocks.FIRE.getDefaultState());
-				}**/
 			}
 		}
-
-		/*if (!world.isRemote) {
-			if (getOwner() != null) {
-				//TODO: Get rid of this
-				AbilityData abilityData = AbilityData.get(getOwner(), getAbility().getName());
-
-				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(),
-						entity -> entity != getOwner()
-								&& !(entity instanceof EntityFlames));
-
-				for (Entity entity : collided) {
-
-					entity.setFire((int) (3F * 1 + abilityData.getTotalXp() / 100f));
-
-					// Add extra damage
-					// Adding 0 since even though this doesn't affect health, will
-					// cause mobs to aggro
-
-					float additionalDamage = 0;
-					if (abilityData.getTotalXp() >= 50) {
-						additionalDamage = 2 + (abilityData.getTotalXp() - 50) / 25;
-					}
-					additionalDamage *= damageMult;
-					if (entity.attackEntityFrom(
-							AvatarDamageSource.causeFireShotDamage(entity, getOwner()),
-							additionalDamage)) {
-						BattlePerformanceScore.addSmallScore(getOwner());
-					}
-
-				}
-
-				abilityData.addXp(SKILLS_CONFIG.fireShotHit * collided.size());
-				if (getAbility() instanceof AbilityFireShot) {
-					if (!collided.isEmpty() && !abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) setDead();
-				}
-				else if (!collided.isEmpty()) setDead();
-			}
-		}**/
-
 	}
 
 	@Override
@@ -176,10 +146,8 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 				setDead();
 				spawnExtinguishIndicators();
 				return true;
-			}
-			else return false;
-		}
-		else {
+			} else return false;
+		} else {
 			setDead();
 			spawnExtinguishIndicators();
 			return true;
@@ -187,12 +155,12 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	}
 
 	@Override
-	protected boolean shouldDissipate() {
+	public boolean shouldDissipate() {
 		return true;
 	}
 
 	@Override
-	protected boolean shouldExplode() {
+	public boolean shouldExplode() {
 		return false;
 	}
 
@@ -202,7 +170,6 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		spawnExtinguishIndicators();
 		return true;
 	}
-
 
 	@Override
 	public boolean onMinorWaterContact() {
@@ -246,29 +213,13 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 	}
 
 	@Override
-	protected int getNumberofParticles() {
+	public int getNumberofParticles() {
 		return 15;
 	}
 
 	@Override
-	protected double getParticleSpeed() {
+	public double getParticleSpeed() {
 		return 0.04;
-	}
-
-	@Override
-	public boolean onCollideWithSolid() {
-		if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
-			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
-			if (!data.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				setDead();
-				Dissipate();
-			}
-			return !data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
-		}
-		setDead();
-		Dissipate();
-		return true;
-
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -277,20 +228,28 @@ public class EntityFlames extends EntityOffensive implements ILightProvider {
 		return true;
 	}
 
+
 	@Override
-	@Optional.Method(modid = "albedo")
-	public Light provideLight() {
-		return Light.builder().pos(this).color(2F, 1F, 0F).radius(8).build();
+	public Vec3d getKnockbackMult() {
+		return new Vec3d(STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push / 2, STATS_CONFIG.fireShotSetttings.push * 2);
 	}
 
 	@Override
-	@Optional.Method(modid = "albedo")
-	public void gatherLights(GatherLightsEvent event, Entity entity) {
-
+	public boolean isPiercing() {
+		if (getOwner() != null && getAbility() instanceof AbilityFireShot) {
+			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
+			if (data != null)
+				return data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
+		}
+		return false;
 	}
 
+
+
+
 	@Override
-	protected Vec3d getKnockbackMult() {
-		return new Vec3d(STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push * 2);
+	@Optional.Method(modid = "hammercore")
+	public ColoredLight produceColoredLight(float partialTicks) {
+		return ColoredLight.builder().pos(this).color(1f, 0f, 0f, 1f).radius(10f).build();
 	}
 }

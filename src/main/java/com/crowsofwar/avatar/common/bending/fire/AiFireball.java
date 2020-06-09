@@ -18,7 +18,6 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
@@ -28,6 +27,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_FIREBALL;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
@@ -67,7 +67,7 @@ public class AiFireball extends BendingAi {
 		entity.rotationPitch = (float) toDegrees(rotations.x());
 
 		if (timeExecuting >= 15) {
-			execStatusControl(StatusControl.THROW_FIREBALL);
+			execStatusControl(THROW_FIREBALL);
 			timeExecuting = 0;
 			return false;
 		} else {
@@ -97,7 +97,7 @@ public class AiFireball extends BendingAi {
 
 		if (fireball != null) {
 			fireball.setDead();
-			bender.getData().removeStatusControl(StatusControl.THROW_FIREBALL);
+			bender.getData().removeStatusControl(THROW_FIREBALL);
 		}
 
 	}

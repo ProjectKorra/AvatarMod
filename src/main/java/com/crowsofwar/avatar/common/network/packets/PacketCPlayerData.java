@@ -65,7 +65,6 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		playerId = readUUID(buf);
-
 		final BendingData data = AvatarPlayerData.fetcher()
 				.fetch(GoreCore.proxy.getClientSidePlayer().world, playerId).getData();
 

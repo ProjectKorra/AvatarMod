@@ -16,11 +16,18 @@
 */
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.common.data.StatusControl;
+import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
+
+import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAMETHROWER;
 
 /**
  * @author CrowsOfWar
@@ -45,8 +52,14 @@ public class RenderHumanBender extends RenderLiving<EntityHumanBender> {
 	}
 
 	@Override
+	public void doRender(EntityHumanBender entity, double x, double y, double z, float entityYaw, float partialTicks) {
+		super.doRender(entity, x, y, z, entityYaw, partialTicks);
+	}
+
+	@Override
 	protected ResourceLocation getEntityTexture(EntityHumanBender entity) {
-		return locations[entity.getSkin()];
+		int location = Math.min(locations.length - 1, entity.getSkin());
+		return locations[location];
 	}
 
 }

@@ -18,7 +18,7 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -38,6 +38,7 @@ import java.util.Random;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.*;
 
 public class AbilityWall extends Ability {
 
@@ -120,12 +121,12 @@ public class AbilityWall extends Ability {
 			}
 
 			if (wallCreated) {
-				ctx.getData().addStatusControl(StatusControl.DROP_WALL);
-				ctx.getData().addStatusControl(StatusControl.PLACE_WALL);
+				ctx.getData().addStatusControl(DROP_WALL);
+				ctx.getData().addStatusControl(PLACE_WALL);
 				if (ctx.isDynamicMasterLevel(AbilityTreePath.FIRST)) {
-					ctx.getData().addStatusControl(StatusControl.SHOOT_WALL);
+					ctx.getData().addStatusControl(SHOOT_WALL);
 				} else if (ctx.isDynamicMasterLevel(AbilityTreePath.SECOND)) {
-					ctx.getData().addStatusControl(StatusControl.PUSH_WALL);
+					ctx.getData().addStatusControl(PUSH_WALL);
 				}
 			}
 		}
@@ -260,7 +261,7 @@ public class AbilityWall extends Ability {
 	}
 
 	@Override
-	public int getTier() {
-		return 2;
+	public int getBaseTier() {
+		return 3;
 	}
 }

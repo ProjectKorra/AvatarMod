@@ -20,15 +20,14 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.entity.mob.EntityAirbender;
 import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenVillage;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.terraingen.InitMapGenEvent.EventType;
 import net.minecraftforge.fml.common.Mod;
@@ -46,9 +45,13 @@ import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class HumanBenderSpawner {
 
+	public static void register() {
+		MinecraftForge.TERRAIN_GEN_BUS.register(new HumanBenderSpawner());
+	}
+
 	//Doesn't work, dunno why
-/*	@SubscribeEvent
-	public static void modifyVillageSpawner(InitMapGenEvent e) {
+	@SubscribeEvent
+	public void modifyVillageSpawner(InitMapGenEvent e) {
 
 		if (e.getType() == EventType.VILLAGE) {
 			// TODO See if this messes up superflat world options
@@ -57,31 +60,6 @@ public class HumanBenderSpawner {
 
 		}
 
-	}**/
-
-	@SubscribeEvent
-	public static void modifyVillagerSpawns(LivingSpawnEvent event) {
-		Entity e = event.getEntity();
-		World world = e.getEntityWorld();
-		if (event.getEntity() == e && e instanceof EntityVillager) {
-
-			AxisAlignedBB box = new AxisAlignedBB(e.posX + 200,
-					e.posY + 200, e.posZ + 200,
-					e.posX - 200, e.posY - 200,
-					e.posZ - 200);
-			List<Entity> nearbyBenders = world.getEntitiesWithinAABB(EntityHumanBender.class, box);
-			List<Entity> nearbyVillagers = world.getEntitiesWithinAABB(EntityVillager.class, box);
-			int villagerSize = nearbyVillagers.size();
-			int size = nearbyBenders.size();
-			Random rand = new Random();
-			boolean bender = rand.nextBoolean();
-			//Will be changed when more benders are added
-			if (size < MOBS_CONFIG.benderSettings.maxNumberOfBenders && villagerSize >= 6) {
-				EntityHumanBender b = bender ? new EntityAirbender(world) : new EntityFirebender(world);
-				b.copyLocationAndAnglesFrom(e);
-				world.spawnEntity(b);
-			}
-		}
 	}
 
 	private static class MapGenVillageWithHumanbenders extends MapGenVillage {
@@ -98,6 +76,7 @@ public class HumanBenderSpawner {
 		public synchronized boolean generateStructure(World worldIn, Random randomIn, ChunkPos chunkCoord) {
 			boolean result = super.generateStructure(worldIn, randomIn, chunkCoord);
 			if (result) {
+				//TODO: More immersive spawning
 
 
 				// This list contains villagers in that structure
@@ -105,62 +84,42 @@ public class HumanBenderSpawner {
 					assert villager != null;
 					return new ChunkPos(villager.getPosition()).equals(chunkCoord);
 				});
+				if (!villagers.isEmpty()) {
 
 
-				// To attempt to have all humanbenders be same type, check if
-				// there are nearby humanbenders
-				// If there are just copy their type
-				AxisAlignedBB aabb = new AxisAlignedBB(villagers.get(0).posX + 100, villagers.get(0).posY + 100, villagers.get(0).posZ + 100,
-						villagers.get(0).posX - 100, villagers.get(0).posY - 100, villagers.get(0).posZ - 100);
-				List<EntityHumanBender> nearbyBenders = worldIn.getEntitiesWithinAABB(EntityHumanBender.class,
-						aabb);
-				Village village = worldIn.getVillageCollection()
-						.getNearestVillage(chunkCoord.getBlock(0, 0, 0), 200);
+					// To attempt to have all humanbenders be same type, check if
+					// there are nearby humanbenders
+					// If there are just copy their type
+					AxisAlignedBB aabb = new AxisAlignedBB(villagers.get(0).posX + 100, villagers.get(0).posY + 100, villagers.get(0).posZ + 100,
+							villagers.get(0).posX - 100, villagers.get(0).posY - 100, villagers.get(0).posZ - 100);
+					List<EntityHumanBender> nearbyBenders = worldIn.getEntitiesWithinAABB(EntityHumanBender.class,
+							aabb);
 
-				if (village != null) {
-					EntityHumanBender airbender = new EntityAirbender(worldIn);
-					airbender.setPosition(village.getCenter().getX(), village.getCenter().getY(), village.getCenter().getZ());
-				}
-
-
-				for (Entity e : villagers) {
-					int i = rand.nextInt(3) + 1;
-					if (i == 3) {
-						EntityHumanBender b = new EntityAirbender(worldIn);
-						b.setPosition(villagers.get(0).posX, villagers.get(0).posY, villagers.get(0).posZ);
-					}
-				}
-
-
-				double chance = 100;
-				Random rand = new Random();
-				if (!villagers.isEmpty()/* && rand.nextDouble() * 100 < chance**/) {
-
-
+					Random rand = new Random();
 					boolean firebender;
 
 					if (nearbyBenders.isEmpty()) {
-						firebender = new Random().nextBoolean();
+						firebender = rand.nextBoolean();
 					} else {
-						firebender = nearbyBenders.get(0) instanceof EntityFirebender;
+						firebender = !(nearbyBenders.get(0) instanceof EntityFirebender);
 					}
 
 					for (Entity e : villagers) {
-						int i = rand.nextInt(3) + 1;
-						if (i == 3) {
+						int i = AvatarUtils.getRandomNumberInRange(1, 2);
+						if (i == 2) {
 							EntityHumanBender bender = firebender ? new EntityFirebender(worldIn)
 									: new EntityAirbender(worldIn);
 							bender.copyLocationAndAnglesFrom(e);
-							worldIn.spawnEntity(bender);
+							bender.setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
+							bender.setHomePosAndDistance(e.getPosition(), 20);
+							if (!worldIn.isRemote)
+								worldIn.spawnEntity(bender);
 
 						}
 					}
 				}
 			}
-
 			return false;
 		}
-
 	}
-
 }

@@ -47,9 +47,7 @@ public class AiWave extends BendingAi {
 		EntityLivingBase target = entity.getAttackTarget();
 		if (target != null && target.isInWater()) {
 
-			if (isAtEdgeOfWater()) {
-				return true;
-			}
+			return isAtEdgeOfWater();
 
 		}
 

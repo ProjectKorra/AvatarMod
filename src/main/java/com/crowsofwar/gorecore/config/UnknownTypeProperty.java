@@ -44,7 +44,7 @@ public class UnknownTypeProperty {
 	
 	public <T> T as(ObjectLoader<T> factory) {
 		if (!(object instanceof Map)) throw new ConfigException(name + " isn't a Dictionary");
-		return factory.load(new Configuration((Map) object));
+		return factory.load(new Configuration(object));
 	}
 	
 	public String asString() {
@@ -93,7 +93,7 @@ public class UnknownTypeProperty {
 	}
 	
 	public Configuration asMapping() {
-		return new Configuration((Map) object);
+		return new Configuration(object);
 	}
 	
 }

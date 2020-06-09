@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.powerrating;
 
 import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.bending.air.StaffPowerModifier;
+import com.crowsofwar.avatar.common.bending.air.powermods.StaffPowerModifier;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.bending.earth.EarthbendingJingModifier;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;

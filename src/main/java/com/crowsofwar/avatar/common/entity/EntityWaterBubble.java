@@ -17,16 +17,20 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.WaterBubbleBehavior;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -38,15 +42,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * @author CrowsOfWar
  */
-public class EntityWaterBubble extends AvatarEntity {
+public class EntityWaterBubble extends EntityOffensive implements IShieldEntity {
 
 	private static final DataParameter<WaterBubbleBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterBubble.class, WaterBubbleBehavior.DATA_SERIALIZER);
@@ -106,7 +114,7 @@ public class EntityWaterBubble extends AvatarEntity {
 		dataManager.register(SYNC_SIZE, 1F);
 		dataManager.register(SYNC_MAX_SIZE, 1.5F);
 		dataManager.register(SYNC_HEALTH, 3F);
-		dataManager.register(SYNC_DEGREES_PER_SECOND, 30F);
+		dataManager.register(SYNC_DEGREES_PER_SECOND, 5F);
 	}
 
 	@Override
@@ -149,19 +157,61 @@ public class EntityWaterBubble extends AvatarEntity {
 				}
 			}
 		}
-
+		/*
 		if (!world.isRemote && inWaterSource) {
 			setDead();
 			if (getOwner() != null) {
 				BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
 				if (data != null) {
-					data.removeStatusControl(StatusControl.LOB_BUBBLE);
+					data.removeStatusControl(StatusControlController.LOB_BUBBLE);
 				}
 			}
-		}
+		}**/
 		if (this.getOwner() == null) {
 			this.setDead();
 		}
+
+		//particles!
+		if (world.isRemote && getOwner() != null) {
+			for (double h = 0; h < width; h += 0.5) {
+				Random random = new Random();
+				AxisAlignedBB boundingBox = getEntityBoundingBox();
+				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+				ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).time(15 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0, 102, 255, 255)
+						.scale(getSize()).element(getElement()).spawnEntity(getOwner())
+						.spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+						world.rand.nextGaussian() / 60).time(15 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0, 102, 255, 255)
+						.scale(getSize()).element(getElement()).spawnEntity(getOwner())
+						.spawn(world);
+			}
+
+		}
+
+
+	}
+
+
+	@Override
+	public boolean shouldExplode() {
+		return !(getBehavior() instanceof WaterBubbleBehavior.PlayerControlled);
+	}
+
+	@Override
+	public void spawnExplosionParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public void spawnDissipateParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public void spawnPiercingParticles(World world, Vec3d pos) {
 
 	}
 
@@ -235,5 +285,4 @@ public class EntityWaterBubble extends AvatarEntity {
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 1;
 	}
-
 }

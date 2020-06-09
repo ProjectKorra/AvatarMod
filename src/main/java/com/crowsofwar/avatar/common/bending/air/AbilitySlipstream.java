@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.air.powermods.SlipstreamPowerModifier;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -77,14 +78,14 @@ public class AbilitySlipstream extends Ability {
 			modifier.setTicks(duration);
 			Objects.requireNonNull(data.getPowerRatingManager(getBendingId())).addModifier(modifier, ctx);
 			data.addTickHandler(SLIPSTREAM_COOLDOWN_HANDLER);
-
 		}
+		super.execute(ctx);
 
 	}
 
 	@Override
-	public int getTier() {
-		return 4;
+	public int getBaseTier() {
+		return 5;
 	}
 }
 

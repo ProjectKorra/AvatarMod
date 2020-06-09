@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.TickHandlerController;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class AiAirBurst extends BendingAi {
 

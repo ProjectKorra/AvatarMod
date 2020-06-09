@@ -3,8 +3,7 @@
     "title": "Cracking the Iceberg",
     "description": "Gain a waterbending scroll!",
     "icon": {
-      "item": "avatarmod:scroll_water",
-      "data": 1
+      "item": "avatarmod:scroll_water"
     },
     "background": "avatarmod:textures/advancements/background/water.png",
     "frame": "goal"
@@ -13,7 +12,7 @@
     "experience": 250,
     "recipes": [
       "avatarmod:water_pouch",
-      "avatarmod:waterbending_scroll"
+      "avatarmod:waterbending_scroll_1"
     ]
   },
   "criteria": {

@@ -18,17 +18,16 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSnow;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -38,9 +37,13 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.Random;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.PLACE_BLOCK;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_BLOCK;
 
 /**
  * @author CrowsOfWar
@@ -64,29 +67,15 @@ public class AbilityEarthControl extends Ability {
 	public void execute(AbilityContext ctx) {
 
 		BendingData data = ctx.getData();
-		//EntityLivingBase entity = ctx.getBenderEntity();
+		EntityLivingBase entity = ctx.getBenderEntity();
 		//Bender bender = ctx.getBender();
 		//World world = ctx.getWorld();
 
-		EntityFloatingBlock currentBlock = AvatarEntity.lookupEntity(ctx.getWorld(),
-				EntityFloatingBlock.class,
-				fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
-						&& fb.getOwner() == ctx.getBenderEntity());
 
-		if (currentBlock != null) {
-			return;
-		} else {
-			VectorI target = ctx.getLookPosI();
-			if (target != null) {
+		VectorI target = ctx.getLookPosI();
+		if (target != null) {
+			pickupBlock(ctx, target.toBlockPos());
 
-				pickupBlock(ctx, target.toBlockPos());
-
-				// EnumFacing direction = entity.getHorizontalFacing();
-				// pickupBlock(ctx, target.toBlockPos().offset(direction));
-				// pickupBlock(ctx,
-				// target.toBlockPos().offset(direction.getOpposite()));
-
-			}
 		}
 	}
 
@@ -98,9 +87,30 @@ public class AbilityEarthControl extends Ability {
 		BendingData data = ctx.getData();
 
 		IBlockState ibs = world.getBlockState(pos);
+		if (!ibs.isFullBlock() && !STATS_CONFIG.bendableBlocks.contains(ibs.getBlock()))
+			ibs = world.getBlockState(pos.down());
+
 		Block block = ibs.getBlock();
 
-		if (!world.isAirBlock(pos) && STATS_CONFIG.bendableBlocks.contains(block)) {
+		int maxBlocks = 1;
+		int heldBlocks = 0;
+
+		if (ctx.getLevel() == 2)
+			maxBlocks = 2;
+		else if (ctx.getDynamicPath().equals(AbilityData.AbilityTreePath.FIRST))
+			maxBlocks = 3;
+
+		List<EntityFloatingBlock> blocks = world.getEntitiesWithinAABB(EntityFloatingBlock.class,
+				entity.getEntityBoundingBox().grow(3, 2, 3));
+		for (EntityFloatingBlock b : blocks) {
+			if (b.getController() == entity)
+				heldBlocks++;
+		}
+
+		boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
+		bendable |= !bendable && STATS_CONFIG.bendableBlocks.contains(world.getBlockState(pos.down()).getBlock())
+		&& !(block instanceof BlockSnow || ibs.isFullCube() && ibs.isFullBlock());
+		if (!world.isAirBlock(pos) && bendable && heldBlocks < maxBlocks) {
 
 			if (bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
 
@@ -110,7 +120,7 @@ public class AbilityEarthControl extends Ability {
 				floating.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 				floating.setItemDropsEnabled(!bender.isCreativeMode());
 
-				float damageMult = abilityData.getLevel() >= 2 ? 2 : 1;
+				float damageMult = abilityData.getLevel() >= 2 ? 1.5F : 1;
 				damageMult *= ctx.getPowerRatingDamageMod();
 
 				double dist = 2.5;
@@ -120,6 +130,9 @@ public class AbilityEarthControl extends Ability {
 				floating.setOwner(entity);
 				floating.setAbility(this);
 				floating.setDamageMult(damageMult);
+				floating.setXp(SKILLS_CONFIG.blockThrowHit);
+				floating.setFireTime(0);
+				floating.setLifeTime(150);
 
 				if (STATS_CONFIG.preventPickupBlockGriefing) {
 					floating.setItemDropsEnabled(false);
@@ -127,7 +140,8 @@ public class AbilityEarthControl extends Ability {
 					world.setBlockState(pos, Blocks.AIR.getDefaultState());
 				}
 
-				world.spawnEntity(floating);
+				if (!world.isRemote)
+					world.spawnEntity(floating);
 
 				SoundType sound = block.getSoundType();
 				if (sound != null) {
@@ -135,8 +149,10 @@ public class AbilityEarthControl extends Ability {
 							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 				}
 
-				data.addStatusControl(StatusControl.PLACE_BLOCK);
-				data.addStatusControl(StatusControl.THROW_BLOCK);
+				if (!data.hasStatusControl(PLACE_BLOCK))
+					data.addStatusControl(PLACE_BLOCK);
+				if (!data.hasStatusControl(THROW_BLOCK))
+					data.addStatusControl(THROW_BLOCK);
 
 			}
 

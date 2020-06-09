@@ -18,6 +18,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.Objects;
+
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_PURIFY_COOLDOWN;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -124,26 +126,26 @@ public class AbilityImmolate extends Ability {
 	}
 
 	@Override
-	public int getTier() {
-		return 4;
+	public int getBaseTier() {
+		return 5;
 	}
 
 	public static class ImmolateLightOrbBehaviour extends LightOrbBehavior.FollowPlayer {
 		@Override
 		public Behavior onUpdate(EntityLightOrb entity) {
 			super.onUpdate(entity);
-			Entity emitter = entity.getEmittingEntity();
+			EntityLivingBase emitter = entity.getOwner();
 			assert emitter instanceof EntityPlayer || emitter instanceof EntityBender;
-			Bender b = Bender.get((EntityLivingBase) emitter);
-			/*if (b != null && b.getData() != null && entity.ticksExisted > 1) {
+			Bender b = Bender.get(emitter);
+			if (b != null && b.getData() != null && entity.ticksExisted > 1) {
 				if (!Objects.requireNonNull(b.getData().getPowerRatingManager(Firebending.ID)).hasModifier(ImmolatePowerModifier.class)) {
 					entity.setDead();
 				}
-			}**/
+			}
 			int lightRadius = 5;
 			//Stops constant spam and calculations
 			if (entity.ticksExisted == 1) {
-				AbilityData aD = AbilityData.get((EntityLivingBase) emitter, "immolate");
+				AbilityData aD = AbilityData.get(emitter, "immolate");
 				int level = aD.getLevel();
 				if (level >= 1) {
 					lightRadius = 7;

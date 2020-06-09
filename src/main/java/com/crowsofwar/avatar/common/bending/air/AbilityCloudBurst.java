@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -14,7 +13,9 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_CLOUDBURST;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
@@ -33,10 +34,12 @@ public class AbilityCloudBurst extends Ability {
 		Bender bender = ctx.getBender();
 		BendingData data = ctx.getData();
 
-		if (data.hasStatusControl(StatusControl.THROW_CLOUDBURST)) return;
+		if (data.hasStatusControl(THROW_CLOUDBURST)) return;
 
 		float chi = STATS_CONFIG.chiCloudburst;
 		//2.5F
+
+		float xp = SKILLS_CONFIG.cloudburstHit;
 
 		if (ctx.getLevel() == 1) {
 			chi += 1;
@@ -66,10 +69,11 @@ public class AbilityCloudBurst extends Ability {
 
 			double damage = STATS_CONFIG.cloudburstSettings.damage;
 			//2
+			int size = 16;
 			EntityCloudBall cloudball = new EntityCloudBall(world);
 
 			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-				cloudball.setSize(20);
+				size = 30;
 				damage = STATS_CONFIG.cloudburstSettings.damage * 4;
 				//8
 				cloudball.setChiSmash(true);
@@ -78,41 +82,48 @@ public class AbilityCloudBurst extends Ability {
 				damage = STATS_CONFIG.cloudburstSettings.damage * 2;
 				//4
 				cloudball.setAbsorb(true);
+				size = 20;
 			}
 			if (ctx.getLevel() == 1) {
 				damage = STATS_CONFIG.cloudburstSettings.damage * 1.5;
 				//3
+				size += 4;
 			}
 
 			if (ctx.getLevel() == 2) {
 				damage = STATS_CONFIG.cloudburstSettings.damage * 2.25;
 				//4.5
+				size += 8;
 			}
 
 			damage *= ctx.getPowerRatingDamageMod();
-			damage += ctx.getAbilityData().getTotalXp() / 800;
+			damage += ctx.getAbilityData().getTotalXp() / 100;
 
 
 			if (target != null) {
 				cloudball.setPosition(target);
 			}
 			cloudball.setOwner(entity);
+			cloudball.setSize(size);
 			cloudball.setPushStoneButton(ctx.getLevel() >= 1);
 			cloudball.setPushIronTrapDoor(ctx.getLevel() >= 2);
 			cloudball.setPushIronDoor(ctx.getLevel() >= 2);
 			cloudball.setBehavior(new CloudburstBehavior.PlayerControlled());
 			cloudball.setDamage((float) damage);
+			cloudball.setXp(xp);
 			cloudball.setAbility(this);
-			world.spawnEntity(cloudball);
+			cloudball.setElement(new Airbending());
+			if (!world.isRemote)
+				world.spawnEntity(cloudball);
 
-			data.addStatusControl(StatusControl.THROW_CLOUDBURST);
-
+			data.addStatusControl(THROW_CLOUDBURST);
 		}
+		super.execute(ctx);
 
 	}
 
 	@Override
-	public int getTier() {
+	public int getBaseTier() {
 		return 3;
 	}
 

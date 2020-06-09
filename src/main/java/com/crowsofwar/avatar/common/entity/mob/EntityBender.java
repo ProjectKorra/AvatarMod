@@ -16,23 +16,32 @@
 */
 package com.crowsofwar.avatar.common.entity.mob;
 
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+
+import javax.annotation.Nullable;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 
 /**
  * @author CrowsOfWar
  */
-public abstract class EntityBender extends EntityCreature {
+public abstract class EntityBender extends EntityCreature implements IEntityAdditionalSpawnData {
 
 	private Bender bender;
 	private static final DataParameter<Integer> SYNC_LEVEL = EntityDataManager
@@ -63,20 +72,29 @@ public abstract class EntityBender extends EntityCreature {
 		// Initialize the bender here (instead of constructor) so the bender will be ready for
 		// initEntityAI - Constructor is called AFTER initEntityAI
 		bender = initBender();
-		dataManager.register(SYNC_LEVEL, AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
+		dataManager.register(SYNC_LEVEL, 1);
 		applyAbilityLevels(getLevel());
-		setElement();
+		getData().addBending(getElement());
+	}
+
+	@Override
+	protected void applyEntityAttributes() {
+		super.applyEntityAttributes();
+		applyAbilityLevels(getLevel());
+		getData().addBending(getElement());
 	}
 
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
+		setLevel(nbt.getInteger("Level"));
 		bender.getData().readFromNbt(nbt);
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
+		nbt.setInteger("Level", getLevel());
 		bender.getData().writeToNbt(nbt);
 	}
 
@@ -96,7 +114,33 @@ public abstract class EntityBender extends EntityCreature {
 		return bender.getData();
 	}
 
-	public void setElement() {
+	//Used for changing stuff like the size of an air bubble or something. Usually called right
+	//before an entity is spawned
+	public void modifyAbilities(Ability ability) {
+
 	}
 
+
+	public BendingStyle getElement() {
+		return new Airbending();
+	}
+
+	@Nullable
+	@Override
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
+		setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
+		applyAbilityLevels(getLevel());
+		getData().addBending(getElement());
+		return super.onInitialSpawn(difficulty, livingdata);
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer) {
+		buffer.writeInt(getLevel());
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf additionalData) {
+		setLevel(additionalData.readInt());
+	}
 }

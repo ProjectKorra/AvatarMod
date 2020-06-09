@@ -16,36 +16,65 @@
 */
 package com.crowsofwar.avatar.common.blocks;
 
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.blocks.tiles.TileBlockTemp;
-
+import com.google.common.base.Preconditions;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static net.minecraftforge.client.model.ModelLoader.setCustomModelResourceLocation;
 
 /**
  * @author Aang23
  */
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarBlocks {
 
-//	@GameRegistry.ObjectHolder("modtut:datablock")
+
 	public static BlockTemp BLOCK_TEMP = new BlockTemp();
 
+	public static List<Block> allBlocks;
+	public static CloudBlock blockCloud;
+
 	public static void init() {
-		MinecraftForge.EVENT_BUS.register(new AvatarBlocks());
+		allBlocks = new ArrayList<>();
+		addBlock(blockCloud = new CloudBlock());
+		blockCloud.initModel();
 	}
 
-	@SubscribeEvent
-	public void registerBlocks(RegistryEvent.Register<Block> e) {
-		e.getRegistry().register(BLOCK_TEMP);
-		GameRegistry.registerTileEntity(TileBlockTemp.class, "avatarmod_block_temp");
+	private static void addBlock(Block block) {
+		// Remove the "tile." prefix
+		if (block.getTranslationKey().contains("tile.")) {
+			block.setRegistryName(block.getTranslationKey().substring(5));
+			block.setTranslationKey(block.getTranslationKey().substring(5));
+		}
+		else {
+			block.setRegistryName(block.getTranslationKey());
+		}
+		allBlocks.add(block);
 	}
 
+
 	@SubscribeEvent
-	public void registerItemBlocks(RegistryEvent.Register<Item> e) {
-		
+	public static void registerBlocks(RegistryEvent.Register<Block> e) {
+		init();
+		Block[] blocksArr = allBlocks.toArray(new Block[allBlocks.size()]);
+		e.getRegistry().registerAll(blocksArr);
+		GameRegistry.registerTileEntity(TileBlockTemp.class, "avatarmod:block_temp");
+
 	}
-	
+
+
 }

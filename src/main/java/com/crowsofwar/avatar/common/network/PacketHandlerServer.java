@@ -26,7 +26,7 @@ import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -37,6 +37,7 @@ import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.event.AbilityLevelEvent;
 import com.crowsofwar.avatar.common.event.AbilityUnlockEvent;
 import com.crowsofwar.avatar.common.event.ElementUnlockEvent;
+import com.crowsofwar.avatar.common.event.ParticleCollideEvent;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.gui.ContainerGetBending;
 import com.crowsofwar.avatar.common.gui.ContainerSkillsGui;
@@ -44,6 +45,7 @@ import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.avatar.common.network.packets.*;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.PlayerViewRegistry;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -96,7 +98,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (packet instanceof PacketSUseStatusControl)
 			return handleUseStatusControl((PacketSUseStatusControl) packet, ctx);
 
-		if (packet instanceof PacketSWallJump) return handleWallJump((PacketSWallJump) packet, ctx);
+		if (packet instanceof PacketSWallJump)
+			return handleWallJump((PacketSWallJump) packet, ctx);
 
 		if (packet instanceof PacketSSkillsMenu)
 			return handleSkillsMenu((PacketSSkillsMenu) packet, ctx);
@@ -122,6 +125,13 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (packet instanceof PacketSSendViewStatus)
 			return handleViewUpdate((PacketSSendViewStatus) packet, ctx);
 
+		if (packet instanceof PacketSParticleCollideEvent) {
+			MinecraftForge.EVENT_BUS.post(new ParticleCollideEvent(((PacketSParticleCollideEvent) packet).getEntity(),
+					((PacketSParticleCollideEvent) packet).getSpawnerEntity(), ((PacketSParticleCollideEvent) packet).getAbility(),
+					((PacketSParticleCollideEvent) packet).getVelocity()));
+			return null;
+		}
+
 		AvatarLog.warn("Unknown packet recieved: " + packet.getClass().getName());
 		return null;
 	}
@@ -135,7 +145,7 @@ public class PacketHandlerServer implements IPacketHandler {
 
 		EntityPlayerMP player = ctx.getServerHandler().player;
 		if (player != null) {
-			PlayerViewRegistry.setPlayerViewInRegistry(player.getUniqueID(), packet.getMode());			
+			PlayerViewRegistry.setPlayerViewInRegistry(player.getUniqueID(), packet.getMode());
 		}
 
 		return null;
@@ -178,19 +188,23 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleRequestData(PacketSRequestData packet, MessageContext ctx) {
 
 		UUID id = packet.getAskedPlayer();
-		EntityPlayer player = AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().player.world,
-				id);
+		EntityPlayer player = AccountUUIDs.findEntityFromUUID(ctx.getServerHandler().player.world, id);
 
 		if (player == null) {
 
-			AvatarLog.warnHacking(ctx.getServerHandler().player.getName(),
-					"Sent request data for a player with account '" + id
-							+ "', but that player is not in the world.");
-			return null;
+			player = AvatarEntityUtils.getPlayerFromStringID(id.toString());
+			if (player == null) {
 
+				AvatarLog.warnHacking(ctx.getServerHandler().player.getName(),
+						"Sent request data for a player with account '" + id
+								+ "', but that player is not in the world.");
+				return null;
+			}
 		}
 
-		BendingData data = BendingData.get(player);
+		BendingData data = null;
+		if (Bender.isBenderSupported(player))
+			data = BendingData.get(player);
 
 		if (data != null) data.saveAll();
 		return null;
@@ -205,7 +219,10 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleUseStatusControl(PacketSUseStatusControl packet, MessageContext ctx) {
 		EntityPlayerMP player = ctx.getServerHandler().player;
 
-		BendingData data = BendingData.get(player);
+		BendingData data = null;
+		if (Bender.isBenderSupported(player))
+			data = BendingData.get(player);
+
 
 		if (data != null) {
 			StatusControl sc = packet.getStatusControl();
@@ -241,10 +258,13 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleSkillsMenu(PacketSSkillsMenu packet, MessageContext ctx) {
 
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		BendingData data = BendingData.get(player);
+		BendingData data = null;
+		if (Bender.isBenderSupported(player))
+			data = BendingData.get(player);
+
 		UUID element = packet.getElement();
 
-		if (BendingStyles.has(element)) {
+		if (BendingStyles.has(element) && data != null) {
 			if (data.hasBendingId(element)) {
 				int guiId = AvatarGuiHandler.getGuiId(element);
 				player.openGui(AvatarMod.instance, guiId, player.world, 0, 0, 0);
@@ -262,55 +282,60 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleUseScroll(PacketSUseScroll packet, MessageContext ctx) {
 		EntityPlayerMP player = ctx.getServerHandler().player;
 
-		BendingData data = BendingData.get(player);
-		AbilityData abilityData = data.getAbilityData(packet.getAbility());
+		BendingData data = null;
+		if (Bender.isBenderSupported(player))
+			data = BendingData.get(player);
 
-		if (!abilityData.isMaxLevel() && (abilityData.getXp() == 100 || abilityData.isLocked())) {
+		if (data != null) {
+			AbilityData abilityData = data.getAbilityData(packet.getAbility());
 
-			Container container = player.openContainer;
-			if (container instanceof ContainerSkillsGui) {
-				ContainerSkillsGui skills = (ContainerSkillsGui) container;
+			if (!abilityData.isMaxLevel() && (abilityData.getXp() == 100 || abilityData.isLocked())) {
 
-				Slot slot1 = skills.getSlot(0);
-				Slot slot2 = skills.getSlot(1);
+				Container container = player.openContainer;
+				if (container instanceof ContainerSkillsGui) {
+					ContainerSkillsGui skills = (ContainerSkillsGui) container;
 
-				Slot activeSlot = null;
-				if (slot1.getHasStack()) {
-					activeSlot = slot1;
-					abilityData.setPath(AbilityTreePath.FIRST);
-				} else if (slot2.getHasStack()) {
-					activeSlot = slot2;
-					abilityData.setPath(AbilityTreePath.SECOND);
-				}
+					Slot slot1 = skills.getSlot(0);
+					Slot slot2 = skills.getSlot(1);
 
-				if (activeSlot != null) {
-					ItemStack stack = activeSlot.getStack();
-					if (stack.getItem() instanceof ItemScroll) {
-						// Try to use this scroll
-						ScrollType type = Scrolls.getTypeForStack(stack);
-						assert type != null;
-						AbilityData aD = AbilityData.get(player, packet.getAbility().getName());
-						if (type.accepts(packet.getAbility().getBendingId()) && packet.getAbility().isCompatibleScroll(stack, aD.getLevel())) {
-							if (abilityData.getLevel() < 0 && !MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(player, abilityData.getAbility()))
-									|| !MinecraftForge.EVENT_BUS.post(new AbilityLevelEvent(player, abilityData.getAbility(), abilityData.getLevel() + 1, abilityData.getLevel() + 2))) {
-								activeSlot.putStack(ItemStack.EMPTY);
-								abilityData.addLevel();
-								abilityData.setXp(0);
-
-								// Send analytics
-								String name = abilityData.getAbilityName();
-								String desc = abilityData.getLevelDesc();
-								AnalyticEvent e = AnalyticEvents.getAbilityUpgradeEvent(name, desc);
-								AvatarAnalytics.INSTANCE.pushEvent(e);
-
-							}
-						}
-
+					Slot activeSlot = null;
+					if (slot1.getHasStack()) {
+						activeSlot = slot1;
+						abilityData.setPath(AbilityTreePath.FIRST);
+					} else if (slot2.getHasStack()) {
+						activeSlot = slot2;
+						abilityData.setPath(AbilityTreePath.SECOND);
 					}
+
+					if (activeSlot != null) {
+						ItemStack stack = activeSlot.getStack();
+						if (stack.getItem() instanceof ItemScroll) {
+							// Try to use this scroll
+							ScrollType type = Scrolls.getTypeForStack(stack);
+							assert type != null;
+							AbilityData aD = AbilityData.get(player, packet.getAbility().getName());
+							if (type.accepts(packet.getAbility().getBendingId()) && packet.getAbility().isCompatibleScroll(stack, aD.getLevel())) {
+								if (abilityData.getLevel() < 0 && !MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(player, abilityData.getAbility()))
+										|| !MinecraftForge.EVENT_BUS.post(new AbilityLevelEvent(player, abilityData.getAbility(), abilityData.getLevel() + 1, abilityData.getLevel() + 2))) {
+									activeSlot.putStack(ItemStack.EMPTY);
+									abilityData.addLevel();
+									abilityData.setXp(0);
+
+									// Send analytics
+									String name = abilityData.getAbilityName();
+									String desc = abilityData.getLevelDesc();
+									AnalyticEvent e = AnalyticEvents.getAbilityUpgradeEvent(name, desc);
+									AvatarAnalytics.INSTANCE.pushEvent(e);
+
+								}
+							}
+
+						}
+					}
+
 				}
 
 			}
-
 		}
 
 		return null;
@@ -334,9 +359,12 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleGetBending(PacketSOpenUnlockGui packet, MessageContext ctx) {
 
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		BendingData data = BendingData.get(player);
+		BendingData data = null;
+		if (Bender.isBenderSupported(player))
+			data = BendingData.get(player);
 
-		if (data.getAllBending().isEmpty()) {
+
+		if (data != null && data.getAllBending().isEmpty()) {
 			player.openGui(AvatarMod.instance, AvatarGuiHandler.GUI_ID_GET_BENDING, player.world, 0, 0, 0);
 		}
 
@@ -347,7 +375,10 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleUnlockBending(PacketSUnlockBending packet, MessageContext ctx) {
 
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		BendingData data = BendingData.get(player);
+		BendingData data = null;
+		if (Bender.isBenderSupported(player))
+			data = BendingData.get(player);
+
 		Container container = player.openContainer;
 
 		if (container instanceof ContainerGetBending) {
@@ -355,7 +386,7 @@ public class PacketHandlerServer implements IPacketHandler {
 
 			UUID bending = packet.getUnlockType();
 			if (eligible.contains(bending)) {
-				if (data.getAllBending().isEmpty()) {
+				if (data != null && data.getAllBending().isEmpty()) {
 					if (!MinecraftForge.EVENT_BUS.post(new ElementUnlockEvent(player, BendingStyles.get(bending)))) {
 						data.addBendingId(bending);
 
@@ -394,22 +425,26 @@ public class PacketHandlerServer implements IPacketHandler {
 	private IMessage handleCycleBending(PacketSCycleBending packet, MessageContext ctx) {
 
 		EntityPlayerMP player = ctx.getServerHandler().player;
-		BendingData data = BendingData.get(player);
+		BendingData data = null;
+		if (Bender.isBenderSupported(player))
+			data = BendingData.get(player);
 
-		List<BendingStyle> controllers = data.getAllBending();
-		controllers.sort(Comparator.comparing(BendingStyle::getName));
-		if (controllers.size() > 1) {
+		if (data != null) {
 
-			int index = controllers.indexOf(data.getActiveBending());
-			index += packet.cycleRight() ? 1 : -1;
+			List<BendingStyle> controllers = data.getAllBending();
+			controllers.sort(Comparator.comparing(BendingStyle::getName));
+			if (controllers.size() > 1) {
 
-			if (index == -1) index = controllers.size() - 1;
-			if (index == controllers.size()) index = 0;
+				int index = controllers.indexOf(data.getActiveBending());
+				index += packet.cycleRight() ? 1 : -1;
 
-			data.setActiveBending(controllers.get(index));
+				if (index == -1) index = controllers.size() - 1;
+				if (index == controllers.size()) index = 0;
 
+				data.setActiveBending(controllers.get(index));
+
+			}
 		}
-
 		return null;
 
 	}

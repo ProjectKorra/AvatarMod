@@ -30,8 +30,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_LIGHTNINGSPEAR;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
@@ -88,14 +88,14 @@ public class AbilityLightningSpear extends Ability {
 			damage *= ctx.getPowerRatingDamageMod();
 
 			EntityLightningSpear spear = new EntityLightningSpear(world);
-			spear.setSize(size);
+			spear.setEntitySize(size);
 
 			Vector target;
 			if (ctx.isLookingAtBlock()) {
 				target = ctx.getLookPos();
 			} else {
 				Vector playerPos = getEyePos(entity);
-				target = playerPos.plus(getLookRectangular(entity).times(spear.getSize()));
+				target = playerPos.plus(getLookRectangular(entity).times(spear.getAvgSize()));
 			}
 
 
@@ -109,6 +109,7 @@ public class AbilityLightningSpear extends Ability {
 			spear.setPiercing(abilityData.isMasterPath(AbilityTreePath.FIRST));
 			spear.setAbility(this);
 			spear.setDegreesPerSecond(400);
+			spear.setEntitySize(size / 8);
 			spear.setGroupAttack(abilityData.isMasterPath(AbilityTreePath.SECOND));
 			world.spawnEntity(spear);
 
@@ -119,7 +120,7 @@ public class AbilityLightningSpear extends Ability {
 	}
 
 	@Override
-	public int getParentTier() {
+	public int getBaseParentTier() {
 		return 3;
 	}
 

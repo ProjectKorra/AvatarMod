@@ -2,10 +2,9 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.entity.data.LightCylinderBehaviour;
 import com.crowsofwar.gorecore.util.Vector;
-import elucent.albedo.event.GatherLightsEvent;
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
-import elucent.albedo.lighting.LightManager;
+
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -19,8 +18,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author Aang23
  */
-@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityLightCylinder extends AvatarEntity implements ILightProvider {
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityLightCylinder extends AvatarEntity implements IGlowingEntity {
 
 	private static final DataParameter<String> SYNC_TEXTURE = EntityDataManager.createKey(EntityLightCylinder.class,
 			DataSerializers.STRING);
@@ -89,24 +88,7 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
 		return true;
 	}
 
-	@Override
-	@Optional.Method(modid = "albedo")
-	public Light provideLight() {
-		for (int i = 0; i < getCylinderLength(); i++) {
-			if (i % (getCylinderLength() / getLightAmount()) == 0) {
-				Vector end = new Vector(posX, posY, posZ).plus(new Vector(this.getLookVec()).times(i * (0.3 * 2)));
-				LightManager.lights.add(Light.builder().pos(end.toBlockPos())
-						.color(getColorR(), getColorG(), getColorB()).radius(getLightRadius()).build());
-			}
-		}
-		return Light.builder().pos(this).color(getColorR(), getColorG(), getColorB()).radius(getLightRadius()).build();
-	}
 
-	@Override
-	@Optional.Method(modid = "albedo")
-	public void gatherLights(GatherLightsEvent event, Entity entity) {
-
-	}
 
 	@Override
 	public void onUpdate() {
@@ -266,6 +248,13 @@ public class EntityLightCylinder extends AvatarEntity implements ILightProvider 
 
 	public LightCylinderBehaviour getBehaviour() {
 		return dataManager.get(SYNC_BEHAVIOR);
+	}
+
+	@Override
+	@Optional.Method(modid = "hammercore")
+	public ColoredLight produceColoredLight(float partialTicks) {
+		return ColoredLight.builder().pos(this).color(87, 161, 235).radius(10f).build();
+
 	}
 
 	public enum EnumType {

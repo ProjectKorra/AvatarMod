@@ -170,6 +170,11 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 		}
 
 		@Override
+		public void renderUpdate(EntityEarthspikeSpawner entity) {
+
+		}
+
+		@Override
 		public void fromBytes(PacketBuffer buf) {
 		}
 

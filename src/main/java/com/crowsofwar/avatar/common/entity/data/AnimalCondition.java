@@ -115,22 +115,23 @@ public class AnimalCondition {
 	}
 
 	public boolean canHaveOwner() {
-		return getDomestication() >= MOBS_CONFIG.bisonOwnableTameness;
+		return getDomestication() >= MOBS_CONFIG.bisonSettings.bisonOwnableTameness;
 	}
 
 	public int getMaxRiders() {
 
-		if (!isAdult()) {
-			return 0;
+		//As the max adult age is 7, it'll have a max of 7 riders.
+		if (getAgeDays() >= (int) (getAdultAge() / getAgeDays())) {
+			return 1 + (int) Math.min(getAgeDays() - (int) (getAdultAge() / getAgeDays()), getAdultAge());
 		}
 
 		if (canHaveOwner()) {
 
-			double pctToTame = 1.0 * (getDomestication() - MOBS_CONFIG.bisonOwnableTameness)
-					/ (1000 - MOBS_CONFIG.bisonOwnableTameness);
+			double pctToTame = 1.0 * (getDomestication() - MOBS_CONFIG.bisonSettings.bisonOwnableTameness)
+					/ (1000 - MOBS_CONFIG.bisonSettings.bisonOwnableTameness);
 			return 1 + (int) (pctToTame * 4);
 
-		} else if (getDomestication() >= MOBS_CONFIG.bisonRiderTameness) {
+		} else if (getDomestication() >= MOBS_CONFIG.bisonSettings.bisonRiderTameness) {
 			return 1;
 		} else {
 			return 0;

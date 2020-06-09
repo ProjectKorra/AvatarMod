@@ -76,7 +76,7 @@ public class ItemBisonArmor extends Item implements AvatarItem {
 		private final float armorPoints;
 		private final float speedMultiplier;
 
-		private ArmorTier(float armorPoints, float speedMultiplier) {
+		ArmorTier(float armorPoints, float speedMultiplier) {
 			this.armorPoints = armorPoints;
 			this.speedMultiplier = speedMultiplier;
 		}

@@ -18,19 +18,39 @@ package com.crowsofwar.avatar.common.network.packets;
 
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.EnumFaceDirection;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
+import org.lwjgl.input.Keyboard;
 
 /**
  * @author CrowsOfWar
  */
 public class PacketSWallJump extends AvatarPacket<PacketSWallJump> {
 
+	//private KeyBinding key;
+	private int direction;
+
+	public PacketSWallJump(int direction) {
+		this.direction = direction;
+	}
+
+	public PacketSWallJump() {
+		super();
+	}
+
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
+	//	key = getKeyFromID(buf.readInt());
 	}
 
 	@Override
 	public void avatarToBytes(ByteBuf buf) {
+		//buf.writeInt(direction);
 	}
 
 	@Override
@@ -42,5 +62,26 @@ public class PacketSWallJump extends AvatarPacket<PacketSWallJump> {
 	protected com.crowsofwar.avatar.common.network.packets.AvatarPacket.Handler<PacketSWallJump> getPacketHandler() {
 		return PacketRedirector::redirectMessage;
 	}
+
+	/*private KeyBinding getKeyFromID(int id) {
+		GameSettings settings = Minecraft.getMinecraft().gameSettings;
+		switch (id) {
+			case 0:
+				return settings.keyBindForward;
+			case 1:
+				return settings.keyBindRight;
+			case 2:
+				return settings.keyBindBack;
+			case 3:
+				return settings.keyBindLeft;
+			default:
+				break;
+		}
+		return settings.keyBindForward;
+	}**/
+
+	/*public KeyBinding getKey() {
+		return this.key;
+	}**/
 
 }

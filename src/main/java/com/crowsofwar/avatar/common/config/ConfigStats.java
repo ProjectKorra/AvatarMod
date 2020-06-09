@@ -38,12 +38,12 @@ public class ConfigStats {
 	@Load
 	public AttackSettings floatingBlockSettings = new AttackSettings(2f, 1),
 			ravineSettings = new AttackSettings(3.5F, 0.25), //
-			waveSettings = new AttackSettings(0.25F, 4), //
-			airbladeSettings = new AttackSettings(5, .03), //
+			waveSettings = new AttackSettings(0.25F, 2), //
+			airbladeSettings = new AttackSettings(3.5F, 0.5), //
 			fireBlastSettings = new AttackSettings(2.5F, 1),   //
+			flamethrowerSettings = new AttackSettings(0.75F, 0.5),
 			waterArcSettings = new AttackSettings(3, 1),
 			boulderSettings = new AttackSettings(0.1F, 0.1),
-			airBurstSettings = new AttackSettings (5F, 1),
 			fireShotSetttings = new AttackSettings(1F, 0.5),
 			lightningSpearSettings = new AttackSettings(4F, 2);
 
@@ -58,28 +58,32 @@ public class ConfigStats {
 	//Has to be a float so I can times it by a fraction; there aren't any partial ticks, though.
 
 	@Load
-	public FireballSettings fireballSettings = new FireballSettings();
-
-	@Load
-	public ExplosionSettings explosionSettings = new ExplosionSettings();
+	public AirBurstSettings airBurstSettings = new AirBurstSettings();
 
 	@Load
 	public CloudburstSettings cloudburstSettings = new CloudburstSettings();
 
 	@Load
+	public ExplosionSettings explosionSettings = new ExplosionSettings();
+
+	@Load
 	public EarthspikeSettings earthspikeSettings = new EarthspikeSettings();
+
+	@Load
+	public FlameStrikeSettings flameStrikeSettings = new FlameStrikeSettings();
+
+	@Load
+	public FireballSettings fireballSettings = new FireballSettings();
 
 	@Load
 	public LightningRazeSettings lightningRazeSettings = new LightningRazeSettings();
 
 	@Load
-	public AirBurstSettings AirBurstSettings = new AirBurstSettings();
+	public PassiveSettings passiveSettings = new PassiveSettings();
 
 	@Load
 	public WaterCannonSettings waterCannonSettings = new WaterCannonSettings();
 
-	@Load
-	public PassiveSettings passiveSettings = new PassiveSettings();
 	// @formatter:off
 	@Load
 	public float chiAirblade = 1f,
@@ -106,11 +110,11 @@ public class ConfigStats {
 			chiPickUpBlock = 1.25f,
 			chiMining = 2f,
 			chiMiningMaster = 0.5f,
-			chiFireBlast = 2f,
+			chiFlameStrike = 2f,
 			chiFireball = 2f,
-			chiFlamethrowerSecond = 1.75f,
-			chiFlamethrowerSecondLvl4_1 = 2.625f,
-			chiFlamethrowerSecondLvl4_2 = 2f,
+			chiFlamethrowerSecond = 2.5f,
+			chiFlamethrowerSecondLvl4_1 = 3.75f,
+			chiFlamethrowerSecondLvl4_2 = 4.25f,
 			chiFireShot = 2.5f,
 			chiWave = 2f,
 			chiWaterArc = 1f,
@@ -138,9 +142,6 @@ public class ConfigStats {
 
 	@Load
 	public float sleepChiRegen = 99999;
-
-	@Load
-	public float InfernoPunchDamage = 3F;
 
 	@Load
 	public boolean allowAirBubbleElytra = false;
@@ -345,29 +346,39 @@ public class ConfigStats {
 
 	}
 
-	public static class AirBurstSettings {
+	public static class FlameStrikeSettings {
 
 		@Load
-		public float radius = 3;
+		public int strikeNumber = 2;
+
+		@Load
+		public float size = 2.5f;
+
+		@Load
+		public int chargeDuration = 40;
+
+		@Load
+		public float damage = 2;
 
 		@Load
 		public float knockback = 2;
-		//Multiply by push to get the total knockback
 
 		@Load
-		public float durationToFire = 40;
-		//How long it takes to shoot the air burst, in ticks
+		public int performanceAmount = 6;
 
 		@Load
-		public int performanceAmount = 15;
-		//How much performance is added to the player's performance score upon a hit
+		public int fireTime = 3;
+
+		@Load
+		public float maxDistance = 3;
 
 	}
+
 
 	public static class FireballSettings {
 
 		@Load
-		public float damage = 5F;
+		public float damage = 3.5F;
 
 		@Load
 		public int fireTime = 6;
@@ -380,6 +391,38 @@ public class ConfigStats {
 
 		@Load
 		public double push = 1.25;
+
+	}
+	public static class AirBurstSettings {
+
+		@Load
+		public float damage = 4F;
+
+		@Load
+		public float push = 2;
+
+		@Load
+		public float radius = 4;
+
+		@Load
+		public float durationToFire = 40;
+		//How long it takes to shoot the air burst, in ticks
+
+		@Load
+		public int performanceAmount = 12;
+		//How much performance is added to the player's performance score upon a hit
+
+		@Load
+		public float beamDamage = 6F;
+
+		@Load
+		public float beamPush = 20F;
+
+		@Load
+		public float beamSize = 1F;
+
+		@Load
+		public int beamRange = 10;
 
 	}
 

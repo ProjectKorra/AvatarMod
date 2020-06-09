@@ -25,10 +25,12 @@ import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockTNT;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -56,6 +58,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import static net.minecraft.block.BlockTNT.EXPLODE;
+
 /**
  * @author CrowsOfWar
  */
@@ -71,13 +75,16 @@ public abstract class AvatarEntity extends Entity {
 			DataSerializers.STRING);
 
 
-	protected boolean putsOutFires;
-	protected boolean flammable;
+	protected boolean putsOutFires, flammable;
 	protected boolean pushStoneButton, pushTrapDoor, pushDoor;
+	protected boolean setsFires, lightTnt;
 	private double powerRating;
-	protected boolean setsFires;
 	private BendingStyle element;
+	private int tier;
 	private SyncedEntity<EntityLivingBase> ownerRef;
+	private BlockPos prevLeverPos = null, prevDoorPos = null, prevTrapdoorPos = null,
+			prevButtonPos = null, prevGatePos = null;
+	private IBlockState prevLeverState = null, prevDoorState = null, prevTrapdoorState = null, prevButtonState = null, prevGateState = null;
 
 	/**
 	 * @param world
@@ -90,6 +97,8 @@ public abstract class AvatarEntity extends Entity {
 		this.flammable = false;
 		this.element = null;
 		this.setsFires = false;
+		this.lightTnt = false;
+		this.tier = 1;
 	}
 
 	/**
@@ -255,12 +264,18 @@ public abstract class AvatarEntity extends Entity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		setAvId(nbt.getInteger("AvId"));
+		pushStoneButton = nbt.getBoolean("PushStoneButton");
+		pushTrapDoor = nbt.getBoolean("PushIronTrapDoor");
+		pushDoor = nbt.getBoolean("PushIronDoor");
 		ownerRef.readFromNbt(nbt);
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("AvId", getAvId());
+		nbt.setBoolean("PushIronDor", pushDoor);
+		nbt.setBoolean("PushIronTrapDoor", pushTrapDoor);
+		nbt.setBoolean("PushStoneButton", pushStoneButton);
 		ownerRef.writeToNbt(nbt);
 	}
 
@@ -279,12 +294,16 @@ public abstract class AvatarEntity extends Entity {
 	public void onUpdate() {
 		super.onUpdate();
 		collideWithNearbyEntities();
+
 		if (putsOutFires && ticksExisted % 2 == 0) {
 			setFire(0);
 			for (int x = 0; x <= 1; x++) {
 				for (int z = 0; z <= 1; z++) {
 					for (int y = 0; y <= 1; y++) {
-						BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+						double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+						double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+						double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+						BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
 						if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
 							world.setBlockToAir(pos);
 							world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
@@ -296,7 +315,10 @@ public abstract class AvatarEntity extends Entity {
 			for (int x = 0; x >= -1; x--) {
 				for (int z = 0; z >= -1; z--) {
 					for (int y = 0; y >= -1; y--) {
-						BlockPos pos = new BlockPos(posX + x * width, posY - y * height, posZ + z * width);
+						double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+						double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+						double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+						BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
 						if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
 							world.setBlockToAir(pos);
 							world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
@@ -307,52 +329,130 @@ public abstract class AvatarEntity extends Entity {
 			}
 		}
 
-		for (int x = 0; x <= 1; x++) {
-			for (int z = 0; z <= 1; z++) {
-				for (int y = 0; y <= 1; y++) {
-					BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+
+		//Prev states are used to make sure each button isn't activated twice
+		for (double x = 0; x <= 1; x++) {
+			for (double z = 0; z <= 1; z++) {
+				for (double y = 0; y <= 1; y++) {
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+					BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
 					if (pushButton(pushStoneButton)) {
-						AvatarUtils.pushButton(world, pushStoneButton, pos);
+						if (world.getBlockState(pos) != prevButtonState)
+							prevButtonState = null;
+						if (pos != prevButtonPos && prevButtonState == null) {
+							if ((AvatarUtils.pushButton(world, pushStoneButton, pos))) {
+								prevButtonPos = pos;
+								prevButtonState = world.getBlockState(pos);
+							}
+						}
 					}
 					if (pushLever()) {
-						AvatarUtils.pushLever(world, pos);
+						if (world.getBlockState(pos) != prevLeverState)
+							prevLeverState = null;
+						if (pos != prevLeverPos && prevLeverPos == null) {
+							if (AvatarUtils.pushLever(world, pos)) {
+								prevLeverPos = pos;
+								prevLeverState = world.getBlockState(pos);
+							}
+						}
 					}
 
 					if (pushTrapdoor(pushTrapDoor)) {
-						AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos);
+						if (world.getBlockState(pos) != prevTrapdoorState)
+							prevTrapdoorState = null;
+						if (pos != prevTrapdoorPos && prevTrapdoorState == null) {
+							if (AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos)) {
+								prevTrapdoorPos = pos;
+								prevTrapdoorState = world.getBlockState(pos);
+							}
+						}
 					}
 
 					if (pushDoor(pushDoor)) {
-						AvatarUtils.pushDoor(this, pushDoor, pos);
+						if (world.getBlockState(pos) != prevDoorState)
+							prevDoorState = null;
+						if (pos != prevDoorPos && prevDoorState == null) {
+							if (AvatarUtils.pushDoor(this, pushDoor, pos)) {
+								prevDoorPos = pos;
+								prevLeverState = world.getBlockState(pos);
+							}
+						}
 					}
 
 					if (pushGate()) {
-						AvatarUtils.pushGate(this, pos);
+						if (world.getBlockState(pos) != prevGateState)
+							prevGateState = null;
+						if (pos != prevGatePos && prevGateState == null) {
+							if (AvatarUtils.pushGate(this, pos)) {
+								prevGatePos = pos;
+								prevGateState = world.getBlockState(pos);
+							}
+						}
 					}
 				}
 			}
 		}
-		for (int x = 0; x >= -1; x--) {
-			for (int z = 0; z >= -1; z--) {
-				for (int y = 0; y >= -1; y--) {
-					BlockPos pos = new BlockPos(posX + x * width, posY - y * height, posZ + z * width);
+		for (double x = 0; x >= -1; x--) {
+			for (double z = 0; z >= -1; z--) {
+				for (double y = 0; y >= -1; y--) {
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+					BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
 					if (pushButton(pushStoneButton)) {
-						AvatarUtils.pushButton(world, pushStoneButton, pos);
+						if (world.getBlockState(pos) != prevButtonState)
+							prevButtonState = null;
+						if (pos != prevButtonPos && prevButtonState == null) {
+							if ((AvatarUtils.pushButton(world, pushStoneButton, pos))) {
+								prevButtonPos = pos;
+								prevButtonState = world.getBlockState(pos);
+							}
+						}
 					}
 					if (pushLever()) {
-						AvatarUtils.pushLever(world, pos);
+						if (world.getBlockState(pos) != prevLeverState)
+							prevLeverState = null;
+						if (pos != prevLeverPos && prevLeverPos == null) {
+							if (AvatarUtils.pushLever(world, pos)) {
+								prevLeverPos = pos;
+								prevLeverState = world.getBlockState(pos);
+							}
+						}
 					}
 
 					if (pushTrapdoor(pushTrapDoor)) {
-						AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos);
+						if (world.getBlockState(pos) != prevTrapdoorState)
+							prevTrapdoorState = null;
+						if (pos != prevTrapdoorPos && prevTrapdoorState == null) {
+							if (AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos)) {
+								prevTrapdoorPos = pos;
+								prevTrapdoorState = world.getBlockState(pos);
+							}
+						}
 					}
 
 					if (pushDoor(pushDoor)) {
-						AvatarUtils.pushDoor(this, pushDoor, pos);
+						if (world.getBlockState(pos) != prevDoorState)
+							prevDoorState = null;
+						if (pos != prevDoorPos && prevDoorState == null) {
+							if (AvatarUtils.pushDoor(this, pushDoor, pos)) {
+								prevDoorPos = pos;
+								prevLeverState = world.getBlockState(pos);
+							}
+						}
 					}
 
 					if (pushGate()) {
-						AvatarUtils.pushGate(this, pos);
+						if (world.getBlockState(pos) != prevGateState)
+							prevGateState = null;
+						if (pos != prevGatePos && prevGateState == null) {
+							if (AvatarUtils.pushGate(this, pos)) {
+								prevGatePos = pos;
+								prevGateState = world.getBlockState(pos);
+							}
+						}
 					}
 				}
 			}
@@ -364,9 +464,49 @@ public abstract class AvatarEntity extends Entity {
 
 		if (collided) {
 			if (setsFires) {
-				BlockPos pos = getPosition();
-				if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
-					world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+				for (int x = 0; x <= 1; x++) {
+					for (int z = 0; z <= 1; z++) {
+						for (int y = 0; y <= 1; y++) {
+							BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+							if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
+								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+							}
+						}
+					}
+				}
+				for (int x = 0; x >= -1; x--) {
+					for (int z = 0; z >= -1; z--) {
+						for (int y = 0; y >= -1; y--) {
+							BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+							if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
+								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+							}
+						}
+					}
+				}
+				if (lightTnt) {
+					for (int x = 0; x <= 1; x++) {
+						for (int z = 0; z <= 1; z++) {
+							for (int y = 0; y <= 1; y++) {
+								BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+								if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
+									((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
+											world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
+								}
+							}
+						}
+					}
+					for (int x = 0; x >= -1; x--) {
+						for (int z = 0; z >= -1; z--) {
+							for (int y = 0; y >= -1; y--) {
+								BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+								if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
+									((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
+											world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
+								}
+							}
+						}
+					}
 				}
 			}
 			onCollideWithSolid();
@@ -445,8 +585,10 @@ public abstract class AvatarEntity extends Entity {
 			return false;
 		} else if (entity instanceof EntityEnderCrystal) {
 			return true;
+		} else if (entity == this) {
+			return false;
 		} else
-			return (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase;
+			return (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase || entity instanceof AvatarEntity;
 	}
 
 	@Override
@@ -528,7 +670,7 @@ public abstract class AvatarEntity extends Entity {
 
 
 	public boolean canDamageEntity(Entity entity) {
-		return canCollideWith(entity) || entity instanceof EntityEnderCrystal;
+		return canCollideWith(entity) && entity.canBeAttackedWithItem() || entity instanceof EntityEnderCrystal;
 	}
 
 	/**
@@ -541,7 +683,7 @@ public abstract class AvatarEntity extends Entity {
 	}
 
 	/**
-	 * Returns whether the entity can be considered a shield. Gerenally,
+	 * Returns whether the entity can be considered a shield. Generally,
 	 * an entity is considered a shield if it blocks other entities.
 	 * Air Bubble and Wall are both shields.
 	 */
@@ -667,6 +809,15 @@ public abstract class AvatarEntity extends Entity {
 
 	public void setElement(BendingStyle element) {
 		this.element = element;
+	}
+
+	//Used to determine what the tier of the entity is. Useful for better collision.
+	public int getTier() {
+		return tier;
+	}
+
+	public void setTier(int tier) {
+		this.tier = tier;
 	}
 
 }

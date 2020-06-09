@@ -77,7 +77,7 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 		this.bendingId = guiBending;
 
 		ContainerSkillsGui skillsContainer = (ContainerSkillsGui) inventorySlots;
-		BendingData data = BendingData.get(getMinecraft().player);
+		BendingData data = BendingData.getFromEntity(getMinecraft().player);
 
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 
@@ -95,50 +95,52 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 
 		handler = new UiComponentHandler();
 
-		UUID[] types = data.getAllBending().stream()//
-				.map(BendingStyle::getId)//
-				.sorted((id1, id2) -> {
-					BendingStyle c1 = BendingStyles.get(id1);
-					BendingStyle c2 = BendingStyles.get(id2);
-					return c1.getName().compareTo(c2.getName());
-				})//
-				.toArray(UUID[]::new);
+		if (data != null) {
+			UUID[] types = data.getAllBending().stream()//
+					.map(BendingStyle::getId)//
+					.sorted((id1, id2) -> {
+						BendingStyle c1 = BendingStyles.get(id1);
+						BendingStyle c2 = BendingStyles.get(id2);
+						return c1.getName().compareTo(c2.getName());
+					})//
+					.toArray(UUID[]::new);
 
-		tabs = new ComponentBendingTab[types.length];
-		for (int i = 0; i < types.length; i++) {
-			float scale = 1.4f;
-			BendingStyle style = BendingStyles.get(types[i]);
-			tabs[i] = new ComponentBendingTab(style, types[i] == guiBending);
-			tabs[i].setPosition(StartingPosition.MIDDLE_BOTTOM);
-			tabs[i].setOffset(Measurement.fromPixels(24 * scaleFactor() * (i - types.length / 2) * scale, 0));
-			tabs[i].setScale(scale);
-			handler.add(tabs[i]);
+			tabs = new ComponentBendingTab[types.length];
+			for (int i = 0; i < types.length; i++) {
+				float scale = 1.4f;
+				BendingStyle style = BendingStyles.get(types[i]);
+				tabs[i] = new ComponentBendingTab(style, types[i] == guiBending);
+				tabs[i].setPosition(StartingPosition.MIDDLE_BOTTOM);
+				tabs[i].setOffset(Measurement.fromPixels(24 * scaleFactor() * (i - types.length / 2) * scale, 0));
+				tabs[i].setScale(scale);
+				handler.add(tabs[i]);
+			}
+
+			inventory = new ComponentInventorySlots(inventorySlots, 9, 3, skillsContainer.getInvIndex(),
+					skillsContainer.getInvIndex() + 26);
+			inventory.useTexture(AvatarUiTextures.skillsGui, 0, 54, 169, 83);
+			inventory.setPosition(StartingPosition.BOTTOM_RIGHT);
+			inventory.setPadding(fromPixels(7, 7));
+			inventory.setVisible(false);
+
+			hotbar = new ComponentInventorySlots(inventorySlots, 9, 1, skillsContainer.getHotbarIndex(),
+					skillsContainer.getHotbarIndex() + 8);
+			hotbar.setPosition(StartingPosition.BOTTOM_RIGHT);
+			hotbar.setVisible(false);
+
+			title = new ComponentText(TextFormatting.BOLD + FormattedMessageProcessor.formatText(MSG_TITLE,
+					I18n.format("avatar.ui.skillsMenu"), BendingStyles.get(guiBending).getName().toLowerCase()));
+			title.setPosition(StartingPosition.TOP_CENTER);
+			title.setOffset(Measurement.fromPixels(0, 10));
+			handler.add(title);
+
+			ResourceLocation bgTexture = AvatarUiTextures.getBendingBackgroundTexture(guiBending);
+			int bgWidth = (int) AvatarUiTextures.getBendingBackgroundWidth(guiBending);
+			int bgHeight = (int) AvatarUiTextures.getBendingBackgroundHeight(guiBending);
+			background = new ComponentImageNonSquare(bgTexture, bgWidth, bgHeight);
+			background.setZLevel(-1);
+			handler.add(background);
 		}
-
-		inventory = new ComponentInventorySlots(inventorySlots, 9, 3, skillsContainer.getInvIndex(),
-				skillsContainer.getInvIndex() + 26);
-		inventory.useTexture(AvatarUiTextures.skillsGui, 0, 54, 169, 83);
-		inventory.setPosition(StartingPosition.BOTTOM_RIGHT);
-		inventory.setPadding(fromPixels(7, 7));
-		inventory.setVisible(false);
-
-		hotbar = new ComponentInventorySlots(inventorySlots, 9, 1, skillsContainer.getHotbarIndex(),
-				skillsContainer.getHotbarIndex() + 8);
-		hotbar.setPosition(StartingPosition.BOTTOM_RIGHT);
-		hotbar.setVisible(false);
-
-		title = new ComponentText(TextFormatting.BOLD + FormattedMessageProcessor.formatText(MSG_TITLE,
-				I18n.format("avatar.ui.skillsMenu"), BendingStyles.get(guiBending).getName().toLowerCase()));
-		title.setPosition(StartingPosition.TOP_CENTER);
-		title.setOffset(Measurement.fromPixels(0, 10));
-		handler.add(title);
-
-		ResourceLocation bgTexture = AvatarUiTextures.getBendingBackgroundTexture(guiBending);
-		int bgWidth = (int) AvatarUiTextures.getBendingBackgroundWidth(guiBending);
-		int bgHeight = (int) AvatarUiTextures.getBendingBackgroundHeight(guiBending);
-		background = new ComponentImageNonSquare(bgTexture, bgWidth, bgHeight);
-		background.setZLevel(-1);
-		handler.add(background);
 
 	}
 
@@ -222,12 +224,14 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	@Override
 	public void handleKeyboardInput() throws IOException {
 		super.handleKeyboardInput();
-		if (Keyboard.getEventKey() == mc.gameSettings.keyBindLeft.getKeyCode() && mc.gameSettings.keyBindLeft.isKeyDown()) {
-			scroll += 40;
-		}
-		if (Keyboard.getEventKey() == mc.gameSettings.keyBindRight.getKeyCode() && mc.gameSettings.keyBindRight.isKeyDown()) {
-			scroll -= 40;
-		}
+		boolean minecraftLeft = Keyboard.getEventKey() == mc.gameSettings.keyBindLeft.getKeyCode() && mc.gameSettings.keyBindLeft.isKeyDown();
+		boolean keyboardLeft = Keyboard.getEventKey() == Keyboard.KEY_LEFT && Keyboard.getEventKeyState();
+		boolean minecraftRight = Keyboard.getEventKey() == mc.gameSettings.keyBindRight.getKeyCode() && mc.gameSettings.keyBindRight.isKeyDown();
+		boolean keyboardRight = Keyboard.getEventKey() == Keyboard.KEY_RIGHT && Keyboard.getEventKeyState();
+		if (minecraftLeft || keyboardLeft)
+			scroll += 20;
+		if (minecraftRight || keyboardRight)
+			scroll -= 20;
 	}
 
 	@Override

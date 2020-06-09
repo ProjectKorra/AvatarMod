@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.EntityLivingBase;
 
 /**
  * @author CrowsOfWar

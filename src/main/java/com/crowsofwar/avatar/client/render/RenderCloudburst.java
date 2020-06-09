@@ -47,21 +47,13 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 		size *= Math.sqrt(entity.getSize() / 30f);
 
 		enableBlend();
-		if (entity.ticksExisted % 5 == 0) {
-			World world = entity.world;
-			AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-			double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-			double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-			double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-			world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, spawnX, spawnY, spawnZ, 0, 0.06, 0);
-		}
 
 		//   if (MinecraftForgeClient.getRenderPass() == 0) {
 		disableLighting();
 
 		renderCube(x, y, z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
-				.5f, //
+				size * 0.5F, //
 				ticks / 25F, ticks / 25f, ticks / 25F);
 
 		int i = 15728880;
@@ -70,7 +62,7 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
 
 		//  } else {
-		int light = entity.world.getSkylightSubtracted() > 7 ? 7 : entity.world.getSkylightSubtracted();
+		int light = Math.min(entity.world.getSkylightSubtracted(), 7);
 		disableLight(light);
 
 		pushMatrix();

@@ -18,7 +18,7 @@ package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.item.scroll.Scrolls;
+import com.crowsofwar.avatar.common.item.scroll.*;
 
 import com.crowsofwar.avatar.common.GliderInfo;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -33,6 +33,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,17 +48,19 @@ public class AvatarItems {
 	public static ItemBisonSaddle itemBisonSaddle;
 	public static ItemBisonArmor itemBisonArmor;
 	public static ItemOstrichEquipment itemOstrichEquipment;
-	private static ItemStack stackScroll;
+	public static ItemStack stackScroll;
 	public static ItemAirbenderStaff airbenderStaff;
 	public static ItemHangGliderPart gliderPartScaffolding;
 	public static ItemHangGliderPart gliderPartLeftWing;
 	public static ItemHangGliderPart gliderPartRightWing;
 	public static ItemHangGliderBasic gliderBasic;
 	public static ItemHangGliderAdvanced gliderAdv;
+
 	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
+		@Nonnull
 		@Override
 		public ItemStack createIcon() {
-			return stackScroll;
+			return AvatarItems.stackScroll;
 		}
 	};
 
@@ -66,15 +69,15 @@ public class AvatarItems {
 
 	public static void init() {
 		allItems = new ArrayList<>();
-		addItem(Scrolls.ALL);
-		addItem(Scrolls.AIR);
-		addItem(Scrolls.EARTH);
-		addItem(Scrolls.FIRE);
-		addItem(Scrolls.WATER);
-		addItem(Scrolls.COMBUSTION);
-		addItem(Scrolls.SAND);
-		addItem(Scrolls.ICE);
-		addItem(Scrolls.LIGHTNING);
+		addItem(Scrolls.ALL = new ItemScrollAll());
+		addItem(Scrolls.AIR = new ItemScrollAir());
+		addItem(Scrolls.EARTH = new ItemScrollEarth());
+		addItem(Scrolls.FIRE = new ItemScrollFire());
+		addItem(Scrolls.WATER = new ItemScrollWater());
+		addItem(Scrolls.COMBUSTION = new ItemScrollCombustion());
+		addItem(Scrolls.SAND = new ItemScrollSand());
+		addItem(Scrolls.ICE = new ItemScrollIce());
+		addItem(Scrolls.LIGHTNING = new ItemScrollLightning());
 		addItem(itemWaterPouch = new ItemWaterPouch());
 		addItem(itemBisonWhistle = new ItemBisonWhistle());
 		addItem(itemBisonArmor = new ItemBisonArmor());

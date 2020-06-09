@@ -154,9 +154,7 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
 			return false;
 		if (preReleaseVersion != other.preReleaseVersion)
 			return false;
-		if (versionState != other.versionState)
-			return false;
-		return true;
+		return versionState == other.versionState;
 	}
 
 	private String buildVersionString() {

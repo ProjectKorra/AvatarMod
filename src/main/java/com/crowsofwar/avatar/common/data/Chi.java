@@ -84,6 +84,8 @@ public class Chi {
 			total += amount;
 		}
 		availableMark += total - prev;
+		if (Math.abs(availableMark) > total)
+			availableMark = 0;
 		save();
 	}
 

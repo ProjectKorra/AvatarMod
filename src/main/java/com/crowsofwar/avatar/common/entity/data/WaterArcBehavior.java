@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -36,6 +35,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import java.util.List;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_WATER;
 
 /**
  * @author CrowsOfWar
@@ -86,7 +86,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 
 			// Ensure that owner always has stat ctrl active
 			if (water.ticksExisted % 10 == 0) {
-				BendingData.get(owner).addStatusControl(StatusControl.THROW_WATER);
+				BendingData.get(owner).addStatusControl(THROW_WATER);
 			}
 
 			return this;

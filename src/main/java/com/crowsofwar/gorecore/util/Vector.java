@@ -159,6 +159,15 @@ public class Vector {
 		return rotateVectorAroundVector(axis, ortho, degrees);
 	}
 
+	public static Vector getOrthogonalVector(Vec3d axis, double degrees,
+											 double length) {
+		Vector ortho = new Vector(axis.y, -axis.x, 0);
+		ortho = ortho.normalize();
+		ortho = ortho.times(length);
+
+		return rotateVectorAroundVector(new Vector(axis.x, axis.y, axis.z), ortho, degrees);
+	}
+
 	/**
 	 * @param distance How big the helix is.
 	 * @param axis The axis along which the helix spawns.
@@ -368,6 +377,9 @@ public class Vector {
 		return new Vector(-sin(yaw) * cos(pitch), -sin(pitch), cos(yaw) * cos(pitch));
 	}
 
+	public static Vector fromVec3d(Vec3d vec3d) {
+		return new Vector(vec3d.x, vec3d.y, vec3d.z);
+	}
 	/**
 	 * Creates a new vector from the packet information in the byte buffer. Vectors should be
 	 * encoded using the non-static {@link #toBytes(ByteBuf) toBytes}.

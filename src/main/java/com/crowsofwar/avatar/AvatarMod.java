@@ -17,11 +17,13 @@
 
 package com.crowsofwar.avatar;
 
+import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleBehaviour;
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirJump;
 import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosion;
 import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosivePillar;
 import com.crowsofwar.avatar.common.bending.combustion.Combustionbending;
@@ -79,8 +81,8 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
-@Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false, //
-		updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "[1.12,1.13)")
+@Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore",  //
+		updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "1.12")
 
 public class AvatarMod {
 
@@ -92,49 +94,57 @@ public class AvatarMod {
 
 	public static SimpleNetworkWrapper network;
 
-	public static boolean codeChickenLibCompat;
+	public static boolean codeChickenLibCompat, realFirstPersonRender2Compat, cubicChunks;
 
 	private int nextMessageID = 1;
 	private int nextEntityID = 1;
 
 	private static void registerAbilities() {
+		/*    			Air		  			*/
 		Abilities.register(new AbilityAirGust());
 		Abilities.register(new AbilityAirJump());
-		Abilities.register(new AbilityEarthControl());
-		Abilities.register(new AbilityRavine());
+		Abilities.register(new AbilityAirblade());
+		Abilities.register(new AbilityCloudBurst());
+		Abilities.register(new AbilityAirBubble());
+		Abilities.register(new AbilityAirBurst());
+		Abilities.register(new AbilitySlipstream());
+		/*    			Fire	  			*/
 		Abilities.register(new AbilityFireShot());
-		Abilities.register(new AbilityFireBlast());
+		Abilities.register(new AbilityFlameStrike());
 		Abilities.register(new AbilityFlamethrower());
+		Abilities.register(new AbilityFireball());
+		Abilities.register(new AbilityFireJump());
+		Abilities.register(new AbilityImmolate());
+		/*    			Water	  			*/
 		Abilities.register(new AbilityWaterArc());
 		Abilities.register(new AbilityCreateWave());
 		Abilities.register(new AbilityWaterBubble());
-		Abilities.register(new AbilityWall());
 		Abilities.register(new AbilityWaterSkate());
-		Abilities.register(new AbilityFireball());
-		Abilities.register(new AbilityAirblade());
+		Abilities.register(new AbilityWaterCannon());
+		Abilities.register(new AbilityCleanse());
+		/*    			Earth	  			*/
+		Abilities.register(new AbilityEarthControl());
 		Abilities.register(new AbilityMining());
-		Abilities.register(new AbilityAirBubble());
+		Abilities.register(new AbilityRavine());
+		Abilities.register(new AbilityWall());
+		Abilities.register(new AbilityEarthspikes());
+		Abilities.register(new AbilityRestore());
+		/*    			Ice		  			*/
 		Abilities.register(new AbilityIceBurst());
 		Abilities.register(new AbilityIcePrison());
+		/*    			Sand	  			*/
 		Abilities.register(new AbilitySandPrison());
+		Abilities.register(new AbilitySandstorm());
+		/*    			Lightning	  		*/
+		Abilities.register(new AbilityLightningSpear());
 		Abilities.register(new AbilityLightningArc());
 		Abilities.register(new AbilityLightningRedirect());
-		Abilities.register(new AbilityCloudBurst());
-		Abilities.register(new AbilityRestore());
-		Abilities.register(new AbilitySlipstream());
-		Abilities.register(new AbilityCleanse());
-		Abilities.register(new AbilityEarthspikes());
-		Abilities.register(new AbilityLightningSpear());
-		Abilities.register(new AbilityImmolate());
-		Abilities.register(new AbilityWaterCannon());
-		Abilities.register(new AbilityFireJump());
+		Abilities.register(new AbilityLightningRaze());
+		/*    			Combustion	  		*/
 		Abilities.register(new AbilityExplosion());
 		Abilities.register(new AbilityExplosivePillar());
-		Abilities.register(new AbilitySandstorm());
-		Abilities.register(new AbilityInfernoPunch());
-		//Abilities.register(new AbilityBoulderRing());
-		Abilities.register(new AbilityLightningRaze());
-		Abilities.register(new AbilityAirBurst());
+
+
 	}
 
 	private static void registerBendingStyles() {
@@ -152,6 +162,10 @@ public class AvatarMod {
 	public void preInit(FMLPreInitializationEvent e) {
 
 		codeChickenLibCompat = Loader.isModLoaded("codechickenlib");
+		//Used for particle and inferno punch shenanigans
+		realFirstPersonRender2Compat = Loader.isModLoaded("rfp2");
+		//Prevents sky bison crashing
+		cubicChunks = Loader.isModLoaded("cubicchunkscore");
 
 		AvatarLog.log = e.getModLog();
 
@@ -202,6 +216,7 @@ public class AvatarMod {
 		registerPacket(PacketCPowerRating.class, Side.CLIENT);
 		registerPacket(PacketCOpenSkillCard.class, Side.CLIENT);
 		registerPacket(PacketSSendViewStatus.class, Side.SERVER);
+		registerPacket(PacketSParticleCollideEvent.class, Side.SERVER);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 
@@ -213,9 +228,13 @@ public class AvatarMod {
 
 		Behavior.registerBehaviours();
 
+		ParticleBehaviour.registerBehaviours();
+
 		EarthbendingEvents.register();
 
 		PacketHandlerServer.register();
+
+		HumanBenderSpawner.register();
 
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {
 		});
@@ -228,10 +247,11 @@ public class AvatarMod {
 	public void init(FMLInitializationEvent e) {
 		//Anything with a low update frequency needs that frequency in order to function properly. Otherwise, they have a high frequency (ticks between updates).
 		registerEntity(EntityFloatingBlock.class, "FloatingBlock", 128, 1000, true);
-		registerEntity(EntityFireArc.class, "FireArc", 128, 1000, true);
+		//registerEntity(EntityFireArc.class, "FireArc", 128, 1000, true);
 		registerEntity(EntityWaterArc.class, "WaterArc", 128, 1000, true);
 		registerEntity(EntityAirGust.class, "AirGust", 128, 1000, true);
 		registerEntity(EntityRavine.class, "Ravine", 128, 1000, true);
+		//For some reason, there's random desync for its position when spawning it. Setting it to 1 fixes it.
 		registerEntity(EntityFlames.class, "Flames", 128, 1000, true);
 		registerEntity(EntityWave.class, "Wave", 128, 1000, true);
 		registerEntity(EntityWaterBubble.class, "WaterBubble", 128, 1000, true);
@@ -262,6 +282,7 @@ public class AvatarMod {
 		registerEntity(EntityShockwave.class, "Shockwave", 128, 1000, false);
 		registerEntity(EntityLightOrb.class, "LightOrb", 128, 1000, true);
 		registerEntity(EntityLightCylinder.class, "LightCylinder", 128, 1000, true);
+		registerEntity(EntityFlamethrower.class, "Flamethrower", 128, 1000, true);
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 1, 3, EnumCreatureType.CREATURE, //
 				SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, TAIGA_HILLS, ICE_MOUNTAINS, REDWOOD_TAIGA_HILLS, MUTATED_EXTREME_HILLS,
@@ -286,6 +307,7 @@ public class AvatarMod {
 		MinecraftForge.EVENT_BUS.register(new ConfigHandler());
 
 		proxy.init();
+		proxy.registerParticles();
 
 	}
 

@@ -19,34 +19,24 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.state.IBlockState;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.item.EntityEnderCrystal;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.List;
-import java.util.Objects;
+public class EntityAirGust extends EntityOffensive {
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.util.AvatarUtils.afterVelocityAdded;
-
-public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> {
-
-	public static final Vector ZERO = new Vector(0, 0, 0);
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityAirGust.class, DataSerializers.FLOAT);
-	private boolean airGrab, destroyProjectiles, pushStone, pushIronTrapDoor, pushIronDoor;
-	private int ticks;
-	//used to kill the air gust when it's in blocks
+	private boolean piercesEnemies = false, slowProjectiles = false, destroyProjectiles = false,
+			pushStone, pushIronTrapDoor, pushIronDoor;
 
 	public EntityAirGust(World world) {
 		super(world);
@@ -56,36 +46,24 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 		this.pushStoneButton = pushStone;
 		this.pushDoor = pushIronDoor;
 		this.pushTrapDoor = pushIronTrapDoor;
-	}
-
-	public float getSize() {
-		return dataManager.get(SYNC_SIZE);
-	}
-
-	public void setSize(float size) {
-		dataManager.set(SYNC_SIZE, size);
-	}
-
-	@Override
-	protected void entityInit() {
-		super.entityInit();
-		dataManager.register(SYNC_SIZE, 1F);
+		setDamage(0);
 	}
 
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		airGrab = nbt.getBoolean("AirGrab");
+		slowProjectiles = nbt.getBoolean("SlowProjectiles");
 		destroyProjectiles = nbt.getBoolean("DestroyProjectiles");
+		piercesEnemies = nbt.getBoolean("PiercesEnemies");
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		nbt.setBoolean("AirGrab", airGrab);
+		nbt.setBoolean("SlowProjectiles", slowProjectiles);
 		nbt.setBoolean("DestroyProjectiles", destroyProjectiles);
-
+		nbt.setBoolean("PiercesEnemies", piercesEnemies);
 	}
 
 	@Override
@@ -96,111 +74,37 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+
+		if (world.isRemote && getOwner() != null) {
+			for (int i = 0; i < 4; i++) {
+				Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(this);
+				double spawnX = mid.x + world.rand.nextGaussian() / 10;
+				double spawnY = mid.y + world.rand.nextGaussian() / 10;
+				double spawnZ = mid.z + world.rand.nextGaussian() / 10;
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
+						world.rand.nextGaussian() / 45).time(4).clr(0.85F, 0.85F, 0.85F).spawnEntity(getOwner())
+						.scale(getAvgSize() * 1.25F).element(getElement()).spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
+						world.rand.nextGaussian() / 45).time(12).clr(0.85F, 0.85F, 0.85F).spawnEntity(getOwner())
+						.scale(getAvgSize() * 1.25F).element(getElement()).spawn(world);
+			}
+		}
+
+		//Not sure why I have this here, but I'm too lazy to test it right now.
 		if (ticksExisted <= 2) {
 			this.pushStoneButton = pushStone;
 			this.pushDoor = pushIronDoor;
 			this.pushTrapDoor = pushIronTrapDoor;
 		}
-		ControlPoint first = getControlPoint(0);
-		ControlPoint second = getControlPoint(1);
-		if (first.position().sqrDist(second.position()) >= 400
-				|| ticksExisted > 120) {
-			setDead();
-		}
-		List<Entity> hit = world.getEntitiesWithinAABB(Entity.class, getEntityBoundingBox().grow(0.3));
-		if (!world.isRemote) {
-			if (!hit.isEmpty()) {
-				for (Entity e : hit) {
-					if (canCollideWith(e) && e != getOwner() && e != this) {
-						onCollideWithEntity(e);
-					}
-				}
-			}
-		}
-
-		IBlockState state = world.getBlockState(getPosition());
-		if (state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()) {
-			ticks++;
-		}
-		if (ticks >= 2) {
-			this.setDead();
-		}
-		float expansionRate = 1f / 80;
-		setSize(getSize() + expansionRate);
-		setSize(getSize(), getSize());
 	}
 
-	@Override
-	public void onCollideWithEntity(Entity entity) {
-		EntityLivingBase owner = getOwner();
-		if (!entity.world.isRemote && entity != owner && canCollideWith(entity) && owner != null) {
 
-			if (entity instanceof AvatarEntity) {
-				AvatarEntity avatarEntity = (AvatarEntity) entity;
-				if (avatarEntity.onAirContact()) return;
-				if (!avatarEntity.canPush()) return;
-			}
-
-			BendingData data = Objects.requireNonNull(Bender.get(owner)).getData();
-			float xp = 0;
-			if (data != null) {
-				AbilityData abilityData = data.getAbilityData("air_gust");
-				xp = abilityData.getTotalXp();
-				abilityData.addXp(SKILLS_CONFIG.airGustHit);
-			}
-
-			Vector velocity = velocity().times(0.15).times(1 + xp / 200.0);
-			velocity = velocity.withY(airGrab ? -1 : 1).times(airGrab ? -0.6 : 0.6);
-
-			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
-			afterVelocityAdded(entity);
-
-			if (entity instanceof AvatarEntity) {
-				((AvatarEntity) entity).onAirContact();
-			}
-			setDead();
-
-		}
+	public void setSlowProjectiles(boolean slowProjectiles) {
+		this.slowProjectiles = slowProjectiles;
 	}
 
-	@Override
-	public boolean onCollideWithSolid() {
-		setDead();
-		return true;
-	}
-
-	@Override
-	protected AirGustControlPoint createControlPoint(float size, int index) {
-		return new AirGustControlPoint(this, 0.3f, 0, 0, 0);
-	}
-
-	@Override
-	public int getAmountOfControlPoints() {
-		return 2;
-	}
-
-	@Override
-	protected double getControlPointMaxDistanceSq() {
-		return 8; // 20
-	}
-
-	@Override
-	protected double getControlPointTeleportDistanceSq() {
-		// Note: Is not actually called.
-		// Set dead as soon as reached sq-distance
-		return 200;
-	}
-
-	public boolean doesAirGrab() {
-		return airGrab;
-	}
-
-	public void setAirGrab(boolean airGrab) {
-		this.airGrab = airGrab;
-	}
-
-	public boolean doesDestroyProjectiles() {
-		return destroyProjectiles;
+	public void setPiercesEnemies(boolean piercesEnemies) {
+		this.piercesEnemies = piercesEnemies;
 	}
 
 	public void setDestroyProjectiles(boolean destroyProjectiles) {
@@ -245,62 +149,136 @@ public class EntityAirGust extends EntityArc<EntityAirGust.AirGustControlPoint> 
 	}
 
 	@Override
-	protected double getVelocityMultiplier() {
-		return 8;
-	}
-
-	public static class AirGustControlPoint extends ControlPoint {
-
-		public AirGustControlPoint(EntityArc arc, float size, double x, double y, double z) {
-			super(arc, size, x, y, z);
-		}
-
-		@Override
-		public void onUpdate() {
-			super.onUpdate();
-			if (arc.getControlPoint(0) == this) {
-				float expansionRate = 1f / 80;
-				size += expansionRate;
-			}
-		}
-
+	public boolean isPiercing() {
+		return piercesEnemies;
 	}
 
 	@Override
-	protected void updateCpBehavior() {
-		getLeader().setPosition(position());
-		getLeader().setVelocity(velocity());
+	public boolean shouldExplode() {
+		return false;
+	}
 
-		// Move control points to follow leader
+	@Override
+	public boolean shouldDissipate() {
+		return true;
+	}
 
-		for (int i = 1; i < points.size(); i++) {
+	@Override
+	public Vec3d getKnockbackMult() {
+		return new Vec3d(1.5, 2, 1.5);
+	}
 
-			ControlPoint leader = points.get(i - 1);
-			ControlPoint p = points.get(i);
-			Vector leadPos = leader.position();
-			double sqrDist = p.position().sqrDist(leadPos);
+	@Override
+	public void spawnDissipateParticles(World world, Vec3d pos) {
+		//We don't need to spawn any since particle collision handles it
+	}
 
-			if (sqrDist > getControlPointTeleportDistanceSq() && getControlPointTeleportDistanceSq() != -1) {
+	@Override
+	public void spawnPiercingParticles(World world, Vec3d pos) {
+		//We don't need to spawn any since particle collision handles it
+	}
 
-				Vector toFollowerDir = p.position().minus(leader.position()).normalize();
-
-				double idealDist = Math.sqrt(getControlPointTeleportDistanceSq());
-				if (idealDist > 1) idealDist -= 1; // Make sure there is some room
-
-				Vector revisedOffset = leader.position().plus(toFollowerDir.times(idealDist));
-				p.setPosition(revisedOffset);
-				leader.setPosition(revisedOffset);
-				p.setVelocity(Vector.ZERO);
-
-			} else if (sqrDist > getControlPointMaxDistanceSq() && getControlPointMaxDistanceSq() != -1) {
-
-				Vector diff = leader.position().minus(p.position());
-				diff = diff.normalize().times(getVelocityMultiplier());
-				p.setVelocity(p.velocity().plus(diff));
-
+	@Override
+	public void applyElementalContact(AvatarEntity entity) {
+		super.applyElementalContact(entity);
+		entity.onAirContact();
+		if (destroyProjectiles) {
+			if (entity instanceof IOffensiveEntity && ((IOffensiveEntity) entity).getDamage() < 6 * getAvgSize() ||
+					entity instanceof EntityOffensive && getAvgSize() < 1.25 * getAvgSize() || (entity.isProjectile() && entity.velocity().sqrMagnitude() <
+					velocity().sqrMagnitude()) || entity.getTier() < getTier()) {
+				((IOffensiveEntity) entity).Dissipate(entity);
 			}
-
+			if (entity.getTier() == getTier()) {
+				Dissipate();
+				if (entity instanceof IOffensiveEntity) {
+					((IOffensiveEntity) entity).Dissipate(entity);
+				}
+			}
 		}
-		getControlPoint(0).setPosition(position().plusY(getSize() / 2));
+	}
+
+	@Override
+	public SoundEvent[] getSounds() {
+		SoundEvent[] events = new SoundEvent[1];
+		events[0] = SoundEvents.BLOCK_FIRE_EXTINGUISH;
+		return events;
+	}
+
+	@Override
+	public float getVolume() {
+		return super.getVolume() * 1.5F;
+	}
+
+	@Override
+	public int getFireTime() {
+		return 0;
+	}
+
+
+	@Override
+	public void onCollideWithEntity(Entity entity) {
+		super.onCollideWithEntity(entity);
+		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).isProjectile() || entity instanceof EntityArrow || entity instanceof EntityThrowable) {
+			if (slowProjectiles) {
+				entity.motionX *= 0.4;
+				entity.motionY *= 0.4;
+				entity.motionZ *= 0.4;
+			}
+		}
+		if (entity instanceof EntityAirBubble && ((EntityAirBubble) entity).getTier() <= getTier()) {
+			super.onCollideWithEntity(((EntityAirBubble) entity).getOwner());
+			if (!isPiercing())
+				Dissipate();
+		} else if (entity instanceof EntityAirBubble)
+			Dissipate();
+	}
+
+	@Override
+	public boolean canCollideWith(Entity entity) {
+		if (entity == getOwner()) {
+			return false;
+		} else if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() == getOwner()) {
+			return false;
+		} else if (entity instanceof EntityLivingBase && entity.getControllingPassenger() == getOwner()) {
+			return false;
+		} else if (getOwner() != null && getOwner().getTeam() != null && entity.getTeam() == getOwner().getTeam()) {
+			return false;
+		} else if (entity instanceof EntityEnderCrystal) {
+			return true;
+		} else
+			return true;
+	}
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public double getExpandedHitboxWidth() {
+		return Math.max(0.3, Math.min(getAvgSize() / 3, 1));
+	}
+
+	@Override
+	public double getExpandedHitboxHeight() {
+		return Math.max(0.3, Math.min(getAvgSize() / 3, 1));
+	}
+
+	@Override
+	public Vec3d getKnockback() {
+		double x = Math.min(getKnockbackMult().x * motionX, motionX * 2);
+		double y = Math.min(0.5, (motionY + 0.15) * getKnockbackMult().y);
+		double z = Math.min(getKnockbackMult().z * motionZ, motionZ * 2);
+		if (velocity().sqrMagnitude() > getAvgSize() * 15) {
+			x = Math.min(x, motionX * 0.75F);
+			z = Math.min(z, motionZ * 0.75F);
+		}
+		return new Vec3d(x, y, z);
+	}
+
+
+	@Override
+	public boolean canDamageEntity(Entity entity) {
+		return canCollideWith(entity);
 	}
 }

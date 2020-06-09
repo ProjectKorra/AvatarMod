@@ -82,7 +82,7 @@ public class AbilityIcePrison extends Ability {
 	}
 
 	@Override
-	public int getParentTier() {
+	public int getBaseParentTier() {
 		return 4;
 	}
 

@@ -18,11 +18,11 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -41,6 +41,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
@@ -65,10 +66,6 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 
 	private static final DataParameter<Optional<IBlockState>>[] SYNC_BLOCKS_DATA;
 
-	private boolean restrictToVertical;
-
-	private Vector initialPos;
-
 	static {
 		SYNC_BLOCKS_DATA = new DataParameter[SEGMENT_HEIGHT];
 		for (int i = 0; i < SEGMENT_HEIGHT; i++) {
@@ -78,6 +75,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	}
 
 	private final SyncedEntity<EntityWall> wallReference;
+	private boolean restrictToVertical;
+	private Vector initialPos;
 	/**
 	 * direction that all wall-segments are facing towards. Only set on server.
 	 */
@@ -114,12 +113,12 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		this.restrictToVertical = value;
 	}
 
-	public void setInitialPos(Vector pos) {
-		initialPos = pos;
-	}
-
 	public Vector getInitialPos() {
 		return initialPos;
+	}
+
+	public void setInitialPos(Vector pos) {
+		initialPos = pos;
 	}
 
 	/**
@@ -151,21 +150,21 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		// Remove "drop wall" statCtrl if the wall is dropping
 		if (behavior instanceof WallBehavior.Drop) {
 			if (getOwner() != null) {
-				BendingData.get(getOwner()).removeStatusControl(StatusControl.DROP_WALL);
-				BendingData.get(getOwner()).removeStatusControl(StatusControl.PLACE_WALL);
-				BendingData.get(getOwner()).removeStatusControl(StatusControl.SHOOT_WALL);
-				BendingData.get(getOwner()).removeStatusControl(StatusControl.PUSH_WALL);
-				BendingData.get(getOwner()).removeStatusControl(StatusControl.PULL_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControlController.DROP_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControlController.PLACE_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControlController.SHOOT_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControlController.PUSH_WALL);
+				BendingData.get(getOwner()).removeStatusControl(StatusControlController.PULL_WALL);
 			}
 		}
 	}
 
-	public void setDirection(EnumFacing dir) {
-		this.direction = dir;
-	}
-
 	public EnumFacing getDirection() {
 		return direction;
+	}
+
+	public void setDirection(EnumFacing dir) {
+		this.direction = dir;
 	}
 
 	public int getBlocksOffset() {
@@ -296,8 +295,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 					if (getBehavior().getClass() == WallBehavior.Rising.class) {
 						entity.addVelocity(entity.motionX, 0.25D, entity.motionZ);
 					} else {
-						entity.setPosition(entity.prevPosX, entity.prevPosY, entity.prevPosZ);
-						entity.applyEntityCollision(this);
+						Vec3d vel = entity.getPositionVector().subtract(getPositionVector()).scale(0.00025);
+						entity.addVelocity(vel.x, vel.y, vel.z);
 					}
 				}
 			}
@@ -307,63 +306,65 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	public void onCollideWithEntity(Entity entity) {
 
-		// Note... only called server-side
-		double amt = 0.05;
+		if (entity != getOwner()) {
+			// Note... only called server-side
+			double amt = 0.05;
 
-		boolean ns = direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH;
-		if (ns) {
-			if (entity.posZ > this.posZ) {
-				entity.posZ = this.posZ + 1.1;
-			} else {
-				amt = -amt;
-				entity.posZ = this.posZ - 1.1;
-			}
-		} else {
-			if (entity.posX > this.posX) {
-				entity.posX = this.posX + 1.1;
-			} else {
-				amt = -amt;
-				entity.posX = this.posX - 1.1;
-			}
-		}
-
-		if (ns) {
-			entity.motionZ = amt;
-		} else {
-			entity.motionX = amt;
-		}
-
-		entity.motionY = 0.01;
-
-		entity.isAirBorne = true;
-		AvatarUtils.afterVelocityAdded(entity);
-		if (entity instanceof AvatarEntity) {
-			Vector velocity = ((AvatarEntity) entity).velocity();
+			boolean ns = direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH;
 			if (ns) {
-				velocity = velocity.withZ(amt);
+				if (entity.posZ > this.posZ) {
+					entity.posZ = this.posZ + 1.1;
+				} else {
+					amt = -amt;
+					entity.posZ = this.posZ - 1.1;
+				}
 			} else {
-				velocity = velocity.withX(amt);
-			}
-		}
-
-		if (entity instanceof AvatarEntity) {
-
-			AvatarEntity avEnt = (AvatarEntity) entity;
-			avEnt.onCollideWithSolid();
-
-			if (avEnt.onCollideWithSolid()) {
-				entity.setDead();
-				EntityLivingBase owner = getOwner();
-				if (owner != null) {
-					BendingData data = BendingData.get(owner);
-					data.getAbilityData("wall").addXp(SKILLS_CONFIG.wallBlockedAttack);
-					BattlePerformanceScore.addLargeScore(getOwner());
+				if (entity.posX > this.posX) {
+					entity.posX = this.posX + 1.1;
+				} else {
+					amt = -amt;
+					entity.posX = this.posX - 1.1;
 				}
 			}
 
+			if (ns) {
+				entity.motionZ = amt;
+			} else {
+				entity.motionX = amt;
+			}
+
+			entity.motionY = 0.01;
+
+			entity.isAirBorne = true;
+			AvatarUtils.afterVelocityAdded(entity);
+			if (entity instanceof AvatarEntity) {
+				Vector velocity = ((AvatarEntity) entity).velocity();
+				if (ns) {
+					velocity = velocity.withZ(amt);
+				} else {
+					velocity = velocity.withX(amt);
+				}
+			}
+
+			if (entity instanceof AvatarEntity) {
+
+				AvatarEntity avEnt = (AvatarEntity) entity;
+				avEnt.onCollideWithSolid();
+
+				if (avEnt.onCollideWithSolid()) {
+					entity.setDead();
+					EntityLivingBase owner = getOwner();
+					if (owner != null) {
+						BendingData data = BendingData.get(owner);
+						data.getAbilityData("wall").addXp(SKILLS_CONFIG.wallBlockedAttack);
+						BattlePerformanceScore.addLargeScore(getOwner());
+					}
+				}
+
+			}
+			// this.setVelocity(Vector.ZERO);
+			// For some reason the wall is affected by explosions and whatnot
 		}
-		// this.setVelocity(Vector.ZERO);
-		// For some reason the wall is affected by explosions and whatnot
 	}
 
 	@Override

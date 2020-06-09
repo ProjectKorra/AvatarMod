@@ -97,7 +97,7 @@ public class AvatarCommand extends TreeCommand {
 			super.execute(server, sender, arguments);
 			AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onAvatarCommand());
 		} else {
-			TextComponentTranslation messagePermission = new TextComponentTranslation("commands.generic.permission", new Object[0]);
+			TextComponentTranslation messagePermission = new TextComponentTranslation("commands.generic.permission");
       messagePermission.getStyle().setColor(TextFormatting.RED);
       sender.sendMessage(messagePermission);
 		}

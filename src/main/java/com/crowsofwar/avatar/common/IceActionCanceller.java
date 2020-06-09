@@ -17,19 +17,20 @@
 package com.crowsofwar.avatar.common;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityIcePrison;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Objects;
+
+import static com.crowsofwar.avatar.common.data.StatusControlController.SHIELD_SHATTER;
 
 /**
  * Cancels any actions done when a player is in an ice prison or ice shield
@@ -47,7 +48,7 @@ public class IceActionCanceller {
 		//noinspection SimplifiableIfStatement
 		if (Bender.isBenderSupported(entity)) {
 			if (BendingData.getFromEntity(entity) != null) {
-				return Objects.requireNonNull(BendingData.getFromEntity(entity)).hasStatusControl(StatusControl.SHIELD_SHATTER);
+				return Objects.requireNonNull(BendingData.getFromEntity(entity)).hasStatusControl(SHIELD_SHATTER);
 			}
 		}
 
@@ -57,8 +58,12 @@ public class IceActionCanceller {
 	@SubscribeEvent
 	public static void onJump(LivingJumpEvent e) {
 		EntityLivingBase entity = e.getEntityLiving();
-		if (isTrapped(entity)) {
-			entity.motionY = 0;
+		if (isTrapped(entity) && entity.onGround) {
+			entity.motionY *= 0;
+		}
+		else if (isTrapped(entity)) {
+			entity.motionX *= 0;
+			entity.motionZ *= 0;
 		}
 	}
 

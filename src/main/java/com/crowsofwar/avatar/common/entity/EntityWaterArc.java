@@ -17,16 +17,18 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -42,12 +44,12 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.THROW_WATER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
@@ -125,8 +127,8 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	@Override
 	protected void updateCpBehavior() {
 		super.updateCpBehavior();
-	//	getControlPoint(0).setPosition(this.position());
-	//	getLeader().setPosition(this.position().plusY(getSize() / 8));
+		//	getControlPoint(0).setPosition(this.position());
+		//	getLeader().setPosition(this.position().plusY(getSize() / 8));
 	}
 
 	public void damageEntity(Entity entity) {
@@ -321,11 +323,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		if (getOwner() != null) {
 			EntityWaterArc arc = AvatarEntity.lookupControlledEntity(world, EntityWaterArc.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (arc == null && bD.hasStatusControl(StatusControl.THROW_WATER)) {
-				bD.removeStatusControl(StatusControl.THROW_WATER);
+			if (arc == null && bD.hasStatusControl(StatusControlController.THROW_WATER)) {
+				bD.removeStatusControl(StatusControlController.THROW_WATER);
 			}
-			if (arc != null && arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_WATER))) {
-				bD.addStatusControl(StatusControl.THROW_WATER);
+			if (arc != null && arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControlController.THROW_WATER))) {
+				bD.addStatusControl(StatusControlController.THROW_WATER);
 			}
 
 		}
@@ -363,7 +365,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		if (getOwner() != null) {
 			BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
 			if (data != null) {
-				data.removeStatusControl(THROW_WATER);
+				data.removeStatusControl(StatusControlController.THROW_WATER);
 			}
 		}
 	}
@@ -403,6 +405,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		}
 	}
 
+	@Override
+	protected double getVelocityMultiplier() {
+		return velocityMultiplier;
+	}
+
 	static class WaterControlPoint extends ControlPoint {
 
 		private WaterControlPoint(EntityArc arc, float size, double x, double y, double z) {
@@ -412,7 +419,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	@Override
-	protected double getVelocityMultiplier() {
-		return velocityMultiplier;
+	public boolean isProjectile() {
+		return true;
 	}
 }

@@ -48,6 +48,7 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 
 		float ticks = bubble.ticksExisted + partialTicks;
 		float colorEnhancement = 1.2f;
+		float size = bubble.getSize();
 
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.renderEngine.bindTexture(water);
@@ -55,38 +56,29 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		GlStateManager.color(colorEnhancement, colorEnhancement, colorEnhancement, 0.6f);
 
 		Matrix4f mat = new Matrix4f();
-		mat.translate((float) x - 0.5f, (float) y * bubble.getSize(), (float) z - 0.5f);
+		mat = mat.translate((float) x, (float) y + 0.4F, (float) z);
 
-		//TIL that putting the rotation code here makes it orbit around you. Very cool, but not the intended effect xD
-		//Using mul.rotate instead of GlStateManager does the same thing to the entity, BUT it just spins the water bubble around a corner
-
-		//TODO: Add rotations, size scaling, and wobbling (only wobble when degrees per second is 0)
-
-		// (0 Left)/(1 Right), (0 Bottom)/(1 Top), (0 Front)/(1 Back)
-		//Vector4f mid = new Vector4f((float) x, (float) y + .5f, (float) z, 1);
-
-
-		mat.rotate(ticks / 25f * bubble.getDegreesPerSecond(), 1, 0, 0);
-		mat.rotate(ticks / 25f * bubble.getDegreesPerSecond(), 0, 1, 0);
-		mat.rotate(ticks / 25f * bubble.getDegreesPerSecond(), 0, 0, 1);
+		mat = mat.rotate(ticks / 20 * 0.2F * bubble.getDegreesPerSecond(), 1, 0, 0);
+		mat = mat.rotate(ticks / 20 * bubble.getDegreesPerSecond(), 0, 1, 0);
+		mat = mat.rotate(ticks / 20 * -0.4F * bubble.getDegreesPerSecond(), 0, 0, 1);
 
 
 		// @formatter:off
 		Vector4f
-				lbf = new Vector4f(0, 0, 0, 1).mul(mat),
-				rbf = new Vector4f(1, 0, 0, 1).mul(mat),
-				ltf = new Vector4f(0, 1, 0, 1).mul(mat),
-				rtf = new Vector4f(1, 1, 0, 1).mul(mat),
-				lbb = new Vector4f(0, 0, 1, 1).mul(mat),
-				rbb = new Vector4f(1, 0, 1, 1).mul(mat),
-				ltb = new Vector4f(0, 1, 1, 1).mul(mat),
-				rtb = new Vector4f(1, 1, 1, 1).mul(mat);
+				//You can't mul using the size because that would mul the w component, which would still make the bubble with a size of 1.
+				lbf = new Vector4f(-.5f * size, -.5f * size, -.5f * size, 1).mul(mat),
+				rbf = new Vector4f(0.5f * size, -.5f * size, -.5f * size, 1).mul(mat),
+				ltf = new Vector4f(-.5f * size, 0.5f * size, -.5f * size, 1).mul(mat),
+				rtf = new Vector4f(0.5f * size, 0.5f * size, -.5f * size, 1).mul(mat),
+				lbb = new Vector4f(-.5f * size, -.5f * size, 0.5f * size, 1).mul(mat),
+				rbb = new Vector4f(0.5f * size, -.5f * size, 0.5f * size, 1).mul(mat),
+				ltb = new Vector4f(-.5f * size, 0.5f * size, 0.5f * size, 1).mul(mat),
+				rtb = new Vector4f(0.5f * size, 0.5f * size, 0.5f * size, 1).mul(mat);
 
 
 		float t1 = ticks * (float) Math.PI / 10f;
 		float t2 = t1 + (float) Math.PI / 2f;
-		float amt = .05f;
-		//lbf.rotate()
+		float amt = 0.05f;
 
 		lbf.add(cos(t1) * amt, sin(t2) * amt, cos(t2) * amt, 0);
 		rbf.add(sin(t1) * amt, cos(t2) * amt, sin(t2) * amt, 0);
@@ -113,10 +105,6 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		drawQuad(2, rtf, rbf, lbf, ltf, 0, v1, 1, v2); // -z
 		drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2); // +z
 
-		float rotation = ticks * 20F;
-		GlStateManager.rotate(rotation * 0.2F, 1, 0, 0);
-		GlStateManager.rotate(rotation, 0, 1, 0);
-		GlStateManager.rotate(rotation * 0.2F, 0, 0, 1);
 
 
 

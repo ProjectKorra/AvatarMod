@@ -24,6 +24,8 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.google.common.base.Optional;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -146,11 +148,11 @@ public class EntitySandPrison extends AvatarEntity {
 				normalBaseValue = speed.getBaseValue();
 				speed.setBaseValue(0);
 			}
-			imprisoned.posX = this.posX;
-			imprisoned.posY = this.posY;
-			imprisoned.posZ = this.posZ;
-			imprisoned.motionX = imprisoned.motionY = imprisoned.motionZ = 0;
+			imprisoned.motionX *= 0;
+			imprisoned.motionY *= 0;
+			imprisoned.motionZ *= 0;
 			this.motionX = this.motionY = this.motionZ = 0;
+			imprisoned.setPositionAndUpdate(posX, posY, posZ);
 		}
 
 		if (!world.isRemote) {

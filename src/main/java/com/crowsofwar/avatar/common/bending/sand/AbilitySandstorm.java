@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.bending.sand;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -10,6 +10,8 @@ import com.crowsofwar.avatar.common.entity.EntitySandstorm;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.data.StatusControlController.SANDSTORM_REDIRECT;
 
 public class AbilitySandstorm extends Ability {
 
@@ -58,19 +60,19 @@ public class AbilitySandstorm extends Ability {
 
 			world.spawnEntity(sandstorm);
 
-			ctx.getData().addStatusControl(StatusControl.SANDSTORM_REDIRECT);
+			ctx.getData().addStatusControl(SANDSTORM_REDIRECT);
 
 		}
 
 	}
 
 	@Override
-	public int getTier() {
+	public int getBaseTier() {
 		return 2;
 	}
 
 	@Override
-	public int getParentTier() {
+	public int getBaseParentTier() {
 		return 4;
 	}
 }

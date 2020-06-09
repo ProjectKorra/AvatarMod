@@ -36,7 +36,7 @@ public class ConfigClient {
 	public float radialMenuAlpha = 0.75f;
 
 	@Load
-	public float chiBarAlpha = 0.5f;
+	public float chiBarAlpha = 0.625f;
 
 	@Load
 	public final float bendingCycleAlpha = 0.75f;
@@ -69,10 +69,16 @@ public class ConfigClient {
 	@Load
 	public FireRenderSettings fireRenderSettings = new FireRenderSettings();
 
+	@Load
+	public AirRenderSettings airRenderSettings = new AirRenderSettings();
+
+	@Load
+	public ParticleRenderSettings particleSettings = new ParticleRenderSettings();
+
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
 
-		CLIENT_CONFIG.keymappings.clear();
+		//CLIENT_CONFIG.keymappings.clear();
 		Set<Map.Entry<String, Integer>> entries = CLIENT_CONFIG.nameKeymappings.entrySet();
 		for (Map.Entry<String, Integer> entry : entries) {
 			Ability ability = null;
@@ -86,7 +92,7 @@ public class ConfigClient {
 				CLIENT_CONFIG.keymappings.put(ability, entry.getValue());
 			}
 		}
-		CLIENT_CONFIG.conflicts.clear();
+		//CLIENT_CONFIG.conflicts.clear();
 		Set<Map.Entry<String, Boolean>> entries2 = CLIENT_CONFIG.nameConflicts.entrySet();
 		for (Map.Entry<String, Boolean> entry : entries2) {
 			Ability ability = null;
@@ -150,6 +156,19 @@ public class ConfigClient {
 		public final int bendingMenuDuration = 200;
 		//If the menu should disappear, how long it should take before disappearing
 
+		@Load
+		public final int middleXPosition = 0, rightXPosition = 50, leftXPosition = -35;
+		//The x pos of the middle/active bending, the bending icon on the right, and the bending icon on the left
+
+		@Load
+		public final int middleYPosition = -30, rightYPosition = 5, leftYPosition = 5;
+		//The xp pos of the bending icon on the left
+
+		@Load
+		public final float middleBendingWidth = 50, leftBendingWidth = 35, rightBendingWidth = 35;
+
+		@Load
+		public final float middleBendingHeight = 50, leftBendingHeight = 35, rightBendingHeight = 35;
 
 	}
 
@@ -166,14 +185,43 @@ public class ConfigClient {
 		@Load
 		public final int chibarDuration = 200;
 
+		@Load
+		public final double widthScale = 1.1F, heightScale = 1.1F;
+
+		@Load
+		public final int xPos = 115, yPos = 3;
+
 	}
 
 	public static class FireRenderSettings {
-		@Load
-		public final boolean fireBallSphere = false;
 
 		@Load
-		public final boolean infernoPunchSphere = false;
+		public final boolean flameStrikeSphere = false;
+
+		@Load
+		public final boolean showFlameStrikeOrb = false;
+
+		@Load
+		public final boolean solidFlamethrowerParticles = true;
+
+		@Load
+		public final boolean solidFlameStrikeParticles = true;
+
+
+	}
+
+	public static class AirRenderSettings {
+		@Load
+		public final boolean airBurstSphere = true;
+
+	}
+
+	public static class ParticleRenderSettings {
+		@Load
+		public final boolean voxelFlashParticles = false;
+
+		@Load
+		public final boolean squareFlashParticles = false;
 	}
 
 }

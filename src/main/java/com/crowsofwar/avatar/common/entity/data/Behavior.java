@@ -61,7 +61,6 @@ public abstract class Behavior<E extends Entity> {
 	public static void registerBehaviours() {
 		FloatingBlockBehavior.register();
 		WaterArcBehavior.register();
-		FireArcBehavior.register();
 		WaterBubbleBehavior.register();
 		WallBehavior.register();
 		EarthspikesBehavior.register();
@@ -70,6 +69,7 @@ public abstract class Behavior<E extends Entity> {
 		LightningSpearBehavior.register();
 		LightOrbBehavior.register();
 		LightCylinderBehaviour.register();
+		OffensiveBehaviour.register();
 		ShockwaveBehaviour.register();
 	}
 
@@ -112,9 +112,13 @@ public abstract class Behavior<E extends Entity> {
 	 * Called every update tick.
 	 *
 	 * @return Next Behavior. Return <code>this</code> to continue the Behavior.
-	 *         May never return null.
+	 * May never return null.
 	 */
 	public abstract Behavior onUpdate(E entity);
+
+	public void renderUpdate(E entity) {
+
+	}
 
 	public abstract void fromBytes(PacketBuffer buf);
 
@@ -123,6 +127,7 @@ public abstract class Behavior<E extends Entity> {
 	public abstract void load(NBTTagCompound nbt);
 
 	public abstract void save(NBTTagCompound nbt);
+
 
 	public static class BehaviorSerializer<B extends Behavior<? extends Entity>> implements DataSerializer<B> {
 

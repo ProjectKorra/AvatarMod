@@ -7,7 +7,8 @@ import codechicken.lib.render.OBJParser;
 import codechicken.lib.texture.TextureUtils;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
-import com.crowsofwar.avatar.common.bending.fire.AbilityInfernoPunch;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFlameStrike;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.entity.EntityFireball;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -115,7 +116,7 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
 
             GlStateManager.scale(scale, scale, scale);
 
-            if(entity.getAbility() instanceof AbilityFireball && entity.getEmittingEntity() != null && entity.getEmittingEntity() instanceof EntityFireball) {
+          /*  if(entity.getAbility() instanceof AbilityFireball && entity.getEmittingEntity() != null && entity.getEmittingEntity() instanceof EntityFireball) {
                 int amount = entity.getType() == EntityLightOrb.EnumType.TEXTURE_SPHERE ? 1 : 2;
                 for (int i = 0; i < amount; i++) {
                     EntityFireball fireball = (EntityFireball) entity.getEmittingEntity();
@@ -126,7 +127,7 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
                     double spawnZ = boundingBox.minZ + AvatarUtils.getRandomNumberInRange(1, 10) / 10F * (boundingBox.maxZ - boundingBox.minZ);
                     world.spawnParticle(AvatarParticles.getParticleFlames(), spawnX, spawnY, spawnZ, 0, 0, 0);
                 }
-            }
+            }**/
 
             if (entity.isSpinning() && entity.isSphere()) {
                 //TODO: Data parameters for rotation amounts
@@ -138,7 +139,7 @@ public class RenderLightOrb extends Render<EntityLightOrb> {
             GlStateManager.disableCull();
             if (entity.getType() == EntityLightOrb.EnumType.COLOR_CUBE || entity.getType() == EntityLightOrb.EnumType.TEXTURE_CUBE) {
                 if (entity.isSpinning()) {
-                    if (entity.getAbility() instanceof AbilityInfernoPunch) {
+                    if (entity.getAbility() instanceof AbilityFlameStrike) {
                         RenderUtils.renderCube(0, 0, 0, 0d, 1d, 0d, 1d, 1f,
                                 rotation * entity.getOrbSize() / 80F, rotation * entity.getOrbSize() / 40F, rotation * entity.getOrbSize() / 80F);
                     } else {

@@ -17,15 +17,10 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.gorecore.util.Vector;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -33,9 +28,10 @@ import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
 import java.util.List;
+
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.PULL_WALL;
 
 /**
  * @author CrowsOfWar
@@ -59,8 +55,8 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
 
-			if(entity == null) return this;
-			if(entity.getWall() == null) return this;
+			if (entity == null) return this;
+			if (entity.getWall() == null) return this;
 
 			entity.addVelocity(Vector.DOWN.times(7.0 / 20));
 
@@ -105,8 +101,8 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
 
-			if(entity == null) return this;
-			if(entity.getWall() == null) return this;
+			if (entity == null) return this;
+			if (entity.getWall() == null) return this;
 
 			ticks++;
 			// Prevents some glitches
@@ -143,8 +139,8 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
 
-			if(entity == null) return this;
-			if(entity.getWall() == null) return this;
+			if (entity == null) return this;
+			if (entity.getWall() == null) return this;
 
 			// not 0 since client missed 0th tick
 			if (ticks == 1) {
@@ -194,8 +190,8 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
 
-			if(entity == null) return this;
-			if(entity.getWall() == null) return this;
+			if (entity == null) return this;
+			if (entity.getWall() == null) return this;
 
 			entity.setVelocity(Vector.ZERO);
 			ticks++;
@@ -229,8 +225,8 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
 
-			if(entity == null) return this;
-			if(entity.getWall() == null) return this;
+			if (entity == null) return this;
+			if (entity.getWall() == null) return this;
 
 			ticks++;
 
@@ -252,7 +248,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 				int pushDistance = 4;
 				double velocity = STATS_CONFIG.wallMomentum / 5 * pushDistance / 20;
 				lastApplied = velocity;
-				AvatarUtils.applyMotionToEntityInDirection(entity, cardinalToPush, velocity);
+				AvatarEntityUtils.applyMotionToEntityInDirection(entity, cardinalToPush, velocity);
 
 				// Consume Chi.
 				BendingData.get(entity.getOwner()).chi().consumeChi(STATS_CONFIG.chiPushWall);
@@ -261,7 +257,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 				entity.motionY = 0;
 
 				double velocity = lastApplied * 0.9;
-				AvatarUtils.applyMotionToEntityInDirection(entity, cardinalToPush, velocity);
+				AvatarEntityUtils.applyMotionToEntityInDirection(entity, cardinalToPush, velocity);
 				lastApplied = velocity;
 			}
 
@@ -271,14 +267,14 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 
 			if (collidingEntities.size() > 0) {
 				for (Entity current : collidingEntities) {
-					AvatarUtils.applyMotionToEntityInDirection(current, cardinalToPush, 0.4);
+					AvatarEntityUtils.applyMotionToEntityInDirection(current, cardinalToPush, 0.4);
 				}
 			}
 
 			boolean done = ticks > 50;
 
 			if (done) {
-				BendingData.get(entity.getOwner()).addStatusControl(StatusControl.PULL_WALL);
+				BendingData.get(entity.getOwner()).addStatusControl(PULL_WALL);
 			}
 
 			return done ? new Waiting() : this;
@@ -310,9 +306,9 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		@Override
 		public Behavior onUpdate(EntityWallSegment entity) {
 
-			if(entity == null) return this;
-			if(entity.getWall() == null) return this;
-			
+			if (entity == null) return this;
+			if (entity.getWall() == null) return this;
+
 			ticks++;
 
 			// Get in which direction the wall should be pulled. Needs to be reversed later
@@ -331,7 +327,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 
 				double velocity = STATS_CONFIG.wallMomentum / 5 * pushDistance / 20;
 				lastApplied = velocity;
-				AvatarUtils.applyMotionToEntityInDirection(entity, cardinalToPush, -velocity);
+				AvatarEntityUtils.applyMotionToEntityInDirection(entity, cardinalToPush, -velocity);
 
 				// Consume Chi.
 				BendingData.get(entity.getOwner()).chi().consumeChi(STATS_CONFIG.chiPushWall * 2);
@@ -340,7 +336,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 				entity.motionY = 0;
 
 				double velocity = lastApplied * 0.9;
-				AvatarUtils.applyMotionToEntityInDirection(entity, cardinalToPush, -velocity);
+				AvatarEntityUtils.applyMotionToEntityInDirection(entity, cardinalToPush, -velocity);
 				lastApplied = velocity;
 			}
 
@@ -350,7 +346,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 
 			if (collidingEntities.size() > 0) {
 				for (Entity current : collidingEntities) {
-					AvatarUtils.applyMotionToEntityInDirection(current, cardinalToPush, -0.4);
+					AvatarEntityUtils.applyMotionToEntityInDirection(current, cardinalToPush, -0.4);
 				}
 			}
 

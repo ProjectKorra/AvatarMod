@@ -17,7 +17,8 @@
 
 package com.crowsofwar.avatar.common.network.packets;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
@@ -38,7 +39,7 @@ public class PacketCRemoveStatusControl extends AvatarPacket<PacketCRemoveStatus
 
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
-		control = StatusControl.lookup(buf.readInt());
+		control = StatusControlController.lookup(buf.readInt());
 	}
 
 	@Override

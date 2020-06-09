@@ -35,7 +35,7 @@ public class ItemOstrichEquipment extends Item implements AvatarItem {
 	@Override
 	public String getTranslationKey(ItemStack stack) {
 		return super.getTranslationKey(stack) + "." + EquipmentTier
-						.getTierName(stack.getMetadata());
+				.getTierName(stack.getMetadata());
 	}
 
 	@Override

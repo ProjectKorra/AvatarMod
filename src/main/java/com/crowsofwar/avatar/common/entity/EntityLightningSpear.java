@@ -17,24 +17,17 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningArc;
-import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.damageutils.DamageUtils;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.common.entity.data.LightningSpearBehavior;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import elucent.albedo.event.GatherLightsEvent;
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -43,35 +36,31 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
 import java.util.Objects;
 
-import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 
 /**
  * @author CrowsOfWar
  */
-@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityLightningSpear extends EntityOffensive implements ILightProvider {
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityLightningSpear extends EntityOffensive implements IGlowingEntity {
+
+	//TODO: Clean up this class. Dear lord.
 
 	private static final DataParameter<LightningSpearBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityLightningSpear.class, LightningSpearBehavior.DATA_SERIALIZER);
 
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityLightningSpear.class,
-			DataSerializers.FLOAT);
-
 	private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityLightningSpear.class,
 			DataSerializers.FLOAT);
 
-
-	private float damage;
 
 	/**
 	 * Whether the lightning spear can continue through multiple enemies, instead of being destroyed
@@ -89,61 +78,41 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	 */
 	private LightningFloodFill floodFill;
 
-	private float Size;
-
-	private ParticleSpawner particleSpawner;
-
 
 	/**
 	 * @param world The world it spawns in
 	 */
 	public EntityLightningSpear(World world) {
 		super(world);
-		this.Size = 0.8F;
-		setSize(Size, Size);
-		this.damage = 3F;
 		this.piercing = false;
-		this.setInvisible(false);
-		this.particleSpawner = new NetworkParticleSpawner();
-
 	}
 
-	//So lightning spear doesn't bounce off of entities (if piercing)
+	@Override
+	public int getFireTime() {
+		return 0;
+	}
 
 	@Override
 	public void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new LightningSpearBehavior.Idle());
-		dataManager.register(SYNC_SIZE, Size);
 		dataManager.register(SYNC_DEGREES_PER_SECOND, 400F);
 	}
 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
 		setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
 
-		// Add hook or something
-		if (getOwner() != null) {
-			if (getBehavior() != null && getBehavior() instanceof LightningSpearBehavior.PlayerControlled) {
-				this.rotationYaw = this.getOwner().rotationYaw;
-				this.rotationPitch = this.getOwner().rotationPitch;
-			}
-		}
-
-
-		this.setSize(getSize() / 3, getSize() / 3);
-
-
+		LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
 		if (getOwner() != null) {
 			EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (spear == null && bD.hasStatusControl(THROW_LIGHTNINGSPEAR)) {
-				bD.removeStatusControl(THROW_LIGHTNINGSPEAR);
+			if (spear == null && bD.hasStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR)) {
+				bD.removeStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR);
 			}
-			if (spear != null && spear.getBehavior().equals(controlled) && !(bD.hasStatusControl(THROW_LIGHTNINGSPEAR))) {
-				bD.addStatusControl(THROW_LIGHTNINGSPEAR);
+			if (spear != null && spear.getBehavior().equals(controlled) && !(bD.hasStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR))) {
+				bD.addStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR);
 			}
 
 		}
@@ -170,76 +139,36 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 			}
 		}
 
+		setEntitySize(getAvgSize());
+
 	}
 
-	public void LightningBurst() {
-		if (getOwner() != null) {
-			particleSpawner.spawnParticles(world, AvatarParticles.getParticleElectricity(), (int) (getSize() * 25), (int) (getSize() * 30), posX, posY, posZ, getSize() * 1.25, getSize() * 1.25, getSize() * 1.25, true);
-			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-			world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(getSize() * 2, getSize() * 2, getSize() * 2),
-					entity -> entity != getOwner());
-
-			if (!collided.isEmpty()) {
-				for (Entity entity : collided) {
-					if (entity != getOwner() && entity != null && getOwner() != null && entity != this && canCollideWith(entity)) {
-
-						damageEntity(entity);
-
-						//Divide the result of the position difference to make entities fly
-						//further the closer they are to the player.
-						double dist = (getSize() * 2 - entity.getDistance(entity)) > 1 ? (getSize() * 2 - entity.getDistance(entity)) : 1;
-						Vector velocity = Vector.getEntityPos(entity).minus(Vector.getEntityPos(this));
-						velocity = velocity.dividedBy(40).times(dist).withY(getSize() / 50);
-
-						double x = (velocity.x());
-						double y = (velocity.y()) > 0 ? velocity.y() : 0.2F;
-						double z = (velocity.z());
-
-						if (!entity.world.isRemote) {
-							entity.addVelocity(x, y, z);
-
-							if (collided instanceof AvatarEntity) {
-								if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
-									AvatarEntity avent = (AvatarEntity) collided;
-									avent.addVelocity(x, y, z);
-								}
-								entity.isAirBorne = true;
-								AvatarUtils.afterVelocityAdded(entity);
-							}
-						}
-					}
-				}
-			}
-
-		}
+	@Override
+	public SoundEvent[] getSounds() {
+		SoundEvent[] events = new SoundEvent[2];
+		events[0] = SoundEvents.ENTITY_LIGHTNING_IMPACT;
+		events[1] = SoundEvents.ENTITY_LIGHTNING_THUNDER;
+		return events;
 	}
 
-	public void damageEntity(Entity entity) {
-		if (getOwner() != null) {
-			BendingData data = BendingData.get(getOwner());
-			AbilityData abilityData = data.getAbilityData("lightning_spear");
-			int lvl = abilityData.getLevel();
-			float damage = getDamage() / 3;
-			if (lvl == 1) {
-				damage = getDamage() / 2;
-			}
-			if (lvl == 2) {
-				damage = getDamage() / 1.5F;
-			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				damage = getDamage();
-			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				damage = getDamage();
-			}
-			boolean attack = entity.attackEntityFrom(AvatarDamageSource.causeLightningSpearDamage(entity, getOwner()), damage);
-			if (attack) {
-				abilityData.addXp(SKILLS_CONFIG.lightningspearHit);
-				BattlePerformanceScore.addMediumScore(getOwner());
+	@Override
+	public float getAoeDamage() {
+		return getDamage() / 10;
+	}
 
-			}
-		}
+	@Override
+	public double getExpandedHitboxHeight() {
+		return getAvgSize() / 4;
+	}
+
+	@Override
+	public double getExpandedHitboxWidth() {
+		return getAvgSize() / 4;
+	}
+
+	@Override
+	public DamageSource getDamageSource(Entity target) {
+		return AvatarDamageSource.causeLightningSpearDamage(target, getOwner());
 	}
 
 	/**
@@ -250,10 +179,7 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 
 		// Uses same DamageSource as lightning arc; this is intentional
 		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());
-
-		if (entity.attackEntityFrom(damageSource, damage / 2)) {
-			BattlePerformanceScore.addLargeScore(getOwner());
-		}
+		DamageUtils.attackEntity(getOwner(), entity, damageSource, getDamage() / 5, getPerformanceAmount(), getAbility(), getXpPerHit());
 
 	}
 
@@ -271,22 +197,7 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	}
 
 
-	public float getDamage() {
-		return damage;
-	}
-
-	public void setDamage(float damage) {
-		this.damage = damage;
-	}
-
-	public float getSize() {
-		return dataManager.get(SYNC_SIZE);
-	}
-
-	public void setSize(float size) {
-		dataManager.set(SYNC_SIZE, size);
-	}
-
+	@Override
 	public boolean isPiercing() {
 		return piercing;
 	}
@@ -313,29 +224,23 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 
 	@Override
 	public boolean onCollideWithSolid() {
-
-		if (!(getBehavior() instanceof LightningSpearBehavior.Thrown)) {
-			return false;
-		}
-		setInvisible(false);
-		LightningBurst();
-		setDead();
-		return true;
-
+		if (getBehavior() instanceof LightningSpearBehavior.Thrown)
+			return super.onCollideWithSolid();
+		else return false;
 	}
 
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		setDamage(nbt.getFloat("Damage"));
 		setBehavior((LightningSpearBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
+		setPiercing(nbt.getBoolean("Piercing"));
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		nbt.setFloat("Damage", getDamage());
 		nbt.setInteger("Behavior", getBehavior().getId());
+		nbt.setBoolean("Piercing", piercing);
 	}
 
 	@Override
@@ -346,48 +251,22 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 	@Override
 	public void setDead() {
 		super.setDead();
+		if (this.isDead && !world.isRemote)
+			Thread.dumpStack();
 		removeStatCtrl();
 	}
 
-	@Override
-	public boolean onAirContact() {
-		if (getAbility() instanceof AbilityLightningArc && !world.isRemote) {
-			AbilityData aD = AbilityData.get(getOwner(), "lightning_spear");
-			if (!aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				this.setDead();
-			}
-		}
-		return true;
-	}
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
-		if (getBehavior() instanceof LightningSpearBehavior.Thrown && getBehavior() != null && !world.isRemote) {
-			if (this.canCollideWith(entity) && entity != getOwner()) {
-				if (getAbility() instanceof AbilityLightningSpear && !world.isRemote) {
-					AbilityData aD = AbilityData.get(getOwner(), getAbility().getName());
-					if (!aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-						LightningBurst();
-						setDead();
-					}
-					LightningBurst();
-				} else {
-					LightningBurst();
-				}
-			}
-			if (entity instanceof AvatarEntity) {
-				if (((AvatarEntity) entity).getElement() instanceof Airbending) {
-					this.onAirContact();
-					((AvatarEntity) entity).onLightningContact();
-				}
-			}
-		}
+		if (getBehavior() instanceof LightningSpearBehavior.Thrown && getBehavior() != null)
+			super.onCollideWithEntity(entity);
 	}
 
 	public void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
-			data.removeStatusControl(THROW_LIGHTNINGSPEAR);
+			data.removeStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR);
 		}
 	}
 
@@ -402,15 +281,62 @@ public class EntityLightningSpear extends EntityOffensive implements ILightProvi
 		return 15728880;
 	}
 
+
 	@Override
-	@Optional.Method(modid = "albedo")
-	public Light provideLight() {
-		return Light.builder().pos(this).color(1F, 2F, 3F).radius(8 + getSize()).build();
+	public boolean canBeCollidedWith() {
+		return !(getBehavior() instanceof LightningSpearBehavior.PlayerControlled);
 	}
 
 	@Override
-	@Optional.Method(modid = "albedo")
-	public void gatherLights(GatherLightsEvent event, Entity entity) {
+	public boolean canBeAttackedWithItem() {
+		return !(getBehavior() instanceof LightningSpearBehavior.PlayerControlled);
+	}
+
+	@Override
+	public void applyElementalContact(AvatarEntity entity) {
+		super.applyElementalContact(entity);
+		entity.onLightningContact();
+	}
+
+	@Override
+	public float getXpPerHit() {
+		return SKILLS_CONFIG.lightningspearHit;
+	}
+
+	@Override
+	public int getPerformanceAmount() {
+		return 15;
+	}
+
+	@Override
+	public EnumParticleTypes getParticle() {
+		return AvatarParticles.getParticleElectricity();
+	}
+
+	@Override
+	public boolean shouldExplode() {
+		return getBehavior() instanceof LightningSpearBehavior.Thrown;
+	}
+
+	@Override
+	public boolean shouldDissipate() {
+		return getBehavior() instanceof LightningSpearBehavior.Thrown;
+	}
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public float getVolume() {
+		return super.getVolume() * 6;
+	}
+
+	@Override
+	@Optional.Method(modid = "hammercore")
+	public ColoredLight produceColoredLight(float partialTicks) {
+		return ColoredLight.builder().pos(this).color(87, 161, 235).radius(10f).build();
 
 	}
 }

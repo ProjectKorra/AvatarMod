@@ -16,16 +16,20 @@
 */
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.START_FLAMETHROW;
+import static com.crowsofwar.avatar.common.data.StatusControlController.STOP_FLAMETHROW;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAMETHROWER;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
@@ -44,39 +48,33 @@ public class AiFlamethrower extends BendingAi {
 	@Override
 	public void resetTask() {
 		super.resetTask();
-		bender.getData().removeStatusControl(StatusControl.START_FLAMETHROW);
+		bender.getData().removeStatusControl(START_FLAMETHROW);
 		bender.getData().removeTickHandler(FLAMETHROWER);
-		bender.getData().addStatusControl(StatusControl.STOP_FLAMETHROW);
+		bender.getData().removeStatusControl(STOP_FLAMETHROW);
 	}
 
 	@Override
 	public boolean shouldContinueExecuting() {
 
 
-
-		if (entity.getAttackTarget() == null) return false;
+		if (entity.getAttackTarget() == null || AbilityData.get(bender.getEntity(), "flamethrower").getLevel() < 0) return false;
 
 		Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
+		BendingData data = BendingData.getFromEntity(entity);
 		entity.rotationYaw = (float) toDegrees(rotations.y());
 		entity.rotationPitch = (float) toDegrees(rotations.x());
 
-		if (timeExecuting == 20) {
-
-			BendingContext ctx = new BendingContext(bender.getData(), entity, bender, new Raytrace.Result());
-
-			execAbility();
-			execStatusControl(StatusControl.START_FLAMETHROW);
-
+		if (timeExecuting == 1) {
+			if (!entity.world.isRemote) {
+				execStatusControl(START_FLAMETHROW);
+			}
 		}
 
-		if (timeExecuting > 20 && timeExecuting < 60) {
-			BendingContext ctx = new BendingContext(bender.getData(), entity, bender, new Raytrace.Result());
-			FLAMETHROWER.tick(ctx);
-		}
-		if (timeExecuting >= 60) {
-			bender.getData().removeStatusControl(StatusControl.START_FLAMETHROW);
+		if (timeExecuting >= 120) {
+			execStatusControl(STOP_FLAMETHROW);
+			bender.getData().removeStatusControl(START_FLAMETHROW);
 			bender.getData().removeTickHandler(FLAMETHROWER);
-			execStatusControl(StatusControl.STOP_FLAMETHROW);
+
 
 			return false;
 		}
@@ -87,12 +85,16 @@ public class AiFlamethrower extends BendingAi {
 
 	@Override
 	protected boolean shouldExec() {
+		int amount = Math.max(bender.getData().getAbilityData(new AbilityFlamethrower()).getLevel(), 0) + 7;
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSq(target) < 6 * 6;
+		return target != null && entity.getDistance(target) < amount;
 	}
 
 	@Override
 	protected void startExec() {
+		timeExecuting = 0;
+		execAbility();
+		bender.getData().getMiscData().setAbilityCooldown(200);
 	}
 
 }

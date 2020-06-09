@@ -5,13 +5,15 @@ import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.AIRBURST_CHARGE_HANDLER;
+import static com.crowsofwar.avatar.common.data.StatusControlController.CHARGE_AIR_BURST;
+import static com.crowsofwar.avatar.common.data.StatusControlController.RELEASE_AIR_BURST;
 
 public class AbilityAirBurst extends Ability {
 
@@ -27,7 +29,9 @@ public class AbilityAirBurst extends Ability {
 
 		float chi = 6;
 		//6
-		boolean hasAirCharge = data.hasTickHandler(AIRBURST_CHARGE_HANDLER);
+		//The charge status control adds the release status control, but the release status control doesn't activate until the right click button is released.
+
+		boolean hasAirCharge = data.hasStatusControl(RELEASE_AIR_BURST);
 
 		if (ctx.getLevel() == 1) {
 			chi = 7;
@@ -48,16 +52,17 @@ public class AbilityAirBurst extends Ability {
 
 
 		if (bender.consumeChi(chi) && !hasAirCharge) {
-			data.addTickHandler(AIRBURST_CHARGE_HANDLER);
+			data.addStatusControl(CHARGE_AIR_BURST);
 		} else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
 			if (!hasAirCharge) {
-				data.addTickHandler(AIRBURST_CHARGE_HANDLER);
+				data.addStatusControl(CHARGE_AIR_BURST);
 			}
 		}
+		super.execute(ctx);
 	}
 
 	@Override
-	public int getTier() {
+	public int getBaseTier() {
 		return 4;
 	}
 

@@ -17,31 +17,29 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
 import com.crowsofwar.avatar.common.gui.MenuTheme.ThemeColor;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 
 import java.awt.*;
 import java.util.UUID;
 
 public class Firebending extends BendingStyle {
 
-	public static UUID ID = UUID.fromString("8485da8f-20d9-4e98-9a10-721104e962fe");
+	public static final UUID ID = UUID.fromString("8485da8f-20d9-4e98-9a10-721104e962fe");
 
 	private final BendingMenuInfo menu;
 
 	public Firebending() {
-		addAbility("fire_shot");
-		addAbility("fire_blast");
-		addAbility("flamethrower");
-		addAbility("fire_jump");
-		addAbility("fireball");
-		addAbility("inferno_punch");
-		addAbility("immolate");
-
-
+		for (Ability ability : Abilities.getAbilitiesToRegister(ID))
+			addAbility(ability.getName());
 		Color light = new Color(244, 240, 187);
 		Color red = new Color(173, 64, 31);
 		Color gray = new Color(40, 40, 40);
@@ -82,4 +80,13 @@ public class Firebending extends BendingStyle {
 		return ID;
 	}
 
+	@Override
+	public TextFormatting getTextFormattingColour() {
+		return TextFormatting.RED;
+	}
+
+	@Override
+	public SoundEvent getRadialMenuSound() {
+		return SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE;
+	}
 }

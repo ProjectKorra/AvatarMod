@@ -17,13 +17,9 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.bending.lightning.AbilityLightningSpear;
 import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
@@ -31,21 +27,16 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import java.util.List;
-import java.util.Objects;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_LIGHTNINGSPEAR;
 
 /**
  * @author CrowsOfWar
@@ -96,16 +87,12 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
 
 			time++;
-
-			if (!entity.world.isRemote && time > 200) {
-				entity.onCollideWithSolid();
-
-			}
+			entity.noClip = false;
 
 			World world = entity.world;
 			if (!entity.isDead && !world.isRemote) {
-				AxisAlignedBB box = new AxisAlignedBB(entity.posX + entity.getSize(), entity.posY + entity.getSize(), entity.posZ + entity.getSize(),
-						entity.posX - entity.getSize(), entity.posY - entity.getSize(), entity.posZ - entity.getSize());
+				AxisAlignedBB box = new AxisAlignedBB(entity.posX + entity.getAvgSize(), entity.posY + entity.getAvgSize(), entity.posZ + entity.getAvgSize(),
+						entity.posX - entity.getAvgSize(), entity.posY - entity.getAvgSize(), entity.posZ - entity.getAvgSize());
 				List<Entity> collidedList = world.getEntitiesWithinAABB(Entity.class,
 						box);
 				if (!collidedList.isEmpty()) {
@@ -126,36 +113,9 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 
 
 		private void collision(Entity collided, EntityLightningSpear entity, boolean triggerGroupAttack) {
-			if (entity.canCollideWith(collided) && collided.canBeCollidedWith() && collided.canBePushed() && collided != entity.getOwner() && collided != entity) {
+			//TODO: Move all of this to the entity class.
+			if (entity.canDamageEntity(collided) && collided != entity.getOwner() && collided != entity) {
 
-				if (collided.attackEntityFrom(AvatarDamageSource.causeLightningDamage(collided, entity.getOwner()),
-						entity.getDamage())) {
-					BattlePerformanceScore.addMediumScore(entity.getOwner());
-				}
-				Vector motion = entity.velocity().dividedBy(40);
-				motion = motion.times(STATS_CONFIG.lightningSpearSettings.push).withY(0.04);
-				collided.addVelocity(motion.x(), motion.y(), motion.z());
-
-				BendingData data = Objects.requireNonNull(Bender.get(entity.getOwner())).getData();
-				if (!entity.world.isRemote && data != null) {
-					float xp = SKILLS_CONFIG.lightningspearHit;
-					data.getAbilityData("lightning_spear").addXp(xp);
-					if (!data.getAbilityData("lightning_spear").isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-						entity.LightningBurst();
-						entity.world.playSound(null,collided.posX, entity.posY, collided.posZ, SoundEvents.ENTITY_LIGHTNING_IMPACT, SoundCategory.BLOCKS, 2.0F,
-								(1.0F + (entity.world.rand.nextFloat() - entity.world.rand.nextFloat()) * 0.2F));
-						entity.removeStatCtrl();
-
-					}
-					else {
-						if (entity.world instanceof WorldServer) {
-							WorldServer World = (WorldServer) entity.world;
-							World.playSound(null,collided.posX, entity.posY, collided.posZ, SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.BLOCKS, 2.0F,
-									(1.0F + (entity.world.rand.nextFloat() - entity.world.rand.nextFloat()) * 0.2F));
-							World.spawnParticle(AvatarParticles.getParticleElectricity(), collided.posX, entity.posY, collided.posZ, 10, 0, 0, 0, 0.025);
-						}
-					}
-				}
 			}
 
 
@@ -178,7 +138,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				}
 
 			}
-			if (!entity.world.isRemote && !entity.isPiercing()) entity.setDead();
+		//	if (!entity.world.isRemote && !entity.isPiercing()) entity.setDead();
 
 		}
 
@@ -211,13 +171,13 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 		public LightningSpearBehavior onUpdate(EntityLightningSpear entity) {
 			EntityLivingBase owner = entity.getOwner();
 
-			if (owner == null) return this;
+			if (owner == null || entity.world.isRemote) return this;
 
 			BendingData data = BendingData.get(owner);
-			if (!data.hasStatusControl(StatusControl.THROW_LIGHTNINGSPEAR)) {
+			if (!data.hasStatusControl(THROW_LIGHTNINGSPEAR)) {
 				EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(entity.world, EntityLightningSpear.class, entity.getOwner());
 				if (spear != null) {
-					data.addStatusControl(StatusControl.THROW_LIGHTNINGSPEAR);
+					data.addStatusControl(THROW_LIGHTNINGSPEAR);
 				}
 			}
 			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
@@ -228,7 +188,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			} else {
 				Vector look = Vector.toRectangular(Math.toRadians(owner.rotationYaw),
 						Math.toRadians(owner.rotationPitch));
-				target = Vector.getEyePos(owner).plus(look.times(1 + entity.getSize()));
+				target = Vector.getEyePos(owner).plus(look.times(1 + entity.getAvgSize()));
 			}
 
 			assert target != null;
@@ -239,9 +199,13 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 			Vector direction = entity.position().minus(Vector.getEyePos(owner)).toSpherical();
 			entity.rotationYaw = (float) Math.toDegrees(direction.y());
 			entity.rotationPitch = (float) Math.toDegrees(direction.x());
+			//entity.rotationPitch = owner.rotationPitch;
+			//entity.rotationYaw = owner.rotationYaw;
+
+			entity.noClip = true;
 
 
-			float size = entity.getSize();
+			float size = entity.getAvgSize();
 			float damage = entity.getDamage();
 
 			if (entity.getAbility() instanceof AbilityLightningSpear && !entity.world.isRemote) {
@@ -264,7 +228,7 @@ public abstract class LightningSpearBehavior extends Behavior<EntityLightningSpe
 				}
 			}
 			if (size < maxSize && entity.ticksExisted % 4 == 0) {
-				entity.setSize(size + 0.005F);
+				entity.setEntitySize(size + 0.005F);
 			}
 			if (damage < maxDamage && entity.ticksExisted % 4 == 0) {
 				entity.setDamage(damage + 0.005F);

@@ -21,11 +21,11 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AvatarWorldData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BenderEntityComponent;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.ai.*;
 import com.crowsofwar.avatar.common.entity.data.AnimalCondition;
@@ -38,6 +38,7 @@ import com.crowsofwar.avatar.common.item.ItemBisonArmor.ArmorTier;
 import com.crowsofwar.avatar.common.item.ItemBisonSaddle.SaddleTier;
 import com.crowsofwar.avatar.common.item.ItemBisonWhistle;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.avatar.common.util.PlayerViewRegistry;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import com.crowsofwar.gorecore.util.Vector;
@@ -193,8 +194,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	protected void entityInit() {
 		super.entityInit();
 
-		int domestication = MOBS_CONFIG.bisonMinDomestication
-				+ rand.nextInt(MOBS_CONFIG.bisonMaxDomestication - MOBS_CONFIG.bisonMinDomestication);
+		int domestication = MOBS_CONFIG.bisonSettings.bisonMinDomestication
+				+ rand.nextInt(MOBS_CONFIG.bisonSettings.bisonMaxDomestication - MOBS_CONFIG.bisonSettings.bisonMinDomestication);
 
 		dataManager.register(SYNC_OWNER, Optional.absent());
 		dataManager.register(SYNC_SITTING, false);
@@ -213,7 +214,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(2);
+		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.6);
 		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100);
 	}
 
@@ -221,7 +222,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 
-		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
+		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
 		this.targetTasks.addTask(2, new EntityAiBisonDefendOwner(this));
 		this.targetTasks.addTask(3, new EntityAiBisonHelpOwnerTarget(this));
 
@@ -248,7 +249,6 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty,
 											@Nullable IEntityLivingData livingData) {
 		getData().addBendingId(Airbending.ID);
-		getData().getAbilityData("air_gust").setLevel(0);
 
 
 		boolean sterile = false;
@@ -256,13 +256,14 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			sterile = ((BisonSpawnData) livingData).isSterile();
 		}
 		condition.setSterile(sterile);
-		condition.setBreedTimer((int) (MOBS_CONFIG.bisonBreedMaxMinutes * 1200));
+		condition.setBreedTimer((int) (MOBS_CONFIG.bisonSettings.bisonBreedMaxMinutes * 1200));
 
 		IBlockState walkingOn = world.getBlockState(getEntityPos(this).minusY(0.01)
 				.toBlockPos());
 		wasTouchingGround = walkingOn.getMaterial() != Material.AIR;
 
 		condition.setAge(rand.nextInt(48000) + 40000);
+
 
 		originalPos = Vector.getEntityPos(this);
 		return super.onInitialSpawn(difficulty, livingData);
@@ -483,7 +484,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		if (index > -1) {
 
 			//Fix this as well, since the max age is now 7. Yay.
-			float sizeOffset = condition.getAgeDays() < 5 ? condition.getAgeDays() / condition.getAdultAge() : 5;
+			float sizeOffset = condition.getAgeDays() < 7 ? condition.getAgeDays() / condition.getAdultAge() / 2F : 0.5F;
 			double offset = 0.75;
 			double angle = (index + 0.5) * Math.PI - toRadians(rotationYaw);
 			double yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.35));
@@ -491,15 +492,22 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			if (passenger == getControllingPassenger() && !this.isSitting()) {
 				angle = -toRadians(passenger.rotationYaw);
 				offset = 1;
-				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.40)) - Math.sin(toRadians(rotationPitch));
+				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.40));
 			}
 			if (passenger == getControllingPassenger() && this.isSitting()) {
 				angle = -toRadians(passenger.rotationYaw);
 				offset = 1;
-				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.35)) - Math.sin(toRadians(rotationPitch));
+				yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.35));
 			}
 
-			passenger.setPosition(posX + sin(angle) * offset, posY + yOffset, posZ + cos(angle) * offset);
+			if (/*!AvatarMod.realFirstPersonRender2Compat && **/(PlayerViewRegistry.getPlayerViewMode(passenger.getUniqueID()) >= 2 ||
+					PlayerViewRegistry.getPlayerViewMode(passenger.getUniqueID()) <= -1)) {
+				passenger.setPosition(posX + sin(angle) * offset, posY + yOffset,
+						posZ + cos(angle) * offset);
+			} else {
+				passenger.setPosition(posX + sin(angle) * offset - sin(angle), posY + yOffset,
+						posZ + cos(angle) * offset - cos(angle));
+			}
 
 			if (passenger != getControllingPassenger()) {
 				if (motionX != 0 || motionY != 0 || motionZ != 0) {
@@ -689,8 +697,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		if (stack.getItem() == Item.getItemFromBlock(Blocks.TALLGRASS)) {
 			if (condition.getBreedTimer() == 0) {
-				float min = MOBS_CONFIG.bisonBreedMinMinutes;
-				float max = MOBS_CONFIG.bisonBreedMaxMinutes;
+				float min = MOBS_CONFIG.bisonSettings.bisonBreedMinMinutes;
+				float max = MOBS_CONFIG.bisonSettings.bisonBreedMaxMinutes;
 				float minutes = min + rand.nextFloat() * (max - min);
 				condition.setBreedTimer((int) (minutes * 1200));
 				if (!player.capabilities.isCreativeMode) {
@@ -709,10 +717,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 		if (player.isSneaking() && getOwner() == player) {
 			if (!isSitting()) {
-				 Bender b = Bender.get(getOwner());
-				 if (b != null && !world.isRemote) {
-				 	b.sendMessage("avatar.bisonSitting");
-				 }
+				Bender b = Bender.get(getOwner());
+				if (b != null && !world.isRemote) {
+					b.sendMessage("avatar.bisonSitting");
+				}
 			}
 			setSitting(!isSitting());
 			madeSitByPlayer = true;
@@ -753,15 +761,15 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 	@Override
 	public boolean canBeLeashedTo(EntityPlayer player) {
-		return condition.getDomestication() >= MOBS_CONFIG.bisonLeashTameness && super.canBeLeashedTo(player);
+		return condition.getDomestication() >= MOBS_CONFIG.bisonSettings.bisonRiderTameness && super.canBeLeashedTo(player);
 	}
 
 	private void onLiftoff() {
 		if (!isEatingGrass()) {
 			getBender().executeAbility(Abilities.get("air_jump"), false);
-			StatusControl.AIR_JUMP.execute(new BendingContext(getData(), this, getBender(), new
+			StatusControlController.AIR_JUMP.execute(new BendingContext(getData(), this, getBender(), new
 					Raytrace.Result()));
-			getData().removeStatusControl(StatusControl.AIR_JUMP);
+			getData().removeStatusControl(StatusControlController.AIR_JUMP);
 		}
 	}
 
@@ -777,7 +785,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 
 	@Override
 	public void eatGrassBonus() {
-		condition.addFood(MOBS_CONFIG.bisonGrassFoodBonus);
+		condition.addFood(MOBS_CONFIG.bisonSettings.bisonGrassFoodBonus);
 	}
 
 	// ================================================================================
@@ -861,11 +869,11 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	}
 
 	public boolean canPlayerViewInventory(EntityPlayer player) {
-		return getOwner() == player && condition.getDomestication() >= MOBS_CONFIG.bisonChestTameness;
+		return getOwner() == player && condition.getDomestication() >= MOBS_CONFIG.bisonSettings.bisonChestTameness;
 	}
 
 	public int getChestSlots() {
-		if (condition.getDomestication() >= MOBS_CONFIG.bisonChestTameness && condition.isAdult()) {
+		if (condition.getDomestication() >= MOBS_CONFIG.bisonSettings.bisonChestTameness && condition.getAgeDays() > 1) {
 
 			int age = (int) (condition.getAgeDays() - 1);
 
@@ -915,7 +923,12 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		setLevel((int) Math.min(condition.getAgeDays(), 7));
+		//Applies AI stuff as it ages
+		applyAbilityLevels(getLevel());
 
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20 + Math.min(80 * condition.getAgeDays()
+				/ condition.getAdultAge(), 80));
 		if (this.isSitting() && hasOwner() && (world.getBlockState(getEntityPos(this)
 				.toBlockPos()).getBlock() != Blocks.AIR)) {
 			this.motionX = this.motionY = this.motionZ = 0;
@@ -942,7 +955,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			this.world.spawnParticle(EnumParticleTypes.HEART,
 					this.posX + this.rand.nextFloat() * this.width * 2 - this.width,
 					this.posY + 0.5D + this.rand.nextFloat() * this.height,
-					this.posZ + this.rand.nextFloat() * this.width * 2 - this.width, d0, d1, d2, new int[0]);
+					this.posZ + this.rand.nextFloat() * this.width * 2 - this.width, d0, d1, d2);
 
 		}
 
@@ -963,16 +976,18 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			setSitting(false);
 		}
 
-		if (!isForceLoadingChunks() && hasOwner()) {
-			beginForceLoadingChunks();
-		}
-		if (isForceLoadingChunks()) {
-			ForgeChunkManager.forceChunk(ticket, new ChunkPos(getPosition()));
-			if (!hasOwner() || getHealth() <= 0) {
-				stopForceLoadingChunks();
+		//Stops crashes; weird bugs will ensue, but blame cubic chunks
+		if (!AvatarMod.cubicChunks) {
+			if (!isForceLoadingChunks() && hasOwner()) {
+				beginForceLoadingChunks();
+			}
+			if (isForceLoadingChunks()) {
+				ForgeChunkManager.forceChunk(ticket, new ChunkPos(getPosition()));
+				if (!hasOwner() || getHealth() <= 0) {
+					stopForceLoadingChunks();
+				}
 			}
 		}
-
 		if (!world.isRemote) {
 
 			IBlockState walkingOn = world.getBlockState(getEntityPos(this).withY(0.01)
@@ -994,16 +1009,10 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			riderTicks = 0;
 		}
 		if (!condition.canHaveOwner() && riderTicks > 0 && riderTicks % 60 == 0) {
-			condition.addDomestication(MOBS_CONFIG.bisonRideOneSecondTameness * 3);
+			condition.addDomestication(MOBS_CONFIG.bisonSettings.bisonRideOneSecondTameness * 3);
 			playTameEffect(false);
 		}
 
-	}
-
-	@Override
-	public void setElement() {
-		super.setElement();
-		getData().addBending(new Airbending());
 	}
 
 	@Override
@@ -1038,7 +1047,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 			Vector look = toRectangular(toRadians(driver.rotationYaw), toRadians(pitch));
 			forward = (float) look.withY(0).magnitude();
 
-			float speedMult = getSpeedMultiplier() * driver.moveForward * 2;
+			float speedMult = getSpeedMultiplier() * driver.moveForward * 1.25F;
 
 			float current = normalizeAngle(this.rotationYaw);
 			float target = normalizeAngle(driver.rotationYaw);
@@ -1185,7 +1194,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 					this.posX + this.rand.nextFloat() * this.width * 2.0F - this.width,
 					this.posY + 0.5D + this.rand.nextFloat() * this.height,
 					this.posZ + this.rand.nextFloat() * this.width * 2.0F - this.width, //
-					mx, my, mz, new int[0]);
+					mx, my, mz);
 		}
 
 	}

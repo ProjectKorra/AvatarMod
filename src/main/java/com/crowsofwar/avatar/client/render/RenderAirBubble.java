@@ -38,7 +38,7 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 public class RenderAirBubble extends Render<EntityAirBubble> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/entity/air_bubble.png");
+			"textures/entity/air-bubble.png");
 
 	public RenderAirBubble(RenderManager renderManager) {
 		super(renderManager);
@@ -55,7 +55,8 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		float z = (float) zz;
 
 		enableBlend();
-		GlStateManager.disableLighting();
+		disableDepth();
+		GlStateManager.enableLighting();
 
 		float ticks = entity.ticksExisted + partialTicks;
 		float sizeMult = 1, alpha = 1;
@@ -73,23 +74,25 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		}
 		sizeMult *= entity.getSize() / 2.5f;
 
-		GlStateManager.color(1, 1, 1, .5f * alpha);
+		GlStateManager.color(0.75F, 0.75F, 0.75F, .25f * alpha);
 		{
 			float rotY = ticks / 7f;
 			float rotX = MathHelper.cos(ticks / 4f) * .3f;
-			disableLighting();
+			enableLighting();
 			renderCube(x, y, z, 0, 1, 0, 1, 2.25f * sizeMult, rotX, rotY, 0);
 		}
-		GlStateManager.color(1, 1, 1, 1 * alpha);
+		GlStateManager.color(0.85F, 0.85F, 0.85F, 0.5F * alpha);
 		{
 			float rotY = ticks / 25f;
 			float rotZ = MathHelper.cos(ticks / 10f + 1.3f) * .3f;
-			disableLighting();
+			enableLighting();
 			renderCube(x, y, z, 0, 1, 0, 1, 3f * sizeMult, 0, rotY, rotZ);
 		}
+		//GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+
 
 		disableBlend();
-
+		enableDepth();
 	}
 
 	private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,

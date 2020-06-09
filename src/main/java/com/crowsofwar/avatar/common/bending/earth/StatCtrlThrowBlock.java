@@ -17,11 +17,10 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
@@ -29,6 +28,8 @@ import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.data.StatusControlController.PLACE_BLOCK;
 
 /**
  * @author CrowsOfWar
@@ -42,11 +43,10 @@ public class StatCtrlThrowBlock extends StatusControl {
 	@Override
 	public boolean execute(BendingContext ctx) {
 
-		BendingStyle controller = BendingStyles.get(Earthbending.ID);
-
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = entity.world;
 		BendingData data = ctx.getData();
+		AbilityData abilityData = AbilityData.get(entity, new AbilityEarthControl().getName());
 
 		EntityFloatingBlock floating = AvatarEntity.lookupControlledEntity(world, EntityFloatingBlock.class,
 				entity);
@@ -57,11 +57,18 @@ public class StatCtrlThrowBlock extends StatusControl {
 			float pitch = (float) Math.toRadians(entity.rotationPitch);
 
 			// Calculate force and everything
-			double forceMult = data.getAbilityData("pickup_block").getLevel() >= 1 //
-					? 50 : 35;
+			double forceMult = 15;
+			if (abilityData.getLevel() == 1)
+				forceMult += 7;
+			if (abilityData.getLevel() == 2)
+				forceMult += 12;
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST))
+				forceMult += 15;
+			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND))
+				forceMult += 30;
+
 			Vector lookDir = Vector.toRectangular(yaw, pitch);
-			floating.addVelocity(floating.velocity().times(-1));
-			floating.addVelocity(lookDir.times(forceMult));
+			floating.setVelocity(lookDir.times(forceMult));
 			floating.setBehavior(new FloatingBlockBehavior.Thrown());
 
 			data.removeStatusControl(PLACE_BLOCK);

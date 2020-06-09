@@ -22,9 +22,9 @@ public class WaterbendingPerformanceBonus {
 		if (e.phase == TickEvent.Phase.START) {
 			EntityPlayer player = e.player;
 			World world = player.world;
-			BendingData data = BendingData.get(player);
+			BendingData data = BendingData.getFromEntity(player);
 
-			if (!world.isRemote && data.hasBendingId(Waterbending.ID)) {
+			if (!world.isRemote && data != null && data.hasBendingId(Waterbending.ID)) {
 
 				BattlePerformanceScore performance = data.getPerformance();
 				double score = data.getPerformance().getScore();

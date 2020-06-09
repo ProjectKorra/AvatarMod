@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
@@ -10,6 +10,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 import java.util.List;
+
+import static com.crowsofwar.avatar.common.data.StatusControlController.*;
 
 /**
  * @author CrowsOfWar
@@ -26,8 +28,6 @@ public class StatCtrlDropWall extends StatusControl {
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 
-		// TODO: When upgrade to a5.0 , call setOwner on the wall itself , then lookup based on wall
-
 		// Wall has no owner so we go for segments
 		EntityWallSegment wallSegment = AvatarEntity.lookupOwnedEntity(world, EntityWallSegment.class, entity);
 
@@ -38,9 +38,9 @@ public class StatCtrlDropWall extends StatusControl {
 			seg.setBehavior(new WallBehavior.Drop());
 		}
 
-		ctx.getData().removeStatusControl(StatusControl.PLACE_WALL);
-		ctx.getData().removeStatusControl(StatusControl.PUSH_WALL);
-		ctx.getData().removeStatusControl(StatusControl.PULL_WALL);
+		ctx.getData().removeStatusControl(PLACE_WALL);
+		ctx.getData().removeStatusControl(PUSH_WALL);
+		ctx.getData().removeStatusControl(PULL_WALL);
 
 		return true;
 	}

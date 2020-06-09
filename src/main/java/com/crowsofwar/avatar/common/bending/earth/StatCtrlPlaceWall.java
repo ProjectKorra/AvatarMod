@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
@@ -10,6 +10,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 import java.util.List;
+
+import static com.crowsofwar.avatar.common.data.StatusControlController.*;
 
 /**
  * @author CrowsOfWar
@@ -43,10 +45,10 @@ public class StatCtrlPlaceWall extends StatusControl {
 					segment.setBehavior(new WallBehavior.Place());
 			}
 
-			ctx.getData().removeStatusControl(StatusControl.DROP_WALL);
-			ctx.getData().removeStatusControl(StatusControl.SHOOT_WALL);
-			ctx.getData().removeStatusControl(StatusControl.PUSH_WALL);
-			ctx.getData().removeStatusControl(StatusControl.PULL_WALL);
+			ctx.getData().removeStatusControl(DROP_WALL);
+			ctx.getData().removeStatusControl(SHOOT_WALL);
+			ctx.getData().removeStatusControl(PUSH_WALL);
+			ctx.getData().removeStatusControl(PULL_WALL);
 
 			return true;
 		} else {

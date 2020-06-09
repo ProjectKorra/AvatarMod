@@ -16,7 +16,7 @@ public class AiFireShot extends BendingAi {
 
 	AiFireShot(Ability ability, EntityLiving entity, Bender bender) {
 		super(ability, entity, bender);
-		setMutexBits(2);
+		setMutexBits(3);
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class AiFireShot extends BendingAi {
 			entity.rotationPitch = (float) toDegrees(rotations.x());
 
 			execAbility();
-			data.getMiscData().setAbilityCooldown(20);
+			data.getMiscData().setAbilityCooldown(40);
 
 		}
 	}
@@ -39,8 +39,8 @@ public class AiFireShot extends BendingAi {
 	@Override
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSq(target) < 8 * 8
-				&& bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
+		return target != null && entity.getDistanceSq(target) < 9 * 9
+				&& bender.getData().getMiscData().getAbilityCooldown() == 0;
 	}
 
 }

@@ -19,21 +19,31 @@ package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockSnow;
 import net.minecraft.block.SoundType;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
+import static com.crowsofwar.avatar.common.data.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_BLOCK;
 
 /**
  * @author CrowsOfWar
@@ -51,6 +61,8 @@ public class StatCtrlPlaceBlock extends StatusControl {
 	public boolean execute(BendingContext ctx) {
 
 		BendingStyle controller = BendingStyles.get(Earthbending.ID);
+		World world = ctx.getWorld();
+		EntityLivingBase entity = ctx.getBenderEntity();
 
 		BendingData data = ctx.getData();
 
@@ -58,14 +70,20 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
 						&& fb.getOwner() == ctx.getBenderEntity());
 
-		if (floating != null) {
-			VectorI looking = ctx.getLookPosI();
-			EnumFacing lookingSide = ctx.getLookSide();
-			if (looking != null && lookingSide != null) {
-				looking.offset(lookingSide);
+		if (floating != null && !world.isRemote) {
+			Vec3d start = Vector.getEntityPos(entity).toMinecraft().add(0, entity.getEyeHeight(), 0);
+			Vec3d end = start.add(entity.getLookVec().scale(5));
 
-				floating.setBehavior(new FloatingBlockBehavior.Place(looking.toBlockPos()));
-				Vector force = looking.precision().minus(new Vector(floating)).normalize();
+			RayTraceResult result = world.rayTraceBlocks(start, end);
+			if (result != null && result.sideHit != null) {
+				BlockPos pos = result.getBlockPos().offset(result.sideHit);
+				Block block = world.getBlockState(pos).getBlock();
+
+				if (block instanceof BlockSnow)
+					pos = pos.down();
+
+				floating.setBehavior(new FloatingBlockBehavior.Place(pos));
+				Vector force = new Vector(pos).minus(floating.velocity()).normalize();
 				floating.addVelocity(force);
 
 				SoundType sound = floating.getBlock().getSoundType();
@@ -76,14 +94,14 @@ public class StatCtrlPlaceBlock extends StatusControl {
 
 				data.removeStatusControl(THROW_BLOCK);
 
-				data.getAbilityData("pickup_block").addXp(SKILLS_CONFIG.blockPlaced);
+				data.getAbilityData(new AbilityEarthControl()).addXp(SKILLS_CONFIG.blockPlaced);
 
 				return true;
 			}
 			return false;
 		}
 
-		return false;
+		return true;
 
 	}
 

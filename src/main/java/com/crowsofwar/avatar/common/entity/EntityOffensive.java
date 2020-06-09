@@ -1,32 +1,33 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.function.Predicate;
 
-public abstract class EntityOffensive extends AvatarEntity {
+public abstract class EntityOffensive extends AvatarEntity implements IOffensiveEntity {
 
 	//Used for all entities that damage things
 	private static final DataParameter<Float> SYNC_DAMAGE = EntityDataManager
@@ -37,22 +38,71 @@ public abstract class EntityOffensive extends AvatarEntity {
 			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
 	private static final DataParameter<Float> SYNC_WIDTh = EntityDataManager
 			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
+	private static final DataParameter<OffensiveBehaviour> SYNC_BEHAVIOR = EntityDataManager
+			.createKey(EntityOffensive.class, OffensiveBehaviour.DATA_SERIALIZER);
 
-	private AxisAlignedBB expandedHitbox;
+	/**
+	 * The fraction of the impact velocity that should be the maximum spread speed added on impact.
+	 */
+	private static final double SPREAD_FACTOR = 0.1;
+	/**
+	 * Lateral velocity is reduced by this factor on impact, before adding random spread velocity.
+	 */
+	private static final double IMPACT_FRICTION = 0.4;
+
 	private float xp;
 	private int fireTime;
+	private boolean dynamicSpreadingCollision;
+	private boolean collidedWithSolid;
 	private int performanceAmount;
-	private Vec3d piercingKnockback;
-	private Vec3d knockbackMult;
+	private int ticks = 0, ticksMoving = 0;
+	private double prevVelX, prevVelY, prevVelZ;
+	private Predicate<Entity> solidEntities;
 
 
 	public EntityOffensive(World world) {
 		super(world);
-		this.expandedHitbox = getEntityBoundingBox();
 		this.performanceAmount = 20;
 		this.fireTime = 3;
 		this.xp = 3;
-		this.piercingKnockback = Vec3d.ZERO;
+		this.dynamicSpreadingCollision = false;
+		this.prevVelX = prevVelY = prevVelZ = 0;
+		this.solidEntities = entity -> entity instanceof EntityWall || entity instanceof EntityWallSegment ||
+				entity instanceof EntityShield && ((EntityShield) entity).getOwner() != getOwner();
+		this.width = getWidth();
+		this.height = getHeight();
+	}
+
+	public OffensiveBehaviour getBehaviour() {
+		return dataManager.get(SYNC_BEHAVIOR);
+	}
+
+	public void setBehaviour(OffensiveBehaviour behaviour) {
+		dataManager.set(SYNC_BEHAVIOR, behaviour);
+	}
+
+	public boolean getDynamicSpreadingCollision() {
+		return this.dynamicSpreadingCollision;
+	}
+
+	public void setDynamicSpreadingCollision(boolean collision) {
+		this.dynamicSpreadingCollision = collision;
+	}
+
+	public void setSolidEntityPredicate(Predicate<Entity> predicate) {
+		this.solidEntities = predicate;
+	}
+
+	public void setSolidEntityPredicateOr(Predicate<Entity> predicate) {
+		this.solidEntities = this.solidEntities.or(predicate);
+	}
+
+	public void setSolidEntityPredicateAnd(Predicate<Entity> predicate) {
+		this.solidEntities = this.solidEntities.and(predicate);
+	}
+
+	public Predicate<Entity> getSolidEntities() {
+		return this.solidEntities;
 	}
 
 	public float getHeight() {
@@ -66,13 +116,17 @@ public abstract class EntityOffensive extends AvatarEntity {
 	public float getAvgSize() {
 		if (getHeight() == getWidth()) {
 			return getHeight();
-		}
-		else return (getHeight() + getWidth()) / 2;
+		} else return (getHeight() + getWidth()) / 2;
 	}
 
 	public void setEntitySize(float height, float width) {
 		dataManager.set(SYNC_HEIGHT, height);
 		dataManager.set(SYNC_WIDTh, width);
+	}
+
+	public void setEntitySize(float size) {
+		dataManager.set(SYNC_HEIGHT, size);
+		dataManager.set(SYNC_WIDTh, size);
 	}
 
 	public float getDamage() {
@@ -83,32 +137,186 @@ public abstract class EntityOffensive extends AvatarEntity {
 		dataManager.set(SYNC_DAMAGE, damage);
 	}
 
+	//This just makes the methods easier to use.
+	public void Explode() {
+		Explode(world, this, getOwner());
+	}
+
+	public void applyPiercingCollision() {
+		applyPiercingCollision(this);
+	}
+
+	public void Dissipate() {
+		Dissipate(this);
+	}
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_DAMAGE, 1F);
-		dataManager.register(SYNC_LIFETIME, 100);
+		dataManager.register(SYNC_LIFETIME, 20);
 		dataManager.register(SYNC_WIDTh, 1.0F);
 		dataManager.register(SYNC_HEIGHT, 1.0F);
+		dataManager.register(SYNC_BEHAVIOR, new OffensiveBehaviour.Idle());
+	}
+
+	@Override
+	protected void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		setDamage(nbt.getFloat("Damage"));
+		setLifeTime(nbt.getInteger("Lifetime"));
+		setBehaviour((OffensiveBehaviour) Behavior.lookup(nbt.getInteger("Behaviour"), this));
+	}
+
+	@Override
+	protected void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		nbt.setFloat("Damage", getDamage());
+		nbt.setInteger("Lifetime", getLifeTime());
+		nbt.setInteger("Behaviour", getBehaviour().getId());
 	}
 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (!world.isRemote) {
-			List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, getExpandedHitbox());
-			if (!targets.isEmpty()) {
-				for (Entity hit : targets) {
-					if (canDamageEntity(hit) && this != hit) {
+
+		setBehaviour((OffensiveBehaviour) getBehaviour().onUpdate(this));
+		setSize(getWidth(), getHeight());
+
+		List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, getExpandedHitbox());
+		if (!targets.isEmpty()) {
+			for (Entity hit : targets) {
+				if (canCollideWith(hit) && this != hit) {
+					if (!world.isRemote) {
 						onCollideWithEntity(hit);
 					}
 				}
 			}
 		}
-		if (ticksExisted >= getLifeTime()) {
-			Dissipate();
+
+		if (noClip) {
+			IBlockState state = world.getBlockState(getPosition());
+			if (state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()) {
+				ticks++;
+			}
+			if (ticks > 1) {
+				//Checks whether to dissipate first.
+				if (shouldDissipate())
+					Dissipate();
+				else if (shouldExplode())
+					Explode();
+			}
 		}
-		setSize(getWidth(), getHeight());
+		if (shouldDissipate() || shouldExplode())
+			ticksMoving++;
+
+		if (ticksMoving >= getLifeTime() && (shouldDissipate() || shouldExplode()) && getLifeTime() > 0) {
+			if (shouldDissipate())
+				Dissipate();
+			else if (shouldExplode())
+				Explode();
+		}
+
+		//Dynamic Collision code.
+
+		if (dynamicSpreadingCollision) {
+			//Handles actual motion on colliding
+			if (this.motionX == 0 && this.prevVelX != 0) { // If the particle just collided in x
+				// Reduce lateral velocity so the added spread speed actually has an effect
+				this.motionY *= IMPACT_FRICTION;
+				this.motionZ *= IMPACT_FRICTION;
+				// Add random velocity in y and z proportional to the impact velocity
+				this.motionY += (rand.nextDouble() * 2 - 1) * this.prevVelX * SPREAD_FACTOR;
+				this.motionZ += (rand.nextDouble() * 2 - 1) * this.prevVelX * SPREAD_FACTOR;
+			}
+
+			if (this.motionY == 0 && this.prevVelY != 0) { // If the particle just collided in y
+				// Reduce lateral velocity so the added spread speed actually has an effect
+				this.motionX *= IMPACT_FRICTION;
+				this.motionZ *= IMPACT_FRICTION;
+				// Add random velocity in x and z proportional to the impact velocity
+				this.motionX += (rand.nextDouble() * 2 - 1) * this.prevVelY * SPREAD_FACTOR;
+				this.motionZ += (rand.nextDouble() * 2 - 1) * this.prevVelY * SPREAD_FACTOR;
+			}
+
+			if (this.motionZ == 0 && this.prevVelZ != 0) { // If the particle just collided in z
+				// Reduce lateral velocity so the added spread speed actually has an effect
+				this.motionX *= IMPACT_FRICTION;
+				this.motionY *= IMPACT_FRICTION;
+				// Add random velocity in x and y proportional to the impact velocity
+				this.motionX += (rand.nextDouble() * 2 - 1) * this.prevVelZ * SPREAD_FACTOR;
+				this.motionY += (rand.nextDouble() * 2 - 1) * this.prevVelZ * SPREAD_FACTOR;
+			}
+
+			//Handles if it's colliding with something.
+			double x = motionX, y = motionY, z = motionZ;
+			double origX = x, origY = y, origZ = z;
+			List<AxisAlignedBB> list = this.world.getCollisionBoxes(null, this.getEntityBoundingBox().expand(x, y, z).grow(0.1));
+			List<Entity> entityList = this.world.getEntitiesWithinAABB(Entity.class, getEntityBoundingBox().expand(x, y, z).grow(0.15));
+
+			for (Entity hit : entityList) {
+				if (hit != getOwner()) {
+					if (solidEntities.test(hit)) {
+						collidedWithSolid = true;
+					} else if (hit instanceof EntityThrowable || hit instanceof EntityArrow || hit instanceof EntityOffensive && canCollideWith(hit)) {
+						Vec3d hitVel = new Vec3d(hit.motionX, hit.motionY, hit.motionZ);
+						Vec3d pVel = new Vec3d(motionX, motionY, motionZ);
+						if (AvatarUtils.getMagnitude(hitVel) >= AvatarUtils.getMagnitude(pVel))
+							motionX = motionY = motionZ = 0;
+						else {
+							this.motionX += hit.motionX;
+							this.motionY += hit.motionY;
+							this.motionZ += hit.motionZ;
+						}
+					}
+				}
+			}
+			if (!list.isEmpty() && !onGround) {
+				for (AxisAlignedBB axisalignedbb : list) {
+					y = axisalignedbb.calculateYOffset(this.getEntityBoundingBox(), y);
+				}
+
+				//TODO: Makes this configurable. Ensures entities are killed when they hit the ground.
+
+				if (y < posY)
+					setDead();
+
+				this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, y, 0.0D));
+
+				for (AxisAlignedBB axisalignedbb1 : list) {
+					x = axisalignedbb1.calculateXOffset(this.getEntityBoundingBox(), x);
+				}
+
+				this.setEntityBoundingBox(this.getEntityBoundingBox().offset(x, 0.0D, 0.0D));
+
+				for (AxisAlignedBB axisalignedbb2 : list) {
+					z = axisalignedbb2.calculateZOffset(this.getEntityBoundingBox(), z);
+				}
+
+				this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, 0.0D, z));
+
+				this.resetPositionToBB();
+			}
+
+			if (collidedWithSolid)
+				motionX = motionY = motionZ = 0.0D;
+
+			if (origX != x) this.motionX = 0.0D;
+			if (origY != y) this.motionY = 0.0D; // Why doesn't Particle do this for y?
+			if (origZ != z) this.motionZ = 0.0D;
+		}
+
+		if (onCollideWithSolid()) {
+			if (isProjectile() && shouldExplode())
+				Explode();
+			if (isProjectile() && shouldDissipate())
+				Dissipate();
+		}
+
+		//These values are only used for proper visual spread collision.
+		prevVelX = motionX;
+		prevVelY = motionY;
+		prevVelZ = motionZ;
 	}
 
 	@Override
@@ -119,142 +327,41 @@ public abstract class EntityOffensive extends AvatarEntity {
 	@Override
 	public void onCollideWithEntity(Entity entity) {
 		super.onCollideWithEntity(entity);
+
 		if (!isPiercing() && isProjectile() && shouldExplode())
 			Explode();
 		else if (!isPiercing() && shouldDissipate()) {
+			attackEntity(this, entity, false, getKnockback());
 			Dissipate();
-		} else applyPiercingCollision();
+		} else if (isShockwave())
+			attackEntity(this, entity, false, getKnockback(entity));
+		else applyPiercingCollision();
 		if (entity instanceof AvatarEntity)
 			applyElementalContact((AvatarEntity) entity);
+		if (getSolidEntities().test(entity))
+			if (shouldExplode())
+				Explode();
+			else Dissipate();
 
-	}
-
-	public void Explode() {
-		if (world instanceof WorldServer) {
-			if (getOwner() != null) {
-				WorldServer World = (WorldServer) world;
-				World.spawnParticle(getParticle(), posX, posY, posZ, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
-				world.playSound(null, posX, posY, posZ, getSound(), getSoundCategory(), getVolume(),
-						getPitch());
-				List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox().grow(getExplosionHitboxGrowth(),
-						getExplosionHitboxGrowth(), getExplosionHitboxGrowth()),
-						entity -> entity != getOwner());
-
-				if (!collided.isEmpty()) {
-					for (Entity entity : collided) {
-						if (entity != getOwner() && entity != null && getOwner() != null) {
-							attackEntity(entity, false, getAbility(), getXp(), Vec3d.ZERO);
-							//Divide the result of the position difference to make entities fly
-							//further the closer they are to the player.
-							double dist = (getExplosionHitboxGrowth() - entity.getDistance(entity)) > 1 ? (getExplosionHitboxGrowth() - entity.getDistance(entity)) : 1;
-							Vec3d velocity = entity.getPositionVector().subtract(this.getPositionVector());
-							velocity = velocity.scale((1 / 40F)).scale(dist).add(0, getExplosionHitboxGrowth() / 50, 0);
-
-							double x = velocity.x;
-							double y = velocity.y > 0 ? velocity.z : 0.15F;
-							double z = velocity.z;
-							x *= getKnockbackMult().x;
-							y *= getKnockbackMult().y;
-							z *= getKnockbackMult().z;
-
-							attackEntity(entity, true, getAbility(), getXp(), Vec3d.ZERO);
-
-							if (!entity.world.isRemote) {
-								if (entity.canBePushed()) {
-									entity.motionX += x;
-									entity.motionY += y;
-									entity.motionZ += z;
-								}
-
-								if (collided instanceof AvatarEntity) {
-									if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
-											&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
-										AvatarEntity avent = (AvatarEntity) collided;
-										avent.addVelocity(x, y, z);
-									}
-									entity.isAirBorne = true;
-									AvatarUtils.afterVelocityAdded(entity);
-								}
-							}
-						}
-					}
-				}
-
-			}
-		}
-	}
-
-	public void applyPiercingCollision() {
-		double x = getPiercingKnockback().x * getKnockbackMult().x;
-		double y = getPiercingKnockback().y * getKnockbackMult().y;
-		y = y > 0 ? y : 0.15F;
-		double z = getPiercingKnockback().z * getKnockbackMult().z;
-		List<Entity> collided = world.getEntitiesInAABBexcluding(this, getExpandedHitbox(), entity -> entity != getOwner());
-		if (!collided.isEmpty()) {
-			for (Entity entity : collided) {
-				if (entity != getOwner() && entity != null && getOwner() != null) {
-					attackEntity(entity, false, getAbility(), getXp(), new Vec3d(x, y, z));
-				}
-			}
-
-		}
-	}
-
-	public void Dissipate() {
-		if (world instanceof WorldServer) {
-			if (getOwner() != null) {
-				WorldServer World = (WorldServer) world;
-				World.spawnParticle(getParticle(), posX, posY, posZ, getNumberofParticles(), 0, 0, 0, getParticleSpeed());
-				world.playSound(null, posX, posY, posZ, getSound(), getSoundCategory(), getVolume(),
-						getPitch());
-			}
-		}
-		Vec3d vel = getVelocity();
-		double x = vel.x * getKnockbackMult().x;
-		double y = vel.y * getKnockbackMult().y;
-		y = y > 0 ? y : 0.15F;
-		double z = vel.z * getKnockbackMult().z;
-		List<Entity> collided = world.getEntitiesInAABBexcluding(this, getExpandedHitbox(), entity -> entity != getOwner());
-		if (!collided.isEmpty()) {
-			for (Entity entity : collided) {
-				if (entity != getOwner() && entity != null && getOwner() != null) {
-					attackEntity(entity, false, getAbility(), getXp(), new Vec3d(x, y, z));
-				}
-			}
-
-		}
-		setDead();
-	}
-
-	public void attackEntity(Entity hit, boolean explosionDamage, Ability ability, float xp, Vec3d velocity) {
-		if (getOwner() != null && hit != null) {
-			AbilityData data = AbilityData.get(getOwner(), ability.getName());
-			if (data != null) {
-				boolean ds = hit.attackEntityFrom(getDamageSource(hit), explosionDamage ? getAoeDamage() : getDamage());
-				if (!ds && hit instanceof EntityDragon) {
-					((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, getDamageSource(hit),
-							explosionDamage ? getAoeDamage() : getDamage());
-					BattlePerformanceScore.addScore(getOwner(), getPerformanceAmount());
-					data.addXp(xp);
-
-				} else if (hit instanceof EntityLivingBase && ds) {
-					BattlePerformanceScore.addScore(getOwner(), getPerformanceAmount());
-					data.addXp(xp);
-					hit.addVelocity(velocity.x, velocity.y, velocity.z);
-					hit.setFire(getFireTime());
-				}
-			}
-		}
 	}
 
 	@Override
+	public Vec3d getKnockback() {
+		double x = Math.min(getKnockbackMult().x * motionX, motionX * 2);
+		double y = Math.min(0.5, (motionY + 0.3) * getKnockbackMult().y);
+		double z = Math.min(getKnockbackMult().z * motionZ, motionZ * 2);
+		return new Vec3d(x, y, z);
+	}
+
+	@Override
+	public float getXpPerHit() {
+		return xp;
+	}
+
+
+	@Override
 	public boolean onCollideWithSolid() {
-		if (isProjectile() && shouldExplode())
-			Explode();
-		if (isProjectile() && shouldDissipate())
-			Dissipate();
-		setDead();
-		return true;
+		return collided;
 	}
 
 	public int getLifeTime() {
@@ -265,30 +372,32 @@ public abstract class EntityOffensive extends AvatarEntity {
 		dataManager.set(SYNC_LIFETIME, lifeTime);
 	}
 
-	protected float getAoeDamage() {
+	@Override
+	public float getAoeDamage() {
 		return 1;
 	}
 
-	public void setKnockbackMult(Vec3d mult) {
-		this.knockbackMult = mult;
+	@Override
+	public Vec3d getKnockbackMult() {
+		return new Vec3d(1, 2, 1);
 	}
 
-	protected Vec3d getKnockbackMult() {
-		return knockbackMult;
-	}
-
-	protected EnumParticleTypes getParticle() {
+	@Override
+	public EnumParticleTypes getParticle() {
 		return AvatarParticles.getParticleFlames();
 	}
 
-	protected int getNumberofParticles() {
+	@Override
+	public int getNumberofParticles() {
 		return 50;
 	}
 
-	protected double getParticleSpeed() {
+	@Override
+	public double getParticleSpeed() {
 		return 0.02;
 	}
 
+	@Override
 	public int getPerformanceAmount() {
 		return this.performanceAmount;
 	}
@@ -297,30 +406,31 @@ public abstract class EntityOffensive extends AvatarEntity {
 		this.performanceAmount = amount;
 	}
 
-	protected SoundEvent getSound() {
-		return SoundEvents.ENTITY_GHAST_SHOOT;
-	}
-
-	protected float getVolume() {
+	@Override
+	public float getVolume() {
 		return 1.0F + AvatarUtils.getRandomNumberInRange(1, 100) / 500F;
 	}
 
-	protected float getPitch() {
+	@Override
+	public float getPitch() {
 		return 1.0F + AvatarUtils.getRandomNumberInRange(1, 100) / 500F;
 	}
 
-	protected DamageSource getDamageSource(Entity target) {
-		return AvatarDamageSource.causeFireDamage(target, getOwner());
+	public DamageSource getDamageSource(Entity target) {
+		return getDamageSource(target, getOwner());
 	}
 
-	protected double getExpandedHitboxWidth() {
+	@Override
+	public double getExpandedHitboxWidth() {
 		return 0.25;
 	}
 
-	protected double getExpandedHitboxHeight() {
+	@Override
+	public double getExpandedHitboxHeight() {
 		return 0.25;
 	}
 
+	@Override
 	public int getFireTime() {
 		return this.fireTime;
 	}
@@ -329,55 +439,42 @@ public abstract class EntityOffensive extends AvatarEntity {
 		this.fireTime = time;
 	}
 
-	protected boolean isPiercing() {
+	@Override
+	public boolean isPiercing() {
 		return false;
 	}
 
-	protected boolean shouldDissipate() {
+	@Override
+	public boolean shouldDissipate() {
 		return false;
 	}
 
-	protected boolean shouldExplode() {
+	@Override
+	public boolean shouldExplode() {
 		return true;
 	}
 
 	public AxisAlignedBB getExpandedHitbox() {
-		return expandedHitbox;
+		return getExpandedHitbox(this);
 	}
 
+	@Override
 	public double getExplosionHitboxGrowth() {
 		return 1;
 	}
 
+	@Override
 	public void applyElementalContact(AvatarEntity entity) {
 
-	}
-
-	public float getXp() {
-		return this.xp;
 	}
 
 	public void setXp(float xp) {
 		this.xp = xp;
 	}
 
-	public Vec3d getPiercingKnockback() {
-		return this.piercingKnockback;
-	}
-
-	public void setPiercingKnockback(Vec3d knockback) {
-		this.piercingKnockback = knockback;
-	}
-
 	@Override
 	public boolean canBePushed() {
 		return !isPiercing();
-	}
-
-	@Override
-	public void setEntityBoundingBox(@Nonnull AxisAlignedBB bb) {
-		super.setEntityBoundingBox(bb);
-		expandedHitbox = bb.grow(getExpandedHitboxWidth(), getExpandedHitboxHeight(), getExpandedHitboxWidth());
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -386,4 +483,16 @@ public abstract class EntityOffensive extends AvatarEntity {
 		return true;
 	}
 
+	//No relation to getKnockback.
+	@Override
+	public Vec3d getExplosionKnockbackMult() {
+		return new Vec3d(0.4, 0.4, 0.4);
+	}
+
+	//Only used in shockwaves
+	@Override
+	public Vec3d getKnockback(Entity target) {
+		Vec3d knockback = Vector.getEntityPos(target).minus(Vector.getEntityPos(this)).normalize().toMinecraft();
+		return new Vec3d(knockback.x * getKnockbackMult().x, knockback.y * getKnockbackMult().y, knockback.z * getKnockbackMult().z);
+	}
 }

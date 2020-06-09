@@ -19,18 +19,22 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * An AvatarEntity that acts as a shield for further attacks. It has a certain amount of health
@@ -39,12 +43,14 @@ import java.util.Objects;
  *
  * @author CrowsOfWar
  */
-public abstract class EntityShield extends AvatarEntity {
+public abstract class EntityShield extends AvatarEntity implements ICustomHitbox {
 
 	public static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityShield.class,
 			DataSerializers.FLOAT);
 	public static final DataParameter<Float> SYNC_MAX_HEALTH = EntityDataManager
 			.createKey(EntityShield.class, DataSerializers.FLOAT);
+	public static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityShield.class,
+			DataSerializers.FLOAT);
 
 	/**
 	 * Shields do not protect against some types of damage, such as falling.
@@ -61,7 +67,50 @@ public abstract class EntityShield extends AvatarEntity {
 		super.entityInit();
 		dataManager.register(SYNC_HEALTH, 20f);
 		dataManager.register(SYNC_MAX_HEALTH, 20f);
+		dataManager.register(SYNC_SIZE, 2.0F);
 		this.putsOutFires = true;
+	}
+
+
+	/**
+	 * Returns true if the given bounding box is completely inside this forcefield (the surface counts as outside).
+	 */
+	public boolean contains(AxisAlignedBB box) {
+		return Arrays.stream(AvatarEntityUtils.getVertices(box)).allMatch(this::contains);
+	}
+
+	/**
+	 * Returns true if the given entity is completely inside this forcefield (the surface counts as outside).
+	 */
+	public boolean contains(Entity entity) {
+		return contains(entity.getEntityBoundingBox());
+	}
+
+	@Override
+	public Vec3d calculateIntercept(Vec3d origin, Vec3d endpoint, float fuzziness) {
+
+		// We want the intercept between the line and a sphere
+		// First we need to find the point where the line is closest to the centre
+		// Then we can use a bit of geometry to find the intercept
+
+		// Find the closest point to the centre
+		// http://mathworld.wolfram.com/Point-LineDistance3-Dimensional.html
+		Vec3d line = endpoint.subtract(origin);
+		double t = -origin.subtract(this.getPositionVector()).dotProduct(line) / line.lengthSquared();
+		Vec3d closestPoint = origin.add(line.scale(t));
+		// Now calculate the distance from that point to the centre (squared because that's all we need)
+		double dsquared = closestPoint.squareDistanceTo(this.getPositionVector());
+		double rsquared = Math.pow(getSize() + fuzziness, 2);
+		// If the minimum distance is outside the radius (plus fuzziness) then there is no intercept
+		if (dsquared > rsquared) return null;
+		// Now do pythagoras to find the other side of the triangle, which is the distance along the line from
+		// the closest point to the edge of the sphere, and go that far back towards the origin - and that's it!
+		return closestPoint.subtract(line.normalize().scale(MathHelper.sqrt(rsquared - dsquared)));
+	}
+
+	@Override
+	public boolean contains(Vec3d point) {
+		return point.distanceTo(AvatarEntityUtils.getMiddleOfEntity(this)) <= getSize();
 	}
 
 	@Override
@@ -73,9 +122,9 @@ public abstract class EntityShield extends AvatarEntity {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (getOwner() != null) {
-			setPosition(getOwner().posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
-		}
+		if (getOwner() != null)
+			setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(getOwner()));
+		this.motionX = this.motionY = this.motionZ = 0;
 
 		EntityLivingBase owner = getOwner();
 		if (owner == null) {
@@ -86,6 +135,8 @@ public abstract class EntityShield extends AvatarEntity {
 		if (owner.isBurning()) {
 			owner.extinguish();
 		}
+
+		setSize(getSize(), getSize());
 
 	}
 
@@ -107,7 +158,14 @@ public abstract class EntityShield extends AvatarEntity {
 
 	@Override
 	public void setPositionAndUpdate(double x, double y, double z) {
-		super.setPositionAndUpdate(Objects.requireNonNull(getOwner()).posX, getOwner().getEntityBoundingBox().minY, getOwner().posZ);
+		if (getOwner() != null) {
+			Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(getOwner());
+			x = pos.x;
+			y = pos.y;
+			z = pos.z;
+			super.setPositionAndUpdate(x, y, z);
+		} else
+			super.setPositionAndUpdate(x, y, z);
 	}
 
 	@Override
@@ -138,9 +196,8 @@ public abstract class EntityShield extends AvatarEntity {
 				}
 			}
 
-		} else {
-			return true;
-		}
+		} else return true;
+
 		return false;
 
 	}
@@ -164,6 +221,14 @@ public abstract class EntityShield extends AvatarEntity {
 	 * Called when the health reaches zero.
 	 */
 	protected abstract void onDeath();
+
+	public float getSize() {
+		return dataManager.get(SYNC_SIZE);
+	}
+
+	public void setSize(float size) {
+		dataManager.set(SYNC_SIZE, size);
+	}
 
 	@Override
 	public boolean isShield() {
