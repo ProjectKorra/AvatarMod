@@ -25,6 +25,9 @@ import com.crowsofwar.avatar.common.entity.EntityAirGust;
 import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -81,7 +84,7 @@ public class AbilityAirGust extends Ability {
 				lifetime += 10;
 			}
 			if (ctx.isDynamicMasterLevel(SECOND)) {
-				size = 3.0F;
+				size = 2.25F;
 				speed = 15;
 				lifetime += 30;
 			}
@@ -111,6 +114,27 @@ public class AbilityAirGust extends Ability {
 			if (!world.isRemote)
 				world.spawnEntity(gust);
 
+			if (world.isRemote) {
+				for (double angle = 0; angle < 360; angle += Math.max((int) (size * 15), 15)) {
+					Vector position = Vector.getOrthogonalVector(entity.getLookVec(), angle, size / 20F);
+					Vector velocity;
+					//position = position.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
+					position = position.plus(pos.minusY(0.05).plus(Vector.getLookRectangular(entity)));
+					velocity = position.minus(pos.minusY(0.05).plus(Vector.getLookRectangular(entity))).normalize();
+					velocity = velocity.times(speed / 400);
+					double spawnX = position.x();
+					double spawnY = position.y();
+					double spawnZ = position.z();
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
+							world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
+							.time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
+							.scale(size * (1 / size)).element(new Airbending()).collide(true).spawn(world);
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
+							world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
+							.time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
+							.scale(size * (1 / size)).element(new Airbending()).collide(true).spawn(world);
+				}
+			}
 			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, entity.getSoundCategory(), 1.0F + Math.max(ctx.getLevel(), 0) / 2F, 0.9F + world.rand.nextFloat() / 10);
 		}
 		super.execute(ctx);
