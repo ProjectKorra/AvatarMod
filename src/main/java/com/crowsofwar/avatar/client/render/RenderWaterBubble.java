@@ -115,7 +115,7 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityWaterBubble entity) {
-		return null;
+		return water;
 	}
 
 }
