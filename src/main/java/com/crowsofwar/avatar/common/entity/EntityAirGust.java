@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -78,15 +79,15 @@ public class EntityAirGust extends EntityOffensive {
 		if (world.isRemote && getOwner() != null) {
 			for (int i = 0; i < 4; i++) {
 				Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(this);
-				double spawnX = mid.x + world.rand.nextGaussian() / 10;
-				double spawnY = mid.y + world.rand.nextGaussian() / 10;
-				double spawnZ = mid.z + world.rand.nextGaussian() / 10;
+				double spawnX = mid.x + world.rand.nextGaussian() / 20;
+				double spawnY = mid.y + world.rand.nextGaussian() / 20;
+				double spawnZ = mid.z + world.rand.nextGaussian() / 20;
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-						world.rand.nextGaussian() / 45).time(4).clr(0.85F, 0.85F, 0.85F).spawnEntity(getOwner())
-						.scale(getAvgSize() * 1.25F).element(getElement()).spawn(world);
+						world.rand.nextGaussian() / 45).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(getOwner())
+						.scale(getAvgSize() * (1 / getAvgSize() + 1)).element(getElement()).collide(true).spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-						world.rand.nextGaussian() / 45).time(12).clr(0.85F, 0.85F, 0.85F).spawnEntity(getOwner())
-						.scale(getAvgSize() * 1.25F).element(getElement()).spawn(world);
+						world.rand.nextGaussian() / 45).time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(getOwner())
+						.scale(getAvgSize() * (1 / getAvgSize() + 0.5F)).element(getElement()).collide(true).spawn(world);
 			}
 		}
 
@@ -170,7 +171,20 @@ public class EntityAirGust extends EntityOffensive {
 
 	@Override
 	public void spawnDissipateParticles(World world, Vec3d pos) {
-		//We don't need to spawn any since particle collision handles it
+		if (world.isRemote && getOwner() != null) {
+			for (int i = 0; i < 8; i++) {
+				Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(this);
+				double spawnX = mid.x + world.rand.nextGaussian() / 10;
+				double spawnY = mid.y + world.rand.nextGaussian() / 10;
+				double spawnZ = mid.z + world.rand.nextGaussian() / 10;
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
+						world.rand.nextGaussian() / 20).time(4).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
+						.scale(getAvgSize() * 1.25F).element(getElement()).collide(true).spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
+						world.rand.nextGaussian() / 20).time(12).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
+						.scale(getAvgSize() * 1.25F).element(getElement()).collide(true).spawn(world);
+			}
+		}
 	}
 
 	@Override

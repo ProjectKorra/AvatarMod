@@ -12,6 +12,7 @@ import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -154,30 +155,33 @@ public class ShootAirBurstHandler extends TickHandler {
 		public Behavior onUpdate(EntityOffensive entity) {
 			World world = entity.world;
 			if (world.isRemote && entity.getOwner() != null) {
-				for (double angle = 0; angle < 360; angle += Math.max((int) (entity.getAvgSize() * 20), 1)) {
+				for (double angle = 0; angle < 360; angle += Math.max((int) (entity.getAvgSize() * 25), 20)) {
 					Vector position = Vector.getOrthogonalVector(entity.getLookVec(), angle, entity.getAvgSize());
 					position = position.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
 					position = position.plus(AvatarEntityUtils.getMiddleOfEntity(entity).x, AvatarEntityUtils.getMiddleOfEntity(entity).y,
 							AvatarEntityUtils.getMiddleOfEntity(entity).z);
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(position.x(), position.y(), position.z()).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-							world.rand.nextGaussian() / 45).time(4).clr(0.85F, 0.85F, 0.85F)
-							.scale(entity.getAvgSize() * 1.25F).element(entity.getElement()).spawn(world);
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(position.x(), position.y(), position.z()).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-							world.rand.nextGaussian() / 45).time(12).clr(0.85F, 0.85F, 0.85F)
-							.scale(entity.getAvgSize() * 1.25F).element(entity.getElement()).spawn(world);
+					double spawnX = position.x();
+					double spawnY = position.y();
+					double spawnZ = position.z();
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
+							world.rand.nextGaussian() / 45).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity.getOwner())
+							.scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.25F)).element(entity.getElement()).collide(true).spawn(world);
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
+							world.rand.nextGaussian() / 45).time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity.getOwner())
+							.scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.25F)).element(entity.getElement()).collide(true).spawn(world);
 				}
-				for (int i = 0; i < 2; i++) {
+			//	for (int i = 0; i < 1; i++) {
 					Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(entity);
 					double spawnX = mid.x + world.rand.nextGaussian() / 20;
 					double spawnY = mid.y + world.rand.nextGaussian() / 20;
 					double spawnZ = mid.z + world.rand.nextGaussian() / 20;
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-							world.rand.nextGaussian() / 45).time(18).clr(0.85F, 0.85F, 0.85F)
-							.scale(entity.getAvgSize() * 1.25F).element(entity.getElement()).spawn(world);
+							world.rand.nextGaussian() / 45).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity.getOwner())
+							.scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.25F)).element(entity.getElement()).collide(true).spawn(world);
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-							world.rand.nextGaussian() / 45).time(20).clr(0.85F, 0.85F, 0.85F)
-							.scale(entity.getAvgSize() * 1.25F).element(entity.getElement()).spawn(world);
-				}
+							world.rand.nextGaussian() / 45).time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity.getOwner())
+							.scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.25F)).element(entity.getElement()).collide(true).spawn(world);
+			//	}
 			}
 			float expansionRate = 1f / 80;
 			entity.setEntitySize(entity.getAvgSize() + expansionRate);

@@ -61,15 +61,17 @@ public class RenderFireball extends Render<EntityFireball> {
 		enableBlend();
 		disableLighting();
 
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE = new ResourceLocation("avatarmod", "textures/entity/inside_fireball.png"));
 		GlStateManager.color(2F, 2F, 2F, 2f);
 
+
 		renderCube(x, y, z, //
 				0, 1, 0, 1,//0, 8 / 256.0, 0, 8 / 256.0, //
 				.5f * size, //
-				ticks / 25F, ticks / 25f, ticks / 25F);
+				ticks / 5F * (float) entity.world.rand.nextGaussian(), ticks / 5F * (float) entity.world.rand.nextGaussian(),
+				ticks / 5F * (float) entity.world.rand.nextGaussian());
 
 
 		//pushMatrix();
@@ -78,10 +80,10 @@ public class RenderFireball extends Render<EntityFireball> {
 		int i = 15728880;
 		int j = i % 65536;
 		int k = i / 65536;
+//		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+		GlStateManager.color(0.5F, 0.5F, 0.5F, 0.5f);
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE = new ResourceLocation("avatarmod", "textures/entity/outside_fireball.png"));
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
-		GlStateManager.color(2F, 2F, 2F, 0.75f);
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE);
+		//GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		renderCube(x, y, z, //
 				0, 1, 0, 1,//8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
 				size, //

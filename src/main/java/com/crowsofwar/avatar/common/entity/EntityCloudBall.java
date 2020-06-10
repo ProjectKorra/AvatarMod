@@ -123,7 +123,7 @@ public class EntityCloudBall extends EntityOffensive {
 			double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 			double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 			ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-					world.rand.nextGaussian() / 60).time(12).clr(0.85F, 0.85F, 0.85F)
+					world.rand.nextGaussian() / 60).time(12).clr(0.95F, 0.95F, 0.95F)
 					.scale(getSize() * 0.03125F * 2).element(getElement()).spawn(world);
 		}
 
@@ -299,7 +299,7 @@ public class EntityCloudBall extends EntityOffensive {
 			for (int i = 0; i < getSize(); i++)
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(getAvgSize()).collide(true).vel(world.rand.nextGaussian() / 10,
 						world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10).time(8).pos(AvatarEntityUtils.getMiddleOfEntity(this))
-						.clr(0.85F, 0.85F, 0.85F).element(getElement()).spawn(world);
+						.clr(0.95F, 0.95F, 0.95F, 0.2F).element(getElement()).spawn(world);
 	}
 
 	@Override
@@ -308,7 +308,7 @@ public class EntityCloudBall extends EntityOffensive {
 			for (int i = 0; i < getSize(); i++)
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(getAvgSize()).collide(true).vel(world.rand.nextGaussian() / 40,
 						world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).time(8).pos(AvatarEntityUtils.getMiddleOfEntity(this))
-						.clr(0.85F, 0.85F, 0.85F).element(getElement()).spawn(world);
+						.clr(0.95F, 0.95F, 0.95F, 0.2F).element(getElement()).spawn(world);
 
 	}
 

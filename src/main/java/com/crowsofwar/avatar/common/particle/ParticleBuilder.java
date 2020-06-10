@@ -257,7 +257,6 @@ public final class ParticleBuilder {
 	}
 
 	/**
-	 *
 	 * @param behaviour The particle behaviour to use for the particle(s) being spawned.
 	 * @return The ParticleBuilder instance
 	 */
@@ -840,6 +839,7 @@ public final class ParticleBuilder {
 		// Anything with an if statement here allows default values to be set in particle constructors
 		if (!Double.isNaN(vx) && !Double.isNaN(vy) && !Double.isNaN(vz)) particle.setVelocity(vx, vy, vz);
 		if (r >= 0 && g >= 0 && b >= 0) particle.setRBGColorF(r, g, b);
+		if (a >= 0) particle.setAlphaF(a);
 		if (fr >= 0 && fg >= 0 && fb >= 0) particle.setFadeColour(fr, fg, fb);
 
 		for (int i = 0; i < 4; i++) {
@@ -897,6 +897,7 @@ public final class ParticleBuilder {
 		r = -1;
 		g = -1;
 		b = -1;
+		a = -1;
 		fr = -1;
 		fg = -1;
 		fb = -1;

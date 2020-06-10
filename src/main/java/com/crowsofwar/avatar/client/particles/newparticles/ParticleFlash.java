@@ -27,7 +27,7 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
 	public ParticleFlash(World world, double x, double y, double z) {
 		super(world, x, y, z);
 		this.setRBGColorF(1, 1, 1);
-		this.setAlphaF(1.0F);
+		this.setAlphaF(particleAlpha = 1.0F);
 		this.particleScale = 0.6f; // 7.1f is the value used in fireworks
 		this.particleMaxAge = 6;
 	}
@@ -72,7 +72,8 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
 			f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
 		}
 
-		this.setAlphaF((sparkle ? particleAlpha * 0.6F : 0.6F) - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F);
+
+		this.setAlphaF(sparkle ? particleAlpha - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F : particleAlpha);
 		float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
 		float f6 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
 		float f7 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
