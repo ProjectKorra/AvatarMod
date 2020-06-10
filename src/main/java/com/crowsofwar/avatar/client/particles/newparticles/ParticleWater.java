@@ -5,7 +5,6 @@ import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
@@ -25,7 +24,7 @@ import static net.minecraft.util.math.MathHelper.sin;
 public class ParticleWater extends ParticleAvatar {
 
 	private static final ResourceLocation WATER = new ResourceLocation("minecraft",
-							 "textures/blocks/water_still.png");
+			"textures/blocks/water_still.png");
 
 	/**
 	 * Creates a new particle in the given world at the given position. All other parameters are set via the various
@@ -162,7 +161,7 @@ public class ParticleWater extends ParticleAvatar {
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		mc.renderEngine.bindTexture(WATER);
 		GlStateManager.disableBlend();
-	//	GlStateManager.enableLighting();
+		//	GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 
 	}

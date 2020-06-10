@@ -126,7 +126,7 @@ public class RadialMenu extends Gui {
 		int x = resolution.getScaledWidth() / 2;
 		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRenderer.FONT_HEIGHT * 1.5);
 
-		BendingData data = BendingData.get(mc.player);
+		BendingData data = BendingData.getFromEntity(mc.player);
 		if (data != null) {
 
 			int level = 0;
