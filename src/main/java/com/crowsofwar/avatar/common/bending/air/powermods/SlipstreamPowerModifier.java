@@ -75,7 +75,7 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 					double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 					double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-							world.rand.nextGaussian() / 60).time(12).clr(0.8F, 0.8F, 0.8F)
+							world.rand.nextGaussian() / 60).time(12).clr(0.95F, 0.95F, 0.95F, 0.1F)
 							.scale((1.5F + Math.min(data.getLevel(), 0) / 2F) * 2).spawn(world);
 				}
 			}

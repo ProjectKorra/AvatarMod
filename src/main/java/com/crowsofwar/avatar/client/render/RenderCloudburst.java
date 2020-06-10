@@ -56,18 +56,19 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 		renderCube(x, y, z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
 				size * 0.5F, //
-				ticks / 25F, ticks / 25f, ticks / 25F);
+				ticks / 15F, ticks / 15f, ticks / 15F);
 
 		int i = 15728880;
 		int j = i % 65536;
 		int k = i / 65536;
-	//	OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
 
 		//  } else {
 		int light = Math.min(entity.world.getSkylightSubtracted(), 7);
 		disableLight(light);
 
-		GlStateManager.color(0.5F, 0.5F, 0.5F, 0.6F);
+		blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+		GlStateManager.color(1, 1, 1, 0.3F);
 		pushMatrix();
 		renderCube(x, y, z, //
 				8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
