@@ -53,14 +53,14 @@ public class MiscData {
 	public void toBytes(ByteBuf buf) {
 		buf.writeFloat(fallAbsorption);
 		buf.writeInt(timeInAir);
-		if (!abilityCooldowns.isEmpty()) {
+		/*if (!abilityCooldowns.isEmpty()) {
 			buf.writeInt(abilityCooldowns.size());
 			abilityCooldowns.keySet().iterator().forEachRemaining(ability -> {
 				buf.writeInt(ability.getName().length());
 				new PacketBuffer(buf).writeString(ability.getName());
 				buf.writeInt(abilityCooldowns.get(ability));
 			});
-		}
+		}**/
 		buf.writeBoolean(wallJumping);
 		buf.writeInt(petSummonCooldown);
 		buf.writeBoolean(bisonFollowMode);
@@ -70,10 +70,10 @@ public class MiscData {
 	public void fromBytes(ByteBuf buf) {
 		fallAbsorption = buf.readFloat();
 		timeInAir = buf.readInt();
-		for (int i = 0; i < buf.readInt(); i++) {
+	/*	for (int i = 0; i < buf.readInt(); i++) {
 			int length = buf.readInt();
 			abilityCooldowns.replace(Abilities.get(new PacketBuffer(buf).readString(length)), buf.readInt());
-		}
+		}**/
 		wallJumping = buf.readBoolean();
 		petSummonCooldown = buf.readInt();
 		bisonFollowMode = buf.readBoolean();

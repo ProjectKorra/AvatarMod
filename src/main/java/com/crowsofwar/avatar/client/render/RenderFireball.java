@@ -37,7 +37,7 @@ import static net.minecraft.util.math.MathHelper.cos;
  */
 public class RenderFireball extends Render<EntityFireball> {
 
-	private static ResourceLocation TEXTURE;
+	private static ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/entity/fireball_together.png");
 
 	public RenderFireball(RenderManager renderManager) {
 		super(renderManager);
@@ -63,15 +63,15 @@ public class RenderFireball extends Render<EntityFireball> {
 
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE = new ResourceLocation("avatarmod", "textures/entity/inside_fireball.png"));
-		GlStateManager.color(2F, 2F, 2F, 2f);
+		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+
+		GlStateManager.color(2F, 2F, 2F, 1f);
 
 
 		renderCube(x, y, z, //
-				0, 1, 0, 1,//0, 8 / 256.0, 0, 8 / 256.0, //
+				0, 8.0 / 16.0, 0, 1,//0, 8 / 256.0, 0, 8 / 256.0, //
 				.5f * size, //
-				ticks / 5F * (float) entity.world.rand.nextGaussian(), ticks / 5F * (float) entity.world.rand.nextGaussian(),
-				ticks / 5F * (float) entity.world.rand.nextGaussian());
+				ticks / 15F, ticks / 15F, ticks / 15F);
 
 
 		//pushMatrix();
@@ -80,12 +80,10 @@ public class RenderFireball extends Render<EntityFireball> {
 		int i = 15728880;
 		int j = i % 65536;
 		int k = i / 65536;
-//		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
-		GlStateManager.color(0.5F, 0.5F, 0.5F, 0.5f);
-		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE = new ResourceLocation("avatarmod", "textures/entity/outside_fireball.png"));
-		//GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		renderCube(x, y, z, //
-				0, 1, 0, 1,//8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
+	//	OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+		GlStateManager.color(0.75F, 0.75F, 0.75F, 0.75f);
+			renderCube(x, y, z, //
+				8.0 / 16.0, 1, 0, 1,//8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
 				size, //
 				rotation * .2f, rotation, rotation * -.4f);
 
