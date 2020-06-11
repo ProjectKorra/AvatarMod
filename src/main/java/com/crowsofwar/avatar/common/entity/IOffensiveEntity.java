@@ -78,7 +78,7 @@ public interface IOffensiveEntity {
 				entity1 != entity && entity.canCollideWith(entity1));
 		if (!collided.isEmpty()) {
 			for (Entity hit : collided) {
-				if (entity.getOwner() != null && hit != entity.getOwner() && hit != null) {
+				if (entity.getOwner() != null && hit != entity.getOwner() && hit != null && entity.canCollideWith(hit)) {
 					attackEntity(entity, hit, false, getKnockback());
 				}
 			}
@@ -96,7 +96,7 @@ public interface IOffensiveEntity {
 	}
 
 	default void attackEntity(AvatarEntity attacker, Entity hit, boolean explosionDamage, Vec3d vel) {
-		if (attacker.getOwner() != null && hit != null && hit != attacker) {
+		if (attacker.getOwner() != null && hit != null && hit != attacker && !attacker.world.isRemote) {
 			AbilityData data = AbilityData.get(attacker.getOwner(), attacker.getAbility().getName());
 			if ((explosionDamage ? getAoeDamage() > 0 : getDamage() > 0) && attacker.canDamageEntity(hit)) {
 				boolean ds = hit.attackEntityFrom(getDamageSource(hit, attacker.getOwner()), explosionDamage ? getAoeDamage() : getDamage());

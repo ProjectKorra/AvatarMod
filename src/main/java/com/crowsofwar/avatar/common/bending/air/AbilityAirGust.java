@@ -26,7 +26,6 @@ import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
-import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
@@ -108,6 +107,7 @@ public class AbilityAirGust extends Ability {
 			gust.setSlowProjectiles(ctx.isDynamicMasterLevel(SECOND));
 			gust.setPiercesEnemies(ctx.getLevel() >= 1);
 			gust.setAbility(this);
+			gust.setLifeTime(30);
 			gust.setTier(getCurrentTier(ctx.getLevel()));
 			gust.setXp(SKILLS_CONFIG.airGustHit);
 			gust.setBehaviour(new AirGustBehaviour());

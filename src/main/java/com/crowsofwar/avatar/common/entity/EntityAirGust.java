@@ -31,7 +31,6 @@ import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -188,7 +187,13 @@ public class EntityAirGust extends EntityOffensive {
 
 	@Override
 	public Vec3d getKnockbackMult() {
-		return new Vec3d(1.5, 2, 1.5);
+		return new Vec3d(0.5, 3, 0.5);
+	}
+
+	@Override
+	public void applyPiercingCollision() {
+		if (!world.isRemote)
+			super.applyPiercingCollision();
 	}
 
 	@Override
@@ -303,11 +308,11 @@ public class EntityAirGust extends EntityOffensive {
 	@Override
 	public Vec3d getKnockback() {
 		double x = Math.min(getKnockbackMult().x * motionX, motionX * 2);
-		double y = Math.min(0.5, (motionY + 0.15) * getKnockbackMult().y);
+		double y = Math.max(0.25, Math.min((motionY + 0.15) * getKnockbackMult().y, 0.25));
 		double z = Math.min(getKnockbackMult().z * motionZ, motionZ * 2);
 		if (velocity().sqrMagnitude() > getAvgSize() * 15) {
-			x = Math.min(x, motionX * 0.75F);
-			z = Math.min(z, motionZ * 0.75F);
+			x = Math.min(x, motionX * 0.5F);
+			z = Math.min(z, motionZ * 0.5F);
 		}
 		return new Vec3d(x, y, z);
 	}
