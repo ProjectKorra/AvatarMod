@@ -83,7 +83,7 @@ public class EntityAirGust extends EntityOffensive {
 				double spawnY = mid.y + world.rand.nextGaussian() / 20;
 				double spawnZ = mid.z + world.rand.nextGaussian() / 20;
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-						world.rand.nextGaussian() / 45).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(getOwner())
+						world.rand.nextGaussian() / 45).time(4 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(getOwner())
 						.scale(getAvgSize() * (1 / getAvgSize() + 1)).element(getElement()).collide(true).spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
 						world.rand.nextGaussian() / 45).time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(getOwner())

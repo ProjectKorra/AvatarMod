@@ -170,21 +170,10 @@ public class ShootAirBurstHandler extends TickHandler {
 							world.rand.nextGaussian() / 45).time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity.getOwner())
 							.scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.25F)).element(entity.getElement()).collide(true).spawn(world);
 				}
-			//	for (int i = 0; i < 1; i++) {
-					Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(entity);
-					double spawnX = mid.x + world.rand.nextGaussian() / 20;
-					double spawnY = mid.y + world.rand.nextGaussian() / 20;
-					double spawnZ = mid.z + world.rand.nextGaussian() / 20;
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-							world.rand.nextGaussian() / 45).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity.getOwner())
-							.scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.25F)).element(entity.getElement()).collide(true).spawn(world);
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-							world.rand.nextGaussian() / 45).time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity.getOwner())
-							.scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.25F)).element(entity.getElement()).collide(true).spawn(world);
-			//	}
 			}
-			float expansionRate = 1f / 80;
-			entity.setEntitySize(entity.getAvgSize() + expansionRate);
+			float expansionRate = 1f / 100;
+			if (entity.ticksExisted % 4 == 0)
+				entity.setEntitySize(entity.getAvgSize() + expansionRate);
 			return this;
 		}
 
