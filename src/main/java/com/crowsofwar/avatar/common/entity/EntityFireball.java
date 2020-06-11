@@ -113,7 +113,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
 		}
 
-		//particles!
+		//Particles!
 		if (world.isRemote && getOwner() != null) {
 			for (double h = 0; h < width; h += 0.3) {
 				Random random = new Random();
@@ -135,8 +135,8 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 				for (int i = 0; i < 4; i++) {
 					Vec3d pos = Vector.getOrthogonalVector(getLookVec(), i * 90 + (ticksExisted % 360) * 10, getAvgSize() / 1.25F).toMinecraft();
 					Vec3d velocity;
-					//position = position.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
 					Vec3d entityPos = AvatarEntityUtils.getMiddleOfEntity(this);
+
 					pos = pos.add(entityPos);
 					velocity = pos.subtract(entityPos).normalize();
 					velocity = velocity.scale(AvatarUtils.getSqrMagnitude(getVelocity()) / 400000);

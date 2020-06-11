@@ -92,8 +92,8 @@ public class EntityAirGust extends EntityOffensive {
 			for (int i = 0; i < 2; i++) {
 				Vec3d pos = Vector.getOrthogonalVector(getLookVec(), i * 180 + (ticksExisted % 360) * 10, getAvgSize() / 1.5F).toMinecraft();
 				Vec3d velocity;
-				//position = position.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
 				Vec3d entityPos = AvatarEntityUtils.getMiddleOfEntity(this);
+
 				pos = pos.add(entityPos);
 				velocity = pos.subtract(entityPos).normalize();
 				velocity = velocity.scale(AvatarUtils.getSqrMagnitude(getVelocity()) / 400000);
