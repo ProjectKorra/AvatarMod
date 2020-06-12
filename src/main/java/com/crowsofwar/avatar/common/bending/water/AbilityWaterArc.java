@@ -41,9 +41,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiPredicate;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_WATER;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.WATERARC_COMBO_HANDLER;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 import static java.lang.Math.toRadians;
 
@@ -139,79 +139,25 @@ public class AbilityWaterArc extends Ability {
 			if (bender.consumeChi(STATS_CONFIG.chiWaterArc)) {
 
 				removeExisting(ctx);
-				String UUID = entity.getUniqueID().toString();
+				
+				EntityWaterArc water = new EntityWaterArc(world);
+				water.setOwner(entity);
+				assert targetPos != null;
+				water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
+				water.setDamageMult(damageMult);
+				water.setSize(size);
+				water.setDamage(damageMult * STATS_CONFIG.waterArcSettings.damage);
+				water.setXp(SKILLS_CONFIG.waterHit);
+				water.setTier(getCurrentTier(ctx.getLevel()));
+				water.setLifeTime(30);
+				water.setBehavior(new WaterArcBehavior.PlayerControlled());
+				water.isSpear(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND));
+				water.setGravity(gravity);
+				water.setAbility(this);
+				if (!world.isRemote)
+					world.spawnEntity(water);
+				ctx.getData().addStatusControl(THROW_WATER);
 
-				if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-					EntityWaterArc water = new EntityWaterArc(world);
-
-					if (data.hasTickHandler(WATERARC_COMBO_HANDLER)) {
-						int number = getComboNumber(UUID);
-						if (number < 3)
-							number++;
-						setComboNumber(UUID, number);
-						data.removeTickHandler(WATERARC_COMBO_HANDLER);
-						data.addTickHandler(WATERARC_COMBO_HANDLER);
-					} else setComboNumber(UUID, 1);
-
-					if (getComboNumber(UUID) == 0) {
-						setComboNumber(UUID, 1);
-					}
-
-					if (getComboNumber(UUID) <= 1) {
-						size = 0.5F;
-					}
-
-					if (getComboNumber(UUID) == 2) {
-						gravity = -9.81F;
-						size = 0.5F;
-					}
-
-					if (getComboNumber(UUID) >= 3) {
-						//Massive Singular water arc; kinda like airgust
-						size = 1F;
-						gravity = 2;
-						setComboNumber(UUID, 1);
-					}
-
-
-					damageMult = getComboNumber(UUID) >= 3 ? 1.25F : 0.5F;
-					damageMult *= ctx.getPowerRatingDamageMod();
-
-
-					Vector playerEye = Vector.getEyePos(entity);
-					Vector look = playerEye.plus(getLookRectangular(entity).times(1.5));
-					Vector force = Vector.toRectangular(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch));
-					force = force.times(15 + getComboNumber(UUID));
-
-					System.out.println(getComboNumber(UUID));
-					water.setOwner(entity);
-					water.setPosition(look);
-					water.setSize(size);
-					water.setDamageMult(damageMult);
-					water.setVelocity(force);
-					water.setLifeTime(30);
-					water.setGravity(gravity);
-					water.setBehavior(new WaterArcBehavior.Thrown());
-					water.setAbility(this);
-					if (!world.isRemote)
-						world.spawnEntity(water);
-
-				} else {
-					EntityWaterArc water = new EntityWaterArc(world);
-					water.setOwner(entity);
-					assert targetPos != null;
-					water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
-					water.setDamageMult(damageMult);
-					water.setSize(size);
-					water.setLifeTime(30);
-					water.setBehavior(new WaterArcBehavior.PlayerControlled());
-					water.isSpear(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND));
-					water.setGravity(gravity);
-					water.setAbility(this);
-					if (!world.isRemote)
-						world.spawnEntity(water);
-					ctx.getData().addStatusControl(THROW_WATER);
-				}
 
 			}
 		}

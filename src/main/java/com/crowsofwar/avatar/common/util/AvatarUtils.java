@@ -51,6 +51,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import org.apache.commons.lang3.Validate;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -123,26 +124,43 @@ public class AvatarUtils {
 		return null;
 	}
 
+
+	/**
+	 * Returns a function that draws the bezier curve for the given order and control points
+	 * @param order how many control points there are
+	 * @param points the control points (note that only the amount matching the first n locations, n = order)
+	 * @return bezier curve function, accepting inputs in the range [0, 1]
+	 */
 	public static Function<Double, Vec3d> bezierCurve(int order, List<Vec3d> points) {
-		if (order < 1) {
-			throw new IllegalArgumentException("Order of the curve must be positive");
-		} else if (order < points.size()) {
-			throw new IllegalArgumentException("Order of the curve must be at least the size of the list of Locations");
-		}
+		Validate.isTrue(order >= 1, "Order of the curve must be positive");
+		Validate.isTrue(points.size() >= order, "Order of the curve must be at least the size of the given list of Locations");
 
 		return (t) -> {
 			if (t < 0 || t > 1) {
 				return null;
 			}
 
-			if (order == 1) {
-				return points.get(0);
-			} else {
-				return bezierCurve(order - 1, points.subList(0, order - 1)).apply(t).scale(1.0 - t)
-						.add(bezierCurve(order - 1, points.subList(1, order)).apply(t).scale(t));
+			Vec3d point = Vec3d.ZERO;
+
+			for (int i = 0; i < order; i++) {
+				double coefficient = (double) factorial(order) / (double) (factorial(i) * factorial(order - i));
+				double basis = coefficient * Math.pow(t, i) * Math.pow(1.0 - t, order - i);
+
+				point.add(points.get(i).scale(basis));
 			}
+
+			return point;
 		};
 	}
+
+	public static int factorial(int n) {
+		int product = 1;
+		for (int i = 1; i < n; i++) {
+			product *= i;
+		}
+		return product;
+	}
+
 
 	public static void chargeCreeper(EntityCreeper creeper) {
 		creeper.getDataManager().set(POWERED, true);
