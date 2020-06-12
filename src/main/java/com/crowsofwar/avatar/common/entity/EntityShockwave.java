@@ -190,7 +190,7 @@ public class EntityShockwave extends EntityOffensive {
 			setDead();
 		}
 
-		if (world.isRemote) {
+		if (world.isRemote && getOwner() != null) {
 			if (shouldRenderNormal() && getParticle() != null) {
 				EnumParticleTypes particle = getParticle();
 				if (particle != null) {
@@ -200,7 +200,7 @@ public class EntityShockwave extends EntityOffensive {
 								//Even though the maths is technically wrong, you use sin if you want a shockwave, and cos if you want a sphere (for x).
 								double x2 = posX + (ticksExisted * getSpeed()) * Math.sin(angle);
 								double y2 = posY;
-								double z2 =posZ + (ticksExisted * getSpeed()) * Math.cos(angle);
+								double z2 = posZ + (ticksExisted * getSpeed()) * Math.cos(angle);
 								Vector speed = new Vector((ticksExisted * getSpeed()) * Math.sin(angle) * (getParticleSpeed() * 10),
 										getParticleSpeed() / 2, (ticksExisted * getSpeed()) * Math.cos(angle) * (getParticleSpeed() * 10));
 								world.spawnParticle(particle, x2, y2, z2, speed.x(), speed.y(), speed.z());
@@ -263,7 +263,7 @@ public class EntityShockwave extends EntityOffensive {
 
 	@Override
 	public Vec3d getKnockbackMult() {
-		double amount = getSphere() ? (ticksExisted * getSpeed()) * 12.5 : ticksExisted * 10 * getSpeed();
+		double amount = getSphere() ? (ticksExisted * getSpeed()) * 5 : ticksExisted * 6 * getSpeed();
 		return new Vec3d(amount * knockbackMult.x, amount * knockbackMult.y, amount * knockbackMult.z);
 	}
 

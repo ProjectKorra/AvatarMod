@@ -425,7 +425,7 @@ public final class ParticleBuilder {
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder clr(int r, int g, int b, float a) {
+	public ParticleBuilder clr(int r, int g, int b, int a) {
 		return this.clr(r / 255f, g / 255f, b / 255f, a / 255F); // Yes, 255 is correct and not 256, or else we can't have pure white
 	}
 

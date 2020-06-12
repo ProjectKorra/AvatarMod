@@ -127,7 +127,6 @@ public class ParticleWater extends ParticleAvatar {
 		float t2 = t1 + (float) Math.PI / 2f;
 		float amt = 0.05f;
 
-		mc.renderEngine.bindTexture(WATER);
 		lbf.add(cos(t1) * amt, sin(t2) * amt, cos(t2) * amt, 0);
 		rbf.add(sin(t1) * amt, cos(t2) * amt, sin(t2) * amt, 0);
 		lbb.add(sin(t2) * amt, cos(t2) * amt, cos(t2) * amt, 0);
@@ -158,8 +157,7 @@ public class ParticleWater extends ParticleAvatar {
 		drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2,
 				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // +z
 
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		mc.renderEngine.bindTexture(WATER);
+		//GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.disableBlend();
 		//	GlStateManager.enableLighting();
 		GlStateManager.popMatrix();

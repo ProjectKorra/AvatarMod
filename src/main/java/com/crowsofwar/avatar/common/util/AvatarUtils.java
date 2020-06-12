@@ -45,7 +45,10 @@ import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -86,14 +89,15 @@ public class AvatarUtils {
 	/**
 	 * Returns a new {@link ItemStack} that is identical to the supplied one, except with the metadata changed to the
 	 * new value given.
-	 * @param toCopy The stack to copy
+	 *
+	 * @param toCopy      The stack to copy
 	 * @param newMetadata The new metadata value
 	 * @return The resulting {@link ItemStack}
 	 */
-	public static ItemStack copyWithMeta(ItemStack toCopy, int newMetadata){
+	public static ItemStack copyWithMeta(ItemStack toCopy, int newMetadata) {
 		ItemStack copy = new ItemStack(toCopy.getItem(), toCopy.getCount(), newMetadata);
 		NBTTagCompound compound = toCopy.getTagCompound();
-		if(compound != null) copy.setTagCompound(compound.copy());
+		if (compound != null) copy.setTagCompound(compound.copy());
 		return copy;
 	}
 
@@ -108,15 +112,36 @@ public class AvatarUtils {
 	public static ParticleAvatar getParticleFromUUID(UUID id) {
 		if (!getAliveParticles().isEmpty() && getAliveParticles().peek() != null) {
 			for (Particle particle : getAliveParticles()) {
-				if(particle instanceof ParticleAvatar) {
+				if (particle instanceof ParticleAvatar) {
 					if (((ParticleAvatar) particle).getUUID().equals(id)) {
 						return (ParticleAvatar) particle;
 					}
 				}
 			}
-			
+
 		}
 		return null;
+	}
+
+	public static Function<Double, Vec3d> bezierCurve(int order, List<Vec3d> points) {
+		if (order < 1) {
+			throw new IllegalArgumentException("Order of the curve must be positive");
+		} else if (order < points.size()) {
+			throw new IllegalArgumentException("Order of the curve must be at least the size of the list of Locations");
+		}
+
+		return (t) -> {
+			if (t < 0 || t > 1) {
+				return null;
+			}
+
+			if (order == 1) {
+				return points.get(0);
+			} else {
+				return bezierCurve(order - 1, points.subList(0, order - 1)).apply(t).scale(1.0 - t)
+						.add(bezierCurve(order - 1, points.subList(1, order)).apply(t).scale(t));
+			}
+		};
 	}
 
 	public static void chargeCreeper(EntityCreeper creeper) {
@@ -480,16 +505,16 @@ public class AvatarUtils {
 	/**
 	 * This method is like the other method, it just uses vanilla damage sources.
 	 *
-	 * @param world        The world the raytrace is in.
-	 * @param caster       The caster of the spell. This is so mobs don't attack each other when you use raytraces from mobs.
-	 *                     All damage is done by the caster.
-	 * @param startPos     Where the raytrace starts.
-	 * @param endPos       Where the raytrace ends.
-	 * @param borderSize   The width of the raytrace.
-	 * @param spellEntity  The entity that's using this method, if applicable. If this method is directly used in a spell, just make this null.
-	 * @param damage       The amount of damage.
-	 * @param knockBack    The amount of knockback.
-	 * @param fireTime     How long to set an enemy on fire.
+	 * @param world       The world the raytrace is in.
+	 * @param caster      The caster of the spell. This is so mobs don't attack each other when you use raytraces from mobs.
+	 *                    All damage is done by the caster.
+	 * @param startPos    Where the raytrace starts.
+	 * @param endPos      Where the raytrace ends.
+	 * @param borderSize  The width of the raytrace.
+	 * @param spellEntity The entity that's using this method, if applicable. If this method is directly used in a spell, just make this null.
+	 * @param damage      The amount of damage.
+	 * @param knockBack   The amount of knockback.
+	 * @param fireTime    How long to set an enemy on fire.
 	 */
 
 	public static void handlePiercingBeamCollision(World world, EntityLivingBase caster, Vec3d startPos, Vec3d endPos, float borderSize, @Nullable AvatarEntity spellEntity, @Nullable Ability ability,
@@ -505,8 +530,7 @@ public class AvatarUtils {
 			if (spellEntity != null) {
 				style = spellEntity.getElement();
 				abilityName = spellEntity.getAbility().getName();
-			}
-			else  {
+			} else {
 				assert ability != null;
 				assert element != null;
 				style = element;
@@ -637,6 +661,7 @@ public class AvatarUtils {
 	public static double getSqrMagnitude(Vec3d vel) {
 		return vel.x * vel.x + vel.y * vel.y + vel.z * vel.z;
 	}
+
 	/**
 	 * An exception thrown by reading/writing methods for NBT
 	 *

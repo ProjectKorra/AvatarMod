@@ -52,7 +52,7 @@ import static java.lang.Math.toRadians;
  */
 public class AbilityWaterArc extends Ability {
 
-	private static HashMap<String, Integer> comboNumber = new HashMap<>();
+	private static final HashMap<String, Integer> comboNumber = new HashMap<>();
 
 	public AbilityWaterArc() {
 		super(Waterbending.ID, "water_arc");
@@ -189,10 +189,12 @@ public class AbilityWaterArc extends Ability {
 					water.setSize(size);
 					water.setDamageMult(damageMult);
 					water.setVelocity(force);
+					water.setLifeTime(30);
 					water.setGravity(gravity);
 					water.setBehavior(new WaterArcBehavior.Thrown());
 					water.setAbility(this);
-					world.spawnEntity(water);
+					if (!world.isRemote)
+						world.spawnEntity(water);
 
 				} else {
 					EntityWaterArc water = new EntityWaterArc(world);
@@ -201,11 +203,13 @@ public class AbilityWaterArc extends Ability {
 					water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
 					water.setDamageMult(damageMult);
 					water.setSize(size);
+					water.setLifeTime(30);
 					water.setBehavior(new WaterArcBehavior.PlayerControlled());
 					water.isSpear(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND));
 					water.setGravity(gravity);
 					water.setAbility(this);
-					world.spawnEntity(water);
+					if (!world.isRemote)
+						world.spawnEntity(water);
 					ctx.getData().addStatusControl(THROW_WATER);
 				}
 

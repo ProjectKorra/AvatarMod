@@ -25,10 +25,9 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import com.zeitheron.hammercore.api.lighting.ColoredLight;
-import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -42,10 +41,11 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.Optional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -73,7 +73,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	private float damageMult;
 
-	private float Size;
+	private final float Size;
 
 	private float velocityMultiplier;
 
@@ -329,9 +329,38 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			if (arc != null && arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControlController.THROW_WATER))) {
 				bD.addStatusControl(StatusControlController.THROW_WATER);
 			}
+		}
 
+		if (world.isRemote && getOwner() != null) {
+			List<Vec3d> points = new ArrayList<>();
+			for (ControlPoint point : getControlPoints())
+				points.add(point.position().toMinecraft());
+			//Particles! Let's do this.
+			//First, we need a bezier curve. Joy.
+			//Iterate through all of the control points.
+			for (int i = 0; i < getAmountOfControlPoints(); i++) {
+				Vec3d pos = AvatarUtils.bezierCurve(getAmountOfControlPoints(), points).apply((double) (i / getAmountOfControlPoints()));
+				ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(getOwner()).scale(1.5F).vel(world.rand.nextGaussian() / 40,
+						world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).clr(0, 102, 255, 255).time(15 + AvatarUtils.getRandomNumberInRange(0, 5)).spawn(world);
+				for (int h = 0; h < 4; h++) {
+					Vec3d pos1 = Vector.getOrthogonalVector(getLookVec(), i * 90 + (ticksExisted % 360) * 10, getAvgSize() * 1.25).toMinecraft();
+					Vec3d velocity;
+					pos1 = pos1.add(pos);
+					velocity = pos1.subtract(pos).normalize();
+					velocity = velocity.scale(AvatarUtils.getSqrMagnitude(getVelocity()) / 400000);
+					double spawnX = pos.x;
+					double spawnY = pos.y;
+					double spawnZ = pos.z;
+
+					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(spawnX, spawnY, spawnZ).spawnEntity(getOwner()).scale(0.75F).vel(world.rand.nextGaussian() / 40 + velocity.x,
+							world.rand.nextGaussian() / 40 + velocity.y, world.rand.nextGaussian() / 40 + velocity.z)
+							.clr(0, 102, 255, 255).time(12 + AvatarUtils.getRandomNumberInRange(0, 6)).spawn(world);
+
+				}
+			}
 		}
 	}
+
 
 	@Override
 	protected WaterControlPoint createControlPoint(float size, int index) {
@@ -410,6 +439,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		return velocityMultiplier;
 	}
 
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
 	static class WaterControlPoint extends ControlPoint {
 
 		private WaterControlPoint(EntityArc arc, float size, double x, double y, double z) {
@@ -419,7 +453,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	}
 
 	@Override
-	public boolean isProjectile() {
-		return true;
+	public boolean shouldExplode() {
+		return getBehavior() instanceof WaterArcBehavior.Thrown;
 	}
 }

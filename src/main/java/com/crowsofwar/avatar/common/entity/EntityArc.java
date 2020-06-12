@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
+public abstract class EntityArc<T extends ControlPoint> extends EntityOffensive {
 
 	public List<T> points;
 	private int brightness = 15728880;
@@ -202,7 +202,7 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 	 * Returns the amount of control points which will be created.
 	 */
 	public int getAmountOfControlPoints() {
-		return 5;
+		return 6;
 	}
 
 	/**

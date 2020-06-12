@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -40,7 +41,7 @@ import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_WA
 /**
  * @author CrowsOfWar
  */
-public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
+public abstract class WaterArcBehavior extends OffensiveBehaviour {
 
 	public static final DataSerializer<WaterArcBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
 
@@ -59,10 +60,10 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 	public static class PlayerControlled extends WaterArcBehavior {
 
 		@Override
-		public WaterArcBehavior onUpdate(EntityWaterArc water) {
+		public WaterArcBehavior onUpdate(EntityOffensive water) {
 
 			EntityLivingBase owner = water.getOwner();
-			if (owner == null) return this;
+			if (owner == null || !(water instanceof EntityWaterArc)) return this;
 
 			Raytrace.Result res = Raytrace.getTargetBlock(owner, 3, false);
 
@@ -80,8 +81,8 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			motion = motion.times(0.5 * 20);
 			water.setVelocity(motion);
 
-			if (water.world.isRemote && water.canPlaySplash()) {
-				if (motion.sqrMagnitude() >= 0.004) water.playSplash();
+			if (water.world.isRemote && ((EntityWaterArc) water).canPlaySplash()) {
+				if (motion.sqrMagnitude() >= 0.004) ((EntityWaterArc) water).playSplash();
 			}
 
 			// Ensure that owner always has stat ctrl active
@@ -116,7 +117,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 		float ticks = 0;
 
 		@Override
-		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
+		public WaterArcBehavior onUpdate(EntityOffensive entity) {
 			ticks++;
 
 
@@ -126,7 +127,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 			int lvl = 0;
 
 			Bender bender = Bender.get(entity.getOwner());
-			if (bender != null && entity.getAbility() != null && !entity.world.isRemote) {
+			if (entity instanceof EntityWaterArc && bender != null && entity.getAbility() != null && !entity.world.isRemote) {
 				data = bender.getData();
 				abilityData = data.getAbilityData(entity.getAbility().getName());
 				if (entity.getAbility() instanceof AbilityWaterArc) {
@@ -134,7 +135,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 				}
 				lvl = abilityData.getLevel();
 			}
-			if (lvl <= 0) {
+		/*	if (lvl <= 0) {
 				//Level I or in Creative Mode
 				if (ticks >= STATS_CONFIG.waterArcTicks) {
 					//Default is 120
@@ -177,16 +178,16 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 					}
 
 				}
-			}
+			}*/
 
-			entity.addVelocity(Vector.DOWN.times(entity.getGravity() / 90));
+			entity.addVelocity(0, -1F / 120, 0);
 
 
 			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
 					EntityLivingBase.class, entity.getEntityBoundingBox().grow(0.5, 0.5, 0.5),
 					collided -> collided != entity.getOwner());
 
-			for (EntityLivingBase collided : collidedList) {
+			/*for (EntityLivingBase collided : collidedList) {
 				if (collided == entity.getOwner()) return this;
 				if (entity.canCollideWith(collided)) {
 					double x = entity.motionX / 6 * STATS_CONFIG.waterArcSettings.push;
@@ -211,7 +212,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 					}
 
 				}
-			}
+			}**/
 
 
 			return this;
@@ -238,7 +239,7 @@ public abstract class WaterArcBehavior extends Behavior<EntityWaterArc> {
 	public static class Idle extends WaterArcBehavior {
 
 		@Override
-		public WaterArcBehavior onUpdate(EntityWaterArc entity) {
+		public WaterArcBehavior onUpdate(EntityOffensive entity) {
 			return this;
 		}
 

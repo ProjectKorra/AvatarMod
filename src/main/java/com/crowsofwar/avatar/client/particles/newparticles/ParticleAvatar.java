@@ -802,6 +802,7 @@ public abstract class ParticleAvatar extends Particle {
 			this.setBoundingBox(this.getBoundingBox().offset(x, y, z));
 		}
 
+		world.getCollisionBoxes(null, getBoundingBox());
 		if (!AvatarUtils.getAliveParticles().isEmpty()) {
 			Queue<Particle> particles = AvatarUtils.getAliveParticles().stream().filter(particle -> particle.getBoundingBox().intersects(getBoundingBox())
 					&& particle instanceof ParticleAvatar && ((ParticleAvatar) particle).spawnEntity != spawnEntity && particle != this)
