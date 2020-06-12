@@ -164,7 +164,7 @@ public class EntityAirBubble extends EntityShield {
 				xVel = x1 * world.rand.nextGaussian() / 200;
 				yVel = y1 * world.rand.nextGaussian() / 200;
 				zVel = z1 * world.rand.nextGaussian() / 200;
-				
+
 				Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(this);
 				double x = centre.x;
 				double y = centre.y;
