@@ -253,29 +253,36 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		}
 
 		if (world.isRemote && getOwner() != null) {
-			List<Vec3d> points = new ArrayList<>();
-			for (ControlPoint point : getControlPoints())
-				points.add(point.position().toMinecraft());
+			Vec3d[] points = new Vec3d[getAmountOfControlPoints()];
+			for (int i = 0; i < getAmountOfControlPoints(); i++)
+				points[i] = getControlPoint(i).position().toMinecraft();
 			//Particles! Let's do this.
 			//First, we need a bezier curve. Joy.
 			//Iterate through all of the control points.
 			for (int i = 0; i < getAmountOfControlPoints(); i++) {
-				Vec3d pos = AvatarUtils.bezierCurve(getAmountOfControlPoints(), points).apply((double) (i / getAmountOfControlPoints()));
+				Vec3d pos = AvatarUtils.bezierCurve(((double) i / (double) getAmountOfControlPoints()), points);
+				Vec3d pos2 = i < getAmountOfControlPoints() - 1 ? AvatarUtils.bezierCurve(
+						Math.min(((double) (i + 1) / getAmountOfControlPoints()), 1), points):
+						Vec3d.ZERO;
 				pos = pos.add(getControlPoint(getAmountOfControlPoints() - i - 1).position().toMinecraft());
+				pos2 = i < getAmountOfControlPoints() - 1 ? pos2.add(getControlPoint(Math.max(getAmountOfControlPoints() - i - 2, 0)).position().toMinecraft())
+				: Vec3d.ZERO;
 				for (int h = 0; h < 4; h++) {
-					Vec3d circlePos = Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 90, getAvgSize()).toMinecraft();
-					Vec3d targetPos = i < getAmountOfControlPoints() - 1 ? Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 90 + 20, getAvgSize()).toMinecraft()
+					Vec3d circlePos = Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 90, getAvgSize()).toMinecraft().add(pos);
+					Vec3d targetPos = i < getAmountOfControlPoints() - 1 ? Vector.getOrthogonalVector(getLookVec(),
+							(ticksExisted % 360) * 20 + h * 90 + 20, getAvgSize()).toMinecraft().add(pos2)
 							: Vec3d.ZERO;
 					Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
 					vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.05).add(vel);
-					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos.add(circlePos)).spawnEntity(this).vel(vel)
-							.clr(0, 102, 255, 255).scale(0.75F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
+					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(circlePos).spawnEntity(this).vel(vel)
+							.clr(0, 102,255, 255).scale(0.75F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
 							.time(10 + AvatarUtils.getRandomNumberInRange(0, 5)).spawn(world);
+					//0, 102, 255
 				}
-				for (int h = 0; h < 4; h++)
-				ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
+				for (int h = 0; h < 2; h++)
+					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
 						world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120).clr(0, 102, 255, 255)
-						.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).spawn(world);
+						.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).target(pos).spawn(world);
 			}
 		}
 	}

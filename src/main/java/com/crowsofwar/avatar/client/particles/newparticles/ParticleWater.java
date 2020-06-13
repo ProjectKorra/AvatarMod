@@ -1,10 +1,7 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
 import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
-import com.crowsofwar.avatar.common.entity.ControlPoint;
-import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -14,7 +11,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -23,11 +19,7 @@ import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
-import static com.crowsofwar.avatar.common.util.AvatarParticleUtils.rotateAroundAxisX;
-import static com.crowsofwar.avatar.common.util.AvatarParticleUtils.rotateAroundAxisY;
 import static net.minecraft.util.math.MathHelper.cos;
 import static net.minecraft.util.math.MathHelper.sin;
 
@@ -99,7 +91,8 @@ public class ParticleWater extends ParticleAvatar {
 		GlStateManager.pushMatrix();
 		mc.renderEngine.bindTexture(WATER);
 		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		GlStateManager.disableLighting();
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		GlStateManager.translate(x, y, z);
 
 
@@ -155,19 +148,19 @@ public class ParticleWater extends ParticleAvatar {
 		float v1 = anim / 16f, v2 = v1 + 1f / 16;
 
 		drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // -x
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // -x
 		drawQuad(2, rtb, rbb, rbf, rtf, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // +x
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // +x
 		drawQuad(2, rbb, rbf, lbf, lbb, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // -y
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // -y
 		drawQuad(2, rtb, rtf, ltf, ltb, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // +y
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // +y
 		drawQuad(2, rtf, rbf, lbf, ltf, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // -z
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // -z
 		drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // +z
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // +z
 
-		//GlStateManager.color(1F, 1F, 1F, 1F);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.disableBlend();
 		//	GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
@@ -186,34 +179,7 @@ public class ParticleWater extends ParticleAvatar {
 		@Nonnull
 		@Override
 		public ParticleAvatarBehaviour onUpdate(ParticleAvatar particle) {
-			if (particle.getSpawnEntity() != null && particle.getSpawnEntity() instanceof EntityWaterArc) {
-				EntityWaterArc arc = (EntityWaterArc) particle.getSpawnEntity();
-				List<Vec3d> points = new ArrayList<>();
-				for (ControlPoint point : arc.getControlPoints())
-					points.add(point.position().toMinecraft());
-				//Particles! Let's do this.
-				//First, we need a bezier curve. Joy.
-				//Iterate through all of the control points.
-				for (int i = 0; i < arc.getAmountOfControlPoints(); i++) {
-
-						Vec3d pos = AvatarUtils.bezierCurve(arc.getAmountOfControlPoints(), points).apply((double) (i / arc.getAmountOfControlPoints()));
-						ControlPoint cP = arc.getControlPoint(arc.getAmountOfControlPoints() - i - 1);
-						particle.speed = Math.max(Math.min(arc.velocity().magnitude(), 0.05), 0.001);
-						particle.angle += particle.speed;
-						particle.speed = particle.speed * 2 * Math.PI; // Converts rotations per tick into radians per tick for the trig functions
-						//this.angle = this.rand.nextFloat() * (float) Math.PI * 2; // Random start angle
-						// Need to set the start position or the circle won't be centred on the correct position
-						//this.posX = relativeX - radius * MathHelper.cos(angle);
-						//this.posZ = relativeZ + radius * MathHelper.sin(angle);
-						Vec3d spin = new Vec3d(arc.getAvgSize() * 4 * -Math.cos(particle.angle), 0, arc.getAvgSize() * 4 * Math.sin(particle.angle));
-						spin = rotateAroundAxisX(spin, arc.rotationPitch + 90);
-						spin = rotateAroundAxisY(spin, arc.rotationYaw - 90);
-						pos = pos.add(spin).add(cP.position().toMinecraft());
-						particle.setPosition(pos.x, pos.y, pos.z);
-
-
-				}
-			}
+			particle.relativeMotionY -= 9.82 / 40;
 			return this;
 		}
 

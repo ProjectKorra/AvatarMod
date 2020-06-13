@@ -127,29 +127,32 @@ public class AvatarUtils {
 
 	/**
 	 * Returns a function that draws the bezier curve for the given order and control points
-	 * @param order how many control points there are
-	 * @param points the control points (note that only the amount matching the first n locations, n = order)
+	 * @param t Domain of the function from 0 to 1
+	 * @param controls the control points (note that only the amount matching the first n locations, n = order)
 	 * @return bezier curve function, accepting inputs in the range [0, 1]
 	 */
-	public static Function<Double, Vec3d> bezierCurve(int order, List<Vec3d> points) {
-		Validate.isTrue(order >= 1, "Order of the curve must be positive");
-		Validate.isTrue(points.size() >= order, "Order of the curve must be at least the size of the given list of Locations");
+	public static Vec3d bezierCurve(double t, Vec3d...controls) {
+		if (controls == null) {
+			throw new IllegalArgumentException("Control point array cannot be null");
+		} else if (controls.length == 0) {
+			throw new IllegalArgumentException("Control point array cannot be empty");
+		} else if (Arrays.asList(controls).contains(null)) {
+			throw new IllegalArgumentException("A control point cannot be null");
+		} else if (t < 0 || t > 1) {
+			throw new IllegalArgumentException("Parameter t must be within the range [0, 1]");
+		}
 
-		return (t) -> {
-			if (t < 0 || t > 1) {
-				return null;
-			}
+		int order = controls.length;
+		Vec3d point = Vec3d.ZERO;
 
-			Vec3d point = Vec3d.ZERO;
-			for (int i = 0; i < order; i++) {
-				double coefficient = (double) factorial(order) / (double) (factorial(i) * factorial(order - i));
-				double basis = coefficient * Math.pow(t, i) * Math.pow(1.0 - t, order - i);
+		for (int i = 0; i < order; i++) {
+			double coefficient = (double) factorial(order) / (double) (factorial(i) * factorial(order - i));
+			double basis = coefficient * Math.pow(t, i) * Math.pow(1.0 - t, order - i);
 
-				point.add(points.get(i).scale(basis));
-			}
+			point.add(controls[i].scale(basis));
+		}
 
-			return point;
-		};
+		return point;
 	}
 
 	public static int factorial(int n) {
