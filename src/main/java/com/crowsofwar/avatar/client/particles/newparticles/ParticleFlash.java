@@ -49,7 +49,7 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
-		
+
 		if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		}

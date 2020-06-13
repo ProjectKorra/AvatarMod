@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.client.particles.newparticles.ParticleWater;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -283,6 +284,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
 						world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120).clr(0, 102, 255, 255)
 						.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).target(pos).spawn(world);
+				//Dripping water blocks
+				for (int h = 0; h < 2; h++)
+					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 20,
+							world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 255)
+							.time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).target(pos).scale(0.625F).gravity(true).spawn(world);
 			}
 		}
 	}

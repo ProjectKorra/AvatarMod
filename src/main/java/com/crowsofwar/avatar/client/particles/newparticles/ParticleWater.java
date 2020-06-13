@@ -182,7 +182,7 @@ public class ParticleWater extends ParticleAvatar {
 		@Nonnull
 		@Override
 		public ParticleAvatarBehaviour onUpdate(ParticleAvatar particle) {
-			particle.relativeMotionY -= 9.82 / 40;
+			particle.setGravity(true);
 			return this;
 		}
 
