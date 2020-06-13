@@ -1,22 +1,33 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
-import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
+import com.crowsofwar.avatar.common.entity.ControlPoint;
+import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.crowsofwar.avatar.common.util.AvatarParticleUtils.rotateAroundAxisX;
+import static com.crowsofwar.avatar.common.util.AvatarParticleUtils.rotateAroundAxisY;
 import static net.minecraft.util.math.MathHelper.cos;
 import static net.minecraft.util.math.MathHelper.sin;
 
@@ -69,11 +80,11 @@ public class ParticleWater extends ParticleAvatar {
 		}
 	}
 
-/*	@SubscribeEvent
-	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
-		event.getMap().registerSprite(WATER);
-	}
-**/
+	/*	@SubscribeEvent
+		public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
+			event.getMap().registerSprite(WATER);
+		}
+	**/
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float lookZ, float lookY, float lookX, float lookXY, float lookYZ) {
 
@@ -167,6 +178,64 @@ public class ParticleWater extends ParticleAvatar {
 	@Override
 	public int getFXLayer() {
 		return 3;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static class WaterParticleBehaviour extends ParticleAvatarBehaviour {
+
+		@Nonnull
+		@Override
+		public ParticleAvatarBehaviour onUpdate(ParticleAvatar particle) {
+			if (particle.getSpawnEntity() != null && particle.getSpawnEntity() instanceof EntityWaterArc) {
+				EntityWaterArc arc = (EntityWaterArc) particle.getSpawnEntity();
+				List<Vec3d> points = new ArrayList<>();
+				for (ControlPoint point : arc.getControlPoints())
+					points.add(point.position().toMinecraft());
+				//Particles! Let's do this.
+				//First, we need a bezier curve. Joy.
+				//Iterate through all of the control points.
+				for (int i = 0; i < arc.getAmountOfControlPoints(); i++) {
+
+						Vec3d pos = AvatarUtils.bezierCurve(arc.getAmountOfControlPoints(), points).apply((double) (i / arc.getAmountOfControlPoints()));
+						ControlPoint cP = arc.getControlPoint(arc.getAmountOfControlPoints() - i - 1);
+						particle.speed = Math.max(Math.min(arc.velocity().magnitude(), 0.05), 0.001);
+						particle.angle += particle.speed;
+						particle.speed = particle.speed * 2 * Math.PI; // Converts rotations per tick into radians per tick for the trig functions
+						//this.angle = this.rand.nextFloat() * (float) Math.PI * 2; // Random start angle
+						// Need to set the start position or the circle won't be centred on the correct position
+						//this.posX = relativeX - radius * MathHelper.cos(angle);
+						//this.posZ = relativeZ + radius * MathHelper.sin(angle);
+						Vec3d spin = new Vec3d(arc.getAvgSize() * 4 * -Math.cos(particle.angle), 0, arc.getAvgSize() * 4 * Math.sin(particle.angle));
+						spin = rotateAroundAxisX(spin, arc.rotationPitch + 90);
+						spin = rotateAroundAxisY(spin, arc.rotationYaw - 90);
+						pos = pos.add(spin).add(cP.position().toMinecraft());
+						particle.setPosition(pos.x, pos.y, pos.z);
+
+
+				}
+			}
+			return this;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
 	}
 
 }

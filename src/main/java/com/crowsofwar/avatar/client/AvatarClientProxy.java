@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
 import com.crowsofwar.avatar.client.gui.skills.GetBendingGui;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
 import com.crowsofwar.avatar.client.particles.newparticles.*;
+import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleBehaviour;
 import com.crowsofwar.avatar.client.particles.oldsystem.*;
 import com.crowsofwar.avatar.client.render.*;
 import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
@@ -47,6 +48,7 @@ import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.common.network.packets.PacketSSendViewStatus;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder.Type;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
@@ -104,7 +106,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 
 	@Override
 	public void registerParticles(){
-		// I'll be a good programmer and use the API method rather than the one above. Lead by example, as they say...
+
 		ParticleAvatar.registerParticle(Type.BEAM, ParticleBeam::new);
 		ParticleAvatar.registerParticle(Type.BUFF, ParticleBuff::new);
 		ParticleAvatar.registerParticle(Type.DARK_MAGIC, ParticleDarkMagic::new);
@@ -126,6 +128,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		ParticleAvatar.registerParticle(Type.SUMMON, ParticleSummon::new);
 		ParticleAvatar.registerParticle(Type.VINE, ParticleVine::new);
 		ParticleAvatar.registerParticle(Type.WATER, ParticleWater::new);
+
+		ParticleBehaviour.registerBehaviours();
 	}
 
 	@Override

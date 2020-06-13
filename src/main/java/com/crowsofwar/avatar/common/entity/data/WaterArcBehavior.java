@@ -80,6 +80,8 @@ public abstract class WaterArcBehavior extends OffensiveBehaviour {
 			Vector motion = target.minus(water.position());
 			motion = motion.times(0.5 * 20);
 			water.setVelocity(motion);
+			water.rotationYaw = owner.rotationYaw;
+			water.rotationPitch = owner.rotationPitch;
 
 			if (water.world.isRemote && ((EntityWaterArc) water).canPlaySplash()) {
 				if (motion.sqrMagnitude() >= 0.004) ((EntityWaterArc) water).playSplash();

@@ -36,7 +36,7 @@ import java.util.Map;
  * All custom behaviors must be registered via {@link #registerBehavior(Class)}.
  * It's unnecessary to sync this server-side as it's only used for particles.
  *
- * @param E Type of entity this behavior is for
+ * @param <E> The particle this behaviour is for
  * @author FavouriteDragon
  */
 public abstract class ParticleBehaviour<E extends Particle> {
@@ -50,7 +50,7 @@ public abstract class ParticleBehaviour<E extends Particle> {
 
 	// Static method called from preInit
 	public static void registerBehaviours() {
-
+		ParticleAvatarBehaviour.register();
 	}
 
 	protected static int registerBehavior(Class<? extends ParticleBehaviour> behaviorClass) {

@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -261,9 +262,20 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			for (int i = 0; i < getAmountOfControlPoints(); i++) {
 				Vec3d pos = AvatarUtils.bezierCurve(getAmountOfControlPoints(), points).apply((double) (i / getAmountOfControlPoints()));
 				pos = pos.add(getControlPoint(getAmountOfControlPoints() - i - 1).position().toMinecraft());
+				for (int h = 0; h < 4; h++) {
+					Vec3d circlePos = Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 90, getAvgSize()).toMinecraft();
+					Vec3d targetPos = i < getAmountOfControlPoints() - 1 ? Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 90 + 20, getAvgSize()).toMinecraft()
+							: Vec3d.ZERO;
+					Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
+					vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.05).add(vel);
+					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos.add(circlePos)).spawnEntity(this).vel(vel)
+							.clr(0, 102, 255, 255).scale(0.75F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
+							.time(10 + AvatarUtils.getRandomNumberInRange(0, 5)).spawn(world);
+				}
 				for (int h = 0; h < 4; h++)
-					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(getOwner()).vel(world.rand.nextGaussian() / 40,
-							world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).clr(0, 102, 255, 255).time(10 + AvatarUtils.getRandomNumberInRange(0, 5)).spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
+						world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120).clr(0, 102, 255, 255)
+						.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).spawn(world);
 			}
 		}
 	}

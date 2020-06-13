@@ -95,7 +95,7 @@ public abstract class ParticleAvatar extends Particle {
 	protected float fadeRed = 0;
 	protected float fadeGreen = 0;
 	protected float fadeBlue = 0;
-	protected float angle;
+	public float angle;
 	protected double radius = 0;
 	protected double speed = 0;
 	protected UUID uuid = UUID.fromString("ccc7dd56-8fcc-4477-9782-7f0423e5616d");
@@ -115,6 +115,7 @@ public abstract class ParticleAvatar extends Particle {
 	protected double scaleChange;
 	protected boolean speedChangeOnUpdate;
 	protected double speedChange;
+	public double ticksExisted;
 	/**
 	 * The entity this particle is linked to. The particle will move with this entity.
 	 */
@@ -400,8 +401,15 @@ public abstract class ParticleAvatar extends Particle {
 	public void setSpawnEntity(Entity entity) {
 		this.spawnEntity = entity;
 	}
+
+	public Entity getSpawnEntity() {
+		return this.spawnEntity;
+	}
+
+
 	// Setters for parameters that only affect some particles - these are unimplemented in this class because they
 	// doesn't make sense for most particles
+
 
 	/**
 	 * Sets the base colour of the particle. <i>Note that this also sets the fade colour so that particles without a
@@ -630,6 +638,7 @@ public abstract class ParticleAvatar extends Particle {
 			this.relativeZ += relativeMotionZ;
 		}
 
+		ticksExisted = particleAge;
 		//Colour shifting! Who needs colour fading, amirite?
 		//Copied from my (FavouriteDragon) glorious light orb code.
 		if (colourShiftRange[0] != 0 && colourShiftInterval[0] != 0) {

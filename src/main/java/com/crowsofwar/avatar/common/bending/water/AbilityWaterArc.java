@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
+import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
+import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -24,8 +26,10 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.ControlPoint;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
@@ -34,9 +38,16 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -139,7 +150,7 @@ public class AbilityWaterArc extends Ability {
 			if (bender.consumeChi(STATS_CONFIG.chiWaterArc)) {
 
 				removeExisting(ctx);
-				
+
 				EntityWaterArc water = new EntityWaterArc(world);
 				water.setOwner(entity);
 				assert targetPos != null;
@@ -198,7 +209,6 @@ public class AbilityWaterArc extends Ability {
 
 	}**/
 
-
 	//For bending snow and ice; is a separate method so that when passives are active it's easy to differentiate
 	//For some reason this doesn't work; will use alternate method for now
 	private Vector getClosestWaterbendableBlock(EntityLivingBase entity, int level) {
@@ -235,7 +245,6 @@ public class AbilityWaterArc extends Ability {
 
 	}
 
-
 	/**
 	 * Kills already existing water arc if there is one
 	 */
@@ -254,5 +263,6 @@ public class AbilityWaterArc extends Ability {
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiWaterArc(this, entity, bender);
 	}
+
 
 }
