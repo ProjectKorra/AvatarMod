@@ -25,7 +25,6 @@ import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.entity.data.WaterArcBehavior;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -262,23 +261,9 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			for (int i = 0; i < getAmountOfControlPoints(); i++) {
 				Vec3d pos = AvatarUtils.bezierCurve(getAmountOfControlPoints(), points).apply((double) (i / getAmountOfControlPoints()));
 				pos = pos.add(getControlPoint(getAmountOfControlPoints() - i - 1).position().toMinecraft());
-				ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(getOwner()).scale(1.5F).vel(world.rand.nextGaussian() / 40,
-						world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).clr(0, 102, 255, 255).time(10 + AvatarUtils.getRandomNumberInRange(0, 5)).spawn(world);
-				for (int h = 0; h < 2; h++) {
-					Vec3d pos1 = Vector.getOrthogonalVector(getLookVec(), i * 180 + (ticksExisted % 360) * 10, getAvgSize() * 3).toMinecraft();
-					Vec3d velocity;
-					pos1 = pos1.add(pos).add(getControlPoint(getAmountOfControlPoints() - i - 1).position().toMinecraft());
-					velocity = pos1.subtract(pos.add(getControlPoint(getAmountOfControlPoints() - i - 1).position().toMinecraft())).normalize();
-					velocity = velocity.scale(AvatarUtils.getSqrMagnitude(getVelocity()) / 400000);
-					double spawnX = pos1.x;
-					double spawnY = pos1.y;
-					double spawnZ = pos1.z;
-
-					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(spawnX, spawnY, spawnZ).spawnEntity(getOwner()).scale(0.75F).vel(world.rand.nextGaussian() / 40 + velocity.x,
-							world.rand.nextGaussian() / 40 + velocity.y, world.rand.nextGaussian() / 40 + velocity.z)
-							.clr(0, 102, 255, 255).time(12 + AvatarUtils.getRandomNumberInRange(0, 6)).spawn(world);
-
-				}
+				for (int h = 0; h < 4; h++)
+					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(getOwner()).vel(world.rand.nextGaussian() / 40,
+							world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).clr(0, 102, 255, 255).time(10 + AvatarUtils.getRandomNumberInRange(0, 5)).spawn(world);
 			}
 		}
 	}

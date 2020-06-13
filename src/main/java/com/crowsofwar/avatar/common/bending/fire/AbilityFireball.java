@@ -148,8 +148,8 @@ public class AbilityFireball extends Ability {
 			Vector target = Vector.getEyePos(owner).plus(look.times(2 + ((EntityFireball) entity).getSize() * 0.03125F));
 			List<EntityFireball> fireballs = entity.world.getEntitiesWithinAABB(EntityFireball.class,
 					owner.getEntityBoundingBox().grow(5, 5, 5));
-			fireballs = fireballs.stream().filter(entityFireball -> entityFireball.getBehavior() instanceof FireballBehavior.PlayerControlled)
-			.collect(Collectors.toList());
+			fireballs = fireballs.stream().filter(entityFireball -> entityFireball.getBehavior() instanceof FireballBehavior.PlayerControlled
+			&& entityFireball.getOwner() == entity.getOwner()).collect(Collectors.toList());
 			Vec3d motion = Objects.requireNonNull(target).minus(Vector.getEntityPos(entity)).toMinecraft();
 
 			if (!fireballs.isEmpty() && fireballs.size() > 1 && fireballs.contains(entity)) {

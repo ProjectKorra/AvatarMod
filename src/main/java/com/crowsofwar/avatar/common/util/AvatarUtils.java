@@ -141,7 +141,6 @@ public class AvatarUtils {
 			}
 
 			Vec3d point = Vec3d.ZERO;
-
 			for (int i = 0; i < order; i++) {
 				double coefficient = (double) factorial(order) / (double) (factorial(i) * factorial(order - i));
 				double basis = coefficient * Math.pow(t, i) * Math.pow(1.0 - t, order - i);

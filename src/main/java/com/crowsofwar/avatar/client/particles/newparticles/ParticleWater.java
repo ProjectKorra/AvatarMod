@@ -20,7 +20,7 @@ import org.lwjgl.opengl.GL11;
 import static net.minecraft.util.math.MathHelper.cos;
 import static net.minecraft.util.math.MathHelper.sin;
 
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+//@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class ParticleWater extends ParticleAvatar {
 
 	private static final ResourceLocation WATER = new ResourceLocation("minecraft",
@@ -69,11 +69,11 @@ public class ParticleWater extends ParticleAvatar {
 		}
 	}
 
-	@SubscribeEvent
+/*	@SubscribeEvent
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
 		event.getMap().registerSprite(WATER);
 	}
-
+**/
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float lookZ, float lookY, float lookX, float lookXY, float lookYZ) {
 
@@ -88,7 +88,6 @@ public class ParticleWater extends ParticleAvatar {
 		GlStateManager.pushMatrix();
 		mc.renderEngine.bindTexture(WATER);
 		GlStateManager.enableBlend();
-		GlStateManager.disableLighting();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		GlStateManager.translate(x, y, z);
 
