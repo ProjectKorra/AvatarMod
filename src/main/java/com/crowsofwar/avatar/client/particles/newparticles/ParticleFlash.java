@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Copied from ParticleFirework.Overlay; for some reason that class has no public constructors, plus I want to change the
@@ -48,7 +49,7 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
-
+		
 		if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		}
@@ -71,7 +72,6 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
 		} else {
 			f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
 		}
-
 
 		this.setAlphaF(sparkle ? particleAlpha - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F : particleAlpha);
 		float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);

@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 
 import static net.minecraft.util.math.MathHelper.cos;
 import static net.minecraft.util.math.MathHelper.sin;
+import static org.lwjgl.opengl.GL11.GL_ALWAYS;
 
 //@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class ParticleWater extends ParticleAvatar {
@@ -90,11 +91,13 @@ public class ParticleWater extends ParticleAvatar {
 
 		GlStateManager.pushMatrix();
 		mc.renderEngine.bindTexture(WATER);
+		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.translate(x, y, z);
 
+		GlStateManager.translate(x, y, z);
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		GlStateManager.alphaFunc(GL_ALWAYS, particleAlpha * 0.5F);
 
 		float ticks = this.particleAge + partialTicks;
 		float colorEnhancement = 1.5f;
@@ -162,7 +165,7 @@ public class ParticleWater extends ParticleAvatar {
 
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.disableBlend();
-		//	GlStateManager.enableLighting();
+		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 
 	}

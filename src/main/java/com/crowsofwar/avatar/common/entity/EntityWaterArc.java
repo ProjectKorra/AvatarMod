@@ -275,7 +275,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 					Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
 					vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.05).add(vel);
 					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(circlePos).spawnEntity(this).vel(vel)
-							.clr(0, 102,255, 255).scale(0.75F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
+							.clr(0, 102,255, 175).scale(0.75F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
 							.time(10 + AvatarUtils.getRandomNumberInRange(0, 5)).spawn(world);
 					//0, 102, 255
 				}
