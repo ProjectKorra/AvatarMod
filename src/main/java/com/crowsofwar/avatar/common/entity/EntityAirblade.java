@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -126,8 +127,27 @@ public class EntityAirblade extends EntityOffensive {
 				double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 				double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).collide(true).time(8).clr(0.8F, 0.8F, 0.8F)
+						world.rand.nextGaussian() / 60).collide(true).time(8).clr(0.8F, 0.8F, 0.8F, 0.075F)
 						.scale(getWidth() * 4).element(getElement()).spawn(world);
+			}
+
+			Vec3d[] points = new Vec3d[3];
+			points[0] = position().withY(getExpandedHitbox().minY).toMinecraft();
+			points[1] = AvatarEntityUtils.getMiddleOfEntity(this).add(getLookVec().scale(width * 4));
+			points[2] = position().withY(getExpandedHitbox().maxY).toMinecraft();
+			for (int h = 0; h < 3; h++) {
+				for (double i = 0; i < 2; i += 1 / (getHeight() * 4)) {
+					Vec3d pos = AvatarUtils.bezierCurve((points.length - h) / (i + 1) / points.length, points);
+					Vec3d pos2;
+					pos = pos.add(points[points.length - h - 1]);
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+							world.rand.nextGaussian() / 60).collide(true).time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.8F, 0.8F, 0.8F, 0.075F)
+							.scale(getWidth()).element(getElement()).spawnEntity(this).spawn(world);
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120,
+							world.rand.nextGaussian() / 120).collide(true)
+							.time(16 + AvatarUtils.getRandomNumberInRange(0, 8)).clr(0.8F, 0.8F, 0.8F, 0.075F).spawnEntity(this)
+							.scale(getWidth() * 2).element(getElement()).spawn(world);
+				}
 			}
 		}
 

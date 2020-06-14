@@ -166,6 +166,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		setDamage(nbt.getFloat("Damage"));
 		setLifeTime(nbt.getInteger("Lifetime"));
 		setBehaviour((OffensiveBehaviour) Behavior.lookup(nbt.getInteger("Behaviour"), this));
+		setDynamicSpreadingCollision(nbt.getBoolean("Dynamic Collision"));
 	}
 
 	@Override
@@ -174,6 +175,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		nbt.setFloat("Damage", getDamage());
 		nbt.setInteger("Lifetime", getLifeTime());
 		nbt.setInteger("Behaviour", getBehaviour().getId());
+		nbt.setBoolean("Dynamic Collision", getDynamicSpreadingCollision());
 	}
 
 	@Override
