@@ -230,7 +230,7 @@ public class AvatarMod {
 		registerEntity(EntityFloatingBlock.class, "FloatingBlock", 128, 1000, true);
 		//registerEntity(EntityFireArc.class, "FireArc", 128, 1000, true);
 		registerEntity(EntityWaterArc.class, "WaterArc", 128, 1000, true);
-		registerEntity(EntityAirGust.class, "AirGust", 128, 3, true);
+		registerEntity(EntityAirGust.class, "AirGust", 128, 1000, true);
 		registerEntity(EntityRavine.class, "Ravine", 128, 1000, true);
 		//For some reason, there's random desync for its position when spawning it. Setting it to 1 fixes it.
 		registerEntity(EntityFlames.class, "Flames", 128, 1000, true);
@@ -239,7 +239,7 @@ public class AvatarMod {
 		registerEntity(EntityWall.class, "Wall", 128, 3, true);
 		registerEntity(EntityWallSegment.class, "WallSegment", 128, 3, true);
 		registerEntity(EntityFireball.class, "Fireball", 128, 1000, true);
-		registerEntity(EntityAirblade.class, "Airblade", 128, 2, true);
+		registerEntity(EntityAirblade.class, "Airblade", 128, 1000, true);
 		registerEntity(EntityAirBubble.class, "AirBubble", 128, 1000, false);
 		registerEntity(EntityFirebender.class, "Firebender", 0xB0171F, 0xFFFF00);
 		registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xDDA0DD);
@@ -252,7 +252,7 @@ public class AvatarMod {
 		registerEntity(EntityOstrichHorse.class, "OstrichHorse", 0x5c5b46, 0x0f1108);
 		registerEntity(EntitySandPrison.class, "sandprison", 128, 1000, true);
 		registerEntity(EntityLightningArc.class, "Lightning_arc", 128, 1000, true);
-		registerEntity(EntityCloudBall.class, "Cloudburst", 128, 2, true);
+		registerEntity(EntityCloudBall.class, "Cloudburst", 128, 1000, true);
 		registerEntity(EntityEarthspike.class, "Earthspike", 128, 1000, false);
 		registerEntity(EntityLightningSpear.class, "Lightning_Spear", 128, 1000, true);
 		registerEntity(EntityEarthspikeSpawner.class, "EarthspikeSpawner", 128, 1000, true);

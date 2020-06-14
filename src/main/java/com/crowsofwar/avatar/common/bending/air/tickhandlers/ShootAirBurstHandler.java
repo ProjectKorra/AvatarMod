@@ -155,7 +155,7 @@ public class ShootAirBurstHandler extends TickHandler {
 		public Behavior onUpdate(EntityOffensive entity) {
 			World world = entity.world;
 			if (world.isRemote && entity.getOwner() != null) {
-				for (double angle = 0; angle < 360; angle += Math.max((int) (entity.getAvgSize() * 25), 20)) {
+				for (double angle = 0; angle < 360; angle += Math.max((int) (entity.getAvgSize() * 25) + (entity.ticksExisted % 360) * 20, 20)) {
 					Vector position = Vector.getOrthogonalVector(entity.getLookVec(), angle, entity.getAvgSize());
 					position = position.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
 					position = position.plus(AvatarEntityUtils.getMiddleOfEntity(entity).x, AvatarEntityUtils.getMiddleOfEntity(entity).y,
@@ -167,7 +167,7 @@ public class ShootAirBurstHandler extends TickHandler {
 							world.rand.nextGaussian() / 45).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity.getOwner())
 							.scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.25F)).element(entity.getElement()).collide(true).spawn(world);
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-							world.rand.nextGaussian() / 45).time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity.getOwner())
+							world.rand.nextGaussian() / 45).time(10 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity.getOwner())
 							.scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.25F)).element(entity.getElement()).collide(true).spawn(world);
 				}
 			}
