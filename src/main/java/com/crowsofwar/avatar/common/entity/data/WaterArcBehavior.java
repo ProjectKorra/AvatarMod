@@ -119,14 +119,14 @@ public abstract class WaterArcBehavior extends OffensiveBehaviour {
 			ticks++;
 
 
-			if (entity.world.isRemote && entity.getOwner() != null) {
+		/*	if (entity.world.isRemote && entity.getOwner() != null) {
 				Vec3d pos = AvatarEntityUtils.getMiddleOfEntity(entity);
 				for (int h = 0; h < 4; h++)
-					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(entity).vel(entity.world.rand.nextGaussian() / 80 + entity.motionX,
+					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).entity(entity).vel(entity.world.rand.nextGaussian() / 80 + entity.motionX,
 							entity.world.rand.nextGaussian() / 80 + entity.motionY, entity.world.rand.nextGaussian() / 80 + entity.motionZ).clr(0, 102, 255, 255)
 							.time(8 + AvatarUtils.getRandomNumberInRange(0, 8)).collide(true).spawn(entity.world);
 
-			}
+			}**/
 
 			entity.addVelocity(0, -1F / 120, 0);
 			return this;

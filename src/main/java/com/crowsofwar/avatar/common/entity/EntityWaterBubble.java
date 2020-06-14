@@ -95,8 +95,18 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 		return dataManager.get(SYNC_HEALTH);
 	}
 
+	@Override
+	public float getMaxHealth() {
+		return 0;
+	}
+
 	public void setHealth(float health) {
 		dataManager.set(SYNC_HEALTH, health);
+	}
+
+	@Override
+	public void setMaxHealth(float maxHealth) {
+
 	}
 
 	public float getDegreesPerSecond() {

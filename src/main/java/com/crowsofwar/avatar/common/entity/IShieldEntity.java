@@ -5,5 +5,9 @@ public interface IShieldEntity {
 
 	float getHealth();
 
+	float getMaxHealth();
+
 	void setHealth(float health);
+
+	void setMaxHealth(float maxHealth);
 }
