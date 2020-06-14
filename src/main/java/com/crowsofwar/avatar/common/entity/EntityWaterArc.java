@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.client.particles.newparticles.ParticleWater;
 import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -43,8 +42,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -77,6 +74,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.lastPlayedSplash = -1;
 		this.damageMult = 1;
 		this.putsOutFires = true;
+		this.velocityMultiplier = 10;
 	}
 
 	public float getDamageMult() {
@@ -255,35 +253,36 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 		if (world.isRemote && getOwner() != null) {
 			Vec3d[] points = new Vec3d[getAmountOfControlPoints()];
-			for (int i = 0; i < getAmountOfControlPoints(); i++)
+			for (int i = 0; i < points.length; i++)
 				points[i] = getControlPoint(i).position().toMinecraft();
 			//Particles! Let's do this.
 			//First, we need a bezier curve. Joy.
 			//Iterate through all of the control points.
+			//0 is the leader/front one
 			for (int i = 0; i < getAmountOfControlPoints(); i++) {
-				Vec3d pos = AvatarUtils.bezierCurve(((double) (getAmountOfControlPoints() - i) / (double) getAmountOfControlPoints()), points);
+				Vec3d pos = AvatarUtils.bezierCurve(((double) (points.length - i) / (double) points.length), points);
 				Vec3d pos2 = i < getAmountOfControlPoints() - 1 ? AvatarUtils.bezierCurve(
-						Math.min(((double) (i + 1) / getAmountOfControlPoints()), 1), points):
+						Math.min(((double) (i + 1) / points.length), 1), points) :
 						Vec3d.ZERO;
-				pos = pos.add(getControlPoint(getAmountOfControlPoints() - i - 1).position().toMinecraft());
-				pos2 = i < getAmountOfControlPoints() - 1 ? pos2.add(getControlPoint(Math.max(getAmountOfControlPoints() - i - 2, 0)).position().toMinecraft())
-				: Vec3d.ZERO;
+				pos = pos.add(getControlPoint(points.length - i - 1).position().toMinecraft());
+				pos2 = i < points.length - 1 ? pos2.add(getControlPoint(Math.max(points.length - i - 2, 0)).position().toMinecraft())
+						: Vec3d.ZERO;
 				for (int h = 0; h < 4; h++) {
 					Vec3d circlePos = Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 90, getAvgSize()).toMinecraft().add(pos);
-					Vec3d targetPos = i < getAmountOfControlPoints() - 1 ? Vector.getOrthogonalVector(getLookVec(),
+					Vec3d targetPos = i < points.length - 1 ? Vector.getOrthogonalVector(getLookVec(),
 							(ticksExisted % 360) * 20 + h * 90 + 20, getAvgSize()).toMinecraft().add(pos2)
 							: Vec3d.ZERO;
 					Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
-					vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.05).add(vel);
+					if (targetPos != circlePos)
+						vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.075).add(vel);
 					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(circlePos).spawnEntity(this).vel(vel)
-							.clr(0, 102,255, 175).scale(0.75F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
+							.clr(0, 102, 255, 175).scale(0.75F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
 							.time(10 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).spawn(world);
-					//0, 102, 255
 				}
 				for (int h = 0; h < 2; h++)
 					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
-						world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120).clr(0, 102, 255, 255)
-						.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).target(pos).collide(true).spawn(world);
+							world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120).clr(0, 102, 255, 255)
+							.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).target(pos).collide(true).spawn(world);
 				//Dripping water blocks
 				for (int h = 0; h < 2; h++)
 					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 20,
@@ -293,6 +292,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		}
 	}
 
+
+	@Override
+	public int getFireTime() {
+		return 0;
+	}
 
 	@Override
 	protected WaterControlPoint createControlPoint(float size, int index) {
@@ -384,6 +388,11 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	@Override
 	public void setHealth(float health) {
 
+	}
+
+	@Override
+	protected double getControlPointTeleportDistanceSq() {
+		return getControlPointMaxDistanceSq() * getAmountOfControlPoints();
 	}
 
 	@Override

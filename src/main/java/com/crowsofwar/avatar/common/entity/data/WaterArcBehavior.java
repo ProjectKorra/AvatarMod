@@ -17,13 +17,7 @@
 
 package com.crowsofwar.avatar.common.entity.data;
 
-import com.crowsofwar.avatar.common.bending.water.AbilityWaterArc;
-import com.crowsofwar.avatar.common.config.ConfigSkills;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
@@ -38,9 +32,6 @@ import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.Vec3d;
 
-import java.util.List;
-
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_WATER;
 
 /**
@@ -128,20 +119,6 @@ public abstract class WaterArcBehavior extends OffensiveBehaviour {
 			ticks++;
 
 
-			boolean waterSpear = false;
-			BendingData data = null;
-			AbilityData abilityData = null;
-			int lvl = 0;
-
-			Bender bender = Bender.get(entity.getOwner());
-			if (entity instanceof EntityWaterArc && bender != null && entity.getAbility() != null && !entity.world.isRemote) {
-				data = bender.getData();
-				abilityData = data.getAbilityData(entity.getAbility().getName());
-				if (entity.getAbility() instanceof AbilityWaterArc) {
-					waterSpear = abilityData.isMasterPath(AbilityTreePath.SECOND);
-				}
-				lvl = abilityData.getLevel();
-			}
 			if (entity.world.isRemote && entity.getOwner() != null) {
 				Vec3d pos = AvatarEntityUtils.getMiddleOfEntity(entity);
 				for (int h = 0; h < 4; h++)
@@ -150,86 +127,8 @@ public abstract class WaterArcBehavior extends OffensiveBehaviour {
 							.time(8 + AvatarUtils.getRandomNumberInRange(0, 8)).collide(true).spawn(entity.world);
 
 			}
-		/*	if (lvl <= 0) {
-				//Level I or in Creative Mode
-				if (ticks >= STATS_CONFIG.waterArcTicks) {
-					//Default is 120
-					entity.Splash();
-					entity.setDead();
-				}
-			}
-			if (lvl == 1) {
-				//Level II.
-				if (ticks >= STATS_CONFIG.waterArcTicks * (5F / 4)) {
-					//150
-					entity.Splash();
-					entity.setDead();
-				}
-			}
-			if (lvl == 2) {
-				//Level III
-				if (ticks >= STATS_CONFIG.waterArcTicks * (6F / 4)) {
-					//180
-					entity.Splash();
-					entity.setDead();
-				}
-			}
-			if (waterSpear) {
-				//Level 4 Path Two
-				if (ticks >= STATS_CONFIG.waterArcTicks * (3)) {
-					//360 ticks
-					entity.Splash();
-					entity.setDead();
-				}
-			}
-
-			if (abilityData != null) {
-				if (abilityData.isMasterPath(AbilityTreePath.FIRST)) {
-					//Level 4 Path One
-					if (ticks >= STATS_CONFIG.waterArcTicks * (5F / 4)) {
-						//150
-						entity.Splash();
-						entity.setDead();
-					}
-
-				}
-			}*/
 
 			entity.addVelocity(0, -1F / 120, 0);
-
-
-			List<EntityLivingBase> collidedList = entity.getEntityWorld().getEntitiesWithinAABB(
-					EntityLivingBase.class, entity.getEntityBoundingBox().grow(0.5, 0.5, 0.5),
-					collided -> collided != entity.getOwner());
-
-			/*for (EntityLivingBase collided : collidedList) {
-				if (collided == entity.getOwner()) return this;
-				if (entity.canCollideWith(collided)) {
-					double x = entity.motionX / 6 * STATS_CONFIG.waterArcSettings.push;
-					double y = entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push > 0.75 ? 0.75 : entity.motionY / 20 * STATS_CONFIG.waterArcSettings.push;
-					double z = entity.motionZ / 6 * STATS_CONFIG.waterArcSettings.push;
-					collided.addVelocity(x, y, z);
-					if (entity.canDamageEntity(collided)) {
-						entity.setDamageMult(1);
-						entity.damageEntity(collided);
-					}
-
-					if (!entity.world.isRemote && data != null) {
-
-						abilityData.addXp(ConfigSkills.SKILLS_CONFIG.waterHit);
-
-						if (!waterSpear) {
-							entity.Splash();
-							entity.setDead();
-							entity.cleanup();
-						}
-
-					}
-
-				}
-			}**/
-
-
 			return this;
 		}
 
