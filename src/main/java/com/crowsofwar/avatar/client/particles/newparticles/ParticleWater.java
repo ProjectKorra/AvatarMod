@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
@@ -44,7 +45,6 @@ public class ParticleWater extends ParticleAvatar {
 		this.setRBGColorF(1, 1, 1);
 		this.particleAlpha = 1F;
 		this.particleMaxAge = 12 + rand.nextInt(4);
-		this.shaded = false;
 		this.canCollide = true;
 	}
 
@@ -73,11 +73,12 @@ public class ParticleWater extends ParticleAvatar {
 		}
 	}
 
-	/*	@SubscribeEvent
-		public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
-			event.getMap().registerSprite(WATER);
-		}
-	**/
+
+	@Override
+	public boolean shouldDisableDepth() {
+		return true;
+	}
+
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float lookZ, float lookY, float lookX, float lookXY, float lookYZ) {
 
@@ -91,13 +92,12 @@ public class ParticleWater extends ParticleAvatar {
 
 		GlStateManager.pushMatrix();
 		mc.renderEngine.bindTexture(WATER);
-		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
 
 		GlStateManager.translate(x, y, z);
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.alphaFunc(GL_ALWAYS, particleAlpha * 0.5F);
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
 		float ticks = this.particleAge + partialTicks;
 		float colorEnhancement = 1.5f;

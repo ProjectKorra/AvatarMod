@@ -23,8 +23,12 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.EntityWaterArc;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,6 +36,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
 
@@ -136,6 +141,14 @@ public abstract class WaterArcBehavior extends OffensiveBehaviour {
 					waterSpear = abilityData.isMasterPath(AbilityTreePath.SECOND);
 				}
 				lvl = abilityData.getLevel();
+			}
+			if (entity.world.isRemote && entity.getOwner() != null) {
+				Vec3d pos = AvatarEntityUtils.getMiddleOfEntity(entity);
+				for (int h = 0; h < 4; h++)
+					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(entity).vel(entity.world.rand.nextGaussian() / 80 + entity.motionX,
+							entity.world.rand.nextGaussian() / 80 + entity.motionY, entity.world.rand.nextGaussian() / 80 + entity.motionZ).clr(0, 102, 255, 255)
+							.time(8 + AvatarUtils.getRandomNumberInRange(0, 8)).collide(true).spawn(entity.world);
+
 			}
 		/*	if (lvl <= 0) {
 				//Level I or in Creative Mode

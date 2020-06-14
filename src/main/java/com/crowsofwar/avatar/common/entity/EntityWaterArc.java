@@ -261,7 +261,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 			//First, we need a bezier curve. Joy.
 			//Iterate through all of the control points.
 			for (int i = 0; i < getAmountOfControlPoints(); i++) {
-				Vec3d pos = AvatarUtils.bezierCurve(((double) i / (double) getAmountOfControlPoints()), points);
+				Vec3d pos = AvatarUtils.bezierCurve(((double) (getAmountOfControlPoints() - i) / (double) getAmountOfControlPoints()), points);
 				Vec3d pos2 = i < getAmountOfControlPoints() - 1 ? AvatarUtils.bezierCurve(
 						Math.min(((double) (i + 1) / getAmountOfControlPoints()), 1), points):
 						Vec3d.ZERO;
@@ -277,18 +277,18 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 					vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.05).add(vel);
 					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(circlePos).spawnEntity(this).vel(vel)
 							.clr(0, 102,255, 175).scale(0.75F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
-							.time(10 + AvatarUtils.getRandomNumberInRange(0, 5)).spawn(world);
+							.time(10 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).spawn(world);
 					//0, 102, 255
 				}
 				for (int h = 0; h < 2; h++)
 					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
 						world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120).clr(0, 102, 255, 255)
-						.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).target(pos).spawn(world);
+						.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).target(pos).collide(true).spawn(world);
 				//Dripping water blocks
 				for (int h = 0; h < 2; h++)
 					ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 20,
 							world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 255)
-							.time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).target(pos).scale(0.625F).gravity(true).spawn(world);
+							.time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).target(pos).scale(0.625F).gravity(true).collide(true).spawn(world);
 			}
 		}
 	}
