@@ -112,7 +112,7 @@ public interface IOffensiveEntity {
 						data.addXp(getXpPerHit());
 						hit.setFire(getFireTime());
 						if (setVelocity())
-							hit.setVelocity(vel.x, vel.y, vel.z);
+							AvatarUtils.setVelocity(hit, vel);
 						else hit.addVelocity(vel.x, vel.y, vel.z);
 						AvatarUtils.afterVelocityAdded(hit);
 					}
@@ -122,7 +122,7 @@ public interface IOffensiveEntity {
 				data.addXp(getXpPerHit());
 				hit.setFire(getFireTime());
 				if (setVelocity())
-					hit.setVelocity(vel.x, vel.y, vel.z);
+					AvatarUtils.setVelocity(hit, vel);
 				else hit.addVelocity(vel.x, vel.y, vel.z);
 				hit.setEntityInvulnerable(false);
 				AvatarUtils.afterVelocityAdded(hit);

@@ -267,6 +267,7 @@ public abstract class AvatarEntity extends Entity {
 		pushStoneButton = nbt.getBoolean("PushStoneButton");
 		pushTrapDoor = nbt.getBoolean("PushIronTrapDoor");
 		pushDoor = nbt.getBoolean("PushIronDoor");
+		tier = nbt.getInteger("Tier");
 		ownerRef.readFromNbt(nbt);
 	}
 
@@ -276,6 +277,7 @@ public abstract class AvatarEntity extends Entity {
 		nbt.setBoolean("PushIronDor", pushDoor);
 		nbt.setBoolean("PushIronTrapDoor", pushTrapDoor);
 		nbt.setBoolean("PushStoneButton", pushStoneButton);
+		nbt.setInteger("Tier", tier);
 		ownerRef.writeToNbt(nbt);
 	}
 

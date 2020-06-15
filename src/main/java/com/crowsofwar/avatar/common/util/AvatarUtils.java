@@ -271,6 +271,7 @@ public class AvatarUtils {
 		return false;
 	}
 
+
 	/**
 	 * Spawns a directional helix that has rotating particles.
 	 *
@@ -313,6 +314,17 @@ public class AvatarUtils {
 			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityTeleport(entity));
 			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 		}
+	}
+
+	public static void setVelocity(Entity entity, Vec3d vel) {
+		entity.motionX *= 0;
+		entity.motionY *= 0;
+		entity.motionZ *= 0;
+		entity.motionX = vel.x;
+		entity.motionY = vel.y;
+		entity.motionZ = vel.z;
+		entity.isAirBorne = true;
+		afterVelocityAdded(entity);
 	}
 
 
