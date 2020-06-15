@@ -16,27 +16,19 @@
 */
 package com.crowsofwar.avatar.client;
 
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
-
-import com.google.common.base.Preconditions;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static com.crowsofwar.avatar.common.blocks.AvatarBlocks.allBlocks;
 import static com.crowsofwar.avatar.common.blocks.AvatarBlocks.blockCloud;
 import static net.minecraftforge.client.model.ModelLoader.setCustomModelResourceLocation;
 
@@ -55,20 +47,17 @@ public class AvatarItemRenderRegister {
 		locationsRegular = new ModelResourceLocation[ScrollType.amount()];
 		locationsGlow = new ModelResourceLocation[ScrollType.amount()];
 
-		
 
-		//for (int i = 0; i <= 7; i++) {
-			forScroll(Scrolls.ALL);
-			forScroll(Scrolls.AIR);
-			forScroll(Scrolls.WATER);
-			forScroll(Scrolls.FIRE);
-			forScroll(Scrolls.EARTH);
-			forScroll(Scrolls.LIGHTNING);
-			forScroll(Scrolls.COMBUSTION);
-			forScroll(Scrolls.SAND);
-			forScroll(Scrolls.ICE);
+		forScroll(Scrolls.ALL);
+		forScroll(Scrolls.AIR);
+		forScroll(Scrolls.WATER);
+		forScroll(Scrolls.FIRE);
+		forScroll(Scrolls.EARTH);
+		forScroll(Scrolls.LIGHTNING);
+		forScroll(Scrolls.COMBUSTION);
+		forScroll(Scrolls.SAND);
+		forScroll(Scrolls.ICE);
 
-		//}
 
 		for (int i = 0; i <= 5; i++) {
 			register(AvatarItems.itemWaterPouch, i);
@@ -76,8 +65,8 @@ public class AvatarItemRenderRegister {
 
 		register(AvatarItems.itemBisonWhistle);
 		register(AvatarItems.airbenderStaff);
-		blockCloud.initModel();
-		
+		register(ItemScroll.getItemFromBlock(blockCloud));
+
 		for (int i = 0; i <= 3; i++) {
 			register(AvatarItems.itemBisonArmor, i);
 			register(AvatarItems.itemBisonSaddle, i);
@@ -86,7 +75,7 @@ public class AvatarItemRenderRegister {
 
 	}
 
-	private static void forScroll(ItemScroll scroll){
+	private static void forScroll(ItemScroll scroll) {
 		for (int i = 0; i < 7; i++) {
 			ScrollType type = scroll.getScrollType();
 			locationsRegular[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
@@ -103,18 +92,25 @@ public class AvatarItemRenderRegister {
 	 * {unlocalizedName}.json. Note that if no metadata is specified, the item
 	 * will not be registered.
 	 */
-	private static void register(AvatarItem item, int... metadata) {
+	private static void register(Item item, int... metadata) {
 
 		if (metadata.length == 0) {
 			metadata = new int[1];
 		}
 
-		for (int meta : metadata) {
-			ModelResourceLocation mrl = new ModelResourceLocation("avatarmod:" + item.getModelName(meta),
-					"inventory");
+		if (item instanceof AvatarItem) {
+			for (int meta : metadata) {
+				ModelResourceLocation mrl = new ModelResourceLocation("avatarmod:" + ((AvatarItem) item).getModelName(meta),
+						"inventory");
 
-			setCustomModelResourceLocation(item.item(), meta, mrl);
+				setCustomModelResourceLocation(((AvatarItem) item).item(), meta, mrl);
 
+			}
+		} else {
+
+			ModelBakery.registerItemVariants(item, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+			// Assigns the model for all metadata values
+			ModelLoader.setCustomMeshDefinition(item, s -> new ModelResourceLocation(item.getRegistryName(), "inventory"));
 		}
 
 	}

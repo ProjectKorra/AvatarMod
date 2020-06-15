@@ -209,8 +209,6 @@ public class AvatarMod {
 
 		Behavior.registerBehaviours();
 
-		ParticleBehaviour.registerBehaviours();
-
 		EarthbendingEvents.register();
 
 		PacketHandlerServer.register();

@@ -159,6 +159,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		MinecraftForge.EVENT_BUS.register(this);
 		AvatarInventoryOverride.register();
 		AvatarFovChanger.register();
+		ParticleBehaviour.registerBehaviours();
 
 		clientFetcher = new PlayerDataFetcherClient<>(AvatarPlayerData.class, (data) -> {
 			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
@@ -321,7 +322,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public void registerItemModels() {
 		AvatarItemRenderRegister.register();
-		AvatarBlocks.init();
 	}
 
 	@Override

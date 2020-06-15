@@ -17,15 +17,9 @@
 package com.crowsofwar.avatar.common.blocks;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.blocks.tiles.TileBlockTemp;
-import com.google.common.base.Preconditions;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -33,8 +27,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static net.minecraftforge.client.model.ModelLoader.setCustomModelResourceLocation;
 
 /**
  * @author Aang23
@@ -51,7 +43,6 @@ public class AvatarBlocks {
 	public static void init() {
 		allBlocks = new ArrayList<>();
 		addBlock(blockCloud = new CloudBlock());
-		blockCloud.initModel();
 	}
 
 	private static void addBlock(Block block) {
@@ -59,8 +50,7 @@ public class AvatarBlocks {
 		if (block.getTranslationKey().contains("tile.")) {
 			block.setRegistryName(block.getTranslationKey().substring(5));
 			block.setTranslationKey(block.getTranslationKey().substring(5));
-		}
-		else {
+		} else {
 			block.setRegistryName(block.getTranslationKey());
 		}
 		allBlocks.add(block);
@@ -69,11 +59,9 @@ public class AvatarBlocks {
 
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> e) {
-		init();
 		Block[] blocksArr = allBlocks.toArray(new Block[allBlocks.size()]);
 		e.getRegistry().registerAll(blocksArr);
-		GameRegistry.registerTileEntity(TileBlockTemp.class, "avatarmod:block_temp");
-
+		GameRegistry.registerTileEntity(TileBlockTemp.class, new ResourceLocation("minecraft", "temp_block"));
 	}
 
 

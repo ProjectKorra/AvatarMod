@@ -139,7 +139,7 @@ public class EntityAirblade extends EntityOffensive {
 					Vec3d pos = Vector.getOrthogonalVector(Vector.getLookRectangular(this),
 							(ticksExisted % 360) * height * 10 + h * 60, Math.min(i + 1D / height, height / 2)).toMinecraft();
 					pos = Vector.getOrthogonalVector(pos,
-							(ticksExisted % 360) * height * 10 + h * 60, Math.min(i + 1D / height, height)).toMinecraft();
+							180, Math.min(i + 1D / height, height)).toMinecraft();
 
 					pos = pos.add(AvatarEntityUtils.getMiddleOfEntity(this));
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
