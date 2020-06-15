@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockLiquid;
@@ -19,6 +20,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -217,6 +219,39 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 				Dissipate();
 			else if (shouldExplode())
 				Explode();
+		}
+
+		for (double x = 0; x <= 1; x++) {
+			for (double z = 0; z <= 1; z++) {
+				for (double y = 0; y <= 1; y++) {
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+					BlockPos pos = new BlockPos(xPos + x * getExpandedHitboxWidth() / 2,
+							yPos + y * getExpandedHitboxHeight() / 2, zPos + z * getExpandedHitboxWidth() / 2);
+					pushLevers(pos);
+					pushTrapDoors(pos);
+					pushButtons(pos);
+					pushDoors(pos);
+					pushGates(pos);
+				}
+			}
+		}
+		for (double x = 0; x >= -1; x--) {
+			for (double z = 0; z >= -1; z--) {
+				for (double y = 0; y >= -1; y--) {
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+					BlockPos pos = new BlockPos(xPos + x * getExpandedHitboxWidth() / 2,
+							yPos + y * getExpandedHitboxHeight() / 2, zPos + z * getExpandedHitboxWidth() / 2);
+					pushLevers(pos);
+					pushTrapDoors(pos);
+					pushButtons(pos);
+					pushDoors(pos);
+					pushGates(pos);
+				}
+			}
 		}
 
 		//Dynamic Collision code.

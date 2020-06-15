@@ -224,7 +224,7 @@ public class EntityAirGust extends EntityOffensive {
 
 	@Override
 	public Vec3d getKnockbackMult() {
-		return new Vec3d(0.75, 3, 0.75);
+		return new Vec3d(2, 3, 2);
 	}
 
 	@Override
@@ -350,8 +350,8 @@ public class EntityAirGust extends EntityOffensive {
 		double x = getKnockbackMult().x * motionX;
 		double y = Math.max(0.25, Math.min((motionY + 0.15) * getKnockbackMult().y, 0.25));
 		double z = getKnockbackMult().z * motionZ;
-
-		return new Vec3d(x, y, z);
+		double scale = 0.5F + getTier() / 4F;
+		return new Vec3d(x * scale, y * scale, z * scale);
 	}
 
 
