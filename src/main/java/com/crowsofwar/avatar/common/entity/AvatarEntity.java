@@ -289,25 +289,69 @@ public abstract class AvatarEntity extends Entity {
 		return false;
 	}
 
+	public void Extinguish() {
+		setFire(0);
+		for (int x = 0; x <= 1; x++) {
+			for (int z = 0; z <= 1; z++) {
+				for (int y = 0; y <= 1; y++) {
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+					BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
+					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
+						world.setBlockToAir(pos);
+						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
+								SoundCategory.PLAYERS, 1, 1, false);
+					}
+				}
+			}
+		}
+		for (int x = 0; x >= -1; x--) {
+			for (int z = 0; z >= -1; z--) {
+				for (int y = 0; y >= -1; y--) {
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+					BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
+					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
+						world.setBlockToAir(pos);
+						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
+								SoundCategory.PLAYERS, 1, 1, false);
+					}
+				}
+			}
+		}
+	}
 
-	@Override
-	public void onUpdate() {
-		super.onUpdate();
-		collideWithNearbyEntities();
-
-		if (putsOutFires && ticksExisted % 2 == 0) {
-			setFire(0);
+	public void setFires() {
+		for (int x = 0; x <= 1; x++) {
+			for (int z = 0; z <= 1; z++) {
+				for (int y = 0; y <= 1; y++) {
+					BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+					if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
+						world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+					}
+				}
+			}
+		}
+		for (int x = 0; x >= -1; x--) {
+			for (int z = 0; z >= -1; z--) {
+				for (int y = 0; y >= -1; y--) {
+					BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+					if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
+						world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+					}
+				}
+			}
+		}
+		if (lightTnt) {
 			for (int x = 0; x <= 1; x++) {
 				for (int z = 0; z <= 1; z++) {
 					for (int y = 0; y <= 1; y++) {
-						double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
-						double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
-						double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
-						BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
-						if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
-							world.setBlockToAir(pos);
-							world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
-									SoundCategory.PLAYERS, 1, 1, false);
+						BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+						if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
+							((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
+									world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
 						}
 					}
 				}
@@ -315,19 +359,24 @@ public abstract class AvatarEntity extends Entity {
 			for (int x = 0; x >= -1; x--) {
 				for (int z = 0; z >= -1; z--) {
 					for (int y = 0; y >= -1; y--) {
-						double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
-						double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
-						double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
-						BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
-						if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
-							world.setBlockToAir(pos);
-							world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
-									SoundCategory.PLAYERS, 1, 1, false);
+						BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+						if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
+							((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
+									world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
 						}
 					}
 				}
 			}
 		}
+	}
+
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		collideWithNearbyEntities();
+
+		if (putsOutFires && ticksExisted % 2 == 0)
+			Extinguish();
 
 
 		//Prev states are used to make sure each button isn't activated twice
@@ -463,52 +512,8 @@ public abstract class AvatarEntity extends Entity {
 		}
 
 		if (collided) {
-			if (setsFires) {
-				for (int x = 0; x <= 1; x++) {
-					for (int z = 0; z <= 1; z++) {
-						for (int y = 0; y <= 1; y++) {
-							BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
-							if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
-								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-							}
-						}
-					}
-				}
-				for (int x = 0; x >= -1; x--) {
-					for (int z = 0; z >= -1; z--) {
-						for (int y = 0; y >= -1; y--) {
-							BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
-							if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
-								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-							}
-						}
-					}
-				}
-				if (lightTnt) {
-					for (int x = 0; x <= 1; x++) {
-						for (int z = 0; z <= 1; z++) {
-							for (int y = 0; y <= 1; y++) {
-								BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
-								if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
-									((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
-											world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
-								}
-							}
-						}
-					}
-					for (int x = 0; x >= -1; x--) {
-						for (int z = 0; z >= -1; z--) {
-							for (int y = 0; y >= -1; y--) {
-								BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
-								if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
-									((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
-											world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
-								}
-							}
-						}
-					}
-				}
-			}
+			if (setsFires)
+				setFires();
 			onCollideWithSolid();
 		}
 		if (inWater) {

@@ -72,6 +72,13 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity {
 
 
 	@Override
+	public boolean onCollideWithSolid() {
+		if (collided)
+			setFires();
+		return super.onCollideWithSolid();
+	}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 
@@ -243,8 +250,6 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity {
 		}
 		return false;
 	}
-
-
 
 
 	@Override
