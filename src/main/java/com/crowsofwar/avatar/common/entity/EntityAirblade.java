@@ -24,7 +24,9 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.common.util.AvatarParticleUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -131,22 +133,21 @@ public class EntityAirblade extends EntityOffensive {
 						.scale(getWidth() * 4).element(getElement()).spawn(world);
 			}
 
-			Vec3d[] points = new Vec3d[3];
-			points[0] = position().withY(getExpandedHitbox().minY).toMinecraft();
-			points[1] = AvatarEntityUtils.getMiddleOfEntity(this).add(getLookVec().scale(width * 4));
-			points[2] = position().withY(getExpandedHitbox().maxY).toMinecraft();
-			for (int h = 0; h < 3; h++) {
-				for (double i = 0; i < 2; i += 1 / (getHeight() * 4)) {
-					Vec3d pos = AvatarUtils.bezierCurve((points.length - h) / (i + 1) / points.length, points);
-					Vec3d pos2;
-					pos = pos.add(points[points.length - h - 1]);
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-							world.rand.nextGaussian() / 60).collide(true).time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.8F, 0.8F, 0.8F, 0.075F)
-							.scale(getWidth()).element(getElement()).spawnEntity(this).spawn(world);
-					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120,
-							world.rand.nextGaussian() / 120).collide(true)
-							.time(16 + AvatarUtils.getRandomNumberInRange(0, 8)).clr(0.8F, 0.8F, 0.8F, 0.075F).spawnEntity(this)
-							.scale(getWidth() * 2).element(getElement()).spawn(world);
+			//How many particles per "ring"
+			for (double i = 0; i < height; i += 1 / height) {
+				for (int h = 0; h < 6; h++) {
+					Vec3d pos = Vector.getOrthogonalVector(Vector.getLookRectangular(this),
+							(ticksExisted % 360) * height * 10 + h * 60, Math.min(i + 1D / height, height / 2)).toMinecraft();
+					pos = Vector.getOrthogonalVector(pos,
+							(ticksExisted % 360) * height * 10 + h * 60, Math.min(i + 1D / height, height)).toMinecraft();
+
+					pos = pos.add(AvatarEntityUtils.getMiddleOfEntity(this));
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80,
+							world.rand.nextGaussian() / 80).collide(true).time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(1F, 1F, 1F, 0.075F)
+							.scale(getWidth()).element(getElement()).spawn(world);
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(world.rand.nextGaussian() / 180, world.rand.nextGaussian() / 180,
+							world.rand.nextGaussian() / 180).collide(true).time(12 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(1F, 1F, 1F, 0.2F)
+							.scale(getWidth() * 3).element(getElement()).spin(width / 10, 0.1).spawn(world);
 				}
 			}
 		}
