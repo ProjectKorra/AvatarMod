@@ -81,7 +81,7 @@ public abstract class AvatarEntity extends Entity {
 	private double powerRating;
 	private BendingStyle element;
 	private int tier;
-	private SyncedEntity<EntityLivingBase> ownerRef;
+	private final SyncedEntity<EntityLivingBase> ownerRef;
 	private BlockPos prevLeverPos = null, prevDoorPos = null, prevTrapdoorPos = null,
 			prevButtonPos = null, prevGatePos = null;
 	private IBlockState prevLeverState = null, prevDoorState = null, prevTrapdoorState = null, prevButtonState = null, prevGateState = null;
@@ -370,6 +370,61 @@ public abstract class AvatarEntity extends Entity {
 		}
 	}
 
+	public void pushLevers(BlockPos pos) {
+		if (pushLever()) {
+			if (pos != prevLeverPos && prevLeverState != world.getBlockState(pos) || prevLeverPos == null) {
+				if (AvatarUtils.pushLever(world, pos)) {
+					prevLeverPos = pos;
+					prevLeverState = world.getBlockState(pos);
+				}
+			}
+		}
+	}
+
+	public void pushButtons(BlockPos pos) {
+		if (pushButton(pushStoneButton)) {
+			if (pos != prevButtonPos && prevButtonState != world.getBlockState(pos) || prevButtonState == null) {
+				if ((AvatarUtils.pushButton(world, pushStoneButton, pos))) {
+					prevButtonPos = pos;
+					prevButtonState = world.getBlockState(pos);
+				}
+			}
+		}
+	}
+
+	public void pushTrapDoors(BlockPos pos) {
+		if (pushTrapdoor(pushTrapDoor)) {
+			if (pos != prevTrapdoorPos && prevTrapdoorState != world.getBlockState(pos) || prevTrapdoorState == null) {
+				if (AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos)) {
+					prevTrapdoorPos = pos;
+					prevTrapdoorState = world.getBlockState(pos);
+				}
+			}
+		}
+	}
+
+	public void pushDoors(BlockPos pos) {
+		if (pushDoor(pushDoor)) {
+			if (pos != prevDoorPos && prevDoorState != world.getBlockState(pos) || prevDoorState == null) {
+				if (AvatarUtils.pushDoor(this, pushDoor, pos)) {
+					prevDoorPos = pos;
+					prevLeverState = world.getBlockState(pos);
+				}
+			}
+		}
+	}
+
+	public void pushGates(BlockPos pos) {
+		if (pushGate()) {
+			if (pos != prevGatePos && prevGateState != world.getBlockState(pos) || prevGateState == null) {
+				if (AvatarUtils.pushGate(this, pos)) {
+					prevGatePos = pos;
+					prevGateState = world.getBlockState(pos);
+				}
+			}
+		}
+	}
+
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
@@ -387,59 +442,11 @@ public abstract class AvatarEntity extends Entity {
 					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
 					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
 					BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
-					if (pushButton(pushStoneButton)) {
-						if (world.getBlockState(pos) != prevButtonState)
-							prevButtonState = null;
-						if (pos != prevButtonPos && prevButtonState == null) {
-							if ((AvatarUtils.pushButton(world, pushStoneButton, pos))) {
-								prevButtonPos = pos;
-								prevButtonState = world.getBlockState(pos);
-							}
-						}
-					}
-					if (pushLever()) {
-						if (world.getBlockState(pos) != prevLeverState)
-							prevLeverState = null;
-						if (pos != prevLeverPos && prevLeverPos == null) {
-							if (AvatarUtils.pushLever(world, pos)) {
-								prevLeverPos = pos;
-								prevLeverState = world.getBlockState(pos);
-							}
-						}
-					}
-
-					if (pushTrapdoor(pushTrapDoor)) {
-						if (world.getBlockState(pos) != prevTrapdoorState)
-							prevTrapdoorState = null;
-						if (pos != prevTrapdoorPos && prevTrapdoorState == null) {
-							if (AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos)) {
-								prevTrapdoorPos = pos;
-								prevTrapdoorState = world.getBlockState(pos);
-							}
-						}
-					}
-
-					if (pushDoor(pushDoor)) {
-						if (world.getBlockState(pos) != prevDoorState)
-							prevDoorState = null;
-						if (pos != prevDoorPos && prevDoorState == null) {
-							if (AvatarUtils.pushDoor(this, pushDoor, pos)) {
-								prevDoorPos = pos;
-								prevLeverState = world.getBlockState(pos);
-							}
-						}
-					}
-
-					if (pushGate()) {
-						if (world.getBlockState(pos) != prevGateState)
-							prevGateState = null;
-						if (pos != prevGatePos && prevGateState == null) {
-							if (AvatarUtils.pushGate(this, pos)) {
-								prevGatePos = pos;
-								prevGateState = world.getBlockState(pos);
-							}
-						}
-					}
+					pushLevers(pos);
+					pushTrapDoors(pos);
+					pushButtons(pos);
+					pushDoors(pos);
+					pushGates(pos);
 				}
 			}
 		}
@@ -450,59 +457,11 @@ public abstract class AvatarEntity extends Entity {
 					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
 					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
 					BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
-					if (pushButton(pushStoneButton)) {
-						if (world.getBlockState(pos) != prevButtonState)
-							prevButtonState = null;
-						if (pos != prevButtonPos && prevButtonState == null) {
-							if ((AvatarUtils.pushButton(world, pushStoneButton, pos))) {
-								prevButtonPos = pos;
-								prevButtonState = world.getBlockState(pos);
-							}
-						}
-					}
-					if (pushLever()) {
-						if (world.getBlockState(pos) != prevLeverState)
-							prevLeverState = null;
-						if (pos != prevLeverPos && prevLeverPos == null) {
-							if (AvatarUtils.pushLever(world, pos)) {
-								prevLeverPos = pos;
-								prevLeverState = world.getBlockState(pos);
-							}
-						}
-					}
-
-					if (pushTrapdoor(pushTrapDoor)) {
-						if (world.getBlockState(pos) != prevTrapdoorState)
-							prevTrapdoorState = null;
-						if (pos != prevTrapdoorPos && prevTrapdoorState == null) {
-							if (AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos)) {
-								prevTrapdoorPos = pos;
-								prevTrapdoorState = world.getBlockState(pos);
-							}
-						}
-					}
-
-					if (pushDoor(pushDoor)) {
-						if (world.getBlockState(pos) != prevDoorState)
-							prevDoorState = null;
-						if (pos != prevDoorPos && prevDoorState == null) {
-							if (AvatarUtils.pushDoor(this, pushDoor, pos)) {
-								prevDoorPos = pos;
-								prevLeverState = world.getBlockState(pos);
-							}
-						}
-					}
-
-					if (pushGate()) {
-						if (world.getBlockState(pos) != prevGateState)
-							prevGateState = null;
-						if (pos != prevGatePos && prevGateState == null) {
-							if (AvatarUtils.pushGate(this, pos)) {
-								prevGatePos = pos;
-								prevGateState = world.getBlockState(pos);
-							}
-						}
-					}
+					pushLevers(pos);
+					pushTrapDoors(pos);
+					pushButtons(pos);
+					pushDoors(pos);
+					pushGates(pos);
 				}
 			}
 		}
