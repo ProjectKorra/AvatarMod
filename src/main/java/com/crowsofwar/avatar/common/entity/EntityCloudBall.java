@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.air.powermods.CloudburstPowerModifier;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.StatusControlController;
@@ -25,6 +26,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -55,6 +57,41 @@ public class EntityCloudBall extends EntityOffensive {
 		this.pushDoor = pushIronDoor;
 		this.pushTrapDoor = pushIronTrapDoor;
 
+	}
+
+	@Override
+	public void pushLevers(BlockPos pos) {
+		super.pushLevers(pos);
+		if (getOwner() != null && getAbility() != null)
+			AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+	}
+
+	@Override
+	public void pushButtons(BlockPos pos) {
+		super.pushButtons(pos);
+		if (getOwner() != null && getAbility() != null)
+			AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+	}
+
+	@Override
+	public void pushTrapDoors(BlockPos pos) {
+		super.pushTrapDoors(pos);
+		if (getOwner() != null && getAbility() != null)
+			AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+	}
+
+	@Override
+	public void pushDoors(BlockPos pos) {
+		super.pushDoors(pos);
+		if (getOwner() != null && getAbility() != null)
+			AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+	}
+
+	@Override
+	public void pushGates(BlockPos pos) {
+		super.pushGates(pos);
+		if (getOwner() != null && getAbility() != null)
+			AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
 	}
 
 	public void setAbsorb(boolean canAbsorb) {

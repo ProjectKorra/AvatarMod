@@ -1,7 +1,9 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -13,6 +15,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -236,13 +239,57 @@ public class EntityShockwave extends EntityOffensive {
 	}
 
 	@Override
+	public void pushLevers(BlockPos pos) {
+		super.pushLevers(pos);
+		if (getElement() instanceof Airbending)
+			if (getOwner() != null && getAbility() != null)
+				AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+	}
+
+	@Override
+	public void pushButtons(BlockPos pos) {
+		super.pushButtons(pos);
+		if (getElement() instanceof Airbending)
+			if (getOwner() != null && getAbility() != null)
+				AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+
+	}
+
+	@Override
+	public void pushTrapDoors(BlockPos pos) {
+		super.pushTrapDoors(pos);
+		if (getElement() instanceof Airbending)
+			if (getOwner() != null && getAbility() != null)
+				AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+
+	}
+
+	@Override
+	public void pushDoors(BlockPos pos) {
+		super.pushDoors(pos);
+		if (getElement() instanceof Airbending)
+			if (getOwner() != null && getAbility() != null)
+				AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+
+	}
+
+	@Override
+	public void pushGates(BlockPos pos) {
+		super.pushGates(pos);
+		if (getElement() instanceof Airbending)
+			if (getOwner() != null && getAbility() != null)
+				AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+
+	}
+
+	@Override
 	public double getExpandedHitboxWidth() {
-		return (ticksExisted * getSpeed());
+		return (ticksExisted * getSpeed() * 0.5);
 	}
 
 	@Override
 	public double getExpandedHitboxHeight() {
-		return (ticksExisted * getSpeed());
+		return (ticksExisted * getSpeed() * 0.5);
 	}
 
 	@Override
@@ -263,7 +310,7 @@ public class EntityShockwave extends EntityOffensive {
 
 	@Override
 	public Vec3d getKnockbackMult() {
-		double amount = getSphere() ? (ticksExisted * getSpeed()) * 5 : ticksExisted * 6 * getSpeed();
+		double amount = getSphere() ? (ticksExisted * getSpeed()) * 2.55 : ticksExisted * 3 * getSpeed();
 		return new Vec3d(amount * knockbackMult.x, amount * knockbackMult.y, amount * knockbackMult.z);
 	}
 

@@ -111,19 +111,21 @@ public interface IOffensiveEntity {
 						BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
 						data.addXp(getXpPerHit());
 						hit.setFire(getFireTime());
-						hit.addVelocity(vel.x, vel.y, vel.z);
+						if (setVelocity())
+							hit.setVelocity(vel.x, vel.y, vel.z);
+						else hit.addVelocity(vel.x, vel.y, vel.z);
 						AvatarUtils.afterVelocityAdded(hit);
 					}
 				}
 			} else if (attacker.canCollideWith(hit)) {
-				if (hit instanceof EntityLivingBase) {
-					BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
-					data.addXp(getXpPerHit());
-					hit.setFire(getFireTime());
-					hit.addVelocity(vel.x, vel.y, vel.z);
-					hit.setEntityInvulnerable(false);
-					AvatarUtils.afterVelocityAdded(hit);
-				}
+				BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
+				data.addXp(getXpPerHit());
+				hit.setFire(getFireTime());
+				if (setVelocity())
+					hit.setVelocity(vel.x, vel.y, vel.z);
+				else hit.addVelocity(vel.x, vel.y, vel.z);
+				hit.setEntityInvulnerable(false);
+				AvatarUtils.afterVelocityAdded(hit);
 			}
 		}
 	}
@@ -279,6 +281,10 @@ public interface IOffensiveEntity {
 
 	default double getExplosionHitboxGrowth() {
 		return 1;
+	}
+
+	default boolean setVelocity() {
+		return false;
 	}
 
 	default void applyElementalContact(AvatarEntity entity) {

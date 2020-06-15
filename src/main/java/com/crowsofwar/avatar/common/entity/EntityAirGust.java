@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -31,6 +32,7 @@ import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -121,6 +123,40 @@ public class EntityAirGust extends EntityOffensive {
 		}
 	}
 
+	@Override
+	public void pushLevers(BlockPos pos) {
+		super.pushLevers(pos);
+		if (getOwner() != null && getAbility() != null)
+			AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit());
+	}
+
+	@Override
+	public void pushButtons(BlockPos pos) {
+		super.pushButtons(pos);
+		if (getOwner() != null && getAbility() != null)
+			AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit());
+	}
+
+	@Override
+	public void pushTrapDoors(BlockPos pos) {
+		super.pushTrapDoors(pos);
+		if (getOwner() != null && getAbility() != null)
+			AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit());
+	}
+
+	@Override
+	public void pushDoors(BlockPos pos) {
+		super.pushDoors(pos);
+		if (getOwner() != null && getAbility() != null)
+			AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit());
+	}
+
+	@Override
+	public void pushGates(BlockPos pos) {
+		super.pushGates(pos);
+		if (getOwner() != null && getAbility() != null)
+			AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit());
+	}
 
 	public void setSlowProjectiles(boolean slowProjectiles) {
 		this.slowProjectiles = slowProjectiles;
@@ -188,7 +224,7 @@ public class EntityAirGust extends EntityOffensive {
 
 	@Override
 	public Vec3d getKnockbackMult() {
-		return new Vec3d(0.5, 3, 0.5);
+		return new Vec3d(0.75, 3, 0.75);
 	}
 
 	@Override
@@ -240,6 +276,11 @@ public class EntityAirGust extends EntityOffensive {
 	}
 
 	@Override
+	public boolean setVelocity() {
+		return true;
+	}
+
+	@Override
 	public SoundEvent[] getSounds() {
 		SoundEvent[] events = new SoundEvent[1];
 		events[0] = SoundEvents.BLOCK_FIRE_EXTINGUISH;
@@ -283,10 +324,8 @@ public class EntityAirGust extends EntityOffensive {
 			return false;
 		} else if (entity instanceof EntityLivingBase && entity.getControllingPassenger() == getOwner()) {
 			return false;
-		} else if (getOwner() != null && getOwner().getTeam() != null && entity.getTeam() == getOwner().getTeam()) {
+		} else if (getOwner() != null && getOwner().getTeam() != null && entity.getTeam() != null && entity.getTeam() == getOwner().getTeam()) {
 			return false;
-		} else if (entity instanceof EntityEnderCrystal) {
-			return true;
 		} else
 			return true;
 	}
@@ -298,23 +337,20 @@ public class EntityAirGust extends EntityOffensive {
 
 	@Override
 	public double getExpandedHitboxWidth() {
-		return Math.max(0.3, Math.min(getAvgSize() / 3, 1));
+		return Math.max(0.35, Math.min(getAvgSize() / 2, 1));
 	}
 
 	@Override
 	public double getExpandedHitboxHeight() {
-		return Math.max(0.3, Math.min(getAvgSize() / 3, 1));
+		return Math.max(0.35, Math.min(getAvgSize() / 2, 1));
 	}
 
 	@Override
 	public Vec3d getKnockback() {
-		double x = Math.min(getKnockbackMult().x * motionX, motionX * 2);
+		double x = getKnockbackMult().x * motionX;
 		double y = Math.max(0.25, Math.min((motionY + 0.15) * getKnockbackMult().y, 0.25));
-		double z = Math.min(getKnockbackMult().z * motionZ, motionZ * 2);
-		if (velocity().sqrMagnitude() > getAvgSize() * 15) {
-			x = Math.min(x, motionX * 0.5F);
-			z = Math.min(z, motionZ * 0.5F);
-		}
+		double z = getKnockbackMult().z * motionZ;
+
 		return new Vec3d(x, y, z);
 	}
 
