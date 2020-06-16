@@ -161,7 +161,8 @@ public class StatCtrlAirJump extends StatusControl {
 			if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.SECOND) {
 				data.addTickHandler(SMASH_GROUND);
 			}
-			abilityData.addXp(SKILLS_CONFIG.airJump);
+			if (!world.isRemote)
+				abilityData.addXp(SKILLS_CONFIG.airJump);
 
 			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, SoundCategory.PLAYERS, 1, .7f);
 
@@ -195,7 +196,7 @@ public class StatCtrlAirJump extends StatusControl {
 			timesJumped.replace(uuid, jumps);
 			//If you return when it's greater than 1, it resets, and you can double jump infinitely.
 			boolean isDone = jumps > 2;
-				if (isDone) timesJumped.replace(uuid, 0);
+			if (isDone) timesJumped.replace(uuid, 0);
 			return true;
 
 		}
