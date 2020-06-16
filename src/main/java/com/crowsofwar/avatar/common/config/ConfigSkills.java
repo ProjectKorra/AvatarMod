@@ -40,7 +40,7 @@ public class ConfigSkills {
 	@Load
 	public float blockPlaced = 5f,
 			airBurstHit = 4F,
-			airbladeHit = 3f,
+			airBladeHit = 3f,
 			airGustHit = 3f,
 			airJump = 2f,
 			blockThrowHit = 6.5f,

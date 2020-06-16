@@ -28,6 +28,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.FIRST;
 import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECOND;
@@ -116,6 +117,8 @@ public class AbilityAirblade extends Ability {
 			airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
 			airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 40 : 30));
 			airblade.setDamage(damage);
+			airblade.setTier(getCurrentTier(ctx.getLevel()));
+			airblade.setXp(SKILLS_CONFIG.airBladeHit);
 			airblade.setSizeMult(sizeMult);
 			airblade.rotationPitch = entity.rotationPitch;
 			airblade.rotationYaw = entity.rotationYaw;

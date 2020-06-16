@@ -186,7 +186,7 @@ public class EntityShockwave extends EntityOffensive {
 
 		this.motionX = this.motionY = this.motionZ = 0;
 
-		if ((this.ticksExisted * getSpeed()) > getRange()) {
+		if ((this.ticksExisted * getSpeed() * 0.5) > getRange()) {
 			this.setDead();
 		}
 		if (ticksExisted > 140) {

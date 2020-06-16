@@ -285,11 +285,6 @@ public class EntityAirblade extends EntityOffensive {
 	}
 
 	@Override
-	public Vec3d getKnockback() {
-		return super.getKnockback();
-	}
-
-	@Override
 	public double getExpandedHitboxWidth() {
 		return width * 1.5;
 	}
