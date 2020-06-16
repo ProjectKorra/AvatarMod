@@ -161,8 +161,8 @@ public class StatCtrlAirJump extends StatusControl {
 			if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.SECOND) {
 				data.addTickHandler(SMASH_GROUND);
 			}
-			if (!world.isRemote)
-				abilityData.addXp(SKILLS_CONFIG.airJump);
+
+			abilityData.addXp(SKILLS_CONFIG.airJump);
 
 			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, SoundCategory.PLAYERS, 1, .7f);
 

@@ -372,59 +372,69 @@ public abstract class AvatarEntity extends Entity {
 		}
 	}
 
-	public void pushLevers(BlockPos pos) {
+	public boolean pushLevers(BlockPos pos) {
 		if (pushLever()) {
 			if (pos != prevLeverPos && prevLeverState != world.getBlockState(pos) || prevLeverPos == null) {
 				if (AvatarUtils.pushLever(world, pos)) {
 					prevLeverPos = pos;
 					prevLeverState = world.getBlockState(pos);
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
-	public void pushButtons(BlockPos pos) {
+	public boolean pushButtons(BlockPos pos) {
 		if (pushButton(pushStoneButton)) {
 			if (pos != prevButtonPos && prevButtonState != world.getBlockState(pos) || prevButtonState == null) {
 				if ((AvatarUtils.pushButton(world, pushStoneButton, pos))) {
 					prevButtonPos = pos;
 					prevButtonState = world.getBlockState(pos);
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
-	public void pushTrapDoors(BlockPos pos) {
+	public boolean pushTrapDoors(BlockPos pos) {
 		if (pushTrapdoor(pushTrapDoor)) {
 			if (pos != prevTrapdoorPos && prevTrapdoorState != world.getBlockState(pos) || prevTrapdoorState == null) {
 				if (AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos)) {
 					prevTrapdoorPos = pos;
 					prevTrapdoorState = world.getBlockState(pos);
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
-	public void pushDoors(BlockPos pos) {
+	public boolean pushDoors(BlockPos pos) {
 		if (pushDoor(pushDoor)) {
 			if (pos != prevDoorPos && prevDoorState != world.getBlockState(pos) || prevDoorState == null) {
 				if (AvatarUtils.pushDoor(this, pushDoor, pos)) {
 					prevDoorPos = pos;
 					prevLeverState = world.getBlockState(pos);
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
-	public void pushGates(BlockPos pos) {
+	public boolean pushGates(BlockPos pos) {
 		if (pushGate()) {
 			if (pos != prevGatePos && prevGateState != world.getBlockState(pos) || prevGateState == null) {
 				if (AvatarUtils.pushGate(this, pos)) {
 					prevGatePos = pos;
 					prevGateState = world.getBlockState(pos);
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
 	@Override

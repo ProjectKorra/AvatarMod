@@ -124,38 +124,42 @@ public class EntityAirGust extends EntityOffensive {
 	}
 
 	@Override
-	public void pushLevers(BlockPos pos) {
-		super.pushLevers(pos);
-		if (getOwner() != null && getAbility() != null)
-			AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit());
+	public boolean pushLevers(BlockPos pos) {
+		if (super.pushLevers(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+		return super.pushLevers(pos);
 	}
 
 	@Override
-	public void pushButtons(BlockPos pos) {
-		super.pushButtons(pos);
-		if (getOwner() != null && getAbility() != null)
-			AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit());
+	public boolean pushButtons(BlockPos pos) {
+		if (super.pushButtons(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+		return super.pushButtons(pos);
+
 	}
 
 	@Override
-	public void pushTrapDoors(BlockPos pos) {
-		super.pushTrapDoors(pos);
-		if (getOwner() != null && getAbility() != null)
-			AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit());
+	public boolean pushTrapDoors(BlockPos pos) {
+		if (super.pushTrapDoors(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+		return super.pushTrapDoors(pos);
+
 	}
 
 	@Override
-	public void pushDoors(BlockPos pos) {
-		super.pushDoors(pos);
-		if (getOwner() != null && getAbility() != null)
-			AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit());
-	}
+	public boolean pushDoors(BlockPos pos) {
+		if (super.pushGates(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+		return super.pushGates(pos);
 
-	@Override
-	public void pushGates(BlockPos pos) {
-		super.pushGates(pos);
-		if (getOwner() != null && getAbility() != null)
-			AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit());
 	}
 
 	public void setSlowProjectiles(boolean slowProjectiles) {

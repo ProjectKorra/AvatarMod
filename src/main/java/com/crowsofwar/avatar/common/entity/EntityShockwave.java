@@ -239,46 +239,51 @@ public class EntityShockwave extends EntityOffensive {
 	}
 
 	@Override
-	public void pushLevers(BlockPos pos) {
-		super.pushLevers(pos);
-		if (getElement() instanceof Airbending)
-			if (getOwner() != null && getAbility() != null)
-				AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+	public boolean pushLevers(BlockPos pos) {
+		if (super.pushLevers(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+		return super.pushLevers(pos);
 	}
 
 	@Override
-	public void pushButtons(BlockPos pos) {
-		super.pushButtons(pos);
-		if (getElement() instanceof Airbending)
-			if (getOwner() != null && getAbility() != null)
-				AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
-
-	}
-
-	@Override
-	public void pushTrapDoors(BlockPos pos) {
-		super.pushTrapDoors(pos);
-		if (getElement() instanceof Airbending)
-			if (getOwner() != null && getAbility() != null)
-				AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+	public boolean pushButtons(BlockPos pos) {
+		if (super.pushButtons(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+		return super.pushButtons(pos);
 
 	}
 
 	@Override
-	public void pushDoors(BlockPos pos) {
-		super.pushDoors(pos);
-		if (getElement() instanceof Airbending)
-			if (getOwner() != null && getAbility() != null)
-				AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+	public boolean pushTrapDoors(BlockPos pos) {
+		if (super.pushTrapDoors(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+		return super.pushTrapDoors(pos);
 
 	}
 
 	@Override
-	public void pushGates(BlockPos pos) {
-		super.pushGates(pos);
-		if (getElement() instanceof Airbending)
-			if (getOwner() != null && getAbility() != null)
-				AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+	public boolean pushDoors(BlockPos pos) {
+		if (super.pushGates(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+		return super.pushGates(pos);
+
+	}
+
+	@Override
+	public boolean pushGates(BlockPos pos) {
+		if (super.pushGates(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+		return super.pushGates(pos);
 
 	}
 
