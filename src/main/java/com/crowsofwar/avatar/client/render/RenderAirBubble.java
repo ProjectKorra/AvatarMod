@@ -59,7 +59,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		enableBlend();
 		disableDepth();
 		enableLighting();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE);
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
 		float ticks = entity.ticksExisted + partialTicks;
@@ -78,14 +78,14 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		}
 		sizeMult *= entity.getSize() / 2.5f;
 
-		GlStateManager.color(0.25F, 0.25F, 0.25F, 0.15f * alpha);
+		GlStateManager.color(0.75F, 0.5F, 0.5F, 0.15f * alpha);
 		{
 			float rotY = ticks / 7f;
 			float rotX = MathHelper.cos(ticks / 4f) * .3f;
 			enableLighting();
 			renderCube(x, y, z, 0, 1, 0, 1, 2.25f * sizeMult, rotX, rotY, 0);
 		}
-		GlStateManager.color(0.5F, 0.5F, 0.5F, 0.3F * alpha);
+		GlStateManager.color(1, 1, 1, 0.25F * alpha);
 		{
 			float rotY = ticks / 25f;
 			float rotZ = MathHelper.cos(ticks / 10f + 1.3f) * .3f;
