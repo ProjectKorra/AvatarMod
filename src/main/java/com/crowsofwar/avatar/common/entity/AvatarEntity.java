@@ -328,6 +328,13 @@ public abstract class AvatarEntity extends Entity {
 						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
 								SoundCategory.PLAYERS, 1, 1, false);
 					}
+					else if (world.getBlockState(pos).getBlock() instanceof BlockLiquid) {
+						Block lava = world.getBlockState(pos).getBlock();
+						if (lava == Blocks.LAVA)
+							world.setBlockState(pos, Blocks.OBSIDIAN.getDefaultState());
+						else if (lava == Blocks.FLOWING_LAVA)
+							world.setBlockState(pos, Blocks.STONE.getDefaultState());
+					}
 				}
 			}
 		}
