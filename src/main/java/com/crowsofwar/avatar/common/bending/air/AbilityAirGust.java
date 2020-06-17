@@ -75,13 +75,13 @@ public class AbilityAirGust extends Ability {
 				lifetime += 10;
 			}
 			if (ctx.getLevel() >= 2) {
-				speed = 45;
+				speed = 42.5F;
 				size = 1.5F;
 				lifetime += 20;
 			}
 			if (ctx.isDynamicMasterLevel(FIRST)) {
 				size = 0.75F;
-				speed = 55;
+				speed = 47.5F;
 				lifetime += 10;
 			}
 			if (ctx.isDynamicMasterLevel(SECOND)) {
@@ -99,6 +99,7 @@ public class AbilityAirGust extends Ability {
 			gust.setOwner(entity);
 			gust.setEntitySize(size);
 			gust.setDamage(0);
+			gust.setDynamicSpreadingCollision(true);
 			gust.setLifeTime(lifetime);
 			gust.rotationPitch = entity.rotationPitch;
 			gust.rotationYaw = entity.rotationYaw;

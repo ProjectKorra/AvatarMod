@@ -326,6 +326,13 @@ public class AvatarUtils {
 		entity.isAirBorne = true;
 		afterVelocityAdded(entity);
 	}
+	
+	public static Vec3d getMiddleVec3d(AxisAlignedBB box) {
+			double x = box.maxX - box.minX;
+			double y = box.maxY - box.minY;
+			double z = box.maxZ - box.minZ;
+			return new Vec3d(box.minX + x / 2, box.minY + y / 2, box.minZ + z / 2);
+	}
 
 
 	/**

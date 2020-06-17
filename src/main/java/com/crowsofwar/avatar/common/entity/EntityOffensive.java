@@ -193,7 +193,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		if (!targets.isEmpty()) {
 			for (Entity hit : targets) {
 				if (canCollideWith(hit) && this != hit) {
-						onCollideWithEntity(hit);
+					onCollideWithEntity(hit);
 				}
 			}
 		}
@@ -203,7 +203,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 			if (state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()) {
 				ticks++;
 			}
-			if (ticks > 1) {
+			if (ticks > 0 || onCollideWithSolid()) {
 				//Checks whether to dissipate first.
 				if (shouldDissipate())
 					Dissipate();
@@ -221,9 +221,9 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 				Explode();
 		}
 
-		for (double x = 0; x <= 1; x+= 0.5) {
-			for (double z = 0; z <= 1; z+= 0.5) {
-				for (double y = 0; y <= 1; y+= 0.5) {
+		for (double x = 0; x <= 1; x += 0.5) {
+			for (double z = 0; z <= 1; z += 0.5) {
+				for (double y = 0; y <= 1; y += 0.5) {
 					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
 					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
 					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
@@ -237,9 +237,9 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 				}
 			}
 		}
-		for (double x = 0; x >= -1; x-= 0.5) {
-			for (double z = 0; z >= -1; z-= 0.5) {
-				for (double y = 0; y >= -1; y-= 0.5) {
+		for (double x = 0; x >= -1; x -= 0.5) {
+			for (double z = 0; z >= -1; z -= 0.5) {
+				for (double y = 0; y >= -1; y -= 0.5) {
 					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
 					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
 					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
@@ -310,29 +310,44 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 			}
 			if (!list.isEmpty() && !onGround) {
 				for (AxisAlignedBB axisalignedbb : list) {
-					y = axisalignedbb.calculateYOffset(this.getEntityBoundingBox(), y);
+					Vec3d mid = AvatarUtils.getMiddleVec3d(axisalignedbb);
+					BlockPos pos = new BlockPos(mid.x, mid.y, mid.z);
+					IBlockState state = world.getBlockState(pos);
+					if (!noClip || state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()
+							&& state.isFullCube())
+						y = axisalignedbb.calculateYOffset(this.getEntityBoundingBox(), y);
 				}
 
-				//TODO: Makes this configurable. Ensures entities are killed when they hit the ground.
+				//TODO: Make this configurable. Ensures entities are killed when they hit the ground.
 
-				if (y < posY)
-					setDead();
+				if (y < posY && onGround)
+					if (shouldExplode())
+						Explode();
+					else Dissipate();
 
 				this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, y, 0.0D));
 
 				for (AxisAlignedBB axisalignedbb1 : list) {
-					x = axisalignedbb1.calculateXOffset(this.getEntityBoundingBox(), x);
+					Vec3d mid = AvatarUtils.getMiddleVec3d(axisalignedbb1);
+					BlockPos pos = new BlockPos(mid.x, mid.y, mid.z);
+					IBlockState state = world.getBlockState(pos);
+					if (!noClip || state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()
+							&& state.isFullCube())
+						x = axisalignedbb1.calculateXOffset(this.getEntityBoundingBox(), x);
 				}
 
 				this.setEntityBoundingBox(this.getEntityBoundingBox().offset(x, 0.0D, 0.0D));
 
 				for (AxisAlignedBB axisalignedbb2 : list) {
-					z = axisalignedbb2.calculateZOffset(this.getEntityBoundingBox(), z);
+					Vec3d mid = AvatarUtils.getMiddleVec3d(axisalignedbb2);
+					BlockPos pos = new BlockPos(mid.x, mid.y, mid.z);
+					IBlockState state = world.getBlockState(pos);
+					if (!noClip || state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()
+							&& state.isFullCube())
+						z = axisalignedbb2.calculateZOffset(this.getEntityBoundingBox(), z);
 				}
 
 				this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, 0.0D, z));
-
-				this.resetPositionToBB();
 			}
 
 			if (collidedWithSolid)
@@ -398,7 +413,40 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	@Override
 	public boolean onCollideWithSolid() {
-		return collided;
+		IBlockState state = world.getBlockState(getPosition());
+		boolean collision = !world.getCollisionBoxes(this, getExpandedHitbox()).isEmpty();
+		for (double x = 0; x <= 1; x += 0.5) {
+			for (double z = 0; z <= 1; z += 0.5) {
+				for (double y = 0; y <= 1; y += 0.5) {
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+					BlockPos pos = new BlockPos(xPos + x * getExpandedHitboxWidth() / 2,
+							yPos + y * getExpandedHitboxHeight() / 2, zPos + z * getExpandedHitboxWidth() / 2);
+					state = world.getBlockState(pos);
+					collision &= state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock() && state.isFullCube();
+					if (collision)
+						break;
+
+				}
+			}
+		}
+		for (double x = 0; x >= -1; x -= 0.5) {
+			for (double z = 0; z >= -1; z -= 0.5) {
+				for (double y = 0; y >= -1; y -= 0.5) {
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+					BlockPos pos = new BlockPos(xPos + x * getExpandedHitboxWidth() / 2,
+							yPos + y * getExpandedHitboxHeight() / 2, zPos + z * getExpandedHitboxWidth() / 2);
+					state = world.getBlockState(pos);
+					collision &= state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock() && state.isFullCube();
+					if (collision)
+						break;
+				}
+			}
+		}
+		return collided || collision;
 	}
 
 	public int getLifeTime() {
