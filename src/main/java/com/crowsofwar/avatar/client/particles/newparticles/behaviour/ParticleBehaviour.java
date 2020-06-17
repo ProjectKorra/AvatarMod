@@ -42,8 +42,8 @@ import java.util.Map;
 public abstract class ParticleBehaviour<E extends Particle> {
 
 	private static int nextId = 1;
-	private static Map<Integer, Class<? extends ParticleBehaviour>> behaviorIdToClass;
-	private static Map<Class<? extends ParticleBehaviour>, Integer> classToBehaviorId;
+	private static Map<Integer, Class<? extends ParticleBehaviour>> behaviourIdToClass;
+	private static Map<Class<? extends ParticleBehaviour>, Integer> classToBehaviourId;
 
 	public ParticleBehaviour() {
 	}
@@ -54,14 +54,14 @@ public abstract class ParticleBehaviour<E extends Particle> {
 	}
 
 	protected static int registerBehavior(Class<? extends ParticleBehaviour> behaviorClass) {
-		if (behaviorIdToClass == null) {
-			behaviorIdToClass = new HashMap<>();
-			classToBehaviorId = new HashMap<>();
+		if (behaviourIdToClass == null) {
+			behaviourIdToClass = new HashMap<>();
+			classToBehaviourId = new HashMap<>();
 			nextId = 1;
 		}
 		int id = nextId++;
-		behaviorIdToClass.put(id, behaviorClass);
-		classToBehaviorId.put(behaviorClass, id);
+		behaviourIdToClass.put(id, behaviorClass);
+		classToBehaviourId.put(behaviorClass, id);
 		return id;
 	}
 
@@ -72,7 +72,7 @@ public abstract class ParticleBehaviour<E extends Particle> {
 	public static ParticleBehaviour lookup(int id, Entity entity) {
 		try {
 
-			ParticleBehaviour behaviour = behaviorIdToClass.get(id).newInstance();
+			ParticleBehaviour behaviour = behaviourIdToClass.get(id).newInstance();
 			return behaviour;
 
 		} catch (Exception e) {
@@ -85,7 +85,7 @@ public abstract class ParticleBehaviour<E extends Particle> {
 	}
 
 	public int getId() {
-		return classToBehaviorId.get(getClass());
+		return classToBehaviourId.get(getClass());
 	}
 
 	/**

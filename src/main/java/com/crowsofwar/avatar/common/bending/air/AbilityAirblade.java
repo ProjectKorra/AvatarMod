@@ -22,9 +22,18 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
+import com.crowsofwar.avatar.common.entity.EntityOffensive;
+import com.crowsofwar.avatar.common.entity.data.Behavior;
+import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -50,7 +59,6 @@ public class AbilityAirblade extends Ability {
 		World world = ctx.getWorld();
 
 		if (!bender.consumeChi(STATS_CONFIG.chiAirblade)) return;
-
 
 
 		Vector look = Vector.getLookRectangular(entity);
@@ -109,6 +117,7 @@ public class AbilityAirblade extends Ability {
 				airblade.setAbility(this);
 				airblade.setPierceArmor(true);
 				airblade.setChopBlocksThreshold(chopBlocks);
+				airblade.setBehaviour(new AirBladeBehaviour());
 				if (!world.isRemote)
 					world.spawnEntity(airblade);
 			}
@@ -119,12 +128,18 @@ public class AbilityAirblade extends Ability {
 			airblade.setDamage(damage);
 			airblade.setTier(getCurrentTier(ctx.getLevel()));
 			airblade.setXp(SKILLS_CONFIG.airBladeHit);
-			airblade.setSizeMult(sizeMult);
+			if (!ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND))
+				airblade.setSizeMult(sizeMult);
+			else {
+				airblade.setSizeMult(-1);
+				airblade.setEntitySize(0.5F, 2.0F);
+			}
 			airblade.rotationPitch = entity.rotationPitch;
 			airblade.rotationYaw = entity.rotationYaw;
 			airblade.setOwner(entity);
 			airblade.setElement(new Airbending());
 			airblade.setAbility(this);
+			airblade.setBehaviour(new AirBladeBehaviour());
 			airblade.setPierceArmor(false);
 			airblade.setChopBlocksThreshold(chopBlocks);
 			airblade.setTier(getCurrentTier(abilityData.getLevel()));
@@ -145,4 +160,97 @@ public class AbilityAirblade extends Ability {
 		return new AiAirblade(this, entity, bender);
 	}
 
+
+	public static class AirBladeBehaviour extends OffensiveBehaviour {
+
+		@Override
+		public Behavior<EntityOffensive> onUpdate(EntityOffensive entity) {
+			if (entity instanceof EntityAirblade && entity.getOwner() != null) {
+				World world = entity.world;
+
+				entity.motionX *= 0.98;
+				entity.motionY *= 0.98;
+				entity.motionZ *= 0.98;
+
+				if (entity.getOwner() != null && entity.getAbility() instanceof AbilityAirblade) {
+					AbilityData data = AbilityData.get(entity.getOwner(), entity.getAbility().getName());
+					if (!data.isMasterPath(AbilityData.AbilityTreePath.SECOND) && entity.velocity().sqrMagnitude() <= 0.9 * 0.9) {
+						entity.Dissipate();
+					}
+				} else if (entity.velocity().sqrMagnitude() <= 0.9 * 0.9) {
+					entity.Dissipate();
+				}
+				if (((EntityAirblade) entity).getSizeMult() > 0)
+					entity.setEntitySize(((EntityAirblade) entity).getSizeMult() * 1.5F, ((EntityAirblade) entity).getSizeMult() * 0.2F);
+
+
+				if (AbilityData.get(entity.getOwner(), entity.getAbility().getName()).isDynamicMasterLevel(SECOND)) {
+					if (world.isRemote) {
+						for (double i = 0; i < 2; i += 1 / entity.getWidth()) {
+							AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+							double spawnX = boundingBox.minX + world.rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+							double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+							double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+									world.rand.nextGaussian() / 60).collide(true).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.8F, 0.8F, 0.8F, 0.075F)
+									.scale(entity.getAvgSize() / 4).element(entity.getElement()).spawnEntity(entity).spawn(world);
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfEntity(entity)).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+									world.rand.nextGaussian() / 60).collide(true).time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.8F, 0.8F, 0.8F, 0.075F)
+									.scale(entity.getAvgSize() / 4).element(entity.getElement()).spin(entity.getWidth() / 2, 0.1).spawnEntity(entity).spawn(world);
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfEntity(entity)).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+									world.rand.nextGaussian() / 60).collide(true).time(12 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.8F, 0.8F, 0.8F, 0.075F)
+									.scale(entity.getAvgSize() / 4).element(entity.getElement()).spin(entity.getWidth() / 2, 0.1).spawnEntity(entity).spawn(world);
+						}
+
+					}
+				} else {
+					if (world.isRemote) {
+						for (double i = 0; i < 0.5; i += 1 / entity.getHeight()) {
+							AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+							double spawnX = boundingBox.minX + world.rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+							double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+							double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+									world.rand.nextGaussian() / 60).collide(true).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.8F, 0.8F, 0.8F, 0.075F)
+									.scale(entity.getAvgSize() / 4).element(entity.getElement()).spawn(world);
+						}
+
+						for (double i = -90; i <= 90; i += 6) {
+							Vec3d pos = AvatarEntityUtils.getMiddleOfEntity(entity);
+							Vec3d newDir = entity.getLookVec().scale(entity.getHeight() / 2 * Math.cos(Math.toRadians(i)));
+							pos = pos.add(newDir);
+							pos = new Vec3d(pos.x, pos.y + (entity.getHeight() / 2 * Math.sin(Math.toRadians(i))), pos.z);
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+									world.rand.nextGaussian() / 60).collide(true).time(1 + AvatarUtils.getRandomNumberInRange(0, 1)).clr(0.8F, 0.8F, 0.8F, 0.075F)
+									.scale(entity.getWidth() * 2).element(entity.getElement()).spawnEntity(entity).spawn(world);
+							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(entity.motionX * 0.98, entity.motionY * 0.98, entity.motionZ * 0.98).collide(true)
+									.time(12 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.8F, 0.8F, 0.8F, 0.1F)
+									.scale(entity.getWidth() * 4).spawnEntity(entity).element(entity.getElement()).spawn(world);
+						}
+					}
+				}
+			}
+			return this;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
+	}
 }

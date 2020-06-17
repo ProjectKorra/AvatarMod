@@ -59,7 +59,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
 		enableBlend();
 		disableDepth();
 		enableLighting();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
 		float ticks = entity.ticksExisted + partialTicks;

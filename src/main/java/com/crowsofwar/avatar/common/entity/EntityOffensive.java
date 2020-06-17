@@ -38,7 +38,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 			.createKey(EntityOffensive.class, DataSerializers.VARINT);
 	private static final DataParameter<Float> SYNC_HEIGHT = EntityDataManager
 			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
-	private static final DataParameter<Float> SYNC_WIDTh = EntityDataManager
+	private static final DataParameter<Float> SYNC_WIDTH = EntityDataManager
 			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
 	private static final DataParameter<OffensiveBehaviour> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityOffensive.class, OffensiveBehaviour.DATA_SERIALIZER);
@@ -112,7 +112,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	}
 
 	public float getWidth() {
-		return dataManager.get(SYNC_WIDTh);
+		return dataManager.get(SYNC_WIDTH);
 	}
 
 	public float getAvgSize() {
@@ -123,12 +123,12 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	public void setEntitySize(float height, float width) {
 		dataManager.set(SYNC_HEIGHT, height);
-		dataManager.set(SYNC_WIDTh, width);
+		dataManager.set(SYNC_WIDTH, width);
 	}
 
 	public void setEntitySize(float size) {
 		dataManager.set(SYNC_HEIGHT, size);
-		dataManager.set(SYNC_WIDTh, size);
+		dataManager.set(SYNC_WIDTH, size);
 	}
 
 	public float getDamage() {
@@ -157,7 +157,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		super.entityInit();
 		dataManager.register(SYNC_DAMAGE, 1F);
 		dataManager.register(SYNC_LIFETIME, 20);
-		dataManager.register(SYNC_WIDTh, 1.0F);
+		dataManager.register(SYNC_WIDTH, 1.0F);
 		dataManager.register(SYNC_HEIGHT, 1.0F);
 		dataManager.register(SYNC_BEHAVIOR, new OffensiveBehaviour.Idle());
 	}
@@ -193,9 +193,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		if (!targets.isEmpty()) {
 			for (Entity hit : targets) {
 				if (canCollideWith(hit) && this != hit) {
-					if (!world.isRemote) {
 						onCollideWithEntity(hit);
-					}
 				}
 			}
 		}

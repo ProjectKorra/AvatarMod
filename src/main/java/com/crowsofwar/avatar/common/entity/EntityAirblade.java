@@ -24,7 +24,6 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -92,62 +91,17 @@ public class EntityAirblade extends EntityOffensive {
 	}
 
 	@Override
+	public boolean shouldExplode() {
+		return false;
+	}
+
+	@Override
 	public void onUpdate() {
-
 		super.onUpdate();
-		setEntitySize(getSizeMult() * 1.5F, getSizeMult() * 0.2F);
-
-		this.motionX *= 0.98;
-		this.motionY *= 0.98;
-		this.motionZ *= 0.98;
-
-		if (!world.isRemote && getOwner() != null && getAbility() instanceof AbilityAirblade) {
-			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
-			if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				if (velocity().sqrMagnitude() <= 0.7 * 0.7) {
-					setDead();
-				}
-
-			} else if (velocity().sqrMagnitude() <= 0.9 * 0.9) {
-				setDead();
-			}
-		} else if (!world.isRemote && velocity().sqrMagnitude() <= 0.9 * 0.9) {
-			setDead();
-		}
 
 		if (!world.isRemote && chopBlocksThreshold >= 0) {
 			breakCollidingBlocks();
 		}
-
-
-		if (world.isRemote) {
-			for (double i = 0; i < 0.5; i += 1 / getHeight()) {
-				AxisAlignedBB boundingBox = getEntityBoundingBox();
-				double spawnX = boundingBox.minX + world.rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-				double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-				double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).collide(true).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.8F, 0.8F, 0.8F, 0.075F)
-						.scale(getWidth()).element(getElement()).spawn(world);
-			}
-
-			for (double i = -90; i <= 90; i += 6) {
-				Vec3d pos = AvatarEntityUtils.getMiddleOfEntity(this);
-				Vec3d newDir = getLookVec().scale(getHeight() / 2 * Math.cos(Math.toRadians(i)));
-				//newDir = newDir.scale((Math.abs(i) % 45) / 45);
-				pos = pos.add(newDir);
-				pos = new Vec3d(pos.x, pos.y + (getHeight() / 2  * Math.sin(Math.toRadians(i))), pos.z);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).collide(true).time(1 + AvatarUtils.getRandomNumberInRange(0, 1)).clr(0.8F, 0.8F, 0.8F, 0.075F)
-						.scale(getWidth() * 2).element(getElement()).spawn(world);
-				//if (ticksExisted % 8 == 0)
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(motionX * 0.98, motionY * 0.98, motionZ * 0.98).collide(true)
-						.time(12 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.8F, 0.8F, 0.8F, 0.1F)
-						.scale(getWidth() * 4).element(getElement()).spawn(world);
-			}
-
-		}
-
 	}
 
 	@Override
@@ -286,7 +240,7 @@ public class EntityAirblade extends EntityOffensive {
 
 	@Override
 	public double getExpandedHitboxWidth() {
-		return width * 1.5;
+		return width / 2;
 	}
 
 	@Override
