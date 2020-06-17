@@ -78,8 +78,10 @@ public class EntityAirblade extends EntityOffensive {
 		return false;
 	}
 
+	@Override
+	public void resetPositionToBB() {
 
-
+	}
 
 	@Override
 	protected void entityInit() {

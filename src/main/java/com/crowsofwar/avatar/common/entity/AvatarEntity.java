@@ -563,7 +563,9 @@ public abstract class AvatarEntity extends Entity {
 			return true;
 		} else if (entity == this) {
 			return false;
-		} else
+		} else if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).hurtTime > 0)
+			return false;
+		else
 			return (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase || entity instanceof AvatarEntity;
 	}
 

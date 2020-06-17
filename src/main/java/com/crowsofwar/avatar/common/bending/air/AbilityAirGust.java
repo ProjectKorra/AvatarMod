@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
@@ -34,6 +35,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -150,12 +152,50 @@ public class AbilityAirGust extends Ability {
 		@Override
 		public Behavior<EntityOffensive> onUpdate(EntityOffensive entity) {
 			if (entity != null) {
-				entity.setVelocity(entity.velocity().times(0.95));
-				if (entity.velocity().sqrMagnitude() < 0.5 * 0.5)
-					entity.Dissipate();
+				World world = entity.world;
+				if (world.isRemote && entity.getOwner() != null) {
+					for (int i = 0; i < 4; i++) {
+						Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(entity);
+						double spawnX = mid.x + world.rand.nextGaussian() / 20;
+						double spawnY = mid.y + world.rand.nextGaussian() / 20;
+						double spawnZ = mid.z + world.rand.nextGaussian() / 20;
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
+								world.rand.nextGaussian() / 45).time(4 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity)
+								.scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 1)).element(entity.getElement()).collide(true).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45 + entity.motionX,
+								world.rand.nextGaussian() / 45 + entity.motionY, world.rand.nextGaussian() / 45 + entity.motionZ)
+								.time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity)
+								.scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.5F)).element(entity.getElement()).collide(true).spawn(world);
+					}
+					for (int i = 0; i < 2; i++) {
+						Vec3d pos = Vector.getOrthogonalVector(entity.getLookVec(), i * 180 + (entity.ticksExisted % 360) * 20 *
+								(1 / entity.getAvgSize()), entity.getAvgSize() / 1.5F).toMinecraft();
+						Vec3d velocity;
+						Vec3d entityPos = AvatarEntityUtils.getMiddleOfEntity(entity);
 
-				float expansionRate = 1f / 80;
-				entity.setEntitySize(entity.getAvgSize() + expansionRate);
+						pos = pos.add(entityPos);
+						velocity = pos.subtract(entityPos).normalize();
+						velocity = velocity.scale(AvatarUtils.getSqrMagnitude(entity.getVelocity()) / 400000);
+						double spawnX = pos.x;
+						double spawnY = pos.y;
+						double spawnZ = pos.z;
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
+								world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
+								.time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
+								.scale(0.75F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
+								world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
+								.time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
+								.scale(0.75F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).spawn(world);
+
+					}
+					entity.setVelocity(entity.velocity().times(0.95));
+					if (entity.velocity().sqrMagnitude() < 0.5 * 0.5)
+						entity.Dissipate();
+
+					float expansionRate = 1f / 80;
+					entity.setEntitySize(entity.getAvgSize() + expansionRate);
+				}
 			}
 			return this;
 		}

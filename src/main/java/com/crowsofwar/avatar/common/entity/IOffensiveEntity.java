@@ -54,16 +54,6 @@ public interface IOffensiveEntity {
 						z *= getExplosionKnockbackMult().z;
 
 						attackEntity(entity, entity1, true, new Vec3d(x, y, z));
-
-						if (collided instanceof AvatarEntity) {
-							if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
-									&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
-								AvatarEntity avent = (AvatarEntity) collided;
-								avent.addVelocity(x, y, z);
-							}
-							entity1.isAirBorne = true;
-							AvatarUtils.afterVelocityAdded(entity1);
-						}
 					}
 				}
 			}
@@ -105,6 +95,8 @@ public interface IOffensiveEntity {
 						((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, getDamageSource(hit, attacker.getOwner()),
 								explosionDamage ? getAoeDamage() : getDamage());
 						BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
+						if (multiHit())
+							((EntityLivingBase) hit).hurtTime = 1;
 						data.addXp(getXpPerHit());
 
 					} else if (hit instanceof EntityLivingBase && ds) {
@@ -114,6 +106,8 @@ public interface IOffensiveEntity {
 						if (setVelocity())
 							AvatarUtils.setVelocity(hit, vel);
 						else hit.addVelocity(vel.x, vel.y, vel.z);
+						if (multiHit())
+							((EntityLivingBase) hit).hurtTime = 1;
 						AvatarUtils.afterVelocityAdded(hit);
 					}
 				}
@@ -121,10 +115,14 @@ public interface IOffensiveEntity {
 				BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
 				data.addXp(getXpPerHit());
 				hit.setFire(getFireTime());
+				if (hit instanceof EntityOffensive)
+					((EntityOffensive) hit).applyElementalContact(attacker);
 				if (setVelocity())
 					AvatarUtils.setVelocity(hit, vel);
 				else hit.addVelocity(vel.x, vel.y, vel.z);
 				hit.setEntityInvulnerable(false);
+				if (multiHit() && hit instanceof EntityLivingBase)
+					((EntityLivingBase) hit).hurtTime = 1;
 				AvatarUtils.afterVelocityAdded(hit);
 			}
 		}
@@ -273,6 +271,11 @@ public interface IOffensiveEntity {
 
 	default boolean shouldExplode() {
 		return true;
+	}
+
+	//If this is true, entities will multihit (add knockback and/or attack even when an entity's hurt timer isn't 0)
+	default boolean multiHit() {
+		return false;
 	}
 
 	default AxisAlignedBB getExpandedHitbox(AvatarEntity entity) {

@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
@@ -26,7 +27,6 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
@@ -40,6 +40,7 @@ public class EntityAirGust extends EntityOffensive {
 
 	private boolean piercesEnemies = false, slowProjectiles = false, destroyProjectiles = false,
 			pushStone, pushIronTrapDoor, pushIronDoor;
+	private float exWidth, exHeight;
 
 	public EntityAirGust(World world) {
 		super(world);
@@ -49,9 +50,10 @@ public class EntityAirGust extends EntityOffensive {
 		this.pushStoneButton = pushStone;
 		this.pushDoor = pushIronDoor;
 		this.pushTrapDoor = pushIronTrapDoor;
+		this.exWidth = 0.5F;
+		this.exHeight = 0.5F;
 		setDamage(0);
 	}
-
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -59,6 +61,8 @@ public class EntityAirGust extends EntityOffensive {
 		slowProjectiles = nbt.getBoolean("SlowProjectiles");
 		destroyProjectiles = nbt.getBoolean("DestroyProjectiles");
 		piercesEnemies = nbt.getBoolean("PiercesEnemies");
+		exWidth = nbt.getFloat("Expanded Width");
+		exHeight = nbt.getFloat("Expanded Height");
 	}
 
 	@Override
@@ -67,6 +71,8 @@ public class EntityAirGust extends EntityOffensive {
 		nbt.setBoolean("SlowProjectiles", slowProjectiles);
 		nbt.setBoolean("DestroyProjectiles", destroyProjectiles);
 		nbt.setBoolean("PiercesEnemies", piercesEnemies);
+		nbt.setFloat("Expanded Width", exWidth);
+		nbt.setFloat("Expanded Height", exHeight);
 	}
 
 	@Override
@@ -78,42 +84,6 @@ public class EntityAirGust extends EntityOffensive {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if (world.isRemote && getOwner() != null) {
-			for (int i = 0; i < 4; i++) {
-				Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(this);
-				double spawnX = mid.x + world.rand.nextGaussian() / 20;
-				double spawnY = mid.y + world.rand.nextGaussian() / 20;
-				double spawnZ = mid.z + world.rand.nextGaussian() / 20;
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-						world.rand.nextGaussian() / 45).time(4 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(getOwner())
-						.scale(getAvgSize() * (1 / getAvgSize() + 1)).element(getElement()).collide(true).spawn(world);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45 + motionX, world.rand.nextGaussian() / 45 + motionY,
-						world.rand.nextGaussian() / 45 + motionZ).time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(getOwner())
-						.scale(getAvgSize() * (1 / getAvgSize() + 0.5F)).element(getElement()).collide(true).spawn(world);
-			}
-			for (int i = 0; i < 2; i++) {
-				Vec3d pos = Vector.getOrthogonalVector(getLookVec(), i * 180 + (ticksExisted % 360) * 20 *
-						(1 / getAvgSize()), getAvgSize() / 1.5F).toMinecraft();
-				Vec3d velocity;
-				Vec3d entityPos = AvatarEntityUtils.getMiddleOfEntity(this);
-
-				pos = pos.add(entityPos);
-				velocity = pos.subtract(entityPos).normalize();
-				velocity = velocity.scale(AvatarUtils.getSqrMagnitude(getVelocity()) / 400000);
-				double spawnX = pos.x;
-				double spawnY = pos.y;
-				double spawnZ = pos.z;
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
-						world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
-						.time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
-						.scale(0.75F * getAvgSize() * (1 / getAvgSize())).element(new Airbending()).collide(true).spawn(world);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
-						world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
-						.time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
-						.scale(0.75F * getAvgSize() * (1 / getAvgSize())).element(new Airbending()).collide(true).spawn(world);
-
-			}
-		}
 
 		//Not sure why I have this here, but I'm too lazy to test it right now.
 		if (ticksExisted <= 2) {
@@ -160,6 +130,22 @@ public class EntityAirGust extends EntityOffensive {
 					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
 		return super.pushGates(pos);
 
+	}
+
+	public void setExpandedWidth(float width) {
+		this.exWidth = width;
+	}
+
+	public float getExpandedWidth() {
+		return this.exWidth;
+	}
+
+	public void setExpandedHeight(float height) {
+		this.height = height;
+	}
+
+	public float getExpandedHeight() {
+		return this.exHeight;
 	}
 
 	public void setSlowProjectiles(boolean slowProjectiles) {
@@ -280,6 +266,11 @@ public class EntityAirGust extends EntityOffensive {
 	}
 
 	@Override
+	public boolean multiHit() {
+		return getAbility() instanceof AbilityAirblade && getOwner() != null && AbilityData.get(getOwner(), getAbility().getName()).isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND);
+	}
+
+	@Override
 	public boolean setVelocity() {
 		return true;
 	}
@@ -341,12 +332,12 @@ public class EntityAirGust extends EntityOffensive {
 
 	@Override
 	public double getExpandedHitboxWidth() {
-		return Math.max(0.35, Math.min(getAvgSize() / 2, 1));
+		return exWidth;
 	}
 
 	@Override
 	public double getExpandedHitboxHeight() {
-		return Math.max(0.35, Math.min(getAvgSize() / 2, 1));
+		return exHeight;
 	}
 
 	@Override
