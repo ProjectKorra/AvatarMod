@@ -55,8 +55,7 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		}
 
-		GlStateManager.disableLighting();
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 480f, 480f);
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 24f, 240f);
 
 		float f4;
 		if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
