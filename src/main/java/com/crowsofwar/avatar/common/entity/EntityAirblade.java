@@ -62,6 +62,7 @@ public class EntityAirblade extends EntityOffensive {
 		setSize(0.2f, 1.5f);
 		this.chopBlocksThreshold = -1;
 		this.noClip = true;
+		this.putsOutFires = true;
 	}
 
 	public float getSizeMult() {
@@ -71,6 +72,13 @@ public class EntityAirblade extends EntityOffensive {
 	public void setSizeMult(float sizeMult) {
 		dataManager.set(SYNC_SIZE_MULT, sizeMult);
 	}
+
+	@Override
+	public boolean canBePushed() {
+		return false;
+	}
+
+
 
 
 	@Override
@@ -201,11 +209,11 @@ public class EntityAirblade extends EntityOffensive {
 
 	@Override
 	public void spawnDissipateParticles(World world, Vec3d pos) {
-		if (world.isRemote)
-			for (int i = 0; i < 1; i += 1 / getWidth())
+		/*if (world.isRemote)
+			for (double i = 0; i < 1; i += 1 / getWidth())
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfEntity(this)).vel(world.rand.nextGaussian() / 20,
 						world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20).time(6).clr(0.8F, 0.8F, 0.8F)
-						.scale(getWidth() * 5F).collide(true).element(getElement()).spawn(world);
+						.scale(getWidth() * 5F).collide(true).element(getElement()).spawn(world);**/
 	}
 
 	@Override

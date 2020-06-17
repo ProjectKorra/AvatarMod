@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
@@ -61,8 +62,6 @@ public class AbilityAirblade extends Ability {
 		if (!bender.consumeChi(STATS_CONFIG.chiAirblade)) return;
 
 
-		Vector look = Vector.getLookRectangular(entity);
-		Vector spawnAt = Vector.getEyePos(entity).plus(look).minusY(0.6);
 
 		AbilityData abilityData = ctx.getData().getAbilityData(this);
 		float sizeMult = 1.0F;
@@ -100,6 +99,8 @@ public class AbilityAirblade extends Ability {
 			chopBlocks = 4;
 		}
 
+		Vector spawnAt = Vector.getEyePos(entity);
+
 		if (ctx.isMasterLevel(FIRST)) {
 			for (int i = 0; i < 5; i++) {
 				float yaw = entity.rotationYaw - 30 + i * 15;
@@ -122,9 +123,10 @@ public class AbilityAirblade extends Ability {
 					world.spawnEntity(airblade);
 			}
 		} else {
+			Vec3d look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), Math.toRadians(entity.rotationPitch)).toMinecraft();
 			EntityAirblade airblade = new EntityAirblade(world);
-			airblade.setPosition(spawnAt.x(), spawnAt.y(), spawnAt.z());
-			airblade.setVelocity(look.times(ctx.getLevel() >= 1 ? 40 : 30));
+			airblade.setPosition(spawnAt.minusY(0.5));
+			airblade.setVelocity(look.scale(ctx.getLevel() >= 1 ? 20 : 15));
 			airblade.setDamage(damage);
 			airblade.setTier(getCurrentTier(ctx.getLevel()));
 			airblade.setXp(SKILLS_CONFIG.airBladeHit);
@@ -132,7 +134,7 @@ public class AbilityAirblade extends Ability {
 				airblade.setSizeMult(sizeMult);
 			else {
 				airblade.setSizeMult(-1);
-				airblade.setEntitySize(0.5F, 2.0F);
+				airblade.setEntitySize(0.5F, 3.0F);
 			}
 			airblade.rotationPitch = entity.rotationPitch;
 			airblade.rotationYaw = entity.rotationYaw;
@@ -168,38 +170,37 @@ public class AbilityAirblade extends Ability {
 			if (entity instanceof EntityAirblade && entity.getOwner() != null) {
 				World world = entity.world;
 
-				entity.motionX *= 0.98;
-				entity.motionY *= 0.98;
-				entity.motionZ *= 0.98;
+				//entity.motionX *= 0.98;
+				//entity.motionY *= 0.98;
+				//entity.motionZ *= 0.98;
 
-				if (entity.getOwner() != null && entity.getAbility() instanceof AbilityAirblade) {
+				/*if (entity.getOwner() != null && entity.getAbility() instanceof AbilityAirblade) {
 					AbilityData data = AbilityData.get(entity.getOwner(), entity.getAbility().getName());
 					if (!data.isMasterPath(AbilityData.AbilityTreePath.SECOND) && entity.velocity().sqrMagnitude() <= 0.9 * 0.9) {
 						entity.Dissipate();
 					}
 				} else if (entity.velocity().sqrMagnitude() <= 0.9 * 0.9) {
 					entity.Dissipate();
-				}
+				}*/
 				if (((EntityAirblade) entity).getSizeMult() > 0)
 					entity.setEntitySize(((EntityAirblade) entity).getSizeMult() * 1.5F, ((EntityAirblade) entity).getSizeMult() * 0.2F);
 
 
 				if (AbilityData.get(entity.getOwner(), entity.getAbility().getName()).isDynamicMasterLevel(SECOND)) {
 					if (world.isRemote) {
-						for (double i = 0; i < 2; i += 1 / entity.getWidth()) {
-							AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-							double spawnX = boundingBox.minX + world.rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-							double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-							double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+						for (double i = 0; i < 10; i += 1 / entity.getWidth()) {
+							double spawnX = AvatarEntityUtils.getMiddleOfEntity(entity).x;
+							double spawnY = AvatarEntityUtils.getMiddleOfEntity(entity).y;
+							double spawnZ = AvatarEntityUtils.getMiddleOfEntity(entity).z;
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-									world.rand.nextGaussian() / 60).collide(true).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.8F, 0.8F, 0.8F, 0.075F)
+									world.rand.nextGaussian() / 60).collide(true).time(2 + AvatarUtils.getRandomNumberInRange(0, 1)).clr(1F, 1F, 1F, 0.075F)
 									.scale(entity.getAvgSize() / 4).element(entity.getElement()).spawnEntity(entity).spawn(world);
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfEntity(entity)).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-									world.rand.nextGaussian() / 60).collide(true).time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.8F, 0.8F, 0.8F, 0.075F)
+									world.rand.nextGaussian() / 60).collide(true).time(2 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.8F, 0.8F, 0.8F, 0.075F)
 									.scale(entity.getAvgSize() / 4).element(entity.getElement()).spin(entity.getWidth() / 2, 0.1).spawnEntity(entity).spawn(world);
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfEntity(entity)).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-									world.rand.nextGaussian() / 60).collide(true).time(12 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.8F, 0.8F, 0.8F, 0.075F)
-									.scale(entity.getAvgSize() / 4).element(entity.getElement()).spin(entity.getWidth() / 2, 0.1).spawnEntity(entity).spawn(world);
+									world.rand.nextGaussian() / 60).collide(true).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(1F, 1F, 1F, 0.1F)
+									.scale(entity.getAvgSize() / 2).element(entity.getElement()).spin(entity.getWidth() / 2, 0.1).spawnEntity(entity).spawn(world);
 						}
 
 					}

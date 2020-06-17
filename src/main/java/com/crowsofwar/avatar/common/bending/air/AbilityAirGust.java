@@ -148,7 +148,7 @@ public class AbilityAirGust extends Ability {
 	public static class AirGustBehaviour extends OffensiveBehaviour {
 
 		@Override
-		public Behavior onUpdate(EntityOffensive entity) {
+		public Behavior<EntityOffensive> onUpdate(EntityOffensive entity) {
 			if (entity != null) {
 				entity.setVelocity(entity.velocity().times(0.95));
 				if (entity.velocity().sqrMagnitude() < 0.5 * 0.5)
