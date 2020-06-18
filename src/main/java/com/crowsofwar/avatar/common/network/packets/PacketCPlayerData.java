@@ -65,30 +65,34 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		playerId = readUUID(buf);
-		final BendingData data = AvatarPlayerData.fetcher()
-				.fetch(GoreCore.proxy.getClientSidePlayer().world, playerId).getData();
+		if (GoreCore.proxy.getClientSidePlayer() != null) {
+			AvatarPlayerData playerData = AvatarPlayerData.fetcher().fetch(GoreCore.proxy.getClientSidePlayer().world, playerId);
+			if (playerData != null) {
+				final BendingData data = playerData.getData();
 
-		if (data != null) {
+				if (data != null) {
 
-			// Find what changed
-			changed = new TreeSet<>();
-			int size = buf.readInt();
-			for (int i = 0; i < size; i++) {
-				changed.add(DataCategory.values()[buf.readInt()]);
-			}
+					// Find what changed
+					changed = new TreeSet<>();
+					int size = buf.readInt();
+					for (int i = 0; i < size; i++) {
+						changed.add(DataCategory.values()[buf.readInt()]);
+					}
 
-			// Read what changed
+					// Read what changed
 
-			// For the scheduled task, can't continue to use this old bytebuf - it will be
-			// deallocated and trying to read it will throw an error
-			// So, just make a copy of the bytebuf, which will NOT be deallocated
-			ByteBuf copyBuf = buf.copy();
-			AvatarMod.proxy.getClientThreadListener().addScheduledTask(() -> {
-				for (DataCategory category : changed) {
-					category.read(copyBuf, data);
+					// For the scheduled task, can't continue to use this old bytebuf - it will be
+					// deallocated and trying to read it will throw an error
+					// So, just make a copy of the bytebuf, which will NOT be deallocated
+					ByteBuf copyBuf = buf.copy();
+					AvatarMod.proxy.getClientThreadListener().addScheduledTask(() -> {
+						for (DataCategory category : changed) {
+							category.read(copyBuf, data);
+						}
+					});
+
 				}
-			});
-
+			}
 		} else {
 			AvatarLog.warn(WarningType.WEIRD_PACKET, "Server sent a packet about data for player " + playerId
 					+ " but data couldn't be found for them");

@@ -80,8 +80,9 @@ public class MiscData {
 		fallAbsorption = nbt.getFloat("FallAbsorption");
 		timeInAir = nbt.getInteger("TimeInAir");
 		for (int i = 0; i < nbt.getInteger("AbilityCooldownSize"); i++) {
-			abilityCooldowns.replace(nbt.getString("Ability " + abilityCooldowns.keySet().toArray()[i]),
-					nbt.getInteger("Cooldown " + abilityCooldowns.keySet().toArray()[i]));
+			String[] abilities = abilityCooldowns.keySet().toArray(new String[nbt.getInteger("AbilityCooldownSize")]);
+			abilityCooldowns.replace(nbt.getString("Ability " + abilities[i]),
+					nbt.getInteger("Cooldown " + abilities[i]));
 		}
 		wallJumping = nbt.getBoolean("WallJumping");
 		petSummonCooldown = nbt.getInteger("PetSummonCooldown");
