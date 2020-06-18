@@ -100,6 +100,7 @@ public class AbilityFireball extends Ability {
 			damage += size / 10F;
 
 			if (canUse) {
+				assert target != null;
 				EntityFireball fireball = new EntityFireball(world);
 				fireball.setPosition(target);
 				fireball.setOwner(entity);
@@ -113,11 +114,11 @@ public class AbilityFireball extends Ability {
 				fireball.setAbility(this);
 				fireball.setFireTime(size / 5);
 				fireball.setXp(SKILLS_CONFIG.fireballHit);
-
-
-				data.addStatusControl(THROW_FIREBALL);
 				if (!world.isRemote)
 					world.spawnEntity(fireball);
+
+				data.addStatusControl(THROW_FIREBALL);
+
 			}
 
 		}

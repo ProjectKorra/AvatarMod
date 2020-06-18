@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.bending.earth;
+package com.crowsofwar.avatar.common.bending.earth.tickhandlers;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.data.AbilityData;

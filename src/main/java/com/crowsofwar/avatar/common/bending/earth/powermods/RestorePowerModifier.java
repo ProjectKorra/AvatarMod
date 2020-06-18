@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.bending.earth;
+package com.crowsofwar.avatar.common.bending.earth.powermods;
 
 import com.crowsofwar.avatar.common.bending.BuffPowerModifier;
 import com.crowsofwar.avatar.common.data.AbilityData;
