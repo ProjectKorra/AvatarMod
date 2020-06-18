@@ -37,7 +37,7 @@ public class AiLightningSpear extends BendingAi {
 		data.chi().setTotalChi(10);
 		data.chi().setAvailableChi(10);
 		execAbility();
-		data.getMiscData().setAbilityCooldown(100);
+		data.getMiscData().setAbilityCooldown(ability.getName(), 100);
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class AiLightningSpear extends BendingAi {
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSq(target) > 4 * 4
-				&& bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
+				&& bender.getData().getMiscData().getAbilityCooldown(ability.getName()) == 0 && entity.getRNG().nextBoolean();
 	}
 
 	@Override

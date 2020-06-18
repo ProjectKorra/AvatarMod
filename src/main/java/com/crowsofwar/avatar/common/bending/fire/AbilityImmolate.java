@@ -20,7 +20,6 @@ import net.minecraft.world.World;
 
 import java.util.Objects;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_PURIFY_COOLDOWN;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.PURIFY_COOLDOWN_HANDLER;
@@ -57,7 +56,6 @@ public class AbilityImmolate extends Ability {
 		}
 
 		if (data.hasTickHandler(PURIFY_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
-			MSG_PURIFY_COOLDOWN.send(entity);
 		}
 
 		if (bender.consumeChi(chi) && !data.hasTickHandler(PURIFY_COOLDOWN_HANDLER)) {

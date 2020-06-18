@@ -29,7 +29,7 @@ public class AiCloudBall extends BendingAi {
 	protected void startExec() {
 		BendingData data = bender.getData();
 		execAbility();
-		data.getMiscData().setAbilityCooldown(80);
+		data.getMiscData().setAbilityCooldown(ability.getName(),80);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class AiCloudBall extends BendingAi {
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSq(target) > 3 * 3
-				&& bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
+				&& bender.getData().getMiscData().getAbilityCooldown(ability.getName()) == 0 && entity.getRNG().nextBoolean();
 	}
 
 	@Override

@@ -13,7 +13,6 @@ import net.minecraft.potion.PotionEffect;
 
 import java.util.Objects;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_SLIPSTREAM_COOLDOWN;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.SLIPSTREAM_COOLDOWN_HANDLER;
@@ -48,7 +47,7 @@ public class AbilitySlipstream extends Ability {
 		}
 
 		if (data.hasTickHandler(SLIPSTREAM_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
-			MSG_SLIPSTREAM_COOLDOWN.send(entity);
+
 		}
 
 		if (bender.consumeChi(chi) && !data.hasTickHandler(SLIPSTREAM_COOLDOWN_HANDLER)) {
@@ -81,6 +80,30 @@ public class AbilitySlipstream extends Ability {
 		}
 		super.execute(ctx);
 
+	}
+
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+
+		int coolDown = 140;
+		if (ctx.getLevel() == 1) {
+			coolDown = 120;
+		}
+		if (ctx.getLevel() == 2) {
+			coolDown = 100;
+		}
+		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			coolDown = 110;
+		}
+		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			coolDown = 90;
+		}
+
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+			coolDown = 0;
+		}
+		return coolDown;
 	}
 
 	@Override

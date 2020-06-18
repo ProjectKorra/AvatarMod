@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.common.data;
 
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -51,29 +50,30 @@ public class MiscData {
 	public void toBytes(ByteBuf buf) {
 		buf.writeFloat(fallAbsorption);
 		buf.writeInt(timeInAir);
+		buf.writeBoolean(wallJumping);
+		buf.writeInt(petSummonCooldown);
+		buf.writeBoolean(bisonFollowMode);
+		buf.writeBoolean(canUseAbilities);
 		buf.writeInt(abilityCooldowns.size());
 		abilityCooldowns.keySet().iterator().forEachRemaining(ability -> {
 			buf.writeInt(ability.length());
 			new PacketBuffer(buf).writeString(ability);
 			buf.writeInt(abilityCooldowns.get(ability));
 		});
-		buf.writeBoolean(wallJumping);
-		buf.writeInt(petSummonCooldown);
-		buf.writeBoolean(bisonFollowMode);
-		buf.writeBoolean(canUseAbilities);
 	}
 
 	public void fromBytes(ByteBuf buf) {
 		fallAbsorption = buf.readFloat();
 		timeInAir = buf.readInt();
-		for (int i = 0; i < buf.readInt(); i++) {
-			int length = buf.readInt();
-			abilityCooldowns.replace(new PacketBuffer(buf).readString(length), buf.readInt());
-		}
 		wallJumping = buf.readBoolean();
 		petSummonCooldown = buf.readInt();
 		bisonFollowMode = buf.readBoolean();
 		canUseAbilities = buf.readBoolean();
+		int size = buf.readInt();
+		for (int i = 0; i < size; i++) {
+			int length = buf.readInt();
+			abilityCooldowns.replace(new PacketBuffer(buf).readString(length), buf.readInt());
+		}
 	}
 
 	public void readFromNbt(NBTTagCompound nbt) {

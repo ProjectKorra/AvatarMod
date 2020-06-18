@@ -94,7 +94,7 @@ public class AiFlamethrower extends BendingAi {
 	protected void startExec() {
 		timeExecuting = 0;
 		execAbility();
-		bender.getData().getMiscData().setAbilityCooldown(200);
+		bender.getData().getMiscData().setAbilityCooldown(ability.getName(),200);
 	}
 
 }

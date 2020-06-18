@@ -17,7 +17,7 @@ public class AiInfernoPunch extends BendingAiMelee {
 	@Override
 	protected void startExec() {
 		super.startExec();
-		bender.getData().getMiscData().setAbilityCooldown(80);
+		bender.getData().getMiscData().setAbilityCooldown(ability.getName(),80);
 	}
 
 

@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_CLEANSE_COOLDOWN;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.CLEANSE_COOLDOWN_HANDLER;
@@ -122,7 +121,6 @@ public class AbilityCleanse extends Ability {
 			bender.sendMessage("avatar.cleanseFail");
 		}
 		if (data.hasTickHandler(CLEANSE_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
-			MSG_CLEANSE_COOLDOWN.send(entity);
 		}
 
 	}

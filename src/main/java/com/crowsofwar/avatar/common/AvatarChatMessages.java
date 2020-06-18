@@ -93,9 +93,6 @@ public class AvatarChatMessages {
 
 	public static final FormattedMessage MSG_AIR_STAFF_COOLDOWN = newChatMessage(CFG, "avatar.staffCooldown");
 
-	public static final FormattedMessage MSG_ABILITY_COOLDOWN = newChatMessage(CFG, "avatar.abilityCooldown");
-
-
 	public static final FormattedMessage MSG_SKATING_BENDING_DISABLED = newChatMessage(CFG,
 			"avatar.skatingBendingDisabled");
 

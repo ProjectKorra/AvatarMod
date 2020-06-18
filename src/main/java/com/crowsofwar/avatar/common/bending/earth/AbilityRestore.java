@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_RESTORE_COOLDOWN;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.RESTORE_COOLDOWN_HANDLER;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.RESTORE_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
@@ -48,7 +47,7 @@ public class AbilityRestore extends Ability {
 		}
 
 		if (data.hasTickHandler(RESTORE_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
-			MSG_RESTORE_COOLDOWN.send(entity);
+
 		}
 
 		if (bender.consumeChi(chi) && !data.hasTickHandler(RESTORE_COOLDOWN_HANDLER)) {

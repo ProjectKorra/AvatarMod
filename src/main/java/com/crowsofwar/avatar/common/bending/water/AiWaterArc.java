@@ -73,7 +73,7 @@ public class AiWaterArc extends BendingAi {
 			data.chi().setTotalChi(10);
 			data.chi().setAvailableChi(10);
 			execAbility();
-			data.getMiscData().setAbilityCooldown(80);
+			data.getMiscData().setAbilityCooldown(ability.getName(), 80);
 		}
 
 		if (timeExecuting >= 80) {
@@ -91,7 +91,7 @@ public class AiWaterArc extends BendingAi {
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSq(target) > 4 * 4
-				&& bender.getData().getMiscData().getAbilityCooldown() == 0;
+				&& bender.getData().getMiscData().getAbilityCooldown(ability.getName()) == 0;
 	}
 
 	@Override
