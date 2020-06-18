@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.data;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -132,22 +133,22 @@ public class MiscData {
 		this.timeInAir = time;
 	}
 
-	public int getAbilityCooldown() {
-		//return abilityCooldown;
-		return 0;
+	public int getAbilityCooldown(String ability) {
+		return abilityCooldowns.getOrDefault(ability, 0);
 	}
 
-	public void setAbilityCooldown(int cooldown) {
+	public void setAbilityCooldown(String ability, int cooldown) {
 		if (cooldown < 0) cooldown = 0;
-		//	this.abilityCooldown = cooldown;
+		if (abilityCooldowns.containsKey(ability))
+			abilityCooldowns.replace(ability, cooldown);
+		else abilityCooldowns.put(ability, cooldown);
 		save.run();
 	}
 
 	public void decrementCooldown() {
-		//	if (abilityCooldown > 0) {
-		//		abilityCooldown--;
-		//		save.run();
-		//	}
+		for (String ability : abilityCooldowns.keySet()) {
+			setAbilityCooldown(ability, getAbilityCooldown(ability) - 1);
+		}
 	}
 
 	public boolean isWallJumping() {

@@ -208,7 +208,7 @@ public abstract class Bender {
 			if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
 				double powerRating = calcPowerRating(ability.getBendingId());
 
-				if (data.getMiscData().getAbilityCooldown() == 0) {
+				if (data.getMiscData().getAbilityCooldown(ability.getName()) == 0) {
 
 					if (data.getMiscData().getCanUseAbilities()) {
 
@@ -216,7 +216,7 @@ public abstract class Bender {
 								entity, powerRating, switchPath);
 
 						ability.execute(abilityCtx);
-						data.getMiscData().setAbilityCooldown(ability.getCooldown(abilityCtx));
+						data.getMiscData().setAbilityCooldown(ability.getName(), ability.getCooldown(abilityCtx));
 
 					} else {
 						// TODO make bending disabled available for multiple things
@@ -224,8 +224,9 @@ public abstract class Bender {
 					}
 
 				} else {
-					QueuedAbilityExecutionHandler.queueAbilityExecution(entity, data, ability,
-							raytrace, powerRating, switchPath);
+					AvatarChatMessages.MSG_ABILITY_COOLDOWN.send(getEntity());
+				//	QueuedAbilityExecutionHandler.queueAbilityExecution(entity, data, ability,
+				//			raytrace, powerRating, switchPath);
 				}
 			} else {
 				sendMessage("avatar.abilityLocked");
