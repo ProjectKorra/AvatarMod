@@ -19,10 +19,8 @@ package com.crowsofwar.avatar.common.data;
 import com.crowsofwar.avatar.common.data.ctx.NoBenderInfo;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 
 /**
  * @author CrowsOfWar
@@ -30,7 +28,6 @@ import java.util.HashMap;
 public class MiscData {
 
 	private final Runnable save;
-	private final HashMap<String, Integer> abilityCooldowns;
 	private float fallAbsorption;
 	private int timeInAir;
 	private boolean wallJumping;
@@ -44,7 +41,6 @@ public class MiscData {
 		this.bisonFollowMode = true;
 		this.canUseAbilities = true;
 		this.redirectionSource = new NoBenderInfo();
-		this.abilityCooldowns = new HashMap<>();
 	}
 
 	public void toBytes(ByteBuf buf) {
@@ -54,12 +50,6 @@ public class MiscData {
 		buf.writeInt(petSummonCooldown);
 		buf.writeBoolean(bisonFollowMode);
 		buf.writeBoolean(canUseAbilities);
-		buf.writeInt(abilityCooldowns.size());
-		abilityCooldowns.keySet().iterator().forEachRemaining(ability -> {
-			buf.writeInt(ability.length());
-			new PacketBuffer(buf).writeString(ability);
-			buf.writeInt(abilityCooldowns.get(ability));
-		});
 	}
 
 	public void fromBytes(ByteBuf buf) {
@@ -69,21 +59,12 @@ public class MiscData {
 		petSummonCooldown = buf.readInt();
 		bisonFollowMode = buf.readBoolean();
 		canUseAbilities = buf.readBoolean();
-		int size = buf.readInt();
-		for (int i = 0; i < size; i++) {
-			int length = buf.readInt();
-			abilityCooldowns.replace(new PacketBuffer(buf).readString(length), buf.readInt());
-		}
+		save.run();
 	}
 
 	public void readFromNbt(NBTTagCompound nbt) {
 		fallAbsorption = nbt.getFloat("FallAbsorption");
 		timeInAir = nbt.getInteger("TimeInAir");
-		for (int i = 0; i < nbt.getInteger("AbilityCooldownSize"); i++) {
-			String[] abilities = abilityCooldowns.keySet().toArray(new String[nbt.getInteger("AbilityCooldownSize")]);
-			abilityCooldowns.replace(nbt.getString("Ability " + abilities[i]),
-					nbt.getInteger("Cooldown " + abilities[i]));
-		}
 		wallJumping = nbt.getBoolean("WallJumping");
 		petSummonCooldown = nbt.getInteger("PetSummonCooldown");
 		bisonFollowMode = nbt.getBoolean("BisonFollowMode");
@@ -95,21 +76,18 @@ public class MiscData {
 			canUseAbilities = true;
 		}
 		redirectionSource = BenderInfo.readFromNbt(nbt);
+		save.run();
 	}
 
 	public void writeToNbt(NBTTagCompound nbt) {
 		nbt.setFloat("FallAbsorption", fallAbsorption);
 		nbt.setInteger("TimeInAir", timeInAir);
-		nbt.setInteger("AbilityCooldownSize", abilityCooldowns.size());
-		abilityCooldowns.keySet().iterator().forEachRemaining(ability -> {
-			nbt.setString("Ability " + ability, ability);
-			nbt.setInteger("Cooldown " + ability, abilityCooldowns.get(ability));
-		});
 		nbt.setBoolean("WallJumping", wallJumping);
 		nbt.setInteger("PetSummonCooldown", petSummonCooldown);
 		nbt.setBoolean("BisonFollowMode", bisonFollowMode);
 		nbt.setBoolean("CanUseAbilitiesA4.6", canUseAbilities);
 		redirectionSource.writeToNbt(nbt);
+		save.run();
 	}
 
 	public float getFallAbsorption() {
@@ -132,24 +110,6 @@ public class MiscData {
 
 	public void setTimeInAir(int time) {
 		this.timeInAir = time;
-	}
-
-	public int getAbilityCooldown(String ability) {
-		return abilityCooldowns.getOrDefault(ability, 0);
-	}
-
-	public void setAbilityCooldown(String ability, int cooldown) {
-		if (cooldown < 0) cooldown = 0;
-		if (abilityCooldowns.containsKey(ability))
-			abilityCooldowns.replace(ability, cooldown);
-		else abilityCooldowns.put(ability, cooldown);
-		save.run();
-	}
-
-	public void decrementCooldown() {
-		for (String ability : abilityCooldowns.keySet()) {
-			setAbilityCooldown(ability, getAbilityCooldown(ability) - 1);
-		}
 	}
 
 	public boolean isWallJumping() {

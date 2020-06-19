@@ -17,12 +17,14 @@
 
 package com.crowsofwar.avatar.common.data;
 
+import akka.japi.Pair;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -43,6 +45,7 @@ public class AbilityData {
 	private float lastXp;
 	private float xp;
 	private final boolean switchPath;
+	int abilityCooldown;
 	/**
 	 * The current level. -1 for locked
 	 * <p>
@@ -62,6 +65,7 @@ public class AbilityData {
 		this.level = -1;
 		this.path = AbilityTreePath.MAIN;
 		this.switchPath = false;
+		this.abilityCooldown = 0;
 	}
 
 	public AbilityData(BendingData data, String abilityName, boolean switchPath) {
@@ -71,6 +75,7 @@ public class AbilityData {
 		this.level = -1;
 		this.path = AbilityTreePath.MAIN;
 		this.switchPath = switchPath;
+		this.abilityCooldown = 0;
 	}
 
 	/**
@@ -93,6 +98,18 @@ public class AbilityData {
 
 	public static AbilityData get(World world, String playerName, String abilityName) {
 		return BendingData.get(world, playerName).getAbilityData(abilityName);
+	}
+
+	public void setAbilityCooldown(int cooldown) {
+		abilityCooldown = cooldown;
+	}
+
+	public int getAbilityCooldown() {
+		return abilityCooldown;
+	}
+
+	public void decrementCooldown() {
+		abilityCooldown--;
 	}
 
 	@Nullable
@@ -333,12 +350,14 @@ public class AbilityData {
 		buf.writeFloat(xp);
 		buf.writeInt(level);
 		buf.writeInt(path.id());
+		buf.writeInt(abilityCooldown);
 	}
 
 	private void fromBytes(ByteBuf buf) {
 		xp = buf.readFloat();
 		level = buf.readInt();
 		path = AbilityTreePath.get(buf.readInt());
+		abilityCooldown = buf.readInt();
 	}
 
 	/**

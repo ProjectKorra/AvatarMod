@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarChatMessages;
+import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
@@ -42,6 +43,7 @@ import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -204,15 +206,14 @@ public abstract class Bender {
 		if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
 			double powerRating = calcPowerRating(ability.getBendingId());
 
-			System.out.println(data.getMiscData().getAbilityCooldown(ability.getName()));
-			if (data.getMiscData().getAbilityCooldown(ability.getName()) == 0) {
+			if (aD.getAbilityCooldown() == 0) {
 				if (data.getMiscData().getCanUseAbilities()) {
 
 					AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
 							entity, powerRating, switchPath);
 
 					ability.execute(abilityCtx);
-					data.getMiscData().setAbilityCooldown(ability.getName(), ability.getCooldown(abilityCtx));
+					aD.setAbilityCooldown(ability.getCooldown(abilityCtx));
 				} else {
 					// TODO make bending disabled available for multiple things
 					AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(getEntity());
@@ -251,15 +252,6 @@ public abstract class Bender {
 		return false;
 	}
 
-	//Called for npc benders in order to properly render the particle system without packets
-	public void onRenderUpdate() {
-		BendingData data = getData();
-		World world = getWorld();
-		EntityLivingBase entity = getEntity();
-
-		data.getMiscData().decrementCooldown();
-
-	}
 
 	/**
 	 * Called every tick; updates things like chi.
@@ -270,7 +262,11 @@ public abstract class Bender {
 		World world = getWorld();
 		EntityLivingBase entity = getEntity();
 
-		data.getMiscData().decrementCooldown();
+		List<Ability> abilities = Abilities.all().stream().filter(ability -> AbilityData.get(entity, ability.getName()).getAbilityCooldown() > 0).collect(Collectors.toList());
+		for (Ability ability : abilities) {
+			AbilityData aD = AbilityData.get(entity, ability.getName());
+			aD.decrementCooldown();
+		}
 
 		BendingContext ctx = new BendingContext(data, entity, this, new Raytrace.Result());
 

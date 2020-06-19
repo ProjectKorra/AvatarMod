@@ -75,7 +75,7 @@ public class AiFlamethrower extends BendingAi {
 			bender.getData().removeStatusControl(START_FLAMETHROW);
 			bender.getData().removeTickHandler(FLAMETHROWER);
 
-
+			bender.getData().getAbilityData(ability).setAbilityCooldown(80);
 			return false;
 		}
 
@@ -94,7 +94,6 @@ public class AiFlamethrower extends BendingAi {
 	protected void startExec() {
 		timeExecuting = 0;
 		execAbility();
-		bender.getData().getMiscData().setAbilityCooldown(ability.getName(),200);
 	}
 
 }
