@@ -336,6 +336,7 @@ public class AbilityData {
 		lastXp = nbt.getFloat("lastXp");
 		level = nbt.getInteger("Level");
 		path = AbilityTreePath.get(nbt.getInteger("Path"));
+		abilityCooldown = nbt.getInteger("AbilityCooldown");
 	}
 
 	public void writeToNbt(NBTTagCompound nbt) {
@@ -343,6 +344,7 @@ public class AbilityData {
 		nbt.setFloat("LastXp", lastXp);
 		nbt.setInteger("Level", level);
 		nbt.setInteger("Path", path.id());
+		nbt.setInteger("AbilityCooldown", abilityCooldown);
 	}
 
 	public void toBytes(ByteBuf buf) {
