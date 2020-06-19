@@ -25,6 +25,8 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.DataCategory;
 import com.crowsofwar.gorecore.GoreCore;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.SortedSet;
@@ -65,8 +67,10 @@ public class PacketCPlayerData extends AvatarPacket<PacketCPlayerData> {
 	@Override
 	public void avatarFromBytes(ByteBuf buf) {
 		playerId = readUUID(buf);
-		if (GoreCore.proxy.getClientSidePlayer() != null) {
-			AvatarPlayerData playerData = AvatarPlayerData.fetcher().fetch(GoreCore.proxy.getClientSidePlayer().world, playerId);
+		EntityPlayerSP clientP = FMLClientHandler.instance().getClientPlayerEntity();
+		if (GoreCore.proxy.getClientSidePlayer() != null || clientP != null) {
+			AvatarPlayerData playerData = AvatarPlayerData.fetcher().fetch(GoreCore.proxy.getClientSidePlayer() == null ?
+			clientP.world : GoreCore.proxy.getClientSidePlayer().world, playerId);
 			if (playerData != null) {
 				final BendingData data = playerData.getData();
 
