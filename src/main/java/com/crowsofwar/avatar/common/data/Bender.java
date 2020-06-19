@@ -204,6 +204,7 @@ public abstract class Bender {
 		if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
 			double powerRating = calcPowerRating(ability.getBendingId());
 
+			System.out.println(data.getMiscData().getAbilityCooldown(ability.getName()));
 			if (data.getMiscData().getAbilityCooldown(ability.getName()) == 0) {
 				if (data.getMiscData().getCanUseAbilities()) {
 

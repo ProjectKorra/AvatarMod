@@ -28,6 +28,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -39,7 +41,7 @@ public class WallJumpEvents {
 		MiscData miscData = data.getMiscData();
 		Bender bender = Bender.get(player);
 	//	GameSettings settings = Minecraft.getMinecraft().gameSettings;
-		if (player == GoreCore.proxy.getClientSidePlayer() && bender.getWallJumpManager()
+		if ((player == GoreCore.proxy.getClientSidePlayer() || player == FMLClientHandler.instance().getClientPlayerEntity())&& bender.getWallJumpManager()
 				.canWallJump()) {
 			if (AvatarControl.CONTROL_JUMP.isPressed()) {
 				AvatarMod.network.sendToServer(new PacketSWallJump());
