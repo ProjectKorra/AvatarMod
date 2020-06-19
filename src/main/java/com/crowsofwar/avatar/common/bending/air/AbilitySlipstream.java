@@ -15,7 +15,6 @@ import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.SLIPSTREAM_COOLDOWN_HANDLER;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.SLIPSTREAM_WALK_HANDLER;
 
 public class AbilitySlipstream extends Ability {
@@ -46,11 +45,7 @@ public class AbilitySlipstream extends Ability {
 			chi = STATS_CONFIG.chiBuffLvl4 * 1.5F;
 		}
 
-		if (data.hasTickHandler(SLIPSTREAM_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
-
-		}
-
-		if (bender.consumeChi(chi) && !data.hasTickHandler(SLIPSTREAM_COOLDOWN_HANDLER)) {
+		if (bender.consumeChi(chi)) {
 			float xp = SKILLS_CONFIG.buffUsed;
 
 			// 4s base + 1s per level
@@ -76,7 +71,6 @@ public class AbilitySlipstream extends Ability {
 			SlipstreamPowerModifier modifier = new SlipstreamPowerModifier();
 			modifier.setTicks(duration);
 			Objects.requireNonNull(data.getPowerRatingManager(getBendingId())).addModifier(modifier, ctx);
-			data.addTickHandler(SLIPSTREAM_COOLDOWN_HANDLER);
 		}
 		super.execute(ctx);
 

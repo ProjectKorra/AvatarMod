@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.client.gui.RenderElementHandler;
 import com.crowsofwar.avatar.common.bending.air.tickhandlers.*;
-import com.crowsofwar.avatar.common.bending.earth.tickhandlers.RestoreCooldownHandler;
 import com.crowsofwar.avatar.common.bending.earth.tickhandlers.RestoreParticleHandler;
 import com.crowsofwar.avatar.common.bending.fire.*;
 import com.crowsofwar.avatar.common.bending.fire.tickhandlers.*;

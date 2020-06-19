@@ -11,10 +11,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
-import static com.crowsofwar.avatar.common.data.TickHandlerController.RESTORE_COOLDOWN_HANDLER;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.RESTORE_PARTICLE_SPAWNER;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.RESTORE_PARTICLE_SPAWNER;
 
 public class AbilityRestore extends Ability {
 	public AbilityRestore() {
@@ -46,11 +45,7 @@ public class AbilityRestore extends Ability {
 			chi = STATS_CONFIG.chiBuffLvl4;
 		}
 
-		if (data.hasTickHandler(RESTORE_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
-
-		}
-
-		if (bender.consumeChi(chi) && !data.hasTickHandler(RESTORE_COOLDOWN_HANDLER)) {
+		if (bender.consumeChi(chi)) {
 
 			abilityData.addXp(SKILLS_CONFIG.buffUsed);
 
@@ -89,7 +84,6 @@ public class AbilityRestore extends Ability {
 			//noinspection ConstantConditions
 			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
 			data.addTickHandler(RESTORE_PARTICLE_SPAWNER);
-			data.addTickHandler(RESTORE_COOLDOWN_HANDLER);
 
 		}
 	}
@@ -97,6 +91,30 @@ public class AbilityRestore extends Ability {
 	@Override
 	public int getBaseTier() {
 		return 5;
+	}
+
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+		int coolDown = 160;
+
+		if (ctx.getLevel() == 1) {
+			coolDown = 150;
+		}
+		if (ctx.getLevel() == 2) {
+			coolDown = 140;
+		}
+		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			coolDown = 130;
+		}
+		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			coolDown = 140;
+		}
+
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+			coolDown = 0;
+		}
+		return coolDown;
 	}
 }
 
