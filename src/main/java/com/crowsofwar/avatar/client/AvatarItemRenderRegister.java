@@ -65,7 +65,7 @@ public class AvatarItemRenderRegister {
 
 		register(AvatarItems.itemBisonWhistle);
 		register(AvatarItems.airbenderStaff);
-		register(ItemScroll.getItemFromBlock(blockCloud));
+		register(Item.getItemFromBlock(blockCloud));
 
 		for (int i = 0; i <= 3; i++) {
 			register(AvatarItems.itemBisonArmor, i);
