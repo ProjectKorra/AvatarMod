@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
@@ -99,19 +100,21 @@ public interface IOffensiveEntity {
 							((EntityLivingBase) hit).hurtTime = 1;
 						data.addXp(getXpPerHit());
 
-					} else if (hit instanceof EntityLivingBase && ds) {
+					} else if (ds) {
 						BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
 						data.addXp(getXpPerHit());
 						hit.setFire(getFireTime());
 						if (setVelocity())
 							AvatarUtils.setVelocity(hit, vel);
 						else hit.addVelocity(vel.x, vel.y, vel.z);
-						if (multiHit())
+						if (multiHit() && hit instanceof EntityLivingBase)
 							((EntityLivingBase) hit).hurtTime = 1;
 						AvatarUtils.afterVelocityAdded(hit);
 					}
 				}
 			} else if (attacker.canCollideWith(hit)) {
+				if (hit instanceof EntityItem)
+					vel = vel.scale(0.05);
 				BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
 				data.addXp(getXpPerHit());
 				hit.setFire(getFireTime());

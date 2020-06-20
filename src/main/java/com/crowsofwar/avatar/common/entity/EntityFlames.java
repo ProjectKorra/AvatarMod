@@ -29,7 +29,11 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -70,6 +74,17 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity {
 		return new Firebending();
 	}
 
+	@Override
+	public void onCollideWithEntity(Entity entity) {
+		super.onCollideWithEntity(entity);
+		if (entity instanceof EntityItem) {
+			ItemStack stack = ((EntityItem) entity).getItem();
+			ItemStack smelted = FurnaceRecipes.instance().getSmeltingResult(stack);
+			EntityItem item = new EntityItem(world, posX, posY, posZ, smelted);
+			if (!world.isRemote)
+				world.spawnEntity(item);
+		}
+	}
 
 	@Override
 	public boolean onCollideWithSolid() {
