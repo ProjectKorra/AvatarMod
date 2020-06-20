@@ -195,14 +195,13 @@ public abstract class Bender {
 	 * @see #executeAbility(Ability, Raytrace.Result, boolean) (Ability)
 	 */
 	public void executeAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath) {
-		//if (!getWorld().isRemote) {
-		// Do any effects besides particles server-side.
 
 		BendingData data = getData();
 		EntityLivingBase entity = getEntity();
 		AbilityData aD = AbilityData.get(getEntity(), ability.getName());
 		int level = aD.getLevel();
 		AbilityData.AbilityTreePath path = aD.getPath();
+		System.out.println("Client Side: " + getWorld().isRemote + ", Cooldown: " + aD.getAbilityCooldown());
 		if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
 			double powerRating = calcPowerRating(ability.getBendingId());
 
@@ -266,6 +265,7 @@ public abstract class Bender {
 		for (Ability ability : abilities) {
 			AbilityData aD = AbilityData.get(entity, ability.getName());
 			aD.decrementCooldown();
+			data.save(DataCategory.ABILITY_DATA);
 		}
 
 		BendingContext ctx = new BendingContext(data, entity, this, new Raytrace.Result());
@@ -345,6 +345,8 @@ public abstract class Bender {
 		if (entity instanceof EntityPlayer && !world.isRemote && entity.ticksExisted % 40 == 0) {
 			syncPowerRating();
 		}
+
+		data.saveAll();
 
 	}
 
