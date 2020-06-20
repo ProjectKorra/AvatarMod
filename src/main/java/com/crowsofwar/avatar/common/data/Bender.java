@@ -201,7 +201,6 @@ public abstract class Bender {
 		AbilityData aD = AbilityData.get(getEntity(), ability.getName());
 		int level = aD.getLevel();
 		AbilityData.AbilityTreePath path = aD.getPath();
-		System.out.println("Client Side: " + getWorld().isRemote + ", Cooldown: " + aD.getAbilityCooldown());
 		if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
 			double powerRating = calcPowerRating(ability.getBendingId());
 
