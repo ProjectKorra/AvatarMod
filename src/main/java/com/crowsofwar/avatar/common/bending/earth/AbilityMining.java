@@ -291,4 +291,5 @@ public class AbilityMining extends Ability {
 		return block instanceof BlockOre || block instanceof BlockRedstoneOre;
 	}
 
+
 }

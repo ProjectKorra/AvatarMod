@@ -135,6 +135,16 @@ public class AbilityFireball extends Ability {
 		return 3;
 	}
 
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public boolean isOffensive() {
+		return true;
+	}
+
 	public static class FireballOrbitController extends FireballBehavior.PlayerControlled {
 
 		@Override
@@ -150,7 +160,7 @@ public class AbilityFireball extends Ability {
 			List<EntityFireball> fireballs = entity.world.getEntitiesWithinAABB(EntityFireball.class,
 					owner.getEntityBoundingBox().grow(5, 5, 5));
 			fireballs = fireballs.stream().filter(entityFireball -> entityFireball.getBehavior() instanceof FireballBehavior.PlayerControlled
-			&& entityFireball.getOwner() == entity.getOwner()).collect(Collectors.toList());
+					&& entityFireball.getOwner() == entity.getOwner()).collect(Collectors.toList());
 			Vec3d motion = Objects.requireNonNull(target).minus(Vector.getEntityPos(entity)).toMinecraft();
 
 			if (!fireballs.isEmpty() && fireballs.size() > 1 && fireballs.contains(entity)) {
