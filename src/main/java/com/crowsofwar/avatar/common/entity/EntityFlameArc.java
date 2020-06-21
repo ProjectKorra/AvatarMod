@@ -159,24 +159,25 @@ public class EntityFlameArc extends EntityArc<EntityFlameArc.FlameControlPoint> 
 
 						if (targetPos != circlePos)
 							vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.05).add(vel);
-						ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(circlePos).spawnEntity(this).vel(vel)
+						ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(this).vel(vel)
 								.clr(0, 102, 255, 175).scale(0.675F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
-								.time(8 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).spawn(world);
+								.time(8 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).element(new Firebending()).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(this).vel(vel)
+								.clr(0, 102, 255, 175).scale(0.675F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
+								.time(8 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).element(new Firebending()).spawn(world);
+
 					}
 
 					//Particles along the line
 					for (int h = 0; h < 1; h++) {
 						pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
-						ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
+						ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
 								world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120).clr(0, 102, 255, 255)
-								.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).target(pos).collide(true).spawn(world);
-					}
-					//Dripping water particles
-					for (int h = 0; h < 2; h++) {
-						pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
-						ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 20,
-								world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 255)
-								.time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).target(pos).scale(0.625F).gravity(true).collide(true).spawn(world);
+								.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).target(pos).collide(true).element(new Firebending()).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
+								world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120).clr(0, 102, 255, 255)
+								.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).target(pos).collide(true).element(new Firebending()).spawn(world);
+
 					}
 				}
 			}

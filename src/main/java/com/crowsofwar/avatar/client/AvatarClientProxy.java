@@ -32,7 +32,6 @@ import com.crowsofwar.avatar.client.render.*;
 import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
-import com.crowsofwar.avatar.common.blocks.AvatarBlocks;
 import com.crowsofwar.avatar.common.blocks.tiles.TileBlockTemp;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
@@ -122,7 +121,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		ParticleAvatar.registerParticle(Type.SPHERE, ParticleSphere::new);
 		ParticleAvatar.registerParticle(Type.SUMMON, ParticleSummon::new);
 		ParticleAvatar.registerParticle(Type.VINE, ParticleVine::new);
-		ParticleAvatar.registerParticle(Type.WATER, ParticleWater::new);
+		ParticleAvatar.registerParticle(Type.CUBE, ParticleCube::new);
 
 		ParticleBehaviour.registerBehaviours();
 	}

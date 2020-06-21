@@ -29,7 +29,7 @@ import static net.minecraft.util.math.MathHelper.cos;
 import static net.minecraft.util.math.MathHelper.sin;
 
 //@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
-public class ParticleWater extends ParticleAvatar {
+public class ParticleCube extends ParticleAvatar {
 
 	private static final ResourceLocation WATER = new ResourceLocation("minecraft",
 			"textures/blocks/water_still.png");
@@ -43,7 +43,7 @@ public class ParticleWater extends ParticleAvatar {
 	 * @param y     The y-coordinate at which to create the particle.
 	 * @param z     The z-coordinate at which to create the particle.
 	 */
-	public ParticleWater(World world, double x, double y, double z) {
+	public ParticleCube(World world, double x, double y, double z) {
 		super(world, x, y, z);//, WATER);
 		this.setRBGColorF(1, 1, 1);
 		this.particleAlpha = 1F;

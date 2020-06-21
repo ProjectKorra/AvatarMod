@@ -1029,6 +1029,6 @@ public final class ParticleBuilder {
 		/**
 		 * 3D-rendered water cube particle. <p></p><b>Defaults:</b><br>Lifetime: 12-17 tick<br> Colour: blue
 		 */
-		public static final ResourceLocation WATER = new ResourceLocation(AvatarInfo.MOD_ID, "water");
+		public static final ResourceLocation CUBE = new ResourceLocation(AvatarInfo.MOD_ID, "cube");
 	}
 }
