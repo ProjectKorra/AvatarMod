@@ -54,8 +54,8 @@ public class RenderWaterArc extends RenderArc {
 		Vector direction = diff.normalize();
 		Vector spawnAt = offset.plus(direction.times(Math.random()));
 		Vector velocity = first.velocity();
-		arc.world.spawnParticle(EnumParticleTypes.WATER_SPLASH, spawnAt.x(), spawnAt.y(), spawnAt.z(),
-				velocity.x(), velocity.y(), velocity.z());
+	//	arc.world.spawnParticle(EnumParticleTypes.WATER_SPLASH, spawnAt.x(), spawnAt.y(), spawnAt.z(),
+	//			velocity.x(), velocity.y(), velocity.z());
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class RenderWaterArc extends RenderArc {
 						 float partialTicks) {
 
 		EntityWaterArc arc = (EntityWaterArc) entity;
-		renderArc(arc, partialTicks, 3f, 3 * arc.getSize());
+	//	renderArc(arc, partialTicks, 3f, 3 * arc.getSize());
 	}
 
 

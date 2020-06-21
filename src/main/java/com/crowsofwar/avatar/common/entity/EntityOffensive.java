@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockLiquid;
@@ -19,6 +20,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -36,7 +38,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 			.createKey(EntityOffensive.class, DataSerializers.VARINT);
 	private static final DataParameter<Float> SYNC_HEIGHT = EntityDataManager
 			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
-	private static final DataParameter<Float> SYNC_WIDTh = EntityDataManager
+	private static final DataParameter<Float> SYNC_WIDTH = EntityDataManager
 			.createKey(EntityOffensive.class, DataSerializers.FLOAT);
 	private static final DataParameter<OffensiveBehaviour> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityOffensive.class, OffensiveBehaviour.DATA_SERIALIZER);
@@ -110,7 +112,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 	}
 
 	public float getWidth() {
-		return dataManager.get(SYNC_WIDTh);
+		return dataManager.get(SYNC_WIDTH);
 	}
 
 	public float getAvgSize() {
@@ -121,12 +123,12 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	public void setEntitySize(float height, float width) {
 		dataManager.set(SYNC_HEIGHT, height);
-		dataManager.set(SYNC_WIDTh, width);
+		dataManager.set(SYNC_WIDTH, width);
 	}
 
 	public void setEntitySize(float size) {
 		dataManager.set(SYNC_HEIGHT, size);
-		dataManager.set(SYNC_WIDTh, size);
+		dataManager.set(SYNC_WIDTH, size);
 	}
 
 	public float getDamage() {
@@ -155,7 +157,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		super.entityInit();
 		dataManager.register(SYNC_DAMAGE, 1F);
 		dataManager.register(SYNC_LIFETIME, 20);
-		dataManager.register(SYNC_WIDTh, 1.0F);
+		dataManager.register(SYNC_WIDTH, 1.0F);
 		dataManager.register(SYNC_HEIGHT, 1.0F);
 		dataManager.register(SYNC_BEHAVIOR, new OffensiveBehaviour.Idle());
 	}
@@ -166,6 +168,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		setDamage(nbt.getFloat("Damage"));
 		setLifeTime(nbt.getInteger("Lifetime"));
 		setBehaviour((OffensiveBehaviour) Behavior.lookup(nbt.getInteger("Behaviour"), this));
+		setDynamicSpreadingCollision(nbt.getBoolean("Dynamic Collision"));
+		setXp(nbt.getFloat("XP"));
 	}
 
 	@Override
@@ -174,6 +178,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		nbt.setFloat("Damage", getDamage());
 		nbt.setInteger("Lifetime", getLifeTime());
 		nbt.setInteger("Behaviour", getBehaviour().getId());
+		nbt.setBoolean("Dynamic Collision", getDynamicSpreadingCollision());
+		nbt.setFloat("XP", getXpPerHit());
 	}
 
 	@Override
@@ -187,9 +193,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 		if (!targets.isEmpty()) {
 			for (Entity hit : targets) {
 				if (canCollideWith(hit) && this != hit) {
-					if (!world.isRemote) {
-						onCollideWithEntity(hit);
-					}
+					onCollideWithEntity(hit);
 				}
 			}
 		}
@@ -199,7 +203,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 			if (state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()) {
 				ticks++;
 			}
-			if (ticks > 1) {
+			if (ticks > 0 || onCollideWithSolid()) {
 				//Checks whether to dissipate first.
 				if (shouldDissipate())
 					Dissipate();
@@ -215,6 +219,39 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 				Dissipate();
 			else if (shouldExplode())
 				Explode();
+		}
+
+		for (double x = 0; x <= 1; x += 0.5) {
+			for (double z = 0; z <= 1; z += 0.5) {
+				for (double y = 0; y <= 1; y += 0.5) {
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+					BlockPos pos = new BlockPos(xPos + x * getExpandedHitboxWidth() / 2,
+							yPos + y * getExpandedHitboxHeight() / 2, zPos + z * getExpandedHitboxWidth() / 2);
+					pushLevers(pos);
+					pushTrapDoors(pos);
+					pushButtons(pos);
+					pushDoors(pos);
+					pushGates(pos);
+				}
+			}
+		}
+		for (double x = 0; x >= -1; x -= 0.5) {
+			for (double z = 0; z >= -1; z -= 0.5) {
+				for (double y = 0; y >= -1; y -= 0.5) {
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+					BlockPos pos = new BlockPos(xPos + x * getExpandedHitboxWidth() / 2,
+							yPos + y * getExpandedHitboxHeight() / 2, zPos + z * getExpandedHitboxWidth() / 2);
+					pushLevers(pos);
+					pushTrapDoors(pos);
+					pushButtons(pos);
+					pushDoors(pos);
+					pushGates(pos);
+				}
+			}
 		}
 
 		//Dynamic Collision code.
@@ -273,29 +310,44 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 			}
 			if (!list.isEmpty() && !onGround) {
 				for (AxisAlignedBB axisalignedbb : list) {
-					y = axisalignedbb.calculateYOffset(this.getEntityBoundingBox(), y);
+					Vec3d mid = AvatarUtils.getMiddleVec3d(axisalignedbb);
+					BlockPos pos = new BlockPos(mid.x, mid.y, mid.z);
+					IBlockState state = world.getBlockState(pos);
+					if (!noClip || state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()
+							&& state.isFullCube())
+						y = axisalignedbb.calculateYOffset(this.getEntityBoundingBox(), y);
 				}
 
-				//TODO: Makes this configurable. Ensures entities are killed when they hit the ground.
+				//TODO: Make this configurable. Ensures entities are killed when they hit the ground.
 
-				if (y < posY)
-					setDead();
+				if (y < posY && onGround)
+					if (shouldExplode())
+						Explode();
+					else Dissipate();
 
 				this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, y, 0.0D));
 
 				for (AxisAlignedBB axisalignedbb1 : list) {
-					x = axisalignedbb1.calculateXOffset(this.getEntityBoundingBox(), x);
+					Vec3d mid = AvatarUtils.getMiddleVec3d(axisalignedbb1);
+					BlockPos pos = new BlockPos(mid.x, mid.y, mid.z);
+					IBlockState state = world.getBlockState(pos);
+					if (!noClip || state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()
+							&& state.isFullCube())
+						x = axisalignedbb1.calculateXOffset(this.getEntityBoundingBox(), x);
 				}
 
 				this.setEntityBoundingBox(this.getEntityBoundingBox().offset(x, 0.0D, 0.0D));
 
 				for (AxisAlignedBB axisalignedbb2 : list) {
-					z = axisalignedbb2.calculateZOffset(this.getEntityBoundingBox(), z);
+					Vec3d mid = AvatarUtils.getMiddleVec3d(axisalignedbb2);
+					BlockPos pos = new BlockPos(mid.x, mid.y, mid.z);
+					IBlockState state = world.getBlockState(pos);
+					if (!noClip || state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()
+							&& state.isFullCube())
+						z = axisalignedbb2.calculateZOffset(this.getEntityBoundingBox(), z);
 				}
 
 				this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, 0.0D, z));
-
-				this.resetPositionToBB();
 			}
 
 			if (collidedWithSolid)
@@ -347,9 +399,9 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	@Override
 	public Vec3d getKnockback() {
-		double x = Math.min(getKnockbackMult().x * motionX, motionX * 2);
+		double x = getKnockbackMult().x * motionX;
 		double y = Math.min(0.5, (motionY + 0.3) * getKnockbackMult().y);
-		double z = Math.min(getKnockbackMult().z * motionZ, motionZ * 2);
+		double z = getKnockbackMult().z * motionZ;
 		return new Vec3d(x, y, z);
 	}
 
@@ -361,7 +413,40 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
 	@Override
 	public boolean onCollideWithSolid() {
-		return collided;
+		IBlockState state = world.getBlockState(getPosition());
+		boolean collision = !world.getCollisionBoxes(this, getExpandedHitbox()).isEmpty();
+		for (double x = 0; x <= 1; x += 0.5) {
+			for (double z = 0; z <= 1; z += 0.5) {
+				for (double y = 0; y <= 1; y += 0.5) {
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+					BlockPos pos = new BlockPos(xPos + x * getExpandedHitboxWidth() / 2,
+							yPos + y * getExpandedHitboxHeight() / 2, zPos + z * getExpandedHitboxWidth() / 2);
+					state = world.getBlockState(pos);
+					collision &= state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock() && state.isFullCube();
+					if (collision)
+						break;
+
+				}
+			}
+		}
+		for (double x = 0; x >= -1; x -= 0.5) {
+			for (double z = 0; z >= -1; z -= 0.5) {
+				for (double y = 0; y >= -1; y -= 0.5) {
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+					BlockPos pos = new BlockPos(xPos + x * getExpandedHitboxWidth() / 2,
+							yPos + y * getExpandedHitboxHeight() / 2, zPos + z * getExpandedHitboxWidth() / 2);
+					state = world.getBlockState(pos);
+					collision &= state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock() && state.isFullCube();
+					if (collision)
+						break;
+				}
+			}
+		}
+		return collided || collision;
 	}
 
 	public int getLifeTime() {

@@ -82,6 +82,8 @@ public class AbilityAirBubble extends Ability {
 			bubble.setHealth(health);
 			bubble.setMaxHealth(health);
 			bubble.setSize(size);
+			bubble.rotationYaw = entity.rotationYaw;
+			bubble.rotationPitch = entity.rotationPitch;
 			bubble.motionX = bubble.motionY = bubble.motionZ = 0;
 			bubble.setAllowHovering(ctx.isMasterLevel(SECOND));
 			bubble.setAbility(this);

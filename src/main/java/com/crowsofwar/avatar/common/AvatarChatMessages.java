@@ -93,15 +93,6 @@ public class AvatarChatMessages {
 
 	public static final FormattedMessage MSG_AIR_STAFF_COOLDOWN = newChatMessage(CFG, "avatar.staffCooldown");
 
-	public static final FormattedMessage MSG_SLIPSTREAM_COOLDOWN = newChatMessage(CFG, "avatar.slipstreamCooldown");
-
-	public static final FormattedMessage MSG_CLEANSE_COOLDOWN = newChatMessage(CFG, "avatar.cleanseCooldown");
-
-	public static final FormattedMessage MSG_PURIFY_COOLDOWN = newChatMessage(CFG, "avatar.purifyCooldown");
-
-	public static final FormattedMessage MSG_RESTORE_COOLDOWN = newChatMessage(CFG, "avatar.restoreCooldown");
-
-
 	public static final FormattedMessage MSG_SKATING_BENDING_DISABLED = newChatMessage(CFG,
 			"avatar.skatingBendingDisabled");
 

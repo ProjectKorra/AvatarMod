@@ -154,7 +154,7 @@ public class AirBurstHandler extends TickHandler {
 							i * 30), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(lookpos.toMinecraft()))
 							.collide(true).scale(abilityData.getXpModifier() * 0.5F * charge).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-							world.rand.nextGaussian() / 60).clr(0.8F, 0.8F, 0.8F).element(new Airbending()).spawn(world);
+							world.rand.nextGaussian() / 60).clr(1F, 1F, 1F, 0.2F).element(new Airbending()).spawn(world);
 				}
 			}
 			world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 0.25F * charge, 0.8F + world.rand.nextFloat() / 10);
@@ -207,7 +207,7 @@ public class AirBurstHandler extends TickHandler {
 
 			if (!data.hasStatusControl(RELEASE_AIR_BURST)) {
 
-				int particleController = abilityData.getLevel() > 0 ? 62 - (4 * abilityData.getLevel()) : 62;
+				int particleController = abilityData.getLevel() > 0 ? 50 - (4 * abilityData.getLevel()) : 50;
 				EntityShockwave shockwave = new EntityShockwave(world);
 				shockwave.setOwner(entity);
 				shockwave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity));
@@ -310,20 +310,20 @@ public class AirBurstHandler extends TickHandler {
 									zVel = z1 * entity.getParticleSpeed() * 0.375F;
 
 									ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
-											.clr(0.8F, 0.8F, 0.8F).time(12 + AvatarUtils.getRandomNumberInRange(0, 10) + (int) (3 * ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
-											.scale(0.225F + 0.5F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).element(entity.getElement())
+											.clr(0.95F, 0.95F, 0.95F, 0.075F).time(12 + AvatarUtils.getRandomNumberInRange(0, 10) + (int) (3 * ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
+											.scale(0.325F + 0.5F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).element(entity.getElement())
 											.spawn(world);
 
 								}
 							}
 
 						} //else {
-							for (double i = 0; i < ((EntityShockwave) entity).getRange() + ((EntityShockwave) entity).getParticleAmount(); i += 0.025) {
+							for (double i = 0; i < ((EntityShockwave) entity).getRange() + ((EntityShockwave) entity).getParticleAmount(); i += 0.02) {
 								Vec3d vel = new Vec3d(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian());
 								vel = vel.scale(0.275F * entity.getParticleSpeed());
 								ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(entity.posX, entity.posY, entity.posZ).vel(vel)
-										.clr(0.85F, 0.85F, 0.85F).time(12 + AvatarUtils.getRandomNumberInRange(0, 10)).collide(true)
-										.scale(0.275f + 0.575F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).shaded(true).
+										.clr(0.95F, 0.95F, 0.95F, 0.075F).time(12 + AvatarUtils.getRandomNumberInRange(0, 10)).collide(true)
+										.scale(0.4f + 0.575F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).
 										element(entity.getElement()).spawn(world);
 
 							}

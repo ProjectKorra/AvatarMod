@@ -17,13 +17,16 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.entity.data.FireballBehavior;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.util.Vector;
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
@@ -110,7 +113,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
 		}
 
-		//particles!
+		//Particles!
 		if (world.isRemote && getOwner() != null) {
 			for (double h = 0; h < width; h += 0.3) {
 				Random random = new Random();
@@ -127,6 +130,32 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
 						.scale(getSize() * 0.03125F).element(getElement()).spawnEntity(getOwner())
 						.spawn(world);
+			}
+			if (getBehavior() instanceof FireballBehavior.Thrown) {
+				for (int i = 0; i < 4; i++) {
+					Vec3d pos = Vector.getOrthogonalVector(getLookVec(), i * 90 + (ticksExisted % 360) * 10, getAvgSize() / 1.25F).toMinecraft();
+					Vec3d velocity;
+					Vec3d entityPos = AvatarEntityUtils.getMiddleOfEntity(this);
+
+					pos = pos.add(entityPos);
+					velocity = pos.subtract(entityPos).normalize();
+					velocity = velocity.scale(AvatarUtils.getSqrMagnitude(getVelocity()) / 400000);
+					double spawnX = pos.x;
+					double spawnY = pos.y;
+					double spawnZ = pos.z;
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 100 + velocity.x,
+							world.rand.nextGaussian() / 100 + velocity.y, world.rand.nextGaussian() / 60 + velocity.z)
+							.time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(1F, 10 / 255F, 5 / 255F, 0.85F)
+							.scale(getAvgSize()).element(getElement()).spawnEntity(getOwner())
+							.spawn(world);
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 100 + velocity.x,
+							world.rand.nextGaussian() / 100 + velocity.y, world.rand.nextGaussian() / 60 + velocity.z)
+							.time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr((235 + AvatarUtils.getRandomNumberInRange(0, 20)) / 255F,
+							(20 + AvatarUtils.getRandomNumberInRange(0, 60)) / 255F, 10 / 255F, 0.85F)
+							.scale(getAvgSize()).element(getElement()).spawnEntity(getOwner())
+							.spawn(world);
+
+				}
 			}
 
 		}

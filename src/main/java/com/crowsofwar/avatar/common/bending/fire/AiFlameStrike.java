@@ -102,7 +102,7 @@ public class AiFlameStrike extends BendingAi {
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSq(target) < 3 * 3
-				&& bender.getData().getMiscData().getAbilityCooldown() == 0;
+				&& bender.getData().getAbilityData(ability).getAbilityCooldown() == 0;
 	}
 
 	@Override

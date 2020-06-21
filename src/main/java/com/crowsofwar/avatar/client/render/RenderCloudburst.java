@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.client.render;
 import com.crowsofwar.avatar.common.entity.EntityCloudBall;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
@@ -47,14 +48,15 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 		size *= Math.sqrt(entity.getSize() / 30f);
 
 		enableBlend();
-
-		//   if (MinecraftForgeClient.getRenderPass() == 0) {
+		disableAlpha();
 		disableLighting();
 
+		blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
+		GlStateManager.color(0.85F, 0.85F, 0.85F, 0.4F);
 		renderCube(x, y, z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
 				size * 0.5F, //
-				ticks / 25F, ticks / 25f, ticks / 25F);
+				ticks / 15F, ticks / 15f, ticks / 15F);
 
 		int i = 15728880;
 		int j = i % 65536;
@@ -65,15 +67,17 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 		int light = Math.min(entity.world.getSkylightSubtracted(), 7);
 		disableLight(light);
 
+		blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+		GlStateManager.color(1, 1, 1, 0.3F);
 		pushMatrix();
 		renderCube(x, y, z, //
 				8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
 				size, //
 				rotation * .2f, rotation, rotation * -.4f);
+		disableBlend();
+		enableAlpha();
 		popMatrix();
 
-		//  }
-		disableBlend();
 
 	}
 	// @formatter:on

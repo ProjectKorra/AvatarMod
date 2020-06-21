@@ -1,7 +1,9 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -13,6 +15,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -183,14 +186,14 @@ public class EntityShockwave extends EntityOffensive {
 
 		this.motionX = this.motionY = this.motionZ = 0;
 
-		if ((this.ticksExisted * getSpeed()) > getRange()) {
+		if ((this.ticksExisted * getSpeed() * 0.5) > getRange()) {
 			this.setDead();
 		}
 		if (ticksExisted > 140) {
 			setDead();
 		}
 
-		if (world.isRemote) {
+		if (world.isRemote && getOwner() != null) {
 			if (shouldRenderNormal() && getParticle() != null) {
 				EnumParticleTypes particle = getParticle();
 				if (particle != null) {
@@ -200,7 +203,7 @@ public class EntityShockwave extends EntityOffensive {
 								//Even though the maths is technically wrong, you use sin if you want a shockwave, and cos if you want a sphere (for x).
 								double x2 = posX + (ticksExisted * getSpeed()) * Math.sin(angle);
 								double y2 = posY;
-								double z2 =posZ + (ticksExisted * getSpeed()) * Math.cos(angle);
+								double z2 = posZ + (ticksExisted * getSpeed()) * Math.cos(angle);
 								Vector speed = new Vector((ticksExisted * getSpeed()) * Math.sin(angle) * (getParticleSpeed() * 10),
 										getParticleSpeed() / 2, (ticksExisted * getSpeed()) * Math.cos(angle) * (getParticleSpeed() * 10));
 								world.spawnParticle(particle, x2, y2, z2, speed.x(), speed.y(), speed.z());
@@ -236,13 +239,62 @@ public class EntityShockwave extends EntityOffensive {
 	}
 
 	@Override
+	public boolean pushLevers(BlockPos pos) {
+		if (super.pushLevers(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+		return super.pushLevers(pos);
+	}
+
+	@Override
+	public boolean pushButtons(BlockPos pos) {
+		if (super.pushButtons(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+		return super.pushButtons(pos);
+
+	}
+
+	@Override
+	public boolean pushTrapDoors(BlockPos pos) {
+		if (super.pushTrapDoors(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+		return super.pushTrapDoors(pos);
+
+	}
+
+	@Override
+	public boolean pushDoors(BlockPos pos) {
+		if (super.pushGates(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+		return super.pushGates(pos);
+
+	}
+
+	@Override
+	public boolean pushGates(BlockPos pos) {
+		if (super.pushGates(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 4);
+		return super.pushGates(pos);
+
+	}
+
+	@Override
 	public double getExpandedHitboxWidth() {
-		return (ticksExisted * getSpeed());
+		return (ticksExisted * getSpeed() * 0.5);
 	}
 
 	@Override
 	public double getExpandedHitboxHeight() {
-		return (ticksExisted * getSpeed());
+		return (ticksExisted * getSpeed() * 0.5);
 	}
 
 	@Override
@@ -263,7 +315,7 @@ public class EntityShockwave extends EntityOffensive {
 
 	@Override
 	public Vec3d getKnockbackMult() {
-		double amount = getSphere() ? (ticksExisted * getSpeed()) * 12.5 : ticksExisted * 10 * getSpeed();
+		double amount = getSphere() ? (ticksExisted * getSpeed()) * 2.55 : ticksExisted * 3 * getSpeed();
 		return new Vec3d(amount * knockbackMult.x, amount * knockbackMult.y, amount * knockbackMult.z);
 	}
 

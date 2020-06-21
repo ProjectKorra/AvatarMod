@@ -116,44 +116,6 @@ public abstract class FireballBehavior extends OffensiveBehaviour {
 
 		@Override
 		public FireballBehavior onUpdate(EntityOffensive entity) {
-			/*EntityLivingBase owner = entity.getOwner();
-
-			if (owner == null || !(entity instanceof EntityFireball)) return this;
-
-			BendingData data = Objects.requireNonNull(Bender.get(owner)).getData();
-
-			Vector look = Vector.getLookRectangular(owner);
-			Vector target = Vector.getEyePos(owner).plus(look.times(2 + ((EntityFireball) entity).getSize() * 0.03125F));
-			List<EntityFireball> fireballs = entity.world.getEntitiesWithinAABB(EntityFireball.class,
-					owner.getEntityBoundingBox().grow(8, 8, 8));
-			Vec3d motion = Objects.requireNonNull(target).minus(Vector.getEntityPos(entity)).toMinecraft();
-
-			if (!fireballs.isEmpty() && fireballs.size() > 1) {
-				int angle = entity.getOwner().ticksExisted % 360;
-				angle *= 5;
-				angle += entity.ticksExisted % 360;
-				double radians = Math.toRadians(angle);
-				double x = 1.75 * Math.cos(radians);
-				double z = 1.75 * Math.sin(radians);
-				Vec3d pos = new Vec3d(x, 0, z);
-				pos = pos.add(owner.posX, owner.getEntityBoundingBox().minY + 1, owner.posZ);
-				motion = pos.subtract(entity.getPositionVector()).scale(0.75);
-			} else motion = motion.scale(0.75);
-			entity.setVelocity(motion);
-
-			data.addStatusControl(THROW_FIREBALL);
-
-			if (entity.getAbility() instanceof AbilityFireball) {
-				if (data.getAbilityData(new AbilityFireball().getName()).isMasterPath(AbilityTreePath.SECOND)) {
-					int size = ((EntityFireball) entity).getSize();
-					if (size < 60 && entity.ticksExisted % 4 == 0) {
-						((EntityFireball) entity).setSize(size + 1);
-						entity.setDamage(20 / 32F * (((EntityFireball) entity).getSize() * 0.03125F) * entity.getDamage());
-					}
-				}
-			}
-
-			ticks++;**/
 			return this;
 		}
 

@@ -8,6 +8,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
@@ -15,20 +16,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import scala.Int;
 
 import javax.annotation.Nullable;
 
 @Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
-public class EntityFlamethrower extends EntityOffensive implements IGlowingEntity {
+public class EntityFlameArc extends EntityArc<EntityFlameArc.FlameControlPoint> implements IGlowingEntity {
 
-	public float hitboxWidth, hitboxHeight;
-	private Vec3d knockback = new Vec3d(0, 0, 0);
-	//Used for particle maths.
-	private Vec3d spawnPos = Vec3d.ZERO;
-	private double range = 0;
-	private boolean shouldExplode = false;
-
-	public EntityFlamethrower(World world) {
+	public EntityFlameArc(World world) {
 		super(world);
 		this.ignoreFrustumCheck = true;
 		this.lightTnt = true;
@@ -36,21 +31,6 @@ public class EntityFlamethrower extends EntityOffensive implements IGlowingEntit
 		this.setsFires = false;
 	}
 
-	public void setShouldExplode(boolean explode) {
-		this.shouldExplode = explode;
-	}
-
-	@Override
-	public void setPosition(Vec3d position) {
-		super.setPosition(position);
-		this.spawnPos = position;
-	}
-
-	@Override
-	public void setPosition(Vector position) {
-		super.setPosition(position);
-		this.spawnPos = position.toMinecraft();
-	}
 
 	@Override
 	public boolean isPiercing() {
@@ -62,15 +42,6 @@ public class EntityFlamethrower extends EntityOffensive implements IGlowingEntit
 		return true;
 	}
 
-	@Override
-	public boolean shouldExplode() {
-		return shouldExplode;
-	}
-
-	@Override
-	public Vec3d getKnockbackMult() {
-		return new Vec3d(1, 1, 1);
-	}
 
 	@Override
 	public BendingStyle getElement() {
@@ -79,7 +50,7 @@ public class EntityFlamethrower extends EntityOffensive implements IGlowingEntit
 
 	@Override
 	public boolean canBePushed() {
-		return false;
+		return true;
 	}
 
 
@@ -174,15 +145,6 @@ public class EntityFlamethrower extends EntityOffensive implements IGlowingEntit
 
 
 	@Override
-	public Vec3d getKnockback() {
-		return knockback;
-	}
-
-	public void setKnockback(Vec3d knockback) {
-		this.knockback = knockback;
-	}
-
-	@Override
 	public DamageSource getDamageSource(Entity target) {
 		return AvatarDamageSource.causeFlamethrowerDamage(target, getOwner());
 	}
@@ -191,14 +153,6 @@ public class EntityFlamethrower extends EntityOffensive implements IGlowingEntit
 		this.setsFires = lightFires;
 	}
 
-	public void setExpandedHitbox(float width, float height) {
-		this.hitboxHeight = height;
-		this.hitboxWidth = width;
-	}
-
-	public void setRange(float range) {
-		this.range = range;
-	}
 
 
 	@Override
@@ -217,5 +171,13 @@ public class EntityFlamethrower extends EntityOffensive implements IGlowingEntit
 	@Optional.Method(modid = "hammercore")
 	public ColoredLight produceColoredLight(float partialTicks) {
 		return ColoredLight.builder().pos(this).color(1f,0f,0f,1f).radius(10f).build();
+	}
+
+	static class FlameControlPoint extends ControlPoint {
+
+		private FlameControlPoint(EntityFlameArc arc, float size, double x, double y, double z) {
+			super(arc, size, x, y, z);
+		}
+
 	}
 }

@@ -39,10 +39,6 @@ public class CloudBlock extends Block {
 		return BlockRenderLayer.TRANSLUCENT;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void initModel() {
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "json"));
-	}
 
 	@Override
 	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {

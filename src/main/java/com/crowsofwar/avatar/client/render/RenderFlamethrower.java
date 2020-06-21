@@ -1,24 +1,15 @@
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityFlamethrower;
-import com.crowsofwar.avatar.common.particle.ParticleBuilder;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.common.entity.EntityFlameArc;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-
-public class RenderFlamethrower extends Render<EntityFlamethrower> {
+public class RenderFlamethrower extends Render<EntityFlameArc> {
 
 	//Although this is bad practice, mobs won't show particles otherwise.
 
@@ -27,7 +18,7 @@ public class RenderFlamethrower extends Render<EntityFlamethrower> {
 	}
 
 	@Override
-	public void doRender(EntityFlamethrower entity, double x, double y, double z, float entityYaw, float partialTicks) {
+	public void doRender(EntityFlameArc entity, double x, double y, double z, float entityYaw, float partialTicks) {
 
 		float r, g, b, a;
 		Tessellator tessellator = Tessellator.getInstance();
@@ -127,7 +118,7 @@ public class RenderFlamethrower extends Render<EntityFlamethrower> {
 
 	@Nullable
 	@Override
-	protected ResourceLocation getEntityTexture(EntityFlamethrower entity) {
+	protected ResourceLocation getEntityTexture(EntityFlameArc entity) {
 		return null;
 	}
 }

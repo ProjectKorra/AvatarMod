@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.bending.earth;
+package com.crowsofwar.avatar.common.bending.earth.statctrls;
 
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.StatusControl;
@@ -11,19 +11,21 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-import static com.crowsofwar.avatar.common.data.StatusControlController.PLACE_WALL;
+import static com.crowsofwar.avatar.common.data.StatusControlController.*;
 
 /**
+ * @author CrowsOfWar
  * @author Aang23
  */
-public class StatCtrlPushWall extends StatusControl {
+public class StatCtrlPlaceWall extends StatusControl {
 
-	public StatCtrlPushWall() {
-		super(23, AvatarControl.CONTROL_LEFT_CLICK_DOWN, CrosshairPosition.LEFT_OF_CROSSHAIR);
+	public StatCtrlPlaceWall() {
+		super(21, AvatarControl.CONTROL_RIGHT_CLICK, CrosshairPosition.RIGHT_OF_CROSSHAIR);
 	}
 
 	@Override
 	public boolean execute(BendingContext ctx) {
+
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 
@@ -40,14 +42,18 @@ public class StatCtrlPushWall extends StatusControl {
 
 			for (EntityWallSegment segment : segments) {
 				if (segment.getBehavior().getClass().equals(WallBehavior.Waiting.class))
-					segment.setBehavior(new WallBehavior.Push());
+					segment.setBehavior(new WallBehavior.Place());
 			}
 
-			ctx.getData().removeStatusControl(PLACE_WALL);
+			ctx.getData().removeStatusControl(DROP_WALL);
+			ctx.getData().removeStatusControl(SHOOT_WALL);
+			ctx.getData().removeStatusControl(PUSH_WALL);
+			ctx.getData().removeStatusControl(PULL_WALL);
 
 			return true;
 		} else {
 			return false;
 		}
 	}
+
 }

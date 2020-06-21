@@ -62,6 +62,7 @@ public class EntityAirblade extends EntityOffensive {
 		setSize(0.2f, 1.5f);
 		this.chopBlocksThreshold = -1;
 		this.noClip = true;
+		this.putsOutFires = true;
 	}
 
 	public float getSizeMult() {
@@ -72,6 +73,15 @@ public class EntityAirblade extends EntityOffensive {
 		dataManager.set(SYNC_SIZE_MULT, sizeMult);
 	}
 
+	@Override
+	public boolean canBePushed() {
+		return false;
+	}
+
+	@Override
+	public void resetPositionToBB() {
+
+	}
 
 	@Override
 	protected void entityInit() {
@@ -91,46 +101,17 @@ public class EntityAirblade extends EntityOffensive {
 	}
 
 	@Override
+	public boolean shouldExplode() {
+		return false;
+	}
+
+	@Override
 	public void onUpdate() {
-
 		super.onUpdate();
-		setEntitySize(getSizeMult() * 1.5F, getSizeMult() * 0.2F);
-
-		this.motionX *= 0.98;
-		this.motionY *= 0.98;
-		this.motionZ *= 0.98;
-
-		if (!world.isRemote && getOwner() != null && getAbility() instanceof AbilityAirblade) {
-			AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
-			if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				if (velocity().sqrMagnitude() <= 0.7 * 0.7) {
-					setDead();
-				}
-
-			} else if (velocity().sqrMagnitude() <= 0.9 * 0.9) {
-				setDead();
-			}
-		} else if (!world.isRemote && velocity().sqrMagnitude() <= 0.9 * 0.9) {
-			setDead();
-		}
 
 		if (!world.isRemote && chopBlocksThreshold >= 0) {
 			breakCollidingBlocks();
 		}
-
-
-		if (world.isRemote) {
-			for (double i = 0; i < 0.5; i += 1 / getHeight()) {
-				AxisAlignedBB boundingBox = getEntityBoundingBox();
-				double spawnX = boundingBox.minX + world.rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-				double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-				double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).collide(true).time(8).clr(0.8F, 0.8F, 0.8F)
-						.scale(getWidth() * 4).element(getElement()).spawn(world);
-			}
-		}
-
 	}
 
 	@Override
@@ -230,11 +211,11 @@ public class EntityAirblade extends EntityOffensive {
 
 	@Override
 	public void spawnDissipateParticles(World world, Vec3d pos) {
-		if (world.isRemote)
-			for (int i = 0; i < 1; i += 1 / getWidth())
+		/*if (world.isRemote)
+			for (double i = 0; i < 1; i += 1 / getWidth())
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfEntity(this)).vel(world.rand.nextGaussian() / 20,
 						world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20).time(6).clr(0.8F, 0.8F, 0.8F)
-						.scale(getWidth() * 5F).collide(true).element(getElement()).spawn(world);
+						.scale(getWidth() * 5F).collide(true).element(getElement()).spawn(world);**/
 	}
 
 	@Override
@@ -268,18 +249,13 @@ public class EntityAirblade extends EntityOffensive {
 	}
 
 	@Override
-	public Vec3d getKnockback() {
-		return super.getKnockback();
-	}
-
-	@Override
 	public double getExpandedHitboxWidth() {
-		return getAvgSize() / 3;
+		return width / 2;
 	}
 
 	@Override
 	public double getExpandedHitboxHeight() {
-		return getAvgSize() / 3;
+		return getHeight() / 4;
 	}
 
 	@Override

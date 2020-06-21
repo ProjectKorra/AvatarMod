@@ -51,10 +51,6 @@ public class RenderSkyBison extends RenderLiving<EntitySkyBison> {
 		//TODO: Centralise render update code
 		EntitySkyBison bison = (EntitySkyBison) entity;
 		shadowSize = 2.5f * bison.getCondition().getSizeMultiplier();
-		Bender bender = Bender.get(bison);
-		if (bender != null) {
-			bender.onRenderUpdate();
-		}
 		super.doRenderShadowAndFire(entity, x, y, z, yaw, partialTicks);
 
 	}

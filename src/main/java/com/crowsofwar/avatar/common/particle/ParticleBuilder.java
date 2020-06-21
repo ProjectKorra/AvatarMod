@@ -257,7 +257,6 @@ public final class ParticleBuilder {
 	}
 
 	/**
-	 *
 	 * @param behaviour The particle behaviour to use for the particle(s) being spawned.
 	 * @return The ParticleBuilder instance
 	 */
@@ -426,7 +425,7 @@ public final class ParticleBuilder {
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder clr(int r, int g, int b, float a) {
+	public ParticleBuilder clr(int r, int g, int b, int a) {
 		return this.clr(r / 255f, g / 255f, b / 255f, a / 255F); // Yes, 255 is correct and not 256, or else we can't have pure white
 	}
 
@@ -840,6 +839,7 @@ public final class ParticleBuilder {
 		// Anything with an if statement here allows default values to be set in particle constructors
 		if (!Double.isNaN(vx) && !Double.isNaN(vy) && !Double.isNaN(vz)) particle.setVelocity(vx, vy, vz);
 		if (r >= 0 && g >= 0 && b >= 0) particle.setRBGColorF(r, g, b);
+		if (a >= 0) particle.setAlphaF(a);
 		if (fr >= 0 && fg >= 0 && fb >= 0) particle.setFadeColour(fr, fg, fb);
 
 		for (int i = 0; i < 4; i++) {
@@ -897,6 +897,7 @@ public final class ParticleBuilder {
 		r = -1;
 		g = -1;
 		b = -1;
+		a = -1;
 		fr = -1;
 		fg = -1;
 		fb = -1;

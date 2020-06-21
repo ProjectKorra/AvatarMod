@@ -17,17 +17,16 @@
 
 package com.crowsofwar.avatar.client;
 
-import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AnalyticsWarningGui;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.client.gui.GuiBisonChest;
-import com.crowsofwar.avatar.client.gui.PreviewWarningGui;
 import com.crowsofwar.avatar.client.gui.skills.GetBendingGui;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
 import com.crowsofwar.avatar.client.particles.newparticles.*;
+import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleBehaviour;
 import com.crowsofwar.avatar.client.particles.oldsystem.*;
 import com.crowsofwar.avatar.client.render.*;
 import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
@@ -74,8 +73,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -108,7 +105,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 
 	@Override
 	public void registerParticles(){
-		// I'll be a good programmer and use the API method rather than the one above. Lead by example, as they say...
+
 		ParticleAvatar.registerParticle(Type.BEAM, ParticleBeam::new);
 		ParticleAvatar.registerParticle(Type.BUFF, ParticleBuff::new);
 		ParticleAvatar.registerParticle(Type.DARK_MAGIC, ParticleDarkMagic::new);
@@ -130,6 +127,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		ParticleAvatar.registerParticle(Type.SUMMON, ParticleSummon::new);
 		ParticleAvatar.registerParticle(Type.VINE, ParticleVine::new);
 		ParticleAvatar.registerParticle(Type.WATER, ParticleWater::new);
+
+		ParticleBehaviour.registerBehaviours();
 	}
 
 	@Override
@@ -164,6 +163,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		MinecraftForge.EVENT_BUS.register(this);
 		AvatarInventoryOverride.register();
 		AvatarFovChanger.register();
+		ParticleBehaviour.registerBehaviours();
 
 		clientFetcher = new PlayerDataFetcherClient<>(AvatarPlayerData.class, (data) -> {
 			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
@@ -179,7 +179,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityWaterBubble.class, RenderWaterBubble::new);
 		registerEntityRenderingHandler(EntityWallSegment.class, RenderWallSegment::new);
 		registerEntityRenderingHandler(EntityFireball.class, /*AvatarMod.codeChickenLibCompat && !CLIENT_CONFIG.fireRenderSettings.originalFireball ? RenderNothing::new : **/ RenderFireball::new);
-		registerEntityRenderingHandler(EntityAirblade.class, RenderAirBlade::new);
+		registerEntityRenderingHandler(EntityAirblade.class, RenderNothing::new);
 		registerEntityRenderingHandler(EntityAirBubble.class, RenderAirBubble::new);
 		registerEntityRenderingHandler(EntitySkyBison.class, RenderSkyBison::new);
 		registerEntityRenderingHandler(EntityOtterPenguin.class, RenderOtterPenguin::new);
@@ -198,7 +198,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityExplosionSpawner.class, RenderNothing::new);
 		registerEntityRenderingHandler(EntityLightningSpawner.class, RenderLightningSpawner::new);
 		registerEntityRenderingHandler(EntityAvatarLightning.class, RenderAvatarLightning::new);
-		registerEntityRenderingHandler(EntityFlamethrower.class, RenderFlamethrower::new);
+		registerEntityRenderingHandler(EntityFlameArc.class, RenderFlamethrower::new);
 		//registerEntityRenderingHandler(EntityPlayer.class, RenderSlipstreamInvisibility::new);
 
 		// Renderers dependent on CodeChickenLib. 
@@ -332,7 +332,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 	@Override
 	public void registerItemModels() {
 		AvatarItemRenderRegister.register();
-		AvatarBlocks.init();
 	}
 
 	@Override

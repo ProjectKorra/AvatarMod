@@ -100,6 +100,7 @@ public class AbilityFireball extends Ability {
 			damage += size / 10F;
 
 			if (canUse) {
+				assert target != null;
 				EntityFireball fireball = new EntityFireball(world);
 				fireball.setPosition(target);
 				fireball.setOwner(entity);
@@ -107,16 +108,17 @@ public class AbilityFireball extends Ability {
 				fireball.setDamage(damage);
 				fireball.setPowerRating(bender.calcPowerRating(Firebending.ID));
 				fireball.setSize(size);
+				fireball.setLifeTime(30);
 				fireball.setOrbitID(fireballs.size() + 1);
 				fireball.setPerformanceAmount((int) (BattlePerformanceScore.SCORE_MOD_SMALL * 1.5));
 				fireball.setAbility(this);
 				fireball.setFireTime(size / 5);
 				fireball.setXp(SKILLS_CONFIG.fireballHit);
-
-
-				data.addStatusControl(THROW_FIREBALL);
 				if (!world.isRemote)
 					world.spawnEntity(fireball);
+
+				data.addStatusControl(THROW_FIREBALL);
+
 			}
 
 		}
@@ -147,8 +149,8 @@ public class AbilityFireball extends Ability {
 			Vector target = Vector.getEyePos(owner).plus(look.times(2 + ((EntityFireball) entity).getSize() * 0.03125F));
 			List<EntityFireball> fireballs = entity.world.getEntitiesWithinAABB(EntityFireball.class,
 					owner.getEntityBoundingBox().grow(5, 5, 5));
-			fireballs = fireballs.stream().filter(entityFireball -> entityFireball.getBehavior() instanceof FireballBehavior.PlayerControlled)
-			.collect(Collectors.toList());
+			fireballs = fireballs.stream().filter(entityFireball -> entityFireball.getBehavior() instanceof FireballBehavior.PlayerControlled
+			&& entityFireball.getOwner() == entity.getOwner()).collect(Collectors.toList());
 			Vec3d motion = Objects.requireNonNull(target).minus(Vector.getEntityPos(entity)).toMinecraft();
 
 			if (!fireballs.isEmpty() && fireballs.size() > 1 && fireballs.contains(entity)) {

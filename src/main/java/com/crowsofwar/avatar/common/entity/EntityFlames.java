@@ -24,12 +24,17 @@ import com.crowsofwar.avatar.common.blocks.BlockTemp;
 import com.crowsofwar.avatar.common.blocks.BlockUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -70,6 +75,19 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity {
 		return new Firebending();
 	}
 
+	@Override
+	public void onCollideWithEntity(Entity entity) {
+		if (entity instanceof EntityItem)
+			AvatarEntityUtils.smeltItemEntity((EntityItem) entity);
+		super.onCollideWithEntity(entity);
+	}
+
+	@Override
+	public boolean onCollideWithSolid() {
+		if (collided)
+			setFires();
+		return super.onCollideWithSolid();
+	}
 
 	@Override
 	public void onUpdate() {
@@ -136,6 +154,21 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity {
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean canCollideWith(Entity entity) {
+		return super.canCollideWith(entity) || entity instanceof EntityItem;
+	}
+
+	@Override
+	public double getExpandedHitboxWidth() {
+		return 0.35;
+	}
+
+	@Override
+	public double getExpandedHitboxHeight() {
+		return 0.35;
 	}
 
 	@Override
@@ -243,8 +276,6 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity {
 		}
 		return false;
 	}
-
-
 
 
 	@Override

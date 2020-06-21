@@ -2,8 +2,7 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.client.gui.RenderElementHandler;
 import com.crowsofwar.avatar.common.bending.air.tickhandlers.*;
-import com.crowsofwar.avatar.common.bending.earth.RestoreCooldownHandler;
-import com.crowsofwar.avatar.common.bending.earth.RestoreParticleHandler;
+import com.crowsofwar.avatar.common.bending.earth.tickhandlers.RestoreParticleHandler;
 import com.crowsofwar.avatar.common.bending.fire.*;
 import com.crowsofwar.avatar.common.bending.fire.tickhandlers.*;
 import com.crowsofwar.avatar.common.bending.lightning.LightningCreateHandler;
@@ -45,15 +44,11 @@ public class TickHandlerController {
 	//public static TickHandler AIR_DODGE = new AirDodgeHandler(18);
 	public static TickHandler RENDER_ELEMENT_HANDLER = new RenderElementHandler(19);
 	public static TickHandler STAFF_GUST_HANDLER = new StaffGustCooldown(20);
-	public static TickHandler SLIPSTREAM_COOLDOWN_HANDLER = new SlipstreamCooldownHandler(21);
-	public static TickHandler PURIFY_COOLDOWN_HANDLER = new ImmolateCooldownHandler(22);
-	public static TickHandler PURIFY_PARTICLE_SPAWNER = new ImmolateParticleHandler(23);
-	public static TickHandler CLEANSE_COOLDOWN_HANDLER = new CleanseCooldownHandler(25);
-	public static TickHandler RESTORE_COOLDOWN_HANDLER = new RestoreCooldownHandler(26);
-	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler(27);
-	public static TickHandler SLIPSTREAM_WALK_HANDLER = new SlipstreamAirWalkHandler(29);
-	public static TickHandler WATERARC_COMBO_HANDLER = new WaterArcComboHandler(30);
-	public static TickHandler SHOOT_AIRBURST = new ShootAirBurstHandler(31);
+	public static TickHandler PURIFY_PARTICLE_SPAWNER = new ImmolateParticleHandler(21);
+	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler(22);
+	public static TickHandler SLIPSTREAM_WALK_HANDLER = new SlipstreamAirWalkHandler(23);
+	public static TickHandler WATERARC_COMBO_HANDLER = new WaterArcComboHandler(24);
+	public static TickHandler SHOOT_AIRBURST = new ShootAirBurstHandler(25);
 
 
 	public static TickHandler fromId(int id) {

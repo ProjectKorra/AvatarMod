@@ -30,7 +30,7 @@ public class AiFireShot extends BendingAi {
 			entity.rotationPitch = (float) toDegrees(rotations.x());
 
 			execAbility();
-			data.getMiscData().setAbilityCooldown(40);
+			data.getAbilityData(ability).setAbilityCooldown(40);
 
 		}
 	}
@@ -40,7 +40,7 @@ public class AiFireShot extends BendingAi {
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSq(target) < 9 * 9
-				&& bender.getData().getMiscData().getAbilityCooldown() == 0;
+				&& bender.getData().getAbilityData(ability).getAbilityCooldown() == 0;
 	}
 
 }

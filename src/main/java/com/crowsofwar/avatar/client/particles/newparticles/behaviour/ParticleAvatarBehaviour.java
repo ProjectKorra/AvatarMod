@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.client.particles.newparticles.behaviour;
 
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
+import com.crowsofwar.avatar.client.particles.newparticles.ParticleWater;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 
@@ -9,7 +10,7 @@ import javax.annotation.Nonnull;
 public abstract class ParticleAvatarBehaviour extends ParticleBehaviour<ParticleAvatar> {
 
 	public static void register() {
-
+		registerBehavior(ParticleWater.WaterParticleBehaviour.class);
 	}
 
 	public static class WaterBlastBehaviour extends ParticleAvatarBehaviour {

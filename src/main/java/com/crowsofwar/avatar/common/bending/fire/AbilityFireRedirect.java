@@ -1,0 +1,22 @@
+package com.crowsofwar.avatar.common.bending.fire;
+
+import com.crowsofwar.avatar.common.bending.Ability;
+
+import java.util.UUID;
+
+public class AbilityFireRedirect extends Ability {
+
+	public AbilityFireRedirect() {
+		super(Firebending.ID, "fire_redirect");
+	}
+
+	@Override
+	public int getBaseTier() {
+		return 3;
+	}
+
+	@Override
+	public boolean isVisibleInRadial() {
+		return false;
+	}
+}

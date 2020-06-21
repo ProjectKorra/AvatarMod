@@ -57,10 +57,12 @@ public class StatCtrlThrowFireball extends StatusControl {
 		if (fireball != null) {
 			AbilityData abilityData = ctx.getData().getAbilityData(new AbilityFireball());
 			double speedMult = abilityData.getLevel() >= 2 ? 37.5 : 30;
+			Vector lookPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(6 + fireball.getAvgSize()));
 			fireball.setBehavior(new FireballBehavior.Thrown());
 			fireball.rotationPitch = entity.rotationPitch;
 			fireball.rotationYaw = entity.rotationYaw;
-			fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+
+			Vector vel = lookPos.minus(Vector.getEntityPos(fireball));
 
 			if (!fireballs.isEmpty()) {
 				fireballs = fireballs.stream().filter(fireball1 -> !(fireball1.getBehavior() instanceof FireballBehavior.Thrown
@@ -70,7 +72,11 @@ public class StatCtrlThrowFireball extends StatusControl {
 					for (EntityFireball ball : fireballs)
 						ball.setOrbitID(ball.getOrbitID() - 1);
 				}
+				if (fireballs.size() > 1)
+					fireball.setVelocity(vel.normalize().times(speedMult));
+				else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
 			}
+			else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
 		}
 
 

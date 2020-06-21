@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
-import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -9,23 +9,27 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
+
 import static net.minecraft.util.math.MathHelper.cos;
 import static net.minecraft.util.math.MathHelper.sin;
+import static org.lwjgl.opengl.GL11.GL_ALWAYS;
 
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
+//@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class ParticleWater extends ParticleAvatar {
 
 	private static final ResourceLocation WATER = new ResourceLocation("minecraft",
-							 "textures/blocks/water_still.png");
+			"textures/blocks/water_still.png");
 
 	/**
 	 * Creates a new particle in the given world at the given position. All other parameters are set via the various
@@ -41,7 +45,6 @@ public class ParticleWater extends ParticleAvatar {
 		this.setRBGColorF(1, 1, 1);
 		this.particleAlpha = 1F;
 		this.particleMaxAge = 12 + rand.nextInt(4);
-		this.shaded = false;
 		this.canCollide = true;
 	}
 
@@ -70,9 +73,10 @@ public class ParticleWater extends ParticleAvatar {
 		}
 	}
 
-	@SubscribeEvent
-	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
-		event.getMap().registerSprite(WATER);
+
+	@Override
+	public boolean shouldDisableDepth() {
+		return true;
 	}
 
 	@Override
@@ -90,11 +94,10 @@ public class ParticleWater extends ParticleAvatar {
 		mc.renderEngine.bindTexture(WATER);
 		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-	//	OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
 		GlStateManager.translate(x, y, z);
-
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
 		float ticks = this.particleAge + partialTicks;
 		float colorEnhancement = 1.5f;
@@ -103,8 +106,6 @@ public class ParticleWater extends ParticleAvatar {
 
 
 		GlStateManager.scale(scale, scale, scale);
-	//	GlStateManager.color(1,//colorEnhancement * particleRed,
-	//			 1, /*colorEnhancement * particleGreen**/ 1, /*colorEnhancement * particleBlue,**/ colorEnhancement * particleAlpha);
 
 		Matrix4f mat = new Matrix4f();
 		mat = mat.translate(x, y + 0.4F, z);
@@ -132,7 +133,6 @@ public class ParticleWater extends ParticleAvatar {
 		float t2 = t1 + (float) Math.PI / 2f;
 		float amt = 0.05f;
 
-		mc.renderEngine.bindTexture(WATER);
 		lbf.add(cos(t1) * amt, sin(t2) * amt, cos(t2) * amt, 0);
 		rbf.add(sin(t1) * amt, cos(t2) * amt, sin(t2) * amt, 0);
 		lbb.add(sin(t2) * amt, cos(t2) * amt, cos(t2) * amt, 0);
@@ -151,22 +151,21 @@ public class ParticleWater extends ParticleAvatar {
 		float v1 = anim / 16f, v2 = v1 + 1f / 16;
 
 		drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // -x
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // -x
 		drawQuad(2, rtb, rbb, rbf, rtf, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // +x
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // +x
 		drawQuad(2, rbb, rbf, lbf, lbb, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // -y
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // -y
 		drawQuad(2, rtb, rtf, ltf, ltb, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // +y
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // +y
 		drawQuad(2, rtf, rbf, lbf, ltf, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // -z
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // -z
 		drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.35F); // +z
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // +z
 
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		mc.renderEngine.bindTexture(WATER);
 		GlStateManager.disableBlend();
-	//	GlStateManager.enableLighting();
+		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 
 	}
@@ -175,6 +174,37 @@ public class ParticleWater extends ParticleAvatar {
 	@Override
 	public int getFXLayer() {
 		return 3;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static class WaterParticleBehaviour extends ParticleAvatarBehaviour {
+
+		@Nonnull
+		@Override
+		public ParticleAvatarBehaviour onUpdate(ParticleAvatar particle) {
+			particle.setGravity(true);
+			return this;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
 	}
 
 }

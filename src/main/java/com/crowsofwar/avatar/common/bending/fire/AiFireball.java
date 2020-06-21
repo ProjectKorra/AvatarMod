@@ -54,7 +54,7 @@ public class AiFireball extends BendingAi {
 	protected void startExec() {
 		BendingData data = bender.getData();
 		execAbility();
-		data.getMiscData().setAbilityCooldown(120);
+		data.getAbilityData(ability).setAbilityCooldown(120);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class AiFireball extends BendingAi {
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistance(target) > 4
-				&& bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
+				&& bender.getData().getAbilityData(ability).getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
 	}
 
 	@Override
