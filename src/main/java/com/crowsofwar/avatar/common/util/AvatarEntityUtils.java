@@ -5,7 +5,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -44,6 +47,18 @@ public class AvatarEntityUtils {
 		}
 	}
 
+
+	public static void smeltItemEntity(EntityItem entity) {
+		ItemStack stack = entity.getItem();
+		ItemStack smelted = FurnaceRecipes.instance().getSmeltingResult(stack);
+		EntityItem item = new EntityItem(entity.world, entity.posX, entity.posY + 0.75, entity.posZ, smelted);
+		item.setDefaultPickupDelay();
+		item.setEntityInvulnerable(true);
+		if (!entity.world.isRemote)
+			entity.world.spawnEntity(item);
+		entity.setDead();
+
+	}
 	/**
 	 *
 	 */

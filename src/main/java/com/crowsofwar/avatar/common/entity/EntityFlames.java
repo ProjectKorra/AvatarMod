@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.common.blocks.BlockTemp;
 import com.crowsofwar.avatar.common.blocks.BlockUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
@@ -76,16 +77,8 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity {
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
-		if (entity instanceof EntityItem) {
-			ItemStack stack = ((EntityItem) entity).getItem();
-			ItemStack smelted = FurnaceRecipes.instance().getSmeltingResult(stack);
-			entity.setDead();
-			EntityItem item = new EntityItem(world, posX, posY + 0.75, posZ, smelted);
-			item.setDefaultPickupDelay();
-			item.setEntityInvulnerable(true);
-			if (!world.isRemote)
-				world.spawnEntity(item);
-		}
+		if (entity instanceof EntityItem)
+			AvatarEntityUtils.smeltItemEntity((EntityItem) entity);
 		super.onCollideWithEntity(entity);
 	}
 
