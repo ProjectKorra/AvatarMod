@@ -20,4 +20,9 @@ public class AbilityWaterRedirect extends Ability {
 	public boolean isVisibleInRadial() {
 		return false;
 	}
+
+	@Override
+	public boolean isUtility() {
+		return true;
+	}
 }

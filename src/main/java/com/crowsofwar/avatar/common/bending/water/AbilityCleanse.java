@@ -230,5 +230,7 @@ public class AbilityCleanse extends Ability {
 
 		return coolDown;
 	}
+
+
 }
 

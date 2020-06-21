@@ -457,4 +457,9 @@ public class AbilityFlameStrike extends Ability {
 
 		}
 	}
+
+	@Override
+	public boolean isOffensive() {
+		return true;
+	}
 }

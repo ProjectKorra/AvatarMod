@@ -48,6 +48,11 @@ public class AbilityFlamethrower extends Ability {
 	}
 
 	@Override
+	public boolean isOffensive() {
+		return true;
+	}
+
+	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiFlamethrower(this, entity, bender);
 	}

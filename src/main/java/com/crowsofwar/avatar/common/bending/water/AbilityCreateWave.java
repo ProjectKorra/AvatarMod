@@ -222,6 +222,16 @@ public class AbilityCreateWave extends Ability {
 	}
 
 	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public boolean isOffensive() {
+		return true;
+	}
+
+	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiWave(this, entity, bender);
 	}

@@ -92,4 +92,24 @@ public class AbilitySwirlingInferno extends Ability {
 			}
 		}
 	}
+
+	@Override
+	public int getBaseTier() {
+		return 5;
+	}
+
+	@Override
+	public boolean isChargeable() {
+		return true;
+	}
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public boolean isOffensive() {
+		return true;
+	}
 }

@@ -264,5 +264,13 @@ public class AbilityWaterArc extends Ability {
 		return new AiWaterArc(this, entity, bender);
 	}
 
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
 
+	@Override
+	public boolean isOffensive() {
+		return true;
+	}
 }
