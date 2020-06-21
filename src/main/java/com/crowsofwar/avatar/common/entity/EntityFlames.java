@@ -76,14 +76,17 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity {
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {
-		super.onCollideWithEntity(entity);
 		if (entity instanceof EntityItem) {
 			ItemStack stack = ((EntityItem) entity).getItem();
 			ItemStack smelted = FurnaceRecipes.instance().getSmeltingResult(stack);
-			EntityItem item = new EntityItem(world, posX, posY, posZ, smelted);
+			entity.setDead();
+			EntityItem item = new EntityItem(world, posX, posY + 0.75, posZ, smelted);
+			item.setDefaultPickupDelay();
+			item.setEntityInvulnerable(true);
 			if (!world.isRemote)
 				world.spawnEntity(item);
 		}
+		super.onCollideWithEntity(entity);
 	}
 
 	@Override
@@ -158,6 +161,21 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity {
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean canCollideWith(Entity entity) {
+		return super.canCollideWith(entity) || entity instanceof EntityItem;
+	}
+
+	@Override
+	public double getExpandedHitboxWidth() {
+		return 0.35;
+	}
+
+	@Override
+	public double getExpandedHitboxHeight() {
+		return 0.35;
 	}
 
 	@Override
