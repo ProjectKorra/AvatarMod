@@ -27,7 +27,6 @@ import javax.annotation.Nonnull;
 
 import static net.minecraft.util.math.MathHelper.cos;
 import static net.minecraft.util.math.MathHelper.sin;
-import static org.lwjgl.opengl.GL11.GL_ALWAYS;
 
 //@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class ParticleWater extends ParticleAvatar {
@@ -76,8 +75,7 @@ public class ParticleWater extends ParticleAvatar {
 				buffer.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).color(r, g, b, a).endVertex();
 				tessellator.draw();
 			}
-		}
-		else if (element instanceof Firebending || element instanceof Airbending) {
+		} else if (element instanceof Firebending || element instanceof Airbending) {
 			if (normal == 0 || normal == 2) {
 				//Clears the previous builder
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
@@ -163,20 +161,22 @@ public class ParticleWater extends ParticleAvatar {
 				rtb = new Vector4f(0.5f * size, 0.5f * size, 0.5f * size, 1).mul(mat);
 
 
-		float t1 = ticks * (float) Math.PI / 10f;
-		float t2 = t1 + (float) Math.PI / 2f;
-		float amt = 0.05f;
+		if (element instanceof Waterbending) {
 
-		lbf.add(cos(t1) * amt, sin(t2) * amt, cos(t2) * amt, 0);
-		rbf.add(sin(t1) * amt, cos(t2) * amt, sin(t2) * amt, 0);
-		lbb.add(sin(t2) * amt, cos(t2) * amt, cos(t2) * amt, 0);
-		rbb.add(cos(t2) * amt, cos(t1) * amt, cos(t1) * amt, 0);
+			float t1 = ticks * (float) Math.PI / 10f;
+			float t2 = t1 + (float) Math.PI / 2f;
+			float amt = 0.05f;
 
-		ltf.add(cos(t2) * amt, cos(t1) * amt, sin(t1) * amt, 0);
-		rtf.add(sin(t2) * amt, sin(t1) * amt, cos(t1) * amt, 0);
-		ltb.add(sin(t1) * amt, sin(t2) * amt, cos(t1) * amt, 0);
-		rtb.add(cos(t1) * amt, cos(t2) * amt, sin(t1) * amt, 0);
+			lbf.add(cos(t1) * amt, sin(t2) * amt, cos(t2) * amt, 0);
+			rbf.add(sin(t1) * amt, cos(t2) * amt, sin(t2) * amt, 0);
+			lbb.add(sin(t2) * amt, cos(t2) * amt, cos(t2) * amt, 0);
+			rbb.add(cos(t2) * amt, cos(t1) * amt, cos(t1) * amt, 0);
 
+			ltf.add(cos(t2) * amt, cos(t1) * amt, sin(t1) * amt, 0);
+			rtf.add(sin(t2) * amt, sin(t1) * amt, cos(t1) * amt, 0);
+			ltb.add(sin(t1) * amt, sin(t2) * amt, cos(t1) * amt, 0);
+			rtb.add(cos(t1) * amt, cos(t2) * amt, sin(t1) * amt, 0);
+		}
 		// @formatter:on
 
 
