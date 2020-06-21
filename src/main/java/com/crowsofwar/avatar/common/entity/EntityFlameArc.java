@@ -158,12 +158,18 @@ public class EntityFlameArc extends EntityArc<EntityFlameArc.FlameControlPoint> 
 						Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
 
 						if (targetPos != circlePos)
-							vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.05).add(vel);
+							vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.2).add(vel);
 						ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(this).vel(vel)
 								.clr(0, 102, 255, 175).scale(0.675F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
 								.time(8 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).element(new Firebending()).spawn(world);
 						ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(this).vel(vel)
 								.clr(0, 102, 255, 175).scale(0.675F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
+								.time(8 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).element(new Firebending()).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(circlePos).spawnEntity(this).vel(vel)
+								.clr(255, 15, 5, 140).scale(0.675F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
+								.time(8 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).element(new Firebending()).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(circlePos).spawnEntity(this).vel(vel)
+								.clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10, 180).scale(0.675F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
 								.time(8 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).element(new Firebending()).spawn(world);
 
 					}
@@ -171,12 +177,19 @@ public class EntityFlameArc extends EntityArc<EntityFlameArc.FlameControlPoint> 
 					//Particles along the line
 					for (int h = 0; h < 1; h++) {
 						pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
-						ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
-								world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120).clr(0, 102, 255, 255)
+						pos2 = pos2.add(AvatarUtils.bezierCurve(Math.min((((i + 1) / (h + 1D)) / points.length), 1), points));
+
+						Vec3d vel = new Vec3d(world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120);
+						vel = vel.add(pos2.subtract(pos).normalize().scale(0.2));
+
+						ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(vel).clr(0, 102, 255, 255)
+								.time(14 + AvatarUtils.getRandomNumberInRange(0, 5)).target(pos).collide(true).element(new Firebending()).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(vel).clr(0, 102, 255, 255)
 								.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).target(pos).collide(true).element(new Firebending()).spawn(world);
-						ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
-								world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120).clr(0, 102, 255, 255)
-								.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).target(pos).collide(true).element(new Firebending()).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).spawnEntity(this).vel(vel).clr(255, 15, 5, 180)
+								.time(14 + AvatarUtils.getRandomNumberInRange(0, 5)).target(pos).collide(true).element(new Firebending()).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).spawnEntity(this).vel(vel).clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10,
+								180).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).target(pos).collide(true).element(new Firebending()).spawn(world);
 
 					}
 				}
