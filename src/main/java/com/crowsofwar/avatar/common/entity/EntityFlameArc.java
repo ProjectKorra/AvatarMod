@@ -3,12 +3,12 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
@@ -16,7 +16,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import scala.Int;
 
 import javax.annotation.Nullable;
 
@@ -82,8 +81,10 @@ public class EntityFlameArc extends EntityArc<EntityFlameArc.FlameControlPoint> 
 	}
 
 	@Override
-	public void applyPiercingCollision() {
-		super.applyPiercingCollision();
+	public boolean onCollideWithSolid() {
+		if (collided && setsFires)
+			setFires();
+		return super.onCollideWithSolid();
 	}
 
 	//We don't want sounds playing
@@ -108,6 +109,7 @@ public class EntityFlameArc extends EntityArc<EntityFlameArc.FlameControlPoint> 
 
 	}
 
+
 	@Override
 	public boolean onMinorWaterContact() {
 		if (getTier() < 5) {
@@ -130,6 +132,56 @@ public class EntityFlameArc extends EntityArc<EntityFlameArc.FlameControlPoint> 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+
+		if (world.isRemote && getOwner() != null && ticksExisted % 2 == 0) {
+			Vec3d[] points = new Vec3d[getAmountOfControlPoints()];
+			for (int i = 0; i < points.length; i++)
+				points[i] = getControlPoint(i).position().toMinecraft();
+			//Particles! Let's do this.
+			//First, we need a bezier curve. Joy.
+			//Iterate through all of the control points.
+			//0 is the leader/front one
+			for (int i = 0; i < getAmountOfControlPoints(); i++) {
+				Vec3d pos = getControlPoint(points.length - i - 1).position().toMinecraft();
+				Vec3d pos2 = i < points.length - 1 ? getControlPoint(Math.max(points.length - i - 2, 0)).position().toMinecraft() : Vec3d.ZERO;
+
+				if (i < points.length - 1) {
+					for (int h = 0; h < 4; h++) {
+						pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
+
+						//Flow animation
+						pos2 = pos2.add(AvatarUtils.bezierCurve(Math.min((((i + 1) / (h + 1D)) / points.length), 1), points));
+						Vec3d circlePos = Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 90, getAvgSize() / 2F).toMinecraft().add(pos);
+						Vec3d targetPos = i < points.length - 1 ? Vector.getOrthogonalVector(getLookVec(),
+								(ticksExisted % 360) * 20 + h * 90 + 20, getAvgSize()).toMinecraft().add(pos2)
+								: Vec3d.ZERO;
+						Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
+
+						if (targetPos != circlePos)
+							vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.05).add(vel);
+						ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(circlePos).spawnEntity(this).vel(vel)
+								.clr(0, 102, 255, 175).scale(0.675F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
+								.time(8 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).spawn(world);
+					}
+
+					//Particles along the line
+					for (int h = 0; h < 1; h++) {
+						pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
+						ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
+								world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120).clr(0, 102, 255, 255)
+								.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).target(pos).collide(true).spawn(world);
+					}
+					//Dripping water particles
+					for (int h = 0; h < 2; h++) {
+						pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
+						ParticleBuilder.create(ParticleBuilder.Type.WATER).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 20,
+								world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 255)
+								.time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).target(pos).scale(0.625F).gravity(true).collide(true).spawn(world);
+					}
+				}
+			}
+
+		}
 	}
 
 
@@ -154,7 +206,6 @@ public class EntityFlameArc extends EntityArc<EntityFlameArc.FlameControlPoint> 
 	}
 
 
-
 	@Override
 	public boolean isProjectile() {
 		return true;
@@ -170,7 +221,7 @@ public class EntityFlameArc extends EntityArc<EntityFlameArc.FlameControlPoint> 
 	@Override
 	@Optional.Method(modid = "hammercore")
 	public ColoredLight produceColoredLight(float partialTicks) {
-		return ColoredLight.builder().pos(this).color(1f,0f,0f,1f).radius(10f).build();
+		return ColoredLight.builder().pos(this).color(1f, 0f, 0f, 1f).radius(10f).build();
 	}
 
 	static class FlameControlPoint extends ControlPoint {

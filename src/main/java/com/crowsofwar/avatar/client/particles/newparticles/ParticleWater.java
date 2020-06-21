@@ -1,6 +1,10 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
 import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -49,27 +53,48 @@ public class ParticleWater extends ParticleAvatar {
 	}
 
 	public static void drawQuad(int normal, Vector4f pos1, Vector4f pos2, Vector4f pos3, Vector4f
-			pos4, double u1, double v1, double u2, double v2, float r, float g, float b, float a) {
+			pos4, double u1, double v1, double u2, double v2, float r, float g, float b, float a, BendingStyle element) {
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 
-		if (normal == 0 || normal == 2) {
-			//Clears the previous builder
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-			buffer.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).color(r, g, b, a).endVertex();
-			buffer.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).color(r, g, b, a).endVertex();
-			buffer.pos(pos3.x, pos3.y, pos3.z).tex(u1, v2).color(r, g, b, a).endVertex();
-			buffer.pos(pos4.x, pos4.y, pos4.z).tex(u1, v1).color(r, g, b, a).endVertex();
-			tessellator.draw();
+		if (element instanceof Waterbending) {
+			if (normal == 0 || normal == 2) {
+				//Clears the previous builder
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+				buffer.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).color(r, g, b, a).endVertex();
+				buffer.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).color(r, g, b, a).endVertex();
+				buffer.pos(pos3.x, pos3.y, pos3.z).tex(u1, v2).color(r, g, b, a).endVertex();
+				buffer.pos(pos4.x, pos4.y, pos4.z).tex(u1, v1).color(r, g, b, a).endVertex();
+				tessellator.draw();
+			}
+			if (normal == 1 || normal == 2) {
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+				buffer.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).color(r, g, b, a).endVertex();
+				buffer.pos(pos4.x, pos4.y, pos4.z).tex(u1, v1).color(r, g, b, a).endVertex();
+				buffer.pos(pos3.x, pos3.y, pos3.z).tex(u1, v2).color(r, g, b, a).endVertex();
+				buffer.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).color(r, g, b, a).endVertex();
+				tessellator.draw();
+			}
 		}
-		if (normal == 1 || normal == 2) {
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-			buffer.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).color(r, g, b, a).endVertex();
-			buffer.pos(pos4.x, pos4.y, pos4.z).tex(u1, v1).color(r, g, b, a).endVertex();
-			buffer.pos(pos3.x, pos3.y, pos3.z).tex(u1, v2).color(r, g, b, a).endVertex();
-			buffer.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).color(r, g, b, a).endVertex();
-			tessellator.draw();
+		else if (element instanceof Firebending || element instanceof Airbending) {
+			if (normal == 0 || normal == 2) {
+				//Clears the previous builder
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+				buffer.pos(pos1.x, pos1.y, pos1.z).color(r, g, b, a).endVertex();
+				buffer.pos(pos2.x, pos2.y, pos2.z).color(r, g, b, a).endVertex();
+				buffer.pos(pos3.x, pos3.y, pos3.z).color(r, g, b, a).endVertex();
+				buffer.pos(pos4.x, pos4.y, pos4.z).color(r, g, b, a).endVertex();
+				tessellator.draw();
+			}
+			if (normal == 1 || normal == 2) {
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+				buffer.pos(pos1.x, pos1.y, pos1.z).color(r, g, b, a).endVertex();
+				buffer.pos(pos4.x, pos4.y, pos4.z).color(r, g, b, a).endVertex();
+				buffer.pos(pos3.x, pos3.y, pos3.z).color(r, g, b, a).endVertex();
+				buffer.pos(pos2.x, pos2.y, pos2.z).color(r, g, b, a).endVertex();
+				tessellator.draw();
+			}
 		}
 	}
 
@@ -91,13 +116,22 @@ public class ParticleWater extends ParticleAvatar {
 		float z = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
 
 		GlStateManager.pushMatrix();
-		mc.renderEngine.bindTexture(WATER);
 		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
 
 		GlStateManager.translate(x, y, z);
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+
+		if (element instanceof Waterbending) {
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+			mc.renderEngine.bindTexture(WATER);
+		}
+
+		if (element instanceof Firebending)
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+
+		if (element instanceof Airbending)
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
 		float ticks = this.particleAge + partialTicks;
 		float colorEnhancement = 1.5f;
@@ -151,17 +185,17 @@ public class ParticleWater extends ParticleAvatar {
 		float v1 = anim / 16f, v2 = v1 + 1f / 16;
 
 		drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // -x
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // -x
 		drawQuad(2, rtb, rbb, rbf, rtf, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // +x
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // +x
 		drawQuad(2, rbb, rbf, lbf, lbb, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // -y
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // -y
 		drawQuad(2, rtb, rtf, ltf, ltb, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // +y
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // +y
 		drawQuad(2, rtf, rbf, lbf, ltf, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // -z
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // -z
 		drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2,
-				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F); // +z
+				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // +z
 
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.disableBlend();
