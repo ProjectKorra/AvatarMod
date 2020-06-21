@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -313,8 +314,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 					Vec3d mid = AvatarUtils.getMiddleVec3d(axisalignedbb);
 					BlockPos pos = new BlockPos(mid.x, mid.y, mid.z);
 					IBlockState state = world.getBlockState(pos);
-					if (!noClip || state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()
-							&& state.isFullCube())
+					if (!noClip || state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock() && state.isFullCube()
+							&& (!pushDoor || !(state.getBlock() instanceof BlockDoor)))
 						y = axisalignedbb.calculateYOffset(this.getEntityBoundingBox(), y);
 				}
 
@@ -331,8 +332,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 					Vec3d mid = AvatarUtils.getMiddleVec3d(axisalignedbb1);
 					BlockPos pos = new BlockPos(mid.x, mid.y, mid.z);
 					IBlockState state = world.getBlockState(pos);
-					if (!noClip || state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()
-							&& state.isFullCube())
+					if (!noClip || state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock() && state.isFullCube()
+							&& (!pushDoor || !(state.getBlock() instanceof BlockDoor)))
 						x = axisalignedbb1.calculateXOffset(this.getEntityBoundingBox(), x);
 				}
 
@@ -342,8 +343,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 					Vec3d mid = AvatarUtils.getMiddleVec3d(axisalignedbb2);
 					BlockPos pos = new BlockPos(mid.x, mid.y, mid.z);
 					IBlockState state = world.getBlockState(pos);
-					if (!noClip || state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()
-							&& state.isFullCube())
+					if (!noClip || state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock() && state.isFullCube()
+							&& (!pushDoor || !(state.getBlock() instanceof BlockDoor)))
 						z = axisalignedbb2.calculateZOffset(this.getEntityBoundingBox(), z);
 				}
 

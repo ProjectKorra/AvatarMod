@@ -9,6 +9,9 @@ import com.crowsofwar.gorecore.util.Vector;
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
@@ -22,6 +25,8 @@ import javax.annotation.Nullable;
 @Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
 public class EntityFlameArc extends EntityArc<EntityFlameArc.FlameControlPoint> implements IGlowingEntity {
 
+	private static final DataParameter<Float> SYNC_MAX_SIZE = EntityDataManager.createKey(EntityFlameArc.class, DataSerializers.FLOAT);
+
 	public EntityFlameArc(World world) {
 		super(world);
 		this.ignoreFrustumCheck = true;
@@ -30,6 +35,13 @@ public class EntityFlameArc extends EntityArc<EntityFlameArc.FlameControlPoint> 
 		this.setsFires = false;
 	}
 
+	public float getMaxSize() {
+		return dataManager.get(SYNC_MAX_SIZE);
+	}
+
+	public void setMaxSize(float size) {
+		dataManager.set(SYNC_MAX_SIZE, size);
+	}
 
 	@Override
 	public boolean isPiercing() {
@@ -51,7 +63,6 @@ public class EntityFlameArc extends EntityArc<EntityFlameArc.FlameControlPoint> 
 	public boolean canBePushed() {
 		return true;
 	}
-
 
 	@Override
 	public void spawnDissipateParticles(World world, Vec3d pos) {
@@ -146,14 +157,14 @@ public class EntityFlameArc extends EntityArc<EntityFlameArc.FlameControlPoint> 
 				Vec3d pos2 = i < points.length - 1 ? getControlPoint(Math.max(points.length - i - 2, 0)).position().toMinecraft() : Vec3d.ZERO;
 
 				if (i < points.length - 1) {
-					for (int h = 0; h < 4; h++) {
+					for (int h = 0; h < 6; h++) {
 						pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
 
 						//Flow animation
 						pos2 = pos2.add(AvatarUtils.bezierCurve(Math.min((((i + 1) / (h + 1D)) / points.length), 1), points));
-						Vec3d circlePos = Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 90, getAvgSize() / 2F).toMinecraft().add(pos);
+						Vec3d circlePos = Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 60, getAvgSize() / 2F).toMinecraft().add(pos);
 						Vec3d targetPos = i < points.length - 1 ? Vector.getOrthogonalVector(getLookVec(),
-								(ticksExisted % 360) * 20 + h * 90 + 20, getAvgSize()).toMinecraft().add(pos2)
+								(ticksExisted % 360) * 20 + h * 60 + 20, getAvgSize()).toMinecraft().add(pos2)
 								: Vec3d.ZERO;
 						Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
 
@@ -231,6 +242,11 @@ public class EntityFlameArc extends EntityArc<EntityFlameArc.FlameControlPoint> 
 		return true;
 	}
 
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_MAX_SIZE, 2.0F);
+	}
 
 	@Override
 	@Optional.Method(modid = "hammercore")
