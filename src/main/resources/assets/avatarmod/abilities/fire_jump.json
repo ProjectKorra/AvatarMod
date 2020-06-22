@@ -1,9 +1,33 @@
 {
-  "tier": 3,
-  "chiCost": 1,
-  "cooldown": 0,
-  "custom_properties": {
-    "fireTime": 20,
-    "xpOnUse": 2
+  "xpOnUse": 2,
+  "level1": {
+    "tier": 3,
+    "chiCost": 3.0,
+    "cooldown": 0,
+    "fireTime": 20
+  },
+  "level2": {
+    "tier": 3,
+    "chiCost": 3.25,
+    "cooldown": 5,
+    "fireTime": 25
+  },
+  "level3": {
+    "tier": 4,
+    "chiCost": 3.5,
+    "cooldown": 10,
+    "fireTime": 30
+  },
+  "level4_1": {
+    "tier": 5,
+    "chiCost": 3.75,
+    "cooldown": 15,
+    "fireTime": 35
+  },
+  "level4_2": {
+    "tier": 5,
+    "chiCost": 4.0,
+    "cooldown": 20,
+    "fireTime": 40
   }
 }

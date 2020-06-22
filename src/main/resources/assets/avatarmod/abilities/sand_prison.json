@@ -1,8 +1,33 @@
 {
-  "tier": 1,
-  "chiCost": 1,
-  "cooldown": 0,
-  "custom_properties": {
-    "xpOnUse": 2
+  "xpOnUse": 2,
+  "level1": {
+    "tier": 1,
+    "parentTier": 3,
+    "chiCost": 3.0,
+    "cooldown": 0
+  },
+  "level2": {
+    "tier": 1,
+    "parentTier": 3,
+    "chiCost": 3.25,
+    "cooldown": 5
+  },
+  "level3": {
+    "tier": 2,
+    "parentTier": 4,
+    "chiCost": 3.5,
+    "cooldown": 10
+  },
+  "level4_1": {
+    "tier": 3,
+    "parentTier": 5,
+    "chiCost": 3.75,
+    "cooldown": 15
+  },
+  "level4_2": {
+    "tier": 3,
+    "parentTier": 5,
+    "chiCost": 4.0,
+    "cooldown": 20
   }
 }
