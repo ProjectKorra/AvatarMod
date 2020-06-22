@@ -20,7 +20,6 @@ package com.crowsofwar.avatar;
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
 import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosion;
@@ -49,9 +48,6 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
@@ -70,9 +66,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.io.FileWriter;
-import java.io.IOException;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -224,54 +217,6 @@ public class AvatarMod {
 		});
 
 		AvatarAnnouncements.fetchAnnouncements();
-
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-		for(Ability ability : Abilities.all()) {
-			try {
-
-				FileWriter writer = new FileWriter(new ResourceLocation("avatarmod", "abilities/") + ability.getName() + ".json");
-
-				JsonObject json = new JsonObject();
-
-				JsonObject custom = new JsonObject();
-
-				json.addProperty("tier", ability.getBaseTier());
-				json.addProperty("chiCost", 1);
-				json.addProperty("cooldown", 0);
-
-				json.add("custom_properties", custom);
-				if (ability.getElement() instanceof Firebending && !ability.isBuff())
-					custom.addProperty("fireTime", 20);
-
-				//These properties are shared across projectile and offensive abilities
-				if (ability.isProjectile() || ability.isOffensive()) {
-					custom.addProperty("lifeTime", 20);
-					custom.addProperty("size", 0.5F);
-					custom.addProperty("speed", 5);
-					custom.addProperty("knockback", 2);
-					custom.addProperty("chiOnHit", 2);
-					custom.addProperty("xpOnHit", 2);
-				}
-				if (ability.isOffensive()) {
-					custom.addProperty("damage", 4);
-				}
-				if (ability.isBuff())
-					custom.addProperty("duration", 20);
-
-				if (ability.isBuff() || ability.isUtility())
-					custom.addProperty("xpOnUse", 2);
-
-				if (ability.isChargeable())
-					custom.addProperty("chargeTime", 40);
-				gson.toJson(json, writer);
-
-				writer.close();
-
-			} catch (IOException exception) {
-				exception.printStackTrace();
-			}
-		}
 	}
 
 	@EventHandler

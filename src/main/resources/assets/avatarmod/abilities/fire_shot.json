@@ -1,0 +1,16 @@
+{
+  "tier": 1,
+  "chiCost": 1,
+  "cooldown": 0,
+  "custom_properties": {
+    "fireTime": 20,
+    "lifeTime": 20,
+    "size": 0.5,
+    "speed": 5,
+    "knockback": 2,
+    "chiOnHit": 2,
+    "xpOnHit": 2,
+    "damage": 4,
+    "xpOnUse": 2
+  }
+}

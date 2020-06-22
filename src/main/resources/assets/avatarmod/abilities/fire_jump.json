@@ -1,0 +1,9 @@
+{
+  "tier": 3,
+  "chiCost": 1,
+  "cooldown": 0,
+  "custom_properties": {
+    "fireTime": 20,
+    "xpOnUse": 2
+  }
+}
