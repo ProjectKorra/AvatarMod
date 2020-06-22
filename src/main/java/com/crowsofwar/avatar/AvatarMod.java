@@ -249,32 +249,34 @@ public class AvatarMod {
 					custom.addProperty("xpOnUse", 2);
 
 				for (int i = 0; i < 5; i++) {
-					json.addProperty("chiCost", 3 + i * 0.25F);
-					json.addProperty("cooldown", i * 5);
 					JsonObject level = new JsonObject();
-					String property = "level" + i + 1;
+					String property = "level" + (i + 1);
 					if (i >= 3)
 						property = "level4_" + (i - 2);
-					json.add(property, level);
+					custom.add(property, level);
+
+					level.addProperty("chiCost", 3 + i * 0.25F);
+					level.addProperty("cooldown", i * 5);
+
 					if (ability.getElement() instanceof Firebending && !ability.isBuff())
-						custom.addProperty("fireTime", 20 + i * 5);
+						level.addProperty("fireTime", 20 + i * 5);
 
 					//These properties are shared across projectile and offensive abilities
 					if (ability.isProjectile() || ability.isOffensive()) {
-						custom.addProperty("lifeTime", 20 + i * 5);
-						custom.addProperty("size", 0.5F + i * 0.25F);
-						custom.addProperty("speed", 5 + i * 2);
-						custom.addProperty("knockback", 2 + i);
-						custom.addProperty("chiOnHit", (3 + i * 02.5F) / 2);
+						level.addProperty("lifeTime", 20 + i * 5);
+						level.addProperty("size", 0.5F + i * 0.25F);
+						level.addProperty("speed", 5 + i * 2);
+						level.addProperty("knockback", 2 + i);
+						level.addProperty("chiOnHit", (3 + i * 0.25F) / 2);
 					}
 					if (ability.isOffensive()) {
-						custom.addProperty("damage", 4 + i);
+						level.addProperty("damage", 4 + i);
 					}
 					if (ability.isBuff())
-						custom.addProperty("duration", 20 + i * 5);
+						level.addProperty("duration", 20 + i * 5);
 
 					if (ability.isChargeable())
-						custom.addProperty("chargeTime", 40 - i * 5);
+						level.addProperty("chargeTime", 40 - i * 5);
 				}
 
 				gson.toJson(json, writer);
