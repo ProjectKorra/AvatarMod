@@ -73,5 +73,13 @@ public class AbilityExplosion extends Ability {
 		return 3;
 	}
 
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
 
+	@Override
+	public boolean isOffensive() {
+		return true;
+	}
 }

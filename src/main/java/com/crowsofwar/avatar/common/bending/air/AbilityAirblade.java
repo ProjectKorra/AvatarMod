@@ -262,4 +262,14 @@ public class AbilityAirblade extends Ability {
 
 		}
 	}
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public boolean isOffensive() {
+		return true;
+	}
 }

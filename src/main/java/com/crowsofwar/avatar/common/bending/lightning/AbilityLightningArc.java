@@ -40,4 +40,19 @@ public class AbilityLightningArc extends Ability {
 	public int getBaseParentTier() {
 		return 4;
 	}
+
+	@Override
+	public boolean isChargeable() {
+		return true;
+	}
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public boolean isOffensive() {
+		return true;
+	}
 }

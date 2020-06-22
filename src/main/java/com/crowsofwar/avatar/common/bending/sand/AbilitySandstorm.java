@@ -67,6 +67,16 @@ public class AbilitySandstorm extends Ability {
 	}
 
 	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public boolean isOffensive() {
+		return true;
+	}
+
+	@Override
 	public int getBaseTier() {
 		return 2;
 	}

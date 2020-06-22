@@ -67,6 +67,21 @@ public class AbilityAirBurst extends Ability {
 	}
 
 	@Override
+	public boolean isChargeable() {
+		return true;
+	}
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public boolean isOffensive() {
+		return true;
+	}
+
+	@Override
 	public BendingAi getAi(EntityLiving entity, Bender bender) {
 		return new AiAirBurst(this, entity, bender);
 	}

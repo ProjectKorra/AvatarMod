@@ -90,6 +90,21 @@ public class AbilityIceBurst extends Ability {
 	}
 
 	@Override
+	public boolean isOffensive() {
+		return true;
+	}
+
+	@Override
+	public boolean isUtility() {
+		return true;
+	}
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
 	public int getBaseTier() {
 		return 2;
 	}

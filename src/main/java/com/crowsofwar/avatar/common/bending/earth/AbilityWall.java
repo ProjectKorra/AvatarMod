@@ -261,6 +261,11 @@ public class AbilityWall extends Ability {
 	}
 
 	@Override
+	public boolean isUtility() {
+		return true;
+	}
+
+	@Override
 	public int getBaseTier() {
 		return 3;
 	}

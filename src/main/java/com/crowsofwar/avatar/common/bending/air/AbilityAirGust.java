@@ -222,4 +222,9 @@ public class AbilityAirGust extends Ability {
 		}
 	}
 
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
 }
