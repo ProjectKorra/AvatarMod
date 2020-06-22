@@ -230,7 +230,7 @@ public class AvatarMod {
 		for(Ability ability : Abilities.all()) {
 			try {
 
-				FileWriter writer = new FileWriter("generated\\" + new ResourceLocation("avatarmod", ability.getName()) + ".json");
+				FileWriter writer = new FileWriter(new ResourceLocation("avatarmod", "abilities/") + ability.getName() + ".json");
 
 				JsonObject json = new JsonObject();
 
