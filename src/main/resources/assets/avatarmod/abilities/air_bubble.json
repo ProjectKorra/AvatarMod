@@ -1,8 +1,9 @@
 {
   "tier": 3,
-  "chiCost": 1,
+  "chiCost": 2,
   "cooldown": 0,
   "custom_properties": {
-    "xpOnUse": 2
+    "xpOnDefend": 2,
+    "chiPerSecond": 1
   }
 }
