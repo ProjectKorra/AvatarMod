@@ -26,7 +26,9 @@ import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -42,6 +44,8 @@ public abstract class Ability {
 	private final UUID type;
 	private final String name;
 	private Raytrace.Info raytrace;
+	/** Used in initialisation. */
+	private Set<String> propertyKeys = new HashSet<>();
 
 	public Ability(UUID bendingType, String name) {
 		this.type = bendingType;
