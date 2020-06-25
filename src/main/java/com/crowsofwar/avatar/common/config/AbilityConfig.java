@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.config;
+/*package com.crowsofwar.avatar.common.config;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
@@ -42,26 +42,25 @@ public class AbilityConfig {
 
 
 
-
-
+/*
 	private static final Gson gson = new Gson();
 	/**
 	 * The tier this spell belongs to.
 	 */
-	public final int tier;
+	/*public final int tier;
 
 	/**
 	 * Mana cost of the spell. If it is a continuous spell the cost is per second.
 	 */
-	public final int cost;
+	/*public final int cost;
 	/**
 	 * The charge-up time of the spell, in ticks.
 	 */
-	public final int chargeup;
+	/*public final int chargeup;
 	/**
 	 * The cooldown time of the spell, in ticks.
 	 */
-	public final int cooldown;
+/*	public final int cooldown;
 
 	/**
 	 * A map storing the base values for this spell. These values are defined by the spell class and cannot be
@@ -71,7 +70,7 @@ public class AbilityConfig {
 	// If we did what attributes do and just use doubles, people (myself included!) might plug them into calculations
 	// without thinking. However, with Number you can't just do that, you have to convert and therefore you have to
 	// decide how to do the conversion. Internally they're handled as floats though.
-	private final Map<String, Number> baseValues;
+	/*private final Map<String, Number> baseValues;
 
 	/**
 	 * Parses the given JSON object and constructs a new {@code SpellProperties} from it, setting all the relevant
@@ -81,7 +80,7 @@ public class AbilityConfig {
 	 * @param ability The spell that this {@code AbilityConfig} object is for.
 	 * @throws JsonSyntaxException if at any point the JSON object is found to be invalid.
 	 */
-	private AbilityConfig(JsonObject json, Ability ability) {
+/*	private AbilityConfig(JsonObject json, Ability ability) {
 
 		String[] baseValueNames = ability.getPropertyKeys();
 
@@ -119,7 +118,7 @@ public class AbilityConfig {
 		 * Fireball level4_1 has an int numberOfFireballs.
 		 */
 
-		JsonObject baseValueObject = JsonUtils.getJsonObject(json, "base_properties");
+/*		JsonObject baseValueObject = JsonUtils.getJsonObject(json, "base_properties");
 
 		// If the code requests more values than the JSON file contains, that will cause a JsonSyntaxException here anyway.
 		// If there are redundant values in the JSON file, chances are that a user has misunderstood the system and tried
@@ -148,7 +147,7 @@ public class AbilityConfig {
 	/**
 	 * Constructs a new SpellProperties object for the given spell, reading its values from the given ByteBuf.
 	 */
-	public AbilityConfig(Ability ability, ByteBuf buf) {
+/*	public AbilityConfig(Ability ability, ByteBuf buf) {
 
 		baseValues = new HashMap<>();
 
@@ -173,7 +172,7 @@ public class AbilityConfig {
 	// I *think* I decided against the proxy thing and just forgot to delete the methods (they're gone now), but if
 	// things don't work as expected then that may be why - pretty sure it's fine though since the properties get
 	// wiped client-side on each login anyway.
-	public static void init() {
+/*	public static void init() {
 		boolean flag = loadConfigAbilityProperties();
 
 		flag &= loadBuiltInAbilityProperties(); // Don't short-circuit, or mods later on won't get loaded!
@@ -345,7 +344,7 @@ public class AbilityConfig {
 	/**
 	 * Writes this SpellProperties object to the given ByteBuf so it can be sent via packets.
 	 */
-	public void write(ByteBuf buf) {
+/*	public void write(ByteBuf buf) {
 
 		buf.writeInt(tier);
 		buf.writeInt(chargeup);
@@ -370,12 +369,12 @@ public class AbilityConfig {
 	 * @return The base value, as a {@code Number}.
 	 * @throws IllegalArgumentException if no base value was defined with the given identifier.
 	 */
-	public Number getBaseValue(String identifier) {
+/*	public Number getBaseValue(String identifier) {
 		if (!baseValues.containsKey(identifier)) {
 			throw new IllegalArgumentException("Base value with identifier '" + identifier + "' is not defined.");
 		}
 		return baseValues.get(identifier);
 	}
 
-}
+}**/
 
