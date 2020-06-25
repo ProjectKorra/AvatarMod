@@ -224,6 +224,13 @@ public class EntityAirGust extends EntityOffensive {
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+		if (!world.isRemote)
+			Thread.dumpStack();
+	}
+
+	@Override
 	public void spawnDissipateParticles(World world, Vec3d pos) {
 		if (world.isRemote && getOwner() != null) {
 			for (int i = 0; i < 8; i++) {
