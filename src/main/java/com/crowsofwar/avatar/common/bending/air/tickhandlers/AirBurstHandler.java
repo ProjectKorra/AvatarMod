@@ -205,6 +205,9 @@ public class AirBurstHandler extends TickHandler {
 			}
 
 
+			System.out.println("Should Remove: " + shouldRemove);
+			System.out.println("Duration: " + duration);
+			System.out.println(!data.hasStatusControl(SHOOT_AIR_BURST));
 			if (!data.hasStatusControl(RELEASE_AIR_BURST)) {
 
 				int particleController = abilityData.getLevel() > 0 ? 50 - (4 * abilityData.getLevel()) : 50;

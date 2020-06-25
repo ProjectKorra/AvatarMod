@@ -325,6 +325,7 @@ public abstract class Bender {
 					}
 				}
 			}
+			data.save(DataCategory.TICK_HANDLERS);
 		}
 
 		// Update bending managers

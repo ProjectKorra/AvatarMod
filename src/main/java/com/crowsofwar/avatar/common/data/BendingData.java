@@ -441,7 +441,7 @@ public class BendingData {
 		tickHandlers.addAll(handlers);
 
 		Map<TickHandler, Integer> newDurations = handlers.stream().collect(Collectors.toMap(Function.identity()
-				, h -> 0));
+				, this::getTickHandlerDuration));
 		tickHandlerDuration.clear();
 		tickHandlerDuration.putAll(newDurations);
 	}
