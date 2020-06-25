@@ -1,12 +1,20 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.AvatarClientProxy;
+import com.crowsofwar.avatar.common.AvatarCommonProxy;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.server.AvatarServerProxy;
+import com.crowsofwar.gorecore.GoreCore;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.FMLClientHandler;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
@@ -67,7 +75,18 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
 			f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
 		}
 
-		this.setAlphaF(sparkle ? particleAlpha - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F : particleAlpha);
+		if (FMLClientHandler.instance().hasOptifine()) {
+			 this.setAlphaF(sparkle ? particleAlpha - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F :
+					 0.6F - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F);
+			if (world.getWorldTime() > 12600 && world.getWorldTime() < 950) {
+				particleAlpha *= 0.75F;
+				f4 = 0.25F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
+			}
+			else f4 = 0.5F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
+			if (element instanceof Airbending)
+				setRBGColorF(1.0F, 1.0F, 1.0F);
+		}
+		else this.setAlphaF(sparkle ? particleAlpha - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F : particleAlpha);
 		float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
 		float f6 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
 		float f7 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
