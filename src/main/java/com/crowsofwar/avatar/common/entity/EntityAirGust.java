@@ -226,8 +226,6 @@ public class EntityAirGust extends EntityOffensive {
 	@Override
 	public void setDead() {
 		super.setDead();
-		if (!world.isRemote)
-			Thread.dumpStack();
 	}
 
 	@Override

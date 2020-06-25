@@ -280,40 +280,42 @@ public class EntityFloatingBlock extends EntityOffensive {
 
         }
 
-        // Spawn particles
-        Random random = new Random();
-        for (int i = 0; i < 7; i++) {
-            spawnCrackParticle(posX, posY + 0.3, posZ, random.nextGaussian() * 0.1,
-                    random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
-        }
-        if (getOwner() != null && getAbility() instanceof AbilityEarthControl) {
-            AbilityData data = BendingData.get(getOwner()).getAbilityData("earth_control");
-
-            if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
-
-                Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);
-                if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
-                    explosion.doExplosionA();
-                    explosion.doExplosionB(true);
-                }
-
+        if (collided) {
+            // Spawn particles
+            Random random = new Random();
+            for (int i = 0; i < 7; i++) {
+                spawnCrackParticle(posX, posY + 0.3, posZ, random.nextGaussian() * 0.1,
+                        random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
             }
-            if (!data.isMasterPath(AbilityTreePath.FIRST)) {
-                setDead();
-            }
-            if (!world.isRemote && areItemDropsEnabled()) {
-                NonNullList<ItemStack> drops = NonNullList.create();
-                getBlock().getDrops(drops, world, new BlockPos(this), getBlockState(), 0);
-                int i = 0;
-                for (ItemStack is : drops) {
-                    if (i < 1) {
-                        EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
-                        world.spawnEntity(ei);
+            if (getOwner() != null && getAbility() instanceof AbilityEarthControl) {
+                AbilityData data = BendingData.get(getOwner()).getAbilityData("earth_control");
+
+                if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
+
+                    Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);
+                    if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
+                        explosion.doExplosionA();
+                        explosion.doExplosionB(true);
                     }
-                    i++;
-                }
-            }
 
+                }
+                if (!data.isMasterPath(AbilityTreePath.FIRST)) {
+                    setDead();
+                }
+                if (!world.isRemote && areItemDropsEnabled()) {
+                    NonNullList<ItemStack> drops = NonNullList.create();
+                    getBlock().getDrops(drops, world, new BlockPos(this), getBlockState(), 0);
+                    int i = 0;
+                    for (ItemStack is : drops) {
+                        if (i < 1) {
+                            EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
+                            world.spawnEntity(ei);
+                        }
+                        i++;
+                    }
+                }
+
+            }
         }
 
         return collided;
