@@ -1,31 +1,31 @@
 // For those who want the bleeding edge
 buildscript {
-	repositories {
-		mavenCentral()
-		jcenter()
-		maven {
-			url = "https://plugins.gradle.org/m2/"
-		}
-		maven {
-			name = "forge"
-			url = "http://files.minecraftforge.net/maven/"
-		}
-		maven {
-			name = "sonatype"
-			url = "https://oss.sonatype.org/content/repositories/snapshots/"
-		}
-		maven {
-			name = "amuzil"
-			url = "http://repo.amuzil.com/repository/public/"
-		}
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url = "https://plugins.gradle.org/m2/"
+        }
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven/"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            name = "amuzil"
+            url = "http://repo.amuzil.com/repository/public/"
+        }
 
-	}
-	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-		classpath "com.github.jengelman.gradle.plugins:shadow:4.0.3"
-		classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7"
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath "com.github.jengelman.gradle.plugins:shadow:4.0.3"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7"
 
-	}
+    }
 }
 
 apply plugin: "java"
@@ -54,166 +54,168 @@ archivesBaseName = config.archivesBaseName
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 compileJava {
-	sourceCompatibility = JavaVersion.VERSION_1_8
-	targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 // This makes IDEA recognize the assets folder
 idea {
-	module {
-		inheritOutputDirs = true
-	}
+    module {
+        inheritOutputDirs = true
+    }
 }
 
 repositories {
-	mavenCentral()
-	maven {
-		name = "amuzil"
-		url = "http://repo.amuzil.com/repository/public/"
-	}
+    mavenCentral()
+    jcenter()
+    maven { url = "https://files.minecraftforge.net/maven" }
+    maven {
+        name = "amuzil"
+        url = "http://repo.amuzil.com/repository/public/"
+    }
 
-	maven {
-		name = "codechickenlib"
-		url = "http://chickenbones.net/maven/"
-	}
+    maven {
+        name = "codechickenlib"
+        url = "http://chickenbones.net/maven/"
+    }
 
-	maven {
-		// location of the maven that hosts JEI files
-		name = "Progwml6 maven"
-		url = "https://dvs1.progwml6.com/files/maven/"
-	}
-	maven {
-		// location of a maven mirror for JEI files, as a fallback
-		name = "ModMaven"
-		url = "https://modmaven.k-4u.nl"
-	}
-	maven {
-		name = "DragonForge"
-		url = "https://raw.github.com/dragon-forge/maven/master"
-	}
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+    maven {
+        name = "DragonForge"
+        url = "https://raw.github.com/dragon-forge/maven/master"
+    }
 }
 
 configurations {
-	shadow
+    shadow
 
-	compile.extendsFrom provided
-	provided.extendsFrom shadow
+    compile.extendsFrom provided
+    provided.extendsFrom shadow
 }
 
 task useDeobfDependencies {
-	dependenciesConfig.obfuscated = false
+    dependenciesConfig.obfuscated = false
 }
 
 tasks.runClient.dependsOn tasks.useDeobfDependencies
 tasks.runServer.dependsOn tasks.useDeobfDependencies
 
 dependencies {
-	provided fileTree(dir: dependenciesConfig.libraries + (dependenciesConfig.obfuscated ? "" : "Deobf"), include: ["*.jar"])
-	//provided "elucent.albedo:albedo:1.1.0-3"
-	provided "codechicken:CodeChickenLib:1.12.2-3.2.2.353:universal"
-	deobfCompile "tk.zeitheron.HammerLib:HammerLib-1.12.2:2.0.6.13:deobf"
-	deobfCompile "tk.zeitheron.ColoredLux:ColoredLux-1.12.2:12r:deobf"
-	// compile against the JEI API but do not include it at runtime
-	deobfProvided "mezz.jei:jei_1.12.2:4.15.0.293:api"
-	// at runtime, use the full JEI jar
-	runtime "mezz.jei:jei_1.12.2:4.15.0.293"
-	// Forge Mods
-	if (dependenciesConfig.obfuscated) {
-	} else {
-	}
-	//jei_1.12.2-4.15.0.293.jar
-	// Other Stuff
-	shadow "org.yaml:snakeyaml:1.23"
-	shadow "org.joml:joml:1.9.24"
+    provided fileTree(dir: dependenciesConfig.libraries + (dependenciesConfig.obfuscated ? "" : "Deobf"), include: ["*.jar"])
+    //provided "elucent.albedo:albedo:1.1.0-3"
+//	provided "codechicken:CodeChickenLib:1.12.2-3.2.2.353:universal"
+//	deobfCompile "tk.zeitheron.HammerLib:HammerLib-1.12.2:2.0.6.13:deobf"
+//	deobfCompile "tk.zeitheron.ColoredLux:ColoredLux-1.12.2:12r:deobf"
+    // compile against the JEI API but do not include it at runtime
+//	deobfProvided "mezz.jei:jei_1.12.2:4.15.0.293:api"
+    // at runtime, use the full JEI jar
+//	runtime "mezz.jei:jei_1.12.2:4.15.0.293"
+    // Forge Mods
+    if (dependenciesConfig.obfuscated) {
+    } else {
+    }
+    //jei_1.12.2-4.15.0.293.jar
+    // Other Stuff
+    shadow "org.yaml:snakeyaml:1.23"
+    shadow "org.joml:joml:1.9.24"
 }
 
 minecraft {
-	version = config.forge
-	mappings = config.mappings
+    version = config.forge
+    mappings = config.mappings
 
-	runDir = "run"
+    runDir = "run"
 
-	replaceIn "src/main/java/com/crowsofwar/avatar/AvatarInfo.java"
-	replace "@version@", config.version
-	replace "@modid@", config.modid
-	replace "@mcversion@", project.minecraft.version
-	replace "@name@", config.name
+    replaceIn "src/main/java/com/crowsofwar/avatar/AvatarInfo.java"
+    replace "@version@", config.version
+    replace "@modid@", config.modid
+    replace "@mcversion@", project.minecraft.version
+    replace "@name@", config.name
 }
 
 jar {
-	manifest {
+    manifest {
 
-	}
-	from("./") {
-		include "*.md"
-	}
+    }
+    from("./") {
+        include "*.md"
+    }
 }
 
 shadowJar {
-	// Overwrite the default file
-	classifier = null
-	configurations = [project.configurations.shadow]
+    // Overwrite the default file
+    classifier = null
+    configurations = [project.configurations.shadow]
 
-	from(sourceSets.main.allJava) {
-		include "*"
-	}
-	from("./") {
-		include "*.md"
-	}
+    from(sourceSets.main.allJava) {
+        include "*"
+    }
+    from("./") {
+        include "*.md"
+    }
 
-	relocate "org.joml", "com.crowsofwar.avatar.joml"
-	relocate "org.yaml.snakeyaml", "com.crowsofwar.avatar.snakeyaml"
+    relocate "org.joml", "com.crowsofwar.avatar.joml"
+    relocate "org.yaml.snakeyaml", "com.crowsofwar.avatar.snakeyaml"
 }
 
 reobf {
-	shadowJar {
-		mappingType = "SEARGE"
-	}
+    shadowJar {
+        mappingType = "SEARGE"
+    }
 }
 tasks.reobfShadowJar.mustRunAfter shadowJar
 
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = 'sources'
-	from sourceSets.main.allSource
+    classifier = 'sources'
+    from sourceSets.main.allSource
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-	classifier = 'javadoc'
-	from javadoc.destinationDir
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
 
 artifacts {
-	archives sourcesJar
-	// TODO Fix
-	// archives javadocJar
+    archives sourcesJar
+    // TODO Fix
+    // archives javadocJar
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
 processResources {
-	// This will ensure that this task is redone when the versions change
-	inputs.property "version", project.version
-	inputs.property "mcversion", project.minecraft.version
+    // This will ensure that this task is redone when the versions change
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
 
-	// Replace stuff in mcmod.info, nothing else
-	from(sourceSets.main.resources.srcDirs) {
-		include "mcmod.info"
-		filter ReplaceTokens, tokens: [version: config.version, mcversion: project.minecraft.version, modid: config.modid, name: config.name]
-	}
+    // Replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include "mcmod.info"
+        filter ReplaceTokens, tokens: [version: config.version, mcversion: project.minecraft.version, modid: config.modid, name: config.name]
+    }
 
-	// Copy everything else
-	from(sourceSets.main.resources.srcDirs) {
-		exclude "mcmod.info"
-	}
+    // Copy everything else
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "mcmod.info"
+    }
 }
 
 static def parseConfig(File config) {
-	config.withReader {
-		def prop = new Properties()
-		prop.load(it)
-		return (new ConfigSlurper().parse(prop))
-	}
+    config.withReader {
+        def prop = new Properties()
+        prop.load(it)
+        return (new ConfigSlurper().parse(prop))
+    }
 }
 
 def startBuildMessage = "Starting build...\n\nName: ${project.name}\nVersion: ${project.version}"
@@ -221,75 +223,75 @@ def finishBuildMessage = "Successfully finished building ${project.name} version
 def fancyBorder = ""
 
 task buildInformation {
-	doFirst {
-		def lines = startBuildMessage.readLines()
-		lines.addAll(finishBuildMessage.readLines())
-		def maxLength = 0
-		for (String line : lines)
-			maxLength = Math.max(line.length(), maxLength)
-		if (maxLength % 2 != 0) maxLength++
-		for (def i = 0; i < maxLength; i++) {
-			fancyBorder += i % 2 == 0 ? "=" : "--"
-		}
-	}
+    doFirst {
+        def lines = startBuildMessage.readLines()
+        lines.addAll(finishBuildMessage.readLines())
+        def maxLength = 0
+        for (String line : lines)
+            maxLength = Math.max(line.length(), maxLength)
+        if (maxLength % 2 != 0) maxLength++
+        for (def i = 0; i < maxLength; i++) {
+            fancyBorder += i % 2 == 0 ? "=" : "--"
+        }
+    }
 }
 
 task startBuild {
-	doFirst {
-		println """
+    doFirst {
+        println """
 ${fancyBorder}
 
 ${startBuildMessage}
 
 ${fancyBorder}
 """
-	}
+    }
 }
 
 task finishBuild {
-	doLast {
-		println """
+    doLast {
+        println """
 ${fancyBorder}
 
 ${finishBuildMessage}
 
 ${fancyBorder}
 """
-	}
+    }
 }
 
 task cleanBuild(dependsOn: ["buildInformation", "startBuild", "clean", "build", "finishBuild"]) {
-	group "build"
-	tasks.startBuild.mustRunAfter tasks.buildInformation
-	tasks.clean.mustRunAfter tasks.startBuild
-	tasks.build.mustRunAfter tasks.clean
-	tasks.finishBuild.mustRunAfter tasks.build
+    group "build"
+    tasks.startBuild.mustRunAfter tasks.buildInformation
+    tasks.clean.mustRunAfter tasks.startBuild
+    tasks.build.mustRunAfter tasks.clean
+    tasks.finishBuild.mustRunAfter tasks.build
 }
 
 publishing {
-	publications {
-		shadowPublication(MavenPublication) {
-			project.shadow.component(it)
-			afterEvaluate {
-				artifact sourcesJar
-				// TODO artifact javadocJar
-			}
-		}
-	}
-	repositories {
-		maven {
-			url = "http://repo.amuzil.com/repository/public/"
-			credentials {
-				username = secrets.repo.username
-				password = secrets.repo.password
-			}
-		}
-	}
+    publications {
+        shadowPublication(MavenPublication) {
+            project.shadow.component(it)
+            afterEvaluate {
+                artifact sourcesJar
+                // TODO artifact javadocJar
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = "http://repo.amuzil.com/repository/public/"
+            credentials {
+                username = secrets.repo.username
+                password = secrets.repo.password
+            }
+        }
+    }
 }
 
 task release(dependsOn: ["cleanBuild", "publish"]) {
-	group "build"
-	tasks.publish.mustRunAfter cleanBuild
+    group "build"
+    tasks.publish.mustRunAfter cleanBuild
 }
 
 runClient {
