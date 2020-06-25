@@ -53,7 +53,6 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
-		GlStateManager.enableLighting();
 
 
 		if (element instanceof Firebending || glow) {
