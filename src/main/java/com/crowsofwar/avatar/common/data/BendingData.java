@@ -405,8 +405,8 @@ public class BendingData {
 	 * the TickHandler.
 	 */
 	public int getTickHandlerDuration(TickHandler handler) {
-		if (hasTickHandler(handler)) {
-			return tickHandlerDuration.get(handler);
+		if (hasTickHandler(handler) && tickHandlerDuration != null) {
+			return tickHandlerDuration.getOrDefault(handler, 0);
 		} else {
 			return -1;
 		}
