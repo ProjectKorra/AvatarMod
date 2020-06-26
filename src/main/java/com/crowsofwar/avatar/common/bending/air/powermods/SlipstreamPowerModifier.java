@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.common.bending.air.powermods;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.bending.BuffPowerModifier;
 import com.crowsofwar.avatar.common.bending.air.AbilitySlipstream;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.Vision;
@@ -69,7 +70,7 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
 			double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 			ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
 					world.rand.nextGaussian() / 60).time(12).clr(0.95F, 0.95F, 0.95F, 0.1F)
-					.scale((1.5F + Math.min(data.getLevel(), 0) / 2F) * 2).spawn(world);
+					.scale((1.5F + Math.min(data.getLevel(), 0) / 2F) * 2).element(new Airbending()).spawn(world);
 
 		}
 

@@ -154,7 +154,7 @@ public class AirBurstHandler extends TickHandler {
 							i * 30), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
 					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(lookpos.toMinecraft()))
 							.collide(true).scale(abilityData.getXpModifier() * 0.5F * charge).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-							world.rand.nextGaussian() / 60).clr(1F, 1F, 1F, 0.2F).element(new Airbending()).spawn(world);
+							world.rand.nextGaussian() / 60).element(new Airbending()).clr(1F, 1F, 1F, 0.2F).element(new Airbending()).spawn(world);
 				}
 			}
 			world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 0.25F * charge, 0.8F + world.rand.nextFloat() / 10);
