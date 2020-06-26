@@ -166,8 +166,6 @@ public class AvatarMod {
 		ConfigChi.load();
 		ConfigMobs.load();
 		ConfigAnalytics.load();
-
-		AvatarControl.initControls();
 		registerAbilities();
 		registerBendingStyles();
 		AvatarItems.init();

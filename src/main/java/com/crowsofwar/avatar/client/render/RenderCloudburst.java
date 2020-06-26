@@ -14,6 +14,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
@@ -54,7 +55,7 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 
 		if (!AvatarMod.proxy.isOptifinePresent())
 			blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
-		GlStateManager.color(0.85F, 0.85F, 0.85F, 0.4F);
+		GlStateManager.color(0.875F, 0.875F, 0.875F, 0.5F);
 		renderCube(x, y, z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
 				size * 0.5F, //
@@ -64,8 +65,8 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 		int j = i % 65536;
 		int k = i / 65536;
 
-		if (!AvatarMod.proxy.isOptifinePresent())
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
 
 		//  } else {
 		int light = Math.min(entity.world.getSkylightSubtracted(), 7);

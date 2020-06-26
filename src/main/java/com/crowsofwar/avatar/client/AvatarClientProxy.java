@@ -33,6 +33,7 @@ import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
 import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.blocks.tiles.TileBlockTemp;
+import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
@@ -159,6 +160,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		AvatarInventoryOverride.register();
 		AvatarFovChanger.register();
 		ParticleBehaviour.registerBehaviours();
+		AvatarControl.initControls();
 
 		clientFetcher = new PlayerDataFetcherClient<>(AvatarPlayerData.class, (data) -> {
 			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));

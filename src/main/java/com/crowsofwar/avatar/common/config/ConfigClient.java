@@ -138,6 +138,12 @@ public class ConfigClient {
 
 		@Load
 		public boolean useImmolateShaders = false;
+
+		@Load
+		public boolean bslActive = false;
+
+		@Load
+		public boolean sildursActive = false;
 	}
 
 	public static class ActiveBendingSettings {

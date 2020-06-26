@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -32,6 +31,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 /**
@@ -61,9 +61,9 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         disableDepth();
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
-        if (!AvatarMod.proxy.isOptifinePresent()) {
+        if (!CLIENT_CONFIG.shaderSettings.bslActive)
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-        }
+
 
         float ticks = entity.ticksExisted + partialTicks;
         float sizeMult = 1, alpha = 1;
@@ -81,24 +81,24 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         }
         sizeMult *= entity.getSize() / 2.5f;
 
-        if (AvatarMod.proxy.isOptifinePresent())
+        if (CLIENT_CONFIG.shaderSettings.bslActive || CLIENT_CONFIG.shaderSettings.sildursActive)
             GlStateManager.color(0.35F, 0.35F, 0.35F, 0.15f * alpha);
         else GlStateManager.color(0.5F, 0.5F, 0.5F, 0.15f * alpha);
         {
             float rotY = ticks / 7f;
             float rotX = MathHelper.cos(ticks / 4f) * .3f;
-            if (!AvatarMod.proxy.isOptifinePresent())
+            if (!CLIENT_CONFIG.shaderSettings.bslActive)
                 enableLighting();
             renderCube(x, y, z, 0, 1, 0, 1, 2.25f * sizeMult, rotX, rotY, 0);
         }
 
-        if (AvatarMod.proxy.isOptifinePresent())
+        if (CLIENT_CONFIG.shaderSettings.bslActive || CLIENT_CONFIG.shaderSettings.sildursActive)
             GlStateManager.color(0.875F, 0.875F, 0.875F, 0.25f * alpha);
         else GlStateManager.color(1F, 1F, 1F, 0.25f * alpha);
         {
             float rotY = ticks / 25f;
             float rotZ = MathHelper.cos(ticks / 10f + 1.3f) * .3f;
-            if (!AvatarMod.proxy.isOptifinePresent())
+            if (!CLIENT_CONFIG.shaderSettings.bslActive)
                 enableLighting();
             renderCube(x, y, z, 0, 1, 0, 1, 3f * sizeMult, 0, rotY, rotZ);
         }
