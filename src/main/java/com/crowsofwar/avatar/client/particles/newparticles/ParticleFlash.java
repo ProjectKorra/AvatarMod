@@ -1,13 +1,8 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.AvatarClientProxy;
-import com.crowsofwar.avatar.common.AvatarCommonProxy;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
-import com.crowsofwar.avatar.server.AvatarServerProxy;
-import com.crowsofwar.gorecore.GoreCore;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -29,96 +24,99 @@ import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 //@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
 public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ {
 
-	public ParticleFlash(World world, double x, double y, double z) {
-		super(world, x, y, z);
-		this.setRBGColorF(1, 1, 1);
-		this.setAlphaF(particleAlpha = 1.0F);
-		this.particleScale = 0.6f; // 7.1f is the value used in fireworks
-		this.particleMaxAge = 6;
-	}
+    public ParticleFlash(World world, double x, double y, double z) {
+        super(world, x, y, z);
+        this.setRBGColorF(1, 1, 1);
+        this.setAlphaF(particleAlpha = 1.0F);
+        this.particleScale = 0.6f; // 7.1f is the value used in fireworks
+        this.particleMaxAge = 6;
+    }
 
 
-	@Override
-	public boolean shouldDisableDepth() {
-		return true;
-	}
+    @Override
+    public boolean shouldDisableDepth() {
+        return true;
+    }
 
-	@Override
-	public int getFXLayer() {
-		return 0;
-	}
+    @Override
+    public int getFXLayer() {
+        return 0;
+    }
 
-	@Override
-	public void drawParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
+    @Override
+    public void drawParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
 
-		GlStateManager.pushMatrix();
-		GlStateManager.enableBlend();
-
-
-		if (element instanceof Firebending || glow) {
-			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-		}
-
-		if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
-			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		}
-
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 24f, 240f);
-
-		float f4;
-		if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
-			setRBGColorF(particleRed * 0.875f, particleGreen * 0.875F, particleBlue * 0.875F);
-			setAlphaF(particleAlpha * 0.9F);
-			f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
-		} else {
-			f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
-		}
-
-		if (FMLClientHandler.instance().hasOptifine()) {
-			 this.setAlphaF(sparkle ? particleAlpha - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F :
-					 0.6F - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F);
-			if (world.getWorldTime() > 12600 && world.getWorldTime() < 950 && element instanceof Airbending) {
-				particleAlpha *= 0.75F;
-				f4 = 0.25F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
-			}
-			else if (element instanceof Airbending) f4 = 0.5F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
-			if (element instanceof Airbending)
-				setRBGColorF(1.0F, 1.0F, 1.0F);
-			if (element instanceof Firebending)
-				particleAlpha *= 2F;
-		}
-		else this.setAlphaF(sparkle ? particleAlpha - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F : particleAlpha);
-		float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
-		float f6 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
-		float f7 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
-		int i = this.getBrightnessForRender(partialTicks);
-		int j = i >> 16 & 65535;
-		int k = i & 65535;
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
 
 
-		buffer.pos(f5 - rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 - rotationYZ * f4 - rotationXZ * f4).tex(0.5D, 0.375D)
-				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		buffer.pos(f5 - rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 - rotationYZ * f4 + rotationXZ * f4).tex(0.5D, 0.125D)
-				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		buffer.pos(f5 + rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 + rotationYZ * f4 + rotationXZ * f4).tex(0.25D, 0.125D)
-				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		buffer.pos(f5 + rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 + rotationYZ * f4 - rotationXZ * f4).tex(0.25D, 0.375D)
-				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+        if (element instanceof Firebending || glow) {
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+        }
 
-		GlStateManager.popMatrix();
+        if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        }
 
-	}
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 24f, 240f);
+
+        float f4;
+        if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
+            setRBGColorF(particleRed * 0.875f, particleGreen * 0.875F, particleBlue * 0.875F);
+            setAlphaF(particleAlpha * 0.9F);
+            f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
+        } else {
+            f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
+        }
+
+        if (FMLClientHandler.instance().hasOptifine()) {
+            this.setAlphaF(sparkle ? particleAlpha - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F :
+                    0.6F - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F);
+            if (world.getWorldTime() > 12600 && world.getWorldTime() < 950 && element instanceof Airbending) {
+                particleAlpha *= 0.75F;
+                f4 = 0.25F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
+            } else if (element instanceof Airbending)
+                f4 = 0.5F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
+            if (element instanceof Airbending)
+                setRBGColorF(1.0F, 1.0F, 1.0F);
+            if (element instanceof Firebending) {
+                if (!(ability instanceof AbilityFlamethrower))
+                    particleAlpha *= 2F;
+                else particleAlpha *= 1.25F;
+            }
+        } else
+            this.setAlphaF(sparkle ? particleAlpha - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F : particleAlpha);
+        float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
+        float f6 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
+        float f7 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
+        int i = this.getBrightnessForRender(partialTicks);
+        int j = i >> 16 & 65535;
+        int k = i & 65535;
 
 
-	@Override
-	public int getBrightnessForRender(float partialTicks) {
+        buffer.pos(f5 - rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 - rotationYZ * f4 - rotationXZ * f4).tex(0.5D, 0.375D)
+                .color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+        buffer.pos(f5 - rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 - rotationYZ * f4 + rotationXZ * f4).tex(0.5D, 0.125D)
+                .color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+        buffer.pos(f5 + rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 + rotationYZ * f4 + rotationXZ * f4).tex(0.25D, 0.125D)
+                .color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+        buffer.pos(f5 + rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 + rotationYZ * f4 - rotationXZ * f4).tex(0.25D, 0.375D)
+                .color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+
+        GlStateManager.popMatrix();
+
+    }
+
+
+    @Override
+    public int getBrightnessForRender(float partialTicks) {
 		/*if (element instanceof Firebending) {
 			BlockPos blockpos = new BlockPos(this.posX, this.posY, this.posZ);
 			return this.world.isBlockLoaded(blockpos) ? this.world.getCombinedLight(blockpos, Math.min(world.getSkylightSubtracted(), 7)) : 0;
 		}
 		else */
-		return super.getBrightnessForRender(partialTicks);
-	}
+        return super.getBrightnessForRender(partialTicks);
+    }
 
 
 
