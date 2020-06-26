@@ -61,7 +61,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         disableDepth();
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
-        if (!CLIENT_CONFIG.shaderSettings.bslActive)
+        if (!CLIENT_CONFIG.shaderSettings.bslActive && !CLIENT_CONFIG.shaderSettings.sildursActive)
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
 
@@ -87,8 +87,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         {
             float rotY = ticks / 7f;
             float rotX = MathHelper.cos(ticks / 4f) * .3f;
-            if (!CLIENT_CONFIG.shaderSettings.bslActive)
-                enableLighting();
+            enableLighting();
             renderCube(x, y, z, 0, 1, 0, 1, 2.25f * sizeMult, rotX, rotY, 0);
         }
 
@@ -98,8 +97,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         {
             float rotY = ticks / 25f;
             float rotZ = MathHelper.cos(ticks / 10f + 1.3f) * .3f;
-            if (!CLIENT_CONFIG.shaderSettings.bslActive)
-                enableLighting();
+            enableLighting();
             renderCube(x, y, z, 0, 1, 0, 1, 3f * sizeMult, 0, rotY, rotZ);
         }
         //GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);

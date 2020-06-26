@@ -23,6 +23,10 @@ import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
+import com.crowsofwar.avatar.common.config.ConfigClient;
+import com.crowsofwar.avatar.common.config.ConfigMobs;
+import com.crowsofwar.avatar.common.config.ConfigSkills;
+import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
@@ -328,6 +332,13 @@ public abstract class Bender {
 			data.save(DataCategory.TICK_HANDLERS);
 		}
 
+		//Config updates
+		if (entity.ticksExisted % 400 == 0) {
+			ConfigClient.load();
+			ConfigStats.load();
+			ConfigSkills.load();
+			ConfigMobs.load();
+		}
 		// Update bending managers
 
 		List<PowerRatingManager> managers = data.getPowerRatingManagers();
