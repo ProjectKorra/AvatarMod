@@ -84,6 +84,8 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
 			else if (element instanceof Airbending) f4 = 0.5F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
 			if (element instanceof Airbending)
 				setRBGColorF(1.0F, 1.0F, 1.0F);
+			if (element instanceof Firebending)
+				particleAlpha *= 2F;
 		}
 		else this.setAlphaF(sparkle ? particleAlpha - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F : particleAlpha);
 		float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
