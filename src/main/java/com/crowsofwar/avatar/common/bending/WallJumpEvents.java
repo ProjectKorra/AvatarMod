@@ -41,7 +41,7 @@ public class WallJumpEvents {
 		MiscData miscData = data.getMiscData();
 		Bender bender = Bender.get(player);
 	//	GameSettings settings = Minecraft.getMinecraft().gameSettings;
-		if ((player == GoreCore.proxy.getClientSidePlayer() || player == FMLClientHandler.instance().getClientPlayerEntity())&& bender.getWallJumpManager()
+		if (player == GoreCore.proxy.getClientSidePlayer() && bender.getWallJumpManager()
 				.canWallJump()) {
 			if (AvatarControl.CONTROL_JUMP.isPressed()) {
 				AvatarMod.network.sendToServer(new PacketSWallJump());
