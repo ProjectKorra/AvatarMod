@@ -174,7 +174,7 @@ public class EntityCloudBall extends EntityOffensive {
 			double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 			double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 			ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-					world.rand.nextGaussian() / 60).time(12).clr(0.95F, 0.95F, 0.95F, 0.2F)
+					world.rand.nextGaussian() / 60).time(12).clr(0.95F, 0.95F, 0.95F, 0.1F)
 					.scale(getSize() * 0.03125F * 2).element(new Airbending()).spawn(world);
 			if (getBehavior() instanceof CloudburstBehavior.Thrown)
 			for (int i = 0; i < 4; i++) {

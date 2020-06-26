@@ -42,7 +42,7 @@ public class WallJumpManager {
 		Vector normal = getHorizontalCollisionNormal();
 		Block block = getHorizontalCollisionBlock();
 
-		if (normal != Vector.UP) {
+		if (normal != Vector.UP && normal != null) {
 
 			Vector velocity = new Vector(entity.motionX, entity.motionY, entity.motionZ);
 			Vector n = velocity.reflect(normal).times(4).minus(normal.times(0.5)).withY(0.5);
