@@ -111,7 +111,7 @@ public class RadialMenu extends Gui {
 		for (int i = 0; i < segments.length; i++) {
 			if (segments[i] == null) continue;
 			boolean hover = segments[i].isMouseHover(mouseX, mouseY, resolution);
-			segments[i].draw(hover, resolution, scale * CLIENT_CONFIG.radialMenuAlpha, scale);
+			segments[i].draw(hover, resolution, scale * CLIENT_CONFIG.radialMenuAlpha, scale * 0.9F);
 
 			if (hover) {
 				displaySegmentDetails(controls[i], resolution);

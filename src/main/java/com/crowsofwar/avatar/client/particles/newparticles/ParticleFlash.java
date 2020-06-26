@@ -2,13 +2,17 @@ package com.crowsofwar.avatar.client.particles.newparticles;
 
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.client.FMLClientHandler;
+import org.lwjgl.opengl.GL11;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
@@ -22,6 +26,7 @@ import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 //@SideOnly(Side.CLIENT)
 //@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
 public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ {
+    private static final ResourceLocation PARTICLE_TEXTURES = new ResourceLocation("minecraft", "textures/particle/particles.png");
 
     public ParticleFlash(World world, double x, double y, double z) {
         super(world, x, y, z);
@@ -39,6 +44,8 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
 
     @Override
     public int getFXLayer() {
+        if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
+            return 3;
         return 0;
     }
 
@@ -48,6 +55,8 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
 
+        if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
+            Minecraft.getMinecraft().renderEngine.bindTexture(PARTICLE_TEXTURES);
 
         if (element instanceof Firebending || glow) {
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
@@ -57,7 +66,7 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         }
 
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 24f, 240f);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
         float f4;
         if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
@@ -68,8 +77,14 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
             f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
         }
 
+        if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
+            if (element instanceof Airbending) {
+                particleAlpha *= 1.1F;
+                particleScale *= 0.75F;
+            }
+
         if (CLIENT_CONFIG.shaderSettings.bslActive || CLIENT_CONFIG.shaderSettings.sildursActive) {
-              if (element instanceof Airbending)
+            if (element instanceof Airbending)
                 setRBGColorF(0.95F, 0.95F, 0.95F);
             if (element instanceof Firebending) {
                 particleAlpha *= 1.5F;
@@ -94,7 +109,10 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
         int j = i >> 16 & 65535;
         int k = i & 65535;
 
+        // buffer = Tessellator.getInstance().getBuffer();
 
+        if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
         buffer.pos(f5 - rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 - rotationYZ * f4 - rotationXZ * f4).tex(0.5D, 0.375D)
                 .color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
         buffer.pos(f5 - rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 - rotationYZ * f4 + rotationXZ * f4).tex(0.5D, 0.125D)
@@ -103,7 +121,8 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
                 .color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
         buffer.pos(f5 + rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 + rotationYZ * f4 - rotationXZ * f4).tex(0.25D, 0.375D)
                 .color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-
+        if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
+            Tessellator.getInstance().draw();
         GlStateManager.popMatrix();
 
     }

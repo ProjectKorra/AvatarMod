@@ -60,7 +60,6 @@ public class ParticleCube extends ParticleAvatar {
 
         if (element instanceof Waterbending) {
             if (normal == 0 || normal == 2) {
-                //Clears the previous builder
                 buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
                 buffer.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).color(r, g, b, a).endVertex();
                 buffer.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).color(r, g, b, a).endVertex();
@@ -78,7 +77,6 @@ public class ParticleCube extends ParticleAvatar {
             }
         } else if (element instanceof Firebending || element instanceof Airbending) {
             if (normal == 0 || normal == 2) {
-                //Clears the previous builder
                 buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
                 buffer.pos(pos1.x, pos1.y, pos1.z).color(r, g, b, a).endVertex();
                 buffer.pos(pos2.x, pos2.y, pos2.z).color(r, g, b, a).endVertex();
