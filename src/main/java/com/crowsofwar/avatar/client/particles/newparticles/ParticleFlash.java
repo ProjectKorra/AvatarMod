@@ -69,16 +69,16 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
         }
 
         if (FMLClientHandler.instance().hasOptifine()) {
+              if (element instanceof Airbending)
+                setRBGColorF(0.95F, 0.95F, 0.95F);
+            if (element instanceof Firebending) {
+                particleAlpha *= 1.5F;
+            }
             if (world.getWorldTime() > 12600 && world.getWorldTime() < 950 && element instanceof Airbending) {
                 particleAlpha *= 0.75F;
                 f4 = 0.25F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
             } else if (element instanceof Airbending)
                 f4 = 0.5F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
-            if (element instanceof Airbending)
-                setRBGColorF(0.95F, 0.95F, 0.95F);
-            if (element instanceof Firebending) {
-                particleAlpha *= 1.5F;
-            }
         } else
             this.setAlphaF(sparkle ? particleAlpha - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F : particleAlpha);
         float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);

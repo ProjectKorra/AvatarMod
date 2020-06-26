@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.entity.EntityCloudBall;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -51,7 +52,8 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 		disableAlpha();
 		disableLighting();
 
-		blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
+		if (!AvatarMod.proxy.isOptifinePresent())
+			blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
 		GlStateManager.color(0.85F, 0.85F, 0.85F, 0.4F);
 		renderCube(x, y, z, //
 				0, 8 / 256.0, 0, 8 / 256.0, //
@@ -61,7 +63,9 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
 		int i = 15728880;
 		int j = i % 65536;
 		int k = i / 65536;
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+
+		if (!AvatarMod.proxy.isOptifinePresent())
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
 
 		//  } else {
 		int light = Math.min(entity.world.getSkylightSubtracted(), 7);

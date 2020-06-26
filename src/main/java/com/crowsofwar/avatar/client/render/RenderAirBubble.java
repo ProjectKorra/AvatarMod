@@ -61,8 +61,9 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         disableDepth();
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
-        if (AvatarMod.proxy.isOptifinePresent())
+        if (!AvatarMod.proxy.isOptifinePresent()) {
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+        }
 
         float ticks = entity.ticksExisted + partialTicks;
         float sizeMult = 1, alpha = 1;
@@ -86,17 +87,19 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         {
             float rotY = ticks / 7f;
             float rotX = MathHelper.cos(ticks / 4f) * .3f;
-            enableLighting();
+            if (!AvatarMod.proxy.isOptifinePresent())
+                enableLighting();
             renderCube(x, y, z, 0, 1, 0, 1, 2.25f * sizeMult, rotX, rotY, 0);
         }
 
-		if (AvatarMod.proxy.isOptifinePresent())
-			GlStateManager.color(0.875F, 0.875F, 0.875F, 0.25f * alpha);
-		else GlStateManager.color(1F, 1F, 1F, 0.25f * alpha);
-		{
+        if (AvatarMod.proxy.isOptifinePresent())
+            GlStateManager.color(0.875F, 0.875F, 0.875F, 0.25f * alpha);
+        else GlStateManager.color(1F, 1F, 1F, 0.25f * alpha);
+        {
             float rotY = ticks / 25f;
             float rotZ = MathHelper.cos(ticks / 10f + 1.3f) * .3f;
-            enableLighting();
+            if (!AvatarMod.proxy.isOptifinePresent())
+                enableLighting();
             renderCube(x, y, z, 0, 1, 0, 1, 3f * sizeMult, 0, rotY, rotZ);
         }
         //GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
