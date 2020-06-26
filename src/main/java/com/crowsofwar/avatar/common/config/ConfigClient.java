@@ -111,12 +111,12 @@ public class ConfigClient {
 
 	public static void save() {
 
-		CLIENT_CONFIG.nameKeymappings.clear();
+		//CLIENT_CONFIG.nameKeymappings.clear();
 		Set<Map.Entry<Ability, Integer>> entries = CLIENT_CONFIG.keymappings.entrySet();
 		for (Map.Entry<Ability, Integer> entry : entries) {
 			CLIENT_CONFIG.nameKeymappings.put(entry.getKey().getName(), entry.getValue());
 		}
-		CLIENT_CONFIG.nameConflicts.clear();
+		//CLIENT_CONFIG.nameConflicts.clear();
 		Set<Map.Entry<Ability, Boolean>> entries2 = CLIENT_CONFIG.conflicts.entrySet();
 		for (Map.Entry<Ability, Boolean> entry : entries2) {
 			CLIENT_CONFIG.nameConflicts.put(entry.getKey().getName(), entry.getValue());
