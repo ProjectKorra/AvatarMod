@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
@@ -183,6 +184,10 @@ public class ParticleCube extends ParticleAvatar {
 		float existed = ticks;
 		int anim = ((int) existed % 16);
 		float v1 = anim / 16f, v2 = v1 + 1f / 16;
+		if (AvatarMod.proxy.isOptifinePresent()) {
+			if (element instanceof Waterbending)
+				setRBGColorF(particleRed * 0.5F, particleGreen * 0.5F, particleBlue * 2F);
+		}
 
 		drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2,
 				particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // -x

@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.air.powermods.CloudburstPowerModifier;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -57,6 +58,11 @@ public class EntityCloudBall extends EntityOffensive {
 		this.pushDoor = pushIronDoor;
 		this.pushTrapDoor = pushIronTrapDoor;
 
+	}
+
+	@Override
+	public BendingStyle getElement() {
+		return new Airbending();
 	}
 
 	@Override
