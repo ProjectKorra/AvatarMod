@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
 import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -70,19 +69,15 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
         }
 
         if (FMLClientHandler.instance().hasOptifine()) {
-            this.setAlphaF(sparkle ? particleAlpha - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F :
-                    0.6F - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F);
             if (world.getWorldTime() > 12600 && world.getWorldTime() < 950 && element instanceof Airbending) {
                 particleAlpha *= 0.75F;
                 f4 = 0.25F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
             } else if (element instanceof Airbending)
                 f4 = 0.5F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
             if (element instanceof Airbending)
-                setRBGColorF(1.0F, 1.0F, 1.0F);
+                setRBGColorF(0.875F, 0.875F, 0.875F);
             if (element instanceof Firebending) {
-                if (!(ability instanceof AbilityFlamethrower))
-                    particleAlpha *= 2F;
-                else particleAlpha *= 1.25F;
+                particleAlpha *= 1.5F;
             }
         } else
             this.setAlphaF(sparkle ? particleAlpha - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F : particleAlpha);
