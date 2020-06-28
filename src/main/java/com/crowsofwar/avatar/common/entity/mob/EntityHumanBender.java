@@ -424,6 +424,8 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 
 			ItemStack itemToSell = ItemStack.EMPTY;
 			ItemStack item2nd = ItemStack.EMPTY;
+			ItemStack firstPrice = ItemStack.EMPTY;
+			ItemStack secondPrice = ItemStack.EMPTY;
 
 			boolean itemAlreadySold = true;
 
@@ -461,10 +463,12 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 						(int) tierIncreaseChance * AvatarUtils.getRandomNumberInRange(2, 4) + 1, maxTier));
 				itemToSell = this.getRandomItemOfTier(finalTier);
 				item2nd = this.getRandomItemOfTier(finalTier);
-
+				firstPrice = this.getRandomPrice(finalTier);
+				secondPrice = this.getRandomPrice(finalTier);
 				if (this.trades != null) {
 					for (Object recipe : this.trades) {
-						if (ItemStack.areItemStacksEqual(((MerchantRecipe) recipe).getItemToSell(), itemToSell))
+						if (ItemStack.areItemStacksEqual(((MerchantRecipe) recipe).getItemToSell(), firstPrice)
+						|| ItemStack.areItemStacksEqual(((MerchantRecipe) recipe).getItemToSell(), secondPrice))
 							itemAlreadySold = true;
 					}
 				}
@@ -473,8 +477,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 			// Don't know how it can ever be empty here, but it's a failsafe.
 			if (itemToSell == ItemStack.EMPTY) return;
 
-			ItemStack firstPrice = this.getRandomPrice(finalTier);
-			ItemStack secondPrice = this.getRandomPrice(finalTier);
+
 			greaterTier = MOBS_CONFIG.getTradeItemTier(firstPrice.getItem()) > finalTier;
 			if (greaterTier)
 				recipeList.add(new MerchantRecipe(itemToSell, firstPrice));
