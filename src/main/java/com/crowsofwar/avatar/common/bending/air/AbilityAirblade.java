@@ -21,9 +21,7 @@ import com.crowsofwar.avatar.common.bending.BendingAi;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirGust;
-import com.crowsofwar.avatar.common.entity.EntityAirblade;
 import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
@@ -214,29 +212,32 @@ public class AbilityAirblade extends Ability {
 					}
 				} else {
 					if (world.isRemote) {
-						for (double i = 0; i < 0.5; i += 1 / entity.getHeight()) {
+						for (double i = 0; i < 0.75; i += 1 / entity.getHeight()) {
 							AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
 							double spawnX = boundingBox.minX + world.rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
 							double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 							double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-									world.rand.nextGaussian() / 60).collide(true).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.8F, 0.8F, 0.8F, 0.075F)
-									.scale(entity.getAvgSize() / 4).element(entity.getElement()).spawn(world);
+									world.rand.nextGaussian() / 60).collide(true).time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.96F, 0.96F, 0.96F, 0.075F)
+									.scale(entity.getAvgSize() / 5).element(entity.getElement()).spawn(world);
 						}
 
-						for (double i = -90; i <= 90; i += 6) {
+						for (double i = -90; i <= 90; i += 5) {
 							Vec3d pos = AvatarEntityUtils.getMiddleOfEntity(entity);
-							Vec3d newDir = entity.getLookVec().scale(entity.getHeight() / 2 * Math.cos(Math.toRadians(i)));
+							Vec3d newDir = entity.getLookVec().scale(entity.getHeight() / 1.75 * Math.cos(Math.toRadians(i)));
 							pos = pos.add(newDir);
-							pos = new Vec3d(pos.x, pos.y + (entity.getHeight() / 2 * Math.sin(Math.toRadians(i))), pos.z);
+							pos = new Vec3d(pos.x, pos.y + (entity.getHeight() / 1.75 * Math.sin(Math.toRadians(i))), pos.z);
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-									world.rand.nextGaussian() / 60).collide(true).time(1 + AvatarUtils.getRandomNumberInRange(0, 1)).clr(0.8F, 0.8F, 0.8F, 0.075F)
-									.scale(entity.getWidth() * 2).element(entity.getElement()).spawnEntity(entity).spawn(world);
+									world.rand.nextGaussian() / 60).collide(true).time(1 + AvatarUtils.getRandomNumberInRange(0, 1)).clr(0.95F, 095F, 0.95F, 0.05F)
+									.scale(entity.getWidth()).element(entity.getElement()).spawnEntity(entity).spawn(world);
 							ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(entity.motionX * 0.98, entity.motionY * 0.98, entity.motionZ * 0.98).collide(true)
-									.time(12 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.8F, 0.8F, 0.8F, 0.1F)
-									.scale(entity.getWidth() * 4).spawnEntity(entity).element(entity.getElement()).spawn(world);
+									.time(8 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.075F)
+									.scale(entity.getWidth() * 2).spawnEntity(entity).element(entity.getElement()).spawn(world);
 						}
 					}
+					entity.motionX *= 0.975;
+					entity.motionY *= 0.975;
+					entity.motionZ *= 0.975;
 				}
 			}
 			return this;
