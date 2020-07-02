@@ -49,12 +49,27 @@ public class ItemScroll extends Item implements AvatarItem {
 		setTranslationKey("scroll_" + type.displayName());
 	}
 
+
+
 	public Scrolls.ScrollType getScrollType() {
 		return type;
 	}
 
 	@Override
 	public EnumRarity getRarity(ItemStack stack) {
+		switch (stack.getMetadata()) {
+			case 0:
+			case 1:
+				return EnumRarity.COMMON;
+			case 2:
+				return EnumRarity.UNCOMMON;
+			case 3:
+			case 4:
+				return EnumRarity.RARE;
+			case 5:
+			case 6:
+				return EnumRarity.EPIC;
+		}
 		return EnumRarity.RARE;
 	}
 
@@ -176,4 +191,6 @@ public class ItemScroll extends Item implements AvatarItem {
 			}
 		}
 	}
+
+
 }

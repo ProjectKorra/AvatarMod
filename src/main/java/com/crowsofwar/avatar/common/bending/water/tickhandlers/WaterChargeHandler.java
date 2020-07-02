@@ -139,7 +139,7 @@ public class WaterChargeHandler extends TickHandler {
 
 		Vector velocity = Vector.getLookRectangular(entity);
 		velocity = velocity.normalize().times(speed);
-		cannon.setVelocity(velocity);
+		cannon.setSpeed((float) speed);
 		world.spawnEntity(cannon);
 
 		EntityLightCylinder cylinder = new EntityLightCylinder(world);
@@ -160,7 +160,7 @@ public class WaterChargeHandler extends TickHandler {
 		cylinder.setCylinderYaw(entity.rotationYaw);
 		cylinder.setCylinderLength(1);
 		cylinder.setBehaviour(new WaterCylinderBehaviour());
-		world.spawnEntity(cylinder);
+		//world.spawnEntity(cylinder);
 
 	}
 

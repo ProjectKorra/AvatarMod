@@ -120,6 +120,42 @@ public class EntityFlameArc extends EntityArc<EntityFlameArc.FlameControlPoint> 
 
 	}
 
+	@Override
+	protected void updateCpBehavior() {
+		getLeader().setPosition(position().plusY(height / 2));
+		getLeader().setVelocity(velocity());
+
+		// Move control points to follow leader
+
+		for (int i = 1; i < points.size(); i++) {
+
+			ControlPoint leader = points.get(i - 1);
+			ControlPoint p = points.get(i);
+			Vector leadPos = leader.position();
+			double sqrDist = p.position().sqrDist(leadPos);
+
+			if (sqrDist > getControlPointTeleportDistanceSq() && getControlPointTeleportDistanceSq() != -1) {
+
+				Vector toFollowerDir = p.position().minus(leader.position()).normalize();
+
+				double idealDist = Math.sqrt(getControlPointTeleportDistanceSq());
+				if (idealDist > 1) idealDist -= 1; // Make sure there is some room
+
+				Vector revisedOffset = leader.position().plus(toFollowerDir.times(idealDist));
+				p.setPosition(revisedOffset);
+				leader.setPosition(revisedOffset);
+				p.setVelocity(Vector.ZERO);
+
+			} else if (sqrDist > getControlPointMaxDistanceSq() && getControlPointMaxDistanceSq() != -1) {
+
+				Vector diff = leader.position().minus(p.position());
+				diff = diff.normalize().times(getVelocityMultiplier());
+				p.setVelocity(p.velocity().plus(diff));
+
+			}
+
+		}
+	}
 
 	@Override
 	public boolean onMinorWaterContact() {
