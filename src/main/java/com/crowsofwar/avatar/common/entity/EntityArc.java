@@ -104,12 +104,13 @@ public abstract class EntityArc<T extends ControlPoint> extends EntityOffensive 
 		}
 
 		if (points.size() < getAmountOfControlPoints()) {
-			for (int i = points.size() - 1; i < getAmountOfControlPoints(); i++) {
+			for (int i = points.size(); i < getAmountOfControlPoints(); i++) {
 				points.add(createControlPoint(getAvgSize(), i));
 			}
 		}
 		else if (points.size() > getAmountOfControlPoints()) {
-			for (int i = points.size() - 1; i > getAmountOfControlPoints(); i--) {
+			for (int i = points.size() - 1; i > getAmountOfControlPoints() - 1; i--) {
+				getControlPoint(i).setDead();
 				points.remove(i);
 			}
 		}

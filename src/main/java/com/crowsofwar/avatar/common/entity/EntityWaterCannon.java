@@ -88,10 +88,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
         dataManager.set(SYNC_SIZE, sizeMultiplier);
     }
 
-    public void setLifeTime(float ticks) {
-        this.lifeTime = ticks;
-    }
-
     public void setMaxRange(float range) {
         this.maxRange = range;
     }
@@ -167,7 +163,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
                         particleController = 120;
                     }
                 }
-                for (double i = 0; i < 1; i += 1 / dist) {
+               /* for (double i = 0; i < 1; i += 1 / dist) {
                     Vector startPos = getControlPoint(points.size() - 1).position();
                     Vector distance = this.position().minus(getControlPoint(points.size() - 1).position());
                     distance = distance.times(i);
@@ -179,17 +175,16 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
                     }
                     particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1,
                             startPos.x() + distance.x(), startPos.y() + distance.y(), startPos.z() + distance.z(), 0, 0, 0, true);
-                }
+                }**/
 
             }
         }
 
-        setPosition(getOwner().getPositionVector().subtract(0, -getOwner().getEyeHeight() + 0.3, 0));
+        Vec3d targetPos = getOwner().getPositionVector().add(0, getOwner().getEyeHeight() - 0.3, 0)
+                .add(getOwner().getLookVec().scale(0.25));
+        setVelocity(targetPos.subtract(getPositionVector()).scale(0.5));
 
 
-        if (this.ticksExisted >= lifeTime && !world.isRemote) {
-            setDead();
-        }
         if (ticksExisted > 150) {
             setDead();
         }
@@ -199,15 +194,48 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
         }
 
         if (world.isRemote) {
-            ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(getControlPoint(points.size() - 1).position().toMinecraft()).spawnEntity(this).vel(world.rand.nextGaussian() / 20,
-                    world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 185)
-                    .time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).scale(0.625F).gravity(true).collide(true).element(new Waterbending()).spawn(world);
-
+            for (int i = 0; i < 10; i++) {
+                ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(getControlPoint(points.size() - 1).position().toMinecraft()).spawnEntity(this).vel(world.rand.nextGaussian() / 20,
+                        world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 185)
+                        .time(14 + AvatarUtils.getRandomNumberInRange(0, 3)).scale(1.25F).collide(true).element(new Waterbending()).spawn(world);
+            }
         }
 
-        setSize(1.5F * getSizeMultiplier(), 1.5F * getSizeMultiplier());
+        rotationYaw = getOwner().rotationYaw;
+        rotationPitch = getOwner().rotationPitch;
+
+        setSize(getSizeMultiplier(), getSizeMultiplier());
     }
 
+    @Override
+    public boolean shouldDissipate() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldExplode() {
+        return false;
+    }
+
+    @Override
+    public boolean isPiercing() {
+        return true;
+    }
+
+    @Override
+    public void spawnExplosionParticles(World world, Vec3d pos) {
+
+    }
+
+    @Override
+    public void spawnDissipateParticles(World world, Vec3d pos) {
+
+    }
+
+    @Override
+    public void spawnPiercingParticles(World world, Vec3d pos) {
+
+    }
 
     @Override
     public EntityLivingBase getController() {
@@ -221,7 +249,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
     @Override
     protected double getControlPointTeleportDistanceSq() {
-        return getControlPointMaxDistanceSq() * getAmountOfControlPoints();
+        return getControlPointMaxDistanceSq() * points.size();
     }
 
 
@@ -233,9 +261,12 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
                 ControlPoint leader = points.get(i - 1);
                 ControlPoint p = points.get(i);
                 Vector leadPos = leader.position();
-                double sqrDist = p.position().sqrDist(leadPos);
+                Vector lookPos = Vector.getLookRectangular(getOwner()).times(getControlPointMaxDistanceSq() * i);
+                lookPos = lookPos.plus(Vector.getEntityPos(getOwner()).plus(0, getOwner().getEyeHeight() - 0.3, 0));
 
-                if (sqrDist > getControlPointTeleportDistanceSq() && getControlPointTeleportDistanceSq() != -1) {
+                double sqrDist = p.position().sqrDist(lookPos);
+
+                if (sqrDist > getControlPointTeleportDistanceSq() * getControlPointTeleportDistanceSq() && getControlPointTeleportDistanceSq() != -1) {
 
                     Vector toFollowerDir = p.position().minus(leader.position()).normalize();
 
@@ -247,12 +278,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
                     leader.setPosition(revisedOffset);
                     p.setVelocity(Vector.ZERO);
 
-                } else if (sqrDist > getControlPointMaxDistanceSq() && getControlPointMaxDistanceSq() != -1) {
+                } else if (sqrDist > getControlPointMaxDistanceSq() * getControlPointMaxDistanceSq() && getControlPointMaxDistanceSq() != -1) {
 
-                    Vector diff = (Vector.getLookRectangular(getOwner())
-                            .times(getControlPointMaxDistanceSq() * i).plus(Vector.getEntityPos(getOwner())).minusY(0.3)).minus(p.position());
-                    diff = diff.normalize().times(getVelocityMultiplier() * 10);
-                    p.setVelocity(p.velocity().plus(diff));
+                    Vector diff = (lookPos).minus(p.position());
+                    diff = diff.times(getVelocityMultiplier() * 200);
+                    p.setVelocity(diff);
 
                 }
             }
@@ -327,7 +357,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
 
     @Override
     protected CannonControlPoint createControlPoint(float size, int index) {
-        return new CannonControlPoint(this, 1.5F * getSizeMultiplier(),
+        return new CannonControlPoint(this, getSizeMultiplier(),
                 posX, posY, posZ);
     }
 
@@ -364,7 +394,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControl
     }
 
 
-    class CannonControlPoint extends ControlPoint {
+   static class CannonControlPoint extends ControlPoint {
 
         private CannonControlPoint(EntityWaterCannon arc, float size, double x, double y, double z) {
             super(arc, size, x, y, z);

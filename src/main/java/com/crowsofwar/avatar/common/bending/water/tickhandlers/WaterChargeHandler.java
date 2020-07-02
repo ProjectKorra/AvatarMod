@@ -132,7 +132,7 @@ public class WaterChargeHandler extends TickHandler {
 		cannon.setDamage(damage);
 		cannon.setSizeMultiplier(size);
 		cannon.setPosition(Vector.getEyePos(entity));
-		cannon.setLifeTime(ticks);
+		cannon.setLifeTime((int) (ticks * 20));
 		cannon.setKnockBack(knockBack);
 		cannon.setMaxRange(maxRange);
 		cannon.setAbility(new AbilityWaterCannon());
