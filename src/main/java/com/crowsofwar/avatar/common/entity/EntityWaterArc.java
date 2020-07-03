@@ -53,13 +53,9 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	private static final DataParameter<WaterArcBehavior> SYNC_BEHAVIOR = EntityDataManager
 			.createKey(EntityWaterArc.class, WaterArcBehavior.DATA_SERIALIZER);
 
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager
-			.createKey(EntityWaterArc.class, DataSerializers.FLOAT);
-
 	private static final DataParameter<Float> SYNC_GRAVITY = EntityDataManager
 			.createKey(EntityWaterArc.class, DataSerializers.FLOAT);
-	private final float Size;
-	/**
+		/**
 	 * The amount of ticks since last played splash sound. -1 for splashable.
 	 */
 	private int lastPlayedSplash;
@@ -70,8 +66,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 
 	public EntityWaterArc(World world) {
 		super(world);
-		this.Size = 0.4F;
-		setSize(Size, Size);
+		setSize(0.2F, 0.2F);
 		this.lastPlayedSplash = -1;
 		this.damageMult = 1;
 		this.putsOutFires = true;
@@ -90,13 +85,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		this.isSpear = isSpear;
 	}
 
-	public float getSize() {
-		return dataManager.get(SYNC_SIZE);
-	}
-
-	public void setSize(float size) {
-		dataManager.set(SYNC_SIZE, size);
-	}
 
 	public float getGravity() {
 		return dataManager.get(SYNC_GRAVITY);
@@ -111,7 +99,6 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(SYNC_BEHAVIOR, new WaterArcBehavior.Idle());
-		dataManager.register(SYNC_SIZE, Size);
 		dataManager.register(SYNC_GRAVITY, 9.82F);
 	}
 
@@ -224,7 +211,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 		if (getOwner() == null) {
 			this.setDead();
 		}
-		setEntitySize(getSize() / 2);
+		setEntitySize(getAvgSize());
 
 		if (getBehavior() != null && getBehavior() instanceof WaterArcBehavior.PlayerControlled) {
 			this.velocityMultiplier = 5F;

@@ -91,27 +91,7 @@ public class AbilityWaterArc extends Ability {
 
 		Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel() * 2);
 
-		List<Entity> waterArc = Raytrace.entityRaytrace(world, Vector.getEntityPos(entity).withY(entity.getEyeHeight()), Vector.getLookRectangular(entity).times(10), 3,
-				entity1 -> entity1 != entity);
 
-		if (waterArc.isEmpty()) {
-			if (ctx.getLevel() >= 2) {
-				for (Entity a : waterArc) {
-					if (a instanceof AvatarEntity) {
-						if (((AvatarEntity) a).getOwner() != entity) {
-							if (a instanceof EntityWaterArc) {
-								((EntityWaterArc) a).setOwner(entity);
-								((EntityWaterArc) a).setBehavior(new WaterArcBehavior.PlayerControlled());
-								((EntityWaterArc) a).setAbility(this);
-								((EntityWaterArc) a).setSize(0.5F);
-								((EntityWaterArc) a).setGravity(9.82F);
-								((EntityWaterArc) a).setPosition(Vector.getLookRectangular(entity).times(1.5F));
-							}
-						}
-					}
-				}
-			}
-		}
 		if (targetPos != null || ctx.consumeWater(1) || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
 
 			if (targetPos == null) {
@@ -156,7 +136,7 @@ public class AbilityWaterArc extends Ability {
 				assert targetPos != null;
 				water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
 				water.setDamageMult(damageMult);
-				water.setSize(size);
+				water.setEntitySize(size / 2);
 				water.setDamage(damageMult * STATS_CONFIG.waterArcSettings.damage);
 				water.setXp(SKILLS_CONFIG.waterHit);
 				water.setTier(getCurrentTier(ctx.getLevel()));

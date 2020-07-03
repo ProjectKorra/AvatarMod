@@ -30,11 +30,11 @@ public class RenderWaterCannon extends RenderArc {
 						 float partialTicks) {
 
 		EntityWaterCannon cannon = (EntityWaterCannon) entity;
-		renderArc(cannon, partialTicks, 3f, 1.5f * cannon.getSizeMultiplier());
+		renderArc(cannon, partialTicks, 3f, 1.5f * cannon.getAvgSize());
 
 		World world = entity.world;
 		Vector position = cannon.position().plusY(cannon.height / 2);
-		double radius = 1.5f * cannon.getSizeMultiplier();
+		double radius = 1.5f * cannon.getAvgSize();
 		/*if (cannon.getOwner() != null) {
 			Vector eyePos = getEyePos(cannon.getOwner()).minusY(0.3);
 			Vector directionToEnd = cannon.position().minus(eyePos).normalize();

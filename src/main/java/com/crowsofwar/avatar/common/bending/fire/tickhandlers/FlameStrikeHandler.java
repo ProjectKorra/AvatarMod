@@ -88,10 +88,10 @@ public class FlameStrikeHandler extends TickHandler {
 					height = entity.getPositionVector().add(0, 0.84, 0);
 					if (entity.getPrimaryHand() == EnumHandSide.RIGHT && data.hasStatusControl(FLAME_STRIKE_MAIN)
 							|| entity.getPrimaryHand() == EnumHandSide.LEFT && data.hasStatusControl(FLAME_STRIKE_OFF)) {
-						rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.385).withY(0).toMinecraft();
+						rightSide = Vector.toRectangular(Math.toRadians(entity.renderYawOffset + 90), 0).times(0.385).withY(0).toMinecraft();
 						rightSide = rightSide.add(height);
 					} else {
-						rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw - 90), 0).times(0.385).withY(0).toMinecraft();
+						rightSide = Vector.toRectangular(Math.toRadians(entity.renderYawOffset - 90), 0).times(0.385).withY(0).toMinecraft();
 						rightSide = rightSide.add(height);
 					}
 				}
@@ -99,10 +99,10 @@ public class FlameStrikeHandler extends TickHandler {
 				height = entity.getPositionVector().add(0, 0.84, 0);
 				if (entity.getPrimaryHand() == EnumHandSide.RIGHT && data.hasStatusControl(FLAME_STRIKE_MAIN)
 						|| entity.getPrimaryHand() == EnumHandSide.LEFT && data.hasStatusControl(FLAME_STRIKE_OFF)) {
-					rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.385).withY(0).toMinecraft();
+					rightSide = Vector.toRectangular(Math.toRadians(entity.renderYawOffset+ 90), 0).times(0.385).withY(0).toMinecraft();
 					rightSide = rightSide.add(height);
 				} else {
-					rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw - 90), 0).times(0.385).withY(0).toMinecraft();
+					rightSide = Vector.toRectangular(Math.toRadians(entity.renderYawOffset - 90), 0).times(0.385).withY(0).toMinecraft();
 					rightSide = rightSide.add(height);
 				}
 

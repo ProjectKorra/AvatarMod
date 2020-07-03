@@ -95,6 +95,17 @@ public abstract class EntityArc<T extends ControlPoint> extends EntityOffensive 
 	}
 
 	private void updateControlPoints() {
+	/*	if (points.size() < getAmountOfControlPoints()) {
+			int i = points.size();
+			for (; i < getAmountOfControlPoints(); i++) {
+				points.add(createControlPoint(getAvgSize(), i));
+			}
+		}
+		else if (points.size() > getAmountOfControlPoints()) {
+			if (points.size() > getAmountOfControlPoints()) {
+				points.subList(getAmountOfControlPoints(), points.size()).clear();
+			}
+		}**/
 
 		updateCpBehavior();
 
@@ -103,17 +114,7 @@ public abstract class EntityArc<T extends ControlPoint> extends EntityOffensive 
 			cp.onUpdate();
 		}
 
-		if (points.size() < getAmountOfControlPoints()) {
-			for (int i = points.size(); i < getAmountOfControlPoints(); i++) {
-				points.add(createControlPoint(getAvgSize(), i));
-			}
-		}
-		else if (points.size() > getAmountOfControlPoints()) {
-			for (int i = points.size() - 1; i > getAmountOfControlPoints() - 1; i--) {
-				getControlPoint(i).setDead();
-				points.remove(i);
-			}
-		}
+
 
 	}
 
@@ -158,13 +159,13 @@ public abstract class EntityArc<T extends ControlPoint> extends EntityOffensive 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		setNumberofPoints(nbt.getInteger("Points"));
+		//setNumberofPoints(nbt.getInteger("Points"));
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		nbt.setInteger("Points", getNumberofPoints());
+		//nbt.setInteger("Points", getNumberofPoints());
 	}
 
 	@Override
@@ -223,8 +224,13 @@ public abstract class EntityArc<T extends ControlPoint> extends EntityOffensive 
 	}
 
 	@Override
+	public boolean isInRangeToRender3d(double x, double y, double z) {
+		return true;
+	}
+
+	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 1;
+		return true;
 	}
 
 	@Override
