@@ -17,16 +17,13 @@
 package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.common.bending.*;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -104,17 +101,17 @@ public class BendingData {
 
 	@Nullable
 	public static BendingData get(World world, UUID playerId) {
-		return AvatarPlayerData.fetcher().fetch(world, playerId).getData();
+		return getFromEntity(AvatarEntityUtils.getPlayerFromStringID(playerId.toString()));
 	}
 
 	@Nullable
 	public static BendingData get(World world, String playerName) {
-		return AvatarPlayerData.fetcher().fetch(world, playerName).getData();
+		return getFromEntity(AvatarEntityUtils.getPlayerFromUsername(playerName));
 	}
 
 	@Nullable
 	public static BendingData get(World world, BenderInfo info) {
-		if (info.isPlayer()) {
+		if (info != null && info.isPlayer()) {
 			return get(world, info.getId());
 		} else {
 			Bender bender = info.find(world);
@@ -130,6 +127,15 @@ public class BendingData {
 	// BENDINGS METHODS
 	// ================================================================================
 
+	/**
+	 * Checks if the given ability can be used by the player.
+	 */
+	public boolean canUse(Ability ability) {
+		if (bendings.contains(ability.getBendingId())) {
+			return getAbilityData(ability).getLevel() > -1;
+		}
+		return false;
+	}
 	/**
 	 * Checks if the player has any elements.
 	 */
@@ -399,8 +405,8 @@ public class BendingData {
 	 * the TickHandler.
 	 */
 	public int getTickHandlerDuration(TickHandler handler) {
-		if (hasTickHandler(handler)) {
-			return tickHandlerDuration.get(handler);
+		if (hasTickHandler(handler) && tickHandlerDuration != null) {
+			return tickHandlerDuration.getOrDefault(handler, 0);
 		} else {
 			return -1;
 		}
@@ -435,7 +441,7 @@ public class BendingData {
 		tickHandlers.addAll(handlers);
 
 		Map<TickHandler, Integer> newDurations = handlers.stream().collect(Collectors.toMap(Function.identity()
-				, h -> 0));
+				, this::getTickHandlerDuration));
 		tickHandlerDuration.clear();
 		tickHandlerDuration.putAll(newDurations);
 	}
@@ -598,7 +604,7 @@ public class BendingData {
 				"BendingControllers");
 
 		AvatarUtils.readList(statusControls,
-				nbt -> StatusControl.lookup(nbt.getInteger("Id")),
+				nbt -> StatusControlController.lookup(nbt.getInteger("Id")),
 				readFrom,
 				"StatusControls");
 

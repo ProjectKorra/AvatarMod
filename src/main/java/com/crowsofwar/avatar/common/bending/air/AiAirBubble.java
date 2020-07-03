@@ -18,13 +18,15 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import net.minecraft.entity.EntityLiving;
 
 import java.util.Random;
+
+import static com.crowsofwar.avatar.common.data.StatusControlController.BUBBLE_EXPAND;
 
 /**
  * @author CrowsOfWar
@@ -57,7 +59,7 @@ public class AiAirBubble extends BendingAi {
 		boolean lowHealth = entity.getHealth() / entity.getMaxHealth() <= 0.5f;
 
 		if (timeExecuting > 200 || (entity.getAttackTarget() != null && entity.getDistance(entity.getAttackTarget()) < 3) && entity.getRNG().nextBoolean()) {
-			execStatusControl(StatusControl.BUBBLE_EXPAND);
+			execStatusControl(BUBBLE_EXPAND);
 			return false;
 
 		}

@@ -22,11 +22,18 @@ import com.crowsofwar.avatar.common.data.BenderEntityComponent;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 
 import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.village.MerchantRecipe;
+import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
+
+import javax.annotation.Nullable;
 
 /**
  * @author CrowsOfWar
@@ -57,10 +64,6 @@ public class EntityWaterbender extends EntityHumanBender {
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1, true));
 	}
 
-	@Override
-	protected ScrollType getScrollType() {
-		return ScrollType.WATER;
-	}
 
 	@Override
 	protected int getNumSkins() {
@@ -71,6 +74,7 @@ public class EntityWaterbender extends EntityHumanBender {
 	protected ResourceLocation getLootTable() {
 		return LOOT_TABLE;
 	}
+
 
 	private class WaterbenderBenderComponent extends BenderEntityComponent {
 

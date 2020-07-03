@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
@@ -54,23 +54,12 @@ public class RenderHumanBender extends RenderLiving<EntityHumanBender> {
 	@Override
 	public void doRender(EntityHumanBender entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
-		Bender bender = Bender.get(entity);
-		if (bender != null) {
-			BendingData data = BendingData.getFromEntity(entity);
-			if (data != null) {
-				if (data.hasStatusControl(StatusControl.STOP_FLAMETHROW)) {
-					System.out.println("nice");
-					FLAMETHROWER.renderTick(new BendingContext(data, entity, bender, new Raytrace.Result()));
-				}
-
-			}
-			bender.onRenderUpdate();
-		}
 	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityHumanBender entity) {
-		return locations[entity.getSkin()];
+		int location = Math.min(locations.length - 1, entity.getSkin());
+		return locations[location];
 	}
 
 }

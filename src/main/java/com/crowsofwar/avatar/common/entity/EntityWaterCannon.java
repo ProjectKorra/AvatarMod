@@ -1,361 +1,350 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.water.AbilityWaterCannon;
-import com.crowsofwar.avatar.common.bending.water.tickhandlers.WaterChargeHandler;
-import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.bending.water.Waterbending;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
-
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-
-public class EntityWaterCannon extends EntityArc<EntityWaterCannon.CannonControlPoint> {
-
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey
-			(EntityWaterCannon.class, DataSerializers.FLOAT);
-
-
-	private float damage;
-	private float lifeTime;
-	private ParticleSpawner particles;
-	private double maxRange;
-	private double range;
-	private Vec3d knockBack;
-
-	public EntityWaterCannon(World world) {
-		super(world);
-		setSize(1.5f * getSizeMultiplier(), 1.5f * getSizeMultiplier());
-		damage = 0.5F;
-		this.putsOutFires = true;
-		this.noClip = false;
-		this.particles = new NetworkParticleSpawner();
-		this.setInvisible(false);
-		this.range = 0;
-	}
-
-	public float getDamage() {
-		return damage;
-	}
-
-	public void setDamage(float damage) {
-		this.damage = damage;
-	}
-
-	public float getSizeMultiplier() {
-		return dataManager.get(SYNC_SIZE);
-	}
-
-	public void setSizeMultiplier(float sizeMultiplier) {
-		dataManager.set(SYNC_SIZE, sizeMultiplier);
-	}
-
-	public void setLifeTime(float ticks) {
-		this.lifeTime = ticks;
-	}
-
-	public void setMaxRange(float range) {
-		this.maxRange = range;
-	}
-
-	public void setKnockBack(Vec3d knockBack) {
-		this.knockBack = knockBack;
-	}
-
-
-	@Override
-	protected void entityInit() {
-		super.entityInit();
-		dataManager.register(SYNC_SIZE, 1f);
-		range = 0;
-	}
-
-	@Override
-	public int getAmountOfControlPoints() {
-		return 2;
-	}
-
-
-	@Override
-	public void onUpdate() {
-		super.onUpdate();
-
-		world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.BLOCK_WATER_AMBIENT,
-				SoundCategory.PLAYERS, 1, 2);
-
-
-		if (getOwner() != null) {
-			//Todo: Behaviour for cylinder to change its length, pitch, and yaw onUpdate
-			if (getAbility() instanceof AbilityWaterCannon) {
-				Vec3d startPos = getControlPoint(getAmountOfControlPoints() - 1).position().toMinecraft();
-				Vec3d distance = getOwner().getLookVec().scale(range);
-				Vec3d endPos = startPos.add(distance);
-				range += range < maxRange ? maxRange / lifeTime : 0;
-
-				Vec3d speed = endPos.subtract(startPos);
-
-				if (!world.isRemote) {
-					if (onCollideWithSolid()) {
-						this.motionX = this.motionY = this.motionZ = 0;
-						setVelocity(Vector.ZERO);
-					} else {
-						this.motionX = speed.x / 60;
-						this.motionY = speed.y / 60;
-						this.motionZ = speed.z / 60;
-					}
-				}
-
-			}
-
-			if (ticksExisted % 4 == 0 && !this.isDead && STATS_CONFIG.waterCannonSettings.useWaterCannonParticles) {
-				double dist = this.getDistance(getOwner());
-				int particleController = 20;
-				if (getAbility() instanceof AbilityWaterCannon && !world.isRemote) {
-					AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
-					particleController = 23;
-					if (data.getLevel() == 1) {
-						particleController = 20;
-					}
-					if (data.getLevel() >= 2) {
-						particleController = 17;
-					}
-
-					if (data.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-						particleController = 120;
-					}
-				}
-				for (double i = 0; i < 1; i += 1 / dist) {
-					Vector startPos = getControlPoint(getAmountOfControlPoints() - 1).position();
-					Vector distance = this.position().minus(getControlPoint(getAmountOfControlPoints() - 1).position());
-					distance = distance.times(i);
-					for (double angle = 0; angle < 360; angle += particleController) {
-						Vector position = Vector.getOrthogonalVector(this.position().minus(getControlPoint(getAmountOfControlPoints() - 1).position()), angle, getSizeMultiplier() * 1.4);
-						particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1,
-								position.x() + startPos.x() + distance.x(), position.y() + startPos.y() + distance.y(), position.z() + startPos.z() + distance.z(), 0, 0, 0, true);
-
-					}
-					particles.spawnParticles(world, EnumParticleTypes.WATER_WAKE, 1, 1,
-							startPos.x() + distance.x(), startPos.y() + distance.y(), startPos.z() + distance.z(), 0, 0, 0, true);
-				}
-
-			}
-		}
-
-
-		if (this.ticksExisted >= lifeTime && !world.isRemote) {
-			setDead();
-		}
-		if (ticksExisted > 150) {
-			setDead();
-		}
-
-		if (getOwner() == null) {
-			setDead();
-		}
-
-
-		setSize(1.5F * getSizeMultiplier(), 1.5F * getSizeMultiplier());
-
-	}
-
-
-	@Override
-	public EntityLivingBase getController() {
-		return getOwner();
-	}
-
-	@Override
-	protected double getControlPointMaxDistanceSq() {
-		return 0.05;
-	}
-
-	@Override
-	protected double getControlPointTeleportDistanceSq() {
-		return 0.15;
-	}
-
-	@Override
-	protected void updateCpBehavior() {
-
-		super.updateCpBehavior();
-		// First control point (at front) should just follow water cannon
-		//getControlPoint(0).setPosition(Vector.getEntityPos(this).plusY(getSizeMultiplier()));
-		//The control point's top gets set to the water cannon; you want the center to be set
-		//to the water cannon.
-
-
-		// Last control point (at back) should stay near the player
-		if (getOwner() != null) {
-			Vector eyePos = Vector.getEyePos(getOwner()).minus(0, 0.3, 0);
-			Vector directionToEnd = position().minus(eyePos).normalize();
-			getControlPoint(getAmountOfControlPoints() - 1).setPosition(eyePos.plus(directionToEnd.times(0.075)));
-		}
-
-	}
-
-	@Override
-	public void onCollideWithEntity(Entity entity) {
-		if (this.canCollideWith(entity) && getOwner() != entity) {
-
-
-			if (!world.isRemote) {
-				int numberOfParticles = (int) (400 * getSizeMultiplier());
-				WorldServer World = (WorldServer) world;
-				World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, numberOfParticles, 0, 0, 0, 0.05 + getSizeMultiplier() / 10);
-				//Change based on size
-			}
-
-			damageEntity(entity);
-			world.playSound(null, getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH,
-					SoundCategory.PLAYERS, 1, 1);
-
-		}
-	}
-
-	/**
-	 * Custom water cannon collision detection which uses raytrace. Required since water cannon moves
-	 * quickly and can sometimes "glitch" through an entity without detecting the collision.
-	 * That's because the hitbox is wonky, and also because the hitbox is well, a box, at the end of the water cannon. If
-	 * it were to extend across the entire entity.... Well let's just say that minecraft
-	 * wouldn't be happy.
-	 */
-	@Override
-	protected void collideWithNearbyEntities() {
-
-		if (getOwner() != null) {
-			BendingData data = BendingData.get(getOwner());
-
-
-			double dist = this.getDistance(getOwner());
-			List<Entity> collisions = Raytrace.entityRaytrace(world, getControlPoint(getAmountOfControlPoints() - 1).position(), this.position().minus(getControlPoint(getAmountOfControlPoints() - 1).position()), dist, entity -> entity != getOwner());
-
-			if (!collisions.isEmpty()) {
-				for (Entity collided : collisions) {
-					if (canCollideWith(collided) && collided != getOwner()) {
-						onCollideWithEntity(collided);
-						//Needed because the water cannon will still glitch through the entity
-						if (!(data.getAbilityData("water_cannon").isMasterPath(AbilityData.AbilityTreePath.SECOND))) {
-							this.setPosition(collided.posX, this.posY, collided.posZ);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	private void damageEntity(Entity entity) {
-
-		if (world.isRemote) {
-			return;
-		}
-
-		if (this.canDamageEntity(entity)) {
-			DamageSource damageSource = AvatarDamageSource.causeWaterCannonDamage(entity, getOwner());
-			if (entity.attackEntityFrom(damageSource, damage)) {
-
-				BattlePerformanceScore.addSmallScore(getOwner());
-
-				entity.motionX = knockBack.x;
-				entity.motionY = knockBack.y;
-				entity.motionZ = knockBack.z;
-				AvatarUtils.afterVelocityAdded(entity);
-
-				// Add Experience
-				// Although 2 water cannon entities are fired in each water cannon ability, this won't
-				// cause 2x XP rewards as this only happens when the entity is successfully attacked
-				if (getOwner() != null) {
-					BendingData data = BendingData.get(getOwner());
-					AbilityData abilityData = data.getAbilityData("water_cannon");
-					abilityData.addXp(SKILLS_CONFIG.waterHit / 2);
-				}
-			}
-		}
-	}
-
-	@Override
-	public boolean onCollideWithSolid() {
-		if (getOwner() != null && !world.isRemote) {
-			Raytrace.Result result = Raytrace.getTargetBlock(getOwner(), maxRange);
-			if (result.getPos() != null && result.getPosPrecise() != null && result.getPos().toBlockPos() == getPosition()) {
-				setPosition(result.getPosPrecise());
-				posX = result.getPosPrecise().x();
-				posY = result.getPosPrecise().y();
-				posZ = result.getPosPrecise().z();
-				this.motionX = this.motionY = this.motionZ = 0;
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public EntityWaterCannon.CannonControlPoint createControlPoint(float size, int index) {
-		return new EntityWaterCannon.CannonControlPoint(this, index);
-	}
-
-	@Override
-	public boolean shouldRenderInPass(int pass) {
-		return true;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public boolean isInRangeToRenderDist(double distance) {
-		return true;
-	}
-
-	@Override
-	public boolean canBePushed() {
-		return false;
-	}
-
-	@Override
-	protected double getVelocityMultiplier() {
-		return 14;
-	}
-
-	@Override
-	public void setDead() {
-		super.setDead();
-		if (getOwner() != null) {
-			AttributeModifier modifier = getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(WaterChargeHandler.MOVEMENT_MODIFIER_ID);
-			if (modifier != null) {
-				getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(modifier);
-			}
-		}
-	}
-
-	class CannonControlPoint extends ControlPoint {
-
-		private CannonControlPoint(EntityArc arc, int index) {
-			// Make all control points the same size
-			super(arc, index == 0 ? 0.5f : 0.5F - 0.15F * (index / 10F), 0, 0, 0);
-		}
-
-	}
+
+import javax.annotation.Nullable;
+
+
+public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlPoint> implements IShieldEntity {
+
+    private static final DataParameter<Float> SYNC_SPEED = EntityDataManager
+            .createKey(EntityWaterArc.class, DataSerializers.FLOAT);
+    private final float velocityMultiplier;
+    /**
+     * The amount of ticks since last played splash sound. -1 for splashable.
+     */
+    private int lastPlayedSplash;
+    private boolean isSpear;
+    private float damageMult;
+
+
+    public EntityWaterCannon(World world) {
+        super(world);
+        setSize(0.2F, 0.2F);
+        this.lastPlayedSplash = -1;
+        this.noClip = false;
+        this.damageMult = 1;
+        this.putsOutFires = true;
+        this.velocityMultiplier = 5;
+    }
+
+    public float getDamageMult() {
+        return damageMult;
+    }
+
+    public void setDamageMult(float mult) {
+        this.damageMult = mult;
+    }
+
+    public void isSpear(boolean isSpear) {
+        this.isSpear = isSpear;
+    }
+
+
+    public float getSpeed() {
+        return dataManager.get(SYNC_SPEED);
+    }
+
+    public void setSpeed(float speed) {
+        dataManager.set(SYNC_SPEED, speed);
+    }
+
+
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        dataManager.register(SYNC_SPEED, 30F);
+    }
+
+
+    @Override
+    public void spawnExplosionParticles(World world, Vec3d pos) {
+
+    }
+
+    @Override
+    public void spawnDissipateParticles(World world, Vec3d pos) {
+
+    }
+
+    @Override
+    public void spawnPiercingParticles(World world, Vec3d pos) {
+
+    }
+
+    @Nullable
+    @Override
+    public SoundEvent[] getSounds() {
+        SoundEvent[] events = new SoundEvent[1];
+        events[0] = SoundEvents.ENTITY_GENERIC_SPLASH;
+        return events;
+    }
+
+    @Override
+    public boolean onCollideWithSolid() {
+        if (getOwner() != null) {
+            for (int i = 0; i < getAmountOfControlPoints(); i++) {
+                Vec3d dir = i == 0 ? Vector.getLookRectangular(getOwner()).times(Math.min(ticksExisted / 20F, 1) * getSpeed() / 5F).toMinecraft()
+                        : getControlPoint(i - 1).position().minus(getControlPoint(i).position()).normalize().toMinecraft();
+                RayTraceResult re = Raytrace.rayTrace(world,
+                        getControlPoint(i).position().toMinecraft(), dir,
+                        getAvgSize(), true, true, false,
+                        Entity.class, entity -> !canCollideWith(entity));
+                if (re != null && re.hitVec != null) {
+                   // setVelocity(re.hitVec.subtract(position().toMinecraft()).scale(getVelocityMultiplier() / 2));
+                   // setPosition(re.hitVec);
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void applyElementalContact(AvatarEntity entity) {
+        super.applyElementalContact(entity);
+        if (entity.getTier() <= getTier())
+            entity.onMajorWaterContact();
+        else entity.onMinorWaterContact();
+    }
+
+    @Override
+    public void setDead() {
+        super.setDead();
+    }
+
+    @Override
+    protected void updateCpBehavior() {
+        getLeader().setPosition(position().plusY(height / 2));
+        getLeader().setVelocity(velocity());
+
+        // Move control points to follow leader
+
+        if (getOwner() != null) {
+        for (int i = 1; i < points.size() - 1; i++) {
+
+            ControlPoint leader = points.get(i - 1);
+            ControlPoint p = points.get(i);
+            Vector leadPos = leader.position();
+            double sqrDist = p.position().sqrDist(leadPos);
+
+            if (sqrDist > getControlPointTeleportDistanceSq() && getControlPointTeleportDistanceSq() != -1) {
+
+                Vector toFollowerDir = p.position().minus(leader.position()).normalize();
+
+                double idealDist = Math.sqrt(getControlPointTeleportDistanceSq());
+                if (idealDist > 1) idealDist -= 1; // Make sure there is some room
+
+                Vector revisedOffset = leader.position().plus(toFollowerDir.times(idealDist));
+                p.setPosition(revisedOffset);
+                leader.setPosition(revisedOffset);
+                p.setVelocity(Vector.ZERO);
+
+            } else if (sqrDist > getControlPointMaxDistanceSq() && getControlPointMaxDistanceSq() != -1) {
+                Vector lookPos = Vector.getLookRectangular(getOwner())
+                        .times(getSpeed() / 5F * ((float) i / getAmountOfControlPoints())).plus(Vector.getEntityPos(getOwner()))
+                        .plusY(getOwner().getEyeHeight() - 0.5);
+                Vector diff = lookPos.minus(p.position());
+                diff = diff.times(getVelocityMultiplier() / 2);
+                p.setVelocity(diff);
+
+            }
+        }
+
+            Vector lookPos = Vector.getLookRectangular(getOwner())
+                    .times(0.5).plus(Vector.getEntityPos(getOwner()))
+                    .plusY(getOwner().getEyeHeight() - 0.5);
+            WaterControlPoint point = getControlPoint(points.size() - 1);
+            point.setVelocity(lookPos.minus(point.position()).times(getVelocityMultiplier()));
+        }
+    }
+
+    @Override
+    public void onUpdate() {
+
+        super.onUpdate();
+        if (lastPlayedSplash > -1) {
+            lastPlayedSplash++;
+            if (lastPlayedSplash > 20) lastPlayedSplash = -1;
+        }
+
+
+        if (getOwner() == null) {
+            this.setDead();
+        }
+        setEntitySize(getAvgSize());
+
+        if (world.isRemote && getOwner() != null) {
+            Vec3d[] points = new Vec3d[getAmountOfControlPoints()];
+            for (int i = 0; i < points.length; i++)
+                points[i] = getControlPoint(i).position().toMinecraft();
+            //Particles! Let's do this.
+            //First, we need a bezier curve. Joy.
+            //Iterate through all of the control points.
+            //0 is the leader/front one
+            for (int i = 0; i < getAmountOfControlPoints(); i++) {
+                if (i < getAmountOfControlPoints() - 1) {
+                    //for (int j = 0; j < 4; j++) {
+                    Vec3d pos = getControlPoint(points.length - i - 1).position().toMinecraft();
+                    if (pos.distanceTo(getOwner().getPositionVector()) <= Math.min(ticksExisted / 20F, 1) * getSpeed() * 7.5F) {
+                        Vec3d pos2 = i < points.length - 1 ? getControlPoint(Math.max(points.length - i - 2, 0)).position().toMinecraft() : Vec3d.ZERO;
+
+                        for (int h = 0; h < 6; h++) {
+                            pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
+
+                            //Flow animation
+                            pos2 = pos2.add(AvatarUtils.bezierCurve(Math.min(((points.length - i - 2D / (h + 1D)) / points.length), 1), points));
+                            Vec3d circlePos = Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 60, getAvgSize() / (4 - (i + 1D) / getAmountOfControlPoints())).toMinecraft().add(pos);
+                            Vec3d targetPos = i < points.length - 1 ? Vector.getOrthogonalVector(getLookVec(),
+                                    (ticksExisted % 360) * 20 + h * 60 + 20, getAvgSize() / (2 - (i + 1D) / getAmountOfControlPoints())).toMinecraft().add(pos2)
+                                    : Vec3d.ZERO;
+                            Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
+
+                            if (targetPos != circlePos)
+                                vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.075).add(vel);
+                            ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(this).vel(vel)
+                                    .clr(0, 102, 255, 145).scale(getAvgSize() / 2).target(targetPos == Vec3d.ZERO ? pos : targetPos)
+                                    .time(14 + AvatarUtils.getRandomNumberInRange(0, 9)).collide(true).element(new Waterbending()).spawn(world);
+                        }
+
+                        //Particles along the line
+                        for (int h = 0; h < 6; h++) {
+                            pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
+                            ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
+                                    world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120).clr(0, 102, 255, 185)
+                                    .time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).scale(getAvgSize()).target(pos).collide(true).element(new Waterbending()).spawn(world);
+
+                        }
+                        //Dripping water particles
+                        for (int h = 0; h < 2; h++) {
+                            pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
+                            ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 20,
+                                    world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 185)
+                                    .time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).scale(getAvgSize()).gravity(true).collide(true).element(new Waterbending()).spawn(world);
+                        }
+                    }
+                    //}
+                }
+            }
+        }
+        if (getOwner() != null)
+            setVelocity((Vector.getEntityPos(getOwner())
+                    .plus(0, getOwner().getEyeHeight() - 0.5, 0).plus(Vector.getLookRectangular(getOwner()).times(getSpeed() / 5F))).minus(position())
+                    .times(getVelocityMultiplier() / 4));
+
+    }
+
+
+    @Override
+    public int getFireTime() {
+        return 0;
+    }
+
+    @Override
+    protected EntityWaterCannon.WaterControlPoint createControlPoint(float size, int index) {
+        return new EntityWaterCannon.WaterControlPoint(this, size, posX, posY, posZ);
+    }
+
+    @Override
+    public boolean canBePushed() {
+        return true;
+    }
+
+    public boolean canPlaySplash() {
+        return lastPlayedSplash == -1;
+    }
+
+    public void playSplash() {
+        world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_SWIM, SoundCategory.PLAYERS, 0.3f,
+                1.5f, false);
+        lastPlayedSplash = 0;
+    }
+
+
+    @Override
+    public EntityLivingBase getController() {
+        return getOwner();
+    }
+
+    @Override
+    protected double getVelocityMultiplier() {
+        return velocityMultiplier;
+    }
+
+    @Override
+    public boolean isProjectile() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldDissipate() {
+        return true;
+    }
+
+    @Override
+    public boolean isPiercing() {
+        return true;
+    }
+
+    @Override
+    public float getHealth() {
+        return 0;
+    }
+
+    @Override
+    public void setHealth(float health) {
+
+    }
+
+    @Override
+    public float getMaxHealth() {
+        return 0;
+    }
+
+    @Override
+    public void setMaxHealth(float maxHealth) {
+
+    }
+
+    @Override
+    protected double getControlPointTeleportDistanceSq() {
+        return getControlPointMaxDistanceSq() * getAmountOfControlPoints();
+    }
+
+    @Override
+    protected double getControlPointMaxDistanceSq() {
+        return 0.25F;
+    }
+
+    @Override
+    public int getAmountOfControlPoints() {
+        return 10;
+    }
+
+    @Override
+    public boolean shouldExplode() {
+        return false;
+    }
+
+    static class WaterControlPoint extends ControlPoint {
+
+        private WaterControlPoint(EntityWaterCannon arc, float size, double x, double y, double z) {
+            super(arc, size, x, y, z);
+        }
+
+    }
 }
-
-

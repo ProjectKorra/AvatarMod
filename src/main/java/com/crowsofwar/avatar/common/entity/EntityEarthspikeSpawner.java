@@ -4,6 +4,8 @@ import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.entity.data.EarthspikesBehavior;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;

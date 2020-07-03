@@ -93,13 +93,13 @@ public class AvatarCommand extends TreeCommand {
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] arguments) throws CommandException {
-		if(sender.canUseCommand(2, "avatarmod.command.avatar")) {
+		if (sender.canUseCommand(2, "avatarmod.command.avatar")) {
 			super.execute(server, sender, arguments);
 			AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onAvatarCommand());
 		} else {
-			TextComponentTranslation messagePermission = new TextComponentTranslation("commands.generic.permission", new Object[0]);
-      messagePermission.getStyle().setColor(TextFormatting.RED);
-      sender.sendMessage(messagePermission);
+			TextComponentTranslation messagePermission = new TextComponentTranslation("commands.generic.permission");
+			messagePermission.getStyle().setColor(TextFormatting.RED);
+			sender.sendMessage(messagePermission);
 		}
 	}
 }

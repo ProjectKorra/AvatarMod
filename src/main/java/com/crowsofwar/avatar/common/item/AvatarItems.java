@@ -56,6 +56,14 @@ public class AvatarItems {
 	public static ItemHangGliderBasic gliderBasic;
 	public static ItemHangGliderAdvanced gliderAdv;
 
+	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
+		@Nonnull
+		@Override
+		public ItemStack createIcon() {
+			return AvatarItems.stackScroll;
+		}
+	};
+
 	private AvatarItems() {
 	}
 

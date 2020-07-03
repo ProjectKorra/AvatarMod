@@ -27,16 +27,21 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.village.MerchantRecipe;
+import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_NEED_AIR_TRADE_ITEM;
@@ -90,23 +95,8 @@ public class EntityAirbender extends EntityHumanBender {
 	}
 
 	@Override
-	protected ScrollType getScrollType() {
-		return ScrollType.AIR;
-	}
-
-	@Override
 	protected int getNumSkins() {
 		return 7;
-	}
-
-	@Override
-	protected boolean isTradeItem(Item item) {
-		return super.isTradeItem(item) || MOBS_CONFIG.isAirTradeItem(item);
-	}
-
-	@Override
-	protected int getTradeAmount(Item item) {
-		return super.getTradeAmount(item) + MOBS_CONFIG.getAirTradeItemAmount(item);
 	}
 
 	@Override
@@ -172,7 +162,7 @@ public class EntityAirbender extends EntityHumanBender {
 	@Override
 	public void setDead() {
 		ItemStack stack = new ItemStack(Scrolls.AIR, 1, getLevel());
-		if (AvatarUtils.getRandomNumberInRange(1, 100) < 50 && !world.isRemote) {
+		if (world.rand.nextBoolean() && !world.isRemote) {
 			this.entityDropItem(stack, 1.0F);
 		}
 		super.setDead();
@@ -188,9 +178,4 @@ public class EntityAirbender extends EntityHumanBender {
 		return textcomponentstring;
 	}
 
-	@Override
-	public void setElement() {
-		super.setElement();
-		getData().addBending(new Airbending());
-	}
 }

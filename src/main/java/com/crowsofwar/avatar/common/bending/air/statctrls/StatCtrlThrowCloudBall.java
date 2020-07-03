@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common.bending.air.statctrls;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
@@ -10,7 +10,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
+import static com.crowsofwar.avatar.common.data.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.common.controls.AvatarControl.CONTROL_LEFT_CLICK;
 
 public class StatCtrlThrowCloudBall extends StatusControl {
@@ -23,22 +23,22 @@ public class StatCtrlThrowCloudBall extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		AbilityData abilityData = ctx.getData().getAbilityData("cloudburst");
-		double speed = 17.5;
+		double speed = 12.5;
 
 		if (abilityData.getLevel() == 1) {
-			speed = 20;
+			speed = 15;
 		}
 
 		if (abilityData.getLevel() == 2) {
-			speed = 22.5;
+			speed = 17.5;
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			speed = 25;
+			speed = 20;
 		}
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			speed = 27.5;
+			speed = 22.5;
 		}
 
 
@@ -46,7 +46,8 @@ public class StatCtrlThrowCloudBall extends StatusControl {
 
 		if (cloudBall != null) {
 			cloudBall.setBehavior(new CloudburstBehavior.Thrown());
-			cloudBall.setVelocity(Vector.getLookRectangular(entity).times(speed).times(2));
+			cloudBall.setLifeTime(30);
+			cloudBall.setVelocity(Vector.getLookRectangular(entity).times(speed * 1.5F));
 			//ctx.getData().addTickHandler(AIR_STATCTRL_HANDLER);
 		}
 

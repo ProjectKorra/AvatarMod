@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.client.particles.newparticles;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.AvatarClientProxy;
+import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.entity.*;
@@ -52,23 +53,10 @@ import java.util.stream.Collectors;
  * @see com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder
  * @since AvatarMod 1.6.0
  */
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 public abstract class ParticleAvatar extends Particle {
 
 	//TODO: How to adjust Electroblob's particle system for av2.
-	/**
-	 * ParticleBuilder adjustments:
-	 * -More spawning options. This includes colour shifting for particles, custom behaviour, ability to set the alpha, e.t.c.
-	 * -Better spinning. This means that you'll be able to spin particles along an axis- yay!!!!
-	 * -Particle AI!!!
-	 *
-	 * Particles:
-	 * -ParticleSphere: Alpha setting!
-	 * -ParticleMagicBubble: Actually spins! Behaviour so it can function like MagicFire!
-	 * -More particles in general! Namely, cube, sphere, cylinder, rectangular prism, and water particles!
-	 */
-
-
 	/**
 	 * The fraction of the impact velocity that should be the maximum spread speed added on impact.
 	 */
@@ -107,19 +95,16 @@ public abstract class ParticleAvatar extends Particle {
 	protected float fadeRed = 0;
 	protected float fadeGreen = 0;
 	protected float fadeBlue = 0;
-	protected float angle;
+	public float angle;
 	protected double radius = 0;
 	protected double speed = 0;
 	protected UUID uuid = UUID.fromString("ccc7dd56-8fcc-4477-9782-7f0423e5616d");
-
 	protected BendingStyle element;
 	protected Ability ability;
 	//For flash particles
 	protected boolean glow, sparkle;
-
 	//If the particle expands to a max size, like Flash, this makes it expand faster.
 	protected float expansionRate;
-
 	//Has R, G, B, and A, in that order.
 	protected float[] colourShiftRange = new float[4];
 	//Eventually will be used for better colour shifting (either shift up and down the spectrum or shift randomly)
@@ -130,6 +115,7 @@ public abstract class ParticleAvatar extends Particle {
 	protected double scaleChange;
 	protected boolean speedChangeOnUpdate;
 	protected double speedChange;
+	public double ticksExisted;
 	/**
 	 * The entity this particle is linked to. The particle will move with this entity.
 	 */
@@ -150,16 +136,30 @@ public abstract class ParticleAvatar extends Particle {
 	 * Velocity of this particle relative to the linked entity. If the linked entity is null, these are not used.
 	 */
 	protected double relativeMotionX, relativeMotionY, relativeMotionZ;
-	// Note that roll (equivalent to rotating the texture) is effectively handled by particleAngle - although that is
-	// actually the rotation speed and not the angle itself.
 	/**
 	 * The yaw angle this particle is facing, or {@code NaN} if this particle always faces the viewer (default behaviour).
 	 */
 	protected float yaw = Float.NaN;
+	// Note that roll (equivalent to rotating the texture) is effectively handled by particleAngle - although that is
+	// actually the rotation speed and not the angle itself.
 	/**
 	 * The pitch angle this particle is facing, or {@code NaN} if this particle always faces the viewer (default behaviour).
 	 */
 	protected float pitch = Float.NaN;
+	/**
+	 * ParticleBuilder adjustments:
+	 * -More spawning options. This includes colour shifting for particles, custom behaviour, ability to set the alpha, e.t.c.
+	 * -Better spinning. This means that you'll be able to spin particles along an axis- yay!!!!
+	 * -Particle AI!!!
+	 * <p>
+	 * Particles:
+	 * -ParticleSphere: Alpha setting!
+	 * -ParticleMagicBubble: Actually spins! Behaviour so it can function like MagicFire!
+	 * -More particles in general! Namely, cube, sphere, cylinder, rectangular prism, and water particles!
+	 */
+
+
+	private ParticleAvatarBehaviour behaviour;
 	private boolean collidedWithSolid, collidedWithParticle = false;
 	private boolean dynamicCollidedWithEntity;
 	/**
@@ -401,8 +401,15 @@ public abstract class ParticleAvatar extends Particle {
 	public void setSpawnEntity(Entity entity) {
 		this.spawnEntity = entity;
 	}
+
+	public Entity getSpawnEntity() {
+		return this.spawnEntity;
+	}
+
+
 	// Setters for parameters that only affect some particles - these are unimplemented in this class because they
 	// doesn't make sense for most particles
+
 
 	/**
 	 * Sets the base colour of the particle. <i>Note that this also sets the fade colour so that particles without a
@@ -587,6 +594,9 @@ public abstract class ParticleAvatar extends Particle {
 		//TODO: Fix collision so that particles don't collide with their owner's entities!
 		super.onUpdate();
 
+		if (behaviour != null)
+			behaviour.onUpdate(this);
+
 		if (this.canCollide && this.onGround) {
 			// I reject your friction and substitute my own!
 			this.motionX /= 0.699999988079071D;
@@ -628,6 +638,7 @@ public abstract class ParticleAvatar extends Particle {
 			this.relativeZ += relativeMotionZ;
 		}
 
+		ticksExisted = particleAge;
 		//Colour shifting! Who needs colour fading, amirite?
 		//Copied from my (FavouriteDragon) glorious light orb code.
 		if (colourShiftRange[0] != 0 && colourShiftInterval[0] != 0) {
@@ -776,40 +787,7 @@ public abstract class ParticleAvatar extends Particle {
 			collidedWithParticle = false;
 			dynamicCollidedWithEntity = false;
 			for (Entity hit : entityList) {
-				if (hit != getEntity()) {
-					if (hit instanceof EntityShield || hit instanceof EntityWall || hit instanceof EntityWallSegment) {
-						if (((AvatarEntity) hit).getOwner() != getEntity() || hit instanceof EntityWall || hit instanceof EntityWallSegment) {
-							AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
-							collidedWithSolid = true;
-						}
-					} else if (hit instanceof EntityThrowable || hit instanceof EntityArrow || hit instanceof EntityOffensive && ((EntityOffensive) hit).getOwner() != spawnEntity) {
-						dynamicCollidedWithEntity = true;
-						Vec3d hitVel = new Vec3d(hit.motionX, hit.motionY, hit.motionZ);
-						Vec3d pVel = new Vec3d(motionX, motionY, motionZ);
-						if (AvatarUtils.getMagnitude(hitVel) >= AvatarUtils.getMagnitude(pVel))
-							motionX = motionY = motionZ = 0;
-						else {
-							this.motionX += hit.motionX;
-							this.motionY += hit.motionY;
-							this.motionZ += hit.motionZ;
-						}
-						if (hit != null && spawnEntity != null && getAbility() != null)
-							AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
-					} else if (spawnEntity != null && getAbility() != null && hit != spawnEntity && !(hit instanceof AvatarEntity) || hit instanceof AvatarEntity && ((AvatarEntity) hit).getOwner() != spawnEntity && !collidedWithSolid) {
-						//Send packets
-						//TODO: Find a way to reduce lag
-						if (!hit.getIsInvulnerable()) {
-							if (hit instanceof EntityLivingBase) {
-								if (((EntityLivingBase) hit).attackable() && hit.canBeAttackedWithItem())
-									if (((EntityLivingBase) hit).hurtTime == 0)
-									AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
-
-							} else
-								if (hit.canBeAttackedWithItem())
-									AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(hit, this, spawnEntity, getAbility()));
-						}
-					}
-				}
+				onCollideWithEntity(hit);
 			}
 			for (AxisAlignedBB axisalignedbb : list) {
 				y = axisalignedbb.calculateYOffset(this.getBoundingBox(), y);
@@ -833,6 +811,7 @@ public abstract class ParticleAvatar extends Particle {
 			this.setBoundingBox(this.getBoundingBox().offset(x, y, z));
 		}
 
+		world.getCollisionBoxes(null, getBoundingBox());
 		if (!AvatarUtils.getAliveParticles().isEmpty()) {
 			Queue<Particle> particles = AvatarUtils.getAliveParticles().stream().filter(particle -> particle.getBoundingBox().intersects(getBoundingBox())
 					&& particle instanceof ParticleAvatar && ((ParticleAvatar) particle).spawnEntity != spawnEntity && particle != this)
@@ -862,18 +841,71 @@ public abstract class ParticleAvatar extends Particle {
 		if (origZ != z) this.motionZ = 0.0D;
 	}
 
-	@Override
-	public void setExpired() {
-		super.setExpired();
-		/**
-		 * @throws java.util.ConcurrentModificationException, so we're leaving this commented out for now. Instead, we'll clear lists when joining/leaving worlds.
-		 */
-		//if (ParticleBuilder.aliveParticles.contains(this))
-		//	ParticleBuilder.aliveParticles.remove();
+
+	public void onCollideWithEntity(Entity entity) {
+		if (entity != getEntity() && (getAbility() != null || this.element != null)) {
+			if (entity instanceof EntityShield && ((EntityShield) entity).getOwner() != getEntity() || entity instanceof EntityWall || entity instanceof EntityWallSegment) {
+				if (getAbility() != null)
+					AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
+				else
+					AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, element.getId()));
+				collidedWithSolid = true;
+			} else if (entity instanceof EntityThrowable || entity instanceof EntityArrow || entity instanceof EntityOffensive && ((EntityOffensive) entity).getOwner() != spawnEntity
+					|| entity instanceof IOffensiveEntity && ((AvatarEntity) entity).getOwner() != spawnEntity) {
+				dynamicCollidedWithEntity = true;
+				Vec3d hitVel = new Vec3d(entity.motionX, entity.motionY, entity.motionZ);
+				Vec3d pVel = new Vec3d(motionX, motionY, motionZ);
+				if (AvatarUtils.getMagnitude(hitVel) >= AvatarUtils.getMagnitude(pVel))
+					motionX = motionY = motionZ = 0;
+				else {
+					this.motionX += entity.motionX;
+					this.motionY += entity.motionY;
+					this.motionZ += entity.motionZ;
+				}
+				if (entity instanceof AvatarEntity)
+					applyElementalContact((AvatarEntity) entity);
+
+				if (entity != null && spawnEntity != null && getAbility() != null)
+					AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
+			} else if (spawnEntity != null && getAbility() != null && entity != spawnEntity && !(entity instanceof AvatarEntity) || entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != spawnEntity && !collidedWithSolid) {
+				//Send packets
+				//TODO: Find a way to reduce lag
+				if (!entity.getIsInvulnerable()) {
+					if (entity instanceof EntityLivingBase) {
+						if (((EntityLivingBase) entity).attackable() && entity.canBeAttackedWithItem())
+							AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
+
+					} else if (entity.canBeAttackedWithItem())
+						AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
+				}
+			}
+		}
+	}
+
+	public void applyElementalContact(ParticleAvatar particle) {
+
+	}
+
+	public void applyElementalContact(AvatarEntity entity) {
+		if (entity.getOwner() != null && entity.getElement() != null) {
+			switch (entity.getElement().getName()) {
+				case "waterbending":
+					break;
+				case "firebending":
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 	public int getLifetimeRemaining() {
 		return this.particleMaxAge - this.particleAge;
+	}
+
+
+	public void setBehaviour(ParticleAvatarBehaviour behaviour) {
+		this.behaviour = behaviour;
 	}
 
 	/**

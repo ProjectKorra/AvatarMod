@@ -9,6 +9,5 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 public class ItemScrollAll extends ItemScroll {
     public ItemScrollAll() {
         super(Scrolls.ScrollType.ALL);
-        setCreativeTab(AvatarMod.tabItems);
     }
 }

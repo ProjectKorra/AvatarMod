@@ -107,12 +107,7 @@ avatar.needTradeItem=You need a diamond, gold, or emerald, to get a scroll!
 avatar.needAirTradeItem=You need a diamond, gold, emerald, dragon's breath, totem of undying, or elytra to get a scroll!
 avatar.needFireTradeItem=You need a diamond, gold ingot, emerald, magma cream, or blaze rod to get a scroll!
 avatar.staffCooldown=The staff is on cooldown! You can't airbend with it!
-avatar.gliderElytra=You can't use a glider while wearing an elytra!
-
-avatar.slipstreamCooldown=Slipstream is on cooldown! You can't use it!
-avatar.cleanseCooldown=Cleanse is on cooldown! You can't use it!
-avatar.purifyCooldown=Purify is on cooldown! You can't use it!
-avatar.restoreCooldown=Restore is on cooldown! You can't use it!
+avatar.abilityCooldown=That ability is on cooldown! You can't use it!
 
 avatar.abilityLocked=You need to unlock that ability before you can use it!
 avatar.bisonNoFood=Your bison is too hungry to fly! You need to feed it apples and hay so it can fly.
@@ -202,29 +197,28 @@ avatar.ability.earth_spikes.lvl4_1=§2§l§oOctopus §2§l§ofissure ;; Creates 
 avatar.ability.earth_spikes.lvl4_2=§2§l§oFlash §2§l§ofissure ;; Travels much faster and deals twice the damage
 
 avatar.ability.restore=§2§lRestore
-avatar.ability.restore.desc= Use the energy of the earth to aid you in combat, increasing your toughness.
-avatar.ability.restore.lvl1= Gain Resistance, but at the cost of your speed. The tortoise and the.... tortoise???
-avatar.ability.restore.lvl2= You can draw energy from the surrounding area to slowly heal yourself.
-avatar.ability.restore.lvl3= The amount of speed you lose is decreased, and your regeneration speed is increased. You also receive strength.
-avatar.ability.restore.lvl4_1= §2§l§oGuardian §2§l§oof §2§l§oLife ;; Your strength and resistance are increased.
-avatar.ability.restore.lvl4_2= §2§l§oSustenance §2§l§oof §2§l§oLife ;; You receive instantaneous health, and your hunger disappears.
+avatar.ability.restore.desc=Use the energy of the earth to aid you in combat, increasing your toughness.
+avatar.ability.restore.lvl1=Gain Resistance, but at the cost of your speed. The tortoise and the.... tortoise???
+avatar.ability.restore.lvl2=You can draw energy from the surrounding area to slowly heal yourself.
+avatar.ability.restore.lvl3=The amount of speed you lose is decreased, and your regeneration speed is increased. You also receive strength.
+avatar.ability.restore.lvl4_1=§2§l§oGuardian §2§l§oof §2§l§oLife ;; Your strength and resistance are increased.
+avatar.ability.restore.lvl4_2=§2§l§oSustenance §2§l§oof §2§l§oLife ;; You receive instantaneous health, and your hunger disappears.
 
 avatar.ability.fire_shot=§c§lFire Shot
-avatar.ability.fire_shot.desc=A small, utility type ability to light fires. It's less practical in combat than some other abilities.
-avatar.ability.fire_shot.fail=You weren't able to light the fire. Maybe you should try again...
-avatar.ability.fire_shot.lvl1=When you don't succeed, keep trying, otherwise mobs will start spawning...
-avatar.ability.fire_shot.lvl2=Greater chance of creating fire
-avatar.ability.fire_shot.lvl3=Greater chance of creating fire
-avatar.ability.fire_shot.lvl4_1=§c§l§oFlame §c§l§odrive ;; Create a line of fire in the direction you're looking
-avatar.ability.fire_shot.lvl4_2=§c§l§oFlame §c§l§owall ;; Light nearby blocks on fire as well
+avatar.ability.fire_shot.desc=A small utility and offensive ability to light fires and keep mobs at bay.
+avatar.ability.fire_shot.lvl1=Shoot tiny fireballs to set the world on fire!
+avatar.ability.fire_shot.lvl2=Faster and stronger.
+avatar.ability.fire_shot.lvl3=Even faster and stronger!
+avatar.ability.fire_shot.lvl4_1=§c§l§oFlame §c§l§oDrive ;; Create a line of fire in the direction you're looking; extermely powerful.
+avatar.ability.fire_shot.lvl4_2=§c§l§oBlazing §c§l§oBurst ;; Create a shockwave of pure fire!
 
-avatar.ability.fire_blast=§c§lFire Blast
-avatar.ability.fire_blast.desc=Make a flaming whip of fire and throw it at your enemies.
-avatar.ability.fire_blast.lvl1=Create a fire arc
-avatar.ability.fire_blast.lvl2=Moves faster
-avatar.ability.fire_blast.lvl3=Tons more damage, and you can redirect fire arcs that you look at in a 3 block radius!
-avatar.ability.fire_blast.lvl4_1=§c§l§oLarge §c§l§ofire ;; Can make even more fire upon landing
-avatar.ability.fire_blast.lvl4_2=§c§l§oBoomerang ;; Comes back upon a successful hit
+avatar.ability.flame_strike=§c§lFlame Strike
+avatar.ability.flame_strike.desc=Strike with the power of condensed fire, creating a concussive blast at your fist!
+avatar.ability.flame_strike.lvl1=Punch with the power of flame!
+avatar.ability.flame_strike.lvl2=Bigger blasts!
+avatar.ability.flame_strike.lvl3=Tons more damage!
+avatar.ability.flame_strike.lvl4_1=§c§l§oFlame §c§l§oBeam ;; Piercing arcs of flame shoot from your fist!
+avatar.ability.flame_strike.lvl4_2=§c§l§oPyrotechnic §c§l§oBurst ;; Short explosions of condensed fire!
 
 avatar.ability.flamethrower=§c§lFlamethrower
 avatar.ability.flamethrower.desc=Generate a stream of powerful, close-ranged flames. A trademark of Firebending.
@@ -236,15 +230,15 @@ avatar.ability.flamethrower.lvl4_2=§c§l§oThe world will burn!! ;; Unfocused f
 
 avatar.ability.fireball=§c§lFireball
 avatar.ability.fireball.desc=Create a glowing orb of flame. It makes a firey explosion on impact.
-avatar.ability.fireball.lvl1=I ate too many chilies!
-avatar.ability.fireball.lvl2=Bigger, bigger explosion!!!
+avatar.ability.fireball.lvl1=Firrreeeeballllll
+avatar.ability.fireball.lvl2=Bigger and better!
 avatar.ability.fireball.lvl3=Tons more damage upon direct hit, wayy faster!
-avatar.ability.fireball.lvl4_1=§c§l§oFocused §c§l§oexplosion ;; Can sometimes destroy obsidian
-avatar.ability.fireball.lvl4_2=§c§l§oCharged §c§l§oexplosion ;; Takes a few seconds to charge, larger explosion when charged
+avatar.ability.fireball.lvl4_1=§c§l§oFlaming §c§l§oBarrage ;; Summon up to 3 fireballs that orbit around you!
+avatar.ability.fireball.lvl4_2=§c§l§oCondensed §c§l§oRage ;; Takes a few seconds to charge, larger explosion when charged
 
 avatar.ability.fire_jump=§c§lFire Jump
 avatar.ability.fire_jump.desc=Use fire propulsion to jump a short distance, damaging players when you jump!
-avatar.ability.fire_jump.lvl1=THIS (GIRL/BOY/UNKNOWN GENDER) IS ON FIREEEEEE!
+avatar.ability.fire_jump.lvl1=Feet of fire!
 avatar.ability.fire_jump.lvl2=Jump slightly farther
 avatar.ability.fire_jump.lvl3=Also attack targets upon landing, light them on fire
 avatar.ability.fire_jump.lvl4_1=§c§l§oCombustion §c§l§olaunch ;; Super huge attack when you jump AND land!
@@ -660,6 +654,8 @@ item.avatarmod:ostrich_equip.chain.name=Chainmail Ostrich Armor
 item.avatarmod:ostrich_equip.plate.name=Golden Ostrich Armor
 
 item.avatarmod:airbender_staff.name=Airbending Staff
+
+tile.avatarmod:cloudblock.name=Cloud Block
 
 avatar.tooltip.water_pouch=%d/5 Water
 avatar.tooltip.water_pouch.empty=Empty

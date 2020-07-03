@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -38,6 +37,7 @@ import java.util.function.BiPredicate;
 
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.LOB_BUBBLE;
 import static java.lang.Math.toRadians;
 
 /**
@@ -97,9 +97,10 @@ public class AbilityWaterBubble extends Ability {
 					// This will allow the bubble to travel out of the way of the water before it gets destroyed
 					bubble.setVelocity(Vector.UP);
 
-					world.spawnEntity(bubble);
+					if (!world.isRemote)
+						world.spawnEntity(bubble);
 
-					data.addStatusControl(StatusControl.LOB_BUBBLE);
+					data.addStatusControl(LOB_BUBBLE);
 					//data.addStatusControl(StatusControl.CHARGE_BUBBLE);
 					data.getAbilityData(this).addXp(SKILLS_CONFIG.createBubble);
 
@@ -185,4 +186,18 @@ public class AbilityWaterBubble extends Ability {
 
 	}
 
+	@Override
+	public boolean isChargeable() {
+		return true;
+	}
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public boolean isOffensive() {
+		return true;
+	}
 }

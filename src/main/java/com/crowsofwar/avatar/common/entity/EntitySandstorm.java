@@ -1,14 +1,16 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.SandstormMovementHandler;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -22,6 +24,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -375,10 +378,9 @@ public class EntitySandstorm extends AvatarEntity {
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData bD = BendingData.get(getOwner());
-			if (bD.hasStatusControl(StatusControl.SANDSTORM_REDIRECT)) {
-				bD.removeStatusControl(StatusControl.SANDSTORM_REDIRECT);
+			if (bD.hasStatusControl(StatusControlController.SANDSTORM_REDIRECT)) {
+				bD.removeStatusControl(StatusControlController.SANDSTORM_REDIRECT);
 			}
 		}
 	}
-
 }

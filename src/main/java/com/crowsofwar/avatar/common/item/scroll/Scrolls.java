@@ -66,6 +66,49 @@ public class Scrolls {
         return stack.getMetadata() + 1;
     }
 
+    @Nullable
+    public static ItemScroll getTypeFromElement(BendingStyle style) {
+        if (style instanceof Airbending)
+            return AIR;
+        if (style instanceof Firebending)
+            return FIRE;
+        if (style instanceof Waterbending)
+            return WATER;
+        if (style instanceof Earthbending)
+            return EARTH;
+        if (style instanceof Combustionbending)
+            return COMBUSTION;
+        if (style instanceof Icebending)
+            return ICE;
+        if (style instanceof Sandbending)
+            return SAND;
+        if (style instanceof Lightningbending)
+            return LIGHTNING;
+        else return ALL;
+    }
+
+    public static ItemScroll getTypeFromElement(String element) {
+        switch (element) {
+            case "airbending":
+                return AIR;
+            case "firebending":
+                return FIRE;
+            case "waterbending":
+                return WATER;
+            case "earthbending":
+                return EARTH;
+            case "combustionbending":
+                return COMBUSTION;
+            case "icebending":
+                return ICE;
+            case "sandbending":
+                return SAND;
+            case "lightningbending":
+                return LIGHTNING;
+            default:
+                return ALL;
+        }
+    }
     public enum ScrollType {
         ALL(null), // 0
         EARTH(Earthbending.ID), // 1

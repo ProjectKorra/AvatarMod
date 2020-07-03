@@ -5,10 +5,9 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
+import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Queues;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
@@ -18,7 +17,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * <i>"Don't waste time spawning particles manually - let {@code ParticleBuilder} do the work for you!"</i>
@@ -62,8 +62,6 @@ public final class ParticleBuilder {
 	 */
 	public static final ParticleBuilder instance = new ParticleBuilder();
 
-	public static Queue<ParticleAvatar> aliveParticles = Queues.newArrayDeque();
-
 	/**
 	 * Whether the particle builder is currently building or not.
 	 */
@@ -99,6 +97,7 @@ public final class ParticleBuilder {
 	private Entity target;
 	private long seed;
 	private double length;
+	private ParticleAvatarBehaviour behaviour;
 
 	private ParticleBuilder() {
 		reset();
@@ -168,14 +167,6 @@ public final class ParticleBuilder {
 		return ParticleBuilder.instance.particle(type).pos(px, py, pz);
 	}
 
-	public void glow(boolean glow) {
-		this.glow = glow;
-	}
-
-	public void sparkle(boolean sparkle) {
-		this.sparkle = sparkle;
-	}
-
 	/**
 	 * Spawns spark and large smoke particles (8 of each) within a 1x1x1 volume centred on the given position.
 	 */
@@ -211,8 +202,13 @@ public final class ParticleBuilder {
 		ParticleBuilder.create(Type.BUFF).entity(entity).clr(1, 1, 0.3f).spawn(world);
 	}
 
-	public static void addAliveParticles(ParticleAvatar particle) {
-		aliveParticles.add(particle);
+
+	public void glow(boolean glow) {
+		this.glow = glow;
+	}
+
+	public void sparkle(boolean sparkle) {
+		this.sparkle = sparkle;
 	}
 
 	/**
@@ -257,6 +253,15 @@ public final class ParticleBuilder {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		return this;
+	}
+
+	/**
+	 * @param behaviour The particle behaviour to use for the particle(s) being spawned.
+	 * @return The ParticleBuilder instance
+	 */
+	public ParticleBuilder behaviour(ParticleAvatarBehaviour behaviour) {
+		this.behaviour = behaviour;
 		return this;
 	}
 
@@ -420,7 +425,7 @@ public final class ParticleBuilder {
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
-	public ParticleBuilder clr(int r, int g, int b, float a) {
+	public ParticleBuilder clr(int r, int g, int b, int a) {
 		return this.clr(r / 255f, g / 255f, b / 255f, a / 255F); // Yes, 255 is correct and not 256, or else we can't have pure white
 	}
 
@@ -834,6 +839,7 @@ public final class ParticleBuilder {
 		// Anything with an if statement here allows default values to be set in particle constructors
 		if (!Double.isNaN(vx) && !Double.isNaN(vy) && !Double.isNaN(vz)) particle.setVelocity(vx, vy, vz);
 		if (r >= 0 && g >= 0 && b >= 0) particle.setRBGColorF(r, g, b);
+		if (a >= 0) particle.setAlphaF(a);
 		if (fr >= 0 && fg >= 0 && fb >= 0) particle.setFadeColour(fr, fg, fb);
 
 		for (int i = 0; i < 4; i++) {
@@ -852,6 +858,7 @@ public final class ParticleBuilder {
 		if (length > 0) particle.setLength(length);
 		if (element != null) particle.setElement(element);
 		if (ability != null) particle.setAbility(ability);
+		if (behaviour != null) particle.setBehaviour(behaviour);
 
 		UUID id = UUID.randomUUID();
 
@@ -890,6 +897,7 @@ public final class ParticleBuilder {
 		r = -1;
 		g = -1;
 		b = -1;
+		a = -1;
 		fr = -1;
 		fg = -1;
 		fb = -1;
@@ -915,6 +923,7 @@ public final class ParticleBuilder {
 		target = null;
 		element = null;
 		ability = null;
+		behaviour = null;
 		seed = 0;
 		length = -1;
 	}
@@ -932,7 +941,8 @@ public final class ParticleBuilder {
 	 */
 	// This was originally an enum, but I think having 'Type' explicitly declared is quite nice so I've left it as a
 	// nested class.
-	public static class Type {
+	public static class
+	Type {
 		/**
 		 * 3D-rendered light-beam particle.<p></p><b>Defaults:</b><br>Lifetime: 1 tick<br> Colour: white
 		 */
@@ -1016,10 +1026,9 @@ public final class ParticleBuilder {
 		 * 3D-rendered vine particle.<p></p><b>Defaults:</b><br>Lifetime: 1 tick<br> Colour: green
 		 */
 		public static final ResourceLocation VINE = new ResourceLocation(AvatarInfo.MOD_ID, "vine");
+		/**
+		 * 3D-rendered water cube particle. <p></p><b>Defaults:</b><br>Lifetime: 12-17 tick<br> Colour: blue
+		 */
+		public static final ResourceLocation CUBE = new ResourceLocation(AvatarInfo.MOD_ID, "cube");
 	}
-
-	/*@Nullable
-	public static ParticleAvatar getParticleFromUUID(UUID id) {
-		return aliveParticles.get(id);
-	}**/
 }

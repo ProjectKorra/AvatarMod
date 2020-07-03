@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.common.config;
 
+import akka.japi.Pair;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
@@ -25,7 +26,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.item.Item;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,7 +37,7 @@ import java.util.Map;
 public class ConfigMobs {
 
 	private static final Map<String, Integer> DEFAULT_FOODS = new HashMap<>();
-	private static final Map<String, Integer> DEFAULT_TRADE_ITEMS = new HashMap<>();
+	private static final Map<String, String> TRADE_ITEMS = new HashMap<>();
 	private static final Map<String, Integer> AIRBENDING_TRADE_ITEMS = new HashMap<>();
 	private static final Map<String, Integer> FIREBENDING_TRADE_ITEMS = new HashMap<>();
 
@@ -57,18 +60,16 @@ public class ConfigMobs {
 
 
 	static {
-		//Default items that are tradeable for scrolls- the number is just random for now.
-		//TODO: Make the number correspond to the amount of the item the player has to hold
-		DEFAULT_TRADE_ITEMS.put("minecraft:diamond", 1);
-		DEFAULT_TRADE_ITEMS.put("minecraft:gold_ingot", 1);
-		DEFAULT_TRADE_ITEMS.put("minecraft:emerald", 1);
+		TRADE_ITEMS.put("minecraft:diamond 1", "all");
+		TRADE_ITEMS.put("minecraft:gold_ingot 1", "all");
+		TRADE_ITEMS.put("minecraft:emerald 1", "all");
 		//Required items for trading for a airbending scroll
-		AIRBENDING_TRADE_ITEMS.put("minecraft:elytra", 1);
-		AIRBENDING_TRADE_ITEMS.put("minecraft:dragon_breath", 1);
-		AIRBENDING_TRADE_ITEMS.put("minecraft:totem_of_undying", 1);
+		TRADE_ITEMS.put("minecraft:elytra 4", "air");
+		TRADE_ITEMS.put("minecraft:dragon_breath 5", "air");
+		TRADE_ITEMS.put("minecraft:totem_of_undying 3", "air");
 		//Required items for trading for a firebending scroll
-		FIREBENDING_TRADE_ITEMS.put("minecraft:magma_cream", 1);
-		FIREBENDING_TRADE_ITEMS.put("minecraft:blaze_rod", 1);
+		TRADE_ITEMS.put("minecraft:magma_cream 2", "fire");
+		TRADE_ITEMS.put("minecraft:blaze_rod 1", "fire");
 
 		// Wheat
 		DEFAULT_FOODS.put("minecraft:bread", 5);
@@ -119,6 +120,8 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_TYPE.put("chicken", "air");
 		DEFAULT_SCROLL_DROPS.put("sheep", 5.0);
 		DEFAULT_SCROLL_TYPE.put("sheep", "air");
+		DEFAULT_SCROLL_DROPS.put("shulker", 50.0);
+		DEFAULT_SCROLL_TYPE.put("shulker", "air");
 
 
 		//Earth
@@ -169,17 +172,11 @@ public class ConfigMobs {
 	@Load
 	private Map<String, String> scrollType;
 	@Load
-	private Map<String, Integer> scrollTradeItems;
-	private Map<Item, Integer> tradeItems;
-	private Map<String, Integer> airScrollTradeItems;
-	private Map<Item, Integer> airTradeItems;
-	private Map<String, Integer> fireScrollTradeItems;
-	private Map<Item, Integer> fireTradeItems;
+	private Map<String, String> scrollTradeItems;
+	private Map<Item, Pair<Integer, String>> tradeItems;
 
 	public static void load() {
-		MOBS_CONFIG.scrollTradeItems = DEFAULT_TRADE_ITEMS;
-		MOBS_CONFIG.airScrollTradeItems = AIRBENDING_TRADE_ITEMS;
-		MOBS_CONFIG.fireScrollTradeItems = FIREBENDING_TRADE_ITEMS;
+		MOBS_CONFIG.scrollTradeItems = TRADE_ITEMS;
 		MOBS_CONFIG.bisonFoods = DEFAULT_FOODS;
 		MOBS_CONFIG.scrollType = DEFAULT_SCROLL_TYPE;
 		MOBS_CONFIG.scrollDropChance = DEFAULT_SCROLL_DROPS;
@@ -200,31 +197,21 @@ public class ConfigMobs {
 			}
 		}
 		tradeItems = new HashMap<>();
-		for (Map.Entry<String, Integer> entry : scrollTradeItems.entrySet()) {
+		for (Map.Entry<String, String> entry : scrollTradeItems.entrySet()) {
 			String name = entry.getKey();
-			Item item = Item.getByNameOrId(name);
-			if (item != null) {
-				tradeItems.put(item, entry.getValue());
-			} else {
-				AvatarLog.warn(WarningType.CONFIGURATION, "Invalid trade item; item " + name + " not found");
+			String tierS = name.split(" ")[1];
+			name = name.split(" ")[0];
+			int tier = 1;
+			try {
+				tier = Integer.parseInt(tierS);
 			}
-		}
-		airTradeItems = new HashMap<>();
-		for (Map.Entry<String, Integer> entry : airScrollTradeItems.entrySet()) {
-			String name = entry.getKey();
-			Item item = Item.getByNameOrId(name);
-			if (item != null) {
-				airTradeItems.put(item, entry.getValue());
-			} else {
-				AvatarLog.warn(WarningType.CONFIGURATION, "Invalid trade item; item " + name + " not found");
+			catch (NumberFormatException e) {
+				e.printStackTrace();
+				AvatarLog.warn(WarningType.CONFIGURATION, "Please enter a number for the tier next to the item name.");
 			}
-		}
-		fireTradeItems = new HashMap<>();
-		for (Map.Entry<String, Integer> entry : fireScrollTradeItems.entrySet()) {
-			String name = entry.getKey();
 			Item item = Item.getByNameOrId(name);
 			if (item != null) {
-				fireTradeItems.put(item, entry.getValue());
+				tradeItems.put(item, new Pair<>(tier, entry.getValue()));
 			} else {
 				AvatarLog.warn(WarningType.CONFIGURATION, "Invalid trade item; item " + name + " not found");
 			}
@@ -235,24 +222,31 @@ public class ConfigMobs {
 		return bisonFoodList.getOrDefault(item, 0);
 	}
 
+	public List<Item> getTradeItems() {
+		List<Item> items = new ArrayList<>();
+		for (Map.Entry<Item, Pair<Integer, String>> entry : tradeItems.entrySet()) {
+			items.add(entry.getKey());
+		}
+		return items;
+	}
 	public boolean isTradeItem(Item item) {
 		return tradeItems.containsKey(item);
 	}
 
-	public int getTradeItemAmount(Item item) {
-		return tradeItems.getOrDefault(item, 1);
+	public String getTradeItemElement(Item item) {
+			return tradeItems.getOrDefault(item, new Pair<>(1, "all")).second();
+	}
+
+	public int getTradeItemTier(Item item) {
+		return tradeItems.getOrDefault(item, new Pair<>(1, "all")).first();
 	}
 
 	public boolean isAirTradeItem(Item item) {
-		return airTradeItems.containsKey(item);
-	}
-
-	public int getAirTradeItemAmount(Item item) {
-		return airTradeItems.getOrDefault(item, 1);
+		return tradeItems.getOrDefault(item, new Pair<>(1, "all")).second().equals("air");
 	}
 
 	public boolean isFireTradeItem(Item item) {
-		return fireTradeItems.containsKey(item);
+		return tradeItems.getOrDefault(item, new Pair<>(1, "all")).second().equals("fire");
 	}
 
 	public boolean isBisonFood(Item item) {

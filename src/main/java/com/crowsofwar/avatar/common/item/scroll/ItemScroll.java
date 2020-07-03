@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarItem;
+import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 import net.minecraft.client.resources.I18n;
@@ -43,10 +44,12 @@ public class ItemScroll extends Item implements AvatarItem {
 		this.type = type;
 		setMaxStackSize(1);
 		setMaxDamage(0);
-		setCreativeTab(AvatarMod.tabItems);
+		setCreativeTab(AvatarItems.tabItems);
 		setHasSubtypes(true);
 		setTranslationKey("scroll_" + type.displayName());
 	}
+
+
 
 	public Scrolls.ScrollType getScrollType() {
 		return type;
@@ -54,6 +57,19 @@ public class ItemScroll extends Item implements AvatarItem {
 
 	@Override
 	public EnumRarity getRarity(ItemStack stack) {
+		switch (stack.getMetadata()) {
+			case 0:
+			case 1:
+				return EnumRarity.COMMON;
+			case 2:
+				return EnumRarity.UNCOMMON;
+			case 3:
+			case 4:
+				return EnumRarity.RARE;
+			case 5:
+			case 6:
+				return EnumRarity.EPIC;
+		}
 		return EnumRarity.RARE;
 	}
 
@@ -175,4 +191,6 @@ public class ItemScroll extends Item implements AvatarItem {
 			}
 		}
 	}
+
+
 }

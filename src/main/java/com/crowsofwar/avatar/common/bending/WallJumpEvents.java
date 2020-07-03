@@ -24,8 +24,12 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.MiscData;
 import com.crowsofwar.avatar.common.network.packets.PacketSWallJump;
 import com.crowsofwar.gorecore.GoreCore;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -36,6 +40,7 @@ public class WallJumpEvents {
 	private static void tick(EntityPlayer player, World world, BendingData data) {
 		MiscData miscData = data.getMiscData();
 		Bender bender = Bender.get(player);
+	//	GameSettings settings = Minecraft.getMinecraft().gameSettings;
 		if (player == GoreCore.proxy.getClientSidePlayer() && bender.getWallJumpManager()
 				.canWallJump()) {
 			if (AvatarControl.CONTROL_JUMP.isPressed()) {

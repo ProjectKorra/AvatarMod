@@ -18,21 +18,29 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntityAirGust extends EntityOffensive {
 
-	private boolean piercesEnemies = false, slowProjectiles = false, destroyProjectiles = false, pushStone, pushIronTrapDoor, pushIronDoor;
+	private boolean piercesEnemies = false, slowProjectiles = false, destroyProjectiles = false,
+			pushStone, pushIronTrapDoor, pushIronDoor;
+	private float exWidth, exHeight;
 
 	public EntityAirGust(World world) {
 		super(world);
@@ -42,9 +50,10 @@ public class EntityAirGust extends EntityOffensive {
 		this.pushStoneButton = pushStone;
 		this.pushDoor = pushIronDoor;
 		this.pushTrapDoor = pushIronTrapDoor;
+		this.exWidth = 0.5F;
+		this.exHeight = 0.5F;
 		setDamage(0);
 	}
-
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -52,6 +61,8 @@ public class EntityAirGust extends EntityOffensive {
 		slowProjectiles = nbt.getBoolean("SlowProjectiles");
 		destroyProjectiles = nbt.getBoolean("DestroyProjectiles");
 		piercesEnemies = nbt.getBoolean("PiercesEnemies");
+		exWidth = nbt.getFloat("Expanded Width");
+		exHeight = nbt.getFloat("Expanded Height");
 	}
 
 	@Override
@@ -60,6 +71,8 @@ public class EntityAirGust extends EntityOffensive {
 		nbt.setBoolean("SlowProjectiles", slowProjectiles);
 		nbt.setBoolean("DestroyProjectiles", destroyProjectiles);
 		nbt.setBoolean("PiercesEnemies", piercesEnemies);
+		nbt.setFloat("Expanded Width", exWidth);
+		nbt.setFloat("Expanded Height", exHeight);
 	}
 
 	@Override
@@ -71,6 +84,7 @@ public class EntityAirGust extends EntityOffensive {
 	public void onUpdate() {
 		super.onUpdate();
 
+
 		//Not sure why I have this here, but I'm too lazy to test it right now.
 		if (ticksExisted <= 2) {
 			this.pushStoneButton = pushStone;
@@ -79,6 +93,60 @@ public class EntityAirGust extends EntityOffensive {
 		}
 	}
 
+	@Override
+	public boolean pushLevers(BlockPos pos) {
+		if (super.pushLevers(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+		return super.pushLevers(pos);
+	}
+
+	@Override
+	public boolean pushButtons(BlockPos pos) {
+		if (super.pushButtons(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+		return super.pushButtons(pos);
+
+	}
+
+	@Override
+	public boolean pushTrapDoors(BlockPos pos) {
+		if (super.pushTrapDoors(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+		return super.pushTrapDoors(pos);
+
+	}
+
+	@Override
+	public boolean pushDoors(BlockPos pos) {
+		if (super.pushGates(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+		return super.pushGates(pos);
+
+	}
+
+	public void setExpandedWidth(float width) {
+		this.exWidth = width;
+	}
+
+	public float getExpandedWidth() {
+		return this.exWidth;
+	}
+
+	public void setExpandedHeight(float height) {
+		this.height = height;
+	}
+
+	public float getExpandedHeight() {
+		return this.exHeight;
+	}
 
 	public void setSlowProjectiles(boolean slowProjectiles) {
 		this.slowProjectiles = slowProjectiles;
@@ -146,12 +214,36 @@ public class EntityAirGust extends EntityOffensive {
 
 	@Override
 	public Vec3d getKnockbackMult() {
-		return new Vec3d(1.5, 2, 1.5);
+		return new Vec3d(2, 3, 2);
+	}
+
+	@Override
+	public void applyPiercingCollision() {
+		if (!world.isRemote)
+			super.applyPiercingCollision();
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
 	}
 
 	@Override
 	public void spawnDissipateParticles(World world, Vec3d pos) {
-		//We don't need to spawn any since particle collision handles it
+		if (world.isRemote && getOwner() != null) {
+			for (int i = 0; i < 8; i++) {
+				Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(this);
+				double spawnX = mid.x + world.rand.nextGaussian() / 10;
+				double spawnY = mid.y + world.rand.nextGaussian() / 10;
+				double spawnZ = mid.z + world.rand.nextGaussian() / 10;
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
+						world.rand.nextGaussian() / 20).time(4).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
+						.scale(getAvgSize() * 1.25F).element(getElement()).collide(true).spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
+						world.rand.nextGaussian() / 20).time(12).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
+						.scale(getAvgSize() * 1.25F).element(getElement()).collide(true).spawn(world);
+			}
+		}
 	}
 
 	@Override
@@ -176,6 +268,16 @@ public class EntityAirGust extends EntityOffensive {
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean multiHit() {
+		return getAbility() instanceof AbilityAirblade && getOwner() != null && AbilityData.get(getOwner(), getAbility().getName()).isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND);
+	}
+
+	@Override
+	public boolean setVelocity() {
+		return true;
 	}
 
 	@Override
@@ -210,8 +312,7 @@ public class EntityAirGust extends EntityOffensive {
 			super.onCollideWithEntity(((EntityAirBubble) entity).getOwner());
 			if (!isPiercing())
 				Dissipate();
-		}
-		else if (entity instanceof EntityAirBubble)
+		} else if (entity instanceof EntityAirBubble)
 			Dissipate();
 	}
 
@@ -223,10 +324,8 @@ public class EntityAirGust extends EntityOffensive {
 			return false;
 		} else if (entity instanceof EntityLivingBase && entity.getControllingPassenger() == getOwner()) {
 			return false;
-		} else if (getOwner() != null && getOwner().getTeam() != null && entity.getTeam() == getOwner().getTeam()) {
+		} else if (getOwner() != null && getOwner().getTeam() != null && entity.getTeam() != null && entity.getTeam() == getOwner().getTeam()) {
 			return false;
-		} else if (entity instanceof EntityEnderCrystal) {
-			return true;
 		} else
 			return true;
 	}
@@ -238,26 +337,22 @@ public class EntityAirGust extends EntityOffensive {
 
 	@Override
 	public double getExpandedHitboxWidth() {
-		return Math.max(0.3, Math.min(getAvgSize() / 3, 1));
+		return exWidth;
 	}
 
 	@Override
 	public double getExpandedHitboxHeight() {
-		return Math.max(0.3, Math.min(getAvgSize() / 3, 1));
+		return exHeight;
 	}
 
 	@Override
 	public Vec3d getKnockback() {
-		double x = Math.min(getKnockbackMult().x * motionX, motionX * 2);
-		double y = Math.min(0.5, (motionY + 0.15) * getKnockbackMult().y);
-		double z = Math.min(getKnockbackMult().z * motionZ, motionZ * 2);
-		if (velocity().sqrMagnitude() > getAvgSize() * 15) {
-			x = Math.min(x, motionX * 0.75F);
-			z = Math.min(z, motionZ * 0.75F);
-		}
-		return new Vec3d(x, y, z);
+		double x = getKnockbackMult().x * motionX;
+		double y = Math.max(0.25, Math.min((motionY + 0.15) * getKnockbackMult().y, 0.25));
+		double z = getKnockbackMult().z * motionZ;
+		double scale = 0.5F + getTier() / 4F;
+		return new Vec3d(x * scale, y * scale, z * scale);
 	}
-
 
 
 	@Override

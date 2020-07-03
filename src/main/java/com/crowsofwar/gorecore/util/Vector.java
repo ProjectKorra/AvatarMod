@@ -189,12 +189,11 @@ public class Vector {
 	                                              double degrees) {
 		double angle = Math.toRadians(degrees);
 		Vector rotation = axis;
-		Vector rotate = rotator;
 		rotation = rotation.normalize();
 
-		Vector thirdaxis = rotation.cross(rotate).normalize().times(rotate.magnitude());
+		Vector thirdaxis = rotation.cross(rotator).normalize().times(rotator.magnitude());
 
-		return rotate.times(Math.cos(angle)).plus(thirdaxis.times(Math.sin(angle)));
+		return rotator.times(Math.cos(angle)).plus(thirdaxis.times(Math.sin(angle)));
 	}
 
 	private static double dot(Vector a, Vector b) {

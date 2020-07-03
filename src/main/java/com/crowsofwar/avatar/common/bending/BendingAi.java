@@ -18,11 +18,15 @@ package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.EntityLightCylinder;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+
+import static com.crowsofwar.avatar.common.bending.BendingAi.AbilityType.PROJECTILE;
 
 /**
  * Represents behavior needed for use of an ability by a mob. When most
@@ -40,69 +44,89 @@ import net.minecraft.entity.ai.EntityAIBase;
  */
 public abstract class BendingAi extends EntityAIBase {
 
-	protected final Ability ability;
-	protected final EntityLiving entity;
-	protected final Bender bender;
+    protected final Ability ability;
+    protected final EntityLiving entity;
+    protected final Bender bender;
 
-	protected int timeExecuting;
+    protected int timeExecuting;
 
-	protected BendingAi(Ability ability, EntityLiving entity, Bender bender) {
-		this.ability = ability;
-		this.entity = entity;
-		this.bender = bender;
-		this.timeExecuting = 0;
-	}
+    protected BendingAi(Ability ability, EntityLiving entity, Bender bender) {
+        this.ability = ability;
+        this.entity = entity;
+        this.bender = bender;
+        this.timeExecuting = 0;
+    }
 
-	@Override
-	public void startExecuting() {
-		timeExecuting = 0;
-		startExec();
-	}
+    @Override
+    public void startExecuting() {
+        timeExecuting = 0;
+        startExec();
+    }
 
-	@Override
-	public boolean shouldContinueExecuting() {
-		return false;
-	}
+    @Override
+    public boolean shouldContinueExecuting() {
+        return false;
+    }
 
-	@Override
-	public void resetTask() {
-		timeExecuting = 0;
-	}
+    @Override
+    public void resetTask() {
+        timeExecuting = 0;
+    }
 
-	@Override
-	public void updateTask() {
-		timeExecuting++;
-	}
+    @Override
+    public void updateTask() {
+        timeExecuting++;
+    }
 
-	@Override
-	public final boolean shouldExecute() {
-		EntityLivingBase target = entity.getAttackTarget();
-		boolean targetInRange = target == null || entity.getDistanceSq(target) < 12 * 12;
-		return bender.getData().getMiscData().getAbilityCooldown() == 0 && targetInRange && shouldExec();
-	}
+    @Override
+    public final boolean shouldExecute() {
+        EntityLivingBase target = entity.getAttackTarget();
+        boolean targetInRange = target == null ||
+                entity.getDistanceSq(target) < getTargetRange() * getTargetRange();
+        return targetInRange && shouldExec();
+    }
 
-	protected abstract boolean shouldExec();
+    protected abstract boolean shouldExec();
 
-	protected abstract void startExec();
+    protected abstract void startExec();
 
-	/**
-	 * Executes the ability's main code (the part used for players)
-	 */
-	protected void execAbility() {
-		bender.executeAbility(ability, false);
-	}
+    /**
+     * Executes the ability's main code (the part used for players)
+     */
+    protected void execAbility() {
+        bender.executeAbility(ability, false);
+    }
 
-	/**
-	 * If the status control is present, uses up the status control
-	 */
-	protected void execStatusControl(StatusControl sc) {
-		BendingData data = bender.getData();
-		if (data.hasStatusControl(sc)) {
-			Raytrace.Result raytrace = Raytrace.getTargetBlock(entity, ability.getRaytrace());
-			if (sc.execute(new BendingContext(data, entity, bender, raytrace))) {
-				data.removeStatusControl(sc);
-			}
-		}
-	}
+    /**
+     * If the status control is present, uses up the status control
+     */
+    protected void execStatusControl(StatusControl sc) {
+        BendingData data = bender.getData();
+        if (data.hasStatusControl(sc)) {
+            Raytrace.Result raytrace = Raytrace.getTargetBlock(entity, ability.getRaytrace());
+            if (sc.execute(new BendingContext(data, entity, bender, raytrace))) {
+                data.removeStatusControl(sc);
+            }
+        }
+    }
+
+    public AbilityType[] getAbilityTypes() {
+        return new AbilityType[] {
+                PROJECTILE
+        };
+    }
+
+    public enum AbilityType {
+        PROJECTILE,
+        OFFENSIVE,
+        BUFF,
+        UTILITY,
+        MOBILITY,
+        DEFENSIVE
+    }
+
+    public int getTargetRange() {
+        return 12;
+    }
 
 }

@@ -17,12 +17,14 @@
 
 package com.crowsofwar.avatar.common.data;
 
+import akka.japi.Pair;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -42,6 +44,8 @@ public class AbilityData {
 	private final String abilityName;
 	private float lastXp;
 	private float xp;
+	private final boolean switchPath;
+	int abilityCooldown;
 	/**
 	 * The current level. -1 for locked
 	 * <p>
@@ -60,6 +64,18 @@ public class AbilityData {
 		this.xp = 0;
 		this.level = -1;
 		this.path = AbilityTreePath.MAIN;
+		this.switchPath = false;
+		this.abilityCooldown = 0;
+	}
+
+	public AbilityData(BendingData data, String abilityName, boolean switchPath) {
+		this.data = data;
+		this.abilityName = abilityName;
+		this.xp = 0;
+		this.level = -1;
+		this.path = AbilityTreePath.MAIN;
+		this.switchPath = switchPath;
+		this.abilityCooldown = 0;
 	}
 
 	/**
@@ -82,6 +98,18 @@ public class AbilityData {
 
 	public static AbilityData get(World world, String playerName, String abilityName) {
 		return BendingData.get(world, playerName).getAbilityData(abilityName);
+	}
+
+	public void setAbilityCooldown(int cooldown) {
+		abilityCooldown = cooldown;
+	}
+
+	public int getAbilityCooldown() {
+		return abilityCooldown;
+	}
+
+	public void decrementCooldown() {
+		abilityCooldown--;
 	}
 
 	@Nullable
@@ -163,12 +191,38 @@ public class AbilityData {
 	}
 
 	/**
+	 * Same as isMasterLevel(), but accounts for a dynamic change
+	 */
+	public boolean isDynamicMasterLevel(AbilityTreePath path) {
+		return getLevel() == 3 && getDynamicPath() == path;
+	}
+
+	/**
 	 * Ensures ability path is correct - on level 4, if still on MAIN path, will
 	 * switch to FIRST automatically
 	 */
 	private void checkPath() {
 		if (level == 3 && path == AbilityTreePath.MAIN) {
 			setPath(AbilityTreePath.FIRST);
+		}
+	}
+
+
+	/*
+	 * Same as getPath(), but accounts for a dynamic change
+	 */
+	public AbilityTreePath getDynamicPath() {
+		AbilityTreePath currentPath = getPath();
+		if (switchPath) {
+			if (currentPath == AbilityTreePath.FIRST) {
+				return AbilityTreePath.SECOND;
+			} else if (currentPath == AbilityTreePath.SECOND) {
+				return AbilityTreePath.FIRST;
+			} else {
+				return AbilityTreePath.MAIN;
+			}
+		} else {
+			return currentPath;
 		}
 	}
 
@@ -282,6 +336,7 @@ public class AbilityData {
 		lastXp = nbt.getFloat("lastXp");
 		level = nbt.getInteger("Level");
 		path = AbilityTreePath.get(nbt.getInteger("Path"));
+		abilityCooldown = nbt.getInteger("AbilityCooldown");
 	}
 
 	public void writeToNbt(NBTTagCompound nbt) {
@@ -289,6 +344,7 @@ public class AbilityData {
 		nbt.setFloat("LastXp", lastXp);
 		nbt.setInteger("Level", level);
 		nbt.setInteger("Path", path.id());
+		nbt.setInteger("AbilityCooldown", abilityCooldown);
 	}
 
 	public void toBytes(ByteBuf buf) {
@@ -296,12 +352,14 @@ public class AbilityData {
 		buf.writeFloat(xp);
 		buf.writeInt(level);
 		buf.writeInt(path.id());
+		buf.writeInt(abilityCooldown);
 	}
 
 	private void fromBytes(ByteBuf buf) {
 		xp = buf.readFloat();
 		level = buf.readInt();
 		path = AbilityTreePath.get(buf.readInt());
+		abilityCooldown = buf.readInt();
 	}
 
 	/**

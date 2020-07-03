@@ -44,7 +44,7 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 	public ItemAirbenderStaff(Item.ToolMaterial material) {
 		super(material);
 		setTranslationKey("airbender_staff");
-		setCreativeTab(AvatarMod.tabItems);
+		setCreativeTab(AvatarItems.tabItems);
 		setMaxStackSize(1);
 		setMaxDamage(200);
 

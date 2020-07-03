@@ -17,31 +17,39 @@
 
 package com.crowsofwar.avatar.client;
 
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.controls.IControlsHandler;
 import com.crowsofwar.avatar.common.data.Bender;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControl;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.event.BendingCycleEvent;
 import com.crowsofwar.avatar.common.event.BendingUseEvent;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.*;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentString;
-
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.*;
-import net.minecraftforge.fml.relauncher.*;
-
-import com.crowsofwar.avatar.*;
-import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
-import com.crowsofwar.avatar.common.bending.*;
-import com.crowsofwar.avatar.common.controls.*;
-import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.avatar.common.util.Raytrace.Result;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
-import org.lwjgl.input.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import java.util.*;
 
@@ -156,16 +164,18 @@ public class ClientInput implements IControlsHandler {
 		tryCycleBending();
 
 		if (AvatarControl.KEY_SKILLS.isPressed()) {
-			BendingData data = BendingData.get(mc.player);
-			BendingStyle active = data.getActiveBending();
-			if (active == null) {
-				AvatarMod.network.sendToServer(new PacketSOpenUnlockGui());
-			} else {
-				AvatarMod.network.sendToServer(new PacketSSkillsMenu(active.getId()));
+			BendingData data = BendingData.getFromEntity(mc.player);
+			if (data != null) {
+				BendingStyle active = data.getActiveBending();
+				if (active == null) {
+					AvatarMod.network.sendToServer(new PacketSOpenUnlockGui());
+				} else {
+					AvatarMod.network.sendToServer(new PacketSSkillsMenu(active.getId()));
+				}
 			}
-		}
-		if (AvatarControl.KEY_TRANSFER_BISON.isPressed()) {
-			AvatarMod.network.sendToServer(new PacketSConfirmTransfer());
+			if (AvatarControl.KEY_TRANSFER_BISON.isPressed()) {
+				AvatarMod.network.sendToServer(new PacketSConfirmTransfer());
+			}
 		}
 
 	}
@@ -183,14 +193,12 @@ public class ClientInput implements IControlsHandler {
 	 * Tries to open the specified bending controller if its key is pressed.
 	 */
 	private void tryOpenBendingMenu() {
-		BendingData data = BendingData.get(mc.player);
+		BendingData data = BendingData.getFromEntity(mc.player);
 		if (AvatarControl.KEY_USE_BENDING.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
-			if (data.getActiveBending() != null) {
+			if (data != null && data.getActiveBending() != null) {
 				if (!MinecraftForge.EVENT_BUS.post(new BendingUseEvent(mc.player, data.getActiveBending())))
-				AvatarUiRenderer.openBendingGui(data.getActiveBendingId());
-			}
-
-			else {
+					AvatarUiRenderer.openBendingGui(data.getActiveBendingId());
+			} else {
 				if (CLIENT_CONFIG.displayGetBendingMessage) {
 					String message = I18n.format(MSG_DONT_HAVE_BENDING.getTranslateKey());
 					message = FormattedMessageProcessor.formatText(MSG_DONT_HAVE_BENDING, message, mc.player.getName());
@@ -206,11 +214,11 @@ public class ClientInput implements IControlsHandler {
 	private void tryCycleBending() {
 		if (AvatarControl.KEY_BENDING_CYCLE_LEFT.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
 			if (!MinecraftForge.EVENT_BUS.post(new BendingCycleEvent(mc.player, false)))
-			AvatarMod.network.sendToServer(new PacketSCycleBending(false));
+				AvatarMod.network.sendToServer(new PacketSCycleBending(false));
 		}
 		if (AvatarControl.KEY_BENDING_CYCLE_RIGHT.isPressed() && !AvatarUiRenderer.hasBendingGui()) {
 			if (!MinecraftForge.EVENT_BUS.post(new BendingCycleEvent(mc.player, true)))
-			AvatarMod.network.sendToServer(new PacketSCycleBending(true));
+				AvatarMod.network.sendToServer(new PacketSCycleBending(true));
 		}
 	}
 
@@ -233,36 +241,46 @@ public class ClientInput implements IControlsHandler {
 		if (player != null && player.world != null) {
 			// Send any input to the server
 			if (Objects.requireNonNull(Bender.get(player)).getInfo().getId() != null) {
-				BendingData data = BendingData.get(player);
+				BendingData data = BendingData.getFromEntity(player);
+				if (data != null) {
 
-				if (mc.inGameHasFocus) {
-					Collection<AvatarControl> pressed = getAllPressed();
-					Collection<StatusControl> statusControls = data.getAllStatusControls();
-					for (StatusControl sc : statusControls) {
-						if (pressed.contains(sc.getSubscribedControl())) {
-							Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
-							AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
+					if (mc.inGameHasFocus) {
+						Collection<AvatarControl> pressed = getAllPressed();
+						Collection<StatusControl> statusControls = data.getAllStatusControls();
+						for (StatusControl sc : statusControls) {
+							if (pressed.contains(sc.getSubscribedControl())) {
+								Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
+								//Call it client-side
+								sc.execute(new BendingContext(data, player, raytrace));
+								//Then server side
+								AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
+							}
 						}
 					}
-				}
 
-				boolean isSwitchPathKeyDown = AvatarControl.KEY_SWITCH.isDown();
+					boolean isSwitchPathKeyDown = AvatarControl.KEY_SWITCH.isDown();
 
-				List<Ability> allAbilities = Abilities.all();
-				for (int i = 0; i < allAbilities.size(); i++) {
-					Ability ability = allAbilities.get(i);
-					boolean down = isAbilityPressed(ability);
+					List<Ability> allAbilities = Abilities.all();
+					for (int i = 0; i < allAbilities.size(); i++) {
+						Ability ability = allAbilities.get(i);
+						boolean down = isAbilityPressed(ability);
 
-					if (!CLIENT_CONFIG.conflicts.containsKey(ability)) CLIENT_CONFIG.conflicts.put(ability, false);
-					boolean conflict = CLIENT_CONFIG.conflicts.get(ability);
+						if (!CLIENT_CONFIG.conflicts.containsKey(ability)) CLIENT_CONFIG.conflicts.put(ability, false);
+						boolean conflict = CLIENT_CONFIG.conflicts.get(ability);
 
-					if (!conflict && mc.inGameHasFocus && mc.currentScreen == null && down && !wasAbilityDown[i]) {
-						Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player, ability.getRaytrace());
-						AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, isSwitchPathKeyDown));
+						if (!conflict && mc.inGameHasFocus && mc.currentScreen == null && down && !wasAbilityDown[i]) {
+							Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player, ability.getRaytrace());
+							if (data.hasBendingId(ability.getBendingId()) && player.isCreative() || data.canUse(ability)) {
+								//Client side
+								Bender.get(player).executeAbility(ability, raytrace, isSwitchPathKeyDown);
+								//Server side
+								AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, isSwitchPathKeyDown));
+							}
+						}
+						wasAbilityDown[i] = down;
 					}
-					wasAbilityDown[i] = down;
-				}
 
+				}
 			}
 		}
 

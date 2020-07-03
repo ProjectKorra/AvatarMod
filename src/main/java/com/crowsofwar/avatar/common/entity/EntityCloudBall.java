@@ -1,15 +1,20 @@
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.air.powermods.CloudburstPowerModifier;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.CloudburstBehavior;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -22,6 +27,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -53,6 +59,51 @@ public class EntityCloudBall extends EntityOffensive {
 		this.pushTrapDoor = pushIronTrapDoor;
 
 	}
+
+	@Override
+	public BendingStyle getElement() {
+		return new Airbending();
+	}
+
+	@Override
+	public boolean pushLevers(BlockPos pos) {
+		if (super.pushLevers(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+		return super.pushLevers(pos);
+	}
+
+	@Override
+	public boolean pushButtons(BlockPos pos) {
+		if (super.pushButtons(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+		return super.pushButtons(pos);
+
+	}
+
+	@Override
+	public boolean pushTrapDoors(BlockPos pos) {
+		if (super.pushTrapDoors(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+		return super.pushTrapDoors(pos);
+
+	}
+
+	@Override
+	public boolean pushDoors(BlockPos pos) {
+		if (super.pushGates(pos))
+			if (getElement() instanceof Airbending)
+				if (getOwner() != null && getAbility() != null)
+					AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
+		return super.pushGates(pos);
+
+	}
+
 
 	public void setAbsorb(boolean canAbsorb) {
 		absorbtion = canAbsorb;
@@ -104,15 +155,15 @@ public class EntityCloudBall extends EntityOffensive {
 			Dissipate();
 
 
-		if (getOwner() != null) {
+		if (getOwner() != null && Bender.isBenderSupported(getOwner())) {
 			EntityCloudBall ball = AvatarEntity.lookupControlledEntity(world, EntityCloudBall.class, getOwner());
-			BendingData bD = BendingData.get(getOwner());
-			if (ball == null && bD.hasStatusControl(StatusControl.THROW_CLOUDBURST)) {
-				bD.removeStatusControl(StatusControl.THROW_CLOUDBURST);
+			BendingData bD = BendingData.getFromEntity(getOwner());
+			if (ball == null && bD.hasStatusControl(StatusControlController.THROW_CLOUDBURST)) {
+				bD.removeStatusControl(StatusControlController.THROW_CLOUDBURST);
 			}
 			if (ball != null && ball.getBehavior() instanceof CloudburstBehavior.PlayerControlled && !(bD
-					.hasStatusControl(StatusControl.THROW_CLOUDBURST))) {
-				bD.addStatusControl(StatusControl.THROW_CLOUDBURST);
+					.hasStatusControl(StatusControlController.THROW_CLOUDBURST))) {
+				bD.addStatusControl(StatusControlController.THROW_CLOUDBURST);
 			}
 
 		}
@@ -123,8 +174,30 @@ public class EntityCloudBall extends EntityOffensive {
 			double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 			double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 			ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-					world.rand.nextGaussian() / 60).time(12).clr(0.85F, 0.85F, 0.85F)
-					.scale(getSize() * 0.03125F * 2).element(getElement()).spawn(world);
+					world.rand.nextGaussian() / 60).time(12).clr(0.95F, 0.95F, 0.95F, 0.1F)
+					.scale(getSize() * 0.03125F * 2).element(new Airbending()).spawn(world);
+			if (getBehavior() instanceof CloudburstBehavior.Thrown)
+			for (int i = 0; i < 4; i++) {
+				Vec3d pos = Vector.getOrthogonalVector(getLookVec(), i * 90 + (ticksExisted % 360) * 10, getAvgSize()).toMinecraft();
+				Vec3d velocity;
+				//position = position.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
+				Vec3d entityPos = AvatarEntityUtils.getMiddleOfEntity(this);
+				pos = pos.add(entityPos);
+				velocity = pos.subtract(entityPos).normalize();
+				velocity = velocity.scale(AvatarUtils.getSqrMagnitude(getVelocity()) / 400000);
+				spawnX = pos.x;
+				spawnY = pos.y;
+				spawnZ = pos.z;
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
+						world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
+						.time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
+						.scale(0.75F * getAvgSize() * (1 / getAvgSize())).element(new Airbending()).collide(true).spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
+						world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
+						.time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
+						.scale(0.75F * getAvgSize() * (1 / getAvgSize())).element(new Airbending()).collide(true).spawn(world);
+
+			}
 		}
 
 		//I'm using 0.03125, because that results in a size of 0.5F when rendering, as the default size for the cloudburst is actually 16.
@@ -220,7 +293,6 @@ public class EntityCloudBall extends EntityOffensive {
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		setDamage(nbt.getFloat("Damage"));
 		setBehavior((CloudburstBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
 		setAbsorb(nbt.getBoolean("Absorb"));
 		setChiSmash(nbt.getBoolean("ChiSmash"));
@@ -229,7 +301,6 @@ public class EntityCloudBall extends EntityOffensive {
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		nbt.setFloat("Damage", getDamage());
 		nbt.setInteger("Behavior", getBehavior().getId());
 		nbt.setBoolean("Absorb", absorbtion);
 		nbt.setBoolean("ChiSmash", chismash);
@@ -245,7 +316,7 @@ public class EntityCloudBall extends EntityOffensive {
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
-			data.removeStatusControl(StatusControl.THROW_CLOUDBURST);
+			data.removeStatusControl(StatusControlController.THROW_CLOUDBURST);
 		}
 	}
 
@@ -301,7 +372,7 @@ public class EntityCloudBall extends EntityOffensive {
 			for (int i = 0; i < getSize(); i++)
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(getAvgSize()).collide(true).vel(world.rand.nextGaussian() / 10,
 						world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10).time(8).pos(AvatarEntityUtils.getMiddleOfEntity(this))
-						.clr(0.85F, 0.85F, 0.85F).element(getElement()).spawn(world);
+						.clr(0.95F, 0.95F, 0.95F, 0.2F).element(getElement()).spawn(world);
 	}
 
 	@Override
@@ -310,7 +381,7 @@ public class EntityCloudBall extends EntityOffensive {
 			for (int i = 0; i < getSize(); i++)
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(getAvgSize()).collide(true).vel(world.rand.nextGaussian() / 40,
 						world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).time(8).pos(AvatarEntityUtils.getMiddleOfEntity(this))
-						.clr(0.85F, 0.85F, 0.85F).element(getElement()).spawn(world);
+						.clr(0.95F, 0.95F, 0.95F, 0.2F).element(getElement()).spawn(world);
 
 	}
 

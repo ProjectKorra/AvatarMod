@@ -38,7 +38,7 @@ public class ConfigStats {
 	@Load
 	public AttackSettings floatingBlockSettings = new AttackSettings(2f, 1),
 			ravineSettings = new AttackSettings(3.5F, 0.25), //
-			waveSettings = new AttackSettings(0.25F, 4), //
+			waveSettings = new AttackSettings(0.25F, 2), //
 			airbladeSettings = new AttackSettings(3.5F, 0.5), //
 			fireBlastSettings = new AttackSettings(2.5F, 1),   //
 			flamethrowerSettings = new AttackSettings(0.75F, 0.5),
@@ -70,10 +70,10 @@ public class ConfigStats {
 	public EarthspikeSettings earthspikeSettings = new EarthspikeSettings();
 
 	@Load
-	public FireballSettings fireballSettings = new FireballSettings();
+	public FlameStrikeSettings flameStrikeSettings = new FlameStrikeSettings();
 
 	@Load
-	public InfernoPunchSettings infernoPunchSettings = new InfernoPunchSettings();
+	public FireballSettings fireballSettings = new FireballSettings();
 
 	@Load
 	public LightningRazeSettings lightningRazeSettings = new LightningRazeSettings();
@@ -110,9 +110,9 @@ public class ConfigStats {
 			chiPickUpBlock = 1.25f,
 			chiMining = 2f,
 			chiMiningMaster = 0.5f,
-			chiFireBlast = 2f,
+			chiFlameStrike = 2f,
 			chiFireball = 2f,
-			chiFlamethrowerSecond = 2f,
+			chiFlamethrowerSecond = 2.5f,
 			chiFlamethrowerSecondLvl4_1 = 3.75f,
 			chiFlamethrowerSecondLvl4_2 = 4.25f,
 			chiFireShot = 2.5f,
@@ -346,6 +346,53 @@ public class ConfigStats {
 
 	}
 
+	public static class FlameStrikeSettings {
+
+		@Load
+		public int strikeNumber = 2;
+
+		@Load
+		public float size = 2.5f;
+
+		@Load
+		public int chargeDuration = 40;
+
+		@Load
+		public float damage = 2;
+
+		@Load
+		public float knockback = 2;
+
+		@Load
+		public int performanceAmount = 6;
+
+		@Load
+		public int fireTime = 3;
+
+		@Load
+		public float maxDistance = 3;
+
+	}
+
+
+	public static class FireballSettings {
+
+		@Load
+		public float damage = 3.5F;
+
+		@Load
+		public int fireTime = 6;
+
+		@Load
+		public float explosionSize = 1f;
+
+		@Load
+		public boolean damageBlocks = false;
+
+		@Load
+		public double push = 1.25;
+
+	}
 	public static class AirBurstSettings {
 
 		@Load
@@ -376,25 +423,6 @@ public class ConfigStats {
 
 		@Load
 		public int beamRange = 10;
-
-	}
-
-	public static class FireballSettings {
-
-		@Load
-		public float damage = 5F;
-
-		@Load
-		public int fireTime = 6;
-
-		@Load
-		public float explosionSize = 1f;
-
-		@Load
-		public boolean damageBlocks = false;
-
-		@Load
-		public double push = 1.25;
 
 	}
 
@@ -489,30 +517,6 @@ public class ConfigStats {
 
 		@Load
 		public double push = 1;
-
-	}
-
-	public static class InfernoPunchSettings {
-		@Load
-		public float damage = 3;
-
-		@Load
-		public float knockbackMult = 1F;
-
-		@Load
-		public int performanceAmount = 10;
-
-		@Load
-		public int fireTime = 3;
-
-		@Load
-		public float shockwaveRadius = 5;
-
-		@Load
-		public float shockwaveSpeed = 1;
-
-		@Load
-		public float shockwaveDamage = 6F;
 
 	}
 

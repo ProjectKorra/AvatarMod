@@ -32,27 +32,32 @@ public class ConfigSkills {
 	public boolean startWithRandomBending = true;
 
 	@Load
+	public boolean MultipleElements = true;
+
+	@Load
+	public boolean setKeepInventory = true;
+
+	@Load
 	public float blockPlaced = 5f,
+			airBurstHit = 4F,
+			airBladeHit = 3f,
+			airGustHit = 3f,
+			airJump = 2f,
 			blockThrowHit = 6.5f,
 			blockKill = 4f,
-			airJump = 2f,
-			airGustHit = 3f,
-			airBurstHit = 4F,
 			buffUsed = 4f,
 			earthspikeHit = 3.0F,
 			ravineHit = 3f,
 			waveHit = 4f,
 			waterHit = 3f,
-			fireBlastHit = 3f,
+			fireballHit = 4.5f,
 			fireShotHit = 3F,
 			flamethrowerHit = 0.75f,
-			fireballHit = 4.5f,
-			infernoPunchHit = 5F,
+			flameStrikeHit = 3,
 			cloudburstHit = 5.0f,
 			lightningspearHit = 6.0F,
-			airbladeHit = 3f,
-			miningUse = 10f,
-			miningBreakOre = 5f,
+			miningUse = 2.5f,
+			miningBreakOre = 3.5f,
 			waterSkateOneSecond = 1.5f,
 			wallRaised = 1f,
 			wallReach = 2,

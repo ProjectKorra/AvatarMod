@@ -16,8 +16,8 @@
 */
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControlController;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,7 +28,6 @@ import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -194,7 +193,7 @@ public class EntityIceShield extends EntityShield {
 		shatter();
 
 		if (getOwner() != null) {
-			BendingData.get(getOwner()).removeStatusControl(StatusControl.SHIELD_SHATTER);
+			BendingData.get(getOwner()).removeStatusControl(StatusControlController.SHIELD_SHATTER);
 		}
 
 	}
@@ -287,5 +286,4 @@ public class EntityIceShield extends EntityShield {
 	public void setPitchAngles(float[] pitchAngles) {
 		this.pitchAngles = pitchAngles;
 	}
-
 }

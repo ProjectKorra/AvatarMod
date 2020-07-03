@@ -13,7 +13,8 @@
       "item": "minecraft:diamond"
     },
     "s": {
-      "item": "avatarmod:scroll_air"
+      "item": "avatarmod:scroll_air",
+      "data": 1
     }
   },
   "result": {

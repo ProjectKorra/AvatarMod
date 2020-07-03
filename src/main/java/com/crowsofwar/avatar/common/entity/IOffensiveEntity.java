@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
@@ -54,16 +55,6 @@ public interface IOffensiveEntity {
 						z *= getExplosionKnockbackMult().z;
 
 						attackEntity(entity, entity1, true, new Vec3d(x, y, z));
-
-						if (collided instanceof AvatarEntity) {
-							if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment)
-									&& !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
-								AvatarEntity avent = (AvatarEntity) collided;
-								avent.addVelocity(x, y, z);
-							}
-							entity1.isAirBorne = true;
-							AvatarUtils.afterVelocityAdded(entity1);
-						}
 					}
 				}
 			}
@@ -78,7 +69,7 @@ public interface IOffensiveEntity {
 				entity1 != entity && entity.canCollideWith(entity1));
 		if (!collided.isEmpty()) {
 			for (Entity hit : collided) {
-				if (entity.getOwner() != null && hit != entity.getOwner() && hit != null) {
+				if (entity.getOwner() != null && hit != entity.getOwner() && hit != null && entity.canCollideWith(hit)) {
 					attackEntity(entity, hit, false, getKnockback());
 				}
 			}
@@ -96,7 +87,7 @@ public interface IOffensiveEntity {
 	}
 
 	default void attackEntity(AvatarEntity attacker, Entity hit, boolean explosionDamage, Vec3d vel) {
-		if (attacker.getOwner() != null && hit != null && hit != attacker) {
+		if (attacker.getOwner() != null && hit != null && hit != attacker && !attacker.world.isRemote) {
 			AbilityData data = AbilityData.get(attacker.getOwner(), attacker.getAbility().getName());
 			if ((explosionDamage ? getAoeDamage() > 0 : getDamage() > 0) && attacker.canDamageEntity(hit)) {
 				boolean ds = hit.attackEntityFrom(getDamageSource(hit, attacker.getOwner()), explosionDamage ? getAoeDamage() : getDamage());
@@ -105,25 +96,37 @@ public interface IOffensiveEntity {
 						((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, getDamageSource(hit, attacker.getOwner()),
 								explosionDamage ? getAoeDamage() : getDamage());
 						BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
+						if (multiHit())
+							((EntityLivingBase) hit).hurtTime = 1;
 						data.addXp(getXpPerHit());
 
-					} else if (hit instanceof EntityLivingBase && ds) {
+					} else if (ds) {
 						BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
 						data.addXp(getXpPerHit());
 						hit.setFire(getFireTime());
-						hit.addVelocity(vel.x, vel.y, vel.z);
+						if (setVelocity())
+							AvatarUtils.setVelocity(hit, vel);
+						else hit.addVelocity(vel.x, vel.y, vel.z);
+						if (multiHit() && hit instanceof EntityLivingBase)
+							((EntityLivingBase) hit).hurtTime = 1;
 						AvatarUtils.afterVelocityAdded(hit);
 					}
 				}
 			} else if (attacker.canCollideWith(hit)) {
-				if (hit instanceof EntityLivingBase) {
-					BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
-					data.addXp(getXpPerHit());
-					hit.setFire(getFireTime());
-					hit.addVelocity(vel.x, vel.y, vel.z);
-					hit.setEntityInvulnerable(false);
-					AvatarUtils.afterVelocityAdded(hit);
-				}
+				if (hit instanceof EntityItem)
+					vel = vel.scale(0.05);
+				BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
+				data.addXp(getXpPerHit());
+				hit.setFire(getFireTime());
+				if (hit instanceof EntityOffensive)
+					((EntityOffensive) hit).applyElementalContact(attacker);
+				if (setVelocity())
+					AvatarUtils.setVelocity(hit, vel);
+				else hit.addVelocity(vel.x, vel.y, vel.z);
+				hit.setEntityInvulnerable(false);
+				if (multiHit() && hit instanceof EntityLivingBase)
+					((EntityLivingBase) hit).hurtTime = 1;
+				AvatarUtils.afterVelocityAdded(hit);
 			}
 		}
 	}
@@ -273,12 +276,21 @@ public interface IOffensiveEntity {
 		return true;
 	}
 
+	//If this is true, entities will multihit (add knockback and/or attack even when an entity's hurt timer isn't 0)
+	default boolean multiHit() {
+		return false;
+	}
+
 	default AxisAlignedBB getExpandedHitbox(AvatarEntity entity) {
 		return entity.getEntityBoundingBox().grow(getExpandedHitboxWidth(), getExpandedHitboxHeight(), getExpandedHitboxWidth());
 	}
 
 	default double getExplosionHitboxGrowth() {
 		return 1;
+	}
+
+	default boolean setVelocity() {
+		return false;
 	}
 
 	default void applyElementalContact(AvatarEntity entity) {

@@ -19,11 +19,13 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLiving;
+
+import static com.crowsofwar.avatar.common.data.StatusControlController.START_FLAMETHROW;
 
 /**
  * @author CrowsOfWar
@@ -37,12 +39,17 @@ public class AbilityFlamethrower extends Ability {
 	@Override
 	public void execute(AbilityContext ctx) {
 		BendingData data = ctx.getData();
-		data.addStatusControl(StatusControl.START_FLAMETHROW);
+		data.addStatusControl(START_FLAMETHROW);
 	}
 
 	@Override
 	public int getBaseTier() {
 		return 2;
+	}
+
+	@Override
+	public boolean isOffensive() {
+		return true;
 	}
 
 	@Override

@@ -245,6 +245,42 @@ public class Raytrace {
 
 	}
 
+	public static List<Entity> entityRaytrace(World world, Vec3d start, Vec3d direction,
+											  double maxDistance) {
+		return entityRaytrace(world, start, direction, maxDistance, entity -> true);
+	}
+
+	public static List<Entity> entityRaytrace(World world, Vec3d start, Vec3d direction, double maxRange,
+											  Predicate<Entity> filter) {
+
+		// Detect correct range- avoid obstructions from walls
+		double range = maxRange;
+		Result raytrace = raytrace(world, start, direction, maxRange, true);
+		if (raytrace.hitSomething()) {
+			Vec3d stopAt = raytrace.posPrecise.toMinecraft();
+			range = AvatarUtils.getMagnitude(start.subtract(stopAt));
+		}
+
+		List<Entity> hit = new ArrayList<>();
+
+		Vec3d end = start.add(direction.scale(range));
+		AxisAlignedBB aabb = new AxisAlignedBB(start.x, start.y, start.z, end.x, end.y, end.z);
+		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, aabb);
+
+		for (Entity entity : entities) {
+			if (filter.test(entity)) {
+				AxisAlignedBB collisionBox = entity.getEntityBoundingBox();
+				RayTraceResult result = collisionBox.calculateIntercept(start, end);
+				if (result != null) {
+					hit.add(entity);
+				}
+			}
+		}
+
+		return hit;
+
+	}
+
 	public static List<Entity> entityRaytrace(World world, Vector start, Vector direction, float borderSize,
 											  double maxDistance) {
 		return entityRaytrace(world, start, direction, maxDistance, borderSize, entity -> true);
@@ -275,6 +311,45 @@ public class Raytrace {
 				collisionBox = collisionBox.grow(borderSize);
 				RayTraceResult result = collisionBox.calculateIntercept(start.toMinecraft(),
 						end.toMinecraft());
+				if (result != null) {
+					hit.add(entity);
+				}
+			}
+		}
+
+		return hit;
+
+	}
+
+	public static List<Entity> entityRaytrace(World world, Vec3d start, Vec3d direction, float borderSize,
+											  double maxDistance) {
+		return entityRaytrace(world, start, direction, maxDistance, borderSize, entity -> true);
+	}
+
+	public static List<Entity> entityRaytrace(World world, Vec3d start, Vec3d direction, double maxRange, float borderSize,
+											  Predicate<? super Entity> filter) {
+
+		// Detect correct range- avoid obstructions from walls
+		double range = maxRange;
+		Result raytrace = raytrace(world, start, direction, maxRange, true);
+		if (raytrace.hitSomething()) {
+			Vec3d stopAt = raytrace.posPrecise.toMinecraft();
+			range = AvatarUtils.getMagnitude(start.subtract(stopAt));
+		}
+
+		List<Entity> hit = new ArrayList<>();
+
+		Vec3d end = start.add(direction.scale(range));
+		AxisAlignedBB aabb = new AxisAlignedBB(start.x, start.y, start.z, end.x, end.y, end.z);
+		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, aabb);
+
+		for (Entity entity : entities) {
+			if (filter.test(entity)) {
+				float entBorder = entity.getCollisionBorderSize();
+				AxisAlignedBB collisionBox = entity.getEntityBoundingBox();
+				collisionBox = collisionBox.grow(entBorder);
+				collisionBox = collisionBox.grow(borderSize);
+				RayTraceResult result = collisionBox.calculateIntercept(start, end);
 				if (result != null) {
 					hit.add(entity);
 				}

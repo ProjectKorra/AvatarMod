@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.common.bending.lightning;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
@@ -12,7 +11,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
-import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_LIGHTNINGSPEAR;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
@@ -38,7 +37,7 @@ public class AiLightningSpear extends BendingAi {
 		data.chi().setTotalChi(10);
 		data.chi().setAvailableChi(10);
 		execAbility();
-		data.getMiscData().setAbilityCooldown(100);
+		data.getAbilityData(ability).setAbilityCooldown(100);
 	}
 
 	@Override
@@ -65,7 +64,7 @@ public class AiLightningSpear extends BendingAi {
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSq(target) > 4 * 4
-				&& bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
+				&& bender.getData().getAbilityData(ability).getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
 	}
 
 	@Override

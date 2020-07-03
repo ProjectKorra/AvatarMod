@@ -1,14 +1,18 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 
@@ -19,86 +23,128 @@ import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
  * @author Electroblob, FavouriteDragon
  * @since Wizardry 4.2.0, Av2 1.6.0
  */
-@SideOnly(Side.CLIENT)
-public class ParticleFlash extends ParticleAvatar {
+//@SideOnly(Side.CLIENT)
+//@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ {
+    private static final ResourceLocation PARTICLE_TEXTURES = new ResourceLocation("minecraft", "textures/particle/particles.png");
 
-	public ParticleFlash(World world, double x, double y, double z) {
-		super(world, x, y, z);
-		this.setRBGColorF(1, 1, 1);
-		this.setAlphaF(1.0F);
-		this.particleScale = 0.6f; // 7.1f is the value used in fireworks
-		this.particleMaxAge = 6;
-	}
+    public ParticleFlash(World world, double x, double y, double z) {
+        super(world, x, y, z);
+        this.setRBGColorF(1, 1, 1);
+        this.setAlphaF(particleAlpha = 1.0F);
+        this.particleScale = 0.6f; // 7.1f is the value used in fireworks
+        this.particleMaxAge = 6;
+    }
 
 
-	@Override
-	public boolean shouldDisableDepth() {
-		return true; // Well this fixes everything... let's hope it doesn't cause any side-effects!
-	}
+    @Override
+    public boolean shouldDisableDepth() {
+        return true;
+    }
 
-	@Override
-	public int getFXLayer() {
-		return 0;
-	}
+    @Override
+    public int getFXLayer() {
+        if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
+            return 3;
+        return 0;
+    }
 
-	@Override
-	public void drawParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
+    @Override
+    public void drawParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
 
-		GlStateManager.pushMatrix();
-		GlStateManager.enableBlend();
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
 
-		if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
-			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
+            Minecraft.getMinecraft().renderEngine.bindTexture(PARTICLE_TEXTURES);
+
+        if (element instanceof Firebending || glow) {
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+        }
+
+        if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        }
+
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+
+        float f4;
+        if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
+            setRBGColorF(particleRed * 0.875f, particleGreen * 0.875F, particleBlue * 0.875F);
+            setAlphaF(particleAlpha * 0.9F);
+            f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
+        } else {
+            f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
+        }
+
+        if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
+            if (element instanceof Airbending) {
+                particleAlpha *= 1.1F;
+                particleScale *= 0.75F;
+            }
+
+        if (CLIENT_CONFIG.shaderSettings.bslActive || CLIENT_CONFIG.shaderSettings.sildursActive) {
+            if (element instanceof Airbending)
+                setRBGColorF(0.95F, 0.95F, 0.95F);
+            if (element instanceof Firebending) {
+                particleAlpha *= 1.5F;
+                if (CLIENT_CONFIG.shaderSettings.bslActive)
+                    particleScale *= 1.25F;
+            }
+            if (world.getWorldTime() > 12600 && world.getWorldTime() < 950 && element instanceof Airbending) {
+                particleAlpha *= 0.75F;
+                f4 = 0.25F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
+                if (CLIENT_CONFIG.shaderSettings.sildursActive) {
+                    particleAlpha = particleAlpha / 0.75f * 0.5F;
+                    f4 *= 0.75;
+                }
+            } else if (element instanceof Airbending)
+                f4 = 0.5F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
+        } else
+            this.setAlphaF(sparkle ? particleAlpha - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F : particleAlpha);
+        float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
+        float f6 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
+        float f7 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
+        int i = this.getBrightnessForRender(partialTicks);
+        int j = i >> 16 & 65535;
+        int k = i & 65535;
+
+        // buffer = Tessellator.getInstance().getBuffer();
+
+        if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
+        buffer.pos(f5 - rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 - rotationYZ * f4 - rotationXZ * f4).tex(0.5D, 0.375D)
+                .color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+        buffer.pos(f5 - rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 - rotationYZ * f4 + rotationXZ * f4).tex(0.5D, 0.125D)
+                .color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+        buffer.pos(f5 + rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 + rotationYZ * f4 + rotationXZ * f4).tex(0.25D, 0.125D)
+                .color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+        buffer.pos(f5 + rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 + rotationYZ * f4 - rotationXZ * f4).tex(0.25D, 0.375D)
+                .color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+        if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
+            Tessellator.getInstance().draw();
+        GlStateManager.popMatrix();
+
+    }
+
+
+    @Override
+    public int getBrightnessForRender(float partialTicks) {
+		/*if (element instanceof Firebending) {
+			BlockPos blockpos = new BlockPos(this.posX, this.posY, this.posZ);
+			return this.world.isBlockLoaded(blockpos) ? this.world.getCombinedLight(blockpos, Math.min(world.getSkylightSubtracted(), 7)) : 0;
 		}
-		//TODO: Figure out a way to do this without breaking everything else
-		else if (CLIENT_CONFIG.particleSettings.squareFlashParticles) {
-			GlStateManager.disableTexture2D();
-			GlStateManager.disableNormalize();
-		}
-		//Great for fire!
-		else {
-			if (element instanceof Firebending || glow) {
-				GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-			}
-		}
-		GlStateManager.disableLighting();
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-
-		float f4;
-		if (CLIENT_CONFIG.particleSettings.voxelFlashParticles || CLIENT_CONFIG.particleSettings.squareFlashParticles) {
-			f4 = particleScale * 0.725F * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
-		} else {
-			f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
-		}
-
-		this.setAlphaF((sparkle ? particleAlpha * 0.6F : 0.6F) - ((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * 0.5F);
-		float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
-		float f6 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
-		float f7 = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
-		int i = this.getBrightnessForRender(partialTicks);
-		int j = i >> 16 & 65535;
-		int k = i & 65535;
-
-		//GlStateManager.enableDepth();
-		//This does some cool stuff:
-		//	GlStateManager.depthMask(true);
-		buffer.pos(f5 - rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 - rotationYZ * f4 - rotationXZ * f4).tex(0.5D, 0.375D)
-				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		buffer.pos(f5 - rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 - rotationYZ * f4 + rotationXZ * f4).tex(0.5D, 0.125D)
-				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		buffer.pos(f5 + rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 + rotationYZ * f4 + rotationXZ * f4).tex(0.25D, 0.125D)
-				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		buffer.pos(f5 + rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 + rotationYZ * f4 - rotationXZ * f4).tex(0.25D, 0.375D)
-				.color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-
-		GlStateManager.enableTexture2D();
-		GlStateManager.popMatrix();
-		GlStateManager.enableNormalize();
-	}
+		else */
+        return super.getBrightnessForRender(partialTicks);
+    }
 
 
-	@Override
-	public int getBrightnessForRender(float partialTicks) {
-		return 15728880;
-	}
+
+	/*@Override
+	@Optional.Method(modid = "hammercore")
+	public ColoredLight produceColoredLight(float v) {
+		if (element instanceof Firebending)
+			return ColoredLight.builder().pos(posX, posY, posZ).radius(particleScale * 0.5F).color(getRedColorF(), getGreenColorF(), getBlueColorF()).build();
+		else return null;
+	}**/
 }

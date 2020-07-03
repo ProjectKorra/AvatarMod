@@ -42,15 +42,12 @@ import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
-import com.crowsofwar.avatar.common.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.common.entity.mob.*;
 import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.crowsofwar.avatar.api.upgrade.UpgradeItems;
-import net.minecraft.creativetab.CreativeTabs;
 import com.crowsofwar.avatar.common.config.ConfigHandler;
 import com.crowsofwar.avatar.common.event.ServerEventHandler;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketHandler;
@@ -58,7 +55,6 @@ import com.crowsofwar.avatar.common.registry.CapabilityRegistry;
 import com.crowsofwar.avatar.common.wind.WindHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -77,15 +73,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-import javax.annotation.Nonnull;
-
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
-@Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore", useMetadata = false, //
-		updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "[1.12,1.13)")
+@Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore",  //
+		updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "1.12")
 
 public class AvatarMod {
 
@@ -102,51 +96,52 @@ public class AvatarMod {
 	private int nextMessageID = 1;
 	private int nextEntityID = 1;
 
-	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
-		@Nonnull
-		@Override
-		public ItemStack createIcon() {
-			return AvatarItems.stackScroll;
-		}
-	};
-
 	private static void registerAbilities() {
+		/*    			Air		  			*/
 		Abilities.register(new AbilityAirGust());
 		Abilities.register(new AbilityAirJump());
-		Abilities.register(new AbilityEarthControl());
-		Abilities.register(new AbilityRavine());
+		Abilities.register(new AbilityAirblade());
+		Abilities.register(new AbilityCloudBurst());
+		Abilities.register(new AbilityAirBubble());
+		Abilities.register(new AbilityAirBurst());
+		Abilities.register(new AbilitySlipstream());
+		/*    			Fire	  			*/
 		Abilities.register(new AbilityFireShot());
-		Abilities.register(new AbilityFireBlast());
+		Abilities.register(new AbilityFlameStrike());
 		Abilities.register(new AbilityFlamethrower());
+		Abilities.register(new AbilityFireball());
+		Abilities.register(new AbilityFireJump());
+		Abilities.register(new AbilityImmolate());
+		/*    			Water	  			*/
 		Abilities.register(new AbilityWaterArc());
 		Abilities.register(new AbilityCreateWave());
 		Abilities.register(new AbilityWaterBubble());
-		Abilities.register(new AbilityWall());
 		Abilities.register(new AbilityWaterSkate());
-		Abilities.register(new AbilityFireball());
-		Abilities.register(new AbilityAirblade());
+		Abilities.register(new AbilityWaterCannon());
+		Abilities.register(new AbilityCleanse());
+		/*    			Earth	  			*/
+		Abilities.register(new AbilityEarthControl());
 		Abilities.register(new AbilityMining());
-		Abilities.register(new AbilityAirBubble());
+		Abilities.register(new AbilityRavine());
+		Abilities.register(new AbilityWall());
+		Abilities.register(new AbilityEarthspikes());
+		Abilities.register(new AbilityRestore());
+		/*    			Ice		  			*/
 		Abilities.register(new AbilityIceBurst());
 		Abilities.register(new AbilityIcePrison());
+		/*    			Sand	  			*/
 		Abilities.register(new AbilitySandPrison());
+		Abilities.register(new AbilitySandstorm());
+		/*    			Lightning	  		*/
+		Abilities.register(new AbilityLightningSpear());
 		Abilities.register(new AbilityLightningArc());
 		Abilities.register(new AbilityLightningRedirect());
-		Abilities.register(new AbilityCloudBurst());
-		Abilities.register(new AbilityRestore());
-		Abilities.register(new AbilitySlipstream());
-		Abilities.register(new AbilityCleanse());
-		Abilities.register(new AbilityEarthspikes());
-		Abilities.register(new AbilityLightningSpear());
-		Abilities.register(new AbilityImmolate());
-		Abilities.register(new AbilityWaterCannon());
-		Abilities.register(new AbilityFireJump());
+		Abilities.register(new AbilityLightningRaze());
+		/*    			Combustion	  		*/
 		Abilities.register(new AbilityExplosion());
 		Abilities.register(new AbilityExplosivePillar());
-		Abilities.register(new AbilitySandstorm());
-		Abilities.register(new AbilityInfernoPunch());
-		Abilities.register(new AbilityLightningRaze());
-		Abilities.register(new AbilityAirBurst());
+
+
 	}
 
 	private static void registerBendingStyles() {
@@ -247,7 +242,7 @@ public class AvatarMod {
 	public void init(FMLInitializationEvent e) {
 		//Anything with a low update frequency needs that frequency in order to function properly. Otherwise, they have a high frequency (ticks between updates).
 		registerEntity(EntityFloatingBlock.class, "FloatingBlock", 128, 1000, true);
-		registerEntity(EntityFireArc.class, "FireArc", 128, 1000, true);
+		//registerEntity(EntityFireArc.class, "FireArc", 128, 1000, true);
 		registerEntity(EntityWaterArc.class, "WaterArc", 128, 1000, true);
 		registerEntity(EntityAirGust.class, "AirGust", 128, 1000, true);
 		registerEntity(EntityRavine.class, "Ravine", 128, 1000, true);
@@ -282,7 +277,7 @@ public class AvatarMod {
 		registerEntity(EntityShockwave.class, "Shockwave", 128, 1000, false);
 		registerEntity(EntityLightOrb.class, "LightOrb", 128, 1000, true);
 		registerEntity(EntityLightCylinder.class, "LightCylinder", 128, 1000, true);
-		registerEntity(EntityFlamethrower.class, "Flamethrower", 128, 1000, true);
+		registerEntity(EntityFlameArc.class, "Flamethrower", 128, 1000, true);
 
 		EntityRegistry.addSpawn(EntitySkyBison.class, 5, 1, 3, EnumCreatureType.CREATURE, //
 				SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, TAIGA_HILLS, ICE_MOUNTAINS, REDWOOD_TAIGA_HILLS, MUTATED_EXTREME_HILLS,

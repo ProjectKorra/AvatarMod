@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
@@ -41,20 +42,23 @@ public class WallJumpManager {
 		Vector normal = getHorizontalCollisionNormal();
 		Block block = getHorizontalCollisionBlock();
 
-		if (normal != Vector.UP) {
+		if (normal != Vector.UP && normal != null) {
 
 			Vector velocity = new Vector(entity.motionX, entity.motionY, entity.motionZ);
 			Vector n = velocity.reflect(normal).times(4).minus(normal.times(0.5)).withY(0.5);
-			n = n.plus(Vector.getLookRectangular(entity).times(.8));
+			n = n.plus(Vector.getLookRectangular(entity).times(-1.25).withY(1));
 
 			if (n.sqrMagnitude() > 1) {
 				n = n.normalize().times(1);
 			}
 
 			// can't use setVelocity since that is Client SideOnly
-			entity.motionX = n.x();
-			entity.motionY = n.y();
-			entity.motionZ = n.z();
+			entity.motionX *= 0;
+			entity.motionY *= 0;
+			entity.motionZ *= 0;
+			entity.motionX += n.x();
+			entity.motionY += n.y();
+			entity.motionZ += n.z();
 			AvatarUtils.afterVelocityAdded(entity);
 
 			new NetworkParticleSpawner().spawnParticles(world, particles, 4, 10, new Vector

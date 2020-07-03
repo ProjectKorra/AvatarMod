@@ -31,13 +31,13 @@ public class FireParticleSpawner extends TickHandler {
 		Vector pos = Vector.getEntityPos(target).minusY(0.05);
 
 		if (world.isRemote)
-			for (int i = 0; i < 4 + AvatarUtils.getRandomNumberInRange(0, 4); i++) {
+			for (int i = 0; i < 2 + AvatarUtils.getRandomNumberInRange(0, 4); i++) {
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).collide(true).clr(255, 10,
-						5).pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).scale(1.25F +
-						Math.max(data.getLevel(), 0)).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true).spawn(world);
+						5).pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).scale(1F +
+						Math.max(data.getLevel(), 0) / 2F).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true).spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).collide(true).clr(255, 40 + AvatarUtils.getRandomNumberInRange(0, 60),
-						10).pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).scale(1.25F +
-						Math.max(data.getLevel(), 0)).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true).spawn(world);
+						10).pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40)
+						.scale(1F + Math.max(data.getLevel(), 0) / 2F).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true).spawn(world);
 			}
 
 		//particles.spawnParticles(world, world.rand.nextBoolean() ? AvatarParticles.getParticleFlames() : AvatarParticles.getParticleFire(),

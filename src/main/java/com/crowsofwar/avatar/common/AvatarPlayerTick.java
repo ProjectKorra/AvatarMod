@@ -21,14 +21,11 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.TickHandlerController;
 import com.crowsofwar.avatar.common.event.AbilityUnlockEvent;
 import com.crowsofwar.avatar.common.event.AbilityUseEvent;
 import com.crowsofwar.avatar.common.event.ElementUnlockEvent;
-import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -56,10 +53,9 @@ public class AvatarPlayerTick {
 			Bender bender = Bender.get(e.player);
 			if (bender != null) {
 				BendingData data = bender.getData();
-
 				EntityPlayer player = e.player;
 
-				if (!player.world.isRemote && player.ticksExisted == 0) {
+				if (!player.world.isRemote && player.ticksExisted % 1000 == 0) {
 					data.saveAll();
 				}
 
@@ -69,24 +65,6 @@ public class AvatarPlayerTick {
 
 			}
 		}
-
-		//Removes particles.
-		/*if (e.phase == Phase.END && Bender.get(e.player) != null) {
-			List<EntityLivingBase> benders = e.player.world.getEntities(EntityLivingBase.class, Bender::isBenderSupported);
-			boolean flamethrowerActive = false;
-			if (!benders.isEmpty()) {
-				for (EntityLivingBase entity : benders) {
-					if (Bender.get(entity).getData().hasTickHandler(TickHandlerController.FLAMETHROWER) || Bender.get(entity).getData().hasStatusControl(StatusControl.STOP_FLAMETHROW))
-						flamethrowerActive = true;
-				}
-			}
-			if (Bender.get(e.player).getData().hasStatusControl(StatusControl.STOP_FLAMETHROW) || Bender.get(e.player).getData().hasTickHandler(TickHandlerController.FLAMETHROWER))
-				flamethrowerActive = true;
-			if (!flamethrowerActive) {
-				System.out.println("Remove flamethrower");
-				//ParticleBuilder.aliveParticles.removeIf(particleAvatar -> !particleAvatar.isAlive());
-			}
-		}**/
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
@@ -94,37 +72,38 @@ public class AvatarPlayerTick {
 		if (event.getEntity() instanceof EntityLivingBase && Bender.isBenderSupported((EntityLivingBase) event.getEntity())) {
 			if (SKILLS_CONFIG.startWithRandomBending && !event.getWorld().isRemote) {
 				EntityLivingBase bender = (EntityLivingBase) event.getEntity();
-				BendingData data = BendingData.get(bender);
-				if (!data.hasElements()) {
-					int elementID = AvatarUtils.getRandomNumberInRange(1, 4);
-					List<BendingStyle> elements = BendingStyles.all().stream()
-							.filter(bendingStyle -> bendingStyle.isParentBending() && bendingStyle.canEntityUse())
-							.collect(Collectors.toList());
-					BendingStyle style = BendingStyles.get(elements.get(elementID - 1).getName());
-					if (!MinecraftForge.EVENT_BUS.post(new ElementUnlockEvent(bender, style))) {
-						data.addBending(style);
+				if (Bender.isBenderSupported(bender)) {
+					BendingData data = BendingData.getFromEntity(bender);
+					if (data != null && !data.hasElements()) {
+						int elementID = AvatarUtils.getRandomNumberInRange(1, 4);
+						List<BendingStyle> elements = BendingStyles.all().stream()
+								.filter(bendingStyle -> bendingStyle.isParentBending() && bendingStyle.canEntityUse())
+								.collect(Collectors.toList());
+						BendingStyle style = BendingStyles.get(elements.get(elementID - 1).getName());
+						if (!MinecraftForge.EVENT_BUS.post(new ElementUnlockEvent(bender, style))) {
+							data.addBending(style);
 
-						// Unlock first ability
-						//noinspection ConstantConditions - can safely assume bending is present if
-						// the ID is in use to unlock it
-						Ability ability = Objects.requireNonNull(style.getAllAbilities().get(0));
-						if (!MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(bender, ability)))
-							data.getAbilityData(ability).unlockAbility();
+							// Unlock first ability
+							//noinspection ConstantConditions - can safely assume bending is present if
+							// the ID is in use to unlock it
+							Ability ability = Objects.requireNonNull(style.getAllAbilities().get(0));
+							if (!MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(bender, ability)))
+								data.getAbilityData(ability).unlockAbility();
 
+						}
 					}
 				}
 			}
 		}
 	}
 
+	//Prevents keybinds from letting you use abilities you haven't learned
 	@SubscribeEvent
 	public static void onBendingUseEvent(AbilityUseEvent event) {
 		if (event.getEntityLiving() != null) {
-			if (BendingData.getFromEntity(event.getEntityLiving()) != null) {
 				BendingData data = BendingData.getFromEntity(event.getEntityLiving());
-				if (!data.hasBendingId(event.getAbility().getBendingId())) {
+				if (data != null && !data.hasBendingId(event.getAbility().getBendingId())) {
 					event.setCanceled(true);
-				}
 			}
 		}
 	}

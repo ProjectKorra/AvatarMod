@@ -26,7 +26,7 @@ import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -98,7 +98,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (packet instanceof PacketSUseStatusControl)
 			return handleUseStatusControl((PacketSUseStatusControl) packet, ctx);
 
-		if (packet instanceof PacketSWallJump) return handleWallJump((PacketSWallJump) packet, ctx);
+		if (packet instanceof PacketSWallJump)
+			return handleWallJump((PacketSWallJump) packet, ctx);
 
 		if (packet instanceof PacketSSkillsMenu)
 			return handleSkillsMenu((PacketSSkillsMenu) packet, ctx);
@@ -126,7 +127,8 @@ public class PacketHandlerServer implements IPacketHandler {
 
 		if (packet instanceof PacketSParticleCollideEvent) {
 			MinecraftForge.EVENT_BUS.post(new ParticleCollideEvent(((PacketSParticleCollideEvent) packet).getEntity(),
-					((PacketSParticleCollideEvent) packet).getParticle(), ((PacketSParticleCollideEvent) packet).getSpawnerEntity(), ((PacketSParticleCollideEvent) packet).getAbility()));
+					((PacketSParticleCollideEvent) packet).getSpawnerEntity(), ((PacketSParticleCollideEvent) packet).getAbility(),
+					((PacketSParticleCollideEvent) packet).getVelocity()));
 			return null;
 		}
 

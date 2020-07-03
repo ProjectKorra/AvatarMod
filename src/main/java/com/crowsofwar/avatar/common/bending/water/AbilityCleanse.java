@@ -29,10 +29,8 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_CLEANSE_COOLDOWN;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.CLEANSE_COOLDOWN_HANDLER;
 import static java.lang.Math.toRadians;
 
 public class AbilityCleanse extends Ability {
@@ -65,8 +63,8 @@ public class AbilityCleanse extends Ability {
 
 		Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel() * 3);
 
-		if ((bender.consumeChi(chi) && targetPos != null && !data.hasTickHandler(CLEANSE_COOLDOWN_HANDLER)) || (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative())
-				|| (ctx.consumeWater(4) && !data.hasTickHandler(CLEANSE_COOLDOWN_HANDLER))) {
+		if ((bender.consumeChi(chi) && targetPos != null || (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative())
+				|| ctx.consumeWater(4))) {
 
 			// Duration: 5-10s
 			int duration = abilityData.getLevel() < 2 ? 100 : 200;
@@ -120,9 +118,6 @@ public class AbilityCleanse extends Ability {
 
 		} else {
 			bender.sendMessage("avatar.cleanseFail");
-		}
-		if (data.hasTickHandler(CLEANSE_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
-			MSG_CLEANSE_COOLDOWN.send(entity);
 		}
 
 	}
@@ -211,32 +206,31 @@ public class AbilityCleanse extends Ability {
 		return 5;
 	}
 
-	public static class CleanseLightOrbBehaviour extends LightOrbBehavior.FollowPlayer {
-		@Override
-		public Behavior onUpdate(EntityLightOrb entity) {
-			return super.onUpdate(entity);
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+		int coolDown = 160;
+
+		if (ctx.getLevel() == 1) {
+			coolDown = 140;
+		}
+		if (ctx.getLevel() == 2) {
+			coolDown = 120;
+		}
+		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			coolDown = 130;
+		}
+		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			coolDown = 110;
 		}
 
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-			super.fromBytes(buf);
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+			coolDown = 0;
 		}
 
-		@Override
-		public void toBytes(PacketBuffer buf) {
-			super.toBytes(buf);
-		}
-
-		@Override
-		public void load(NBTTagCompound nbt) {
-			super.load(nbt);
-		}
-
-		@Override
-		public void save(NBTTagCompound nbt) {
-			super.save(nbt);
-		}
+		return coolDown;
 	}
+
 
 }
 

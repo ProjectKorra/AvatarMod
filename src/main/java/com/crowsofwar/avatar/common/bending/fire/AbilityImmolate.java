@@ -9,7 +9,6 @@ import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,10 +17,10 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_PURIFY_COOLDOWN;
+import java.util.Objects;
+
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.TickHandlerController.PURIFY_COOLDOWN_HANDLER;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.PURIFY_PARTICLE_SPAWNER;
 import static net.minecraft.init.MobEffects.*;
 
@@ -54,11 +53,7 @@ public class AbilityImmolate extends Ability {
 			chi = STATS_CONFIG.chiBuffLvl4;
 		}
 
-		if (data.hasTickHandler(PURIFY_COOLDOWN_HANDLER) && entity instanceof EntityPlayer) {
-			MSG_PURIFY_COOLDOWN.send(entity);
-		}
-
-		if (bender.consumeChi(chi) && !data.hasTickHandler(PURIFY_COOLDOWN_HANDLER)) {
+		if (bender.consumeChi(chi)) {
 
 			// 3s base + 2s per level
 			int duration = abilityData.getLevel() > 0 ? 60 + 40 * abilityData.getLevel() : 60;
@@ -124,26 +119,50 @@ public class AbilityImmolate extends Ability {
 	}
 
 	@Override
+	public int getCooldown(AbilityContext ctx) {
+		EntityLivingBase entity = ctx.getBenderEntity();
+		int coolDown = 140;
+
+		if (ctx.getLevel() == 1) {
+			coolDown = 130;
+		}
+		if (ctx.getLevel() == 2) {
+			coolDown = 120;
+		}
+		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+			coolDown = 130;
+		}
+		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+			coolDown = 110;
+		}
+
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+			coolDown = 0;
+		}
+		return coolDown;
+	}
+
+	@Override
 	public int getBaseTier() {
 		return 5;
 	}
 
 	public static class ImmolateLightOrbBehaviour extends LightOrbBehavior.FollowPlayer {
 		@Override
-		public Behavior onUpdate(EntityLightOrb entity) {
+		public Behavior<EntityLightOrb> onUpdate(EntityLightOrb entity) {
 			super.onUpdate(entity);
-			Entity emitter = entity.getEmittingEntity();
+			EntityLivingBase emitter = entity.getOwner();
 			assert emitter instanceof EntityPlayer || emitter instanceof EntityBender;
-			Bender b = Bender.get((EntityLivingBase) emitter);
-			/*if (b != null && b.getData() != null && entity.ticksExisted > 1) {
+			Bender b = Bender.get(emitter);
+			if (b != null && b.getData() != null && entity.ticksExisted > 1) {
 				if (!Objects.requireNonNull(b.getData().getPowerRatingManager(Firebending.ID)).hasModifier(ImmolatePowerModifier.class)) {
 					entity.setDead();
 				}
-			}**/
+			}
 			int lightRadius = 5;
 			//Stops constant spam and calculations
 			if (entity.ticksExisted == 1) {
-				AbilityData aD = AbilityData.get((EntityLivingBase) emitter, "immolate");
+				AbilityData aD = AbilityData.get(emitter, "immolate");
 				int level = aD.getLevel();
 				if (level >= 1) {
 					lightRadius = 7;

@@ -24,9 +24,6 @@ import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.gorecore.util.Vector;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Queues;
-import com.google.common.collect.UnmodifiableIterator;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -47,22 +44,17 @@ import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.asm.transformers.AccessTransformer;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.Validate;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -95,26 +87,82 @@ public class AvatarUtils {
 
 	}
 
+	/**
+	 * Returns a new {@link ItemStack} that is identical to the supplied one, except with the metadata changed to the
+	 * new value given.
+	 *
+	 * @param toCopy      The stack to copy
+	 * @param newMetadata The new metadata value
+	 * @return The resulting {@link ItemStack}
+	 */
+	public static ItemStack copyWithMeta(ItemStack toCopy, int newMetadata) {
+		ItemStack copy = new ItemStack(toCopy.getItem(), toCopy.getCount(), newMetadata);
+		NBTTagCompound compound = toCopy.getTagCompound();
+		if (compound != null) copy.setTagCompound(compound.copy());
+		return copy;
+	}
+
+
 	public static Queue<Particle> getAliveParticles() {
-		Queue<Particle> particleQueue = ((ArrayDeque) ReflectionHelper.getPrivateValue(ParticleManager.class, Minecraft.getMinecraft().effectRenderer, "queue",
-				"field_187241_h")).clone();
-		//particleQueue = particleQueue.stream().filter(particle -> particle instanceof ParticleAvatar).collect(Collectors.toCollection(ArrayDeque::new));
+		Queue<Particle> particleQueue = ReflectionHelper.getPrivateValue(ParticleManager.class, Minecraft.getMinecraft().effectRenderer, "queue",
+				"field_187241_h");
+		particleQueue = particleQueue.stream().filter(particle -> particle instanceof ParticleAvatar).collect(Collectors.toCollection(ArrayDeque::new));
 		return particleQueue;
 	}
 
 	public static ParticleAvatar getParticleFromUUID(UUID id) {
 		if (!getAliveParticles().isEmpty() && getAliveParticles().peek() != null) {
 			for (Particle particle : getAliveParticles()) {
-				if(particle instanceof ParticleAvatar) {
+				if (particle instanceof ParticleAvatar) {
 					if (((ParticleAvatar) particle).getUUID().equals(id)) {
 						return (ParticleAvatar) particle;
 					}
 				}
 			}
-			
+
 		}
 		return null;
 	}
+
+
+	/**
+	 * Returns a function that draws the bezier curve for the given order and control points
+	 * @param t Domain of the function from 0 to 1
+	 * @param controls the control points (note that only the amount matching the first n locations, n = order)
+	 * @return bezier curve function, accepting inputs in the range [0, 1]
+	 */
+	public static Vec3d bezierCurve(double t, Vec3d...controls) {
+		if (controls == null) {
+			throw new IllegalArgumentException("Control point array cannot be null");
+		} else if (controls.length == 0) {
+			throw new IllegalArgumentException("Control point array cannot be empty");
+		} else if (Arrays.asList(controls).contains(null)) {
+			throw new IllegalArgumentException("A control point cannot be null");
+		} else if (t < 0 || t > 1) {
+			throw new IllegalArgumentException("Parameter t must be within the range [0, 1]");
+		}
+
+		int order = controls.length;
+		Vec3d point = Vec3d.ZERO;
+
+		for (int i = 0; i < order; i++) {
+			double coefficient = (double) factorial(order) / (double) (factorial(i) * factorial(order - i));
+			double basis = coefficient * Math.pow(t, i) * Math.pow(1.0 - t, order - i);
+
+			point.add(controls[i].scale(basis));
+		}
+
+		return point;
+	}
+
+	public static int factorial(int n) {
+		int product = 1;
+		for (int i = 1; i < n; i++) {
+			product *= i;
+		}
+		return product;
+	}
+
 
 	public static void chargeCreeper(EntityCreeper creeper) {
 		creeper.getDataManager().set(POWERED, true);
@@ -223,6 +271,7 @@ public class AvatarUtils {
 		return false;
 	}
 
+
 	/**
 	 * Spawns a directional helix that has rotating particles.
 	 *
@@ -265,6 +314,24 @@ public class AvatarUtils {
 			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityTeleport(entity));
 			((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 		}
+	}
+
+	public static void setVelocity(Entity entity, Vec3d vel) {
+		entity.motionX *= 0;
+		entity.motionY *= 0;
+		entity.motionZ *= 0;
+		entity.motionX = vel.x;
+		entity.motionY = vel.y;
+		entity.motionZ = vel.z;
+		entity.isAirBorne = true;
+		afterVelocityAdded(entity);
+	}
+	
+	public static Vec3d getMiddleVec3d(AxisAlignedBB box) {
+			double x = box.maxX - box.minX;
+			double y = box.maxY - box.minY;
+			double z = box.maxZ - box.minZ;
+			return new Vec3d(box.minX + x / 2, box.minY + y / 2, box.minZ + z / 2);
 	}
 
 
@@ -477,16 +544,16 @@ public class AvatarUtils {
 	/**
 	 * This method is like the other method, it just uses vanilla damage sources.
 	 *
-	 * @param world        The world the raytrace is in.
-	 * @param caster       The caster of the spell. This is so mobs don't attack each other when you use raytraces from mobs.
-	 *                     All damage is done by the caster.
-	 * @param startPos     Where the raytrace starts.
-	 * @param endPos       Where the raytrace ends.
-	 * @param borderSize   The width of the raytrace.
-	 * @param spellEntity  The entity that's using this method, if applicable. If this method is directly used in a spell, just make this null.
-	 * @param damage       The amount of damage.
-	 * @param knockBack    The amount of knockback.
-	 * @param fireTime     How long to set an enemy on fire.
+	 * @param world       The world the raytrace is in.
+	 * @param caster      The caster of the spell. This is so mobs don't attack each other when you use raytraces from mobs.
+	 *                    All damage is done by the caster.
+	 * @param startPos    Where the raytrace starts.
+	 * @param endPos      Where the raytrace ends.
+	 * @param borderSize  The width of the raytrace.
+	 * @param spellEntity The entity that's using this method, if applicable. If this method is directly used in a spell, just make this null.
+	 * @param damage      The amount of damage.
+	 * @param knockBack   The amount of knockback.
+	 * @param fireTime    How long to set an enemy on fire.
 	 */
 
 	public static void handlePiercingBeamCollision(World world, EntityLivingBase caster, Vec3d startPos, Vec3d endPos, float borderSize, @Nullable AvatarEntity spellEntity, @Nullable Ability ability,
@@ -502,8 +569,7 @@ public class AvatarUtils {
 			if (spellEntity != null) {
 				style = spellEntity.getElement();
 				abilityName = spellEntity.getAbility().getName();
-			}
-			else  {
+			} else {
 				assert ability != null;
 				assert element != null;
 				style = element;
@@ -634,6 +700,7 @@ public class AvatarUtils {
 	public static double getSqrMagnitude(Vec3d vel) {
 		return vel.x * vel.x + vel.y * vel.y + vel.z * vel.z;
 	}
+
 	/**
 	 * An exception thrown by reading/writing methods for NBT
 	 *

@@ -36,7 +36,7 @@ public class ConfigClient {
 	public float radialMenuAlpha = 0.75f;
 
 	@Load
-	public float chiBarAlpha = 0.5f;
+	public float chiBarAlpha = 0.625f;
 
 	@Load
 	public final float bendingCycleAlpha = 0.75f;
@@ -78,7 +78,7 @@ public class ConfigClient {
 	public static void load() {
 		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
 
-		CLIENT_CONFIG.keymappings.clear();
+		//CLIENT_CONFIG.keymappings.clear();
 		Set<Map.Entry<String, Integer>> entries = CLIENT_CONFIG.nameKeymappings.entrySet();
 		for (Map.Entry<String, Integer> entry : entries) {
 			Ability ability = null;
@@ -92,7 +92,7 @@ public class ConfigClient {
 				CLIENT_CONFIG.keymappings.put(ability, entry.getValue());
 			}
 		}
-		CLIENT_CONFIG.conflicts.clear();
+		//CLIENT_CONFIG.conflicts.clear();
 		Set<Map.Entry<String, Boolean>> entries2 = CLIENT_CONFIG.nameConflicts.entrySet();
 		for (Map.Entry<String, Boolean> entry : entries2) {
 			Ability ability = null;
@@ -111,12 +111,12 @@ public class ConfigClient {
 
 	public static void save() {
 
-		CLIENT_CONFIG.nameKeymappings.clear();
+		//CLIENT_CONFIG.nameKeymappings.clear();
 		Set<Map.Entry<Ability, Integer>> entries = CLIENT_CONFIG.keymappings.entrySet();
 		for (Map.Entry<Ability, Integer> entry : entries) {
 			CLIENT_CONFIG.nameKeymappings.put(entry.getKey().getName(), entry.getValue());
 		}
-		CLIENT_CONFIG.nameConflicts.clear();
+		//CLIENT_CONFIG.nameConflicts.clear();
 		Set<Map.Entry<Ability, Boolean>> entries2 = CLIENT_CONFIG.conflicts.entrySet();
 		for (Map.Entry<Ability, Boolean> entry : entries2) {
 			CLIENT_CONFIG.nameConflicts.put(entry.getKey().getName(), entry.getValue());
@@ -138,6 +138,12 @@ public class ConfigClient {
 
 		@Load
 		public boolean useImmolateShaders = false;
+
+		@Load
+		public boolean bslActive = false;
+
+		@Load
+		public boolean sildursActive = false;
 	}
 
 	public static class ActiveBendingSettings {
@@ -194,20 +200,20 @@ public class ConfigClient {
 	}
 
 	public static class FireRenderSettings {
-		@Load
-		public final boolean fireBallSphere = false;
 
 		@Load
-		public final boolean originalFireball = true;
+		public final boolean flameStrikeSphere = false;
 
 		@Load
-		public final boolean infernoPunchSphere = false;
+		public final boolean showFlameStrikeOrb = false;
 
 		@Load
-		public final boolean showInfernoPunchOrb = false;
+		public final boolean solidFlamethrowerParticles = true;
 
 		@Load
-		public final boolean useFlamethrowerParticles = true;
+		public final boolean solidFlameStrikeParticles = true;
+
+
 	}
 
 	public static class AirRenderSettings {
@@ -221,7 +227,7 @@ public class ConfigClient {
 		public final boolean voxelFlashParticles = false;
 
 		@Load
-		public final boolean squareFlashParticles = false;
+		public final boolean layeredOverWaterFlashParticles = false;
 	}
 
 }

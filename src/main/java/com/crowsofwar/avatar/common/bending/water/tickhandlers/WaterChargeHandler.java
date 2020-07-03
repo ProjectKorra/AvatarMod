@@ -29,6 +29,7 @@ import net.minecraft.world.World;
 
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 public class WaterChargeHandler extends TickHandler {
@@ -63,9 +64,7 @@ public class WaterChargeHandler extends TickHandler {
 		}
 
 
-		if (world.isRemote) {
-			return false;
-		}
+
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
@@ -130,19 +129,20 @@ public class WaterChargeHandler extends TickHandler {
 
 		cannon.setOwner(entity);
 		cannon.setDamage(damage);
-		cannon.setSizeMultiplier(size);
-		cannon.setPosition(Vector.getEyePos(entity));
-		cannon.setLifeTime(ticks);
-		cannon.setKnockBack(knockBack);
-		cannon.setMaxRange(maxRange);
+		cannon.setEntitySize(size);
+		cannon.setPosition(Vector.getEyePos(entity).minusY(0.8));
+		cannon.setLifeTime((int) ticks * 2);
+		cannon.setXp(SKILLS_CONFIG.waterHit / 2);
+		cannon.setTier(new AbilityWaterCannon().getCurrentTier(AbilityData.get(entity, "water_cannon").getLevel()));
 		cannon.setAbility(new AbilityWaterCannon());
 
 		Vector velocity = Vector.getLookRectangular(entity);
-		velocity = velocity.normalize().times(speed);
-		cannon.setVelocity(velocity);
-		world.spawnEntity(cannon);
+		velocity = velocity.normalize().times(speed / 2);
+		cannon.setSpeed((float) speed);
+		if (!world.isRemote)
+			world.spawnEntity(cannon);
 
-		EntityLightCylinder cylinder = new EntityLightCylinder(world);
+		/*EntityLightCylinder cylinder = new EntityLightCylinder(world);
 		cylinder.setShouldSpin(true);
 		cylinder.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight() - 0.3, 0).add(entity.getLookVec().scale(0.4)));
 		cylinder.setTexture("avatarmod:textures/entity/water-ribbon.png");
@@ -159,8 +159,8 @@ public class WaterChargeHandler extends TickHandler {
 		cylinder.setCylinderPitch(entity.rotationPitch);
 		cylinder.setCylinderYaw(entity.rotationYaw);
 		cylinder.setCylinderLength(1);
-		cylinder.setBehaviour(new WaterCylinderBehaviour());
-		world.spawnEntity(cylinder);
+		cylinder.setBehaviour(new WaterCylinderBehaviour());**/
+		//world.spawnEntity(cylinder);
 
 	}
 

@@ -30,12 +30,12 @@ public class RenderWaterCannon extends RenderArc {
 						 float partialTicks) {
 
 		EntityWaterCannon cannon = (EntityWaterCannon) entity;
-		renderArc(cannon, partialTicks, 3f, 3f * cannon.getSizeMultiplier());
+		renderArc(cannon, partialTicks, 3f, 1.5f * cannon.getAvgSize());
 
 		World world = entity.world;
 		Vector position = cannon.position().plusY(cannon.height / 2);
-		double radius = 1.5f * cannon.getSizeMultiplier();
-		if (cannon.getOwner() != null) {
+		double radius = 1.5f * cannon.getAvgSize();
+		/*if (cannon.getOwner() != null) {
 			Vector eyePos = getEyePos(cannon.getOwner()).minusY(0.3);
 			Vector directionToEnd = cannon.position().minus(eyePos).normalize();
 			AvatarEntityUtils.setRotationFromPosition(cannon, eyePos.plus(directionToEnd.times(0.075)).toMinecraft());
@@ -57,7 +57,7 @@ public class RenderWaterCannon extends RenderArc {
 				world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, pos.x() + position.x(), pos.y() + position.y(),
 						pos.z() + position.z(), 0.05 * radius * omega * Math.cos(angle2), 0.1, 0.05 * radius * omega * Math.sin(angle2));                //	World.spawnParticle(particle, pos.x() + position.x() + direction.x(), pos.y() + position.y() + direction.y(),
 			}
-		}
+		}**/
 
 	}
 

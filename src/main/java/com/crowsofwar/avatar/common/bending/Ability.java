@@ -23,11 +23,12 @@ import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.util.Raytrace;
-import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -43,6 +44,8 @@ public abstract class Ability {
 	private final UUID type;
 	private final String name;
 	private Raytrace.Info raytrace;
+	/** Used in initialisation. */
+	private Set<String> propertyKeys = new HashSet<>();
 
 	public Ability(UUID bendingType, String name) {
 		this.type = bendingType;
@@ -93,6 +96,26 @@ public abstract class Ability {
 	 */
 
 	public boolean isUtility() {
+		return false;
+	}
+
+	/**
+	 * Used for abilities that are charged actively. E.g Water Cannon, Lightning Blast, Swirling Inferno, Air Burst.
+	 * Not used for passively charged abilities like Fireball's 2nd path.
+	 */
+	public boolean isChargeable() {
+		return false;
+	}
+
+	//Pretty self-explanatory
+	public boolean isProjectile() {
+		return false;
+	}
+
+	/**
+	 * Used for abilities that are offensive, like earth spike and ravine.
+	 */
+	public boolean isOffensive() {
 		return false;
 	}
 

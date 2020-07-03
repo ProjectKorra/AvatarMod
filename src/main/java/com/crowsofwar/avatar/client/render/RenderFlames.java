@@ -51,38 +51,8 @@ public class RenderFlames extends Render<EntityFlames> {
 	@Override
 	public void doRender(EntityFlames entity, double x, double y, double z, float entityYaw,
 						 float partialTicks) {
-
-		particleSpawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 4, 6,
+		particleSpawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 1, 2,
 				Vector.getEntityPos(entity), new Vector(0.02, 0.01, 0.02), true);
-
-		//Bad practice, but it works with mobs and servers.
-		World world = entity.world;
-		if (world.isRemote) {
-			for (double i = 0; i < entity.width; i += 0.05) {
-				Random random = new Random();
-				AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(12).clr(255, 10, 5)
-						.scale(entity.getAvgSize() * 4).element(entity.getElement()).spawn(world);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
-						.scale(entity.getAvgSize() * 4).element(entity.getElement()).spawn(world);
-			}
-		}
-
-		// entity.world.spawnParticle(AvatarParticles.getParticleFlames(),
-		// entity.posX,
-		// entity.posY,
-		// entity.posZ,
-		// // entity.world.spawnParticle(EnumParticleTypes.FLAME,
-		// entity.posX, entity.posY,
-		// // entity.posZ,
-		// (random.nextGaussian() - 0.5) * 0.02, random.nextGaussian() * 0.01,
-		// (random.nextGaussian() - 0.5) * 0.02);
 
 	}
 

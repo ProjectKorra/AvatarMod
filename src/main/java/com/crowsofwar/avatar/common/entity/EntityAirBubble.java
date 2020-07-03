@@ -17,10 +17,11 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.StatusControlController;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
@@ -43,6 +44,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -144,16 +146,50 @@ public class EntityAirBubble extends EntityShield {
 		setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(getOwner()));
 		this.motionX = this.motionY = this.motionZ = 0;
 
+		//	System.out.println("Pitch: " + getOwner().rotationPitch);
+		//	System.out.println("Yaw: " + getOwner().rotationYaw);
+		//Particles go spin!
+		if (world.isRemote && getOwner() != null) {
+			for (int i = 0; i < 10; i++) {
+				double x1, y1, z1, xVel, yVel, zVel;
+				double theta = (ticksExisted % 180) * 10 + i * 36;
+				double dphi = 30 / Math.sin(Math.toRadians(theta));
+				double phi = ((ticksExisted % 360) * dphi) + i * 36;
+				double rphi = Math.toRadians(phi);
+				double rtheta = Math.toRadians(theta);
+
+				x1 = getSize() * Math.cos(rphi) * Math.sin(rtheta);
+				y1 = getSize() * Math.sin(rphi) * Math.sin(rtheta);
+				z1 = getSize() * Math.cos(rtheta);
+				xVel = x1 * world.rand.nextGaussian() / 200;
+				yVel = y1 * world.rand.nextGaussian() / 200;
+				zVel = z1 * world.rand.nextGaussian() / 200;
+
+				Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(this);
+				double x = centre.x;
+				double y = centre.y;
+				double z = centre.z;
+
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + x, y1 + y, z1 +z).vel(xVel, yVel, zVel)
+						.clr(0.95F, 0.95F, 0.95F, 0.1F).time(15 + AvatarUtils.getRandomNumberInRange(0, 10)).spawnEntity(getOwner())
+						.scale(0.75F * getSize() * (1 / getSize())).element(getElement()).spawn(world);
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + x, y1 + y, z1 + z).vel(xVel, yVel, zVel)
+						.clr(0.95F, 0.95F, 0.95F, 0.1F).time(15 + AvatarUtils.getRandomNumberInRange(0, 10)).spawnEntity(getOwner())
+						.scale(0.75F * getSize() * (1 / getSize())).element(getElement()).spawn(world);
+			}
+
+
+		}
 		if (getOwner() != null) {
 			EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
 			BendingData bD = BendingData.get(getOwner());
-			if (bubble == null && (bD.hasStatusControl(StatusControl.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControl.BUBBLE_EXPAND))) {
-				bD.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
-				bD.removeStatusControl(StatusControl.BUBBLE_EXPAND);
+			if (bubble == null && (bD.hasStatusControl(StatusControlController.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControlController.BUBBLE_EXPAND))) {
+				bD.removeStatusControl(StatusControlController.BUBBLE_CONTRACT);
+				bD.removeStatusControl(StatusControlController.BUBBLE_EXPAND);
 			}
-			if (bubble != null && !(bD.hasStatusControl(StatusControl.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControl.BUBBLE_EXPAND))) {
-				bD.addStatusControl(StatusControl.BUBBLE_CONTRACT);
-				bD.addStatusControl(StatusControl.BUBBLE_EXPAND);
+			if (bubble != null && !(bD.hasStatusControl(StatusControlController.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControlController.BUBBLE_EXPAND))) {
+				bD.addStatusControl(StatusControlController.BUBBLE_CONTRACT);
+				bD.addStatusControl(StatusControlController.BUBBLE_EXPAND);
 			}
 		}
 
@@ -255,6 +291,7 @@ public class EntityAirBubble extends EntityShield {
 		// Hover distance doesn't need to be EXACT
 		final double minFloatHeight = 1.2;
 		final double maxFloatHeight = 3;
+
 
 		EntityLivingBase owner = getOwner();
 
@@ -446,8 +483,8 @@ public class EntityAirBubble extends EntityShield {
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
-			data.removeStatusControl(StatusControl.BUBBLE_EXPAND);
-			data.removeStatusControl(StatusControl.BUBBLE_CONTRACT);
+			data.removeStatusControl(StatusControlController.BUBBLE_EXPAND);
+			data.removeStatusControl(StatusControlController.BUBBLE_CONTRACT);
 
 			IAttributeInstance attribute = getOwner()
 					.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
@@ -456,5 +493,4 @@ public class EntityAirBubble extends EntityShield {
 			}
 		}
 	}
-
 }

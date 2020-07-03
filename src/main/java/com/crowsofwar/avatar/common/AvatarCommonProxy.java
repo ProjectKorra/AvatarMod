@@ -45,21 +45,21 @@ import net.minecraft.world.World;
  */
 public interface AvatarCommonProxy {
 
-    /**
-     * Called from the main class, subclasses should initialize themselves here
-     * (fields, etc).
-     */
-    public void preInit();
+	/**
+	 * Called from the main class, subclasses should initialize themselves here
+	 * (fields, etc).
+	 */
+	void preInit();
 
-    public IControlsHandler getKeyHandler();
+	IControlsHandler getKeyHandler();
 
-    /**
-     * Get a client-side packet handler safely. When the machine is running a
-     * minecraft client (even if in the integrated server thread), returns the
-     * packet handler for the client. Otherwise (this only happens on dedicated
-     * servers), returns null.
-     */
-    public IPacketHandler getClientPacketHandler();
+	/**
+	 * Get a client-side packet handler safely. When the machine is running a
+	 * minecraft client (even if in the integrated server thread), returns the
+	 * packet handler for the client. Otherwise (this only happens on dedicated
+	 * servers), returns null.
+	 */
+	IPacketHandler getClientPacketHandler();
 
     /**
      * Get client player's reach. Returns 0 on server.
@@ -114,10 +114,10 @@ public interface AvatarCommonProxy {
      */
     KeybindingWrapper createKeybindWrapper(String keybindName);
 
-    /**
-     * Register the item models so they can be configured to use the correct textures
-     */
-    public void registerItemModels();
+	/**
+	 * Register the item models so they can be configured to use the correct textures
+	 */
+	void registerItemModels();
 
     boolean isOptifinePresent();
 

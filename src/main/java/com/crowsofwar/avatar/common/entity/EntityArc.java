@@ -20,6 +20,9 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -28,7 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
+public abstract class EntityArc<T extends ControlPoint> extends EntityOffensive {
+
+	private static final DataParameter<Integer> SYNC_POINTS = EntityDataManager.createKey(EntityArc.class,
+			DataSerializers.VARINT);
 
 	public List<T> points;
 	private int brightness = 15728880;
@@ -43,6 +49,14 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 			points.add(createControlPoint(size, i));
 		}
 
+	}
+
+	public void setNumberofPoints(int points) {
+		dataManager.set(SYNC_POINTS, points);
+	}
+
+	public int getNumberofPoints() {
+		return dataManager.get(SYNC_POINTS);
 	}
 
 	/**
@@ -81,6 +95,17 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 	}
 
 	private void updateControlPoints() {
+	/*	if (points.size() < getAmountOfControlPoints()) {
+			int i = points.size();
+			for (; i < getAmountOfControlPoints(); i++) {
+				points.add(createControlPoint(getAvgSize(), i));
+			}
+		}
+		else if (points.size() > getAmountOfControlPoints()) {
+			if (points.size() > getAmountOfControlPoints()) {
+				points.subList(getAmountOfControlPoints(), points.size()).clear();
+			}
+		}**/
 
 		updateCpBehavior();
 
@@ -88,6 +113,8 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 		for (T cp : points) {
 			cp.onUpdate();
 		}
+
+
 
 	}
 
@@ -132,11 +159,13 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
+		//setNumberofPoints(nbt.getInteger("Points"));
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
+		//nbt.setInteger("Points", getNumberofPoints());
 	}
 
 	@Override
@@ -181,6 +210,12 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 	}
 
 	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataManager.register(SYNC_POINTS, 6);
+	}
+
+	@Override
 	public void setOwner(EntityLivingBase owner) {
 		super.setOwner(owner);
 		for (T cp : points) {
@@ -189,8 +224,13 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 	}
 
 	@Override
+	public boolean isInRangeToRender3d(double x, double y, double z) {
+		return true;
+	}
+
+	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 1;
+		return true;
 	}
 
 	@Override
@@ -202,7 +242,7 @@ public abstract class EntityArc<T extends ControlPoint> extends AvatarEntity {
 	 * Returns the amount of control points which will be created.
 	 */
 	public int getAmountOfControlPoints() {
-		return 5;
+		return getNumberofPoints();
 	}
 
 	/**

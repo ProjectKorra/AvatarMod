@@ -22,6 +22,8 @@ import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.common.bending.earth.AbilityEarthspikes;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.BendingData;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -36,6 +38,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
 
@@ -51,13 +54,10 @@ public class EntityEarthspike extends AvatarEntity {
 			DataSerializers.FLOAT);
 
 	private double damage;
-	private float Size;
 	private double lifetime;
 
 	public EntityEarthspike(World world) {
 		super(world);
-		this.Size = 1;
-		setSize(Size, Size);
 		this.damage = STATS_CONFIG.earthspikeSettings.damage;
 		this.noClip = true;
 		this.lifetime = 30;
@@ -186,4 +186,5 @@ public class EntityEarthspike extends AvatarEntity {
 		entity.motionY += (STATS_CONFIG.earthspikeSettings.push / 6) + (damage / 100);
 		entity.motionZ += this.motionZ / 4;
 	}
+
 }

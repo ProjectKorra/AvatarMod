@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.common.entity;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.bending.earth.AbilityEarthControl;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
@@ -25,6 +24,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
@@ -42,6 +42,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -52,336 +53,404 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Objects;
 import java.util.Random;
 
+import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.PLACE_BLOCK;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_BLOCK;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
 import static net.minecraft.network.datasync.EntityDataManager.createKey;
 
-public class EntityFloatingBlock extends AvatarEntity {
+public class EntityFloatingBlock extends EntityOffensive {
 
-	public static final Block DEFAULT_BLOCK = Blocks.STONE;
+    public static final Block DEFAULT_BLOCK = Blocks.STONE;
 
-	private static final DataParameter<Integer> SYNC_ENTITY_ID = createKey(EntityFloatingBlock.class,
-			DataSerializers.VARINT);
-	private static final DataParameter<Vector> SYNC_VELOCITY = createKey(EntityFloatingBlock.class,
-			AvatarDataSerializers.SERIALIZER_VECTOR);
-	private static final DataParameter<Float> SYNC_FRICTION = createKey(EntityFloatingBlock.class,
-			DataSerializers.FLOAT);
-	private static final DataParameter<Optional<IBlockState>> SYNC_BLOCK = createKey(
-			EntityFloatingBlock.class, DataSerializers.OPTIONAL_BLOCK_STATE);
+    private static final DataParameter<Integer> SYNC_ENTITY_ID = createKey(EntityFloatingBlock.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Vector> SYNC_VELOCITY = createKey(EntityFloatingBlock.class,
+            AvatarDataSerializers.SERIALIZER_VECTOR);
+    private static final DataParameter<Float> SYNC_FRICTION = createKey(EntityFloatingBlock.class,
+            DataSerializers.FLOAT);
+    private static final DataParameter<Optional<IBlockState>> SYNC_BLOCK = createKey(
+            EntityFloatingBlock.class, DataSerializers.OPTIONAL_BLOCK_STATE);
+    private static final DataParameter<Integer> SYNC_HITS_LEFT = createKey(EntityFloatingBlock.class,
+            DataSerializers.VARINT);
 
-	private static final DataParameter<FloatingBlockBehavior> SYNC_BEHAVIOR = createKey(
-			EntityFloatingBlock.class, FloatingBlockBehavior.DATA_SERIALIZER);
+    private static final DataParameter<FloatingBlockBehavior> SYNC_BEHAVIOR = createKey(
+            EntityFloatingBlock.class, FloatingBlockBehavior.DATA_SERIALIZER);
 
-	private static int nextBlockID = 0;
+    private static int nextBlockID = 0;
 
-	/**
-	 * Cached owner of this floating block. May not be accurate- use
-	 * {@link #getOwner()} to use updated version.
-	 */
-	private EntityPlayer ownerCached;
+    /**
+     * Cached owner of this floating block. May not be accurate- use
+     * {@link #getOwner()} to use updated version.
+     */
+    private EntityPlayer ownerCached;
 
-	/**
-	 * Whether or not to drop an ItemBlock when the floating block has been
-	 * destroyed. Does not matter on client.
-	 */
-	private boolean enableItemDrops;
+    /**
+     * Whether or not to drop an ItemBlock when the floating block has been
+     * destroyed. Does not matter on client.
+     */
+    private boolean enableItemDrops;
 
-	/**
-	 * The hitbox for this floating block, but slightly expanded to give more
-	 * room for killing things with.
-	 */
-	private AxisAlignedBB expandedHitbox;
+    /**
+     * The hitbox for this floating block, but slightly expanded to give more
+     * room for killing things with.
+     */
+    private AxisAlignedBB expandedHitbox;
 
-	private float damageMult;
+    private float damageMult;
 
-	public EntityFloatingBlock(World world) {
-		super(world);
-		float size = .9f;
-		setSize(size, size);
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-			setID(nextBlockID++);
-		}
-		this.enableItemDrops = true;
-		this.damageMult = 1;
+    public EntityFloatingBlock(World world) {
+        super(world);
+        float size = .9f;
+        setSize(size, size);
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+            setID(nextBlockID++);
+        }
+        this.enableItemDrops = true;
+        this.damageMult = 1;
 
-	}
+    }
 
-	public EntityFloatingBlock(World world, IBlockState blockState) {
-		this(world);
-		setBlockState(blockState);
-	}
+    public EntityFloatingBlock(World world, IBlockState blockState) {
+        this(world);
+        setBlockState(blockState);
+    }
 
-	public EntityFloatingBlock(World world, IBlockState blockState, EntityPlayer owner) {
-		this(world, blockState);
-		setOwner(owner);
-	}
+    public EntityFloatingBlock(World world, IBlockState blockState, EntityPlayer owner) {
+        this(world, blockState);
+        setOwner(owner);
+    }
 
-	public static EntityFloatingBlock getFromID(World world, int id) {
-		for (int i = 0; i < world.loadedEntityList.size(); i++) {
-			Entity e = world.loadedEntityList.get(i);
-			if (e instanceof EntityFloatingBlock && ((EntityFloatingBlock) e).getID() == id)
-				return (EntityFloatingBlock) e;
-		}
-		return null;
-	}
+    public static EntityFloatingBlock getFromID(World world, int id) {
+        for (int i = 0; i < world.loadedEntityList.size(); i++) {
+            Entity e = world.loadedEntityList.get(i);
+            if (e instanceof EntityFloatingBlock && ((EntityFloatingBlock) e).getID() == id)
+                return (EntityFloatingBlock) e;
+        }
+        return null;
+    }
 
-	// Called from constructor of Entity class
-	@Override
-	protected void entityInit() {
 
-		super.entityInit();
-		dataManager.register(SYNC_ENTITY_ID, 0);
-		dataManager.register(SYNC_VELOCITY, Vector.ZERO);
-		dataManager.register(SYNC_FRICTION, 1f);
-		dataManager.register(SYNC_BLOCK, Optional.of(DEFAULT_BLOCK.getDefaultState()));
-		dataManager.register(SYNC_BEHAVIOR, new FloatingBlockBehavior.DoNothing());
+    // Called from constructor of Entity class
+    @Override
+    protected void entityInit() {
 
-	}
+        super.entityInit();
+        dataManager.register(SYNC_ENTITY_ID, 0);
+        dataManager.register(SYNC_VELOCITY, Vector.ZERO);
+        dataManager.register(SYNC_FRICTION, 1f);
+        dataManager.register(SYNC_BLOCK, Optional.of(DEFAULT_BLOCK.getDefaultState()));
+        dataManager.register(SYNC_BEHAVIOR, new FloatingBlockBehavior.Idle());
+        dataManager.register(SYNC_HITS_LEFT, 3);
 
-	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		super.readEntityFromNBT(nbt);
-		setBlockState(
-				Block.getBlockById(nbt.getInteger("BlockId")).getStateFromMeta(nbt.getInteger("Metadata")));
-		//setVelocity(new Vector(nbt.getDouble("VelocityX"), nbt.getDouble("VelocityY"), nbt.getDouble
-		//		("VelocityZ")));
-		setFriction(nbt.getFloat("Friction"));
-		setItemDropsEnabled(nbt.getBoolean("DropItems"));
-		setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
-		getBehavior().load(nbt.getCompoundTag("BehaviorData"));
-		damageMult = nbt.getFloat("DamageMultiplier");
-	}
+    }
 
-	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		super.writeEntityToNBT(nbt);
-		nbt.setInteger("BlockId", Block.getIdFromBlock(getBlock()));
-		nbt.setInteger("Metadata", getBlock().getMetaFromState(getBlockState()));
-		//nbt.setDouble("VelocityX", velocity().x());
-		//nbt.setDouble("VelocityY", velocity().y());
-		//nbt.setDouble("VelocityZ", velocity().z());
-		nbt.setFloat("Friction", getFriction());
-		nbt.setBoolean("DropItems", areItemDropsEnabled());
-		nbt.setInteger("Behavior", getBehavior().getId());
-		getBehavior().save(nestedCompound(nbt, "BehaviorData"));
-		nbt.setFloat("DamageMultiplier", damageMult);
-	}
+    @Override
+    protected void readEntityFromNBT(NBTTagCompound nbt) {
+        super.readEntityFromNBT(nbt);
+        setBlockState(
+                Block.getBlockById(nbt.getInteger("BlockId")).getStateFromMeta(nbt.getInteger("Metadata")));
+        setFriction(nbt.getFloat("Friction"));
+        setItemDropsEnabled(nbt.getBoolean("DropItems"));
+        setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
+        getBehavior().load(nbt.getCompoundTag("BehaviorData"));
+        damageMult = nbt.getFloat("DamageMultiplier");
+    }
 
-	@Override
-	public boolean canRenderOnFire() {
-		return false;
-	}
+    @Override
+    protected void writeEntityToNBT(NBTTagCompound nbt) {
+        super.writeEntityToNBT(nbt);
+        nbt.setInteger("BlockId", Block.getIdFromBlock(getBlock()));
+        nbt.setInteger("Metadata", getBlock().getMetaFromState(getBlockState()));
+        nbt.setFloat("Friction", getFriction());
+        nbt.setBoolean("DropItems", areItemDropsEnabled());
+        nbt.setInteger("Behavior", getBehavior().getId());
+        getBehavior().save(nestedCompound(nbt, "BehaviorData"));
+        nbt.setFloat("DamageMultiplier", damageMult);
+    }
 
-	public Block getBlock() {
-		return getBlockState().getBlock();
-	}
+    @Override
+    public boolean canRenderOnFire() {
+        return false;
+    }
 
-	public void setBlock(Block block) {
-		setBlockState(block.getDefaultState());
-	}
+    public Block getBlock() {
+        return getBlockState().getBlock();
+    }
 
-	public IBlockState getBlockState() {
-		Optional<IBlockState> obs = dataManager.get(SYNC_BLOCK);
-		return obs.get();
-	}
+    public void setBlock(Block block) {
+        setBlockState(block.getDefaultState());
+    }
 
-	public void setBlockState(IBlockState state) {
-		dataManager.set(SYNC_BLOCK, Optional.of(state));
-	}
+    public IBlockState getBlockState() {
+        Optional<IBlockState> obs = dataManager.get(SYNC_BLOCK);
+        return obs.get();
+    }
 
-	/**
-	 * Get the ID of this floating block. Each instance has its own unique ID.
-	 * Synced between client and server.
-	 */
-	public int getID() {
-		return dataManager.get(SYNC_ENTITY_ID);
-	}
+    public void setBlockState(IBlockState state) {
+        dataManager.set(SYNC_BLOCK, Optional.of(state));
+    }
 
-	public void setID(int id) {
-		if (!world.isRemote) dataManager.set(SYNC_ENTITY_ID, id);
-	}
+    /**
+     * Get the ID of this floating block. Each instance has its own unique ID.
+     * Synced between client and server.
+     */
+    public int getID() {
+        return dataManager.get(SYNC_ENTITY_ID);
+    }
 
-	/**
-	 * Returns whether the floating block drops the block as an item when it is
-	 * destroyed. Only used on server-side. By default, is true.
-	 */
-	public boolean areItemDropsEnabled() {
-		return enableItemDrops;
-	}
+    public void setID(int id) {
+        if (!world.isRemote) dataManager.set(SYNC_ENTITY_ID, id);
+    }
 
-	/**
-	 * Set whether the block should be dropped when it is destroyed.
-	 */
-	public void setItemDropsEnabled(boolean enable) {
-		this.enableItemDrops = enable;
-	}
+    /**
+     * Returns whether the floating block drops the block as an item when it is
+     * destroyed. Only used on server-side. By default, is true.
+     */
+    public boolean areItemDropsEnabled() {
+        return enableItemDrops;
+    }
 
-	public float getDamageMult() {
-		return damageMult;
-	}
+    /**
+     * Set whether the block should be dropped when it is destroyed.
+     */
+    public void setItemDropsEnabled(boolean enable) {
+        this.enableItemDrops = enable;
+    }
 
-	public void setDamageMult(float mult) {
-		this.damageMult = mult;
-	}
+    public float getDamageMult() {
+        return damageMult;
+    }
 
-	private void spawnCrackParticle(double x, double y, double z, double mx, double my, double mz) {
-		world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, x, y, z, mx, my, mz,
-				Block.getStateId(getBlockState()));
-	}
+    public void setDamageMult(float mult) {
+        this.damageMult = mult;
+    }
 
-	@Override
-	public void onUpdate() {
+    private void spawnCrackParticle(double x, double y, double z, double mx, double my, double mz) {
+        world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, x, y, z, mx, my, mz,
+                Block.getStateId(getBlockState()));
+    }
 
-		super.onUpdate();
-		extinguish();
+    @Override
+    public void onUpdate() {
 
-		if (ticksExisted == 1) {
-			for (int i = 0; i < 10; i++) {
-				double spawnX = posX + (rand.nextDouble() - 0.5);
-				double spawnY = posY - 0;
-				double spawnZ = posZ + (rand.nextDouble() - 0.5);
-				spawnCrackParticle(spawnX, spawnY, spawnZ, 0, -0.1, 0);
-			}
-		}
+        super.onUpdate();
+        extinguish();
 
-		if (getBehavior() != null && getBehavior() instanceof FloatingBlockBehavior.Thrown) {
-			setVelocity(velocity().times(getFriction()));
-		}
+        if (ticksExisted == 1) {
+            for (int i = 0; i < 10; i++) {
+                double spawnX = posX + (rand.nextDouble() - 0.5);
+                double spawnY = posY - 0;
+                double spawnZ = posZ + (rand.nextDouble() - 0.5);
+                spawnCrackParticle(spawnX, spawnY, spawnZ, 0, -0.1, 0);
+            }
+        }
 
-		if (getOwner() != null) {
-			EntityFloatingBlock block = AvatarEntity.lookupControlledEntity(world, EntityFloatingBlock.class, getOwner());
-			BendingData bD = BendingData.get(getOwner());
-			if (block == null && (bD.hasStatusControl(StatusControl.THROW_BLOCK) || bD.hasStatusControl(StatusControl.PLACE_BLOCK))) {
-				bD.removeStatusControl(StatusControl.THROW_BLOCK);
-				bD.removeStatusControl(StatusControl.PLACE_BLOCK);
-			}
-			if (block != null && block.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled && !(bD.hasStatusControl(StatusControl.THROW_BLOCK))) {
-				bD.addStatusControl(StatusControl.THROW_BLOCK);
-				bD.addStatusControl(StatusControl.PLACE_BLOCK);
-			}
+        if (getBehavior() != null && getBehavior() instanceof FloatingBlockBehavior.Thrown) {
+            setVelocity(velocity().times(getFriction()));
+        }
 
-		}
+        if (getOwner() != null) {
+            EntityFloatingBlock block = AvatarEntity.lookupControlledEntity(world, EntityFloatingBlock.class, getOwner());
+            BendingData bD = BendingData.get(getOwner());
+            if (block == null && (bD.hasStatusControl(THROW_BLOCK) || bD.hasStatusControl(PLACE_BLOCK))) {
+                bD.removeStatusControl(THROW_BLOCK);
+                bD.removeStatusControl(PLACE_BLOCK);
+            }
+            if (block != null && block.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled && !(bD.hasStatusControl(THROW_BLOCK))) {
+                bD.addStatusControl(THROW_BLOCK);
+                bD.addStatusControl(PLACE_BLOCK);
+            }
 
-		/*prevPosX = posX;
-		prevPosY = posY;
-		prevPosZ = posZ;**/
-		//Uhhh what's this for? It just seems to induce glichtiness...
+        }
 
-		FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) Objects.requireNonNull(getBehavior()).onUpdate(this);
-		if (nextBehavior != getBehavior()) setBehavior(nextBehavior);
+        FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) Objects.requireNonNull(getBehavior()).onUpdate(this);
+        if (nextBehavior != getBehavior()) setBehavior(nextBehavior);
 
-	}
+    }
 
-	@Override
-	public boolean onCollideWithSolid() {
+    @Override
+    public boolean onCollideWithSolid() {
 
-		FloatingBlockBehavior behavior = getBehavior();
-		if (!(behavior instanceof FloatingBlockBehavior.Fall || behavior instanceof
-				FloatingBlockBehavior.Thrown)) {
+        FloatingBlockBehavior behavior = getBehavior();
+        if (!(behavior instanceof FloatingBlockBehavior.Fall || behavior instanceof
+                FloatingBlockBehavior.Thrown)) {
 
-			return false;
+            return false;
 
-		}
+        }
 
-		// Spawn particles
-		Random random = new Random();
-		for (int i = 0; i < 7; i++) {
-			spawnCrackParticle(posX, posY + 0.3, posZ, random.nextGaussian() * 0.1,
-					random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
-		}
-		if (getOwner() != null && getAbility() instanceof AbilityEarthControl) {
-			AbilityData data = BendingData.get(getOwner()).getAbilityData("earth_control");
+        if (collided) {
+            // Spawn particles
+            Random random = new Random();
+            for (int i = 0; i < 7; i++) {
+                spawnCrackParticle(posX, posY + 0.3, posZ, random.nextGaussian() * 0.1,
+                        random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
+            }
+            if (getOwner() != null && getAbility() instanceof AbilityEarthControl) {
+                AbilityData data = BendingData.get(getOwner()).getAbilityData("earth_control");
 
-			if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
+                if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
 
-				Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);
-				if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
-					explosion.doExplosionA();
-					explosion.doExplosionB(true);
-				}
+                    Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);
+                    if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
+                        explosion.doExplosionA();
+                        explosion.doExplosionB(true);
+                    }
 
-			}
-			if (!data.isMasterPath(AbilityTreePath.FIRST)) {
-				setDead();
-			}
-			if (!world.isRemote && areItemDropsEnabled()) {
-				NonNullList<ItemStack> drops = NonNullList.create();
-				getBlock().getDrops(drops, world, new BlockPos(this), getBlockState(), 0);
-				int i = 0;
-				for (ItemStack is : drops) {
-					if (i < 1) {
-						EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
-						world.spawnEntity(ei);
-					}
-					i++;
-				}
-			}
+                }
+                if (!data.isMasterPath(AbilityTreePath.FIRST)) {
+                    setDead();
+                }
+                if (!world.isRemote && areItemDropsEnabled()) {
+                    NonNullList<ItemStack> drops = NonNullList.create();
+                    getBlock().getDrops(drops, world, new BlockPos(this), getBlockState(), 0);
+                    int i = 0;
+                    for (ItemStack is : drops) {
+                        if (i < 1) {
+                            EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
+                            world.spawnEntity(ei);
+                        }
+                        i++;
+                    }
+                }
 
-		}
+            }
+        }
 
-		return true;
+        return collided;
 
-	}
+    }
 
-	public float getFriction() {
-		return dataManager.get(SYNC_FRICTION);
-	}
+    @Override
+    public boolean shouldDissipate() {
+        return getBehavior() instanceof FloatingBlockBehavior.Thrown;
+    }
 
-	public void setFriction(float friction) {
-		if (!world.isRemote) dataManager.set(SYNC_FRICTION, friction);
-	}
+    @Override
+    public boolean shouldExplode() {
+        return false;
+    }
 
-	public void drop() {
-		setBehavior(new FloatingBlockBehavior.Fall());
-	}
+    @Override
+    public boolean isPiercing() {
+        return true;
+    }
 
-	public FloatingBlockBehavior getBehavior() {
-		return dataManager.get(SYNC_BEHAVIOR);
-	}
+    @Override
+    public boolean canBeCollidedWith() {
+        return getBehavior() instanceof FloatingBlockBehavior.Thrown;
+    }
 
-	public void setBehavior(FloatingBlockBehavior behavior) {
-		// FIXME research: why doesn't sync_Behavior cause an update to client?
-		if (behavior == null) throw new IllegalArgumentException("Cannot have null behavior");
-		dataManager.set(SYNC_BEHAVIOR, behavior);
-	}
+    @Override
+    public void applyPiercingCollision() {
+        super.applyPiercingCollision();
+        if (getOwner() != null) {
+            AbilityData abilityData = AbilityData.get(getOwner(), new AbilityEarthControl().getName());
+            if (abilityData != null) {
+                if (abilityData.isMasterPath(AbilityTreePath.FIRST))
+                    setBehavior(new FloatingBlockBehavior.PlayerControlled());
+            }
+        }
+    }
 
-	@Override
-	public EntityLivingBase getController() {
-		return getBehavior() instanceof FloatingBlockBehavior.PlayerControlled ? getOwner() : null;
-	}
+    @Override
+    public void spawnDissipateParticles(World world, Vec3d pos) {
 
-	public AxisAlignedBB getExpandedHitbox() {
-		return this.expandedHitbox;
-	}
+    }
 
-	@Override
-	public void setEntityBoundingBox(AxisAlignedBB bb) {
-		super.setEntityBoundingBox(bb);
-		expandedHitbox = bb.grow(0.35, 0.35, 0.35);
-	}
+    @Override
+    public void spawnExplosionParticles(World world, Vec3d pos) {
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean isInRangeToRenderDist(double d) {
-		return true;
-	}
+    }
 
-	@Override
-	public boolean isProjectile() {
-		return true;
-	}
+    @Override
+    public void spawnPiercingParticles(World world, Vec3d pos) {
 
-	@Override
-	public void setDead() {
-		super.setDead();
-		removeStatCtrl();
-	}
+    }
 
-	 private void removeStatCtrl() {
-		if (getOwner() != null) {
-			BendingData bD = BendingData.get(getOwner());
-			bD.removeStatusControl(StatusControl.THROW_BLOCK);
-			bD.removeStatusControl(StatusControl.PLACE_BLOCK);
-		}
+    @Override
+    public boolean canCollideWith(Entity entity) {
+        if (getBehavior() instanceof FloatingBlockBehavior.Thrown)
+            return super.canCollideWith(entity);
+        else return false;
+    }
 
-	}
+    public float getFriction() {
+        return dataManager.get(SYNC_FRICTION);
+    }
+
+    public void setFriction(float friction) {
+        if (!world.isRemote) dataManager.set(SYNC_FRICTION, friction);
+    }
+
+    public void drop() {
+        setBehavior(new FloatingBlockBehavior.Fall());
+    }
+
+    public FloatingBlockBehavior getBehavior() {
+        return dataManager.get(SYNC_BEHAVIOR);
+    }
+
+    public void setBehavior(FloatingBlockBehavior behavior) {
+        // FIXME research: why doesn't sync_Behavior cause an update to client?
+        if (behavior == null) throw new IllegalArgumentException("Cannot have null behavior");
+        dataManager.set(SYNC_BEHAVIOR, behavior);
+    }
+
+    @Override
+    public Vec3d getKnockback() {
+        double x = Math.min(getKnockbackMult().x * motionX, motionX * 2);
+        double y = Math.min(0.15, (motionY + 0.1) * getKnockbackMult().y);
+        double z = Math.min(getKnockbackMult().z * motionZ, motionZ * 2);
+        return new Vec3d(x, y, z);
+    }
+
+    @Override
+    public EntityLivingBase getController() {
+        return getBehavior() instanceof FloatingBlockBehavior.PlayerControlled ? getOwner() : null;
+    }
+
+
+    @Override
+    public double getExpandedHitboxWidth() {
+        return 0.35;
+    }
+
+    @Override
+    public double getExpandedHitboxHeight() {
+        return 0.35;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean isInRangeToRenderDist(double d) {
+        return true;
+    }
+
+    @Override
+    public boolean isProjectile() {
+        return true;
+    }
+
+    @Override
+    public float getDamage() {
+        return (float) (AvatarUtils.getMagnitude(velocity().toMinecraft()) / 25 * STATS_CONFIG.floatingBlockSettings.damage
+                * getDamageMult());
+    }
+
+    @Override
+    public void setDead() {
+        super.setDead();
+        removeStatCtrl();
+    }
+
+    private void removeStatCtrl() {
+        if (getOwner() != null) {
+            BendingData bD = BendingData.get(getOwner());
+            bD.removeStatusControl(THROW_BLOCK);
+            bD.removeStatusControl(PLACE_BLOCK);
+        }
+
+    }
 }

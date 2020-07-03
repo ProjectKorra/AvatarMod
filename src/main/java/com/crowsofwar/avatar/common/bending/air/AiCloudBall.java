@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.common.bending.air;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
@@ -12,6 +11,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_CLOUDBURST;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
@@ -29,7 +29,7 @@ public class AiCloudBall extends BendingAi {
 	protected void startExec() {
 		BendingData data = bender.getData();
 		execAbility();
-		data.getMiscData().setAbilityCooldown(80);
+		data.getAbilityData(ability).setAbilityCooldown(80);
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class AiCloudBall extends BendingAi {
 		entity.rotationPitch = (float) toDegrees(rotations.x());
 
 		if (timeExecuting >= 20) {
-			execStatusControl(StatusControl.THROW_CLOUDBURST);
+			execStatusControl(THROW_CLOUDBURST);
 			timeExecuting = 0;
 			return false;
 		} else {
@@ -55,7 +55,7 @@ public class AiCloudBall extends BendingAi {
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSq(target) > 3 * 3
-				&& bender.getData().getMiscData().getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
+				&& bender.getData().getAbilityData(ability).getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class AiCloudBall extends BendingAi {
 
 		if (cloudball != null) {
 			cloudball.setDead();
-			bender.getData().removeStatusControl(StatusControl.THROW_CLOUDBURST);
+			bender.getData().removeStatusControl(THROW_CLOUDBURST);
 		}
 
 	}

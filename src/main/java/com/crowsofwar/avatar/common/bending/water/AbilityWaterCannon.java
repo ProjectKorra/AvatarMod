@@ -157,5 +157,20 @@ public class AbilityWaterCannon extends Ability {
 	public int getBaseTier() {
 		return 3;
 	}
+
+	@Override
+	public boolean isChargeable() {
+		return true;
+	}
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public boolean isOffensive() {
+		return true;
+	}
 }
 

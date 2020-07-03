@@ -15,4 +15,19 @@ public class AbilityBubbleBlitz extends Ability {
 	public void execute(AbilityContext ctx) {
 
 	}
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public boolean isOffensive() {
+		return true;
+	}
+
+	@Override
+	public int getBaseTier() {
+		return 4;
+	}
 }

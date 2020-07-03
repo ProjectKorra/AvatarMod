@@ -125,6 +125,16 @@ public class AbilityLightningRaze extends Ability {
 	}
 
 	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public boolean isOffensive() {
+		return true;
+	}
+
+	@Override
 	public int getBaseTier() {
 		return 3;
 	}

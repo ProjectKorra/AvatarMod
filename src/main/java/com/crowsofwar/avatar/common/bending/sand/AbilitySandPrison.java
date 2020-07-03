@@ -92,6 +92,7 @@ public class AbilitySandPrison extends Ability {
 
 	}
 
+
 	@Override
 	public int getBaseParentTier() {
 		return 3;

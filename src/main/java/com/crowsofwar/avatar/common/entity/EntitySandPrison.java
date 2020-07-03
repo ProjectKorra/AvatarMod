@@ -24,6 +24,8 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.google.common.base.Optional;
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;

@@ -18,11 +18,15 @@ package com.crowsofwar.avatar.common.data;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.AvatarChatMessages;
-import com.crowsofwar.avatar.common.QueuedAbilityExecutionHandler;
+import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
+import com.crowsofwar.avatar.common.config.ConfigClient;
+import com.crowsofwar.avatar.common.config.ConfigMobs;
+import com.crowsofwar.avatar.common.config.ConfigSkills;
+import com.crowsofwar.avatar.common.config.ConfigStats;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.data.ctx.PlayerBender;
@@ -42,10 +46,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.common.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -197,44 +199,41 @@ public abstract class Bender {
 	 * @see #executeAbility(Ability, Raytrace.Result, boolean) (Ability)
 	 */
 	public void executeAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath) {
-		if (!getWorld().isRemote) {
-			// Server-side : Execute the ability
 
-			BendingData data = getData();
-			EntityLivingBase entity = getEntity();
-			AbilityData aD = AbilityData.get(getEntity(), ability.getName());
-			int level = aD.getLevel();
-			AbilityData.AbilityTreePath path = aD.getPath();
-			if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
-				double powerRating = calcPowerRating(ability.getBendingId());
+		BendingData data = getData();
+		EntityLivingBase entity = getEntity();
+		AbilityData aD = AbilityData.get(getEntity(), ability.getName());
+		int level = aD.getLevel();
+		AbilityData.AbilityTreePath path = aD.getPath();
+		if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
+			double powerRating = calcPowerRating(ability.getBendingId());
 
-				if (data.getMiscData().getAbilityCooldown() == 0) {
+			if (aD.getAbilityCooldown() == 0) {
+				if (data.getMiscData().getCanUseAbilities()) {
 
-					if (data.getMiscData().getCanUseAbilities()) {
+					AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
+							entity, powerRating, switchPath);
 
-						AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
-								entity, powerRating, switchPath);
-
-						ability.execute(abilityCtx);
-						data.getMiscData().setAbilityCooldown(ability.getCooldown(abilityCtx));
-
-					} else {
-						// TODO make bending disabled available for multiple things
-						AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(getEntity());
-					}
-
+					ability.execute(abilityCtx);
+					aD.setAbilityCooldown(ability.getCooldown(abilityCtx));
 				} else {
-					QueuedAbilityExecutionHandler.queueAbilityExecution(entity, data, ability,
-							raytrace, powerRating, switchPath);
+					// TODO make bending disabled available for multiple things
+					AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(getEntity());
 				}
-			} else {
-				sendMessage("avatar.abilityLocked");
-			}
 
+			} else {
+				Objects.requireNonNull(Bender.get(getEntity())).sendMessage("avatar.abilityCooldown");
+				//	QueuedAbilityExecutionHandler.queueAbilityExecution(entity, data, ability,
+				//			raytrace, powerRating, switchPath);
+			}
+		} else {
+			sendMessage("avatar.abilityLocked");
 		}
 
+		//	}
+
 		// On client-side, players will send a packet to the server, while other entities will do
-		// nothing
+		// nothing. Particles will be spawned. Remember to check what side you're on when executing abilities!
 
 	}
 
@@ -255,25 +254,7 @@ public abstract class Bender {
 		return false;
 	}
 
-	//Called for npc benders in order to properly render the particle system without packets
-	public void onRenderUpdate() {
-		BendingData data = getData();
-		World world = getWorld();
-		EntityLivingBase entity = getEntity();
 
-		data.getMiscData().decrementCooldown();
-
-		BendingContext ctx = new BendingContext(data, entity, this, new Raytrace.Result());
-
-		List<TickHandler> tickHandlers = data.getAllTickHandlers();
-		if (tickHandlers != null) {
-			for (TickHandler handler : tickHandlers) {
-				if (handler != null) {
-					handler.renderTick(ctx);
-				}
-			}
-		}
-	}
 	/**
 	 * Called every tick; updates things like chi.
 	 */
@@ -283,7 +264,12 @@ public abstract class Bender {
 		World world = getWorld();
 		EntityLivingBase entity = getEntity();
 
-		data.getMiscData().decrementCooldown();
+		List<Ability> abilities = Abilities.all().stream().filter(ability -> AbilityData.get(entity, ability.getName()).getAbilityCooldown() > 0).collect(Collectors.toList());
+		for (Ability ability : abilities) {
+			AbilityData aD = AbilityData.get(entity, ability.getName());
+			aD.decrementCooldown();
+			data.save(DataCategory.ABILITY_DATA);
+		}
 
 		BendingContext ctx = new BendingContext(data, entity, this, new Raytrace.Result());
 
@@ -334,8 +320,6 @@ public abstract class Bender {
 			for (TickHandler handler : tickHandlers) {
 				if (handler != null) {
 					if (handler.tick(ctx)) {
-						if (!(entity instanceof EntityPlayer))
-							handler.renderTick(ctx);
 						// Can use this since the list is a COPY of the
 						// underlying list
 						data.removeTickHandler(handler);
@@ -345,8 +329,16 @@ public abstract class Bender {
 					}
 				}
 			}
+			data.save(DataCategory.TICK_HANDLERS);
 		}
 
+		//Config updates
+		if (entity.ticksExisted % 400 == 0) {
+			ConfigClient.load();
+			ConfigStats.load();
+			ConfigSkills.load();
+			ConfigMobs.load();
+		}
 		// Update bending managers
 
 		List<PowerRatingManager> managers = data.getPowerRatingManagers();
@@ -364,6 +356,8 @@ public abstract class Bender {
 		if (entity instanceof EntityPlayer && !world.isRemote && entity.ticksExisted % 40 == 0) {
 			syncPowerRating();
 		}
+
+		data.saveAll();
 
 	}
 

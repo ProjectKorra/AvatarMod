@@ -30,8 +30,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.common.bending.lightning.StatCtrlThrowLightningSpear.THROW_LIGHTNINGSPEAR;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_LIGHTNINGSPEAR;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 

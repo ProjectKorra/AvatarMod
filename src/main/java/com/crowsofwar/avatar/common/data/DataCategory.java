@@ -54,8 +54,8 @@ public enum DataCategory {
 	private final BiConsumer<BendingData, ?> setter;
 	private final DataTransmitter<?> transmitter;
 
-	private <T> DataCategory(Function<BendingData, T> getter, BiConsumer<BendingData, T> setter,
-							 DataTransmitter<?> transmitter) {
+	<T> DataCategory(Function<BendingData, T> getter, BiConsumer<BendingData, T> setter,
+					 DataTransmitter<?> transmitter) {
 		this.getter = getter;
 		this.setter = setter;
 		this.transmitter = transmitter;

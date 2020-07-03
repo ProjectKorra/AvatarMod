@@ -6,14 +6,37 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.Validate;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
 public class AvatarParticleUtils {
 
-	//NOTE: ONLY USE ENUMPARTICLETYPE SPAWN METHODS IN RENDERING FILES. DUE TO VANILLA'S WEIRD PARTICLE SPAWNING SYSTEM,
-	//YOU CANNOT SPAWN PARTICLES IN ENTITY CLASSES AND SUCH RELIABLY. CUSTOM PARTICLES IN THIS CASE ARE FINE, THOUGH.
+
+	//Always points to the right
+	/*public static Vec3d orthogonal(Vec3d axis, double length, double angle, float rotationYaw, float rotationPitch) throws IllegalArgumentException {
+		Validate.isTrue(!axis.equals(Vec3d.ZERO), "Axis vector cannot be zero!");
+​
+		double yaw = Math.toRadians(rotationYaw);
+		Vec3d other = new Vec3d(-Math.sin(yaw), -axis.y + 0.1, Math.cos(yaw));
+		other.crossProduct(axis).normalize().scale(length);
+​
+		return rotate(other, axis, angle);
+	}
+​
+	public static Vec3d rotate(Vec3d rotator, Vec3d axis, double angle) {
+		double radians = Math.toRadians(angle);
+​
+		if (Math.abs(angle / (2 * Math.PI)) < Vec3d.getEpsilon()) {
+			return rotator;
+		} else if (Math.abs(angle / Math.PI) < Vec3d.getEpsilon()) {
+			return rotator.scale(-1);
+		}
+​
+		return rotateAroundAxis(axis, angle);
+	}**/
+
 
 	public static Vec3d rotateAroundAxisX(Vec3d v, double angle) {
 		angle = Math.toRadians(angle);
@@ -53,6 +76,7 @@ public class AvatarParticleUtils {
 											  double velX, double velY, double velZ) {
 		for (int angle = 0; angle < particleAmount; angle++) {
 			double radius = minRadius + (angle / radiusScale);
+			//Why isn't this in radians
 			double x = radius * cos(angle);
 			double y = angle / (particleAmount / vortexLength);
 			double z = radius * sin(angle);
@@ -210,7 +234,7 @@ public class AvatarParticleUtils {
 		float f1 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
 		float f2 = -MathHelper.cos(-pitch * 0.017453292F);
 		float f3 = MathHelper.sin(-pitch * 0.017453292F);
-		return new Vec3d((double) (f1 * f2), (double) f3, (double) (f * f2));
+		return new Vec3d(f1 * f2, f3, f * f2);
 	}
 
 	public static Vec3d getDirectionalVortexEndPos(EntityLivingBase entity, Vec3d direction, int maxAngle, double vortexLength, double radiusScale, double posX, double posY, double posZ) {

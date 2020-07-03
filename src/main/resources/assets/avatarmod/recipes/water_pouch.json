@@ -10,7 +10,8 @@
       "item": "minecraft:leather"
     },
     "s": {
-      "item": "avatarmod:scroll_water"
+      "item": "avatarmod:scroll_water",
+      "data": 1
     }
   },
     "result": {

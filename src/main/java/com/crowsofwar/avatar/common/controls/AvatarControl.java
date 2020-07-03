@@ -18,6 +18,8 @@
 package com.crowsofwar.avatar.common.controls;
 
 import com.crowsofwar.avatar.AvatarMod;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.GameSettings;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -68,23 +70,24 @@ public class AvatarControl {
 	
 	public static void initControls() {
 		ALL_CONTROLS = new ArrayList<>();
+		GameSettings settings = Minecraft.getMinecraft().gameSettings;
 		KEY_USE_BENDING = new AvatarControl("avatar.Bend", true);
 		KEY_BENDING_CYCLE_LEFT = new AvatarControl("avatar.BendingCycleLeft", true);
 		KEY_BENDING_CYCLE_RIGHT = new AvatarControl("avatar.BendingCycleRight", true);
 		KEY_SKILLS = new AvatarControl("avatar.Skills", true);
 		KEY_SWITCH = new AvatarControl("avatar.Switch", true);
 		KEY_TRANSFER_BISON = new AvatarControl("avatar.TransferBison", true);
-		CONTROL_LEFT_CLICK = new AvatarControl("LeftClick", false);
-		CONTROL_RIGHT_CLICK = new AvatarControl("RightClick", false);
+		CONTROL_LEFT_CLICK = new AvatarControl(settings.keyBindAttack.getKeyDescription(), false);
+		CONTROL_RIGHT_CLICK = new AvatarControl(settings.keyBindUseItem.getKeyDescription(), false);
 		CONTROL_MIDDLE_CLICK = new AvatarControl("MiddleClick", false);
 		CONTROL_LEFT_CLICK_DOWN = new AvatarControl("LeftClickDown", false);
 		CONTROL_RIGHT_CLICK_DOWN = new AvatarControl("RightClickDown", false);
 		CONTROL_MIDDLE_CLICK_DOWN = new AvatarControl("MiddleClickDown", false);
-		CONTROL_JUMP = new AvatarControl("key.jump", true);
+		CONTROL_JUMP = new AvatarControl(settings.keyBindJump.getKeyDescription(), true);
 		CONTROL_LEFT_CLICK_UP = new AvatarControl("LeftClickUp", false);
 		CONTROL_RIGHT_CLICK_UP = new AvatarControl("RightClickUp", false);
 		CONTROL_MIDDLE_CLICK_UP = new AvatarControl("MiddleClickUp", false);
-		CONTROL_SHIFT = new AvatarControl("Shift", false);
+		CONTROL_SHIFT = new AvatarControl(settings.keyBindSneak.getKeyDescription(), false);
 	}
 	
 	/**

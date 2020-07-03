@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.bending.fire;
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.blocks.BlockTemp;
 import com.crowsofwar.avatar.common.blocks.BlockUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
@@ -31,6 +32,8 @@ import com.crowsofwar.avatar.common.entity.EntityShockwave;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -81,13 +84,11 @@ public class AbilityFireShot extends Ability {
 			speed += 0.25F;
 			chi += 0.5F;
 			damage += 2;
-			xp -= 0.5F;
 		}
 		if (ctx.getLevel() == 2) {
 			speed += 0.5F;
 			chi += 1;
 			damage += 4;
-			xp -= 1.5F;
 		}
 		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
 			speed += 0.75F;
@@ -98,10 +99,10 @@ public class AbilityFireShot extends Ability {
 			chi += 2F;
 		}
 		damage += abilityData.getTotalXp() / 50;
-		if (world.isRemote)
-			System.out.println("Client-Side LookVec: " + entity.getLookVec());
+
 		if (bender.consumeChi(chi)) {
 			if (!ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+				Vector pos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(0.05));
 				EntityFlames flames = new EntityFlames(world);
 				flames.setPosition(Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(0.05)));
 				flames.setOwner(entity);
@@ -118,7 +119,31 @@ public class AbilityFireShot extends Ability {
 				flames.setPowerRating(10);
 				world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
 						world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
-				world.spawnEntity(flames);
+				pos = pos.minus(Vector.getLookRectangular(entity).times(0.05));
+				if (!world.isRemote)
+					world.spawnEntity(flames);
+				if (world.isRemote) {
+					for (double angle = 0; angle < 360; angle += 8) {
+						Vector position = Vector.getOrthogonalVector(entity.getLookVec(), angle, 0.01f);
+						Vector velocity;
+						//position = position.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
+						position = position.plus(pos.minusY(0.05).plus(Vector.getLookRectangular(entity).times(0.85)));
+						velocity = position.minus(pos.minusY(0.05).plus(Vector.getLookRectangular(entity).times(0.85))).normalize();
+						velocity = velocity.times(speed / 15);
+						double spawnX = position.x();
+						double spawnY = position.y();
+						double spawnZ = position.z();
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
+								world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
+								.time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(1F, 10 / 255F, 5 / 255F, 0.75F).spawnEntity(entity)
+								.scale(0.125F).element(new Firebending()).collide(true).spawn(world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
+								world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
+								.time(12 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(1F, (40 + AvatarUtils.getRandomNumberInRange(0, 60)) / 255F,
+								10 / 255F, 0.75F).spawnEntity(entity)
+								.scale(0.125F).element(new Firebending()).collide(true).spawn(world);
+					}
+				}
 			} else {
 				EntityShockwave wave = new EntityShockwave(world);
 				wave.setOwner(entity);
@@ -138,10 +163,10 @@ public class AbilityFireShot extends Ability {
 				wave.setParticleSpeed(0.18F);
 				wave.setParticleWaves(2);
 				wave.setParticleAmount(10);
-
 				world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
 						world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
-				world.spawnEntity(wave);
+				if (!world.isRemote)
+					world.spawnEntity(wave);
 			}
 		}
 
@@ -197,5 +222,15 @@ public class AbilityFireShot extends Ability {
 		public void save(NBTTagCompound nbt) {
 
 		}
+	}
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
+	public boolean isOffensive() {
+		return true;
 	}
 }

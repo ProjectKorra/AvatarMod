@@ -54,8 +54,6 @@ public class AiAirGust extends BendingAi {
 			entity.rotationPitch = (float) toDegrees(rotations.x());
 
 			execAbility();
-			data.getMiscData().setAbilityCooldown(20);
-
 		}
 	}
 

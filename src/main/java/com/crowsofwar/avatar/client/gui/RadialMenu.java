@@ -111,7 +111,7 @@ public class RadialMenu extends Gui {
 		for (int i = 0; i < segments.length; i++) {
 			if (segments[i] == null) continue;
 			boolean hover = segments[i].isMouseHover(mouseX, mouseY, resolution);
-			segments[i].draw(hover, resolution, scale * CLIENT_CONFIG.radialMenuAlpha, scale);
+			segments[i].draw(hover, resolution, scale * CLIENT_CONFIG.radialMenuAlpha, scale * 0.9F);
 
 			if (hover) {
 				displaySegmentDetails(controls[i], resolution);
@@ -126,7 +126,7 @@ public class RadialMenu extends Gui {
 		int x = resolution.getScaledWidth() / 2;
 		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRenderer.FONT_HEIGHT * 1.5);
 
-		BendingData data = BendingData.get(mc.player);
+		BendingData data = BendingData.getFromEntity(mc.player);
 		if (data != null) {
 
 			int level = 0;
@@ -167,6 +167,7 @@ public class RadialMenu extends Gui {
 
 			//Ignore if your IDE says that the cast is redundant, it'll then complain that the object specified is too ambiguous.
 
+			//Ignore the redundant casting, it stops Intellij from throwing a fit
 			second = FormattedMessageProcessor.formatText(MSG_RADIAL_XP, second,
 					(Object[]) ArrayUtils.addAll(secondArgs, level + ""));
 

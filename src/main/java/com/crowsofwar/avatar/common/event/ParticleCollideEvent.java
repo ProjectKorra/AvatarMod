@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.EntityEvent;
 
 import java.util.UUID;
@@ -13,29 +14,32 @@ import java.util.UUID;
 //Called server side through packets
 public class ParticleCollideEvent extends EntityEvent {
 
-	private ParticleAvatar particle;
+//	private ParticleAvatar particle;
 	private Entity spawner;
 	private UUID bendingID;
 	private Ability ability;
+	private Vec3d velocity;
 
-	public ParticleCollideEvent(Entity entity, ParticleAvatar particle, Entity spawner, UUID bendingID) {
+	public ParticleCollideEvent(Entity entity, Entity spawner, UUID bendingID, Vec3d velocity) {
 		super(entity);
-		this.particle = particle;
+		//this.particle = particle;
 		this.spawner = spawner;
 		this.bendingID = bendingID;
+		this.velocity = velocity;
 	}
 
-	public ParticleCollideEvent(Entity entity, ParticleAvatar particle, Entity spawner, Ability ability) {
+	public ParticleCollideEvent(Entity entity, Entity spawner, Ability ability, Vec3d velocity) {
 		super(entity);
-		this.particle = particle;
+	//	this.particle = particle;
 		this.spawner = spawner;
 		this.ability = ability;
 		this.bendingID = ability == null ? Airbending.ID : ability.getBendingId();
+		this.velocity = velocity;
 	}
 
-	public ParticleAvatar getParticle() {
+	/*public ParticleAvatar getParticle() {
 		return this.particle;
-	}
+	}**/
 
 	public Entity getSpawner() {
 		return this.spawner;
@@ -47,5 +51,9 @@ public class ParticleCollideEvent extends EntityEvent {
 
 	public Ability getAbility() {
 		return this.ability;
+	}
+
+	public Vec3d getVelocity() {
+		return this.velocity;
 	}
 }

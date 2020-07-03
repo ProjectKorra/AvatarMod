@@ -25,10 +25,12 @@ import com.crowsofwar.avatar.common.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -80,7 +82,7 @@ public abstract class AvatarEntity extends Entity {
 	private double powerRating;
 	private BendingStyle element;
 	private int tier;
-	private SyncedEntity<EntityLivingBase> ownerRef;
+	private final SyncedEntity<EntityLivingBase> ownerRef;
 	private BlockPos prevLeverPos = null, prevDoorPos = null, prevTrapdoorPos = null,
 			prevButtonPos = null, prevGatePos = null;
 	private IBlockState prevLeverState = null, prevDoorState = null, prevTrapdoorState = null, prevButtonState = null, prevGateState = null;
@@ -266,6 +268,7 @@ public abstract class AvatarEntity extends Entity {
 		pushStoneButton = nbt.getBoolean("PushStoneButton");
 		pushTrapDoor = nbt.getBoolean("PushIronTrapDoor");
 		pushDoor = nbt.getBoolean("PushIronDoor");
+		tier = nbt.getInteger("Tier");
 		ownerRef.readFromNbt(nbt);
 	}
 
@@ -275,6 +278,7 @@ public abstract class AvatarEntity extends Entity {
 		nbt.setBoolean("PushIronDor", pushDoor);
 		nbt.setBoolean("PushIronTrapDoor", pushTrapDoor);
 		nbt.setBoolean("PushStoneButton", pushStoneButton);
+		nbt.setInteger("Tier", tier);
 		ownerRef.writeToNbt(nbt);
 	}
 
@@ -288,24 +292,83 @@ public abstract class AvatarEntity extends Entity {
 		return false;
 	}
 
+	public void Extinguish() {
+		setFire(0);
+		for (int x = 0; x <= 1; x++) {
+			for (int z = 0; z <= 1; z++) {
+				for (int y = 0; y <= 1; y++) {
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+					BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
+					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
+						world.setBlockToAir(pos);
+						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
+								SoundCategory.PLAYERS, 1, 1, false);
+					}
+					else if (world.getBlockState(pos).getBlock() instanceof BlockLiquid) {
+						Block lava = world.getBlockState(pos).getBlock();
+						if (lava == Blocks.LAVA)
+							world.setBlockState(pos, Blocks.OBSIDIAN.getDefaultState());
+						else if (lava == Blocks.FLOWING_LAVA)
+							world.setBlockState(pos, Blocks.STONE.getDefaultState());
+					}
+				}
+			}
+		}
+		for (int x = 0; x >= -1; x--) {
+			for (int z = 0; z >= -1; z--) {
+				for (int y = 0; y >= -1; y--) {
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
+					BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
+					if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
+						world.setBlockToAir(pos);
+						world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
+								SoundCategory.PLAYERS, 1, 1, false);
+					}
+					else if (world.getBlockState(pos).getBlock() instanceof BlockLiquid) {
+						Block lava = world.getBlockState(pos).getBlock();
+						if (lava == Blocks.LAVA)
+							world.setBlockState(pos, Blocks.OBSIDIAN.getDefaultState());
+						else if (lava == Blocks.FLOWING_LAVA)
+							world.setBlockState(pos, Blocks.STONE.getDefaultState());
+					}
+				}
+			}
+		}
+	}
 
-	@Override
-	public void onUpdate() {
-		super.onUpdate();
-		collideWithNearbyEntities();
-		if (putsOutFires && ticksExisted % 2 == 0) {
-			setFire(0);
+	public void setFires() {
+		for (int x = 0; x <= 1; x++) {
+			for (int z = 0; z <= 1; z++) {
+				for (int y = 0; y <= 1; y++) {
+					BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+					if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
+						world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+					}
+				}
+			}
+		}
+		for (int x = 0; x >= -1; x--) {
+			for (int z = 0; z >= -1; z--) {
+				for (int y = 0; y >= -1; y--) {
+					BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+					if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
+						world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+					}
+				}
+			}
+		}
+		if (lightTnt) {
 			for (int x = 0; x <= 1; x++) {
 				for (int z = 0; z <= 1; z++) {
 					for (int y = 0; y <= 1; y++) {
-						double xPos = getEntityBoundingBox().getCenter().x;
-						double yPos = getEntityBoundingBox().getCenter().y;
-						double zPos = getEntityBoundingBox().getCenter().z;
-						BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
-						if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
-							world.setBlockToAir(pos);
-							world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
-									SoundCategory.PLAYERS, 1, 1, false);
+						BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+						if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
+							((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
+									world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
 						}
 					}
 				}
@@ -313,145 +376,119 @@ public abstract class AvatarEntity extends Entity {
 			for (int x = 0; x >= -1; x--) {
 				for (int z = 0; z >= -1; z--) {
 					for (int y = 0; y >= -1; y--) {
-						double xPos = getEntityBoundingBox().getCenter().x;
-						double yPos = getEntityBoundingBox().getCenter().y;
-						double zPos = getEntityBoundingBox().getCenter().z;
-						BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
-						if (world.getBlockState(pos).getBlock() == Blocks.FIRE) {
-							world.setBlockToAir(pos);
-							world.playSound(posX, posY, posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH,
-									SoundCategory.PLAYERS, 1, 1, false);
+						BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+						if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
+							((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
+									world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
 						}
 					}
 				}
 			}
 		}
+	}
+
+	public boolean pushLevers(BlockPos pos) {
+		if (pushLever()) {
+			if (pos != prevLeverPos && prevLeverState != world.getBlockState(pos) || prevLeverPos == null) {
+				if (AvatarUtils.pushLever(world, pos)) {
+					prevLeverPos = pos;
+					prevLeverState = world.getBlockState(pos);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean pushButtons(BlockPos pos) {
+		if (pushButton(pushStoneButton)) {
+			if (pos != prevButtonPos && prevButtonState != world.getBlockState(pos) || prevButtonState == null) {
+				if ((AvatarUtils.pushButton(world, pushStoneButton, pos))) {
+					prevButtonPos = pos;
+					prevButtonState = world.getBlockState(pos);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean pushTrapDoors(BlockPos pos) {
+		if (pushTrapdoor(pushTrapDoor)) {
+			if (pos != prevTrapdoorPos && prevTrapdoorState != world.getBlockState(pos) || prevTrapdoorState == null) {
+				if (AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos)) {
+					prevTrapdoorPos = pos;
+					prevTrapdoorState = world.getBlockState(pos);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean pushDoors(BlockPos pos) {
+		if (pushDoor(pushDoor)) {
+			if (pos != prevDoorPos && prevDoorState != world.getBlockState(pos) || prevDoorState == null) {
+				if (AvatarUtils.pushDoor(this, pushDoor, pos)) {
+					prevDoorPos = pos;
+					prevLeverState = world.getBlockState(pos);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean pushGates(BlockPos pos) {
+		if (pushGate()) {
+			if (pos != prevGatePos && prevGateState != world.getBlockState(pos) || prevGateState == null) {
+				if (AvatarUtils.pushGate(this, pos)) {
+					prevGatePos = pos;
+					prevGateState = world.getBlockState(pos);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		collideWithNearbyEntities();
+
+		if (putsOutFires && ticksExisted % 2 == 0)
+			Extinguish();
 
 
 		//Prev states are used to make sure each button isn't activated twice
 		for (double x = 0; x <= 1; x++) {
 			for (double z = 0; z <= 1; z++) {
 				for (double y = 0; y <= 1; y++) {
-					double xPos = getEntityBoundingBox().getCenter().x;
-					double yPos = getEntityBoundingBox().getCenter().y;
-					double zPos = getEntityBoundingBox().getCenter().z;
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
 					BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
-					if (pushButton(pushStoneButton)) {
-						if (world.getBlockState(pos) != prevButtonState)
-							prevButtonState = null;
-						if (pos != prevButtonPos && prevButtonState == null) {
-							if ((AvatarUtils.pushButton(world, pushStoneButton, pos))) {
-								prevButtonPos = pos;
-								prevButtonState = world.getBlockState(pos);
-							}
-						}
-					}
-					if (pushLever()) {
-						if (world.getBlockState(pos) != prevLeverState)
-							prevLeverState = null;
-						if (pos != prevLeverPos && prevLeverPos == null) {
-							if (AvatarUtils.pushLever(world, pos)) {
-								prevLeverPos = pos;
-								prevLeverState = world.getBlockState(pos);
-							}
-						}
-					}
-
-					if (pushTrapdoor(pushTrapDoor)) {
-						if (world.getBlockState(pos) != prevTrapdoorState)
-							prevTrapdoorState = null;
-						if (pos != prevTrapdoorPos && prevTrapdoorState == null) {
-							if (AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos)) {
-								prevTrapdoorPos = pos;
-								prevTrapdoorState = world.getBlockState(pos);
-							}
-						}
-					}
-
-					if (pushDoor(pushDoor)) {
-						if (world.getBlockState(pos) != prevDoorState)
-							prevDoorState = null;
-						if (pos != prevDoorPos && prevDoorState == null) {
-							if (AvatarUtils.pushDoor(this, pushDoor, pos)) {
-								prevDoorPos = pos;
-								prevLeverState = world.getBlockState(pos);
-							}
-						}
-					}
-
-					if (pushGate()) {
-						if (world.getBlockState(pos) != prevGateState)
-							prevGateState = null;
-						if (pos != prevGatePos && prevGateState == null) {
-							if (AvatarUtils.pushGate(this, pos)) {
-								prevGatePos = pos;
-								prevGateState = world.getBlockState(pos);
-							}
-						}
-					}
+					pushLevers(pos);
+					pushTrapDoors(pos);
+					pushButtons(pos);
+					pushDoors(pos);
+					pushGates(pos);
 				}
 			}
 		}
 		for (double x = 0; x >= -1; x--) {
 			for (double z = 0; z >= -1; z--) {
 				for (double y = 0; y >= -1; y--) {
-					double xPos = getEntityBoundingBox().getCenter().x;
-					double yPos = getEntityBoundingBox().getCenter().y;
-					double zPos = getEntityBoundingBox().getCenter().z;
+					double xPos = AvatarEntityUtils.getMiddleOfEntity(this).x;
+					double yPos = AvatarEntityUtils.getMiddleOfEntity(this).y;
+					double zPos = AvatarEntityUtils.getMiddleOfEntity(this).z;
 					BlockPos pos = new BlockPos(xPos + x * width / 2, yPos + y * height / 2, zPos + z * width / 2);
-					if (pushButton(pushStoneButton)) {
-						if (world.getBlockState(pos) != prevButtonState)
-							prevButtonState = null;
-						if (pos != prevButtonPos && prevButtonState == null) {
-							if ((AvatarUtils.pushButton(world, pushStoneButton, pos))) {
-								prevButtonPos = pos;
-								prevButtonState = world.getBlockState(pos);
-							}
-						}
-					}
-					if (pushLever()) {
-						if (world.getBlockState(pos) != prevLeverState)
-							prevLeverState = null;
-						if (pos != prevLeverPos && prevLeverPos == null) {
-							if (AvatarUtils.pushLever(world, pos)) {
-								prevLeverPos = pos;
-								prevLeverState = world.getBlockState(pos);
-							}
-						}
-					}
-
-					if (pushTrapdoor(pushTrapDoor)) {
-						if (world.getBlockState(pos) != prevTrapdoorState)
-							prevTrapdoorState = null;
-						if (pos != prevTrapdoorPos && prevTrapdoorState == null) {
-							if (AvatarUtils.pushTrapDoor(world, pushTrapDoor, pos)) {
-								prevTrapdoorPos = pos;
-								prevTrapdoorState = world.getBlockState(pos);
-							}
-						}
-					}
-
-					if (pushDoor(pushDoor)) {
-						if (world.getBlockState(pos) != prevDoorState)
-							prevDoorState = null;
-						if (pos != prevDoorPos && prevDoorState == null) {
-							if (AvatarUtils.pushDoor(this, pushDoor, pos)) {
-								prevDoorPos = pos;
-								prevLeverState = world.getBlockState(pos);
-							}
-						}
-					}
-
-					if (pushGate()) {
-						if (world.getBlockState(pos) != prevGateState)
-							prevGateState = null;
-						if (pos != prevGatePos && prevGateState == null) {
-							if (AvatarUtils.pushGate(this, pos)) {
-								prevGatePos = pos;
-								prevGateState = world.getBlockState(pos);
-							}
-						}
-					}
+					pushLevers(pos);
+					pushTrapDoors(pos);
+					pushButtons(pos);
+					pushDoors(pos);
+					pushGates(pos);
 				}
 			}
 		}
@@ -461,52 +498,8 @@ public abstract class AvatarEntity extends Entity {
 		}
 
 		if (collided) {
-			if (setsFires) {
-				for (int x = 0; x <= 1; x++) {
-					for (int z = 0; z <= 1; z++) {
-						for (int y = 0; y <= 1; y++) {
-							BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
-							if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
-								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-							}
-						}
-					}
-				}
-				for (int x = 0; x >= -1; x--) {
-					for (int z = 0; z >= -1; z--) {
-						for (int y = 0; y >= -1; y--) {
-							BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
-							if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR) {
-								world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-							}
-						}
-					}
-				}
-				if (lightTnt) {
-					for (int x = 0; x <= 1; x++) {
-						for (int z = 0; z <= 1; z++) {
-							for (int y = 0; y <= 1; y++) {
-								BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
-								if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
-									((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
-											world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
-								}
-							}
-						}
-					}
-					for (int x = 0; x >= -1; x--) {
-						for (int z = 0; z >= -1; z--) {
-							for (int y = 0; y >= -1; y--) {
-								BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
-								if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
-									((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
-											world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
-								}
-							}
-						}
-					}
-				}
-			}
+			if (setsFires)
+				setFires();
 			onCollideWithSolid();
 		}
 		if (inWater) {
@@ -585,7 +578,9 @@ public abstract class AvatarEntity extends Entity {
 			return true;
 		} else if (entity == this) {
 			return false;
-		} else
+		} else if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).hurtTime > 0)
+			return false;
+		else
 			return (entity.canBePushed() && entity.canBeCollidedWith()) || entity instanceof EntityLivingBase || entity instanceof AvatarEntity;
 	}
 

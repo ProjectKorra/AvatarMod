@@ -61,7 +61,7 @@ public class AbilityMining extends Ability {
 		Bender bender = ctx.getBender();
 		float chi = ctx.isMasterLevel(FIRST) ? STATS_CONFIG.chiMiningMaster : STATS_CONFIG.chiMining;
 
-		if (bender.consumeChi(chi)) {
+		if (bender.consumeChi(chi) && !ctx.getWorld().isRemote) {
 
 			EntityLivingBase entity = ctx.getBenderEntity();
 			World world = ctx.getWorld();
@@ -105,6 +105,8 @@ public class AbilityMining extends Ability {
 					if (!success && block != Blocks.AIR) {
 						break;
 					}
+					if (success)
+						abilityData.addXp(SKILLS_CONFIG.miningUse * ((float) 1 / dist));
 
 				}
 
@@ -288,5 +290,6 @@ public class AbilityMining extends Ability {
 		Block block = world.getBlockState(pos).getBlock();
 		return block instanceof BlockOre || block instanceof BlockRedstoneOre;
 	}
+
 
 }

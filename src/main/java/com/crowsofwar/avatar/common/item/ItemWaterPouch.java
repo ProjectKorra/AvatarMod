@@ -50,7 +50,7 @@ import java.util.List;
 public class ItemWaterPouch extends Item implements AvatarItem {
 
 	public ItemWaterPouch() {
-		setCreativeTab(AvatarMod.tabItems);
+		setCreativeTab(AvatarItems.tabItems);
 		setTranslationKey("water_pouch");
 		setMaxStackSize(1);
 		setMaxDamage(0);

@@ -17,19 +17,16 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.common.entity.EntityFireball;
-import com.crowsofwar.avatar.common.particle.ParticleBuilder;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
-
-import java.util.Random;
 
 import static com.crowsofwar.avatar.client.render.RenderUtils.drawQuad;
 import static net.minecraft.client.renderer.GlStateManager.*;
@@ -40,9 +37,7 @@ import static net.minecraft.util.math.MathHelper.cos;
  */
 public class RenderFireball extends Render<EntityFireball> {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation("avatarmod",
-			"textures/entity/fireball.png");
-	private static final Random random = new Random();
+	private static ResourceLocation TEXTURE = new ResourceLocation("avatarmod", "textures/entity/fireball_together.png");
 
 	public RenderFireball(RenderManager renderManager) {
 		super(renderManager);
@@ -56,68 +51,45 @@ public class RenderFireball extends Render<EntityFireball> {
 
 		float x = (float) xx, y = (float) yy, z = (float) zz;
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 
 		float ticks = entity.ticksExisted + partialTicks;
-
 		float rotation = ticks / 3f;
 		float size = .8f + cos(ticks / 5f) * .05f;
 		size *= Math.sqrt(entity.getSize() / 30f);
 
+		pushMatrix();
 		enableBlend();
-
-
-		//   if (MinecraftForgeClient.getRenderPass() == 0) {
 		disableLighting();
 
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, DestFactor.ONE);
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+
+		GlStateManager.color(2F, 2F, 2F, 1f);
+
+
+		renderCube(x, y, z, //
+				0, 8.0 / 16.0, 0, 1,//0, 8 / 256.0, 0, 8 / 256.0, //
+				.5f * size, //
+				ticks / 15F, ticks / 15F, ticks / 15F);
+
+
+		//pushMatrix();
 		//Where did crows get this number from?
 		//Maybe try using 3932220 instead?
-		int i = 3932220;
-		//128 * 128 instead of 64^2
-		int j = i % 16384;
-		int k = i / 16384;
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
-
-		/*renderCube(x, y, z, //
-				0, 8 / 256.0, 0, 8 / 256.0, //
-				.5f, //
-				ticks / 25F, ticks / 25f, ticks / 25F);
-
-		//  } else {
-
-		pushMatrix();
-		renderCube(x, y, z, //
-				8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
+		int i = 15728880;
+		int j = i % 65536;
+		int k = i / 65536;
+	//	OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+		GlStateManager.color(0.75F, 0.75F, 0.75F, 0.75f);
+			renderCube(x, y, z, //
+				8.0 / 16.0, 1, 0, 1,//8 / 256.0, 16 / 256.0, 0 / 256.0, 8 / 256.0, //
 				size, //
 				rotation * .2f, rotation, rotation * -.4f);
-		popMatrix();
 
-		//  }
-		**/
-		World world = entity.world;
-		if (world.isRemote) {
-			for (double h = 0; h < entity.width; h += 0.15) {
-				Random random = new Random();
-				AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(12).clr(255, 10, 5)
-						.scale(entity.getSize() * 0.03125F * 2).element(entity.getElement())
-						.face(entity.rotationYaw + rotation * (float) world.rand.nextGaussian(), entity.rotationPitch + rotation * (float) world.rand.nextGaussian())
-						.spawn(world);
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
-						.scale(entity.getSize() * 0.03125F * 2).element(entity.getElement())
-						.face(entity.rotationYaw + rotation * (float) world.rand.nextGaussian(), entity.rotationPitch + rotation * (float) world.rand.nextGaussian())
-						.spawn(world);
-			}
-
-		}
 		enableLighting();
 		disableBlend();
+		popMatrix();
 
 	}
 	// @formatter:on

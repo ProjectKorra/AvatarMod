@@ -1,24 +1,15 @@
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityFlamethrower;
-import com.crowsofwar.avatar.common.particle.ParticleBuilder;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.common.entity.EntityFlameArc;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-
-public class RenderFlamethrower extends Render<EntityFlamethrower> {
+public class RenderFlamethrower extends Render<EntityFlameArc> {
 
 	//Although this is bad practice, mobs won't show particles otherwise.
 
@@ -27,7 +18,7 @@ public class RenderFlamethrower extends Render<EntityFlamethrower> {
 	}
 
 	@Override
-	public void doRender(EntityFlamethrower entity, double x, double y, double z, float entityYaw, float partialTicks) {
+	public void doRender(EntityFlameArc entity, double x, double y, double z, float entityYaw, float partialTicks) {
 
 		float r, g, b, a;
 		Tessellator tessellator = Tessellator.getInstance();
@@ -35,7 +26,7 @@ public class RenderFlamethrower extends Render<EntityFlamethrower> {
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 		World world = entity.world;
 		//GlStateManager.pushMatrix();
-		if (world.isRemote) {
+	/*	if (world.isRemote) {
 			for (double i = 0; i < Math.max(Math.min((int) (1 / entity.getAvgSize()), 2), 1); i++) {
 				AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
 				double spawnX = boundingBox.getCenter().x + world.rand.nextGaussian() / 15;
@@ -56,7 +47,7 @@ public class RenderFlamethrower extends Render<EntityFlamethrower> {
 						20 + AvatarUtils.getRandomNumberInRange(0, 30), 10)
 						.scale(entity.getAvgSize() * 2F).element(entity.getElement()).collide(true).spawn(world);
 			}
-		}
+		}**/
 		//Copied from particleFlash.
 		/*int maxFlashes = AvatarUtils.getRandomNumberInRange(2, 4);
 		for (int i = 0; i < maxFlashes; i++) {
@@ -127,7 +118,7 @@ public class RenderFlamethrower extends Render<EntityFlamethrower> {
 
 	@Nullable
 	@Override
-	protected ResourceLocation getEntityTexture(EntityFlamethrower entity) {
+	protected ResourceLocation getEntityTexture(EntityFlameArc entity) {
 		return null;
 	}
 }

@@ -401,7 +401,7 @@ public class ConfigLoader {
 			scanner.close();
 			
 			Yaml yaml = new Yaml();
-			Map<String, Object> map = (Map) yaml.load(contents);
+			Map<String, Object> map = yaml.load(contents);
 			
 			return map == null ? new HashMap<>() : map;
 			

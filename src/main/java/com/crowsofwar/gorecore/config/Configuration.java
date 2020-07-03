@@ -25,6 +25,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -164,7 +165,7 @@ public class Configuration {
 			InputStream instr = getClass().getClassLoader().getResourceAsStream(path);
 			if (instr == null)
 				throw new FileNotFoundException("Default configuration file not found: " + path);
-			BufferedReader br = new BufferedReader(new InputStreamReader(instr, "UTF-8"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(instr, StandardCharsets.UTF_8));
 			
 			String ln = null;
 			while ((ln = br.readLine()) != null)
@@ -204,7 +205,7 @@ public class Configuration {
 			scanner.close();
 			
 			Yaml yaml = new Yaml();
-			Map<String, ?> map = (Map) yaml.load(contents);
+			Map<String, ?> map = yaml.load(contents);
 			
 			Configuration config = new Configuration(map);
 			config.path = "config/" + path;

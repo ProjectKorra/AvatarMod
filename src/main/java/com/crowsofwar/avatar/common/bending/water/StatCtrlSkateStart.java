@@ -16,11 +16,11 @@
 */
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.bending.StatusControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 
-import static com.crowsofwar.avatar.common.bending.StatusControl.CrosshairPosition.BELOW_CROSSHAIR;
+import static com.crowsofwar.avatar.common.data.StatusControl.CrosshairPosition.BELOW_CROSSHAIR;
 
 /**
  * @author CrowsOfWar

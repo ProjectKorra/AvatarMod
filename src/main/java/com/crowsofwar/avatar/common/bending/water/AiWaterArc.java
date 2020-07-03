@@ -18,7 +18,6 @@ package com.crowsofwar.avatar.common.bending.water;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingAi;
-import com.crowsofwar.avatar.common.bending.StatusControl;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
@@ -28,6 +27,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
+import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_WATER;
 import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.toDegrees;
@@ -73,12 +73,12 @@ public class AiWaterArc extends BendingAi {
 			data.chi().setTotalChi(10);
 			data.chi().setAvailableChi(10);
 			execAbility();
-			data.getMiscData().setAbilityCooldown(80);
+			data.getAbilityData(ability).setAbilityCooldown(80);
 		}
 
 		if (timeExecuting >= 80) {
 			BendingData data = bender.getData();
-			execStatusControl(StatusControl.THROW_WATER);
+			execStatusControl(THROW_WATER);
 			timeExecuting = 0;
 			return false;
 		} else {
@@ -91,7 +91,7 @@ public class AiWaterArc extends BendingAi {
 	protected boolean shouldExec() {
 		EntityLivingBase target = entity.getAttackTarget();
 		return target != null && entity.getDistanceSq(target) > 4 * 4
-				&& bender.getData().getMiscData().getAbilityCooldown() == 0;
+				&& bender.getData().getAbilityData(ability).getAbilityCooldown() == 0;
 	}
 
 	@Override
@@ -106,9 +106,10 @@ public class AiWaterArc extends BendingAi {
 				arc -> arc.getBehavior() instanceof WaterArcBehavior.PlayerControlled
 						&& arc.getOwner() == entity);
 
+
 		if (water != null) {
 			water.setDead();
-			bender.getData().removeStatusControl(StatusControl.THROW_WATER);
+			bender.getData().removeStatusControl(THROW_WATER);
 		}
 
 	}

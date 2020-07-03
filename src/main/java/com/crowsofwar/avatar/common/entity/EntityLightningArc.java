@@ -13,9 +13,9 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import elucent.albedo.event.GatherLightsEvent;
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
+
+import com.zeitheron.hammercore.api.lighting.ColoredLight;
+import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -40,8 +40,8 @@ import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
 /**
  * @author CrowsOfWar
  */
-@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningControlPoint> implements ILightProvider {
+@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
+public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningControlPoint> implements IGlowingEntity {
 
 	//TODO: Find out why tf this is lagging my world so much.
 	private static final DataParameter<Vector> SYNC_ENDPOS = EntityDataManager.createKey
@@ -402,16 +402,13 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 	}
 
 	@Override
-	@Optional.Method(modid = "albedo")
-	public void gatherLights(GatherLightsEvent gatherLightsEvent, Entity entity) {
+	@Optional.Method(modid = "hammercore")
+	public ColoredLight produceColoredLight(float partialTicks) {
+		return ColoredLight.builder().pos(this).color(87, 161, 235).radius(10f).build();
+
 
 	}
 
-	@Override
-	@Optional.Method(modid = "albedo")
-	public Light provideLight() {
-		return Light.builder().pos(this).color(1F, 2F, 3F).radius(15).build();
-	}
 
 	public class LightningControlPoint extends ControlPoint {
 
