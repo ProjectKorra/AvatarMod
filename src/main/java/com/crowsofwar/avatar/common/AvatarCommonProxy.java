@@ -45,80 +45,85 @@ import net.minecraft.world.World;
  */
 public interface AvatarCommonProxy {
 
-	/**
-	 * Called from the main class, subclasses should initialize themselves here
-	 * (fields, etc).
-	 */
-	public void preInit();
+    /**
+     * Called from the main class, subclasses should initialize themselves here
+     * (fields, etc).
+     */
+    public void preInit();
 
-	public IControlsHandler getKeyHandler();
+    public IControlsHandler getKeyHandler();
 
-	/**
-	 * Get a client-side packet handler safely. When the machine is running a
-	 * minecraft client (even if in the integrated server thread), returns the
-	 * packet handler for the client. Otherwise (this only happens on dedicated
-	 * servers), returns null.
-	 */
-	public IPacketHandler getClientPacketHandler();
+    /**
+     * Get a client-side packet handler safely. When the machine is running a
+     * minecraft client (even if in the integrated server thread), returns the
+     * packet handler for the client. Otherwise (this only happens on dedicated
+     * servers), returns null.
+     */
+    public IPacketHandler getClientPacketHandler();
 
-	/**
-	 * Get client player's reach. Returns 0 on server.
-	 */
-	double getPlayerReach();
+    /**
+     * Get client player's reach. Returns 0 on server.
+     */
+    double getPlayerReach();
 
-	/**
-	 * Called during the FMLInitialization event
-	 */
-	void init();
+    /**
+     * Called during the FMLInitialization event
+     */
+    void init();
 
-	AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
+    AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
 
-	PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher();
+    PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher();
 
-	/**
-	 * Get client-side IThreadListener, null on server
-	 *
-	 * @return
-	 */
-	IThreadListener getClientThreadListener();
+    /**
+     * Get client-side IThreadListener, null on server
+     *
+     * @return
+     */
+    IThreadListener getClientThreadListener();
 
-	/**
-	 * Get amount of particles. 0 = All, 1 = decreased, 2 = minimal
-	 */
-	int getParticleAmount();
+    /**
+     * Get amount of particles. 0 = All, 1 = decreased, 2 = minimal
+     */
+    int getParticleAmount();
 
 
-	/** Called from init() in the main mod class to initialise the particle factories. */
-	default void registerParticles(){} // Does nothing since particles are client-side only
+    /**
+     * Called from init() in the main mod class to initialise the particle factories.
+     */
+    default void registerParticles() {
+    } // Does nothing since particles are client-side only
 
-	/** Creates a new particle of the specified type from the appropriate particle factory. <i>Does not actually spawn the
-	 * particle; use {@link com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder} to spawn particles.</i> */
-	default ParticleAvatar createParticle(ResourceLocation type, World world, double x, double y, double z){
-		return null;
-	}
+    /**
+     * Creates a new particle of the specified type from the appropriate particle factory. <i>Does not actually spawn the
+     * particle; use {@link com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder} to spawn particles.</i>
+     */
+    default ParticleAvatar createParticle(ResourceLocation type, World world, double x, double y, double z) {
+        return null;
+    }
 
-	default void spawnTornadoParticle(World world, double x, double y, double z, double velX, double velZ, double radius,
-									 int maxAge, IBlockState block, BlockPos pos){
-	}
+    default void spawnTornadoParticle(World world, double x, double y, double z, double velX, double velZ, double radius,
+                                      int maxAge, IBlockState block, BlockPos pos) {
+    }
 
-	/**
-	 * Creates a wrapper so that the keybinding can be used on both sides
-	 * (KeyBinding is client SideOnly)
-	 * <p>
-	 * Looks up keybinding by name
-	 */
-	KeybindingWrapper createKeybindWrapper(String keybindName);
+    /**
+     * Creates a wrapper so that the keybinding can be used on both sides
+     * (KeyBinding is client SideOnly)
+     * <p>
+     * Looks up keybinding by name
+     */
+    KeybindingWrapper createKeybindWrapper(String keybindName);
 
-	/**
-	 * Register the item models so they can be configured to use the correct textures
-	 */
-	public void registerItemModels();
+    /**
+     * Register the item models so they can be configured to use the correct textures
+     */
+    public void registerItemModels();
 
-	boolean isOptifinePresent();
+    boolean isOptifinePresent();
 
     EntityPlayer getClientPlayer();
 
-	World getClientWorld();
+    World getClientWorld();
 
-	IAdvancedGliderCapabilityHandler getClientGliderCapability();
+    IAdvancedGliderCapabilityHandler getClientGliderCapability();
 }

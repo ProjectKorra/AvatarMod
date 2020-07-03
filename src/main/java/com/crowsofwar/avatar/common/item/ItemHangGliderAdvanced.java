@@ -17,17 +17,6 @@ public class ItemHangGliderAdvanced extends ItemHangGliderBase implements Avatar
 		setTranslationKey(GliderInfo.itemGliderAdvancedName);
 	}
 
-	//ToDo: Needed?
-	@Override
-	public NBTTagCompound serializeNBT() {
-		return null;
-	}
-
-	@Override
-	public void deserializeNBT(NBTTagCompound nbt) {
-
-	}
-
 	@Override
 	public Item item() {
 		return this;

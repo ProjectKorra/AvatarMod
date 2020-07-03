@@ -16,17 +16,6 @@ public class ItemHangGliderBasic extends ItemHangGliderBase {
         setTranslationKey(GliderInfo.itemGliderBasicName);
     }
 
-    //ToDo: Needed?
-    @Override
-    public NBTTagCompound serializeNBT() {
-        return null;
-    }
-
-    @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
-
-    }
-
     @Override
     public Item item() {
         return this;
