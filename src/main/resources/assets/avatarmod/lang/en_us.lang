@@ -107,6 +107,7 @@ avatar.needTradeItem=You need a diamond, gold, or emerald, to get a scroll!
 avatar.needAirTradeItem=You need a diamond, gold, emerald, dragon's breath, totem of undying, or elytra to get a scroll!
 avatar.needFireTradeItem=You need a diamond, gold ingot, emerald, magma cream, or blaze rod to get a scroll!
 avatar.staffCooldown=The staff is on cooldown! You can't airbend with it!
+avatar.gliderElytra=You can't use a glider while wearing an elytra!
 avatar.abilityCooldown=That ability is on cooldown! You can't use it!
 
 avatar.abilityLocked=You need to unlock that ability before you can use it!
