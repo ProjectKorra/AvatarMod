@@ -297,6 +297,14 @@ public class EntityAirGust extends EntityOffensive {
 		return 0;
 	}
 
+	@Override
+	public boolean onCollideWithSolid() {
+			if (super.onCollideWithSolid()) {
+				setVelocity(Vector.ZERO);
+				setLifeTime(1);
+			}
+			return super.onCollideWithSolid();
+		}
 
 	@Override
 	public void onCollideWithEntity(Entity entity) {

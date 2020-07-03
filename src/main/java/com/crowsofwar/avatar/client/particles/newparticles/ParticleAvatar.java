@@ -845,11 +845,11 @@ public abstract class ParticleAvatar extends Particle {
 	public void onCollideWithEntity(Entity entity) {
 		if (entity != getEntity() && (getAbility() != null || this.element != null)) {
 			if (entity instanceof EntityShield && ((EntityShield) entity).getOwner() != getEntity() || entity instanceof EntityWall || entity instanceof EntityWallSegment) {
-				if (getAbility() != null)
+				/*if (getAbility() != null)
 					AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
 				else
 					AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, element.getId()));
-				collidedWithSolid = true;
+				**/collidedWithSolid = true;
 			} else if (entity instanceof EntityThrowable || entity instanceof EntityArrow || entity instanceof EntityOffensive && ((EntityOffensive) entity).getOwner() != spawnEntity
 					|| entity instanceof IOffensiveEntity && ((AvatarEntity) entity).getOwner() != spawnEntity) {
 				dynamicCollidedWithEntity = true;
@@ -865,19 +865,19 @@ public abstract class ParticleAvatar extends Particle {
 				if (entity instanceof AvatarEntity)
 					applyElementalContact((AvatarEntity) entity);
 
-				if (entity != null && spawnEntity != null && getAbility() != null)
-					AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
+				//if (entity != null && spawnEntity != null && getAbility() != null)
+				//	AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
 			} else if (spawnEntity != null && getAbility() != null && entity != spawnEntity && !(entity instanceof AvatarEntity) || entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != spawnEntity && !collidedWithSolid) {
 				//Send packets
 				//TODO: Find a way to reduce lag
-				if (!entity.getIsInvulnerable()) {
+				/*if (!entity.getIsInvulnerable()) {
 					if (entity instanceof EntityLivingBase) {
 						if (((EntityLivingBase) entity).attackable() && entity.canBeAttackedWithItem())
 							AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
 
 					} else if (entity.canBeAttackedWithItem())
 						AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
-				}
+				}**/
 			}
 		}
 	}
