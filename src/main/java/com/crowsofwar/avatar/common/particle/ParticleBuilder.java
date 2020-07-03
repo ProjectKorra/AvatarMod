@@ -219,8 +219,12 @@ public final class ParticleBuilder {
 	 * @throws IllegalStateException if the particle builder is already building.
 	 */
 	public ParticleBuilder particle(ResourceLocation type) {
-		if (building)
-			throw new IllegalStateException("Already building! Particle being built: " + getCurrentParticleString());
+		if (building) {
+			//Stops crashes, but lets the dev know they goofed
+			AvatarLog.warn("Already building! Particle being built: " + getCurrentParticleString());
+			this.reset();
+			//throw new IllegalStateException("Already building! Particle being built: " + getCurrentParticleString());
+		}
 		this.type = type;
 		this.building = true;
 		return this;

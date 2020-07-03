@@ -3,9 +3,7 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
@@ -13,7 +11,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -37,7 +34,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
         super(world);
         setSize(0.2F, 0.2F);
         this.lastPlayedSplash = -1;
-        this.noClip = false;
+        this.noClip = true;
         this.damageMult = 1;
         this.putsOutFires = true;
         this.velocityMultiplier = 5;
@@ -74,7 +71,18 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
 
     @Override
     public void spawnExplosionParticles(World world, Vec3d pos) {
+        if (world.isRemote) {
+            for (int i = 0; i < 10; i++) {
+                for (int h = 0; h < 6; h++) {
+                    Vec3d circlePos = Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 60, getAvgSize() / 2F).toMinecraft().add(pos);
+                    Vec3d vel = new Vec3d(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10);
 
+                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(this).vel(vel)
+                            .clr(0, 102, 255, 145).scale(getAvgSize())
+                            .time(16 + AvatarUtils.getRandomNumberInRange(0, 4)).collide(true).element(new Waterbending()).spawn(world);
+                }
+            }
+        }
     }
 
     @Override
@@ -97,21 +105,12 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
 
     @Override
     public boolean onCollideWithSolid() {
-        if (getOwner() != null) {
-            for (int i = 0; i < getAmountOfControlPoints(); i++) {
-                Vec3d dir = i == 0 ? Vector.getLookRectangular(getOwner()).times(Math.min(ticksExisted / 20F, 1) * getSpeed() / 5F).toMinecraft()
-                        : getControlPoint(i - 1).position().minus(getControlPoint(i).position()).normalize().toMinecraft();
-                RayTraceResult re = Raytrace.rayTrace(world,
-                        getControlPoint(i).position().toMinecraft(), dir,
-                        getAvgSize(), true, true, false,
-                        Entity.class, entity -> !canCollideWith(entity));
-                if (re != null && re.hitVec != null) {
-                   // setVelocity(re.hitVec.subtract(position().toMinecraft()).scale(getVelocityMultiplier() / 2));
-                   // setPosition(re.hitVec);
-                }
-            }
+        if (super.onCollideWithSolid()) {
+            setVelocity(Vector.ZERO);
+            setLifeTime(30);
+            setDamageMult(0);
         }
-        return false;
+        return super.onCollideWithSolid();
     }
 
     @Override
@@ -129,48 +128,49 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
 
     @Override
     protected void updateCpBehavior() {
-        getLeader().setPosition(position().plusY(height / 2));
+      /*  getLeader().setPosition(position().plusY(height / 2));
         getLeader().setVelocity(velocity());
 
         // Move control points to follow leader
 
         if (getOwner() != null) {
-        for (int i = 1; i < points.size() - 1; i++) {
+            for (int i = 1; i < points.size() - 1; i++) {
 
-            ControlPoint leader = points.get(i - 1);
-            ControlPoint p = points.get(i);
-            Vector leadPos = leader.position();
-            double sqrDist = p.position().sqrDist(leadPos);
+                ControlPoint leader = points.get(i - 1);
+                ControlPoint p = points.get(i);
+                Vector leadPos = leader.position();
+                Vector entityPos = Vector.getEntityPos(getOwner()).plusY(getOwner().getEyeHeight() - 0.5);
+                Vector lookPos = Vector.getLookRectangular(getOwner()).times(getSpeed() / 5 * (float) i / getAmountOfControlPoints());
+                double sqrDist = p.position().sqrDist(leadPos);
 
-            if (sqrDist > getControlPointTeleportDistanceSq() && getControlPointTeleportDistanceSq() != -1) {
+                /*if (sqrDist > getControlPointTeleportDistanceSq() && getControlPointTeleportDistanceSq() != -1) {
 
-                Vector toFollowerDir = p.position().minus(leader.position()).normalize();
+                    Vector toFollowerDir = p.position().minus(leader.position()).normalize();
 
-                double idealDist = Math.sqrt(getControlPointTeleportDistanceSq());
-                if (idealDist > 1) idealDist -= 1; // Make sure there is some room
+                    double idealDist = Math.sqrt(getControlPointTeleportDistanceSq());
+                    if (idealDist > 1) idealDist -= 1; // Make sure there is some room
 
-                Vector revisedOffset = leader.position().plus(toFollowerDir.times(idealDist));
-                p.setPosition(revisedOffset);
-                leader.setPosition(revisedOffset);
-                p.setVelocity(Vector.ZERO);
+                    Vector revisedOffset = leader.position().plus(toFollowerDir.times(idealDist));
+                    p.setPosition(revisedOffset);
+                    leader.setPosition(revisedOffset);
+                    p.setVelocity(Vector.ZERO);
 
-            } else if (sqrDist > getControlPointMaxDistanceSq() && getControlPointMaxDistanceSq() != -1) {
-                Vector lookPos = Vector.getLookRectangular(getOwner())
-                        .times(getSpeed() / 5F * ((float) i / getAmountOfControlPoints())).plus(Vector.getEntityPos(getOwner()))
-                        .plusY(getOwner().getEyeHeight() - 0.5);
-                Vector diff = lookPos.minus(p.position());
-                diff = diff.times(getVelocityMultiplier() / 2);
-                p.setVelocity(diff);
+                } else if (sqrDist > getControlPointMaxDistanceSq() && getControlPointMaxDistanceSq() != -1) {
+                    lookPos = lookPos.plus(entityPos);
+                    Vector diff = lookPos.minus(p.position());
+                    diff = diff.times(getVelocityMultiplier() / 4);
+                    p.setVelocity(diff);
 
+                }
             }
-        }
 
             Vector lookPos = Vector.getLookRectangular(getOwner())
                     .times(0.5).plus(Vector.getEntityPos(getOwner()))
                     .plusY(getOwner().getEyeHeight() - 0.5);
             WaterControlPoint point = getControlPoint(points.size() - 1);
             point.setVelocity(lookPos.minus(point.position()).times(getVelocityMultiplier()));
-        }
+        }**/
+        super.updateCpBehavior();
     }
 
     @Override
@@ -188,7 +188,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
         }
         setEntitySize(getAvgSize());
 
-        if (world.isRemote && getOwner() != null) {
+        if (world.isRemote && getOwner() != null && ticksExisted % 2 == 0) {
             Vec3d[] points = new Vec3d[getAmountOfControlPoints()];
             for (int i = 0; i < points.length; i++)
                 points[i] = getControlPoint(i).position().toMinecraft();
@@ -197,55 +197,48 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
             //Iterate through all of the control points.
             //0 is the leader/front one
             for (int i = 0; i < getAmountOfControlPoints(); i++) {
-                if (i < getAmountOfControlPoints() - 1) {
+              //  if (i < getAmountOfControlPoints() - 1) {
                     //for (int j = 0; j < 4; j++) {
                     Vec3d pos = getControlPoint(points.length - i - 1).position().toMinecraft();
-                    if (pos.distanceTo(getOwner().getPositionVector()) <= Math.min(ticksExisted / 20F, 1) * getSpeed() * 7.5F) {
-                        Vec3d pos2 = i < points.length - 1 ? getControlPoint(Math.max(points.length - i - 2, 0)).position().toMinecraft() : Vec3d.ZERO;
+                    Vec3d pos2 = i < points.length - 1 ? getControlPoint(Math.max(points.length - i - 2, 0)).position().toMinecraft() : Vec3d.ZERO;
 
-                        for (int h = 0; h < 6; h++) {
-                            pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
+                    for (int h = 0; h < 6; h++) {
+                        pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
 
-                            //Flow animation
-                            pos2 = pos2.add(AvatarUtils.bezierCurve(Math.min(((points.length - i - 2D / (h + 1D)) / points.length), 1), points));
-                            Vec3d circlePos = Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 60, getAvgSize() / (4 - (i + 1D) / getAmountOfControlPoints())).toMinecraft().add(pos);
-                            Vec3d targetPos = i < points.length - 1 ? Vector.getOrthogonalVector(getLookVec(),
-                                    (ticksExisted % 360) * 20 + h * 60 + 20, getAvgSize() / (2 - (i + 1D) / getAmountOfControlPoints())).toMinecraft().add(pos2)
-                                    : Vec3d.ZERO;
-                            Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
+                        //Flow animation
+                        pos2 = pos2.add(AvatarUtils.bezierCurve(Math.min((((i + 1) / (h + 1D)) / points.length), 1), points));
+                        Vec3d circlePos = Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 60, getAvgSize() / 2F).toMinecraft().add(pos);
+                        Vec3d targetPos = i < points.length - 1 ? Vector.getOrthogonalVector(getLookVec(),
+                                (ticksExisted % 360) * 20 + h * 60 + 20, getAvgSize() / 2F).toMinecraft().add(pos2)
+                                : Vec3d.ZERO;
+                        Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
 
-                            if (targetPos != circlePos)
-                                vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.075).add(vel);
-                            ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(this).vel(vel)
-                                    .clr(0, 102, 255, 145).scale(getAvgSize() / 2).target(targetPos == Vec3d.ZERO ? pos : targetPos)
-                                    .time(14 + AvatarUtils.getRandomNumberInRange(0, 9)).collide(true).element(new Waterbending()).spawn(world);
-                        }
+                        if (targetPos != circlePos)
+                            vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.15).add(vel);
+                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(this).vel(vel)
+                                .clr(0, 102, 255, 145).scale(getAvgSize()).target(targetPos == Vec3d.ZERO ? pos : targetPos)
+                                .time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).collide(true).element(new Waterbending()).spawn(world);
+                    }
 
-                        //Particles along the line
-                        for (int h = 0; h < 6; h++) {
-                            pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
-                            ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
-                                    world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120).clr(0, 102, 255, 185)
-                                    .time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).scale(getAvgSize()).target(pos).collide(true).element(new Waterbending()).spawn(world);
+                    //Particles along the line
+                    for (int h = 0; h < 6; h++) {
+                        pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
+                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 40 * getAvgSize(),
+                                world.rand.nextGaussian() / 40 * getAvgSize(), world.rand.nextGaussian() / 40 * getAvgSize()).scale(getAvgSize()).clr(0, 102, 255, 185)
+                                .time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).element(new Waterbending()).spawn(world);
 
-                        }
-                        //Dripping water particles
-                        for (int h = 0; h < 2; h++) {
-                            pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
-                            ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 20,
-                                    world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 185)
-                                    .time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).scale(getAvgSize()).gravity(true).collide(true).element(new Waterbending()).spawn(world);
-                        }
+                    }
+                    //Dripping water particles
+                    for (int h = 0; h < 2; h++) {
+                        pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
+                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 20,
+                                world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 185)
+                                .time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).target(pos).scale(getAvgSize()).gravity(true).collide(true).element(new Waterbending()).spawn(world);
                     }
                     //}
-                }
+               // }
             }
         }
-        if (getOwner() != null)
-            setVelocity((Vector.getEntityPos(getOwner())
-                    .plus(0, getOwner().getEyeHeight() - 0.5, 0).plus(Vector.getLookRectangular(getOwner()).times(getSpeed() / 5F))).minus(position())
-                    .times(getVelocityMultiplier() / 4));
-
     }
 
 
@@ -261,7 +254,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
 
     @Override
     public boolean canBePushed() {
-        return true;
+        return false;
     }
 
     public boolean canPlaySplash() {
@@ -327,7 +320,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
 
     @Override
     protected double getControlPointMaxDistanceSq() {
-        return 0.25F;
+        return 3.5F;
     }
 
     @Override
@@ -337,7 +330,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
 
     @Override
     public boolean shouldExplode() {
-        return false;
+        return true;
     }
 
     static class WaterControlPoint extends ControlPoint {
@@ -347,4 +340,5 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
         }
 
     }
+
 }

@@ -92,16 +92,16 @@ public class WaterChargeHandler extends TickHandler {
 			speed += powerRating / 15;
 			damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * bender.getDamageMult(Waterbending.ID));
 			//Default damage is 1
-			size = 0.25F;
+			size = 0.5F;
 
 			if (abilityData.getLevel() >= 1) {
 				damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * 1.25 * bender.getDamageMult(Waterbending.ID));
-				size = 0.4f;
+				size = 0.75f;
 				ticks = 75;
 			}
 			if (abilityData.getLevel() >= 2) {
 				damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * 1.5 * bender.getDamageMult(Waterbending.ID));
-				size = 0.55f;
+				size = 1f;
 				ticks = 100;
 			}
 			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
@@ -129,16 +129,17 @@ public class WaterChargeHandler extends TickHandler {
 
 		cannon.setOwner(entity);
 		cannon.setDamage(damage);
-		cannon.setEntitySize(size);
+		cannon.setEntitySize(1.5F * size);
 		cannon.setPosition(Vector.getEyePos(entity).minusY(0.8));
-		cannon.setLifeTime((int) ticks * 2);
+		cannon.setLifeTime((int) ticks);
 		cannon.setXp(SKILLS_CONFIG.waterHit / 2);
 		cannon.setTier(new AbilityWaterCannon().getCurrentTier(AbilityData.get(entity, "water_cannon").getLevel()));
 		cannon.setAbility(new AbilityWaterCannon());
 
 		Vector velocity = Vector.getLookRectangular(entity);
-		velocity = velocity.normalize().times(speed / 2);
+		velocity = velocity.normalize().times(speed);
 		cannon.setSpeed((float) speed);
+		cannon.setVelocity(velocity);
 		if (!world.isRemote)
 			world.spawnEntity(cannon);
 

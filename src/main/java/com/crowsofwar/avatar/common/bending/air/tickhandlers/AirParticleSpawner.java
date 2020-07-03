@@ -59,7 +59,6 @@ public class AirParticleSpawner extends TickHandler {
 		//particles.spawnParticles(entity.world, EnumParticleTypes.EXPLOSION_NORMAL, 1, 4, pos,
 		//		new Vector(0.7, 0.2, 0.7), true);
 
-		System.out.println("X: " + pos.x() + ", Y: " + pos.y() + ", Z: " + pos.z());
 		return entity.isInWater() || entity.onGround || bender.isFlying();
 
 	}
