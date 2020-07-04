@@ -133,6 +133,8 @@ public class WaterChargeHandler extends TickHandler {
 		cannon.setPosition(Vector.getEyePos(entity).minusY(0.8));
 		cannon.setLifeTime((int) ticks);
 		cannon.setXp(SKILLS_CONFIG.waterHit / 2);
+		cannon.rotationPitch = entity.rotationPitch;
+		cannon.rotationYaw = entity.rotationYaw;
 		cannon.setTier(new AbilityWaterCannon().getCurrentTier(AbilityData.get(entity, "water_cannon").getLevel()));
 		cannon.setAbility(new AbilityWaterCannon());
 

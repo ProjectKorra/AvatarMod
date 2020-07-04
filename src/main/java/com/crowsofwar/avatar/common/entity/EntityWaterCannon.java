@@ -188,7 +188,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
         }
         setEntitySize(getAvgSize());
 
-        if (world.isRemote && getOwner() != null && ticksExisted % 2 == 0) {
+        if (world.isRemote && getOwner() != null) {
             Vec3d[] points = new Vec3d[getAmountOfControlPoints()];
             for (int i = 0; i < points.length; i++)
                 points[i] = getControlPoint(i).position().toMinecraft();
@@ -202,14 +202,14 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
                     Vec3d pos = getControlPoint(points.length - i - 1).position().toMinecraft();
                     Vec3d pos2 = i < points.length - 1 ? getControlPoint(Math.max(points.length - i - 2, 0)).position().toMinecraft() : Vec3d.ZERO;
 
-                    for (int h = 0; h < 6; h++) {
+                    for (int h = 0; h < 5; h++) {
                         pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
 
                         //Flow animation
                         pos2 = pos2.add(AvatarUtils.bezierCurve(Math.min((((i + 1) / (h + 1D)) / points.length), 1), points));
-                        Vec3d circlePos = Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 60, getAvgSize() / 2F).toMinecraft().add(pos);
+                        Vec3d circlePos = Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 72, getAvgSize() / 2F).toMinecraft().add(pos);
                         Vec3d targetPos = i < points.length - 1 ? Vector.getOrthogonalVector(getLookVec(),
-                                (ticksExisted % 360) * 20 + h * 60 + 20, getAvgSize() / 2F).toMinecraft().add(pos2)
+                                (ticksExisted % 360) * 20 + h * 72 + 20, getAvgSize() / 2F).toMinecraft().add(pos2)
                                 : Vec3d.ZERO;
                         Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
 
@@ -221,7 +221,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
                     }
 
                     //Particles along the line
-                    for (int h = 0; h < 6; h++) {
+                    for (int h = 0; h < 4; h++) {
                         pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
                         ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 40 * getAvgSize(),
                                 world.rand.nextGaussian() / 40 * getAvgSize(), world.rand.nextGaussian() / 40 * getAvgSize()).scale(getAvgSize()).clr(0, 102, 255, 185)
