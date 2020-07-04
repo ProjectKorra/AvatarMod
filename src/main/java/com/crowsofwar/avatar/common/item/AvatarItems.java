@@ -57,7 +57,7 @@ public class AvatarItems {
 
 	public static void init() {
 		allItems = new ArrayList<>();
-		addItem(Scrolls.ALL = new ItemScrollAll());
+		Scrolls.ALL = ItemScrollAll.instance;
 		addItem(Scrolls.AIR = new ItemScrollAir());
 		addItem(Scrolls.EARTH = new ItemScrollEarth());
 		addItem(Scrolls.FIRE = new ItemScrollFire());
@@ -78,7 +78,7 @@ public class AvatarItems {
 
 	}
 
-	private static void addItem(Item item) {
+	public static void addItem(Item item) {
 		item.setRegistryName("avatarmod", item.getTranslationKey().substring(5));
 		item.setTranslationKey("avatarmod:" + item.getTranslationKey().substring(5));
 		allItems.add(item);
