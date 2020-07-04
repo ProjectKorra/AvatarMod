@@ -10,16 +10,16 @@ import net.minecraftforge.fml.relauncher.Side;
  * [UNUSED]
  * Syncs the gliding capability on the server side to a given player.
  */
-public class PacketServerGliding extends AvatarPacket<PacketServerGliding> {
+public class PacketSServerGliding extends AvatarPacket<PacketSServerGliding> {
     //the data sent
     public byte isGliding;
 
     public final static byte IS_GLIDING = 0;
     public final static byte IS_NOT_GLIDING = 1;
 
-    public PacketServerGliding() {} //default constructor is necessary
+    public PacketSServerGliding() {} //default constructor is necessary
 
-    public PacketServerGliding(byte gliding) {
+    public PacketSServerGliding(byte gliding) {
         this.isGliding = gliding;
     }
 
@@ -39,7 +39,7 @@ public class PacketServerGliding extends AvatarPacket<PacketServerGliding> {
     }
 
     @Override
-    protected AvatarPacket.Handler<PacketServerGliding> getPacketHandler() {
+    protected AvatarPacket.Handler<PacketSServerGliding> getPacketHandler() {
         return PacketRedirector::redirectMessage;
     }
 }

@@ -3,7 +3,7 @@ package com.crowsofwar.avatar.common.capabilities;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.api.capabilities.IAdvancedGliderCapabilityHandler;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketSyncGliderDataToClient;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketCSyncGliderDataToClient;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -107,7 +107,7 @@ public final class GliderCapabilityImplementation {
 
         @Override
         public void sync(EntityPlayerMP player) {
-            AvatarMod.network.sendTo(new PacketSyncGliderDataToClient(serializeNBT()), player);
+            AvatarMod.network.sendTo(new PacketCSyncGliderDataToClient(serializeNBT()), player);
         }
 
     }

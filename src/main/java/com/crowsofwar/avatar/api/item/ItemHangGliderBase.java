@@ -3,7 +3,7 @@ package com.crowsofwar.avatar.api.item;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
 import com.crowsofwar.avatar.common.item.AvatarItem;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketUpdateClientTarget;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketCUpdateClientTarget;
 import com.crowsofwar.avatar.common.util.GliderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
@@ -108,7 +108,7 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
             //client only
             if (!world.isRemote) {
                 //send packet to nearby players to update visually
-                AvatarMod.network.sendToServer(new PacketUpdateClientTarget(player, getIsGliderDeployed(player)));
+                AvatarMod.network.sendToServer(new PacketCUpdateClientTarget(player, getIsGliderDeployed(player)));
             }
 
         } else {

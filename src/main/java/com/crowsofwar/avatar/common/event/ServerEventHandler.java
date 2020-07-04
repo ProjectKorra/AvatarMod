@@ -5,7 +5,7 @@ import com.crowsofwar.avatar.api.capabilities.CapabilityHelper;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.common.capabilities.GliderCapabilityImplementation;
 import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketUpdateClientTarget;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketCUpdateClientTarget;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -71,9 +71,9 @@ public class ServerEventHandler {
             EntityPlayer targetPlayer = (EntityPlayer) targetEntity; //typecast to entityPlayer
             if (CapabilityHelper.hasGliderCapability(targetPlayer)) { //if have the capability
                 if (GliderHelper.getIsGliderDeployed(targetPlayer)) { //if the target has capability need to update
-                    AvatarMod.network.sendTo(new PacketUpdateClientTarget(targetPlayer, true), (EntityPlayerMP) targetPlayer);
+                    AvatarMod.network.sendTo(new PacketCUpdateClientTarget(targetPlayer, true), (EntityPlayerMP) targetPlayer);
                 } else {
-                    AvatarMod.network.sendTo(new PacketUpdateClientTarget(targetPlayer, false), (EntityPlayerMP) targetPlayer);
+                    AvatarMod.network.sendTo(new PacketCUpdateClientTarget(targetPlayer, false), (EntityPlayerMP) targetPlayer);
 
                 }
             }

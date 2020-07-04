@@ -7,12 +7,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class PacketSyncGliderDataToClient extends AvatarPacket<PacketSyncGliderDataToClient> {
+public class PacketCSyncGliderDataToClient extends AvatarPacket<PacketCSyncGliderDataToClient> {
     public NBTTagCompound nbt;
 
-    public PacketSyncGliderDataToClient() {}
+    public PacketCSyncGliderDataToClient() {}
 
-    public PacketSyncGliderDataToClient(NBTTagCompound nbt) {
+    public PacketCSyncGliderDataToClient(NBTTagCompound nbt) {
         this.nbt = nbt;
     }
 
@@ -32,7 +32,7 @@ public class PacketSyncGliderDataToClient extends AvatarPacket<PacketSyncGliderD
     }
 
     @Override
-    protected AvatarPacket.Handler<PacketSyncGliderDataToClient> getPacketHandler() {
+    protected AvatarPacket.Handler<PacketCSyncGliderDataToClient> getPacketHandler() {
         return PacketRedirector::redirectMessage;
     }
 

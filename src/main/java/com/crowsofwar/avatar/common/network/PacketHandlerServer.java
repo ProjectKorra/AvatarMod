@@ -46,12 +46,10 @@ import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.avatar.common.network.packets.*;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketClientGliding;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketServerGliding;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketSServerGliding;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.PlayerViewRegistry;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
-import com.jcraft.jogg.Packet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -69,7 +67,7 @@ import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 import static com.crowsofwar.avatar.common.analytics.AnalyticEvents.getAbilityExecutionEvent;
-import static com.crowsofwar.avatar.common.network.packets.glider.PacketServerGliding.IS_GLIDING;
+import static com.crowsofwar.avatar.common.network.packets.glider.PacketSServerGliding.IS_GLIDING;
 
 /**
  * Implements IPacketHandler. Acts as a packet handler for integrated and
@@ -130,8 +128,8 @@ public class PacketHandlerServer implements IPacketHandler {
 		if (packet instanceof PacketSSendViewStatus)
 			return handleViewUpdate((PacketSSendViewStatus) packet, ctx);
 
-		if (packet instanceof PacketServerGliding)
-			return handleServerGliding((PacketServerGliding) packet, ctx);
+		if (packet instanceof PacketSServerGliding)
+			return handleServerGliding((PacketSServerGliding) packet, ctx);
 
 		if (packet instanceof PacketSParticleCollideEvent) {
 			MinecraftForge.EVENT_BUS.post(new ParticleCollideEvent(((PacketSParticleCollideEvent) packet).getEntity(),
@@ -457,7 +455,7 @@ public class PacketHandlerServer implements IPacketHandler {
 
 	}
 
-	private IMessage handleServerGliding(PacketServerGliding packet, MessageContext ctx) {
+	private IMessage handleServerGliding(PacketSServerGliding packet, MessageContext ctx) {
 
 		GliderHelper.setIsGliderDeployed(ctx.getServerHandler().player, packet.isGliding == IS_GLIDING);
 
