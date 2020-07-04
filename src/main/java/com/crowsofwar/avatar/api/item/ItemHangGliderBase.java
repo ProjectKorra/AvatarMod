@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.api.item;
 
 import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
 import com.crowsofwar.avatar.common.item.AvatarItem;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketHandler;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketUpdateClientTarget;
 import com.crowsofwar.avatar.common.util.GliderHelper;
 import net.minecraft.client.resources.I18n;
@@ -15,7 +14,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -24,7 +22,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -32,7 +29,6 @@ import java.util.List;
 
 import static com.crowsofwar.avatar.api.helper.GliderHelper.getIsGliderDeployed;
 import static com.crowsofwar.avatar.api.helper.GliderHelper.setIsGliderDeployed;
-import static com.crowsofwar.avatar.common.config.ConfigGlider.GLIDER_CONFIG;
 
 public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
 

@@ -4,7 +4,6 @@ import com.crowsofwar.avatar.api.capabilities.CapabilityHelper;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.common.capabilities.GliderCapabilityImplementation;
 import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketHandler;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketUpdateClientTarget;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

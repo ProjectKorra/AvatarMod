@@ -51,7 +51,6 @@ import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.config.ConfigGlider;
 import com.crowsofwar.avatar.common.event.ServerEventHandler;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketHandler;
 import com.crowsofwar.avatar.common.registry.CapabilityRegistry;
 import com.crowsofwar.avatar.common.wind.WindHelper;
 import net.minecraft.entity.Entity;
@@ -74,7 +73,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-import static com.crowsofwar.avatar.common.config.ConfigGlider.GLIDER_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;

@@ -46,6 +46,7 @@ import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketClientGliding;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketServerGliding;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.PlayerViewRegistry;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
@@ -126,6 +127,9 @@ public class PacketHandlerServer implements IPacketHandler {
 
 		if (packet instanceof PacketSSendViewStatus)
 			return handleViewUpdate((PacketSSendViewStatus) packet, ctx);
+
+		if (packet instanceof PacketServerGliding)
+			return handleServerGliding((PacketServerGliding) packet, ctx);
 
 		if (packet instanceof PacketSParticleCollideEvent) {
 			MinecraftForge.EVENT_BUS.post(new ParticleCollideEvent(((PacketSParticleCollideEvent) packet).getEntity(),
@@ -448,6 +452,11 @@ public class PacketHandlerServer implements IPacketHandler {
 			}
 		}
 		return null;
+
+	}
+
+	private IMessage handleServerGliding(PacketServerGliding packet, MessageContext ctx) {
+		return packet.onMessage(packet,ctx);
 
 	}
 
