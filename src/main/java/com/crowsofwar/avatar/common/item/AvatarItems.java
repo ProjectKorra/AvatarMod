@@ -71,11 +71,11 @@ public class AvatarItems {
 
 	public static void init() {
 		allItems = new ArrayList<>();
-		Scrolls.ALL = ItemScrollAll.instance;
-		addItem(Scrolls.AIR = new ItemScrollAir());
-		addItem(Scrolls.EARTH = new ItemScrollEarth());
-		addItem(Scrolls.FIRE = new ItemScrollFire());
-		addItem(Scrolls.WATER = new ItemScrollWater());
+		Scrolls.ALL = ItemScrollAll.getInstance();
+		Scrolls.AIR = ItemScrollAir.getInstance();
+		Scrolls.EARTH = ItemScrollEarth.getInstance();
+		Scrolls.FIRE = ItemScrollFire.getInstance();
+		Scrolls.WATER = ItemScrollWater.getInstance();
 		addItem(Scrolls.COMBUSTION = new ItemScrollCombustion());
 		addItem(Scrolls.SAND = new ItemScrollSand());
 		addItem(Scrolls.ICE = new ItemScrollIce());
@@ -109,7 +109,7 @@ public class AvatarItems {
 		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(AvatarInfo.DOMAIN + name, "inventory"));
 	}
 
-	private static void addItem(Item item) {
+	public static void addItem(Item item) {
 		item.setRegistryName("avatarmod", item.getTranslationKey().substring(5));
 		item.setTranslationKey("avatarmod:" + item.getTranslationKey().substring(5));
 		allItems.add(item);

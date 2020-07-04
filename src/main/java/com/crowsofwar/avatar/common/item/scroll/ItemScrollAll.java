@@ -13,10 +13,10 @@ public class ItemScrollAll extends ItemScroll {
         super(Scrolls.ScrollType.ALL);
     }
 
-    public ItemScrollAll getInstance() {
+    public static ItemScrollAll getInstance() {
         if(instance == null) {
             instance = new ItemScrollAll();
-            AvatarItems.addItem(this);
+            AvatarItems.addItem(instance);
         }
         return instance;
     }

@@ -34,4 +34,10 @@ public interface AvatarItem {
 	 */
 	String getModelName(int meta);
 
+	/**
+	 * Define every item as a singleton and have the first getInstance call handle registration and
+	 * other necessary setup.
+	 */
+	AvatarItem getInstance();
+
 }
