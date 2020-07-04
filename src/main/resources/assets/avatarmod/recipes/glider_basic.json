@@ -1,0 +1,26 @@
+{
+  "result": {
+    "item": "avatarmod:hang_glider_basic"
+  },
+  "pattern": [
+    "   ",
+    "lsr",
+    "   "
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "l": {
+      "item": "avatarmod:hang_glider_part",
+      "data": 0
+    },
+    "s": {
+      "item": "avatarmod:hang_glider_part",
+      "data": 2
+    },
+    "r": {
+      "item": "avatarmod:hang_glider_part",
+      "data": 1
+    }
+  },
+  "mirrored": false
+}

@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.network;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.analytics.AnalyticEvent;
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
@@ -45,9 +46,12 @@ import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.avatar.common.network.packets.*;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketClientGliding;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketServerGliding;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.PlayerViewRegistry;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
+import com.jcraft.jogg.Packet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -65,6 +69,7 @@ import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 import static com.crowsofwar.avatar.common.analytics.AnalyticEvents.getAbilityExecutionEvent;
+import static com.crowsofwar.avatar.common.network.packets.glider.PacketServerGliding.IS_GLIDING;
 
 /**
  * Implements IPacketHandler. Acts as a packet handler for integrated and
@@ -124,6 +129,9 @@ public class PacketHandlerServer implements IPacketHandler {
 
 		if (packet instanceof PacketSSendViewStatus)
 			return handleViewUpdate((PacketSSendViewStatus) packet, ctx);
+
+		if (packet instanceof PacketServerGliding)
+			return handleServerGliding((PacketServerGliding) packet, ctx);
 
 		if (packet instanceof PacketSParticleCollideEvent) {
 			MinecraftForge.EVENT_BUS.post(new ParticleCollideEvent(((PacketSParticleCollideEvent) packet).getEntity(),
@@ -446,6 +454,14 @@ public class PacketHandlerServer implements IPacketHandler {
 			}
 		}
 		return null;
+
+	}
+
+	private IMessage handleServerGliding(PacketServerGliding packet, MessageContext ctx) {
+
+		GliderHelper.setIsGliderDeployed(ctx.getServerHandler().player, packet.isGliding == IS_GLIDING);
+
+		return null; //no return message
 
 	}
 

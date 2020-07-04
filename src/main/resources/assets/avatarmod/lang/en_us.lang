@@ -31,6 +31,19 @@ avatar.icebending.demonym=§3§lIcebender
 avatar.sandbending=§6§lSandbending
 avatar.sandbending.demonym=§6§lSandbender
 
+item.avatarmod:avatarmod:hang_glider_basic.name=Hang Glider
+item.avatarmod:avatarmod:hang_glider_advanced.name=Advanced Hang Glider
+item.avatarmod:avatarmod:hang_glider_part.wing_left.name=Glider Wing (Left)
+item.avatarmod:avatarmod:hang_glider_part.wing_right.name=Glider Wing (Right)
+item.avatarmod:avatarmod:hang_glider_part.scaffolding.name=Scaffolding
+
+# Creative tab Localization
+itemGroup.avatarmod=Open Glider
+
+# Other
+avatarmod.elytra.error=You cannot hang glide with an elytra equipped!
+avatarmod.tooltip.upgrade=Upgrade
+
 avatar.all=§aUniversal
 
 avatar.cmd.bending=Manage a player's bending controllers.
@@ -94,7 +107,9 @@ avatar.needTradeItem=You need a diamond, gold, or emerald, to get a scroll!
 avatar.needAirTradeItem=You need a diamond, gold, emerald, dragon's breath, totem of undying, or elytra to get a scroll!
 avatar.needFireTradeItem=You need a diamond, gold ingot, emerald, magma cream, or blaze rod to get a scroll!
 avatar.staffCooldown=The staff is on cooldown! You can't airbend with it!
+avatar.gliderElytra=You can't use a glider while wearing an elytra!
 avatar.abilityCooldown=That ability is on cooldown! You can't use it!
+
 avatar.abilityLocked=You need to unlock that ability before you can use it!
 avatar.bisonNoFood=Your bison is too hungry to fly! You need to feed it apples and hay so it can fly.
 avatar.bisonSitting=Your bison is now sitting!

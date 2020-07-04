@@ -65,14 +65,19 @@ public class AvatarItemRenderRegister {
 
 		register(AvatarItems.itemBisonWhistle);
 		register(AvatarItems.airbenderStaff);
+
 		register(Item.getItemFromBlock(blockCloud));
+
+		//TODO: Register the other glider parts
+
+		register(AvatarItems.gliderBasic);
+		register(AvatarItems.gliderAdv);
 
 		for (int i = 0; i <= 3; i++) {
 			register(AvatarItems.itemBisonArmor, i);
 			register(AvatarItems.itemBisonSaddle, i);
 			register(AvatarItems.itemOstrichEquipment, i);
 		}
-
 	}
 
 	private static void forScroll(ItemScroll scroll) {
@@ -104,7 +109,6 @@ public class AvatarItemRenderRegister {
 						"inventory");
 
 				setCustomModelResourceLocation(((AvatarItem) item).item(), meta, mrl);
-
 			}
 		} else {
 
