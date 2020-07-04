@@ -9,39 +9,39 @@ public class ConfigGlider {
 
     //Basic Glider
     @Load
-    public static final float basicGliderMinSpeed = 0.03F;
+    public float basicGliderMinSpeed = 0.03F;
     @Load
-    public static final float basicGliderMaxSpeed = 0.0515F;
+    public float basicGliderMaxSpeed = 0.0515F;
     @Load
-    public static final float basicGliderPitchOffset = 20F;
+    public float basicGliderPitchOffset = 20F;
     @Load
-    public static final float basicGliderYBoost = 0.0015F;
+    public float basicGliderYBoost = 0.0015F;
     @Load
-    public static final float basicGliderFallReduction = 0.7F;
+    public static float basicGliderFallReduction = 0.7F;
     @Load
-    public static final float basicGliderWindModifier = 1.4F;
+    public static float basicGliderWindModifier = 1.4F;
     @Load
-    public static final float basicGliderAirResistance = 0.985F;
+    public static float basicGliderAirResistance = 0.985F;
     @Load
-    public static final int basicGliderTotalDurability = 512;
+    public static int basicGliderTotalDurability = 512;
 
     //Advanced Glider
     @Load
-    public static final float advancedGliderMinSpeed = 0.03f;
+    public static float advancedGliderMinSpeed = 0.03f;
     @Load
-    public static final float advancedGliderMaxSpeed = 0.0715f;
+    public static float advancedGliderMaxSpeed = 0.0715f;
     @Load
-    public static final float advancedGliderPitchOffset = 20f;
+    public static float advancedGliderPitchOffset = 20f;
     @Load
-    public static final float advancedGliderYBoost = 0.025f;
+    public static float advancedGliderYBoost = 0.025f;
     @Load
-    public static final float advancedGliderFallReduction = 0.9f;
+    public static float advancedGliderFallReduction = 0.9f;
     @Load
-    public static final float advancedGliderWindModifier = 0.75f;
+    public static float advancedGliderWindModifier = 0.75f;
     @Load
-    public static final float advancedGliderAirResistance = 0.99f;
+    public static float advancedGliderAirResistance = 0.99f;
     @Load
-    public static final int advancedGliderTotalDurability = 2048;
+    public static int advancedGliderTotalDurability = 2048;
 
     //Wind
     @Load
@@ -77,19 +77,19 @@ public class ConfigGlider {
 
     //Client
     @Load
-    public static final boolean enableRendering3PP = true;
+    public static boolean enableRendering3PP = true;
     @Load
-    public static final boolean enableRenderingFPP = true;
+    public static boolean enableRenderingFPP = true;
     @Load
-    public static final float gliderVisibilityFPPShiftAmount = 1.9f;
+    public static float gliderVisibilityFPPShiftAmount = 1.9f;
     @Load
-    public static final boolean disableOffhandRenderingWhenGliding = true;
+    public static boolean disableOffhandRenderingWhenGliding = true;
     @Load
-    public static final boolean disableHandleBarRenderingWhenGliding = true;
+    public static boolean disableHandleBarRenderingWhenGliding = true;
     @Load
-    public static final float shiftSpeedVisualShift = 0.05f;
+    public static float shiftSpeedVisualShift = 0.05f;
     @Load
-    public static final float airbenderHeightGain = 0.5f;
+    public static float airbenderHeightGain = 0.5f;
 
     private ConfigGlider() {
     }
