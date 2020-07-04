@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.entity;
 
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
@@ -128,49 +129,50 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
 
     @Override
     protected void updateCpBehavior() {
-      /*  getLeader().setPosition(position().plusY(height / 2));
+        getLeader().setPosition(position().plusY(height / 2).plus(Vector.getLookRectangular(this)
+                .times(getAvgSize() / 4)));
         getLeader().setVelocity(velocity());
 
         // Move control points to follow leader
 
-        if (getOwner() != null) {
-            for (int i = 1; i < points.size() - 1; i++) {
+        for (int i = 1; i < points.size(); i++) {
 
-                ControlPoint leader = points.get(i - 1);
-                ControlPoint p = points.get(i);
-                Vector leadPos = leader.position();
-                Vector entityPos = Vector.getEntityPos(getOwner()).plusY(getOwner().getEyeHeight() - 0.5);
-                Vector lookPos = Vector.getLookRectangular(getOwner()).times(getSpeed() / 5 * (float) i / getAmountOfControlPoints());
-                double sqrDist = p.position().sqrDist(leadPos);
+            ControlPoint leader = points.get(i - 1);
+            ControlPoint p = points.get(i);
+            Vector leadPos = leader.position();
+            double sqrDist = p.position().sqrDist(leadPos);
 
-                /*if (sqrDist > getControlPointTeleportDistanceSq() && getControlPointTeleportDistanceSq() != -1) {
+            if (sqrDist > getControlPointTeleportDistanceSq() && getControlPointTeleportDistanceSq() != -1) {
 
-                    Vector toFollowerDir = p.position().minus(leader.position()).normalize();
+                Vector toFollowerDir = p.position().minus(leader.position()).normalize();
 
-                    double idealDist = Math.sqrt(getControlPointTeleportDistanceSq());
-                    if (idealDist > 1) idealDist -= 1; // Make sure there is some room
+                double idealDist = Math.sqrt(getControlPointTeleportDistanceSq());
+                if (idealDist > 1) idealDist -= 1; // Make sure there is some room
 
-                    Vector revisedOffset = leader.position().plus(toFollowerDir.times(idealDist));
-                    p.setPosition(revisedOffset);
-                    leader.setPosition(revisedOffset);
-                    p.setVelocity(Vector.ZERO);
+                Vector revisedOffset = leader.position().plus(toFollowerDir.times(idealDist));
+                p.setPosition(revisedOffset);
+                leader.setPosition(revisedOffset);
+                p.setVelocity(Vector.ZERO);
 
-                } else if (sqrDist > getControlPointMaxDistanceSq() && getControlPointMaxDistanceSq() != -1) {
-                    lookPos = lookPos.plus(entityPos);
-                    Vector diff = lookPos.minus(p.position());
-                    diff = diff.times(getVelocityMultiplier() / 4);
-                    p.setVelocity(diff);
+            } else if (sqrDist > getControlPointMaxDistanceSq() && getControlPointMaxDistanceSq() != -1) {
 
-                }
+                Vector diff = leader.position().minus(p.position());
+                diff = diff.normalize().times(getVelocityMultiplier());
+                p.setVelocity(p.velocity().plus(diff));
+
             }
 
-            Vector lookPos = Vector.getLookRectangular(getOwner())
-                    .times(0.5).plus(Vector.getEntityPos(getOwner()))
-                    .plusY(getOwner().getEyeHeight() - 0.5);
-            WaterControlPoint point = getControlPoint(points.size() - 1);
-            point.setVelocity(lookPos.minus(point.position()).times(getVelocityMultiplier()));
-        }**/
-        super.updateCpBehavior();
+        }
+    }
+
+    @Override
+    public Vec3d getKnockback() {
+        return super.getKnockback();
+    }
+
+    @Override
+    public Vec3d getKnockbackMult() {
+        return new Vec3d(0.75, 0.5, 0.75);
     }
 
     @Override
@@ -267,6 +269,10 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
         lastPlayedSplash = 0;
     }
 
+    @Override
+    public boolean multiHit() {
+        return true;
+    }
 
     @Override
     public EntityLivingBase getController() {
@@ -331,6 +337,16 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
     @Override
     public boolean shouldExplode() {
         return true;
+    }
+
+    @Override
+    public boolean setVelocity() {
+        return false;
+    }
+
+    @Override
+    public BendingStyle getElement() {
+        return new Waterbending();
     }
 
     static class WaterControlPoint extends ControlPoint {

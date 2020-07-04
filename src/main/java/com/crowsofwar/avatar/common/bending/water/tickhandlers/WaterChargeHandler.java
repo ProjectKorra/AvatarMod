@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.common.bending.water.tickhandlers;
 
-import com.crowsofwar.avatar.common.bending.water.AbilityWaterCannon;
+import com.crowsofwar.avatar.common.bending.water.AbilityWaterBlast;
 import com.crowsofwar.avatar.common.bending.water.Waterbending;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
@@ -13,7 +13,6 @@ import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.LightCylinderBehaviour;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -42,7 +41,7 @@ public class WaterChargeHandler extends TickHandler {
 	@Override
 	public boolean tick(BendingContext ctx) {
 
-		AbilityData abilityData = ctx.getData().getAbilityData("water_cannon");
+		AbilityData abilityData = ctx.getData().getAbilityData("water_blast");
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
@@ -135,8 +134,8 @@ public class WaterChargeHandler extends TickHandler {
 		cannon.setXp(SKILLS_CONFIG.waterHit / 2);
 		cannon.rotationPitch = entity.rotationPitch;
 		cannon.rotationYaw = entity.rotationYaw;
-		cannon.setTier(new AbilityWaterCannon().getCurrentTier(AbilityData.get(entity, "water_cannon").getLevel()));
-		cannon.setAbility(new AbilityWaterCannon());
+		cannon.setTier(new AbilityWaterBlast().getCurrentTier(AbilityData.get(entity, "water_blast").getLevel()));
+		cannon.setAbility(new AbilityWaterBlast());
 
 		Vector velocity = Vector.getLookRectangular(entity);
 		velocity = velocity.normalize().times(speed);

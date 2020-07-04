@@ -39,7 +39,6 @@ import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.blocks.AvatarBlocks;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.*;
-import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
@@ -119,7 +118,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityCreateWave());
 		Abilities.register(new AbilityWaterBubble());
 		Abilities.register(new AbilityWaterSkate());
-		Abilities.register(new AbilityWaterCannon());
+		Abilities.register(new AbilityWaterBlast());
 		Abilities.register(new AbilityCleanse());
 		/*    			Earth	  			*/
 		Abilities.register(new AbilityEarthControl());

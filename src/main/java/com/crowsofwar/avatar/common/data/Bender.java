@@ -278,20 +278,21 @@ public abstract class Bender {
 		EntityLivingBase entity = getEntity();
 		AbilityData aD = AbilityData.get(getEntity(), ability.getName());
 		int level = aD.getLevel();
+		double powerRating = calcPowerRating(ability.getBendingId());
 		AbilityData.AbilityTreePath path = aD.getPath();
+		AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
+				entity, powerRating, switchPath);
+
 		if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
-			double powerRating = calcPowerRating(ability.getBendingId());
-
-			if (aD.getAbilityCooldown() == 0) {
+			if (aD.getAbilityCooldown() == 0 && this.consumeChi(ability.getChiCost(abilityCtx))) {
 				if (data.getMiscData().getCanUseAbilities()) {
-
-					AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
-							entity, powerRating, switchPath);
-
 					ability.execute(abilityCtx);
+					aD.setExhaustion(ability.getExhaustion(abilityCtx));
 					aD.setAbilityCooldown(ability.getCooldown(abilityCtx));
+					//We set the burnout last as it affects all of the other inhibiting stats
+					aD.setBurnOut(ability.getBurnOut(abilityCtx));
+
 				} else {
-					// TODO make bending disabled available for multiple things
 					AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(getEntity());
 				}
 

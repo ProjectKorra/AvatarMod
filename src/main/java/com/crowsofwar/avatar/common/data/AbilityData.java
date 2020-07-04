@@ -54,6 +54,12 @@ public class AbilityData {
 	 * <p>
 	 *     Goes from 0 to 100, where 100 is basically half damage and effects.
 	 *     Discourages move spamming.
+	 *     Affects other stats like so:
+	 *     <p>
+	 *         Chi: 0 is base cost, 100 is 1.5x cost.
+	 *         Cooldown: 0 is base cooldown, 100 is 1.5x cooldown.
+	 *         Exhaustion: 0 is base exhaustion, 100 ix 2x exhaustion.
+	 *     </p>
 	 * </p>
 	 */
 	private float burnOut;
