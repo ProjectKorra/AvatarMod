@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "avatarmod:hang_glider_part",
+    "data": 1
+  },
+  "pattern": [
+    "ls ",
+    "lls",
+    "lll"
+  ],
+  "type": "avatarmod:ore_shaped",
+  "key": {
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "stickWood"
+    },
+    "l": {
+      "type": "forge:ore_dict",
+      "ore": "leather"
+    }
+  },
+  "mirrored": false
+}

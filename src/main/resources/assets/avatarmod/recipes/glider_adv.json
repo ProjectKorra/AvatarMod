@@ -1,0 +1,28 @@
+{
+  "result": {
+    "item": "avatarmod:hang_glider_advanced"
+  },
+  "pattern": [
+    " e ",
+    "lsr",
+    " e "
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "l": {
+      "item": "avatarmod:hang_glider_part",
+      "data": 0
+    },
+    "s": {
+      "item": "avatarmod:hang_glider_basic"
+    },
+    "r": {
+      "item": "avatarmod:hang_glider_part",
+      "data": 1
+    },
+    "e": {
+      "item": "minecraft:elytra"
+    }
+  },
+  "mirrored": false
+}

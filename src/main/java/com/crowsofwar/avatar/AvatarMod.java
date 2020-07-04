@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar;
 
+import com.crowsofwar.avatar.api.upgrade.UpgradeItems;
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
@@ -39,6 +40,7 @@ import com.crowsofwar.avatar.common.bending.water.*;
 import com.crowsofwar.avatar.common.blocks.AvatarBlocks;
 import com.crowsofwar.avatar.common.command.AvatarCommand;
 import com.crowsofwar.avatar.common.config.*;
+import com.crowsofwar.avatar.common.controls.AvatarControl;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.entity.*;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
@@ -51,10 +53,15 @@ import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.crowsofwar.avatar.common.config.ConfigGlider;
+import com.crowsofwar.avatar.common.event.ServerEventHandler;
+import com.crowsofwar.avatar.common.registry.CapabilityRegistry;
+import com.crowsofwar.avatar.common.wind.WindHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -173,6 +180,15 @@ public class AvatarMod {
 		ConfigChi.load();
 		ConfigMobs.load();
 		ConfigAnalytics.load();
+		ConfigGlider.load();
+
+		//wind
+		WindHelper.initNoiseGenerator();
+
+		//register capabilities
+		CapabilityRegistry.registerAllCapabilities();
+
+		AvatarControl.initControls();
 		registerAbilities();
 		registerBendingStyles();
 		AvatarItems.init();
@@ -346,6 +362,12 @@ public class AvatarMod {
 		STATS_CONFIG.loadBlocks();
 		MOBS_CONFIG.loadLists();
 		ConfigMobs.load();
+
+		//glider upgrades
+		UpgradeItems.initUpgradesList();
+
+		//register server events
+		MinecraftForge.EVENT_BUS.register(new ServerEventHandler());
 
 		proxy.init();
 		proxy.registerParticles();

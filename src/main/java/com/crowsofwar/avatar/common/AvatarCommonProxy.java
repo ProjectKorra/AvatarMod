@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
 import com.crowsofwar.avatar.common.data.AvatarPlayerData;
 import com.crowsofwar.avatar.common.gui.AvatarGui;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
+import com.crowsofwar.avatar.api.capabilities.IAdvancedGliderCapabilityHandler;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -60,59 +61,69 @@ public interface AvatarCommonProxy {
 	 */
 	IPacketHandler getClientPacketHandler();
 
-	/**
-	 * Get client player's reach. Returns 0 on server.
-	 */
-	double getPlayerReach();
+    /**
+     * Get client player's reach. Returns 0 on server.
+     */
+    double getPlayerReach();
 
-	/**
-	 * Called during the FMLInitialization event
-	 */
-	void init();
+    /**
+     * Called during the FMLInitialization event
+     */
+    void init();
 
-	AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
+    AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
 
-	PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher();
+    PlayerDataFetcher<AvatarPlayerData> getClientDataFetcher();
 
-	/**
-	 * Get client-side IThreadListener, null on server
-	 *
-	 * @return
-	 */
-	IThreadListener getClientThreadListener();
+    /**
+     * Get client-side IThreadListener, null on server
+     *
+     * @return
+     */
+    IThreadListener getClientThreadListener();
 
-	/**
-	 * Get amount of particles. 0 = All, 1 = decreased, 2 = minimal
-	 */
-	int getParticleAmount();
+    /**
+     * Get amount of particles. 0 = All, 1 = decreased, 2 = minimal
+     */
+    int getParticleAmount();
 
 
-	/** Called from init() in the main mod class to initialise the particle factories. */
-	default void registerParticles(){} // Does nothing since particles are client-side only
+    /**
+     * Called from init() in the main mod class to initialise the particle factories.
+     */
+    default void registerParticles() {
+    } // Does nothing since particles are client-side only
 
-	/** Creates a new particle of the specified type from the appropriate particle factory. <i>Does not actually spawn the
-	 * particle; use {@link com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder} to spawn particles.</i> */
-	default ParticleAvatar createParticle(ResourceLocation type, World world, double x, double y, double z){
-		return null;
-	}
+    /**
+     * Creates a new particle of the specified type from the appropriate particle factory. <i>Does not actually spawn the
+     * particle; use {@link com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder} to spawn particles.</i>
+     */
+    default ParticleAvatar createParticle(ResourceLocation type, World world, double x, double y, double z) {
+        return null;
+    }
 
-	default void spawnTornadoParticle(World world, double x, double y, double z, double velX, double velZ, double radius,
-									 int maxAge, IBlockState block, BlockPos pos){
-	}
+    default void spawnTornadoParticle(World world, double x, double y, double z, double velX, double velZ, double radius,
+                                      int maxAge, IBlockState block, BlockPos pos) {
+    }
 
-	/**
-	 * Creates a wrapper so that the keybinding can be used on both sides
-	 * (KeyBinding is client SideOnly)
-	 * <p>
-	 * Looks up keybinding by name
-	 */
-	KeybindingWrapper createKeybindWrapper(String keybindName);
+    /**
+     * Creates a wrapper so that the keybinding can be used on both sides
+     * (KeyBinding is client SideOnly)
+     * <p>
+     * Looks up keybinding by name
+     */
+    KeybindingWrapper createKeybindWrapper(String keybindName);
 
 	/**
 	 * Register the item models so they can be configured to use the correct textures
 	 */
 	void registerItemModels();
 
-	boolean isOptifinePresent();
+    boolean isOptifinePresent();
 
+    EntityPlayer getClientPlayer();
+
+    World getClientWorld();
+
+    IAdvancedGliderCapabilityHandler getClientGliderCapability();
 }
