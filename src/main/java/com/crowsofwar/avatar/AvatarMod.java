@@ -173,9 +173,7 @@ public class AvatarMod {
 		ConfigChi.load();
 		ConfigMobs.load();
 		ConfigAnalytics.load();
-
-		//config
-		ConfigGlider.init(e.getSuggestedConfigurationFile());
+		ConfigGlider.load();
 
 		//wind
 		WindHelper.initNoiseGenerator();
@@ -299,8 +297,6 @@ public class AvatarMod {
 
 		//register server events
 		MinecraftForge.EVENT_BUS.register(new ServerEventHandler());
-		//register config changed event
-		MinecraftForge.EVENT_BUS.register(new ConfigGlider());
 
 		proxy.init();
 		proxy.registerParticles();
