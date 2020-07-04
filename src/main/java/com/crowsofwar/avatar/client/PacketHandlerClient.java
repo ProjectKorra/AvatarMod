@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.client;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
 import com.crowsofwar.avatar.common.data.BendingData;
@@ -31,7 +33,9 @@ import com.crowsofwar.avatar.common.network.packets.glider.PacketClientGliding;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketSyncGliderDataToClient;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketUpdateClientTarget;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -138,15 +142,35 @@ public class PacketHandlerClient implements IPacketHandler {
 	}
 
 	private IMessage handlePacketClientGliding(PacketClientGliding packet, MessageContext ctx) {
-		return packet.onMessage(packet,ctx);
+		//have to use threading system since 1.8
+		Minecraft.getMinecraft().addScheduledTask(() -> {
+			EntityPlayer player = AvatarMod.proxy.getClientPlayer();
+			if (player != null) {
+				GliderHelper.setIsGliderDeployed(player, packet.isGliding);
+			}
+		});
+
+		return null; //no return message
 	}
 
 	private IMessage handlePacketSyncGliderDataToClient(PacketSyncGliderDataToClient packet, MessageContext ctx) {
-		return packet.onMessage(packet,ctx);
+		Minecraft.getMinecraft().addScheduledTask(() -> {
+			AvatarMod.proxy.getClientGliderCapability().deserializeNBT(packet.nbt);
+			AvatarLog.debug("** RECEIVED GLIDER SYNC INFO CLIENTSIDE **");
+		});
+
+		return null;
 	}
 
 	private IMessage handlePacketUpdateClientTarget(PacketUpdateClientTarget packet, MessageContext ctx) {
-		return packet.onMessage(packet,ctx);
+		Minecraft.getMinecraft().addScheduledTask(() -> {
+			World world = AvatarMod.proxy.getClientWorld();
+			EntityPlayer targetEntity = (EntityPlayer) world.getEntityByID(packet.targetEntityID);
+			if (targetEntity != null) {
+				GliderHelper.setIsGliderDeployed(targetEntity, packet.isGliding);
+			}
+		});
+		return null;
 	}
 
 }

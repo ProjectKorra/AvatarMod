@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.common.network;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.common.TransferConfirmHandler;
 import com.crowsofwar.avatar.common.analytics.AnalyticEvent;
 import com.crowsofwar.avatar.common.analytics.AnalyticEvents;
@@ -68,6 +69,7 @@ import java.util.UUID;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.*;
 import static com.crowsofwar.avatar.common.analytics.AnalyticEvents.getAbilityExecutionEvent;
+import static com.crowsofwar.avatar.common.network.packets.glider.PacketServerGliding.IS_GLIDING;
 
 /**
  * Implements IPacketHandler. Acts as a packet handler for integrated and
@@ -456,7 +458,10 @@ public class PacketHandlerServer implements IPacketHandler {
 	}
 
 	private IMessage handleServerGliding(PacketServerGliding packet, MessageContext ctx) {
-		return packet.onMessage(packet,ctx);
+
+		GliderHelper.setIsGliderDeployed(ctx.getServerHandler().player, packet.isGliding == IS_GLIDING);
+
+		return null; //no return message
 
 	}
 

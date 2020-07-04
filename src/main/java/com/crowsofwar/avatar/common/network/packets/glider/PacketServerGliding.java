@@ -1,12 +1,9 @@
 package com.crowsofwar.avatar.common.network.packets.glider;
 
-import com.crowsofwar.avatar.api.helper.GliderHelper;
+import com.crowsofwar.avatar.common.network.PacketRedirector;
 import com.crowsofwar.avatar.common.network.packets.AvatarPacket;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -14,19 +11,8 @@ import net.minecraftforge.fml.relauncher.Side;
  * Syncs the gliding capability on the server side to a given player.
  */
 public class PacketServerGliding extends AvatarPacket<PacketServerGliding> {
-    public static class Handler implements AvatarPacket.Handler<PacketServerGliding> {
-
-        @Override
-        public IMessage onMessageRecieved(PacketServerGliding message, MessageContext ctx) {
-
-            GliderHelper.setIsGliderDeployed(ctx.getServerHandler().player, message.isGliding == IS_GLIDING);
-
-            return null; //no return message
-        }
-    }
-
     //the data sent
-    private byte isGliding;
+    public byte isGliding;
 
     public final static byte IS_GLIDING = 0;
     public final static byte IS_NOT_GLIDING = 1;
@@ -54,7 +40,7 @@ public class PacketServerGliding extends AvatarPacket<PacketServerGliding> {
 
     @Override
     protected AvatarPacket.Handler<PacketServerGliding> getPacketHandler() {
-        return new Handler();
+        return PacketRedirector::redirectMessage;
     }
 }
 
