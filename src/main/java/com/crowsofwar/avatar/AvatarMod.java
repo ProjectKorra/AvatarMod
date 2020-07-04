@@ -49,6 +49,10 @@ import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketCClientGliding;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketCSyncGliderDataToClient;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketCUpdateClientTarget;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketSServerGliding;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -217,6 +221,10 @@ public class AvatarMod {
 		registerPacket(PacketCOpenSkillCard.class, Side.CLIENT);
 		registerPacket(PacketSSendViewStatus.class, Side.SERVER);
 		registerPacket(PacketSParticleCollideEvent.class, Side.SERVER);
+		registerPacket(PacketSServerGliding.class, Side.SERVER);
+		registerPacket(PacketCSyncGliderDataToClient.class, Side.CLIENT);
+		registerPacket(PacketCClientGliding.class, Side.CLIENT);
+		registerPacket(PacketCUpdateClientTarget.class, Side.CLIENT);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 

@@ -8,13 +8,13 @@ import net.minecraftforge.fml.relauncher.Side;
 /**
  * Message to sync the gliding capability on the client side for a given player.
  */
-public class PacketClientGliding extends AvatarPacket<PacketClientGliding> {
+public class PacketCClientGliding extends AvatarPacket<PacketCClientGliding> {
     //the data sent
     public boolean isGliding;
 
-    public PacketClientGliding() {} //default constructor is necessary
+    public PacketCClientGliding() {} //default constructor is necessary
 
-    public PacketClientGliding(boolean isGliding) {
+    public PacketCClientGliding(boolean isGliding) {
         this.isGliding = isGliding;
     }
 
@@ -34,7 +34,7 @@ public class PacketClientGliding extends AvatarPacket<PacketClientGliding> {
     }
 
     @Override
-    protected AvatarPacket.Handler<PacketClientGliding> getPacketHandler() {
+    protected AvatarPacket.Handler<PacketCClientGliding> getPacketHandler() {
         return PacketRedirector::redirectMessage;
     }
 
