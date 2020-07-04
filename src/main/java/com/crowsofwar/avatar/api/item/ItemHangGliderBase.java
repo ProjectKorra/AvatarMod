@@ -108,7 +108,7 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
             //client only
             if (!world.isRemote) {
                 //send packet to nearby players to update visually
-                AvatarMod.network.sendToServer(new PacketCUpdateClientTarget(player, getIsGliderDeployed(player)));
+                AvatarMod.network.sendToAllTracking(new PacketCUpdateClientTarget(player, getIsGliderDeployed(player)), player);
             }
 
         } else {
