@@ -12,7 +12,7 @@ public class ItemHangGliderBasic extends ItemHangGliderBase {
 
     public ItemHangGliderBasic() {
         super(ConfigHandler.basicGliderMinSpeed, ConfigHandler.basicGliderMaxSpeed, ConfigHandler.basicGliderPitchOffset, ConfigHandler.basicGliderYBoost, ConfigHandler.basicGliderFallReduction, ConfigHandler.basicGliderWindModifier, ConfigHandler.basicGliderAirResistance, ConfigHandler.basicGliderTotalDurability, ModelGlider.MODEL_GLIDER_BASIC_TEXTURE_RL);
-        setCreativeTab(AvatarMod.tabItems);
+        setCreativeTab(AvatarItems.tabItems);
         setTranslationKey(GliderInfo.itemGliderBasicName);
     }
 

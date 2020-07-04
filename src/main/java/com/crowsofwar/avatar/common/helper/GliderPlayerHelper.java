@@ -15,6 +15,7 @@ import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.wind.WindHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -22,7 +23,10 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.sql.Time;
 
 import static com.crowsofwar.avatar.common.helper.MathHelper.*;
 
@@ -44,7 +48,14 @@ public class GliderPlayerHelper {
             if (player.isServerWorld()) {
                 if (shouldBeGliding(player)) {
                     if(isAirbender) {
-                        final float speed = (float) MathHelper.clampedLerp(iGlider.getMinSpeed(), iGlider.getMaxSpeed(), player.moveForward);
+//                            Vec3d vec3d = player.getLookVec();
+//                            double d0 = 0.5D;
+//                            double d1 = 0.1D;
+//                            player.motionX += vec3d.x * d1 + (vec3d.x * d0 - player.motionX) * 0.5D;
+//                            player.motionY += vec3d.y * d1 + (vec3d.y * d0 - player.motionY) * 0.5D;
+//                            player.motionZ += vec3d.z * d1 + (vec3d.z * d0 - player.motionZ) * 0.5D;
+//                            player.velocityChanged = true;
+                        final float speed = (float) MathHelper.clampedLerp(iGlider.getMinSpeed(), iGlider.getMaxSpeed(), -player.moveForward);
                         final float elevationBoost = transform(
                                 Math.abs(player.rotationPitch),
                                 45.0F, 90.0F,

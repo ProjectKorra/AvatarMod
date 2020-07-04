@@ -65,11 +65,7 @@ public class AvatarItemRenderRegister {
 
 		register(AvatarItems.itemBisonWhistle);
 		register(AvatarItems.airbenderStaff);
-		register(AvatarItems.gliderBasic);
-		//TODO: Register the other glider parts
-		register(AvatarItems.gliderAdv);
-    
-		blockCloud.initModel();
+
 		register(Item.getItemFromBlock(blockCloud));
 
 		//TODO: Register the other glider parts

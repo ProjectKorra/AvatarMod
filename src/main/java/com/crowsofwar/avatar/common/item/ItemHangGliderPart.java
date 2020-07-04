@@ -15,7 +15,7 @@ public class ItemHangGliderPart extends Item {
 
     public ItemHangGliderPart() {
         super();
-        setCreativeTab(AvatarMod.tabItems);
+        setCreativeTab(AvatarItems.tabItems);
         setHasSubtypes(true);
         setTranslationKey(MOD_ID +":" + GliderInfo.itemGliderPartName + ".");
     }

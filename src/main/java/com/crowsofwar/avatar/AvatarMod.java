@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar;
 
+import com.crowsofwar.avatar.api.upgrade.UpgradeItems;
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
