@@ -21,9 +21,9 @@ import static com.crowsofwar.avatar.common.data.TickHandlerController.WATER_CHAR
 import static com.crowsofwar.avatar.common.data.TickHandlerController.WATER_PARTICLE_SPAWNER;
 import static java.lang.Math.toRadians;
 
-public class AbilityWaterCannon extends Ability {
-	public AbilityWaterCannon() {
-		super(Waterbending.ID, "water_cannon");
+public class AbilityWaterBlast extends Ability {
+	public AbilityWaterBlast() {
+		super(Waterbending.ID, "water_blast");
 		requireRaytrace(-1, false);
 	}
 
@@ -77,7 +77,7 @@ public class AbilityWaterCannon extends Ability {
 				data.addTickHandler(WATER_PARTICLE_SPAWNER);
 			}
 		} else {
-			bender.sendMessage("avatar.waterCannonFail");
+			bender.sendMessage("avatar.waterBlastFail");
 		}
 	}
 

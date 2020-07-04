@@ -44,8 +44,25 @@ public class AbilityData {
 	private final String abilityName;
 	private float lastXp;
 	private float xp;
+	//Whether to switch the path of the ability
 	private final boolean switchPath;
-	int abilityCooldown;
+	private int abilityCooldown;
+	//How much exhaustion to add to the player (affects the hunger bar, like sprinting or fighting)
+	private float exhaustion;
+	/**
+	 * Current burnout amount of the ability.
+	 * <p>
+	 *     Goes from 0 to 100, where 100 is basically half damage and effects.
+	 *     Discourages move spamming.
+	 *     Affects other stats like so:
+	 *     <p>
+	 *         Chi: 0 is base cost, 100 is 1.5x cost.
+	 *         Cooldown: 0 is base cooldown, 100 is 1.5x cooldown.
+	 *         Exhaustion: 0 is base exhaustion, 100 ix 2x exhaustion.
+	 *     </p>
+	 * </p>
+	 */
+	private float burnOut;
 	/**
 	 * The current level. -1 for locked
 	 * <p>
@@ -66,6 +83,8 @@ public class AbilityData {
 		this.path = AbilityTreePath.MAIN;
 		this.switchPath = false;
 		this.abilityCooldown = 0;
+		this.burnOut = 0;
+		this.exhaustion = 0;
 	}
 
 	public AbilityData(BendingData data, String abilityName, boolean switchPath) {
@@ -76,6 +95,8 @@ public class AbilityData {
 		this.path = AbilityTreePath.MAIN;
 		this.switchPath = switchPath;
 		this.abilityCooldown = 0;
+		this.burnOut = 0;
+		this.exhaustion = 0;
 	}
 
 	/**
@@ -98,6 +119,22 @@ public class AbilityData {
 
 	public static AbilityData get(World world, String playerName, String abilityName) {
 		return BendingData.get(world, playerName).getAbilityData(abilityName);
+	}
+
+	public void setExhaustion(float exhaustion) {
+		this.exhaustion = exhaustion;
+	}
+
+	public float getExhaustion() {
+		return this.exhaustion;
+	}
+
+	public void setBurnOut(float burnOut) {
+		this.burnOut = burnOut;
+	}
+
+	public float getBurnOut() {
+		return this.burnOut;
 	}
 
 	public void setAbilityCooldown(int cooldown) {

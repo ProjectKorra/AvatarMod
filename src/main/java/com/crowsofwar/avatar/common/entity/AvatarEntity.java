@@ -598,6 +598,8 @@ public abstract class AvatarEntity extends Entity {
 	 * where another entity is pushing this one.
 	 */
 	public void onCollideWithEntity(Entity entity) {
+		if (putsOutFires)
+			entity.extinguish();
 	}
 
 	/**

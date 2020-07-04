@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.api.upgrade.UpgradeItems;
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
 import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosion;
@@ -49,6 +50,9 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.crowsofwar.avatar.common.config.ConfigGlider;
 import com.crowsofwar.avatar.common.event.ServerEventHandler;
 import com.crowsofwar.avatar.common.registry.CapabilityRegistry;
@@ -72,6 +76,10 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -117,7 +125,7 @@ public class AvatarMod {
 		Abilities.register(new AbilityCreateWave());
 		Abilities.register(new AbilityWaterBubble());
 		Abilities.register(new AbilityWaterSkate());
-		Abilities.register(new AbilityWaterCannon());
+		Abilities.register(new AbilityWaterBlast());
 		Abilities.register(new AbilityCleanse());
 		/*    			Earth	  			*/
 		Abilities.register(new AbilityEarthControl());
@@ -180,9 +188,6 @@ public class AvatarMod {
 		//register capabilities
 		CapabilityRegistry.registerAllCapabilities();
 
-		//packets
-		PacketHandler.init();
-
 		AvatarControl.initControls();
 		registerAbilities();
 		registerBendingStyles();
@@ -233,6 +238,73 @@ public class AvatarMod {
 		});
 
 		AvatarAnnouncements.fetchAnnouncements();
+
+		//File Generation
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+		for(Ability ability : Abilities.all()) {
+			try {
+
+
+				File file = new File("generated\\" + ability.getName() + ".json");
+				file.createNewFile();
+				FileWriter writer = new FileWriter(file);
+
+				JsonObject json = new JsonObject();
+
+				JsonObject custom = new JsonObject();
+
+				json.addProperty("tier", ability.getBaseTier());
+				json.add("custom_properties", custom);
+
+				if (ability.isProjectile() || ability.isOffensive())
+					custom.addProperty("xpOnHit", 2);
+				if (ability.isBuff() || ability.isUtility())
+					custom.addProperty("xpOnUse", 2);
+
+				for (int i = 0; i < 5; i++) {
+					JsonObject level = new JsonObject();
+					String property = "level" + (i + 1);
+					if (i >= 3)
+						property = "level4_" + (i - 2);
+					custom.add(property, level);
+
+					level.addProperty("chiCost", 3 + i * 0.25F);
+					level.addProperty("cooldown", i * 5);
+					level.addProperty("exhaustion", 2.0 + i / 2F);
+					level.addProperty("burnOut", 10.0F + i * 5);
+					level.addProperty("burnOutRecoverTick", 0.5F + i * 0.25);
+
+					if (ability.getElement() instanceof Firebending && !ability.isBuff())
+						level.addProperty("fireTime", 20 + i * 5);
+
+					//These properties are shared across projectile and offensive abilities
+					if (ability.isProjectile() || ability.isOffensive()) {
+						level.addProperty("lifeTime", 20 + i * 5);
+						level.addProperty("size", 0.5F + i * 0.25F);
+						level.addProperty("speed", 5 + i * 2);
+						level.addProperty("knockback", 2 + i);
+						level.addProperty("chiOnHit", (3 + i * 0.25F) / 2);
+					}
+					if (ability.isOffensive()) {
+						level.addProperty("damage", 4 + i);
+					}
+					if (ability.isBuff())
+						level.addProperty("duration", 20 + i * 5);
+
+					if (ability.isChargeable())
+						level.addProperty("chargeTime", 40 - i * 5);
+				}
+
+				gson.toJson(json, writer);
+
+				writer.close();
+
+			} catch (IOException exception) {
+				exception.printStackTrace();
+			}
+		}
+
 
 	}
 

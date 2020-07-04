@@ -200,24 +200,99 @@ public abstract class Bender {
 	 */
 	public void executeAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath) {
 
+		/**
+		 * Going to be used so I can autogen default values for each ability.
+		 * <p>
+		 *  Basically, I just use the abilities ingame and it fills out their actual
+		 * 		 * values. Minimal effort, maximum efficiency
+		 * </p>
+		 *
+		 */
+
+		/*File Generation
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+		for(Ability ability : Abilities.all()) {
+			try {
+
+
+				File file = new File("generated\\" + ability.getName() + ".json");
+				file.createNewFile();
+				FileWriter writer = new FileWriter(file);
+
+				JsonObject json = new JsonObject();
+
+				JsonObject custom = new JsonObject();
+
+				json.addProperty("tier", ability.getBaseTier());
+				json.add("custom_properties", custom);
+
+				if (ability.isProjectile() || ability.isOffensive())
+					custom.addProperty("xpOnHit", 2);
+				if (ability.isBuff() || ability.isUtility())
+					custom.addProperty("xpOnUse", 2);
+
+				for (int i = 0; i < 5; i++) {
+					JsonObject level = new JsonObject();
+					String property = "level" + (i + 1);
+					if (i >= 3)
+						property = "level4_" + (i - 2);
+					custom.add(property, level);
+
+					level.addProperty("chiCost", 3 + i * 0.25F);
+					level.addProperty("cooldown", i * 5);
+					level.addProperty("exhaustion", 2.0 + i / 2F);
+					level.addProperty("burnOut", 10.0F + i * 5);
+					level.addProperty("burnOutRecoverTick", 0.5F + i * 0.25);
+
+					if (ability.getElement() instanceof Firebending && !ability.isBuff())
+						level.addProperty("fireTime", 20 + i * 5);
+
+					//These properties are shared across projectile and offensive abilities
+					if (ability.isProjectile() || ability.isOffensive()) {
+						level.addProperty("lifeTime", 20 + i * 5);
+						level.addProperty("size", 0.5F + i * 0.25F);
+						level.addProperty("speed", 5 + i * 2);
+						level.addProperty("knockback", 2 + i);
+						level.addProperty("chiOnHit", (3 + i * 0.25F) / 2);
+					}
+					if (ability.isOffensive()) {
+						level.addProperty("damage", 4 + i);
+					}
+					if (ability.isBuff())
+						level.addProperty("duration", 20 + i * 5);
+
+					if (ability.isChargeable())
+						level.addProperty("chargeTime", 40 - i * 5);
+				}
+
+				gson.toJson(json, writer);
+
+				writer.close();
+
+			} catch (IOException exception) {
+				exception.printStackTrace();
+			}
+		}**/
 		BendingData data = getData();
 		EntityLivingBase entity = getEntity();
 		AbilityData aD = AbilityData.get(getEntity(), ability.getName());
 		int level = aD.getLevel();
+		double powerRating = calcPowerRating(ability.getBendingId());
 		AbilityData.AbilityTreePath path = aD.getPath();
+		AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
+				entity, powerRating, switchPath);
+
 		if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
-			double powerRating = calcPowerRating(ability.getBendingId());
-
-			if (aD.getAbilityCooldown() == 0) {
+			if (aD.getAbilityCooldown() == 0 && this.consumeChi(ability.getChiCost(abilityCtx))) {
 				if (data.getMiscData().getCanUseAbilities()) {
-
-					AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
-							entity, powerRating, switchPath);
-
 					ability.execute(abilityCtx);
+					aD.setExhaustion(ability.getExhaustion(abilityCtx));
 					aD.setAbilityCooldown(ability.getCooldown(abilityCtx));
+					//We set the burnout last as it affects all of the other inhibiting stats
+					aD.setBurnOut(ability.getBurnOut(abilityCtx));
+
 				} else {
-					// TODO make bending disabled available for multiple things
 					AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(getEntity());
 				}
 
