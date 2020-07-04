@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.common.network.packets.glider;
 
-import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.GliderInfo;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;

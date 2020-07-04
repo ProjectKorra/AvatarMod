@@ -17,10 +17,6 @@ public class PacketClientGliding implements IMessage{
     //the data sent
     private boolean isGliding;
 
-    //use variables so I can just send over
-    public final static byte IS_GLIDING = 0;
-    public final static byte IS_NOT_GLIDING = 1;
-
     public PacketClientGliding() {} //default constructor is necessary
 
     public PacketClientGliding(boolean isGliding) {
