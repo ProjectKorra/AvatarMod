@@ -2,16 +2,6 @@ package com.crowsofwar.avatar.common.config;
 
 import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.crowsofwar.avatar.AvatarInfo.MOD_ID;
-
 
 public class ConfigGlider {
 
