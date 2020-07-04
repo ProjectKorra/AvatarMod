@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketCOpenSkillCard;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPowerRating;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketClientGliding;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -63,6 +64,9 @@ public class PacketHandlerClient implements IPacketHandler {
 
 		if (packet instanceof PacketCOpenSkillCard)
 			return handlePacketSkillCard((PacketCOpenSkillCard) packet, ctx);
+
+		if (packet instanceof PacketClientGliding)
+			return handlePacketClientGliding((PacketClientGliding) packet, ctx);
 
 		AvatarLog.warn(WarningType.WEIRD_PACKET, "Client recieved unknown packet from server:" + packet);
 
@@ -123,6 +127,10 @@ public class PacketHandlerClient implements IPacketHandler {
 			((SkillsGui) mc.currentScreen).openWindow(packet.getAbility());
 		}
 		return null;
+	}
+
+	private IMessage handlePacketClientGliding(PacketClientGliding packet, MessageContext ctx) {
+		return packet.onMessage(packet,ctx);
 	}
 
 }

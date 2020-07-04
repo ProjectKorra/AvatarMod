@@ -32,6 +32,7 @@ import java.util.List;
 
 import static com.crowsofwar.avatar.api.helper.GliderHelper.getIsGliderDeployed;
 import static com.crowsofwar.avatar.api.helper.GliderHelper.setIsGliderDeployed;
+import static com.crowsofwar.avatar.common.config.ConfigGlider.GLIDER_CONFIG;
 
 public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
 
@@ -102,8 +103,10 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
             //old deployment state
             boolean isDeployed = getIsGliderDeployed(player);
 
+
             //toggle state of glider deployment
             setIsGliderDeployed(player, !isDeployed);
+
 
             //client only
             if (!world.isRemote) {
