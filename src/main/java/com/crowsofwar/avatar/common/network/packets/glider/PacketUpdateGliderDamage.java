@@ -3,7 +3,7 @@ package com.crowsofwar.avatar.common.network.packets.glider;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.api.item.IGlider;
-import com.crowsofwar.avatar.common.config.ConfigHandler;
+import com.crowsofwar.avatar.common.config.ConfigGlider;
 import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -36,7 +36,7 @@ public class PacketUpdateGliderDamage implements IMessage{
                 if (player != null) {
                     ItemStack glider = GliderPlayerHelper.getGlider(player);
                     if (glider != null && !glider.isEmpty()) {
-                        glider.damageItem(ConfigHandler.durabilityPerUse, player);
+                        glider.damageItem(ConfigGlider.durabilityPerUse, player);
                         if (((IGlider)glider.getItem()).isBroken(glider)) { //broken item
                             GliderHelper.setIsGliderDeployed(player, false);
                         }

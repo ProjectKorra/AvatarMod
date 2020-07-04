@@ -1,32 +1,17 @@
 package com.crowsofwar.avatar.common.helper;
 
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.api.item.IGlider;
-import com.crowsofwar.avatar.common.config.ConfigHandler;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketClientGliding;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketHandler;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketServerGliding;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketUpdateGliderDamage;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import com.crowsofwar.avatar.common.wind.WindHelper;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import java.sql.Time;
 
 import static com.crowsofwar.avatar.common.helper.MathHelper.*;
 
@@ -148,7 +133,7 @@ public class GliderPlayerHelper {
 //                if (up_boost > 0) {
 //                    player.addVelocity(0, up_boost, 0);
 //
-//                    if (ConfigHandler.airResistanceEnabled) {
+//                    if (ConfigGlider.airResistanceEnabled) {
 //                        player.motionX *= glider.getAirResistance();
 //                        player.motionZ *= glider.getAirResistance();
 //                    }
@@ -226,7 +211,7 @@ public class GliderPlayerHelper {
      * @return - the first glider found (as an itemstack), null otherwise
      */
     public static ItemStack getGlider(EntityPlayer player) {
-//        if (ConfigHandler.holdingGliderEnforced)
+//        if (ConfigGlider.holdingGliderEnforced)
               return player.getHeldItemMainhand();
 //        if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand().getItem() instanceof ItemHangglider) {
 //            return player.getHeldItemOffhand();

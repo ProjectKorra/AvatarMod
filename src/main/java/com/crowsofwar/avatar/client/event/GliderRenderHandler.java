@@ -2,17 +2,14 @@ package com.crowsofwar.avatar.client.event;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.config.ConfigGlider;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.api.item.IGlider;
 import com.crowsofwar.avatar.client.model.ModelGlider;
-import com.crowsofwar.avatar.common.config.ConfigHandler;
 import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
 import com.crowsofwar.avatar.common.helper.MathHelper;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
-import io.netty.util.internal.MathUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -20,7 +17,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderSpecificHandEvent;
@@ -29,7 +25,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 
 import static com.crowsofwar.avatar.common.helper.MathHelper.toRadians;
 
@@ -70,7 +65,7 @@ public class GliderRenderHandler {
      */
     @SubscribeEvent
     public void onRenderOverlay(RenderWorldLastEvent event){
-        if (ConfigHandler.enableRenderingFPP && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) { //rendering enabled and first person perspective
+        if (ConfigGlider.enableRenderingFPP && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) { //rendering enabled and first person perspective
             EntityPlayer playerEntity = Minecraft.getMinecraft().player;
             if (GliderHelper.getIsGliderDeployed(playerEntity)) { //if gliderBasic deployed
                 if (GliderPlayerHelper.shouldBeGliding(playerEntity)) { //if flying
@@ -138,17 +133,17 @@ public class GliderRenderHandler {
         GlStateManager.rotate(180F, 0, 1, 0);
         GlStateManager.rotate(90F, 1, 0, 0);
         //move up to correct position (above player's head)
-        GlStateManager.translate(0, ConfigHandler.gliderVisibilityFPPShiftAmount, 0);
+        GlStateManager.translate(0, ConfigGlider.gliderVisibilityFPPShiftAmount, 0);
         GlStateManager.translate(0, 0, -3f);
 
         //move away if sneaking
         if (player.isSneaking())
-            GlStateManager.translate(0, 0, -1 * ConfigHandler.shiftSpeedVisualShift); //subtle speed effect (makes gliderBasic smaller looking)
+            GlStateManager.translate(0, 0, -1 * ConfigGlider.shiftSpeedVisualShift); //subtle speed effect (makes gliderBasic smaller looking)
 
         boolean isAirbender = BendingData.get(player).getAllBending().contains(BendingStyles.get("airbending"));
         if(Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown() && isAirbender)
         {
-            GlStateManager.translate(0, 1 * ConfigHandler.airbenderHeightGain, 0); //subtle speed effect (makes gliderBasic smaller looking)
+            GlStateManager.translate(0, 1 * ConfigGlider.airbenderHeightGain, 0); //subtle speed effect (makes gliderBasic smaller looking)
         }
     }
 
@@ -194,10 +189,10 @@ public class GliderRenderHandler {
     @SubscribeEvent
     public void onHandRender(RenderSpecificHandEvent event){
         EntityPlayer player = AvatarMod.proxy.getClientPlayer();
-        if (ConfigHandler.disableOffhandRenderingWhenGliding || ConfigHandler.disableHandleBarRenderingWhenGliding) { //configurable
+        if (ConfigGlider.disableOffhandRenderingWhenGliding || ConfigGlider.disableHandleBarRenderingWhenGliding) { //configurable
             if (GliderHelper.getIsGliderDeployed(player)) { //if gliderBasic deployed
-                if (ConfigHandler.disableHandleBarRenderingWhenGliding) event.setCanceled(true);
-                else if (ConfigHandler.disableOffhandRenderingWhenGliding) {
+                if (ConfigGlider.disableHandleBarRenderingWhenGliding) event.setCanceled(true);
+                else if (ConfigGlider.disableOffhandRenderingWhenGliding) {
                     if (player.getHeldItemMainhand() != null && !player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() instanceof IGlider && !((IGlider) player.getHeldItemMainhand().getItem()).isBroken(player.getHeldItemMainhand())) { //if holding a deployed hang gliderBasic
                         if (event.getHand() == EnumHand.OFF_HAND) { //offhand rendering
                             event.setCanceled(true);

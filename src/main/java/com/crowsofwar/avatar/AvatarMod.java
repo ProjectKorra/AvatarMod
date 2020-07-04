@@ -49,7 +49,7 @@ import com.crowsofwar.avatar.common.item.AvatarItems;
 import com.crowsofwar.avatar.common.network.PacketHandlerServer;
 import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.crowsofwar.avatar.common.config.ConfigHandler;
+import com.crowsofwar.avatar.common.config.ConfigGlider;
 import com.crowsofwar.avatar.common.event.ServerEventHandler;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketHandler;
 import com.crowsofwar.avatar.common.registry.CapabilityRegistry;
@@ -175,7 +175,7 @@ public class AvatarMod {
 		ConfigAnalytics.load();
 
 		//config
-		ConfigHandler.init(e.getSuggestedConfigurationFile());
+		ConfigGlider.init(e.getSuggestedConfigurationFile());
 
 		//wind
 		WindHelper.initNoiseGenerator();
@@ -300,7 +300,7 @@ public class AvatarMod {
 		//register server events
 		MinecraftForge.EVENT_BUS.register(new ServerEventHandler());
 		//register config changed event
-		MinecraftForge.EVENT_BUS.register(new ConfigHandler());
+		MinecraftForge.EVENT_BUS.register(new ConfigGlider());
 
 		proxy.init();
 		proxy.registerParticles();

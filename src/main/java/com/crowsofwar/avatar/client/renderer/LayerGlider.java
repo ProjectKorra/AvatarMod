@@ -4,7 +4,7 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.api.item.IGlider;
 import com.crowsofwar.avatar.client.model.ModelGlider;
-import com.crowsofwar.avatar.common.config.ConfigHandler;
+import com.crowsofwar.avatar.common.config.ConfigGlider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,7 +30,7 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
     public void doRenderLayer(@Nonnull AbstractClientPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 
         //Handles glider render layers scale rotation and translation for third person perspective
-        if (!entitylivingbaseIn.isInvisible() && ConfigHandler.enableRendering3PP) { //if not invisible and should render
+        if (!entitylivingbaseIn.isInvisible() && ConfigGlider.enableRendering3PP) { //if not invisible and should render
 
             boolean gliding = GliderHelper.getIsGliderDeployed(entitylivingbaseIn); //get if gliding (to render or not)
             if (gliding) { //if there is one
