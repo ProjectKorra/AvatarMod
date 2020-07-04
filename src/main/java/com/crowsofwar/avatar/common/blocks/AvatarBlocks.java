@@ -61,6 +61,7 @@ public class AvatarBlocks {
 	public static void registerBlocks(RegistryEvent.Register<Block> e) {
 		Block[] blocksArr = allBlocks.toArray(new Block[allBlocks.size()]);
 		e.getRegistry().registerAll(blocksArr);
+		e.getRegistry().register(blockCloud);
 		GameRegistry.registerTileEntity(TileBlockTemp.class, new ResourceLocation("avatar", "temp_block"));
 	}
 
