@@ -1,12 +1,12 @@
 package com.crowsofwar.avatar.api.item;
 
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
 import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketUpdateClientTarget;
 import com.crowsofwar.avatar.common.util.GliderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.IItemPropertyGetter;
@@ -66,8 +66,8 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
                 return isGlidingGlider(entityIn, stack) ? 1.0F : isBroken(stack) ? 2.0F : 0.0F; //0 = undeployed, 1 = deployed, 2 = broken
             }
 
-            private boolean isGlidingGlider(EntityLivingBase entityIn, ItemStack stack) {
-                return entityIn != null && entityIn instanceof EntityPlayer && getIsGliderDeployed((EntityPlayer) entityIn) && GliderPlayerHelper.getGlider((EntityPlayer) entityIn) == stack;
+            private boolean isGlidingGlider(EntityLivingBase entityIn, ItemStack stack){
+                return entityIn != null && entityIn instanceof EntityPlayer && getIsGliderDeployed((EntityPlayer)entityIn) && GliderPlayerHelper.getGlider((EntityPlayer)entityIn) == stack;
             }
 
         });
@@ -77,9 +77,10 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
     /**
      * Handles a right click of the item attempting to deploy the hang glider.
      *
-     * @param world  - the world this occurs in
+     * @param world - the world this occurs in
      * @param player - the player clicking
-     * @param hand   - the hand used
+     * @param hand - the hand used
+     *
      * @return - an ActionResult of the occurrence
      */
     @Override
@@ -92,10 +93,8 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
         //if no elytra equipped
         if (!(chestItem != null && !chestItem.isEmpty() && chestItem.getItem() instanceof ItemElytra)) {
 
-            if (this.isBroken(itemStack))
-                return ActionResult.newResult(EnumActionResult.PASS, itemStack); //nothing if broken
-            if (!hand.equals(EnumHand.MAIN_HAND))
-                return ActionResult.newResult(EnumActionResult.PASS, itemStack); //return if not using main hand
+            if (this.isBroken(itemStack)) return ActionResult.newResult(EnumActionResult.PASS, itemStack); //nothing if broken
+            if (!hand.equals(EnumHand.MAIN_HAND)) return ActionResult.newResult(EnumActionResult.PASS, itemStack); //return if not using main hand
 
             //old deployment state
             boolean isDeployed = getIsGliderDeployed(player);
@@ -108,7 +107,8 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
             //client only
             if (!world.isRemote) {
                 //send packet to nearby players to update visually
-                AvatarMod.network.sendToServer(new PacketUpdateClientTarget(player, getIsGliderDeployed(player)));
+                EntityTracker tracker = world.getMinecraftServer().getWorld(player.dimension).getEntityTracker();
+                tracker.sendToTracking(player, PacketHandler.HANDLER.getPacketFrom(new PacketUpdateClientTarget(player, getIsGliderDeployed(player))));
             }
 
         } else {
