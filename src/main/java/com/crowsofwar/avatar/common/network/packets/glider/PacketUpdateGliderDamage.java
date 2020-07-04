@@ -13,6 +13,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+import static com.crowsofwar.avatar.common.config.ConfigGlider.GLIDER_CONFIG;
+
 public class PacketUpdateGliderDamage implements IMessage{
 
     public PacketUpdateGliderDamage() {} //default constructor is necessary
@@ -36,7 +38,7 @@ public class PacketUpdateGliderDamage implements IMessage{
                 if (player != null) {
                     ItemStack glider = GliderPlayerHelper.getGlider(player);
                     if (glider != null && !glider.isEmpty()) {
-                        glider.damageItem(ConfigGlider.durabilityPerUse, player);
+                        glider.damageItem(GLIDER_CONFIG.durabilityPerUse, player);
                         if (((IGlider)glider.getItem()).isBroken(glider)) { //broken item
                             GliderHelper.setIsGliderDeployed(player, false);
                         }

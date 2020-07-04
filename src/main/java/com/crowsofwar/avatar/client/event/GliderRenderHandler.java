@@ -26,6 +26,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import static com.crowsofwar.avatar.common.config.ConfigGlider.GLIDER_CONFIG;
 import static com.crowsofwar.avatar.common.helper.MathHelper.toRadians;
 
 @SideOnly(Side.CLIENT)
@@ -65,7 +66,7 @@ public class GliderRenderHandler {
      */
     @SubscribeEvent
     public void onRenderOverlay(RenderWorldLastEvent event){
-        if (ConfigGlider.enableRenderingFPP && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) { //rendering enabled and first person perspective
+        if (GLIDER_CONFIG.enableRenderingFPP && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) { //rendering enabled and first person perspective
             EntityPlayer playerEntity = Minecraft.getMinecraft().player;
             if (GliderHelper.getIsGliderDeployed(playerEntity)) { //if gliderBasic deployed
                 if (GliderPlayerHelper.shouldBeGliding(playerEntity)) { //if flying
@@ -133,17 +134,17 @@ public class GliderRenderHandler {
         GlStateManager.rotate(180F, 0, 1, 0);
         GlStateManager.rotate(90F, 1, 0, 0);
         //move up to correct position (above player's head)
-        GlStateManager.translate(0, ConfigGlider.gliderVisibilityFPPShiftAmount, 0);
+        GlStateManager.translate(0, GLIDER_CONFIG.gliderVisibilityFPPShiftAmount, 0);
         GlStateManager.translate(0, 0, -3f);
 
         //move away if sneaking
         if (player.isSneaking())
-            GlStateManager.translate(0, 0, -1 * ConfigGlider.shiftSpeedVisualShift); //subtle speed effect (makes gliderBasic smaller looking)
+            GlStateManager.translate(0, 0, -1 * GLIDER_CONFIG.shiftSpeedVisualShift); //subtle speed effect (makes gliderBasic smaller looking)
 
         boolean isAirbender = BendingData.get(player).getAllBending().contains(BendingStyles.get("airbending"));
         if(Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown() && isAirbender)
         {
-            GlStateManager.translate(0, 1 * ConfigGlider.airbenderHeightGain, 0); //subtle speed effect (makes gliderBasic smaller looking)
+            GlStateManager.translate(0, 1 * GLIDER_CONFIG.airbenderHeightGain, 0); //subtle speed effect (makes gliderBasic smaller looking)
         }
     }
 
@@ -189,10 +190,10 @@ public class GliderRenderHandler {
     @SubscribeEvent
     public void onHandRender(RenderSpecificHandEvent event){
         EntityPlayer player = AvatarMod.proxy.getClientPlayer();
-        if (ConfigGlider.disableOffhandRenderingWhenGliding || ConfigGlider.disableHandleBarRenderingWhenGliding) { //configurable
+        if (GLIDER_CONFIG.disableOffhandRenderingWhenGliding || GLIDER_CONFIG.disableHandleBarRenderingWhenGliding) { //configurable
             if (GliderHelper.getIsGliderDeployed(player)) { //if gliderBasic deployed
-                if (ConfigGlider.disableHandleBarRenderingWhenGliding) event.setCanceled(true);
-                else if (ConfigGlider.disableOffhandRenderingWhenGliding) {
+                if (GLIDER_CONFIG.disableHandleBarRenderingWhenGliding) event.setCanceled(true);
+                else if (GLIDER_CONFIG.disableOffhandRenderingWhenGliding) {
                     if (player.getHeldItemMainhand() != null && !player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() instanceof IGlider && !((IGlider) player.getHeldItemMainhand().getItem()).isBroken(player.getHeldItemMainhand())) { //if holding a deployed hang gliderBasic
                         if (event.getHand() == EnumHand.OFF_HAND) { //offhand rendering
                             event.setCanceled(true);

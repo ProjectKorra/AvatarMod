@@ -74,6 +74,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
+import static com.crowsofwar.avatar.common.config.ConfigGlider.GLIDER_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;

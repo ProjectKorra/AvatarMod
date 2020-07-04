@@ -16,6 +16,8 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import javax.annotation.Nonnull;
 
+import static com.crowsofwar.avatar.common.config.ConfigGlider.GLIDER_CONFIG;
+
 public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
 
     /** Instance of the player renderer. */
@@ -30,7 +32,7 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
     public void doRenderLayer(@Nonnull AbstractClientPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 
         //Handles glider render layers scale rotation and translation for third person perspective
-        if (!entitylivingbaseIn.isInvisible() && ConfigGlider.enableRendering3PP) { //if not invisible and should render
+        if (!entitylivingbaseIn.isInvisible() && GLIDER_CONFIG.enableRendering3PP) { //if not invisible and should render
 
             boolean gliding = GliderHelper.getIsGliderDeployed(entitylivingbaseIn); //get if gliding (to render or not)
             if (gliding) { //if there is one

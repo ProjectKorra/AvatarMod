@@ -1,10 +1,11 @@
 package com.crowsofwar.avatar.common.wind;
 
 import com.crowsofwar.avatar.api.item.IGlider;
-import com.crowsofwar.avatar.common.config.ConfigGlider;
 import com.crowsofwar.avatar.common.wind.generator.OpenSimplexNoise;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+
+import static com.crowsofwar.avatar.common.config.ConfigGlider.GLIDER_CONFIG;
 
 
 /**
@@ -29,14 +30,14 @@ public class WindHelper {
      */
     public static void applyWind(EntityPlayer player, ItemStack glider){
 
-        if (!ConfigGlider.windEnabled) return; //if no wind, then do nothing
+        if (!GLIDER_CONFIG.windEnabled) return; //if no wind, then do nothing
 
-        double windGustSize = ConfigGlider.windGustSize; //18;
-        double windFrequency = ConfigGlider.windFrequency; //0.15;
-        double windRainingMultiplier = ConfigGlider.windRainingMultiplier; //4;
-        double windSpeedMultiplier = ConfigGlider.windSpeedMultiplier; //0.4;
-        double windHeightMultiplier = ConfigGlider.windHeightMultiplier; //1.2;
-        double windOverallPower = ConfigGlider.windOverallPower; //1;
+        double windGustSize = GLIDER_CONFIG.windGustSize; //18;
+        double windFrequency = GLIDER_CONFIG.windFrequency; //0.15;
+        double windRainingMultiplier = GLIDER_CONFIG.windRainingMultiplier; //4;
+        double windSpeedMultiplier = GLIDER_CONFIG.windSpeedMultiplier; //0.4;
+        double windHeightMultiplier = GLIDER_CONFIG.windHeightMultiplier; //1.2;
+        double windOverallPower = GLIDER_CONFIG.windOverallPower; //1;
 
         //downscale for gust size/occurrence amount
         double noise = WindHelper.noiseGenerator.eval(player.posX / windGustSize, player.posZ / windGustSize); //occurrence amount
@@ -55,7 +56,7 @@ public class WindHelper {
         double wind = speedStabilized * height;
 
         //apply durability modifier
-        double additionalDamagePercentage = glider.isItemDamaged() ? ConfigGlider.windDurabilityMultiplier * ((double)glider.getItemDamage() / (glider.getMaxDamage())) : 0; //1.x where x is the percent of durability used
+        double additionalDamagePercentage = glider.isItemDamaged() ? GLIDER_CONFIG.windDurabilityMultiplier * ((double)glider.getItemDamage() / (glider.getMaxDamage())) : 0; //1.x where x is the percent of durability used
         wind *= 1 + additionalDamagePercentage;
 
         //apply overall wind power multiplier

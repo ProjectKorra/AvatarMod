@@ -3,14 +3,14 @@ package com.crowsofwar.avatar.common.item;
 import com.crowsofwar.avatar.api.item.ItemHangGliderBase;
 import com.crowsofwar.avatar.client.model.ModelGlider;
 import com.crowsofwar.avatar.common.GliderInfo;
-import com.crowsofwar.avatar.common.config.ConfigGlider;
 import net.minecraft.item.Item;
 
+import static com.crowsofwar.avatar.common.config.ConfigGlider.GLIDER_CONFIG;
 
 public class ItemHangGliderAdvanced extends ItemHangGliderBase implements AvatarItem {
 
 	public ItemHangGliderAdvanced() {
-		super(ConfigGlider.advancedGliderMinSpeed, ConfigGlider.advancedGliderMaxSpeed, ConfigGlider.advancedGliderPitchOffset, ConfigGlider.advancedGliderYBoost, ConfigGlider.advancedGliderFallReduction, ConfigGlider.advancedGliderWindModifier, ConfigGlider.advancedGliderAirResistance, ConfigGlider.advancedGliderTotalDurability, ModelGlider.MODEL_GLIDER_ADVANCED_TEXTURE_RL);
+		super(GLIDER_CONFIG.advancedGliderMinSpeed, GLIDER_CONFIG.advancedGliderMaxSpeed, GLIDER_CONFIG.advancedGliderPitchOffset, GLIDER_CONFIG.advancedGliderYBoost, GLIDER_CONFIG.advancedGliderFallReduction, GLIDER_CONFIG.advancedGliderWindModifier, GLIDER_CONFIG.advancedGliderAirResistance, GLIDER_CONFIG.advancedGliderTotalDurability, ModelGlider.MODEL_GLIDER_ADVANCED_TEXTURE_RL);
 		setCreativeTab(AvatarItems.tabItems);
 		setTranslationKey(GliderInfo.itemGliderAdvancedName);
 	}
