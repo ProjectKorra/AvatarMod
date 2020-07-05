@@ -38,6 +38,7 @@ public class ConfigMobs {
 
 	private static final Map<String, Integer> DEFAULT_FOODS = new HashMap<>();
 	private static final Map<String, String> TRADE_ITEMS = new HashMap<>();
+	private static final Map<String, String> GLIDER_TRADES = new HashMap<>();
 	private static final Map<String, Integer> AIRBENDING_TRADE_ITEMS = new HashMap<>();
 	private static final Map<String, Integer> FIREBENDING_TRADE_ITEMS = new HashMap<>();
 
@@ -160,8 +161,6 @@ public class ConfigMobs {
 		DEFAULT_SCROLL_DROPS.put("witch", 10.0);
 		DEFAULT_SCROLL_DROPS.put("enderman", 12.5);
 		DEFAULT_SCROLL_DROPS.put("creeper", 5.0);
-
-
 	}
 
 	@Load

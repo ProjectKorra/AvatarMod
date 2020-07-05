@@ -31,14 +31,14 @@ avatar.icebending.demonym=§3§lIcebender
 avatar.sandbending=§6§lSandbending
 avatar.sandbending.demonym=§6§lSandbender
 
-item.avatarmod:avatarmod:hang_glider_basic.name=Hang Glider
-item.avatarmod:avatarmod:hang_glider_advanced.name=Advanced Hang Glider
-item.avatarmod:avatarmod:hang_glider_part.wing_left.name=Glider Wing (Left)
-item.avatarmod:avatarmod:hang_glider_part.wing_right.name=Glider Wing (Right)
-item.avatarmod:avatarmod:hang_glider_part.scaffolding.name=Scaffolding
+item.avatarmod:hang_glider_basic.name=§f§lAcolyte Glider
+item.avatarmod:hang_glider_advanced.name=§7§l§nMaster Glider
+item.avatarmod:hang_glider_part.wing_left.name=Glider Wing (Left)
+item.avatarmod:hang_glider_part.wing_right.name=Glider Wing (Right)
+item.avatarmod:hang_glider_part.scaffolding.name=Scaffolding
 
 # Creative tab Localization
-itemGroup.avatarmod=Open Glider
+itemGroup.avatarmod=Glider
 
 # Other
 avatarmod.elytra.error=You cannot hang glide with an elytra equipped!
