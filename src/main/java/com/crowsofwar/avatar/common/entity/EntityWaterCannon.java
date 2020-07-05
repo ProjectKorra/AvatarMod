@@ -326,12 +326,12 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
 
     @Override
     protected double getControlPointMaxDistanceSq() {
-        return 3.5F;
+        return 4.25F;
     }
 
     @Override
     public int getAmountOfControlPoints() {
-        return 10;
+        return 8;
     }
 
     @Override

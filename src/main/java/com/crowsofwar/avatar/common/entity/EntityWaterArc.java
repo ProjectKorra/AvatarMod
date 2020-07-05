@@ -267,7 +267,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 							if (targetPos != circlePos)
 								vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.075).add(vel);
 							ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(this).vel(vel)
-									.clr(0, 102, 255, 145).scale(getAvgSize() * 1.25F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
+									.clr(0, 102, 255, 145).scale(getAvgSize()).target(targetPos == Vec3d.ZERO ? pos : targetPos)
 									.time(8 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).element(new Waterbending()).spawn(world);
 						}
 
@@ -276,7 +276,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 							pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
 							ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
 									world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120).clr(0, 102, 255, 185)
-									.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).scale(getAvgSize() * 1.25F).collide(true).element(new Waterbending()).spawn(world);
+									.time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).scale(getAvgSize()).collide(true).element(new Waterbending()).spawn(world);
 
 						}
 						//Dripping water particles
@@ -284,7 +284,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
 							pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
 							ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 20,
 									world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 185)
-									.time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).scale(getAvgSize() * 1.25F).gravity(true).collide(true).element(new Waterbending()).spawn(world);
+									.time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).scale(getAvgSize()).gravity(true).collide(true).element(new Waterbending()).spawn(world);
 						}
 					//}
 				}

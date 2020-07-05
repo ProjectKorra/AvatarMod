@@ -85,9 +85,10 @@ public class AvatarItemRenderRegister {
 	private static void forScroll(ItemScroll scroll) {
 		for (int i = 0; i < 7; i++) {
 			ScrollType type = scroll.getScrollType();
+			int meta = i == 6 ? 1 : (i + 1);
 			locationsRegular[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
 					"inventory");
-			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow",
+			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow_" + (i + 1),
 					"inventory");
 			setCustomModelResourceLocation(scroll.item(), i, locationsGlow[i]);
 			setCustomModelResourceLocation(scroll.item(), i, locationsRegular[i]);

@@ -24,7 +24,7 @@ import java.util.Random;
 public class CloudBlock extends Block {
 
 	public CloudBlock() {
-		super(Material.GLASS);
+		super(Material.CLOTH);
 		this.setCreativeTab(AvatarItems.tabItems);
 		this.setTranslationKey("avatarmod:cloudblock");
 		this.setHardness(1f);
@@ -60,6 +60,6 @@ public class CloudBlock extends Block {
 
 	@Override
 	public int tickRate(World worldIn) {
-		return 1;
+		return 3;
 	}
 }
