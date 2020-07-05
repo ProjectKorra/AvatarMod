@@ -29,9 +29,9 @@ import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
 import com.crowsofwar.avatar.common.network.packets.PacketCOpenSkillCard;
 import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
 import com.crowsofwar.avatar.common.network.packets.PacketCPowerRating;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketClientGliding;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketSyncGliderDataToClient;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketUpdateClientTarget;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketCClientGliding;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketCSyncGliderDataToClient;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketCUpdateClientTarget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumParticleTypes;
@@ -71,14 +71,14 @@ public class PacketHandlerClient implements IPacketHandler {
 		if (packet instanceof PacketCOpenSkillCard)
 			return handlePacketSkillCard((PacketCOpenSkillCard) packet, ctx);
 
-		if (packet instanceof PacketClientGliding)
-			return handlePacketClientGliding((PacketClientGliding) packet, ctx);
+		if (packet instanceof PacketCClientGliding)
+			return handlePacketClientGliding((PacketCClientGliding) packet, ctx);
 
-		if (packet instanceof PacketSyncGliderDataToClient)
-			return handlePacketSyncGliderDataToClient((PacketSyncGliderDataToClient) packet, ctx);
+		if (packet instanceof PacketCSyncGliderDataToClient)
+			return handlePacketSyncGliderDataToClient((PacketCSyncGliderDataToClient) packet, ctx);
 
-		if (packet instanceof PacketUpdateClientTarget)
-			return handlePacketUpdateClientTarget((PacketUpdateClientTarget) packet, ctx);
+		if (packet instanceof PacketCUpdateClientTarget)
+			return handlePacketUpdateClientTarget((PacketCUpdateClientTarget) packet, ctx);
 
 		AvatarLog.warn(WarningType.WEIRD_PACKET, "Client recieved unknown packet from server:" + packet);
 
@@ -141,7 +141,7 @@ public class PacketHandlerClient implements IPacketHandler {
 		return null;
 	}
 
-	private IMessage handlePacketClientGliding(PacketClientGliding packet, MessageContext ctx) {
+	private IMessage handlePacketClientGliding(PacketCClientGliding packet, MessageContext ctx) {
 		//have to use threading system since 1.8
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			EntityPlayer player = AvatarMod.proxy.getClientPlayer();
@@ -153,7 +153,7 @@ public class PacketHandlerClient implements IPacketHandler {
 		return null; //no return message
 	}
 
-	private IMessage handlePacketSyncGliderDataToClient(PacketSyncGliderDataToClient packet, MessageContext ctx) {
+	private IMessage handlePacketSyncGliderDataToClient(PacketCSyncGliderDataToClient packet, MessageContext ctx) {
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			AvatarMod.proxy.getClientGliderCapability().deserializeNBT(packet.nbt);
 			AvatarLog.debug("** RECEIVED GLIDER SYNC INFO CLIENTSIDE **");
@@ -162,7 +162,7 @@ public class PacketHandlerClient implements IPacketHandler {
 		return null;
 	}
 
-	private IMessage handlePacketUpdateClientTarget(PacketUpdateClientTarget packet, MessageContext ctx) {
+	private IMessage handlePacketUpdateClientTarget(PacketCUpdateClientTarget packet, MessageContext ctx) {
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			World world = AvatarMod.proxy.getClientWorld();
 			EntityPlayer targetEntity = (EntityPlayer) world.getEntityByID(packet.targetEntityID);

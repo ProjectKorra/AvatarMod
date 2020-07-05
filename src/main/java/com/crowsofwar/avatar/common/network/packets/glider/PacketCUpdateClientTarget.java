@@ -6,14 +6,14 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class PacketUpdateClientTarget extends AvatarPacket<PacketUpdateClientTarget> {
+public class PacketCUpdateClientTarget extends AvatarPacket<PacketCUpdateClientTarget> {
     //the tracked entity to update
     public int targetEntityID;
     public boolean isGliding;
 
-    public PacketUpdateClientTarget() {} //default constructor is necessary
+    public PacketCUpdateClientTarget() {} //default constructor is necessary
 
-    public PacketUpdateClientTarget(EntityPlayer target, boolean isGliding) {
+    public PacketCUpdateClientTarget(EntityPlayer target, boolean isGliding) {
         this.targetEntityID = target.getEntityId();
         this.isGliding = isGliding;
     }
@@ -36,7 +36,7 @@ public class PacketUpdateClientTarget extends AvatarPacket<PacketUpdateClientTar
     }
 
     @Override
-    protected AvatarPacket.Handler<PacketUpdateClientTarget> getPacketHandler() {
+    protected AvatarPacket.Handler<PacketCUpdateClientTarget> getPacketHandler() {
         return PacketRedirector::redirectMessage;
     }
 
