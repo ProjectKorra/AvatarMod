@@ -49,9 +49,7 @@ public class AvatarItems {
 	public static ItemBisonArmor itemBisonArmor;
 	public static ItemOstrichEquipment itemOstrichEquipment;
 	public static ItemStack stackScroll;
-	public static ItemHangGliderPart gliderPartScaffolding;
-	public static ItemHangGliderPart gliderPartLeftWing;
-	public static ItemHangGliderPart gliderPartRightWing;
+	public static ItemHangGliderPart gliderPart;
 	public static ItemHangGliderBasic gliderBasic;
 	public static ItemHangGliderAdvanced gliderAdv;
 
@@ -72,6 +70,7 @@ public class AvatarItems {
 		itemOstrichEquipment = ItemOstrichEquipment.getInstance();
 		gliderBasic = ItemHangGliderBasic.getInstance();
 		gliderAdv = ItemHangGliderAdvanced.getInstance();
+		gliderPart = ItemHangGliderPart.getInstance();
 	}
 
 	//Models
@@ -80,9 +79,6 @@ public class AvatarItems {
 	public static void registerModels(ModelRegistryEvent event) {
 		itemRender(gliderBasic, 0, GliderInfo.itemGliderBasicName);
 		itemRender(gliderAdv, 0, GliderInfo.itemGliderAdvancedName);
-		itemRender(gliderPartLeftWing, 0, ItemHangGliderPart.names[0]);
-		itemRender(gliderPartRightWing, 1, ItemHangGliderPart.names[1]);
-		itemRender(gliderPartScaffolding, 2, ItemHangGliderPart.names[2]);
 	}
 
 	@SubscribeEvent
