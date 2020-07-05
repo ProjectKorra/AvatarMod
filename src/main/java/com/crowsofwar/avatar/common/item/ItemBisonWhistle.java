@@ -47,6 +47,13 @@ import static net.minecraft.util.EnumActionResult.SUCCESS;
  * @author CrowsOfWar
  */
 public class ItemBisonWhistle extends Item implements AvatarItem {
+	private static ItemBisonWhistle instance = null;
+
+	public static ItemBisonWhistle getInstance() {
+
+
+		return instance;
+	}
 
 	public ItemBisonWhistle() {
 		setCreativeTab(AvatarItems.tabItems);

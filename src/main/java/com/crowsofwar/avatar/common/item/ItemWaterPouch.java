@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.zeitheron.hammercore.internal.blocks.IWitherProofBlock;
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
@@ -48,6 +49,17 @@ import java.util.List;
  * @author Mahtaran
  */
 public class ItemWaterPouch extends Item implements AvatarItem {
+	private static ItemWaterPouch instance = null;
+
+	public static ItemWaterPouch getInstance() {
+		if(instance == null) {
+			instance = new ItemWaterPouch();
+			AvatarItems.addItem(instance);
+		}
+
+		return instance;
+	}
+
 
 	public ItemWaterPouch() {
 		setCreativeTab(AvatarItems.tabItems);

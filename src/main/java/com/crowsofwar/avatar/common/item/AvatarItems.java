@@ -58,6 +58,10 @@ public class AvatarItems {
 	public static ItemHangGliderBasic gliderBasic;
 	public static ItemHangGliderAdvanced gliderAdv;
 
+	private static void PopulateItems() {
+
+	}
+
 	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
 		@Nonnull
 		@Override
@@ -76,17 +80,17 @@ public class AvatarItems {
 		Scrolls.EARTH = ItemScrollEarth.getInstance();
 		Scrolls.FIRE = ItemScrollFire.getInstance();
 		Scrolls.WATER = ItemScrollWater.getInstance();
-		addItem(Scrolls.COMBUSTION = new ItemScrollCombustion());
-		addItem(Scrolls.SAND = new ItemScrollSand());
-		addItem(Scrolls.ICE = new ItemScrollIce());
-		addItem(Scrolls.LIGHTNING = new ItemScrollLightning());
-		addItem(itemWaterPouch = new ItemWaterPouch());
-		addItem(itemBisonWhistle = new ItemBisonWhistle());
-		addItem(itemBisonArmor = new ItemBisonArmor());
-		addItem(itemBisonSaddle = new ItemBisonSaddle());
-		addItem(itemOstrichEquipment = new ItemOstrichEquipment());
-		addItem(gliderBasic = new ItemHangGliderBasic());
-		addItem(gliderAdv = new ItemHangGliderAdvanced());
+		Scrolls.COMBUSTION = ItemScrollCombustion.getInstance();
+		Scrolls.SAND = ItemScrollSand.getInstance();
+		Scrolls.ICE = ItemScrollIce.getInstance();
+		Scrolls.LIGHTNING = ItemScrollLightning.getInstance();
+		itemWaterPouch = ItemWaterPouch.getInstance();
+		itemBisonWhistle = ItemBisonWhistle.getInstance();
+		itemBisonArmor = ItemBisonArmor.getInstance();
+		itemBisonSaddle = ItemBisonSaddle.getInstance();
+		itemOstrichEquipment = ItemOstrichEquipment.getInstance();
+		gliderBasic = ItemHangGliderBasic.getInstance();
+		gliderAdv = ItemHangGliderAdvanced.getInstance();
 		airbenderStaff = ItemAirbenderStaff.getInstance();
 
 		stackScroll = new ItemStack(Scrolls.ALL);
@@ -119,10 +123,10 @@ public class AvatarItems {
 	public void registerItems(RegistryEvent.Register<Item> e) {
 		Item[] itemsArr = allItems.toArray(new Item[allItems.size()]);
 		e.getRegistry().registerAll(itemsArr);
-
-		e.getRegistry().register(new ItemHangGliderPart().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.itemGliderPartName));
-		e.getRegistry().register(new ItemHangGliderBasic().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.itemGliderBasicName));
-		e.getRegistry().register(new ItemHangGliderAdvanced().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.itemGliderAdvancedName));
+//
+//		e.getRegistry().register(new ItemHangGliderPart().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.itemGliderPartName));
+//		e.getRegistry().register(new ItemHangGliderBasic().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.itemGliderBasicName));
+//		e.getRegistry().register(new ItemHangGliderAdvanced().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.itemGliderAdvancedName));
 
 		AvatarMod.proxy.registerItemModels();
 	}
