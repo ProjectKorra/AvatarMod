@@ -91,6 +91,7 @@ public class AvatarItemRenderRegister {
 			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow_" + (i + 1),
 					"inventory");
 			setCustomModelResourceLocation(scroll.item(), i, locationsGlow[i]);
+			if (type != ScrollType.AIR)
 			setCustomModelResourceLocation(scroll.item(), i, locationsRegular[i]);
 		}
 	}
