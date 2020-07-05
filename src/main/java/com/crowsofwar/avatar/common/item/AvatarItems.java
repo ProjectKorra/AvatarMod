@@ -79,6 +79,9 @@ public class AvatarItems {
 	public static void registerModels(ModelRegistryEvent event) {
 		itemRender(gliderBasic, 0, GliderInfo.itemGliderBasicName);
 		itemRender(gliderAdv, 0, GliderInfo.itemGliderAdvancedName);
+		itemRender(gliderPart, 0, GliderInfo.ITEM_GLIDER_PART_LEFTWING);
+		itemRender(gliderPart, 1, GliderInfo.ITEM_GLIDER_PART_RIGHTWING);
+		itemRender(gliderPart, 2, GliderInfo.ITEM_GLIDER_PART_SCAFFOLDING);
 	}
 
 	@SubscribeEvent

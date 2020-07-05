@@ -76,6 +76,9 @@ public class AvatarItemRenderRegister {
 			register(AvatarItems.itemBisonArmor, i);
 			register(AvatarItems.itemBisonSaddle, i);
 			register(AvatarItems.itemOstrichEquipment, i);
+			if(i < 3) {
+				register(AvatarItems.gliderPart, i);
+			}
 		}
 	}
 
