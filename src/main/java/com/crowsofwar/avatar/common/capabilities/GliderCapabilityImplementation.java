@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.common.capabilities;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.api.capabilities.IAdvancedGliderCapabilityHandler;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketCSyncGliderDataToClient;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,7 +18,11 @@ import static com.crowsofwar.avatar.api.capabilities.CapabilityHelper.GLIDER_CAP
 
 public final class GliderCapabilityImplementation {
 
-    public static void init(){
+    //make it un-constructable, as it is just a container for the other nested classes and static methods
+    private GliderCapabilityImplementation() {
+    }
+
+    public static void init() {
         CapabilityManager.INSTANCE.register(IAdvancedGliderCapabilityHandler.class, new Capability.IStorage<IAdvancedGliderCapabilityHandler>() {
 
             @Override
@@ -35,6 +40,11 @@ public final class GliderCapabilityImplementation {
 
     public static class DefaultGliderCapImplementation implements IAdvancedGliderCapabilityHandler {
 
+        private static final String CAP_PLAYER_GLIDING = MOD_ID + ".isPlayerGliding";
+        private static final String CAP_GLIDER_DEPLOYED = MOD_ID + ".isGliderDeployed";
+        private static final String CAP_GLIDER_USED = MOD_ID + ".gliderUsed";
+
+        //Glider data
         private boolean isPlayerGliding;
         private boolean isGliderDeployed;
 
@@ -43,12 +53,12 @@ public final class GliderCapabilityImplementation {
             this.isGliderDeployed = false;
         }
 
-        //Glider data
-
         @Override
         public boolean getIsPlayerGliding() {
             return isGliderDeployed && isPlayerGliding;
         }
+
+        //Serializing and Deserializing NBT
 
         @Override
         public void setIsPlayerGliding(boolean isGliding) {
@@ -71,12 +81,6 @@ public final class GliderCapabilityImplementation {
                 isGliderDeployed = isDeployed;
             if (!isDeployed) isPlayerGliding = false; //if not deployed, cannot be flying either
         }
-
-        //Serializing and Deserializing NBT
-
-        private static final String CAP_PLAYER_GLIDING = MOD_ID+".isPlayerGliding";
-        private static final String CAP_GLIDER_DEPLOYED = MOD_ID+".isGliderDeployed";
-        private static final String CAP_GLIDER_USED = MOD_ID+".gliderUsed";
 
         @Override
         public NBTTagCompound serializeNBT() {
@@ -103,7 +107,7 @@ public final class GliderCapabilityImplementation {
 
         @Override
         public void sync(EntityPlayerMP player) {
-            PacketHandler.HANDLER.sendTo(new PacketSyncGliderDataToClient(serializeNBT()), player);
+            AvatarMod.network.sendTo(new PacketCSyncGliderDataToClient(serializeNBT()), player);
         }
 
     }
@@ -137,8 +141,5 @@ public final class GliderCapabilityImplementation {
             capabilityImplementation.deserializeNBT(nbt);
         }
     }
-
-    //make it un-constructable, as it is just a container for the other nested classes and static methods
-    private GliderCapabilityImplementation() {}
 
 }

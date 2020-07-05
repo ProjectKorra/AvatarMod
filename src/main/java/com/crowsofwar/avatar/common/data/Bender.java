@@ -287,7 +287,8 @@ public abstract class Bender {
 			if (aD.getAbilityCooldown() == 0 && this.consumeChi(ability.getChiCost(abilityCtx))) {
 				if (data.getMiscData().getCanUseAbilities()) {
 					ability.execute(abilityCtx);
-					aD.setExhaustion(ability.getExhaustion(abilityCtx));
+					if (entity instanceof EntityPlayer)
+						((EntityPlayer) entity).addExhaustion(ability.getExhaustion(abilityCtx));
 					aD.setAbilityCooldown(ability.getCooldown(abilityCtx));
 					//We set the burnout last as it affects all of the other inhibiting stats
 					aD.setBurnOut(ability.getBurnOut(abilityCtx));

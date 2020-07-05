@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.event;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.api.capabilities.CapabilityHelper;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.common.capabilities.GliderCapabilityImplementation;
@@ -24,7 +25,7 @@ public class ServerEventHandler {
     @SubscribeEvent
     public void onAttachCapability(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof EntityPlayer) {
-            if (!CapabilityHelper.hasGliderCapability((EntityPlayer)event.getObject())) {
+            if (!CapabilityHelper.hasGliderCapability((EntityPlayer) event.getObject())) {
                 event.addCapability(GliderCapabilityImplementation.Provider.NAME, new GliderCapabilityImplementation.Provider());
             }
         }
@@ -38,10 +39,10 @@ public class ServerEventHandler {
     @SubscribeEvent
     public void onPlayerCloning(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
 //        if (!event.isWasDeath()) { //return from end (deal with dumb returning from the end code) //ToDo: Test without
-            if (CapabilityHelper.hasGliderCapability(event.getOriginal())) {
-                NBTTagCompound gliderData = CapabilityHelper.getGliderCapability(event.getOriginal()).serializeNBT();
-                CapabilityHelper.getGliderCapability(event.getEntityPlayer()).deserializeNBT(gliderData);
-            }
+        if (CapabilityHelper.hasGliderCapability(event.getOriginal())) {
+            NBTTagCompound gliderData = CapabilityHelper.getGliderCapability(event.getOriginal()).serializeNBT();
+            CapabilityHelper.getGliderCapability(event.getEntityPlayer()).deserializeNBT(gliderData);
+        }
 //        }
     }
 
@@ -51,8 +52,8 @@ public class ServerEventHandler {
      * @param event - tick event
      */
     @SubscribeEvent
-    public void onTick(TickEvent.PlayerTickEvent event){
-        if (GliderHelper.getIsGliderDeployed(event.player)){
+    public void onTick(TickEvent.PlayerTickEvent event) {
+        if (GliderHelper.getIsGliderDeployed(event.player)) {
             GliderPlayerHelper.updatePosition(event.player);
         }
     }
@@ -70,9 +71,9 @@ public class ServerEventHandler {
             EntityPlayer targetPlayer = (EntityPlayer) targetEntity; //typecast to entityPlayer
             if (CapabilityHelper.hasGliderCapability(targetPlayer)) { //if have the capability
                 if (GliderHelper.getIsGliderDeployed(targetPlayer)) { //if the target has capability need to update
-                    PacketHandler.HANDLER.sendTo(new PacketUpdateClientTarget(targetPlayer, true), (EntityPlayerMP) tracker); //send a packet to the tracker's client to update their target
+                    AvatarMod.network.sendTo(new PacketCUpdateClientTarget(targetPlayer, true), (EntityPlayerMP) targetPlayer);
                 } else {
-                    PacketHandler.HANDLER.sendTo(new PacketUpdateClientTarget(targetPlayer, false), (EntityPlayerMP) tracker);
+                    AvatarMod.network.sendTo(new PacketCUpdateClientTarget(targetPlayer, false), (EntityPlayerMP) targetPlayer);
                 }
             }
         }
@@ -101,7 +102,7 @@ public class ServerEventHandler {
      * @param player - the player to sync the data for
      */
     private void syncGlidingCapability(EntityPlayer player) {
-        CapabilityHelper.getGliderCapability(player).sync((EntityPlayerMP)player);
+        CapabilityHelper.getGliderCapability(player).sync((EntityPlayerMP) player);
     }
 
 }

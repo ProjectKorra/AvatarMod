@@ -121,13 +121,6 @@ public class AbilityData {
 		return BendingData.get(world, playerName).getAbilityData(abilityName);
 	}
 
-	public void setExhaustion(float exhaustion) {
-		this.exhaustion = exhaustion;
-	}
-
-	public float getExhaustion() {
-		return this.exhaustion;
-	}
 
 	public void setBurnOut(float burnOut) {
 		this.burnOut = burnOut;
