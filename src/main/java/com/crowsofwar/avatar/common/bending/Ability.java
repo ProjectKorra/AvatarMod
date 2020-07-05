@@ -310,7 +310,7 @@ public abstract class Ability {
         for (String key : keys)
             if (propertyKeys.contains(key))
                 AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Tried to add a duplicate property key '"
-                        + key + "' to spell " + getName());
+                        + key + "' to ability " + getName());
 
         Collections.addAll(propertyKeys, keys);
 

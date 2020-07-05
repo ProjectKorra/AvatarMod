@@ -66,7 +66,7 @@ public class AbilityProperties {
     private final Map<String, Number> baseValues;
 
     /**
-     * A map storing the base values for this spell. These values are defined by the spell class and cannot be
+     * A map storing the base values for this ability. These values are defined by the spell class and cannot be
      * changed.
      */
     // We're using Number here because it makes implementors think about what they convert it to.

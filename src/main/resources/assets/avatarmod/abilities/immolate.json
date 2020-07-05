@@ -1,8 +1,8 @@
 {
-  "tier": 5,
   "custom_properties": {
     "xpOnUse": 2,
     "level1": {
+      "tier": 5,
       "chiCost": 3.0,
       "cooldown": 0,
       "exhaustion": 2.0,
@@ -11,6 +11,7 @@
       "duration": 20
     },
     "level2": {
+      "tier": 5,
       "chiCost": 3.25,
       "cooldown": 5,
       "exhaustion": 2.5,
@@ -19,6 +20,7 @@
       "duration": 25
     },
     "level3": {
+      "tier": 6,
       "chiCost": 3.5,
       "cooldown": 10,
       "exhaustion": 3.0,
@@ -27,6 +29,7 @@
       "duration": 30
     },
     "level4_1": {
+      "tier": 7,
       "chiCost": 3.75,
       "cooldown": 15,
       "exhaustion": 3.5,
@@ -35,6 +38,7 @@
       "duration": 35
     },
     "level4_2": {
+      "tier": 7,
       "chiCost": 4.0,
       "cooldown": 20,
       "exhaustion": 4.0,
