@@ -244,6 +244,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 
 		//Add rendering layer
 		LayerGlider.addLayer();
+		RenderSlipstreamInvisibility.addLayer();
 
 		//register client events
 		MinecraftForge.EVENT_BUS.register(new GliderRenderHandler());
