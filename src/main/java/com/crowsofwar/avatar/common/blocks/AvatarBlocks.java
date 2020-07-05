@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.common.blocks;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.blocks.tiles.TileBlockTemp;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -61,7 +63,6 @@ public class AvatarBlocks {
 	public static void registerBlocks(RegistryEvent.Register<Block> e) {
 		Block[] blocksArr = allBlocks.toArray(new Block[allBlocks.size()]);
 		e.getRegistry().registerAll(blocksArr);
-		e.getRegistry().register(blockCloud);
 		GameRegistry.registerTileEntity(TileBlockTemp.class, new ResourceLocation("avatar", "temp_block"));
 	}
 

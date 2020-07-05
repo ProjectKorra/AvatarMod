@@ -9,7 +9,18 @@ import net.minecraft.util.NonNullList;
 
 import static com.crowsofwar.avatar.AvatarInfo.MOD_ID;
 
-public class ItemHangGliderPart extends Item {
+public class ItemHangGliderPart extends Item implements AvatarItem {
+
+    private static ItemHangGliderPart instance = null;
+
+    public static ItemHangGliderPart getInstance() {
+        if(instance == null) {
+            instance = new ItemHangGliderPart();
+            AvatarItems.addItem(instance);
+        }
+
+        return instance;
+    }
 
     public static String[] names = {"wing_left", "wing_right", "scaffolding"};
 
@@ -17,7 +28,8 @@ public class ItemHangGliderPart extends Item {
         super();
         setCreativeTab(AvatarItems.tabItems);
         setHasSubtypes(true);
-        setTranslationKey(MOD_ID +":" + GliderInfo.itemGliderPartName + ".");
+        setTranslationKey(GliderInfo.itemGliderPartName + ".");
+
     }
 
     @Override
@@ -33,4 +45,13 @@ public class ItemHangGliderPart extends Item {
         return super.getTranslationKey(stack) + names[stack.getItemDamage()];
     }
 
+    @Override
+    public Item item() {
+        return new ItemHangGliderPart();
+    }
+
+    @Override
+    public String getModelName(int meta) {
+        return null;
+    }
 }

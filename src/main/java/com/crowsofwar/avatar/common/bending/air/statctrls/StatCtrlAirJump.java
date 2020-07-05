@@ -31,6 +31,7 @@ import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
@@ -45,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.crowsofwar.avatar.api.helper.GliderHelper.getIsGliderDeployed;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.AIR_PARTICLE_SPAWNER;
@@ -81,10 +83,10 @@ public class StatCtrlAirJump extends StatusControl {
 		int jumps = timesJumped.get(uuid);
 		// Figure out whether entity is on ground by finding collisions with
 		// ground - if found a collision box, then is not on ground
-		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.2, 0.5, 0.2));
+		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.25, 0.625, 0.25));
 		boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WEB;
 
-		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiAirJump))) {
+		if (onGround || entity instanceof EntityPlayer && getIsGliderDeployed((EntityPlayer) entity) || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiAirJump))) {
 
 			int lvl = abilityData.getLevel();
 			double multiplier = 0.65;
