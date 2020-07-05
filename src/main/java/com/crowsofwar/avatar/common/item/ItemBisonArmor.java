@@ -28,6 +28,8 @@ import javax.annotation.Nullable;
  */
 public class ItemBisonArmor extends Item implements AvatarItem {
 
+	private static ItemBisonArmor instance = null;
+
 	public ItemBisonArmor() {
 		setTranslationKey("bison_armor");
 		setMaxStackSize(1);
@@ -46,6 +48,15 @@ public class ItemBisonArmor extends Item implements AvatarItem {
 		ArmorTier tier = ArmorTier.get(meta);
 		String tierName = tier == null ? "null" : tier.name().toLowerCase();
 		return "bison_armor_" + tierName;
+	}
+
+	public static ItemBisonArmor getInstance() {
+		if(instance == null) {
+			instance = new ItemBisonArmor();
+			AvatarItems.addItem(instance);
+		}
+
+		return instance;
 	}
 
 	@Override

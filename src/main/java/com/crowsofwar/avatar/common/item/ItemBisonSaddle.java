@@ -17,6 +17,8 @@
 package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,6 +29,8 @@ import net.minecraft.util.NonNullList;
  */
 public class ItemBisonSaddle extends Item implements AvatarItem {
 
+	private static ItemBisonSaddle instance = null;
+
 	public ItemBisonSaddle() {
 		setTranslationKey("bison_saddle");
 		setMaxStackSize(1);
@@ -35,7 +39,16 @@ public class ItemBisonSaddle extends Item implements AvatarItem {
 		setHasSubtypes(true);
 	}
 
-	@Override
+	public static ItemBisonSaddle getInstance() {
+		if(instance == null) {
+			instance = new ItemBisonSaddle();
+			AvatarItems.addItem(instance);
+		}
+
+		return instance;
+	}
+
+    @Override
 	public Item item() {
 		return this;
 	}

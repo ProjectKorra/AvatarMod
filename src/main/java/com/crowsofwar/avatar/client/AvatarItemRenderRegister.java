@@ -64,7 +64,6 @@ public class AvatarItemRenderRegister {
 		}
 
 		register(AvatarItems.itemBisonWhistle);
-		register(AvatarItems.airbenderStaff);
 
 		register(Item.getItemFromBlock(blockCloud));
 

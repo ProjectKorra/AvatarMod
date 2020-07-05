@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.powerrating;
 
+import com.crowsofwar.avatar.api.item.ItemHangGliderBase;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.air.powermods.StaffPowerModifier;
 import com.crowsofwar.avatar.common.bending.earth.Earthbending;
@@ -10,7 +11,6 @@ import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.PowerRatingManager;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.item.ItemAirbenderStaff;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -54,13 +54,13 @@ public class PrModifierHandler {
 			if (bendingId.equals(Airbending.ID)) {
 				if (bender.getEntity().getHeldItemMainhand() != ItemStack.EMPTY) {
 					Item item = bender.getEntity().getHeldItemMainhand().getItem();
-					if (item instanceof ItemAirbenderStaff) {
+					if (item instanceof ItemHangGliderBase) {
 						manager.addModifier(new StaffPowerModifier(), ctx);
 					}
 				}
 				if (bender.getEntity().getHeldItemOffhand() != ItemStack.EMPTY) {
 					Item item = bender.getEntity().getHeldItemOffhand().getItem();
-					if (item instanceof ItemAirbenderStaff) {
+					if (item instanceof ItemHangGliderBase) {
 						manager.addModifier(new StaffPowerModifier(), ctx);
 					}
 				}
