@@ -57,6 +57,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.Random;
 
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_NEED_TRADE_ITEM;
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
@@ -646,8 +647,11 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 			ItemStack universalScroll = new ItemStack(Scrolls.ALL, 1, 1);
 			ItemStack elementScroll = new ItemStack(Scrolls.getTypeFromElement(getElement()), 1, 2);
 			ItemStack staff;
-			if (getElement() instanceof Airbending)
-				staff = new ItemStack(AvatarItems.airbenderStaff, 1);
+			if (getElement() instanceof Airbending) {
+				staff = new Random().nextInt(100) % 2 == 0
+						? new ItemStack(AvatarItems.gliderBasic, 1)
+						: new ItemStack(AvatarItems.gliderAdv, 1);
+			}
 			else staff = new ItemStack(Scrolls.ALL, 2, 1);
 			this.trades.add(new MerchantRecipe(universalScroll, elementScroll, staff));
 			this.addRandomRecipes(3);

@@ -1,36 +1,52 @@
 package com.crowsofwar.avatar.api.item;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.Chi;
+import com.crowsofwar.avatar.common.entity.EntityAirGust;
+import com.crowsofwar.avatar.common.entity.EntityAirblade;
+import com.crowsofwar.avatar.common.event.StaffUseEvent;
 import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
 import com.crowsofwar.avatar.common.item.AvatarItem;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketCUpdateClientTarget;
 import com.crowsofwar.avatar.common.util.GliderHelper;
+import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.IItemPropertyGetter;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemElytra;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.*;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static com.crowsofwar.avatar.api.helper.GliderHelper.getIsGliderDeployed;
 import static com.crowsofwar.avatar.api.helper.GliderHelper.setIsGliderDeployed;
+import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_AIR_STAFF_COOLDOWN;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.STAFF_GUST_HANDLER;
 
-public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
+public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem {
 
     //ToDo: NBT saving tags of upgrade (need IRecipe for them)
 
@@ -43,8 +59,10 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
     private double airResistance;
     private int totalDurability;
     private ResourceLocation modelRL;
+    private boolean spawnGust;
 
     public ItemHangGliderBase(float minSpeed, float maxSpeed, float pitchOffset, float yBoost, float fallReduction, double windMultiplier, double airResistance, int totalDurability, ResourceLocation modelRL) {
+        super(Item.ToolMaterial.WOOD);
         this.windMultiplier = windMultiplier;
         this.airResistance = airResistance;
         this.totalDurability = totalDurability;
@@ -72,6 +90,212 @@ public class ItemHangGliderBase extends Item implements IGlider, AvatarItem {
 
         });
 
+    }
+
+    @Override
+    public float getAttackDamage() {
+        return 1F;
+    }
+
+    @Override
+    public boolean hasEffect(ItemStack stack) {
+        return false;
+    }
+
+
+    @Override
+    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
+        boolean isCreative =
+                attacker instanceof EntityPlayer && ((EntityPlayer) attacker).isCreative();
+        if (!isCreative) {
+            stack.damageItem(1, attacker);
+        }
+        Vector velocity = Vector.getLookRectangular(attacker).times(1.1);
+        target.motionX += velocity.x();
+        target.motionY += velocity.y() > 0 ? velocity.y() + 0.2 : 0.3;
+        target.motionZ += velocity.z();
+        return true;
+
+    }
+
+
+    @Override
+    public EnumRarity getRarity(ItemStack stack) {
+        return EnumRarity.RARE;
+    }
+
+
+    @Override
+    public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack) {
+        boolean isCreative = entityLiving instanceof EntityPlayer && ((EntityPlayer) entityLiving)
+                .isCreative();
+        BendingData data = BendingData.get(entityLiving);
+        if(entityLiving.isSneaking()) {
+            if (entityLiving.getHeldItemOffhand() == stack) {
+                if (!data.hasTickHandler(STAFF_GUST_HANDLER) && !entityLiving.world.isRemote) {
+                    if (!MinecraftForge.EVENT_BUS.post(new StaffUseEvent(entityLiving, spawnGust))) {
+                        if (spawnGust) {
+                            EntityAirGust gust = new EntityAirGust(entityLiving.world);
+                            gust.setPosition(Vector.getLookRectangular(entityLiving)
+                                    .plus(Vector.getEntityPos(entityLiving))
+                                    .withY(entityLiving.getEyeHeight() +
+                                            entityLiving.getEntityBoundingBox().minY));
+                            gust.setAbility(new AbilityAirGust());
+                            gust.setOwner(entityLiving);
+                            gust.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
+                            entityLiving.world.spawnEntity(gust);
+                            if (!isCreative) {
+                                data.addTickHandler(STAFF_GUST_HANDLER);
+                                stack.damageItem(2, entityLiving);
+                            }
+                            return true;
+                        } else {
+                            EntityAirblade blade = new EntityAirblade(entityLiving.world);
+                            blade.setPosition(Vector.getLookRectangular(entityLiving)
+                                    .plus(Vector.getEntityPos(entityLiving))
+                                    .withY(entityLiving.getEyeHeight() + entityLiving
+                                            .getEntityBoundingBox().minY));
+                            blade.setAbility(new AbilityAirblade());
+                            blade.rotationYaw = entityLiving.rotationYaw;
+                            blade.rotationPitch = entityLiving.rotationPitch;
+                            blade.setOwner(entityLiving);
+                            blade.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
+                            blade.setDamage(2);
+                            entityLiving.world.spawnEntity(blade);
+                            if (!isCreative) {
+                                data.addTickHandler(STAFF_GUST_HANDLER);
+                                stack.damageItem(2, entityLiving);
+                            }
+                            return true;
+                        }
+                    }
+                }
+                if (data.hasTickHandler(STAFF_GUST_HANDLER) && !entityLiving.world.isRemote) {
+                    MSG_AIR_STAFF_COOLDOWN.send(entityLiving);
+                }
+                return true;
+            }
+            return false;
+        } else {
+            if (!data.hasTickHandler(STAFF_GUST_HANDLER) && !entityLiving.world.isRemote) {
+                if (!MinecraftForge.EVENT_BUS.post(new StaffUseEvent(entityLiving, spawnGust))) {
+                    if (spawnGust) {
+                        EntityAirGust gust = new EntityAirGust(entityLiving.world);
+                        gust.setPosition(Vector.getLookRectangular(entityLiving)
+                                .plus(Vector.getEntityPos(entityLiving))
+                                .withY(entityLiving.getEyeHeight() + entityLiving
+                                        .getEntityBoundingBox().minY));
+                        gust.setAbility(new AbilityAirGust());
+                        gust.setOwner(entityLiving);
+                        gust.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
+                        entityLiving.world.spawnEntity(gust);
+                        if (!isCreative) {
+                            data.addTickHandler(STAFF_GUST_HANDLER);
+                            stack.damageItem(2, entityLiving);
+                        }
+                        return true;
+                    } else {
+                        EntityAirblade blade = new EntityAirblade(entityLiving.world);
+                        blade.setPosition(Vector.getLookRectangular(entityLiving)
+                                .plus(Vector.getEntityPos(entityLiving))
+                                .withY(entityLiving.getEyeHeight() + entityLiving
+                                        .getEntityBoundingBox().minY));
+                        blade.setAbility(new AbilityAirblade());
+                        blade.setOwner(entityLiving);
+                        blade.rotationYaw = entityLiving.rotationYaw;
+                        blade.rotationPitch = entityLiving.rotationPitch;
+                        blade.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
+                        blade.setDamage(2);
+                        entityLiving.world.spawnEntity(blade);
+                        if (!isCreative) {
+                            data.addTickHandler(STAFF_GUST_HANDLER);
+                            stack.damageItem(2, entityLiving);
+                        }
+                        return true;
+                    }
+
+                }
+            }
+            if (data.hasTickHandler(STAFF_GUST_HANDLER) && entityLiving instanceof EntityPlayer
+                    && !entityLiving.world.isRemote) {
+                MSG_AIR_STAFF_COOLDOWN.send(entityLiving);
+            }
+            return false;
+        }
+
+    }
+
+    @Override
+    public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot,
+                         boolean isSelected) {
+
+        if (isSelected && entityIn instanceof EntityLivingBase) {
+            spawnGust = !entityIn.isSneaking();
+            if (!worldIn.isRemote && worldIn instanceof WorldServer) {
+                WorldServer world = (WorldServer) worldIn;
+                if (entityIn.ticksExisted % 40 == 0) {
+                    world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entityIn.posX,
+                            entityIn.posY + entityIn.getEyeHeight(),
+                            entityIn.posZ, 1, 0, 0, 0, 0.04);
+                    ((EntityLivingBase) entityIn)
+                            .addPotionEffect(new PotionEffect(MobEffects.SPEED, 40, 0, false, false));
+                    ((EntityLivingBase) entityIn)
+                            .addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 40, 0, false, false));
+                }
+            }
+        }
+        if (entityIn instanceof EntityLivingBase) {
+            if (((EntityLivingBase) entityIn).getHeldItemOffhand().getItem() == this) {
+                if (!worldIn.isRemote && worldIn instanceof WorldServer) {
+                    WorldServer world = (WorldServer) worldIn;
+                    if (entityIn.ticksExisted % 40 == 0) {
+                        world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entityIn.posX,
+                                entityIn.posY + entityIn.getEyeHeight(),
+                                entityIn.posZ, 1, 0, 0, 0, 0.04);
+                        ((EntityLivingBase) entityIn)
+                                .addPotionEffect(new PotionEffect(MobEffects.SPEED, 40, 0, false, false));
+                        ((EntityLivingBase) entityIn).addPotionEffect(
+                                new PotionEffect(MobEffects.JUMP_BOOST, 40, 0, false, false));
+                    }
+                }
+            }
+        }
+        if (entityIn instanceof EntityLivingBase) {
+            //Heals the item's durability if you have airbending
+            BendingData data = BendingData.get((EntityLivingBase) entityIn);
+            Chi chi = data.chi();
+            if (entityIn.ticksExisted % 80 == 0 && chi != null && data.hasBendingId(Airbending.ID)
+                    && ((new Random().nextInt(2) + 1) >= 2)) {
+                if (stack.isItemDamaged()) {
+                    float availableChi = chi.getAvailableChi();
+                    if (availableChi > 1) {
+                        if (!(entityIn instanceof EntityPlayer && (((EntityPlayer) entityIn)
+                                .isCreative()))) {
+                            chi.setTotalChi(chi.getTotalChi() - 2);
+                        }
+                        stack.damageItem(-1, (EntityLivingBase) entityIn);
+                    }
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public Multimap<String, AttributeModifier> getItemAttributeModifiers(
+            EntityEquipmentSlot equipmentSlot) {
+        Multimap<String, AttributeModifier> multimap = HashMultimap.create();
+
+        if (equipmentSlot == EntityEquipmentSlot.MAINHAND) {
+            spawnGust = new Random().nextBoolean();
+            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(),
+                    new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier",
+                            getAttackDamage(), 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(),
+                    new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", 0, 0));
+        }
+
+        return multimap;
     }
 
     /**

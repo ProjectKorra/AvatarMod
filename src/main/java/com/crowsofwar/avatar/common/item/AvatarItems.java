@@ -49,7 +49,6 @@ public class AvatarItems {
 	public static ItemBisonArmor itemBisonArmor;
 	public static ItemOstrichEquipment itemOstrichEquipment;
 	public static ItemStack stackScroll;
-	public static ItemAirbenderStaff airbenderStaff;
 	public static ItemHangGliderPart gliderPartScaffolding;
 	public static ItemHangGliderPart gliderPartLeftWing;
 	public static ItemHangGliderPart gliderPartRightWing;
@@ -73,7 +72,6 @@ public class AvatarItems {
 		itemOstrichEquipment = ItemOstrichEquipment.getInstance();
 		gliderBasic = ItemHangGliderBasic.getInstance();
 		gliderAdv = ItemHangGliderAdvanced.getInstance();
-		airbenderStaff = ItemAirbenderStaff.getInstance();
 	}
 
 	//Models

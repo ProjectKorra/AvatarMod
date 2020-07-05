@@ -11,11 +11,11 @@ public class ConfigGlider {
     @Load
     public float basicGliderMinSpeed = 0.03F;
     @Load
-    public float basicGliderMaxSpeed = 0.0515F;
+    public float basicGliderMaxSpeed = 0.0615F;
     @Load
     public float basicGliderPitchOffset = 20F;
     @Load
-    public float basicGliderYBoost = 0.0015F;
+    public float basicGliderYBoost = 0.0025F;
     @Load
     public static float basicGliderFallReduction = 0.7F;
     @Load
