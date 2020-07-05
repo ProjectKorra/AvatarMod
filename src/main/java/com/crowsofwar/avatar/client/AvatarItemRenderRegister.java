@@ -67,16 +67,13 @@ public class AvatarItemRenderRegister {
 
 		register(Item.getItemFromBlock(blockCloud));
 
-		//TODO: Register the other glider parts
-
-		register(AvatarItems.gliderBasic);
-		register(AvatarItems.gliderAdv);
-
 		for (int i = 0; i <= 3; i++) {
 			register(AvatarItems.itemBisonArmor, i);
 			register(AvatarItems.itemBisonSaddle, i);
 			register(AvatarItems.itemOstrichEquipment, i);
 			if(i < 3) {
+				register(AvatarItems.gliderBasic, i);
+				register(AvatarItems.gliderAdv, i);
 				register(AvatarItems.gliderPart, i);
 			}
 		}

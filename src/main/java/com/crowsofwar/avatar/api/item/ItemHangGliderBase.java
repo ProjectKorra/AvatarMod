@@ -513,7 +513,7 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
         switch (meta) {
             case 1:
                 return "hang_glider_basic_deployed";
-            case 3:
+            case 2:
                 return "hang_glider_basic_broken";
             default:
                 return "hang_glider_basic";
