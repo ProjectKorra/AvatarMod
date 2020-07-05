@@ -50,7 +50,10 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 	private static ItemBisonWhistle instance = null;
 
 	public static ItemBisonWhistle getInstance() {
-
+		if(instance == null) {
+			instance = new ItemBisonWhistle();
+			AvatarItems.addItem(instance);
+		}
 
 		return instance;
 	}

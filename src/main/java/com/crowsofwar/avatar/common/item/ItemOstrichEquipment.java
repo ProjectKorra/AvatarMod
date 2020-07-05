@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
  * @author CrowsOfWar
  */
 public class ItemOstrichEquipment extends Item implements AvatarItem {
+	private static ItemOstrichEquipment instance = null;
 
 	public ItemOstrichEquipment() {
 		setTranslationKey("ostrich_equip");
@@ -22,7 +23,17 @@ public class ItemOstrichEquipment extends Item implements AvatarItem {
 		setHasSubtypes(true);
 	}
 
-	@Override
+	public static ItemOstrichEquipment getInstance() {
+		if(instance == null) {
+			instance = new ItemOstrichEquipment();
+			AvatarItems.addItem(instance);
+		}
+
+
+		return instance;
+	}
+
+    @Override
 	public Item item() {
 		return this;
 	}

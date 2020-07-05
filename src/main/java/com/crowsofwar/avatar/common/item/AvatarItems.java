@@ -43,8 +43,6 @@ import java.util.List;
 public class AvatarItems {
 
 	public static List<Item> allItems;
-	public static List<Item> modeledItems;
-	public static ItemScroll itemScroll;
 	public static ItemWaterPouch itemWaterPouch;
 	public static ItemBisonWhistle itemBisonWhistle;
 	public static ItemBisonSaddle itemBisonSaddle;
@@ -59,22 +57,6 @@ public class AvatarItems {
 	public static ItemHangGliderAdvanced gliderAdv;
 
 	private static void PopulateItems() {
-
-	}
-
-	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
-		@Nonnull
-		@Override
-		public ItemStack createIcon() {
-			return AvatarItems.stackScroll;
-		}
-	};
-
-	private AvatarItems() {
-	}
-
-	public static void init() {
-		allItems = new ArrayList<>();
 		Scrolls.ALL = ItemScrollAll.getInstance();
 		Scrolls.AIR = ItemScrollAir.getInstance();
 		Scrolls.EARTH = ItemScrollEarth.getInstance();
@@ -92,10 +74,6 @@ public class AvatarItems {
 		gliderBasic = ItemHangGliderBasic.getInstance();
 		gliderAdv = ItemHangGliderAdvanced.getInstance();
 		airbenderStaff = ItemAirbenderStaff.getInstance();
-
-		stackScroll = new ItemStack(Scrolls.ALL);
-		MinecraftForge.EVENT_BUS.register(new AvatarItems());
-
 	}
 
 	//Models
@@ -109,6 +87,37 @@ public class AvatarItems {
 		itemRender(gliderPartScaffolding, 2, ItemHangGliderPart.names[2]);
 	}
 
+	@SubscribeEvent
+	public void registerItems(RegistryEvent.Register<Item> e) {
+		Item[] itemsArr = allItems.toArray(new Item[allItems.size()]);
+
+		e.getRegistry().registerAll(itemsArr);
+
+		AvatarMod.proxy.registerItemModels();
+	}
+
+	public static CreativeTabs tabItems = new CreativeTabs("avatar.items") {
+		@Nonnull
+		@Override
+		public ItemStack createIcon() {
+			return AvatarItems.stackScroll;
+		}
+	};
+
+	private AvatarItems() {
+	}
+
+	public static void init() {
+		allItems = new ArrayList<>();
+
+		//separated this out so that new items have a variable added then initialised directly beneath.
+		// the rest of how it works shouldn't matter when adding new stuff.
+		PopulateItems();
+
+		stackScroll = new ItemStack(Scrolls.ALL);
+		MinecraftForge.EVENT_BUS.register(new AvatarItems());
+	}
+
 	private static void itemRender(Item item, int meta, String name) {
 		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(AvatarInfo.DOMAIN + name, "inventory"));
 	}
@@ -117,18 +126,6 @@ public class AvatarItems {
 		item.setRegistryName("avatarmod", item.getTranslationKey().substring(5));
 		item.setTranslationKey("avatarmod:" + item.getTranslationKey().substring(5));
 		allItems.add(item);
-	}
-
-	@SubscribeEvent
-	public void registerItems(RegistryEvent.Register<Item> e) {
-		Item[] itemsArr = allItems.toArray(new Item[allItems.size()]);
-		e.getRegistry().registerAll(itemsArr);
-//
-//		e.getRegistry().register(new ItemHangGliderPart().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.itemGliderPartName));
-//		e.getRegistry().register(new ItemHangGliderBasic().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.itemGliderBasicName));
-//		e.getRegistry().register(new ItemHangGliderAdvanced().setRegistryName(AvatarInfo.MOD_ID + GliderInfo.itemGliderAdvancedName));
-
-		AvatarMod.proxy.registerItemModels();
 	}
 
 }
