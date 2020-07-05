@@ -38,6 +38,6 @@ public interface AvatarItem {
 	 * Define every item as a singleton and have the first getInstance call handle registration and
 	 * other necessary setup.
 	 */
-	AvatarItem getInstance();
+	static AvatarItem getInstance();
 
 }

@@ -39,6 +39,8 @@ import static com.crowsofwar.avatar.common.data.TickHandlerController.STAFF_GUST
 
 public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 
+	private static ItemAirbenderStaff instance = null;
+
 	private boolean spawnGust;
 
 	public ItemAirbenderStaff(Item.ToolMaterial material) {
@@ -280,6 +282,16 @@ public class ItemAirbenderStaff extends ItemSword implements AvatarItem {
 	@Override
 	public String getModelName(int meta) {
 		return "airbender_staff";
+	}
+
+	public static ItemAirbenderStaff getInstance() {
+
+		if(instance == null) {
+			instance = new ItemAirbenderStaff(Item.ToolMaterial.WOOD);
+			AvatarItems.addItem(instance);
+		}
+
+		return instance;
 	}
 
 	//Add power rating modifier
