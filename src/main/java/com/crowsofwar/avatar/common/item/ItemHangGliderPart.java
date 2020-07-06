@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.GliderInfo;
+import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,15 +14,6 @@ public class ItemHangGliderPart extends Item implements AvatarItem {
 
     private static ItemHangGliderPart instance = null;
 
-    public static ItemHangGliderPart getInstance() {
-        if(instance == null) {
-            instance = new ItemHangGliderPart();
-            AvatarItems.addItem(instance);
-        }
-
-        return instance;
-    }
-
     public static String[] names = {"wing_left", "wing_right", "scaffolding"};
 
     public ItemHangGliderPart() {
@@ -29,7 +21,14 @@ public class ItemHangGliderPart extends Item implements AvatarItem {
         setCreativeTab(AvatarItems.tabItems);
         setHasSubtypes(true);
         setTranslationKey(GliderInfo.itemGliderPartName + ".");
+    }
 
+    public static ItemHangGliderPart getInstance() {
+        if(instance == null) {
+            instance = new ItemHangGliderPart();
+            AvatarItems.addItem(instance);
+        }
+        return instance;
     }
 
     @Override
@@ -42,16 +41,16 @@ public class ItemHangGliderPart extends Item implements AvatarItem {
 
     @Override
     public String getTranslationKey(ItemStack stack) {
-        return super.getTranslationKey(stack) + names[stack.getItemDamage()];
+        return super.getTranslationKey(stack) + names[stack.getMetadata()];
     }
 
     @Override
     public Item item() {
-        return new ItemHangGliderPart();
+        return this;
     }
 
     @Override
     public String getModelName(int meta) {
-        return null;
+        return names[meta];
     }
 }
