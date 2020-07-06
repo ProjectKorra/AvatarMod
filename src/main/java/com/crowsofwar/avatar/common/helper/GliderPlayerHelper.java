@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.api.item.IGlider;
+import com.crowsofwar.avatar.common.wind.WindHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -11,8 +12,12 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.Arrays;
+
+import static com.crowsofwar.avatar.common.config.ConfigGlider.GLIDER_CONFIG;
 import static com.crowsofwar.avatar.common.helper.MathHelper.*;
 
 public class GliderPlayerHelper {
@@ -32,6 +37,8 @@ public class GliderPlayerHelper {
             IGlider iGlider = (IGlider) glider.getItem();
             if (player.isServerWorld()) {
                 if (shouldBeGliding(player)) {
+                    applyHeatUplift(player, iGlider);
+                    WindHelper.applyWind(player, glider);
                     if(isAirbender) {
 //                            Vec3d vec3d = player.getLookVec();
 //                            double d0 = 0.5D;
@@ -56,7 +63,13 @@ public class GliderPlayerHelper {
                         player.motionZ += vz * vxz * speed;
                     } else {
                         if (player.motionY < 0.0D) {
+                            Vec3d vec3d = player.getLookVec();
+                            double d0 = 0.5D;
+                            double d1 = 0.1D;
+                            player.motionX += vec3d.x * d1 + (vec3d.x * d0 - player.motionX) * 0.5D;
+                            player.motionZ += vec3d.z * d1 + (vec3d.z * d0 - player.motionZ) * 0.5D;
                             player.motionY *= FALL_REDUCTION;
+                            player.velocityChanged = true;
                         }
                         player.fallDistance = 0.0F;
                     }
@@ -77,7 +90,7 @@ public class GliderPlayerHelper {
         BlockPos pos = player.getPosition();
         World worldIn = player.getEntityWorld();
 
-        int maxSearchDown = 5;
+        int maxSearchDown = 15;
         int maxSquared = (maxSearchDown-1) * (maxSearchDown-1);
 
         int i = 0;
@@ -90,7 +103,7 @@ public class GliderPlayerHelper {
                 double closeness = (maxSearchDown - i) * (maxSearchDown - i);
 
                 //set amount up
-                double configMovement = 12.2;
+                double configMovement = 17.2;
                 double upUnnormalized = configMovement * closeness;
 
 //                Logger.info("UN-NORMALIZED: "+upUnnormalized);
@@ -111,33 +124,30 @@ public class GliderPlayerHelper {
 //                Logger.info("AFTER: "+player.motionY);
 
 
-//                double boostAmt = 1 + (0.5 * (maxSearchDown - i));
-//                double calculated = (player.motionY - (player.motionY * boostAmt));
-//                Logger.info(calculated);
-//                Logger.info("BEFORE: "+player.motionY);
-//                player.motionY += calculated;
-//                Logger.info("AFTER: "+player.motionY);
+                double boostAmt = 1 + (0.5 * (maxSearchDown - i));
+                double calculated = (player.motionY - (player.motionY * boostAmt));
+                player.motionY += calculated;
 
 
-//                Vec3d vec3d = player.getLookVec();
-//                double d0 = 1.5D;
-//                double d1 = 0.1D;
-////                player.motionX += vec3d.x * d1 + (vec3d.x * d0 - player.motionX) * 0.2D;
-////                player.motionZ += vec3d.z * d1 + (vec3d.z * d0 - player.motionZ) * 0.2D;
-//                double up_boost;
-//                if (i > 0) {
-//                    up_boost = -0.07 * i + 0.6;
-//                } else {
-//                    up_boost = 0.07;
-//                }
-//                if (up_boost > 0) {
-//                    player.addVelocity(0, up_boost, 0);
-//
-//                    if (ConfigGlider.airResistanceEnabled) {
-//                        player.motionX *= glider.getAirResistance();
-//                        player.motionZ *= glider.getAirResistance();
-//                    }
-//                }
+                Vec3d vec3d = player.getLookVec();
+                double d0 = 1.5D;
+                double d1 = 0.1D;
+                player.motionX += vec3d.x * d1 + (vec3d.x * d0 - player.motionX) * 0.2D;
+                player.motionZ += vec3d.z * d1 + (vec3d.z * d0 - player.motionZ) * 0.2D;
+                double up_boost;
+                if (i > 0) {
+                    up_boost = -0.07 * i + 0.6;
+                } else {
+                    up_boost = 0.07;
+                }
+                if (up_boost > 0) {
+                    player.addVelocity(0, up_boost, 0);
+
+                    if (GLIDER_CONFIG.airResistanceEnabled) {
+                        player.motionX *= glider.getAirResistance();
+                        player.motionZ *= glider.getAirResistance();
+                    }
+                }
 
                 break;
             } else if (!scanned.equals(Blocks.AIR)) {

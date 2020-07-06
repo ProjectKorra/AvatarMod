@@ -49,7 +49,7 @@ public class ConfigGlider {
     @Load
     public static boolean windEnabled = true;
     @Load
-    public static float windOverallPower = 1.0f;
+    public static float windOverallPower = 3.0f;
     @Load
     public static float windGustSize = 19;
     @Load

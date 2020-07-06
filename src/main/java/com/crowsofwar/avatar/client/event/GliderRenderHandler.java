@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.client.event;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.config.ConfigGlider;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.api.item.IGlider;
@@ -17,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderSpecificHandEvent;
@@ -27,7 +27,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static com.crowsofwar.avatar.common.config.ConfigGlider.GLIDER_CONFIG;
-import static com.crowsofwar.avatar.common.helper.MathHelper.toRadians;
 
 @SideOnly(Side.CLIENT)
 public class GliderRenderHandler {
@@ -149,32 +148,14 @@ public class GliderRenderHandler {
     }
 
     private void setRotationThirdPersonPerspective(EntityPlayer player, float partialTicks) {
-        //Handles gliders scale rotation and translation for third person perspective
-//        float interpolatedPitch = (player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks) + 90;
-//        //rotate the gliderBasic to the same orientation as the player is facing
-//        GlStateManager.rotate(interpolatedPitch, 1, 0, 0);
-        float interpolatedYaw = (player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) - partialTicks);
-//        //rotate the gliderBasic to the same orientation as the player is facing
-//        GlStateManager.rotate(interpolatedYaw, 0, 1, 0);
-//        GlStateManager.rotate(player.prevRotationYaw - (player.rotationYaw - player.prevRotationYaw), 1, 0, 0);
-//
-//        GlStateManager.pushMatrix();
-//        GlStateManager.popMatrix();
-//
-//        this.needToPop = true;
-
-
-        final float roll = MathHelper.lerpDegrees(
-                player.prevRenderYawOffset - player.prevRotationYaw,
-                player.renderYawOffset - player.rotationYaw,
-                partialTicks
-        );
-        float yaw = -toRadians(player.rotationYaw) - (float)Math.PI;
-        final float pitch = -MathHelper.lerpDegrees(player.prevRotationPitch, player.rotationPitch, partialTicks) - 90;
-        GlStateManager.rotate(MathHelper.lerpDegrees(0.0F, -pitch, 1f), 1.0F, 0.0F, 0.0F);
-        GlStateManager.rotate(-interpolatedYaw, 0.0F, 1.0F, 0.0F);
+        player.limbSwingAmount = 0;
+        GlStateManager.rotate(-player.rotationYawHead, 0, 1, 0);
         GlStateManager.pushMatrix();
-
+        float interpolatedPitch = (player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks) + 90;
+        Vec3d lookVec = player.getLookVec();
+        GlStateManager.rotate(interpolatedPitch, 1, 0, 0);
+        float interpolatedYaw = (player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) - partialTicks);
+        GlStateManager.rotate(interpolatedYaw, 0, 1, 0);
 
     }
 
