@@ -36,7 +36,6 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
 
             boolean gliding = GliderHelper.getIsGliderDeployed(entitylivingbaseIn); //get if gliding (to render or not)
             if (gliding) { //if there is one
-
                 //bind texture of the current glider
                 ItemStack gliderStack = GliderHelper.getGlider(entitylivingbaseIn);
                 this.playerRenderer.bindTexture(((IGlider)gliderStack.getItem()).getModelTexture(gliderStack));

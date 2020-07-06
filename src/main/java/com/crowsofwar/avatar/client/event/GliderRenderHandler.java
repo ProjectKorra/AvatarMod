@@ -148,6 +148,7 @@ public class GliderRenderHandler {
     }
 
     private void setRotationThirdPersonPerspective(EntityPlayer player, float partialTicks) {
+        player.limbSwingAmount = 0;
         GlStateManager.rotate(-player.rotationYawHead, 0, 1, 0);
         GlStateManager.pushMatrix();
         float interpolatedPitch = (player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks) + 90;
@@ -155,8 +156,6 @@ public class GliderRenderHandler {
         GlStateManager.rotate(interpolatedPitch, 1, 0, 0);
         float interpolatedYaw = (player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) - partialTicks);
         GlStateManager.rotate(interpolatedYaw, 0, 1, 0);
-        GlStateManager.pushMatrix();
-        GlStateManager.popMatrix();
 
     }
 

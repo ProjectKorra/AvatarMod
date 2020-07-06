@@ -15,6 +15,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.Arrays;
+
 import static com.crowsofwar.avatar.common.config.ConfigGlider.GLIDER_CONFIG;
 import static com.crowsofwar.avatar.common.helper.MathHelper.*;
 
