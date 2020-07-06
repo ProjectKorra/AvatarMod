@@ -47,7 +47,6 @@ public class AvatarItemRenderRegister {
 		locationsRegular = new ModelResourceLocation[ScrollType.amount()];
 		locationsGlow = new ModelResourceLocation[ScrollType.amount()];
 
-
 		forScroll(Scrolls.ALL);
 		forScroll(Scrolls.AIR);
 		forScroll(Scrolls.WATER);
@@ -58,25 +57,17 @@ public class AvatarItemRenderRegister {
 		forScroll(Scrolls.SAND);
 		forScroll(Scrolls.ICE);
 
-
-		for (int i = 0; i <= 5; i++) {
-			register(AvatarItems.itemWaterPouch, i);
-		}
-
 		register(AvatarItems.itemBisonWhistle);
 
 		register(Item.getItemFromBlock(blockCloud));
 
-		for (int i = 0; i <= 3; i++) {
-			register(AvatarItems.itemBisonArmor, i);
-			register(AvatarItems.itemBisonSaddle, i);
-			register(AvatarItems.itemOstrichEquipment, i);
-			if(i < 3) {
-				register(AvatarItems.gliderBasic, i);
-				register(AvatarItems.gliderAdv, i);
-				register(AvatarItems.gliderPart, i);
-			}
-		}
+		registerWithMetadata(AvatarItems.itemWaterPouch, 6);
+		registerWithMetadata(AvatarItems.itemBisonArmor, 4);
+		registerWithMetadata(AvatarItems.itemBisonSaddle, 4);
+		registerWithMetadata(AvatarItems.itemOstrichEquipment, 4);
+		registerWithMetadata(AvatarItems.gliderBasic, 3);
+		registerWithMetadata(AvatarItems.gliderAdv, 3);
+		registerWithMetadata(AvatarItems.gliderPart, 3);
 	}
 
 	private static void forScroll(ItemScroll scroll) {
@@ -88,6 +79,12 @@ public class AvatarItemRenderRegister {
 					"inventory");
 			setCustomModelResourceLocation(scroll.item(), i, locationsGlow[i]);
 			setCustomModelResourceLocation(scroll.item(), i, locationsRegular[i]);
+		}
+	}
+
+	private static void registerWithMetadata(Item item, int subitemCount) {
+		for (int i = 0; i < subitemCount; i++) {
+			register(item, i);
 		}
 	}
 
