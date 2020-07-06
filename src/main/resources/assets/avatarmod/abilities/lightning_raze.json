@@ -1,8 +1,9 @@
 {
-  "tier": 3,
   "custom_properties": {
     "xpOnHit": 2,
     "level1": {
+      "tier": 3,
+      "parentTier": 5,
       "chiCost": 3.0,
       "cooldown": 0,
       "exhaustion": 2.0,
@@ -16,6 +17,8 @@
       "damage": 4
     },
     "level2": {
+      "tier": 3,
+      "parentTier": 5,
       "chiCost": 3.25,
       "cooldown": 5,
       "exhaustion": 2.5,
@@ -29,6 +32,8 @@
       "damage": 5
     },
     "level3": {
+      "tier": 4,
+      "parentTier": 6,
       "chiCost": 3.5,
       "cooldown": 10,
       "exhaustion": 3.0,
@@ -42,6 +47,8 @@
       "damage": 6
     },
     "level4_1": {
+      "tier": 5,
+      "parentTier": 7,
       "chiCost": 3.75,
       "cooldown": 15,
       "exhaustion": 3.5,
@@ -55,6 +62,8 @@
       "damage": 7
     },
     "level4_2": {
+      "tier": 5,
+      "parentTier": 7,
       "chiCost": 4.0,
       "cooldown": 20,
       "exhaustion": 4.0,

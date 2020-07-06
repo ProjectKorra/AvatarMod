@@ -18,13 +18,17 @@ package com.crowsofwar.avatar.common.item;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.blocks.AvatarBlocks;
 import com.crowsofwar.avatar.common.item.scroll.*;
 
 import com.crowsofwar.avatar.common.GliderInfo;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -89,6 +93,8 @@ public class AvatarItems {
 		Item[] itemsArr = allItems.toArray(new Item[allItems.size()]);
 
 		e.getRegistry().registerAll(itemsArr);
+		for (Block block : AvatarBlocks.allBlocks)
+			e.getRegistry().register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
 
 		AvatarMod.proxy.registerItemModels();
 	}

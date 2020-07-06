@@ -55,7 +55,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 // todo:Colored Flux
 @Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
-public class EntityFlames extends EntityOffensive implements IGlowingEntity {
+public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICustomHitbox{
 
 	private boolean reflect;
 	private boolean lightTrailingFire;
@@ -282,5 +282,15 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity {
 	@Optional.Method(modid = "hammercore")
 	public ColoredLight produceColoredLight(float partialTicks) {
 		return ColoredLight.builder().pos(this).color(1f, 0f, 0f, 1f).radius(10f).build();
+	}
+
+	@Override
+	public Vec3d calculateIntercept(Vec3d origin, Vec3d endpoint, float fuzziness) {
+		return null;
+	}
+
+	@Override
+	public boolean contains(Vec3d point) {
+		return false;
 	}
 }

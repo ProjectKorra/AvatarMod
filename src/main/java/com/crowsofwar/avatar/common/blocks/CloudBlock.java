@@ -24,7 +24,7 @@ import java.util.Random;
 public class CloudBlock extends Block {
 
 	public CloudBlock() {
-		super(Material.GLASS);
+		super(Material.CLOTH);
 		this.setCreativeTab(AvatarItems.tabItems);
 		this.setTranslationKey("avatarmod:cloudblock");
 		this.setHardness(1f);
@@ -44,7 +44,7 @@ public class CloudBlock extends Block {
 	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
 		super.onEntityWalk(worldIn, pos, entityIn);
 		if (worldIn.isRemote)
-			ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Airbending()).clr(0.85F, 0.85F, 0.85F)
+			ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Airbending()).clr(0.95F, 0.95F, 0.95F, 0.075F)
 				.pos(entityIn.posX, pos.getY() + 1, entityIn.posZ).scale(1.25F).time(25).spin(0.25F, 0.125).spawn(worldIn);
 	}
 
@@ -53,13 +53,13 @@ public class CloudBlock extends Block {
 		super.updateTick(worldIn, pos, state, rand);
 		Vec3d centre = AvatarEntityUtils.getMiddleOfBlock(state, worldIn, pos);
 		if (worldIn.isRemote && centre != null)
-			ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Airbending()).clr(0.85F, 0.85F, 0.85F)
+			ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Airbending()).clr(0.95F, 0.95F, 0.95F, 0.075F)
 					.pos(centre).scale(1.5F).time(25).spin(0.25F, 0.125 * worldIn.rand.nextGaussian()).spawn(worldIn);
 	}
 
 
 	@Override
 	public int tickRate(World worldIn) {
-		return 1;
+		return 3;
 	}
 }

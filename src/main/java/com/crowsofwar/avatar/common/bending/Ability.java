@@ -17,19 +17,23 @@
 
 package com.crowsofwar.avatar.common.bending;
 
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.config.AbilityProperties;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
+import com.crowsofwar.avatar.common.network.packets.PacketCSyncAbilityProperties;
 import com.crowsofwar.avatar.common.util.Raytrace;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import javax.annotation.Nonnull;
+import java.util.*;
 
 /**
  * Encapsulates all logic required for a bending ability. There is 1 instance of
@@ -44,6 +48,14 @@ public abstract class Ability {
     private final UUID type;
     private final String name;
     /**
+     * This spell's associated SpellProperties object.
+     */
+    private AbilityProperties properties;
+    /**
+     * A reference to the global spell properties for this spell, so they are only loaded once.
+     */
+    private AbilityProperties globalProperties;
+    /**
      * Used in initialisation.
      */
     private final Set<String> propertyKeys = new HashSet<>();
@@ -55,9 +67,37 @@ public abstract class Ability {
         this.raytrace = new Raytrace.Info();
     }
 
+    /**
+     * Called from the event handler when a player logs in.
+     */
+    public static void syncProperties(EntityPlayer player) {
+        if (player instanceof EntityPlayerMP) {
+            // On the server side, send a packet to the player to synchronise their spell properties
+            List<Ability> abilities = Abilities.all();
+            AvatarMod.network.sendTo(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)), (EntityPlayerMP) player);
+
+        } else {
+            // On the client side, wipe the spell properties so the new ones can be set
+            // TESTME: Can we guarantee this happens before the packet arrives?
+            clearProperties();
+        }
+    }
+
+    private static void clearProperties() {
+        for (Ability ability : Abilities.all()) {
+            ability.properties = null;
+        }
+    }
+
     protected BendingStyle controller() {
         return BendingStyles.get(type);
     }
+
+    /**
+     * All configurable stats. Should be implemented here so that
+     * it automagically gets the correct stats from the json files based on the ability name
+     * with 0 need for an override (except in the case of status control abilities).
+     */
 
     /**
      * Get the id of the bending style that this ability belongs to
@@ -76,12 +116,6 @@ public abstract class Ability {
             //Used for AI purposes
             ((EntityBender) ctx.getBenderEntity()).modifyAbilities(this);
     }
-
-    /**
-     * All configurable stats. Should be implemented here so that
-     * it automagically gets the correct stats from the json files based on the ability name
-     * with 0 need for an override (except in the case of status control abilities).
-     */
 
     /**
      * Gets cooldown to be added after the ability is activated.
@@ -184,7 +218,6 @@ public abstract class Ability {
         return 1;
     }
 
-
     public int getCurrentTier(int level) {
         int tier = getBaseTier();
         switch (level) {
@@ -227,6 +260,8 @@ public abstract class Ability {
         return 0;
     }
 
+    /* Properties; have to fix. Copied from Wizardry. */
+
     public boolean isCompatibleScroll(ItemStack stack, int level) {
         if (getBendingId() != null) {
             if (stack.getItem() instanceof ItemScroll) {
@@ -251,7 +286,6 @@ public abstract class Ability {
         return new DefaultAbilityAi(this, entity, bender);
     }
 
-    /* Properties; have to fix. Copied from Wizardry. */
     /**
      * Adds the given JSON identifiers to the configurable base properties of this spell. This should be called from
      * the constructor or {@link Spell#init()}. <i>It is highly recommended that property keys be defined as constants,
@@ -259,6 +293,7 @@ public abstract class Ability {
      * <p></p>
      * General spell classes will call this method to set any properties they require in order to work properly, and
      * the relevant keys will be public constants.
+     *
      * @param keys One or more spell property keys to add to the spell. By convention, these are lowercase_with_underscores.
      *             If any of these already exists, a warning will be printed to the console.
      * @return The spell instance, allowing this method to be chained onto the constructor.
@@ -267,60 +302,47 @@ public abstract class Ability {
     // Nobody can remove property keys, which guarantees that spell classes always have the properties they need.
     // It also means that subclasses need not worry about properties already defined and used in their superclass.
     // Conversely, general spell classes ONLY EVER define the properties they ACTUALLY USE.
-    /*public final Spell addProperties(String... keys){
+    public final Ability addProperties(String... keys) {
 
-        if(arePropertiesInitialised()) throw new IllegalStateException("Tried to add spell properties after they were initialised");
+        if (arePropertiesInitialised())
+            throw new IllegalStateException("Tried to add spell properties after they were initialised");
 
-        for(String key : keys) if(propertyKeys.contains(key)) Wizardry.logger.warn("Tried to add a duplicate property key '"
-                + key + "' to spell " + this.getRegistryName());
+        for (String key : keys)
+            if (propertyKeys.contains(key))
+                AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Tried to add a duplicate property key '"
+                        + key + "' to ability " + getName());
 
         Collections.addAll(propertyKeys, keys);
 
         return this;
     }
 
-    /** Internal, do not use. */
-   /* public final String[] getPropertyKeys(){
+    /**
+     * Internal, do not use.
+     */
+    public final String[] getPropertyKeys() {
         return propertyKeys.toArray(new String[0]);
     }
 
-    /** Returns true if this spell's properties have been initialised, false if not. Check this if you're attempting
-     * to access them from code that could be called before wizardry's {@code init()} method (e.g. item attributes). */
-    /*public final boolean arePropertiesInitialised(){
+    /**
+     * Returns true if this spell's properties have been initialised, false if not. Check this if you're attempting
+     * to access them from code that could be called before wizardry's {@code init()} method (e.g. item attributes).
+     */
+    public final boolean arePropertiesInitialised() {
         return properties != null;
     }
 
-    /** Sets this spell's properties to the given {@link SpellProperties} object, but only if it doesn't already
-     * have one. This prevents spell properties from being changed after initialisation. */
-    /*public void setProperties(@Nonnull SpellProperties properties){
+    /**
+     * Sets this spell's properties to the given {@link AbilityProperties} object, but only if it doesn't already
+     * have one. This prevents spell properties from being changed after initialisation.
+     */
+    public void setProperties(@Nonnull AbilityProperties properties) {
 
-        if(!arePropertiesInitialised()){
+        if (!arePropertiesInitialised()) {
             this.properties = properties;
-            if(this.globalProperties == null) this.globalProperties = properties;
-        }else{
-            Wizardry.logger.info("A mod attempted to set a spell's properties, but they were already initialised.");
+            if (this.globalProperties == null) this.globalProperties = properties;
+        } else {
+            AvatarLog.info("A mod attempted to set an ability's properties, but they were already initialised.");
         }
     }
-
-    /** Called from the event handler when a player logs in. */
-   /* public static void syncProperties(EntityPlayer player){
-        if(player instanceof EntityPlayerMP){
-            // On the server side, send a packet to the player to synchronise their spell properties
-            // To avoid sending extra data unnecessarily, the spell properties are sent in order of spell ID
-            List<Spell> spells = new ArrayList<>(registry.getValuesCollection());
-            spells.sort(Comparator.comparingInt(Spell::networkID));
-            WizardryPacketHandler.net.sendToAll(new PacketSpellProperties.Message(spells.stream()
-                    .map(s -> s.properties).toArray(SpellProperties[]::new)));
-        }else{
-            // On the client side, wipe the spell properties so the new ones can be set
-            // TESTME: Can we guarantee this happens before the packet arrives?
-            clearProperties();
-        }
-    }
-
-    private static void clearProperties(){
-        for(Spell spell : registry){
-            spell.properties = null;
-        }
-    }**/
 }

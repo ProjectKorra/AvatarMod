@@ -1,7 +1,8 @@
 {
-  "tier": 1,
   "custom_properties": {
     "level1": {
+      "tier": 1,
+      "parentTier": 3,
       "chiCost": 3.0,
       "cooldown": 0,
       "exhaustion": 2.0,
@@ -9,6 +10,8 @@
       "burnOutRecoverTick": 0.5
     },
     "level2": {
+      "tier": 1,
+      "parentTier": 3,
       "chiCost": 3.25,
       "cooldown": 5,
       "exhaustion": 2.5,
@@ -16,6 +19,8 @@
       "burnOutRecoverTick": 0.75
     },
     "level3": {
+      "tier": 2,
+      "parentTier": 4,
       "chiCost": 3.5,
       "cooldown": 10,
       "exhaustion": 3.0,
@@ -23,6 +28,8 @@
       "burnOutRecoverTick": 1.0
     },
     "level4_1": {
+      "tier": 3,
+      "parentTier": 5,
       "chiCost": 3.75,
       "cooldown": 15,
       "exhaustion": 3.5,
@@ -30,6 +37,8 @@
       "burnOutRecoverTick": 1.25
     },
     "level4_2": {
+      "tier": 3,
+      "parentTier": 5,
       "chiCost": 4.0,
       "cooldown": 20,
       "exhaustion": 4.0,
