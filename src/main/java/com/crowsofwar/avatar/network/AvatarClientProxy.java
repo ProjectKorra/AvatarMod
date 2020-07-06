@@ -50,8 +50,11 @@ import com.crowsofwar.avatar.capabilities.IAdvancedGliderCapabilityHandler;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder.Type;
 import com.crowsofwar.avatar.client.event.GliderRenderHandler;
 import com.crowsofwar.avatar.client.renderer.LayerGlider;
+import com.crowsofwar.avatar.common.triggers.AvatarTriggers;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import com.crowsofwar.gorecore.data.PlayerDataFetcherClient;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -72,8 +75,11 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -250,6 +256,8 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 
 		ParticleManager pm = mc.effectRenderer;
 
+		InitiateCustomTriggers();
+
 		if (CLIENT_CONFIG.useCustomParticles) {
 			pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(), AvatarParticleFlames::new);
 			pm.registerParticle(AvatarParticles.getParticleAir().getParticleID(), AvatarParticleAir::new);
@@ -259,6 +267,27 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			pm.registerParticle(AvatarParticles.getParticleFire().getParticleID(), AvatarParticleFlame::new);
 		}
 
+	}
+
+	private void InitiateCustomTriggers() {
+		Method method;
+
+		method = ReflectionHelper.findMethod(CriteriaTriggers.class, "register", "func_192118_a", ICriterionTrigger.class);
+
+		method.setAccessible(true);
+
+		for (int i = 0; i < AvatarTriggers.TRIGGER_ARRAY.length; i++)
+		{
+			try
+			{
+				method.invoke(null, AvatarTriggers.TRIGGER_ARRAY[i]);
+			}
+			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
