@@ -128,7 +128,7 @@ public class UnlockAbilityTrigger implements ICriterionTrigger<UnlockAbilityTrig
     public UnlockAbilityTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)
     {
         return new UnlockAbilityTrigger.Instance(getId(),
-                AbilityPredicate.deserialize(json.get("element")));
+                AbilityPredicate.deserialize(json.get("ability")));
     }
 
     /**
