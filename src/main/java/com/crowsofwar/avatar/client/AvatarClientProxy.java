@@ -257,7 +257,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 
 		ParticleManager pm = mc.effectRenderer;
 
-		InitiateCustomTriggers();
+		AvatarTriggers.init();
 
 		if (CLIENT_CONFIG.useCustomParticles) {
 			pm.registerParticle(AvatarParticles.getParticleFlames().getParticleID(), AvatarParticleFlames::new);
@@ -268,27 +268,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 			pm.registerParticle(AvatarParticles.getParticleFire().getParticleID(), AvatarParticleFlame::new);
 		}
 
-	}
-
-	private void InitiateCustomTriggers() {
-		Method method;
-
-		method = ReflectionHelper.findMethod(CriteriaTriggers.class, "register", "func_192118_a", ICriterionTrigger.class);
-
-		method.setAccessible(true);
-
-		for (int i = 0; i < AvatarTriggers.TRIGGER_ARRAY.length; i++)
-		{
-			try
-			{
-				method.invoke(null, AvatarTriggers.TRIGGER_ARRAY[i]);
-			}
-			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 	}
 
 	@Override

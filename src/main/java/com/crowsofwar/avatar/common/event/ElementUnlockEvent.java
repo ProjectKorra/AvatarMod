@@ -16,7 +16,7 @@ public class ElementUnlockEvent extends BendingEvent {
 		super(entity);
 		this.element = element;
 		AvatarLog.info("triggering element unlock");
-		AvatarTriggers.TriggerUnlockElement(element, entity);
+		AvatarTriggers.UNLOCK_ELEMENT.trigger((EntityPlayerMP) entity, element);
 	}
 
 	public BendingStyle getElement() {
