@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.event.AbilityUnlockEvent;
@@ -81,11 +82,12 @@ public class AvatarPlayerTick {
 								.collect(Collectors.toList());
 						BendingStyle style = BendingStyles.get(elements.get(elementID - 1).getName());
 						if (!MinecraftForge.EVENT_BUS.post(new ElementUnlockEvent(bender, style))) {
-							data.addBending(style);
+							data.addBending(style == null ? new Airbending() : style);
 
 							// Unlock first ability
 							//noinspection ConstantConditions - can safely assume bending is present if
 							// the ID is in use to unlock it
+							assert style != null;
 							Ability ability = Objects.requireNonNull(style.getAllAbilities().get(0));
 							if (!MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(bender, ability)))
 								data.getAbilityData(ability).unlockAbility();

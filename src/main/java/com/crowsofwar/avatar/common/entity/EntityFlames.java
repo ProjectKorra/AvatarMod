@@ -36,6 +36,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -44,6 +45,7 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Random;
 
@@ -55,7 +57,7 @@ import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 
 // todo:Colored Flux
 @Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
-public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICustomHitbox{
+public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICustomHitbox {
 
 	private boolean reflect;
 	private boolean lightTrailingFire;
@@ -63,11 +65,11 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 	public EntityFlames(World worldIn) {
 		super(worldIn);
 		setSize(0.1f, 0.1f);
-		this.setsFires = true;
 		this.lightTrailingFire = false;
 		this.reflect = false;
 		this.ignoreFrustumCheck = true;
 		this.lightTnt = true;
+		this.setsFires = true;
 	}
 
 	@Override
@@ -84,7 +86,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
 	@Override
 	public boolean onCollideWithSolid() {
-		if (collided)
+		if (collided && setsFires)
 			setFires();
 		return super.onCollideWithSolid();
 	}
@@ -96,6 +98,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 		motionX *= 0.975;
 		motionY *= 0.975;
 		motionZ *= 0.975;
+
 
 		if (velocity().sqrMagnitude() <= 0.5 * 0.5) Dissipate();
 
@@ -155,6 +158,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 			}
 		}
 	}
+
 
 	@Override
 	public boolean canCollideWith(Entity entity) {
