@@ -1,0 +1,22 @@
+{
+  "display": {
+    "title": "Bending Arts",
+    "description": "Unlocked an element!",
+    "icon": {
+      "item": "avatarmod:scroll_all"
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "goal"
+  },
+  "rewards": {
+    "experience": 50,
+    "recipes": [
+      "avatarmod:airbender_staff"
+    ]
+  },
+  "criteria": {
+    "unlock_an_element": {
+      "trigger": "unlock_an_element"
+    }
+  }
+}
