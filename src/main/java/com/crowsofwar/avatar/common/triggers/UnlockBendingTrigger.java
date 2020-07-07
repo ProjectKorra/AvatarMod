@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.common.data.BendingData;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -34,17 +36,17 @@ import net.minecraft.util.ResourceLocation;
  *
  * @author jabelar
  */
-public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance>
+public class UnlockBendingTrigger implements ICriterionTrigger<UnlockBendingTrigger.Instance>
 {
     private final ResourceLocation RL;
-    private final Map<PlayerAdvancements, CustomTrigger.Listeners> listeners = Maps.newHashMap();
+    private final Map<PlayerAdvancements, UnlockBendingTrigger.Listeners> listeners = Maps.newHashMap();
 
     /**
      * Instantiates a new custom trigger.
      *
      * @param parString the par string
      */
-    public CustomTrigger(String parString)
+    public UnlockBendingTrigger(String parString)
     {
         super();
         RL = new ResourceLocation(parString);
@@ -55,7 +57,7 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance>
      *
      * @param parRL the par RL
      */
-    public CustomTrigger(ResourceLocation parRL)
+    public UnlockBendingTrigger(ResourceLocation parRL)
     {
         super();
         RL = parRL;
@@ -74,13 +76,13 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance>
      * @see net.minecraft.advancements.ICriterionTrigger#addListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    public void addListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<CustomTrigger.Instance> listener)
+    public void addListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<UnlockBendingTrigger.Instance> listener)
     {
-        CustomTrigger.Listeners myCustomTrigger$listeners = listeners.get(playerAdvancementsIn);
+        UnlockBendingTrigger.Listeners myCustomTrigger$listeners = listeners.get(playerAdvancementsIn);
 
         if (myCustomTrigger$listeners == null)
         {
-            myCustomTrigger$listeners = new CustomTrigger.Listeners(playerAdvancementsIn);
+            myCustomTrigger$listeners = new UnlockBendingTrigger.Listeners(playerAdvancementsIn);
             listeners.put(playerAdvancementsIn, myCustomTrigger$listeners);
         }
 
@@ -91,9 +93,9 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance>
      * @see net.minecraft.advancements.ICriterionTrigger#removeListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    public void removeListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<CustomTrigger.Instance> listener)
+    public void removeListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<UnlockBendingTrigger.Instance> listener)
     {
-        CustomTrigger.Listeners tameanimaltrigger$listeners = listeners.get(playerAdvancementsIn);
+        UnlockBendingTrigger.Listeners tameanimaltrigger$listeners = listeners.get(playerAdvancementsIn);
 
         if (tameanimaltrigger$listeners != null)
         {
@@ -123,9 +125,9 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance>
      * @return the tame bird trigger. instance
      */
     @Override
-    public CustomTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)
+    public UnlockBendingTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)
     {
-        return new CustomTrigger.Instance(getId());
+        return new UnlockBendingTrigger.Instance(getId());
     }
 
     /**
@@ -135,11 +137,11 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance>
      */
     public void trigger(EntityPlayerMP parPlayer)
     {
-        CustomTrigger.Listeners tameanimaltrigger$listeners = listeners.get(parPlayer.getAdvancements());
+        UnlockBendingTrigger.Listeners tameanimaltrigger$listeners = listeners.get(parPlayer.getAdvancements());
 
         if (tameanimaltrigger$listeners != null)
         {
-            tameanimaltrigger$listeners.trigger(parPlayer);
+            tameanimaltrigger$listeners.trigger();
         }
     }
 
@@ -170,7 +172,7 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance>
     static class Listeners
     {
         private final PlayerAdvancements playerAdvancements;
-        private final Set<ICriterionTrigger.Listener<CustomTrigger.Instance>> listeners = Sets.newHashSet();
+        private final Set<ICriterionTrigger.Listener<UnlockBendingTrigger.Instance>> listeners = Sets.newHashSet();
 
         /**
          * Instantiates a new listeners.
@@ -197,7 +199,7 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance>
          *
          * @param listener the listener
          */
-        public void add(ICriterionTrigger.Listener<CustomTrigger.Instance> listener)
+        public void add(ICriterionTrigger.Listener<UnlockBendingTrigger.Instance> listener)
         {
             listeners.add(listener);
         }
@@ -207,7 +209,7 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance>
          *
          * @param listener the listener
          */
-        public void remove(ICriterionTrigger.Listener<CustomTrigger.Instance> listener)
+        public void remove(ICriterionTrigger.Listener<UnlockBendingTrigger.Instance> listener)
         {
             listeners.remove(listener);
         }
@@ -215,13 +217,12 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance>
         /**
          * Trigger.
          *
-         * @param player the player
          */
-        public void trigger(EntityPlayerMP player)
+        public void trigger()
         {
-            ArrayList<ICriterionTrigger.Listener<CustomTrigger.Instance>> list = null;
+            ArrayList<ICriterionTrigger.Listener<UnlockBendingTrigger.Instance>> list = null;
 
-            for (ICriterionTrigger.Listener<CustomTrigger.Instance> listener : listeners)
+            for (ICriterionTrigger.Listener<UnlockBendingTrigger.Instance> listener : listeners)
             {
                 if (listener.getCriterionInstance().test())
                 {
@@ -236,7 +237,7 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance>
 
             if (list != null)
             {
-                for (ICriterionTrigger.Listener<CustomTrigger.Instance> listener1 : list)
+                for (ICriterionTrigger.Listener<UnlockBendingTrigger.Instance> listener1 : list)
                 {
                     listener1.grantCriterion(playerAdvancements);
                 }

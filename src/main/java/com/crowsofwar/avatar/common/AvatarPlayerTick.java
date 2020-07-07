@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.event.AbilityUnlockEvent;
 import com.crowsofwar.avatar.common.event.AbilityUseEvent;
 import com.crowsofwar.avatar.common.event.ElementUnlockEvent;
+import com.crowsofwar.avatar.common.triggers.AvatarTriggers;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
