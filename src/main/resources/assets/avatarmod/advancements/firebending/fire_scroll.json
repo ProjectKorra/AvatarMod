@@ -1,19 +1,16 @@
 {
   "display": {
-    "title": "Path of freedom",
-    "description": "Gain an airbending scroll!",
+    "title": "Path of Power",
+    "description": "Gain a firebending scroll!",
     "icon": {
-      "item": "avatarmod:scroll_air",
+      "item": "avatarmod:scroll_fire",
       "data": 0
     },
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "goal"
   },
   "rewards": {
-    "experience": 50,
-    "recipes": [
-      "avatarmod:airbender_staff"
-    ]
+    "experience": 50
   },
   "criteria": {
     "gained_air_scroll": {
@@ -21,7 +18,7 @@
       "conditions": {
         "items": [
           {
-            "item": "avatarmod:scroll_air"
+            "item": "avatarmod:scroll_fire"
           }
         ]
       }

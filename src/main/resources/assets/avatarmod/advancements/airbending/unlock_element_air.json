@@ -1,14 +1,15 @@
 {
   "display": {
-    "title": "Path of freedom",
-    "description": "Gain an airbending scroll!",
+    "title": "Bending Arts",
+    "description": "Unlocked the element of freedom, Air!",
     "icon": {
       "item": "avatarmod:scroll_air",
-      "data": 0
+      "data": 1
     },
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "goal"
   },
+  "parent": "avatarmod:airbending/air_scroll",
   "rewards": {
     "experience": 50,
     "recipes": [
@@ -16,15 +17,8 @@
     ]
   },
   "criteria": {
-    "gained_air_scroll": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "item": "avatarmod:scroll_air"
-          }
-        ]
-      }
+    "unlock_an_element": {
+      "trigger": "airbending/UNLOCK_ELEMENT_AIR"
     }
   }
 }

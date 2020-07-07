@@ -1,0 +1,24 @@
+{
+  "display": {
+    "title": "Bending Arts",
+    "description": "Unlocked the element of substance, Earth!",
+    "icon": {
+      "item": "avatarmod:scroll_earth",
+      "data": 0
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "goal"
+  },
+  "parent": "avatarmod:earthbending/earth_scroll",
+  "rewards": {
+    "experience": 50,
+    "recipes": [
+      "avatarmod:earthbending_scroll_2"
+    ]
+  },
+  "criteria": {
+    "unlock_an_element": {
+      "trigger": "earthbending/UNLOCK_ELEMENT_EARTH"
+    }
+  }
+}
