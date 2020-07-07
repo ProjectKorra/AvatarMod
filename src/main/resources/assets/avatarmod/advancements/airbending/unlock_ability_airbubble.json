@@ -18,7 +18,7 @@
       "trigger": "unlock_ability",
       "conditions": {
         "ability": {
-          "ability": "airbubble"
+          "ability": "air_bubble"
         }
       }
     }
