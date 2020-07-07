@@ -52,7 +52,7 @@ public class ElementPredicate {
                 spell = BendingStyles.get(s);
 
                 if(spell == null){
-                    throw new JsonSyntaxException("Unknown element id '" + s + "'");
+                    throw new JsonSyntaxException("Unknown element name '" + s + "'");
                 }
             }
 

@@ -12,6 +12,7 @@
  */
 package com.crowsofwar.avatar.common.triggers;
 
+import com.crowsofwar.avatar.common.bending.Ability;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -126,7 +127,8 @@ public class UnlockAbilityTrigger implements ICriterionTrigger<UnlockAbilityTrig
     @Override
     public UnlockAbilityTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)
     {
-        return new UnlockAbilityTrigger.Instance(getId());
+        return new UnlockAbilityTrigger.Instance(getId(),
+                AbilityPredicate.deserialize(json.get("element")));
     }
 
     /**
@@ -134,37 +136,41 @@ public class UnlockAbilityTrigger implements ICriterionTrigger<UnlockAbilityTrig
      *
      * @param parPlayer the player
      */
-    public void trigger(EntityPlayerMP parPlayer)
+    public void trigger(EntityPlayerMP parPlayer, Ability ability)
     {
         UnlockAbilityTrigger.Listeners tameanimaltrigger$listeners = listeners.get(parPlayer.getAdvancements());
 
         if (tameanimaltrigger$listeners != null)
         {
-            tameanimaltrigger$listeners.trigger();
+            tameanimaltrigger$listeners.trigger(ability);
         }
     }
 
     public static class Instance extends AbstractCriterionInstance
     {
 
+        private final AbilityPredicate ability;
         /**
          * Instantiates a new instance.
          *
          * @param parRL the par RL
+         * @param ability
          */
-        public Instance(ResourceLocation parRL)
+        public Instance(ResourceLocation parRL, AbilityPredicate ability)
         {
             super(parRL);
+            this.ability = ability;
         }
 
         /**
          * Test.
          *
          * @return true, if successful
+         * @param ability
          */
-        public boolean test()
+        public boolean test(Ability ability)
         {
-            return true;
+            return this.ability.test(ability);
         }
     }
 
@@ -216,14 +222,15 @@ public class UnlockAbilityTrigger implements ICriterionTrigger<UnlockAbilityTrig
         /**
          * Trigger.
          *
+         * @param ability
          */
-        public void trigger()
+        public void trigger(Ability ability)
         {
             ArrayList<Listener<UnlockAbilityTrigger.Instance>> list = null;
 
             for (Listener<UnlockAbilityTrigger.Instance> listener : listeners)
             {
-                if (listener.getCriterionInstance().test())
+                if (listener.getCriterionInstance().test(ability))
                 {
                     if (list == null)
                     {

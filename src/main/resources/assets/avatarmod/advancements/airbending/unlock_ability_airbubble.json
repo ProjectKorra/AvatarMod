@@ -1,0 +1,26 @@
+{
+  "display": {
+    "title": "Acolyte Moves: Air Bubble",
+    "description": "Unlocked the Air Bubble ability!",
+    "icon": {
+      "item": "avatarmod:scroll_air",
+      "data": 2
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "goal"
+  },
+  "parent": "avatarmod:airbending/unlock_element_air",
+  "rewards": {
+    "experience": 50
+  },
+  "criteria": {
+    "unlock_an_element": {
+      "trigger": "unlock_ability",
+      "conditions": {
+        "ability": {
+          "ability": "airbubble"
+        }
+      }
+    }
+  }
+}
