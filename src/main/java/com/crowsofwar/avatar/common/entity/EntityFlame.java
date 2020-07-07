@@ -241,19 +241,24 @@ public class EntityFlame extends EntityOffensive implements IGlowingEntity, ICus
 
     @Override
     public Vec3d getKnockbackMult() {
-        return new Vec3d(STATS_CONFIG.fireShotSetttings.push * 2, STATS_CONFIG.fireShotSetttings.push / 2, STATS_CONFIG.fireShotSetttings.push * 2);
+        return new Vec3d(STATS_CONFIG.fireShotSetttings.push * 0.125, STATS_CONFIG.fireShotSetttings.push / 2, STATS_CONFIG.fireShotSetttings.push * 0.125);
     }
 
     @Override
     public boolean isPiercing() {
-        if (getOwner() != null && getAbility() instanceof AbilityFireShot) {
-            AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
-            if (data != null)
-                return data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
-        }
-        return false;
+       return true;
     }
 
+    @Override
+    public boolean canBePushed() {
+        return true;
+    }
+
+    //Lets velocity control arrows
+    @Override
+    public boolean canBeCollidedWith() {
+        return false;
+    }
 
     @Override
     @Optional.Method(modid = "hammercore")

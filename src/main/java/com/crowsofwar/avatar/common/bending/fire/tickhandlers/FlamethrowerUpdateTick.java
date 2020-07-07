@@ -401,7 +401,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
                     //Will need to be changed later as I go through and add in the new ability config
                     flames.setXp(SKILLS_CONFIG.flamethrowerHit);
                     flames.setVelocity(look.times(speedMult / 1.5F));
-                    flames.setLifeTime(10 + AvatarUtils.getRandomNumberInRange(0, 5));
+                    flames.setLifeTime(8 + AvatarUtils.getRandomNumberInRange(0, 4));
                     flames.setTrailingFire(abilityData.isDynamicMasterLevel(AbilityTreePath.SECOND));
                     flames.setFireTime(fireTime);
                     flames.setDamage(damage);
