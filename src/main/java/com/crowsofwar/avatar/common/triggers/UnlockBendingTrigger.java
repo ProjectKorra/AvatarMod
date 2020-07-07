@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -26,8 +25,11 @@ import com.google.gson.JsonObject;
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.advancements.critereon.AbstractCriterionInstance;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import scala.xml.Elem;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -127,7 +129,8 @@ public class UnlockBendingTrigger implements ICriterionTrigger<UnlockBendingTrig
     @Override
     public UnlockBendingTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)
     {
-        return new UnlockBendingTrigger.Instance(getId());
+        return new UnlockBendingTrigger.Instance(getId(),
+                ElementPredicate.deserialize(json.get("element")));
     }
 
     /**
@@ -135,27 +138,28 @@ public class UnlockBendingTrigger implements ICriterionTrigger<UnlockBendingTrig
      *
      * @param parPlayer the player
      */
-    public void trigger(EntityPlayerMP parPlayer)
+    public void trigger(EntityPlayerMP parPlayer, BendingStyle bendingStyle)
     {
         UnlockBendingTrigger.Listeners tameanimaltrigger$listeners = listeners.get(parPlayer.getAdvancements());
 
         if (tameanimaltrigger$listeners != null)
         {
-            tameanimaltrigger$listeners.trigger();
+            tameanimaltrigger$listeners.trigger(bendingStyle);
         }
     }
 
     public static class Instance extends AbstractCriterionInstance
     {
-
+        private final ElementPredicate element;
         /**
          * Instantiates a new instance.
          *
-         * @param parRL the par RL
+         * @param criterion the criterion RL
          */
-        public Instance(ResourceLocation parRL)
+        public Instance(ResourceLocation criterion, ElementPredicate element)
         {
-            super(parRL);
+            super(criterion);
+            this.element = element;
         }
 
         /**
@@ -163,9 +167,9 @@ public class UnlockBendingTrigger implements ICriterionTrigger<UnlockBendingTrig
          *
          * @return true, if successful
          */
-        public boolean test()
+        public boolean test(BendingStyle element)
         {
-            return true;
+            return this.element.test(element);
         }
     }
 
@@ -217,14 +221,15 @@ public class UnlockBendingTrigger implements ICriterionTrigger<UnlockBendingTrig
         /**
          * Trigger.
          *
+         * @param bendingStyle
          */
-        public void trigger()
+        public void trigger(BendingStyle bendingStyle)
         {
             ArrayList<ICriterionTrigger.Listener<UnlockBendingTrigger.Instance>> list = null;
 
             for (ICriterionTrigger.Listener<UnlockBendingTrigger.Instance> listener : listeners)
             {
-                if (listener.getCriterionInstance().test())
+                if (listener.getCriterionInstance().test(bendingStyle))
                 {
                     if (list == null)
                     {

@@ -18,7 +18,12 @@
   },
   "criteria": {
     "unlock_an_element": {
-      "trigger": "firebending/UNLOCK_ELEMENT_FIRE"
+      "trigger": "unlock_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending"
+        }
+      }
     }
   }
 }

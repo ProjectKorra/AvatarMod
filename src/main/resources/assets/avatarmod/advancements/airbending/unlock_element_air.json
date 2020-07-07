@@ -18,7 +18,12 @@
   },
   "criteria": {
     "unlock_an_element": {
-      "trigger": "airbending/UNLOCK_ELEMENT_AIR"
+      "trigger": "unlock_bending",
+      "conditions": {
+        "element": {
+          "element": "airbending"
+        }
+      }
     }
   }
 }

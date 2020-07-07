@@ -18,7 +18,12 @@
   "parent": "avatarmod:waterbending/water_scroll",
   "criteria": {
     "unlock_an_element": {
-      "trigger": "waterbending/UNLOCK_ELEMENT_WATER"
+      "trigger": "unlock_bending",
+      "conditions": {
+        "element": {
+          "element": "waterbending"
+        }
+      }
     }
   }
 }
