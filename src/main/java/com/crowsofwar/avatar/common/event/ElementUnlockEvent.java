@@ -1,6 +1,8 @@
 package com.crowsofwar.avatar.common.event;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.triggers.AvatarTriggers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,7 +15,8 @@ public class ElementUnlockEvent extends BendingEvent {
 	public ElementUnlockEvent(EntityLivingBase entity, BendingStyle element) {
 		super(entity);
 		this.element = element;
-		AvatarTriggers.UNLOCK_AN_ELEMENT.trigger((EntityPlayerMP) entity);
+		AvatarLog.info("triggering element unlock");
+		AvatarTriggers.TriggerUnlockElement(element, entity);
 	}
 
 	public BendingStyle getElement() {

@@ -1,9 +1,9 @@
 {
   "display": {
-    "title": "Path of freedom",
-    "description": "Gain an airbending scroll!",
+    "title": "Path of Substance",
+    "description": "Gain an earthbending scroll!",
     "icon": {
-      "item": "avatarmod:scroll_air",
+      "item": "avatarmod:scroll_earth",
       "data": 0
     },
     "background": "avatarmod:textures/advancements/background/air.png",
@@ -12,7 +12,7 @@
   "rewards": {
     "experience": 50,
     "recipes": [
-      "avatarmod:airbender_staff"
+      "avatarmod:earthbending_scroll_1"
     ]
   },
   "criteria": {
@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "avatarmod:scroll_air"
+            "item": "avatarmod:scroll_earth"
           }
         ]
       }

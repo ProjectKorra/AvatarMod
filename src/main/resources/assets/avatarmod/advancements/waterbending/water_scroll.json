@@ -1,9 +1,10 @@
 {
   "display": {
-    "title": "Cracking the Iceberg",
+    "title": "Path of change",
     "description": "Gain a waterbending scroll!",
     "icon": {
-      "item": "avatarmod:scroll_water"
+      "item": "avatarmod:scroll_water",
+      "data": 0
     },
     "background": "avatarmod:textures/advancements/background/water.png",
     "frame": "goal"
