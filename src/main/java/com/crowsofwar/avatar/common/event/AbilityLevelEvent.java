@@ -17,7 +17,8 @@ public class AbilityLevelEvent extends BendingEvent {
 		this.ability = ability;
 		this.oldLevel = oldLevel;
 		this.newLevel = newLevel;
-		AvatarTriggers.ABILITY_LEVEL.trigger((EntityPlayerMP) entity, ability, oldLevel, newLevel);
+		if(entity instanceof EntityPlayerMP)
+			AvatarTriggers.ABILITY_LEVEL.trigger((EntityPlayerMP) entity, ability, oldLevel, newLevel);
 	}
 
 	public Ability getAbility() {

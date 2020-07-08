@@ -11,7 +11,8 @@ public class AbilityUnlockEvent extends BendingEvent {
 	public AbilityUnlockEvent(EntityLivingBase entity, Ability ability) {
 		super(entity);
 		this.ability = ability;
-		AvatarTriggers.ABILITY_USE.trigger((EntityPlayerMP)entity, ability);
+		if(entity instanceof EntityPlayerMP)
+			AvatarTriggers.ABILITY_USE.trigger((EntityPlayerMP)entity, ability);
 	}
 
 	public Ability getAbility() {
