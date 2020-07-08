@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.blocks.BlockTemp;
 import com.crowsofwar.avatar.common.blocks.BlockUtils;
 import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.Raytrace;
@@ -123,6 +124,14 @@ public class EntityFlame extends EntityOffensive implements IGlowingEntity, ICus
             }
         }
 
+        if (world.isRemote && getOwner() != null) {
+            for (double i = 0; i < this.width; i += 0.15) {
+                ParticleBuilder.create(ParticleBuilder.Type.FIRE).time(6 + AvatarUtils.getRandomNumberInRange(0, 6))
+                        .scale(getAvgSize() / 4.5F).vel(world.rand.nextGaussian() / 10 * getAvgSize(), world.rand.nextGaussian() / 10 * getAvgSize(),
+                        world.rand.nextGaussian() / 10 * getAvgSize()).pos(AvatarEntityUtils.getMiddleOfEntity(this)).spawnEntity(getOwner()).spawn(world);
+            }
+        }
+
         setEntitySize(getAvgSize() * sizeMult);
 
         if (lightTrailingFire && !world.isRemote) {
@@ -137,6 +146,11 @@ public class EntityFlame extends EntityOffensive implements IGlowingEntity, ICus
                 }
             }
         }
+    }
+
+    @Override
+    public void spawnPiercingParticles(World world, Vec3d pos) {
+
     }
 
     @Override

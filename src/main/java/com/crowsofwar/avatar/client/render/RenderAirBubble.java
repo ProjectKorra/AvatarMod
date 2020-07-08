@@ -59,6 +59,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         pushMatrix();
         enableBlend();
         disableDepth();
+        enableAlpha();
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
         if (!CLIENT_CONFIG.shaderSettings.bslActive && !CLIENT_CONFIG.shaderSettings.sildursActive)

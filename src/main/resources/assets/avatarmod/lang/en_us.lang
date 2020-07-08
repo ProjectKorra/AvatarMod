@@ -218,16 +218,16 @@ avatar.ability.flame_strike.desc=Strike with the power of condensed fire, creati
 avatar.ability.flame_strike.lvl1=Punch with the power of flame!
 avatar.ability.flame_strike.lvl2=Bigger blasts!
 avatar.ability.flame_strike.lvl3=Tons more damage!
-avatar.ability.flame_strike.lvl4_1=§c§l§oFlame §c§l§oBeam ;; Piercing arcs of flame shoot from your fist!
-avatar.ability.flame_strike.lvl4_2=§c§l§oPyrotechnic §c§l§oBurst ;; Short explosions of condensed fire!
+avatar.ability.flame_strike.lvl4_1=§c§l§oPhoenix's Breath ;; Piercing arcs of flame shoot from your fist!
+avatar.ability.flame_strike.lvl4_2=§c§l§oDragon's Wrath ;; Short explosions of multicoloured condensed fire!
 
 avatar.ability.flamethrower=§c§lFlamethrower
 avatar.ability.flamethrower.desc=Generate a stream of powerful, close-ranged flames. A trademark of Firebending.
 avatar.ability.flamethrower.lvl1=Attack within a short range
 avatar.ability.flamethrower.lvl2=Nearly twice as many flames; but more chi
 avatar.ability.flamethrower.lvl3=Longer range, more precise, HUUUUGE damage increase
-avatar.ability.flamethrower.lvl4_1=§c§l§oFlamestream ;; Extremely long-ranged, concentrated flames
-avatar.ability.flamethrower.lvl4_2=§c§l§oThe world will burn!! ;; Unfocused flames that create fires everywhere
+avatar.ability.flamethrower.lvl4_1=§c§l§oDragon's Breath ;; Breathe multicoloured high-pressure flames!
+avatar.ability.flamethrower.lvl4_2=§c§l§oPhoenix's Wrath!! ;; Huge, unfocused fire that creates flames everywhere.
 
 avatar.ability.fireball=§c§lFireball
 avatar.ability.fireball.desc=Create a glowing orb of flame. It makes a firey explosion on impact.

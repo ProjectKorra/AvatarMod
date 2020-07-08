@@ -491,6 +491,23 @@ public final class ParticleBuilder {
 	}
 
 	/**
+	 * Sets the fade colour of the particle being built. This is an 8-bit (0-255) integer version of
+	 * {@link ParticleBuilder#fade(float, float, float)}.
+	 * <p></p>
+	 * <b>Affects:</b> All particle types except {@link Type#ICE ICE}, {@link Type#MAGIC_BUBBLE MAGIC_BUBBLE}
+	 * and {@link Type#MAGIC_FIRE MAGIC_FIRE}
+	 *
+	 * @param r The red colour component to set; will be clamped to between 0 and 255
+	 * @param g The green colour component to set; will be clamped to between 0 and 255
+	 * @param b The blue colour component to set; will be clamped to between 0 and 255
+	 * @return The particle builder instance, allowing other methods to be chained onto this one
+	 * @throws IllegalStateException if the particle builder is not yet building.
+	 */
+	public ParticleBuilder fade(int r, int g, int b, int a) {
+		return this.clr(r / 255f, g / 255f, b / 255f, a / 255F); // Yes, 255 is correct and not 256, or else we can't have pure white
+	}
+
+	/**
 	 * Sets the fade colour of the particle being built. This is a 6-digit hex colour version of
 	 * {@link ParticleBuilder#fade(float, float, float)}.
 	 * <p></p>
