@@ -268,7 +268,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 
         //Spawn particles
 
-        for (int i = 0; i < 22 + particleCount * 2; i++) {
+        for (int i = 0; i < 24 + particleCount * 2; i++) {
             double x1 = entity.posX + look.x * i / 50 + world.rand.nextGaussian() * accuracyMult;
             double y1 = eyePos - 0.4F + world.rand.nextGaussian() * accuracyMult;
             double z1 = entity.posZ + look.z * i / 50 + world.rand.nextGaussian() * accuracyMult;
@@ -323,9 +323,9 @@ public class StatCtrlFlameStrike extends StatusControl {
                 flames.setElement(new Firebending());
                 flames.setPosition(x1, y1, z1);
                 flames.setTrailingFire(abilityData.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
-                flames.setVelocity(look.x * mult + world.rand.nextGaussian() * accuracyMult,
+                flames.setVelocity(new Vec3d(look.x * mult + world.rand.nextGaussian() * accuracyMult,
                         look.y * mult + world.rand.nextGaussian() * accuracyMult,
-                        look.z * mult + world.rand.nextGaussian() * accuracyMult);
+                        look.z * mult + world.rand.nextGaussian() * accuracyMult));
                 flames.setEntitySize(size / 8);
                 if (!world.isRemote)
                     world.spawnEntity(flames);
