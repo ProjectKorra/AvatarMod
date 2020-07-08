@@ -117,7 +117,7 @@ public class ParticleCube extends ParticleAvatar {
 
         GlStateManager.translate(x, y, z);
 
-        if (!AvatarMod.proxy.isOptifinePresent() && !(element instanceof Firebending))
+        if (!AvatarMod.proxy.isOptifinePresent())
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
         if (element instanceof Waterbending) {
@@ -185,7 +185,7 @@ public class ParticleCube extends ParticleAvatar {
         float v1 = anim / 16f, v2 = v1 + 1f / 16;
         if (AvatarMod.proxy.isOptifinePresent()) {
             if (element instanceof Waterbending)
-                setRBGColorF(particleRed * 0.5F, particleGreen * 0.75F, particleBlue * 1.75F);
+                setRBGColorF(particleRed * 0.75F, particleGreen * 0.75F, particleBlue * 1.25F);
         }
 
         drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2,

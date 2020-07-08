@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.common.bending.fire.statctrls;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
 import com.crowsofwar.avatar.common.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.config.ConfigSkills;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
@@ -12,7 +13,9 @@ import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -155,9 +158,17 @@ public class StatCtrlFireJump extends StatusControl {
 				damageNearbyEntities(ctx, range, speed, damage, numberOfParticles, particleSpeed);
 			}
 
-			ParticleSpawner spawner = new NetworkParticleSpawner();
-			spawner.spawnParticles(entity.world, AvatarParticles.getParticleFlames(), 15, 20, new Vector(entity), new Vector(1, 0, 1), true);
-
+			for (int angle = 0; angle < 360; angle += 2) {
+				if (world.isRemote) {
+					double radians = Math.toRadians(angle);
+					double x = 0.25 * Math.cos(radians);
+					double z = 0.25 * Math.sin(radians);
+					ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(Vector.getEntityPos(entity).toMinecraft().add(x, 0, z))
+							.vel(x * range / 2.5 * world.rand.nextDouble(), world.rand.nextGaussian() / 15, z * range / 2.5 * world.rand.nextDouble())
+							.time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).scale((float) range / 6F).element(new Firebending())
+							.spawnEntity(entity).collide(true).spawn(world);
+				}
+			}
 			data.addTickHandler(FIRE_PARTICLE_SPAWNER);
 			data.getMiscData().setFallAbsorption(fallAbsorption);
 
@@ -180,23 +191,6 @@ public class StatCtrlFireJump extends StatusControl {
 		World world = entity.world;
 		AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.getEntityBoundingBox().minY, entity.posZ - range, entity.posX + range,
 											  entity.posY + entity.getEyeHeight(), entity.posZ + range);
-
-		if (!world.isRemote) {
-			WorldServer World = (WorldServer) world;
-			for (double i = 0; i < range; ) {
-				for (int j = 0; j < 30; j++) {
-					Vector lookPos;
-					if (i >= 1) {
-						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + j * 12), 0).times(i);
-					} else {
-						lookPos = Vector.toRectangular(Math.toRadians(entity.rotationYaw + j * 12), 0);
-					}
-					World.spawnParticle(AvatarParticles.getParticleFlames(), lookPos.x() + entity.posX, entity.getEntityBoundingBox().minY,
-										lookPos.z() + entity.posZ, numberOfParticles, 0, 0, 0, particleSpeed / 4);
-				}
-				i += range / 4;
-			}
-		}
 
 		List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 		for (EntityLivingBase target : nearby) {

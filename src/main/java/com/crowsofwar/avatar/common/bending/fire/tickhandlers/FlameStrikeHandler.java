@@ -135,6 +135,11 @@ public class FlameStrikeHandler extends TickHandler {
             data.removeStatusControl(FLAME_STRIKE_OFF);
             return true;
         }
+        if (data.getTickHandlerDuration(this) > 240) {
+            data.removeStatusControl(FLAME_STRIKE_MAIN);
+            data.removeStatusControl(FLAME_STRIKE_OFF);
+            return true;
+        }
         return false;
     }
 
