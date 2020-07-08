@@ -352,7 +352,7 @@ public class ConfigStats {
 		public int strikeNumber = 2;
 
 		@Load
-		public float size = 2.5f;
+		public float size = 1.75f;
 
 		@Load
 		public int chargeDuration = 40;

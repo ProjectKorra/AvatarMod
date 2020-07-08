@@ -250,6 +250,7 @@ public abstract class AvatarEntity extends Entity {
 		return powerRating;
 	}
 
+	//why
 	public void setPowerRating(double powerRating) {
 		this.powerRating = powerRating;
 	}

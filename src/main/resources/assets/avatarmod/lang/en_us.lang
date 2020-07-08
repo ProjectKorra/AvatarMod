@@ -123,7 +123,7 @@ avatar.lightningRedirected=You redirected ${lightningbender}'s §l§blightning!
 avatar.canUpgradeAbility=[bold]\[AvatarMod2] Did you know [aqua]you can upgrade your ability [translate=avatar.ability.${ability}] to [translate=avatar.spec.lvl${newLevel}]?[/aqua][/bold]
 avatar.canUpgradeAbility2=\[AvatarMod2] To do so, in the radial menu, just hover over the ability and right click!
 avatar.canUpgradeAbility3=\[AvatarMod2] You'll need a [yellow]Universal or [translate=avatar.${bendingType}] scroll[/yellow] to do so!
-avatar.waterCannonFail=Need to look directly at a water source or be nearby one!
+avatar.waterBlastFail=Need to look directly at a water source or be nearby one!
 avatar.cleanseFail=Need to look at or get near a water source block!
 avatar.onCooldown=This ability is still on cooldown!
 
@@ -218,16 +218,16 @@ avatar.ability.flame_strike.desc=Strike with the power of condensed fire, creati
 avatar.ability.flame_strike.lvl1=Punch with the power of flame!
 avatar.ability.flame_strike.lvl2=Bigger blasts!
 avatar.ability.flame_strike.lvl3=Tons more damage!
-avatar.ability.flame_strike.lvl4_1=§c§l§oFlame §c§l§oBeam ;; Piercing arcs of flame shoot from your fist!
-avatar.ability.flame_strike.lvl4_2=§c§l§oPyrotechnic §c§l§oBurst ;; Short explosions of condensed fire!
+avatar.ability.flame_strike.lvl4_1=§c§l§oPhoenix's Breath ;; Piercing arcs of flame shoot from your fist! Set fire to things!
+avatar.ability.flame_strike.lvl4_2=§c§l§oDragon's Wrath ;; Short explosions of multicoloured condensed fire!
 
 avatar.ability.flamethrower=§c§lFlamethrower
 avatar.ability.flamethrower.desc=Generate a stream of powerful, close-ranged flames. A trademark of Firebending.
 avatar.ability.flamethrower.lvl1=Attack within a short range
 avatar.ability.flamethrower.lvl2=Nearly twice as many flames; but more chi
 avatar.ability.flamethrower.lvl3=Longer range, more precise, HUUUUGE damage increase
-avatar.ability.flamethrower.lvl4_1=§c§l§oFlamestream ;; Extremely long-ranged, concentrated flames
-avatar.ability.flamethrower.lvl4_2=§c§l§oThe world will burn!! ;; Unfocused flames that create fires everywhere
+avatar.ability.flamethrower.lvl4_1=§c§l§oDragon's Breath ;; Breathe multicoloured high-pressure flames!
+avatar.ability.flamethrower.lvl4_2=§c§l§oPhoenix's Wrath!! ;; Huge, unfocused fire that creates flames everywhere.
 
 avatar.ability.fireball=§c§lFireball
 avatar.ability.fireball.desc=Create a glowing orb of flame. It makes a firey explosion on impact.
@@ -294,13 +294,13 @@ avatar.ability.water_skate.lvl3=Much faster, and you can now skate on flowing wa
 avatar.ability.water_skate.lvl4_1=§9§l§oBalanced §9§l§oskating ;; Can skate even on solid blocks!
 avatar.ability.water_skate.lvl4_2=§9§l§oWatery §9§l§oimpact ;; Smash the ground after jumping
 
-avatar.ability.water_cannon=§9§lWater §9§lCannon
-avatar.ability.water_cannon.desc=Make a continuous stream of water acts as crowd control. It takes a while to charge up, and takes 3 water charges out of water pouches.
-avatar.ability.water_cannon.lvl1=Basic water cannon
-avatar.ability.water_cannon.lvl2=Deals more damage, slightly larger
-avatar.ability.water_cannon.lvl3=Deals even more damage; you can now just be near a waterbendable block to use water cannon, you don't have to look at one!
-avatar.ability.water_cannon.lvl4_1=§9§l§oTitanium §9§l§oTearer ;; Unleash a hydro-powered beam of such force that it can tear through steel!
-avatar.ability.water_cannon.lvl4_2=§9§l§oRapidfire ;; Rapidly create many smaller streams of water that pierces through enemies!
+avatar.ability.water_blast=§9§lWater §9§lBlast
+avatar.ability.water_blast.desc=Make a continuous stream of water acts as crowd control. It takes a while to charge up, and takes 3 water charges out of water pouches.
+avatar.ability.water_blast.lvl1=Basic water cannon
+avatar.ability.water_blast.lvl2=Deals more damage, slightly larger
+avatar.ability.water_blast.lvl3=Deals even more damage; you can now just be near a waterbendable block to use water cannon, you don't have to look at one!
+avatar.ability.water_blast.lvl4_1=§9§l§oTitanium §9§l§oTearer ;; Unleash a hydro-powered beam of such force that it can tear through steel!
+avatar.ability.water_blast.lvl4_2=§9§l§oRapidfire ;; Rapidly create many smaller streams of water that pierces through enemies!
 
 avatar.ability.cleanse=§9§lCleanse
 avatar.ability.cleanse.desc=Grant yourself and nearby players restorative health effects, plus bending buffs

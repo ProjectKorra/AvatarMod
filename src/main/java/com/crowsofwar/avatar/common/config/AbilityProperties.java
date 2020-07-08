@@ -56,7 +56,7 @@ public class AbilityProperties {
      */
     public final int cooldown;
     /**
-     * A map storing the base values for this spell. These values are defined by the spell class and cannot be
+     * A map storing the base values for this ability. These values are defined by the ability class and cannot be
      * changed.
      */
     // We're using Number here because it makes implementors think about what they convert it to.
@@ -64,16 +64,6 @@ public class AbilityProperties {
     // without thinking. However, with Number you can't just do that, you have to convert and therefore you have to
     // decide how to do the conversion. Internally they're handled as floats though.
     private final Map<String, Number> baseValues;
-
-    /**
-     * A map storing the base values for this ability. These values are defined by the spell class and cannot be
-     * changed.
-     */
-    // We're using Number here because it makes implementors think about what they convert it to.
-    // If we did what attributes do and just use doubles, people (myself included!) might plug them into calculations
-    // without thinking. However, with Number you can't just do that, you have to convert and therefore you have to
-    // decide how to do the conversion. Internally they're handled as floats though.
-	/*private final Map<String, Number> baseValues;
 
 	/**
 	 * Parses the given JSON object and constructs a new {@code SpellProperties} from it, setting all the relevant
@@ -126,7 +116,7 @@ public class AbilityProperties {
         // If the code requests more values than the JSON file contains, that will cause a JsonSyntaxException here anyway.
         // If there are redundant values in the JSON file, chances are that a user has misunderstood the system and tried
         // to add properties that aren't implemented. However, redundant values will also be found if a programmer has
-        // forgotten to call addProperties in their spell constructor (I know I have!), potentially causing a crash at
+        // forgotten to call addProperties in their ability constructor (I know I have!), potentially causing a crash at
         // some random point in the future. Since redundant values aren't a problem by themselves, we shouldn't throw an
         // exception, but a warning is appropriate.
 
@@ -148,7 +138,7 @@ public class AbilityProperties {
     // It's the only way we're gonna keep the fields final!
 
     /**
-     * Constructs a new SpellProperties object for the given spell, reading its values from the given ByteBuf.
+     * Constructs a new AbilityProperties object for the given ability, reading its values from the given ByteBuf.
      */
     public AbilityProperties(Ability ability, ByteBuf buf) {
 
@@ -168,7 +158,7 @@ public class AbilityProperties {
     }
 
     /**
-     * Called from preInit() in the main mod class to initialise the spell property system.
+     * Called from preInit() in the main mod class to initialise the ability property system.
      */
     // For some reason I had this called from a method in CommonProxy which was overridden to do nothing in
     // ClientProxy, but that method was never called and instead this one was called directly from the main mod class.

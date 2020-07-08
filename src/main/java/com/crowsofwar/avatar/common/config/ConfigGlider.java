@@ -17,59 +17,59 @@ public class ConfigGlider {
     @Load
     public float basicGliderYBoost = 0.0025F;
     @Load
-    public static float basicGliderFallReduction = 0.7F;
+    public float basicGliderFallReduction = 0.7F;
     @Load
-    public static float basicGliderWindModifier = 1.4F;
+    public float basicGliderWindModifier = 1.4F;
     @Load
-    public static float basicGliderAirResistance = 0.985F;
+    public float basicGliderAirResistance = 0.985F;
     @Load
-    public static int basicGliderTotalDurability = 512;
+    public  int basicGliderTotalDurability = 512;
 
     //Advanced Glider
     @Load
-    public static float advancedGliderMinSpeed = 0.03f;
+    public float advancedGliderMinSpeed = 0.03f;
     @Load
-    public static float advancedGliderMaxSpeed = 0.0715f;
+    public float advancedGliderMaxSpeed = 0.0715f;
     @Load
-    public static float advancedGliderPitchOffset = 20f;
+    public float advancedGliderPitchOffset = 20f;
     @Load
-    public static float advancedGliderYBoost = 0.025f;
+    public float advancedGliderYBoost = 0.025f;
     @Load
-    public static float advancedGliderFallReduction = 0.9f;
+    public float advancedGliderFallReduction = 0.9f;
     @Load
-    public static float advancedGliderWindModifier = 0.75f;
+    public float advancedGliderWindModifier = 0.75f;
     @Load
-    public static float advancedGliderAirResistance = 0.99f;
+    public float advancedGliderAirResistance = 0.99f;
     @Load
-    public static int advancedGliderTotalDurability = 2048;
+    public int advancedGliderTotalDurability = 2048;
 
     //Wind
     @Load
-    public static boolean airResistanceEnabled = true;
+    public boolean airResistanceEnabled = true;
     @Load
-    public static boolean windEnabled = true;
+    public boolean windEnabled = true;
     @Load
-    public static float windOverallPower = 1.0f;
+    public float windOverallPower = 3.0f;
     @Load
-    public static float windGustSize = 19;
+    public float windGustSize = 19;
     @Load
-    public static float windFrequency = 0.15f;
+    public float windFrequency = 0.15f;
     @Load
-    public static float windRainingMultiplier = 3;
+    public float windRainingMultiplier = 3;
     @Load
-    public static float windSpeedMultiplier = 0.4f;
+    public float windSpeedMultiplier = 0.4f;
     @Load
-    public static float windHeightMultiplier = 1.5f;
+    public float windHeightMultiplier = 1.5f;
     @Load
-    public static float windDurabilityMultiplier = 0.7f;
+    public float windDurabilityMultiplier = 0.7f;
 
     //Durability
     @Load
-    public static boolean durabilityEnabled = true; // durability is disabled in code right now but this will be changed.
+    public boolean durabilityEnabled = true; // durability is disabled in code right now but this will be changed.
     @Load
-    public static int durabilityPerUse = 1;
+    public int durabilityPerUse = 1;
     @Load
-    public static int durabilityTimeframe = 200;
+    public int durabilityTimeframe = 200;
 
     //Misc
     @Load

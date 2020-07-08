@@ -1,7 +1,9 @@
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityFlameArc;
-import net.minecraft.client.renderer.*;
+import com.crowsofwar.avatar.common.entity.EntityFlame;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -9,23 +11,23 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class RenderFlamethrower extends Render<EntityFlameArc> {
+public class RenderFlamethrower extends Render<EntityFlame> {
 
-	//Although this is bad practice, mobs won't show particles otherwise.
+    //Although this is bad practice, mobs won't show particles otherwise.
 
-	public RenderFlamethrower(RenderManager renderManager) {
-		super(renderManager);
-	}
+    public RenderFlamethrower(RenderManager renderManager) {
+        super(renderManager);
+    }
 
-	@Override
-	public void doRender(EntityFlameArc entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    @Override
+    public void doRender(EntityFlame entity, double x, double y, double z, float entityYaw, float partialTicks) {
 
-		float r, g, b, a;
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator.getBuffer();
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-		World world = entity.world;
-		//GlStateManager.pushMatrix();
+        float r, g, b, a;
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+        World world = entity.world;
+        //GlStateManager.pushMatrix();
 	/*	if (world.isRemote) {
 			for (double i = 0; i < Math.max(Math.min((int) (1 / entity.getAvgSize()), 2), 1); i++) {
 				AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
@@ -48,7 +50,7 @@ public class RenderFlamethrower extends Render<EntityFlameArc> {
 						.scale(entity.getAvgSize() * 2F).element(entity.getElement()).collide(true).spawn(world);
 			}
 		}**/
-		//Copied from particleFlash.
+        //Copied from particleFlash.
 		/*int maxFlashes = AvatarUtils.getRandomNumberInRange(2, 4);
 		for (int i = 0; i < maxFlashes; i++) {
 			if (i < (maxFlashes / 2)) {
@@ -114,11 +116,11 @@ public class RenderFlamethrower extends Render<EntityFlameArc> {
 			GlStateManager.enableTexture2D();
 			GlStateManager.enableNormalize();
 		}**/
-	}
+    }
 
-	@Nullable
-	@Override
-	protected ResourceLocation getEntityTexture(EntityFlameArc entity) {
-		return null;
-	}
+    @Nullable
+    @Override
+    protected ResourceLocation getEntityTexture(EntityFlame entity) {
+        return null;
+    }
 }

@@ -47,7 +47,6 @@ public class AvatarItemRenderRegister {
 		locationsRegular = new ModelResourceLocation[ScrollType.amount()];
 		locationsGlow = new ModelResourceLocation[ScrollType.amount()];
 
-
 		forScroll(Scrolls.ALL);
 		forScroll(Scrolls.AIR);
 		forScroll(Scrolls.WATER);
@@ -58,41 +57,34 @@ public class AvatarItemRenderRegister {
 		forScroll(Scrolls.SAND);
 		forScroll(Scrolls.ICE);
 
-
-		for (int i = 0; i <= 5; i++) {
-			register(AvatarItems.itemWaterPouch, i);
-		}
-
 		register(AvatarItems.itemBisonWhistle);
 
 		register(Item.getItemFromBlock(blockCloud));
 
-		//TODO: Register the other glider parts
-
-		register(AvatarItems.gliderBasic);
-		register(AvatarItems.gliderAdv);
-		register(AvatarItems.gliderPartLeftWing, 0);
-		register(AvatarItems.gliderPartRightWing, 1);
-		register(AvatarItems.gliderPartScaffolding, 2);
-
-		for (int i = 0; i <= 3; i++) {
-			register(AvatarItems.itemBisonArmor, i);
-			register(AvatarItems.itemBisonSaddle, i);
-			register(AvatarItems.itemOstrichEquipment, i);
-		}
+		registerWithMetadata(AvatarItems.itemWaterPouch, 6);
+		registerWithMetadata(AvatarItems.itemBisonArmor, 4);
+		registerWithMetadata(AvatarItems.itemBisonSaddle, 4);
+		registerWithMetadata(AvatarItems.itemOstrichEquipment, 4);
+		registerWithMetadata(AvatarItems.gliderBasic, 3);
+		registerWithMetadata(AvatarItems.gliderAdv, 3);
+		registerWithMetadata(AvatarItems.gliderPart, 3);
 	}
 
 	private static void forScroll(ItemScroll scroll) {
 		for (int i = 0; i < 7; i++) {
 			ScrollType type = scroll.getScrollType();
-			int meta = i == 6 ? 1 : (i + 1);
 			locationsRegular[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
 					"inventory");
-			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow_" + (i + 1),
+			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow",
 					"inventory");
 			setCustomModelResourceLocation(scroll.item(), i, locationsGlow[i]);
-			if (type != ScrollType.AIR)
 			setCustomModelResourceLocation(scroll.item(), i, locationsRegular[i]);
+		}
+	}
+
+	private static void registerWithMetadata(Item item, int subitemCount) {
+		for (int i = 0; i < subitemCount; i++) {
+			register(item, i);
 		}
 	}
 

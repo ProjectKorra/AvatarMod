@@ -21,7 +21,6 @@ import com.crowsofwar.avatar.api.upgrade.UpgradeItems;
 import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
 import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosion;
@@ -57,9 +56,6 @@ import com.crowsofwar.avatar.common.network.packets.glider.PacketSServerGliding;
 import com.crowsofwar.avatar.common.registry.CapabilityRegistry;
 import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.common.wind.WindHelper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
@@ -79,10 +75,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
@@ -191,7 +183,7 @@ public class AvatarMod {
         //register capabilities
         CapabilityRegistry.registerAllCapabilities();
 
-        AvatarControl.initControls();
+        //AvatarControl.initControls();
         registerAbilities();
         registerBendingStyles();
         AvatarItems.init();
@@ -247,8 +239,10 @@ public class AvatarMod {
 
         AvatarAnnouncements.fetchAnnouncements();
 
+        AbilityProperties.init();
+
         //File Generation
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      /*  Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         for (Ability ability : Abilities.all()) {
             try {
@@ -328,7 +322,7 @@ public class AvatarMod {
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
-        }
+        }*/
 
 
     }
@@ -372,7 +366,7 @@ public class AvatarMod {
         registerEntity(EntityShockwave.class, "Shockwave", 128, 1000, false);
         registerEntity(EntityLightOrb.class, "LightOrb", 128, 1000, true);
         registerEntity(EntityLightCylinder.class, "LightCylinder", 128, 1000, true);
-        registerEntity(EntityFlameArc.class, "Flamethrower", 128, 1000, true);
+        registerEntity(EntityFlame.class, "Flamethrower", 128, 1000, true);
 
         EntityRegistry.addSpawn(EntitySkyBison.class, 5, 1, 3, EnumCreatureType.CREATURE, //
                 SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, TAIGA_HILLS, ICE_MOUNTAINS, REDWOOD_TAIGA_HILLS, MUTATED_EXTREME_HILLS,
