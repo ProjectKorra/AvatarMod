@@ -183,7 +183,7 @@ public class AvatarMod {
         //register capabilities
         CapabilityRegistry.registerAllCapabilities();
 
-        AvatarControl.initControls();
+        //AvatarControl.initControls();
         registerAbilities();
         registerBendingStyles();
         AvatarItems.init();
