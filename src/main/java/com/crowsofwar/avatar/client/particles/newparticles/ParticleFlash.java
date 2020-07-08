@@ -88,9 +88,9 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
                 setRBGColorF(0.95F, 0.95F, 0.95F);
             if (element instanceof Firebending) {
                 if (CLIENT_CONFIG.shaderSettings.bslActive)
-                    f4 = 2F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
+                    f4 = 1.125F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
                 else
-                    f4 = 1.5F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
+                    f4 = 1.25F * particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
 
             }
             if (world.getWorldTime() > 12600 && world.getWorldTime() < 950 && element instanceof Airbending) {

@@ -452,7 +452,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
                     world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
                             SoundCategory.PLAYERS, 0.2f, 0.8f);
 
-                float movementModifier = 1F - (float) speedMult / 50F;
+                float movementModifier = 1F - (float) speedMult / 90F;
                 if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID) == null)
                     applyMovementModifier(entity, movementModifier);
 

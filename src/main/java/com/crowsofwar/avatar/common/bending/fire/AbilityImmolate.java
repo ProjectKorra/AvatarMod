@@ -154,7 +154,7 @@ public class AbilityImmolate extends Ability {
 			EntityLivingBase emitter = entity.getOwner();
 			assert emitter instanceof EntityPlayer || emitter instanceof EntityBender;
 			Bender b = Bender.get(emitter);
-			if (b != null && b.getData() != null && entity.ticksExisted > 1) {
+			if (b != null && BendingData.getFromEntity(emitter) != null && entity.ticksExisted > 1) {
 				if (!Objects.requireNonNull(b.getData().getPowerRatingManager(Firebending.ID)).hasModifier(ImmolatePowerModifier.class)) {
 					entity.setDead();
 				}

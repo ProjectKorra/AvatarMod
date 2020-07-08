@@ -56,15 +56,16 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         float y = (float) yy + .8f;
         float z = (float) zz;
 
-        pushMatrix();
+      //  pushMatrix();
         enableBlend();
+        enableLighting();
+        disableAlpha();
         disableDepth();
-        enableAlpha();
-        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
+        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
         if (!CLIENT_CONFIG.shaderSettings.bslActive && !CLIENT_CONFIG.shaderSettings.sildursActive)
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-
+        //  GlStateManager.depthFunc(GL11.GL_LEQUAL);
 
         float ticks = entity.ticksExisted + partialTicks;
         float sizeMult = 1, alpha = 1;
@@ -88,7 +89,6 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         {
             float rotY = ticks / 7f;
             float rotX = MathHelper.cos(ticks / 4f) * .3f;
-            enableLighting();
             renderCube(x, y, z, 0, 1, 0, 1, 2.25f * sizeMult, rotX, rotY, 0);
         }
 
@@ -98,15 +98,18 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         {
             float rotY = ticks / 25f;
             float rotZ = MathHelper.cos(ticks / 10f + 1.3f) * .3f;
-            enableLighting();
             renderCube(x, y, z, 0, 1, 0, 1, 3f * sizeMult, 0, rotY, rotZ);
         }
         //GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+        //   GlStateManager.alphaFunc(GL11.GL_GREATER, 0.15F * alpha);
 
 
         disableBlend();
+        disableLighting();
         enableDepth();
-        popMatrix();
+        enableAlpha();
+
+      //  popMatrix();
     }
 
     private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,
