@@ -250,10 +250,12 @@ public class ClientInput implements IControlsHandler {
 						for (StatusControl sc : statusControls) {
 							if (pressed.contains(sc.getSubscribedControl())) {
 								Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
-								//Call it client-side
-								sc.execute(new BendingContext(data, player, raytrace));
-								//Then server side
+								//Call server side
 								AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
+								//Then client side
+								if (sc.execute(new BendingContext(data, player, raytrace)))
+									data.removeStatusControl(sc);
+
 							}
 						}
 					}

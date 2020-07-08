@@ -87,7 +87,7 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
             if (element instanceof Airbending)
                 setRBGColorF(0.95F, 0.95F, 0.95F);
             if (element instanceof Firebending) {
-                particleAlpha *= 1.5F;
+
                 if (CLIENT_CONFIG.shaderSettings.bslActive)
                     particleScale *= 1.25F;
             }
