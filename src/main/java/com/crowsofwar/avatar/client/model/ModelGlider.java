@@ -16,9 +16,6 @@ import static com.crowsofwar.avatar.AvatarInfo.MOD_ID;
  */
 public class ModelGlider extends ModelBase {
 
-    public static final ResourceLocation MODEL_GLIDER_BASIC_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/orangestaff.png");
-    public static final ResourceLocation MODEL_GLIDER_ADVANCED_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/blackstaff.png");
-
     public ModelRenderer staffMain;
     public ModelRenderer gliderPivotTop;
     public ModelRenderer gliderPivotBottom;

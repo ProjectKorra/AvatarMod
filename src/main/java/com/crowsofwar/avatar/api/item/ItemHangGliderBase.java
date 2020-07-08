@@ -41,12 +41,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.crowsofwar.avatar.AvatarInfo.MOD_ID;
 import static com.crowsofwar.avatar.api.helper.GliderHelper.getIsGliderDeployed;
 import static com.crowsofwar.avatar.api.helper.GliderHelper.setIsGliderDeployed;
 import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_AIR_STAFF_COOLDOWN;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.STAFF_GUST_HANDLER;
 
 public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem {
+
+    public static final ResourceLocation MODEL_GLIDER_BASIC_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/orangestaff.png");
+    public static final ResourceLocation MODEL_GLIDER_ADVANCED_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/blackstaff.png");
 
     //ToDo: NBT saving tags of upgrade (need IRecipe for them)
 
