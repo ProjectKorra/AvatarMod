@@ -190,7 +190,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
         }
         setEntitySize(getAvgSize());
 
-        if (world.isRemote && getOwner() != null) {
+        if (world.isRemote && getOwner() != null && ticksExisted % 2 == 0) {
             Vec3d[] points = new Vec3d[getAmountOfControlPoints()];
             for (int i = 0; i < points.length; i++)
                 points[i] = getControlPoint(i).position().toMinecraft();
@@ -223,7 +223,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
                     }
 
                     //Particles along the line
-                    for (int h = 0; h < 4; h++) {
+                    for (int h = 0; h < 6; h++) {
                         pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
                         ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 40 * getAvgSize(),
                                 world.rand.nextGaussian() / 40 * getAvgSize(), world.rand.nextGaussian() / 40 * getAvgSize()).scale(getAvgSize()).clr(0, 102, 255, 185)
@@ -231,7 +231,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
 
                     }
                     //Dripping water particles
-                    for (int h = 0; h < 2; h++) {
+                    for (int h = 0; h < 1; h++) {
                         pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
                         ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 20,
                                 world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 185)
@@ -326,7 +326,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
 
     @Override
     protected double getControlPointMaxDistanceSq() {
-        return 4.25F;
+        return 5F;
     }
 
     @Override

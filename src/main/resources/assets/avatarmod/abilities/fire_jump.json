@@ -8,6 +8,7 @@
       "exhaustion": 2.0,
       "burnOut": 10.0,
       "burnOutRecoverTick": 0.5,
+      "performanceAmount": 20,
       "fireTime": 20
     },
     "level2": {
@@ -17,6 +18,7 @@
       "exhaustion": 2.5,
       "burnOut": 15.0,
       "burnOutRecoverTick": 0.75,
+      "performanceAmount": 25,
       "fireTime": 25
     },
     "level3": {
@@ -26,6 +28,7 @@
       "exhaustion": 3.0,
       "burnOut": 20.0,
       "burnOutRecoverTick": 1.0,
+      "performanceAmount": 30,
       "fireTime": 30
     },
     "level4_1": {
@@ -35,6 +38,7 @@
       "exhaustion": 3.5,
       "burnOut": 25.0,
       "burnOutRecoverTick": 1.25,
+      "performanceAmount": 35,
       "fireTime": 35
     },
     "level4_2": {
@@ -44,6 +48,7 @@
       "exhaustion": 4.0,
       "burnOut": 30.0,
       "burnOutRecoverTick": 1.5,
+      "performanceAmount": 40,
       "fireTime": 40
     }
   }

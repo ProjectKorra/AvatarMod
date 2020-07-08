@@ -26,7 +26,7 @@ public class ItemHangGliderBasic extends ItemHangGliderBase {
         setCreativeTab(AvatarItems.tabItems);
         setTranslationKey(GliderInfo.itemGliderBasicName);
     }
-    
+
     @Override
     public Item item() {
         return this;

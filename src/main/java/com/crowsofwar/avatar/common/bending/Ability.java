@@ -89,6 +89,21 @@ public abstract class Ability {
         }
     }
 
+
+    /**
+     * Returns the base value specified in JSON for the given identifier. This may be used from within the spell
+     * class, or from elsewhere (entities, items, etc.) via the spell's instance.
+     *
+     * @param identifier The JSON identifier for the required property. This <b>must</b> have been defined using
+     *                   {@link Ability#addProperties(String...)} or an exception will be thrown.
+     * @return The base value of the property, as a {@code Number} object. Internally this is handled as a float, but
+     * it is passed through as a {@code Number} to avoid casting. <i>Be careful with rounding when extracting integer
+     * values! The JSON parser cannot guarantee that the property file has an integer value.</i>
+     * @throws IllegalArgumentException if no property was defined with the given identifier. */
+    public final Number getProperty(String identifier){
+        return properties.getBaseValue(identifier);
+    }
+
     protected BendingStyle controller() {
         return BendingStyles.get(type);
     }
@@ -288,7 +303,7 @@ public abstract class Ability {
 
     /**
      * Adds the given JSON identifiers to the configurable base properties of this spell. This should be called from
-     * the constructor or {@link Spell#init()}. <i>It is highly recommended that property keys be defined as constants,
+     * the constructor  . <i>It is highly recommended that property keys be defined as constants,
      * as they will be needed later to retrieve the properties during the casting methods.</i>
      * <p></p>
      * General spell classes will call this method to set any properties they require in order to work properly, and
@@ -304,6 +319,7 @@ public abstract class Ability {
     // Conversely, general spell classes ONLY EVER define the properties they ACTUALLY USE.
     public final Ability addProperties(String... keys) {
 
+        //I need to have an option for specifying the level as well
         if (arePropertiesInitialised())
             throw new IllegalStateException("Tried to add spell properties after they were initialised");
 

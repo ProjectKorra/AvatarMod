@@ -239,6 +239,7 @@ public class StatCtrlFlameStrike extends StatusControl {
             mult = 0.7F;
             damage *= 1.75F;
             performance += 10;
+            particleCount -= 2;
             fireTime += 3;
         }
         if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
@@ -314,9 +315,8 @@ public class StatCtrlFlameStrike extends StatusControl {
                 flames.setTier(new AbilityFlameStrike().getCurrentTier(abilityData.getLevel()));
                 //Will need to be changed later as I go through and add in the new ability config
                 flames.setXp(xp);
-                flames.setLifeTime(10 + AvatarUtils.getRandomNumberInRange(0, 4));
+                flames.setLifeTime((int) (lifeTime * 0.75) + AvatarUtils.getRandomNumberInRange(0, 4));
                 flames.setTrailingFire(abilityData.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND));
-                flames.setFireTime(fireTime);
                 flames.setDamage(damage);
                 flames.setFireTime(fireTime);
                 flames.setPerformanceAmount(performance);

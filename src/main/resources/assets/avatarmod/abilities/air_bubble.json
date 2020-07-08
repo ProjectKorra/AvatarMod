@@ -7,7 +7,8 @@
       "cooldown": 0,
       "exhaustion": 2.0,
       "burnOut": 10.0,
-      "burnOutRecoverTick": 0.5
+      "burnOutRecoverTick": 0.5,
+      "performanceAmount": 20
     },
     "level2": {
       "tier": 3,
@@ -15,7 +16,8 @@
       "cooldown": 5,
       "exhaustion": 2.5,
       "burnOut": 15.0,
-      "burnOutRecoverTick": 0.75
+      "burnOutRecoverTick": 0.75,
+      "performanceAmount": 25
     },
     "level3": {
       "tier": 4,
@@ -23,7 +25,8 @@
       "cooldown": 10,
       "exhaustion": 3.0,
       "burnOut": 20.0,
-      "burnOutRecoverTick": 1.0
+      "burnOutRecoverTick": 1.0,
+      "performanceAmount": 30
     },
     "level4_1": {
       "tier": 5,
@@ -31,7 +34,8 @@
       "cooldown": 15,
       "exhaustion": 3.5,
       "burnOut": 25.0,
-      "burnOutRecoverTick": 1.25
+      "burnOutRecoverTick": 1.25,
+      "performanceAmount": 35
     },
     "level4_2": {
       "tier": 5,
@@ -39,7 +43,8 @@
       "cooldown": 20,
       "exhaustion": 4.0,
       "burnOut": 30.0,
-      "burnOutRecoverTick": 1.5
+      "burnOutRecoverTick": 1.5,
+      "performanceAmount": 40
     }
   }
 }

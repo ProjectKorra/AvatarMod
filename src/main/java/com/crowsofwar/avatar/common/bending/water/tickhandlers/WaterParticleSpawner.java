@@ -30,7 +30,7 @@ public class WaterParticleSpawner extends TickHandler {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		World world = ctx.getWorld();
-		AbilityData abilityData = AbilityData.get(entity, "water_cannon");
+		AbilityData abilityData = AbilityData.get(entity, "water_blast");
 		int maxDuration = 40;
 		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
 			maxDuration = 60;

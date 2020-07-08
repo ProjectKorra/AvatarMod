@@ -40,22 +40,6 @@ public class AbilityProperties {
 
     private static final Gson gson = new Gson();
     /**
-     * The tier this spell belongs to.
-     */
-    public final int tier;
-    /**
-     * Mana cost of the spell. If it is a continuous spell the cost is per second.
-     */
-    public final int cost;
-    /**
-     * The charge-up time of the spell, in ticks.
-     */
-    public final int chargeup;
-    /**
-     * The cooldown time of the spell, in ticks.
-     */
-    public final int cooldown;
-    /**
      * A map storing the base values for this ability. These values are defined by the ability class and cannot be
      * changed.
      */
@@ -65,14 +49,14 @@ public class AbilityProperties {
     // decide how to do the conversion. Internally they're handled as floats though.
     private final Map<String, Number> baseValues;
 
-	/**
-	 * Parses the given JSON object and constructs a new {@code SpellProperties} from it, setting all the relevant
-	 * fields and references.
-	 *
-	 * @param json    A JSON object representing the spell properties to be constructed.
-	 * @param ability The spell that this {@code AbilityConfig} object is for.
-	 * @throws JsonSyntaxException if at any point the JSON object is found to be invalid.
-	 */
+    /**
+     * Parses the given JSON object and constructs a new {@code SpellProperties} from it, setting all the relevant
+     * fields and references.
+     *
+     * @param json    A JSON object representing the spell properties to be constructed.
+     * @param ability The spell that this {@code AbilityConfig} object is for.
+     * @throws JsonSyntaxException if at any point the JSON object is found to be invalid.
+     */
     private AbilityProperties(JsonObject json, Ability ability) {
 
         String[] baseValueNames = ability.getPropertyKeys();
@@ -81,16 +65,6 @@ public class AbilityProperties {
 
         JsonObject enabled = JsonUtils.getJsonObject(json, "enabled");
 
-
-        try {
-            tier = JsonUtils.getInt(json, "tier");
-        } catch (IllegalArgumentException e) {
-            throw new JsonSyntaxException("Incorrect spell property value", e);
-        }
-
-        cost = JsonUtils.getInt(json, "cost");
-        chargeup = JsonUtils.getInt(json, "chargeup");
-        cooldown = JsonUtils.getInt(json, "cooldown");
 
         // There's not much point specifying the classes of the numbers here because the json getter methods just
         // perform conversion to the requested type anyway. It therefore makes very little difference whether the
@@ -143,11 +117,6 @@ public class AbilityProperties {
     public AbilityProperties(Ability ability, ByteBuf buf) {
 
         baseValues = new HashMap<>();
-
-        tier = buf.readInt();
-        cost = buf.readInt();
-        chargeup = buf.readInt();
-        cooldown = buf.readInt();
 
         List<String> keys = Arrays.asList(ability.getPropertyKeys());
         Collections.sort(keys); // Should be the same list of keys in the same order they were written to the ByteBuf
@@ -339,11 +308,6 @@ public class AbilityProperties {
      * Writes this AbilityProperties object to the given ByteBuf so it can be sent via packets.
      */
     public void write(ByteBuf buf) {
-
-        buf.writeInt(tier);
-        buf.writeInt(chargeup);
-        buf.writeInt(cooldown);
-        buf.writeInt(cost);
 
         List<String> keys = new ArrayList<>(baseValues.keySet());
         Collections.sort(keys); // Sort alphabetically (as long as the order is consistent it doesn't matter)
