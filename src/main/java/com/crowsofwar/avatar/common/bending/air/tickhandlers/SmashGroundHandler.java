@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -162,15 +163,15 @@ public class SmashGroundHandler extends TickHandler {
 		public Behavior onUpdate(EntityOffensive entity) {
 			if (entity.world.isRemote) {
 				if (entity instanceof EntityShockwave) {
-					for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (((EntityShockwave) entity).getRange() * ((EntityShockwave) entity).getParticleAmount() * entity.ticksExisted)) {
+					for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (((EntityShockwave) entity).getRange() * ((EntityShockwave) entity).getParticleAmount() * entity.ticksExisted * 0.45)) {
 						//Even though the maths is technically wrong, you use sin if you want a shockwave, and cos if you want a sphere (for x).
 						double x2 = entity.posX + (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle);
 						double y2 = entity.getEntityBoundingBox().minY + 0.3;
 						double z2 = entity.posZ + (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle);
 						Vector speed = new Vector((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle) * (entity.getParticleSpeed() * 8.25),
 								entity.getParticleSpeed() / 6, (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle) * (entity.getParticleSpeed() * 8.25));
-						ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(0.85F, 0.85F, 0.85F).pos(x2, y2, z2).vel(speed.toMinecraft())
-								.collide(true).scale(2.75F).time(10).spawn(entity.world);
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(0.95F, 0.95F, 0.95F, 0.2F).pos(x2, y2, z2).vel(speed.toMinecraft())
+								.collide(true).scale(2F).time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).spawn(entity.world);
 					}
 				}
 				}

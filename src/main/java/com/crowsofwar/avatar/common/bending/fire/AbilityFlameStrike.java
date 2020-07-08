@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityLightOrb;
 import com.crowsofwar.avatar.common.entity.EntityOffensive;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
@@ -35,6 +36,7 @@ import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.avatar.common.util.PlayerViewRegistry;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -50,8 +52,8 @@ import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_STRIKE_MAIN;
-import static com.crowsofwar.avatar.common.data.StatusControlController.FLAME_STRIKE_OFF;
+import static com.crowsofwar.avatar.common.data.StatusControlController.*;
+import static com.crowsofwar.avatar.common.data.StatusControlController.AIR_JUMP;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.FLAME_STRIKE_HANDLER;
 
 /**
@@ -133,6 +135,16 @@ public class AbilityFlameStrike extends Ability {
 		StatCtrlFlameStrike.setTimesUsed(ctx.getBenderEntity().getPersistentID(), 0);
 		data.addTickHandler(FLAME_STRIKE_HANDLER);
 		data.addStatusControl(FLAME_STRIKE_MAIN);
+
+		Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
+		if (FLAME_STRIKE_MAIN.execute(new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
+			if (!ctx.getWorld().isRemote)
+				data.removeStatusControl(FLAME_STRIKE_MAIN);
+		}
+		if (FLAME_STRIKE_OFF.execute(new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
+			if (!ctx.getWorld().isRemote)
+				data.removeStatusControl(FLAME_STRIKE_OFF);
+		}
 	}
 
 
