@@ -1,15 +1,15 @@
 {
   "display": {
-    "title": "Novice Moves: Earth Spear",
-    "description": "Unlocked the Earth Spear ability!",
+    "title": "Acolyte Moves: Fire Jump",
+    "description": "Unlocked the Fire Jump ability!",
     "icon": {
-      "item": "avatarmod:scroll_earth",
+      "item": "avatarmod:scroll_fire",
       "data": 2
     },
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "goal"
   },
-  "parent": "avatarmod:earthbending/unlock_element_earth",
+  "parent": "avatarmod:firebending/unlock_element_fire",
   "rewards": {
     "experience": 50
   },
@@ -18,7 +18,7 @@
       "trigger": "unlock_ability",
       "conditions": {
         "ability": {
-          "ability": "earth_spear"
+          "ability": "fire_jump"
         }
       }
     }
