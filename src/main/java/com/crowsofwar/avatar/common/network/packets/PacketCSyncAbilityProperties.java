@@ -11,7 +11,7 @@ import java.util.List;
 
 public class PacketCSyncAbilityProperties extends AvatarPacket<PacketCSyncAbilityProperties> {
 
-  public AbilityProperties[] properties;
+    public AbilityProperties[] properties;
 
     public PacketCSyncAbilityProperties() {
     }
@@ -35,7 +35,8 @@ public class PacketCSyncAbilityProperties extends AvatarPacket<PacketCSyncAbilit
     @Override
     protected void avatarToBytes(ByteBuf buf) {
         for (AbilityProperties properties : properties)
-            properties.write(buf);
+            if (properties != null)
+                properties.write(buf);
     }
 
     @Override

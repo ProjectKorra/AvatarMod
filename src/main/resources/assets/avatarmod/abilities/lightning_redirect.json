@@ -1,5 +1,6 @@
 {
   "custom_properties": {
+    "xpOnUse": 2,
     "level1": {
       "tier": 1,
       "parentTier": 3,

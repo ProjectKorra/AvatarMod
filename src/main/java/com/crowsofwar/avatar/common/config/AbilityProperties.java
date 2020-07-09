@@ -156,7 +156,7 @@ public class AbilityProperties {
         flag &= loadBuiltInAbilityProperties(); // Don't short-circuit, or mods later on won't get loaded!
 
         if (!flag)
-            AvatarLog.warn("Some spell property files did not load correctly; this will likely cause problems later!");
+            AvatarLog.warn("Some ability property files did not load correctly; this will likely cause problems later!");
     }
 
     public static void loadWorldSpecificAbilityProperties(World world) {
@@ -238,6 +238,7 @@ public class AbilityProperties {
                         JsonObject json = JsonUtils.fromJson(gson, reader, JsonObject.class);
                         AbilityProperties properties = new AbilityProperties(json, ability);
                         ability.setProperties(properties);
+                        AvatarLog.info("Property load successful for " + key +" !");
 
                     } catch (JsonParseException jsonparseexception) {
                         AvatarLog.error("Parsing error loading ability property file for " + key, jsonparseexception);

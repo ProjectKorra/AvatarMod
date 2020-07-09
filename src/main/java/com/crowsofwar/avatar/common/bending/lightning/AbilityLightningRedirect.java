@@ -28,4 +28,15 @@ public class AbilityLightningRedirect extends Ability {
 	public int getBaseParentTier() {
 		return 3;
 	}
+
+	@Override
+	public boolean isUtility() {
+		return true;
+	}
+
+	@Override
+	public void init() {
+		super.init();
+		addProperties(PERFORMANCE);
+	}
 }

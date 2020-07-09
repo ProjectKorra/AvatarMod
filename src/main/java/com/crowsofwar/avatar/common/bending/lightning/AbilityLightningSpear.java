@@ -120,6 +120,16 @@ public class AbilityLightningSpear extends Ability {
 	}
 
 	@Override
+	public boolean isOffensive() {
+		return true;
+	}
+
+	@Override
+	public boolean isProjectile() {
+		return true;
+	}
+
+	@Override
 	public int getBaseParentTier() {
 		return 3;
 	}

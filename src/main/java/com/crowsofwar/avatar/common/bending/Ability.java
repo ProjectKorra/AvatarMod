@@ -99,6 +99,10 @@ public abstract class Ability {
         this.type = bendingType;
         this.name = name;
         this.raytrace = new Raytrace.Info();
+
+    }
+
+    public void init() {
         //Base properties belonging to all abilities
         addProperties(TIER, CHI_COST, BURNOUT, BURNOUT_REGEN, COOLDOWN, EXHAUSTION);
 
@@ -114,13 +118,13 @@ public abstract class Ability {
         if (isChargeable())
             addProperties(CHARGE_TIME);
 
-        if (bendingType == Firebending.ID)
+        if (getBendingId() == Firebending.ID && isOffensive())
             addProperties(FIRE_TIME);
 
         //Brute force due to initialisation order
-        if (bendingType == Lightningbending.ID ||
-                bendingType == Sandbending.ID || bendingType == Combustionbending.ID
-                || bendingType == Icebending.ID)
+        if (getBendingId() == Lightningbending.ID ||
+                getBendingId() == Sandbending.ID || getBendingId() == Combustionbending.ID
+                || getBendingId() == Icebending.ID)
             addProperties(PARENT_TIER);
     }
 
@@ -193,7 +197,7 @@ public abstract class Ability {
      * @throws IllegalArgumentException if no property was defined with the given identifier.
      */
     public final Number getProperty(String identifier, int abilityLevel) {
-        return properties.getBaseValue(identifier, abilityLevel);
+        return properties == null ? 1 : properties.getBaseValue(identifier, abilityLevel);
     }
 
     protected BendingStyle controller() {
@@ -422,6 +426,7 @@ public abstract class Ability {
         if (!arePropertiesInitialised()) {
             this.properties = properties;
             if (this.globalProperties == null) this.globalProperties = properties;
+            AvatarLog.info("Successfully set properties for " + getName() + "!");
         } else {
             AvatarLog.info("A mod attempted to set an ability's properties, but they were already initialised.");
         }

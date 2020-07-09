@@ -192,12 +192,13 @@ public class AvatarMod {
         CapabilityRegistry.registerAllCapabilities();
 
         //AvatarControl.initControls();
-        registerAbilities();
-        AbilityProperties.init();
-        registerBendingStyles();
 
-        for (BendingStyle style : BendingStyles.all())
-            style.registerAbilities();
+        registerAbilities();
+        Abilities.all().forEach(Ability::init);
+        AbilityProperties.init();
+
+       // AbilityProperties.init();
+        registerBendingStyles();
 
         AvatarItems.init();
         AvatarBlocks.init();
@@ -253,7 +254,7 @@ public class AvatarMod {
         AvatarAnnouncements.fetchAnnouncements();
 
         //File Generation
-        /*Gson gson = new GsonBuilder().setPrettyPrinting().create();
+       /* Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         for (Ability ability : Abilities.all()) {
             try {
