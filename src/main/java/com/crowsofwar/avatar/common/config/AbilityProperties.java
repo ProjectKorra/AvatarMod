@@ -331,10 +331,12 @@ public class AbilityProperties {
      * @return The base value, as a {@code Number}.
      * @throws IllegalArgumentException if no base value was defined with the given identifier.
      */
+    //TODO: A way to store the level in the hashmap! Ahh!
     public Number getBaseValue(String identifier, int abilityLevel) {
         if (!baseValues.containsKey(identifier)) {
             throw new IllegalArgumentException("Base value with identifier '" + identifier + "' is not defined.");
         }
+        //getALL()? Need something else
         return baseValues.get(identifier);
     }
 
