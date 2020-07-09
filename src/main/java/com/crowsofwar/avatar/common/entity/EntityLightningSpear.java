@@ -167,8 +167,8 @@ public class EntityLightningSpear extends EntityOffensive implements IGlowingEnt
 	}
 
 	@Override
-	public DamageSource getDamageSource(Entity target) {
-		return AvatarDamageSource.causeLightningSpearDamage(target, getOwner());
+	public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
+		return AvatarDamageSource.causeLightningSpearDamage(target, owner);
 	}
 
 	/**

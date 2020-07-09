@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.entity;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
@@ -31,6 +32,7 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -78,6 +80,11 @@ public class EntityAirGust extends EntityOffensive {
 	@Override
 	public BendingStyle getElement() {
 		return new Airbending();
+	}
+
+	@Override
+	public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
+		return AvatarDamageSource.causeAirDamage(target, owner);
 	}
 
 	@Override

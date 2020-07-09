@@ -237,8 +237,8 @@ public class EntityRavine extends EntityOffensive {
 	}
 
 	@Override
-	public DamageSource getDamageSource(Entity target) {
-		return AvatarDamageSource.causeRavineDamage(target, getOwner());
+	public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
+		return AvatarDamageSource.causeRavineDamage(target, owner);
 	}
 
 	@Override

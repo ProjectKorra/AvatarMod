@@ -488,9 +488,9 @@ avatar.key.conflict1=%1$s
 avatar.key.conflict2=Conflict w/ %1$s
 
 death.attack.avatar_Fire=%1$s was incinerated by %2$s's §c§lfirebending!
-death.attack.avatar_Fire_fireShot=%1$s was incinerated by %2$s's §c§lfire shot!
-death.attack.avatar_Fire_flamethrower=%1$s just got §c§lROASTED by %2$s !
-death.attack.avatar_Fire_fireArc=%1$s was §c§lFIRED by %2$s !
+death.attack.avatar_Fire_fireShot=%1$s was burnt to death by %2$s's §c§lfire shot!
+death.attack.avatar_Fire_flamethrower=%1$s just got §c§lroasted by %2$s !
+death.attack.avatar_Fire_dragonFire=%1$s was §c§lpurified by %2$s !
 death.attack.avatar_Fire_fireball=%2$s §c§lincinerated %1$s with a §c§lfireball!
 death.attack.avatar_Fire_shockWave=%2$s was §c§lcremated away by %1$s's shockwave!
 death.attack.avatar_Fire_sphere_shockWave=%2$s was §c§lconflagrated by %1$s's fire burst!
@@ -498,7 +498,7 @@ death.attack.avatar_Fire_sphere_shockWave=%2$s was §c§lconflagrated by %1$s's 
 death.attack.avatar_Water=%1$s drowned from %2$s's §9§lwaterbending!
 death.attack.avatar_Water_waterArc=%2$s's §9§lwater §9§larc drowned %1$s !
 death.attack.avatar_Water_wave=%1$s §9§lcan't §9§lsurf!
-death.attack.avatar_Water_waterCannon=%1$s couldn't handle the §9§lpressure of %2$s's §9§lWater §9§lCannon!
+death.attack.avatar_Water_waterBlast=%1$s couldn't handle the §9§lpressure of %2$s's §9§lWater §9§lCannon!
 death.attack.avatar_Water_shockWave=%2$s was §9§ldrowned by %1$s's hydrowave!
 death.attack.avatar_Water_sphere_shockWave=%2$s was §9§lblasted by %1$s's §9§ltorrential burst!
 

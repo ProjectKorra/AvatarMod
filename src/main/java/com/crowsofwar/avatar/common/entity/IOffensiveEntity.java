@@ -245,6 +245,10 @@ public interface IOffensiveEntity {
         return 1.0F + AvatarUtils.getRandomNumberInRange(1, 100) / 500F;
     }
 
+    default void setDamageSource(String source) {
+
+    }
+
     default DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
         return AvatarDamageSource.causeFireDamage(target, owner);
     }

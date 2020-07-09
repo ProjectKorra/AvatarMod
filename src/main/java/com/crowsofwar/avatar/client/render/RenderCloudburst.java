@@ -50,6 +50,10 @@ public class RenderCloudburst extends Render<EntityCloudBall> {
         disableLighting();
 
 
+        //My genius is overwhelming
+        if (CLIENT_CONFIG.shaderSettings.bslActive)
+            GlStateManager.depthMask(false);
+
         blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
         GlStateManager.color(0.875F, 0.875F, 0.875F, 0.5F);
         renderCube(x, y, z, //

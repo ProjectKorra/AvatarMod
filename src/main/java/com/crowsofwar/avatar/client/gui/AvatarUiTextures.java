@@ -47,11 +47,6 @@ public class AvatarUiTextures {
 	public static final ResourceLocation ICE = new ResourceLocation("minecraft", "textures/blocks/ice.png");
 	public static final ResourceLocation[] BLOCK_BREAK = getBlockBreakTextures();
 	public static final ResourceLocation WHITE = new ResourceLocation("avatarmod", "textures/gui/white.png");
-	static final ResourceLocation radialMenu = new ResourceLocation("avatarmod",
-			"textures/radial/default_segment.png");
-	static final ResourceLocation icons = new ResourceLocation("avatarmod", "textures/gui/ability_icons.png");
-	static final ResourceLocation blurredIcons = new ResourceLocation("avatarmod",
-			"textures/gui/blurred_icons.png");
 	private static final Map<Ability, ResourceLocation> abilityTextures = new HashMap<>();
 	private static final Map<BendingStyle, ResourceLocation> radialTextures = new HashMap<>();
 	private static final Map<Ability, ResourceLocation> abilityCards = new HashMap<>();

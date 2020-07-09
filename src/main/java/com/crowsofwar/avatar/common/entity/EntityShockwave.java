@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.entity.data.ShockwaveBehaviour;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.network.datasync.DataParameter;
@@ -298,7 +299,7 @@ public class EntityShockwave extends EntityOffensive {
 	}
 
 	@Override
-	public DamageSource getDamageSource(Entity target) {
+	public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
 		return getSphere() ? AvatarDamageSource.causeSphericalShockwaveDamage(target, getOwner(), source)
 				: AvatarDamageSource.causeShockwaveDamage(target, getOwner(), source);
 	}

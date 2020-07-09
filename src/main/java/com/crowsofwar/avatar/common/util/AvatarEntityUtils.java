@@ -48,6 +48,7 @@ public class AvatarEntityUtils {
 	}
 
 
+	//Smelts any item, really unabalanced
 	public static void smeltItemEntity(EntityItem entity) {
 		ItemStack stack = entity.getItem();
 		ItemStack smelted = FurnaceRecipes.instance().getSmeltingResult(stack);
@@ -57,7 +58,20 @@ public class AvatarEntityUtils {
 		if (!entity.world.isRemote)
 			entity.world.spawnEntity(item);
 		entity.setDead();
+	}
 
+	public static void smeltItemEntity(EntityItem entity, int smeltLevel) {
+		ItemStack stack = entity.getItem();
+		ItemStack smelted = FurnaceRecipes.instance().getSmeltingResult(stack);
+		float exp = FurnaceRecipes.instance().getSmeltingExperience(stack);
+		if (smeltLevel / 4F > exp) {
+			EntityItem item = new EntityItem(entity.world, entity.posX, entity.posY + 0.75, entity.posZ, smelted);
+			item.setDefaultPickupDelay();
+			item.setEntityInvulnerable(true);
+			if (!entity.world.isRemote)
+				entity.world.spawnEntity(item);
+			entity.setDead();
+		}
 	}
 	/**
 	 *

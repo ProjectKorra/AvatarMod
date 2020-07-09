@@ -35,6 +35,7 @@ public class EntityFlame extends EntityOffensive implements IGlowingEntity, ICus
 
     private boolean reflect;
     private boolean lightTrailingFire;
+    private boolean smelt;
     private float sizeMult;
 
     public EntityFlame(World worldIn) {
@@ -48,6 +49,10 @@ public class EntityFlame extends EntityOffensive implements IGlowingEntity, ICus
         this.sizeMult = 1.1F;
     }
 
+    public void setSmelt(boolean smelt) {
+        this.smelt = smelt;
+    }
+    
     public float getSizeMult() {
         return this.sizeMult;
     }
@@ -63,8 +68,8 @@ public class EntityFlame extends EntityOffensive implements IGlowingEntity, ICus
 
     @Override
     public void onCollideWithEntity(Entity entity) {
-        if (entity instanceof EntityItem)
-            AvatarEntityUtils.smeltItemEntity((EntityItem) entity);
+        if (entity instanceof EntityItem && smelt)
+            AvatarEntityUtils.smeltItemEntity((EntityItem) entity, getTier());
         super.onCollideWithEntity(entity);
     }
 

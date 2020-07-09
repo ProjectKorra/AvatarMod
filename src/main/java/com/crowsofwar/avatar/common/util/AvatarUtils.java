@@ -576,7 +576,7 @@ public class AvatarUtils {
 				abilityName = ability.getName();
 			}
 
-			String elementName = style.getName().substring(0, style.getName().length() - 7);
+			String elementName = style.getName();
 			String damageName = AvatarDamageSource.getNameFromBendingStyle(elementName);
 			DamageSource damageSource = new EntityDamageSourceIndirect("avatar_" + damageName + "_" + abilityName, hit, caster);
 

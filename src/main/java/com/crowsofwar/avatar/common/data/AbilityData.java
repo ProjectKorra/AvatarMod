@@ -361,6 +361,24 @@ public class AbilityData {
 		}
 	}
 
+	public int getCurrentTier() {
+		int tier = 0;
+		if (getAbility() != null) {
+			tier += getAbility().getBaseTier();
+			switch (level) {
+				default:
+					break;
+				case 2:
+					tier++;
+					break;
+				case 3:
+					tier += 2;
+					break;
+			}
+		}
+		return tier;
+	}
+
 	public void readFromNbt(NBTTagCompound nbt) {
 		xp = nbt.getFloat("Xp");
 		lastXp = nbt.getFloat("lastXp");

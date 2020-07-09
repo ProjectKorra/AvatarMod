@@ -20,7 +20,6 @@ import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -56,16 +55,15 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         float y = (float) yy + .8f;
         float z = (float) zz;
 
-      //  pushMatrix();
+        //  pushMatrix();
         enableBlend();
         enableLighting();
         disableAlpha();
-        disableDepth();
+
+        //My brain is massive
+        GlStateManager.depthMask(false);
 
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
-        if (!CLIENT_CONFIG.shaderSettings.bslActive && !CLIENT_CONFIG.shaderSettings.sildursActive)
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-        //  GlStateManager.depthFunc(GL11.GL_LEQUAL);
 
         float ticks = entity.ticksExisted + partialTicks;
         float sizeMult = 1, alpha = 1;
@@ -100,16 +98,10 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
             float rotZ = MathHelper.cos(ticks / 10f + 1.3f) * .3f;
             renderCube(x, y, z, 0, 1, 0, 1, 3f * sizeMult, 0, rotY, rotZ);
         }
-        //GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-        //   GlStateManager.alphaFunc(GL11.GL_GREATER, 0.15F * alpha);
-
 
         disableBlend();
         disableLighting();
-        enableDepth();
         enableAlpha();
-
-      //  popMatrix();
     }
 
     private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,

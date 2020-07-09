@@ -63,21 +63,21 @@ public class AvatarDamageSource {
 
 	public static String getNameFromBendingStyle(String elementName) {
 		String damageName = "";
-		if (elementName.equalsIgnoreCase("fire"))
+		if (elementName.equalsIgnoreCase("firebending"))
 			damageName = "Fire";
-		else if (elementName.equalsIgnoreCase("water"))
+		else if (elementName.equalsIgnoreCase("waterbending"))
 			damageName = "Water";
-		else if (elementName.equalsIgnoreCase("earth"))
+		else if (elementName.equalsIgnoreCase("earthbending"))
 			damageName = "Earth";
-		else if (elementName.equalsIgnoreCase("air"))
+		else if (elementName.equalsIgnoreCase("airbending"))
 			damageName = "Air";
-		else if (elementName.equalsIgnoreCase("lightning"))
+		else if (elementName.equalsIgnoreCase("lightningbending"))
 			damageName = "Lightning";
-		else if (elementName.equalsIgnoreCase("sand"))
+		else if (elementName.equalsIgnoreCase("sandbending"))
 			damageName = "Sand";
-		else if (elementName.equalsIgnoreCase("ice"))
+		else if (elementName.equalsIgnoreCase("icebending"))
 			damageName = "Ice";
-		else if (elementName.equalsIgnoreCase("combustion"))
+		else if (elementName.equalsIgnoreCase("combustionbending"))
 			damageName = "Combustion";
 		return damageName;
 	}
@@ -147,7 +147,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the airblade
 	 */
 	public static DamageSource causeAirbladeDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_Air_airblade", hit, owner).setProjectile();
+		return new EntityDamageSourceIndirect(AIR.getDamageType() + "_airblade", hit, owner).setProjectile();
 	}
 
 	//WATER
@@ -160,7 +160,7 @@ public class AvatarDamageSource {
 	 * @return DamageSource for the water
 	 */
 	public static DamageSource causeWaterDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect(AvatarDamageSource.WATER.getDamageType(), hit, owner);
+		return new EntityDamageSourceIndirect(WATER.getDamageType(), hit, owner);
 	}
 
 	/**
@@ -171,7 +171,7 @@ public class AvatarDamageSource {
 	 * @return DamageSource for the water arc
 	 */
 	public static DamageSource causeWaterArcDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_Water_waterArc", hit, owner).setProjectile();
+		return new EntityDamageSourceIndirect(WATER.getDamageType() + "_waterArc", hit, owner).setProjectile();
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the wave
 	 */
 	public static DamageSource causeWaveDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_Water_wave", hit, owner).setProjectile();
+		return new EntityDamageSourceIndirect(WATER.getDamageType() + "_wave", hit, owner).setProjectile();
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the water cannon
 	 */
 	public static DamageSource causeWaterCannonDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_Water_waterCannon", hit, owner);
+		return new EntityDamageSourceIndirect(WATER.getDamageType() +  "_waterBlast", hit, owner);
 	}
 
 	//FIRE
@@ -204,7 +204,7 @@ public class AvatarDamageSource {
 	 * @return DamageSource for the fire
 	 */
 	public static DamageSource causeFireDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect(AvatarDamageSource.FIRE.getDamageType(), hit, owner);
+		return new EntityDamageSourceIndirect(FIRE.getDamageType(), hit, owner);
 	}
 
 	/**
@@ -215,19 +215,19 @@ public class AvatarDamageSource {
 	 * @return DamageSource for the fire shot
 	 */
 	public static DamageSource causeFireShotDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_Fire_fireShot", hit, owner);
+		return new EntityDamageSourceIndirect(FIRE.getDamageType() + "_fireShot", hit, owner);
 	}
 
 
 	/**
-	 * Create a DamageSource for damage from a fire arc.
+	 * Create a DamageSource for damage from dragon fire.
 	 *
-	 * @param hit   Who was hit by the fire arc
-	 * @param owner Who created the fire arc
-	 * @return DamageSource for the fire arc
+	 * @param hit   Who was hit by the draconic fire
+	 * @param owner Who created the dragon fire
+	 * @return DamageSource for the Dragon fire
 	 */
-	public static DamageSource causeFireArcDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_Fire_fireArc", hit, owner).setProjectile();
+	public static DamageSource causeDragonFireDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect(FIRE.getDamageType() + "_dragonFire", hit, owner).setProjectile();
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class AvatarDamageSource {
 	 * @param owner Who created the fireball
 	 */
 	public static DamageSource causeFireballDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_Fire_fireball", hit, owner).setProjectile()
+		return new EntityDamageSourceIndirect(FIRE.getDamageType() + "_fireball", hit, owner).setProjectile()
 				.setExplosion();
 	}
 
@@ -248,17 +248,9 @@ public class AvatarDamageSource {
 	 * @param owner Who created the flames
 	 */
 	public static DamageSource causeFlamethrowerDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect("avatar_Fire_flamethrower", hit, owner).setProjectile();
+		return new EntityDamageSourceIndirect(FIRE.getDamageType() + "_flamethrower", hit, owner).setProjectile();
 	}
 
-	/**
-	 * Create a DamageSource for damage caused by punching an enemy with fire..
-	 *
-	 * @param owner Who punched
-	 */
-	public static DamageSource causeInfernoPunchDamage(@Nullable Entity owner) {
-		return new EntityDamageSource("avatar_Fire_infernoPunch",owner);
-	}
 
 	//EARTH
 
@@ -457,6 +449,7 @@ public class AvatarDamageSource {
 			}
 
 			if (AvatarDamageSource.isLightningDamage(source)) {
+				source.setDamageBypassesArmor();
 				if (hit instanceof EntityWaterMob) {
 					event.setAmount(event.getAmount() * 1.5F);
 				}
@@ -467,6 +460,7 @@ public class AvatarDamageSource {
 			}
 
 			if (AvatarDamageSource.isCombustionDamage(source)) {
+				source.setExplosion();
 				if (hit instanceof EntityCreeper) {
 					event.setAmount(event.getAmount() * 0.5F);
 					AvatarUtils.igniteCreeper((EntityCreeper) hit);

@@ -318,6 +318,7 @@ public class StatCtrlFlameStrike extends StatusControl {
                 flames.setLifeTime((int) (lifeTime * 0.75) + AvatarUtils.getRandomNumberInRange(0, 4));
                 flames.setTrailingFire(abilityData.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND));
                 flames.setDamage(damage);
+                flames.setSmelt(true);
                 flames.setFireTime(fireTime);
                 flames.setPerformanceAmount(performance);
                 flames.setElement(new Firebending());

@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.common.bending.fire.AbilityFireShot;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.blocks.BlockTemp;
 import com.crowsofwar.avatar.common.blocks.BlockUtils;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
@@ -31,10 +32,12 @@ import com.crowsofwar.gorecore.util.Vector;
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -80,7 +83,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 	@Override
 	public void onCollideWithEntity(Entity entity) {
 		if (entity instanceof EntityItem)
-			AvatarEntityUtils.smeltItemEntity((EntityItem) entity);
+			AvatarEntityUtils.smeltItemEntity((EntityItem) entity, getTier());
 		super.onCollideWithEntity(entity);
 	}
 
@@ -159,6 +162,10 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 		}
 	}
 
+	@Override
+	public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
+		return AvatarDamageSource.causeFireShotDamage(target, owner);
+	}
 
 	@Override
 	public boolean canCollideWith(Entity entity) {

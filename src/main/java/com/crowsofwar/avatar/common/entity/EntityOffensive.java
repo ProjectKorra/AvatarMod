@@ -1,6 +1,9 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.bending.combustion.Combustionbending;
+import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
+import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.common.entity.data.Behavior;
 import com.crowsofwar.avatar.common.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
@@ -19,6 +22,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -61,6 +65,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     private int ticks = 0, ticksMoving = 0;
     private double prevVelX, prevVelY, prevVelZ;
     private Predicate<Entity> solidEntities;
+    private String damageSource;
 
 
     public EntityOffensive(World world) {
@@ -74,6 +79,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
                 entity instanceof EntityShield && ((EntityShield) entity).getOwner() != getOwner();
         this.width = getWidth();
         this.height = getHeight();
+        this.damageSource = AvatarDamageSource.FIRE.getDamageType();
     }
 
     public OffensiveBehaviour getBehaviour() {
@@ -514,8 +520,25 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         return 1.0F + AvatarUtils.getRandomNumberInRange(1, 100) / 500F;
     }
 
-    public DamageSource getDamageSource(Entity target) {
-        return getDamageSource(target, getOwner());
+    @Override
+    public void setDamageSource(String source) {
+        this.damageSource = source;
+    }
+
+    @Override
+    public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
+        DamageSource source = AvatarDamageSource.FIRE;
+        if (damageSource.startsWith("avatar_")) {
+            source = new EntityDamageSourceIndirect(damageSource, target, owner);
+            if (isProjectile())
+               source.setProjectile();
+            source.setMagicDamage();
+            if (getElement() instanceof Lightningbending)
+                source.setDamageBypassesArmor();
+            if (getElement() instanceof Combustionbending)
+                source.setExplosion();
+        }
+        return source;
     }
 
     @Override
