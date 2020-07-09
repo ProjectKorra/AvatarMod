@@ -47,67 +47,69 @@ import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarPlayerTick {
 
-	@SubscribeEvent
-	public static void onPlayerTick(PlayerTickEvent e) {
-		// Also forces loading of data on client
-		if (Bender.isBenderSupported(e.player)) {
-			Bender bender = Bender.get(e.player);
-			if (bender != null) {
-				BendingData data = bender.getData();
-				EntityPlayer player = e.player;
+    @SubscribeEvent
+    public static void onPlayerTick(PlayerTickEvent e) {
+        // Also forces loading of data on client
+        if (Bender.isBenderSupported(e.player)) {
+            Bender bender = Bender.get(e.player);
+            if (bender != null) {
+                BendingData data = bender.getData();
+                EntityPlayer player = e.player;
 
-				if (!player.world.isRemote && player.ticksExisted % 1000 == 0) {
-					data.saveAll();
-				}
+                if (!player.world.isRemote && player.ticksExisted % 1000 == 0) {
+                    data.saveAll();
+                }
 
-				if (e.phase == Phase.START) {
-					bender.onUpdate();
-				}
+                if (e.phase == Phase.START) {
+                    bender.onUpdate();
+                }
 
-			}
-		}
-	}
+            }
+        }
+    }
 
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void worldJoinEvent(EntityJoinWorldEvent event) {
-		if (event.getEntity() instanceof EntityLivingBase && Bender.isBenderSupported((EntityLivingBase) event.getEntity())) {
-			if (SKILLS_CONFIG.startWithRandomBending && !event.getWorld().isRemote) {
-				EntityLivingBase bender = (EntityLivingBase) event.getEntity();
-				if (Bender.isBenderSupported(bender)) {
-					BendingData data = BendingData.getFromEntity(bender);
-					if (data != null && !data.hasElements()) {
-						int elementID = AvatarUtils.getRandomNumberInRange(1, 4);
-						List<BendingStyle> elements = BendingStyles.all().stream()
-								.filter(bendingStyle -> bendingStyle.isParentBending() && bendingStyle.canEntityUse())
-								.collect(Collectors.toList());
-						BendingStyle style = BendingStyles.get(elements.get(elementID - 1).getName());
-						if (!MinecraftForge.EVENT_BUS.post(new ElementUnlockEvent(bender, style))) {
-							data.addBending(style == null ? new Airbending() : style);
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void worldJoinEvent(EntityJoinWorldEvent event) {
+        if (event.getEntity() instanceof EntityLivingBase && Bender.isBenderSupported((EntityLivingBase) event.getEntity())) {
+            if (event.getEntity() instanceof EntityPlayer)
+                Ability.syncProperties((EntityPlayer) event.getEntity());
+            if (SKILLS_CONFIG.startWithRandomBending && !event.getWorld().isRemote) {
+                EntityLivingBase bender = (EntityLivingBase) event.getEntity();
+                if (Bender.isBenderSupported(bender)) {
+                    BendingData data = BendingData.getFromEntity(bender);
+                    if (data != null && !data.hasElements()) {
+                        int elementID = AvatarUtils.getRandomNumberInRange(1, 4);
+                        List<BendingStyle> elements = BendingStyles.all().stream()
+                                .filter(bendingStyle -> bendingStyle.isParentBending() && bendingStyle.canEntityUse())
+                                .collect(Collectors.toList());
+                        BendingStyle style = BendingStyles.get(elements.get(elementID - 1).getName());
+                        if (!MinecraftForge.EVENT_BUS.post(new ElementUnlockEvent(bender, style))) {
+                            data.addBending(style == null ? new Airbending() : style);
 
-							// Unlock first ability
-							//noinspection ConstantConditions - can safely assume bending is present if
-							// the ID is in use to unlock it
-							assert style != null;
-							Ability ability = Objects.requireNonNull(style.getAllAbilities().get(0));
-							if (!MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(bender, ability)))
-								data.getAbilityData(ability).unlockAbility();
+                            // Unlock first ability
+                            //noinspection ConstantConditions - can safely assume bending is present if
+                            // the ID is in use to unlock it
+                            assert style != null;
+                            Ability ability = Objects.requireNonNull(style.getAllAbilities().get(0));
+                            if (!MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(bender, ability)))
+                                data.getAbilityData(ability).unlockAbility();
 
-						}
-					}
-				}
-			}
-		}
-	}
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-	//Prevents keybinds from letting you use abilities you haven't learned
-	@SubscribeEvent
-	public static void onBendingUseEvent(AbilityUseEvent event) {
-		if (event.getEntityLiving() != null) {
-				BendingData data = BendingData.getFromEntity(event.getEntityLiving());
-				if (data != null && !data.hasBendingId(event.getAbility().getBendingId())) {
-					event.setCanceled(true);
-			}
-		}
-	}
+    //Prevents keybinds from letting you use abilities you haven't learned
+    @SubscribeEvent
+    public static void onBendingUseEvent(AbilityUseEvent event) {
+        if (event.getEntityLiving() != null) {
+            BendingData data = BendingData.getFromEntity(event.getEntityLiving());
+            if (data != null && !data.hasBendingId(event.getAbility().getBendingId())) {
+                event.setCanceled(true);
+            }
+        }
+    }
 
 }

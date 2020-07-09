@@ -11,6 +11,7 @@ import com.crowsofwar.avatar.common.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.potion.PotionEffect;
@@ -76,7 +77,7 @@ public class AbilityImmolate extends Ability {
 			}
 
 			if (abilityData.getLevel() >= 1) {
-				entity.addPotionEffect(new PotionEffect(SPEED, duration, effectLevel));
+				entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, effectLevel));
 				lightRadius = 7;
 			}
 

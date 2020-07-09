@@ -246,7 +246,7 @@ public class AvatarMod {
 
         AvatarAnnouncements.fetchAnnouncements();
 
-       // AbilityProperties.init();
+        AbilityProperties.init();
 
         //File Generation
         /*Gson gson = new GsonBuilder().setPrettyPrinting().create();

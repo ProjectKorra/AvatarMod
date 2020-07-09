@@ -17,8 +17,10 @@
 
 package com.crowsofwar.avatar.common.bending;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.config.AbilityProperties;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -31,6 +33,10 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -41,12 +47,39 @@ import java.util.*;
  *
  * @author CrowsOfWar
  */
+@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public abstract class Ability {
 
     //NOTE: No client side particles can be spawned in an ability class due to abilities being executed server-side.
 
+    ///Property time! How many different properties can I add??????
+    public static final String
+            CHI_COST = "chiCost",
+            COOLDOWN = "cooldown",
+            EXHAUSTION = "exhaustion",
+            BURNOUT = "burnOut",
+            BURNOUT_REGEN = "burnOutRecoverTick",
+            XP_HIT = "xpOnHit",
+            XP_USE = "xpOnUse",
+            TIER = "tier",
+            PARENT_TIER = "parentTier",
+            PERFORMANCE = "performanceAmount",
+            FIRE_TIME = "fireTime",
+            LIFETIME = "lifeTime",
+            SIZE = "size",
+            SPEED = "speed",
+            KNOCKBACK = "knockback",
+            CHI_HIT = "chiOnHit",
+            DAMAGE = "damage",
+            DURATION = "duration",
+            CHARGE_TIME = "chargeTime";
+
     private final UUID type;
     private final String name;
+    /**
+     * Used in initialisation.
+     */
+    private final Set<String> propertyKeys = new HashSet<>();
     /**
      * This spell's associated SpellProperties object.
      */
@@ -55,16 +88,32 @@ public abstract class Ability {
      * A reference to the global spell properties for this spell, so they are only loaded once.
      */
     private AbilityProperties globalProperties;
-    /**
-     * Used in initialisation.
-     */
-    private final Set<String> propertyKeys = new HashSet<>();
     private Raytrace.Info raytrace;
+
 
     public Ability(UUID bendingType, String name) {
         this.type = bendingType;
         this.name = name;
         this.raytrace = new Raytrace.Info();
+        //Base properties belonging to all abilities
+        addProperties(TIER, CHI_COST, BURNOUT, BURNOUT_REGEN, COOLDOWN, EXHAUSTION);
+
+        if (isProjectile() || isOffensive()) {
+            addProperties(LIFETIME, SPEED, KNOCKBACK, CHI_HIT, PERFORMANCE, XP_HIT);
+            if (isOffensive())
+                addProperties(DAMAGE);
+        }
+        if (isBuff())
+            addProperties(DURATION, XP_USE);
+        if (isUtility())
+            addProperties(XP_USE);
+        if (isChargeable())
+            addProperties(CHARGE_TIME);
+
+        if (bendingType == Firebending.ID)
+            addProperties(FIRE_TIME);
+        if (Objects.requireNonNull(BendingStyles.get(bendingType)).isSpecialtyBending())
+            addProperties(PARENT_TIER);
     }
 
     /**
@@ -89,6 +138,35 @@ public abstract class Ability {
         }
     }
 
+    //Event handler stuff for properties
+    @SubscribeEvent
+    public static void onWorldLoadEvent(WorldEvent.Load event) {
+        if (!event.getWorld().isRemote) {
+            if (event.getWorld().provider.getDimension() != 0) return; // Only do it once per save file
+            clearProperties();
+            AbilityProperties.loadWorldSpecificAbilityProperties(event.getWorld());
+            for (Ability ability : Abilities.all()) {
+                if (!ability.arePropertiesInitialised()) ability.setProperties(ability.globalProperties);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onClientDisconnectEvent(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+        // Why does the world UNLOAD event happen during world LOADING? How does that even work?!
+        clearProperties();
+        for (Ability ability : Abilities.all()) {
+            // If someone wants to access them from the menu, they'll get the global ones (not sure why you'd want to)
+            // No need to sync here since the server is about to shut down anyway
+            ability.setProperties(ability.globalProperties);
+        }
+    }
+
+    /**
+     * All configurable stats. Should be implemented here so that
+     * it automagically gets the correct stats from the json files based on the ability name
+     * with 0 need for an override (except in the case of status control abilities).
+     */
 
     /**
      * Returns the base value specified in JSON for the given identifier. This may be used from within the spell
@@ -99,20 +177,15 @@ public abstract class Ability {
      * @return The base value of the property, as a {@code Number} object. Internally this is handled as a float, but
      * it is passed through as a {@code Number} to avoid casting. <i>Be careful with rounding when extracting integer
      * values! The JSON parser cannot guarantee that the property file has an integer value.</i>
-     * @throws IllegalArgumentException if no property was defined with the given identifier. */
-    public final Number getProperty(String identifier, int abilityLevel){
+     * @throws IllegalArgumentException if no property was defined with the given identifier.
+     */
+    public final Number getProperty(String identifier, int abilityLevel) {
         return properties.getBaseValue(identifier, abilityLevel);
     }
 
     protected BendingStyle controller() {
         return BendingStyles.get(type);
     }
-
-    /**
-     * All configurable stats. Should be implemented here so that
-     * it automagically gets the correct stats from the json files based on the ability name
-     * with 0 need for an override (except in the case of status control abilities).
-     */
 
     /**
      * Get the id of the bending style that this ability belongs to
@@ -264,6 +337,8 @@ public abstract class Ability {
         return tier;
     }
 
+    /* Properties; have to fix. Copied from Wizardry. */
+
     public BendingStyle getElement() {
         return BendingStyles.get(getBendingId());
     }
@@ -274,8 +349,6 @@ public abstract class Ability {
         }
         return 0;
     }
-
-    /* Properties; have to fix. Copied from Wizardry. */
 
     public boolean isCompatibleScroll(ItemStack stack, int level) {
         if (getBendingId() != null) {
@@ -339,6 +412,10 @@ public abstract class Ability {
     public final String[] getPropertyKeys() {
         return propertyKeys.toArray(new String[0]);
     }
+
+    // ============================================ Event handlers ==============================================
+
+    // Not ideal but it solves the reloading of spell properties without breaking encapsulation
 
     /**
      * Returns true if this spell's properties have been initialised, false if not. Check this if you're attempting

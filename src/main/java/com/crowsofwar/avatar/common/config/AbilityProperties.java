@@ -4,7 +4,8 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AbilityData;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -24,7 +25,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class AbilityProperties {
 
@@ -48,7 +52,7 @@ public class AbilityProperties {
     // If we did what attributes do and just use doubles, people (myself included!) might plug them into calculations
     // without thinking. However, with Number you can't just do that, you have to convert and therefore you have to
     // decide how to do the conversion. Internally they're handled as floats though.
-    private final Map<String, Number> baseValues;
+    private final Multimap<String, Number> baseValues;
 
     /**
      * Parses the given JSON object and constructs a new {@code AbilityProperties} from it, setting all the relevant
@@ -62,7 +66,7 @@ public class AbilityProperties {
 
         String[] baseValueNames = ability.getPropertyKeys();
 
-        baseValues = new HashMap<>();
+        baseValues = ArrayListMultimap.create();
 
 
         // There's not much point specifying the classes of the numbers here because the json getter methods just
@@ -120,7 +124,7 @@ public class AbilityProperties {
      */
     public AbilityProperties(Ability ability, ByteBuf buf) {
 
-        baseValues = new HashMap<>();
+        baseValues = ArrayListMultimap.create();
 
         List<String> keys = Arrays.asList(ability.getPropertyKeys());
         Collections.sort(keys); // Should be the same list of keys in the same order they were written to the ByteBuf
@@ -317,7 +321,8 @@ public class AbilityProperties {
         Collections.sort(keys); // Sort alphabetically (as long as the order is consistent it doesn't matter)
 
         for (String key : keys) {
-            buf.writeFloat(baseValues.get(key).floatValue());
+            for (Number num : baseValues.get(key))
+                buf.writeFloat(num.floatValue());
         }
     }
 
@@ -336,8 +341,7 @@ public class AbilityProperties {
         if (!baseValues.containsKey(identifier)) {
             throw new IllegalArgumentException("Base value with identifier '" + identifier + "' is not defined.");
         }
-        //getALL()? Need something else
-        return baseValues.get(identifier);
+        return new ArrayList<>(baseValues.get(identifier)).get(abilityLevel == -1 ? 0 : abilityLevel);
     }
 
 }
