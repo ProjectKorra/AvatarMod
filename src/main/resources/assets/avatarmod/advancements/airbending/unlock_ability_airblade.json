@@ -15,10 +15,12 @@
   },
   "criteria": {
     "unlock_an_element": {
-      "trigger": "unlock_ability",
+      "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "airblade"
+          "ability": "airblade",
+          "fromLevel": 0,
+          "toLevel": 1
         }
       }
     }

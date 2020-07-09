@@ -174,7 +174,7 @@ public class LevelAbilityTrigger implements ICriterionTrigger<LevelAbilityTrigge
          */
         public boolean test(Ability ability, int oldLevel, int newLevel)
         {
-            return this.ability.test(ability) && newLevel > oldLevel;
+            return this.ability.test(ability, oldLevel, newLevel) && newLevel > oldLevel;
         }
     }
 
