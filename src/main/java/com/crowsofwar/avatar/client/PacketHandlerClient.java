@@ -25,10 +25,7 @@ import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
-import com.crowsofwar.avatar.common.network.packets.PacketCErrorMessage;
-import com.crowsofwar.avatar.common.network.packets.PacketCOpenSkillCard;
-import com.crowsofwar.avatar.common.network.packets.PacketCParticles;
-import com.crowsofwar.avatar.common.network.packets.PacketCPowerRating;
+import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketCClientGliding;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketCSyncGliderDataToClient;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketCUpdateClientTarget;
@@ -79,6 +76,9 @@ public class PacketHandlerClient implements IPacketHandler {
 
 		if (packet instanceof PacketCUpdateClientTarget)
 			return handlePacketUpdateClientTarget((PacketCUpdateClientTarget) packet, ctx);
+
+		if (packet instanceof PacketCSyncAbilityProperties)
+			return handleSyncProperties((PacketCSyncAbilityProperties) packet, ctx);
 
 		AvatarLog.warn(WarningType.WEIRD_PACKET, "Client recieved unknown packet from server:" + packet);
 
@@ -170,6 +170,11 @@ public class PacketHandlerClient implements IPacketHandler {
 				GliderHelper.setIsGliderDeployed(targetEntity, packet.isGliding);
 			}
 		});
+		return null;
+	}
+
+	private IMessage handleSyncProperties(PacketCSyncAbilityProperties packet, MessageContext ctx) {
+
 		return null;
 	}
 

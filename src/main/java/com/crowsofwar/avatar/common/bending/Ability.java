@@ -100,8 +100,8 @@ public abstract class Ability {
      * it is passed through as a {@code Number} to avoid casting. <i>Be careful with rounding when extracting integer
      * values! The JSON parser cannot guarantee that the property file has an integer value.</i>
      * @throws IllegalArgumentException if no property was defined with the given identifier. */
-    public final Number getProperty(String identifier){
-        return properties.getBaseValue(identifier);
+    public final Number getProperty(String identifier, int abilityLevel){
+        return properties.getBaseValue(identifier, abilityLevel);
     }
 
     protected BendingStyle controller() {
@@ -122,7 +122,7 @@ public abstract class Ability {
     }
 
     /**
-     * Execute this ability. Only called on server.
+     * Execute this ability. Called both client and server-side.
      *
      * @param ctx Information for the ability
      */
@@ -302,7 +302,7 @@ public abstract class Ability {
     }
 
     /**
-     * Adds the given JSON identifiers to the configurable base properties of this spell. This should be called from
+     * Adds the given JSON identifiers to the configurable base properties of this ability. This should be called from
      * the constructor  . <i>It is highly recommended that property keys be defined as constants,
      * as they will be needed later to retrieve the properties during the casting methods.</i>
      * <p></p>

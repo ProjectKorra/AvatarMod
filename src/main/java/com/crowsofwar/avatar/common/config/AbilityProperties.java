@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -28,7 +29,7 @@ import java.util.*;
 public class AbilityProperties {
 
     /**
-     * Big code block time! This class will mirror Electroblob Wizardry's SpellContext class, except for ability usage.
+     * Big code block time! This class will mirror Electroblob Wizardry's SpellProperties class, except for ability usage.
      * Spell Context (as in the enum Context) is completely unnecssary here, and can be ignore/deleted.
      * The only constant variable that won't change based on an ability's level is their xp on a hit, as AbilityData handles decreasing xp calculations.
      * Everything else should vary based on level. Therefore, you only need to store one base value.
@@ -50,7 +51,7 @@ public class AbilityProperties {
     private final Map<String, Number> baseValues;
 
     /**
-     * Parses the given JSON object and constructs a new {@code SpellProperties} from it, setting all the relevant
+     * Parses the given JSON object and constructs a new {@code AbilityProperties} from it, setting all the relevant
      * fields and references.
      *
      * @param json    A JSON object representing the spell properties to be constructed.
@@ -62,8 +63,6 @@ public class AbilityProperties {
         String[] baseValueNames = ability.getPropertyKeys();
 
         baseValues = new HashMap<>();
-
-        JsonObject enabled = JsonUtils.getJsonObject(json, "enabled");
 
 
         // There's not much point specifying the classes of the numbers here because the json getter methods just
@@ -85,24 +84,29 @@ public class AbilityProperties {
          * Fireball level4_1 has an int numberOfFireballs.
          */
 
-        JsonObject baseValueObject = JsonUtils.getJsonObject(json, "base_properties");
+        for (int i = 0; i < 5; i++) {
+            String jsonName = "level" + (i + 1);
+            if (i >= 3)
+                jsonName = "level4_" + (i - 2);
+            JsonObject baseValueObject = JsonUtils.getJsonObject(json, jsonName);
 
-        // If the code requests more values than the JSON file contains, that will cause a JsonSyntaxException here anyway.
-        // If there are redundant values in the JSON file, chances are that a user has misunderstood the system and tried
-        // to add properties that aren't implemented. However, redundant values will also be found if a programmer has
-        // forgotten to call addProperties in their ability constructor (I know I have!), potentially causing a crash at
-        // some random point in the future. Since redundant values aren't a problem by themselves, we shouldn't throw an
-        // exception, but a warning is appropriate.
+            // If the code requests more values than the JSON file contains, that will cause a JsonSyntaxException here anyway.
+            // If there are redundant values in the JSON file, chances are that a user has misunderstood the system and tried
+            // to add properties that aren't implemented. However, redundant values will also be found if a programmer has
+            // forgotten to call addProperties in their ability constructor (I know I have!), potentially causing a crash at
+            // some random point in the future. Since redundant values aren't a problem by themselves, we shouldn't throw an
+            // exception, but a warning is appropriate.
 
-        int redundantKeys = baseValueObject.size() - baseValueNames.length;
-        if (redundantKeys > 0) AvatarLog.warn("Ability " + ability.getName() + " has " + redundantKeys +
-                " redundant ability property key(s) defined in its JSON file. Extra values will have no effect! (Av2 devs:" +
-                " make sure you have called addProperties(...) during ability construction)");
+            int redundantKeys = baseValueObject.size() - baseValueNames.length;
+            if (redundantKeys > 0) AvatarLog.warn("Ability " + ability.getName() + " has " + redundantKeys +
+                    " redundant ability property key(s) defined in its JSON file. Extra values will have no effect! (Av2 devs:" +
+                    " make sure you have called addProperties(...) during ability construction)");
 
-        if (baseValueNames.length > 0) {
+            if (baseValueNames.length > 0) {
 
-            for (String baseValueName : baseValueNames) {
-                baseValues.put(baseValueName, JsonUtils.getFloat(baseValueObject, baseValueName));
+                for (String baseValueName : baseValueNames) {
+                    baseValues.put(baseValueName, JsonUtils.getFloat(baseValueObject, baseValueName));
+                }
             }
         }
 
@@ -147,11 +151,11 @@ public class AbilityProperties {
 
         AvatarLog.info("Loading custom ability properties for world {" + world.getWorldInfo().getWorldName() + "}");
 
-        File spellJSONDir = new File(new File(world.getSaveHandler().getWorldDirectory(), "data"), "abilities");
+        File abilityJSONDir = new File(new File(world.getSaveHandler().getWorldDirectory(), "data"), "abilities");
 
-        if (spellJSONDir.mkdirs()) return; // If it just got created it can't possibly have anything inside
+        if (abilityJSONDir.mkdirs()) return; // If it just got created it can't possibly have anything inside
 
-        if (!loadAbilityPropertiesFromDir(spellJSONDir))
+        if (!loadAbilityPropertiesFromDir(abilityJSONDir))
             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Some ability property files did not load correctly; this will likely cause problems later!");
     }
 
@@ -327,7 +331,7 @@ public class AbilityProperties {
      * @return The base value, as a {@code Number}.
      * @throws IllegalArgumentException if no base value was defined with the given identifier.
      */
-    public Number getBaseValue(String identifier) {
+    public Number getBaseValue(String identifier, int abilityLevel) {
         if (!baseValues.containsKey(identifier)) {
             throw new IllegalArgumentException("Base value with identifier '" + identifier + "' is not defined.");
         }
