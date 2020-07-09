@@ -1,12 +1,12 @@
 package com.crowsofwar.avatar.common.bending.air.tickhandlers;
 
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.data.TickHandler;
+import com.crowsofwar.avatar.common.data.ctx.BendingContext;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.EntityCloudBall;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
-
-import com.crowsofwar.avatar.common.data.StatusControl;
-import com.crowsofwar.avatar.common.data.*;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.entity.*;
 
 import static com.crowsofwar.avatar.common.data.StatusControlController.THROW_CLOUDBURST;
 

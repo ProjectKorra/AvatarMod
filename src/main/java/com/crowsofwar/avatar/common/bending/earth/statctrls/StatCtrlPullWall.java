@@ -1,12 +1,11 @@
 package com.crowsofwar.avatar.common.bending.earth.statctrls;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.AvatarEntity;
 import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 import com.crowsofwar.avatar.common.entity.data.WallBehavior;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 

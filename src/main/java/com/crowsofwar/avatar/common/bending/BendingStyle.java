@@ -81,6 +81,11 @@ public abstract class BendingStyle implements ReadableWritable {
 
 	private final List<Ability> abilities;
 
+	public void registerAbilities() {
+		for (Ability ability : Abilities.getAbilitiesToRegister(getId()))
+			addAbility(ability);
+	}
+
 	/**
 	 * @see #getParentBendingId()
 	 */
@@ -115,6 +120,10 @@ public abstract class BendingStyle implements ReadableWritable {
 
 	protected void addAbility(String abilityName) {
 		this.abilities.add(Abilities.get(abilityName));
+	}
+
+	protected void addAbility(Ability ability) {
+		this.abilities.add(ability);
 	}
 
 	/**

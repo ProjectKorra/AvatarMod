@@ -38,8 +38,7 @@ public class Airbending extends BendingStyle {
 	private BendingMenuInfo menu;
 
 	public Airbending() {
-		for (Ability ability : Abilities.getAbilitiesToRegister(ID))
-			addAbility(ability.getName());
+		registerAbilities();
 		Color light = new Color(220, 220, 220);
 		Color dark = new Color(172, 172, 172);
 		Color iconClr = new Color(196, 109, 0);

@@ -17,8 +17,6 @@
 
 package com.crowsofwar.avatar.common.bending.earth;
 
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
@@ -37,8 +35,7 @@ public class Earthbending extends BendingStyle {
 	private final BendingMenuInfo menu;
 
 	public Earthbending() {
-		for (Ability ability : Abilities.getAbilitiesToRegister(getId()))
-			addAbility(ability.getName());
+		registerAbilities();
 		Color light = new Color(225, 225, 225);
 		Color brown = new Color(79, 57, 45);
 		Color gray = new Color(90, 90, 90);

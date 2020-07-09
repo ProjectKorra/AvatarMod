@@ -20,7 +20,11 @@ package com.crowsofwar.avatar.common.bending;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.combustion.Combustionbending;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
+import com.crowsofwar.avatar.common.bending.ice.Icebending;
+import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
+import com.crowsofwar.avatar.common.bending.sand.Sandbending;
 import com.crowsofwar.avatar.common.config.AbilityProperties;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
@@ -81,11 +85,11 @@ public abstract class Ability {
      */
     private final Set<String> propertyKeys = new HashSet<>();
     /**
-     * This spell's associated SpellProperties object.
+     * This ability's associated AbilityProperties object.
      */
     private AbilityProperties properties;
     /**
-     * A reference to the global spell properties for this spell, so they are only loaded once.
+     * A reference to the global spell properties for this ability, so they are only loaded once.
      */
     private AbilityProperties globalProperties;
     private Raytrace.Info raytrace;
@@ -99,7 +103,7 @@ public abstract class Ability {
         addProperties(TIER, CHI_COST, BURNOUT, BURNOUT_REGEN, COOLDOWN, EXHAUSTION);
 
         if (isProjectile() || isOffensive()) {
-            addProperties(LIFETIME, SPEED, KNOCKBACK, CHI_HIT, PERFORMANCE, XP_HIT);
+            addProperties(LIFETIME, SPEED, KNOCKBACK, CHI_HIT, PERFORMANCE, XP_HIT, SIZE);
             if (isOffensive())
                 addProperties(DAMAGE);
         }
@@ -112,7 +116,11 @@ public abstract class Ability {
 
         if (bendingType == Firebending.ID)
             addProperties(FIRE_TIME);
-        if (Objects.requireNonNull(BendingStyles.get(bendingType)).isSpecialtyBending())
+
+        //Brute force due to initialisation order
+        if (bendingType == Lightningbending.ID ||
+                bendingType == Sandbending.ID || bendingType == Combustionbending.ID
+                || bendingType == Icebending.ID)
             addProperties(PARENT_TIER);
     }
 
@@ -123,7 +131,8 @@ public abstract class Ability {
         if (player instanceof EntityPlayerMP) {
             // On the server side, send a packet to the player to synchronise their spell properties
             List<Ability> abilities = Abilities.all();
-            AvatarMod.network.sendTo(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)), (EntityPlayerMP) player);
+            AvatarMod.network.sendToAllTracking(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)),
+                  player);
 
         } else {
             // On the client side, wipe the spell properties so the new ones can be set
@@ -137,6 +146,10 @@ public abstract class Ability {
             ability.properties = null;
         }
     }
+
+    // ============================================ Event handlers ==============================================
+
+    // Not ideal but it solves the reloading of ability properties without breaking encapsulation
 
     //Event handler stuff for properties
     @SubscribeEvent
@@ -303,41 +316,20 @@ public abstract class Ability {
     }
 
     public int getBaseTier() {
-        return 1;
+        //In this case, just use the values found in AbilityData for levels (0 = I, 1 = II, e.t.c)
+        return getProperty(TIER, 0).intValue();
     }
 
     public int getCurrentTier(int level) {
-        int tier = getBaseTier();
-        switch (level) {
-            default:
-                break;
-            case 2:
-                tier++;
-                break;
-            case 3:
-                tier += 2;
-                break;
-        }
-        return tier;
+        return getProperty(TIER, level).intValue();
     }
 
     //Only for abilities in sub-elements.
     public int getCurrentParentTier(int level) {
-        int tier = getBaseParentTier();
-        switch (level) {
-            default:
-                break;
-            case 2:
-                tier++;
-                break;
-            case 3:
-                tier += 2;
-                break;
-        }
-        return tier;
+        return getProperty(PARENT_TIER, level).intValue();
     }
 
-    /* Properties; have to fix. Copied from Wizardry. */
+
 
     public BendingStyle getElement() {
         return BendingStyles.get(getBendingId());
@@ -345,7 +337,7 @@ public abstract class Ability {
 
     public int getBaseParentTier() {
         if (this.getElement().getParentBendingId() != null) {
-            return 1;
+            return getProperty(PARENT_TIER, 0).intValue();
         }
         return 0;
     }
@@ -394,7 +386,7 @@ public abstract class Ability {
 
         //I need to have an option for specifying the level as well
         if (arePropertiesInitialised())
-            throw new IllegalStateException("Tried to add spell properties after they were initialised");
+            throw new IllegalStateException("Tried to add ability properties after they were initialised");
 
         for (String key : keys)
             if (propertyKeys.contains(key))
@@ -412,10 +404,6 @@ public abstract class Ability {
     public final String[] getPropertyKeys() {
         return propertyKeys.toArray(new String[0]);
     }
-
-    // ============================================ Event handlers ==============================================
-
-    // Not ideal but it solves the reloading of spell properties without breaking encapsulation
 
     /**
      * Returns true if this spell's properties have been initialised, false if not. Check this if you're attempting

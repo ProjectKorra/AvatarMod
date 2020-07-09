@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.common.bending.fire.statctrls;
 
-import com.crowsofwar.avatar.common.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.bending.fire.tickhandlers.FlamethrowerUpdateTick;

@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.common.bending.combustion;
 
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
@@ -23,8 +21,7 @@ public class Combustionbending extends BendingStyle {
 	public Combustionbending() {
 		super(Firebending.ID);
 
-		for (Ability ability : Abilities.getAbilitiesToRegister(ID))
-			addAbility(ability.getName());
+		registerAbilities();
 		Color light = new Color(244, 240, 187);
 		Color red = new Color(173, 64, 31);
 		Color gray = new Color(40, 40, 40);

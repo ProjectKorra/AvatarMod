@@ -42,10 +42,5 @@ public class AbilityFireJump extends Ability {
 
 		}
 	}
-
-	@Override
-	public int getBaseTier() {
-		return 3;
-	}
 }
 

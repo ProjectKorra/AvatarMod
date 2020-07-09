@@ -17,8 +17,6 @@
 
 package com.crowsofwar.avatar.common.bending.water;
 
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
@@ -38,13 +36,12 @@ public class Waterbending extends BendingStyle {
 	private BendingMenuInfo menu;
 
 	public Waterbending() {
-		for (Ability ability : Abilities.getAbilitiesToRegister(ID))
-			addAbility(ability.getName());
+		registerAbilities();
 		Color base = new Color(228, 255, 225);
 		Color edge = new Color(60, 188, 145);
 		Color icon = new Color(129, 149, 148);
 		ThemeColor background = new ThemeColor(base, edge);
-		menu = new BendingMenuInfo(new MenuTheme(new ThemeColor(base, edge), new ThemeColor(edge, edge),
+		menu = new BendingMenuInfo(new MenuTheme(background, new ThemeColor(edge, edge),
 				new ThemeColor(icon, base), 0x57E8F2), this);
 	}
 

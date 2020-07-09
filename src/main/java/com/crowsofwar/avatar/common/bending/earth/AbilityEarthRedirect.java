@@ -2,8 +2,6 @@ package com.crowsofwar.avatar.common.bending.earth;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 
-import java.util.UUID;
-
 public class AbilityEarthRedirect extends Ability {
 
 	public AbilityEarthRedirect() {

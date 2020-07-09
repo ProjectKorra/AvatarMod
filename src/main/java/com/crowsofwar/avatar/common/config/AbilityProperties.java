@@ -68,6 +68,13 @@ public class AbilityProperties {
 
         baseValues = ArrayListMultimap.create();
 
+        JsonObject customProperties = JsonUtils.getJsonObject(json, "custom_properties");
+
+        for (String name : baseValueNames) {
+            if (name.equalsIgnoreCase("xpOnHit") || name.equalsIgnoreCase("xpOnUse"))
+                baseValues.put(name, JsonUtils.getFloat(customProperties, name));
+        }
+
 
         // There's not much point specifying the classes of the numbers here because the json getter methods just
         // perform conversion to the requested type anyway. It therefore makes very little difference whether the
@@ -92,7 +99,7 @@ public class AbilityProperties {
             String jsonName = "level" + (i + 1);
             if (i >= 3)
                 jsonName = "level4_" + (i - 2);
-            JsonObject baseValueObject = JsonUtils.getJsonObject(json, jsonName);
+            JsonObject baseValueObject = JsonUtils.getJsonObject(customProperties, jsonName);
 
             // If the code requests more values than the JSON file contains, that will cause a JsonSyntaxException here anyway.
             // If there are redundant values in the JSON file, chances are that a user has misunderstood the system and tried
@@ -109,7 +116,8 @@ public class AbilityProperties {
             if (baseValueNames.length > 0) {
 
                 for (String baseValueName : baseValueNames) {
-                    baseValues.put(baseValueName, JsonUtils.getFloat(baseValueObject, baseValueName));
+                    if (!baseValueName.equalsIgnoreCase("xpOnHit") && !baseValueName.equalsIgnoreCase("xpOnUse"))
+                        baseValues.put(baseValueName, JsonUtils.getFloat(baseValueObject, baseValueName));
                 }
             }
         }
@@ -165,7 +173,7 @@ public class AbilityProperties {
 
     private static boolean loadConfigAbilityProperties() {
 
-        AvatarLog.info("Loading ability  properties from config folder");
+        AvatarLog.info("Loading ability properties from config folder");
 
         File abilityJsonDir = new File("avatar/abilities");
 
@@ -248,12 +256,12 @@ public class AbilityProperties {
 
         // If a spell is missing its file, log an error
         if (!abilities.isEmpty()) {
-            if (abilities.size() <= 15) {
-                abilities.forEach(a -> AvatarLog.error("Ability " + a.getName() + " is missing a properties file!"));
-            } else {
-                // If there are more than 15 don't bother logging them all, chances are they're all missing
-                AvatarLog.error("Mod " + AvatarInfo.MOD_ID + " has " + abilities.size() + " spells that are missing properties files!");
-            }
+            //if (abilities.size() <= 15) {
+            abilities.forEach(a -> AvatarLog.error("Ability " + a.getName() + " is missing a properties file!"));
+            // } else {
+            // If there are more than 15 don't bother logging them all, chances are they're all missing
+            //    AvatarLog.error("Mod " + AvatarInfo.MOD_ID + " has " + abilities.size() + " abilities that are missing properties files!");
+            // }
         }
 
         return success;

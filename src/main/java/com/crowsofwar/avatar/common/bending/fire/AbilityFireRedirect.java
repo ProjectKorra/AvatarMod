@@ -2,8 +2,6 @@ package com.crowsofwar.avatar.common.bending.fire;
 
 import com.crowsofwar.avatar.common.bending.Ability;
 
-import java.util.UUID;
-
 public class AbilityFireRedirect extends Ability {
 
 	public AbilityFireRedirect() {

@@ -23,7 +23,8 @@ import java.util.Objects;
 import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.common.data.TickHandlerController.PURIFY_PARTICLE_SPAWNER;
-import static net.minecraft.init.MobEffects.*;
+import static net.minecraft.init.MobEffects.HEALTH_BOOST;
+import static net.minecraft.init.MobEffects.STRENGTH;
 
 public class AbilityImmolate extends Ability {
 

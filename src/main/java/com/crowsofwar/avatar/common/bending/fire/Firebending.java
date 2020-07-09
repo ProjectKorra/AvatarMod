@@ -17,8 +17,6 @@
 
 package com.crowsofwar.avatar.common.bending.fire;
 
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.common.gui.MenuTheme;
@@ -33,60 +31,59 @@ import java.util.UUID;
 
 public class Firebending extends BendingStyle {
 
-	public static final UUID ID = UUID.fromString("8485da8f-20d9-4e98-9a10-721104e962fe");
+    public static final UUID ID = UUID.fromString("8485da8f-20d9-4e98-9a10-721104e962fe");
 
-	private final BendingMenuInfo menu;
+    private final BendingMenuInfo menu;
 
-	public Firebending() {
-		for (Ability ability : Abilities.getAbilitiesToRegister(ID))
-			addAbility(ability.getName());
-		Color light = new Color(244, 240, 187);
-		Color red = new Color(173, 64, 31);
-		Color gray = new Color(40, 40, 40);
-		ThemeColor background = new ThemeColor(light, red);
-		ThemeColor edge = new ThemeColor(red, red);
-		ThemeColor icon = new ThemeColor(gray, light);
-		menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xFAAA5A), this);
+    public Firebending() {
+        registerAbilities();
+        Color light = new Color(244, 240, 187);
+        Color red = new Color(173, 64, 31);
+        Color gray = new Color(40, 40, 40);
+        ThemeColor background = new ThemeColor(light, red);
+        ThemeColor edge = new ThemeColor(red, red);
+        ThemeColor icon = new ThemeColor(gray, light);
+        menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xFAAA5A), this);
 
-	}
+    }
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
 
-	}
+    }
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
 
-	}
+    }
 
-	@Override
-	public int getTextColour() {
-		return 0xFF0000;
-	}
+    @Override
+    public int getTextColour() {
+        return 0xFF0000;
+    }
 
-	@Override
-	public BendingMenuInfo getRadialMenu() {
-		return menu;
-	}
+    @Override
+    public BendingMenuInfo getRadialMenu() {
+        return menu;
+    }
 
-	@Override
-	public String getName() {
-		return "firebending";
-	}
+    @Override
+    public String getName() {
+        return "firebending";
+    }
 
-	@Override
-	public UUID getId() {
-		return ID;
-	}
+    @Override
+    public UUID getId() {
+        return ID;
+    }
 
-	@Override
-	public TextFormatting getTextFormattingColour() {
-		return TextFormatting.RED;
-	}
+    @Override
+    public TextFormatting getTextFormattingColour() {
+        return TextFormatting.RED;
+    }
 
-	@Override
-	public SoundEvent getRadialMenuSound() {
-		return SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE;
-	}
+    @Override
+    public SoundEvent getRadialMenuSound() {
+        return SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE;
+    }
 }

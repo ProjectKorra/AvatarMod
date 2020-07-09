@@ -11,7 +11,7 @@ import java.util.List;
 
 public class PacketCSyncAbilityProperties extends AvatarPacket<PacketCSyncAbilityProperties> {
 
-    AbilityProperties[] properties;
+  public AbilityProperties[] properties;
 
     public PacketCSyncAbilityProperties() {
     }

@@ -6,7 +6,9 @@ import com.crowsofwar.gorecore.config.Load;
 public class ConfigGlider {
 
     public static final ConfigGlider GLIDER_CONFIG = new ConfigGlider();
-
+    //Misc
+    @Load
+    public static boolean heatUpdraftEnabled = false;
     //Basic Glider
     @Load
     public float basicGliderMinSpeed = 0.03F;
@@ -23,8 +25,7 @@ public class ConfigGlider {
     @Load
     public float basicGliderAirResistance = 0.985F;
     @Load
-    public  int basicGliderTotalDurability = 512;
-
+    public int basicGliderTotalDurability = 512;
     //Advanced Glider
     @Load
     public float advancedGliderMinSpeed = 0.03f;
@@ -42,7 +43,6 @@ public class ConfigGlider {
     public float advancedGliderAirResistance = 0.99f;
     @Load
     public int advancedGliderTotalDurability = 2048;
-
     //Wind
     @Load
     public boolean airResistanceEnabled = true;
@@ -62,7 +62,6 @@ public class ConfigGlider {
     public float windHeightMultiplier = 1.5f;
     @Load
     public float windDurabilityMultiplier = 0.7f;
-
     //Durability
     @Load
     public boolean durabilityEnabled = true; // durability is disabled in code right now but this will be changed.
@@ -70,26 +69,21 @@ public class ConfigGlider {
     public int durabilityPerUse = 1;
     @Load
     public int durabilityTimeframe = 200;
-
-    //Misc
-    @Load
-    public static boolean heatUpdraftEnabled = false;
-
     //Client
     @Load
-    public static boolean enableRendering3PP = true;
+    public boolean enableRendering3PP = true;
     @Load
-    public static boolean enableRenderingFPP = true;
+    public boolean enableRenderingFPP = true;
     @Load
-    public static float gliderVisibilityFPPShiftAmount = 1.9f;
+    public float gliderVisibilityFPPShiftAmount = 1.9f;
     @Load
-    public static boolean disableOffhandRenderingWhenGliding = true;
+    public boolean disableOffhandRenderingWhenGliding = true;
     @Load
-    public static boolean disableHandleBarRenderingWhenGliding = true;
+    public boolean disableHandleBarRenderingWhenGliding = true;
     @Load
-    public static float shiftSpeedVisualShift = 0.05f;
+    public float shiftSpeedVisualShift = 0.05f;
     @Load
-    public static float airbenderHeightGain = 0.5f;
+    public float airbenderHeightGain = 0.5f;
 
     private ConfigGlider() {
     }

@@ -3,8 +3,6 @@ package com.crowsofwar.avatar.common.bending.earth;
 import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 
-import java.util.UUID;
-
 public class AbilityEarthSpear extends Ability {
 
 	public AbilityEarthSpear() {

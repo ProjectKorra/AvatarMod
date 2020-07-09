@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.bending.sand;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntitySandstorm;
 import com.crowsofwar.avatar.common.util.Raytrace;

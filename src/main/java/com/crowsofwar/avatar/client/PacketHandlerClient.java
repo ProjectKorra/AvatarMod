@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.api.helper.GliderHelper;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
+import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.network.IPacketHandler;
 import com.crowsofwar.avatar.common.network.packets.*;
@@ -31,6 +32,7 @@ import com.crowsofwar.avatar.common.network.packets.glider.PacketCSyncGliderData
 import com.crowsofwar.avatar.common.network.packets.glider.PacketCUpdateClientTarget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -38,7 +40,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Handles packets addressed to the client. Packets like this have a C in their
@@ -47,135 +52,149 @@ import java.util.*;
 @SideOnly(Side.CLIENT)
 public class PacketHandlerClient implements IPacketHandler {
 
-	private final Minecraft mc;
+    private final Minecraft mc;
 
-	public PacketHandlerClient() {
-		this.mc = Minecraft.getMinecraft();
-	}
+    public PacketHandlerClient() {
+        this.mc = Minecraft.getMinecraft();
+    }
 
-	@Override
-	public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
+    @Override
+    public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
 
-		if (packet instanceof PacketCParticles)
-			return handlePacketParticles((PacketCParticles) packet, ctx, ((PacketCParticles) packet).getVelIsMagnitude());
+        if (packet instanceof PacketCParticles)
+            return handlePacketParticles((PacketCParticles) packet, ctx, ((PacketCParticles) packet).getVelIsMagnitude());
 
-		if (packet instanceof PacketCErrorMessage)
-			return handlePacketNotEnoughChi((PacketCErrorMessage) packet, ctx);
+        if (packet instanceof PacketCErrorMessage)
+            return handlePacketNotEnoughChi((PacketCErrorMessage) packet, ctx);
 
-		if (packet instanceof PacketCPowerRating)
-			return handlePacketPowerRating((PacketCPowerRating) packet, ctx);
+        if (packet instanceof PacketCPowerRating)
+            return handlePacketPowerRating((PacketCPowerRating) packet, ctx);
 
-		if (packet instanceof PacketCOpenSkillCard)
-			return handlePacketSkillCard((PacketCOpenSkillCard) packet, ctx);
+        if (packet instanceof PacketCOpenSkillCard)
+            return handlePacketSkillCard((PacketCOpenSkillCard) packet, ctx);
 
-		if (packet instanceof PacketCClientGliding)
-			return handlePacketClientGliding((PacketCClientGliding) packet, ctx);
+        if (packet instanceof PacketCClientGliding)
+            return handlePacketClientGliding((PacketCClientGliding) packet, ctx);
 
-		if (packet instanceof PacketCSyncGliderDataToClient)
-			return handlePacketSyncGliderDataToClient((PacketCSyncGliderDataToClient) packet, ctx);
+        if (packet instanceof PacketCSyncGliderDataToClient)
+            return handlePacketSyncGliderDataToClient((PacketCSyncGliderDataToClient) packet, ctx);
 
-		if (packet instanceof PacketCUpdateClientTarget)
-			return handlePacketUpdateClientTarget((PacketCUpdateClientTarget) packet, ctx);
+        if (packet instanceof PacketCUpdateClientTarget)
+            return handlePacketUpdateClientTarget((PacketCUpdateClientTarget) packet, ctx);
 
-		if (packet instanceof PacketCSyncAbilityProperties)
-			return handleSyncProperties((PacketCSyncAbilityProperties) packet, ctx);
+        if (packet instanceof PacketCSyncAbilityProperties)
+            return handleSyncProperties((PacketCSyncAbilityProperties) packet, ctx);
 
-		AvatarLog.warn(WarningType.WEIRD_PACKET, "Client recieved unknown packet from server:" + packet);
+        AvatarLog.warn(WarningType.WEIRD_PACKET, "Client recieved unknown packet from server:" + packet);
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public Side getSide() {
-		return Side.CLIENT;
-	}
+    @Override
+    public Side getSide() {
+        return Side.CLIENT;
+    }
 
-	private IMessage handlePacketParticles(PacketCParticles packet, MessageContext ctx,  boolean velIsMagnitude) {
+    private IMessage handlePacketParticles(PacketCParticles packet, MessageContext ctx, boolean velIsMagnitude) {
 
-		EnumParticleTypes particle = packet.getParticle();
-		if (particle == null) {
-			AvatarLog.warn(WarningType.WEIRD_PACKET, "Unknown particle recieved from server");
-			return null;
-		}
+        EnumParticleTypes particle = packet.getParticle();
+        if (particle == null) {
+            AvatarLog.warn(WarningType.WEIRD_PACKET, "Unknown particle recieved from server");
+            return null;
+        }
 
-		Random random = new Random();
+        Random random = new Random();
 
-		int particles = random.nextInt(packet.getMaximum() - packet.getMinimum() + 1) + packet.getMinimum();
+        int particles = random.nextInt(packet.getMaximum() - packet.getMinimum() + 1) + packet.getMinimum();
 
-		for (int i = 0; i < particles; i++) {
-			mc.world.spawnParticle(particle, packet.getX(), packet.getY(), packet.getZ(),
-					velIsMagnitude ? packet.getMaxVelocityX() * random.nextGaussian() : packet.getMaxVelocityX() * random.nextDouble(),
-					velIsMagnitude ? packet.getMaxVelocityY() * random.nextGaussian() : packet.getMaxVelocityY() * random.nextDouble(),
-					velIsMagnitude ? packet.getMaxVelocityZ() * random.nextGaussian() : packet.getMaxVelocityZ() * random.nextDouble());
-		}
+        for (int i = 0; i < particles; i++) {
+            mc.world.spawnParticle(particle, packet.getX(), packet.getY(), packet.getZ(),
+                    velIsMagnitude ? packet.getMaxVelocityX() * random.nextGaussian() : packet.getMaxVelocityX() * random.nextDouble(),
+                    velIsMagnitude ? packet.getMaxVelocityY() * random.nextGaussian() : packet.getMaxVelocityY() * random.nextDouble(),
+                    velIsMagnitude ? packet.getMaxVelocityZ() * random.nextGaussian() : packet.getMaxVelocityZ() * random.nextDouble());
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private IMessage handlePacketPowerRating(PacketCPowerRating packet, MessageContext ctx) {
+    private IMessage handlePacketPowerRating(PacketCPowerRating packet, MessageContext ctx) {
 
-		Map<UUID, Double> powerRatings = packet.getPowerRatings();
-		BendingData data = BendingData.getFromEntity(mc.player);
+        Map<UUID, Double> powerRatings = packet.getPowerRatings();
+        BendingData data = BendingData.getFromEntity(mc.player);
 
-		Set<Map.Entry<UUID, Double>> entrySet = powerRatings.entrySet();
-		for (Map.Entry<UUID, Double> entry : entrySet) {
-			if (data != null && data.getPowerRatingManager(entry.getKey()) != null) {
-				data.getPowerRatingManager(entry.getKey()).setCachedRatingValue(entry.getValue());
+        Set<Map.Entry<UUID, Double>> entrySet = powerRatings.entrySet();
+        for (Map.Entry<UUID, Double> entry : entrySet) {
+            if (data != null && data.getPowerRatingManager(entry.getKey()) != null) {
+                data.getPowerRatingManager(entry.getKey()).setCachedRatingValue(entry.getValue());
+            }
+        }
+
+        return null;
+    }
+
+    private IMessage handlePacketNotEnoughChi(PacketCErrorMessage packet, MessageContext ctx) {
+
+        AvatarUiRenderer.displayErrorMessage(packet.getMessage());
+
+        return null;
+    }
+
+    private IMessage handlePacketSkillCard(PacketCOpenSkillCard packet, MessageContext ctx) {
+        if (mc.currentScreen instanceof SkillsGui) {
+            ((SkillsGui) mc.currentScreen).openWindow(packet.getAbility());
+        }
+        return null;
+    }
+
+    private IMessage handlePacketClientGliding(PacketCClientGliding packet, MessageContext ctx) {
+        //have to use threading system since 1.8
+        Minecraft.getMinecraft().addScheduledTask(() -> {
+            EntityPlayer player = AvatarMod.proxy.getClientPlayer();
+            if (player != null) {
+                GliderHelper.setIsGliderDeployed(player, packet.isGliding);
+            }
+        });
+
+        return null; //no return message
+    }
+
+    private IMessage handlePacketSyncGliderDataToClient(PacketCSyncGliderDataToClient packet, MessageContext ctx) {
+        Minecraft.getMinecraft().addScheduledTask(() -> {
+            AvatarMod.proxy.getClientGliderCapability().deserializeNBT(packet.nbt);
+            AvatarLog.debug("** RECEIVED GLIDER SYNC INFO CLIENTSIDE **");
+        });
+
+        return null;
+    }
+
+    private IMessage handlePacketUpdateClientTarget(PacketCUpdateClientTarget packet, MessageContext ctx) {
+        Minecraft.getMinecraft().addScheduledTask(() -> {
+            World world = AvatarMod.proxy.getClientWorld();
+            EntityPlayer targetEntity = (EntityPlayer) world.getEntityByID(packet.targetEntityID);
+            if (targetEntity != null) {
+                GliderHelper.setIsGliderDeployed(targetEntity, packet.isGliding);
+            }
+        });
+        return null;
+    }
+
+    private IMessage handleSyncProperties(PacketCSyncAbilityProperties packet, MessageContext ctx) {
+        if (ctx.side.isServer()) {
+            final EntityPlayerMP player = ctx.getServerHandler().player;
+
+            player.getServerWorld().addScheduledTask(() -> {
+                for (int i = 0; i < packet.properties.length; i++) {
+                    Abilities.all().get(i).setProperties(packet.properties[i]);
+                }
+            });
+        }
+        else {
+			for (int i = 0; i < packet.properties.length; i++) {
+				Abilities.all().get(i).setProperties(packet.properties[i]);
 			}
 		}
 
-		return null;
-	}
-
-	private IMessage handlePacketNotEnoughChi(PacketCErrorMessage packet, MessageContext ctx) {
-
-		AvatarUiRenderer.displayErrorMessage(packet.getMessage());
-
-		return null;
-	}
-
-	private IMessage handlePacketSkillCard(PacketCOpenSkillCard packet, MessageContext ctx) {
-		if (mc.currentScreen instanceof SkillsGui) {
-			((SkillsGui) mc.currentScreen).openWindow(packet.getAbility());
-		}
-		return null;
-	}
-
-	private IMessage handlePacketClientGliding(PacketCClientGliding packet, MessageContext ctx) {
-		//have to use threading system since 1.8
-		Minecraft.getMinecraft().addScheduledTask(() -> {
-			EntityPlayer player = AvatarMod.proxy.getClientPlayer();
-			if (player != null) {
-				GliderHelper.setIsGliderDeployed(player, packet.isGliding);
-			}
-		});
-
-		return null; //no return message
-	}
-
-	private IMessage handlePacketSyncGliderDataToClient(PacketCSyncGliderDataToClient packet, MessageContext ctx) {
-		Minecraft.getMinecraft().addScheduledTask(() -> {
-			AvatarMod.proxy.getClientGliderCapability().deserializeNBT(packet.nbt);
-			AvatarLog.debug("** RECEIVED GLIDER SYNC INFO CLIENTSIDE **");
-		});
-
-		return null;
-	}
-
-	private IMessage handlePacketUpdateClientTarget(PacketCUpdateClientTarget packet, MessageContext ctx) {
-		Minecraft.getMinecraft().addScheduledTask(() -> {
-			World world = AvatarMod.proxy.getClientWorld();
-			EntityPlayer targetEntity = (EntityPlayer) world.getEntityByID(packet.targetEntityID);
-			if (targetEntity != null) {
-				GliderHelper.setIsGliderDeployed(targetEntity, packet.isGliding);
-			}
-		});
-		return null;
-	}
-
-	private IMessage handleSyncProperties(PacketCSyncAbilityProperties packet, MessageContext ctx) {
-
-		return null;
-	}
+        return null;
+    }
 
 }

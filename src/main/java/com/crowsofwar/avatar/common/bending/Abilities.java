@@ -18,7 +18,6 @@ package com.crowsofwar.avatar.common.bending;
 
 import com.crowsofwar.avatar.common.data.Bender;
 import net.minecraft.entity.EntityLiving;
-import org.yaml.snakeyaml.events.Event;
 
 import javax.annotation.Nullable;
 import java.util.*;

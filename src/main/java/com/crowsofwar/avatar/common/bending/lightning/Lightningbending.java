@@ -16,8 +16,6 @@
 */
 package com.crowsofwar.avatar.common.bending.lightning;
 
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
 import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
@@ -41,8 +39,7 @@ public class Lightningbending extends BendingStyle {
 	public Lightningbending() {
 		super(Firebending.ID);
 
-		for (Ability ability : Abilities.getAbilitiesToRegister(ID))
-			addAbility(ability.getName());
+		registerAbilities();
 		ThemeColor bkgd = new ThemeColor(0xEBF4F5, 0xDBE1E2);
 		ThemeColor edge = new ThemeColor(0xC5DDDF, 0xACBFC0);
 		ThemeColor icon = new ThemeColor(0xFFEBC2, 0xFBE9C3);

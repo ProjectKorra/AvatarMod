@@ -16,8 +16,8 @@
 */
 package com.crowsofwar.avatar.common.bending.air.statctrls;
 
-import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.controls.AvatarControl;
+import com.crowsofwar.avatar.common.data.StatusControl;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import net.minecraft.entity.EntityLivingBase;

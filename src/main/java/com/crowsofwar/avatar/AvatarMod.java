@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.common.*;
 import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
 import com.crowsofwar.avatar.common.bending.BendingStyles;
 import com.crowsofwar.avatar.common.bending.air.*;
 import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosion;
@@ -192,7 +193,12 @@ public class AvatarMod {
 
         //AvatarControl.initControls();
         registerAbilities();
+        AbilityProperties.init();
         registerBendingStyles();
+
+        for (BendingStyle style : BendingStyles.all())
+            style.registerAbilities();
+
         AvatarItems.init();
         AvatarBlocks.init();
         AvatarParticles.register();
@@ -245,8 +251,6 @@ public class AvatarMod {
         });
 
         AvatarAnnouncements.fetchAnnouncements();
-
-        AbilityProperties.init();
 
         //File Generation
         /*Gson gson = new GsonBuilder().setPrettyPrinting().create();
