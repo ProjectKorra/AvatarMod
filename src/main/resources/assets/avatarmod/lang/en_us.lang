@@ -206,27 +206,27 @@ avatar.ability.restore.lvl4_1=§2§l§oGuardian §2§l§oof §2§l§oLife ;; You
 avatar.ability.restore.lvl4_2=§2§l§oSustenance §2§l§oof §2§l§oLife ;; You receive instantaneous health, and your hunger disappears.
 
 avatar.ability.fire_shot=§c§lFire Shot
-avatar.ability.fire_shot.desc=A small utility and offensive ability to light fires and keep mobs at bay.
+avatar.ability.fire_shot.desc=A small utility and offensive ability to light fires and keep mobs at bay. Smelts basic items!
 avatar.ability.fire_shot.lvl1=Shoot tiny fireballs to set the world on fire!
-avatar.ability.fire_shot.lvl2=Faster and stronger.
-avatar.ability.fire_shot.lvl3=Even faster and stronger!
+avatar.ability.fire_shot.lvl2=Faster and stronger!
+avatar.ability.fire_shot.lvl3=Even faster and stronger! Smelts food!
 avatar.ability.fire_shot.lvl4_1=§c§l§oFlame §c§l§oDrive ;; Create a line of fire in the direction you're looking; extermely powerful.
 avatar.ability.fire_shot.lvl4_2=§c§l§oBlazing §c§l§oBurst ;; Create a shockwave of pure fire!
 
 avatar.ability.flame_strike=§c§lFlame Strike
-avatar.ability.flame_strike.desc=Strike with the power of condensed fire, creating a concussive blast at your fist!
+avatar.ability.flame_strike.desc=Strike with the power of condensed fire, creating a concussive blast at your fist! S m e l t!
 avatar.ability.flame_strike.lvl1=Punch with the power of flame!
 avatar.ability.flame_strike.lvl2=Bigger blasts!
-avatar.ability.flame_strike.lvl3=Tons more damage!
-avatar.ability.flame_strike.lvl4_1=§c§l§oPhoenix's Breath ;; Piercing arcs of flame shoot from your fist! Set fire to things!
-avatar.ability.flame_strike.lvl4_2=§c§l§oDragon's Wrath ;; Short explosions of multicoloured condensed fire!
+avatar.ability.flame_strike.lvl3=Tons more damage! Smelt!
+avatar.ability.flame_strike.lvl4_1=§c§l§oPhoenix's Breath ;; Piercing arcs of flame shoot from your fist! Set fire to things! Smelt everything!
+avatar.ability.flame_strike.lvl4_2=§c§l§oDragon's Wrath ;; Short explosions of multicoloured condensed fire! Smelt everything!
 
 avatar.ability.flamethrower=§c§lFlamethrower
-avatar.ability.flamethrower.desc=Generate a stream of powerful, close-ranged flames. A trademark of Firebending.
+avatar.ability.flamethrower.desc=Generate a stream of powerful, close-ranged flames. A trademark of Firebending. Smelts!
 avatar.ability.flamethrower.lvl1=Attack within a short range
 avatar.ability.flamethrower.lvl2=Nearly twice as many flames; but more chi
 avatar.ability.flamethrower.lvl3=Longer range, more precise, HUUUUGE damage increase
-avatar.ability.flamethrower.lvl4_1=§c§l§oDragon's Breath ;; Breathe multicoloured high-pressure flames!
+avatar.ability.flamethrower.lvl4_1=§c§l§oDragon's Breath ;; Breathe multicoloured high-pressure flames! Can even smelt armour!
 avatar.ability.flamethrower.lvl4_2=§c§l§oPhoenix's Wrath!! ;; Huge, unfocused fire that creates flames everywhere.
 
 avatar.ability.fireball=§c§lFireball

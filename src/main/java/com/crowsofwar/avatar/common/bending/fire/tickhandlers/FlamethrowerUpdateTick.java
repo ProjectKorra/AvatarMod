@@ -262,6 +262,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 flames.setTrailingFire(abilityData.isDynamicMasterLevel(AbilityTreePath.SECOND));
                 flames.setFireTime(fireTime);
                 flames.setDamage(damage);
+                flames.setSmelt(true);
                 flames.setFireTime(fireTime);
                 flames.setPerformanceAmount((int) performanceAmount);
                 flames.setElement(new Firebending());
