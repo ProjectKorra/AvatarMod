@@ -284,7 +284,7 @@ public abstract class Bender {
 				entity, powerRating, switchPath);
 
 		if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
-			if (aD.getAbilityCooldown() == 0 && this.consumeChi(ability.getChiCost(abilityCtx))) {
+			if (aD.getAbilityCooldown() == 0) {
 				if (data.getMiscData().getCanUseAbilities()) {
 					ability.execute(abilityCtx);
 					if (entity instanceof EntityPlayer)

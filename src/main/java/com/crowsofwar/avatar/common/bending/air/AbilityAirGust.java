@@ -48,8 +48,20 @@ import static com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath.SECO
  */
 public class AbilityAirGust extends Ability {
 
+	static final String
+			PIERCES_ENEMIES = "piercesEnemies",
+			DESTROY_PROJECTILES = "destroyProjectiles",
+			SLOW_PROJECTILES = "slowProjectiles";
+
+
 	public AbilityAirGust() {
 		super(Airbending.ID, "air_gust");
+	}
+
+	@Override
+	public void init() {
+		super.init();
+		addProperties(PIERCES_ENEMIES, DESTROY_PROJECTILES, SLOW_PROJECTILES);
 	}
 
 	@Override
@@ -82,7 +94,6 @@ public class AbilityAirGust extends Ability {
 			if (ctx.isDynamicMasterLevel(FIRST)) {
 				size = 0.75F;
 				speed = 47.5F;
-				lifetime += 10;
 			}
 			if (ctx.isDynamicMasterLevel(SECOND)) {
 				size = 2.25F;
@@ -103,16 +114,15 @@ public class AbilityAirGust extends Ability {
 			gust.setLifeTime(lifetime);
 			gust.rotationPitch = entity.rotationPitch;
 			gust.rotationYaw = entity.rotationYaw;
-			gust.setPushStone(ctx.getLevel() >= 1);
-			gust.setPushIronDoor(ctx.getLevel() >= 2);
-			gust.setPushIronTrapDoor(ctx.getLevel() >= 2);
+			gust.setPushStone(getProperty(PUSH_STONE, ctx.getLevel()).floatValue() > 0);
+			gust.setPushIronDoor(getProperty(PUSH_IRONDOOR, ctx.getLevel()).floatValue() > 0);
+			gust.setPushIronTrapDoor(getProperty(PUSH_IRON_TRAPDOOR, ctx.getLevel()).floatValue() > 0);
 			gust.setDestroyProjectiles(ctx.isDynamicMasterLevel(FIRST));
 			gust.setSlowProjectiles(ctx.isDynamicMasterLevel(SECOND));
 			gust.setPiercesEnemies(ctx.getLevel() >= 1);
 			gust.setAbility(this);
-			gust.setLifeTime(30);
 			gust.setTier(getCurrentTier(ctx.getLevel()));
-			gust.setXp(SKILLS_CONFIG.airGustHit);
+			gust.setXp(getProperty(XP_HIT).floatValue());
 			gust.setBehaviour(new AirGustBehaviour());
 			if (!world.isRemote)
 				world.spawnEntity(gust);

@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.common.bending;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.combustion.Combustionbending;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.bending.ice.Icebending;
@@ -76,7 +77,12 @@ public abstract class Ability {
             CHI_HIT = "chiOnHit",
             DAMAGE = "damage",
             DURATION = "duration",
-            CHARGE_TIME = "chargeTime";
+            CHARGE_TIME = "chargeTime",
+    //Airbending stuff
+    PUSH_REDSTONE = "pushRedstone",
+            PUSH_IRONDOOR = "pushIronDoor",
+            PUSH_STONE = "pushStoneButton",
+            PUSH_IRON_TRAPDOOR = "pushIronTrapDoor";
 
     private final UUID type;
     private final String name;
@@ -102,32 +108,6 @@ public abstract class Ability {
 
     }
 
-    public void init() {
-        //Base properties belonging to all abilities
-        addProperties(TIER, CHI_COST, BURNOUT, BURNOUT_REGEN, COOLDOWN, EXHAUSTION);
-
-        if (isProjectile() || isOffensive()) {
-            addProperties(LIFETIME, SPEED, KNOCKBACK, CHI_HIT, PERFORMANCE, XP_HIT, SIZE);
-            if (isOffensive())
-                addProperties(DAMAGE);
-        }
-        if (isBuff())
-            addProperties(DURATION, XP_USE);
-        if (isUtility())
-            addProperties(XP_USE);
-        if (isChargeable())
-            addProperties(CHARGE_TIME);
-
-        if (getBendingId() == Firebending.ID && isOffensive())
-            addProperties(FIRE_TIME);
-
-        //Brute force due to initialisation order
-        if (getBendingId() == Lightningbending.ID ||
-                getBendingId() == Sandbending.ID || getBendingId() == Combustionbending.ID
-                || getBendingId() == Icebending.ID)
-            addProperties(PARENT_TIER);
-    }
-
     /**
      * Called from the event handler when a player logs in.
      */
@@ -150,10 +130,6 @@ public abstract class Ability {
         }
     }
 
-    // ============================================ Event handlers ==============================================
-
-    // Not ideal but it solves the reloading of ability properties without breaking encapsulation
-
     //Event handler stuff for properties
     @SubscribeEvent
     public static void onWorldLoadEvent(WorldEvent.Load event) {
@@ -167,6 +143,10 @@ public abstract class Ability {
         }
     }
 
+    // ============================================ Event handlers ==============================================
+
+    // Not ideal but it solves the reloading of ability properties without breaking encapsulation
+
     @SubscribeEvent
     public static void onClientDisconnectEvent(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         // Why does the world UNLOAD event happen during world LOADING? How does that even work?!
@@ -176,6 +156,34 @@ public abstract class Ability {
             // No need to sync here since the server is about to shut down anyway
             ability.setProperties(ability.globalProperties);
         }
+    }
+
+    public void init() {
+        //Base properties belonging to all abilities
+        addProperties(TIER, CHI_COST, BURNOUT, BURNOUT_REGEN, COOLDOWN, EXHAUSTION);
+
+        if (isProjectile() || isOffensive()) {
+            addProperties(LIFETIME, SPEED, KNOCKBACK, CHI_HIT, PERFORMANCE, XP_HIT, SIZE);
+            if (isOffensive())
+                addProperties(DAMAGE);
+            if (getBendingId() == Airbending.ID)
+                addProperties(PUSH_REDSTONE, PUSH_IRON_TRAPDOOR, PUSH_IRONDOOR, PUSH_STONE);
+        }
+        if (isBuff())
+            addProperties(DURATION, XP_USE);
+        if (isUtility())
+            addProperties(XP_USE);
+        if (isChargeable())
+            addProperties(CHARGE_TIME);
+
+        if (getBendingId() == Firebending.ID && isOffensive())
+            addProperties(FIRE_TIME);
+
+        //Brute force due to initialisation order
+        if (getBendingId() == Lightningbending.ID ||
+                getBendingId() == Sandbending.ID || getBendingId() == Combustionbending.ID
+                || getBendingId() == Icebending.ID)
+            addProperties(PARENT_TIER);
     }
 
     /**
@@ -199,6 +207,12 @@ public abstract class Ability {
         if (properties == null)
             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
         return properties == null ? 1 : properties.getBaseValue(identifier, abilityLevel);
+    }
+
+    public final Number getProperty(String identifier) {
+        if (properties == null)
+            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+        return properties == null ? 1 : properties.getBaseValue(identifier, 0);
     }
 
     protected BendingStyle controller() {
@@ -229,15 +243,21 @@ public abstract class Ability {
      * is executed.
      */
     public int getCooldown(AbilityContext ctx) {
-        return 0;
+        if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
+            return 0;
+        return getProperty(COOLDOWN, ctx.getLevel()).intValue();
     }
 
     public float getBurnOut(AbilityContext ctx) {
-        return 0F;
+        if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
+            return 0;
+        return getProperty(BURNOUT, ctx.getLevel()).floatValue();
     }
 
     public float getExhaustion(AbilityContext ctx) {
-        return 0F;
+        if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
+            return 0;
+        return getProperty(EXHAUSTION, Math.max(ctx.getLevel(), 0)).floatValue();
     }
 
     /**
@@ -246,7 +266,9 @@ public abstract class Ability {
      * Can be overriden if the chi cost shouldn't be applied immediately.
      */
     public float getChiCost(AbilityContext ctx) {
-        return 0F;
+        if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
+            return 0;
+        return getProperty(CHI_COST, ctx.getLevel()).floatValue();
     }
 
     /*
@@ -333,7 +355,6 @@ public abstract class Ability {
     public int getCurrentParentTier(int level) {
         return getProperty(PARENT_TIER, level).intValue();
     }
-
 
 
     public BendingStyle getElement() {

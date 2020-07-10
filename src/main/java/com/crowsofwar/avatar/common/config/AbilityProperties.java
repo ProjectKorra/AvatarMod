@@ -138,8 +138,6 @@ public class AbilityProperties {
         Collections.sort(keys); // Should be the same list of keys in the same order they were written to the ByteBuf
 
         for (String key : keys) {
-            if (key.equalsIgnoreCase("tier"))
-                AvatarLog.info(key + " " + buf.readFloat());
             baseValues.put(key, buf.readFloat());
         }
     }
@@ -352,7 +350,7 @@ public class AbilityProperties {
         if (!baseValues.containsKey(identifier)) {
             throw new IllegalArgumentException("Base value with identifier '" + identifier + "' is not defined.");
         }
-        return new ArrayList<>(baseValues.get(identifier)).get(abilityLevel == -1 ? 0 : abilityLevel);
+        return new ArrayList<>(baseValues.get(identifier)).get(Math.max(abilityLevel, 0));
     }
 
 }
