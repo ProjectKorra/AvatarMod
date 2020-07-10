@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
@@ -346,11 +347,11 @@ public class AbilityProperties {
      * @throws IllegalArgumentException if no base value was defined with the given identifier.
      */
     //TODO: A way to store the level in the hashmap! Ahh!
-    public Number getBaseValue(String identifier, int abilityLevel) {
+    public Number getBaseValue(String identifier, int abilityLevel, AbilityData.AbilityTreePath path) {
         if (!baseValues.containsKey(identifier)) {
             throw new IllegalArgumentException("Base value with identifier '" + identifier + "' is not defined.");
         }
-        return new ArrayList<>(baseValues.get(identifier)).get(Math.max(abilityLevel, 0));
+        return new ArrayList<>(baseValues.get(identifier)).get(Math.max(path == AbilityData.AbilityTreePath.SECOND ? abilityLevel + 1 : abilityLevel, 0));
     }
 
 }

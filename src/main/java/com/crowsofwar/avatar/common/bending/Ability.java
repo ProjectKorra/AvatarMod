@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.common.bending.ice.Icebending;
 import com.crowsofwar.avatar.common.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.common.bending.sand.Sandbending;
 import com.crowsofwar.avatar.common.config.AbilityProperties;
+import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
@@ -206,13 +207,19 @@ public abstract class Ability {
     public final Number getProperty(String identifier, int abilityLevel) {
         if (properties == null)
             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
-        return properties == null ? 1 : properties.getBaseValue(identifier, abilityLevel);
+        return properties == null ? 1 : properties.getBaseValue(identifier, abilityLevel, AbilityData.AbilityTreePath.MAIN);
+    }
+
+    public final Number getProperty(String identifier, int abilityLevel, AbilityData.AbilityTreePath path) {
+        if (properties == null)
+            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+        return properties == null ? 1 : properties.getBaseValue(identifier, abilityLevel, path);
     }
 
     public final Number getProperty(String identifier) {
         if (properties == null)
             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
-        return properties == null ? 1 : properties.getBaseValue(identifier, 0);
+        return properties == null ? 1 : properties.getBaseValue(identifier, 0, AbilityData.AbilityTreePath.MAIN);
     }
 
     protected BendingStyle controller() {
@@ -245,19 +252,19 @@ public abstract class Ability {
     public int getCooldown(AbilityContext ctx) {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
-        return getProperty(COOLDOWN, ctx.getLevel()).intValue();
+        return getProperty(COOLDOWN, ctx.getLevel(), ctx.getDynamicPath()).intValue();
     }
 
     public float getBurnOut(AbilityContext ctx) {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
-        return getProperty(BURNOUT, ctx.getLevel()).floatValue();
+        return getProperty(BURNOUT, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
     }
 
     public float getExhaustion(AbilityContext ctx) {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
-        return getProperty(EXHAUSTION, Math.max(ctx.getLevel(), 0)).floatValue();
+        return getProperty(EXHAUSTION, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
     }
 
     /**
@@ -268,7 +275,7 @@ public abstract class Ability {
     public float getChiCost(AbilityContext ctx) {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
-        return getProperty(CHI_COST, ctx.getLevel()).floatValue();
+        return getProperty(CHI_COST, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
     }
 
     /*
@@ -347,13 +354,13 @@ public abstract class Ability {
         return getProperty(TIER, 0).intValue();
     }
 
-    public int getCurrentTier(int level) {
-        return getProperty(TIER, level).intValue();
+    public int getCurrentTier(AbilityContext ctx) {
+        return getProperty(TIER, ctx.getLevel(), ctx.getDynamicPath()).intValue();
     }
 
     //Only for abilities in sub-elements.
-    public int getCurrentParentTier(int level) {
-        return getProperty(PARENT_TIER, level).intValue();
+    public int getCurrentParentTier(AbilityContext ctx) {
+        return getProperty(PARENT_TIER, ctx.getLevel(), ctx.getDynamicPath()).intValue();
     }
 
 
@@ -368,18 +375,18 @@ public abstract class Ability {
         return 0;
     }
 
-    public boolean isCompatibleScroll(ItemStack stack, int level) {
+    public boolean isCompatibleScroll(ItemStack stack, AbilityContext ctx) {
         if (getBendingId() != null) {
             if (stack.getItem() instanceof ItemScroll) {
                 Scrolls.ScrollType type = Scrolls.getTypeForStack(stack);
                 assert type != null;
                 if (type.getBendingId() == getBendingId() || type == Scrolls.ScrollType.ALL)
-                    return Scrolls.getTierForStack(stack) >= getCurrentTier(level);
+                    return Scrolls.getTierForStack(stack) >= getCurrentTier(ctx);
 
                 if (getBaseParentTier() > 0)
                     if (Objects.requireNonNull(BendingStyles.get(getBendingId())).getParentBendingId() == type
                             .getBendingId())
-                        return Scrolls.getTierForStack(stack) >= getCurrentParentTier(level);
+                        return Scrolls.getTierForStack(stack) >= getCurrentParentTier(ctx);
             }
         }
         return false;

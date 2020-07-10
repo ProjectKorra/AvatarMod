@@ -33,6 +33,7 @@ import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.BendingData;
 import com.crowsofwar.avatar.common.data.WallJumpManager;
+import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.data.ctx.BendingContext;
 import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.common.event.AbilityLevelEvent;
@@ -49,6 +50,7 @@ import com.crowsofwar.avatar.common.network.packets.*;
 import com.crowsofwar.avatar.common.network.packets.glider.PacketSServerGliding;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.PlayerViewRegistry;
+import com.crowsofwar.avatar.common.util.Raytrace;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -319,8 +321,9 @@ public class PacketHandlerServer implements IPacketHandler {
 							// Try to use this scroll
 							ScrollType type = Scrolls.getTypeForStack(stack);
 							assert type != null;
-							AbilityData aD = AbilityData.get(player, packet.getAbility().getName());
-							if (type.accepts(packet.getAbility().getBendingId()) && packet.getAbility().isCompatibleScroll(stack, aD.getLevel())) {
+							AbilityContext aCtx = new AbilityContext(data, player, Bender.get(player), new Raytrace.Result(), packet.getAbility(),
+									Bender.get(player).calcPowerRating(packet.getAbility().getBendingId()), false);
+							if (type.accepts(packet.getAbility().getBendingId()) && packet.getAbility().isCompatibleScroll(stack, aCtx)) {
 								if (abilityData.getLevel() < 0 && !MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(player, abilityData.getAbility()))
 										|| !MinecraftForge.EVENT_BUS.post(new AbilityLevelEvent(player, abilityData.getAbility(), abilityData.getLevel() + 1, abilityData.getLevel() + 2))) {
 									activeSlot.putStack(ItemStack.EMPTY);
