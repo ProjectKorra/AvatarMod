@@ -87,7 +87,7 @@ public abstract class Ability {
     /**
      * This ability's associated AbilityProperties object.
      */
-    private AbilityProperties properties;
+    public AbilityProperties properties;
     /**
      * A reference to the global spell properties for this ability, so they are only loaded once.
      */
@@ -135,8 +135,7 @@ public abstract class Ability {
         if (player instanceof EntityPlayerMP) {
             // On the server side, send a packet to the player to synchronise their spell properties
             List<Ability> abilities = Abilities.all();
-            AvatarMod.network.sendToAllTracking(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)),
-                  player);
+            AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));
 
         } else {
             // On the client side, wipe the spell properties so the new ones can be set
@@ -197,6 +196,8 @@ public abstract class Ability {
      * @throws IllegalArgumentException if no property was defined with the given identifier.
      */
     public final Number getProperty(String identifier, int abilityLevel) {
+        if (properties == null)
+            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
         return properties == null ? 1 : properties.getBaseValue(identifier, abilityLevel);
     }
 

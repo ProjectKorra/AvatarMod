@@ -64,12 +64,12 @@ public class AbilityProperties {
      */
     private AbilityProperties(JsonObject json, Ability ability) {
 
-        String[] baseValueNames = ability.getPropertyKeys();
+        List<String> baseValueNames = Arrays.asList(ability.getPropertyKeys());
 
         baseValues = ArrayListMultimap.create();
-
         JsonObject customProperties = JsonUtils.getJsonObject(json, "custom_properties");
 
+        Collections.sort(baseValueNames);
         for (String name : baseValueNames) {
             if (name.equalsIgnoreCase("xpOnHit") || name.equalsIgnoreCase("xpOnUse"))
                 baseValues.put(name, JsonUtils.getFloat(customProperties, name));
@@ -108,12 +108,12 @@ public class AbilityProperties {
             // some random point in the future. Since redundant values aren't a problem by themselves, we shouldn't throw an
             // exception, but a warning is appropriate.
 
-            int redundantKeys = baseValueObject.size() - baseValueNames.length;
+            int redundantKeys = baseValueObject.size() - baseValueNames.size();
             if (redundantKeys > 0) AvatarLog.warn("Ability " + ability.getName() + " has " + redundantKeys +
                     " redundant ability property key(s) defined in its JSON file. Extra values will have no effect! (Av2 devs:" +
                     " make sure you have called addProperties(...) during ability construction)");
 
-            if (baseValueNames.length > 0) {
+            if (baseValueNames.size() > 0) {
 
                 for (String baseValueName : baseValueNames) {
                     if (!baseValueName.equalsIgnoreCase("xpOnHit") && !baseValueName.equalsIgnoreCase("xpOnUse"))
@@ -138,6 +138,8 @@ public class AbilityProperties {
         Collections.sort(keys); // Should be the same list of keys in the same order they were written to the ByteBuf
 
         for (String key : keys) {
+            if (key.equalsIgnoreCase("tier"))
+                AvatarLog.info(key + " " + buf.readFloat());
             baseValues.put(key, buf.readFloat());
         }
     }
@@ -326,7 +328,7 @@ public class AbilityProperties {
      */
     public void write(ByteBuf buf) {
 
-        List<String> keys = new ArrayList<>(baseValues.keySet());
+        List<String> keys = new ArrayList<>(baseValues.keys());
         Collections.sort(keys); // Sort alphabetically (as long as the order is consistent it doesn't matter)
 
         for (String key : keys) {

@@ -156,13 +156,14 @@ public class AvatarMod {
     }
 
     private static void registerBendingStyles() {
-        BendingStyles.register(new Earthbending());
+        //Same order as abilities or ability properties won't work!
+        BendingStyles.register(new Airbending());
         BendingStyles.register(new Firebending());
         BendingStyles.register(new Waterbending());
-        BendingStyles.register(new Airbending());
+        BendingStyles.register(new Earthbending());
         BendingStyles.register(new Icebending());
-        BendingStyles.register(new Lightningbending());
         BendingStyles.register(new Sandbending());
+        BendingStyles.register(new Lightningbending());
         BendingStyles.register(new Combustionbending());
     }
 

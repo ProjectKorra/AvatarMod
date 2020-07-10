@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.network.packets;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.common.bending.Abilities;
 import com.crowsofwar.avatar.common.config.AbilityProperties;
 import com.crowsofwar.avatar.common.network.PacketRedirector;
@@ -8,6 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PacketCSyncAbilityProperties extends AvatarPacket<PacketCSyncAbilityProperties> {
 
@@ -25,8 +27,8 @@ public class PacketCSyncAbilityProperties extends AvatarPacket<PacketCSyncAbilit
         List<AbilityProperties> propertiesList = new ArrayList<>();
         int i = 0;
 
-        while (buf.isReadable()) {
-            propertiesList.add(new AbilityProperties(Abilities.all().get(i), buf));
+        while (buf.isReadable() && i < Abilities.all().size()) {
+            propertiesList.add(Abilities.all().stream().map(a -> a.properties).collect(Collectors.toList()).get(i++));
         }
 
         properties = propertiesList.toArray(new AbilityProperties[0]);
@@ -37,6 +39,7 @@ public class PacketCSyncAbilityProperties extends AvatarPacket<PacketCSyncAbilit
         for (AbilityProperties properties : properties)
             if (properties != null)
                 properties.write(buf);
+            else AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file is null! Whack!");
     }
 
     @Override
