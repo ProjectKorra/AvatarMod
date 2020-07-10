@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.common.particle.ParticleBuilder;
 import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -78,50 +79,33 @@ public class AbilityAirGust extends Ability {
 		Vector pos = Vector.getEyePos(entity);
 		if (bender.consumeChi(STATS_CONFIG.chiAirGust)) {
 
-			float speed = 35;
-			float size = 1.0F;
-			int lifetime = 20;
-			if (ctx.getLevel() == 1) {
-				speed = 40;
-				size = 1.25F;
-				lifetime += 10;
-			}
-			if (ctx.getLevel() >= 2) {
-				speed = 42.5F;
-				size = 1.5F;
-				lifetime += 20;
-			}
-			if (ctx.isDynamicMasterLevel(FIRST)) {
-				size = 0.75F;
-				speed = 47.5F;
-			}
-			if (ctx.isDynamicMasterLevel(SECOND)) {
-				size = 2.25F;
-				speed = 15;
-				lifetime += 30;
-			}
+			float speed = getProperty(SPEED, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
+			float size = getProperty(SIZE, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
+			int lifetime = getProperty(LIFETIME, ctx.getLevel(), ctx.getDynamicPath()).intValue();
 
+			//Xp and powerrating integration
 			size *= ctx.getPowerRatingDamageMod();
 			speed += 5 * ctx.getPowerRatingDamageMod();
 
 			EntityAirGust gust = new EntityAirGust(world);
-			gust.setVelocity(look.times(speed));
+			gust.setVelocity(look.times(getProperty(SPEED, ctx.getLevel(), ctx.getDynamicPath()).floatValue()));
 			gust.setPosition(pos.minusY(0.5));
 			gust.setOwner(entity);
-			gust.setEntitySize(size);
+			gust.setEntitySize(getProperty(SIZE, ctx.getLevel(), ctx.getDynamicPath()).floatValue());
 			gust.setDamage(0);
 			gust.setDynamicSpreadingCollision(true);
-			gust.setLifeTime(lifetime);
+			gust.setLifeTime(getProperty(LIFETIME, ctx.getLevel(), ctx.getDynamicPath()).intValue());
 			gust.rotationPitch = entity.rotationPitch;
 			gust.rotationYaw = entity.rotationYaw;
+			//Floats mean when users fuck up the game doesn't yeet itself off a cliff
 			gust.setPushStone(getProperty(PUSH_STONE, ctx.getLevel()).floatValue() > 0);
 			gust.setPushIronDoor(getProperty(PUSH_IRONDOOR, ctx.getLevel()).floatValue() > 0);
 			gust.setPushIronTrapDoor(getProperty(PUSH_IRON_TRAPDOOR, ctx.getLevel()).floatValue() > 0);
-			gust.setDestroyProjectiles(ctx.isDynamicMasterLevel(FIRST));
-			gust.setSlowProjectiles(ctx.isDynamicMasterLevel(SECOND));
-			gust.setPiercesEnemies(ctx.getLevel() >= 1);
+			gust.setDestroyProjectiles(getProperty(DESTROY_PROJECTILES, ctx.getLevel(), ctx.getDynamicPath()).floatValue() > 0);
+			gust.setSlowProjectiles(getProperty(SLOW_PROJECTILES, ctx.getLevel(), ctx.getDynamicPath()).floatValue() > 0);
+			gust.setPiercesEnemies(getProperty(PIERCES_ENEMIES, ctx.getLevel()).floatValue() > 0);
 			gust.setAbility(this);
-			gust.setTier(getCurrentTier(ctx.getLevel()));
+			gust.setTier(getCurrentTier(ctx));
 			gust.setXp(getProperty(XP_HIT).floatValue());
 			gust.setBehaviour(new AirGustBehaviour());
 			if (!world.isRemote)
