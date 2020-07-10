@@ -134,7 +134,7 @@ public class WaterChargeHandler extends TickHandler {
 		cannon.setXp(SKILLS_CONFIG.waterHit / 2);
 		cannon.rotationPitch = entity.rotationPitch;
 		cannon.rotationYaw = entity.rotationYaw;
-		cannon.setTier(new AbilityWaterBlast().getCurrentTier(AbilityData.get(entity, "water_blast").getLevel()));
+		cannon.setTier(new AbilityWaterBlast().getCurrentTier(AbilityData.get(entity, "water_blast")));
 		cannon.setAbility(new AbilityWaterBlast());
 
 		Vector velocity = Vector.getLookRectangular(entity);

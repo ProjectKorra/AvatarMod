@@ -107,7 +107,7 @@ public class AbilityFireShot extends Ability {
 				flames.setEntitySize(0.1F, 0.1F);
 				flames.setReflect(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST));
 				flames.setAbility(this);
-				flames.setTier(getCurrentTier(ctx.getLevel()));
+				flames.setTier(getCurrentTier(ctx));
 				flames.setXp(xp);
 				flames.setVelocity(entity.getLookVec().scale(speed));
 				flames.setLifeTime((int) abilityData.getTotalXp() + 60);

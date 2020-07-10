@@ -312,7 +312,7 @@ public class StatCtrlFlameStrike extends StatusControl {
                 flames.setDynamicSpreadingCollision(true);
                 flames.setEntitySize(0.1F, 0.1F);
                 flames.setAbility(new AbilityFlameStrike());
-                flames.setTier(new AbilityFlameStrike().getCurrentTier(abilityData.getLevel()));
+                flames.setTier(new AbilityFlameStrike().getCurrentTier(abilityData));
                 //Will need to be changed later as I go through and add in the new ability config
                 flames.setXp(xp);
                 flames.setLifeTime((int) (lifeTime * 0.75) + AvatarUtils.getRandomNumberInRange(0, 4));

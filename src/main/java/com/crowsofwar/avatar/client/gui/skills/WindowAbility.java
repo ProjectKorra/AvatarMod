@@ -112,7 +112,7 @@ public class WindowAbility {
         //Turns the tier into a roman numeral.
         String tierName;
         String parentTierName = "";
-        switch (ability.getCurrentTier(AbilityData.get(player, ability.getName()).getLevel())) {
+        switch (ability.getCurrentTier(AbilityData.get(player, ability.getName()))) {
             default:
                 tierName = "I";
                 break;
@@ -136,7 +136,7 @@ public class WindowAbility {
                 break;
         }
         if (ability.getBaseParentTier() > 0) {
-            switch (ability.getCurrentParentTier(AbilityData.get(player, ability.getName()).getLevel())) {
+            switch (ability.getCurrentParentTier(AbilityData.get(player, ability.getName()))) {
                 default:
                     parentTierName = "I";
                     break;

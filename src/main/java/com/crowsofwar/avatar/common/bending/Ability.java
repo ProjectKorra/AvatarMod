@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.common.data.AbilityData;
 import com.crowsofwar.avatar.common.data.Bender;
 import com.crowsofwar.avatar.common.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.common.entity.mob.EntityBender;
+import com.crowsofwar.avatar.common.entity.mob.EntityHumanBender;
 import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import com.crowsofwar.avatar.common.item.scroll.Scrolls;
 import com.crowsofwar.avatar.common.network.packets.PacketCSyncAbilityProperties;
@@ -78,8 +79,8 @@ public abstract class Ability {
             DAMAGE = "damage",
             DURATION = "duration",
             CHARGE_TIME = "chargeTime",
-    //Airbending stuff
-    PUSH_REDSTONE = "pushRedstone",
+            //Airbending stuff
+            PUSH_REDSTONE = "pushRedstone",
             PUSH_IRONDOOR = "pushIronDoor",
             PUSH_STONE = "pushStoneButton",
             PUSH_IRON_TRAPDOOR = "pushIronTrapDoor";
@@ -307,7 +308,9 @@ public abstract class Ability {
     public int getCooldown(AbilityContext ctx) {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
-        return getProperty(COOLDOWN, ctx.getLevel(), ctx.getDynamicPath()).intValue();
+        int coolDown = getProperty(COOLDOWN, ctx.getLevel(), ctx.getDynamicPath()).intValue();
+        //Cooldown has a 1.5x multiplier with max burnout
+        return (int) (coolDown * (1 + ctx.getAbilityData().getBurnOut() / 200));
     }
 
     public float getBurnOut(AbilityContext ctx) {
@@ -319,19 +322,58 @@ public abstract class Ability {
     public float getExhaustion(AbilityContext ctx) {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
-        return getProperty(EXHAUSTION, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
+        float exhaustion = getProperty(EXHAUSTION, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
+        //Burnout has a 2x multiplier on exhaustion
+        return exhaustion * (1 + ctx.getAbilityData().getBurnOut() / 100F);
     }
 
     /**
-     * We now handle chi costs here and in Bender.execute automagically,
-     * rather than manually calling it in each ability. Pretty snazzy.
+     * We now handle chi costs here and in {@code Bender.execute()}
+     * rather than manually getting our value value for each ability. Pretty snazzy.
      * Can be overriden if the chi cost shouldn't be applied immediately.
      */
     public float getChiCost(AbilityContext ctx) {
-        if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
+        if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative() || ctx.getBenderEntity() instanceof EntityHumanBender)
             return 0;
-        return getProperty(CHI_COST, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
+        float chi = getProperty(CHI_COST, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
+        //Burnout has a 1.5x multipler on chi cost
+        return chi * (1 + ctx.getAbilityData().getBurnOut() / 200);
     }
+
+    //Same stuff but with AbilityData
+
+    /**
+     * Gets cooldown to be added after the ability is activated.
+     * Not used by charge or status control abilities, as they'll apply a cooldown after the status control
+     * is executed.
+     */
+    public int getCooldown(AbilityData data) {
+        int coolDown = getProperty(COOLDOWN, data.getLevel(), data.getDynamicPath()).intValue();
+        //Cooldown has a 1.5x multiplier with max burnout
+        return (int) (coolDown * (1 + data.getBurnOut() / 200));
+    }
+
+    public float getBurnOut(AbilityData data) {
+        return getProperty(BURNOUT, data.getLevel(), data.getDynamicPath()).floatValue();
+    }
+
+    public float getExhaustion(AbilityData data) {
+        float exhaustion = getProperty(EXHAUSTION, data.getLevel(), data.getDynamicPath()).floatValue();
+        //Burnout has a 2x multiplier on exhaustion
+        return exhaustion * (1 + data.getBurnOut() / 100F);
+    }
+
+    /**
+     * We now handle chi costs here and in {@code Bender.execute()}
+     * rather than manually getting our value value for each ability. Pretty snazzy.
+     * Can be overriden if the chi cost shouldn't be applied immediately.
+     */
+    public float getChiCost(AbilityData data) {
+        float chi = getProperty(CHI_COST, data.getLevel(), data.getDynamicPath()).floatValue();
+        //Burnout has a 1.5x multipler on chi cost
+        return chi * (1 + data.getBurnOut() / 200);
+    }
+
 
     /*
      * Generally used for abilities that grant you stat boosts.

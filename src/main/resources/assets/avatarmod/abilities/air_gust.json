@@ -17,7 +17,10 @@
       "pushRedstone": true,
       "pushStoneButton": false,
       "pushIronDoor": false,
-      "pushIronTrapDoor": false
+      "pushIronTrapDoor": false,
+      "piercesEnemies": false,
+      "slowProjectiles": false,
+      "destroyProjectiles": false
     },
     "level2": {
       "tier": 1,
@@ -32,10 +35,10 @@
       "speed": 40,
       "knockback": 3,
       "chiOnHit": 0.5,
-      "pushRedstone": true,
       "pushStoneButton": true,
       "pushIronDoor": false,
-      "pushIronTrapDoor": false
+      "pushIronTrapDoor": false,
+      "piercesEnemies": true
     },
     "level3": {
       "tier": 2,
@@ -50,7 +53,6 @@
       "speed": 9,
       "knockback": 4,
       "chiOnHit": 0.65,
-      "pushRedstone": true,
       "pushStoneButton": true,
       "pushIronDoor": true,
       "pushIronTrapDoor": true
@@ -68,10 +70,7 @@
       "speed": 47.5,
       "knockback": 5,
       "chiOnHit": 0.75,
-      "pushRedstone": true,
-      "pushStoneButton": true,
-      "pushIronDoor": true,
-      "pushIronTrapDoor": true
+      "destroyProjectiles": true
     },
     "level4_2": {
       "tier": 3,
@@ -86,10 +85,7 @@
       "speed": 13,
       "knockback": 6,
       "chiOnHit": 0.5,
-      "pushRedstone": true,
-      "pushStoneButton": true,
-      "pushIronDoor": true,
-      "pushIronTrapDoor": true
+      "slowProjectiles": true
     }
   }
 }

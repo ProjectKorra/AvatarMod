@@ -254,7 +254,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 flames.setAbility(new AbilityFlamethrower());
                 flames.setDamageSource(abilityData.isDynamicMasterLevel(AbilityTreePath.FIRST) ? AvatarDamageSource.FIRE.getDamageType() + "dragonFire"
                         : AvatarDamageSource.FIRE.getDamageType());
-                flames.setTier(new AbilityFlamethrower().getCurrentTier(abilityData.getLevel()));
+                flames.setTier(new AbilityFlamethrower().getCurrentTier(abilityData));
                 //Will need to be changed later as I go through and add in the new ability config
                 flames.setXp(SKILLS_CONFIG.flamethrowerHit);
                 flames.setVelocity(look.times(speedMult / 1.625F));

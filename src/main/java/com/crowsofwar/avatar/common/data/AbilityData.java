@@ -25,6 +25,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -124,6 +125,8 @@ public class AbilityData {
 
 	public void setBurnOut(float burnOut) {
 		this.burnOut = burnOut;
+		//Burnout isn't greater than 100 or less than 0
+		this.burnOut = MathHelper.clamp(this.burnOut, 0, 100);
 	}
 
 	public float getBurnOut() {

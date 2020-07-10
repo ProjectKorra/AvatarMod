@@ -111,7 +111,7 @@ public class AbilityWaterArc extends Ability {
                 water.setEntitySize(size);
                 water.setDamage(damageMult * STATS_CONFIG.waterArcSettings.damage);
                 water.setXp(SKILLS_CONFIG.waterHit);
-                water.setTier(getCurrentTier(ctx.getLevel()));
+                water.setTier(getCurrentTier(ctx));
                 water.setLifeTime(30);
                 water.setBehavior(new WaterArcBehavior.PlayerControlled());
                 water.isSpear(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND));

@@ -68,23 +68,23 @@ public class AbilityProperties {
     private AbilityProperties(JsonObject json, Ability ability) {
 
         List<String> baseValueNames = Arrays.asList(ability.getPropertyKeys());
+        List<String> baseBooleanNames = Arrays.asList(ability.getBooleanPropertyKeys());
 
         baseValues = ArrayListMultimap.create();
         baseBooleans = ArrayListMultimap.create();
         JsonObject customProperties = JsonUtils.getJsonObject(json, "custom_properties");
 
         Collections.sort(baseValueNames);
+        Collections.sort(baseBooleanNames);
         for (String name : baseValueNames) {
             if (name.equalsIgnoreCase("xpOnHit") || name.equalsIgnoreCase("xpOnUse")) {
-                try {
-                    baseValues.put(name, JsonUtils.getFloat(customProperties, name));
-                } catch (JsonSyntaxException exception) {
-                    baseBooleans.put(name, JsonUtils.getBoolean(customProperties, name));
-                }
-
+                baseValues.put(name, JsonUtils.getFloat(customProperties, name));
             }
         }
 
+//        for (String name : baseBooleanNames) {
+//            baseBooleans.put(name, JsonUtils.getBoolean(customProperties, name));
+//        }
 
         // There's not much point specifying the classes of the numbers here because the json getter methods just
         // perform conversion to the requested type anyway. It therefore makes very little difference whether the
@@ -127,11 +127,17 @@ public class AbilityProperties {
 
                 for (String baseValueName : baseValueNames) {
                     if (!baseValueName.equalsIgnoreCase("xpOnHit") && !baseValueName.equalsIgnoreCase("xpOnUse"))
-                        try {
-                            baseValues.put(baseValueName, JsonUtils.getFloat(baseValueObject, baseValueName));
-                        } catch (JsonSyntaxException exception) {
-                            baseBooleans.put(baseValueName, JsonUtils.getBoolean(baseValueObject, baseValueName));
-                        }
+                        baseValues.put(baseValueName, JsonUtils.getFloat(baseValueObject, baseValueName));
+                }
+            }
+            if (baseBooleanNames.size() > 0) {
+                for (String baseBooleanName : baseBooleanNames) {
+                    try {
+                        baseBooleans.put(baseBooleanName, JsonUtils.getBoolean(baseValueObject, baseBooleanName));
+                    }
+                    catch (JsonSyntaxException e) {
+                        AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Either someone's been lazy and left out a value, or your properties file is screwed.");
+                    }
                 }
             }
         }
@@ -277,12 +283,12 @@ public class AbilityProperties {
 
         // If a spell is missing its file, log an error
         if (!abilities.isEmpty()) {
-            //if (abilities.size() <= 15) {
+            if (abilities.size() <= 15) {
             abilities.forEach(a -> AvatarLog.error("Ability " + a.getName() + " is missing a properties file!"));
-            // } else {
+             } else {
             // If there are more than 15 don't bother logging them all, chances are they're all missing
-            //    AvatarLog.error("Mod " + AvatarInfo.MOD_ID + " has " + abilities.size() + " abilities that are missing properties files!");
-            // }
+                AvatarLog.error("Mod " + AvatarInfo.MOD_ID + " has " + abilities.size() + " abilities that are missing properties files!");
+             }
         }
 
         return success;
