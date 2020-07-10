@@ -77,7 +77,7 @@ public abstract class AvatarEntity extends Entity {
 
 
 	protected boolean putsOutFires, flammable;
-	protected boolean pushStoneButton, pushTrapDoor, pushDoor;
+	protected boolean pushStoneButton, pushTrapDoor, pushDoor, pushRedstone;
 	protected boolean setsFires, lightTnt;
 	private double powerRating;
 	private BendingStyle element;
@@ -100,6 +100,7 @@ public abstract class AvatarEntity extends Entity {
 		this.setsFires = false;
 		this.lightTnt = false;
 		this.tier = 1;
+		this.pushRedstone = false;
 	}
 
 	/**
@@ -261,6 +262,10 @@ public abstract class AvatarEntity extends Entity {
 
 	public void setAbility(Ability ability) {
 		dataManager.set(SYNC_ABILITY, ability.getName());
+	}
+
+	public void setPushRedstone(boolean push) {
+		this.pushRedstone = push;
 	}
 
 	@Override
@@ -688,23 +693,23 @@ public abstract class AvatarEntity extends Entity {
 	}
 
 	public boolean pushButton(boolean pushStone) {
-		return false;
+		return pushRedstone;
 	}
 
 	public boolean pushLever() {
-		return false;
+		return pushRedstone;
 	}
 
 	public boolean pushTrapdoor(boolean pushIron) {
-		return false;
+		return pushRedstone;
 	}
 
 	public boolean pushDoor(boolean pushIron) {
-		return false;
+		return pushRedstone;
 	}
 
 	public boolean pushGate() {
-		return false;
+		return pushRedstone;
 	}
 
 	/**

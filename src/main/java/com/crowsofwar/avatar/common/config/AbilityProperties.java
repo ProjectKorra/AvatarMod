@@ -55,6 +55,8 @@ public class AbilityProperties {
     // decide how to do the conversion. Internally they're handled as floats though.
     private final Multimap<String, Number> baseValues;
 
+    private final Multimap<String, Boolean> baseBooleans;
+
     /**
      * Parses the given JSON object and constructs a new {@code AbilityProperties} from it, setting all the relevant
      * fields and references.
@@ -68,12 +70,19 @@ public class AbilityProperties {
         List<String> baseValueNames = Arrays.asList(ability.getPropertyKeys());
 
         baseValues = ArrayListMultimap.create();
+        baseBooleans = ArrayListMultimap.create();
         JsonObject customProperties = JsonUtils.getJsonObject(json, "custom_properties");
 
         Collections.sort(baseValueNames);
         for (String name : baseValueNames) {
-            if (name.equalsIgnoreCase("xpOnHit") || name.equalsIgnoreCase("xpOnUse"))
-                baseValues.put(name, JsonUtils.getFloat(customProperties, name));
+            if (name.equalsIgnoreCase("xpOnHit") || name.equalsIgnoreCase("xpOnUse")) {
+                try {
+                    baseValues.put(name, JsonUtils.getFloat(customProperties, name));
+                } catch (JsonSyntaxException exception) {
+                    baseBooleans.put(name, JsonUtils.getBoolean(customProperties, name));
+                }
+
+            }
         }
 
 
@@ -118,7 +127,11 @@ public class AbilityProperties {
 
                 for (String baseValueName : baseValueNames) {
                     if (!baseValueName.equalsIgnoreCase("xpOnHit") && !baseValueName.equalsIgnoreCase("xpOnUse"))
-                        baseValues.put(baseValueName, JsonUtils.getFloat(baseValueObject, baseValueName));
+                        try {
+                            baseValues.put(baseValueName, JsonUtils.getFloat(baseValueObject, baseValueName));
+                        } catch (JsonSyntaxException exception) {
+                            baseBooleans.put(baseValueName, JsonUtils.getBoolean(baseValueObject, baseValueName));
+                        }
                 }
             }
         }
@@ -134,12 +147,18 @@ public class AbilityProperties {
     public AbilityProperties(Ability ability, ByteBuf buf) {
 
         baseValues = ArrayListMultimap.create();
+        baseBooleans = ArrayListMultimap.create();
 
         List<String> keys = Arrays.asList(ability.getPropertyKeys());
+        List<String> bKeys = Arrays.asList(ability.getBooleanPropertyKeys());
         Collections.sort(keys); // Should be the same list of keys in the same order they were written to the ByteBuf
+        Collections.sort(bKeys);
 
         for (String key : keys) {
             baseValues.put(key, buf.readFloat());
+        }
+        for (String key : bKeys) {
+            baseBooleans.put(key, buf.readBoolean());
         }
     }
 
@@ -239,7 +258,7 @@ public class AbilityProperties {
                         JsonObject json = JsonUtils.fromJson(gson, reader, JsonObject.class);
                         AbilityProperties properties = new AbilityProperties(json, ability);
                         ability.setProperties(properties);
-                        AvatarLog.info("Property load successful for " + key +" !");
+                        AvatarLog.info("Property load successful for " + key + " !");
 
                     } catch (JsonParseException jsonparseexception) {
                         AvatarLog.error("Parsing error loading ability property file for " + key, jsonparseexception);
@@ -334,6 +353,13 @@ public class AbilityProperties {
             for (Number num : baseValues.get(key))
                 buf.writeFloat(num.floatValue());
         }
+
+        List<String> bKeys = new ArrayList<>(baseBooleans.keys());
+        Collections.sort(bKeys);
+        for (String key : bKeys) {
+            for (boolean b : baseBooleans.get(key))
+                buf.writeBoolean(b);
+        }
     }
 
     // For crafting recipes, Forge does some stuff behind the scenes to load recipe JSON files from mods' namespaces.
@@ -346,12 +372,27 @@ public class AbilityProperties {
      * @return The base value, as a {@code Number}.
      * @throws IllegalArgumentException if no base value was defined with the given identifier.
      */
-    //TODO: A way to store the level in the hashmap! Ahh!
     public Number getBaseValue(String identifier, int abilityLevel, AbilityData.AbilityTreePath path) {
         if (!baseValues.containsKey(identifier)) {
             throw new IllegalArgumentException("Base value with identifier '" + identifier + "' is not defined.");
         }
-        return new ArrayList<>(baseValues.get(identifier)).get(Math.max(path == AbilityData.AbilityTreePath.SECOND ? abilityLevel + 1 : abilityLevel, 0));
+        ArrayList<Number> list = new ArrayList<>(baseValues.get(identifier));
+        return list.get(Math.min(list.size() - 1, Math.max(path == AbilityData.AbilityTreePath.SECOND ? abilityLevel + 1 : abilityLevel, 0)));
+    }
+
+    /**
+     * Returns the base value for this spell that corresponds to the given identifier.
+     *
+     * @param identifier The string identifier to fetch the base value for.
+     * @return The base value, as a {@code Number}.
+     * @throws IllegalArgumentException if no base value was defined with the given identifier.
+     */
+    public boolean getBaseBooleanValue(String identifier, int abilityLevel, AbilityData.AbilityTreePath path) {
+        if (!baseBooleans.containsKey(identifier)) {
+            throw new IllegalArgumentException("Base value with identifier '" + identifier + "' is not defined.");
+        }
+        ArrayList<Boolean> list = new ArrayList<>(baseBooleans.get(identifier));
+        return list.get(Math.min(list.size() - 1, Math.max(path == AbilityData.AbilityTreePath.SECOND ? abilityLevel + 1 : abilityLevel, 0)));
     }
 
 }

@@ -180,31 +180,6 @@ public class EntityAirGust extends EntityOffensive {
 	}
 
 	@Override
-	public boolean pushButton(boolean pushStone) {
-		return true;
-	}
-
-	@Override
-	public boolean pushLever() {
-		return true;
-	}
-
-	@Override
-	public boolean pushDoor(boolean pushIron) {
-		return true;
-	}
-
-	@Override
-	public boolean pushTrapdoor(boolean pushIron) {
-		return true;
-	}
-
-	@Override
-	public boolean pushGate() {
-		return true;
-	}
-
-	@Override
 	public boolean isPiercing() {
 		return piercesEnemies;
 	}
@@ -224,11 +199,6 @@ public class EntityAirGust extends EntityOffensive {
 		return new Vec3d(2, 3, 2);
 	}
 
-	@Override
-	public void applyPiercingCollision() {
-		if (!world.isRemote)
-			super.applyPiercingCollision();
-	}
 
 	@Override
 	public void setDead() {

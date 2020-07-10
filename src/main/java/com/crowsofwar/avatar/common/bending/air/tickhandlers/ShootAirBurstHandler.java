@@ -129,7 +129,7 @@ public class ShootAirBurstHandler extends TickHandler {
 			gust.setDestroyProjectiles(true);
 			gust.setPiercesEnemies(data.getLevel() >= 2);
 			gust.setAbility(new AbilityAirBurst());
-			gust.setTier(Math.min(new AbilityAirBurst().getCurrentTier(data.getLevel()), charge));
+			gust.setTier(Math.min(new AbilityAirBurst().getCurrentTier(data), charge));
 			gust.setVelocity(look.times(speed + 40));
 			gust.setBehaviour(new AirBurstBeamBehaviour());
 			world.spawnEntity(gust);

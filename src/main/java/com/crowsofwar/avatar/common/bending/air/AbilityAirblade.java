@@ -137,7 +137,7 @@ public class AbilityAirblade extends Ability {
 			airblade.setPosition(spawnAt.minusY(0.5));
 			airblade.setVelocity(look.times(30));
 			airblade.setDamage(damage);
-			airblade.setTier(getCurrentTier(ctx.getLevel()));
+			airblade.setTier(getCurrentTier(ctx));
 			airblade.setXp(SKILLS_CONFIG.airBladeHit);
 			if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 				airblade.setEntitySize(0.5F, 0.5F);
@@ -158,7 +158,7 @@ public class AbilityAirblade extends Ability {
 			airblade.setElement(new Airbending());
 			airblade.setAbility(this);
 			airblade.setBehaviour(new AirBladeBehaviour());
-			airblade.setTier(getCurrentTier(abilityData.getLevel()));
+			airblade.setTier(getCurrentTier(ctx));
 			if (!world.isRemote)
 				world.spawnEntity(airblade);
 		}

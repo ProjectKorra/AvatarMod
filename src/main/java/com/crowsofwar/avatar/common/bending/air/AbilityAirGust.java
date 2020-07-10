@@ -62,7 +62,7 @@ public class AbilityAirGust extends Ability {
 	@Override
 	public void init() {
 		super.init();
-		addProperties(PIERCES_ENEMIES, DESTROY_PROJECTILES, SLOW_PROJECTILES);
+		addBooleanProperties(PUSH_IRON_TRAPDOOR, PUSH_IRONDOOR, PUSH_STONE, PUSH_REDSTONE, PIERCES_ENEMIES, DESTROY_PROJECTILES, SLOW_PROJECTILES);
 	}
 
 	@Override
@@ -97,13 +97,13 @@ public class AbilityAirGust extends Ability {
 			gust.setLifeTime(getProperty(LIFETIME, ctx.getLevel(), ctx.getDynamicPath()).intValue());
 			gust.rotationPitch = entity.rotationPitch;
 			gust.rotationYaw = entity.rotationYaw;
-			//Floats mean when users fuck up the game doesn't yeet itself off a cliff
-			gust.setPushStone(getProperty(PUSH_STONE, ctx.getLevel()).floatValue() > 0);
-			gust.setPushIronDoor(getProperty(PUSH_IRONDOOR, ctx.getLevel()).floatValue() > 0);
-			gust.setPushIronTrapDoor(getProperty(PUSH_IRON_TRAPDOOR, ctx.getLevel()).floatValue() > 0);
-			gust.setDestroyProjectiles(getProperty(DESTROY_PROJECTILES, ctx.getLevel(), ctx.getDynamicPath()).floatValue() > 0);
-			gust.setSlowProjectiles(getProperty(SLOW_PROJECTILES, ctx.getLevel(), ctx.getDynamicPath()).floatValue() > 0);
-			gust.setPiercesEnemies(getProperty(PIERCES_ENEMIES, ctx.getLevel()).floatValue() > 0);
+			gust.setPushRedstone(getBooleanProperty(PUSH_REDSTONE, ctx));
+			gust.setPushStone(getBooleanProperty(PUSH_STONE, ctx));
+			gust.setPushIronDoor(getBooleanProperty(PUSH_IRONDOOR, ctx));
+			gust.setPushIronTrapDoor(getBooleanProperty(PUSH_IRON_TRAPDOOR, ctx));
+			gust.setDestroyProjectiles(getBooleanProperty(DESTROY_PROJECTILES, ctx));
+			gust.setSlowProjectiles(getBooleanProperty(SLOW_PROJECTILES, ctx));
+			gust.setPiercesEnemies(getBooleanProperty(PIERCES_ENEMIES, ctx));
 			gust.setAbility(this);
 			gust.setTier(getCurrentTier(ctx));
 			gust.setXp(getProperty(XP_HIT).floatValue());

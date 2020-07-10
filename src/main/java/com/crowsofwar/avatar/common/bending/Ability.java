@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.common.bending;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.bending.combustion.Combustionbending;
 import com.crowsofwar.avatar.common.bending.fire.Firebending;
 import com.crowsofwar.avatar.common.bending.ice.Icebending;
@@ -91,6 +90,10 @@ public abstract class Ability {
      * Used in initialisation.
      */
     private final Set<String> propertyKeys = new HashSet<>();
+    /**
+     * Used in initialisation.
+     */
+    private final Set<String> booleanPropertyKeys = new HashSet<>();
     /**
      * This ability's associated AbilityProperties object.
      */
@@ -167,8 +170,6 @@ public abstract class Ability {
             addProperties(LIFETIME, SPEED, KNOCKBACK, CHI_HIT, PERFORMANCE, XP_HIT, SIZE);
             if (isOffensive())
                 addProperties(DAMAGE);
-            if (getBendingId() == Airbending.ID)
-                addProperties(PUSH_REDSTONE, PUSH_IRON_TRAPDOOR, PUSH_IRONDOOR, PUSH_STONE);
         }
         if (isBuff())
             addProperties(DURATION, XP_USE);
@@ -220,6 +221,60 @@ public abstract class Ability {
         if (properties == null)
             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
         return properties == null ? 1 : properties.getBaseValue(identifier, 0, AbilityData.AbilityTreePath.MAIN);
+    }
+
+    public final Number getProperty(String identifier, AbilityContext ctx) {
+        if (properties == null)
+            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+        return properties == null ? 1 : properties.getBaseValue(identifier, ctx.getLevel(), ctx.getDynamicPath());
+    }
+
+    public final Number getProperty(String identifier, AbilityData data) {
+        if (properties == null)
+            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+        return properties == null ? 1 : properties.getBaseValue(identifier, data.getLevel(), data.getDynamicPath());
+    }
+
+    /**
+     * Returns the base value specified in JSON for the given identifier. This may be used from within the spell
+     * class, or from elsewhere (entities, items, etc.) via the spell's instance.
+     *
+     * @param identifier The JSON identifier for the required property. This <b>must</b> have been defined using
+     *                   {@link Ability#addProperties(String...)} or an exception will be thrown.
+     * @return The base value of the property, as a {@code Number} object. Internally this is handled as a float, but
+     * it is passed through as a {@code Number} to avoid casting. <i>Be careful with rounding when extracting integer
+     * values! The JSON parser cannot guarantee that the property file has an integer value.</i>
+     * @throws IllegalArgumentException if no property was defined with the given identifier.
+     */
+    public final boolean getBooleanProperty(String identifier, int abilityLevel) {
+        if (properties == null)
+            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+        return properties != null && properties.getBaseBooleanValue(identifier, abilityLevel, AbilityData.AbilityTreePath.MAIN);
+    }
+
+    public final boolean getBooleanProperty(String identifier, int abilityLevel, AbilityData.AbilityTreePath path) {
+        if (properties == null)
+            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+        return properties != null && properties.getBaseBooleanValue(identifier, abilityLevel, path);
+    }
+
+    public final boolean getBooleanProperty(String identifier) {
+        if (properties == null)
+            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+        return properties != null && properties.getBaseBooleanValue(identifier, 0, AbilityData.AbilityTreePath.MAIN);
+    }
+
+    public final boolean getBooleanProperty(String identifier, AbilityContext ctx) {
+        if (properties == null)
+            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+        return properties != null && properties.getBaseBooleanValue(identifier, ctx.getLevel(), ctx.getDynamicPath());
+    }
+
+    public final boolean getBooleanProperty(String identifier, AbilityData data) {
+        if (properties == null)
+            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+        return properties != null && properties.getBaseBooleanValue(identifier, data
+                .getLevel(), data.getDynamicPath());
     }
 
     protected BendingStyle controller() {
@@ -363,6 +418,15 @@ public abstract class Ability {
         return getProperty(PARENT_TIER, ctx.getLevel(), ctx.getDynamicPath()).intValue();
     }
 
+    public int getCurrentTier(AbilityData data) {
+        return getProperty(TIER, data.getLevel(), data.getDynamicPath()).intValue();
+    }
+
+    //Only for abilities in sub-elements.
+    public int getCurrentParentTier(AbilityData data) {
+        return getProperty(PARENT_TIER, data.getLevel(), data.getDynamicPath()).intValue();
+    }
+
 
     public BendingStyle getElement() {
         return BendingStyles.get(getBendingId());
@@ -432,10 +496,50 @@ public abstract class Ability {
     }
 
     /**
+     * Adds the given JSON identifiers to the configurable base properties of this ability. This should be called from
+     * the constructor  . <i>It is highly recommended that property keys be defined as constants,
+     * as they will be needed later to retrieve the properties during the casting methods.</i>
+     * <p></p>
+     * General spell classes will call this method to set any properties they require in order to work properly, and
+     * the relevant keys will be public constants.
+     *
+     * @param keys One or more spell property keys to add to the spell. By convention, these are lowercase_with_underscores.
+     *             If any of these already exists, a warning will be printed to the console.
+     * @return The spell instance, allowing this method to be chained onto the constructor.
+     * @throws IllegalStateException if this method is called after the spell properties have been initialised.
+     */
+    // Nobody can remove property keys, which guarantees that spell classes always have the properties they need.
+    // It also means that subclasses need not worry about properties already defined and used in their superclass.
+    // Conversely, general spell classes ONLY EVER define the properties they ACTUALLY USE.
+    public final Ability addBooleanProperties(String... keys) {
+
+        //I need to have an option for specifying the level as well
+        if (arePropertiesInitialised())
+            throw new IllegalStateException("Tried to add ability properties after they were initialised");
+
+        for (String key : keys)
+            if (booleanPropertyKeys.contains(key))
+                AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Tried to add a duplicate property key '"
+                        + key + "' to ability " + getName());
+
+        Collections.addAll(booleanPropertyKeys, keys);
+
+        return this;
+    }
+
+    /**
      * Internal, do not use.
      */
     public final String[] getPropertyKeys() {
         return propertyKeys.toArray(new String[0]);
+    }
+
+
+    /**
+     * Internal, do not use.
+     */
+    public final String[] getBooleanPropertyKeys() {
+        return booleanPropertyKeys.toArray(new String[0]);
     }
 
     /**
