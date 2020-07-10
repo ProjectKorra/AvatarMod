@@ -16,6 +16,7 @@ public class AbilityPredicate {
     public static final AbilityPredicate ANY = new AbilityPredicate();
     private final int initialLevel;
     private final int newLevel;
+    private final int level;
     private final Ability ability;
     private final Ability[] abilities;
 
@@ -23,13 +24,15 @@ public class AbilityPredicate {
         this.ability = null;
         this.initialLevel = 0;
         this.newLevel = 0;
+        this.level = 0;
         this.abilities = Abilities.all().toArray(new Ability[Abilities.all().size()]);
     }
 
-    public AbilityPredicate(@Nullable Ability ability, Ability[] abilities, int initialLevel, int newLevel){
+    public AbilityPredicate(@Nullable Ability ability, Ability[] abilities, int initialLevel, int newLevel, int level){
         this.ability = ability;
         this.initialLevel = initialLevel;
         this.newLevel = newLevel;
+        this.level = level;
         this.abilities = abilities;
     }
 
@@ -40,6 +43,19 @@ public class AbilityPredicate {
         }else if(!Arrays.asList(this.abilities).contains(ability)){
             return false;
         }else if(this.initialLevel != initialLevel || this.newLevel != newLevel) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean test(Ability ability, int level){
+
+        if(this.ability != null && ability != this.ability){
+            return false;
+        }else if(!Arrays.asList(this.abilities).contains(ability)){
+            return false;
+        }else if(this.level != level) {
             return false;
         }
 
@@ -90,6 +106,19 @@ public class AbilityPredicate {
                 }
             }
 
+            int level = -1;
+
+            if(jsonobject.has("level")){
+
+                String s = JsonUtils.getString(jsonobject, "level");
+
+                level = Integer.parseInt(s);
+
+                if(level < 0){
+                    throw new JsonSyntaxException("Unknown toLevel value '" + s + "'");
+                }
+            }
+
             Ability[] abilities = Abilities.all().toArray(new Ability[Abilities.all().size()]);
 
             if(jsonobject.has("abilities")){
@@ -103,7 +132,7 @@ public class AbilityPredicate {
                 }
             }
 
-            return new AbilityPredicate(ability, abilities, fromLevel, toLevel);
+            return new AbilityPredicate(ability, abilities, fromLevel, toLevel, level);
 
         }else{
             return ANY;
