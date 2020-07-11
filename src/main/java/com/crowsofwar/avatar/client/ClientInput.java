@@ -20,20 +20,20 @@ package com.crowsofwar.avatar.client;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.controls.IControlsHandler;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.StatusControl;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.event.BendingCycleEvent;
-import com.crowsofwar.avatar.common.event.BendingUseEvent;
-import com.crowsofwar.avatar.common.network.packets.*;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Result;
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.client.controls.AvatarControl;
+import com.crowsofwar.avatar.client.controls.IControlsHandler;
+import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.data.StatusControl;
+import com.crowsofwar.avatar.util.data.ctx.BendingContext;
+import com.crowsofwar.avatar.util.event.BendingCycleEvent;
+import com.crowsofwar.avatar.util.event.BendingUseEvent;
+import com.crowsofwar.avatar.network.packets.*;
+import com.crowsofwar.avatar.util.Raytrace;
+import com.crowsofwar.avatar.util.Raytrace.Result;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -53,9 +53,9 @@ import org.lwjgl.input.Mouse;
 
 import java.util.*;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_DONT_HAVE_BENDING;
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
+import static com.crowsofwar.avatar.network.AvatarChatMessages.MSG_DONT_HAVE_BENDING;
+import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.client.controls.AvatarControl.*;
 
 /**
  * Large class that manages input on the client-side. After input is received,

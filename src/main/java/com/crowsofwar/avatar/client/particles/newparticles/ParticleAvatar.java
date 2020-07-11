@@ -1,21 +1,18 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.AvatarClientProxy;
+import com.crowsofwar.avatar.network.AvatarClientProxy;
 import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.entity.*;
-import com.crowsofwar.avatar.common.network.packets.PacketSParticleCollideEvent;
-import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.entity.*;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.ResourceLocation;
@@ -50,7 +47,7 @@ import java.util.stream.Collectors;
  * needs to be defined when spawning the particle - but importantly, it can still be overridden if desired.
  *
  * @author Electroblob, modified by FavouritDragon and Aang23
- * @see com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder
+ * @see com.crowsofwar.avatar.client.particle.ParticleBuilder ParticleBuilder
  * @since AvatarMod 1.6.0
  */
 //@SideOnly(Side.CLIENT)
@@ -169,7 +166,7 @@ public abstract class ParticleAvatar extends Particle {
 
 	/**
 	 * Creates a new particle in the given world at the given position. All other parameters are set via the various
-	 * setter methods ({@link com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder} deals with all of that anyway).
+	 * setter methods ({@link com.crowsofwar.avatar.client.particle.ParticleBuilder ParticleBuilder} deals with all of that anyway).
 	 *
 	 * @param world    The world in which to create the particle.
 	 * @param x        The x-coordinate at which to create the particle.
@@ -243,7 +240,7 @@ public abstract class ParticleAvatar extends Particle {
 
 	/**
 	 * Associates the given {@link ResourceLocation} with the given {@link IAvatarParticleFactory}, allowing it to
-	 * be used in the {@link com.crowsofwar.avatar.common.particle.ParticleBuilder ParticleBuilder}. This is a similar concept to
+	 * be used in the {@link com.crowsofwar.avatar.client.particle.ParticleBuilder ParticleBuilder}. This is a similar concept to
 	 * registering entity renderers, in that it associates the client-only bit with its common-code counterpart - but
 	 * of course, particles are client-side only so a simple identifier is all that is necessary. As with entity
 	 * renderers, <b>this method may only be called from the client side</b>, probably a client proxy.

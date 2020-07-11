@@ -17,15 +17,15 @@
 package com.crowsofwar.avatar.client.gui.skills;
 
 import com.crowsofwar.avatar.client.uitools.UiComponent;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.config.ConfigClient;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.config.ConfigClient;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
 
 /**
  * @author CrowsOfWar

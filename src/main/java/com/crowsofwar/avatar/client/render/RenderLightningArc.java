@@ -17,9 +17,9 @@
 
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityLightningArc;
-import com.crowsofwar.avatar.common.particle.ClientParticleSpawner;
-import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.entity.EntityLightningArc;
+import com.crowsofwar.avatar.client.particle.ClientParticleSpawner;
+import com.crowsofwar.avatar.client.particle.ParticleSpawner;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;

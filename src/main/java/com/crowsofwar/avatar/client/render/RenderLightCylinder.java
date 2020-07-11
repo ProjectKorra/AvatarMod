@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityLightCylinder;
+import com.crowsofwar.avatar.entity.EntityLightCylinder;
 import com.crowsofwar.gorecore.util.Vector;
 
 import org.lwjgl.opengl.GL11;

@@ -19,9 +19,9 @@ package com.crowsofwar.avatar.client.gui.skills;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.Measurement;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import net.minecraft.client.resources.I18n;
 
 import java.util.Arrays;
