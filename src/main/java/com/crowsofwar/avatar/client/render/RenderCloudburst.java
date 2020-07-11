@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityCloudBall;
+import com.crowsofwar.avatar.entity.EntityCloudBall;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraft.client.renderer.GlStateManager.*;
 import static net.minecraft.util.math.MathHelper.cos;
 

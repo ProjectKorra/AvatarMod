@@ -18,8 +18,8 @@ package com.crowsofwar.avatar.client.gui.skills;
 
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.ComponentImage;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.util.data.BendingData;
 import net.minecraft.client.Minecraft;
 
 /**

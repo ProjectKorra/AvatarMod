@@ -16,11 +16,7 @@
 */
 package com.crowsofwar.gorecore.tree.test;
 
-import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.tree.*;
-import com.crowsofwar.gorecore.util.AccountUUIDs;
-
-import static com.crowsofwar.gorecore.tree.test.GoreCoreChatMessages.*;
 
 /**
  * 

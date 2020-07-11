@@ -1,10 +1,9 @@
 package com.crowsofwar.avatar.client.renderer;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.api.helper.GliderHelper;
-import com.crowsofwar.avatar.api.item.IGlider;
+import com.crowsofwar.avatar.util.helper.GliderHelper;
+import com.crowsofwar.avatar.item.IGlider;
 import com.crowsofwar.avatar.client.model.ModelGlider;
-import com.crowsofwar.avatar.common.config.ConfigGlider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -16,7 +15,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import javax.annotation.Nonnull;
 
-import static com.crowsofwar.avatar.common.config.ConfigGlider.GLIDER_CONFIG;
+import static com.crowsofwar.avatar.config.ConfigGlider.GLIDER_CONFIG;
 
 public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
 

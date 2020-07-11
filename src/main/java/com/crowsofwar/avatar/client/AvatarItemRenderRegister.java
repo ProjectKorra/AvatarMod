@@ -16,11 +16,11 @@
 */
 package com.crowsofwar.avatar.client;
 
-import com.crowsofwar.avatar.common.item.AvatarItem;
-import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
-import com.crowsofwar.avatar.common.item.scroll.Scrolls;
-import com.crowsofwar.avatar.common.item.scroll.Scrolls.ScrollType;
+import com.crowsofwar.avatar.registry.AvatarItem;
+import com.crowsofwar.avatar.registry.AvatarItems;
+import com.crowsofwar.avatar.item.scroll.ItemScroll;
+import com.crowsofwar.avatar.item.scroll.Scrolls;
+import com.crowsofwar.avatar.item.scroll.Scrolls.ScrollType;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -29,7 +29,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static com.crowsofwar.avatar.common.blocks.AvatarBlocks.blockCloud;
+import static com.crowsofwar.avatar.blocks.AvatarBlocks.blockCloud;
 import static net.minecraftforge.client.model.ModelLoader.setCustomModelResourceLocation;
 
 /**

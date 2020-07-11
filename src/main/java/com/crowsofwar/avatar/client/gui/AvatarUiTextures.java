@@ -17,9 +17,9 @@
 
 package com.crowsofwar.avatar.client.gui;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import net.minecraft.util.ResourceLocation;
 
 import javax.imageio.ImageIO;
