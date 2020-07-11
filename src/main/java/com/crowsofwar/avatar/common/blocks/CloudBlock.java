@@ -12,8 +12,11 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -34,6 +37,7 @@ public class CloudBlock extends Block {
 		this.setSoundType(SoundType.CLOTH);
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.TRANSLUCENT;
@@ -62,4 +66,16 @@ public class CloudBlock extends Block {
 	public int tickRate(World worldIn) {
 		return 3;
 	}
+
+	@Override
+	public boolean isFullBlock(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
+		return false;
+	}
+
 }
+

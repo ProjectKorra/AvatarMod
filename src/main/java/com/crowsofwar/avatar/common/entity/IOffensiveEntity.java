@@ -89,6 +89,8 @@ public interface IOffensiveEntity {
     }
 
     default void attackEntity(AvatarEntity attacker, Entity hit, boolean explosionDamage, Vec3d vel) {
+        vel = new Vec3d(vel.x * getKnockbackMult().x, vel.y * getKnockbackMult().y, vel.z * getKnockbackMult().z);
+        vel = vel.scale(getPush());
         if (attacker.getOwner() != null && hit != null && hit != attacker && !attacker.world.isRemote) {
             AbilityData data = AbilityData.get(attacker.getOwner(), attacker.getAbility().getName());
             if ((explosionDamage ? getAoeDamage() > 0 : getDamage() > 0) && attacker.canDamageEntity(hit)) {
@@ -146,6 +148,10 @@ public interface IOffensiveEntity {
 
     default float getXpPerHit() {
         return 3;
+    }
+
+    default float getPush() {
+        return 1;
     }
 
     default Vec3d getKnockback() {

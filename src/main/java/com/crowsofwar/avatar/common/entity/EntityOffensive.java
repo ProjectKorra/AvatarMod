@@ -58,6 +58,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     private static final double IMPACT_FRICTION = 0.4;
 
     private float xp;
+    private float push;
     private int fireTime;
     private boolean dynamicSpreadingCollision;
     private boolean collidedWithSolid;
@@ -80,6 +81,16 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         this.width = getWidth();
         this.height = getHeight();
         this.damageSource = AvatarDamageSource.FIRE.getDamageType();
+        this.push = 1;
+    }
+
+    public void setPush(float push) {
+        this.push = push;
+    }
+
+    @Override
+    public float getPush() {
+        return push;
     }
 
     public OffensiveBehaviour getBehaviour() {

@@ -58,7 +58,7 @@ public class AbilityAirGust extends Ability {
     @Override
     public void init() {
         super.init();
-        addBooleanProperties(PUSH_IRON_TRAPDOOR, PUSH_IRONDOOR, PUSH_STONE, PUSH_REDSTONE, PIERCES_ENEMIES, DESTROY_PROJECTILES, SLOW_PROJECTILES);
+        addBooleanProperties(PUSH_IRON_TRAPDOOR, KNOCKBACK, PUSH_IRONDOOR, PUSH_STONE, PUSH_REDSTONE, PIERCES_ENEMIES, DESTROY_PROJECTILES, SLOW_PROJECTILES);
     }
 
     @Override
@@ -78,10 +78,13 @@ public class AbilityAirGust extends Ability {
         float size = getProperty(SIZE, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
         int lifetime = getProperty(LIFETIME, ctx.getLevel(), ctx.getDynamicPath()).intValue();
         int performance = getProperty(PERFORMANCE, ctx).intValue();
+        float push = getProperty(KNOCKBACK, ctx).floatValue();
 
         //Xp and powerrating integration
-        size *= ctx.getPowerRatingDamageMod();
-        speed += 5 * ctx.getPowerRatingDamageMod();
+        size *= ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier();
+        speed += 5 * ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier();
+        lifetime += 5 * ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier();
+        push *= (1 +  0.5 * ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier());
 
         EntityAirGust gust = new EntityAirGust(world);
         gust.setVelocity(look.times(speed));
@@ -91,6 +94,7 @@ public class AbilityAirGust extends Ability {
         gust.setDamage(0);
         gust.setDynamicSpreadingCollision(true);
         gust.setLifeTime(lifetime);
+        gust.setPush(push);
         gust.rotationPitch = entity.rotationPitch;
         gust.rotationYaw = entity.rotationYaw;
         gust.setPerformanceAmount(performance);
