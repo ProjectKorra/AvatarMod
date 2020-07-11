@@ -1,16 +1,23 @@
-package com.crowsofwar.avatar.util.event;
+package com.crowsofwar.avatar.common.event;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.capabilities.CapabilityHelper;
-import com.crowsofwar.avatar.util.helper.GliderHelper;
-import com.crowsofwar.avatar.capabilities.GliderCapabilityImplementation;
-import com.crowsofwar.avatar.util.helper.GliderPlayerHelper;
-import com.crowsofwar.avatar.network.packets.glider.PacketCUpdateClientTarget;
+import com.crowsofwar.avatar.api.capabilities.CapabilityHelper;
+import com.crowsofwar.avatar.api.capabilities.IPlayerShoulders;
+import com.crowsofwar.avatar.api.helper.GliderHelper;
+import com.crowsofwar.avatar.common.capabilities.CapabilityPlayerShoulders;
+import com.crowsofwar.avatar.common.capabilities.GliderCapabilityImplementation;
+import com.crowsofwar.avatar.common.entity.EntityAscendedFlyingLemur;
+import com.crowsofwar.avatar.common.entity.EntityFlyingLemur;
+import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
+import com.crowsofwar.avatar.common.network.packets.glider.PacketCUpdateClientTarget;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -105,4 +112,108 @@ public class ServerEventHandler {
         CapabilityHelper.getGliderCapability(player).sync((EntityPlayerMP) player);
     }
 
+
+    //===========================================================Lemur Events==============================================
+
+    @SubscribeEvent
+    void onOwnerTeleport(PlayerEvent.PlayerChangedDimensionEvent event)
+    {
+
+        IPlayerShoulders playerShoulders = event.player.getCapability(CapabilityPlayerShoulders.TEST_HANDLER, null);
+
+        if(playerShoulders.getRiders().size() > 0) {
+
+            for(Entity passeger : playerShoulders.getRiders())
+            {
+                if(passeger instanceof EntityFlyingLemur) {
+                    EntityFlyingLemur lemur = (EntityFlyingLemur) passeger;
+                    playerShoulders.removeRiders(lemur);
+                    lemur.setRightShoulder(false);
+                    lemur.setLeftShoulder(false);
+                    lemur.setSitting(true);
+
+                }
+                else if(passeger instanceof EntityAscendedFlyingLemur) {
+                    EntityAscendedFlyingLemur lemur = (EntityAscendedFlyingLemur) passeger;
+                    playerShoulders.removeRiders(lemur);
+                    lemur.setRightShoulder(false);
+                    lemur.setLeftShoulder(false);
+                    lemur.setSitting(true);
+                }
+            }
+        }
+
+    }
+
+    @SubscribeEvent
+    void onLemurRideExit(PlayerInteractEvent.RightClickBlock event)
+    {
+
+        IPlayerShoulders playerShoulders = event.getEntityPlayer().getCapability(CapabilityPlayerShoulders.TEST_HANDLER, null);
+
+        if(playerShoulders.getRiders().size() > 0 && event.getEntityPlayer().isSneaking())
+        {
+            BlockPos pos = new BlockPos(event.getPos().getX(), event.getPos().getY()+1f,event.getPos().getZ());
+
+            if(event.getWorld().getBlockState(pos).getBlock() == Blocks.AIR)
+            {
+                for(Entity passeger : playerShoulders.getRiders())
+                {
+
+
+                    if(passeger instanceof EntityFlyingLemur) {
+                        EntityFlyingLemur lemur = (EntityFlyingLemur) passeger;
+                        playerShoulders.removeRiders(lemur);
+                        lemur.setRightShoulder(false);
+                        lemur.setLeftShoulder(false);
+                        lemur.setSitting(true);
+                        lemur.setPosition(event.getPos().getX() +0.5f, event.getPos().getY()+1.0F, event.getPos().getZ() +0.5f);
+                    }
+                    else if(passeger instanceof EntityAscendedFlyingLemur) {
+                        EntityAscendedFlyingLemur lemur = (EntityAscendedFlyingLemur) passeger;
+                        playerShoulders.removeRiders(lemur);
+                        lemur.setRightShoulder(false);
+                        lemur.setLeftShoulder(false);
+                        lemur.setSitting(true);
+                        lemur.setPosition(event.getPos().getX() +0.5f, event.getPos().getY()+1.0F, event.getPos().getZ() +0.5f);
+                    }
+
+
+
+                }
+
+            }
+
+        }
+
+
+    }
+
+
+    @SubscribeEvent
+    void onLogOutLemurExit(PlayerEvent.PlayerLoggedOutEvent event) {
+        IPlayerShoulders playerShoulders = event.player.getCapability(CapabilityPlayerShoulders.TEST_HANDLER, null);
+
+        if(playerShoulders.getRiders().size() > 0)
+        {
+            for(Entity passeger : playerShoulders.getRiders())
+            {
+                if(passeger instanceof EntityFlyingLemur) {
+                    EntityFlyingLemur lemur = (EntityFlyingLemur) passeger;
+                    lemur.height = 1f;
+                    lemur.width = 0.3f;
+                    lemur.setRightShoulder(false);
+                    lemur.setLeftShoulder(false);
+                }
+                else if(passeger instanceof EntityAscendedFlyingLemur) {
+                    EntityAscendedFlyingLemur lemur = (EntityAscendedFlyingLemur) passeger;;
+                    lemur.height = 1f;
+                    lemur.width = 0.3f;
+                    lemur.setRightShoulder(false);
+                    lemur.setLeftShoulder(false);
+                }
+            }
+
+        }
+    }
 }

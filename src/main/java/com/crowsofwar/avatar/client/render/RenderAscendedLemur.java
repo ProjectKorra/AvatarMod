@@ -1,0 +1,46 @@
+package com.crowsofwar.avatar.client.render;
+
+import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.common.entity.EntityAscendedFlyingLemur;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+/**
+ * @author Korog3
+ */
+@SideOnly(Side.CLIENT)
+public class RenderAscendedLemur extends RenderLiving<EntityAscendedFlyingLemur>{
+
+public static final ResourceLocation TEXTURES = new ResourceLocation(AvatarInfo.MOD_ID+":textures/entity/lemur.png");
+
+	public RenderAscendedLemur(RenderManager manager) {
+		super(manager, new ModelLemur(), 0.20F);
+	
+	}
+	
+	@Override
+	protected ResourceLocation getEntityTexture(EntityAscendedFlyingLemur entity) {
+		return TEXTURES;
+	}
+
+	@Override
+	protected void applyRotations(EntityAscendedFlyingLemur entityLiving, float p_77043_2_, float rotationYaw, float partialTicks) {
+		super.applyRotations(entityLiving, p_77043_2_, rotationYaw, partialTicks);
+	} 
+
+	public static class RenderFactory implements IRenderFactory<EntityAscendedFlyingLemur> {
+
+        @Override
+        public Render<? super EntityAscendedFlyingLemur> createRenderFor(RenderManager manager) {
+            return new RenderAscendedLemur(manager);
+        }
+
+    }
+
+	 
+}

@@ -1,0 +1,22 @@
+{
+
+    "entity.momo.ambient":
+    {
+        "category": "entity",
+        "subtitle": "entity.momo.ambient",
+        "sounds": [{ "name": "avatarmod:entity/momo/ambient", "stream": true}]
+    },
+    "entity.momo.hurt":
+    {
+        "category": "entity",
+        "subtitle": "entity.momo.hurt",
+        "sounds": [{ "name": "avatarmod:entity/momo/hurt", "stream": true}]
+    },
+    "entity.momo.death":
+    {
+        "category": "entity",
+        "subtitle": "entity.momo.death",
+        "sounds": [{ "name": "avatarmod:entity/momo/death", "stream": true}]
+    }
+    
+}
