@@ -170,7 +170,7 @@ public abstract class Ability {
         if (isProjectile() || isOffensive()) {
             addProperties(LIFETIME, SPEED, CHI_HIT, PERFORMANCE, XP_HIT, SIZE);
             if (isOffensive())
-                addProperties(DAMAGE);
+                addProperties(DAMAGE, KNOCKBACK);
         }
         if (isBuff())
             addProperties(DURATION, XP_USE);

@@ -230,11 +230,13 @@ public abstract class Bender {
                     aD.setBurnOut(ability.getBurnOut(abilityCtx));
 
                 } else {
-                    AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(getEntity());
+                    Objects.requireNonNull(Bender.get(getEntity())).sendMessage("avatar.abilityCooldown");
                 }
 
             } else {
-                Objects.requireNonNull(Bender.get(getEntity())).sendMessage("avatar.abilityCooldown");
+                if (getWorld().isRemote)
+                    AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(getEntity());
+
                 //	QueuedAbilityExecutionHandler.queueAbilityExecution(entity, data, ability,
                 //			raytrace, powerRating, switchPath);
             }

@@ -77,22 +77,23 @@ public class AbilityAirGust extends Ability {
         float speed = getProperty(SPEED, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
         float size = getProperty(SIZE, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
         int lifetime = getProperty(LIFETIME, ctx.getLevel(), ctx.getDynamicPath()).intValue();
+        int performance = getProperty(PERFORMANCE, ctx).intValue();
 
         //Xp and powerrating integration
         size *= ctx.getPowerRatingDamageMod();
         speed += 5 * ctx.getPowerRatingDamageMod();
 
         EntityAirGust gust = new EntityAirGust(world);
-        gust.setVelocity(look.times(getProperty(SPEED, ctx.getLevel(), ctx.getDynamicPath()).floatValue()));
+        gust.setVelocity(look.times(speed));
         gust.setPosition(pos.minusY(0.5));
         gust.setOwner(entity);
-        gust.setEntitySize(getProperty(SIZE, ctx.getLevel(), ctx.getDynamicPath()).floatValue());
+        gust.setEntitySize(size);
         gust.setDamage(0);
         gust.setDynamicSpreadingCollision(true);
-        gust.setLifeTime(getProperty(LIFETIME, ctx.getLevel(), ctx.getDynamicPath()).intValue());
+        gust.setLifeTime(lifetime);
         gust.rotationPitch = entity.rotationPitch;
         gust.rotationYaw = entity.rotationYaw;
-        gust.setPerformanceAmount(getProperty(PERFORMANCE, ctx).intValue());
+        gust.setPerformanceAmount(performance);
         gust.setPushRedstone(getBooleanProperty(PUSH_REDSTONE, ctx));
         gust.setPushStone(getBooleanProperty(PUSH_STONE, ctx));
         gust.setPushIronDoor(getBooleanProperty(PUSH_IRONDOOR, ctx));
@@ -101,7 +102,6 @@ public class AbilityAirGust extends Ability {
         gust.setSlowProjectiles(getBooleanProperty(SLOW_PROJECTILES, ctx));
         gust.setPiercesEnemies(getBooleanProperty(PIERCES_ENEMIES, ctx));
         gust.setAbility(this);
-        gust.setLifeTime(lifetime);
         gust.setTier(getCurrentTier(ctx));
         gust.setXp(getProperty(XP_HIT).floatValue());
         gust.setBehaviour(new AirGustBehaviour());
