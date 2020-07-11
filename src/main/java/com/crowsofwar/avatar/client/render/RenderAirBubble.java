@@ -82,8 +82,8 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         sizeMult *= entity.getSize() / 2.5f;
 
         if (CLIENT_CONFIG.shaderSettings.bslActive || CLIENT_CONFIG.shaderSettings.sildursActive)
-            GlStateManager.color(0.35F, 0.35F, 0.35F, 0.15f * alpha);
-        else GlStateManager.color(0.5F, 0.5F, 0.5F, 0.15f * alpha);
+            GlStateManager.color(0.35F, 0.35F, 0.35F, 0.10f * alpha);
+        else GlStateManager.color(0.5F, 0.5F, 0.5F, 0.10f * alpha);
         {
             float rotY = ticks / 7f;
             float rotX = MathHelper.cos(ticks / 4f) * .3f;
@@ -91,8 +91,8 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         }
 
         if (CLIENT_CONFIG.shaderSettings.bslActive || CLIENT_CONFIG.shaderSettings.sildursActive)
-            GlStateManager.color(0.875F, 0.875F, 0.875F, 0.25f * alpha);
-        else GlStateManager.color(1F, 1F, 1F, 0.25f * alpha);
+            GlStateManager.color(0.85F, 0.85F, 0.85F, 0.20f * alpha);
+        else GlStateManager.color(0.95F, 0.95F, 0.95F, 0.20f * alpha);
         {
             float rotY = ticks / 25f;
             float rotZ = MathHelper.cos(ticks / 10f + 1.3f) * .3f;

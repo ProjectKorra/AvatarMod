@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.common.entity;
 
 import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.common.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.common.bending.air.Airbending;
 import com.crowsofwar.avatar.common.damageutils.AvatarDamageSource;
@@ -37,6 +38,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.common.bending.air.AbilityAirGust.PIERCES_ENEMIES;
 
 public class EntityAirGust extends EntityOffensive {
 
@@ -181,6 +184,11 @@ public class EntityAirGust extends EntityOffensive {
 
 	@Override
 	public boolean isPiercing() {
+		if (!piercesEnemies) {
+			if (getAbility() instanceof AbilityAirGust && getOwner() != null) {
+				piercesEnemies = getAbility().getBooleanProperty(PIERCES_ENEMIES, AbilityData.get(getOwner(), getAbility().getName()));
+			}
+		}
 		return piercesEnemies;
 	}
 

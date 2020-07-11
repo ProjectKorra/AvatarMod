@@ -168,7 +168,7 @@ public abstract class Ability {
         addProperties(TIER, CHI_COST, BURNOUT, BURNOUT_REGEN, COOLDOWN, EXHAUSTION);
 
         if (isProjectile() || isOffensive()) {
-            addProperties(LIFETIME, SPEED, KNOCKBACK, CHI_HIT, PERFORMANCE, XP_HIT, SIZE);
+            addProperties(LIFETIME, SPEED, CHI_HIT, PERFORMANCE, XP_HIT, SIZE);
             if (isOffensive())
                 addProperties(DAMAGE);
         }

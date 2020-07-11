@@ -127,7 +127,11 @@ public class AbilityProperties {
 
                 for (String baseValueName : baseValueNames) {
                     if (!baseValueName.equalsIgnoreCase("xpOnHit") && !baseValueName.equalsIgnoreCase("xpOnUse"))
-                        baseValues.put(baseValueName, JsonUtils.getFloat(baseValueObject, baseValueName));
+                        try {
+                            baseValues.put(baseValueName, JsonUtils.getFloat(baseValueObject, baseValueName));     }
+                        catch (JsonSyntaxException e) {
+                            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Either someone's been lazy and left out a value, or your properties file is screwed.");
+                        }
                 }
             }
             if (baseBooleanNames.size() > 0) {
