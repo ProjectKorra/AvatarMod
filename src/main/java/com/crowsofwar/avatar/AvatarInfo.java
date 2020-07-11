@@ -17,7 +17,9 @@
 
 package com.crowsofwar.avatar;
 
-import com.crowsofwar.avatar.util.SemanticVersion;
+import com.crowsofwar.avatar.common.util.SemanticVersion;
+
+import java.util.Locale;
 
 /**
  * Not using semantic versioning. This isn't an API, and I'm too lazy to be backwards-compatible.

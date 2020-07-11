@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.entity.EntityAirBubble;
+import com.crowsofwar.avatar.common.entity.EntityAirBubble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,7 +30,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
-import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 /**

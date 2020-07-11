@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.client;
 
-import com.crowsofwar.avatar.registry.AvatarItems;
+import com.crowsofwar.avatar.common.item.AvatarItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.FOVUpdateEvent;

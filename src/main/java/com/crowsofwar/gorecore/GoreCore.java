@@ -27,6 +27,7 @@ import com.crowsofwar.gorecore.settings.GoreCoreModConfig;
 import com.crowsofwar.gorecore.tree.test.GoreCoreChatMessages;
 import com.crowsofwar.gorecore.tree.test.GoreCoreCommand;
 import com.crowsofwar.gorecore.tree.test.TreeTest;
+import com.crowsofwar.gorecore.util.AccountUUIDs;
 
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.Loader;

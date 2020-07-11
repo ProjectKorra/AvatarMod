@@ -19,15 +19,16 @@ package com.crowsofwar.avatar.client.gui;
 
 import com.crowsofwar.avatar.client.AvatarShaderUtils;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
-import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
-import com.crowsofwar.avatar.bending.bending.BendingStyles;
-import com.crowsofwar.avatar.util.data.*;
-import com.crowsofwar.avatar.entity.AvatarEntity;
-import com.crowsofwar.avatar.entity.EntityAirBubble;
-import com.crowsofwar.avatar.entity.EntityIcePrison;
-import com.crowsofwar.avatar.entity.EntityIceShield;
+import com.crowsofwar.avatar.common.bending.Abilities;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.data.*;
+import com.crowsofwar.avatar.common.entity.AvatarEntity;
+import com.crowsofwar.avatar.common.entity.EntityAirBubble;
+import com.crowsofwar.avatar.common.entity.EntityIcePrison;
+import com.crowsofwar.avatar.common.entity.EntityIceShield;
+import com.crowsofwar.avatar.common.gui.BendingMenuInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -53,10 +54,10 @@ import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.BLOCK_BREAK;
 import static com.crowsofwar.avatar.client.uitools.ScreenInfo.*;
-import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.avatar.util.data.StatusControlController.BUBBLE_CONTRACT;
-import static com.crowsofwar.avatar.util.data.StatusControlController.SHIELD_SHATTER;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.RENDER_ELEMENT_HANDLER;
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.common.data.StatusControlController.BUBBLE_CONTRACT;
+import static com.crowsofwar.avatar.common.data.StatusControlController.SHIELD_SHATTER;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.RENDER_ELEMENT_HANDLER;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 /**

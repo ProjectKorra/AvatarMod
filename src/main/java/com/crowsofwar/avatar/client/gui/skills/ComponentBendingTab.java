@@ -19,8 +19,8 @@ package com.crowsofwar.avatar.client.gui.skills;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.UiComponent;
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
-import com.crowsofwar.avatar.network.packets.PacketSSkillsMenu;
+import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.common.network.packets.PacketSSkillsMenu;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
