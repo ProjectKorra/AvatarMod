@@ -128,8 +128,8 @@ public class AbilityProperties {
                 for (String baseValueName : baseValueNames) {
                     if (!baseValueName.equalsIgnoreCase("xpOnHit") && !baseValueName.equalsIgnoreCase("xpOnUse"))
                         try {
-                            baseValues.put(baseValueName, JsonUtils.getFloat(baseValueObject, baseValueName));     }
-                        catch (JsonSyntaxException e) {
+                            baseValues.put(baseValueName, JsonUtils.getFloat(baseValueObject, baseValueName));
+                        } catch (JsonSyntaxException e) {
                             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Either someone's been lazy and left out a value, or your properties file is screwed.");
                         }
                 }
@@ -138,8 +138,7 @@ public class AbilityProperties {
                 for (String baseBooleanName : baseBooleanNames) {
                     try {
                         baseBooleans.put(baseBooleanName, JsonUtils.getBoolean(baseValueObject, baseBooleanName));
-                    }
-                    catch (JsonSyntaxException e) {
+                    } catch (JsonSyntaxException e) {
                         AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Either someone's been lazy and left out a value, or your properties file is screwed.");
                     }
                 }
@@ -288,11 +287,11 @@ public class AbilityProperties {
         // If a spell is missing its file, log an error
         if (!abilities.isEmpty()) {
             if (abilities.size() <= 15) {
-            abilities.forEach(a -> AvatarLog.error("Ability " + a.getName() + " is missing a properties file!"));
-             } else {
-            // If there are more than 15 don't bother logging them all, chances are they're all missing
+                abilities.forEach(a -> AvatarLog.error("Ability " + a.getName() + " is missing a properties file!"));
+            } else {
+                // If there are more than 15 don't bother logging them all, chances are they're all missing
                 AvatarLog.error("Mod " + AvatarInfo.MOD_ID + " has " + abilities.size() + " abilities that are missing properties files!");
-             }
+            }
         }
 
         return success;
@@ -359,17 +358,19 @@ public class AbilityProperties {
         List<String> keys = new ArrayList<>(baseValues.keys());
         Collections.sort(keys); // Sort alphabetically (as long as the order is consistent it doesn't matter)
 
-        for (String key : keys) {
-            for (Number num : baseValues.get(key))
-                buf.writeFloat(num.floatValue());
-        }
+        if (!keys.isEmpty())
+            for (String key : keys) {
+                for (Number num : baseValues.get(key))
+                    buf.writeFloat(num.floatValue());
+            }
 
         List<String> bKeys = new ArrayList<>(baseBooleans.keys());
         Collections.sort(bKeys);
-        for (String key : bKeys) {
-            for (boolean b : baseBooleans.get(key))
-                buf.writeBoolean(b);
-        }
+        if (!bKeys.isEmpty())
+            for (String key : bKeys) {
+                for (boolean b : baseBooleans.get(key))
+                    buf.writeBoolean(b);
+            }
     }
 
     // For crafting recipes, Forge does some stuff behind the scenes to load recipe JSON files from mods' namespaces.

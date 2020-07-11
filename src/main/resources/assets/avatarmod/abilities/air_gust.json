@@ -3,7 +3,7 @@
     "xpOnHit": 3,
     "level1": {
       "tier": 1,
-      "chiCost": 0.75,
+      "chiCost": 1.5,
       "cooldown": 30,
       "exhaustion": 0.5,
       "burnOut": 10,
@@ -23,7 +23,7 @@
     },
     "level2": {
       "tier": 1,
-      "chiCost": 1.0,
+      "chiCost": 2.0,
       "cooldown": 25,
       "exhaustion": 1.0,
       "burnOut": 7.5,
@@ -37,20 +37,19 @@
     },
     "level3": {
       "tier": 2,
-      "chiCost": 1.0,
+      "chiCost": 3.0,
       "cooldown": 20,
       "exhaustion": 1.5,
       "burnOut": 10.0,
       "burnOutRecoverTick": 0.25,
-      "performanceAmount": 7,
+      "performanceAmount": 13,
       "lifeTime": 40,
       "size": 1.5,
       "speed": 42.5,
       "chiOnHit": 0.65,
       "pushStoneButton": true,
       "pushIronDoor": true,
-      "pushIronTrapDoor": true,
-      "piercesEnemies": true
+      "pushIronTrapDoor": true
     },
     "level4_1": {
       "tier": 3,
@@ -59,13 +58,14 @@
       "exhaustion": 2.5,
       "burnOut": 20.0,
       "burnOutRecoverTick": 0.5,
-      "performanceAmount": 10,
+      "performanceAmount": 6,
       "lifeTime": 35,
       "size": 0.75,
       "speed": 47.5,
       "knockback": 5,
       "chiOnHit": 0.75,
-      "destroyProjectiles": true
+      "destroyProjectiles": true,
+      "piercesEnemies": true
     },
     "level4_2": {
       "tier": 3,
@@ -74,13 +74,14 @@
       "exhaustion": 3.5,
       "burnOut": 25.0,
       "burnOutRecoverTick": 0.75,
-      "performanceAmount": 8,
+      "performanceAmount": 2,
       "lifeTime": 70,
       "size": 2,
       "speed": 32.5,
       "knockback": 6,
       "chiOnHit": 0.5,
-      "slowProjectiles": true
+      "slowProjectiles": true,
+      "piercesEnemies": true
     }
   }
 }
