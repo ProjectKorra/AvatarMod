@@ -34,7 +34,7 @@
       "size": 1.25,
       "speed": 40,
       "chiOnHit": 0.5,
-      "knockback": 2.5,
+      "knockback": 2.125,
       "pushStoneButton": true
     },
     "level3": {
@@ -49,7 +49,7 @@
       "size": 1.5,
       "speed": 42.5,
       "chiOnHit": 0.65,
-      "knockback": 3,
+      "knockback": 2.25,
       "pushStoneButton": true,
       "pushIronDoor": true,
       "pushIronTrapDoor": true
@@ -66,7 +66,7 @@
       "size": 0.75,
       "speed": 47.5,
       "chiOnHit": 0.75,
-      "knockback": 4.5,
+      "knockback": 3.0,
       "destroyProjectiles": true,
       "piercesEnemies": true
     },
@@ -81,7 +81,7 @@
       "lifeTime": 70,
       "size": 2,
       "speed": 32.5,
-      "knockback": 1.5,
+      "knockback": 2.25,
       "chiOnHit": 0.5,
       "slowProjectiles": true,
       "piercesEnemies": true

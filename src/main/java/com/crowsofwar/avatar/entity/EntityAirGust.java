@@ -203,7 +203,7 @@ public class EntityAirGust extends EntityOffensive {
 
 	@Override
 	public Vec3d getKnockbackMult() {
-		return new Vec3d(2, 3, 2);
+		return new Vec3d(0.625F, 0.625F, 0.625F);
 	}
 
 
