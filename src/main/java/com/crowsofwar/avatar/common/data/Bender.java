@@ -188,6 +188,7 @@ public abstract class Bender {
 
 		Raytrace.Result raytrace = Raytrace.getTargetBlock(getEntity(),
 				ability.getRaytrace());
+
 		executeAbility(ability, raytrace, switchPath);
 
 	}
