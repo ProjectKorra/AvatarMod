@@ -19,15 +19,16 @@ public class RenderLemur extends RenderLiving<EntityFlyingLemur>{
 
 
 
-public static final ResourceLocation TEXTURES = new ResourceLocation(AvatarInfo.MOD_ID+":textures/entity/lemur.png");
-	
+
+	public static final ResourceLocation[] TEXTURES = new ResourceLocation[] { new ResourceLocation(AvatarInfo.MOD_ID+":textures/mob/lemur.png"), new ResourceLocation(AvatarInfo.MOD_ID+":textures/mob/lemur2.png") };
+
 	public RenderLemur(RenderManager manager) {
 		super(manager, new ModelLemur(), 0.2F);
 	}
 	
 	@Override
 	protected ResourceLocation getEntityTexture(EntityFlyingLemur entity) {
-		return TEXTURES;
+		return TEXTURES[entity.getVariant()];
 	}   
 
 	@Override

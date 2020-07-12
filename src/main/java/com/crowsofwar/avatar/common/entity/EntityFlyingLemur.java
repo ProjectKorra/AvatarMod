@@ -8,13 +8,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityFlying;
+import net.minecraft.entity.passive.EntityParrot;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -32,6 +30,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -46,18 +45,25 @@ import java.util.UUID;
 
 public class EntityFlyingLemur extends EntityTameable implements EntityFlying
 {
+	private static final DataParameter<Integer> VARIANT = EntityDataManager.<Integer>createKey(EntityFlyingLemur.class, DataSerializers.VARINT);
 	private static final Set<Item> TAME_ITEMS = Sets.newHashSet(Items.CARROT, Items.APPLE, Items.GOLDEN_APPLE);
-	private static final Set<Item> TEMPTATION_ITEMS = Sets.newHashSet(Items.CARROT, Items.APPLE);
     protected static final DataParameter<Byte> RIGHTSHOULDER = EntityDataManager.<Byte>createKey(EntityFlyingLemur.class, DataSerializers.BYTE);
     protected static final DataParameter<Byte> LEFTSHOULDER = EntityDataManager.<Byte>createKey(EntityFlyingLemur.class, DataSerializers.BYTE);
     
     public double speed;
     private boolean isActualyFlying;
 	private boolean previusRidingPos;
-	private boolean islemurriding;
 	
     private boolean partyLemur;//TODO
     private BlockPos jukeboxPosition;
+
+	@Nullable
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata)
+	{
+		this.setVariant(this.rand.nextInt(2));
+		return super.onInitialSpawn(difficulty, livingdata);
+	}
+
 	public EntityFlyingLemur(World worldIn) 
 	{
 		super(worldIn);
@@ -66,7 +72,8 @@ public class EntityFlyingLemur extends EntityTameable implements EntityFlying
 		experienceValue = 200;
 		
 	}
-	
+
+
 	@Override
 	protected void initEntityAI() 
 	{
@@ -330,6 +337,7 @@ public class EntityFlyingLemur extends EntityTameable implements EntityFlying
 			super.entityInit();
 		    this.dataManager.register(RIGHTSHOULDER, Byte.valueOf((byte)0));
 		    this.dataManager.register(LEFTSHOULDER, Byte.valueOf((byte)0));
+			this.dataManager.register(VARIANT, Integer.valueOf(0));
 		}
 		
 	    public boolean isFlying()
@@ -568,12 +576,14 @@ public class EntityFlyingLemur extends EntityTameable implements EntityFlying
 		{
 			super.writeEntityToNBT(compound);
 			compound.setBoolean("Angry", this.isAngry());
+			compound.setInteger("Variant", this.getVariant());
 		}
 		@Override
 		public void readEntityFromNBT(NBTTagCompound compound) 
 		{     
 			super.readEntityFromNBT(compound);
 			this.setAngry(compound.getBoolean("Angry"));
+			this.setVariant(compound.getInteger("Variant"));
 		}
 	    public boolean isAngry()
 	    {
@@ -595,8 +605,17 @@ public class EntityFlyingLemur extends EntityTameable implements EntityFlying
 	    /*
 	     * Emotions - End
 	     */
-	    
-	    /*
+
+		public void setVariant(int variantIn)
+		{
+			this.dataManager.set(VARIANT, Integer.valueOf(variantIn));
+		}
+		public int getVariant()
+	{
+		return MathHelper.clamp(((Integer)this.dataManager.get(VARIANT)).intValue(), 0, 1);
+	}
+
+	/*
 	     * Mating - Start
 	     */ 
 	    public boolean isBreedingItem(ItemStack stack)

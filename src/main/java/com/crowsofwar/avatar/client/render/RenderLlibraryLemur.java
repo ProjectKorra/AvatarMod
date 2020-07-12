@@ -17,9 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderLlibraryLemur extends RenderLiving<EntityFlyingLemur>{
 
-
-
-public static final ResourceLocation TEXTURES = new ResourceLocation(AvatarInfo.MOD_ID+":textures/entity/lemur.png");
+	public static final ResourceLocation[] TEXTURES = new ResourceLocation[] { new ResourceLocation(AvatarInfo.MOD_ID+":textures/mob/lemur.png"), new ResourceLocation(AvatarInfo.MOD_ID+":textures/mob/lemur2.png") };
 
 	public RenderLlibraryLemur(RenderManager manager) {
 		super(manager, new ModelLlibraryLemur(), 0.2F);
@@ -27,7 +25,7 @@ public static final ResourceLocation TEXTURES = new ResourceLocation(AvatarInfo.
 	
 	@Override
 	protected ResourceLocation getEntityTexture(EntityFlyingLemur entity) {
-		return TEXTURES;
+		return TEXTURES[entity.getVariant()];
 	}   
 
 	@Override
