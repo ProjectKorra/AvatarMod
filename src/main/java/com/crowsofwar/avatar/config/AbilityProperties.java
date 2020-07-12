@@ -119,9 +119,17 @@ public class AbilityProperties {
             // exception, but a warning is appropriate.
 
             int redundantKeys = baseValueObject.size() - baseValueNames.size();
-            if (redundantKeys > 0) AvatarLog.warn("Ability " + ability.getName() + " has " + redundantKeys +
-                    " redundant ability property key(s) defined in its JSON file. Extra values will have no effect! (Av2 devs:" +
-                    " make sure you have called addProperties(...) during ability construction)");
+            if (redundantKeys > 0) {
+                for (String key : baseValueNames) {
+                    if (!baseBooleans.containsKey(key) && !baseValues.containsKey(key)) {
+                        //Stops warnings for being lazy
+                        AvatarLog.warn("Ability " + ability.getName() + " has " + redundantKeys +
+                                " redundant ability property key(s) defined in its JSON file. Extra values will have no effect! (Av2 devs:" +
+                                " make sure you have called addProperties(...) during ability construction)");
+                        break;
+                    }
+                }
+            }
 
             if (baseValueNames.size() > 0) {
 
@@ -130,7 +138,8 @@ public class AbilityProperties {
                         try {
                             baseValues.put(baseValueName, JsonUtils.getFloat(baseValueObject, baseValueName));
                         } catch (JsonSyntaxException e) {
-                            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Either someone's been lazy and left out a value, or your properties file is screwed.");
+                            if (!baseValues.containsKey(baseValueName))
+                                AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Either someone's been lazy and left out a value, or your properties file is screwed.");
                         }
                 }
             }
@@ -139,7 +148,8 @@ public class AbilityProperties {
                     try {
                         baseBooleans.put(baseBooleanName, JsonUtils.getBoolean(baseValueObject, baseBooleanName));
                     } catch (JsonSyntaxException e) {
-                        AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Either someone's been lazy and left out a value, or your properties file is screwed.");
+                        if (!baseBooleans.containsKey(baseBooleanName))
+                            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Either someone's been lazy and left out a value, or your properties file is screwed.");
                     }
                 }
             }
