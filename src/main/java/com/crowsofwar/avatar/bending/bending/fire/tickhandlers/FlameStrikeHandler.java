@@ -1,6 +1,8 @@
 package com.crowsofwar.avatar.bending.bending.fire.tickhandlers;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFlameStrike;
 import com.crowsofwar.avatar.util.data.AbilityData;
@@ -68,6 +70,7 @@ public class FlameStrikeHandler extends TickHandler {
         //particleSize = (float) (particleSize * (0.8 + chargeLevel / 5F));
         charge |= usage - StatCtrlFlameStrike.getTimesUsed(entity.getPersistentID()) == 1;
         if ((data.hasStatusControl(FLAME_STRIKE_MAIN) || data.hasStatusControl(FLAME_STRIKE_OFF))) {
+            AbilityFlameStrike strike = (AbilityFlameStrike) Abilities.get(new AbilityFlameStrike().getName());
 
             Vec3d height, rightSide;
             if (entity instanceof EntityPlayer) {
