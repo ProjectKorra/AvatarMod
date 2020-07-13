@@ -136,11 +136,11 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
 						world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(255, 10, 5)
-						.scale(getAvgSize() * 6).element(getElement()).spawn(world);
+						.scale(getAvgSize() * 6).element(getElement()).ability(getAbility()).spawnEntity(getOwner()).spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
 						world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
 						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
-						.scale(getAvgSize() * 6).element(getElement()).spawn(world);
+						.scale(getAvgSize() * 6).element(getElement()).ability(getAbility()).spawnEntity(getOwner()).spawn(world);
 			}
 		}
 

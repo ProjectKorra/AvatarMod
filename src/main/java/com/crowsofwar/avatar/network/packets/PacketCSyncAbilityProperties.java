@@ -28,9 +28,10 @@ public class PacketCSyncAbilityProperties extends AvatarPacket<PacketCSyncAbilit
         int i = 0;
 
         while (buf.isReadable() && i < Abilities.all().size()) {
-            propertiesList.add(Abilities.all().stream().map(a -> a.properties).collect(Collectors.toList()).get(i++));
+            propertiesList.add(new AbilityProperties(Abilities.all().get(i++), buf));
         }
 
+        //Bruh
         properties = propertiesList.toArray(new AbilityProperties[0]);
     }
 

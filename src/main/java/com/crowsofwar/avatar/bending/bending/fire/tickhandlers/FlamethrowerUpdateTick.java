@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.bending.bending.fire.tickhandlers;
 
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
@@ -193,17 +195,17 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 //Particle code.
                 if (world.isRemote) {
                     speedMult /= 28.75;
-                    if (CLIENT_CONFIG.fireRenderSettings.solidFlamethrowerParticles) {
+                    /*if (CLIENT_CONFIG.fireRenderSettings.solidFlamethrowerParticles) {
                         for (double i = 0; i < flamesPerSecond; i += 3) {
                             Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
                             ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.125F).time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).collide(true).spawnEntity(entity).vel(look.times(speedMult / 1.25).toMinecraft())
                                     .ability(new AbilityFlamethrower()).spawn(world);
                         }
-                    }
+                    }**/
                     for (int i = 0; i < flamesPerSecond; i++) {
                         Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
                         if (CLIENT_CONFIG.fireRenderSettings.solidFlamethrowerParticles) {
-                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.125F).time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).collide(true).vel(look.times(speedMult / 1.25).toMinecraft()).
+                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.125F).time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).collide(true).vel(look.times(speedMult / 1.25).toMinecraft()).
                                     ability(new AbilityFlamethrower()).spawnEntity(entity).spawn(world);
                             if (abilityData.isDynamicMasterLevel(AbilityTreePath.FIRST)) {
                                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(14 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
@@ -245,7 +247,8 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 }
                 //}
 
-                //  if (duration % 2 == 0) {
+                AbilityFlamethrower flamethrower = (AbilityFlamethrower) Abilities.get(new AbilityFlamethrower().getName());
+
                 EntityFlame flames = new EntityFlame(world);
                 flames.setPosition(start);
                 flames.setOwner(entity);
@@ -254,9 +257,9 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 flames.setAbility(new AbilityFlamethrower());
                 flames.setDamageSource(abilityData.isDynamicMasterLevel(AbilityTreePath.FIRST) ? AvatarDamageSource.FIRE.getDamageType() + "dragonFire"
                         : AvatarDamageSource.FIRE.getDamageType());
-                flames.setTier(new AbilityFlamethrower().getCurrentTier(abilityData));
+                flames.setTier(flamethrower.getCurrentTier(abilityData));
                 //Will need to be changed later as I go through and add in the new ability config
-                flames.setXp(SKILLS_CONFIG.flamethrowerHit);
+                flames.setXp(flamethrower.getProperty(Ability.XP_HIT, abilityData).floatValue());
                 flames.setVelocity(look.times(speedMult / 1.625F));
                 flames.setLifeTime(8 + AvatarUtils.getRandomNumberInRange(0, 4));
                 flames.setTrailingFire(abilityData.isDynamicMasterLevel(AbilityTreePath.SECOND));

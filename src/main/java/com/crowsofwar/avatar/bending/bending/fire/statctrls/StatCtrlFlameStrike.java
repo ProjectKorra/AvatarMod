@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.bending.bending.fire.statctrls;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
@@ -307,15 +308,19 @@ public class StatCtrlFlameStrike extends StatusControl {
                         .scale(size / 2).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5)).spawn(world);
             }
             if (i % 2 == 0) {
+                //Ensures if I change the name I don't get fucked over
+                AbilityFlameStrike strike = (AbilityFlameStrike) Abilities.get(new AbilityFlameStrike().getName());
+
                 EntityFlame flames = new EntityFlame(world);
                 flames.setOwner(entity);
                 flames.setDynamicSpreadingCollision(true);
                 flames.setEntitySize(0.1F, 0.1F);
-                flames.setAbility(new AbilityFlameStrike());
-                flames.setTier(new AbilityFlameStrike().getCurrentTier(abilityData));
+                flames.setAbility(strike);
+                flames.setTier(strike.getCurrentTier(abilityData));
                 //Will need to be changed later as I go through and add in the new ability config
                 flames.setXp(xp);
                 flames.setLifeTime((int) (lifeTime * 0.75) + AvatarUtils.getRandomNumberInRange(0, 4));
+                //Make a property later
                 flames.setTrailingFire(abilityData.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND));
                 flames.setDamage(damage);
                 flames.setSmelt(true);

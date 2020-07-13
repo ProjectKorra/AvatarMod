@@ -75,10 +75,10 @@ public class AbilityFireShot extends Ability {
 
 		float speed = 0.5F;
 		double damageMult = bender.getDamageMult(Firebending.ID);
-		float damage = STATS_CONFIG.fireShotSetttings.damage;
-		float chi = STATS_CONFIG.chiFireShot;
-		float xp = SKILLS_CONFIG.fireShotHit;
-		if (ctx.getLevel() == 1) {
+		float damage = getProperty(DAMAGE, ctx).floatValue();
+		float chi = getProperty(CHI_COST, ctx).floatValue();
+		float xp = getProperty(XP_HIT, ctx).floatValue();
+	/*	if (ctx.getLevel() == 1) {
 			speed += 0.25F;
 			chi += 0.5F;
 			damage += 2;
@@ -95,8 +95,9 @@ public class AbilityFireShot extends Ability {
 		}
 		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
 			chi += 2F;
-		}
-		damage += abilityData.getTotalXp() / 50;
+		}**/
+
+		damage *= abilityData.getXpModifier();
 
 		if (bender.consumeChi(chi)) {
 			if (!ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
@@ -115,7 +116,7 @@ public class AbilityFireShot extends Ability {
 				flames.setFireTime((int) (4F * 1 + abilityData.getTotalXp() / 50f));
 				flames.setDamage(damage * (float) damageMult);
 				flames.setElement(new Firebending());
-				flames.setPowerRating(10);
+				//Oh shit I need to implement that (powerrating)
 				world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
 						world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
 				pos = pos.minus(Vector.getLookRectangular(entity).times(0.05));
@@ -135,12 +136,12 @@ public class AbilityFireShot extends Ability {
 						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
 								world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
 								.time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(1F, 10 / 255F, 5 / 255F, 0.75F).spawnEntity(entity)
-								.scale(0.125F).element(new Firebending()).collide(true).spawn(world);
+								.scale(0.125F).element(new Firebending()).collide(true).ability(this).spawn(world);
 						ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
 								world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
 								.time(12 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(1F, (40 + AvatarUtils.getRandomNumberInRange(0, 60)) / 255F,
 								10 / 255F, 0.75F).spawnEntity(entity)
-								.scale(0.125F).element(new Firebending()).collide(true).spawn(world);
+								.scale(0.125F).element(new Firebending()).collide(true).ability(this).spawn(world);
 					}
 				}
 			} else {

@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
@@ -12,6 +13,7 @@ import com.crowsofwar.avatar.network.AvatarClientProxy;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -20,8 +22,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -781,6 +785,21 @@ public abstract class ParticleAvatar extends Particle {
 
         if (this.canCollide) {
 
+            //General block collisions
+            //Reduce lag, otherwise you'll just yeet servers
+            if (ticksExisted % 2 == 0) {
+                BlockPos pos = new BlockPos(posX, posY, posZ);
+                IBlockState state = world.getBlockState(pos);
+                if (state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.FLOWING_WATER)
+                    onMajorWaterContact();
+                if (state.getBlock() == Blocks.FIRE || state.getBlock() == Blocks.LAVA || state.getBlock() == Blocks.FLOWING_LAVA)
+                    onMajorFireContact();
+
+                if (world.isRainingAt(pos) && world.canBlockSeeSky(pos) && world.getBiome(pos).canRain())
+                    onMinorWaterContact();
+            }
+
+
             List<AxisAlignedBB> list = this.world.getCollisionBoxes(null, this.getBoundingBox().expand(x, y, z).grow(0.1));
             List<Entity> entityList = this.world.getEntitiesWithinAABB(Entity.class, getBoundingBox().expand(x, y, z).grow(0.15));
 
@@ -812,7 +831,6 @@ public abstract class ParticleAvatar extends Particle {
             this.setBoundingBox(this.getBoundingBox().offset(x, y, z));
         }
 
-        world.getCollisionBoxes(null, getBoundingBox());
         if (!AvatarUtils.getAliveParticles().isEmpty()) {
             Queue<Particle> particles = AvatarUtils.getAliveParticles().stream().filter(particle -> particle.getBoundingBox().intersects(getBoundingBox())
                     && particle instanceof ParticleAvatar && ((ParticleAvatar) particle).spawnEntity != spawnEntity && particle != this)
@@ -889,21 +907,19 @@ public abstract class ParticleAvatar extends Particle {
         if (getAbility() != null && getAbility().getElement() instanceof Firebending || element instanceof Firebending) {
             if (getSpawnEntity() instanceof EntityLivingBase) {
                 AbilityData data = AbilityData.get((EntityLivingBase) getSpawnEntity(), getAbility().getName());
-                if (data != null && getAbility().getCurrentTier(data) < 3) {
-                    ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 50,
-                            world.rand.nextDouble() / 20, world.rand.nextGaussian() / 50);
+                Ability ability = Abilities.get(getAbility().getName());
+                //Ensures properties actually work
+                if (data != null && ability.getCurrentTier(data) < 3) {
+                    spawnSteamParticles();
                     setExpired();
                 } else
-                    ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 50,
-                            world.rand.nextDouble() / 20, world.rand.nextGaussian() / 50);
+                    spawnSteamParticles();
             } else {
-                ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 50,
-                        world.rand.nextDouble() / 20, world.rand.nextGaussian() / 50);
+                spawnSteamParticles();
                 setExpired();
             }
         } else {
-            ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 50,
-                    world.rand.nextDouble() / 20, world.rand.nextGaussian() / 50);
+            spawnSteamParticles();
             setExpired();
         }
     }
@@ -913,21 +929,19 @@ public abstract class ParticleAvatar extends Particle {
         if (getAbility() != null && getAbility().getElement() instanceof Firebending || element instanceof Firebending) {
             if (getSpawnEntity() instanceof EntityLivingBase) {
                 AbilityData data = AbilityData.get((EntityLivingBase) getSpawnEntity(), getAbility().getName());
-                if (data != null && getAbility().getCurrentTier(data) < 6) {
-                    ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 50,
-                            world.rand.nextDouble() / 20, world.rand.nextGaussian() / 50);
+                Ability ability = Abilities.get(getAbility().getName());
+                //Ensures properties actually work
+                if (data != null && ability.getCurrentTier(data) < 6) {
+                    spawnSteamParticles();
                     setExpired();
                 } else
-                    ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 50,
-                            world.rand.nextDouble() / 20, world.rand.nextGaussian() / 50);
+                    spawnSteamParticles();
             } else {
-                ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 50,
-                        world.rand.nextDouble() / 20, world.rand.nextGaussian() / 50);
+                spawnSteamParticles();
                 setExpired();
             }
         } else {
-            ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 50,
-                    world.rand.nextDouble() / 20, world.rand.nextGaussian() / 50);
+            spawnSteamParticles();
             setExpired();
         }
     }
@@ -935,8 +949,7 @@ public abstract class ParticleAvatar extends Particle {
     //Weaker abilities
     public void onMinorFireContact() {
         if (getAbility() != null && getAbility().getElement() instanceof Waterbending || element instanceof Waterbending) {
-            ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 50,
-                    world.rand.nextDouble() / 20, world.rand.nextGaussian() / 50);
+            spawnSteamParticles();
         }
     }
 
@@ -945,23 +958,27 @@ public abstract class ParticleAvatar extends Particle {
         if (getAbility() != null && getAbility().getElement() instanceof Waterbending || element instanceof Waterbending) {
             if (getSpawnEntity() instanceof EntityLivingBase) {
                 AbilityData data = AbilityData.get((EntityLivingBase) getSpawnEntity(), getAbility().getName());
-                if (data != null && getAbility().getCurrentTier(data) < 3) {
-                    ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 50,
-                            world.rand.nextDouble() / 20, world.rand.nextGaussian() / 50);
+                Ability ability = Abilities.get(getAbility().getName());
+                //Ensures properties actually work
+                if (data != null && ability.getCurrentTier(data) < 3) {
+                    spawnSteamParticles();
                     setExpired();
                 } else
-                    ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 50,
-                            world.rand.nextDouble() / 20, world.rand.nextGaussian() / 50);
+                    spawnSteamParticles();
             } else {
-                ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 50,
-                        world.rand.nextDouble() / 20, world.rand.nextGaussian() / 50);
+                spawnSteamParticles();
                 setExpired();
             }
         } else {
-            ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 50,
-                    world.rand.nextDouble() / 20, world.rand.nextGaussian() / 50);
+            spawnSteamParticles();
             setExpired();
         }
+    }
+
+    //Abstraction, I guess
+    public void spawnSteamParticles() {
+        ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 50,
+                world.rand.nextDouble() / 20, world.rand.nextGaussian() / 50).time(particleMaxAge - particleAge + 1).spawn(world);
     }
 
     public void applyElementalContact(ParticleAvatar particle) {

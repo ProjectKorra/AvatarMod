@@ -173,12 +173,14 @@ public class AbilityProperties {
         Collections.sort(keys); // Should be the same list of keys in the same order they were written to the ByteBuf
         Collections.sort(bKeys);
 
-        for (String key : keys) {
-            baseValues.put(key, buf.readFloat());
-        }
-        for (String key : bKeys) {
-            baseBooleans.put(key, buf.readBoolean());
-        }
+        if (!keys.isEmpty())
+            for (String key : keys) {
+                baseValues.put(key, buf.readFloat());
+            }
+        if (!bKeys.isEmpty())
+            for (String key : bKeys) {
+                baseBooleans.put(key, buf.readBoolean());
+            }
     }
 
     /**

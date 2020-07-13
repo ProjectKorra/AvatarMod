@@ -132,13 +132,9 @@ public class AbilityFlameStrike extends Ability {
         StatCtrlFlameStrike.setTimesUsed(ctx.getBenderEntity().getPersistentID(), 0);
         data.addTickHandler(FLAME_STRIKE_HANDLER);
         data.addStatusControl(FLAME_STRIKE_MAIN);
+        super.execute(ctx);
     }
 
-
-    @Override
-    public int getBaseTier() {
-        return 2;
-    }
 
     @Override
     public BendingAi getAi(EntityLiving entity, Bender bender) {
@@ -150,6 +146,7 @@ public class AbilityFlameStrike extends Ability {
         return true;
     }
 
+    //Useless except for npc's; I need to fix this
     public static class FireblastBehaviour extends OffensiveBehaviour {
 
         @Override
@@ -460,5 +457,10 @@ public class AbilityFlameStrike extends Ability {
         public void save(NBTTagCompound nbt) {
 
         }
+    }
+
+    @Override
+    public boolean isProjectile() {
+        return true;
     }
 }

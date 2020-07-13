@@ -26,15 +26,15 @@ import com.crowsofwar.avatar.bending.bending.ice.Icebending;
 import com.crowsofwar.avatar.bending.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.bending.bending.sand.Sandbending;
 import com.crowsofwar.avatar.config.AbilityProperties;
-import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.entity.mob.EntityHumanBender;
 import com.crowsofwar.avatar.item.scroll.ItemScroll;
 import com.crowsofwar.avatar.item.scroll.Scrolls;
 import com.crowsofwar.avatar.network.packets.PacketCSyncAbilityProperties;
 import com.crowsofwar.avatar.util.Raytrace;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -79,8 +79,8 @@ public abstract class Ability {
             DAMAGE = "damage",
             DURATION = "duration",
             CHARGE_TIME = "chargeTime",
-            //Airbending stuff
-            PUSH_REDSTONE = "pushRedstone",
+    //Airbending stuff
+    PUSH_REDSTONE = "pushRedstone",
             PUSH_IRONDOOR = "pushIronDoor",
             PUSH_STONE = "pushStoneButton",
             PUSH_IRON_TRAPDOOR = "pushIronTrapDoor";
@@ -106,11 +106,14 @@ public abstract class Ability {
     private Raytrace.Info raytrace;
 
 
+    /**
+    NOTE: DO NOT CREATE A NEW INSTANCE OF AN ABILITY FOR GETTING PROPERTIES, IT'LL JUST RETURN NULL.
+    INSTEAD, call {@code Abilities.get(String name)} and use that.
+     */
     public Ability(UUID bendingType, String name) {
         this.type = bendingType;
         this.name = name;
         this.raytrace = new Raytrace.Info();
-
     }
 
     /**
@@ -120,7 +123,12 @@ public abstract class Ability {
         if (player instanceof EntityPlayerMP) {
             // On the server side, send a packet to the player to synchronise their spell properties
             List<Ability> abilities = Abilities.all();
-            AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));
+            //Let's do this the old fashioned way and see what happens-maybe it fixes some abilities getting fucked?
+            AbilityProperties[] properties = new AbilityProperties[Abilities.all().size()];
+            for (Ability ability : Abilities.all()) {
+                properties[Abilities.all().indexOf(ability)] = ability.properties;
+            }
+            AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(properties));
 
         } else {
             // On the client side, wipe the spell properties so the new ones can be set
@@ -600,8 +608,8 @@ public abstract class Ability {
 
         if (!arePropertiesInitialised()) {
             this.properties = properties;
-            if (this.globalProperties == null) this.globalProperties = properties;
-            AvatarLog.info("Successfully set properties for " + getName() + "!");
+            if (this.globalProperties == null)
+                this.globalProperties = properties;
         } else {
             AvatarLog.info("A mod attempted to set an ability's properties, but they were already initialised.");
         }

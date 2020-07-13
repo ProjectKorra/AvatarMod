@@ -109,7 +109,7 @@ public class AbilityData {
 	}
 
 	public static AbilityData get(EntityLivingBase entity, String abilityName) {
-		return BendingData.get(entity).getAbilityData(abilityName);
+		return BendingData.getFromEntity(entity).getAbilityData(abilityName);
 	}
 
 	public static AbilityData get(World world, UUID playerId, String abilityName) {
