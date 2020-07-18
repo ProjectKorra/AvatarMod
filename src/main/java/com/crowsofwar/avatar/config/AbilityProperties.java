@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -83,10 +84,6 @@ public class AbilityProperties {
             }
         }
 
-//        for (String name : baseBooleanNames) {
-//            baseBooleans.put(name, JsonUtils.getBoolean(customProperties, name));
-//        }
-
         // There's not much point specifying the classes of the numbers here because the json getter methods just
         // perform conversion to the requested type anyway. It therefore makes very little difference whether the
         // conversion is done during JSON parsing or when we actually use the value - and at least in the latter case,
@@ -119,7 +116,7 @@ public class AbilityProperties {
             // some random point in the future. Since redundant values aren't a problem by themselves, we shouldn't throw an
             // exception, but a warning is appropriate.
 
-            int redundantKeys = baseValueObject.size() - baseValueNames.size();
+            int redundantKeys = baseValueObject.size() - (baseValueNames.size() + baseBooleanNames.size());
             if (redundantKeys > 0) {
                 for (String key : baseValueNames) {
                     if (!baseBooleans.containsKey(key) && !baseValues.containsKey(key)) {

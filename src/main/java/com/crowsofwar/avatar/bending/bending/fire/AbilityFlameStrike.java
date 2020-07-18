@@ -68,7 +68,7 @@ public class AbilityFlameStrike extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(BURNOUT, FIRE_R, FIRE_G,  FIRE_B, FADE_R, FADE_G, FADE_B, STRIKES);
+        addProperties(FIRE_R, FIRE_G,  FIRE_B, FADE_R, FADE_G, FADE_B, STRIKES);
         addBooleanProperties(SETS_FIRES, SMELTS);
     }
 
