@@ -918,9 +918,6 @@ public abstract class ParticleAvatar extends Particle {
                 spawnSteamParticles();
                 setExpired();
             }
-        } else {
-            spawnSteamParticles();
-            setExpired();
         }
     }
 
@@ -940,9 +937,6 @@ public abstract class ParticleAvatar extends Particle {
                 spawnSteamParticles();
                 setExpired();
             }
-        } else {
-            spawnSteamParticles();
-            setExpired();
         }
     }
 
@@ -969,9 +963,6 @@ public abstract class ParticleAvatar extends Particle {
                 spawnSteamParticles();
                 setExpired();
             }
-        } else {
-            spawnSteamParticles();
-            setExpired();
         }
     }
 

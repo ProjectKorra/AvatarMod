@@ -25,7 +25,7 @@
       "burnOut": 15.0,
       "burnOutRecoverTick": 0.75,
       "performanceAmount": 25,
-      "fireTime": 6
+      "fireTime": 6,
       "lifeTime": 10,
       "size": 2,
       "speed": 7,

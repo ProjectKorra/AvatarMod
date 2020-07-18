@@ -165,6 +165,7 @@ public class AbilityFireball extends Ability {
 
 			if (!fireballs.isEmpty() && fireballs.size() > 1 && fireballs.contains(entity)) {
 				//Ensures a constant list order for the fireballs
+				int size = fireballs.size();
 				int index = fireballs.indexOf(entity);
 				int id = Math.max(((EntityFireball) entity).getOrbitID() - 1, 0);
 				if (index != id) {
@@ -181,9 +182,9 @@ public class AbilityFireball extends Ability {
 					fireballs.set(secondIn, newBall);
 				}
 				int angle = (entity.getOwner().ticksExisted * 5) % 360;
-				for (int i = 0; i < fireballs.size(); i++) {
+				for (int i = 0; i < size; i++) {
 					//Tfw the game is adding an extra 120 degrees for no reason
-					angle = angle + (360 / fireballs.size() * i);
+					angle = angle + (360 / size * i);
 					if (i == 2)
 						angle -= 120;
 					double radians = Math.toRadians(angle);

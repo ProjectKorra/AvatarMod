@@ -32,6 +32,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
 
@@ -96,7 +97,7 @@ public class AbilityMining extends Ability {
 					// Mark any ores that were found; doesn't actually mine them yet
 					if (isBreakableOre(world, pos)) {
 						oresToBeMined.add(pos);
-						alreadyMinedOres.add(pos);
+						//alreadyMinedOres.add(pos);
 					}
 
 					// Actually break the block here
@@ -257,7 +258,7 @@ public class AbilityMining extends Ability {
 		BlockPos pos = queue.poll();
 
 		if (pos == null) return;
-		if (breakBlock(pos, ctx, oresMined * 3 + 20, 3)) {
+		if (breakBlock(pos, ctx, oresMined * 2 + 20, 3)) {
 			oresMined++;
 			ctx.getAbilityData().addXp(SKILLS_CONFIG.miningBreakOre);
 		}

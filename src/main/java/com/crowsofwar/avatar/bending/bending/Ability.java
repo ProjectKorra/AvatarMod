@@ -123,12 +123,7 @@ public abstract class Ability {
         if (player instanceof EntityPlayerMP) {
             // On the server side, send a packet to the player to synchronise their spell properties
             List<Ability> abilities = Abilities.all();
-            //Let's do this the old fashioned way and see what happens-maybe it fixes some abilities getting fucked?
-            AbilityProperties[] properties = new AbilityProperties[Abilities.all().size()];
-            for (Ability ability : Abilities.all()) {
-                properties[Abilities.all().indexOf(ability)] = ability.properties;
-            }
-            AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(properties));
+            AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));
 
         } else {
             // On the client side, wipe the spell properties so the new ones can be set

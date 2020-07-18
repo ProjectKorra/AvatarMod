@@ -101,7 +101,7 @@ public interface IOffensiveEntity {
                                 explosionDamage ? getAoeDamage() : getDamage());
                         BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
                         if (multiHit())
-                            ((EntityLivingBase) hit).hurtTime = 1;
+                            ((EntityLivingBase) hit).hurtResistantTime = 1;
                         data.addXp(getXpPerHit());
 
                     } else if (ds) {
@@ -112,7 +112,7 @@ public interface IOffensiveEntity {
                             AvatarUtils.setVelocity(hit, vel);
                         else hit.addVelocity(vel.x, vel.y, vel.z);
                         if (multiHit() && hit instanceof EntityLivingBase)
-                            ((EntityLivingBase) hit).hurtTime = 1;
+                            ((EntityLivingBase) hit).hurtResistantTime = 1;
                         AvatarUtils.afterVelocityAdded(hit);
                     }
                 }
@@ -132,7 +132,7 @@ public interface IOffensiveEntity {
                     else hit.addVelocity(vel.x, vel.y, vel.z);
                 }
                 if (multiHit() && hit instanceof EntityLivingBase)
-                    ((EntityLivingBase) hit).hurtTime = 1;
+                    ((EntityLivingBase) hit).hurtResistantTime = 1;
                 AvatarUtils.afterVelocityAdded(hit);
             }
         }
