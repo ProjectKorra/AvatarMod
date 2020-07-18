@@ -287,15 +287,15 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 	@Override
 	public void onCollideWithPlayer(EntityPlayer entityIn) {
 		// Prevents some insane glitches...
-		List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(this, getCollisionBox(this));
+		List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox());
 
 		if (entities.size() > 0) {
 			for (Entity entity : entities) {
 				if (entity instanceof EntityPlayer) {
 					if (getBehavior().getClass() == WallBehavior.Rising.class) {
-						entity.addVelocity(entity.motionX, 0.25D, entity.motionZ);
+						entity.addVelocity(entity.motionX, entity.motionY + 0.25D, entity.motionZ);
 					} else {
-						Vec3d vel = entity.getPositionVector().subtract(getPositionVector()).scale(0.00025);
+						Vec3d vel = entity.getPositionVector().subtract(getPositionVector()).scale(0.1);
 						entity.addVelocity(vel.x, vel.y, vel.z);
 					}
 				}
