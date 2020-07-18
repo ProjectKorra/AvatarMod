@@ -235,7 +235,7 @@ public class StatCtrlFlameStrike extends StatusControl {
         }
         if (abilityData.getLevel() == 2) {
             particleCount += 4;
-            accuracyMult *= 0.75F;
+            accuracyMult *= 0.95F;
             /*size *= 1.25;
             dist = 4;
             mult += 0.1F;
@@ -296,50 +296,37 @@ public class StatCtrlFlameStrike extends StatusControl {
                     fadeB * 2);
 
             if (world.isRemote) {
-               /*if (abilityData.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-                    //Using the random function each time ensures a different number for every value, making the ability "feel" better.
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
-                            look.y * mult + world.rand.nextGaussian() * accuracyMult,
-                            look.z * mult + world.rand.nextGaussian() * accuracyMult)
-                            .element(new Firebending()).ability(strike).spawnEntity(entity)
-                            .clr(255, 15, 5).collide(true).scale(size / 2).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5))
-                            .fade(AvatarUtils.getRandomNumberInRange(75, 200), AvatarUtils.getRandomNumberInRange(1, 180),
-                                    AvatarUtils.getRandomNumberInRange(1, 180), AvatarUtils.getRandomNumberInRange(100, 175)).spawn(world);
-                    //Using the random function each time ensures a different number for every value, making the ability "feel" better.
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
-                            look.y * mult + world.rand.nextGaussian() * accuracyMult,
-                            look.z * mult + world.rand.nextGaussian() * accuracyMult)
-                            .element(new Firebending()).ability(strike).spawnEntity(entity)
-                            .clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true)
-                            .scale(size / 2).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5))
-                            .fade(AvatarUtils.getRandomNumberInRange(75, 200), AvatarUtils.getRandomNumberInRange(1, 180),
-                                    AvatarUtils.getRandomNumberInRange(1, 180), AvatarUtils.getRandomNumberInRange(100, 175)).spawn(world);
-                }**/
                 //Using the random function each time ensures a different number for every value, making the ability "feel" better.
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
                         look.y * mult + world.rand.nextGaussian() * accuracyMult,
                         look.z * mult + world.rand.nextGaussian() * accuracyMult)
                         .element(new Firebending()).ability(strike).spawnEntity(entity)
-                        .clr(r, g, b).collide(true).scale(size * 0.875F).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5))
-                        .fade(rRandom, gRandom, bRandom).spawn(world);
+                        .clr(r, g, b).collide(true).scale(size * 0.75F).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5))
+                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).spawn(world);
                 //Using the random function each time ensures a different number for every value, making the ability "feel" better.
+                rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
+                        fadeR * 2);
+                gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
+                        fadeG * 2);
+                bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
+                        fadeB * 2);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
                         look.y * mult + world.rand.nextGaussian() * accuracyMult,
                         look.z * mult + world.rand.nextGaussian() * accuracyMult)
                         .element(new Firebending()).ability(strike).spawnEntity(entity)
                         .clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true)
-                        .scale(size * 0.875F).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5))
-                        .fade(rRandom, gRandom, bRandom).spawn(world);
+                        .scale(size * 0.75F).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5))
+                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).spawn(world);
             }
-            if (i % 2 == 0) {
+            if (i % 3 == 0) {
                 EntityFlame flames = new EntityFlame(world);
                 flames.setOwner(entity);
-                flames.setDynamicSpreadingCollision(true);
+                flames.setDynamicSpreadingCollision(false);
                 flames.setAbility(strike);
                 flames.setTier(strike.getCurrentTier(abilityData));
                 //Will need to be changed later as I go through and add in the new ability config
                 flames.setXp(xp);
-                flames.setLifeTime((int) (lifeTime * 0.75) + AvatarUtils.getRandomNumberInRange(0, 4));
+                flames.setLifeTime((int) (lifeTime * 0.785) + AvatarUtils.getRandomNumberInRange(0, 4));
                 //Make a property later
                 flames.setTrailingFire(strike.getBooleanProperty(Ability.SETS_FIRES, abilityData) && world.rand.nextBoolean());
                 flames.setDamage(damage);

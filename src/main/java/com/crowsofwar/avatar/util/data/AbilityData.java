@@ -108,6 +108,7 @@ public class AbilityData {
 		return abilityData;
 	}
 
+	@Nullable
 	public static AbilityData get(EntityLivingBase entity, String abilityName) {
 		return BendingData.getFromEntity(entity).getAbilityData(abilityName);
 	}

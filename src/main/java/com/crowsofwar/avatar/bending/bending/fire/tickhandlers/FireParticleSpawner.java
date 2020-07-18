@@ -28,19 +28,19 @@ public class FireParticleSpawner extends TickHandler {
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
         AbilityData data = ctx.getData().getAbilityData(new AbilityFireJump());
-
+        AbilityFireJump jump = (AbilityFireJump) Abilities.get(new AbilityFireJump().getName());
         Vector pos = Vector.getEntityPos(target).minusY(0.05);
 
         if (world.isRemote)
             for (int i = 0; i < 2 + AvatarUtils.getRandomNumberInRange(0, 4); i++) {
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).collide(true).clr(255, 10,
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(255, 10,
                         5).pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).scale(1F +
                         Math.max(data.getLevel(), 0) / 2F).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
-                        .ability(Abilities.get(new AbilityFireJump().getName())).spawn(world);
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).collide(true).clr(255, 40 + AvatarUtils.getRandomNumberInRange(0, 60),
+                        .ability(jump).spawnEntity(target).spawn(world);
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(255, 40 + AvatarUtils.getRandomNumberInRange(0, 60),
                         10).pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40)
                         .scale(1F + Math.max(data.getLevel(), 0) / 2F).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
-                        .ability(Abilities.get(new AbilityFireJump().getName())).spawn(world);
+                        .ability(jump).spawnEntity(target).spawn(world);
             }
 
         //particles.spawnParticles(world, world.rand.nextBoolean() ? AvatarParticles.getParticleFlames() : AvatarParticles.getParticleFire(),

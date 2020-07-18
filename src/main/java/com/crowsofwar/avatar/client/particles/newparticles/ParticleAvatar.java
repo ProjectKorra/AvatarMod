@@ -905,7 +905,7 @@ public abstract class ParticleAvatar extends Particle {
     //Weaker abilities; rain
     public void onMinorWaterContact() {
         if (getAbility() != null && getAbility().getElement() instanceof Firebending || element instanceof Firebending) {
-            if (getSpawnEntity() instanceof EntityLivingBase) {
+            if (getSpawnEntity() instanceof EntityLivingBase && getAbility() != null) {
                 AbilityData data = AbilityData.get((EntityLivingBase) getSpawnEntity(), getAbility().getName());
                 Ability ability = Abilities.get(getAbility().getName());
                 //Ensures properties actually work
@@ -924,7 +924,7 @@ public abstract class ParticleAvatar extends Particle {
     //Stronger abilities, solid water
     public void onMajorWaterContact() {
         if (getAbility() != null && getAbility().getElement() instanceof Firebending || element instanceof Firebending) {
-            if (getSpawnEntity() instanceof EntityLivingBase) {
+            if (getSpawnEntity() instanceof EntityLivingBase && getAbility() != null) {
                 AbilityData data = AbilityData.get((EntityLivingBase) getSpawnEntity(), getAbility().getName());
                 Ability ability = Abilities.get(getAbility().getName());
                 //Ensures properties actually work
@@ -950,7 +950,7 @@ public abstract class ParticleAvatar extends Particle {
     //Stronger abilities, fire, lava
     public void onMajorFireContact() {
         if (getAbility() != null && getAbility().getElement() instanceof Waterbending || element instanceof Waterbending) {
-            if (getSpawnEntity() instanceof EntityLivingBase) {
+            if (getSpawnEntity() instanceof EntityLivingBase && getAbility() != null) {
                 AbilityData data = AbilityData.get((EntityLivingBase) getSpawnEntity(), getAbility().getName());
                 Ability ability = Abilities.get(getAbility().getName());
                 //Ensures properties actually work

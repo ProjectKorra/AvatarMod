@@ -19,6 +19,7 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.bending.bending.Ability.*;
 import static com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike.STRIKES;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_MAIN;
@@ -44,6 +45,13 @@ public class FlameStrikeHandler extends TickHandler {
         boolean charge = false;
         int chargeLevel = StatCtrlFlameStrike.getChargeLevel(entity.getPersistentID());
         float particleSize = 0.7F;
+        int r, g, b, fadeR, fadeG, fadeB;
+        r = strike.getProperty(FIRE_R, abilityData).intValue();
+        g = strike.getProperty(FIRE_G, abilityData).intValue();
+        b = strike.getProperty(FIRE_B, abilityData).intValue();
+        fadeR = strike.getProperty(FADE_R, abilityData).intValue();
+        fadeG = strike.getProperty(FADE_G, abilityData).intValue();
+        fadeB = strike.getProperty(FADE_B, abilityData).intValue();
 
         if (level == 1 || level == 2) {
             particleCount = 2;
@@ -114,22 +122,29 @@ public class FlameStrikeHandler extends TickHandler {
             }
             if (world.isRemote)
                 for (int i = 0; i < particleCount; i++) {
+                    //140, 90, 90
+                    int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
+                            fadeR * 2);
+                    int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
+                            fadeG * 2);
+                    int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
+                            fadeB * 2);
                     if (abilityData.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
-                                world.rand.nextGaussian() / 40).clr(255, 15, 5).collide(false).
-                                scale(particleSize / 1.5F).element(new Firebending()).fade(AvatarUtils.getRandomNumberInRange(75, 200), AvatarUtils.getRandomNumberInRange(1, 180),
-                                AvatarUtils.getRandomNumberInRange(1, 180), AvatarUtils.getRandomNumberInRange(100, 175)).spawn(world);
+                                world.rand.nextGaussian() / 40).clr(r, g, b).collide(false).
+                                scale(particleSize / 1.5F).element(new Firebending()).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
+                                .spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
                                 world.rand.nextGaussian() / 40).clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(false).
-                                scale(particleSize / 1.5F).element(new Firebending()).fade(AvatarUtils.getRandomNumberInRange(75, 200), AvatarUtils.getRandomNumberInRange(1, 180),
-                                AvatarUtils.getRandomNumberInRange(1, 180), AvatarUtils.getRandomNumberInRange(100, 175)).spawn(world);
+                                scale(particleSize / 1.5F).element(new Firebending()).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
+                                .spawn(world);
                     } else {
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
-                                world.rand.nextGaussian() / 40).clr(255, 15, 5).collide(false).
+                                world.rand.nextGaussian() / 40).clr(r, g, b).collide(false).
                                 scale(particleSize / 1.5F).element(new Firebending()).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
                                 world.rand.nextGaussian() / 40).clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(false).
-                                scale(particleSize / 1.5F).element(new Firebending()).spawn(world);
+                                scale(particleSize / 1.5F).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(new Firebending()).spawn(world);
                     }
                 }
 

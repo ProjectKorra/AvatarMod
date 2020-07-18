@@ -31,6 +31,7 @@ import net.minecraft.item.Item;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author CrowsOfWar
@@ -255,28 +256,29 @@ public class ConfigMobs {
      * Gets the scroll type for that entity to drop. By default, is
      * ScrollType.ALL.
      */
-    public ScrollType getScrollType(Entity entity) {
+    public List<ScrollType> getScrollTypes(Entity entity) {
 
         String entityName = EntityList.getEntityString(entity);
+        List<ScrollType> scrollTypes = new ArrayList<>();
         if (entityName != null) {
             String key = entityName.toLowerCase();
-            String typeName = new ArrayList<>(scrollType.get(key)).get(0);
-
-            if (typeName != null) {
-                ScrollType type = ScrollType.ALL;
-                for (ScrollType t : ScrollType.values()) {
-                    if (t.name().toLowerCase().equals(typeName.toLowerCase())) {
-                        type = t;
-                        break;
+            List<String> types = (new ArrayList<>(scrollType.get(key)));
+            for (String typeName : types) {
+                if (typeName != null) {
+                    ScrollType type = ScrollType.ALL;
+                    for (ScrollType t : ScrollType.values()) {
+                        if (t.name().toLowerCase().equals(typeName.toLowerCase())) {
+                            type = t;
+                            break;
+                        }
                     }
+
+                    scrollTypes.add(type);
                 }
-
-                return type;
-
             }
         }
 
-        return ScrollType.ALL;
+        return scrollTypes;
     }
 
 
