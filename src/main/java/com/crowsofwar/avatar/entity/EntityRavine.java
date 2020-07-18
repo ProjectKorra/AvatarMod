@@ -180,8 +180,9 @@ public class EntityRavine extends EntityOffensive {
 			} else {
 				Dissipate();
 			}
-
 		}
+		if (STATS_CONFIG.bendableBlocks.contains(inBlock.getBlock()))
+			setPosition(position().plusY(1));
 
 		if (!world.isRemote && breakBlocks) {
 			BlockPos last = new BlockPos(prevPosX, prevPosY, prevPosZ);
@@ -224,11 +225,13 @@ public class EntityRavine extends EntityOffensive {
 
 	@Override
 	public void Dissipate() {
-		if (world.isRemote && world.getBlockState(getPosition().down()) != null)
-			world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ, world.rand.nextGaussian() / 20,
-					world.rand.nextDouble() / 20, world.rand.nextGaussian() / 20,
-					Block.getStateId(world.getBlockState(getPosition())));
-		setDead();
+		if (onCollideWithSolid()) {
+			if (world.isRemote && world.getBlockState(getPosition()) != null)
+				world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ, world.rand.nextGaussian() / 20,
+						world.rand.nextDouble() / 20, world.rand.nextGaussian() / 20,
+						Block.getStateId(world.getBlockState(getPosition())));
+			setDead();
+		}
 	}
 
 	@Override
@@ -282,13 +285,21 @@ public class EntityRavine extends EntityOffensive {
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+		if (!world.isRemote && isDead)
+			Thread.dumpStack();
+	}
+
+	@Override
 	public boolean onCollideWithSolid() {
 		// Destroy if in a block
 		IBlockState inBlock = world.getBlockState(getPosition());
 		if (inBlock.isFullBlock()) {
 			inBlock = world.getBlockState(getPosition().up());
-			if (inBlock.getBlock() == Blocks.AIR || !inBlock.isFullBlock() && inBlock.getBlockHardness(world, getPosition()) == 0) {
-				setPosition(position().plusY(2));
+			if ((inBlock.getBlock() == Blocks.AIR || !inBlock.isFullBlock() && inBlock.getBlockHardness(world, getPosition()) == 0) &&
+			STATS_CONFIG.bendableBlocks.contains(world.getBlockState(getPosition()).getBlock())) {
+				setPosition(position().plusY(1));
 				return false;
 			}
 			else return true;

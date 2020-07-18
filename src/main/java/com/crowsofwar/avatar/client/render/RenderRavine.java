@@ -50,10 +50,10 @@ public class RenderRavine extends Render<EntityRavine> {
 		World world = entity.world;
 		IBlockState blockState = world.getBlockState(entity.getPosition().down());
 		if (blockState.getBlock() != Blocks.AIR)
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < 2; i++)
 				world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, entity.posX + world.rand.nextGaussian() * 0.5,
-						entity.posY + world.rand.nextDouble(), entity.posZ + world.rand.nextGaussian() * 0.5,
-						random.nextGaussian() * 0.4, random.nextDouble() * 0.4, random.nextGaussian() * 0.4,
+						entity.posY + world.rand.nextDouble() * 0.5, entity.posZ + world.rand.nextGaussian() * 0.5,
+						random.nextGaussian() * 0.4, random.nextDouble() * 0.2, random.nextGaussian() * 0.4,
 						Block.getStateId(blockState));
 	}
 
