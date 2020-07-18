@@ -77,6 +77,7 @@ public class FlameStrikeHandler extends TickHandler {
             particleSize = 1F;
         }
 
+        particleSize *= ctx.getBender().getDamageMult(Firebending.ID) * abilityData.getXpModifier();
         //particleSize = (float) (particleSize * (0.8 + chargeLevel / 5F));
         charge |= usage - StatCtrlFlameStrike.getTimesUsed(entity.getPersistentID()) == 1;
         if ((data.hasStatusControl(FLAME_STRIKE_MAIN) || data.hasStatusControl(FLAME_STRIKE_OFF))) {
