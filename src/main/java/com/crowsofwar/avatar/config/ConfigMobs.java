@@ -285,11 +285,11 @@ public class ConfigMobs {
     /**
      * Get the default scroll drop chance for that entity in percentage (0-100)
      */
-    public double getScrollDropChance(Entity entity) {
+    public double getScrollDropChance(Entity entity, int index) {
         String entityName = EntityList.getEntityString(entity);
         if (entityName != null) {
             String key = entityName.toLowerCase();
-            return scrollDropChance.get(key) != null ? new ArrayList<>(scrollDropChance.get(key)).get(0) : 0;
+            return scrollDropChance.containsKey(key) ? new ArrayList<>(scrollDropChance.get(key)).get(index) : 0;
         }
         return 0;
     }
