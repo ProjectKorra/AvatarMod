@@ -58,10 +58,18 @@ import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_STRIKE
  */
 public class AbilityFlameStrike extends Ability {
 
+    public static final String STRIKES = "numberOfStrikes";
 
     public AbilityFlameStrike() {
         super(Firebending.ID, "flame_strike");
         requireRaytrace(-1, false);
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        addProperties(BURNOUT, FIRE_R, FIRE_G,  FIRE_B, FADE_R, FADE_G, FADE_B, STRIKES);
+        addBooleanProperties(SETS_FIRES, SMELTS);
     }
 
     @Override

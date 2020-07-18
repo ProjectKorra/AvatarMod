@@ -78,12 +78,23 @@ public abstract class Ability {
             CHI_HIT = "chiOnHit",
             DAMAGE = "damage",
             DURATION = "duration",
-            CHARGE_TIME = "chargeTime",
+            CHARGE_TIME = "chargeTime";
     //Airbending stuff
-    PUSH_REDSTONE = "pushRedstone",
+    public static final String
+            PUSH_REDSTONE = "pushRedstone",
             PUSH_IRONDOOR = "pushIronDoor",
             PUSH_STONE = "pushStoneButton",
             PUSH_IRON_TRAPDOOR = "pushIronTrapDoor";
+    //Firebending stuff
+    public static final String
+            FIRE_R = "fireR",
+            FIRE_G = "fireG",
+            FIRE_B = "fireB",
+            FADE_R = "fadeR",
+            FADE_G = "fadeG",
+            FADE_B = "fadeB",
+            SMELTS = "smelts",
+            SETS_FIRES = "setsFires";
 
     private final UUID type;
     private final String name;

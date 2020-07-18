@@ -19,6 +19,7 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import static com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike.STRIKES;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_MAIN;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_OFF;
@@ -35,8 +36,9 @@ public class FlameStrikeHandler extends TickHandler {
         BendingData data = ctx.getData();
         World world = ctx.getWorld();
         AbilityData abilityData = AbilityData.get(entity, "flame_strike");
+        AbilityFlameStrike strike = (AbilityFlameStrike) Abilities.get(new AbilityFlameStrike().getName());
 
-        int usage = STATS_CONFIG.flameStrikeSettings.strikeNumber;
+        int usage = strike.getProperty(STRIKES, abilityData).intValue();
         int particleCount = 1;
         int level = abilityData.getLevel();
         boolean charge = false;
@@ -70,7 +72,6 @@ public class FlameStrikeHandler extends TickHandler {
         //particleSize = (float) (particleSize * (0.8 + chargeLevel / 5F));
         charge |= usage - StatCtrlFlameStrike.getTimesUsed(entity.getPersistentID()) == 1;
         if ((data.hasStatusControl(FLAME_STRIKE_MAIN) || data.hasStatusControl(FLAME_STRIKE_OFF))) {
-            AbilityFlameStrike strike = (AbilityFlameStrike) Abilities.get(new AbilityFlameStrike().getName());
 
             Vec3d height, rightSide;
             if (entity instanceof EntityPlayer) {

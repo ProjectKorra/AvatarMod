@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AbilityProperties {
 
@@ -126,6 +127,7 @@ public class AbilityProperties {
                         AvatarLog.warn("Ability " + ability.getName() + " has " + redundantKeys +
                                 " redundant ability property key(s) defined in its JSON file. Extra values will have no effect! (Av2 devs:" +
                                 " make sure you have called addProperties(...) during ability construction)");
+                        AvatarLog.info("Ability " + ability.getName() + " has redundant key " + key);
                         break;
                     }
                 }
@@ -140,6 +142,11 @@ public class AbilityProperties {
                         } catch (JsonSyntaxException e) {
                             if (!baseValues.containsKey(baseValueName))
                                 AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Either someone's been lazy and left out a value, or your properties file is screwed.");
+                            else {
+                                //Adds placeholder values to the list for each variable, making sure to prevent some weird reading issues.
+                                List<Number> vals = new ArrayList<>(baseValues.get(baseValueName));
+                                baseValues.put(baseValueName, vals.get(vals.size() - 1));
+                            }
                         }
                 }
             }
@@ -150,6 +157,10 @@ public class AbilityProperties {
                     } catch (JsonSyntaxException e) {
                         if (!baseBooleans.containsKey(baseBooleanName))
                             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Either someone's been lazy and left out a value, or your properties file is screwed.");
+                        else {
+                            List<Boolean> vals = new ArrayList<>(baseBooleans.get(baseBooleanName));
+                            baseBooleans.put(baseBooleanName, vals.get(vals.size() - 1));
+                        }
                     }
                 }
             }

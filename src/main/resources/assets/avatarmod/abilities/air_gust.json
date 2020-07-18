@@ -84,7 +84,7 @@
       "knockback": 2.25,
       "chiOnHit": 0.5,
       "slowProjectiles": true,
-      "piercesEnemies": true
+      "destroyProjectiles": false
     }
   }
 }

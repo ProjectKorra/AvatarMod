@@ -100,8 +100,8 @@ public interface IOffensiveEntity {
                         ((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, getDamageSource(hit, attacker.getOwner()),
                                 explosionDamage ? getAoeDamage() : getDamage());
                         BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
-                        if (multiHit())
-                            ((EntityLivingBase) hit).hurtResistantTime = 1;
+                     //   if (multiHit())
+                      //      ((EntityLivingBase) hit).hurtResistantTime = 10;
                         data.addXp(getXpPerHit());
 
                     } else if (ds) {
@@ -111,8 +111,8 @@ public interface IOffensiveEntity {
                         if (setVelocity())
                             AvatarUtils.setVelocity(hit, vel);
                         else hit.addVelocity(vel.x, vel.y, vel.z);
-                        if (multiHit() && hit instanceof EntityLivingBase)
-                            ((EntityLivingBase) hit).hurtResistantTime = 1;
+                     //   if (multiHit() && hit instanceof EntityLivingBase)
+                     //       ((EntityLivingBase) hit).hurtResistantTime = 10;
                         AvatarUtils.afterVelocityAdded(hit);
                     }
                 }
@@ -132,7 +132,7 @@ public interface IOffensiveEntity {
                     else hit.addVelocity(vel.x, vel.y, vel.z);
                 }
                 if (multiHit() && hit instanceof EntityLivingBase)
-                    ((EntityLivingBase) hit).hurtResistantTime = 1;
+                    ((EntityLivingBase) hit).hurtResistantTime = 15;
                 AvatarUtils.afterVelocityAdded(hit);
             }
         }
