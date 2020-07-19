@@ -78,7 +78,11 @@ public abstract class Ability {
             CHI_HIT = "chiOnHit",
             DAMAGE = "damage",
             DURATION = "duration",
-            CHARGE_TIME = "chargeTime";
+            CHARGE_TIME = "chargeTime",
+            RADIUS = "radius",
+            EFFECT_RADIUS = "effect_radius",
+            AIM_ASSIST = "aim_assist",
+            RANGE = "range";
     //Airbending stuff
     public static final String
             PUSH_REDSTONE = "pushRedstone",
@@ -95,6 +99,7 @@ public abstract class Ability {
             FADE_B = "fadeB",
             SMELTS = "smelts",
             SETS_FIRES = "setsFires";
+
 
     private final UUID type;
     private final String name;

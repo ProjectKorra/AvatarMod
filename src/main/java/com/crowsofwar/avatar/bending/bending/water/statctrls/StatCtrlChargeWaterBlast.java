@@ -8,8 +8,8 @@ public class StatCtrlChargeWaterBlast extends StatusControl {
 
     boolean setting;
 
-    public StatCtrlChargeWaterBlast(boolean setting, int texture) {
-        super(texture, setting ? AvatarControl.CONTROL_RIGHT_CLICK_DOWN : AvatarControl.CONTROL_RIGHT_CLICK_UP, CrosshairPosition.RIGHT_OF_CROSSHAIR);
+    public StatCtrlChargeWaterBlast(boolean setting) {
+        super(setting ? 24 : 25, setting ? AvatarControl.CONTROL_RIGHT_CLICK_DOWN : AvatarControl.CONTROL_RIGHT_CLICK_UP, CrosshairPosition.RIGHT_OF_CROSSHAIR);
         this.setting = setting;
 
     }

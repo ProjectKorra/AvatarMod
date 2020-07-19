@@ -48,7 +48,9 @@ public class StatusControlController {
 			THROW_CLOUDBURST = new StatCtrlThrowCloudBall(),
 			THROW_FIREBALL = new StatCtrlThrowFireball(),
 			THROW_LIGHTNINGSPEAR = new StatCtrlThrowLightningSpear(),
-			THROW_WATER = new StatCtrlThrowWater();
+			THROW_WATER = new StatCtrlThrowWater(),
+			CHARGE_WATER = new StatCtrlChargeWaterBlast(true),
+			RELEASE_WATER = new StatCtrlChargeWaterBlast(false);
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {
