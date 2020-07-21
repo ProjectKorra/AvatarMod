@@ -9,6 +9,7 @@ public class BlockUtils {
 
 	public static boolean canPlaceFireAt(World world, BlockPos pos) {
 		return Blocks.FIRE.canPlaceBlockAt(world, pos) && !(world.getBlockState(pos).getBlock() instanceof BlockLiquid)
-				&& world.getBlockState(pos).getBlock() == Blocks.AIR;
+				&& world.getBlockState(pos).getBlock() == Blocks.AIR && world.getBlockState(pos.down()).getBlock() != Blocks.WATER
+				&& world.getBlockState(pos.down()).getBlock() != Blocks.FLOWING_WATER && world.getBlockState(pos.down()).getBlock() != Blocks.AIR;
 	}
 }

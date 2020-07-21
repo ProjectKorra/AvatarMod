@@ -217,7 +217,9 @@ public class ConfigMobs {
     }
 
     public int getDomesticationValue(Item item) {
-        return (int) bisonFoodList.get(item).toArray()[0];
+        if (bisonFoodList.containsKey(item))
+         return (int) bisonFoodList.get(item).toArray()[0];
+        else return 0;
     }
 
     public List<Item> getTradeItems() {
