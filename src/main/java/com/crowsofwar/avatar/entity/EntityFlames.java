@@ -347,13 +347,6 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     }
 
     @Override
-    public void setDead() {
-        super.setDead();
-        if (isDead && !world.isRemote)
-            Thread.dumpStack();
-    }
-
-    @Override
     public void applyElementalContact(AvatarEntity entity) {
         entity.onFireContact();
     }
@@ -395,5 +388,10 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     @Override
     public boolean contains(Vec3d point) {
         return false;
+    }
+
+    @Override
+    public void resetPositionToBB() {
+
     }
 }
