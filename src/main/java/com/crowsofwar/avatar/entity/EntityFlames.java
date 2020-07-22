@@ -113,7 +113,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     public boolean onCollideWithSolid() {
         if (collided && setsFires)
             setFires();
-        return super.onCollideWithSolid();
+        return super.onCollideWithSolid() && !reflect;
     }
 
     @Override
@@ -127,12 +127,12 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
         if (velocity().sqrMagnitude() <= 1) Dissipate();
 
-        Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.5,
+        Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 1,
                 true);
         if (raytrace.hitSomething()) {
             EnumFacing sideHit = raytrace.getSide();
             if (reflect) {
-                setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.5));
+                setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.75));
 
                 // Try to light fires
                 if (sideHit != EnumFacing.DOWN && !world.isRemote) {
@@ -235,6 +235,13 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     public void spawnDissipateParticles(World world, Vec3d pos) {
 
     }
+
+    @Override
+    public void spawnPiercingParticles(World world, Vec3d pos) {
+
+    }
+
+
 
     @Override
     public boolean onAirContact() {

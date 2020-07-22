@@ -72,7 +72,7 @@ public class AbilityFireShot extends Ability {
         AbilityData abilityData = ctx.getAbilityData();
 
         float speed = getProperty(SPEED, ctx).floatValue() / 10;
-        float knockback = getProperty(KNOCKBACK, ctx).floatValue();
+        float knockback = getProperty(KNOCKBACK, ctx).floatValue() / 10;
         float size = getProperty(SIZE, ctx).floatValue();
         float damage = getProperty(DAMAGE, ctx).floatValue();
         float chi = getProperty(CHI_COST, ctx).floatValue();
@@ -95,7 +95,8 @@ public class AbilityFireShot extends Ability {
         if (bender.consumeChi(chi)) {
             if (!getBooleanProperty(SHOCKWAVE, ctx)) {
                 //Add RGB
-                Vector pos = Vector.getEyePos(entity).minusY(0.05).plus(Vector.getLookRectangular(entity).times(0.85));
+                Vector pos = Vector.getEyePos(entity).minusY(0.05);
+                pos = pos.plus(Vector.getLookRectangular(entity).times(0.5));
                 EntityFlames flames = new EntityFlames(world);
                 flames.setPosition(pos);
                 flames.setOwner(entity);
