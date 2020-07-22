@@ -60,6 +60,8 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
 	private boolean reflect;
 	private boolean lightTrailingFire;
+	private int[] rgb = new int[3];
+	private int[] fade = new int[3];
 
 	public EntityFlames(World worldIn) {
 		super(worldIn);
@@ -129,18 +131,30 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
 		if (world.isRemote) {
 			for (double i = 0; i < width; i += 0.05) {
+				int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(1, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
+						fade[0] * 2);
+				int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(1, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
+						fade[1] * 2);
+				int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(1, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
+						fade[2] * 2);
 				Random random = new Random();
 				AxisAlignedBB boundingBox = getEntityBoundingBox();
 				double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
 				double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
 				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(255, 10, 5)
-						.scale(getAvgSize() * 6).element(getElement()).ability(getAbility()).spawnEntity(getOwner()).spawn(world);
+						world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
+						.fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(getAvgSize() * 6).element(getElement())
+						.ability(getAbility()).spawnEntity(getOwner()).spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-						world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-						20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
-						.scale(getAvgSize() * 6).element(getElement()).ability(getAbility()).spawnEntity(getOwner()).spawn(world);
+						world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
+						.fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(getAvgSize() * 6).element(getElement())
+						.ability(getAbility()).spawnEntity(getOwner()).spawn(world);
+				if (i % 0.15 == 0)
+					ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+							world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(getAvgSize() * 2)
+							.element(getElement()).ability(getAbility()).spawnEntity(getOwner()).spawn(world);
+
 			}
 		}
 
@@ -232,6 +246,22 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 			}
 			return true;
 		}
+	}
+
+	public void setFires(boolean fires) {
+		this.setsFires = fires;
+	}
+
+	public void setRGB(int r, int g, int b) {
+		this.rgb[0] = r;
+		this.rgb[1] = g;
+		this.rgb[2] = b;
+	}
+
+	public void setFade(int fadeR, int fadeG, int fadeB) {
+		this.fade[0] = fadeR;
+		this.fade[1] = fadeG;
+		this.fade[2] = fadeB;
 	}
 
 	public void setReflect(boolean reflect) {

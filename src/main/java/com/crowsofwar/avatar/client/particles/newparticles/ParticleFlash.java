@@ -54,6 +54,7 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
 
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
 
         if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
             Minecraft.getMinecraft().renderEngine.bindTexture(PARTICLE_TEXTURES);
@@ -111,7 +112,6 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
         int j = i >> 16 & 65535;
         int k = i & 65535;
 
-        // buffer = Tessellator.getInstance().getBuffer();
 
         if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);

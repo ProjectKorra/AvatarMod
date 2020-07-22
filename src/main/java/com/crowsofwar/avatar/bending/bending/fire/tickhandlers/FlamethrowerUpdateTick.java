@@ -154,7 +154,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 }
                 if (abilityData.isDynamicMasterLevel(AbilityTreePath.FIRST)) {
                     speedMult = 38;
-                    randomness = 0;
                     speedMult += 20;
                     randomness = 0;
                     fireTime = 5;

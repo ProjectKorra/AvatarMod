@@ -174,7 +174,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityWaterArc.class, RenderWaterArc::new);
 		registerEntityRenderingHandler(EntityAirGust.class, RenderAirGust::new);
 		registerEntityRenderingHandler(EntityRavine.class, RenderRavine::new);
-		registerEntityRenderingHandler(EntityFlames.class, rm -> new RenderFlames(rm, new ClientParticleSpawner()));
+		registerEntityRenderingHandler(EntityFlames.class, RenderNothing::new);
 		registerEntityRenderingHandler(EntityWave.class, RenderWave::new);
 		registerEntityRenderingHandler(EntityWaterBubble.class, RenderWaterBubble::new);
 		registerEntityRenderingHandler(EntityWallSegment.class, RenderWallSegment::new);
