@@ -156,7 +156,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
         if (world.isRemote) {
             int[] fade = getFade();
             int[] rgb = getRGB();
-            for (double i = 0; i < width; i += 0.05) {
+            for (double i = 0; i < width; i += 0.1 * getAvgSize() * 4) {
                 int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
                         fade[0] * 2);
                 int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
@@ -170,17 +170,14 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
                 double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
                         world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
-                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(getAvgSize() < 0.5 ? getAvgSize() * 2
-                        : getAvgSize() * 0.75F).element(getElement())
+                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(getAvgSize() * 1.75F).element(getElement())
                         .ability(getAbility()).spawnEntity(getOwner()).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
                         world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
-                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(getAvgSize() < 0.5 ? getAvgSize() * 2
-                        : getAvgSize() * 0.75F).element(getElement())
+                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(getAvgSize() * 1.75F).element(getElement())
                         .ability(getAbility()).spawnEntity(getOwner()).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(AvatarEntityUtils.getMiddleOfEntity(this)).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                        world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(getAvgSize() < 0.5 ? getAvgSize() * 2
-                        : getAvgSize() * 0.5F)
+                        world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(getAvgSize())
                         .element(getElement()).ability(getAbility()).spawnEntity(getOwner()).spawn(world);
 
             }

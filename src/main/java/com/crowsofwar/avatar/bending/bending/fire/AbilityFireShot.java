@@ -83,9 +83,10 @@ public class AbilityFireShot extends Ability {
         int performance = getProperty(PERFORMANCE, ctx).intValue();
 
         double damageMult = bender.getDamageMult(Firebending.ID);
+        double powerrating = bender.calcPowerRating(Firebending.ID);
 
         damage *= abilityData.getXpModifier() * damageMult;
-        size *= abilityData.getXpModifier() * damageMult;
+        size *= (abilityData.getXpModifier() * (powerrating / 100) + 1);
         speed *= abilityData.getXpModifier() * damageMult;
         knockback *= abilityData.getXpModifier() * damageMult;
         fireTime *= Math.min(abilityData.getXpModifier() * damageMult, 0.25F);
@@ -94,9 +95,9 @@ public class AbilityFireShot extends Ability {
         if (bender.consumeChi(chi)) {
             if (!getBooleanProperty(SHOCKWAVE, ctx)) {
                 //Add RGB
-                Vector pos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(0.05));
+                Vector pos = Vector.getEyePos(entity).minusY(0.05).plus(Vector.getLookRectangular(entity).times(0.85));
                 EntityFlames flames = new EntityFlames(world);
-                flames.setPosition(Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(0.05)));
+                flames.setPosition(pos);
                 flames.setOwner(entity);
                 flames.setEntitySize(size);
                 flames.setReflect(getBooleanProperty(REFLECT, ctx));
