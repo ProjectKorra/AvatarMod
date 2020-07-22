@@ -688,6 +688,8 @@ public class AvatarUtils {
 
 
 	public static int getRandomNumberInRange(int min, int max) {
+		min = Math.max(min, 0);
+		max = Math.max(max, min);
 		Random r = new Random();
 		return r.nextInt((max - min) + 1) + min;
 	}

@@ -71,6 +71,8 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 		this.ignoreFrustumCheck = true;
 		this.lightTnt = true;
 		this.setsFires = true;
+		this.fade[0] = fade[1] = fade[2] = 0;
+		this.rgb[0] = rgb[1] = rgb[2] = 0;
 	}
 
 	@Override
@@ -131,11 +133,11 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
 		if (world.isRemote) {
 			for (double i = 0; i < width; i += 0.05) {
-				int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(1, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
+				int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
 						fade[0] * 2);
-				int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(1, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
+				int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
 						fade[1] * 2);
-				int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(1, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
+				int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
 						fade[2] * 2);
 				Random random = new Random();
 				AxisAlignedBB boundingBox = getEntityBoundingBox();

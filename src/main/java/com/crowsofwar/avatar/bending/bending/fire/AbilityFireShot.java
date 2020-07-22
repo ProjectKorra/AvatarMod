@@ -62,10 +62,6 @@ public class AbilityFireShot extends Ability {
         addBooleanProperties(SETS_FIRES, SMELTS, SHOCKWAVE, REFLECT, TRAILING_FIRE);
     }
 
-    @Override
-    public boolean isUtility() {
-        return true;
-    }
 
     @Override
     public void execute(AbilityContext ctx) {
@@ -97,7 +93,7 @@ public class AbilityFireShot extends Ability {
 
         if (bender.consumeChi(chi)) {
             if (!getBooleanProperty(SHOCKWAVE, ctx)) {
-            	//Add RGB
+                //Add RGB
                 Vector pos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(0.05));
                 EntityFlames flames = new EntityFlames(world);
                 flames.setPosition(Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(0.05)));
