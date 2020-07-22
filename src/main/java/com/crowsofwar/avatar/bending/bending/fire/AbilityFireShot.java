@@ -58,7 +58,7 @@ public class AbilityFireShot extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FIRE_B, EFFECT_RADIUS);
+        addProperties(FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FADE_B, EFFECT_RADIUS);
         addBooleanProperties(SETS_FIRES, SMELTS, SHOCKWAVE, REFLECT, TRAILING_FIRE);
     }
 
