@@ -43,6 +43,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
@@ -73,6 +74,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     private static final DataParameter<Integer> SYNC_FADE_B = EntityDataManager.createKey(EntityFlames.class,
             DataSerializers.VARINT);
 
+    //Need data managers for reflect and trailing fires
     private boolean reflect;
     private boolean lightTrailingFire;
 
@@ -111,7 +113,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
     @Override
     public boolean onCollideWithSolid() {
-        if (collided && setsFires)
+        if (collided && setsFires && world.rand.nextBoolean() && !world.isRemote)
             setFires();
         return super.onCollideWithSolid() && !reflect;
     }
@@ -125,33 +127,25 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
         motionZ *= 0.95;
 
 
-        if (velocity().sqrMagnitude() <= 1) Dissipate();
+        if (velocity().sqrMagnitude() <= 0.25) Dissipate();
 
-        Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 1,
-                true);
-        if (raytrace.hitSomething()) {
-            EnumFacing sideHit = raytrace.getSide();
-            if (reflect) {
-                setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.75));
-
-                // Try to light fires
-                if (sideHit != EnumFacing.DOWN && !world.isRemote) {
-
-                    BlockPos bouncingOff = getPosition().add(-sideHit.getXOffset(),
-                            -sideHit.getYOffset(),
-                            -sideHit.getZOffset());
-
-                    if (sideHit == EnumFacing.UP || world.getBlockState(bouncingOff).getBlock()
-                            .isFlammable(world, bouncingOff, sideHit)) {
-
-                        world.setBlockState(getPosition(), Blocks.FIRE.getDefaultState());
-
-                    }
-
-                }
-
+        //Looks for only blocks
+        RayTraceResult raytrace = Raytrace.rayTrace(world, getPositionVector(), getLookVec().add(getPositionVector()), getAvgSize() / 2,
+                false, true, false, Entity.class, entity -> false);
+        EnumFacing sideHit = EnumFacing.UP;
+        if (raytrace != null && raytrace.hitVec != null) {
+            sideHit = raytrace.sideHit;
+        } else if (collided) {
+            if (collidedHorizontally) {
+                raytrace = rayTrace(1, 0);
+                if (raytrace != null && raytrace.hitVec != null)
+                    sideHit = raytrace.sideHit;
             }
         }
+        if (reflect && sideHit != null) {
+            setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.975));
+        }
+
 
         if (world.isRemote) {
             int[] fade = getFade();
@@ -202,6 +196,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
         super.readEntityFromNBT(nbt);
         setFade(nbt.getIntArray("Fade"));
         setRGB(nbt.getIntArray("RGB"));
+        reflect = nbt.getBoolean("Reflect");
     }
 
     @Override
@@ -209,6 +204,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
         super.writeEntityToNBT(nbt);
         nbt.setIntArray("Fade", getFade());
         nbt.setIntArray("RGB", getRGB());
+        nbt.setBoolean("Reflect", reflect);
     }
 
     @Override
@@ -242,7 +238,6 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     }
 
 
-
     @Override
     public boolean onAirContact() {
         if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
@@ -261,7 +256,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
     @Override
     public boolean shouldDissipate() {
-        return true;
+        return !reflect || ticksExisted > getLifeTime();
     }
 
     @Override
@@ -352,6 +347,13 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     }
 
     @Override
+    public void setDead() {
+        super.setDead();
+        if (isDead && !world.isRemote)
+            Thread.dumpStack();
+    }
+
+    @Override
     public void applyElementalContact(AvatarEntity entity) {
         entity.onFireContact();
     }
@@ -361,15 +363,6 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
         return true;
     }
 
-    @Override
-    public int getNumberofParticles() {
-        return 15;
-    }
-
-    @Override
-    public double getParticleSpeed() {
-        return 0.04;
-    }
 
     @SideOnly(Side.CLIENT)
     @Override

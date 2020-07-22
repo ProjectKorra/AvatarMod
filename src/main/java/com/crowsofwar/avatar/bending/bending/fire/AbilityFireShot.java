@@ -100,6 +100,8 @@ public class AbilityFireShot extends Ability {
                 EntityFlames flames = new EntityFlames(world);
                 flames.setPosition(pos);
                 flames.setOwner(entity);
+                flames.rotationYaw = entity.rotationYaw;
+                flames.rotationPitch = entity.rotationPitch;
                 flames.setEntitySize(size);
                 flames.setReflect(getBooleanProperty(REFLECT, ctx));
                 flames.setAbility(this);
