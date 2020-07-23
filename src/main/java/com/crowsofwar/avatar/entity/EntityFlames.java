@@ -122,28 +122,30 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     public void onUpdate() {
         super.onUpdate();
 
-        motionX *= 0.95;
-        motionY *= 0.95;
-        motionZ *= 0.95;
+       // motionX *= 0.95;
+      //  motionY *= 0.95;
+       // motionZ *= 0.95;
 
 
         if (velocity().sqrMagnitude() <= 0.25) Dissipate();
 
         //Looks for only blocks
-        RayTraceResult raytrace = Raytrace.rayTrace(world, getPositionVector(), getLookVec().add(getPositionVector()), getAvgSize() / 2,
-                false, true, false, Entity.class, entity -> false);
-        EnumFacing sideHit = EnumFacing.UP;
-        if (raytrace != null && raytrace.hitVec != null) {
-            sideHit = raytrace.sideHit;
-        } else if (collided) {
-            if (collidedHorizontally) {
-                raytrace = rayTrace(1, 0);
-                if (raytrace != null && raytrace.hitVec != null)
-                    sideHit = raytrace.sideHit;
+        if (reflect) {
+            RayTraceResult raytrace = Raytrace.rayTrace(world, getPositionVector(), getLookVec().add(getPositionVector()), getAvgSize() / 2,
+                    false, true, false, Entity.class, entity -> false);
+            EnumFacing sideHit = EnumFacing.UP;
+            if (raytrace != null && raytrace.hitVec != null) {
+                sideHit = raytrace.sideHit;
+            } else if (collided) {
+                if (collidedHorizontally) {
+                    raytrace = rayTrace(1, 0);
+                    if (raytrace != null && raytrace.hitVec != null)
+                        sideHit = raytrace.sideHit;
+                }
             }
-        }
-        if (reflect && sideHit != null) {
-            setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.975));
+            if (sideHit != null) {
+                setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.975));
+            }
         }
 
 
@@ -190,6 +192,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
             }
         }
     }
+
 
     @Override
     protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -388,10 +391,5 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     @Override
     public boolean contains(Vec3d point) {
         return false;
-    }
-
-    @Override
-    public void resetPositionToBB() {
-
     }
 }

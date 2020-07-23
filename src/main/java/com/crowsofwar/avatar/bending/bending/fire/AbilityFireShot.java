@@ -71,7 +71,7 @@ public class AbilityFireShot extends Ability {
         EntityLivingBase entity = ctx.getBenderEntity();
         AbilityData abilityData = ctx.getAbilityData();
 
-        float speed = getProperty(SPEED, ctx).floatValue() / 10;
+        float speed = getProperty(SPEED, ctx).floatValue() * 2;
         float knockback = getProperty(KNOCKBACK, ctx).floatValue() / 10;
         float size = getProperty(SIZE, ctx).floatValue();
         float damage = getProperty(DAMAGE, ctx).floatValue();
@@ -94,20 +94,20 @@ public class AbilityFireShot extends Ability {
 
         if (bender.consumeChi(chi)) {
             if (!getBooleanProperty(SHOCKWAVE, ctx)) {
-                //Add RGB
-                Vector pos = Vector.getEyePos(entity).minusY(0.05);
-                pos = pos.plus(Vector.getLookRectangular(entity).times(0.5));
+                Vector pos = Vector.getEyePos(entity).minusY(0.5);
+              //  pos = pos.plus(Vector.getLookRectangular(entity).times(0.5));
                 EntityFlames flames = new EntityFlames(world);
                 flames.setPosition(pos);
                 flames.setOwner(entity);
                 flames.rotationYaw = entity.rotationYaw;
                 flames.rotationPitch = entity.rotationPitch;
                 flames.setEntitySize(size);
+                flames.setDynamicSpreadingCollision(true);
                 flames.setReflect(getBooleanProperty(REFLECT, ctx));
                 flames.setAbility(this);
                 flames.setTier(getCurrentTier(ctx));
                 flames.setXp(xp);
-                flames.setVelocity(entity.getLookVec().scale(speed));
+                flames.setVelocity(Vector.getLookRectangular(entity).times(speed));
                 flames.setLifeTime(lifeTime);
                 flames.setTrailingFire(getBooleanProperty(TRAILING_FIRE, ctx));
                 flames.setFireTime(fireTime);
@@ -119,17 +119,16 @@ public class AbilityFireShot extends Ability {
                 flames.setPush(knockback);
                 world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
                         world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
-                pos = pos.minus(Vector.getLookRectangular(entity).times(0.05));
+
                 if (!world.isRemote)
                     world.spawnEntity(flames);
                 if (world.isRemote) {
                     for (double angle = 0; angle < 360; angle += 8) {
                         Vector position = Vector.getOrthogonalVector(entity.getLookVec(), angle, 0.01f);
                         Vector velocity;
-                        //position = position.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
-                        position = position.plus(pos.minusY(0.05).plus(Vector.getLookRectangular(entity).times(0.85)));
-                        velocity = position.minus(pos.minusY(0.05).plus(Vector.getLookRectangular(entity).times(0.85))).normalize();
-                        velocity = velocity.times(speed / 15);
+                        position = position.plus(pos.minusY(0.05).plus(Vector.getLookRectangular(entity)));
+                        velocity = position.minus(pos.minusY(0.05).plus(Vector.getLookRectangular(entity))).normalize();
+                        velocity = velocity.times(speed / 300);
                         double spawnX = position.x();
                         double spawnY = position.y();
                         double spawnZ = position.z();

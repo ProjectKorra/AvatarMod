@@ -17,25 +17,25 @@
 package com.crowsofwar.avatar.util.data;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.network.AvatarChatMessages;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
+import com.crowsofwar.avatar.bending.bendingmultipliers.PrModifierHandler;
 import com.crowsofwar.avatar.config.ConfigClient;
 import com.crowsofwar.avatar.config.ConfigMobs;
 import com.crowsofwar.avatar.config.ConfigSkills;
 import com.crowsofwar.avatar.config.ConfigStats;
+import com.crowsofwar.avatar.entity.EntityLightningArc;
+import com.crowsofwar.avatar.entity.mob.EntityBender;
+import com.crowsofwar.avatar.network.AvatarChatMessages;
+import com.crowsofwar.avatar.network.packets.PacketCPowerRating;
+import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.avatar.util.data.ctx.PlayerBender;
-import com.crowsofwar.avatar.entity.EntityLightningArc;
-import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.event.AbilityUseEvent;
-import com.crowsofwar.avatar.network.packets.PacketCPowerRating;
-import com.crowsofwar.avatar.bending.bendingmultipliers.PrModifierHandler;
-import com.crowsofwar.avatar.util.Raytrace;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -213,35 +213,43 @@ public abstract class Bender {
         BendingData data = getData();
         EntityLivingBase entity = getEntity();
         AbilityData aD = AbilityData.get(getEntity(), ability.getName());
-        int level = aD.getLevel();
-        double powerRating = calcPowerRating(ability.getBendingId());
-        AbilityData.AbilityTreePath path = aD.getPath();
-        AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
-                entity, powerRating, switchPath);
 
-        if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
-            if (data.getMiscData().getCanUseAbilities()) {
-                if (consumeChi(ability.getChiCost(abilityCtx)) && aD.getAbilityCooldown() == 0 || entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-                    ability.execute(abilityCtx);
-                    if (entity instanceof EntityPlayer)
-                        ((EntityPlayer) entity).addExhaustion(ability.getExhaustion(abilityCtx));
-                    aD.setAbilityCooldown(ability.getCooldown(abilityCtx));
-                    //We set the burnout last as it affects all of the other inhibiting stats
-                    aD.setBurnOut(ability.getBurnOut(abilityCtx));
+        if (aD != null) {
+            int level = aD.getLevel();
+            double powerRating = calcPowerRating(ability.getBendingId());
+            AbilityData.AbilityTreePath path = aD.getPath();
+            AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
+                    entity, powerRating, switchPath);
 
+            if (ability.properties != null) {
+                if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
+                    if (data.getMiscData().getCanUseAbilities()) {
+                        if (consumeChi(ability.getChiCost(abilityCtx)) && aD.getAbilityCooldown() == 0 || entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+                            ability.execute(abilityCtx);
+                            if (entity instanceof EntityPlayer)
+                                ((EntityPlayer) entity).addExhaustion(ability.getExhaustion(abilityCtx));
+                            aD.setAbilityCooldown(ability.getCooldown(abilityCtx));
+                            //We set the burnout last as it affects all of the other inhibiting stats
+                            aD.setBurnOut(ability.getBurnOut(abilityCtx));
+
+                        } else {
+                            Objects.requireNonNull(Bender.get(getEntity())).sendMessage("avatar.abilityCooldown");
+                        }
+
+                    } else {
+                        if (getWorld().isRemote)
+                            AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(getEntity());
+
+                        //	QueuedAbilityExecutionHandler.queueAbilityExecution(entity, data, ability,
+                        //			raytrace, powerRating, switchPath);
+                    }
                 } else {
-                    Objects.requireNonNull(Bender.get(getEntity())).sendMessage("avatar.abilityCooldown");
+                    sendMessage("avatar.abilityLocked");
                 }
-
             } else {
-                if (getWorld().isRemote)
-                    AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(getEntity());
-
-                //	QueuedAbilityExecutionHandler.queueAbilityExecution(entity, data, ability,
-                //			raytrace, powerRating, switchPath);
+                if (entity instanceof EntityPlayer)
+                    Ability.syncProperties((EntityPlayer) entity);
             }
-        } else {
-            sendMessage("avatar.abilityLocked");
         }
 
         //	}
