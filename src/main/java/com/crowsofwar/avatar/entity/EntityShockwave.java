@@ -120,7 +120,7 @@ public class EntityShockwave extends EntityOffensive {
 	}
 
 	public double getParticleSpeed() {
-		return dataManager.get(SYNC_PARTICLE_SPEED);
+		return (double) dataManager.get(SYNC_PARTICLE_SPEED);
 	}
 
 	public void setParticleSpeed(float speed) {
@@ -128,7 +128,7 @@ public class EntityShockwave extends EntityOffensive {
 	}
 
 	public double getRange() {
-		return dataManager.get(SYNC_RANGE);
+		return (double) dataManager.get(SYNC_RANGE);
 	}
 
 	public void setRange(float range) {
@@ -136,7 +136,7 @@ public class EntityShockwave extends EntityOffensive {
 	}
 
 	public double getSpeed() {
-		return dataManager.get(SYNC_SPEED);
+		return (double) dataManager.get(SYNC_SPEED);
 	}
 
 	public void setSpeed(float speed) {

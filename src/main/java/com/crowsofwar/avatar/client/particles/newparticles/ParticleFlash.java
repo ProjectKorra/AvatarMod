@@ -1,18 +1,23 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
+import com.crowsofwar.avatar.config.ConfigClient.ParticleRenderSettings;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.Entity ;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Loader;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
 
@@ -36,7 +41,6 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
         this.particleMaxAge = 6;
     }
 
-
     @Override
     public boolean shouldDisableDepth() {
         return true;
@@ -48,28 +52,35 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
             return 3;
         return 0;
     }
+    
+    @Override
+    public void setGlowing(boolean glow) {
+    	super.setGlowing(glow || element instanceof Firebending);
+    }
 
     @Override
     public void drawParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
 
-        GlStateManager.pushMatrix();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-
-        if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
+        /*if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles) {
+            if(GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM) != 0)
+                GL20.glUseProgram(0);
             Minecraft.getMinecraft().renderEngine.bindTexture(PARTICLE_TEXTURES);
+        }
 
-        if (element instanceof Firebending || glow) {
+        if (glow) {
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+        } else {
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         }
 
         if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        }
+        }*/
 
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+        //Drillgon200: What's the point of setting lightmap here when you just set it as a vertex attribute again?
+        //OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
-        float f4;
+        float f4 = 1;
         if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
             setRBGColorF(particleRed * 0.875f, particleGreen * 0.875F, particleBlue * 0.875F);
             setAlphaF(particleAlpha * 0.9F);
@@ -78,12 +89,11 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
             f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
         }
 
-        if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
+        /*if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
             if (element instanceof Airbending) {
-                particleAlpha *= 1.1F;
-                particleScale *= 0.75F;
+                GlStateManager.disableAlpha();
             }
-
+        */
         if (CLIENT_CONFIG.shaderSettings.bslActive || CLIENT_CONFIG.shaderSettings.sildursActive) {
             if (element instanceof Airbending)
                 setRBGColorF(0.95F, 0.95F, 0.95F);
@@ -112,9 +122,11 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
         int j = i >> 16 & 65535;
         int k = i & 65535;
 
+        // buffer = Tessellator.getInstance().getBuffer();
 
-        if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
+
+        //if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
+       //     buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
         buffer.pos(f5 - rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 - rotationYZ * f4 - rotationXZ * f4).tex(0.5D, 0.375D)
                 .color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
         buffer.pos(f5 - rotationX * f4 + rotationXY * f4, f6 + rotationZ * f4, f7 - rotationYZ * f4 + rotationXZ * f4).tex(0.5D, 0.125D)
@@ -123,10 +135,8 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
                 .color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
         buffer.pos(f5 + rotationX * f4 - rotationXY * f4, f6 - rotationZ * f4, f7 + rotationYZ * f4 - rotationXZ * f4).tex(0.25D, 0.375D)
                 .color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-        if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
-            Tessellator.getInstance().draw();
-        GlStateManager.popMatrix();
-
+       // if (CLIENT_CONFIG.particleSettings.layeredOverWaterFlashParticles)
+        //    Tessellator.getInstance().draw();
     }
 
 

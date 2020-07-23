@@ -35,6 +35,11 @@ public class ParticleFire extends ParticleAvatar {
 			event.getMap().registerSprite(array);
 		}
 	}
+	
+	@Override
+	public boolean shouldDisableDepth() {
+		return true;
+	}
 
 	@Override
 	public void onUpdate() {

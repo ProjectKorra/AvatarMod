@@ -17,13 +17,18 @@
 
 package com.crowsofwar.avatar.util;
 
+import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.client.particles.newparticles.FlashParticleBatchRenderer;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
+import com.crowsofwar.avatar.client.particles.newparticles.ParticleFlash;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.gorecore.util.Vector;
+import com.google.common.collect.Queues;
+
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -50,7 +55,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -62,6 +72,7 @@ import static com.crowsofwar.avatar.AvatarLog.WarningType.INVALID_SAVE;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
+@Mod.EventBusSubscriber(value = Side.CLIENT, modid = AvatarInfo.MOD_ID)
 public class AvatarUtils {
 
 	private static final DataParameter<Boolean> POWERED;
@@ -101,12 +112,42 @@ public class AvatarUtils {
 		return copy;
 	}
 
+	private static Queue<ParticleAvatar> aliveParticlesCache = null;
 
-	public static Queue<Particle> getAliveParticles() {
-		Queue<Particle> particleQueue = ReflectionHelper.getPrivateValue(ParticleManager.class, Minecraft.getMinecraft().effectRenderer, "queue",
-				"field_187241_h");
-		particleQueue = particleQueue.stream().filter(particle -> particle instanceof ParticleAvatar).collect(Collectors.toCollection(ArrayDeque::new));
-		return particleQueue;
+	/**
+	 * Don't modify the return value, it's cached.
+	 * @return The collection of all alive avatar particles
+	 */
+	@SuppressWarnings("deprecation")
+	public static Queue<ParticleAvatar> getAliveParticles() {
+		if(aliveParticlesCache != null)
+			return aliveParticlesCache;
+		ArrayDeque<Particle>[][] vanillaParticles = ReflectionHelper.getPrivateValue(ParticleManager.class, Minecraft.getMinecraft().effectRenderer, "fxLayers", "field_78876_b");
+		ArrayDeque<ParticleFlash>[] flashParticles = FlashParticleBatchRenderer.particles;
+		
+		Queue<ParticleAvatar> all_particles = new LinkedList<ParticleAvatar>();
+		for(ArrayDeque<Particle>[] layer : vanillaParticles){
+			for(ArrayDeque<Particle> depthLayer : layer){
+				for(Particle p : depthLayer){
+					if(p instanceof ParticleAvatar){
+						all_particles.add((ParticleAvatar) p);
+					}
+				}
+			}
+		}
+		for(ArrayDeque<ParticleFlash> layer : flashParticles){
+			all_particles.addAll(layer);
+		}
+		
+		aliveParticlesCache = all_particles;
+		return aliveParticlesCache;
+	}
+	
+	@SubscribeEvent
+	public static void clientTick(ClientTickEvent event){
+		if(event.phase == Phase.END){
+			aliveParticlesCache = null;
+		}
 	}
 
 	public static ParticleAvatar getParticleFromUUID(UUID id) {
@@ -688,8 +729,6 @@ public class AvatarUtils {
 
 
 	public static int getRandomNumberInRange(int min, int max) {
-		min = Math.max(min, 0);
-		max = Math.max(max, min);
 		Random r = new Random();
 		return r.nextInt((max - min) + 1) + min;
 	}

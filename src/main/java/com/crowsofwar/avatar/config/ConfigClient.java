@@ -227,7 +227,11 @@ public class ConfigClient {
 		public final boolean voxelFlashParticles = false;
 
 		@Load
-		public final boolean layeredOverWaterFlashParticles = false;
+		public final boolean layeredOverWaterFlashParticles = true;
+		
+		@Load
+		public final boolean releaseShaderOnFlashParticleRender = true;
+		
 	}
 
 }

@@ -235,8 +235,6 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
 
 	public static class PlayerControlled extends FloatingBlockBehavior {
 
-		int ticks = 0;
-
 		public PlayerControlled() {
 		}
 
@@ -250,13 +248,18 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
 			Vector eye = Vector.getEyePos(owner);
 			Vector target = forward.times(2.5).plus(eye);
 			Vec3d motion = target.minus(Vector.getEntityPos(entity)).times(0.5).toMinecraft();
-			int angle = ticks % 360;
+			int angle = (int) entity.world.getWorldTime();
 			List<EntityFloatingBlock> blocks = entity.world.getEntitiesWithinAABB(EntityFloatingBlock.class,
 					owner.getEntityBoundingBox().grow(3, 3, 3));
+			//Drillgon200: Sort the list by id so the blocks will always have the same orbit order.
+			blocks.sort((b1, b2) -> b1.getID()>b2.getID()?1:-1);
+			int index = blocks.indexOf(entity);
+			if(index < 0)
+				return this;
 			//S P I N
 			if (!blocks.isEmpty() && blocks.size() > 1) {
 				angle *= 5;
-				angle += 360 / (blocks.indexOf(entity) + 1);
+				angle += ((360 / blocks.size())*index);
 				double radians = Math.toRadians(angle);
 				double x = 2.5 * Math.cos(radians);
 				double z = 2.5 * Math.sin(radians);
@@ -266,7 +269,6 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
 			}
 
 			entity.setVelocity(motion);
-			ticks++;
 			return this;
 
 		}
