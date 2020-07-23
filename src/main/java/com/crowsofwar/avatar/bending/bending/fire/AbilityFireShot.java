@@ -94,8 +94,8 @@ public class AbilityFireShot extends Ability {
 
         if (bender.consumeChi(chi)) {
             if (!getBooleanProperty(SHOCKWAVE, ctx)) {
+                //TODO: Fix trailing fire and piercing
                 Vector pos = Vector.getEyePos(entity).minusY(0.5);
-              //  pos = pos.plus(Vector.getLookRectangular(entity).times(0.5));
                 EntityFlames flames = new EntityFlames(world);
                 flames.setPosition(pos);
                 flames.setOwner(entity);

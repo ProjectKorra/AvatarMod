@@ -46,14 +46,8 @@ public class AbilityImmolate extends Ability {
 		World world = ctx.getWorld();
 		AbilityData abilityData = data.getAbilityData(this);
 
-		float chi = STATS_CONFIG.chiBuff;
-		if (abilityData.getLevel() == 1) {
-			chi = STATS_CONFIG.chiBuffLvl2;
-		} else if (abilityData.getLevel() == 2) {
-			chi = STATS_CONFIG.chiBuffLvl3;
-		} else if (abilityData.getLevel() == 3) {
-			chi = STATS_CONFIG.chiBuffLvl4;
-		}
+		float chi = getProperty(CHI_COST, ctx).floatValue();
+		//TODO: Literally all of this
 
 		if (bender.consumeChi(chi)) {
 

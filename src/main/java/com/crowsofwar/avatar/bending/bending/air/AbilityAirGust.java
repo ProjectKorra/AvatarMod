@@ -86,6 +86,7 @@ public class AbilityAirGust extends Ability {
         lifetime += 5 * ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier();
         push *= (1 +  0.5 * ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier());
 
+        //TODO: Fix piercing
         EntityAirGust gust = new EntityAirGust(world);
         gust.setVelocity(look.times(speed));
         gust.setPosition(pos.minusY(0.5));
