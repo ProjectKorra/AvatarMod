@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.api.helper.GliderHelper;
-import com.crowsofwar.avatar.common.entity.EntityAscendedFlyingLemur;
-import com.crowsofwar.avatar.common.entity.EntityFlyingLemur;
+import com.crowsofwar.avatar.common.entity.mob.EntityAscendedFlyingLemur;
+import com.crowsofwar.avatar.common.entity.mob.EntityFlyingLemur;
 import net.ilexiconn.llibrary.client.model.ModelAnimator;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelBase;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;

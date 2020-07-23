@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.entity;
+package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.api.capabilities.IPlayerShoulders;
 import com.crowsofwar.avatar.client.sounds.SoundsHandler;
@@ -40,7 +40,9 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * @author Korog3
+ * EntityWolf EntityParrot EntityOcelot EntityCreeper EntityZombie EntityHorse EntityTameable
+ *
+ * @author Korog3a
  */
 
 public class EntityFlyingLemur extends EntityTameable implements EntityFlying

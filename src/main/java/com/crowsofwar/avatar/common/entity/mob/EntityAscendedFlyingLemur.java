@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.common.entity;
+package com.crowsofwar.avatar.common.entity.mob;
 
 import com.crowsofwar.avatar.api.capabilities.IPlayerShoulders;
 import com.crowsofwar.avatar.client.sounds.SoundsHandler;
@@ -10,9 +10,6 @@ import net.minecraft.block.BlockLog;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityFlying;
 import net.minecraft.entity.passive.EntityTameable;
@@ -21,7 +18,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -42,6 +38,8 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
+ * EntityWolf EntityParrot EntityOcelot EntityCreeper EntityZombie EntityHorse EntityTameable
+ *
  * @author Korog3a
  */
 

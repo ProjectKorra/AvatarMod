@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.entity.EntityAscendedFlyingLemur;
+import com.crowsofwar.avatar.common.entity.mob.EntityAscendedFlyingLemur;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
