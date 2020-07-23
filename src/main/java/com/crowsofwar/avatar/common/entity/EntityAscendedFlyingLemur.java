@@ -10,6 +10,9 @@ import net.minecraft.block.BlockLog;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntityGhast;
+import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityFlying;
 import net.minecraft.entity.passive.EntityTameable;
@@ -44,23 +47,23 @@ import java.util.UUID;
 
 public class EntityAscendedFlyingLemur extends EntityTameable implements EntityFlying
 {
-private static final DataParameter<Integer> VARIANT = EntityDataManager.<Integer>createKey(EntityFlyingLemur.class, DataSerializers.VARINT);
-private static final Set<Item> TAME_ITEMS = Sets.newHashSet(Items.CARROT, Items.APPLE, Items.GOLDEN_APPLE);
-protected static final DataParameter<Byte> RIGHTSHOULDER = EntityDataManager.<Byte>createKey(EntityAscendedFlyingLemur.class, DataSerializers.BYTE);
-protected static final DataParameter<Byte> LEFTSHOULDER = EntityDataManager.<Byte>createKey(EntityAscendedFlyingLemur.class, DataSerializers.BYTE);
+    private static final DataParameter<Integer> VARIANT = EntityDataManager.<Integer>createKey(EntityAscendedFlyingLemur.class, DataSerializers.VARINT);
+    private static final Set<Item> TAME_ITEMS = Sets.newHashSet(Items.CARROT, Items.APPLE, Items.GOLDEN_APPLE);
+    protected static final DataParameter<Byte> RIGHTSHOULDER = EntityDataManager.<Byte>createKey(EntityAscendedFlyingLemur.class, DataSerializers.BYTE);
+    protected static final DataParameter<Byte> LEFTSHOULDER = EntityDataManager.<Byte>createKey(EntityAscendedFlyingLemur.class, DataSerializers.BYTE);
 
-public double speed;
-private boolean isActualyFlying;
-private boolean previusRidingPos;
-private boolean partyLemur;//TODO
-private BlockPos jukeboxPosition;
-public EntityAscendedFlyingLemur(World worldIn) 
-{
-	super(worldIn);
-	this.setSize(0.3F, 1F);
-    this.moveHelper = new EntityFlyHelper(this);
-	experienceValue = 200;
-}
+    public double speed;
+    private boolean previusRidingPos;
+    private boolean partyLemur;
+    private BlockPos jukeboxPosition;
+
+    public EntityAscendedFlyingLemur(World worldIn)
+    {
+        super(worldIn);
+        this.setSize(0.3F, 1F);
+        this.moveHelper = new EntityFlyHelper(this);
+        experienceValue = 200;
+    }
 
 
 
@@ -72,177 +75,167 @@ public EntityAscendedFlyingLemur(World worldIn)
     }
 
 
-@Override
-protected void initEntityAI() 
-{
-	this.aiSit = new EntityAISit(this);
-	this.tasks.addTask(1, new EntityAISwimming(this));
-	this.tasks.addTask(2, this.aiSit); 
-    this.tasks.addTask(4, new EntityAIWanderAvoidWater(this, 1.0D));
-    this.tasks.addTask(4, new EntityAIWanderAvoidWaterFlying(this, 1.25D));
-    this.tasks.addTask(2, new EntityAIFollowOwner(this, 1.0F, 10.0F, 2.0F));
-    this.tasks.addTask(2, new EntityAIFollowOwnerFlying(this, 1F, 10F, 2F));  
-    this.tasks.addTask(4, new EntityAIWatchClosest(this, EntityPlayer.class, 16.0F));
-    this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.5D, true));
-	this.tasks.addTask(6, new EntityAIMate(this, 1.5D));
-    this.targetTasks.addTask(1, new EntityAIOwnerHurtByTarget(this));
-    this.targetTasks.addTask(2, new EntityAIOwnerHurtTarget(this));
-    this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true, new Class[0]));
-             
-}	   
-   @Override
-   public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand) 
-    {	
-    	
-    	if(player.isSneaking() &&  this.getOwner() != null && this.getOwner() == player && !this.getLeashed()) 
-    	{
-    		IPlayerShoulders playerShoulders = player.getCapability(CapabilityPlayerShoulders.TEST_HANDLER, null);
-    		this.setSitting(false);
-    		for(Entity lemurs : playerShoulders.getRiders()) {
-    			System.out.println("Lemur :" + lemurs.getName());
-    		}
-    		System.out.println("END OF LIST");
-    		if(playerShoulders.getRiders().size() == 0) 
-			{
-    			if(!previusRidingPos) 
-    			{
-                    this.setRightShoulder(true);
-				 	this.setNoAI(true);
-				 	playerShoulders.setRightShoulder(true);
-				 	previusRidingPos = true;
-					System.out.println("Right");
-    			}
-    			else 
-				{
-    				this.setLeftShoulder(true);
-				 	this.setNoAI(true);
-					playerShoulders.setLeftShoulder(true);
-					previusRidingPos = false;
-					System.out.println("Left");
-				}
-    	
-    		 	playerShoulders.addRiders(this);
-			}
-			else {
-				if(playerShoulders.getRiders().size() < 2) 
-    			{
-				if(playerShoulders.getRiders().size() == 1 && !playerShoulders.getRiders().contains(this)) 
-    			{
-    				if(playerShoulders.getRiders().get(0) instanceof EntityAscendedFlyingLemur) {
-    					EntityAscendedFlyingLemur lemur = (EntityAscendedFlyingLemur) playerShoulders.getRiders().get(0);
-    					if(lemur.getRightShoulder()) {
-    						this.setLeftShoulder(true);
-    					 	this.setNoAI(true);
-    						playerShoulders.setLeftShoulder(true);
-    						previusRidingPos = false;
-    						System.out.println("***Left");
-    					 	playerShoulders.addRiders(this);
-    					}
-    					else if (lemur.getLeftShoulder()) {    
-	    					this.setRightShoulder(true);
-						 	this.setNoAI(true);
-						 	playerShoulders.setRightShoulder(true);
-						 	previusRidingPos = true;
-						 	System.out.println("***Right");
-						 	playerShoulders.addRiders(this);
-    					}
-    				}
-    				else if (playerShoulders.getRiders().get(0) instanceof EntityFlyingLemur) {
-    					EntityFlyingLemur lemur = (EntityFlyingLemur) playerShoulders.getRiders().get(0);
-    					if(lemur.getRightShoulder()) {
-    						this.setLeftShoulder(true);
-    					 	this.setNoAI(true);
-    						playerShoulders.setLeftShoulder(true);
-    						previusRidingPos = false;
-    						System.out.println("***Left");
-    					 	playerShoulders.addRiders(this);
-    					}
-    					else if (lemur.getLeftShoulder()) {    
-	    					this.setRightShoulder(true);
-						 	this.setNoAI(true);
-						 	playerShoulders.setRightShoulder(true);
-						 	previusRidingPos = true;
-						 	System.out.println("***Right");
-						 	playerShoulders.addRiders(this);
-    			          
-    					}
-    				}
-    			
-    			}
-    			}
-			}
-    			
-
-    		
-
-    	}
-
-    	return super.applyPlayerInteraction(player, vec, hand);
-    }
-   
-   public boolean isLemurRiding() { 
-	   if(!this.getLeftShoulder() && !this.getRightShoulder()) {
-		   this.height = 1f;
-		   this.width = 0.3f;
-	   }
-		return this.getLeftShoulder() || this.getRightShoulder();
-   }
-    
     @Override
-	public void onLivingUpdate() 
-	{	
-		super.onLivingUpdate();
+    protected void initEntityAI()
+    {
+        this.aiSit = new EntityAISit(this);
+        this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(2, this.aiSit);
+        this.tasks.addTask(3, new EntityAIWanderAvoidWater(this, 1.0D));
+        this.tasks.addTask(3, new EntityAIWanderAvoidWaterFlying(this, 1.0D));
+        this.tasks.addTask(2, new EntityAIFollowOwner(this, 1.0F, 10.0F, 2.0F));
+        this.tasks.addTask(2, new EntityAIFollowOwnerFlying(this, 1.0D, 5.0F, 1.0F));
+        this.tasks.addTask(4, new EntityAIWatchClosest(this, EntityPlayer.class, 16.0F));
+        this.tasks.addTask(3, new EntityAIFollow(this, 1.0D, 3.0F, 7.0F));
+        this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.2D, true));
+        this.tasks.addTask(6, new EntityAIMate(this, 1.5D));
+        this.targetTasks.addTask(1, new EntityAIOwnerHurtByTarget(this));
+        this.targetTasks.addTask(2, new EntityAIOwnerHurtTarget(this));
+        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true, new Class[0]));
 
-		updatespeed(!this.isLemurRiding());
+    }
 
-		if(!this.isLemurRiding() && this.isAIDisabled()) this.setNoAI(false);
-		
-		
-		if(this.ticksExisted % 200 == 0 ) {  
-			if(this.getMoveHelper() instanceof EntityFlyHelper) {
-				this.moveHelper = new EntityMoveHelper(this);
-		    }
-		    else {
-		    	if(!this.isInWater() && !this.isInLove()) {
-		    	  	this.moveHelper = new EntityFlyHelper(this);
-		    	}
-		    }
-		    
-		}
-		
-		
+    @Override
+    public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand)
+    {
+
+        if(player.isSneaking() &&  this.getOwner() != null && this.getOwner() == player && !this.getLeashed())
+        {
+            IPlayerShoulders playerShoulders = player.getCapability(CapabilityPlayerShoulders.TEST_HANDLER, null);
+            this.setSitting(false);
+            if(playerShoulders.getRiders().size() == 0)
+            {
+                if(!previusRidingPos)
+                {
+                    this.setRightShoulder(true);
+                    this.setNoAI(true);
+                    playerShoulders.setRightShoulder(true);
+                    previusRidingPos = true;
+                }
+                else
+                {
+                    this.setLeftShoulder(true);
+                    this.setNoAI(true);
+                    playerShoulders.setLeftShoulder(true);
+                    previusRidingPos = false;
+                }
+
+                playerShoulders.addRiders(this);
+            }
+            else {
+                if(playerShoulders.getRiders().size() < 2)
+                {
+                    if(playerShoulders.getRiders().size() == 1 && !playerShoulders.getRiders().contains(this))
+                    {
+                        if(playerShoulders.getRiders().get(0) instanceof EntityAscendedFlyingLemur) {
+                            EntityAscendedFlyingLemur lemur = (EntityAscendedFlyingLemur) playerShoulders.getRiders().get(0);
+                            if(lemur.getRightShoulder()) {
+                                this.setLeftShoulder(true);
+                                this.setNoAI(true);
+                                playerShoulders.setLeftShoulder(true);
+                                previusRidingPos = false;
+                                playerShoulders.addRiders(this);
+                            }
+                            else if (lemur.getLeftShoulder()) {
+                                this.setRightShoulder(true);
+                                this.setNoAI(true);
+                                playerShoulders.setRightShoulder(true);
+                                previusRidingPos = true;
+                                playerShoulders.addRiders(this);
+                            }
+                        }
+                        else if (playerShoulders.getRiders().get(0) instanceof EntityFlyingLemur) {
+                            EntityFlyingLemur lemur = (EntityFlyingLemur) playerShoulders.getRiders().get(0);
+                            if(lemur.getRightShoulder()) {
+                                this.setLeftShoulder(true);
+                                this.setNoAI(true);
+                                playerShoulders.setLeftShoulder(true);
+                                previusRidingPos = false;
+                                playerShoulders.addRiders(this);
+                            }
+                            else if (lemur.getLeftShoulder()) {
+                                this.setRightShoulder(true);
+                                this.setNoAI(true);
+                                playerShoulders.setRightShoulder(true);
+                                previusRidingPos = true;
+                                playerShoulders.addRiders(this);
+
+                            }
+                        }
+
+                    }
+                }
+            }
+
+
+
+
+        }
+
+        return super.applyPlayerInteraction(player, vec, hand);
+    }
+
+    public boolean isLemurRiding() {
+        if(!this.getLeftShoulder() && !this.getRightShoulder() && !this.isChild() && this.height != 1 && this.width != 0.4F) {
+            this.height = 1f;
+            this.width = 0.4f;
+        }
+        return this.getLeftShoulder() || this.getRightShoulder();
+    }
+
+    @Override
+    public void onLivingUpdate()
+    {
+        super.onLivingUpdate();
+
+        updatespeed(!this.isLemurRiding());
+
+        if(!this.isLemurRiding() && this.isAIDisabled()) this.setNoAI(false);
+
+        if(this.ticksExisted % 100 == 0 && this.speed == 0 && this.getAIMoveSpeed() == 0 ) {
+            if(this.getMoveHelper() instanceof EntityFlyHelper) {
+                this.moveHelper = new EntityMoveHelper(this);
+            }
+            else {
+                if(!this.isInWater() && !this.isInLove() && !this.isAngry()) {
+                    this.moveHelper = new EntityFlyHelper(this);
+                }
+            }
+
+        }
+
+
         if (this.jukeboxPosition == null || this.jukeboxPosition.distanceSq(this.posX, this.posY, this.posZ) > 12.0D || this.world.getBlockState(this.jukeboxPosition).getBlock() != Blocks.JUKEBOX)
         {
             this.partyLemur = false;
             this.jukeboxPosition = null;
         }
-		
-		if (this.ticksExisted % 15 == 0  && !this.isActualyFlying && !this.isLemurRiding()) {
-			this.isActualyFlying = true;
-		}
-		
-	
-		if(this.isLemurRiding()) {
-			if(this.getOwner() != null && this.getOwner().dimension == this.dimension) { 
-			 	this.setRotation(this.getOwner().renderYawOffset, 0);
-			 	this.setRotationYawHead(this.getOwner().renderYawOffset);
-			 	this.setRenderYawOffset(this.getOwner().renderYawOffset);
-			 	if(this.isChild()) {
-			 	
-					this.setPosition(this.getOwner().posX, this.getOwner().posY + this.getOwner().getMountedYOffset() + this.getYOffset() + 0.30F, this.getOwner().posZ);
-			 	}else {
-	
-					this.setPosition(this.getOwner().posX, this.getOwner().posY + this.getOwner().getMountedYOffset() + this.getYOffset() + 0.30F, this.getOwner().posZ);
-			 	}
-				
-	
-			}
-		
-		}
 
-	
-	}
-    
+
+        if(this.isLemurRiding()) {
+            if(this.getOwner() != null && this.getOwner().dimension == this.dimension) {
+                this.setRotation(this.getOwner().renderYawOffset, 0);
+                this.setRotationYawHead(this.getOwner().renderYawOffset);
+                this.setRenderYawOffset(this.getOwner().renderYawOffset);
+                if(this.isChild()) {
+
+                    this.setPosition(this.getOwner().posX, this.getOwner().posY + this.getOwner().getMountedYOffset() + this.getYOffset() + 0.30F, this.getOwner().posZ);
+                }else {
+
+                    this.setPosition(this.getOwner().posX, this.getOwner().posY + this.getOwner().getMountedYOffset() + this.getYOffset() + 0.30F, this.getOwner().posZ);
+                }
+
+
+            }
+
+        }
+        if (!this.world.isRemote && this.getAttackTarget() == null && this.isAngry())
+        {
+            this.setAngry(false);
+        }
+
+    }
+
     @SideOnly(Side.CLIENT)
     public void setPartying(BlockPos pos, boolean p_191987_2_)
     {
@@ -250,158 +243,185 @@ protected void initEntityAI()
         this.partyLemur = p_191987_2_;
     }
 
+
     @SideOnly(Side.CLIENT)
     public boolean isPartying()
     {
         return this.partyLemur;
     }
-   
-    
+
+
     @Override
     public boolean canBeCollidedWith() {
-    	if(this.isLemurRiding()) return false;
-    	return super.canBeCollidedWith();
+        if(this.isLemurRiding()) return false;
+        return super.canBeCollidedWith();
     }
-    
+
     public boolean getLeftShoulder() {
-    	return (((Byte)this.dataManager.get(LEFTSHOULDER)).byteValue() & 1) != 0;
+        return (((Byte)this.dataManager.get(LEFTSHOULDER)).byteValue() & 1) != 0;
     }
     public boolean getRightShoulder() {
-    	
-    	return (((Byte)this.dataManager.get(RIGHTSHOULDER)).byteValue() & 1) != 0;
+
+        return (((Byte)this.dataManager.get(RIGHTSHOULDER)).byteValue() & 1) != 0;
     }
-    
+
     public void setLeftShoulder(boolean ride) {
-    	byte b0 = ((Byte)this.dataManager.get(LEFTSHOULDER)).byteValue();
+        byte b0 = ((Byte)this.dataManager.get(LEFTSHOULDER)).byteValue();
 
         if (ride)
         {
-        	this.height = 0.0f; 
-        	this.width = 0.1f;
-        	this.setSitting(false);
-        	this.dataManager.set(LEFTSHOULDER, Byte.valueOf((byte)(b0 | 1)));
+            this.height = 0.0f;
+            this.width = 0.1f;
+            this.setSitting(false);
+            this.dataManager.set(LEFTSHOULDER, Byte.valueOf((byte)(b0 | 1)));
         }
         else
         {
-       	 	this.dataManager.set(LEFTSHOULDER, Byte.valueOf((byte)(b0 & -2)));
+            this.dataManager.set(LEFTSHOULDER, Byte.valueOf((byte)(b0 & -2)));
         }
     }
     public void setRightShoulder(boolean ride) {
-    	
-    	 byte b0 = ((Byte)this.dataManager.get(RIGHTSHOULDER)).byteValue();
 
-         if (ride)
-         {
-        	 this.height = 0.0f; 
-        	 this.width = 0.1f;
-        	 this.setSitting(false);
-        	 this.dataManager.set(RIGHTSHOULDER, Byte.valueOf((byte)(b0 | 1)));
-         }
-         else
-         {
-        	 this.dataManager.set(RIGHTSHOULDER, Byte.valueOf((byte)(b0 & -2)));
-         }
+        byte b0 = ((Byte)this.dataManager.get(RIGHTSHOULDER)).byteValue();
+
+        if (ride)
+        {
+            this.height = 0.0f;
+            this.width = 0.1f;
+            this.setSitting(false);
+            this.dataManager.set(RIGHTSHOULDER, Byte.valueOf((byte)(b0 | 1)));
+        }
+        else
+        {
+            this.dataManager.set(RIGHTSHOULDER, Byte.valueOf((byte)(b0 & -2)));
+        }
     }
 
-	@Override
-	protected boolean canDespawn() {
-		return false;
-	}
-		
-	@Override
-	protected void entityInit() 
-	{
-		super.entityInit();
-	    this.dataManager.register(RIGHTSHOULDER, Byte.valueOf((byte)0));
-	    this.dataManager.register(LEFTSHOULDER, Byte.valueOf((byte)0));
+    @Override
+    protected boolean canDespawn() {
+        return false;
+    }
+
+    @Override
+    protected void entityInit()
+    {
+        super.entityInit();
+        this.dataManager.register(RIGHTSHOULDER, Byte.valueOf((byte)0));
+        this.dataManager.register(LEFTSHOULDER, Byte.valueOf((byte)0));
         this.dataManager.register(VARIANT, Integer.valueOf(0));
-	}
-	
-    public boolean isFlying()
-    {	
-    	if(this.onGround || this.isLemurRiding() || this.isInWater()) return false;
-    	return this.isActualyFlying;
     }
-    
-	public void updatespeed(boolean canUpdate) {
-		if(canUpdate) {
-		double motionX = this.posX - this.prevPosX;
-		double motionY = this.posY - this.prevPosY;
-		double motionZ = this.posZ - this.prevPosZ;
-		this.speed = Math.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
-		}
-	}
+
+    public boolean isFlying()
+    {
+        return !this.onGround;
+    }
+
+    public void updatespeed(boolean canUpdate) {
+        if(canUpdate) {
+            double motionX = this.posX - this.prevPosX;
+            double motionY = this.posY - this.prevPosY;
+            double motionZ = this.posZ - this.prevPosZ;
+            this.speed = Math.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
+        }
+    }
+
     protected PathNavigate createNavigator(World worldIn)
     {
-        PathNavigateFlying pathnavigateflying = new PathNavigateFlying(this, worldIn);  
-        PathNavigateGround pathnavigateground = new PathNavigateGround(this, worldIn);  
-        
-    
+        PathNavigateFlying pathnavigateflying = new PathNavigateFlying(this, worldIn);
+        pathnavigateflying.setCanOpenDoors(false);
+        pathnavigateflying.setCanFloat(true);
+        pathnavigateflying.setCanEnterDoors(true);
+
+        PathNavigateGround pathnavigateground = new PathNavigateGround(this, worldIn);
+
+
+        if(this.getMoveHelper() instanceof EntityFlyHelper)
+        {
+            return pathnavigateflying;
+        }
+
+        if(this.getMoveHelper() instanceof EntityMoveHelper)
+        {
+            return pathnavigateground;
+        }
+
+        return null;
+    }
+    /*
+    protected PathNavigate createNavigator(World worldIn)
+    {
+        PathNavigateFlying pathnavigateflying = new PathNavigateFlying(this, worldIn);
+        PathNavigateGround pathnavigateground = new PathNavigateGround(this, worldIn);
+
+
         pathnavigateflying.setCanFloat(true);
         pathnavigateflying.setCanOpenDoors(true);
         pathnavigateflying.setCanEnterDoors(true);
-        pathnavigateground.setEnterDoors(true);   
+        pathnavigateground.setEnterDoors(true);
         pathnavigateground.setCanSwim(true);
-        
-        if(this.getMoveHelper() instanceof EntityFlyHelper) 
+
+        if(this.getMoveHelper() instanceof EntityFlyHelper)
         {
-	        return pathnavigateflying;
+            return pathnavigateflying;
         }
-        
-        if(this.getMoveHelper() instanceof EntityMoveHelper) 
+
+        if(this.getMoveHelper() instanceof EntityMoveHelper)
         {
-        	return pathnavigateground;
+            return pathnavigateground;
         }
-        
-        return pathnavigateground;
+
+        return null;
     }
+    */
     public float getEyeHeight()
-    {	
-    	if(this.isFlying() || this.isLemurRiding() ) {
-		  	return  0.1F;
-		}
-		else {
-			if(this.isSitting()) {
-		  	return 0.65F;
-			}
-			else {
-				return 0.85F;
-			}
-		}
-		
-    }   	
-    @Override
-    public double getYOffset() {
-       	if(this.getOwner() != null && this.getOwner().isSneaking()) {
-       		if(this.isChild()) {
-				return 0.15F;
-			}else {
-		  	return 0.50F;
-			}
-		}
-		else {
-			if(this.isChild()) {
-				return 0.3F;
-			}else {
-		  	return 0.45F;
-			}
-		}
+    {
+        if(this.isFlying() || this.isLemurRiding() ) {
+            return  0.1F;
+        }
+        else {
+            if(this.isSitting()) {
+                return 0.65F;
+            }
+
+            if(this.isChild()) {
+                return 0.55F;
+            }
+
+            return 0.85F;
+
+        }
 
     }
+    @Override
+    public double getYOffset() {
+        if(this.getOwner() != null && this.getOwner().isSneaking()) {
+            if(this.isChild()) {
+                return 0.15F;
+            }else {
+                return 0.50F;
+            }
+        }
+        else {
+            if(this.isChild()) {
+                return 0.3F;
+            }else {
+                return 0.45F;
+            }
+        }
+
+    }
+
+
     public void fall(float distance, float damageMultiplier)
     {
-    	if(!this.isFlying()) {
-    		super.fall(distance, damageMultiplier);
-    	}
-    	
+
     }
+
     protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)
     {
-    	if(!this.isFlying()) {
-    		super.updateFallState(y, onGroundIn, state, pos);
-    	}
-    
+
     }
+
     public boolean getCanSpawnHere()
     {
         int i = MathHelper.floor(this.posX);
@@ -410,20 +430,20 @@ protected void initEntityAI()
         BlockPos blockpos = new BlockPos(i, j, k);
         Block block = this.world.getBlockState(blockpos.down()).getBlock();
         return block instanceof BlockLeaves || block == Blocks.GRASS || block instanceof BlockLog || block == Blocks.AIR && this.world.getLight(blockpos) > 8 && super.getCanSpawnHere();
-    }    
-	@Override
-	protected void applyEntityAttributes() 
-	{
-		super.applyEntityAttributes();
-		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);		  
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
-	    this.getEntityAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(1.0D);
-	    this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
-	    this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0D);
-	}     
-	public void setAttackTarget(@Nullable EntityLivingBase entitylivingbaseIn)
+    }
+    @Override
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.33D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(1.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0D);
+    }
+    public void setAttackTarget(@Nullable EntityLivingBase entitylivingbaseIn)
     {
         super.setAttackTarget(entitylivingbaseIn);
 
@@ -453,29 +473,29 @@ protected void initEntityAI()
         else
         {
             Entity entity = source.getTrueSource();
-            
+
             if (this.aiSit != null)
             {
                 this.aiSit.setSitting(false);
             }
-            
 
-            
-            if (entity instanceof EntityPlayer) 
+
+
+            if (entity instanceof EntityPlayer)
             {
-            	if(!((EntityPlayer) entity).isCreative()) return false;
-           
-	        }
+                if(!((EntityPlayer) entity).isCreative()) return false;
+
+            }
             else
             {
-            	if(source != source.OUT_OF_WORLD) {
-            		return false;
-            	}
+                if(source != source.OUT_OF_WORLD) {
+                    return false;
+                }
             }
-            
+
             return super.attackEntityFrom(source, amount);
         }
-    }  
+    }
     public boolean attackEntityAsMob(Entity entityIn)
     {
         boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float)((int)this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue()));
@@ -486,7 +506,7 @@ protected void initEntityAI()
         }
 
         return flag;
-    }    
+    }
     public void setTamed(boolean tamed)
     {
         super.setTamed(tamed);
@@ -553,31 +573,60 @@ protected void initEntityAI()
     public boolean canBeLeashedTo(EntityPlayer player)
     {
         return !this.isAngry() && super.canBeLeashedTo(player);
-    } 
+    }
     public int getMaxSpawnedInChunk()
     {
         return 8;
     }
 
+    public boolean shouldAttackEntity(EntityLivingBase target, EntityLivingBase owner)
+    {
+        if (!(target instanceof EntityCreeper) && !(target instanceof EntityGhast))
+        {
+            if (target instanceof EntityFlyingLemur)
+            {
+                EntityAscendedFlyingLemur entitylemur = (EntityAscendedFlyingLemur)target;
+
+                if (entitylemur.isTamed() && entitylemur.getOwner() == owner)
+                {
+                    return false;
+                }
+            }
+
+            if (target instanceof EntityPlayer && owner instanceof EntityPlayer && !((EntityPlayer)owner).canAttackPlayer((EntityPlayer)target))
+            {
+                return false;
+            }
+            else
+            {
+                return !(target instanceof AbstractHorse) || !((AbstractHorse)target).isTame();
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     /*
      * Emotions - Start
      */
-	@Override
-	public void writeEntityToNBT(NBTTagCompound compound) 
-	{
-		super.writeEntityToNBT(compound);
-		compound.setBoolean("Angry", this.isAngry());
-	}
-	@Override
-	public void readEntityFromNBT(NBTTagCompound compound) 
-	{     
-		super.readEntityFromNBT(compound);
-		this.setAngry(compound.getBoolean("Angry"));
-	}
+    @Override
+    public void writeEntityToNBT(NBTTagCompound compound)
+    {
+        super.writeEntityToNBT(compound);
+        compound.setBoolean("Angry", this.isAngry());
+    }
+    @Override
+    public void readEntityFromNBT(NBTTagCompound compound)
+    {
+        super.readEntityFromNBT(compound);
+        this.setAngry(compound.getBoolean("Angry"));
+    }
     public boolean isAngry()
     {
         return (((Byte)this.dataManager.get(TAMED)).byteValue() & 2) != 0;
-    }    
+    }
     public void setAngry(boolean angry)
     {
         byte b0 = ((Byte)this.dataManager.get(TAMED)).byteValue();
@@ -605,25 +654,25 @@ protected void initEntityAI()
 
     /*
      * Mating - Start
-     */ 
+     */
     public boolean isBreedingItem(ItemStack stack)
     {
         return stack.getItem() == Items.GOLDEN_APPLE;
-    }  
-	@Override
-	public EntityAgeable createChild(EntityAgeable ageable) 
-	{
-		EntityAscendedFlyingLemur entitymonkey = new EntityAscendedFlyingLemur(this.world);
+    }
+    @Override
+    public EntityAgeable createChild(EntityAgeable ageable)
+    {
+        EntityAscendedFlyingLemur entitymonkey = new EntityAscendedFlyingLemur(this.world);
         UUID uuid = this.getOwnerId();
 
         if (uuid != null)
         {
-        	entitymonkey.setOwnerId(uuid);
-        	entitymonkey.setTamed(true);
+            entitymonkey.setOwnerId(uuid);
+            entitymonkey.setTamed(true);
         }
 
         return entitymonkey;
-	}	
+    }
     public boolean canMateWith(EntityAnimal otherAnimal)
     {
         if (otherAnimal == this)
@@ -640,7 +689,7 @@ protected void initEntityAI()
         }
         else
         {
-        	EntityAscendedFlyingLemur lemur = (EntityAscendedFlyingLemur)otherAnimal;
+            EntityAscendedFlyingLemur lemur = (EntityAscendedFlyingLemur)otherAnimal;
 
             if (!lemur.isTamed())
             {
@@ -658,14 +707,14 @@ protected void initEntityAI()
     }
     /*
      * Mating - End
-     */	
-    
-	/*
-	 * Sounds - Start
-	 */
+     */
+
+    /*
+     * Sounds - Start
+     */
     protected SoundEvent getAmbientSound()
     {
-    	return SoundsHandler.ENTITY_FLYINGLEMUR_AMBIENT;
+        return SoundsHandler.ENTITY_FLYINGLEMUR_AMBIENT;
     }
     protected SoundEvent getHurtSound(DamageSource damageSourceIn)
     {
@@ -679,10 +728,10 @@ protected void initEntityAI()
     {
         return 1.75F;
     }
-	/*
-	 * Sounds - End
-	 */
-    
+    /*
+     * Sounds - End
+     */
+
     /*
      * Particle Effects - Start
      */
@@ -695,7 +744,7 @@ protected void initEntityAI()
             double d2 = this.rand.nextGaussian() * 0.02D;
             this.world.spawnParticle(enumparticletypes, this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, this.posY + 0.5D + (double)(this.rand.nextFloat() * this.height), this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, d0, d1, d2);
         }
-    }  
+    }
     /*
      * Particle Effects - End
      */

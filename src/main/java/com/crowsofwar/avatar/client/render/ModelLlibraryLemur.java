@@ -868,24 +868,24 @@ public class ModelLlibraryLemur extends AdvancedModelBase {
       	this.Right_Wing.setScale(0, 0, 0);
 
         if (entitylivingbaseIn instanceof EntityFlyingLemur){
-        	
+
         	EntityFlyingLemur lemur = (EntityFlyingLemur)entitylivingbaseIn;
             boolean gliding = false;
             if(lemur.getOwner() != null) {
                 gliding = GliderHelper.getIsGliderDeployed((EntityPlayer) lemur.getOwner());
             }
+
             if (lemur.isPartying())
             {
-                this.state = State.PARTY;
-                //TODO
+                this.state = ModelLlibraryLemur.State.PARTY;
                 this.Body.rotateAngleY = -1.5F;
                 this.Body.rotateAngleX = 0.3F;
                 this.BodyLower.rotateAngleX = -0.3f;
                 this.Neck.rotateAngleX = -0.3F;
-                
+
                 this.ArmLeft.rotateAngleZ = -0.3f;
                 this.ArmRight.rotateAngleZ = 0.3f;
-                
+
                 this.LegRight.rotateAngleZ = -0.1f;
                 this.LegLeft.rotateAngleZ = 0.1f;
                 this.LegRight.rotateAngleY = -0.2f;
@@ -894,327 +894,326 @@ public class ModelLlibraryLemur extends AdvancedModelBase {
                 this.LegLeft.rotateAngleX = -0.35f;
                 this.LegRightLower.rotateAngleX = 1.25f;
                 this.LegLeftLower.rotateAngleX = 1.25f;
-                
+
                 this.LegLeftFoot.rotateAngleY = -0.4f;
                 this.LegRightFoot.rotateAngleY = 0.4f;
-                
+
                 this.LegLeftFoot.rotateAngleZ = -0.1f;
                 this.LegRightFoot.rotateAngleZ = 0.1f;
                 this.LegLeftFoot.rotateAngleX = -0.8f;
                 this.LegRightFoot.rotateAngleX = -0.8f;
-                
-                
+
+
                 this.Tail_start.rotateAngleX = 0.2F;
-	            this.Tail_mid1.rotateAngleX = 0F;
-	            this.Tail_mid2.rotateAngleX =  1.25F;
-	            this.Tail_mid3.rotateAngleX = 0F;
-	            this.Tail_mid4.rotateAngleX = 0F;
-	            this.Tail_end.rotateAngleX = 0F;
-	            /*
-	            this.Tail_mid3.rotateAngleZ = -1F;
-	            this.Tail_mid4.rotateAngleZ = -0.75F;
-	            this.Tail_end.rotateAngleZ = -0.5F;
-                 */
-        		this.ArmLeftHand.rotateAngleY = -3.5F;
-        		this.ArmRightHand.rotateAngleY = 3.5F;
-	            
+                this.Tail_mid1.rotateAngleX = 0F;
+                this.Tail_mid2.rotateAngleX =  1.25F;
+                this.Tail_mid3.rotateAngleX = 0F;
+                this.Tail_mid4.rotateAngleX = 0F;
+                this.Tail_end.rotateAngleX = 0F;
+                this.ArmLeftHand.rotateAngleY = -3.5F;
+                this.ArmRightHand.rotateAngleY = 3.5F;
+
             }
             else if (lemur.isSitting() && !lemur.isPartying()) {
-        		this.state = State.SITTING;
-        		this.Body.offsetY = 0.5F;
-        		this.BodyLower.rotateAngleX = 0.35F;
-        		
-        		this.LegRight.rotateAngleX = -2.6f;
-        		this.LegRightLower.rotateAngleX = 2.0f;
-        		this.LegRight.rotateAngleZ = -0.5F;
-        		this.LegRight.rotateAngleY = 0.5F;
-        		this.LegLeft.rotateAngleX = -2.6f;
-        		this.LegLeftLower.rotateAngleX = 2.0f;
-        		this.LegLeft.rotateAngleZ = 0.5F;
-        		this.LegLeft.rotateAngleY = -0.5F;
-        		
-        		this.ArmRight.rotateAngleY = 0.7F;
-        		this.ArmLeft.rotateAngleY = -0.7F;
-        		
-        		this.ArmLeftLower.rotateAngleX = -0.5F;
-        		this.ArmRightLower.rotateAngleX = -0.5F;
-        		
-        		this.ArmRightLower.rotateAngleZ = 0.35F;
-        		this.ArmLeftLower.rotateAngleZ = -0.35F;
-        		
-         		this.ArmRightLower.rotateAngleY = 0.6F;
-        		this.ArmLeftLower.rotateAngleY = -0.6F;
-        		
-        		this.ArmLeftHand.rotateAngleX = 1.6F;
-        		this.ArmRightHand.rotateAngleX = 1.6F;
+                this.state = ModelLlibraryLemur.State.SITTING;
+                this.Body.offsetY = 0.5F;
+                this.BodyLower.rotateAngleX = 0.35F;
 
-        		this.ArmLeftHand.rotateAngleY = -1.5F;
-        		this.ArmRightHand.rotateAngleY = 1.5F;
-        	} 
-        	else if (lemur.getLeftShoulder() && !lemur.getOwner().isElytraFlying() && !gliding) {
-           		this.state = State.ONLEFTSHOULDER;
-        		this.Body.rotateAngleX = 0.35F;
-        		this.Body.rotateAngleY = 0.1F;
-        		this.Body.rotateAngleZ = 0.15F;
-        	
-        		this.BodyLower.rotateAngleX = -0.35F;
-        		
-        		this.LegLeft.rotateAngleX = -2.60F;
-        		this.LegRight.rotateAngleX = -2.60F;
-        		this.LegLeftLower.rotateAngleX = 2.8f;
-        		this.LegRightLower.rotateAngleX = 2.8f;
-        		
-        		this.LegLeftLower.rotateAngleZ = -0.45f;
-        		this.LegRightLower.rotateAngleZ = 0.45f;
-        		this.LegLeft.rotateAngleZ = 0.2F;
-        		this.LegLeft.rotateAngleY = -0.2F;
-        		this.LegRight.rotateAngleZ = -0.2F;
-        		this.LegRight.rotateAngleY = 0.2F;
-        		
-        		
-        		this.ArmRight.rotateAngleX = -0.6F;
-        		this.ArmLeft.rotateAngleX = -0.6F;
-         		this.ArmRight.rotateAngleZ = 0.2F;
-        		this.ArmLeft.rotateAngleZ = -0.2F;
-        		
-        		this.ArmLeftLower.rotateAngleX = -0.35F;
-        		this.ArmRightLower.rotateAngleX = -0.35F;
-        		
-        		this.ArmRightLower.rotateAngleZ = 0.35F;
-        		this.ArmLeftLower.rotateAngleZ = -0.35F;
-        		
-        		this.ArmLeftHand.rotateAngleX = -0.7F;
-        		this.ArmRightHand.rotateAngleX = -0.7F;
-        		
-        		
-        		this.ArmLeftHand.rotateAngleZ = 1F;
-        		this.ArmRightHand.rotateAngleZ = -1F;
-        		
-                this.ArmRightHand.rotateAngleY = 3.5F; 
-                this.ArmLeftHand.rotateAngleY = -3.5F;  		
-        	
-        		this.Body.offsetZ =  0.2F;
-        		
-           		if(lemur.getOwner().isSneaking()) 
-        		{
-        			this.Body.offsetY = 2.4F;
-        		}
-        		else 
-        		{
-        			this.Body.offsetY = 2.0F;
-        		}
-        
-        		if(lemur.isChild()) {
-        		this.Body.offsetX =  1.1F;
-        		}
-        		else {
-        		this.Body.offsetX =  0.8F;
-        		}
-        		
-	        }
-        	else if (lemur.getRightShoulder() && !lemur.getOwner().isElytraFlying() && !gliding) {
-        		this.state = State.ONRIGHTSHOULDER;
-        		
-        		this.Body.rotateAngleX = 0.35F;
-        		this.Body.rotateAngleY = -0.1F;
-        		this.Body.rotateAngleZ = -0.15F;
-        		
-        		this.BodyLower.rotateAngleX = -0.35F;
-        		
-        		this.LegLeft.rotateAngleX = -2.60F;
-        		this.LegRight.rotateAngleX = -2.60F;
-        		this.LegLeftLower.rotateAngleX = 2.8f;
-        		this.LegRightLower.rotateAngleX = 2.8f;
-        		
-        		this.LegLeftLower.rotateAngleZ = -0.45f;
-        		this.LegRightLower.rotateAngleZ = 0.45f;
-        		this.LegLeft.rotateAngleZ = 0.2F;
-        		this.LegLeft.rotateAngleY = -0.2F;
-        		this.LegRight.rotateAngleZ = -0.2F;
-        		this.LegRight.rotateAngleY = 0.2F;
-        		
-        		
-        		this.ArmRight.rotateAngleX = -0.6F;
-        		this.ArmLeft.rotateAngleX = -0.6F;
-         		this.ArmRight.rotateAngleZ = 0.2F;
-        		this.ArmLeft.rotateAngleZ = -0.2F;
-        		
-        		this.ArmLeftLower.rotateAngleX = -0.35F;
-        		this.ArmRightLower.rotateAngleX = -0.35F;
-        		
-        		this.ArmRightLower.rotateAngleZ = 0.35F;
-        		this.ArmLeftLower.rotateAngleZ = -0.35F;
-        		
-        		this.ArmLeftHand.rotateAngleX = -0.7F;
-        		this.ArmRightHand.rotateAngleX = -0.7F;
-        		
-        		
-        		this.ArmLeftHand.rotateAngleZ = 1F;
-        		this.ArmRightHand.rotateAngleZ = -1F;
-        		
-                this.ArmRightHand.rotateAngleY = 3.5F; 
-                this.ArmLeftHand.rotateAngleY = -3.5F;  		
-        	
-        		this.Body.offsetZ =  0.2F;
-        		
-        		if(lemur.getOwner().isSneaking()) 
-        		{
-        			this.Body.offsetY = 2.4F;
-        		}
-        		else 
-        		{
-        			this.Body.offsetY = 2.0F;
-        		}
-        		
-        		if(lemur.isChild()) {
-        		this.Body.offsetX =  -1.1F;
-        		}
-        		else {
-        		this.Body.offsetX =  -0.8F;
-        		}
-        		
-	        } 
-        	else if (lemur.getLeftShoulder() && lemur.getOwner().isElytraFlying() || gliding) {
-        		this.state = State.ELYTRALEFTSHOULDER;
-        		
-	            this.Body.rotateAngleX = 1.5F;
-	            this.ArmRight.rotateAngleX = -1.5F;
-	            this.ArmRight.rotateAngleY = -1.6F;
-	            this.ArmRight.rotateAngleZ = -0.05F;
-	            this.ArmLeft.rotateAngleX = -1.5F;
-	            this.ArmLeft.rotateAngleY = 1.6F;
-	            this.ArmLeft.rotateAngleZ = 0.05F;
-	        
-	            this.Tail_start.rotateAngleX = 0F;
-	            this.Tail_mid1.rotateAngleX = 0F;
-	            this.Tail_mid2.rotateAngleX = 0F;
-	            this.Tail_mid3.rotateAngleX = 0F;
-	            this.Tail_mid4.rotateAngleX = 0F;
-	            this.Tail_end.rotateAngleX = 0F;
-	            this.Left_Wing.setScale(1, 1, 1);
-	            this.Right_Wing.setScale(1, 1, 1);
-        		
-	            this.LegRightFoot.rotateAngleX = 1.5F;
-	            this.LegLeftFoot.rotateAngleX = 1.5F;
-	            
-	            
-	            this.EarRight.rotateAngleX = -0.45F;
-	            this.EarLeft.rotateAngleX = -0.45F;
-	            
-	            this.Body.offsetX =  1.8F;
-	            this.Body.offsetY =  1.5F;
-	        } 
-        	else if (lemur.getRightShoulder() && lemur.getOwner().isElytraFlying() || gliding) {
-        		this.state = State.ELYTRARIGHTSHOULDER;
-        		
-	            this.Body.rotateAngleX = 1.5F;
-	            this.ArmRight.rotateAngleX = -1.5F;
-	            this.ArmRight.rotateAngleY = -1.6F;
-	            this.ArmRight.rotateAngleZ = -0.05F;
-	            this.ArmLeft.rotateAngleX = -1.5F;
-	            this.ArmLeft.rotateAngleY = 1.6F;
-	            this.ArmLeft.rotateAngleZ = 0.05F;
-	        
-	            this.Tail_start.rotateAngleX = 0F;
-	            this.Tail_mid1.rotateAngleX = 0F;
-	            this.Tail_mid2.rotateAngleX = 0F;
-	            this.Tail_mid3.rotateAngleX = 0F;
-	            this.Tail_mid4.rotateAngleX = 0F;
-	            this.Tail_end.rotateAngleX = 0F;
-	            this.Left_Wing.setScale(1, 1, 1);
-	            this.Right_Wing.setScale(1, 1, 1);
-        		
-	            this.LegRightFoot.rotateAngleX = 1.5F;
-	            this.LegLeftFoot.rotateAngleX = 1.5F;
-	            
-	            this.EarRight.rotateAngleX = -0.45F;
-	            this.EarLeft.rotateAngleX = -0.45F;
-	            
-	            this.Body.offsetX =  -1.8F;
-	            this.Body.offsetY =  1.5F;
-	        } 
-        	else if (lemur.isFlying() && !lemur.isLemurRiding())
-        	{
-        		this.state = State.FLYING;
-        		
-	            this.Body.rotateAngleX = 1.5F;
-	            this.ArmRight.rotateAngleX = -1.5F;
-	            this.ArmRight.rotateAngleY = -1.6F;
-	            this.ArmRight.rotateAngleZ = -0.05F;
-	            this.ArmLeft.rotateAngleX = -1.5F;
-	            this.ArmLeft.rotateAngleY = 1.6F;
-	            this.ArmLeft.rotateAngleZ = 0.05F;
-	        
-	            this.Tail_start.rotateAngleX = 0F;
-	            this.Tail_mid1.rotateAngleX = 0F;
-	            this.Tail_mid2.rotateAngleX = 0F;
-	            this.Tail_mid3.rotateAngleX = 0F;
-	            this.Tail_mid4.rotateAngleX = 0F;
-	            this.Tail_end.rotateAngleX = 0F;
-	            this.Left_Wing.setScale(1, 1, 1);
-	            this.Right_Wing.setScale(1, 1, 1);
-        		
-	            this.LegRightFoot.rotateAngleX = 1.5F;
-	            this.LegLeftFoot.rotateAngleX = 1.5F;
-	            
-	            this.EarRight.rotateAngleX = -0.45F;
-	            this.EarLeft.rotateAngleX = -0.45F;
-	        } 
-        	else if (lemur.speed > 0.25f && !lemur.isLemurRiding())
-        	{
-        		this.state = State.SPRINTING;
-        		this.Body.rotateAngleX = 1.5F;
-        		this.Body.offsetY = 0.25F;
-        		this.BodyLower.rotateAngleX = -0.35F;
-        		
+                this.LegRight.rotateAngleX = -2.6f;
+                this.LegRightLower.rotateAngleX = 2.0f;
+                this.LegRight.rotateAngleZ = -0.5F;
+                this.LegRight.rotateAngleY = 0.5F;
+                this.LegLeft.rotateAngleX = -2.6f;
+                this.LegLeftLower.rotateAngleX = 2.0f;
+                this.LegLeft.rotateAngleZ = 0.5F;
+                this.LegLeft.rotateAngleY = -0.5F;
+
+                this.ArmRight.rotateAngleY = 0.7F;
+                this.ArmLeft.rotateAngleY = -0.7F;
+
+                this.ArmLeftLower.rotateAngleX = -0.5F;
+                this.ArmRightLower.rotateAngleX = -0.5F;
+
+                this.ArmRightLower.rotateAngleZ = 0.35F;
+                this.ArmLeftLower.rotateAngleZ = -0.35F;
+
+                this.ArmRightLower.rotateAngleY = 0.6F;
+                this.ArmLeftLower.rotateAngleY = -0.6F;
+
+                this.ArmLeftHand.rotateAngleX = 1.6F;
+                this.ArmRightHand.rotateAngleX = 1.6F;
+
+                this.ArmLeftHand.rotateAngleY = -1.5F;
+                this.ArmRightHand.rotateAngleY = 1.5F;
+            }
+            else if (lemur.getLeftShoulder() && !lemur.getOwner().isElytraFlying() && !gliding) {
+                this.state = ModelLlibraryLemur.State.ONLEFTSHOULDER;
+                this.Body.rotateAngleX = 0.35F;
+                this.Body.rotateAngleY = 0.1F;
+                this.Body.rotateAngleZ = 0.15F;
+
+                this.BodyLower.rotateAngleX = -0.35F;
+
+                this.LegLeft.rotateAngleX = -2.60F;
+                this.LegRight.rotateAngleX = -2.60F;
+                this.LegLeftLower.rotateAngleX = 2.8f;
+                this.LegRightLower.rotateAngleX = 2.8f;
+
+                this.LegLeftLower.rotateAngleZ = -0.45f;
+                this.LegRightLower.rotateAngleZ = 0.45f;
+                this.LegLeft.rotateAngleZ = 0.2F;
+                this.LegLeft.rotateAngleY = -0.2F;
+                this.LegRight.rotateAngleZ = -0.2F;
+                this.LegRight.rotateAngleY = 0.2F;
+
+
+                this.ArmRight.rotateAngleX = -0.6F;
+                this.ArmLeft.rotateAngleX = -0.6F;
+                this.ArmRight.rotateAngleZ = 0.2F;
+                this.ArmLeft.rotateAngleZ = -0.2F;
+
+                this.ArmLeftLower.rotateAngleX = -0.35F;
+                this.ArmRightLower.rotateAngleX = -0.35F;
+
+                this.ArmRightLower.rotateAngleZ = 0.35F;
+                this.ArmLeftLower.rotateAngleZ = -0.35F;
+
+                this.ArmLeftHand.rotateAngleX = -0.7F;
+                this.ArmRightHand.rotateAngleX = -0.7F;
+
+
+                this.ArmLeftHand.rotateAngleZ = 1F;
+                this.ArmRightHand.rotateAngleZ = -1F;
+
+                this.ArmRightHand.rotateAngleY = 3.5F;
+                this.ArmLeftHand.rotateAngleY = -3.5F;
+
+                this.Body.offsetZ =  0.2F;
+
+                if(lemur.getOwner().isSneaking())
+                {
+                    this.Body.offsetY = 2.4F;
+                }
+                else
+                {
+                    this.Body.offsetY = 2.0F;
+                }
+
+                if(lemur.isChild()) {
+                    this.Body.offsetX =  1.1F;
+                }
+                else {
+                    this.Body.offsetX =  0.8F;
+                }
+
+            }
+            else if (lemur.getRightShoulder() && !lemur.getOwner().isElytraFlying() && !gliding) {
+                this.state = ModelLlibraryLemur.State.ONRIGHTSHOULDER;
+
+                this.Body.rotateAngleX = 0.35F;
+                this.Body.rotateAngleY = -0.1F;
+                this.Body.rotateAngleZ = -0.15F;
+
+                this.BodyLower.rotateAngleX = -0.35F;
+
+                this.LegLeft.rotateAngleX = -2.60F;
+                this.LegRight.rotateAngleX = -2.60F;
+                this.LegLeftLower.rotateAngleX = 2.8f;
+                this.LegRightLower.rotateAngleX = 2.8f;
+
+                this.LegLeftLower.rotateAngleZ = -0.45f;
+                this.LegRightLower.rotateAngleZ = 0.45f;
+                this.LegLeft.rotateAngleZ = 0.2F;
+                this.LegLeft.rotateAngleY = -0.2F;
+                this.LegRight.rotateAngleZ = -0.2F;
+                this.LegRight.rotateAngleY = 0.2F;
+
+
+                this.ArmRight.rotateAngleX = -0.6F;
+                this.ArmLeft.rotateAngleX = -0.6F;
+                this.ArmRight.rotateAngleZ = 0.2F;
+                this.ArmLeft.rotateAngleZ = -0.2F;
+
+                this.ArmLeftLower.rotateAngleX = -0.35F;
+                this.ArmRightLower.rotateAngleX = -0.35F;
+
+                this.ArmRightLower.rotateAngleZ = 0.35F;
+                this.ArmLeftLower.rotateAngleZ = -0.35F;
+
+                this.ArmLeftHand.rotateAngleX = -0.7F;
+                this.ArmRightHand.rotateAngleX = -0.7F;
+
+
+                this.ArmLeftHand.rotateAngleZ = 1F;
+                this.ArmRightHand.rotateAngleZ = -1F;
+
+                this.ArmRightHand.rotateAngleY = 3.5F;
+                this.ArmLeftHand.rotateAngleY = -3.5F;
+
+                this.Body.offsetZ =  0.2F;
+
+                if(lemur.getOwner().isSneaking())
+                {
+                    this.Body.offsetY = 2.4F;
+                }
+                else
+                {
+                    this.Body.offsetY = 2.0F;
+                }
+
+                if(lemur.isChild()) {
+                    this.Body.offsetX =  -1.1F;
+                }
+                else {
+                    this.Body.offsetX =  -0.8F;
+                }
+
+            }
+            else if (lemur.getLeftShoulder() && lemur.getOwner().isElytraFlying() || gliding) {
+                this.state = ModelLlibraryLemur.State.ELYTRALEFTSHOULDER;
+
+                this.Body.rotateAngleX = 1.5F;
+                this.ArmRight.rotateAngleX = -1.5F;
+                this.ArmRight.rotateAngleY = -1.6F;
+                this.ArmRight.rotateAngleZ = -0.05F;
+                this.ArmLeft.rotateAngleX = -1.5F;
+                this.ArmLeft.rotateAngleY = 1.6F;
+                this.ArmLeft.rotateAngleZ = 0.05F;
+
+                this.Tail_start.rotateAngleX = 0F;
+                this.Tail_mid1.rotateAngleX = 0F;
+                this.Tail_mid2.rotateAngleX = 0F;
+                this.Tail_mid3.rotateAngleX = 0F;
+                this.Tail_mid4.rotateAngleX = 0F;
+                this.Tail_end.rotateAngleX = 0F;
+                this.Left_Wing.setScale(1, 1, 1);
+                this.Right_Wing.setScale(1, 1, 1);
+
+                this.LegRightFoot.rotateAngleX = 1.5F;
+                this.LegLeftFoot.rotateAngleX = 1.5F;
+
+
+                this.EarRight.rotateAngleX = -0.45F;
+                this.EarLeft.rotateAngleX = -0.45F;
+
+                this.Body.offsetX =  1.8F;
+                this.Body.offsetY =  1.5F;
+            }
+            else if (lemur.getRightShoulder() && lemur.getOwner().isElytraFlying() || gliding) {
+                this.state = ModelLlibraryLemur.State.ELYTRARIGHTSHOULDER;
+
+                this.Body.rotateAngleX = 1.5F;
+                this.ArmRight.rotateAngleX = -1.5F;
+                this.ArmRight.rotateAngleY = -1.6F;
+                this.ArmRight.rotateAngleZ = -0.05F;
+                this.ArmLeft.rotateAngleX = -1.5F;
+                this.ArmLeft.rotateAngleY = 1.6F;
+                this.ArmLeft.rotateAngleZ = 0.05F;
+
+                this.Tail_start.rotateAngleX = 0F;
+                this.Tail_mid1.rotateAngleX = 0F;
+                this.Tail_mid2.rotateAngleX = 0F;
+                this.Tail_mid3.rotateAngleX = 0F;
+                this.Tail_mid4.rotateAngleX = 0F;
+                this.Tail_end.rotateAngleX = 0F;
+                this.Left_Wing.setScale(1, 1, 1);
+                this.Right_Wing.setScale(1, 1, 1);
+
+                this.LegRightFoot.rotateAngleX = 1.5F;
+                this.LegLeftFoot.rotateAngleX = 1.5F;
+
+                this.EarRight.rotateAngleX = -0.45F;
+                this.EarLeft.rotateAngleX = -0.45F;
+
+                this.Body.offsetX =  -1.8F;
+                this.Body.offsetY =  1.5F;
+            }
+            else if (lemur.speed > 0.17f && !lemur.isLemurRiding() && !lemur.isFlying())
+            {
+                this.state = ModelLlibraryLemur.State.SPRINTING;
+                this.Body.rotateAngleX = 1.5F;
+                this.Body.offsetY = 0.25F;
+                this.BodyLower.rotateAngleX = -0.35F;
+
                 this.ArmRight.rotateAngleX = -1.75F;
                 this.ArmLeft.rotateAngleX = -1.75F;
                 this.ArmRight.rotateAngleY = 0.1F;
                 this.ArmLeft.rotateAngleY = -0.1F;
-                this.ArmLeftLower.rotateAngleY = 0.4F; 
+                this.ArmLeftLower.rotateAngleY = 0.4F;
                 this.ArmRightLower.rotateAngleY = -0.4F;
-                this.ArmRightHand.rotateAngleY = 2.6F; 
+                this.ArmRightHand.rotateAngleY = 2.6F;
                 this.ArmLeftHand.rotateAngleY = -2.6F;
 
                 this.LegLeft.rotateAngleX = -1.5F;
                 this.LegRight.rotateAngleX = -1.5F;
                 this.LegLeft.rotateAngleY = -0.5F;
                 this.LegRight.rotateAngleY = 0.5F;
-     
-                
+
+
                 this.Tail_start.rotateAngleX = 0F;
-	            this.Tail_mid1.rotateAngleX = 0F;
-	            this.Tail_mid2.rotateAngleX = 0F;
-	            this.Tail_mid3.rotateAngleX = 0.1F;
-	            this.Tail_mid4.rotateAngleX = 0.1F;
-	            this.Tail_end.rotateAngleX = 0.1F;
-        
-	        }
-        	else if (lemur.speed > 0.1F && lemur.speed < 0.25F && !lemur.isLemurRiding())
-        	{
-        		this.state = State.WALKING;
-	        }
-            else {
-        		this.state = State.STANDING;
-        	}
-    }
-    //TODO
+                this.Tail_mid1.rotateAngleX = 0F;
+                this.Tail_mid2.rotateAngleX = 0F;
+                this.Tail_mid3.rotateAngleX = 0.1F;
+                this.Tail_mid4.rotateAngleX = 0.1F;
+                this.Tail_end.rotateAngleX = 0.1F;
+
+            }
+            else if (lemur.speed >= 0.05F && lemur.speed <= 0.17F && !lemur.isLemurRiding() && !lemur.isFlying())
+            {
+                this.state = ModelLlibraryLemur.State.WALKING;
+            }
+            else if (!lemur.isFlying()) {
+                this.state = ModelLlibraryLemur.State.STANDING;
+            }
+            else if (lemur.isFlying() && !lemur.isLemurRiding())
+            {
+                this.state = ModelLlibraryLemur.State.FLYING;
+
+                this.Body.rotateAngleX = 1.5F;
+                this.ArmRight.rotateAngleX = -1.5F;
+                this.ArmRight.rotateAngleY = -1.6F;
+                this.ArmRight.rotateAngleZ = -0.05F;
+                this.ArmLeft.rotateAngleX = -1.5F;
+                this.ArmLeft.rotateAngleY = 1.6F;
+                this.ArmLeft.rotateAngleZ = 0.05F;
+
+                this.Tail_start.rotateAngleX = 0F;
+                this.Tail_mid1.rotateAngleX = 0F;
+                this.Tail_mid2.rotateAngleX = 0F;
+                this.Tail_mid3.rotateAngleX = 0F;
+                this.Tail_mid4.rotateAngleX = 0F;
+                this.Tail_end.rotateAngleX = 0F;
+                this.Left_Wing.setScale(1, 1, 1);
+                this.Right_Wing.setScale(1, 1, 1);
+
+                this.LegRightFoot.rotateAngleX = 1.5F;
+                this.LegLeftFoot.rotateAngleX = 1.5F;
+
+                this.EarRight.rotateAngleX = -0.45F;
+                this.EarLeft.rotateAngleX = -0.45F;
+            }
+        }
+        //TODO
         if (entitylivingbaseIn instanceof EntityAscendedFlyingLemur){
 
-        	EntityAscendedFlyingLemur lemur = (EntityAscendedFlyingLemur)entitylivingbaseIn;
+            EntityAscendedFlyingLemur lemur = (EntityAscendedFlyingLemur)entitylivingbaseIn;
+
+            boolean gliding = false;
+            if(lemur.getOwner() != null) {
+                gliding = GliderHelper.getIsGliderDeployed((EntityPlayer) lemur.getOwner());
+            }
 
             if (lemur.isPartying())
             {
-                this.state = State.PARTY;
-                //TODO
+                this.state = ModelLlibraryLemur.State.PARTY;
                 this.Body.rotateAngleY = -1.5F;
                 this.Body.rotateAngleX = 0.3F;
                 this.BodyLower.rotateAngleX = -0.3f;
                 this.Neck.rotateAngleX = -0.3F;
-                
+
                 this.ArmLeft.rotateAngleZ = -0.3f;
                 this.ArmRight.rotateAngleZ = 0.3f;
-                
+
                 this.LegRight.rotateAngleZ = -0.1f;
                 this.LegLeft.rotateAngleZ = 0.1f;
                 this.LegRight.rotateAngleY = -0.2f;
@@ -1223,309 +1222,305 @@ public class ModelLlibraryLemur extends AdvancedModelBase {
                 this.LegLeft.rotateAngleX = -0.35f;
                 this.LegRightLower.rotateAngleX = 1.25f;
                 this.LegLeftLower.rotateAngleX = 1.25f;
-                
+
                 this.LegLeftFoot.rotateAngleY = -0.4f;
                 this.LegRightFoot.rotateAngleY = 0.4f;
-                
+
                 this.LegLeftFoot.rotateAngleZ = -0.1f;
                 this.LegRightFoot.rotateAngleZ = 0.1f;
                 this.LegLeftFoot.rotateAngleX = -0.8f;
                 this.LegRightFoot.rotateAngleX = -0.8f;
-                
-                
+
+
                 this.Tail_start.rotateAngleX = 0.2F;
-	            this.Tail_mid1.rotateAngleX = 0F;
-	            this.Tail_mid2.rotateAngleX =  1.25F;
-	            this.Tail_mid3.rotateAngleX = 0F;
-	            this.Tail_mid4.rotateAngleX = 0F;
-	            this.Tail_end.rotateAngleX = 0F;
-	            /*
-	            this.Tail_mid3.rotateAngleZ = -1F;
-	            this.Tail_mid4.rotateAngleZ = -0.75F;
-	            this.Tail_end.rotateAngleZ = -0.5F;
-                 */
-        		this.ArmLeftHand.rotateAngleY = -3.5F;
-        		this.ArmRightHand.rotateAngleY = 3.5F;
-	            
+                this.Tail_mid1.rotateAngleX = 0F;
+                this.Tail_mid2.rotateAngleX =  1.25F;
+                this.Tail_mid3.rotateAngleX = 0F;
+                this.Tail_mid4.rotateAngleX = 0F;
+                this.Tail_end.rotateAngleX = 0F;
+                this.ArmLeftHand.rotateAngleY = -3.5F;
+                this.ArmRightHand.rotateAngleY = 3.5F;
+
             }
             else if (lemur.isSitting() && !lemur.isPartying()) {
-        		this.state = State.SITTING;
-        		this.Body.offsetY = 0.5F;
-        		this.BodyLower.rotateAngleX = 0.35F;
-        		
-        		this.LegRight.rotateAngleX = -2.6f;
-        		this.LegRightLower.rotateAngleX = 2.0f;
-        		this.LegRight.rotateAngleZ = -0.5F;
-        		this.LegRight.rotateAngleY = 0.5F;
-        		this.LegLeft.rotateAngleX = -2.6f;
-        		this.LegLeftLower.rotateAngleX = 2.0f;
-        		this.LegLeft.rotateAngleZ = 0.5F;
-        		this.LegLeft.rotateAngleY = -0.5F;
-        		
-        		this.ArmRight.rotateAngleY = 0.7F;
-        		this.ArmLeft.rotateAngleY = -0.7F;
-        		
-        		this.ArmLeftLower.rotateAngleX = -0.5F;
-        		this.ArmRightLower.rotateAngleX = -0.5F;
-        		
-        		this.ArmRightLower.rotateAngleZ = 0.35F;
-        		this.ArmLeftLower.rotateAngleZ = -0.35F;
-        		
-         		this.ArmRightLower.rotateAngleY = 0.6F;
-        		this.ArmLeftLower.rotateAngleY = -0.6F;
-        		
-        		this.ArmLeftHand.rotateAngleX = 1.6F;
-        		this.ArmRightHand.rotateAngleX = 1.6F;
+                this.state = ModelLlibraryLemur.State.SITTING;
+                this.Body.offsetY = 0.5F;
+                this.BodyLower.rotateAngleX = 0.35F;
 
-        		this.ArmLeftHand.rotateAngleY = -1.5F;
-        		this.ArmRightHand.rotateAngleY = 1.5F;
-        	} 
-        	else if (lemur.getLeftShoulder() && !lemur.getOwner().isElytraFlying()) {
-           		this.state = State.ONLEFTSHOULDER;
-        		this.Body.rotateAngleX = 0.35F;
-        		this.Body.rotateAngleY = 0.1F;
-        		this.Body.rotateAngleZ = 0.15F;
-        	
-        		this.BodyLower.rotateAngleX = -0.35F;
-        		
-        		this.LegLeft.rotateAngleX = -2.60F;
-        		this.LegRight.rotateAngleX = -2.60F;
-        		this.LegLeftLower.rotateAngleX = 2.8f;
-        		this.LegRightLower.rotateAngleX = 2.8f;
-        		
-        		this.LegLeftLower.rotateAngleZ = -0.45f;
-        		this.LegRightLower.rotateAngleZ = 0.45f;
-        		this.LegLeft.rotateAngleZ = 0.2F;
-        		this.LegLeft.rotateAngleY = -0.2F;
-        		this.LegRight.rotateAngleZ = -0.2F;
-        		this.LegRight.rotateAngleY = 0.2F;
-        		
-        		
-        		this.ArmRight.rotateAngleX = -0.6F;
-        		this.ArmLeft.rotateAngleX = -0.6F;
-         		this.ArmRight.rotateAngleZ = 0.2F;
-        		this.ArmLeft.rotateAngleZ = -0.2F;
-        		
-        		this.ArmLeftLower.rotateAngleX = -0.35F;
-        		this.ArmRightLower.rotateAngleX = -0.35F;
-        		
-        		this.ArmRightLower.rotateAngleZ = 0.35F;
-        		this.ArmLeftLower.rotateAngleZ = -0.35F;
-        		
-        		this.ArmLeftHand.rotateAngleX = -0.7F;
-        		this.ArmRightHand.rotateAngleX = -0.7F;
-        		
-        		
-        		this.ArmLeftHand.rotateAngleZ = 1F;
-        		this.ArmRightHand.rotateAngleZ = -1F;
-        		
-                this.ArmRightHand.rotateAngleY = 3.5F; 
-                this.ArmLeftHand.rotateAngleY = -3.5F;  		
-        	
-        		this.Body.offsetZ =  0.2F;
-        		
-         		if(lemur.getOwner().isSneaking()) 
-        		{
-        			this.Body.offsetY = 2.4F;
-        		}
-        		else 
-        		{
-        			this.Body.offsetY = 2.0F;
-        		}
-        
-        		if(lemur.isChild()) {
-        		this.Body.offsetX =  1.1F;
-        		}
-        		else {
-        		this.Body.offsetX =  0.8F;
-        		}
-        		
-	        }
-        	else if (lemur.getRightShoulder() && !lemur.getOwner().isElytraFlying()) {
-        		this.state = State.ONRIGHTSHOULDER;
-        		
-        		this.Body.rotateAngleX = 0.35F;
-        		this.Body.rotateAngleY = -0.1F;
-        		this.Body.rotateAngleZ = -0.15F;
-        		
-        		this.BodyLower.rotateAngleX = -0.35F;
-        		
-        		this.LegLeft.rotateAngleX = -2.60F;
-        		this.LegRight.rotateAngleX = -2.60F;
-        		this.LegLeftLower.rotateAngleX = 2.8f;
-        		this.LegRightLower.rotateAngleX = 2.8f;
-        		
-        		this.LegLeftLower.rotateAngleZ = -0.45f;
-        		this.LegRightLower.rotateAngleZ = 0.45f;
-        		this.LegLeft.rotateAngleZ = 0.2F;
-        		this.LegLeft.rotateAngleY = -0.2F;
-        		this.LegRight.rotateAngleZ = -0.2F;
-        		this.LegRight.rotateAngleY = 0.2F;
-        		
-        		
-        		this.ArmRight.rotateAngleX = -0.6F;
-        		this.ArmLeft.rotateAngleX = -0.6F;
-         		this.ArmRight.rotateAngleZ = 0.2F;
-        		this.ArmLeft.rotateAngleZ = -0.2F;
-        		
-        		this.ArmLeftLower.rotateAngleX = -0.35F;
-        		this.ArmRightLower.rotateAngleX = -0.35F;
-        		
-        		this.ArmRightLower.rotateAngleZ = 0.35F;
-        		this.ArmLeftLower.rotateAngleZ = -0.35F;
-        		
-        		this.ArmLeftHand.rotateAngleX = -0.7F;
-        		this.ArmRightHand.rotateAngleX = -0.7F;
-        		
-        		
-        		this.ArmLeftHand.rotateAngleZ = 1F;
-        		this.ArmRightHand.rotateAngleZ = -1F;
-        		
-                this.ArmRightHand.rotateAngleY = 3.5F; 
-                this.ArmLeftHand.rotateAngleY = -3.5F;  		
-        	
-        		this.Body.offsetZ =  0.2F;
-        		
-         		if(lemur.getOwner().isSneaking()) 
-        		{
-        			this.Body.offsetY = 2.4F;
-        		}
-        		else 
-        		{
-        			this.Body.offsetY = 2.0F;
-        		}
-        		
-        		if(lemur.isChild()) {
-        		this.Body.offsetX =  -1.1F;
-        		}
-        		else {
-        		this.Body.offsetX =  -0.8F;
-        		}
-        		
-	        } 
-        	else if (lemur.getLeftShoulder() && lemur.getOwner().isElytraFlying()) {
-        		this.state = State.ELYTRALEFTSHOULDER;
-        		
-	            this.Body.rotateAngleX = 1.5F;
-	            this.ArmRight.rotateAngleX = -1.5F;
-	            this.ArmRight.rotateAngleY = -1.6F;
-	            this.ArmRight.rotateAngleZ = -0.05F;
-	            this.ArmLeft.rotateAngleX = -1.5F;
-	            this.ArmLeft.rotateAngleY = 1.6F;
-	            this.ArmLeft.rotateAngleZ = 0.05F;
-	        
-	            this.Tail_start.rotateAngleX = 0F;
-	            this.Tail_mid1.rotateAngleX = 0F;
-	            this.Tail_mid2.rotateAngleX = 0F;
-	            this.Tail_mid3.rotateAngleX = 0F;
-	            this.Tail_mid4.rotateAngleX = 0F;
-	            this.Tail_end.rotateAngleX = 0F;
-	            this.Left_Wing.setScale(1, 1, 1);
-	            this.Right_Wing.setScale(1, 1, 1);
-        		
-	            this.LegRightFoot.rotateAngleX = 1.5F;
-	            this.LegLeftFoot.rotateAngleX = 1.5F;
-	            
-	            
-	            this.EarRight.rotateAngleX = -0.45F;
-	            this.EarLeft.rotateAngleX = -0.45F;
-	            
-	            this.Body.offsetX =  1.8F;
-	            this.Body.offsetY =  1.5F;
-	        } 
-        	else if (lemur.getRightShoulder() && lemur.getOwner().isElytraFlying()) {
-        		this.state = State.ELYTRARIGHTSHOULDER;
-        		
-	            this.Body.rotateAngleX = 1.5F;
-	            this.ArmRight.rotateAngleX = -1.5F;
-	            this.ArmRight.rotateAngleY = -1.6F;
-	            this.ArmRight.rotateAngleZ = -0.05F;
-	            this.ArmLeft.rotateAngleX = -1.5F;
-	            this.ArmLeft.rotateAngleY = 1.6F;
-	            this.ArmLeft.rotateAngleZ = 0.05F;
-	        
-	            this.Tail_start.rotateAngleX = 0F;
-	            this.Tail_mid1.rotateAngleX = 0F;
-	            this.Tail_mid2.rotateAngleX = 0F;
-	            this.Tail_mid3.rotateAngleX = 0F;
-	            this.Tail_mid4.rotateAngleX = 0F;
-	            this.Tail_end.rotateAngleX = 0F;
-	            this.Left_Wing.setScale(1, 1, 1);
-	            this.Right_Wing.setScale(1, 1, 1);
-        		
-	            this.LegRightFoot.rotateAngleX = 1.5F;
-	            this.LegLeftFoot.rotateAngleX = 1.5F;
-	            
-	            this.EarRight.rotateAngleX = -0.45F;
-	            this.EarLeft.rotateAngleX = -0.45F;
-	            
-	            this.Body.offsetX =  -1.8F;
-	            this.Body.offsetY =  1.5F;
-	        } 
-        	else if (lemur.isFlying() && !lemur.isLemurRiding())
-        	{
-        		this.state = State.FLYING;
-        		
-	            this.Body.rotateAngleX = 1.5F;
-	            this.ArmRight.rotateAngleX = -1.5F;
-	            this.ArmRight.rotateAngleY = -1.6F;
-	            this.ArmRight.rotateAngleZ = -0.05F;
-	            this.ArmLeft.rotateAngleX = -1.5F;
-	            this.ArmLeft.rotateAngleY = 1.6F;
-	            this.ArmLeft.rotateAngleZ = 0.05F;
-	        
-	            this.Tail_start.rotateAngleX = 0F;
-	            this.Tail_mid1.rotateAngleX = 0F;
-	            this.Tail_mid2.rotateAngleX = 0F;
-	            this.Tail_mid3.rotateAngleX = 0F;
-	            this.Tail_mid4.rotateAngleX = 0F;
-	            this.Tail_end.rotateAngleX = 0F;
-	            this.Left_Wing.setScale(1, 1, 1);
-	            this.Right_Wing.setScale(1, 1, 1);
-        		
-	            this.LegRightFoot.rotateAngleX = 1.5F;
-	            this.LegLeftFoot.rotateAngleX = 1.5F;
-	            
-	            this.EarRight.rotateAngleX = -0.45F;
-	            this.EarLeft.rotateAngleX = -0.45F;
-	        } 
-        	else if (lemur.speed > 0.25f && !lemur.isLemurRiding())
-        	{
-        		this.state = State.SPRINTING;
-        		this.Body.rotateAngleX = 1.5F;
-        		this.Body.offsetY = 0.25F;
-        		this.BodyLower.rotateAngleX = -0.35F;
-        		
+                this.LegRight.rotateAngleX = -2.6f;
+                this.LegRightLower.rotateAngleX = 2.0f;
+                this.LegRight.rotateAngleZ = -0.5F;
+                this.LegRight.rotateAngleY = 0.5F;
+                this.LegLeft.rotateAngleX = -2.6f;
+                this.LegLeftLower.rotateAngleX = 2.0f;
+                this.LegLeft.rotateAngleZ = 0.5F;
+                this.LegLeft.rotateAngleY = -0.5F;
+
+                this.ArmRight.rotateAngleY = 0.7F;
+                this.ArmLeft.rotateAngleY = -0.7F;
+
+                this.ArmLeftLower.rotateAngleX = -0.5F;
+                this.ArmRightLower.rotateAngleX = -0.5F;
+
+                this.ArmRightLower.rotateAngleZ = 0.35F;
+                this.ArmLeftLower.rotateAngleZ = -0.35F;
+
+                this.ArmRightLower.rotateAngleY = 0.6F;
+                this.ArmLeftLower.rotateAngleY = -0.6F;
+
+                this.ArmLeftHand.rotateAngleX = 1.6F;
+                this.ArmRightHand.rotateAngleX = 1.6F;
+
+                this.ArmLeftHand.rotateAngleY = -1.5F;
+                this.ArmRightHand.rotateAngleY = 1.5F;
+            }
+            else if (lemur.getLeftShoulder() && !lemur.getOwner().isElytraFlying() && !gliding) {
+                this.state = ModelLlibraryLemur.State.ONLEFTSHOULDER;
+                this.Body.rotateAngleX = 0.35F;
+                this.Body.rotateAngleY = 0.1F;
+                this.Body.rotateAngleZ = 0.15F;
+
+                this.BodyLower.rotateAngleX = -0.35F;
+
+                this.LegLeft.rotateAngleX = -2.60F;
+                this.LegRight.rotateAngleX = -2.60F;
+                this.LegLeftLower.rotateAngleX = 2.8f;
+                this.LegRightLower.rotateAngleX = 2.8f;
+
+                this.LegLeftLower.rotateAngleZ = -0.45f;
+                this.LegRightLower.rotateAngleZ = 0.45f;
+                this.LegLeft.rotateAngleZ = 0.2F;
+                this.LegLeft.rotateAngleY = -0.2F;
+                this.LegRight.rotateAngleZ = -0.2F;
+                this.LegRight.rotateAngleY = 0.2F;
+
+
+                this.ArmRight.rotateAngleX = -0.6F;
+                this.ArmLeft.rotateAngleX = -0.6F;
+                this.ArmRight.rotateAngleZ = 0.2F;
+                this.ArmLeft.rotateAngleZ = -0.2F;
+
+                this.ArmLeftLower.rotateAngleX = -0.35F;
+                this.ArmRightLower.rotateAngleX = -0.35F;
+
+                this.ArmRightLower.rotateAngleZ = 0.35F;
+                this.ArmLeftLower.rotateAngleZ = -0.35F;
+
+                this.ArmLeftHand.rotateAngleX = -0.7F;
+                this.ArmRightHand.rotateAngleX = -0.7F;
+
+
+                this.ArmLeftHand.rotateAngleZ = 1F;
+                this.ArmRightHand.rotateAngleZ = -1F;
+
+                this.ArmRightHand.rotateAngleY = 3.5F;
+                this.ArmLeftHand.rotateAngleY = -3.5F;
+
+                this.Body.offsetZ =  0.2F;
+
+                if(lemur.getOwner().isSneaking())
+                {
+                    this.Body.offsetY = 2.4F;
+                }
+                else
+                {
+                    this.Body.offsetY = 2.0F;
+                }
+
+                if(lemur.isChild()) {
+                    this.Body.offsetX =  1.1F;
+                }
+                else {
+                    this.Body.offsetX =  0.8F;
+                }
+
+            }
+            else if (lemur.getRightShoulder() && !lemur.getOwner().isElytraFlying() && !gliding) {
+                this.state = ModelLlibraryLemur.State.ONRIGHTSHOULDER;
+
+                this.Body.rotateAngleX = 0.35F;
+                this.Body.rotateAngleY = -0.1F;
+                this.Body.rotateAngleZ = -0.15F;
+
+                this.BodyLower.rotateAngleX = -0.35F;
+
+                this.LegLeft.rotateAngleX = -2.60F;
+                this.LegRight.rotateAngleX = -2.60F;
+                this.LegLeftLower.rotateAngleX = 2.8f;
+                this.LegRightLower.rotateAngleX = 2.8f;
+
+                this.LegLeftLower.rotateAngleZ = -0.45f;
+                this.LegRightLower.rotateAngleZ = 0.45f;
+                this.LegLeft.rotateAngleZ = 0.2F;
+                this.LegLeft.rotateAngleY = -0.2F;
+                this.LegRight.rotateAngleZ = -0.2F;
+                this.LegRight.rotateAngleY = 0.2F;
+
+
+                this.ArmRight.rotateAngleX = -0.6F;
+                this.ArmLeft.rotateAngleX = -0.6F;
+                this.ArmRight.rotateAngleZ = 0.2F;
+                this.ArmLeft.rotateAngleZ = -0.2F;
+
+                this.ArmLeftLower.rotateAngleX = -0.35F;
+                this.ArmRightLower.rotateAngleX = -0.35F;
+
+                this.ArmRightLower.rotateAngleZ = 0.35F;
+                this.ArmLeftLower.rotateAngleZ = -0.35F;
+
+                this.ArmLeftHand.rotateAngleX = -0.7F;
+                this.ArmRightHand.rotateAngleX = -0.7F;
+
+
+                this.ArmLeftHand.rotateAngleZ = 1F;
+                this.ArmRightHand.rotateAngleZ = -1F;
+
+                this.ArmRightHand.rotateAngleY = 3.5F;
+                this.ArmLeftHand.rotateAngleY = -3.5F;
+
+                this.Body.offsetZ =  0.2F;
+
+                if(lemur.getOwner().isSneaking())
+                {
+                    this.Body.offsetY = 2.4F;
+                }
+                else
+                {
+                    this.Body.offsetY = 2.0F;
+                }
+
+                if(lemur.isChild()) {
+                    this.Body.offsetX =  -1.1F;
+                }
+                else {
+                    this.Body.offsetX =  -0.8F;
+                }
+
+            }
+            else if (lemur.getLeftShoulder() && lemur.getOwner().isElytraFlying() || gliding) {
+                this.state = ModelLlibraryLemur.State.ELYTRALEFTSHOULDER;
+
+                this.Body.rotateAngleX = 1.5F;
+                this.ArmRight.rotateAngleX = -1.5F;
+                this.ArmRight.rotateAngleY = -1.6F;
+                this.ArmRight.rotateAngleZ = -0.05F;
+                this.ArmLeft.rotateAngleX = -1.5F;
+                this.ArmLeft.rotateAngleY = 1.6F;
+                this.ArmLeft.rotateAngleZ = 0.05F;
+
+                this.Tail_start.rotateAngleX = 0F;
+                this.Tail_mid1.rotateAngleX = 0F;
+                this.Tail_mid2.rotateAngleX = 0F;
+                this.Tail_mid3.rotateAngleX = 0F;
+                this.Tail_mid4.rotateAngleX = 0F;
+                this.Tail_end.rotateAngleX = 0F;
+                this.Left_Wing.setScale(1, 1, 1);
+                this.Right_Wing.setScale(1, 1, 1);
+
+                this.LegRightFoot.rotateAngleX = 1.5F;
+                this.LegLeftFoot.rotateAngleX = 1.5F;
+
+
+                this.EarRight.rotateAngleX = -0.45F;
+                this.EarLeft.rotateAngleX = -0.45F;
+
+                this.Body.offsetX =  1.8F;
+                this.Body.offsetY =  1.5F;
+            }
+            else if (lemur.getRightShoulder() && lemur.getOwner().isElytraFlying() || gliding) {
+                this.state = ModelLlibraryLemur.State.ELYTRARIGHTSHOULDER;
+
+                this.Body.rotateAngleX = 1.5F;
+                this.ArmRight.rotateAngleX = -1.5F;
+                this.ArmRight.rotateAngleY = -1.6F;
+                this.ArmRight.rotateAngleZ = -0.05F;
+                this.ArmLeft.rotateAngleX = -1.5F;
+                this.ArmLeft.rotateAngleY = 1.6F;
+                this.ArmLeft.rotateAngleZ = 0.05F;
+
+                this.Tail_start.rotateAngleX = 0F;
+                this.Tail_mid1.rotateAngleX = 0F;
+                this.Tail_mid2.rotateAngleX = 0F;
+                this.Tail_mid3.rotateAngleX = 0F;
+                this.Tail_mid4.rotateAngleX = 0F;
+                this.Tail_end.rotateAngleX = 0F;
+                this.Left_Wing.setScale(1, 1, 1);
+                this.Right_Wing.setScale(1, 1, 1);
+
+                this.LegRightFoot.rotateAngleX = 1.5F;
+                this.LegLeftFoot.rotateAngleX = 1.5F;
+
+                this.EarRight.rotateAngleX = -0.45F;
+                this.EarLeft.rotateAngleX = -0.45F;
+
+                this.Body.offsetX =  -1.8F;
+                this.Body.offsetY =  1.5F;
+            }
+            else if (lemur.speed > 0.17f && !lemur.isLemurRiding() && !lemur.isFlying())
+            {
+                this.state = ModelLlibraryLemur.State.SPRINTING;
+                this.Body.rotateAngleX = 1.5F;
+                this.Body.offsetY = 0.25F;
+                this.BodyLower.rotateAngleX = -0.35F;
+
                 this.ArmRight.rotateAngleX = -1.75F;
                 this.ArmLeft.rotateAngleX = -1.75F;
                 this.ArmRight.rotateAngleY = 0.1F;
                 this.ArmLeft.rotateAngleY = -0.1F;
-                this.ArmLeftLower.rotateAngleY = 0.4F; 
+                this.ArmLeftLower.rotateAngleY = 0.4F;
                 this.ArmRightLower.rotateAngleY = -0.4F;
-                this.ArmRightHand.rotateAngleY = 2.6F; 
+                this.ArmRightHand.rotateAngleY = 2.6F;
                 this.ArmLeftHand.rotateAngleY = -2.6F;
 
                 this.LegLeft.rotateAngleX = -1.5F;
                 this.LegRight.rotateAngleX = -1.5F;
                 this.LegLeft.rotateAngleY = -0.5F;
                 this.LegRight.rotateAngleY = 0.5F;
-     
-                
+
+
                 this.Tail_start.rotateAngleX = 0F;
-	            this.Tail_mid1.rotateAngleX = 0F;
-	            this.Tail_mid2.rotateAngleX = 0F;
-	            this.Tail_mid3.rotateAngleX = 0.1F;
-	            this.Tail_mid4.rotateAngleX = 0.1F;
-	            this.Tail_end.rotateAngleX = 0.1F;
-        
-	        }
-        	else if (lemur.speed > 0.1F && lemur.speed < 0.25F && !lemur.isLemurRiding())
-        	{
-        		this.state = State.WALKING;
-	        }
-            else {
-        		this.state = State.STANDING;
-        	}
+                this.Tail_mid1.rotateAngleX = 0F;
+                this.Tail_mid2.rotateAngleX = 0F;
+                this.Tail_mid3.rotateAngleX = 0.1F;
+                this.Tail_mid4.rotateAngleX = 0.1F;
+                this.Tail_end.rotateAngleX = 0.1F;
+
+            }
+            else if (lemur.speed >= 0.05F && lemur.speed <= 0.17F && !lemur.isLemurRiding() && !lemur.isFlying())
+            {
+                this.state = ModelLlibraryLemur.State.WALKING;
+            }
+            else if (!lemur.isFlying()) {
+                this.state = ModelLlibraryLemur.State.STANDING;
+            }
+            else if (lemur.isFlying() && !lemur.isLemurRiding())
+            {
+                this.state = ModelLlibraryLemur.State.FLYING;
+
+                this.Body.rotateAngleX = 1.5F;
+                this.ArmRight.rotateAngleX = -1.5F;
+                this.ArmRight.rotateAngleY = -1.6F;
+                this.ArmRight.rotateAngleZ = -0.05F;
+                this.ArmLeft.rotateAngleX = -1.5F;
+                this.ArmLeft.rotateAngleY = 1.6F;
+                this.ArmLeft.rotateAngleZ = 0.05F;
+
+                this.Tail_start.rotateAngleX = 0F;
+                this.Tail_mid1.rotateAngleX = 0F;
+                this.Tail_mid2.rotateAngleX = 0F;
+                this.Tail_mid3.rotateAngleX = 0F;
+                this.Tail_mid4.rotateAngleX = 0F;
+                this.Tail_end.rotateAngleX = 0F;
+                this.Left_Wing.setScale(1, 1, 1);
+                this.Right_Wing.setScale(1, 1, 1);
+
+                this.LegRightFoot.rotateAngleX = 1.5F;
+                this.LegLeftFoot.rotateAngleX = 1.5F;
+
+                this.EarRight.rotateAngleX = -0.45F;
+                this.EarLeft.rotateAngleX = -0.45F;
+            }
+
         }
     }
   
@@ -1674,7 +1669,7 @@ public class ModelLlibraryLemur extends AdvancedModelBase {
            	
         }
         else if(this.state == State.ELYTRALEFTSHOULDER) { //LEFT
-        	//TODO
+
             this.theHead.rotateAngleY =netHeadYaw * 0.007F;
             this.theHead.rotateAngleX =headPitch * 0.017453292F  - 1.5F; 
          	swing(ArmRight, 0.2F * globalspeed, 0.7F * globalDegree, false, 1.5F, 0, f, f1);
@@ -1695,7 +1690,7 @@ public class ModelLlibraryLemur extends AdvancedModelBase {
            	walk(EarLeft,0.1F * globalspeed, 0.2F * globalDegree, false, 1.2F, 0, f, f1);
         }
         else if(this.state == State.ELYTRARIGHTSHOULDER) { //RIGHT
-        	//TODO
+
             this.theHead.rotateAngleY =netHeadYaw * 0.007F;
             this.theHead.rotateAngleX =headPitch * 0.017453292F  - 1.5F; 
          	swing(ArmRight, 0.2F * globalspeed, 0.7F * globalDegree, false, 1.2F, 0, f, f1);
