@@ -39,7 +39,7 @@ public class FlashParticleBatchRenderer {
 	private static final ResourceLocation PARTICLE_TEXTURES = new ResourceLocation("minecraft", "textures/particle/particles.png");
 	
 	@SuppressWarnings("unchecked")
-	private static ArrayDeque<ParticleFlash>[] particles = new ArrayDeque[2];
+	public static ArrayDeque<ParticleFlash>[] particles = new ArrayDeque[2];
 	
 	private static final Queue<ParticleFlash> queue = Queues.<ParticleFlash>newArrayDeque();
 	
