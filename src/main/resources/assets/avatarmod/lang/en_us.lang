@@ -253,13 +253,30 @@ avatar.ability.immolate.lvl3=Stronger potion effects and don't burn every time
 avatar.ability.immolate.lvl4_1=§c§l§oFire §c§l§otolerance ;; Much longer duration, health boost effect, and you don't get set on fire!
 avatar.ability.immolate.lvl4_2=§c§l§oInferno ;; Much more powerful effects, incinerate surrounding projectiles!
 
-avatar.ability.inferno_punch=§c§lInferno Punch
-avatar.ability.inferno_punch.desc=Smash your enemies with a fist encased in raw fire!
-avatar.ability.inferno_punch.lvl1=Incinerate your enemies with the force of a super-powered fist, knocking them back and setting them on fire!
-avatar.ability.inferno_punch.lvl2=Chi cost increases, damage, knockback, and firetime increases!
-avatar.ability.inferno_punch.lvl3=Even more damage!
-avatar.ability.inferno_punch.lvl4_1=§c§l§oINCINERATE ;; Use a super-powerful inferno when you punch to create a massive fire explosion!
-avatar.ability.inferno_punch.lvl4_2=§c§l§oFireball Flurry! ;; You can hit enemies from really far away, and enemies close to them are hit as well! It's a 3 hit combo! More damage each hit!
+avatar.ability.fire_wall=§c§lFire Wall
+avatar.ability.fire_wall.desc=Create a temporary wall of fire from the ground! Destroys weaker projectiles, and works as an offensive ability!
+avatar.ability.fire_wall.lvl1=Aim at the ground to produce a flame wall, destroying projectiles 2 tiers below and slowing projectiles up to the same tier.
+avatar.ability.fire_wall.lvl2=Increased duration, damage, and health!
+avatar.ability.fire_wall.lvl3=Significantly increased size; destroy tier and slow tier both increased! Health increased again.
+avatar.ability.fire_wall.lvl4_1=§c§l§oCrimson Raze ;; Gain the ability to send your wall forwards after creating it! Significant damage increase, and a destroy tier increase!
+avatar.ability.fire_wall.lvl4_2=§c§l§oPillar of the Sun ;; Wall now forms a circular barrier around you! Temporarily increases powerrating, rainbow.
+
+
+avatar.ability.swirling_inferno=§c§lSwirling Inferno
+avatar.ability.swirling_inferno.desc=Charge up dual devastating fireballs!
+avatar.ability.swirling_inferno.lvl1=Hold right click to charge up two spinning fireballs that explode on impact!
+avatar.ability.swirling_inferno.lvl2=Charge time slightly reduced, damage and explosion strength increased! General stats increased.
+avatar.ability.swirling_inferno.lvl3=Gains the ability to destroy blocks! Significant speed and explosion strength increase.
+avatar.ability.swirling_inferno.lvl4_1=§c§l§oSpinning Sun ;; Create a single, massive fireball that multhits! Pierces! Slower, creates an enormous explosion upon hiting the ground!
+avatar.ability.swirling_inferno.lvl4_2=§c§l§oStar Cannon ;; Insane speed and damage increase, pierces! Rainbow fire.
+
+avatar.ability.fire_redirect=§c§lFire Redirect
+avatar.ability.fire_redirect.desc=Redirect or destroy incoming fire! Not visible in the radial menu, or next to your crosshair.
+avatar.ability.fire_redirect.lvl1=Hold shift to redirect projectiles one tier below, and left click to split projectiles two tiers below!
+avatar.ability.fire_redirect.lvl2=Destroy tier increased! Range for splitting projectiles is also increased.
+avatar.ability.fire_redirect.lvl3=Redirect tier increased! Significant radius boost for redirecting.
+avatar.ability.fire_redirect.lvl4_1=§c§l§oDancing Dragon ;; Redirect tier increased again! You can now redirect flamethrower, and you can absorb fires by pressing shift!
+avatar.ability.fire_redirect.lvl4_2=§c§l§oSplitting Star ;; Destroy tier increased again! Range for splitting also significantly increased!
 
 
 avatar.ability.water_arc=§9§lWater §9§lArc
