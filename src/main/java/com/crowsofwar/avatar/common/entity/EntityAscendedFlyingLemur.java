@@ -64,17 +64,12 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
         this.moveHelper = new EntityFlyHelper(this);
         experienceValue = 200;
     }
-
-
-
     @Nullable
     public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata)
     {
         this.setVariant(this.rand.nextInt(2));
         return super.onInitialSpawn(difficulty, livingdata);
     }
-
-
     @Override
     protected void initEntityAI()
     {
@@ -86,13 +81,11 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
         this.tasks.addTask(2, new EntityAIFollowOwner(this, 1.0F, 10.0F, 2.0F));
         this.tasks.addTask(2, new EntityAIFollowOwnerFlying(this, 1.0D, 5.0F, 1.0F));
         this.tasks.addTask(4, new EntityAIWatchClosest(this, EntityPlayer.class, 16.0F));
-        this.tasks.addTask(3, new EntityAIFollow(this, 1.0D, 3.0F, 7.0F));
         this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.2D, true));
         this.tasks.addTask(6, new EntityAIMate(this, 1.5D));
         this.targetTasks.addTask(1, new EntityAIOwnerHurtByTarget(this));
         this.targetTasks.addTask(2, new EntityAIOwnerHurtTarget(this));
         this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true, new Class[0]));
-
     }
 
     @Override
@@ -197,7 +190,7 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
                 this.moveHelper = new EntityMoveHelper(this);
             }
             else {
-                if(!this.isInWater() && !this.isInLove() && !this.isAngry()) {
+                if(!this.isInWater() && !this.isInLove()) {
                     this.moveHelper = new EntityFlyHelper(this);
                 }
             }
@@ -229,11 +222,6 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
             }
 
         }
-        if (!this.world.isRemote && this.getAttackTarget() == null && this.isAngry())
-        {
-            this.setAngry(false);
-        }
-
     }
 
     @SideOnly(Side.CLIENT)
@@ -443,19 +431,7 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0D);
     }
-    public void setAttackTarget(@Nullable EntityLivingBase entitylivingbaseIn)
-    {
-        super.setAttackTarget(entitylivingbaseIn);
 
-        if (entitylivingbaseIn == null)
-        {
-            this.setAngry(false);
-        }
-        else if (!this.isTamed())
-        {
-            this.setAngry(true);
-        }
-    }
     /*
      * Config - End
      */
@@ -539,7 +515,7 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
                 this.setAttackTarget((EntityLivingBase)null);
             }
         }
-        else if (TAME_ITEMS.contains(itemstack.getItem()) && !this.isAngry())
+        else if (TAME_ITEMS.contains(itemstack.getItem()))
         {
             if (!player.capabilities.isCreativeMode)
             {
@@ -572,77 +548,13 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
     }
     public boolean canBeLeashedTo(EntityPlayer player)
     {
-        return !this.isAngry() && super.canBeLeashedTo(player);
+        return super.canBeLeashedTo(player);
     }
     public int getMaxSpawnedInChunk()
     {
         return 8;
     }
 
-    public boolean shouldAttackEntity(EntityLivingBase target, EntityLivingBase owner)
-    {
-        if (!(target instanceof EntityCreeper) && !(target instanceof EntityGhast))
-        {
-            if (target instanceof EntityFlyingLemur)
-            {
-                EntityAscendedFlyingLemur entitylemur = (EntityAscendedFlyingLemur)target;
-
-                if (entitylemur.isTamed() && entitylemur.getOwner() == owner)
-                {
-                    return false;
-                }
-            }
-
-            if (target instanceof EntityPlayer && owner instanceof EntityPlayer && !((EntityPlayer)owner).canAttackPlayer((EntityPlayer)target))
-            {
-                return false;
-            }
-            else
-            {
-                return !(target instanceof AbstractHorse) || !((AbstractHorse)target).isTame();
-            }
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /*
-     * Emotions - Start
-     */
-    @Override
-    public void writeEntityToNBT(NBTTagCompound compound)
-    {
-        super.writeEntityToNBT(compound);
-        compound.setBoolean("Angry", this.isAngry());
-    }
-    @Override
-    public void readEntityFromNBT(NBTTagCompound compound)
-    {
-        super.readEntityFromNBT(compound);
-        this.setAngry(compound.getBoolean("Angry"));
-    }
-    public boolean isAngry()
-    {
-        return (((Byte)this.dataManager.get(TAMED)).byteValue() & 2) != 0;
-    }
-    public void setAngry(boolean angry)
-    {
-        byte b0 = ((Byte)this.dataManager.get(TAMED)).byteValue();
-
-        if (angry)
-        {
-            this.dataManager.set(TAMED, Byte.valueOf((byte)(b0 | 2)));
-        }
-        else
-        {
-            this.dataManager.set(TAMED, Byte.valueOf((byte)(b0 & -3)));
-        }
-    }
-    /*
-     * Emotions - End
-     */
     public void setVariant(int variantIn)
     {
         this.dataManager.set(VARIANT, Integer.valueOf(variantIn));
@@ -745,7 +657,7 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
             this.world.spawnParticle(enumparticletypes, this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, this.posY + 0.5D + (double)(this.rand.nextFloat() * this.height), this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, d0, d1, d2);
         }
     }
-    /*
-     * Particle Effects - End
-     */
+/*
+ * Particle Effects - End
+ */
 }

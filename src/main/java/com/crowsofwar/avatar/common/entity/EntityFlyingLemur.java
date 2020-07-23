@@ -71,7 +71,6 @@ public class EntityFlyingLemur extends EntityTameable implements EntityFlying
 		experienceValue = 200;
 	}
 
-
 	@Override
 	protected void initEntityAI()
 	{
@@ -83,7 +82,6 @@ public class EntityFlyingLemur extends EntityTameable implements EntityFlying
 		this.tasks.addTask(2, new EntityAIFollowOwner(this, 1.0F, 10.0F, 2.0F));
 		this.tasks.addTask(2, new EntityAIFollowOwnerFlying(this, 1.0D, 5.0F, 1.0F));
 		this.tasks.addTask(4, new EntityAIWatchClosest(this, EntityPlayer.class, 16.0F));
-		this.tasks.addTask(3, new EntityAIFollow(this, 1.0D, 3.0F, 7.0F));
 		this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.2D, true));
 		this.tasks.addTask(6, new EntityAIMate(this, 1.5D));
 		this.targetTasks.addTask(1, new EntityAIOwnerHurtByTarget(this));
@@ -114,15 +112,7 @@ public class EntityFlyingLemur extends EntityTameable implements EntityFlying
 
 		return null;
 	}
-/*
-	protected PathNavigate createNavigator(World worldIn)
-	{
-		PathNavigateFlying pathnavigateflying = new PathNavigateFlying(this, worldIn);
-		pathnavigateflying.setCanOpenDoors(false);
-		pathnavigateflying.setCanFloat(true);
-		pathnavigateflying.setCanEnterDoors(true);
-		return pathnavigateflying;
-	}*/
+
 	@Override
 	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand)
 	{
@@ -553,7 +543,7 @@ public class EntityFlyingLemur extends EntityTameable implements EntityFlying
 
 	public boolean shouldAttackEntity(EntityLivingBase target, EntityLivingBase owner)
 	{
-		if (!(target instanceof EntityCreeper) && !(target instanceof EntityGhast))
+		if (!(target instanceof EntityCreeper) && !(target instanceof EntityGhast) && !(target instanceof EntityAscendedFlyingLemur))
 		{
 			if (target instanceof EntityFlyingLemur)
 			{
@@ -572,6 +562,7 @@ public class EntityFlyingLemur extends EntityTameable implements EntityFlying
 			else
 			{
 				return !(target instanceof AbstractHorse) || !((AbstractHorse)target).isTame();
+
 			}
 		}
 		else
