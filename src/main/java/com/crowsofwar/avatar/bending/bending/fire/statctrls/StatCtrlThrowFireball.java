@@ -64,6 +64,7 @@ public class StatCtrlThrowFireball extends StatusControl {
 
 			Vector vel = lookPos.minus(Vector.getEntityPos(fireball));
 
+			//Drillgon200: Why deal with orbit ids when there's already two other ids you can organize them by?
 			if (!fireballs.isEmpty()) {
 				fireballs = fireballs.stream().filter(fireball1 -> !(fireball1.getBehavior() instanceof FireballBehavior.Thrown
 						|| fireball1.getBehavior() instanceof AbilityFireball.FireballOrbitController)).collect(Collectors.toList());

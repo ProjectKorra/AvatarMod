@@ -539,6 +539,10 @@ public class BendingData {
 	public void writeToNbt(NBTTagCompound writeTo) {
 
 		// @formatter:off
+		
+		if(activeBending != null){
+			writeTo.setString("activeBending", activeBending.toString());
+		}
 
 		AvatarUtils.writeList(bendings,
 				(nbt, controllerId) -> nbt.setUniqueId("ControllerID", controllerId),
@@ -602,6 +606,10 @@ public class BendingData {
 				nbt -> nbt.getUniqueId("ControllerID"),
 				readFrom,
 				"BendingControllers");
+		
+		if(readFrom.hasKey("activeBending")){
+			setActiveBendingId(UUID.fromString(readFrom.getString("activeBending")));
+		}
 
 		AvatarUtils.readList(statusControls,
 				nbt -> StatusControlController.lookup(nbt.getInteger("Id")),
