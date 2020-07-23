@@ -139,7 +139,6 @@ public class AvatarUtils {
 			all_particles.addAll(layer);
 		}
 		
-		System.out.println(all_particles.size());
 		aliveParticlesCache = all_particles;
 		return aliveParticlesCache;
 	}
