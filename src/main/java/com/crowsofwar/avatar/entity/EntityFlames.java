@@ -80,13 +80,13 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
     public EntityFlames(World worldIn) {
         super(worldIn);
-        setSize(0.1f, 0.1f);
+        setSize(1.0f, 1.0f);
         this.lightTrailingFire = false;
         this.reflect = false;
-        this.ignoreFrustumCheck = true;
         this.lightTnt = true;
         this.setsFires = true;
     }
+
 
     @Override
     protected void entityInit() {

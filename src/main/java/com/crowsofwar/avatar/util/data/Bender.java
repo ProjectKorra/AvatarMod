@@ -224,7 +224,7 @@ public abstract class Bender {
             if (ability.properties != null) {
                 if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
                     if (data.getMiscData().getCanUseAbilities()) {
-                        if (consumeChi(ability.getChiCost(abilityCtx)) && aD.getAbilityCooldown() == 0 || entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+                        if (aD.getAbilityCooldown() == 0 || entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
                             ability.execute(abilityCtx);
                             if (entity instanceof EntityPlayer)
                                 ((EntityPlayer) entity).addExhaustion(ability.getExhaustion(abilityCtx));

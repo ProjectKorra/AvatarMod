@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityShockwave;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
@@ -71,11 +72,13 @@ public class AbilityFireShot extends Ability {
         EntityLivingBase entity = ctx.getBenderEntity();
         AbilityData abilityData = ctx.getAbilityData();
 
+        Vector pos = Vector.getEyePos(entity);
+
         float speed = getProperty(SPEED, ctx).floatValue() * 2;
         float knockback = getProperty(KNOCKBACK, ctx).floatValue() / 10;
         float size = getProperty(SIZE, ctx).floatValue();
         float damage = getProperty(DAMAGE, ctx).floatValue();
-        float chi = getProperty(CHI_COST, ctx).floatValue();
+        float chi = getChiCost(ctx);
         float xp = getProperty(XP_HIT, ctx).floatValue();
 
         int fireTime = getProperty(FIRE_TIME, ctx).intValue();
@@ -95,19 +98,20 @@ public class AbilityFireShot extends Ability {
         if (bender.consumeChi(chi)) {
             if (!getBooleanProperty(SHOCKWAVE, ctx)) {
                 //TODO: Fix trailing fire and piercing
-                Vector pos = Vector.getEyePos(entity).minusY(0.5);
+
                 EntityFlames flames = new EntityFlames(world);
-                flames.setPosition(pos);
+                flames.setVelocity(Vector.getLookRectangular(entity).times(speed));
                 flames.setOwner(entity);
+                flames.setPosition(pos.minusY(0.05));
                 flames.rotationYaw = entity.rotationYaw;
                 flames.rotationPitch = entity.rotationPitch;
                 flames.setEntitySize(size);
                 flames.setDynamicSpreadingCollision(true);
                 flames.setReflect(getBooleanProperty(REFLECT, ctx));
                 flames.setAbility(this);
+                flames.setPerformanceAmount(performance);
                 flames.setTier(getCurrentTier(ctx));
                 flames.setXp(xp);
-                flames.setVelocity(Vector.getLookRectangular(entity).times(speed));
                 flames.setLifeTime(lifeTime);
                 flames.setTrailingFire(getBooleanProperty(TRAILING_FIRE, ctx));
                 flames.setFireTime(fireTime);
@@ -117,14 +121,15 @@ public class AbilityFireShot extends Ability {
                 flames.setFade(getProperty(FADE_R, ctx).intValue(), getProperty(FADE_G, ctx).intValue(), getProperty(FADE_B, ctx).intValue());
                 flames.setElement(new Firebending());
                 flames.setPush(knockback);
+                flames.setDamageSource("avatar_Fire_fireShot");
                 world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
                         world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
-
                 if (!world.isRemote)
                     world.spawnEntity(flames);
+
                 if (world.isRemote) {
                     for (double angle = 0; angle < 360; angle += 8) {
-                        Vector position = Vector.getOrthogonalVector(entity.getLookVec(), angle, 0.01f);
+                        Vector position = Vector.getOrthogonalVector(entity.getLookVec(), angle, size / 20F);
                         Vector velocity;
                         position = position.plus(pos.minusY(0.05).plus(Vector.getLookRectangular(entity)));
                         velocity = position.minus(pos.minusY(0.05).plus(Vector.getLookRectangular(entity))).normalize();
@@ -135,12 +140,12 @@ public class AbilityFireShot extends Ability {
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                                 world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
                                 .time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(1F, 10 / 255F, 5 / 255F, 0.75F).spawnEntity(entity)
-                                .scale(0.125F).element(new Firebending()).collide(true).ability(this).spawn(world);
+                                .scale(size / 2F).element(new Firebending()).collide(true).ability(this).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                                 world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
                                 .time(12 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(1F, (40 + AvatarUtils.getRandomNumberInRange(0, 60)) / 255F,
                                 10 / 255F, 0.75F).spawnEntity(entity)
-                                .scale(0.125F).element(new Firebending()).collide(true).ability(this).spawn(world);
+                                .scale(size / 2F).element(new Firebending()).collide(true).ability(this).spawn(world);
                     }
                 }
             } else {
