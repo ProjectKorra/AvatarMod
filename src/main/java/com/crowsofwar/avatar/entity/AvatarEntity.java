@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.entity;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.client.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.client.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.client.particle.ParticleSpawner;
@@ -797,7 +798,13 @@ public abstract class AvatarEntity extends Entity {
 
     @Override
     public boolean shouldRenderInPass(int pass) {
-        return super.shouldRenderInPass(pass);
+        switch (getElement().getName()) {
+            default:
+                return pass == 0;
+            case "firebending":
+            case "airbending":
+                return pass == 1;
+        }
     }
 
     // disable stepping sounds
@@ -807,7 +814,7 @@ public abstract class AvatarEntity extends Entity {
 
     //Used to determine what element the entity is
     public BendingStyle getElement() {
-        return element;
+        return element == null ? new Airbending() : element;
     }
 
     public void setElement(BendingStyle element) {

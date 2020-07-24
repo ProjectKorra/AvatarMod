@@ -3,9 +3,11 @@ package com.crowsofwar.avatar.client.particles.newparticles;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
+
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayer;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayerFlashParticle;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayerFlashParticleGlow;
+
 import com.crowsofwar.avatar.config.ConfigClient.ParticleRenderSettings;
 
 import net.minecraft.client.Minecraft;

@@ -253,13 +253,30 @@ avatar.ability.immolate.lvl3=Stronger potion effects and don't burn every time
 avatar.ability.immolate.lvl4_1=§c§l§oFire §c§l§otolerance ;; Much longer duration, health boost effect, and you don't get set on fire!
 avatar.ability.immolate.lvl4_2=§c§l§oInferno ;; Much more powerful effects, incinerate surrounding projectiles!
 
-avatar.ability.inferno_punch=§c§lInferno Punch
-avatar.ability.inferno_punch.desc=Smash your enemies with a fist encased in raw fire!
-avatar.ability.inferno_punch.lvl1=Incinerate your enemies with the force of a super-powered fist, knocking them back and setting them on fire!
-avatar.ability.inferno_punch.lvl2=Chi cost increases, damage, knockback, and firetime increases!
-avatar.ability.inferno_punch.lvl3=Even more damage!
-avatar.ability.inferno_punch.lvl4_1=§c§l§oINCINERATE ;; Use a super-powerful inferno when you punch to create a massive fire explosion!
-avatar.ability.inferno_punch.lvl4_2=§c§l§oFireball Flurry! ;; You can hit enemies from really far away, and enemies close to them are hit as well! It's a 3 hit combo! More damage each hit!
+avatar.ability.fire_wall=§c§lFire Wall
+avatar.ability.fire_wall.desc=Create a temporary wall of fire from the ground! Destroys weaker projectiles, and works as an offensive ability!
+avatar.ability.fire_wall.lvl1=Aim at the ground to produce a flame wall, destroying projectiles 2 tiers below and slowing projectiles up to the same tier.
+avatar.ability.fire_wall.lvl2=Increased duration, damage, and health!
+avatar.ability.fire_wall.lvl3=Significantly increased size; destroy tier and slow tier both increased! Health increased again.
+avatar.ability.fire_wall.lvl4_1=§c§l§oCrimson Raze ;; Gain the ability to send your wall forwards after creating it! Significant damage increase, and a destroy tier increase!
+avatar.ability.fire_wall.lvl4_2=§c§l§oPillar of the Sun ;; Wall now forms a circular barrier around you! Temporarily increases powerrating, rainbow.
+
+
+avatar.ability.swirling_inferno=§c§lSwirling Inferno
+avatar.ability.swirling_inferno.desc=Charge up dual devastating fireballs!
+avatar.ability.swirling_inferno.lvl1=Hold right click to charge up two spinning fireballs that explode on impact!
+avatar.ability.swirling_inferno.lvl2=Charge time slightly reduced, damage and explosion strength increased! General stats increased.
+avatar.ability.swirling_inferno.lvl3=Gains the ability to destroy blocks! Significant speed and explosion strength increase.
+avatar.ability.swirling_inferno.lvl4_1=§c§l§oSpinning Sun ;; Create a single, massive fireball that multhits! Pierces! Slower, creates an enormous explosion upon hiting the ground!
+avatar.ability.swirling_inferno.lvl4_2=§c§l§oStar Cannon ;; Insane speed and damage increase, pierces! Rainbow fire.
+
+avatar.ability.fire_redirect=§c§lFire Redirect
+avatar.ability.fire_redirect.desc=Redirect or destroy incoming fire! Not visible in the radial menu, or next to your crosshair.
+avatar.ability.fire_redirect.lvl1=Hold shift to redirect projectiles one tier below, and left click to split projectiles two tiers below!
+avatar.ability.fire_redirect.lvl2=Destroy tier increased! Range for splitting projectiles is also increased.
+avatar.ability.fire_redirect.lvl3=Redirect tier increased! Significant radius boost for redirecting.
+avatar.ability.fire_redirect.lvl4_1=§c§l§oDancing Dragon ;; Redirect tier increased again! You can now redirect flamethrower, and you can absorb fires by pressing shift!
+avatar.ability.fire_redirect.lvl4_2=§c§l§oSplitting Star ;; Destroy tier increased again! Range for splitting also significantly increased!
 
 
 avatar.ability.water_arc=§9§lWater §9§lArc
@@ -313,7 +330,7 @@ avatar.ability.cleanse.lvl4_2=§9§l§oFocus ;; Deal much more damage in combat 
 
 avatar.ability.air_gust=§f§lAir Gust
 avatar.ability.air_gust.desc=Generate a strong gust of air to push enemies back, pushing wooden buttons and weaker pressure plates!
-avatar.ability.air_gust.lvl1=I've got 99 problems and you ain't one!
+avatar.ability.air_gust.lvl1=Blast enemies away!
 avatar.ability.air_gust.lvl2=Larger, pierces enemies, and you can now push stone buttons!
 avatar.ability.air_gust.lvl3=Stronger push, larger, you can now push iron doors and trapdoors!
 avatar.ability.air_gust.lvl4_1=§f§l§oWind Bolt ;; Destroys weaker projectiles with a smaller, ultra-fast bolt of air!
@@ -328,16 +345,16 @@ avatar.ability.air_jump.lvl4_1=§f§l§oDouble-jump ;; Costs double chi
 avatar.ability.air_jump.lvl4_2=§f§l§oGround §f§l§opound ;; Attack nearby enemies on land
 
 avatar.ability.airblade=§f§lAirblade
-avatar.ability.airblade.desc=A spinning disc of air powerful enough to cut flesh. Can be deadly in quick succession.
+avatar.ability.airblade.desc=A vertical slash of air powerful enough to rend flesh!
 avatar.ability.airblade.lvl1=Slice n' Dice!
-avatar.ability.airblade.lvl2=Higher speeds and damage
-avatar.ability.airblade.lvl3=Can now cut blocks
+avatar.ability.airblade.lvl2=Higher speeds and damage.
+avatar.ability.airblade.lvl3=Can now cut blocks!
 avatar.ability.airblade.lvl4_1=§f§l§oDragon §f§l§oClaw ;; Shoot 5 smaller, ultra-fast airblades that pierces enemies!
-avatar.ability.airblade.lvl4_2=§f§l§oCyclone §f§l§oCleave ;; Super massive, destroys most blocks.
+avatar.ability.airblade.lvl4_2=§f§l§oBoomerAang  ;; Creates a horizontal, spinning airblade that returns to you!
 
 avatar.ability.cloudburst=§f§lCloudburst
 avatar.ability.cloudburst.desc=Create a whirling ball of air which can be thrown at enemies; creates a mini burst of air where it lands.
-avatar.ability.cloudburst.lvl1=That was a big burp!
+avatar.ability.cloudburst.lvl1=Launch condensed cloud!
 avatar.ability.cloudburst.lvl2=Faster speed when thrown, larger explosion of air, you can now push stone buttons!
 avatar.ability.cloudburst.lvl3=Much more damage, bigger air explosion, you can now push iron trapdoors and doors!
 avatar.ability.cloudburst.lvl4_1=§f§l§oChi §f§l§oSmash ;; Temporarily applies severe debuffs to targets' bending power
@@ -347,13 +364,13 @@ avatar.ability.air_bubble=§f§lAir Bubble
 avatar.ability.air_bubble.desc=Create a bubble of air around you to protect yourself from incoming attacks. However, it takes lots of chi to maintain.
 avatar.ability.air_bubble.lvl1=*Can't touch this*
 avatar.ability.air_bubble.lvl2=Medium-sized air bubble
-avatar.ability.air_bubble.lvl3=More knockback
+avatar.ability.air_bubble.lvl3=More knockback.
 avatar.ability.air_bubble.lvl4_1=§f§l§oPressured §f§l§obubble ;; Very large size
 avatar.ability.air_bubble.lvl4_2=§f§l§oUndercurrent ;; Limited hovering, disabled by sneak
 
 avatar.ability.air_burst=§f§lAir Burst
 avatar.ability.air_burst.desc=Slowly draw the surrounding air inwards, then release it in a massive blast that knocks back enemies! Left click when it's fully charged to shoot a blast of air!
-avatar.ability.air_burst.lvl1="Nope!" nearby enemies, blasting them away with a shockwave of air. 4 charge levels.
+avatar.ability.air_burst.lvl1=Hold right click for 4 different charge levels of icnreasing power!
 avatar.ability.air_burst.lvl2=Charge timed reduced; damage, radius, and knockback increased. You can shoot an air laser at a charge level of 3 instead of 4!
 avatar.ability.air_burst.lvl3=Everything is enhanced! You can shoot a beam of air at charge level 2!
 avatar.ability.air_burst.lvl4_1=§f§lPiercing Winds ;; Way higher damage, and release winds of such ferocity that they blind, weaken, and slow enemies! Air beam is now a sniper beam.

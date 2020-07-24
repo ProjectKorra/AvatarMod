@@ -19,15 +19,15 @@ package com.crowsofwar.avatar.bending.bending.air;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
-import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityAirGust;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
-import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -37,8 +37,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
 /**
  * @author CrowsOfWar
@@ -68,8 +66,6 @@ public class AbilityAirGust extends Ability {
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
 
-        if (!bender.consumeChi(STATS_CONFIG.chiAirGust)) return;
-
         Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw),
                 Math.toRadians(entity.rotationPitch));
         Vector pos = Vector.getEyePos(entity);
@@ -84,57 +80,59 @@ public class AbilityAirGust extends Ability {
         size *= ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier();
         speed += 5 * ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier();
         lifetime += 5 * ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier();
-        push *= (1 +  0.5 * ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier());
+        push *= (1 + 0.5 * ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier());
 
-        EntityAirGust gust = new EntityAirGust(world);
-        gust.setVelocity(look.times(speed));
-        gust.setPosition(pos.minusY(0.5));
-        gust.setOwner(entity);
-        gust.setEntitySize(size);
-        gust.setDamage(0);
-        gust.setDynamicSpreadingCollision(true);
-        gust.setLifeTime(lifetime);
-        gust.setPush(push);
-        gust.rotationPitch = entity.rotationPitch;
-        gust.rotationYaw = entity.rotationYaw;
-        gust.setPerformanceAmount(performance);
-        gust.setPushRedstone(getBooleanProperty(PUSH_REDSTONE, ctx));
-        gust.setPushStone(getBooleanProperty(PUSH_STONE, ctx));
-        gust.setPushIronDoor(getBooleanProperty(PUSH_IRONDOOR, ctx));
-        gust.setPushIronTrapDoor(getBooleanProperty(PUSH_IRON_TRAPDOOR, ctx));
-        gust.setDestroyProjectiles(getBooleanProperty(DESTROY_PROJECTILES, ctx));
-        gust.setSlowProjectiles(getBooleanProperty(SLOW_PROJECTILES, ctx));
-        gust.setPiercesEnemies(getBooleanProperty(PIERCES_ENEMIES, ctx));
-        gust.setAbility(this);
-        gust.setTier(getCurrentTier(ctx));
-        gust.setXp(getProperty(XP_HIT).floatValue());
-        gust.setBehaviour(new AirGustBehaviour());
-        if (!world.isRemote)
-            world.spawnEntity(gust);
+        if (bender.consumeChi(getChiCost(ctx))) {
+            //TODO: Fix piercing
+            EntityAirGust gust = new EntityAirGust(world);
+            gust.setVelocity(look.times(speed));
+            gust.setPosition(pos.minusY(0.5));
+            gust.setOwner(entity);
+            gust.setEntitySize(size);
+            gust.setDamage(0);
+            gust.setDynamicSpreadingCollision(true);
+            gust.setLifeTime(lifetime);
+            gust.setPush(push);
+            gust.rotationPitch = entity.rotationPitch;
+            gust.rotationYaw = entity.rotationYaw;
+            gust.setPerformanceAmount(performance);
+            gust.setPushRedstone(getBooleanProperty(PUSH_REDSTONE, ctx));
+            gust.setPushStone(getBooleanProperty(PUSH_STONE, ctx));
+            gust.setPushIronDoor(getBooleanProperty(PUSH_IRONDOOR, ctx));
+            gust.setPushIronTrapDoor(getBooleanProperty(PUSH_IRON_TRAPDOOR, ctx));
+            gust.setDestroyProjectiles(getBooleanProperty(DESTROY_PROJECTILES, ctx));
+            gust.setSlowProjectiles(getBooleanProperty(SLOW_PROJECTILES, ctx));
+            gust.setPiercesEnemies(getBooleanProperty(PIERCES_ENEMIES, ctx));
+            gust.setAbility(this);
+            gust.setTier(getCurrentTier(ctx));
+            gust.setXp(getProperty(XP_HIT).floatValue());
+            gust.setBehaviour(new AirGustBehaviour());
+            if (!world.isRemote)
+                world.spawnEntity(gust);
 
-        if (world.isRemote) {
-            for (double angle = 0; angle < 360; angle += Math.max((int) (size * 15), 15)) {
-                Vector position = Vector.getOrthogonalVector(entity.getLookVec(), angle, size / 20F);
-                Vector velocity;
-                //position = position.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
-                position = position.plus(pos.minusY(0.05).plus(Vector.getLookRectangular(entity)));
-                velocity = position.minus(pos.minusY(0.05).plus(Vector.getLookRectangular(entity))).normalize();
-                velocity = velocity.times(speed / 400);
-                double spawnX = position.x();
-                double spawnY = position.y();
-                double spawnZ = position.z();
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
-                        world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
-                        .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                        .scale(size * (1 / size)).element(new Airbending()).collide(true).spawn(world);
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
-                        world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
-                        .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                        .scale(size * (1 / size)).element(new Airbending()).collide(true).spawn(world);
+            if (world.isRemote) {
+                for (double angle = 0; angle < 360; angle += Math.max((int) (size * 15), 15)) {
+                    Vector position = Vector.getOrthogonalVector(entity.getLookVec(), angle, size / 20F);
+                    Vector velocity;
+                    position = position.plus(pos.minusY(0.05).plus(Vector.getLookRectangular(entity)));
+                    velocity = position.minus(pos.minusY(0.05).plus(Vector.getLookRectangular(entity))).normalize();
+                    velocity = velocity.times(speed / 400);
+                    double spawnX = position.x();
+                    double spawnY = position.y();
+                    double spawnZ = position.z();
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
+                            world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
+                            .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
+                            .scale(size * (1 / size)).element(new Airbending()).collide(true).spawn(world);
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
+                            world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
+                            .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
+                            .scale(size * (1 / size)).element(new Airbending()).collide(true).spawn(world);
+                }
             }
+            entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, entity.getSoundCategory(), 1.0F + Math.max(ctx.getLevel(), 0) / 2F, 0.9F + world.rand.nextFloat() / 10);
+            super.execute(ctx);
         }
-        entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, entity.getSoundCategory(), 1.0F + Math.max(ctx.getLevel(), 0) / 2F, 0.9F + world.rand.nextFloat() / 10);
-        super.execute(ctx);
     }
 
     @Override

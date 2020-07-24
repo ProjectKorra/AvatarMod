@@ -18,6 +18,8 @@
 package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.Bender;
@@ -89,6 +91,11 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
 		this.wallReference.preventNullSaving();
 		this.setSize(.9f, 5);
 		this.restrictToVertical = true;
+	}
+
+	@Override
+	public BendingStyle getElement() {
+		return new Earthbending();
 	}
 
 	@Override

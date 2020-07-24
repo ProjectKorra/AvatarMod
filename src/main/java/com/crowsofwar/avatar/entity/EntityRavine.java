@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.entity;
 
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.config.ConfigStats;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.gorecore.util.Vector;
@@ -306,5 +308,10 @@ public class EntityRavine extends EntityOffensive {
 
 		}
 		return false;
+	}
+
+	@Override
+	public BendingStyle getElement() {
+		return new Earthbending();
 	}
 }

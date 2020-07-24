@@ -17,7 +17,9 @@
 
 package com.crowsofwar.avatar.entity;
 
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.earth.AbilityEarthControl;
+import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.BendingData;
@@ -443,6 +445,11 @@ public class EntityFloatingBlock extends EntityOffensive {
     public void setDead() {
         super.setDead();
         removeStatCtrl();
+    }
+
+    @Override
+    public BendingStyle getElement() {
+        return new Earthbending();
     }
 
     private void removeStatCtrl() {

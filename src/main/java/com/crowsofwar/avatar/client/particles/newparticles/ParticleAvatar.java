@@ -979,8 +979,8 @@ public abstract class ParticleAvatar extends Particle {
 
     //Abstraction, I guess
     public void spawnSteamParticles() {
-        ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 50,
-                world.rand.nextDouble() / 20, world.rand.nextGaussian() / 50).time(particleMaxAge - particleAge + 1).spawn(world);
+        ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 20 + motionX,
+                world.rand.nextDouble() / 10, world.rand.nextGaussian() / 20 + motionZ).time(particleMaxAge - particleAge + 5).spawn(world);
     }
 
     public void applyElementalContact(ParticleAvatar particle) {

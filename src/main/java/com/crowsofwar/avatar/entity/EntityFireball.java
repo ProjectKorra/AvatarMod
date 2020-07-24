@@ -315,7 +315,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
     @Override
     public boolean shouldRenderInPass(int pass) {
-        return true;
+        return super.shouldRenderInPass(pass);
     }
     // Mostly fixes a glitch where the entity turns invisible
 

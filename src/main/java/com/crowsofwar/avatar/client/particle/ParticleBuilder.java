@@ -4,6 +4,7 @@ package com.crowsofwar.avatar.client.particle;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.client.particles.newparticles.FlashParticleBatchRenderer;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleFlash;
 import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
@@ -896,6 +897,7 @@ public final class ParticleBuilder {
 		particle.setSpawnEntity(spawnEntity);
 		particle.setTargetPosition(tx, ty, tz);
 		particle.setTargetEntity(target);
+
 
 		if(particle.getCustomRenderLayer() != null){
 			ParticleBatchRenderer.addParticle(particle);
