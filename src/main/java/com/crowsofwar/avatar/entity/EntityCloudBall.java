@@ -309,7 +309,7 @@ public class EntityCloudBall extends EntityOffensive {
 
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return true;
+		return super.shouldRenderInPass(pass);
 	}
 	//Fixes a glitch where the entity turns invisible
 

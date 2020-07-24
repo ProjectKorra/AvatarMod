@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.entity;
 
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControlController;
 import com.crowsofwar.avatar.entity.data.SyncedEntity;
@@ -155,6 +157,11 @@ public class EntityWall extends AvatarEntity {
 		if (direction.getAxis().isVertical())
 			throw new IllegalArgumentException("Cannot face up/down: " + direction);
 		this.dataManager.set(SYNC_DIRECTION, direction.ordinal());
+	}
+
+	@Override
+	public BendingStyle getElement() {
+		return new Earthbending();
 	}
 
 	@Override
