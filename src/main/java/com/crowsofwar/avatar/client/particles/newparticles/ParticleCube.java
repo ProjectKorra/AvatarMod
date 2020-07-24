@@ -1,12 +1,24 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
+import static net.minecraft.util.math.MathHelper.cos;
+import static net.minecraft.util.math.MathHelper.sin;
+
+import javax.annotation.Nonnull;
+
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
+import org.lwjgl.opengl.GL11;
+
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
+import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayer;
+import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayerWaterCube;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,14 +32,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.joml.Matrix4f;
-import org.joml.Vector4f;
-import org.lwjgl.opengl.GL11;
-
-import javax.annotation.Nonnull;
-
-import static net.minecraft.util.math.MathHelper.cos;
-import static net.minecraft.util.math.MathHelper.sin;
 
 //@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class ParticleCube extends ParticleAvatar {
@@ -60,20 +64,16 @@ public class ParticleCube extends ParticleAvatar {
 
         if (element instanceof Waterbending) {
             if (normal == 0 || normal == 2) {
-                buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
                 buffer.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).color(r, g, b, a).endVertex();
                 buffer.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).color(r, g, b, a).endVertex();
                 buffer.pos(pos3.x, pos3.y, pos3.z).tex(u1, v2).color(r, g, b, a).endVertex();
                 buffer.pos(pos4.x, pos4.y, pos4.z).tex(u1, v1).color(r, g, b, a).endVertex();
-                tessellator.draw();
             }
             if (normal == 1 || normal == 2) {
-                buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
                 buffer.pos(pos1.x, pos1.y, pos1.z).tex(u2, v1).color(r, g, b, a).endVertex();
                 buffer.pos(pos4.x, pos4.y, pos4.z).tex(u1, v1).color(r, g, b, a).endVertex();
                 buffer.pos(pos3.x, pos3.y, pos3.z).tex(u1, v2).color(r, g, b, a).endVertex();
                 buffer.pos(pos2.x, pos2.y, pos2.z).tex(u2, v2).color(r, g, b, a).endVertex();
-                tessellator.draw();
             }
         } else if (element instanceof Firebending || element instanceof Airbending) {
             if (normal == 0 || normal == 2) {
@@ -104,7 +104,10 @@ public class ParticleCube extends ParticleAvatar {
     @Override
     public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float lookZ, float lookY, float lookX, float lookXY, float lookYZ) {
 
-        updateEntityLinking(partialTicks);
+    	updateEntityLinking(partialTicks);
+        
+        Tessellator tes = Tessellator.getInstance();
+        buffer = tes.getBuffer();
 
         Minecraft mc = Minecraft.getMinecraft();
 
@@ -112,16 +115,16 @@ public class ParticleCube extends ParticleAvatar {
         float y = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
         float z = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
 
-        GlStateManager.pushMatrix();
-        GlStateManager.enableBlend();
+        //GlStateManager.pushMatrix();
+        //GlStateManager.enableBlend();
 
-        GlStateManager.translate(x, y, z);
+        //GlStateManager.translate(x, y, z);
 
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
         if (element instanceof Waterbending) {
-            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-            mc.renderEngine.bindTexture(WATER);
+            //GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+            //mc.renderEngine.bindTexture(WATER);
         }
 
         if (element instanceof Firebending)
@@ -134,17 +137,19 @@ public class ParticleCube extends ParticleAvatar {
         float colorEnhancement = 1.5f;
         float size = 1;
         float scale = particleScale / 10;
-
-
-        GlStateManager.scale(scale, scale, scale);
+        size = scale;
+        //GlStateManager.scale(scale, scale, scale);
 
         Matrix4f mat = new Matrix4f();
+        
         mat = mat.translate(x, y + 0.4F, z);
-
+        
         //4 = degrees per second
         mat = mat.rotate(ticks / 20 * 0.2F * 40, 1, 0, 0);
         mat = mat.rotate(ticks / 20 * 40, 0, 1, 0);
         mat = mat.rotate(ticks / 20 * -0.4F * 40, 0, 0, 1);
+        
+        
 
 
         // @formatter:off
@@ -164,7 +169,7 @@ public class ParticleCube extends ParticleAvatar {
 
             float t1 = ticks * (float) Math.PI / 10f;
             float t2 = t1 + (float) Math.PI / 2f;
-            float amt = 0.05f;
+            float amt = 0.05f*scale;
 
             lbf.add(cos(t1) * amt, sin(t2) * amt, cos(t2) * amt, 0);
             rbf.add(sin(t1) * amt, cos(t2) * amt, sin(t2) * amt, 0);
@@ -186,7 +191,7 @@ public class ParticleCube extends ParticleAvatar {
             //if (element instanceof Waterbending)
             //   setRBGColorF(particleRed * 0.75F, particleGreen * 0.75F, particleBlue * 1.25F);
         }
-
+        
         drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2,
                 particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // -x
         drawQuad(2, rtb, rbb, rbf, rtf, 0, v1, 1, v2,
@@ -199,13 +204,17 @@ public class ParticleCube extends ParticleAvatar {
                 particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // -z
         drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2,
                 particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // +z
-
-        GlStateManager.color(1F, 1F, 1F, 1F);
-        GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
+        
+       // GlStateManager.color(1F, 1F, 1F, 1F);
+       // GlStateManager.disableBlend();
+       // GlStateManager.popMatrix();
 
     }
 
+    @Override
+    public RenderLayer getCustomRenderLayer() {
+    	return element instanceof Waterbending ? RenderLayerWaterCube.INSTANCE : null;
+    }
 
     @Override
     public int getFXLayer() {

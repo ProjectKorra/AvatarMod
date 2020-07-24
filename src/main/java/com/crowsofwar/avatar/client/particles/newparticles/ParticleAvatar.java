@@ -8,11 +8,14 @@ import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
+import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayer;
 import com.crowsofwar.avatar.entity.*;
 import com.crowsofwar.avatar.network.AvatarClientProxy;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
+import com.google.common.collect.Queues;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
@@ -265,6 +268,10 @@ public abstract class ParticleAvatar extends Particle {
 
     public void setGlowing(boolean glow) {
         this.glow = glow;
+    }
+    
+    public boolean glows(){
+    	return glow;
     }
 
     public void setSparkle(boolean sparkle) {
@@ -830,11 +837,15 @@ public abstract class ParticleAvatar extends Particle {
         } else {
             this.setBoundingBox(this.getBoundingBox().offset(x, y, z));
         }
-
+        
         if (!AvatarUtils.getAliveParticles().isEmpty()) {
-            Queue<Particle> particles = AvatarUtils.getAliveParticles().stream().filter(particle -> particle.getBoundingBox().intersects(getBoundingBox())
-                    && particle instanceof ParticleAvatar && ((ParticleAvatar) particle).spawnEntity != spawnEntity && particle != this)
-                    .collect(Collectors.toCollection(ArrayDeque::new));
+            Queue<ParticleAvatar> particles = Queues.newArrayDeque();
+            for(Queue<ParticleAvatar> q : AvatarUtils.getEnemyParticles(this)){
+            	for(ParticleAvatar p : q){
+            		if(p.getBoundingBox().intersects(getBoundingBox()))
+            			particles.add(p);
+            	}
+            }
             if (!particles.isEmpty()) {
                 //Makes particles spread out on collision, but also makes them push other particles
                 collidedWithParticle = true;
@@ -1019,6 +1030,10 @@ public abstract class ParticleAvatar extends Particle {
 
     public void setBehaviour(ParticleAvatarBehaviour behaviour) {
         this.behaviour = behaviour;
+    }
+    
+    public RenderLayer getCustomRenderLayer(){
+    	return null;
     }
 
     /**

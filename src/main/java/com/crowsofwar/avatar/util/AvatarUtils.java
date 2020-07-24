@@ -17,19 +17,46 @@
 
 package com.crowsofwar.avatar.util;
 
+import static com.crowsofwar.avatar.AvatarLog.WarningType.INVALID_SAVE;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Queue;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
+import javax.annotation.Nullable;
+
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.client.particles.newparticles.FlashParticleBatchRenderer;
-import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
-import com.crowsofwar.avatar.client.particles.newparticles.ParticleFlash;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
-import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
+import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.ParticleBatchRenderer;
+import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayer;
 import com.crowsofwar.avatar.entity.AvatarEntity;
+import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.gorecore.util.Vector;
-import com.google.common.collect.Queues;
 
-import net.minecraft.block.*;
+import net.minecraft.block.BlockButton;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.block.BlockFenceGate;
+import net.minecraft.block.BlockLever;
+import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
@@ -61,16 +88,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
-
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static com.crowsofwar.avatar.AvatarLog.WarningType.INVALID_SAVE;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = AvatarInfo.MOD_ID)
 public class AvatarUtils {
@@ -113,7 +130,18 @@ public class AvatarUtils {
 	}
 
 	private static Queue<ParticleAvatar> aliveParticlesCache = null;
+	private static Map<Entity, Queue<ParticleAvatar>> particlesByOwnerEntity = null;
 
+	public static List<Queue<ParticleAvatar>> getEnemyParticles(ParticleAvatar p){
+		List<Queue<ParticleAvatar>> enemyParticles = new ArrayList<>();
+		for(Entry<Entity, Queue<ParticleAvatar>> e : particlesByOwnerEntity.entrySet()){
+			if(e.getKey() != p.getEntity()){
+				enemyParticles.add(e.getValue());
+			}
+		}
+		return enemyParticles;
+	}
+	
 	/**
 	 * Don't modify the return value, it's cached.
 	 * @return The collection of all alive avatar particles
@@ -123,7 +151,7 @@ public class AvatarUtils {
 		if(aliveParticlesCache != null)
 			return aliveParticlesCache;
 		ArrayDeque<Particle>[][] vanillaParticles = ReflectionHelper.getPrivateValue(ParticleManager.class, Minecraft.getMinecraft().effectRenderer, "fxLayers", "field_78876_b");
-		ArrayDeque<ParticleFlash>[] flashParticles = FlashParticleBatchRenderer.particles;
+		Set<RenderLayer> customParticles = ParticleBatchRenderer.layers;
 		
 		Queue<ParticleAvatar> all_particles = new LinkedList<ParticleAvatar>();
 		for(ArrayDeque<Particle>[] layer : vanillaParticles){
@@ -135,11 +163,19 @@ public class AvatarUtils {
 				}
 			}
 		}
-		for(ArrayDeque<ParticleFlash> layer : flashParticles){
-			all_particles.addAll(layer);
+		for(RenderLayer layer : customParticles){
+			all_particles.addAll(layer.getParticles());
 		}
 		
 		aliveParticlesCache = all_particles;
+		
+		particlesByOwnerEntity = new HashMap<>();
+		for(ParticleAvatar p : aliveParticlesCache){
+			if(!particlesByOwnerEntity.containsKey(p.getEntity()))
+				particlesByOwnerEntity.put(p.getEntity(), new LinkedList<ParticleAvatar>());
+			particlesByOwnerEntity.get(p.getEntity()).add(p);
+		}
+		
 		return aliveParticlesCache;
 	}
 	

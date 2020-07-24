@@ -1,8 +1,10 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayer;
+import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayerAdditive;
+
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -52,9 +54,11 @@ public class ParticleFire extends ParticleAvatar {
 
 	@Override
 	protected void drawParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float rotationX, float rotationY, float rotationZ, float rotationYZ, float rotationXY) {
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-		GlStateManager.disableLighting();
 		super.drawParticle(buffer, viewer, partialTicks, rotationX, rotationY, rotationZ, rotationYZ, rotationXY);
+	}
+	
+	@Override
+	public RenderLayer getCustomRenderLayer() {
+		return RenderLayerAdditive.INSTANCE;
 	}
 }
