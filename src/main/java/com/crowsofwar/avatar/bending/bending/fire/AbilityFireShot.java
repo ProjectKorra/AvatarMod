@@ -28,7 +28,6 @@ import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityShockwave;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarUtils;
-import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
@@ -102,7 +101,7 @@ public class AbilityFireShot extends Ability {
                 EntityFlames flames = new EntityFlames(world);
                 flames.setVelocity(Vector.getLookRectangular(entity).times(speed));
                 flames.setOwner(entity);
-                flames.setPosition(pos.minusY(0.05));
+                flames.setPosition(pos.minusY(size / 2));
                 flames.rotationYaw = entity.rotationYaw;
                 flames.rotationPitch = entity.rotationPitch;
                 flames.setEntitySize(size);
@@ -113,7 +112,7 @@ public class AbilityFireShot extends Ability {
                 flames.setTier(getCurrentTier(ctx));
                 flames.setXp(xp);
                 flames.setLifeTime(lifeTime);
-                flames.setTrailingFire(getBooleanProperty(TRAILING_FIRE, ctx));
+                flames.setTrailingFires(getBooleanProperty(TRAILING_FIRE, ctx));
                 flames.setFireTime(fireTime);
                 flames.setFires(getBooleanProperty(SETS_FIRES, ctx));
                 flames.setDamage(damage);

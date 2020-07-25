@@ -57,7 +57,7 @@ public class ImmolateParticleHandler extends TickHandler {
 						fadeB * 2);
 
                 double random = world.rand.nextGaussian();
-                Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (random * 2)), 0).times(aD.getLevel() < 1 ? 0.5 : aD.getLevel() * 0.5).withY(entity.getEyeHeight() - 0.7);
+                Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (random * 2)), 0).times(aD.getLevel() < 1 ? 0.25 : aD.getLevel() * 0.25).withY(entity.getEyeHeight() - 0.7);
                 //Temporary solution to colour fading: randomising the colour between crimson and orangey-yellow for each particle.
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
                         vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40)

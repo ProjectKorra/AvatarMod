@@ -73,18 +73,34 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
             DataSerializers.VARINT);
     private static final DataParameter<Integer> SYNC_FADE_B = EntityDataManager.createKey(EntityFlames.class,
             DataSerializers.VARINT);
+    //Since it doesn't wanna sync the normal way, we're doing it the hard way.
+    private static final DataParameter<Boolean> SYNC_REFLECT = EntityDataManager.createKey(EntityFlames.class,
+            DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> SYNC_TRAILING_FIRES = EntityDataManager.createKey(EntityFlames.class,
+            DataSerializers.BOOLEAN);
 
-    //Need data managers for reflect and trailing fires
-    private boolean reflect;
-    private boolean lightTrailingFire;
 
     public EntityFlames(World worldIn) {
         super(worldIn);
         setSize(1.0f, 1.0f);
-        this.lightTrailingFire = false;
-        this.reflect = false;
         this.lightTnt = true;
         this.setsFires = true;
+    }
+
+    public boolean getTrailingFires() {
+        return dataManager.get(SYNC_TRAILING_FIRES);
+    }
+
+    public void setTrailingFires(boolean fires) {
+        dataManager.set(SYNC_TRAILING_FIRES, fires);
+    }
+
+    public boolean getReflect() {
+        return dataManager.get(SYNC_REFLECT);
+    }
+
+    public void setReflect(boolean reflect) {
+        dataManager.set(SYNC_REFLECT, reflect);
     }
 
 
@@ -97,6 +113,8 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
         dataManager.register(SYNC_FADE_R, 255);
         dataManager.register(SYNC_FADE_G, 255);
         dataManager.register(SYNC_FADE_B, 255);
+        dataManager.register(SYNC_REFLECT, false);
+        dataManager.register(SYNC_TRAILING_FIRES, false);
     }
 
     @Override
@@ -115,22 +133,22 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     public boolean onCollideWithSolid() {
         if (collided && setsFires && world.rand.nextBoolean() && !world.isRemote)
             setFires();
-        return super.onCollideWithSolid() && !reflect;
+        return super.onCollideWithSolid() && !getReflect();
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
 
-       // motionX *= 0.95;
-      //  motionY *= 0.95;
-       // motionZ *= 0.95;
+        // motionX *= 0.95;
+        //  motionY *= 0.95;
+        // motionZ *= 0.95;
 
 
         if (velocity().sqrMagnitude() <= 0.25) Dissipate();
 
         //Looks for only blocks
-        if (reflect) {
+        if (getReflect()) {
             RayTraceResult raytrace = Raytrace.rayTrace(world, getPositionVector(), getLookVec().add(getPositionVector()), getAvgSize() / 2,
                     false, true, false, Entity.class, entity -> false);
             EnumFacing sideHit = EnumFacing.UP;
@@ -179,7 +197,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
             }
         }
 
-        if (lightTrailingFire && !world.isRemote) {
+        if (getTrailingFires() && !world.isRemote) {
             if (AvatarUtils.getRandomNumberInRange(1, 10) <= 5) {
                 BlockPos pos = getPosition();
                 if (BlockUtils.canPlaceFireAt(world, pos)) {
@@ -193,13 +211,13 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
         }
     }
 
-
     @Override
     protected void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
         setFade(nbt.getIntArray("Fade"));
         setRGB(nbt.getIntArray("RGB"));
-        reflect = nbt.getBoolean("Reflect");
+        setReflect(nbt.getBoolean("Reflect"));
+        setTrailingFires(nbt.getBoolean("TrailingFires"));
     }
 
     @Override
@@ -207,7 +225,8 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
         super.writeEntityToNBT(nbt);
         nbt.setIntArray("Fade", getFade());
         nbt.setIntArray("RGB", getRGB());
-        nbt.setBoolean("Reflect", reflect);
+        nbt.setBoolean("Reflect", getReflect());
+        nbt.setBoolean("TrailingFires", getTrailingFires());
     }
 
     @Override
@@ -240,7 +259,6 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
     }
 
-
     @Override
     public boolean onAirContact() {
         if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
@@ -259,7 +277,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
     @Override
     public boolean shouldDissipate() {
-        return !reflect || ticksExisted > getLifeTime();
+        return !getReflect() || ticksExisted > getLifeTime();
     }
 
     @Override
@@ -339,14 +357,6 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
         dataManager.set(SYNC_FADE_R, fade[0]);
         dataManager.set(SYNC_FADE_G, fade[1]);
         dataManager.set(SYNC_FADE_B, fade[2]);
-    }
-
-    public void setReflect(boolean reflect) {
-        this.reflect = reflect;
-    }
-
-    public void setTrailingFire(boolean fire) {
-        this.lightTrailingFire = fire;
     }
 
     @Override

@@ -77,9 +77,9 @@
       "strengthLevel": 3,
       "strengthDuration": 150,
       "fireChance": 0,
-      "fadeR": 250,
-      "fadeG": 50,
-      "fadeB": 20
+      "fadeR": 140,
+      "fadeG": 90,
+      "fadeB": 90
     },
     "level4_2": {
       "tier": 7,
