@@ -154,7 +154,7 @@ public class AirBurstHandler extends TickHandler {
                             i * 30), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(lookpos.toMinecraft()))
                             .collide(true).scale(abilityData.getXpModifier() * 0.85F * charge).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                            world.rand.nextGaussian() / 60).clr(0.975F, 0.975F, 0.975F, 0.1F).element(new Airbending()).spawn(world);
+                            world.rand.nextGaussian() / 60).clr(0.975F, 0.975F, 0.975F, 0.05F).element(new Airbending()).spawn(world);
                 }
             }
             world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 0.25F * charge, 0.8F + world.rand.nextFloat() / 10);
@@ -207,7 +207,7 @@ public class AirBurstHandler extends TickHandler {
 
             if (!data.hasStatusControl(RELEASE_AIR_BURST)) {
 
-                int particleController = abilityData.getLevel() > 0 ? 60 - (4 * abilityData.getLevel()) : 60;
+                int particleController = abilityData.getLevel() > 0 ? 45 - (4 * abilityData.getLevel()) : 45;
                 EntityShockwave shockwave = new EntityShockwave(world);
                 shockwave.setOwner(entity);
                 shockwave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity));
@@ -227,7 +227,8 @@ public class AirBurstHandler extends TickHandler {
                 shockwave.setAbility(new AbilityAirBurst());
                 shockwave.setSpeed((float) knockBack / 4);
                 shockwave.setBehaviour(new AirburstShockwave());
-                world.spawnEntity(shockwave);
+                if (!world.isRemote)
+                    world.spawnEntity(shockwave);
 
 
                 entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
@@ -288,7 +289,7 @@ public class AirBurstHandler extends TickHandler {
     public static class AirburstShockwave extends OffensiveBehaviour {
 
         @Override
-        public Behavior onUpdate(EntityOffensive entity) {
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             if (entity instanceof EntityShockwave) {
                 World world = entity.world;
                 if (world.isRemote) {
@@ -310,7 +311,7 @@ public class AirBurstHandler extends TickHandler {
                                     zVel = z1 * entity.getParticleSpeed() * 0.375F;
 
                                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
-                                            .clr(0.95F, 0.95F, 0.95F, 0.05F).time(12 + AvatarUtils.getRandomNumberInRange(0, 10) + (int) (3 * ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
+                                            .clr(0.95F, 0.95F, 0.95F, 0.035F).time(12 + AvatarUtils.getRandomNumberInRange(0, 10) + (int) (3 * ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
                                             .scale(0.325F + 0.5F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius)
                                             .element(new Airbending()).spawnEntity(entity.getOwner()).spawn(world);
 
@@ -322,7 +323,7 @@ public class AirBurstHandler extends TickHandler {
                             Vec3d vel = new Vec3d(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian());
                             vel = vel.scale(0.275F * entity.getParticleSpeed());
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(entity.posX, entity.posY, entity.posZ).vel(vel)
-                                    .clr(0.95F, 0.95F, 0.95F, 0.05F).time(12 + AvatarUtils.getRandomNumberInRange(0, 10)).collide(true)
+                                    .clr(0.95F, 0.95F, 0.95F, 0.075F).time(12 + AvatarUtils.getRandomNumberInRange(0, 10)).collide(true)
                                     .scale(0.4f + 0.575F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).
                                     element(new Airbending()).spawn(world);
 
