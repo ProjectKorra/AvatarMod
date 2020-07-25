@@ -1,14 +1,15 @@
 package com.crowsofwar.avatar.bending.bending.fire;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.bending.bending.fire.powermods.ImmolatePowerModifier;
 import com.crowsofwar.avatar.entity.EntityLightOrb;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -20,182 +21,204 @@ import net.minecraft.world.World;
 
 import java.util.Objects;
 
-import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.PURIFY_PARTICLE_SPAWNER;
-import static net.minecraft.init.MobEffects.HEALTH_BOOST;
-import static net.minecraft.init.MobEffects.STRENGTH;
 
 public class AbilityImmolate extends Ability {
 
-	public AbilityImmolate() {
-		super(Firebending.ID, "immolate");
-	}
+    public static final String
+            STRENGTH_LEVEL = "strengthLevel",
+            STRENGTH_DURATION = "strengthDuration",
+            SPEED_LEVEL = "speedLevel",
+            SPEED_DURATION = "speedDuration",
+            HEALTH_LEVEL = "healthLevel",
+            HEALTH_DURATION = "healthDuration",
+            INCINERATE_PROJECTILES = "projectileIncineration",
+            FIRE_CHANCE = "fireChance";
 
-	@Override
-	public boolean isBuff() {
-		return true;
-	}
+    public AbilityImmolate() {
+        super(Firebending.ID, "immolate");
+    }
 
-	@Override
-	public void execute(AbilityContext ctx) {
+    @Override
+    public void init() {
+        super.init();
+        addProperties(FIRE_CHANCE, STRENGTH_LEVEL, STRENGTH_DURATION, HEALTH_LEVEL, HEALTH_DURATION, SPEED_LEVEL, SPEED_DURATION,
+                FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FADE_B, POWERRATING);
+        addBooleanProperties(INCINERATE_PROJECTILES);
+    }
 
-		BendingData data = ctx.getData();
-		EntityLivingBase entity = ctx.getBenderEntity();
-		Bender bender = ctx.getBender();
-		World world = ctx.getWorld();
-		AbilityData abilityData = data.getAbilityData(this);
+    @Override
+    public boolean isBuff() {
+        return true;
+    }
 
-		float chi = getProperty(CHI_COST, ctx).floatValue();
-		//TODO: Literally all of this
+    @Override
+    public void execute(AbilityContext ctx) {
 
-		if (bender.consumeChi(chi)) {
+        BendingData data = ctx.getData();
+        EntityLivingBase entity = ctx.getBenderEntity();
+        Bender bender = ctx.getBender();
+        World world = ctx.getWorld();
+        AbilityData abilityData = data.getAbilityData(this);
 
-			// 3s base + 2s per level
-			int duration = abilityData.getLevel() > 0 ? 60 + 40 * abilityData.getLevel() : 60;
-			int lightRadius = 5;
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				duration = 400;
-				lightRadius = 9;
-			}
+        float chi = getChiCost(ctx);
+        //TODO: Literally all of this
 
-			int effectLevel = abilityData.getLevel() >= 2 ? 1 : 0;
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				effectLevel = 2;
-				lightRadius = 12;
-			}
+        if (bender.consumeChi(chi)) {
 
-			entity.addPotionEffect(new PotionEffect(STRENGTH, duration, effectLevel + 1));
+            // 3s base + 2s per level
+            int duration = getProperty(DURATION, ctx).intValue();
+            int strengthLevel, strengthDuration, healthLevel, healthDuration, speedLevel, speedDuration;
+            strengthLevel = getProperty(STRENGTH_LEVEL, ctx).intValue();
+            strengthDuration = getProperty(STRENGTH_DURATION, ctx).intValue();
+            healthLevel = getProperty(HEALTH_LEVEL, ctx).intValue();
+            healthDuration = getProperty(HEALTH_DURATION, ctx).intValue();
+            speedLevel = getProperty(SPEED_LEVEL, ctx).intValue();
+            speedDuration = getProperty(SPEED_DURATION, ctx).intValue();
 
-			if (abilityData.getLevel() < 2) {
-				entity.setFire(1);
-			}
+            int lightRadius = 5;
 
-			if (abilityData.getLevel() >= 1) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, effectLevel));
-				lightRadius = 7;
-			}
+            if (getProperty(FIRE_CHANCE, ctx).floatValue() / 10 > 0.5)
+                entity.setFire(1);
 
-			if (abilityData.getLevel() >= 2) {
-				lightRadius = 10;
-			}
+            if (abilityData.getLevel() == 1) {
+                lightRadius = 7;
+            }
 
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				entity.addPotionEffect(new PotionEffect(HEALTH_BOOST, duration, effectLevel));
-			}
+            if (abilityData.getLevel() == 2) {
+                lightRadius = 10;
+            }
 
-			if (data.hasBendingId(getBendingId())) {
+            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+                lightRadius = 9;
+            }
 
-				ImmolatePowerModifier modifier = new ImmolatePowerModifier();
-				modifier.setTicks(duration);
+            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+                lightRadius = 12;
+            }
 
-				// Ignore warning; we know manager != null if they have the bending style
-				//noinspection ConstantConditions
-				data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
+            if (strengthLevel > 0)
+                entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, strengthDuration, strengthLevel - 1));
 
-			}
+            if (healthLevel > 0)
+                entity.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, healthDuration, healthLevel - 1));
 
-			EntityLightOrb orb = new EntityLightOrb(world);
-			orb.setOwner(entity);
-			orb.setAbility(this);
-			orb.setPosition(new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.height / 2, entity.posZ));
-			orb.setOrbSize(0.005F);
-			orb.setLifeTime(duration);
-			orb.setColor(1F, 0.5F, 0F, 3F);
-			orb.setLightRadius(lightRadius);
-			orb.setEmittingEntity(entity);
-			orb.setBehavior(new ImmolateLightOrbBehaviour());
-			orb.setType(EntityLightOrb.EnumType.COLOR_CUBE);
-			world.spawnEntity(orb);
-			abilityData.addXp(SKILLS_CONFIG.buffUsed);
-			data.addTickHandler(PURIFY_PARTICLE_SPAWNER);
+            if (speedLevel > 0)
+                entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, speedDuration, speedLevel - 1));
 
-		}
+            if (data.hasBendingId(getBendingId())) {
 
-	}
+                ImmolatePowerModifier modifier = new ImmolatePowerModifier();
+                modifier.setTicks(duration);
 
-	@Override
-	public int getCooldown(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-		int coolDown = 140;
+                // Ignore warning; we know manager != null if they have the bending style
+                //noinspection ConstantConditions
+                data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
 
-		if (ctx.getLevel() == 1) {
-			coolDown = 130;
-		}
-		if (ctx.getLevel() == 2) {
-			coolDown = 120;
-		}
-		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 130;
-		}
-		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 110;
-		}
+            }
 
-		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-			coolDown = 0;
-		}
-		return coolDown;
-	}
+            EntityLightOrb orb = new EntityLightOrb(world);
+            orb.setOwner(entity);
+            orb.setAbility(this);
+            orb.setPosition(new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.height / 2, entity.posZ));
+            orb.setOrbSize(0.005F);
+            orb.setLifeTime(duration);
+            orb.setColor(1F, 0.5F, 0F, 3F);
+            orb.setLightRadius(lightRadius);
+            orb.setEmittingEntity(entity);
+            orb.setBehavior(new ImmolateLightOrbBehaviour());
+            orb.setType(EntityLightOrb.EnumType.COLOR_CUBE);
+            if (!world.isRemote)
+                world.spawnEntity(orb);
+            abilityData.addXp(getProperty(XP_USE, ctx).floatValue());
+            data.addTickHandler(PURIFY_PARTICLE_SPAWNER);
 
-	@Override
-	public int getBaseTier() {
-		return 5;
-	}
+        }
 
-	public static class ImmolateLightOrbBehaviour extends LightOrbBehavior.FollowPlayer {
-		@Override
-		public Behavior<EntityLightOrb> onUpdate(EntityLightOrb entity) {
-			super.onUpdate(entity);
-			EntityLivingBase emitter = entity.getOwner();
-			assert emitter instanceof EntityPlayer || emitter instanceof EntityBender;
-			Bender b = Bender.get(emitter);
-			if (b != null && BendingData.getFromEntity(emitter) != null && entity.ticksExisted > 1) {
-				if (!Objects.requireNonNull(b.getData().getPowerRatingManager(Firebending.ID)).hasModifier(ImmolatePowerModifier.class)) {
-					entity.setDead();
-				}
-			}
-			int lightRadius = 5;
-			//Stops constant spam and calculations
-			if (entity.ticksExisted == 1) {
-				AbilityData aD = AbilityData.get(emitter, "immolate");
-				int level = aD.getLevel();
-				if (level >= 1) {
-					lightRadius = 7;
-				}
-				if (level >= 2) {
-					lightRadius = 10;
-				}
-				if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-					lightRadius = 9;
-				}
-				if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-					lightRadius = 12;
-				}
-			}
-			if (entity.getEntityWorld().isRemote) entity.setLightRadius(lightRadius + (int) (Math.random() * 5));
-			return this;
-		}
+    }
 
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-			super.fromBytes(buf);
-		}
+    @Override
+    public int getCooldown(AbilityContext ctx) {
+        EntityLivingBase entity = ctx.getBenderEntity();
+        int coolDown = 140;
 
-		@Override
-		public void toBytes(PacketBuffer buf) {
-			super.toBytes(buf);
-		}
+        if (ctx.getLevel() == 1) {
+            coolDown = 130;
+        }
+        if (ctx.getLevel() == 2) {
+            coolDown = 120;
+        }
+        if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
+            coolDown = 130;
+        }
+        if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
+            coolDown = 110;
+        }
 
-		@Override
-		public void load(NBTTagCompound nbt) {
-			super.load(nbt);
-		}
+        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+            coolDown = 0;
+        }
+        return coolDown;
+    }
 
-		@Override
-		public void save(NBTTagCompound nbt) {
-			super.save(nbt);
-		}
-	}
+    @Override
+    public int getBaseTier() {
+        return 5;
+    }
+
+    public static class ImmolateLightOrbBehaviour extends LightOrbBehavior.FollowPlayer {
+        @Override
+        public Behavior<EntityLightOrb> onUpdate(EntityLightOrb entity) {
+            super.onUpdate(entity);
+            EntityLivingBase emitter = entity.getOwner();
+            assert emitter instanceof EntityPlayer || emitter instanceof EntityBender;
+            Bender b = Bender.get(emitter);
+            if (b != null && BendingData.getFromEntity(emitter) != null && entity.ticksExisted > 1) {
+                if (!Objects.requireNonNull(b.getData().getPowerRatingManager(Firebending.ID)).hasModifier(ImmolatePowerModifier.class)) {
+                    entity.setDead();
+                }
+            }
+            int lightRadius = 5;
+            //Stops constant spam and calculations
+            if (entity.ticksExisted == 1) {
+                AbilityData aD = AbilityData.get(emitter, "immolate");
+                int level = aD.getLevel();
+                if (level >= 1) {
+                    lightRadius = 7;
+                }
+                if (level >= 2) {
+                    lightRadius = 10;
+                }
+                if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+                    lightRadius = 9;
+                }
+                if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+                    lightRadius = 12;
+                }
+            }
+            if (entity.getEntityWorld().isRemote) entity.setLightRadius(lightRadius + (int) (Math.random() * 5));
+            return this;
+        }
+
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+            super.fromBytes(buf);
+        }
+
+        @Override
+        public void toBytes(PacketBuffer buf) {
+            super.toBytes(buf);
+        }
+
+        @Override
+        public void load(NBTTagCompound nbt) {
+            super.load(nbt);
+        }
+
+        @Override
+        public void save(NBTTagCompound nbt) {
+            super.save(nbt);
+        }
+    }
 
 }

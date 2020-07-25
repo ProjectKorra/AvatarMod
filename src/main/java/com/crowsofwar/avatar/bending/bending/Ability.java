@@ -99,6 +99,12 @@ public abstract class Ability {
             FADE_B = "fadeB",
             SMELTS = "smelts",
             SETS_FIRES = "setsFires";
+    //Buff abilities
+    public static final String
+            POWERRATING = "powerrating",
+            EFFECT_LEVEl = "effectLevel",
+            EFFECT_STRENGTH = "effectStrength",
+            EFFECT_DURATION = "effectDuration";
 
 
     private final UUID type;
