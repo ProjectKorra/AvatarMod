@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.client.particles.newparticles.FlashParticleBatchRen
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleFlash;
 import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
+import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.ParticleBatchRenderer;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import net.minecraft.entity.Entity;
@@ -897,8 +898,9 @@ public final class ParticleBuilder {
 		particle.setTargetPosition(tx, ty, tz);
 		particle.setTargetEntity(target);
 
-		if(particle instanceof ParticleFlash){
-			FlashParticleBatchRenderer.addParticle((ParticleFlash) particle);
+
+		if(particle.getCustomRenderLayer() != null){
+			ParticleBatchRenderer.addParticle(particle);
 		} else {
 			net.minecraft.client.Minecraft.getMinecraft().effectRenderer.addEffect(particle);
 		}
