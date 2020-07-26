@@ -59,8 +59,8 @@ public class AbilityAirblade extends Ability {
     @Override
     public void init() {
         super.init();
-        super.addProperties(NUMBER_OF_BLADES, ANGLE);
-        super.addBooleanProperties(DESTROY_GRASS, BOOMERANG, PIERCES);
+        addProperties(NUMBER_OF_BLADES, ANGLE);
+        addBooleanProperties(DESTROY_GRASS, BOOMERANG, PIERCES);
     }
 
     @Override

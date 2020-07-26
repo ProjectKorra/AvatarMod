@@ -18,7 +18,8 @@
       "numberOfBlades": 1,
       "angle": 0,
       "boomerAang": false,
-      "destroyGrass": false
+      "destroyGrass": false,
+      "pierces": false
     },
     "level2": {
       "tier": 2,
@@ -49,7 +50,8 @@
       "knockback": 1.7,
       "chiOnHit": 1.7,
       "damage": 4.5,
-      "destroyGrass": true
+      "destroyGrass": true,
+      "pierces": true
     },
     "level4_1": {
       "tier": 4,
