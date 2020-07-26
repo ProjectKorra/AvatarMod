@@ -92,7 +92,7 @@ public class AbilityAirblade extends Ability {
         knockback *= abilityData.getXpModifier() * ctx.getPowerRatingDamageMod();
         lifetime *= abilityData.getXpModifier() * ctx.getPowerRatingDamageMod();
 
-        Vector spawnAt = Vector.getEyePos(entity).minusY(0.05);
+        Vector spawnAt = Vector.getEyePos(entity).minusY(sizeMult / 2);
 
         for (int i = 0; i < getProperty(NUMBER_OF_BLADES, ctx).intValue(); i++) {
             @SuppressWarnings("IntegerDivisionInFloatingPointContext")

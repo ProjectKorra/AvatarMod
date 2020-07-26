@@ -56,7 +56,7 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public abstract class Ability {
 
-    //NOTE: No client side particles can be spawned in an ability class due to abilities being executed server-side.
+    //TODO: Implement burnout regeneration and cost
 
     ///Property time! How many different properties can I add??????
     public static final String
@@ -105,6 +105,17 @@ public abstract class Ability {
             EFFECT_LEVEl = "effectLevel",
             EFFECT_STRENGTH = "effectStrength",
             EFFECT_DURATION = "effectDuration";
+    //Combustion/boom stuff
+    public static final String
+            EXPLOSION_SIZE = "explosionSize",
+            EXPLOSION_DAMAGE = "explosionDamage";
+    //Chargeable stuff
+    public static final String
+            MAX_SIZE = "maxSize",
+            MAX_DAMAGE = "maxDamage",
+            MAX_CHICOST = "maxChiCost",
+            MAX_BURNOUT = "maxBurnOut",
+            MAX_EXHAUSTION = "maxExhaustion";
 
 
     private final UUID type;

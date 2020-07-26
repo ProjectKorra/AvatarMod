@@ -249,6 +249,7 @@ public abstract class Bender {
             } else {
                 if (entity instanceof EntityPlayer)
                     Ability.syncProperties((EntityPlayer) entity);
+                //TODO: Message sent upon properties files being screwed up
             }
         }
 

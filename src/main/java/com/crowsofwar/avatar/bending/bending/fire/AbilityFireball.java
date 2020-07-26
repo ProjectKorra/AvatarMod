@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.bending.bending.fire;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
@@ -55,6 +56,45 @@ public class AbilityFireball extends Ability {
 	}
 
 	@Override
+	public void init() {
+		super.init();
+		addProperties(FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FADE_B, EXPLOSION_SIZE, EXPLOSION_DAMAGE,
+				MAX_BURNOUT, MAX_DAMAGE, MAX_SIZE, MAX_EXHAUSTION);
+	}
+
+	//We want these to be applied manually upon executing the status control.
+
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		return 0;
+	}
+
+	@Override
+	public float getBurnOut(AbilityContext ctx) {
+		return 0;
+	}
+
+	@Override
+	public float getExhaustion(AbilityContext ctx) {
+		return 0;
+	}
+
+	@Override
+	public int getCooldown(AbilityData data) {
+		return 0;
+	}
+
+	@Override
+	public float getBurnOut(AbilityData data) {
+		return 0;
+	}
+
+	@Override
+	public float getExhaustion(AbilityData data) {
+		return 0;
+	}
+
+	@Override
 	public void execute(AbilityContext ctx) {
 
 		EntityLivingBase entity = ctx.getBenderEntity();
@@ -63,7 +103,7 @@ public class AbilityFireball extends Ability {
 		BendingData data = ctx.getData();
 
 
-		if (bender.consumeChi(STATS_CONFIG.chiFireball)) {
+		if (bender.consumeChi(getChiCost(ctx))) {
 
 			Vector target;
 			if (ctx.isLookingAtBlock() && !world.isRemote) {
@@ -73,7 +113,7 @@ public class AbilityFireball extends Ability {
 				target = playerPos.plus(getLookRectangular(entity).times(2.5));
 			}
 
-			float damage = STATS_CONFIG.fireballSettings.damage;
+			float damage = getProperty(DAMAGE, ctx).floatValue();
 			int size = 16;
 			boolean canUse = !data.hasStatusControl(THROW_FIREBALL);
 			List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class,

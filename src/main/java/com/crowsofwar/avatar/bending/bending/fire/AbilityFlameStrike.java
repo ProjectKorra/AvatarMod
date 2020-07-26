@@ -21,20 +21,20 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFlameStrike;
-import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityLightOrb;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
-import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.PlayerViewRegistry;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -48,7 +48,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_MAIN;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_OFF;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_STRIKE_HANDLER;
@@ -68,7 +67,7 @@ public class AbilityFlameStrike extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(FIRE_R, FIRE_G,  FIRE_B, FADE_R, FADE_G, FADE_B, STRIKES);
+        addProperties(FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FADE_B, STRIKES);
         addBooleanProperties(SETS_FIRES, SMELTS);
     }
 
@@ -80,40 +79,31 @@ public class AbilityFlameStrike extends Ability {
         World world = ctx.getWorld();
         if (data.hasStatusControl(FLAME_STRIKE_MAIN) || data.hasStatusControl(FLAME_STRIKE_OFF))
             return;
-
-        float chi = STATS_CONFIG.chiFlameStrike;
+        
         float orbSize = 0.3F;
         int lightRadius = 4;
         if (ctx.getLevel() == 1) {
-            chi = STATS_CONFIG.chiFlameStrike * 1.5F;
-            //3
             lightRadius += 2;
             orbSize += 0.1F;
 
         }
         if (ctx.getLevel() == 2) {
-            chi = STATS_CONFIG.chiInfernoPunch * 2;
-            //4
             lightRadius += 4;
             orbSize += 0.2F;
 
         }
         if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-            chi = STATS_CONFIG.chiFlameStrike * 2.5F;
-            //5
             lightRadius += 8;
             orbSize += 0.4F;
 
         }
         if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-            chi = STATS_CONFIG.chiFlameStrike * 3F;
-            //6
             lightRadius += 3;
             orbSize += 0.15F;
 
         }
 
-        if (bender.consumeChi(chi)) {
+        if (bender.consumeChi(getProperty(CHI_COST, ctx).floatValue() / 2)) {
 
             //Light orb model translating is currently whack
             Vec3d height = entity.getPositionVector().add(0, 1.8, 0);
@@ -151,6 +141,41 @@ public class AbilityFlameStrike extends Ability {
 
     @Override
     public boolean isOffensive() {
+        return true;
+    }
+
+    @Override
+    public int getCooldown(AbilityContext ctx) {
+        return 0;
+    }
+
+    @Override
+    public float getBurnOut(AbilityContext ctx) {
+        return 0;
+    }
+
+    @Override
+    public float getExhaustion(AbilityContext ctx) {
+        return 0;
+    }
+
+    @Override
+    public int getCooldown(AbilityData data) {
+        return 0;
+    }
+
+    @Override
+    public float getBurnOut(AbilityData data) {
+        return 0;
+    }
+
+    @Override
+    public float getExhaustion(AbilityData data) {
+        return 0;
+    }
+
+    @Override
+    public boolean isProjectile() {
         return true;
     }
 
@@ -465,10 +490,5 @@ public class AbilityFlameStrike extends Ability {
         public void save(NBTTagCompound nbt) {
 
         }
-    }
-
-    @Override
-    public boolean isProjectile() {
-        return true;
     }
 }
