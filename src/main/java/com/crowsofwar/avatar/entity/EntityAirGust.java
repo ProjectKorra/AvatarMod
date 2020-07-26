@@ -66,6 +66,13 @@ public class EntityAirGust extends EntityOffensive {
     }
 
     @Override
+    protected void entityInit() {
+        super.entityInit();
+        dataManager.register(SYNC_DESTROYS, false);
+        dataManager.register(SYNC_SLOWS, false);
+    }
+
+    @Override
     protected void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
         setSlowProjectiles(nbt.getBoolean("SlowProjectiles"));

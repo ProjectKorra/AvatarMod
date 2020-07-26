@@ -92,7 +92,7 @@ public class AbilityAirblade extends Ability {
         knockback *= abilityData.getXpModifier() * ctx.getPowerRatingDamageMod();
         lifetime *= abilityData.getXpModifier() * ctx.getPowerRatingDamageMod();
 
-        Vector spawnAt = Vector.getEyePos(entity);
+        Vector spawnAt = Vector.getEyePos(entity).minusY(0.05);
 
         for (int i = 0; i < getProperty(NUMBER_OF_BLADES, ctx).intValue(); i++) {
             @SuppressWarnings("IntegerDivisionInFloatingPointContext")
@@ -164,12 +164,13 @@ public class AbilityAirblade extends Ability {
                 AbilityData data = AbilityData.get(entity.getOwner(), entity.getAbility().getName());
 
                 if (data != null && entity.getAbility().getBooleanProperty(BOOMERANG, data)) {
-                    if (entity.ticksExisted > 8 && entity.ticksExisted < 25) {
+                    int lifetime = entity.getAbility().getProperty(LIFETIME, data).intValue();
+                    if (entity.ticksExisted > lifetime / 4 && entity.ticksExisted < lifetime / 2) {
                         entity.motionX *= 0.75;
                         entity.motionY *= 0.75;
                         entity.motionZ *= 0.75;
                     }
-                    if (entity.ticksExisted > 25) {
+                    if (entity.ticksExisted > lifetime / 1.5) {
                         entity.setVelocity(AvatarEntityUtils.getMiddleOfEntity(entity.getOwner()).subtract(AvatarEntityUtils.getMiddleOfEntity(entity)).scale(0.25));
                     }
                     if (world.isRemote) {
@@ -178,20 +179,20 @@ public class AbilityAirblade extends Ability {
                             double spawnY = AvatarEntityUtils.getMiddleOfEntity(entity).y;
                             double spawnZ = AvatarEntityUtils.getMiddleOfEntity(entity).z;
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                                    world.rand.nextGaussian() / 60).collide(true).time(2 + AvatarUtils.getRandomNumberInRange(0, 1)).clr(1F, 1F, 1F, 0.075F)
+                                    world.rand.nextGaussian() / 60).collide(true).time(3 + AvatarUtils.getRandomNumberInRange(0, 1)).clr(1F, 1F, 1F, 0.075F)
                                     .scale(entity.getAvgSize() / 4).element(entity.getElement()).spawnEntity(entity).spawn(world);
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfEntity(entity)).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                                    world.rand.nextGaussian() / 60).collide(true).time(2 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.8F, 0.8F, 0.8F, 0.075F)
+                                    world.rand.nextGaussian() / 60).collide(true).time(3 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.8F, 0.8F, 0.8F, 0.075F)
                                     .scale(entity.getAvgSize() / 2).element(entity.getElement()).spin(entity.getWidth() * 2, 0.1).spawnEntity(entity).spawn(world);
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfEntity(entity)).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                                    world.rand.nextGaussian() / 60).collide(true).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(1F, 1F, 1F, 0.1F)
+                                    world.rand.nextGaussian() / 60).collide(true).time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(1F, 1F, 1F, 0.1F)
                                     .scale(entity.getAvgSize()).element(entity.getElement()).spin(entity.getWidth() * 2, 0.1).spawnEntity(entity).spawn(world);
                         }
 
                     }
                 } else {
                     if (world.isRemote) {
-                        for (double i = 0; i < 0.75; i += 1 / entity.getHeight()) {
+                        /*for (double i = 0; i < 0.75; i += 1 / entity.getHeight()) {
                             AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
                             double spawnX = boundingBox.minX + world.rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
                             double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
@@ -199,9 +200,9 @@ public class AbilityAirblade extends Ability {
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
                                     world.rand.nextGaussian() / 60).collide(true).time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.96F, 0.96F, 0.96F, 0.075F)
                                     .scale(entity.getAvgSize() / 5).element(entity.getElement()).spawn(world);
-                        }
+                        }**/
 
-                        for (double i = -90; i <= 90; i += 5) {
+                        for (double i = -90; i <= 90; i += 2) {
                             Vec3d pos = AvatarEntityUtils.getMiddleOfEntity(entity);
                             Vec3d newDir = entity.getLookVec().scale(entity.getHeight() / 1.75 * Math.cos(Math.toRadians(i)));
                             pos = pos.add(newDir);
