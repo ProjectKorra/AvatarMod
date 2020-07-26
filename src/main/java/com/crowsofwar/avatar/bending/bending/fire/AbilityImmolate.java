@@ -66,7 +66,7 @@ public class AbilityImmolate extends Ability {
 
         if (bender.consumeChi(chi)) {
 
-            // 3s base + 2s per level
+            //Buff abilities are unaffected by powerrating, otherwise they'd be stupid good
             int duration = getProperty(DURATION, ctx).intValue();
             int strengthLevel, strengthDuration, healthLevel, healthDuration, speedLevel, speedDuration;
             strengthLevel = getProperty(STRENGTH_LEVEL, ctx).intValue();

@@ -47,6 +47,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
             .createKey(EntityOffensive.class, DataSerializers.FLOAT);
     private static final DataParameter<OffensiveBehaviour> SYNC_BEHAVIOR = EntityDataManager
             .createKey(EntityOffensive.class, OffensiveBehaviour.DATA_SERIALIZER);
+    private static final DataParameter<Boolean> SYNC_PIERCES = EntityDataManager
+            .createKey(EntityOffensive.class, DataSerializers.BOOLEAN);
 
     /**
      * The fraction of the impact velocity that should be the maximum spread speed added on impact.
@@ -59,6 +61,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     private float xp;
     private float push;
+    //Bloody hell
+    private float chiHit;
     private int fireTime;
     private boolean dynamicSpreadingCollision;
     private boolean collidedWithSolid;
@@ -82,6 +86,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         this.height = getHeight();
         this.damageSource = AvatarDamageSource.FIRE.getDamageType();
         this.push = 1;
+        this.chiHit = 1;
     }
 
     public void setPush(float push) {
@@ -178,6 +183,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         dataManager.register(SYNC_WIDTH, 1.0F);
         dataManager.register(SYNC_HEIGHT, 1.0F);
         dataManager.register(SYNC_BEHAVIOR, new OffensiveBehaviour.Idle());
+        dataManager.register(SYNC_PIERCES, false);
     }
 
     @Override
@@ -573,7 +579,11 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     @Override
     public boolean isPiercing() {
-        return false;
+        return dataManager.get(SYNC_PIERCES);
+    }
+
+    public void setPiercing(boolean pierces) {
+        dataManager.set(SYNC_PIERCES, pierces);
     }
 
     @Override
@@ -602,6 +612,15 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     public void setXp(float xp) {
         this.xp = xp;
+    }
+
+    public void setChiHit(float chi) {
+        this.chiHit = chi;
+    }
+
+    @Override
+    public float getChiHit() {
+        return this.chiHit;
     }
 
     @Override

@@ -42,16 +42,13 @@ import net.minecraft.world.World;
 
 public class EntityAirGust extends EntityOffensive {
 
-    private static final DataParameter<Boolean> SYNC_PIERCES = EntityDataManager.createKey(EntityAirGust.class,
-            DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> SYNC_SLOWS = EntityDataManager.createKey(EntityAirGust.class,
             DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> SYNC_DESTROYS = EntityDataManager.createKey(EntityAirGust.class,
             DataSerializers.BOOLEAN);
 
-    private boolean pushStone, pushIronTrapDoor, pushIronDoor;
+    private boolean pushStone, pushIronTrapDoor, pushIronDoor, destroyGrass;
     private float exWidth, exHeight;
-    //Fuck not syncing. All my homies hate not syncing.
 
 
     public EntityAirGust(World world) {
@@ -64,6 +61,7 @@ public class EntityAirGust extends EntityOffensive {
         this.pushTrapDoor = pushIronTrapDoor;
         this.exWidth = 0.5F;
         this.exHeight = 0.5F;
+        this.destroyGrass = false;
         setDamage(0);
     }
 
@@ -72,9 +70,9 @@ public class EntityAirGust extends EntityOffensive {
         super.readEntityFromNBT(nbt);
         setSlowProjectiles(nbt.getBoolean("SlowProjectiles"));
         setDestroyProjectiles(nbt.getBoolean("DestroyProjectiles"));
-        setPiercesEnemies(nbt.getBoolean("PiercesEnemies"));
         exWidth = nbt.getFloat("Expanded Width");
         exHeight = nbt.getFloat("Expanded Height");
+        destroyGrass = nbt.getBoolean("Destroy Grass");
     }
 
     @Override
@@ -82,9 +80,9 @@ public class EntityAirGust extends EntityOffensive {
         super.writeEntityToNBT(nbt);
         nbt.setBoolean("SlowProjectiles", getSlowProjectiles());
         nbt.setBoolean("DestroyProjectiles", getDestroyProjectiles());
-        nbt.setBoolean("PiercesEnemies", isPiercing());
         nbt.setFloat("Expanded Width", exWidth);
         nbt.setFloat("Expanded Height", exHeight);
+        nbt.setBoolean("Destroy Grass", destroyGrass);
     }
 
     @Override
@@ -101,6 +99,12 @@ public class EntityAirGust extends EntityOffensive {
     public void onUpdate() {
         super.onUpdate();
 
+        if (destroyGrass) {
+            if (!world.getBlockState(getPosition()).isFullBlock()) {
+                if (world.getBlockState(getPosition()).getBlockHardness(world, getPosition()) <= 0)
+                    breakBlock(getPosition());
+            }
+        }
 
         //Not sure why I have this here, but I'm too lazy to test it right now.
         if (ticksExisted <= 2) {
@@ -173,10 +177,6 @@ public class EntityAirGust extends EntityOffensive {
         dataManager.set(SYNC_SLOWS, slowProjectiles);
     }
 
-    public void setPiercesEnemies(boolean piercesEnemies) {
-        dataManager.set(SYNC_PIERCES, piercesEnemies);
-    }
-
     public boolean getDestroyProjectiles() {
         return dataManager.get(SYNC_DESTROYS);
     }
@@ -197,9 +197,8 @@ public class EntityAirGust extends EntityOffensive {
         this.pushIronTrapDoor = pushIronTrapDoor;
     }
 
-    @Override
-    public boolean isPiercing() {
-        return dataManager.get(SYNC_PIERCES);
+    public void setDestroyGrass(boolean grass) {
+        this.destroyGrass = grass;
     }
 
     @Override

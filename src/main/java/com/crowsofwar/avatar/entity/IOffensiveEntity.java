@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.data.BendingData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
@@ -103,6 +104,12 @@ public interface IOffensiveEntity {
                      //   if (multiHit())
                       //      ((EntityLivingBase) hit).hurtResistantTime = 10;
                         data.addXp(getXpPerHit());
+                        if (attacker.getOwner() != null) {
+                            BendingData bendingData = BendingData.getFromEntity(attacker.getOwner());
+                            if (bendingData != null && bendingData.chi() != null) {
+                                bendingData.chi().changeAvailableChi(getChiHit());
+                            }
+                        }
 
                     } else if (ds) {
                         BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
@@ -114,6 +121,12 @@ public interface IOffensiveEntity {
                      //   if (multiHit() && hit instanceof EntityLivingBase)
                      //       ((EntityLivingBase) hit).hurtResistantTime = 10;
                         AvatarUtils.afterVelocityAdded(hit);
+                        if (attacker.getOwner() != null) {
+                            BendingData bendingData = BendingData.getFromEntity(attacker.getOwner());
+                            if (bendingData != null && bendingData.chi() != null) {
+                                bendingData.chi().changeAvailableChi(getChiHit());
+                            }
+                        }
                     }
                 }
             } else if (attacker.canCollideWith(hit)) {
@@ -134,6 +147,13 @@ public interface IOffensiveEntity {
                 if (multiHit() && hit instanceof EntityLivingBase)
                     ((EntityLivingBase) hit).hurtResistantTime = 15;
                 AvatarUtils.afterVelocityAdded(hit);
+
+                if (attacker.getOwner() != null) {
+                    BendingData bendingData = BendingData.getFromEntity(attacker.getOwner());
+                    if (bendingData != null && bendingData.chi() != null) {
+                        bendingData.chi().changeAvailableChi(getChiHit());
+                    }
+                }
             }
         }
     }
@@ -148,6 +168,10 @@ public interface IOffensiveEntity {
 
     default float getXpPerHit() {
         return 3;
+    }
+
+    default float getChiHit() {
+        return 1;
     }
 
     default float getPush() {

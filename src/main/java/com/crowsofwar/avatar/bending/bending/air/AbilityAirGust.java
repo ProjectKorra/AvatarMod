@@ -83,7 +83,6 @@ public class AbilityAirGust extends Ability {
         push *= (1 + 0.5 * ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier());
 
         if (bender.consumeChi(getChiCost(ctx))) {
-            //TODO: Fix piercing
             EntityAirGust gust = new EntityAirGust(world);
             gust.setVelocity(look.times(speed));
             gust.setPosition(pos.minusY(0.5));
@@ -102,7 +101,7 @@ public class AbilityAirGust extends Ability {
             gust.setPushIronTrapDoor(getBooleanProperty(PUSH_IRON_TRAPDOOR, ctx));
             gust.setDestroyProjectiles(getBooleanProperty(DESTROY_PROJECTILES, ctx));
             gust.setSlowProjectiles(getBooleanProperty(SLOW_PROJECTILES, ctx));
-            gust.setPiercesEnemies(getBooleanProperty(PIERCES_ENEMIES, ctx));
+            gust.setPiercing(getBooleanProperty(PIERCES_ENEMIES, ctx));
             gust.setAbility(this);
             gust.setTier(getCurrentTier(ctx));
             gust.setXp(getProperty(XP_HIT).floatValue());

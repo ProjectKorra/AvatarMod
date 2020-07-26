@@ -16,9 +16,9 @@
       "chiOnHit": 1.4,
       "damage": 3.5,
       "numberOfBlades": 1,
+      "angle": 0,
       "boomerAang": false,
-      "destroyGrass": false,
-      "angle": 0
+      "destroyGrass": false
     },
     "level2": {
       "tier": 2,
@@ -66,7 +66,7 @@
       "chiOnHit": 1.8,
       "damage": 3.5,
       "numberOfBlades": 5,
-      "angle": 8
+      "angle": 15
     },
     "level4_2": {
       "tier": 4,

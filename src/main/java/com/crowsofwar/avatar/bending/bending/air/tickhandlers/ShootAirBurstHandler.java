@@ -127,7 +127,7 @@ public class ShootAirBurstHandler extends TickHandler {
 			gust.setPushIronDoor(true);
 			gust.setPushIronTrapDoor(true);
 			gust.setDestroyProjectiles(true);
-			gust.setPiercesEnemies(data.getLevel() >= 2);
+			gust.setPiercing(data.getLevel() >= 2);
 			gust.setAbility(new AbilityAirBurst());
 			gust.setTier(Math.min(new AbilityAirBurst().getCurrentTier(data), charge));
 			gust.setVelocity(look.times(speed + 40));

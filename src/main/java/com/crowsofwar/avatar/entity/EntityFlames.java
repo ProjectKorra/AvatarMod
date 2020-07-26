@@ -43,7 +43,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
@@ -145,24 +144,17 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
         // motionZ *= 0.95;
 
 
-        if (velocity().sqrMagnitude() <= 0.25) Dissipate();
+        if (velocity().sqrMagnitude() <= 0.5) Dissipate();
+
+        //Pretty much
 
         //Looks for only blocks
-        if (getReflect()) {
-            RayTraceResult raytrace = Raytrace.rayTrace(world, getPositionVector(), getLookVec().add(getPositionVector()), getAvgSize() / 2,
-                    false, true, false, Entity.class, entity -> false);
-            EnumFacing sideHit = EnumFacing.UP;
-            if (raytrace != null && raytrace.hitVec != null) {
-                sideHit = raytrace.sideHit;
-            } else if (collided) {
-                if (collidedHorizontally) {
-                    raytrace = rayTrace(1, 0);
-                    if (raytrace != null && raytrace.hitVec != null)
-                        sideHit = raytrace.sideHit;
-                }
-            }
-            if (sideHit != null) {
-                setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.975));
+        Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.125,
+                true);
+        if (raytrace.hitSomething()) {
+            EnumFacing sideHit = raytrace.getSide();
+            if (getReflect()) {
+                setVelocity(velocity().reflect(new Vector(Objects.requireNonNull(sideHit))).times(0.75));
             }
         }
 
