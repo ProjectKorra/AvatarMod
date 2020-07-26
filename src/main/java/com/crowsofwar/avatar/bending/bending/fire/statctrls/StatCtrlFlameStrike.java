@@ -335,6 +335,7 @@ public class StatCtrlFlameStrike extends StatusControl {
                 flames.setPerformanceAmount(performance);
                 flames.setElement(new Firebending());
                 flames.setPosition(x1, y1, z1);
+                flames.setChiHit(strike.getProperty(Ability.CHI_HIT, abilityData).floatValue());
                 flames.setTrailingFire(strike.getBooleanProperty(Ability.SETS_FIRES, abilityData) && world.rand.nextBoolean());
                 flames.setVelocity(new Vec3d(look.x * mult + world.rand.nextGaussian() * accuracyMult,
                         look.y * mult + world.rand.nextGaussian() * accuracyMult,

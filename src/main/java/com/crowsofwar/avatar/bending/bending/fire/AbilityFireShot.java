@@ -118,6 +118,7 @@ public class AbilityFireShot extends Ability {
                 flames.setFade(getProperty(FADE_R, ctx).intValue(), getProperty(FADE_G, ctx).intValue(), getProperty(FADE_B, ctx).intValue());
                 flames.setElement(new Firebending());
                 flames.setPush(knockback);
+                flames.setChiHit(getProperty(CHI_HIT, ctx).floatValue());
                 flames.setDamageSource("avatar_Fire_fireShot");
                 world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
                         world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);

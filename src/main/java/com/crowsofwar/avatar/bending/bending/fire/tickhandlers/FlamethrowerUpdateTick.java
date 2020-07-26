@@ -262,7 +262,8 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 flames.setFireTime(fireTime);
                 flames.setPerformanceAmount((int) performanceAmount);
                 flames.setElement(new Firebending());
-                if (abilityData.isDynamicMasterLevel(AbilityTreePath.SECOND)) {
+                flames.setChiHit(flamethrower.getProperty(Ability.CHI_HIT, abilityData).floatValue());
+                if (size >= 1.5) {
                     for (int i = 0; i < 4; i++) {
                         yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness * 2;
                         pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness * 2;

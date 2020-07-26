@@ -104,6 +104,7 @@ public class AbilityAirGust extends Ability {
             gust.setPiercing(getBooleanProperty(PIERCES_ENEMIES, ctx));
             gust.setAbility(this);
             gust.setTier(getCurrentTier(ctx));
+            gust.setChiHit(getProperty(CHI_HIT, ctx).floatValue());
             gust.setXp(getProperty(XP_HIT).floatValue());
             gust.setBehaviour(new AirGustBehaviour());
             if (!world.isRemote)

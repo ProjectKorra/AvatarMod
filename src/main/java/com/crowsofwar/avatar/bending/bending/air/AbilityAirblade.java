@@ -115,6 +115,7 @@ public class AbilityAirblade extends Ability {
             airblade.setTier(getCurrentTier(ctx));
             airblade.setChiHit(getProperty(CHI_HIT, ctx).floatValue());
             airblade.setAbility(this);
+            airblade.setDamageSource("avatar_Air_airblade");
             //All changed depending on boomeranging or not
             if (getBooleanProperty(BOOMERANG, ctx)) {
                 airblade.setEntitySize(sizeMult, 0.25F * sizeMult);
