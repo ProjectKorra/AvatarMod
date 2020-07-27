@@ -79,7 +79,7 @@ public class AbilityFlameStrike extends Ability {
         World world = ctx.getWorld();
         if (data.hasStatusControl(FLAME_STRIKE_MAIN) || data.hasStatusControl(FLAME_STRIKE_OFF))
             return;
-        
+
         float orbSize = 0.3F;
         int lightRadius = 4;
         if (ctx.getLevel() == 1) {
@@ -103,7 +103,7 @@ public class AbilityFlameStrike extends Ability {
 
         }
 
-        if (bender.consumeChi(getProperty(CHI_COST, ctx).floatValue() / 2)) {
+        if (bender.consumeChi(getChiCost(ctx) / 2)) {
 
             //Light orb model translating is currently whack
             Vec3d height = entity.getPositionVector().add(0, 1.8, 0);

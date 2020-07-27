@@ -260,7 +260,6 @@ public class StatCtrlFlameStrike extends StatusControl {
         //Inhibitor factors
         cooldown -= cooldown * powerModifier * xpMod * 0.5;
         exhaustion -= exhaustion * powerModifier * xpMod * 0.25;
-        chiCost -= chiCost * powerModifier * xpMod * 0.5;
         burnout -= burnout * powerModifier * xpMod * 0.25;
 
 

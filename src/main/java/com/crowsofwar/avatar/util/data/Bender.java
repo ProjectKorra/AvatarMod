@@ -162,9 +162,9 @@ public abstract class Bender {
     public double getDamageMult(UUID bendingId) {
         double powerRating = calcPowerRating(bendingId);
         if (powerRating < 0) {
-            return 0.005 * powerRating + 1 < 0 ? 1F / 50 : 0.005 * powerRating + 1;
+            return 0.05 * powerRating + 1 < 0 ? 1F / 50 : 0.05 * powerRating + 1;
         } else {
-            return 0.005 * powerRating + 1;
+            return 0.05 * powerRating + 1;
         }
     }
 
@@ -225,6 +225,7 @@ public abstract class Bender {
                 if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
                     if (data.getMiscData().getCanUseAbilities()) {
                         if (aD.getAbilityCooldown() == 0 || entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+                            aD.setPowerRating(calcPowerRating(ability.getBendingId()));
                             ability.execute(abilityCtx);
                             if (entity instanceof EntityPlayer)
                                 ((EntityPlayer) entity).addExhaustion(ability.getExhaustion(abilityCtx));

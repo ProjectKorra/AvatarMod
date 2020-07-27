@@ -46,6 +46,7 @@ public class AbilityData {
 	//Whether to switch the path of the ability
 	private final boolean switchPath;
 	private int abilityCooldown;
+	private double powerRating;
 	//How much exhaustion to add to the player (affects the hunger bar, like sprinting or fighting)
 	private float exhaustion;
 	/**
@@ -84,6 +85,7 @@ public class AbilityData {
 		this.abilityCooldown = 0;
 		this.burnOut = 0;
 		this.exhaustion = 0;
+		this.powerRating = 0;
 	}
 
 	public AbilityData(BendingData data, String abilityName, boolean switchPath) {
@@ -96,6 +98,7 @@ public class AbilityData {
 		this.abilityCooldown = 0;
 		this.burnOut = 0;
 		this.exhaustion = 0;
+		this.powerRating = 0;
 	}
 
 	/**
@@ -142,6 +145,31 @@ public class AbilityData {
 
 	public void decrementCooldown() {
 		abilityCooldown--;
+	}
+
+	public double getPowerRating() {
+		return powerRating;
+	}
+
+	public void setPowerRating(double power) {
+		this.powerRating = power;
+	}
+
+	/**
+	 * Gets the power rating, but in the range 0.5 to 1.5 for convenience in damage calculations.
+	 * <ul>
+	 * <li>-100 power rating gives 0.5; damage would be 1/2 of normal</li>
+	 * <li>0 power rating gives 1; damage would be the same as normal</li>
+	 * <li>100 power rating gives 1.5; damage would be 1.5 times as much as usual</li>
+	 * Powerrating goes from -1000 to 1000, to allow for insane buffs (avatar).
+	 */
+	public double getDamageMult() {
+		double powerRating = getPowerRating();
+		if (powerRating < 0) {
+			return 0.05 * powerRating + 1 < 0 ? 1F / 50 : 0.05 * powerRating + 1;
+		} else {
+			return 0.05 * powerRating + 1;
+		}
 	}
 
 	@Nullable
