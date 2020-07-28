@@ -34,6 +34,7 @@ public class ImmolateParticleHandler extends TickHandler {
 
         AbilityImmolate immolate = (AbilityImmolate) Abilities.get("immolate");
         int duration = data.getTickHandlerDuration(this);
+        float scale = 1.0F + Math.max(0, aD.getLevel()) * 0.25F;
 
         assert immolate != null;
         int immolateDuration = immolate.getProperty(Ability.DURATION, aD).intValue();
@@ -45,6 +46,8 @@ public class ImmolateParticleHandler extends TickHandler {
 		fadeR = immolate.getProperty(Ability.FADE_R, aD).intValue();
 		fadeG = immolate.getProperty(Ability.FADE_G, aD).intValue();
 		fadeB = immolate.getProperty(Ability.FADE_B, aD).intValue();
+
+        scale *= (float) aD.getDamageMult() * aD.getXpModifier();
 
         //The particles take a while to disappear after the ability finishes- so you decrease the time the particles can spawn
         if (world.isRemote) {
@@ -62,7 +65,7 @@ public class ImmolateParticleHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
                         vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40)
                         .clr(r, g, b).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 170))
-                        .element(new Firebending()).spawn(world);
+                        .element(new Firebending()).scale(scale).spawn(world);
             }
         }
         return duration >= immolateDuration;

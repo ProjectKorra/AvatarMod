@@ -78,6 +78,7 @@ public class AbilityFireShot extends Ability {
         float size = getProperty(SIZE, ctx).floatValue();
         float damage = getProperty(DAMAGE, ctx).floatValue();
         float chi = getChiCost(ctx);
+        float chiHit = getProperty(CHI_HIT, ctx).floatValue();
         float xp = getProperty(XP_HIT, ctx).floatValue();
 
         int fireTime = getProperty(FIRE_TIME, ctx).intValue();
@@ -93,6 +94,7 @@ public class AbilityFireShot extends Ability {
         knockback *= abilityData.getXpModifier() * damageMult;
         fireTime *= Math.min(abilityData.getXpModifier() * damageMult, 0.25F);
         lifeTime *= Math.min(abilityData.getXpModifier() * damageMult, 0.25F);
+        chiHit *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
 
         if (bender.consumeChi(chi)) {
             if (!getBooleanProperty(SHOCKWAVE, ctx)) {
@@ -118,7 +120,7 @@ public class AbilityFireShot extends Ability {
                 flames.setFade(getProperty(FADE_R, ctx).intValue(), getProperty(FADE_G, ctx).intValue(), getProperty(FADE_B, ctx).intValue());
                 flames.setElement(new Firebending());
                 flames.setPush(knockback);
-                flames.setChiHit(getProperty(CHI_HIT, ctx).floatValue());
+                flames.setChiHit(chiHit);
                 flames.setDamageSource("avatar_Fire_fireShot");
                 world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
                         world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);

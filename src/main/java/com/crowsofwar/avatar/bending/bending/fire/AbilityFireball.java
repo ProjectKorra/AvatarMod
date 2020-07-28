@@ -114,29 +114,15 @@ public class AbilityFireball extends Ability {
 			}
 
 			float damage = getProperty(DAMAGE, ctx).floatValue();
-			int size = 16;
+			int size = (int) (getProperty(SIZE, ctx).floatValue() * 32);
+			int lifetime = getProperty(LIFETIME, ctx).intValue();
+			
 			boolean canUse = !data.hasStatusControl(THROW_FIREBALL);
 			List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class,
 					entity.getEntityBoundingBox().grow(3.5, 3.5, 3.5));
 			canUse |= fireballs.size() < 3 && ctx.isDynamicMasterLevel(AbilityTreePath.FIRST);
 
-			damage *= ctx.getLevel() >= 2 ? 1.75f : 1f;
-			damage *= ctx.getPowerRatingDamageMod();
-
-			if (ctx.getLevel() == 1) {
-				size = 18;
-			}
-
-			if (ctx.getLevel() == 2) {
-				size = 20;
-			}
-
-			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-				size = 18;
-				damage -= 2F;
-			}
-			if (ctx.isDynamicMasterLevel(AbilityTreePath.SECOND))
-				size = 20;
+			damage *= ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier();
 			damage += size / 10F;
 
 			if (canUse) {

@@ -97,6 +97,10 @@ public class AbilityImmolate extends Ability {
                 lightRadius = 12;
             }
 
+            speedDuration *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
+            strengthDuration *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
+            healthDuration *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
+
             if (strengthLevel > 0)
                 entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, strengthDuration, strengthLevel - 1, false, false));
 
@@ -137,29 +141,6 @@ public class AbilityImmolate extends Ability {
 
     }
 
-    @Override
-    public int getCooldown(AbilityContext ctx) {
-        EntityLivingBase entity = ctx.getBenderEntity();
-        int coolDown = 140;
-
-        if (ctx.getLevel() == 1) {
-            coolDown = 130;
-        }
-        if (ctx.getLevel() == 2) {
-            coolDown = 120;
-        }
-        if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-            coolDown = 130;
-        }
-        if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-            coolDown = 110;
-        }
-
-        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-            coolDown = 0;
-        }
-        return coolDown;
-    }
 
     @Override
     public int getBaseTier() {
