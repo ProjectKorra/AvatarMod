@@ -287,12 +287,12 @@ avatar.ability.water_bubble.lvl4_1=§9§l§oTidal Bomb ;; Massively increased of
 avatar.ability.water_bubble.lvl4_2=§9§l§oWhirling Vortex ;; Bubble turns into a ring around you, shield also wraps around. Projectiles can be shot from it.
 
 avatar.ability.water_arc=§9§lWater §9§lArc
-avatar.ability.water_arc.desc=One of waterbending's most common attacks. Shoot a trailing arc of water at your enemy, but only when water is nearby.
-avatar.ability.water_arc.lvl1=Basic water arc
-avatar.ability.water_arc.lvl2=Farther pick-up range, bigger water splash.
-avatar.ability.water_arc.lvl3=Much faster, damage increase, and you can redirect water arcs that you look at in a 3 block radius! Bigger water splash.
-avatar.ability.water_arc.lvl4_1=§9§l§oWater Flurry ;; You can now instantly fire off water arcs; multiple arcs in quick succession make a combo.
-avatar.ability.water_arc.lvl4_2=§9§l§oWater spear ;; Super-duper-ultra fast, really high damage, breaks blocks!
+avatar.ability.water_arc.desc=One of waterbending's most basic attacks. Shoot a trailing arc of water at your enemy, but only when water is nearby. Can be spun around oneself to deflect projectiles.
+avatar.ability.water_arc.lvl1=Basic water arc.
+avatar.ability.water_arc.lvl2=Farther pick-up range, bigger water splash. Can draw from snow and ice.
+avatar.ability.water_arc.lvl3=Much faster, can deflect more projectiles, and can be drawn from plants. Can also be turned into short-ranged blades (hold right click and move the mouse).
+avatar.ability.water_arc.lvl4_1=§9§l§oCascading Falls ;; You can now release considerably more melee slashes from the arc and form combos, cuts non-solid plants.
+avatar.ability.water_arc.lvl4_2=§9§l§oCurve of the Moon ;; Spins in all directions like a swimming fish, deflects more projectiles, and can be released into a shockwave or a high-pressure arc.
 
 avatar.ability.wave=§9§lWave
 avatar.ability.wave.desc=Summon a wave of water to destroy your enemies, travels a little on land.
