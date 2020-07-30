@@ -116,7 +116,9 @@ public class AbilityFireball extends Ability {
 			float damage = getProperty(DAMAGE, ctx).floatValue();
 			int size = (int) (getProperty(SIZE, ctx).floatValue() * 32);
 			int lifetime = getProperty(LIFETIME, ctx).intValue();
-			
+			int performance = getProperty(PERFORMANCE, ctx).intValue();
+			int fireTime = getProperty(FIRE_TIME, ctx).intValue();
+			float chiHit = getProperty(CHI_HIT, ctx).floatValue();
 			boolean canUse = !data.hasStatusControl(THROW_FIREBALL);
 			List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class,
 					entity.getEntityBoundingBox().grow(3.5, 3.5, 3.5));
@@ -134,12 +136,13 @@ public class AbilityFireball extends Ability {
 				fireball.setDamage(damage);
 				fireball.setPowerRating(bender.calcPowerRating(Firebending.ID));
 				fireball.setSize(size);
-				fireball.setLifeTime(30);
+				fireball.setLifeTime(lifetime);
 				fireball.setOrbitID(fireballs.size() + 1);
-				fireball.setPerformanceAmount((int) (BattlePerformanceScore.SCORE_MOD_SMALL * 1.5));
+				fireball.setPerformanceAmount(performance);
 				fireball.setAbility(this);
-				fireball.setFireTime(size / 5);
-				fireball.setXp(SKILLS_CONFIG.fireballHit);
+				fireball.setChiHit(chiHit);
+				fireball.setFireTime(fireTime);
+				fireball.setXp(getProperty(XP_HIT, ctx).floatValue());
 				if (!world.isRemote)
 					world.spawnEntity(fireball);
 
@@ -260,4 +263,6 @@ public class AbilityFireball extends Ability {
 
 		}
 	}
+
+
 }
