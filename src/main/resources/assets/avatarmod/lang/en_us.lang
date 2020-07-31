@@ -300,9 +300,7 @@ avatar.ability.wave.lvl1=Make your enemies wave goodbye
 avatar.ability.wave.lvl2=A lot more damage
 avatar.ability.wave.lvl3=Much larger
 avatar.ability.wave.lvl4_1=§9§l§oTsunami ;; Creates a massive wave
-avatar.ability.wave.lvl4_2=§9§l§oForce §9§l§owave ;; Very fast waves, explosions
-
-
+avatar.ability.wave.lvl4_2=§9§l§oEbb and Flow ;; Gain the ability to summon waves pulling enemies towards you.
 
 avatar.ability.water_skate=§9§lWater §9§lSkate
 avatar.ability.water_skate.desc=Run on the surface of water. Useful as an evasive ability, or just to get around.
@@ -314,8 +312,8 @@ avatar.ability.water_skate.lvl4_2=§9§l§oWatery §9§l§oimpact ;; Smash the g
 
 avatar.ability.water_blast=§9§lWater §9§lBlast
 avatar.ability.water_blast.desc=Make a continuous stream of water acts as crowd control. It takes a while to charge up, and takes 3 water charges out of water pouches.
-avatar.ability.water_blast.lvl1=Basic water cannon
-avatar.ability.water_blast.lvl2=Deals more damage, slightly larger
+avatar.ability.water_blast.lvl1=Basic charge, projectile, and burst.
+avatar.ability.water_blast.lvl2=Deals more damage, slightly larger. Can use snow and ice.
 avatar.ability.water_blast.lvl3=Deals even more damage; you can now just be near a waterbendable block to use water cannon, you don't have to look at one!
 avatar.ability.water_blast.lvl4_1=§9§l§oTitanium §9§l§oTearer ;; Unleash a hydro-powered beam of such force that it can tear through steel!
 avatar.ability.water_blast.lvl4_2=§9§l§oRapidfire ;; Rapidly create many smaller streams of water that pierces through enemies!
