@@ -32,10 +32,10 @@ public abstract class FireballBehavior extends OffensiveBehaviour {
 
 	public static final DataSerializer<FireballBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
 
-	public static int ID_NOTHING, ID_FALL, ID_PICKUP, ID_PLAYER_CONTROL, ID_THROWN;
+	public static int ID_NOTHING, ID_PLAYER_CONTROL, ID_THROWN;
 
 	public static void register() {
-		DataSerializers.registerSerializer(DATA_SERIALIZER);
+		//DataSerializers.registerSerializer(DATA_SERIALIZER);
 		ID_NOTHING = registerBehavior(Idle.class);
 		ID_PLAYER_CONTROL = registerBehavior(PlayerControlled.class);
 		ID_THROWN = registerBehavior(Thrown.class);
@@ -97,8 +97,6 @@ public abstract class FireballBehavior extends OffensiveBehaviour {
 	}
 
 	public static class PlayerControlled extends FireballBehavior {
-
-		int ticks = 0;
 
 		public PlayerControlled() {
 		}

@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.client;
 
+import com.crowsofwar.avatar.item.scroll.ItemScrollAir;
 import com.crowsofwar.avatar.registry.AvatarItem;
 import com.crowsofwar.avatar.registry.AvatarItems;
 import com.crowsofwar.avatar.item.scroll.ItemScroll;
@@ -75,10 +76,11 @@ public class AvatarItemRenderRegister {
 			ScrollType type = scroll.getScrollType();
 			locationsRegular[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
 					"inventory");
-			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow",
+			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow" + "_" + (i + 1),
 					"inventory");
 			setCustomModelResourceLocation(scroll.item(), i, locationsGlow[i]);
-			setCustomModelResourceLocation(scroll.item(), i, locationsRegular[i]);
+			if (!(scroll instanceof ItemScrollAir))
+				setCustomModelResourceLocation(scroll.item(), i, locationsRegular[i]);
 		}
 	}
 

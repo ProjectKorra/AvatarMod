@@ -16,6 +16,8 @@
 */
 package com.crowsofwar.avatar.bending.bending.fire.statctrls;
 
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.StatusControl;
@@ -48,7 +50,10 @@ public class StatCtrlThrowFireball extends StatusControl {
 	public boolean execute(BendingContext ctx) {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
-		world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.HOSTILE, 4F, 0.8F);
+		AbilityFireball ball = (AbilityFireball) Abilities.get("fireball");
+
+		int cooldown;
+		float burnOut, exhaustion;
 
 		EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
 		List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class,
@@ -56,20 +61,24 @@ public class StatCtrlThrowFireball extends StatusControl {
 
 		if (fireball != null) {
 			AbilityData abilityData = ctx.getData().getAbilityData(new AbilityFireball());
-			double speedMult = abilityData.getLevel() >= 2 ? 37.5 : 30;
+			double speedMult = Abilities.get("fireball").getProperty(Ability.SPEED, abilityData).floatValue();
 			Vector lookPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(6 + fireball.getAvgSize()));
-			fireball.setBehavior(new FireballBehavior.Thrown());
+
+			speedMult *= abilityData.getDamageMult();
+
+			fireball.setBehaviour(new FireballBehavior.Thrown());
 			fireball.rotationPitch = entity.rotationPitch;
 			fireball.rotationYaw = entity.rotationYaw;
 
 			Vector vel = lookPos.minus(Vector.getEntityPos(fireball));
 
 			//Drillgon200: Why deal with orbit ids when there's already two other ids you can organize them by?
+			//FD: No clue
 			if (!fireballs.isEmpty()) {
-				fireballs = fireballs.stream().filter(fireball1 -> !(fireball1.getBehavior() instanceof FireballBehavior.Thrown
-						|| fireball1.getBehavior() instanceof AbilityFireball.FireballOrbitController)).collect(Collectors.toList());
+				fireballs = fireballs.stream().filter(fireball1 -> !(fireball1.getBehaviour() instanceof FireballBehavior.Thrown
+						|| fireball1.getBehaviour() instanceof AbilityFireball.FireballOrbitController)).collect(Collectors.toList());
 				if (!fireballs.isEmpty()) {
-					fireballs.get(0).setBehavior(new AbilityFireball.FireballOrbitController());
+					fireballs.get(0).setBehaviour(new AbilityFireball.FireballOrbitController());
 					for (EntityFireball ball : fireballs)
 						ball.setOrbitID(ball.getOrbitID() - 1);
 				}
@@ -79,6 +88,7 @@ public class StatCtrlThrowFireball extends StatusControl {
 			}
 			else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
 		}
+		world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.HOSTILE, 4F, 0.8F);
 
 
 		return true;

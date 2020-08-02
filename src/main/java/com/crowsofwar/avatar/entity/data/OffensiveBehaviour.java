@@ -27,6 +27,7 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
 		registerBehavior(ShootAirBurstHandler.AirBurstBeamBehaviour.class);
 		registerBehavior(AbilityAirGust.AirGustBehaviour.class);
 		registerBehavior(AbilityAirblade.AirBladeBehaviour.class);
+		FireballBehavior.register();
 	}
 
 	public static class Idle extends OffensiveBehaviour {

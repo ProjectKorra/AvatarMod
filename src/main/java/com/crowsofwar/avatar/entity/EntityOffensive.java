@@ -1,13 +1,13 @@
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.client.particle.AvatarParticles;
 import com.crowsofwar.avatar.bending.bending.combustion.Combustionbending;
 import com.crowsofwar.avatar.bending.bending.lightning.Lightningbending;
-import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.client.particle.AvatarParticles;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockLiquid;
@@ -49,6 +49,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
             .createKey(EntityOffensive.class, OffensiveBehaviour.DATA_SERIALIZER);
     private static final DataParameter<Boolean> SYNC_PIERCES = EntityDataManager
             .createKey(EntityOffensive.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Float> SYNC_EXPLOSION_SIZE = EntityDataManager
+            .createKey(EntityOffensive.class, DataSerializers.FLOAT);
 
     /**
      * The fraction of the impact velocity that should be the maximum spread speed added on impact.
@@ -71,6 +73,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     private double prevVelX, prevVelY, prevVelZ;
     private Predicate<Entity> solidEntities;
     private String damageSource;
+    private float explosionStrength;
+    private float explosionDamage;
 
 
     public EntityOffensive(World world) {
@@ -87,15 +91,17 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         this.damageSource = AvatarDamageSource.FIRE.getDamageType();
         this.push = 1;
         this.chiHit = 1;
-    }
-
-    public void setPush(float push) {
-        this.push = push;
+        this.explosionStrength = 0.4F;
+        this.explosionDamage = 1;
     }
 
     @Override
     public float getPush() {
         return push;
+    }
+
+    public void setPush(float push) {
+        this.push = push;
     }
 
     public OffensiveBehaviour getBehaviour() {
@@ -162,6 +168,18 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         dataManager.set(SYNC_DAMAGE, damage);
     }
 
+    public void setExplosionSize(float size) {
+        dataManager.set(SYNC_EXPLOSION_SIZE, size);
+    }
+
+    public void setExplosionStrength(float strength) {
+        this.explosionStrength = strength;
+    }
+
+    public void setExplosionDamage(float damage) {
+        this.explosionDamage = damage;
+    }
+
     //This just makes the methods easier to use.
     public void Explode() {
         Explode(world, this, getOwner());
@@ -184,6 +202,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         dataManager.register(SYNC_HEIGHT, 1.0F);
         dataManager.register(SYNC_BEHAVIOR, new OffensiveBehaviour.Idle());
         dataManager.register(SYNC_PIERCES, false);
+        dataManager.register(SYNC_EXPLOSION_SIZE, 1F);
     }
 
     @Override
@@ -495,7 +514,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     @Override
     public float getAoeDamage() {
-        return 1;
+        return explosionDamage;
     }
 
     @Override
@@ -548,7 +567,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         if (damageSource.startsWith("avatar_")) {
             source = new EntityDamageSourceIndirect(damageSource, target, owner);
             if (isProjectile())
-               source.setProjectile();
+                source.setProjectile();
             source.setMagicDamage();
             if (getElement() instanceof Lightningbending)
                 source.setDamageBypassesArmor();
@@ -602,7 +621,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     @Override
     public double getExplosionHitboxGrowth() {
-        return 1;
+        return dataManager.get(SYNC_EXPLOSION_SIZE);
     }
 
     @Override
@@ -614,13 +633,13 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         this.xp = xp;
     }
 
-    public void setChiHit(float chi) {
-        this.chiHit = chi;
-    }
-
     @Override
     public float getChiHit() {
         return this.chiHit;
+    }
+
+    public void setChiHit(float chi) {
+        this.chiHit = chi;
     }
 
     @Override
@@ -637,7 +656,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     //No relation to getKnockback.
     @Override
     public Vec3d getExplosionKnockbackMult() {
-        return new Vec3d(0.4, 0.4, 0.4);
+        return new Vec3d(explosionStrength, explosionStrength, explosionStrength);
     }
 
     //Only used in shockwaves

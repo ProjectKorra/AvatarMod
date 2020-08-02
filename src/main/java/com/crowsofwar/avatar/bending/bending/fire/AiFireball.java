@@ -92,7 +92,7 @@ public class AiFireball extends BendingAi {
 	public void resetTask() {
 
 		EntityFireball fireball = AvatarEntity.lookupEntity(entity.world, EntityFireball.class, //
-				fire -> fire.getBehavior() instanceof FireballBehavior.PlayerControlled
+				fire -> fire.getBehaviour() instanceof FireballBehavior.PlayerControlled
 						&& fire.getOwner() == entity);
 
 		if (fireball != null) {

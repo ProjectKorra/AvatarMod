@@ -75,7 +75,7 @@ public class AbilitySwirlingInferno extends Ability {
 				EntityFireball fireball = new EntityFireball(world);
 				fireball.setPosition(target);
 				fireball.setOwner(entity);
-				fireball.setBehavior(fireballs.size() < 1 ? new AbilityFireball.FireballOrbitController() : new FireballBehavior.PlayerControlled());
+				fireball.setBehaviour(fireballs.size() < 1 ? new AbilityFireball.FireballOrbitController() : new FireballBehavior.PlayerControlled());
 				fireball.setDamage(damage);
 				fireball.setPowerRating(bender.calcPowerRating(Firebending.ID));
 				fireball.setSize(size);

@@ -18,13 +18,13 @@ package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.entity.data.FireballBehavior;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControlController;
-import com.crowsofwar.avatar.entity.data.FireballBehavior;
-import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
@@ -57,8 +57,6 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
     public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityFireball.class,
             DataSerializers.VARINT);
-    private static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
-            .createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
     private static final DataParameter<Integer> SYNC_ORBIT_ID = EntityDataManager.createKey(EntityFireball.class,
             DataSerializers.VARINT);
 
@@ -80,7 +78,6 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
     @Override
     public void entityInit() {
         super.entityInit();
-        dataManager.register(SYNC_BEHAVIOR, new FireballBehavior.Idle());
         dataManager.register(SYNC_SIZE, 30);
         dataManager.register(SYNC_ORBIT_ID, 1);
     }
@@ -88,11 +85,10 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        setBehavior((FireballBehavior) getBehavior().onUpdate(this));
 
-        if (getBehavior() == null) {
+        if (getBehaviour() == null) {
             this.setVelocity(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian());
-            this.setBehavior(new FireballBehavior.Thrown());
+            this.setBehaviour(new FireballBehavior.Thrown());
         }
 
         if (ticksExisted % 30 == 0) {
@@ -106,7 +102,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
             if (fireball == null && (bD.hasStatusControl(THROW_FIREBALL))) {
                 bD.removeStatusControl(THROW_FIREBALL);
             }
-            if (fireball != null && fireball.getBehavior() instanceof FireballBehavior.PlayerControlled && !(bD.hasStatusControl(THROW_FIREBALL))) {
+            if (fireball != null && fireball.getBehaviour() instanceof FireballBehavior.PlayerControlled && !(bD.hasStatusControl(THROW_FIREBALL))) {
                 bD.addStatusControl(THROW_FIREBALL);
             }
 
@@ -148,7 +144,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
                         .spawn(world);
             }
 
-            if (getBehavior() instanceof FireballBehavior.Thrown) {
+            if (getBehaviour() instanceof FireballBehavior.Thrown) {
                 for (int i = 0; i < 4; i++) {
                     Vec3d pos = Vector.getOrthogonalVector(getLookVec(), i * 90 + (ticksExisted % 360) * 10, getAvgSize() / 1.25F).toMinecraft();
                     Vec3d velocity;
@@ -195,17 +191,9 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
         return false;
     }
 
-    public FireballBehavior getBehavior() {
-        return dataManager.get(SYNC_BEHAVIOR);
-    }
-
-    public void setBehavior(FireballBehavior behavior) {
-        dataManager.set(SYNC_BEHAVIOR, behavior);
-    }
-
     @Override
     public EntityLivingBase getController() {
-        return getBehavior() instanceof FireballBehavior.PlayerControlled ? getOwner() : null;
+        return this.getBehaviour() instanceof FireballBehavior.PlayerControlled ? getOwner() : null;
     }
 
 
@@ -249,7 +237,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
     @Override
     public boolean shouldExplode() {
-        return getBehavior() instanceof FireballBehavior.Thrown;
+        return getBehaviour() instanceof FireballBehavior.Thrown;
     }
 
     @Override
@@ -349,14 +337,14 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
     @Override
     public boolean canCollideWith(Entity entity) {
-        if (getBehavior() instanceof FireballBehavior.Thrown)
+        if (getBehaviour() instanceof FireballBehavior.Thrown)
             return super.canCollideWith(entity);
         else return false;
     }
 
     @Override
     public boolean canBeCollidedWith() {
-        if (getBehavior() instanceof FireballBehavior.Thrown)
+        if (getBehaviour() instanceof FireballBehavior.Thrown)
             return super.canBeCollidedWith();
         else return false;
     }

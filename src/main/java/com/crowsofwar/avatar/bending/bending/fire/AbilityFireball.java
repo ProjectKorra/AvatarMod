@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.bending.bending.fire;
 
+import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
@@ -101,6 +102,7 @@ public class AbilityFireball extends Ability {
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
 		BendingData data = ctx.getData();
+		AbilityData abilityData = ctx.getAbilityData();
 
 
 		if (bender.consumeChi(getChiCost(ctx))) {
@@ -119,20 +121,29 @@ public class AbilityFireball extends Ability {
 			int performance = getProperty(PERFORMANCE, ctx).intValue();
 			int fireTime = getProperty(FIRE_TIME, ctx).intValue();
 			float chiHit = getProperty(CHI_HIT, ctx).floatValue();
+			float explosionSize = getProperty(EXPLOSION_SIZE, ctx).floatValue();
+			float explosionDamage = getProperty(EXPLOSION_DAMAGE, ctx).floatValue();
+
 			boolean canUse = !data.hasStatusControl(THROW_FIREBALL);
+
 			List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class,
 					entity.getEntityBoundingBox().grow(3.5, 3.5, 3.5));
+			fireballs = fireballs.stream().filter(entityFireball -> entityFireball.getOwner() == entity).collect(Collectors.toList());
 			canUse |= fireballs.size() < 3 && ctx.isDynamicMasterLevel(AbilityTreePath.FIRST);
 
-			damage *= ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier();
+			size *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
+			damage *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
 			damage += size / 10F;
-
+			explosionSize *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
+			explosionDamage *= ctx.getPowerRatingDamageMod() *  abilityData.getXpModifier();
+			chiHit *= ctx.getPowerRatingDamageMod();
+			lifetime *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
 			if (canUse) {
 				assert target != null;
 				EntityFireball fireball = new EntityFireball(world);
 				fireball.setPosition(target);
 				fireball.setOwner(entity);
-				fireball.setBehavior(fireballs.size() < 1 ? new FireballOrbitController() : new FireballBehavior.PlayerControlled());
+				fireball.setBehaviour(fireballs.size() < 1 ? new FireballOrbitController() : new FireballBehavior.PlayerControlled());
 				fireball.setDamage(damage);
 				fireball.setPowerRating(bender.calcPowerRating(Firebending.ID));
 				fireball.setSize(size);
@@ -141,6 +152,8 @@ public class AbilityFireball extends Ability {
 				fireball.setPerformanceAmount(performance);
 				fireball.setAbility(this);
 				fireball.setChiHit(chiHit);
+				fireball.setExplosionDamage(explosionDamage);
+				fireball.setExplosionSize(explosionSize);
 				fireball.setFireTime(fireTime);
 				fireball.setXp(getProperty(XP_HIT, ctx).floatValue());
 				if (!world.isRemote)
@@ -188,7 +201,7 @@ public class AbilityFireball extends Ability {
 			Vector target = Vector.getEyePos(owner).plus(look.times(2 + ((EntityFireball) entity).getSize() * 0.03125F));
 			List<EntityFireball> fireballs = entity.world.getEntitiesWithinAABB(EntityFireball.class,
 					owner.getEntityBoundingBox().grow(5, 5, 5));
-			fireballs = fireballs.stream().filter(entityFireball -> entityFireball.getBehavior() instanceof FireballBehavior.PlayerControlled
+			fireballs = fireballs.stream().filter(entityFireball -> entityFireball.getBehaviour() instanceof FireballBehavior.PlayerControlled
 					&& entityFireball.getOwner() == entity.getOwner()).collect(Collectors.toList());
 			Vec3d motion = Objects.requireNonNull(target).minus(Vector.getEntityPos(entity)).toMinecraft();
 
@@ -230,7 +243,10 @@ public class AbilityFireball extends Ability {
 			}
 			data.addStatusControl(THROW_FIREBALL);
 
+
 			if (entity.getAbility() instanceof AbilityFireball) {
+				AbilityFireball ball = (AbilityFireball) Abilities.get("fireball");
+				if (ball.getProperty(MAX_SIZE, AbilityData.get(entity.getOwner(), ball.getName())).floatValue() != entity.getAvgSize())
 				if (data.getAbilityData(new AbilityFireball().getName()).isMasterPath(AbilityTreePath.SECOND)) {
 					int size = ((EntityFireball) entity).getSize();
 					if (size < 60 && entity.ticksExisted % 4 == 0) {
