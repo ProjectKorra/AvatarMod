@@ -19,12 +19,13 @@ package com.crowsofwar.avatar.bending.bending.fire.statctrls;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireball;
-import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.util.data.StatusControl;
-import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityFireball;
 import com.crowsofwar.avatar.entity.data.FireballBehavior;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.StatusControl;
+import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -42,56 +43,69 @@ import static com.crowsofwar.avatar.util.data.StatusControl.CrosshairPosition.LE
  */
 public class StatCtrlThrowFireball extends StatusControl {
 
-	public StatCtrlThrowFireball() {
-		super(10, CONTROL_LEFT_CLICK_DOWN, LEFT_OF_CROSSHAIR);
-	}
+    public StatCtrlThrowFireball() {
+        super(10, CONTROL_LEFT_CLICK_DOWN, LEFT_OF_CROSSHAIR);
+    }
 
-	@Override
-	public boolean execute(BendingContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-		World world = ctx.getWorld();
-		AbilityFireball ball = (AbilityFireball) Abilities.get("fireball");
+    @Override
+    public boolean execute(BendingContext ctx) {
+        EntityLivingBase entity = ctx.getBenderEntity();
+        World world = ctx.getWorld();
+        AbilityFireball ability = (AbilityFireball) Abilities.get("fireball");
+		AbilityData abilityData = ctx.getData().getAbilityData(new AbilityFireball());
 
-		int cooldown;
-		float burnOut, exhaustion;
+        int cooldown, maxCooldown;
+        float burnOut, exhaustion, maxSize, maxBurnout, maxExhaustion;
 
-		EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
-		List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class,
-				entity.getEntityBoundingBox().grow(3.5, 3, 3.5));
+        EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
+        List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class,
+                entity.getEntityBoundingBox().grow(3.5, 3, 3.5));
 
-		if (fireball != null) {
-			AbilityData abilityData = ctx.getData().getAbilityData(new AbilityFireball());
-			double speedMult = Abilities.get("fireball").getProperty(Ability.SPEED, abilityData).floatValue();
+        if (fireball != null && Bender.get(entity).consumeChi(ability.getChiCost(abilityData))) {
+
+            double speedMult = Abilities.get("fireball").getProperty(Ability.SPEED, abilityData).floatValue() * 5;
+            cooldown = ability.getProperty(Ability.COOLDOWN, abilityData).intValue();
+            burnOut = ability.getProperty(Ability.BURNOUT, abilityData).floatValue();
+            exhaustion = ability.getProperty(Ability.EXHAUSTION, abilityData).floatValue();
+			maxSize = ability.getProperty(Ability.MAX_SIZE, abilityData).floatValue();
+			maxCooldown = ability.getProperty(Ability.MAX_COOLDOWN, abilityData).intValue();
+
+			speedMult *= abilityData.getDamageMult() * abilityData.getXpModifier();
+			maxSize *= abilityData.getDamageMult() * abilityData.getXpModifier();
+			//Fix these
+			cooldown *= abilityData.getDamageMult() * abilityData.getXpModifier();
+			burnOut *= abilityData.getDamageMult() * abilityData.getXpModifier();
+			exhaustion *= abilityData.getDamageMult() * abilityData.getXpModifier();
+
+			cooldown *= (fireball.getAvId() / maxSize);
 			Vector lookPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(6 + fireball.getAvgSize()));
 
-			speedMult *= abilityData.getDamageMult();
 
-			fireball.setBehaviour(new FireballBehavior.Thrown());
-			fireball.rotationPitch = entity.rotationPitch;
-			fireball.rotationYaw = entity.rotationYaw;
+            fireball.setBehaviour(new FireballBehavior.Thrown());
+            fireball.rotationPitch = entity.rotationPitch;
+            fireball.rotationYaw = entity.rotationYaw;
 
-			Vector vel = lookPos.minus(Vector.getEntityPos(fireball));
+            Vector vel = lookPos.minus(Vector.getEntityPos(fireball));
 
-			//Drillgon200: Why deal with orbit ids when there's already two other ids you can organize them by?
-			//FD: No clue
-			if (!fireballs.isEmpty()) {
-				fireballs = fireballs.stream().filter(fireball1 -> !(fireball1.getBehaviour() instanceof FireballBehavior.Thrown
-						|| fireball1.getBehaviour() instanceof AbilityFireball.FireballOrbitController)).collect(Collectors.toList());
-				if (!fireballs.isEmpty()) {
-					fireballs.get(0).setBehaviour(new AbilityFireball.FireballOrbitController());
-					for (EntityFireball ball : fireballs)
-						ball.setOrbitID(ball.getOrbitID() - 1);
-				}
-				if (fireballs.size() > 1)
-					fireball.setVelocity(vel.normalize().times(speedMult));
-				else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
-			}
-			else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
-		}
-		world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.HOSTILE, 4F, 0.8F);
+            //Drillgon200: Why deal with orbit ids when there's already two other ids you can organize them by?
+            //FD: No clue
+            if (!fireballs.isEmpty()) {
+                fireballs = fireballs.stream().filter(fireball1 -> !(fireball1.getBehaviour() instanceof FireballBehavior.Thrown
+                        || fireball1.getBehaviour() instanceof AbilityFireball.FireballOrbitController)).collect(Collectors.toList());
+                if (!fireballs.isEmpty()) {
+                    fireballs.get(0).setBehaviour(new AbilityFireball.FireballOrbitController());
+                    for (EntityFireball ball : fireballs)
+                        ball.setOrbitID(ball.getOrbitID() - 1);
+                }
+                if (fireballs.size() > 1)
+                    fireball.setVelocity(vel.normalize().times(speedMult));
+                else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+            } else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+        }
+        world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.HOSTILE, 4F, 0.8F);
 
 
-		return true;
-	}
+        return true;
+    }
 
 }

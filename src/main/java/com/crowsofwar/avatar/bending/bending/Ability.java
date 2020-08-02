@@ -115,7 +115,8 @@ public abstract class Ability {
             MAX_DAMAGE = "maxDamage",
             MAX_CHICOST = "maxChiCost",
             MAX_BURNOUT = "maxBurnOut",
-            MAX_EXHAUSTION = "maxExhaustion";
+            MAX_EXHAUSTION = "maxExhaustion",
+            MAX_COOLDOWN = "maxCooldown";
 
 
     private final UUID type;

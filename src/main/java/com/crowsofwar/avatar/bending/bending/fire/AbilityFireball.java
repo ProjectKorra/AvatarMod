@@ -60,7 +60,7 @@ public class AbilityFireball extends Ability {
 	public void init() {
 		super.init();
 		addProperties(FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FADE_B, EXPLOSION_SIZE, EXPLOSION_DAMAGE,
-				MAX_BURNOUT, MAX_DAMAGE, MAX_SIZE, MAX_EXHAUSTION);
+				MAX_BURNOUT, MAX_DAMAGE, MAX_SIZE, MAX_EXHAUSTION, MAX_COOLDOWN, MAX_CHICOST);
 	}
 
 	//We want these to be applied manually upon executing the status control.
