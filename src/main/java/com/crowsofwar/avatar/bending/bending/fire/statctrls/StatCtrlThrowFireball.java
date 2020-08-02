@@ -28,11 +28,13 @@ import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_LEFT_CLICK_DOWN;
@@ -52,58 +54,89 @@ public class StatCtrlThrowFireball extends StatusControl {
         EntityLivingBase entity = ctx.getBenderEntity();
         World world = ctx.getWorld();
         AbilityFireball ability = (AbilityFireball) Abilities.get("fireball");
-		AbilityData abilityData = ctx.getData().getAbilityData(new AbilityFireball());
+        AbilityData abilityData = ctx.getData().getAbilityData(new AbilityFireball());
 
         int cooldown, maxCooldown;
-        float burnOut, exhaustion, maxSize, maxBurnout, maxExhaustion;
+        float burnOut, exhaustion, size, damage, maxDamage, maxBurnout, maxExhaustion;
 
         EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
         List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class,
                 entity.getEntityBoundingBox().grow(3.5, 3, 3.5));
 
-        if (fireball != null && Bender.get(entity).consumeChi(ability.getChiCost(abilityData))) {
+        if (fireball != null && ability != null) {
 
-            double speedMult = Abilities.get("fireball").getProperty(Ability.SPEED, abilityData).floatValue() * 5;
+            double speedMult = ability.getProperty(Ability.SPEED, abilityData).floatValue() * 5;
+            float chi = ability.getChiCost(abilityData);
             cooldown = ability.getProperty(Ability.COOLDOWN, abilityData).intValue();
             burnOut = ability.getProperty(Ability.BURNOUT, abilityData).floatValue();
             exhaustion = ability.getProperty(Ability.EXHAUSTION, abilityData).floatValue();
-			maxSize = ability.getProperty(Ability.MAX_SIZE, abilityData).floatValue();
-			maxCooldown = ability.getProperty(Ability.MAX_COOLDOWN, abilityData).intValue();
+            size = ability.getProperty(Ability.SIZE, abilityData).floatValue();
+            damage = ability.getProperty(Ability.DAMAGE, abilityData).floatValue();
+            maxDamage = ability.getProperty(Ability.MAX_DAMAGE, abilityData).floatValue();
+            maxCooldown = ability.getProperty(Ability.MAX_COOLDOWN, abilityData).intValue();
+            maxBurnout = ability.getProperty(Ability.MAX_BURNOUT, abilityData).floatValue();
+            maxExhaustion = ability.getProperty(Ability.MAX_EXHAUSTION, abilityData).floatValue();
 
-			speedMult *= abilityData.getDamageMult() * abilityData.getXpModifier();
-			maxSize *= abilityData.getDamageMult() * abilityData.getXpModifier();
-			//Fix these
-			cooldown *= abilityData.getDamageMult() * abilityData.getXpModifier();
-			burnOut *= abilityData.getDamageMult() * abilityData.getXpModifier();
-			exhaustion *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            float mult = fireball.getAvgSize() / size;
+            speedMult *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            damage *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            maxDamage *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
-			cooldown *= (fireball.getAvId() / maxSize);
-			Vector lookPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(6 + fireball.getAvgSize()));
+            cooldown -= cooldown * abilityData.getDamageMult() * abilityData.getXpModifier();
+            burnOut -= burnOut * abilityData.getDamageMult() * abilityData.getXpModifier();
+            exhaustion -= exhaustion * abilityData.getDamageMult() * abilityData.getXpModifier();
+            maxCooldown -= maxCooldown * abilityData.getDamageMult() * abilityData.getXpModifier();
+            maxBurnout -= maxBurnout * abilityData.getDamageMult() * abilityData.getXpModifier();
+            maxExhaustion -= maxExhaustion * abilityData.getDamageMult() * abilityData.getXpModifier();
+
+            cooldown *= mult;
+            cooldown = Math.min(cooldown, maxCooldown);
+            cooldown *= (1 + abilityData.getBurnOut() / 200);
+
+            exhaustion *= mult;
+            exhaustion = Math.min(exhaustion, maxExhaustion);
+            exhaustion *= (1 + abilityData.getBurnOut() / 100);
+
+            burnOut *= mult;
+            burnOut = Math.min(burnOut, maxBurnout);
+            burnOut *= (1 + abilityData.getBurnOut() / 200);
+
+            damage *= mult;
+            damage = Math.min(damage, maxDamage);
 
 
-            fireball.setBehaviour(new FireballBehavior.Thrown());
-            fireball.rotationPitch = entity.rotationPitch;
-            fireball.rotationYaw = entity.rotationYaw;
+            Vector lookPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(6 + fireball.getAvgSize()));
 
-            Vector vel = lookPos.minus(Vector.getEntityPos(fireball));
+            if (Objects.requireNonNull(Bender.get(entity)).consumeChi(chi)) {
 
-            //Drillgon200: Why deal with orbit ids when there's already two other ids you can organize them by?
-            //FD: No clue
-            if (!fireballs.isEmpty()) {
-                fireballs = fireballs.stream().filter(fireball1 -> !(fireball1.getBehaviour() instanceof FireballBehavior.Thrown
-                        || fireball1.getBehaviour() instanceof AbilityFireball.FireballOrbitController)).collect(Collectors.toList());
+                fireball.setBehaviour(new FireballBehavior.Thrown());
+                fireball.rotationPitch = entity.rotationPitch;
+                fireball.rotationYaw = entity.rotationYaw;
+                fireball.setDamage(damage);
+                abilityData.setAbilityCooldown(cooldown);
+                if (entity instanceof EntityPlayer)
+                    ((EntityPlayer) entity).addExhaustion(exhaustion);
+                abilityData.setBurnOut(burnOut);
+
+                Vector vel = lookPos.minus(Vector.getEntityPos(fireball));
+
+                //Drillgon200: Why deal with orbit ids when there's already two other ids you can organize them by?
+                //FD: No clue
                 if (!fireballs.isEmpty()) {
-                    fireballs.get(0).setBehaviour(new AbilityFireball.FireballOrbitController());
-                    for (EntityFireball ball : fireballs)
-                        ball.setOrbitID(ball.getOrbitID() - 1);
-                }
-                if (fireballs.size() > 1)
-                    fireball.setVelocity(vel.normalize().times(speedMult));
-                else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
-            } else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+                    fireballs = fireballs.stream().filter(fireball1 -> !(fireball1.getBehaviour() instanceof FireballBehavior.Thrown
+                            || fireball1.getBehaviour() instanceof AbilityFireball.FireballOrbitController)).collect(Collectors.toList());
+                    if (!fireballs.isEmpty()) {
+                        fireballs.get(0).setBehaviour(new AbilityFireball.FireballOrbitController());
+                        for (EntityFireball ball : fireballs)
+                            ball.setOrbitID(ball.getOrbitID() - 1);
+                    }
+                    if (fireballs.size() > 1)
+                        fireball.setVelocity(vel.normalize().times(speedMult));
+                    else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+                } else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+            }
+            world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.HOSTILE, 4F, 0.8F);
         }
-        world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.HOSTILE, 4F, 0.8F);
-
 
         return true;
     }
