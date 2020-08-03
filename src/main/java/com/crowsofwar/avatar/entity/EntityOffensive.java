@@ -147,7 +147,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     public float getAvgSize() {
         if (getHeight() == getWidth()) {
             return getHeight();
-        } else return (getHeight() + getWidth()) / 2;
+        } else return (getHeight() + getWidth()) / 2.0F;
     }
 
     public void setEntitySize(float height, float width) {
@@ -468,8 +468,9 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     @Override
     public boolean onCollideWithSolid() {
-        IBlockState state = world.getBlockState(getPosition());
+        IBlockState state;
         boolean collision = !world.getCollisionBoxes(this, getExpandedHitbox()).isEmpty();
+
         for (double x = 0; x <= 1; x += 0.5) {
             for (double z = 0; z <= 1; z += 0.5) {
                 for (double y = 0; y <= 1; y += 0.5) {

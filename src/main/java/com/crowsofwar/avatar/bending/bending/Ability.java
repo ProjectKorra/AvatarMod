@@ -114,7 +114,7 @@ public abstract class Ability {
             MAX_SIZE = "maxSize",
             MAX_DAMAGE = "maxDamage",
             MAX_CHICOST = "maxChiCost",
-            MAX_BURNOUT = "maxBurnOut",
+            MAX_BURNOUT = "maxBurnout",
             MAX_EXHAUSTION = "maxExhaustion",
             MAX_COOLDOWN = "maxCooldown";
 

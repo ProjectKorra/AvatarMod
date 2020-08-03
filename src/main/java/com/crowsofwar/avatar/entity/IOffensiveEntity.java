@@ -61,9 +61,9 @@ public interface IOffensiveEntity {
                     }
                 }
             }
-
+            entity.setDead();
         }
-        entity.setDead();
+
     }
 
 

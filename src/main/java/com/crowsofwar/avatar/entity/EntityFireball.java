@@ -96,18 +96,6 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
         }
 
 
-        if (getOwner() != null) {
-            EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
-            BendingData bD = BendingData.get(getOwner());
-            if (fireball == null && (bD.hasStatusControl(THROW_FIREBALL))) {
-                bD.removeStatusControl(THROW_FIREBALL);
-            }
-            if (fireball != null && fireball.getBehaviour() instanceof FireballBehavior.PlayerControlled && !(bD.hasStatusControl(THROW_FIREBALL))) {
-                bD.addStatusControl(THROW_FIREBALL);
-            }
-
-        }
-
         //Particles!
         if (world.isRemote && getOwner() != null) {
 
@@ -275,6 +263,11 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
     }
 
     @Override
+    public boolean onCollideWithSolid() {
+        return super.onCollideWithSolid();
+    }
+
+    @Override
     public void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
         //setBehavior((FireballBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
@@ -299,6 +292,11 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
     @Override
     public double getExpandedHitboxHeight() {
         return getHeight() / 4;
+    }
+
+    @Override
+    public boolean isInRangeToRender3d(double x, double y, double z) {
+        return true;
     }
 
     @Override

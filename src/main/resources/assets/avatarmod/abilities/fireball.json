@@ -18,7 +18,7 @@
       "damage": 4,
       "explosionSize": 1,
       "explosionDamage": 1,
-      "maxSize": 0.5,
+      "maxSize": 0,
       "maxBurnout": 16.0,
       "maxExhaustion": 2.0,
       "maxDamage": 4,

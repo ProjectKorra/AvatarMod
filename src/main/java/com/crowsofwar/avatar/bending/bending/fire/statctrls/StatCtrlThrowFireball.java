@@ -56,16 +56,17 @@ public class StatCtrlThrowFireball extends StatusControl {
         AbilityFireball ability = (AbilityFireball) Abilities.get("fireball");
         AbilityData abilityData = ctx.getData().getAbilityData(new AbilityFireball());
 
-        int cooldown, maxCooldown;
+        int cooldown;
         float burnOut, exhaustion, size, damage, maxDamage, maxBurnout, maxExhaustion;
 
         EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, entity);
         List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class,
                 entity.getEntityBoundingBox().grow(3.5, 3, 3.5));
 
-        if (fireball != null && ability != null) {
+        if (fireball != null) {
 
-            double speedMult = ability.getProperty(Ability.SPEED, abilityData).floatValue() * 5;
+            assert ability != null;
+            double speedMult = ability.getProperty(Ability.SPEED, abilityData).floatValue() * 3.5;
             float chi = ability.getChiCost(abilityData);
             cooldown = ability.getProperty(Ability.COOLDOWN, abilityData).intValue();
             burnOut = ability.getProperty(Ability.BURNOUT, abilityData).floatValue();
@@ -73,24 +74,23 @@ public class StatCtrlThrowFireball extends StatusControl {
             size = ability.getProperty(Ability.SIZE, abilityData).floatValue();
             damage = ability.getProperty(Ability.DAMAGE, abilityData).floatValue();
             maxDamage = ability.getProperty(Ability.MAX_DAMAGE, abilityData).floatValue();
-            maxCooldown = ability.getProperty(Ability.MAX_COOLDOWN, abilityData).intValue();
             maxBurnout = ability.getProperty(Ability.MAX_BURNOUT, abilityData).floatValue();
             maxExhaustion = ability.getProperty(Ability.MAX_EXHAUSTION, abilityData).floatValue();
 
-            float mult = fireball.getAvgSize() / size;
             speedMult *= abilityData.getDamageMult() * abilityData.getXpModifier();
             damage *= abilityData.getDamageMult() * abilityData.getXpModifier();
             maxDamage *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            size *= abilityData.getDamageMult() * abilityData.getXpModifier();
+
+            float mult = fireball.getAvgSize() / size;
 
             cooldown -= cooldown * abilityData.getDamageMult() * abilityData.getXpModifier();
             burnOut -= burnOut * abilityData.getDamageMult() * abilityData.getXpModifier();
             exhaustion -= exhaustion * abilityData.getDamageMult() * abilityData.getXpModifier();
-            maxCooldown -= maxCooldown * abilityData.getDamageMult() * abilityData.getXpModifier();
             maxBurnout -= maxBurnout * abilityData.getDamageMult() * abilityData.getXpModifier();
             maxExhaustion -= maxExhaustion * abilityData.getDamageMult() * abilityData.getXpModifier();
 
-            cooldown *= mult;
-            cooldown = Math.min(cooldown, maxCooldown);
+
             cooldown *= (1 + abilityData.getBurnOut() / 200);
 
             exhaustion *= mult;
@@ -105,7 +105,7 @@ public class StatCtrlThrowFireball extends StatusControl {
             damage = Math.min(damage, maxDamage);
 
 
-            Vector lookPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(6 + fireball.getAvgSize()));
+            Vector lookPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(15 + fireball.getAvgSize()));
 
             if (Objects.requireNonNull(Bender.get(entity)).consumeChi(chi)) {
 
@@ -122,18 +122,20 @@ public class StatCtrlThrowFireball extends StatusControl {
 
                 //Drillgon200: Why deal with orbit ids when there's already two other ids you can organize them by?
                 //FD: No clue
-                if (!fireballs.isEmpty()) {
-                    fireballs = fireballs.stream().filter(fireball1 -> !(fireball1.getBehaviour() instanceof FireballBehavior.Thrown
-                            || fireball1.getBehaviour() instanceof AbilityFireball.FireballOrbitController)).collect(Collectors.toList());
+                if (!world.isRemote) {
                     if (!fireballs.isEmpty()) {
-                        fireballs.get(0).setBehaviour(new AbilityFireball.FireballOrbitController());
-                        for (EntityFireball ball : fireballs)
-                            ball.setOrbitID(ball.getOrbitID() - 1);
-                    }
-                    if (fireballs.size() > 1)
-                        fireball.setVelocity(vel.normalize().times(speedMult));
-                    else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
-                } else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+                        fireballs = fireballs.stream().filter(fireball1 -> !(fireball1.getBehaviour() instanceof FireballBehavior.Thrown
+                                || fireball1.getBehaviour() instanceof AbilityFireball.FireballOrbitController)).collect(Collectors.toList());
+                        if (!fireballs.isEmpty()) {
+                            fireballs.get(0).setBehaviour(new AbilityFireball.FireballOrbitController());
+                            for (EntityFireball ball : fireballs)
+                                ball.setOrbitID(ball.getOrbitID() - 1);
+                        }
+                        if (fireballs.size() > 1)
+                            fireball.setVelocity(vel.normalize().times(speedMult));
+                        else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+                    } else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+                }
             }
             world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.HOSTILE, 4F, 0.8F);
         }

@@ -292,6 +292,16 @@ public abstract class AvatarEntity extends Entity {
     }
 
     @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        return super.writeToNBT(compound);
+    }
+
+    @Override
     public boolean canBeCollidedWith() {
         return true;
     }

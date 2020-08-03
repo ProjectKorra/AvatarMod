@@ -166,9 +166,9 @@ public class AbilityData {
 	public double getDamageMult() {
 		double powerRating = getPowerRating();
 		if (powerRating < 0) {
-			return 0.05 * powerRating + 1 < 0 ? 1F / 50 : 0.05 * powerRating + 1;
+			return 0.005 * powerRating + 1 < 0 ? 1F / 50 : 0.005 * powerRating + 1;
 		} else {
-			return 0.05 * powerRating + 1;
+			return 0.005 * powerRating + 1;
 		}
 	}
 
@@ -299,7 +299,7 @@ public class AbilityData {
 	 * @return Returns a modifier based on the current xp, from 1 to 1.36.
 	 */
 	public float getXpModifier() {
-		return getTotalXp() / 100 < 1 ? 1 : getTotalXp() / 100;
+		return (float) Math.min(getTotalXp() / 100 < 1 ? 1 : getTotalXp() / 100, 1.36);
 	}
 
 	public float getXp() {
@@ -415,6 +415,9 @@ public class AbilityData {
 		level = nbt.getInteger("Level");
 		path = AbilityTreePath.get(nbt.getInteger("Path"));
 		abilityCooldown = nbt.getInteger("AbilityCooldown");
+		powerRating = nbt.getDouble("PowerRating");
+		exhaustion = nbt.getFloat("Exhaustion");
+		burnOut = nbt.getFloat("Burnout");
 	}
 
 	public void writeToNbt(NBTTagCompound nbt) {
@@ -423,6 +426,9 @@ public class AbilityData {
 		nbt.setInteger("Level", level);
 		nbt.setInteger("Path", path.id());
 		nbt.setInteger("AbilityCooldown", abilityCooldown);
+		nbt.setDouble("PowerRating", powerRating);
+		nbt.setFloat("Exhaustion", exhaustion);
+		nbt.setFloat("Burnout", burnOut);
 	}
 
 	public void toBytes(ByteBuf buf) {
@@ -431,6 +437,9 @@ public class AbilityData {
 		buf.writeInt(level);
 		buf.writeInt(path.id());
 		buf.writeInt(abilityCooldown);
+		buf.writeDouble(powerRating);
+		buf.writeFloat(exhaustion);
+		buf.writeFloat(burnOut);
 	}
 
 	private void fromBytes(ByteBuf buf) {
@@ -438,6 +447,9 @@ public class AbilityData {
 		level = buf.readInt();
 		path = AbilityTreePath.get(buf.readInt());
 		abilityCooldown = buf.readInt();
+		powerRating = buf.readDouble();
+		exhaustion = buf.readFloat();
+		burnOut = buf.readFloat();
 	}
 
 	/**
