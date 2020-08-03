@@ -47,7 +47,6 @@ import java.util.Objects;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.util.data.StatusControlController.THROW_FIREBALL;
 
 /**
  * @author CrowsOfWar
@@ -61,9 +60,6 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
             DataSerializers.VARINT);
 
 
-    /**
-     * @param world
-     */
     public EntityFireball(World world) {
         super(world);
         setSize(.8f, .8f);
@@ -98,6 +94,14 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
         //Particles!
         if (world.isRemote && getOwner() != null) {
+            int[] fade = getFade();
+            int[] rgb = getRGB();
+            int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
+                    fade[0] * 2);
+            int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
+                    fade[1] * 2);
+            int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
+                    fade[2] * 2);
 
             for (double h = 0; h < width; h += 0.1) {
                 Random random = new Random();
@@ -122,12 +126,13 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
                 double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
                 double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                        world.rand.nextGaussian() / 60).time(12).clr(255, 10, 5)
+                        world.rand.nextGaussian() / 60).time(12).clr(rgb[0], rgb[1], rgb[2])
+                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
                         .scale(getSize() * 0.03125F).element(getElement()).spawnEntity(getOwner())
                         .spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                        world.rand.nextGaussian() / 60).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-                        20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
+                        world.rand.nextGaussian() / 60).time(12).clr(rgb[0], rgb[1], rgb[2])
+                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
                         .scale(getSize() * 0.03125F).element(getElement()).spawnEntity(getOwner())
                         .spawn(world);
             }
@@ -141,18 +146,21 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
                     pos = pos.add(entityPos);
                     velocity = pos.subtract(entityPos).normalize();
                     velocity = velocity.scale(AvatarUtils.getSqrMagnitude(getVelocity()) / 400000);
+
                     double spawnX = pos.x;
                     double spawnY = pos.y;
                     double spawnZ = pos.z;
+
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 100 + velocity.x,
                             world.rand.nextGaussian() / 100 + velocity.y, world.rand.nextGaussian() / 60 + velocity.z)
-                            .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(1F, 10 / 255F, 5 / 255F, 0.85F)
+                            .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
+                            .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
                             .scale(getAvgSize()).element(getElement()).spawnEntity(getOwner())
                             .spawn(world);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 100 + velocity.x,
                             world.rand.nextGaussian() / 100 + velocity.y, world.rand.nextGaussian() / 60 + velocity.z)
-                            .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr((235 + AvatarUtils.getRandomNumberInRange(0, 20)) / 255F,
-                            (20 + AvatarUtils.getRandomNumberInRange(0, 60)) / 255F, 10 / 255F, 0.85F)
+                            .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
+                            .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
                             .scale(getAvgSize()).element(getElement()).spawnEntity(getOwner())
                             .spawn(world);
 
@@ -236,19 +244,31 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
     @Override
     public void spawnExplosionParticles(World world, Vec3d pos) {
         if (world.isRemote && getOwner() != null) {
-            for (double h = 0; h < width * 2; h += 0.2) {
+            int[] fade = getFade();
+            int[] rgb = getRGB();
+            int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
+                    fade[0] * 2);
+            int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
+                    fade[1] * 2);
+            int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
+                    fade[2] * 2);
+
+            for (double h = 0; h < width * 2; h += 0.2 / getExplosionHitboxGrowth()) {
                 Random random = new Random();
                 AxisAlignedBB boundingBox = getEntityBoundingBox();
                 double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
                 double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
                 double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10,
-                        world.rand.nextGaussian() / 10).time(12).clr(255, 10, 5)
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 10 * getExplosionHitboxGrowth(),
+                        world.rand.nextGaussian() / 10 * getExplosionHitboxGrowth(), world.rand.nextGaussian() / 10 * getExplosionHitboxGrowth())
+                        .time(12 + AvatarUtils.getRandomNumberInRange(0, 4) + (int) getExplosionHitboxGrowth()).clr(rgb[0], rgb[1], rgb[2])
+                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
                         .scale(getSize() * 0.03125F).element(getElement()).spawnEntity(getOwner())
                         .spawn(world);
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10,
-                        world.rand.nextGaussian() / 10).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-                        20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 10 * getExplosionHitboxGrowth(),
+                        world.rand.nextGaussian() / 10 * getExplosionHitboxGrowth(), world.rand.nextGaussian() / 10 * getExplosionHitboxGrowth())
+                        .time(12 + AvatarUtils.getRandomNumberInRange(0, 4) + (int) getExplosionHitboxGrowth()).clr(rgb[0], rgb[1], rgb[2])
+                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
                         .scale(getSize() * 0.03125F).element(getElement()).spawnEntity(getOwner())
                         .spawn(world);
             }

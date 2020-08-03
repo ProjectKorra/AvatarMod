@@ -114,6 +114,8 @@ public class AbilityFireball extends Ability {
                 target = playerPos.plus(getLookRectangular(entity).times(2.5));
             }
 
+            int r, g, b, fadeR, fadeG, fadeB;
+            int rRandom, gRandom, bRandom;
             float damage = getProperty(DAMAGE, ctx).floatValue();
             int size = (int) (getProperty(SIZE, ctx).floatValue() * 32);
             int lifetime = getProperty(LIFETIME, ctx).intValue();
@@ -122,6 +124,12 @@ public class AbilityFireball extends Ability {
             float chiHit = getProperty(CHI_HIT, ctx).floatValue();
             float explosionSize = getProperty(EXPLOSION_SIZE, ctx).floatValue();
             float explosionDamage = getProperty(EXPLOSION_DAMAGE, ctx).floatValue();
+            r = getProperty(FIRE_R, ctx).intValue();
+            g = getProperty(FIRE_G, ctx).intValue();
+            b = getProperty(FIRE_B, ctx).intValue();
+            fadeR = getProperty(FADE_R, ctx).intValue();
+            fadeG = getProperty(FADE_G, ctx).intValue();
+            fadeB = getProperty(FADE_B, ctx).intValue();
 
             boolean canUse = !data.hasStatusControl(THROW_FIREBALL);
 
@@ -137,6 +145,7 @@ public class AbilityFireball extends Ability {
             explosionDamage *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
             chiHit *= ctx.getPowerRatingDamageMod();
             lifetime *= (0.75 + 0.25 * ctx.getPowerRatingDamageMod() * abilityData.getXpModifier());
+
             if (canUse) {
                 assert target != null;
                 EntityFireball fireball = new EntityFireball(world);
@@ -154,6 +163,8 @@ public class AbilityFireball extends Ability {
                 fireball.setExplosionDamage(explosionDamage);
                 fireball.setExplosionSize(explosionSize);
                 fireball.setFireTime(fireTime);
+                fireball.setRGB(r, g, b);
+                fireball.setFade(fadeR, fadeG, fadeB);
                 fireball.setXp(getProperty(XP_HIT, ctx).floatValue());
                 if (!world.isRemote)
                     world.spawnEntity(fireball);
@@ -250,7 +261,7 @@ public class AbilityFireball extends Ability {
                     float maxSize = ball.getProperty(MAX_SIZE, abilityData).floatValue();
                     maxSize *= (0.75 + 0.25 * abilityData.getDamageMult() * abilityData.getXpModifier());
                     if (maxSize > entity.getAvgSize()) {
-						if (entity.ticksExisted % 4 == 0) {
+						if (entity.ticksExisted % 2 == 0) {
 							entity.setEntitySize((entity).getAvgSize() + 0.025F);
 						}
 					}

@@ -51,6 +51,18 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
             .createKey(EntityOffensive.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Float> SYNC_EXPLOSION_SIZE = EntityDataManager
             .createKey(EntityOffensive.class, DataSerializers.FLOAT);
+    private static final DataParameter<Integer> SYNC_R = EntityDataManager.createKey(EntityFlames.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> SYNC_G = EntityDataManager.createKey(EntityFlames.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> SYNC_B = EntityDataManager.createKey(EntityFlames.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> SYNC_FADE_R = EntityDataManager.createKey(EntityFlames.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> SYNC_FADE_G = EntityDataManager.createKey(EntityFlames.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> SYNC_FADE_B = EntityDataManager.createKey(EntityFlames.class,
+            DataSerializers.VARINT);
 
     /**
      * The fraction of the impact velocity that should be the maximum spread speed added on impact.
@@ -180,6 +192,46 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         this.explosionDamage = damage;
     }
 
+    public void setRGB(int r, int g, int b) {
+        dataManager.set(SYNC_R, r);
+        dataManager.set(SYNC_G, g);
+        dataManager.set(SYNC_B, b);
+    }
+
+    public int[] getRGB() {
+        int[] rgb = new int[3];
+        rgb[0] = dataManager.get(SYNC_R);
+        rgb[1] = dataManager.get(SYNC_G);
+        rgb[2] = dataManager.get(SYNC_B);
+        return rgb;
+    }
+
+    public void setRGB(int[] rgb) {
+        dataManager.set(SYNC_R, rgb[0]);
+        dataManager.set(SYNC_G, rgb[1]);
+        dataManager.set(SYNC_B, rgb[2]);
+    }
+
+    public void setFade(int fadeR, int fadeG, int fadeB) {
+        dataManager.set(SYNC_FADE_R, fadeR);
+        dataManager.set(SYNC_FADE_G, fadeG);
+        dataManager.set(SYNC_FADE_B, fadeB);
+    }
+
+    public int[] getFade() {
+        int[] fade = new int[3];
+        fade[0] = dataManager.get(SYNC_FADE_R);
+        fade[1] = dataManager.get(SYNC_FADE_G);
+        fade[2] = dataManager.get(SYNC_FADE_B);
+        return fade;
+    }
+
+    public void setFade(int[] fade) {
+        dataManager.set(SYNC_FADE_R, fade[0]);
+        dataManager.set(SYNC_FADE_G, fade[1]);
+        dataManager.set(SYNC_FADE_B, fade[2]);
+    }
+
     //This just makes the methods easier to use.
     public void Explode() {
         Explode(world, this, getOwner());
@@ -203,6 +255,12 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         dataManager.register(SYNC_BEHAVIOR, new OffensiveBehaviour.Idle());
         dataManager.register(SYNC_PIERCES, false);
         dataManager.register(SYNC_EXPLOSION_SIZE, 1F);
+        dataManager.register(SYNC_R, 255);
+        dataManager.register(SYNC_G, 255);
+        dataManager.register(SYNC_B, 255);
+        dataManager.register(SYNC_FADE_R, 255);
+        dataManager.register(SYNC_FADE_G, 255);
+        dataManager.register(SYNC_FADE_B, 255);
     }
 
     @Override
